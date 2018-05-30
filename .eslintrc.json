@@ -1,0 +1,18 @@
+{
+    "env": {
+        "node": true,
+        "es6": true,
+        "jest": true
+    },
+    "parser": "babel-eslint",
+    "extends": "airbnb",
+    "rules": {
+        "no-use-before-define": [2, { "variables": false }],
+        "react/prop-types": [2, { "ignore": ["navigation"] }],
+        "react/jsx-filename-extension": 0,
+        "global-require": 0,
+        "import/no-unresolved": [2, { "ignore": ["local_settings"] }],
+        "import/extensions": [2, { "ignore": ["local_settings"] }],
+        "max-len": [1, { "code": 120 }]
+    }
+}
