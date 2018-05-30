@@ -13,6 +13,8 @@
         "global-require": 0,
         "import/no-unresolved": [2, { "ignore": ["local_settings"] }],
         "import/extensions": [2, { "ignore": ["local_settings"] }],
-        "max-len": [1, { "code": 120 }]
+        "max-len": [1, { "code": 120 }],
+        "arrow-body-style": 0,
+        "arrow-parens": [2, "always"]
     }
 }
