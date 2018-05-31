@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
-export default class SignInScreen extends React.PureComponent {
+export default class ProfileHomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -9,10 +9,10 @@ export default class SignInScreen extends React.PureComponent {
   }
   render() {
     return (
-      <View
-        style={styles.container}
-      >
-        <Text>SignInScreen</Text>
+      <View style={styles.container}>
+        <Text>
+          ProfileHomeScreen
+        </Text>
       </View>
     );
   }
