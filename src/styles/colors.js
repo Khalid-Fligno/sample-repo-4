@@ -1,6 +1,12 @@
 const colors = {
   black: 'rgb(0, 0, 0)', // #000000
   white: 'rgb(255, 255, 255)', // #FFFFFF
+  offWhite: 'rgb(245, 245, 245)', // ##f5f5f5
+  grey: {
+    dark: 'rgb(113, 114, 115)', // #717273
+    normal: 'rgb(188, 188, 189)', // #bcbcbd
+    light: 'rgb(234, 234, 235)', // #eaeaeb
+  },
   charcoal: {
     standard: 'rgb(38, 38, 40)', // #262628
     light: 'rgb(65, 64, 66)', // #414042
