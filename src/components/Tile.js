@@ -1,17 +1,18 @@
 import React from 'react';
 import { View, Image, Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
+import { LinearGradient } from 'expo';
 
 const Tile = ({ imageSrc, title }) => (
   <TouchableOpacity
     style={{
       margin: 10,
       shadowColor: 'black',
-      shadowOpacity: 0.6,
-      shadowOffset: { width: 0, height: 5 },
-      shadowRadius: 7,
+      shadowOpacity: 0.7,
+      shadowOffset: { width: 0, height: 6 },
+      shadowRadius: 5,
     }}
-    activeOpacity={0.8}
+    activeOpacity={0.7}
   >
     <Image
       source={imageSrc}
@@ -21,14 +22,18 @@ const Tile = ({ imageSrc, title }) => (
         borderRadius: 10,
       }}
     />
-    <View
+    <LinearGradient
+      colors={['transparent', 'rgba(0, 0, 0, 0.5)']}
       style={{
         position: 'absolute',
+        bottom: 0,
+        borderRadius: 10,
         width: 200,
         height: 120,
         display: 'flex',
         justifyContent: 'flex-end',
-        paddingLeft: 8,
+        paddingLeft: 12,
+        paddingBottom: 4,
       }}
     >
       <Text
@@ -40,7 +45,7 @@ const Tile = ({ imageSrc, title }) => (
       >
         {title}
       </Text>
-    </View>
+    </LinearGradient>
   </TouchableOpacity>
 );
 
