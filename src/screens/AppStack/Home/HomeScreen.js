@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView, Text } from 'react-native';
 import Tile from '../../../components/Tile';
+import colors from '../../../styles/colors';
 
 export default class HomeScreen extends React.PureComponent {
   constructor(props) {
@@ -36,15 +37,15 @@ export default class HomeScreen extends React.PureComponent {
             showsHorizontalScrollIndicator={false}
           >
             <Tile
-              imageSrc={require('../../../../assets/images/yazzy-colour-mask.png')}
+              imageSrc={require('../../../../assets/images/yazzy.png')}
               title="FitYaz Core"
             />
             <Tile
-              imageSrc={require('../../../../assets/images/yazzy-colour-mask.png')}
+              imageSrc={require('../../../../assets/images/yazzy2.png')}
               title="FitYaz Core"
             />
             <Tile
-              imageSrc={require('../../../../assets/images/yazzy-colour-mask.png')}
+              imageSrc={require('../../../../assets/images/yazzy3.png')}
               title="FitYaz Core"
             />
           </ScrollView>
@@ -57,7 +58,7 @@ export default class HomeScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.offWhite,
     alignItems: 'center',
     justifyContent: 'center',
   },

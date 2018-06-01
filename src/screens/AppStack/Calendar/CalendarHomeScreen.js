@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import colors from '../../../styles/colors';
 
-export default class NutritionHomeScreen extends React.PureComponent {
+export default class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -12,7 +12,7 @@ export default class NutritionHomeScreen extends React.PureComponent {
     return (
       <View style={styles.container}>
         <Text>
-          NutritionHomeScreen
+          CalendarHomeScreen
         </Text>
       </View>
     );
