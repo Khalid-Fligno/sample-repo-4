@@ -17,6 +17,10 @@ export default class AuthLoadingScreen extends React.PureComponent {
   loadAssetsAsync = async () => {
     const imageAssets = cacheImages([
       require('../../assets/images/yazzy-colour-mask.png'),
+      require('../../assets/images/yazzy.png'),
+      require('../../assets/images/yazzy2.png'),
+      require('../../assets/images/yazzy3.png'),
+      require('../../assets/icons/fitazfk-icon-solid-white.png'),
     ]);
     const fontAssets = cacheFonts([
       {
@@ -27,6 +31,9 @@ export default class AuthLoadingScreen extends React.PureComponent {
       },
       {
         GothamNarrowLight: require('../../assets/fonts/gotham-narrow-light.otf'),
+      },
+      {
+        icomoon: require('../../assets/fonts/icomoon.ttf'),
       },
     ]);
     await Promise.all([...imageAssets, ...fontAssets]);
