@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   secondary: {
     ...common.button.solid,
     backgroundColor: colors.violet.standard,
-    shadowColor: colors.violet.light,
+    shadowColor: colors.violet.standard,
   },
   secondaryDisabled: {
     backgroundColor: colors.violet.standard,

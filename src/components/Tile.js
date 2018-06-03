@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { LinearGradient } from 'expo';
 
@@ -8,8 +8,8 @@ const Tile = ({ imageSrc, title }) => (
     style={{
       margin: 10,
       shadowColor: 'black',
-      shadowOpacity: 0.7,
-      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.6,
+      shadowOffset: { width: 0, height: 5 },
       shadowRadius: 5,
     }}
     activeOpacity={0.7}
