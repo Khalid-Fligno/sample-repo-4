@@ -4,13 +4,9 @@ import { SafeAreaView } from 'react-navigation';
 import colors from '../styles/colors';
 
 const Header = () => (
-  <SafeAreaView
-    style={{
-      backgroundColor: colors.coral.standard,
-    }}
-  >
+  <SafeAreaView>
     <StatusBar
-      barStyle="dark-content"
+      barStyle="light-content"
     />
     <View
       style={{
@@ -19,7 +15,7 @@ const Header = () => (
         backgroundColor: colors.coral.standard,
         height: 50,
         shadowColor: colors.coral.standard,
-        shadowOpacity: 0.6,
+        shadowOpacity: 0.8,
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 3,
       }}
