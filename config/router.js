@@ -1,7 +1,6 @@
 import React from 'react';
 import { createSwitchNavigator, createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-import { createIconSetFromIcoMoon } from 'react-native-vector-icons';
-import icoMoonConfig from '../assets/fonts/selection';
+import Icon from '../src//components/Icon';
 import Header from '../src/components/Header';
 import AuthLoadingScreen from '../src/screens/AuthLoadingScreen';
 import SignInScreen from '../src/screens/AuthStack/SignInScreen';
@@ -13,7 +12,6 @@ import ProfileHomeScreen from '../src/screens/AppStack/Profile/ProfileHomeScreen
 import colors from '../src/styles/colors';
 import fonts from '../src/styles/fonts';
 
-const Icon = createIconSetFromIcoMoon(icoMoonConfig);
 
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
