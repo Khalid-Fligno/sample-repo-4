@@ -1,8 +1,14 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, Text, TouchableOpacity } from 'react-native';
-import Tile from '../../../components/Tile';
+import {
+  StyleSheet,
+  View,
+  // ScrollView,
+  Text,
+  // TouchableOpacity
+} from 'react-native';
+// import Tile from '../../../components/Tile';
 import colors from '../../../styles/colors';
-import Icon from '../../../components/Icon';
+// import Icon from '../../../components/Icon';
 
 export default class HomeScreen extends React.PureComponent {
   constructor(props) {
@@ -29,7 +35,7 @@ export default class HomeScreen extends React.PureComponent {
           >
             Workouts
           </Text>
-          <ScrollView
+          {/* <ScrollView
             contentContainerStyle={{
               height: 160,
               padding: 10,
@@ -49,40 +55,8 @@ export default class HomeScreen extends React.PureComponent {
               imageSrc={require('../../../../assets/images/yazzy3.png')}
               title="FitYaz Core"
             />
-          </ScrollView>
+          </ScrollView> */}
         </View>
-        <TouchableOpacity
-          onPress={() => console.log('yee')}
-          activeOpacity={0.7}
-          style={{
-            shadowColor: colors.coral.dark,
-            shadowOpacity: 1,
-            shadowOffset: { width: 0, height: 2 },
-            shadowRadius: 1,
-          }}
-        >
-          <Icon
-            name="pause"
-            size={100}
-            color={colors.coral.standard}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => console.log('yee')}
-          activeOpacity={0.7}
-          style={{
-            shadowColor: colors.coral.dark,
-            shadowOpacity: 1,
-            shadowOffset: { width: 0, height: 2 },
-            shadowRadius: 1,
-          }}
-        >
-          <Icon
-            name="stop"
-            size={100}
-            color={colors.coral.standard}
-          />
-        </TouchableOpacity>
       </View>
     );
   }
