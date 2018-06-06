@@ -13,7 +13,17 @@ import colors from '../src/styles/colors';
 import fonts from '../src/styles/fonts';
 
 
-const AuthStack = createStackNavigator({ SignIn: SignInScreen });
+const AuthStack = createStackNavigator(
+  {
+    SignIn: SignInScreen
+  },
+  {
+    initialRouteName: 'SignIn',
+    navigationOptions: {
+      header: <Header />,
+    },
+  },
+);
 
 const HomeStack = createStackNavigator(
   {

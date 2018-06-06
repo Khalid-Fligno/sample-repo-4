@@ -16,11 +16,14 @@ const cacheFonts = (fonts) => {
 export default class AuthLoadingScreen extends React.PureComponent {
   loadAssetsAsync = async () => {
     const imageAssets = cacheImages([
+      require('../../assets/images/fitazfk-app-icon-dark.png'),
+      require('../../assets/images/fitazfk-splash-dark.png'),
       require('../../assets/images/yazzy-colour-mask.png'),
       require('../../assets/images/yazzy.png'),
       require('../../assets/images/yazzy2.png'),
       require('../../assets/images/yazzy3.png'),
       require('../../assets/icons/fitazfk-icon-solid-white.png'),
+      require('../../assets/icons/fitazfk-icon-outline.png'),
     ]);
     const fontAssets = cacheFonts([
       {
@@ -39,7 +42,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
     await Promise.all([...imageAssets, ...fontAssets]);
   }
   cachingComplete = async () => {
-    this.props.navigation.navigate('App');
+    this.props.navigation.navigate('Auth');
   }
   render() {
     return (
