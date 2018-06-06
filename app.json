@@ -1,5 +1,13 @@
 {
   "expo": {
-    "sdkVersion": "27.0.0"
+    "name": "FitazFK",
+    "slug": "fitazfk-app",
+    "version": "0.0.1",
+    "sdkVersion": "27.0.0",
+    "icon": "./assets/images/fitazfk-app-icon-dark.png",
+    "splash": {
+      "image": "./assets/images/fitazfk-splash-dark.png",
+      "backgroundColor": "#000000"
+    }
   }
 }
