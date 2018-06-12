@@ -12,11 +12,13 @@ const CustomButton = ({
   primary,
   secondary,
   outline,
+  loading,
 }) => (
   <Button
     title={title}
     onPress={onPress}
     activeOpacity={0.7}
+    loading={loading}
     disabled={disabled}
     buttonStyle={[
       styles.default,
