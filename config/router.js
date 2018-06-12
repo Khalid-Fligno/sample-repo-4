@@ -6,6 +6,8 @@ import AuthLoadingScreen from '../src/screens/AuthLoadingScreen';
 import SignInScreen from '../src/screens/AuthStack/SignInScreen';
 import HomeScreen from '../src/screens/AppStack/Home/HomeScreen';
 import NutritionHomeScreen from '../src/screens/AppStack/Nutrition/NutritionHomeScreen';
+import RecipeSelectionScreen from '../src/screens/AppStack/Nutrition/RecipeSelectionScreen';
+import RecipeScreen from '../src/screens/AppStack/Nutrition/RecipeScreen';
 import WorkoutsHomeScreen from '../src/screens/AppStack/Workouts/WorkoutsHomeScreen';
 import CalendarHomeScreen from '../src/screens/AppStack/Calendar/CalendarHomeScreen';
 import ProfileHomeScreen from '../src/screens/AppStack/Profile/ProfileHomeScreen';
@@ -40,6 +42,8 @@ const HomeStack = createStackNavigator(
 const NutritionStack = createStackNavigator(
   {
     NutritionHome: NutritionHomeScreen,
+    RecipeSelection: RecipeSelectionScreen,
+    Recipe: RecipeScreen,
   },
   {
     initialRouteName: 'NutritionHome',
