@@ -1,11 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import * as firebase from 'firebase';
-import 'firebase/firestore';
+import { db } from '../../../../config/firebase';
 import CustomButton from '../../../components/CustomButton';
 import colors from '../../../styles/colors';
-
-const db = firebase.firestore();
 
 export default class RecipeSelectionScreen extends React.PureComponent {
   constructor(props) {

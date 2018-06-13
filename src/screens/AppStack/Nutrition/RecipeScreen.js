@@ -7,15 +7,16 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import * as firebase from 'firebase';
-import 'firebase/firestore';
 import Carousel from 'react-native-snap-carousel';
 import Image from 'react-native-scalable-image';
+// import * as firebase from 'firebase';
+// import 'firebase/firestore';
+import { db } from '../../../../config/firebase';
+
 import CustomButton from '../../../components/CustomButton';
 import Icon from '../../../components/Icon';
 import colors from '../../../styles/colors';
 
-const db = firebase.firestore();
 const { width } = Dimensions.get('window');
 
 export default class RecipeScreen extends React.PureComponent {
@@ -32,6 +33,7 @@ export default class RecipeScreen extends React.PureComponent {
     await this.fetchRecipe();
   }
   fetchRecipe = () => {
+    // const db = firebase.firestore();
     const recipeName = this.props.navigation.getParam('recipeName', null);
     db.collection('recipes')
       .doc(recipeName)
