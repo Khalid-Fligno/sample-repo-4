@@ -1,7 +1,7 @@
 const colors = {
   black: 'rgb(0, 0, 0)', // #000000
   white: 'rgb(255, 255, 255)', // #FFFFFF
-  offWhite: 'rgb(245, 245, 245)', // ##f5f5f5
+  offWhite: 'rgb(250, 250, 250)', // ##f5f5f5
   grey: {
     dark: 'rgb(113, 114, 115)', // #717273
     standard: 'rgb(188, 188, 189)', // #bcbcbd
