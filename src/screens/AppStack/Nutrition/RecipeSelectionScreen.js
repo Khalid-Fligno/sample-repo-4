@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { db } from '../../../../config/firebase';
 import CustomButton from '../../../components/CustomButton';
 import colors from '../../../styles/colors';
@@ -9,12 +10,14 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     super(props);
     this.state = {
       recipes: [],
+      loading: false,
     };
   }
   componentWillMount = async () => {
     await this.fetchRecipes();
   }
   fetchRecipes = () => {
+    this.setState({ loading: true })
     const meal = this.props.navigation.getParam('meal', null);
     db.collection('recipes')
       .where('meal', '==', meal)
@@ -24,11 +27,23 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         querySnapshot.forEach((doc) => {
           recipes.push(doc.data());
         });
-        this.setState({ recipes });
+        this.setState({ recipes, loading: false });
       });
   }
   render() {
-    const { recipes } = this.state;
+    const { recipes, loading } = this.state;
+    if (loading) {
+      return (
+        <View style={{ flex: 1 }}>
+          <Spinner
+            visible={loading}
+            textStyle={{ color: '#FFFFFF' }}
+            animation="fade"
+            size="small"
+          />
+        </View>
+      );
+    }
     const recipeList = recipes.map((recipe) => (
       <CustomButton
         key={recipe.name}

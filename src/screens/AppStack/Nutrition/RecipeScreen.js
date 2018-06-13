@@ -7,12 +7,10 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import Carousel from 'react-native-snap-carousel';
 import Image from 'react-native-scalable-image';
-// import * as firebase from 'firebase';
-// import 'firebase/firestore';
 import { db } from '../../../../config/firebase';
-
 import CustomButton from '../../../components/CustomButton';
 import Icon from '../../../components/Icon';
 import colors from '../../../styles/colors';
@@ -27,13 +25,14 @@ export default class RecipeScreen extends React.PureComponent {
       ingredients: [],
       steps: [],
       started: false,
+      loading: false,
     };
   }
   componentWillMount = async () => {
     await this.fetchRecipe();
   }
   fetchRecipe = () => {
-    // const db = firebase.firestore();
+    this.setState({ loading: true });
     const recipeName = this.props.navigation.getParam('recipeName', null);
     db.collection('recipes')
       .doc(recipeName)
@@ -43,6 +42,7 @@ export default class RecipeScreen extends React.PureComponent {
           recipe: doc.data(),
           ingredients: doc.data().ingredients,
           steps: doc.data().steps,
+          loading: false,
         });
       });
   }
@@ -112,7 +112,24 @@ export default class RecipeScreen extends React.PureComponent {
     );
   }
   render() {
-    const { recipe, ingredients, started } = this.state;
+    const {
+      recipe,
+      ingredients,
+      started,
+      loading,
+    } = this.state;
+    if (loading) {
+      return (
+        <View style={{ flex: 1 }}>
+          <Spinner
+            visible={loading}
+            textStyle={{ color: '#FFFFFF' }}
+            animation="fade"
+            size="small"
+          />
+        </View>
+      );
+    }
     if (started) {
       return (
         <View
