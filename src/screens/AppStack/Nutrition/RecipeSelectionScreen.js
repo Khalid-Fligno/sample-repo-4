@@ -17,8 +17,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     await this.fetchRecipes();
   }
   fetchRecipes = () => {
+    const meal = this.props.navigation.getParam('meal', null);
     db.collection('recipes')
-      .where('meal', '==', 'breakfast')
+      .where('meal', '==', meal)
       .get()
       .then((querySnapshot) => {
         const recipes = []
@@ -52,7 +53,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   },

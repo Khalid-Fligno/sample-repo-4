@@ -19,7 +19,7 @@ export default class NutritionHomeScreen extends React.PureComponent {
         <CustomButton
           primary
           title="Breakfast"
-          onPress={() => this.props.navigation.navigate('RecipeSelection')}
+          onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
         />
       </View>
     );
@@ -29,7 +29,7 @@ export default class NutritionHomeScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   },
