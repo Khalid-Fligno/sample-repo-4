@@ -44,7 +44,7 @@ export default class SignInScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   },
