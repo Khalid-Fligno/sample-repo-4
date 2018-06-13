@@ -11,6 +11,7 @@ const CustomButton = ({
   disabled,
   primary,
   secondary,
+  green,
   outline,
   loading,
 }) => (
@@ -27,14 +28,18 @@ const CustomButton = ({
       primary && outline && styles.primaryOutline,
       secondary && styles.secondary,
       secondary && outline && styles.secondaryOutline,
+      green && styles.green,
+      green && outline && styles.greenOutline,
     ]}
     textStyle={[
-      styles.defaultText,
+      styles.whiteText,
       outline && styles.defaultOutlineText,
-      primary && styles.primaryText,
+      primary && styles.whiteText,
       primary && outline && styles.primaryOutlineText,
-      secondary && styles.secondaryText,
+      secondary && styles.whiteText,
       secondary && outline && styles.secondaryOutlineText,
+      green && styles.whiteText,
+      green && outline && styles.greenText,
     ]}
     disabledStyle={[
       styles.defaultDisabled,
@@ -43,6 +48,8 @@ const CustomButton = ({
       primary && outline && styles.primaryOutlineDisabled,
       secondary && styles.secondaryDisabled,
       secondary && outline && styles.secondaryOutline,
+      green && styles.greenDisabled,
+      green && outline && styles.greenOutline,
     ]}
   />
 );
@@ -73,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.charcoal.standard,
     opacity: 0.5,
   },
-  defaultText: {
+  whiteText: {
     color: colors.white,
     ...common.button.text,
   },
@@ -98,10 +105,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.coral.standard,
     opacity: 0.5,
   },
-  primaryText: {
-    color: colors.white,
-    ...common.button.text,
-  },
   primaryOutline: {
     ...common.button.outline,
     borderColor: colors.coral.standard,
@@ -123,10 +126,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.violet.standard,
     opacity: 0.5,
   },
-  secondaryText: {
-    ...common.button.text,
-    color: colors.white,
-  },
   secondaryOutline: {
     ...common.button.outline,
     borderColor: colors.violet.standard,
@@ -137,6 +136,27 @@ const styles = StyleSheet.create({
   },
   secondaryOutlineText: {
     color: colors.violet.standard,
+    ...common.button.text,
+  },
+  green: {
+    ...common.button.solid,
+    backgroundColor: colors.green.standard,
+    shadowColor: colors.green.standard,
+  },
+  greenDisabled: {
+    backgroundColor: colors.green.standard,
+    opacity: 0.5,
+  },
+  greenOutline: {
+    ...common.button.outline,
+    borderColor: colors.green.standard,
+    shadowColor: colors.green.standard,
+  },
+  greenOutlineDisabled: {
+    ...common.button.outlineDisabled,
+  },
+  greenOutlineText: {
+    color: colors.green.standard,
     ...common.button.text,
   },
 });
