@@ -14,6 +14,11 @@ import ProfileHomeScreen from '../src/screens/AppStack/Profile/ProfileHomeScreen
 import colors from '../src/styles/colors';
 import fonts from '../src/styles/fonts';
 
+const nutritionBackButtonMap = {
+  NutritionHome: false,
+  RecipeSelection: true,
+  Recipe: true,
+}
 
 const AuthStack = createStackNavigator(
   {
@@ -47,9 +52,17 @@ const NutritionStack = createStackNavigator(
   },
   {
     initialRouteName: 'NutritionHome',
-    navigationOptions: {
-      header: <Header />,
-    },
+    navigationOptions: ({ navigation }) => ({
+      header: () => {
+        const { routeName } = navigation.state;
+        return (
+          <Header
+            navigation={navigation}
+            withBackButton={nutritionBackButtonMap[routeName]}
+          />
+        )
+      }
+    }),
   },
 );
 
@@ -98,7 +111,7 @@ const AppStack = createBottomTabNavigator(
     Profile: ProfileStack,
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Nutrition',
     navigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
