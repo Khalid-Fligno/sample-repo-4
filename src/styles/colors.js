@@ -4,7 +4,7 @@ const colors = {
   offWhite: 'rgb(245, 245, 245)', // ##f5f5f5
   grey: {
     dark: 'rgb(113, 114, 115)', // #717273
-    normal: 'rgb(188, 188, 189)', // #bcbcbd
+    standard: 'rgb(188, 188, 189)', // #bcbcbd
     light: 'rgb(234, 234, 235)', // #eaeaeb
   },
   charcoal: {
