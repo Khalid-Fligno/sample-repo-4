@@ -12,7 +12,6 @@ const Header = ({
   <SafeAreaView>
     <StatusBar
       barStyle="light-content"
-      backgroundColor={colors.coral.standard}
     />
     <View
       style={styles.headerContainer}
@@ -25,8 +24,8 @@ const Header = ({
           withBackButton &&
             <Icon
               name="chevron-left"
-              size={24}
-              color={colors.white}
+              size={20}
+              color={colors.black}
             />
         }
       </TouchableOpacity>
@@ -34,7 +33,7 @@ const Header = ({
         style={styles.headerContentContainer}
       >
         <Image
-          source={require('../../assets/icons/fitazfk-icon-solid-white.png')}
+          source={require('../../assets/icons/fitazfk-icon-outline.png')}
           style={{
             width: 30,
             height: 30,
@@ -61,9 +60,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: colors.coral.standard,
+    backgroundColor: colors.white,
     height: 50,
-    borderBottomColor: colors.coral.light,
+    borderTopColor: colors.grey.standard,
+    borderTopWidth: 1,
+    borderBottomColor: colors.grey.standard,
     borderBottomWidth: 1,
     // shadowColor: colors.coral.standard,
     // shadowOpacity: 0.8,

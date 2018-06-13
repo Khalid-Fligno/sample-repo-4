@@ -115,7 +115,8 @@ const AppStack = createBottomTabNavigator(
     navigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
-        const activeState = focused ? colors.coral.standard : colors.charcoal.light;
+        // const activeState = focused ? colors.coral.standard : colors.charcoal.light;
+        const activeState = colors.charcoal.light;
         let icon;
         if (routeName === 'Home') {
           icon = (
@@ -162,7 +163,8 @@ const AppStack = createBottomTabNavigator(
       },
     }),
     tabBarOptions: {
-      activeTintColor: colors.coral.standard,
+      // activeTintColor: colors.coral.standard,
+      activeTintColor: colors.charcoal.light,
       inactiveTintColor: colors.charcoal.light,
       style: {
         borderTopColor: colors.grey.light,
