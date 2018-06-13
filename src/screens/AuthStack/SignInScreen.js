@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, Alert } from 'react-native';
 import { Facebook } from 'expo';
-// import firebase from 'firebase';
 import CustomButton from '../../components/CustomButton';
 import colors from '../../styles/colors';
 
@@ -16,10 +15,9 @@ export default class SignInScreen extends React.PureComponent {
       permissions: ['public_profile', 'email'],
     });
     if (type === 'success') {
-      this.props.navigation.navigate('App')
+      this.props.navigation.navigate('App');
       // Get the user's name using Facebook's Graph API
-      const response = await fetch(
-        `https://graph.facebook.com/me?access_token=${token}`);
+      const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
       Alert.alert(
         'Logged in!',
         `Hi ${(await response.json()).name}!`,

@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
-import colors from '../../../styles/colors';
+import { StyleSheet, View, Text } from 'react-native';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-const db = firebase.firestore();
 import CustomButton from '../../../components/CustomButton';
+import colors from '../../../styles/colors';
+
+const db = firebase.firestore();
 
 export default class RecipeSelectionScreen extends React.PureComponent {
   constructor(props) {
@@ -22,11 +23,11 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       .where('meal', '==', meal)
       .get()
       .then((querySnapshot) => {
-        const recipes = []
+        const recipes = [];
         querySnapshot.forEach((doc) => {
-          recipes.push(doc.data())
-        })
-        this.setState({ recipes })
+          recipes.push(doc.data());
+        });
+        this.setState({ recipes });
       });
   }
   render() {
@@ -38,7 +39,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         title={recipe.displayName}
         onPress={() => this.props.navigation.navigate('Recipe', { recipeName: recipe.name })}
       />
-    ))
+    ));
     return (
       <View style={styles.container}>
         <Text>

@@ -5,23 +5,18 @@ import {
   Text,
   ScrollView,
   Dimensions,
-  Button,
-  StatusBar,
   TouchableOpacity,
 } from 'react-native';
-import { Constants } from 'expo';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-const db = firebase.firestore();
 import Carousel from 'react-native-snap-carousel';
 import Image from 'react-native-scalable-image';
 import CustomButton from '../../../components/CustomButton';
 import Icon from '../../../components/Icon';
 import colors from '../../../styles/colors';
 
+const db = firebase.firestore();
 const { width } = Dimensions.get('window');
-var storage = firebase.storage();
-var pathReference = storage.ref('recipes/baked-eggs.jpg');
 
 export default class RecipeScreen extends React.PureComponent {
   constructor(props) {
@@ -37,7 +32,7 @@ export default class RecipeScreen extends React.PureComponent {
     await this.fetchRecipe();
   }
   fetchRecipe = () => {
-    const recipeName = this.props.navigation.getParam('recipeName', null)
+    const recipeName = this.props.navigation.getParam('recipeName', null);
     db.collection('recipes')
       .doc(recipeName)
       .get()
@@ -46,76 +41,76 @@ export default class RecipeScreen extends React.PureComponent {
           recipe: doc.data(),
           ingredients: doc.data().ingredients,
           steps: doc.data().steps,
-        })
+        });
       });
   }
   toggleRecipeStart = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       started: !prevState.started,
-    }))
+    }));
   }
   renderItem = ({ item, index }) => {
     const { steps } = this.state;
     return (
       <View style={styles.carouselCard}>
-          <View style={styles.carouselHeaderContainer}>
-            <View style={styles.carouselHeaderContentContainer}>
-              <TouchableOpacity
-                onPress={this.toggleRecipeStart}
-                style={styles.carouselHeaderButton}
-              >
-                <Icon
-                  name="cross"
-                  size={14}
-                  color={colors.white}
-                />
-              </TouchableOpacity>
-              <Text style={styles.carouselHeaderText}>
-                Step {index + 1} of {steps.length}
-              </Text>
-              {
-                index + 1 === steps.length ? (
-                  <TouchableOpacity
-                    onPress={this.toggleRecipeStart}
-                    style={styles.carouselHeaderButton}
-                  >
-                    <Icon
-                      name="tick"
-                      size={18}
-                      color={colors.white}
-                    />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => this._carousel.snapToNext() }
-                    style={styles.carouselHeaderButton}
-                  >
-                    <Icon
-                      name="arrow-right"
-                      size={18}
-                      color={colors.white}
-                    />
-                  </TouchableOpacity>
-                )
-              }
-            </View>
-            <Image
-              source={require('../../../../assets/images/recipes/baked-eggs-1024x768.png')}
-              width={width - 50}
-            />
+        <View style={styles.carouselHeaderContainer}>
+          <View style={styles.carouselHeaderContentContainer}>
+            <TouchableOpacity
+              onPress={this.toggleRecipeStart}
+              style={styles.carouselHeaderButton}
+            >
+              <Icon
+                name="cross"
+                size={14}
+                color={colors.white}
+              />
+            </TouchableOpacity>
+            <Text style={styles.carouselHeaderText}>
+              Step {index + 1} of {steps.length}
+            </Text>
+            {
+              index + 1 === steps.length ? (
+                <TouchableOpacity
+                  onPress={this.toggleRecipeStart}
+                  style={styles.carouselHeaderButton}
+                >
+                  <Icon
+                    name="tick"
+                    size={18}
+                    color={colors.white}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => this.carousel.snapToNext()}
+                  style={styles.carouselHeaderButton}
+                >
+                  <Icon
+                    name="arrow-right"
+                    size={18}
+                    color={colors.white}
+                  />
+                </TouchableOpacity>
+              )
+            }
           </View>
-          <View style={styles.carouselTextContainer}>
-            <ScrollView>
-              <Text style={styles.carouselText}>
-                {item}
-              </Text>
-            </ScrollView>
-          </View>
+          <Image
+            source={require('../../../../assets/images/recipes/baked-eggs-1024x768.png')}
+            width={width - 50}
+          />
+        </View>
+        <View style={styles.carouselTextContainer}>
+          <ScrollView>
+            <Text style={styles.carouselText}>
+              {item}
+            </Text>
+          </ScrollView>
+        </View>
       </View>
-    )
+    );
   }
   render() {
-    const { recipe, ingredients, steps, started } = this.state;
+    const { recipe, ingredients, started } = this.state;
     if (started) {
       return (
         <View
@@ -125,14 +120,14 @@ export default class RecipeScreen extends React.PureComponent {
           }}
         >
           <Carousel
-            ref={(c) => { this._carousel = c; }}
+            ref={(c) => this.carousel = c}
             data={this.state.steps}
             renderItem={this.renderItem}
             sliderWidth={width}
             itemWidth={width - 50}
           />
         </View>
-      )
+      );
     }
     return (
       <View style={styles.container}>
@@ -162,7 +157,7 @@ export default class RecipeScreen extends React.PureComponent {
                     >
                       - {ingredient}
                     </Text>
-                  )
+                  );
                 })
               }
             </View>

@@ -61,6 +61,8 @@ CustomButton.propTypes = {
   secondary: PropTypes.bool,
   outline: PropTypes.bool,
   disabled: PropTypes.bool,
+  green: PropTypes.bool,
+  loading: PropTypes.bool,
 };
 
 CustomButton.defaultProps = {
@@ -68,6 +70,8 @@ CustomButton.defaultProps = {
   secondary: false,
   outline: false,
   disabled: false,
+  green: false,
+  loading: false,
 };
 
 const styles = StyleSheet.create({

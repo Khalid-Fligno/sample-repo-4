@@ -18,11 +18,11 @@ const nutritionBackButtonMap = {
   NutritionHome: false,
   RecipeSelection: true,
   Recipe: true,
-}
+};
 
 const AuthStack = createStackNavigator(
   {
-    SignIn: SignInScreen
+    SignIn: SignInScreen,
   },
   {
     initialRouteName: 'SignIn',
@@ -60,8 +60,8 @@ const NutritionStack = createStackNavigator(
             navigation={navigation}
             withBackButton={nutritionBackButtonMap[routeName]}
           />
-        )
-      }
+        );
+      },
     }),
   },
 );

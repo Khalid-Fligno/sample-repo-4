@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Image, StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
+import PropTypes from 'prop-types';
 import Icon from '../components/Icon';
 import colors from '../styles/colors';
 
@@ -21,7 +22,7 @@ const Header = ({
         onPress={() => navigation.goBack()}
       >
         {
-          withBackButton && 
+          withBackButton &&
             <Icon
               name="chevron-left"
               size={24}
@@ -47,6 +48,14 @@ const Header = ({
   </SafeAreaView>
 );
 
+Header.propTypes = {
+  withBackButton: PropTypes.bool,
+};
+
+Header.defaultProps = {
+  withBackButton: false,
+};
+
 const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
@@ -67,6 +76,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-})
+});
 
 export default Header;
