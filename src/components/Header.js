@@ -5,7 +5,17 @@ import PropTypes from 'prop-types';
 import Icon from '../components/Icon';
 import colors from '../styles/colors';
 
+const headerContainer = {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  height: 50,
+  borderBottomColor: colors.black,
+  borderBottomWidth: 1,
+};
+
 const Header = ({
+  stack,
   navigation,
   withBackButton,
 }) => (
@@ -14,7 +24,13 @@ const Header = ({
       barStyle="light-content"
     />
     <View
-      style={styles.headerContainer}
+      style={[
+        styles.defaultHeader,
+        stack === 'home' && styles.homeHeader,
+        stack === 'nutrition' && styles.nutritionHeader,
+        stack === 'workouts' && styles.workoutsHeader,
+        stack === 'calendar' && styles.calendarHeader,
+      ]}
     >
       <TouchableOpacity
         style={styles.headerContentContainer}
@@ -25,7 +41,7 @@ const Header = ({
             <Icon
               name="chevron-left"
               size={20}
-              color={colors.black}
+              color={colors.white}
             />
         }
       </TouchableOpacity>
@@ -33,7 +49,7 @@ const Header = ({
         style={styles.headerContentContainer}
       >
         <Image
-          source={require('../../assets/icons/fitazfk-icon-outline.png')}
+          source={require('../../assets/icons/fitazfk-icon-solid-white.png')}
           style={{
             width: 30,
             height: 30,
@@ -49,10 +65,12 @@ const Header = ({
 
 Header.propTypes = {
   withBackButton: PropTypes.bool,
+  stack: PropTypes.string,
 };
 
 Header.defaultProps = {
   withBackButton: false,
+  stack: null,
 };
 
 const styles = StyleSheet.create({
@@ -60,16 +78,40 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: colors.violet.standard,
     height: 50,
-    borderTopColor: colors.grey.standard,
-    borderTopWidth: 1,
-    borderBottomColor: colors.grey.standard,
+    borderBottomColor: colors.charcoal.standard,
     borderBottomWidth: 1,
-    // shadowColor: colors.coral.standard,
-    // shadowOpacity: 0.8,
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowRadius: 3,
+  },
+  defaultHeader: {
+    ...headerContainer,
+    backgroundColor: colors.charcoal.standard,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.charcoal.dark,
+  },
+  homeHeader: {
+    ...headerContainer,
+    backgroundColor: colors.blue.standard,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.blue.dark,
+  },
+  nutritionHeader: {
+    ...headerContainer,
+    backgroundColor: colors.violet.standard,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.violet.dark,
+  },
+  workoutsHeader: {
+    ...headerContainer,
+    backgroundColor: colors.coral.standard,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.coral.dark,
+  },
+  calendarHeader: {
+    ...headerContainer,
+    backgroundColor: colors.green.standard,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.green.dark,
   },
   headerContentContainer: {
     width: 50,
