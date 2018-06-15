@@ -14,6 +14,14 @@ import ProfileHomeScreen from '../src/screens/AppStack/Profile/ProfileHomeScreen
 import colors from '../src/styles/colors';
 import fonts from '../src/styles/fonts';
 
+const tabColorMap = {
+  Home: colors.blue.standard,
+  Nutrition: colors.violet.standard,
+  Workouts: colors.coral.standard,
+  Calendar: colors.green.standard,
+  Profile: colors.charcoal.standard,
+};
+
 const nutritionBackButtonMap = {
   NutritionHome: false,
   RecipeSelection: true,
@@ -39,7 +47,7 @@ const HomeStack = createStackNavigator(
   {
     initialRouteName: 'HomeHome',
     navigationOptions: {
-      header: <Header />,
+      header: <Header stack="home" />,
     },
   },
 );
@@ -59,6 +67,7 @@ const NutritionStack = createStackNavigator(
           <Header
             navigation={navigation}
             withBackButton={nutritionBackButtonMap[routeName]}
+            stack="nutrition"
           />
         );
       },
@@ -73,7 +82,7 @@ const WorkoutsStack = createStackNavigator(
   {
     initialRouteName: 'WorkoutsHome',
     navigationOptions: {
-      header: <Header />,
+      header: <Header stack="workouts" />,
     },
   },
 );
@@ -85,7 +94,7 @@ const CalendarStack = createStackNavigator(
   {
     initialRouteName: 'CalendarHome',
     navigationOptions: {
-      header: <Header />,
+      header: <Header stack="calendar" />,
     },
   },
 );
@@ -116,14 +125,15 @@ const AppStack = createBottomTabNavigator(
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
         // const activeState = focused ? colors.coral.standard : colors.charcoal.light;
-        const activeState = colors.charcoal.light;
+        const activeState = tabColorMap[routeName];
+        const inactiveState = colors.charcoal.standard;
         let icon;
         if (routeName === 'Home') {
           icon = (
             <Icon
               name={focused ? 'home-solid' : 'home-outline'}
               size={24}
-              color={activeState}
+              color={focused ? activeState : inactiveState}
             />
           );
         } else if (routeName === 'Nutrition') {
@@ -131,7 +141,7 @@ const AppStack = createBottomTabNavigator(
             <Icon
               name={focused ? 'nutrition-solid' : 'nutrition-outline'}
               size={24}
-              color={activeState}
+              color={focused ? activeState : inactiveState}
             />
           );
         } else if (routeName === 'Workouts') {
@@ -139,7 +149,7 @@ const AppStack = createBottomTabNavigator(
             <Icon
               name={focused ? 'workouts-solid' : 'workouts-outline'}
               size={24}
-              color={activeState}
+              color={focused ? activeState : inactiveState}
             />
           );
         } else if (routeName === 'Calendar') {
@@ -147,7 +157,7 @@ const AppStack = createBottomTabNavigator(
             <Icon
               name={focused ? 'calendar-solid' : 'calendar-outline'}
               size={24}
-              color={activeState}
+              color={focused ? activeState : inactiveState}
             />
           );
         } else if (routeName === 'Profile') {
@@ -155,7 +165,7 @@ const AppStack = createBottomTabNavigator(
             <Icon
               name={focused ? 'profile-solid' : 'profile-outline'}
               size={24}
-              color={activeState}
+              color={focused ? activeState : inactiveState}
             />
           );
         }
@@ -163,9 +173,8 @@ const AppStack = createBottomTabNavigator(
       },
     }),
     tabBarOptions: {
-      // activeTintColor: colors.coral.standard,
-      activeTintColor: colors.charcoal.light,
-      inactiveTintColor: colors.charcoal.light,
+      activeTintColor: colors.charcoal.standard,
+      inactiveTintColor: colors.charcoal.standard,
       style: {
         borderTopColor: colors.grey.light,
         borderTopWidth: 1,
