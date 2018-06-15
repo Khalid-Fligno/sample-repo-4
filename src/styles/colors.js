@@ -15,22 +15,22 @@ const colors = {
   coral: {
     standard: 'rgb(238, 48, 66)', // #EE2F42
     light: 'rgb(244, 113, 126)', // #f4717e
-    dark: 'rgb(189, 15, 33)', // #bd0f21
+    dark: 'rgb(236, 19, 41)', // #ec1329
   },
   violet: {
     standard: 'rgb(179, 95, 165)', // #B35fA5
     light: 'rgb(214, 168, 207)', // #D6A8CF
-    dark: 'rgb(121, 57, 111)', // #79396F
+    dark: 'rgb(156, 73, 142)', // #9c498e
   },
   green: {
     standard: 'rgb(21, 160, 140)', // #15A08C
     light: 'rgb(28, 202, 176)', // #1CCAB0
-    dark: 'rgb(15, 112, 98)', // #0F7062
+    dark: 'rgb(18, 135, 118)', // #128776
   },
   blue: {
     standard: 'rgb(122, 155, 224)', // #7A9BE0
     light: 'rgb(131, 161, 226)', // #83A1E2
-    dark: 'rgb(69, 114, 211)', // #4572D3
+    dark: 'rgb(110, 145, 221)', // #6e91dd
   },
 };
 
