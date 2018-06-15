@@ -13,6 +13,7 @@ import Image from 'react-native-scalable-image';
 import { db } from '../../../../config/firebase';
 import CustomButton from '../../../components/CustomButton';
 import Icon from '../../../components/Icon';
+import recipeScreenImageMap from '../../../utils/recipeScreenImageMap';
 import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
 
@@ -53,7 +54,7 @@ export default class RecipeScreen extends React.PureComponent {
     }));
   }
   renderItem = ({ item, index }) => {
-    const { steps } = this.state;
+    const { steps, recipe } = this.state;
     return (
       <View style={styles.carouselCard}>
         <View style={styles.carouselHeaderContainer}>
@@ -98,7 +99,7 @@ export default class RecipeScreen extends React.PureComponent {
             }
           </View>
           <Image
-            source={require('../../../../assets/images/recipes/baked-eggs-1024x768.png')}
+            source={recipeScreenImageMap[`${recipe.id}${index + 1}`]}
             width={width - 52}
           />
         </View>
@@ -149,7 +150,8 @@ export default class RecipeScreen extends React.PureComponent {
       <View style={styles.container}>
         <ScrollView>
           <Image
-            source={require('../../../../assets/images/recipes/baked-eggs-1024x768.png')}
+            // source={require('../../../../assets/images/recipes/baked-eggs-1024x768.png')}
+            source={recipeScreenImageMap[recipe.id]}
             width={width}
           />
           <View style={styles.recipeInfoContainer}>

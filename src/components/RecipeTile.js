@@ -2,6 +2,7 @@ import React from 'react';
 import { Dimensions, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Card } from 'react-native-elements';
 import PropTypes from 'prop-types';
+import recipeTileImageMap from '../utils/recipeTileImageMap';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 
@@ -11,14 +12,14 @@ const RecipeTile = ({
   onPress,
   title,
   subTitle,
-  // imageSource,
+  image,
 }) => (
   <TouchableOpacity
     onPress={onPress}
     style={styles.cardContainer}
   >
     <Card
-      image={require('../../assets/images/recipes/baked-eggs-1024x768.png')}
+      image={recipeTileImageMap[image]}
       containerStyle={styles.card}
     >
       <Text style={styles.title}>
@@ -35,10 +36,7 @@ RecipeTile.propTypes = {
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   subTitle: PropTypes.string.isRequired,
-  // imageSource: PropTypes.string.isRequired,
-};
-
-RecipeTile.defaultProps = {
+  image: PropTypes.string.isRequired,
 };
 
 const styles = StyleSheet.create({
