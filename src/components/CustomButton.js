@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     ...common.button.outlineDisabled,
   },
   secondaryOutlineText: {
-    color: colors.violet.standard,
+    color: colors.violet.dark,
     ...common.button.text,
   },
   green: {

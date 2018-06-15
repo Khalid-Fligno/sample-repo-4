@@ -15,11 +15,58 @@ export default class NutritionHomeScreen extends React.PureComponent {
         <Text>
           NutritionHomeScreen
         </Text>
-        <CustomButton
-          primary
-          title="Breakfast"
-          onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
-        />
+        <View
+          style={{
+            marginTop: 10,
+            marginBottom: 10,
+          }}
+        >
+          <CustomButton
+            secondary
+            outline
+            title="BREAKFAST"
+            onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
+          />
+        </View>
+        <View
+          style={{
+            marginTop: 10,
+            marginBottom: 10,
+          }}
+        >
+          <CustomButton
+            secondary
+            outline
+            title="LUNCH"
+            onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'lunch' })}
+          />
+        </View>
+        <View
+          style={{
+            marginTop: 10,
+            marginBottom: 10,
+          }}
+        >
+          <CustomButton
+            secondary
+            outline
+            title="DINNER"
+            onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'dinner' })}
+          />
+        </View>
+        <View
+          style={{
+            marginTop: 10,
+            marginBottom: 10,
+          }}
+        >
+          <CustomButton
+            secondary
+            outline
+            title="SNACK"
+            onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'snack' })}
+          />
+        </View>
       </View>
     );
   }
@@ -30,6 +77,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
-    justifyContent: 'center',
   },
 });

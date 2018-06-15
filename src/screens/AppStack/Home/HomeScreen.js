@@ -33,7 +33,7 @@ export default class HomeScreen extends React.PureComponent {
               fontSize: 24,
             }}
           >
-            Workouts
+            Home
           </Text>
           {/* <ScrollView
             contentContainerStyle={{

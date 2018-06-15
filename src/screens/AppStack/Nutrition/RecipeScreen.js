@@ -7,12 +7,13 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
+import { Divider } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
 import Image from 'react-native-scalable-image';
 import { db } from '../../../../config/firebase';
 import CustomButton from '../../../components/CustomButton';
 import Icon from '../../../components/Icon';
+import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
 
 const { width } = Dimensions.get('window');
@@ -63,12 +64,12 @@ export default class RecipeScreen extends React.PureComponent {
             >
               <Icon
                 name="cross"
-                size={14}
-                color={colors.white}
+                size={16}
+                color={colors.violet.standard}
               />
             </TouchableOpacity>
             <Text style={styles.carouselHeaderText}>
-              Step {index + 1} of {steps.length}
+              STEP {index + 1} OF {steps.length}
             </Text>
             {
               index + 1 === steps.length ? (
@@ -78,8 +79,8 @@ export default class RecipeScreen extends React.PureComponent {
                 >
                   <Icon
                     name="tick"
-                    size={18}
-                    color={colors.white}
+                    size={22}
+                    color={colors.violet.standard}
                   />
                 </TouchableOpacity>
               ) : (
@@ -89,8 +90,8 @@ export default class RecipeScreen extends React.PureComponent {
                 >
                   <Icon
                     name="arrow-right"
-                    size={18}
-                    color={colors.white}
+                    size={20}
+                    color={colors.violet.standard}
                   />
                 </TouchableOpacity>
               )
@@ -98,7 +99,7 @@ export default class RecipeScreen extends React.PureComponent {
           </View>
           <Image
             source={require('../../../../assets/images/recipes/baked-eggs-1024x768.png')}
-            width={width - 50}
+            width={width - 52}
           />
         </View>
         <View style={styles.carouselTextContainer}>
@@ -120,14 +121,10 @@ export default class RecipeScreen extends React.PureComponent {
     } = this.state;
     if (loading) {
       return (
-        <View style={{ flex: 1 }}>
-          <Spinner
-            visible={loading}
-            textStyle={{ color: '#FFFFFF' }}
-            animation="fade"
-            size="small"
-          />
-        </View>
+        <Loader
+          loading={loading}
+          color={colors.violet.dark}
+        />
       );
     }
     if (started) {
@@ -156,13 +153,16 @@ export default class RecipeScreen extends React.PureComponent {
             width={width}
           />
           <View style={styles.recipeInfoContainer}>
-            <Text style={styles.recipeHeading}>
-              {recipe.displayName}
+            <Text style={styles.recipeTitle}>
+              {recipe.title}
             </Text>
+            <Text style={styles.recipeSubTitle}>
+              {recipe.subTitle}
+            </Text>
+            <Divider style={styles.divider} />
             <Text style={styles.recipeSummaryText}>
               {recipe.summary}
             </Text>
-
             <View style={styles.ingredientsContainer}>
               <Text style={styles.ingredientsHeading} >
                 Ingredients
@@ -186,8 +186,9 @@ export default class RecipeScreen extends React.PureComponent {
           style={styles.startButtonContainer}
         >
           <CustomButton
-            green
-            title="Start Cooking"
+            secondary
+            // outline
+            title="START COOKING"
             onPress={this.toggleRecipeStart}
           />
         </View>
@@ -209,60 +210,77 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderRadius: 5,
     backgroundColor: colors.white,
-    shadowColor: colors.black,
+    shadowColor: colors.violet.dark,
     shadowOpacity: 0.4,
     shadowOffset: { width: 0, height: 5 },
     shadowRadius: 5,
+    borderWidth: 1,
+    borderColor: colors.violet.dark,
   },
   carouselHeaderContainer: {
-    backgroundColor: colors.charcoal.dark,
+    backgroundColor: colors.white,
     borderRadius: 5,
   },
   carouselHeaderContentContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.violet.dark,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
   },
   carouselHeaderText: {
     fontFamily: 'GothamBold',
     fontSize: 16,
-    color: colors.white,
+    color: colors.violet.standard,
     marginTop: 3,
   },
   carouselHeaderButton: {
-    width: 40,
-    height: 40,
+    width: 45,
+    height: 45,
     justifyContent: 'center',
     alignItems: 'center',
   },
   carouselTextContainer: {
     flex: 1,
-    padding: 15,
+    paddingTop: 15,
+    paddingRight: 10,
+    paddingBottom: 15,
+    paddingLeft: 15,
   },
   carouselText: {
     fontFamily: 'GothamBook',
     fontSize: 14,
     color: colors.charcoal.standard,
-    marginBottom: 40,
   },
-  recipeHeading: {
+  recipeTitle: {
     fontFamily: 'GothamBold',
     fontSize: 28,
     color: colors.charcoal.standard,
-    marginBottom: 10,
+  },
+  recipeSubTitle: {
+    fontFamily: 'GothamBook',
+    fontSize: 16,
+    color: colors.charcoal.standard,
+    marginBottom: 15,
+  },
+  divider: {
+    backgroundColor: colors.grey.light,
   },
   recipeSummaryText: {
     fontFamily: 'GothamBook',
     fontSize: 14,
     color: colors.charcoal.standard,
+    marginTop: 15,
   },
   recipeInfoContainer: {
     padding: 15,
   },
   ingredientsContainer: {
     padding: 15,
-    borderWidth: 2,
-    borderColor: colors.charcoal.standard,
+    borderWidth: 1,
+    borderColor: colors.grey.light,
     borderRadius: 10,
     marginTop: 15,
   },
