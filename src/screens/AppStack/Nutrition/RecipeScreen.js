@@ -243,6 +243,10 @@ const styles = StyleSheet.create({
     height: 45,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: colors.violet.dark,
+    shadowOpacity: 0.4,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 1,
   },
   carouselTextContainer: {
     flex: 1,
