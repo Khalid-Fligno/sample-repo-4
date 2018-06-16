@@ -2,13 +2,9 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  // ScrollView,
   Text,
-  // TouchableOpacity
 } from 'react-native';
-// import Tile from '../../../components/Tile';
 import colors from '../../../styles/colors';
-// import Icon from '../../../components/Icon';
 
 export default class HomeScreen extends React.PureComponent {
   constructor(props) {
@@ -35,27 +31,6 @@ export default class HomeScreen extends React.PureComponent {
           >
             Home
           </Text>
-          {/* <ScrollView
-            contentContainerStyle={{
-              height: 160,
-              padding: 10,
-            }}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          >
-            <Tile
-              imageSrc={require('../../../../assets/images/yazzy.png')}
-              title="FitYaz Core"
-            />
-            <Tile
-              imageSrc={require('../../../../assets/images/yazzy2.png')}
-              title="FitYaz Core"
-            />
-            <Tile
-              imageSrc={require('../../../../assets/images/yazzy3.png')}
-              title="FitYaz Core"
-            />
-          </ScrollView> */}
         </View>
       </View>
     );
