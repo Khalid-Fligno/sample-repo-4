@@ -10,18 +10,21 @@ export default class SignInScreen extends React.PureComponent {
     this.state = {
     };
   }
-  logIn = async () => {
+  loginWithFacebook = async () => {
+    const firebase = require('firebase');
+    const auth = firebase.auth();
     const { type, token } = await Facebook.logInWithReadPermissionsAsync('1825444707513470', {
       permissions: ['public_profile', 'email'],
     });
     if (type === 'success') {
-      this.props.navigation.navigate('App');
-      // Get the user's name using Facebook's Graph API
-      const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-      Alert.alert(
-        'Logged in!',
-        `Hi ${(await response.json()).name}!`,
-      );
+      const credential = firebase.auth.FacebookAuthProvider.credential(token);
+      auth.signInAndRetrieveDataWithCredential(credential)
+        .then(() => {
+          this.props.navigation.navigate('App');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }
   render() {
@@ -32,7 +35,7 @@ export default class SignInScreen extends React.PureComponent {
         <Text>SignInScreen</Text>
 
         <CustomButton
-          onPress={() => this.logIn()}
+          onPress={() => this.loginWithFacebook()}
           title="Sign in with Facebook"
           primary
         />
