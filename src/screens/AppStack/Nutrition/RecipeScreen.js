@@ -38,8 +38,7 @@ export default class RecipeScreen extends React.PureComponent {
     const recipeName = this.props.navigation.getParam('recipeName', null);
     db.collection('recipes')
       .doc(recipeName)
-      .get()
-      .then((doc) => {
+      .onSnapshot((doc) => {
         this.setState({
           recipe: doc.data(),
           ingredients: doc.data().ingredients,
@@ -150,7 +149,6 @@ export default class RecipeScreen extends React.PureComponent {
       <View style={styles.container}>
         <ScrollView>
           <Image
-            // source={require('../../../../assets/images/recipes/baked-eggs-1024x768.png')}
             source={recipeScreenImageMap[recipe.id]}
             width={width}
           />

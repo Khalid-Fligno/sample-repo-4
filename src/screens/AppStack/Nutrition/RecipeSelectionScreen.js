@@ -31,8 +31,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     const meal = this.props.navigation.getParam('meal', null);
     db.collection('recipes')
       .where('meal', '==', meal)
-      .get()
-      .then((querySnapshot) => {
+      .onSnapshot((querySnapshot) => {
         const recipes = [];
         querySnapshot.forEach((doc) => {
           recipes.push(doc.data());
