@@ -15,11 +15,11 @@ import colors from '../src/styles/colors';
 import fonts from '../src/styles/fonts';
 
 const tabColorMap = {
-  Home: colors.blue.standard,
+  Home: colors.charcoal.standard,
   Nutrition: colors.violet.standard,
   Workouts: colors.coral.standard,
   Calendar: colors.green.standard,
-  Profile: colors.charcoal.standard,
+  Profile: colors.blue.standard,
 };
 
 const nutritionBackButtonMap = {
@@ -47,7 +47,7 @@ const HomeStack = createStackNavigator(
   {
     initialRouteName: 'HomeHome',
     navigationOptions: {
-      header: <Header stack="home" />,
+      header: <Header />,
     },
   },
 );
@@ -106,7 +106,7 @@ const ProfileStack = createStackNavigator(
   {
     initialRouteName: 'ProfileHome',
     navigationOptions: {
-      header: <Header />,
+      header: <Header stack="profile" />,
     },
   },
 );

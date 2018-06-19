@@ -26,10 +26,10 @@ const Header = ({
     <View
       style={[
         styles.defaultHeader,
-        stack === 'home' && styles.homeHeader,
         stack === 'nutrition' && styles.nutritionHeader,
         stack === 'workouts' && styles.workoutsHeader,
         stack === 'calendar' && styles.calendarHeader,
+        stack === 'profile' && styles.profileHeader,
       ]}
     >
       <TouchableOpacity
@@ -89,12 +89,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.charcoal.dark,
   },
-  homeHeader: {
-    ...headerContainer,
-    backgroundColor: colors.blue.standard,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.blue.dark,
-  },
   nutritionHeader: {
     ...headerContainer,
     backgroundColor: colors.violet.standard,
@@ -112,6 +106,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.green.standard,
     borderBottomWidth: 1,
     borderBottomColor: colors.green.dark,
+  },
+  profileHeader: {
+    ...headerContainer,
+    backgroundColor: colors.blue.standard,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.blue.dark,
   },
   headerContentContainer: {
     width: 50,
