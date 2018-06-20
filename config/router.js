@@ -3,7 +3,9 @@ import { createSwitchNavigator, createStackNavigator, createBottomTabNavigator }
 import Icon from '../src//components/Icon';
 import Header from '../src/components/Header';
 import AuthLoadingScreen from '../src/screens/AuthLoadingScreen';
-import SignInScreen from '../src/screens/AuthStack/SignInScreen';
+import LandingScreen from '../src/screens/AuthStack/LandingScreen';
+import LoginScreen from '../src/screens/AuthStack/LoginScreen';
+import SignupScreen from '../src/screens/AuthStack/SignupScreen';
 import HomeScreen from '../src/screens/AppStack/Home/HomeScreen';
 import NutritionHomeScreen from '../src/screens/AppStack/Nutrition/NutritionHomeScreen';
 import RecipeSelectionScreen from '../src/screens/AppStack/Nutrition/RecipeSelectionScreen';
@@ -30,13 +32,27 @@ const nutritionBackButtonMap = {
 
 const AuthStack = createStackNavigator(
   {
-    SignIn: SignInScreen,
+    Landing: {
+      screen: LandingScreen,
+      navigationOptions: {
+        header: <Header />,
+      },
+    },
+    Signup: {
+      screen: SignupScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header navigation={navigation} withBackButton />,
+      }),
+    },
+    Login: {
+      screen: LoginScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header navigation={navigation} withBackButton />,
+      }),
+    },
   },
   {
-    initialRouteName: 'SignIn',
-    navigationOptions: {
-      header: <Header />,
-    },
+    initialRouteName: 'Landing',
   },
 );
 
