@@ -32,27 +32,16 @@ const nutritionBackButtonMap = {
 
 const AuthStack = createStackNavigator(
   {
-    Landing: {
-      screen: LandingScreen,
-      navigationOptions: {
-        header: <Header />,
-      },
-    },
-    Signup: {
-      screen: SignupScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header navigation={navigation} withBackButton />,
-      }),
-    },
-    Login: {
-      screen: LoginScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header navigation={navigation} withBackButton />,
-      }),
-    },
+    Landing: LandingScreen,
+    Signup: SignupScreen,
+    Login: LoginScreen,
   },
   {
     initialRouteName: 'Landing',
+    mode: 'modal',
+    navigationOptions: {
+      header: null,
+    },
   },
 );
 
