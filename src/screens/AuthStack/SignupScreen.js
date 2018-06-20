@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, TouchableOpacity, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { Button, Divider } from 'react-native-elements';
 import { Facebook } from 'expo';
 import { db } from '../../../config/firebase';
+import Icon from '../../components/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
@@ -58,91 +60,119 @@ export default class SignupScreen extends React.PureComponent {
   }
   render() {
     return (
-      <View
-        style={styles.container}
-      >
-        <Button
-          onPress={() => this.signupWithFacebook()}
-          title="Register with Facebook"
-          textStyle={{
-            marginTop: 4,
-            fontFamily: fonts.bold,
-            fontSize: 15,
-          }}
-          buttonStyle={{
-            backgroundColor: 'rgb(59,89,152)',
-            height: 50,
-            width: width - 30,
-            borderRadius: 4,
-          }}
-          containerViewStyle={{
-            marginBottom: 7,
-            shadowColor: colors.charcoal.dark,
-            shadowOpacity: 0.5,
-            shadowOffset: { width: 0, height: 2 },
-            shadowRadius: 3,
-          }}
-        />
-        <Divider
-          style={{
-            backgroundColor: colors.grey.light,
-            width: width - 30,
-            marginTop: 15,
-            marginBottom: 15,
-          }}
-        />
-        <View
-          style={{
-            height: 30,
-            marginTop: -30,
-            paddingTop: 8,
-            paddingLeft: 20,
-            paddingRight: 20,
-            backgroundColor: colors.white,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: fonts.bold,
-              fontSize: 14,
-              color: colors.grey.dark,
-            }}
-          >
-            OR
-          </Text>
+      <SafeAreaView style={styles.safeAreaContainer}>
+        <View style={styles.container}>
+          <StatusBar barStyle="light-content" />
+          <View style={styles.closeIconContainer}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.goBack()}
+              style={styles.closeIconButton}
+            >
+              <Icon
+                name="cross"
+                color={colors.charcoal.standard}
+                size={22}
+              />
+            </TouchableOpacity>
+          </View>
+          <Button
+            title="Register with Facebook"
+            onPress={() => this.signupWithFacebook()}
+            containerViewStyle={styles.facebookLoginButtonContainer}
+            buttonStyle={styles.facebookLoginButton}
+            textStyle={styles.facebookLoginButtonText}
+          />
+          <Divider style={styles.divider} />
+          <View style={styles.dividerOverlay}>
+            <Text style={styles.dividerOverlayText}>
+              OR
+            </Text>
+          </View>
+          <Button
+            title="Create Account"
+            onPress={() => this.signup()}
+            containerViewStyle={styles.loginButtonContainer}
+            buttonStyle={styles.loginButton}
+            textStyle={styles.loginButtonText}
+          />
         </View>
-        <Button
-          onPress={() => this.signup()}
-          title="Create Account"
-          textStyle={{
-            marginTop: 4,
-            fontFamily: fonts.bold,
-            fontSize: 15,
-          }}
-          buttonStyle={{
-            backgroundColor: colors.coral.standard,
-            height: 50,
-            width: width - 30,
-            borderRadius: 4,
-          }}
-          containerViewStyle={{
-            marginTop: 7,
-            shadowColor: colors.charcoal.dark,
-            shadowOpacity: 0.5,
-            shadowOffset: { width: 0, height: 2 },
-            shadowRadius: 3,
-          }}
-        />
-      </View>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+    backgroundColor: colors.black,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
-    paddingTop: 15,
+  },
+  closeIconContainer: {
+    alignItems: 'flex-end',
+    width,
+  },
+  closeIconButton: {
+    padding: 15,
+    paddingLeft: 20,
+    paddingBottom: 20,
+  },
+  facebookLoginButtonContainer: {
+    marginBottom: 7,
+    shadowColor: colors.charcoal.dark,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+  },
+  facebookLoginButton: {
+    backgroundColor: 'rgb(59,89,152)',
+    height: 50,
+    width: width - 30,
+    borderRadius: 4,
+  },
+  facebookLoginButtonText: {
+    marginTop: 4,
+    fontFamily: fonts.bold,
+    fontSize: 15,
+  },
+  divider: {
+    backgroundColor: colors.grey.light,
+    width: width - 30,
+    marginTop: 15,
+    marginBottom: 15,
+  },
+  dividerOverlay: {
+    height: 30,
+    marginTop: -30,
+    paddingTop: 8,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: colors.white,
+  },
+  dividerOverlayText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.grey.dark,
+  },
+  loginButtonContainer: {
+    marginTop: 7,
+    shadowColor: colors.charcoal.dark,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+  },
+  loginButton: {
+    backgroundColor: colors.coral.standard,
+    height: 50,
+    width: width - 30,
+    borderRadius: 4,
+  },
+  loginButtonText: {
+    marginTop: 4,
+    fontFamily: fonts.bold,
+    fontSize: 15,
   },
 });

@@ -20,6 +20,8 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/icons/fitazfk-splash-dark.png'),
       require('../../assets/icons/fitazfk-icon-solid-white.png'),
       require('../../assets/images/recipes/baked-eggs-1024x768.png'),
+      require('../../assets/images/landing-screen-carousel-1.png'),
+      require('../../assets/images/landing-screen-carousel-2.png'),
     ]);
     const fontAssets = cacheFonts([
       {
