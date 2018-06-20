@@ -34,7 +34,7 @@ const Header = ({
     >
       <TouchableOpacity
         style={styles.headerContentContainer}
-        onPress={() => navigation.goBack()}
+        onPress={() => withBackButton && navigation.goBack()}
       >
         {
           withBackButton &&
