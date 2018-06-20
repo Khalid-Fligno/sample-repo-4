@@ -38,7 +38,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
     await Promise.all([...imageAssets, ...fontAssets]);
   }
   cachingComplete = async () => {
-    this.props.navigation.navigate('App');
+    this.props.navigation.navigate('Auth');
   }
   render() {
     return (
