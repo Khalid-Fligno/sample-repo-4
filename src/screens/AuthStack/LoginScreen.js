@@ -22,12 +22,11 @@ export default class LoginScreen extends React.PureComponent {
       });
       if (type === 'success') {
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        auth.signInAndRetrieveDataWithCredential(credential)
+        auth.signInAndRetrieveDataWithCredential(credential);
+        this.props.navigation.navigate('App');
       }
     } catch (err) {
       console.log(err);
-    } finally {
-      this.props.navigation.navigate('App');
     }
   }
   render() {
@@ -37,12 +36,24 @@ export default class LoginScreen extends React.PureComponent {
       >
         <Button
           onPress={() => this.loginWithFacebook()}
-          title="Login with Facebook"
+          title="Log In with Facebook"
+          textStyle={{
+            marginTop: 4,
+            fontFamily: fonts.bold,
+            fontSize: 15,
+          }}
           buttonStyle={{
             backgroundColor: 'rgb(59,89,152)',
             height: 50,
             width: width - 30,
             borderRadius: 4,
+          }}
+          containerViewStyle={{
+            marginBottom: 7,
+            shadowColor: colors.charcoal.dark,
+            shadowOpacity: 0.5,
+            shadowOffset: { width: 0, height: 2 },
+            shadowRadius: 3,
           }}
         />
         <Divider
@@ -65,7 +76,7 @@ export default class LoginScreen extends React.PureComponent {
         >
           <Text
             style={{
-              fontFamily: fonts.book,
+              fontFamily: fonts.bold,
               fontSize: 14,
               color: colors.grey.dark,
             }}
@@ -75,12 +86,25 @@ export default class LoginScreen extends React.PureComponent {
         </View>
         <Button
           onPress={() => this.signup()}
-          title="Create Account"
+          title="Log In"
+          fontFamily={fonts.bold}
+          textStyle={{
+            marginTop: 4,
+            fontFamily: fonts.bold,
+            fontSize: 15,
+          }}
           buttonStyle={{
-            backgroundColor: colors.charcoal.standard,
+            backgroundColor: colors.coral.standard,
             height: 50,
             width: width - 30,
             borderRadius: 4,
+          }}
+          containerViewStyle={{
+            marginTop: 7,
+            shadowColor: colors.charcoal.dark,
+            shadowOpacity: 0.5,
+            shadowOffset: { width: 0, height: 2 },
+            shadowRadius: 3,
           }}
         />
       </View>

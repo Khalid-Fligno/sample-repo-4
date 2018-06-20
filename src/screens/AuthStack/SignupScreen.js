@@ -49,13 +49,11 @@ export default class SignupScreen extends React.PureComponent {
         email,
       };
       await db.collection('users').doc(uid).set(data);
+      this.props.navigation.navigate('App');
     } catch (err) {
       console.log(err);
       // const errorCode = error.code;
       // const errorMessage = error.message;
-    } finally {
-      console.log('Saved');
-      this.props.navigation.navigate('App');
     }
   }
   render() {
@@ -66,11 +64,23 @@ export default class SignupScreen extends React.PureComponent {
         <Button
           onPress={() => this.signupWithFacebook()}
           title="Register with Facebook"
+          textStyle={{
+            marginTop: 4,
+            fontFamily: fonts.bold,
+            fontSize: 15,
+          }}
           buttonStyle={{
             backgroundColor: 'rgb(59,89,152)',
             height: 50,
             width: width - 30,
             borderRadius: 4,
+          }}
+          containerViewStyle={{
+            marginBottom: 7,
+            shadowColor: colors.charcoal.dark,
+            shadowOpacity: 0.5,
+            shadowOffset: { width: 0, height: 2 },
+            shadowRadius: 3,
           }}
         />
         <Divider
@@ -93,7 +103,7 @@ export default class SignupScreen extends React.PureComponent {
         >
           <Text
             style={{
-              fontFamily: fonts.book,
+              fontFamily: fonts.bold,
               fontSize: 14,
               color: colors.grey.dark,
             }}
@@ -104,11 +114,23 @@ export default class SignupScreen extends React.PureComponent {
         <Button
           onPress={() => this.signup()}
           title="Create Account"
+          textStyle={{
+            marginTop: 4,
+            fontFamily: fonts.bold,
+            fontSize: 15,
+          }}
           buttonStyle={{
-            backgroundColor: colors.charcoal.standard,
+            backgroundColor: colors.coral.standard,
             height: 50,
             width: width - 30,
             borderRadius: 4,
+          }}
+          containerViewStyle={{
+            marginTop: 7,
+            shadowColor: colors.charcoal.dark,
+            shadowOpacity: 0.5,
+            shadowOffset: { width: 0, height: 2 },
+            shadowRadius: 3,
           }}
         />
       </View>
