@@ -8,13 +8,14 @@ import colors from '../styles/colors';
 const Loader = ({
   loading,
   color,
+  overlayColor,
 }) => (
   <View style={styles.loaderContainer}>
     <Spinner
       visible={loading}
       animation="fade"
       size="small"
-      overlayColor="rgba(0, 0, 0, 0)"
+      overlayColor={overlayColor}
     >
       <DotIndicator
         color={color}
@@ -28,10 +29,16 @@ const Loader = ({
 Loader.propTypes = {
   loading: PropTypes.bool.isRequired,
   color: PropTypes.string.isRequired,
+  overlayColor: PropTypes.string,
+};
+
+Loader.defaultProps = {
+  overlayColor: 'rgba(0, 0, 0, 0.3)',
 };
 
 const styles = StyleSheet.create({
   loaderContainer: {
+    position: 'absolute',
     flex: 1,
     backgroundColor: colors.white,
   },
