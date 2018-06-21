@@ -1,11 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
-import { Button, Divider } from 'react-native-elements';
+import { SafeAreaView, StackActions, NavigationActions } from 'react-navigation';
+import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
 import { Facebook } from 'expo';
+import Loader from '../../components/Loader';
 import Icon from '../../components/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import errors from '../../utils/errors';
 
 const { width } = Dimensions.get('window');
 
@@ -13,6 +15,10 @@ export default class LoginScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      email: '',
+      password: '',
+      error: null,
+      loading: false,
     };
   }
   loginWithFacebook = async () => {
@@ -23,15 +29,48 @@ export default class LoginScreen extends React.PureComponent {
         permissions: ['public_profile', 'email'],
       });
       if (type === 'success') {
+        this.setState({ loading: true });
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
         auth.signInAndRetrieveDataWithCredential(credential);
+        this.setState({ loading: false });
         this.props.navigation.navigate('App');
       }
     } catch (err) {
       console.log(err);
+      this.setState({ error: 'Something went wrong', loading: false });
     }
   }
+  login = async (email, password) => {
+    this.setState({ loading: true });
+    const firebase = require('firebase');
+    try {
+      const response = await firebase.auth().signInWithEmailAndPassword(email, password);
+      if (response) {
+        this.setState({ loading: false });
+        this.props.navigation.navigate('App');
+      }
+    } catch (err) {
+      const errorCode = err.code;
+      this.setState({ error: errors.login[errorCode], loading: false });
+    }
+  }
+  navigateToSignup = () => {
+    const resetAction = StackActions.reset({
+      index: 1,
+      actions: [
+        NavigationActions.navigate({ routeName: 'Landing' }),
+        NavigationActions.navigate({ routeName: 'Signup' }),
+      ],
+    });
+    this.props.navigation.dispatch(resetAction);
+  }
   render() {
+    const {
+      email,
+      password,
+      error,
+      loading,
+    } = this.state;
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
         <View style={styles.container}>
@@ -44,7 +83,7 @@ export default class LoginScreen extends React.PureComponent {
               <Icon
                 name="cross"
                 color={colors.charcoal.standard}
-                size={25}
+                size={22}
               />
             </TouchableOpacity>
           </View>
@@ -61,14 +100,65 @@ export default class LoginScreen extends React.PureComponent {
               OR
             </Text>
           </View>
+          <FormInput
+            placeholder="Email"
+            value={email}
+            returnKeyType="next"
+            keyboardType="email-address"
+            autoCorrect={false}
+            autoCapitalize="none"
+            onChangeText={(text) => this.setState({ email: text })}
+            onSubmitEditing={() => this.passwordInput.focus()}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+          />
+          <FormInput
+            placeholder="Password"
+            value={password}
+            returnKeyType="go"
+            autoCorrect={false}
+            autoCapitalize="none"
+            onChangeText={(text) => this.setState({ password: text })}
+            secureTextEntry
+            ref={(input) => {
+              this.passwordInput = input;
+            }}
+            onSubmitEditing={() => this.login(this.state.email, this.state.password)}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+          />
+          {
+            error && (
+              <View style={{ marginBottom: 10 }}>
+                <FormValidationMessage>
+                  {error}
+                </FormValidationMessage>
+              </View>
+            )
+          }
           <Button
             title="Log In"
-            onPress={() => this.signup()}
+            onPress={() => this.login(this.state.email, this.state.password)}
             containerViewStyle={styles.loginButtonContainer}
             buttonStyle={styles.loginButton}
             textStyle={styles.loginButtonText}
             fontFamily={fonts.bold}
           />
+          <Text
+            onPress={() => this.navigateToSignup()}
+            style={styles.navigateToSignup}
+          >
+            Don't have an account? Sign up here
+          </Text>
+          {
+            loading && (
+              <Loader
+                loading={loading}
+                color={colors.black}
+                overlayColor="rgba(0, 0, 0, 0.3)'"
+              />
+            )
+          }
         </View>
       </SafeAreaView>
     );
@@ -119,7 +209,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   dividerOverlay: {
-    height: 30,
+    height: 26,
     marginTop: -30,
     paddingTop: 8,
     paddingLeft: 20,
@@ -130,6 +220,20 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 14,
     color: colors.grey.dark,
+  },
+  inputContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+    borderBottomWidth: 0,
+  },
+  input: {
+    width: width - 30,
+    padding: 12,
+    fontFamily: fonts.bold,
+    color: colors.charcoal.standard,
+    borderWidth: 1,
+    borderColor: colors.grey.standard,
+    borderRadius: 4,
   },
   loginButtonContainer: {
     marginTop: 7,
@@ -148,5 +252,16 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontFamily: fonts.bold,
     fontSize: 15,
+  },
+  navigateToSignup: {
+    width: width - 30,
+    marginTop: 10,
+    paddingTop: 15,
+    paddingBottom: 15,
+    textAlign: 'center',
+    color: colors.grey.dark,
+    textDecorationStyle: 'solid',
+    textDecorationColor: colors.grey.dark,
+    textDecorationLine: 'underline',
   },
 });
