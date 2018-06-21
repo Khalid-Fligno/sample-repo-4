@@ -1,12 +1,21 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity, StatusBar } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
-import { Button, Divider } from 'react-native-elements';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  StatusBar,
+} from 'react-native';
+import { SafeAreaView, StackActions, NavigationActions } from 'react-navigation';
+import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
 import { Facebook } from 'expo';
 import { db } from '../../../config/firebase';
+import Loader from '../../components/Loader';
 import Icon from '../../components/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import errors from '../../utils/errors';
 
 const { width } = Dimensions.get('window');
 
@@ -14,6 +23,12 @@ export default class SignupScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      error: null,
+      loading: false,
     };
   }
   signupWithFacebook = async () => {
@@ -26,39 +41,64 @@ export default class SignupScreen extends React.PureComponent {
       if (type === 'success') {
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
         const { user, additionalUserInfo } = await auth.signInAndRetrieveDataWithCredential(credential);
-        const { uid } = user;
-        const { email } = additionalUserInfo.profile;
-        // console.log(additionalUserInfo.profile.first_name);
+        const { profile } = additionalUserInfo;
         const data = {
-          id: uid,
-          email,
+          id: user.uid,
+          email: profile.email,
+          firstName: profile.first_name,
+          lastName: profile.last_name,
         };
-        await db.collection('users').doc(uid).set(data);
+        await db.collection('users').doc(user.uid).set(data);
+        this.props.navigation.navigate('App');
       }
     } catch (err) {
       console.log(err);
-    } finally {
-      this.props.navigation.navigate('App');
+      this.setState({ error: 'Something went wrong', loading: false });
     }
   }
-  signup = async () => {
+  signup = async (firstName, lastName, email, password) => {
+    this.setState({ loading: true });
+    if (!firstName || !lastName) {
+      this.setState({ error: 'Please complete all fields', loading: false });
+      return;
+    }
     const firebase = require('firebase');
     try {
-      const response = await firebase.auth().createUserWithEmailAndPassword('caleb@fitazfk.com', 'password');
-      const { uid, email } = response.user;
+      const response = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      const { uid } = response.user;
       const data = {
         id: uid,
+        firstName,
+        lastName,
         email,
       };
       await db.collection('users').doc(uid).set(data);
+      this.setState({ loading: false });
       this.props.navigation.navigate('App');
     } catch (err) {
-      console.log(err);
-      // const errorCode = error.code;
-      // const errorMessage = error.message;
+      const errorCode = err.code;
+      this.setState({ error: errors.createUser[errorCode], loading: false });
     }
   }
+  navigateToLogin = () => {
+    const resetAction = StackActions.reset({
+      index: 1,
+      actions: [
+        NavigationActions.navigate({ routeName: 'Landing' }),
+        NavigationActions.navigate({ routeName: 'Login' }),
+      ],
+    });
+    this.props.navigation.dispatch(resetAction);
+  }
   render() {
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      error,
+      loading,
+    } = this.state;
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
         <View style={styles.container}>
@@ -88,13 +128,90 @@ export default class SignupScreen extends React.PureComponent {
               OR
             </Text>
           </View>
+          <FormInput
+            placeholder="First Name"
+            value={firstName}
+            returnKeyType="next"
+            autoCorrect={false}
+            onChangeText={(text) => this.setState({ firstName: text })}
+            onSubmitEditing={() => this.lastNameInput.focus()}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+          />
+          <FormInput
+            placeholder="Last Name"
+            value={lastName}
+            returnKeyType="next"
+            autoCorrect={false}
+            onChangeText={(text) => this.setState({ lastName: text })}
+            ref={(input) => {
+              this.lastNameInput = input;
+            }}
+            onSubmitEditing={() => this.emailInput.focus()}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+          />
+          <FormInput
+            placeholder="Email"
+            value={email}
+            returnKeyType="next"
+            keyboardType="email-address"
+            autoCorrect={false}
+            autoCapitalize="none"
+            onChangeText={(text) => this.setState({ email: text })}
+            ref={(input) => {
+              this.emailInput = input;
+            }}
+            onSubmitEditing={() => this.passwordInput.focus()}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+          />
+          <FormInput
+            placeholder="Password"
+            value={password}
+            returnKeyType="go"
+            autoCorrect={false}
+            autoCapitalize="none"
+            onChangeText={(text) => this.setState({ password: text })}
+            secureTextEntry
+            ref={(input) => {
+              this.passwordInput = input;
+            }}
+            onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+          />
+          {
+            error && (
+              <View style={{ marginBottom: 10 }}>
+                <FormValidationMessage>
+                  {error}
+                </FormValidationMessage>
+              </View>
+            )
+          }
           <Button
             title="Create Account"
-            onPress={() => this.signup()}
+            onPress={() => this.signup(firstName, lastName, email, password)}
             containerViewStyle={styles.loginButtonContainer}
             buttonStyle={styles.loginButton}
             textStyle={styles.loginButtonText}
           />
+          <Text
+            onPress={() => this.navigateToLogin()}
+            style={styles.navigateToLogin}
+          >
+            Already signed up? Log in here
+          </Text>
+          {
+            loading && (
+              <Loader
+                loading={loading}
+                color={colors.black}
+                overlayColor="rgba(0, 0, 0, 0.3)'"
+              />
+            )
+          }
         </View>
       </SafeAreaView>
     );
@@ -145,7 +262,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   dividerOverlay: {
-    height: 30,
+    height: 26,
     marginTop: -30,
     paddingTop: 8,
     paddingLeft: 20,
@@ -156,6 +273,20 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 14,
     color: colors.grey.dark,
+  },
+  inputContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+    borderBottomWidth: 0,
+  },
+  input: {
+    width: width - 30,
+    padding: 12,
+    fontFamily: fonts.bold,
+    color: colors.charcoal.standard,
+    borderWidth: 1,
+    borderColor: colors.grey.standard,
+    borderRadius: 4,
   },
   loginButtonContainer: {
     marginTop: 7,
@@ -174,5 +305,16 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontFamily: fonts.bold,
     fontSize: 15,
+  },
+  navigateToLogin: {
+    width: width - 30,
+    marginTop: 10,
+    paddingTop: 15,
+    paddingBottom: 15,
+    textAlign: 'center',
+    color: colors.grey.dark,
+    textDecorationStyle: 'solid',
+    textDecorationColor: colors.grey.dark,
+    textDecorationLine: 'underline',
   },
 });
