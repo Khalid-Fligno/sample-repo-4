@@ -6,6 +6,7 @@ import AuthLoadingScreen from '../src/screens/AuthLoadingScreen';
 import LandingScreen from '../src/screens/AuthStack/LandingScreen';
 import LoginScreen from '../src/screens/AuthStack/LoginScreen';
 import SignupScreen from '../src/screens/AuthStack/SignupScreen';
+import OnboardingScreen from '../src/screens/AuthStack/OnboardingScreen';
 import HomeScreen from '../src/screens/AppStack/Home/HomeScreen';
 import NutritionHomeScreen from '../src/screens/AppStack/Nutrition/NutritionHomeScreen';
 import RecipeSelectionScreen from '../src/screens/AppStack/Nutrition/RecipeSelectionScreen';
@@ -35,6 +36,7 @@ const AuthStack = createStackNavigator(
     Landing: LandingScreen,
     Signup: SignupScreen,
     Login: LoginScreen,
+    Onboarding: OnboardingScreen,
   },
   {
     initialRouteName: 'Landing',
@@ -125,7 +127,7 @@ const AppStack = createBottomTabNavigator(
     Profile: ProfileStack,
   },
   {
-    initialRouteName: 'Nutrition',
+    initialRouteName: 'Home',
     navigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
