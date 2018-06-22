@@ -4,15 +4,25 @@ import {
   View,
   Text,
 } from 'react-native';
+import * as firebase from 'firebase';
 import colors from '../../../styles/colors';
 
 export default class HomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      user: null,
     };
   }
+  componentDidMount = async () => {
+    await firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({ user });
+      }
+    });
+  }
   render() {
+    const { user } = this.state;
     return (
       <View
         style={styles.container}
@@ -29,7 +39,8 @@ export default class HomeScreen extends React.PureComponent {
               fontSize: 24,
             }}
           >
-            Home
+            {user && user.email}
+            {user && user.uid}
           </Text>
         </View>
       </View>
