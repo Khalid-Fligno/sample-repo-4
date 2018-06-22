@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 import { SafeAreaView } from 'react-navigation';
 import colors from '../../styles/colors';
-import fonts from '../../styles/fonts';
+// import fonts from '../../styles/fonts';
 
 export default class OnboardingScreen extends React.PureComponent {
   constructor(props) {

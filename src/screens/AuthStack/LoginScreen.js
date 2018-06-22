@@ -148,7 +148,7 @@ export default class LoginScreen extends React.PureComponent {
             onPress={() => this.navigateToSignup()}
             style={styles.navigateToSignup}
           >
-            Don't have an account? Sign up here
+            {"Don't have an account? Sign up here"}
           </Text>
           {
             loading && (
