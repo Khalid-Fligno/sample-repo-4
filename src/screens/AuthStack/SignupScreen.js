@@ -49,7 +49,7 @@ export default class SignupScreen extends React.PureComponent {
           lastName: profile.last_name,
         };
         await db.collection('users').doc(user.uid).set(data);
-        this.props.navigation.navigate('App');
+        this.props.navigation.navigate('Onboarding');
       }
     } catch (err) {
       console.log(err);
@@ -74,7 +74,7 @@ export default class SignupScreen extends React.PureComponent {
       };
       await db.collection('users').doc(uid).set(data);
       this.setState({ loading: false });
-      this.props.navigation.navigate('App');
+      this.props.navigation.navigate('Onboarding');
     } catch (err) {
       const errorCode = err.code;
       this.setState({ error: errors.createUser[errorCode], loading: false });
