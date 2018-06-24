@@ -6,8 +6,10 @@ import {
   Dimensions,
   TouchableOpacity,
   StatusBar,
+  ScrollView,
+  SafeAreaView,
 } from 'react-native';
-import { SafeAreaView, StackActions, NavigationActions } from 'react-navigation';
+import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
 import { Facebook } from 'expo';
 import { db } from '../../../config/firebase';
@@ -100,118 +102,126 @@ export default class SignupScreen extends React.PureComponent {
       loading,
     } = this.state;
     return (
-      <SafeAreaView style={styles.safeAreaContainer}>
+      <SafeAreaView style={styles.safeAreaContainer} >
         <View style={styles.container}>
           <StatusBar barStyle="light-content" />
-          <View style={styles.closeIconContainer}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}
-              style={styles.closeIconButton}
-            >
-              <Icon
-                name="cross"
-                color={colors.charcoal.standard}
-                size={22}
-              />
-            </TouchableOpacity>
-          </View>
-          <Button
-            title="Register with Facebook"
-            onPress={() => this.signupWithFacebook()}
-            containerViewStyle={styles.facebookLoginButtonContainer}
-            buttonStyle={styles.facebookLoginButton}
-            textStyle={styles.facebookLoginButtonText}
-          />
-          <Divider style={styles.divider} />
-          <View style={styles.dividerOverlay}>
-            <Text style={styles.dividerOverlayText}>
-              OR
-            </Text>
-          </View>
-          <FormInput
-            placeholder="First Name"
-            value={firstName}
-            returnKeyType="next"
-            autoCorrect={false}
-            onChangeText={(text) => this.setState({ firstName: text })}
-            onSubmitEditing={() => this.lastNameInput.focus()}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-          />
-          <FormInput
-            placeholder="Last Name"
-            value={lastName}
-            returnKeyType="next"
-            autoCorrect={false}
-            onChangeText={(text) => this.setState({ lastName: text })}
-            ref={(input) => {
-              this.lastNameInput = input;
+          <ScrollView
+            contentContainerStyle={{
+              flex: 1,
+              alignItems: 'center',
+              width: width - 30,
             }}
-            onSubmitEditing={() => this.emailInput.focus()}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-          />
-          <FormInput
-            placeholder="Email"
-            value={email}
-            returnKeyType="next"
-            keyboardType="email-address"
-            autoCorrect={false}
-            autoCapitalize="none"
-            onChangeText={(text) => this.setState({ email: text })}
-            ref={(input) => {
-              this.emailInput = input;
-            }}
-            onSubmitEditing={() => this.passwordInput.focus()}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-          />
-          <FormInput
-            placeholder="Password"
-            value={password}
-            returnKeyType="go"
-            autoCorrect={false}
-            autoCapitalize="none"
-            onChangeText={(text) => this.setState({ password: text })}
-            secureTextEntry
-            ref={(input) => {
-              this.passwordInput = input;
-            }}
-            onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-          />
-          {
-            error && (
-              <View style={{ marginBottom: 10 }}>
-                <FormValidationMessage>
-                  {error}
-                </FormValidationMessage>
-              </View>
-            )
-          }
-          <Button
-            title="Create Account"
-            onPress={() => this.signup(firstName, lastName, email, password)}
-            containerViewStyle={styles.loginButtonContainer}
-            buttonStyle={styles.loginButton}
-            textStyle={styles.loginButtonText}
-          />
-          <Text
-            onPress={() => this.navigateToLogin()}
-            style={styles.navigateToLogin}
           >
-            Already signed up? Log in here
-          </Text>
-          {
-            loading && (
-              <Loader
-                loading={loading}
-                color={colors.black}
-                overlayColor="rgba(0, 0, 0, 0.3)'"
-              />
-            )
-          }
+            <View style={styles.closeIconContainer}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.goBack()}
+                style={styles.closeIconButton}
+              >
+                <Icon
+                  name="cross"
+                  color={colors.charcoal.standard}
+                  size={22}
+                />
+              </TouchableOpacity>
+            </View>
+            <Button
+              title="Register with Facebook"
+              onPress={() => this.signupWithFacebook()}
+              containerViewStyle={styles.facebookLoginButtonContainer}
+              buttonStyle={styles.facebookLoginButton}
+              textStyle={styles.facebookLoginButtonText}
+            />
+            <Divider style={styles.divider} />
+            <View style={styles.dividerOverlay}>
+              <Text style={styles.dividerOverlayText}>
+                OR
+              </Text>
+            </View>
+            <FormInput
+              placeholder="First Name"
+              value={firstName}
+              returnKeyType="next"
+              autoCorrect={false}
+              onChangeText={(text) => this.setState({ firstName: text })}
+              onSubmitEditing={() => this.lastNameInput.focus()}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+            />
+            <FormInput
+              placeholder="Last Name"
+              value={lastName}
+              returnKeyType="next"
+              autoCorrect={false}
+              onChangeText={(text) => this.setState({ lastName: text })}
+              ref={(input) => {
+                this.lastNameInput = input;
+              }}
+              onSubmitEditing={() => this.emailInput.focus()}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+            />
+            <FormInput
+              placeholder="Email"
+              value={email}
+              returnKeyType="next"
+              keyboardType="email-address"
+              autoCorrect={false}
+              autoCapitalize="none"
+              onChangeText={(text) => this.setState({ email: text })}
+              ref={(input) => {
+                this.emailInput = input;
+              }}
+              onSubmitEditing={() => this.passwordInput.focus()}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+            />
+            <FormInput
+              placeholder="Password"
+              value={password}
+              returnKeyType="go"
+              autoCorrect={false}
+              autoCapitalize="none"
+              onChangeText={(text) => this.setState({ password: text })}
+              secureTextEntry
+              ref={(input) => {
+                this.passwordInput = input;
+              }}
+              onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+            />
+            {
+              error && (
+                <View style={{ marginBottom: 10 }}>
+                  <FormValidationMessage>
+                    {error}
+                  </FormValidationMessage>
+                </View>
+              )
+            }
+            <Button
+              title="Create Account"
+              onPress={() => this.signup(firstName, lastName, email, password)}
+              containerViewStyle={styles.loginButtonContainer}
+              buttonStyle={styles.loginButton}
+              textStyle={styles.loginButtonText}
+            />
+            <Text
+              onPress={() => this.navigateToLogin()}
+              style={styles.navigateToLogin}
+            >
+              Already signed up? Log in here
+            </Text>
+            {
+              loading && (
+                <Loader
+                  loading={loading}
+                  color={colors.black}
+                  overlayColor="rgba(0, 0, 0, 0.3)'"
+                />
+              )
+            }
+          </ScrollView>
         </View>
       </SafeAreaView>
     );
@@ -227,6 +237,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
+    width,
   },
   closeIconContainer: {
     alignItems: 'flex-end',
@@ -236,6 +247,10 @@ const styles = StyleSheet.create({
     padding: 15,
     paddingLeft: 20,
     paddingBottom: 20,
+    shadowColor: colors.charcoal.standard,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 1,
   },
   facebookLoginButtonContainer: {
     marginBottom: 7,
@@ -275,14 +290,15 @@ const styles = StyleSheet.create({
     color: colors.grey.dark,
   },
   inputContainer: {
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 5,
     borderBottomWidth: 0,
   },
   input: {
     width: width - 30,
     padding: 12,
     fontFamily: fonts.bold,
+    fontSize: 14,
     color: colors.charcoal.standard,
     borderWidth: 1,
     borderColor: colors.grey.standard,

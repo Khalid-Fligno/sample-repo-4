@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity } from 'react-native';
-import { SafeAreaView, StackActions, NavigationActions } from 'react-navigation';
+import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
 import { Facebook } from 'expo';
 import Loader from '../../components/Loader';
@@ -169,6 +169,7 @@ const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
     backgroundColor: colors.black,
+    borderTopColor: colors.black,
   },
   container: {
     flex: 1,
@@ -183,6 +184,10 @@ const styles = StyleSheet.create({
     padding: 15,
     paddingLeft: 20,
     paddingBottom: 20,
+    shadowColor: colors.charcoal.standard,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 1,
   },
   facebookLoginButtonContainer: {
     marginBottom: 7,
