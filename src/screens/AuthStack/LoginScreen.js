@@ -73,8 +73,8 @@ export default class LoginScreen extends React.PureComponent {
     } = this.state;
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
+        <StatusBar barStyle="light-content" />
         <View style={styles.container}>
-          <StatusBar barStyle="light-content" />
           <View style={styles.closeIconContainer}>
             <TouchableOpacity
               onPress={() => this.props.navigation.goBack()}
@@ -86,19 +86,6 @@ export default class LoginScreen extends React.PureComponent {
                 size={22}
               />
             </TouchableOpacity>
-          </View>
-          <Button
-            title="Log In with Facebook"
-            onPress={() => this.loginWithFacebook()}
-            containerViewStyle={styles.facebookLoginButtonContainer}
-            buttonStyle={styles.facebookLoginButton}
-            textStyle={styles.facebookLoginButtonText}
-          />
-          <Divider style={styles.divider} />
-          <View style={styles.dividerOverlay} >
-            <Text style={styles.dividerOverlayText}>
-              OR
-            </Text>
           </View>
           <FormInput
             placeholder="Email"
@@ -129,7 +116,7 @@ export default class LoginScreen extends React.PureComponent {
           />
           {
             error && (
-              <View style={{ marginBottom: 10 }}>
+              <View>
                 <FormValidationMessage>
                   {error}
                 </FormValidationMessage>
@@ -144,6 +131,20 @@ export default class LoginScreen extends React.PureComponent {
             textStyle={styles.loginButtonText}
             fontFamily={fonts.bold}
           />
+          <Divider style={styles.divider} />
+          <View style={styles.dividerOverlay} >
+            <Text style={styles.dividerOverlayText}>
+              OR
+            </Text>
+          </View>
+          <Button
+            title="Log In with Facebook"
+            onPress={() => this.loginWithFacebook()}
+            containerViewStyle={styles.facebookLoginButtonContainer}
+            buttonStyle={styles.facebookLoginButton}
+            textStyle={styles.facebookLoginButtonText}
+          />
+
           <Text
             onPress={() => this.navigateToSignup()}
             style={styles.navigateToSignup}
@@ -189,20 +190,36 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 1,
   },
-  facebookLoginButtonContainer: {
+  inputContainer: {
+    marginTop: 5,
+    marginBottom: 5,
+    borderBottomWidth: 0,
+  },
+  input: {
+    width: width - 30,
+    padding: 12,
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.charcoal.standard,
+    borderWidth: 1,
+    borderColor: colors.grey.standard,
+    borderRadius: 4,
+  },
+  loginButtonContainer: {
+    marginTop: 7,
     marginBottom: 7,
     shadowColor: colors.charcoal.dark,
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
   },
-  facebookLoginButton: {
-    backgroundColor: 'rgb(59,89,152)',
+  loginButton: {
+    backgroundColor: colors.coral.standard,
     height: 50,
     width: width - 30,
     borderRadius: 4,
   },
-  facebookLoginButtonText: {
+  loginButtonText: {
     marginTop: 4,
     fontFamily: fonts.bold,
     fontSize: 15,
@@ -226,34 +243,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.grey.dark,
   },
-  inputContainer: {
-    marginTop: 10,
-    marginBottom: 10,
-    borderBottomWidth: 0,
-  },
-  input: {
-    width: width - 30,
-    padding: 12,
-    fontFamily: fonts.bold,
-    color: colors.charcoal.standard,
-    borderWidth: 1,
-    borderColor: colors.grey.standard,
-    borderRadius: 4,
-  },
-  loginButtonContainer: {
-    marginTop: 7,
+  facebookLoginButtonContainer: {
+    marginTop: 8,
     shadowColor: colors.charcoal.dark,
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
   },
-  loginButton: {
-    backgroundColor: colors.coral.standard,
+  facebookLoginButton: {
+    backgroundColor: 'rgb(59,89,152)',
     height: 50,
     width: width - 30,
     borderRadius: 4,
   },
-  loginButtonText: {
+  facebookLoginButtonText: {
     marginTop: 4,
     fontFamily: fonts.bold,
     fontSize: 15,
