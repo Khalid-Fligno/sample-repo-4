@@ -15,10 +15,10 @@ export default class OnboardingScreen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
         <View style={styles.container}>
-          <Text>OnboardingScreen</Text>
+          <Text>Onboarding 3</Text>
           <Button
-            title="Onboarding complete"
-            onPress={() => this.props.navigation.navigate('App')}
+            title="Next Step"
+            onPress={() => this.props.navigation.navigate('Onboarding3')}
           />
         </View>
       </SafeAreaView>

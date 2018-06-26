@@ -6,7 +6,9 @@ import AuthLoadingScreen from '../src/screens/AuthLoadingScreen';
 import LandingScreen from '../src/screens/AuthStack/LandingScreen';
 import LoginScreen from '../src/screens/AuthStack/LoginScreen';
 import SignupScreen from '../src/screens/AuthStack/SignupScreen';
-import OnboardingScreen from '../src/screens/AuthStack/OnboardingScreen';
+import Onboarding1Screen from '../src/screens/OnboardingStack/Onboarding1Screen';
+import Onboarding2Screen from '../src/screens/OnboardingStack/Onboarding2Screen';
+import Onboarding3Screen from '../src/screens/OnboardingStack/Onboarding3Screen';
 import HomeScreen from '../src/screens/AppStack/Home/HomeScreen';
 import NutritionHomeScreen from '../src/screens/AppStack/Nutrition/NutritionHomeScreen';
 import RecipeSelectionScreen from '../src/screens/AppStack/Nutrition/RecipeSelectionScreen';
@@ -36,13 +38,26 @@ const AuthStack = createStackNavigator(
     Landing: LandingScreen,
     Signup: SignupScreen,
     Login: LoginScreen,
-    Onboarding: OnboardingScreen,
   },
   {
     initialRouteName: 'Landing',
     mode: 'modal',
     navigationOptions: {
       header: null,
+    },
+  },
+);
+
+const OnboardingStack = createStackNavigator(
+  {
+    Onboarding1: Onboarding1Screen,
+    Onboarding2: Onboarding2Screen,
+    Onboarding3: Onboarding3Screen,
+  },
+  {
+    initialRouteName: 'Onboarding1',
+    navigationOptions: {
+      header: <Header />,
     },
   },
 );
@@ -197,8 +212,9 @@ const AppStack = createBottomTabNavigator(
 const SwitchNavigator = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
-    App: AppStack,
     Auth: AuthStack,
+    Onboarding: OnboardingStack,
+    App: AppStack,
   },
   {
     initialRouteName: 'AuthLoading',
