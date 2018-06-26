@@ -73,6 +73,8 @@ export default class SignupScreen extends React.PureComponent {
         firstName,
         lastName,
         email,
+        onboarded: false,
+        burpeeTest: false,
       };
       await db.collection('users').doc(uid).set(data);
       this.setState({ loading: false });
