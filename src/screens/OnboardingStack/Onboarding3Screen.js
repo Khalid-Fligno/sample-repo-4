@@ -1,9 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Button } from 'react-native-elements';
-import { SafeAreaView } from 'react-navigation';
+import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import CustomButton from '../../components/CustomButton';
 import colors from '../../styles/colors';
-// import fonts from '../../styles/fonts';
+import fonts from '../../styles/fonts';
 
 export default class Onboarding3Screen extends React.PureComponent {
   constructor(props) {
@@ -13,12 +12,23 @@ export default class Onboarding3Screen extends React.PureComponent {
   }
   render() {
     return (
-      <SafeAreaView style={styles.safeAreaContainer}>
-        <View style={styles.container}>
-          <Text>Onboarding 3</Text>
-          <Button
-            title="Finished!"
+      <SafeAreaView style={styles.container}>
+        <View>
+          <Text style={styles.headerText}>
+            Header Text
+          </Text>
+          <Text style={styles.bodyText}>
+            Body Text
+          </Text>
+        </View>
+        <View>
+          <Text>Burpee Test</Text>
+        </View>
+        <View>
+          <CustomButton
+            title="Next Step"
             onPress={() => this.props.navigation.navigate('App')}
+            primary
           />
         </View>
       </SafeAreaView>
@@ -27,13 +37,20 @@ export default class Onboarding3Screen extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
-  safeAreaContainer: {
-    flex: 1,
-    backgroundColor: colors.black,
-  },
   container: {
     flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerText: {
+    textAlign: 'center',
+    fontFamily: fonts.bold,
+    fontSize: 24,
+  },
+  bodyText: {
+    textAlign: 'center',
+    fontFamily: fonts.standard,
+    fontSize: 14,
   },
 });
