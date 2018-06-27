@@ -8,6 +8,7 @@ import {
   StatusBar,
   ScrollView,
   SafeAreaView,
+  AsyncStorage,
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
@@ -51,6 +52,7 @@ export default class SignupScreen extends React.PureComponent {
           lastName: profile.last_name,
         };
         await db.collection('users').doc(user.uid).set(data);
+        await AsyncStorage.setItem('uid', user.uid);
         this.props.navigation.navigate('Onboarding');
       }
     } catch (err) {
@@ -77,6 +79,7 @@ export default class SignupScreen extends React.PureComponent {
         burpeeTest: false,
       };
       await db.collection('users').doc(uid).set(data);
+      await AsyncStorage.setItem('uid', uid);
       this.setState({ loading: false });
       this.props.navigation.navigate('Onboarding');
     } catch (err) {
