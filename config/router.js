@@ -33,6 +33,12 @@ const nutritionBackButtonMap = {
   Recipe: true,
 };
 
+const onboardingBackButtonMap = {
+  Onboarding1: false,
+  Onboarding2: true,
+  Onboarding3: true,
+};
+
 const AuthStack = createStackNavigator(
   {
     Landing: LandingScreen,
@@ -56,9 +62,17 @@ const OnboardingStack = createStackNavigator(
   },
   {
     initialRouteName: 'Onboarding1',
-    navigationOptions: {
-      header: <Header />,
-    },
+    navigationOptions: ({ navigation }) => ({
+      header: () => {
+        const { routeName } = navigation.state;
+        return (
+          <Header
+            navigation={navigation}
+            withBackButton={onboardingBackButtonMap[routeName]}
+          />
+        );
+      },
+    }),
   },
 );
 
