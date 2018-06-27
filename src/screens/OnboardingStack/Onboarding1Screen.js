@@ -8,7 +8,9 @@ import {
   KeyboardAvoidingView,
   AsyncStorage,
 } from 'react-native';
-import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
+import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
+import Image from 'react-native-scalable-image';
+import CustomModal from '../../components/CustomModal';
 import CustomButton from '../../components/CustomButton';
 import { db } from '../../../config/firebase';
 import colors from '../../styles/colors';
@@ -24,9 +26,19 @@ export default class OnboardingScreen extends React.PureComponent {
       waist: null,
       hip: null,
       error: null,
+      isModalVisible: false,
     };
   }
+  toggleModal = () => {
+    this.setState((prevState) => ({
+      isModalVisible: !prevState.isModalVisible,
+    }));
+  }
   handleSubmit = async (weight, waist, hip) => {
+    if (!weight || !waist || !hip) {
+      this.setState({ error: 'Please complete all fields' });
+      return;
+    }
     try {
       const uid = await AsyncStorage.getItem('uid');
       const userRef = db.collection('users').doc(uid);
@@ -47,6 +59,7 @@ export default class OnboardingScreen extends React.PureComponent {
       waist,
       hip,
       error,
+      isModalVisible,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -61,6 +74,16 @@ export default class OnboardingScreen extends React.PureComponent {
               justifyContent: 'space-between',
             }}
           >
+            <CustomModal
+              isVisible={isModalVisible}
+              onDismiss={this.toggleModal}
+            >
+              <Image
+                source={require('../../../assets/images/landing-page-1.png')}
+                width={width - 70}
+              />
+              <Text>I am the modal content!</Text>
+            </CustomModal>
             <View
               style={{
                 padding: 15,
@@ -123,20 +146,39 @@ export default class OnboardingScreen extends React.PureComponent {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
               />
+              <Button
+                title="How do I measure this?"
+                onPress={this.toggleModal}
+                containerViewStyle={{
+                  marginTop: 15,
+                }}
+                buttonStyle={{
+                  width: width - 100,
+                  alignSelf: 'center',
+                  borderRadius: 4,
+                  backgroundColor: colors.violet.standard,
+                }}
+                textStyle={{
+                  fontFamily: fonts.standard,
+                  fontSize: 14,
+                }}
+              />
             </View>
-            {
-              error && (
-                <FormValidationMessage>
-                  {error}
-                </FormValidationMessage>
-              )
-            }
+
             <View
               style={{
                 paddingTop: 15,
                 paddingBottom: 15,
+                alignItems: 'center',
               }}
             >
+              {
+                error && (
+                  <FormValidationMessage>
+                    {error}
+                  </FormValidationMessage>
+                )
+              }
               <CustomButton
                 title="Next Step"
                 onPress={() => this.handleSubmit(weight, waist, hip)}
@@ -161,6 +203,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: fonts.bold,
     fontSize: 24,
+    marginBottom: 15,
   },
   bodyText: {
     textAlign: 'center',
