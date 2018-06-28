@@ -28,12 +28,13 @@ const Loader = ({
 
 Loader.propTypes = {
   loading: PropTypes.bool.isRequired,
-  color: PropTypes.string.isRequired,
+  color: PropTypes.string,
   overlayColor: PropTypes.string,
 };
 
 Loader.defaultProps = {
   overlayColor: 'rgba(0, 0, 0, 0.3)',
+  color: colors.charcoal.standard,
 };
 
 const styles = StyleSheet.create({
