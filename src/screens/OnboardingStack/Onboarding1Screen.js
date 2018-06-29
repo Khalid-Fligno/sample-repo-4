@@ -18,7 +18,7 @@ import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
-export default class OnboardingScreen extends React.PureComponent {
+export default class Onboarding1Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
