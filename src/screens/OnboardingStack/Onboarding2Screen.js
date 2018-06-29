@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Button, Image, ActionSheetIOS, AsyncStorage, Alert } from 'react-native';
-import { ImagePicker, Permissions, Linking } from 'expo';
-// import { db } from '../../../config/firebase';
+import { ImagePicker, ImageManipulator, Permissions, Linking } from 'expo';
+import { db } from '../../../config/firebase';
 import Loader from '../../components/Loader';
 import CustomButton from '../../components/CustomButton';
 import colors from '../../styles/colors';
@@ -15,12 +15,13 @@ const uploadImageAsync = async (uri) => {
   const storageRef = firebase.storage().ref();
   const usersStorageRef = storageRef.child('user-photos');
   const userStorageRef = usersStorageRef.child(uid);
-  const beforePhotoStorageRef = userStorageRef.child('before-photo');
+  const beforePhotoStorageRef = userStorageRef.child('before-photo.jpeg');
   const snapshot = await beforePhotoStorageRef.put(blob);
-  return snapshot.downloadURL;
+  const url = await snapshot.ref.getDownloadURL();
+  await db.collection('users').doc(uid).set({ beforePhoto: url }, { merge: true });
 };
 
-export default class OnboardingScreen extends React.PureComponent {
+export default class Onboarding2Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,6 +29,7 @@ export default class OnboardingScreen extends React.PureComponent {
       hasCameraRollPermission: null,
       image: null,
       uploading: false,
+      error: null,
     };
   }
   componentWillMount = () => {
@@ -65,7 +67,7 @@ export default class OnboardingScreen extends React.PureComponent {
       },
       (buttonIndex) => {
         if (buttonIndex === 1) {
-          if (this.state.hasCameraPermission) {
+          if (!this.state.hasCameraPermission) {
             this.appSettingsPrompt();
             return;
           }
@@ -83,35 +85,53 @@ export default class OnboardingScreen extends React.PureComponent {
   takePhoto = async () => {
     const result = await ImagePicker.launchCameraAsync();
     if (!result.cancelled) {
-      this.setState({ image: result.uri });
+      const manipResult = await ImageManipulator.manipulate(
+        result.uri,
+        [{ resize: { width: 600, height: 800 } }],
+        { format: 'jpeg' },
+      );
+      this.setState({ image: manipResult });
     }
-    this.handleImagePicked(result);
   };
   pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
+    const originXValue = result.width > result.height ? 130 : 0;
     if (!result.cancelled) {
-      this.setState({ image: result.uri });
+      try {
+        const manipResult = await ImageManipulator.manipulate(
+          result.uri,
+          [{ resize: { height: 800 } }, {
+            crop: {
+              originX: originXValue, originY: 0, width: 600, height: 800,
+            },
+          }],
+          { format: 'jpeg' },
+        );
+        this.setState({ image: manipResult });
+      } catch (err) {
+        this.setState({ error: 'There was a problem with that image, please try a different one' });
+      }
     }
-    this.handleImagePicked(result);
   };
   handleImagePicked = async (pickerResult) => {
     try {
       this.setState({ uploading: true });
-      if (!pickerResult.cancelled) {
-        const uploadUrl = await uploadImageAsync(pickerResult.uri);
-        this.setState({ image: uploadUrl });
+      if (this.state.image !== null) {
+        await uploadImageAsync(pickerResult.uri);
+        this.props.navigation.navigate('Onboarding3');
+      } else {
+        this.setState({ error: 'Please select an image' });
       }
-    } catch (e) {
-      console.log(e);
-      console.log('Upload failed, sorry :(');
+    } catch (err) {
+      this.setState({ error: 'Problem uploading image, please try again' });
     } finally {
       this.setState({ uploading: false });
     }
   };
   render() {
-    const { image, uploading } = this.state;
+    const { image, uploading, error } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <View>
@@ -122,24 +142,36 @@ export default class OnboardingScreen extends React.PureComponent {
             Body Text
           </Text>
         </View>
-        <View>
-          <Button
-            title="Upload"
-            onPress={this.chooseUploadType}
-          />
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           {
-            image &&
+            image && (
               <Image
                 resizeMode="contain"
-                source={{ uri: image }}
-                style={{ width: 250, height: 250 }}
+                source={{ uri: image.uri }}
+                style={{
+                  width: 120,
+                  height: 160,
+                }}
               />
+            )
           }
+          <Button
+            title="Choose a photo"
+            onPress={this.chooseUploadType}
+          />
         </View>
         <View>
+          {
+            error && <Text>{error}</Text>
+          }
           <CustomButton
             title="Next Step"
-            onPress={() => this.props.navigation.navigate('Onboarding3')}
+            onPress={() => this.handleImagePicked(image)}
             primary
           />
         </View>
