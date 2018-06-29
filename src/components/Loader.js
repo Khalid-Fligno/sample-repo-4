@@ -33,8 +33,8 @@ Loader.propTypes = {
 };
 
 Loader.defaultProps = {
-  overlayColor: 'rgba(0, 0, 0, 0.3)',
-  color: colors.charcoal.standard,
+  overlayColor: 'rgba(0, 0, 0, 0.6)',
+  color: colors.white,
 };
 
 const styles = StyleSheet.create({
