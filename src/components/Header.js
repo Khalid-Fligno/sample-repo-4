@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Image, StatusBar, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import PropTypes from 'prop-types';
 import Icon from '../components/Icon';
@@ -18,6 +18,7 @@ const Header = ({
   stack,
   navigation,
   withBackButton,
+  withSkipButton,
 }) => (
   <SafeAreaView>
     <StatusBar
@@ -56,20 +57,28 @@ const Header = ({
           }}
         />
       </View>
-      <View
+      <TouchableOpacity
         style={styles.headerContentContainer}
-      />
+        onPress={() => withSkipButton && navigation.state.params.handleSkip()}
+      >
+        {
+          withSkipButton &&
+            <Text>Skip</Text>
+        }
+      </TouchableOpacity>
     </View>
   </SafeAreaView>
 );
 
 Header.propTypes = {
   withBackButton: PropTypes.bool,
+  withSkipButton: PropTypes.bool,
   stack: PropTypes.string,
 };
 
 Header.defaultProps = {
   withBackButton: false,
+  withSkipButton: false,
   stack: null,
 };
 
