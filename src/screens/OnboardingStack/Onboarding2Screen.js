@@ -35,6 +35,7 @@ export default class Onboarding2Screen extends React.PureComponent {
   componentWillMount = () => {
     this.getCameraPermission();
     this.getCameraRollPermission();
+    this.props.navigation.setParams({ handleSkip: this.handleSkip });
   }
   getCameraPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -43,6 +44,21 @@ export default class Onboarding2Screen extends React.PureComponent {
   getCameraRollPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     this.setState({ hasCameraRollPermission: status === 'granted' });
+  }
+  handleSkip = () => {
+    Alert.alert(
+      'Warning',
+      'You will need to do this before your first workout',
+      [
+        {
+          text: 'Cancel', style: 'cancel',
+        },
+        {
+          text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('Onboarding3'),
+        },
+      ],
+      { cancelable: false },
+    );
   }
   appSettingsPrompt = () => {
     Alert.alert(

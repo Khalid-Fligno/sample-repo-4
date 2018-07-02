@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -9,6 +9,24 @@ export default class Onboarding3Screen extends React.PureComponent {
     super(props);
     this.state = {
     };
+  }
+  componentWillMount = () => {
+    this.props.navigation.setParams({ handleSkip: this.handleSkip });
+  }
+  handleSkip = () => {
+    Alert.alert(
+      'Warning',
+      'You will need to do this before your first workout',
+      [
+        {
+          text: 'Cancel', style: 'cancel',
+        },
+        {
+          text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
+        },
+      ],
+      { cancelable: false },
+    );
   }
   render() {
     return (
