@@ -33,7 +33,7 @@ const nutritionBackButtonMap = {
   Recipe: true,
 };
 
-const onboardingBackButtonMap = {
+const onboardingHeaderButtonMap = {
   Onboarding1: false,
   Onboarding2: true,
   Onboarding3: true,
@@ -68,7 +68,8 @@ const OnboardingStack = createStackNavigator(
         return (
           <Header
             navigation={navigation}
-            withBackButton={onboardingBackButtonMap[routeName]}
+            withBackButton={onboardingHeaderButtonMap[routeName]}
+            withSkipButton={onboardingHeaderButtonMap[routeName]}
           />
         );
       },
