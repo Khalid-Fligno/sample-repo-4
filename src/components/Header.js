@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-navigation';
 import PropTypes from 'prop-types';
 import Icon from '../components/Icon';
 import colors from '../styles/colors';
+import fonts from '../styles/fonts';
 
 const headerContainer = {
   flexDirection: 'row',
@@ -63,7 +64,11 @@ const Header = ({
       >
         {
           withSkipButton &&
-            <Text>Skip</Text>
+            <Text
+              style={styles.skipButton}
+            >
+              Skip
+            </Text>
         }
       </TouchableOpacity>
     </View>
@@ -91,6 +96,13 @@ const styles = StyleSheet.create({
     height: 50,
     borderBottomColor: colors.charcoal.standard,
     borderBottomWidth: 1,
+  },
+  skipButton: {
+    fontFamily: fonts.standard,
+    fontSize: 16,
+    color: colors.white,
+    marginTop: 4,
+    marginRight: 4,
   },
   defaultHeader: {
     ...headerContainer,
