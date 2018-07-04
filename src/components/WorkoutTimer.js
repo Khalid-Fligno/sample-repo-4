@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import fonts from '../styles/fonts';
 import colors from '../styles/colors';
 
-export default class CustomTimer extends Component {
+export default class WorkoutTimer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      remainingTime: props.totalDuration,
+      remainingTime: (props.totalDuration * 1000) + 900,
     };
   }
   componentDidMount() {
@@ -70,7 +70,8 @@ export default class CustomTimer extends Component {
     return formatted;
   }
   render() {
-    const styles = this.props.options ? this.props.options : defaultStyles;
+    const presetStyles = this.state.remainingTime < 10000 ? warningStyles : defaultStyles;
+    const styles = this.props.options ? this.props.options : presetStyles;
     return (
       <View style={styles.container}>
         <Text style={styles.text}>{this.formatTime()}</Text>
@@ -78,6 +79,24 @@ export default class CustomTimer extends Component {
     );
   }
 }
+
+const warningStyles = {
+  container: {
+    backgroundColor: colors.white,
+    paddingTop: 5,
+    paddingRight: 5,
+    paddingBottom: 0,
+    paddingLeft: 5,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontFamily: fonts.bold,
+    fontSize: 72,
+    color: colors.coral.standard,
+  },
+};
 
 const defaultStyles = {
   container: {
@@ -87,20 +106,17 @@ const defaultStyles = {
     paddingBottom: 0,
     paddingLeft: 5,
     borderRadius: 5,
-    borderColor: colors.charcoal.standard,
-    borderWidth: 3,
-    width: 120,
     alignItems: 'center',
     justifyContent: 'center',
   },
   text: {
     fontFamily: fonts.bold,
-    fontSize: 30,
+    fontSize: 72,
     color: colors.charcoal.standard,
   },
 };
 
-CustomTimer.propTypes = {
+WorkoutTimer.propTypes = {
   totalDuration: PropTypes.number.isRequired,
   start: PropTypes.bool.isRequired,
   options: PropTypes.objectOf(PropTypes.string || PropTypes.number),
@@ -108,7 +124,7 @@ CustomTimer.propTypes = {
   handleFinish: PropTypes.func,
 };
 
-CustomTimer.defaultProps = {
+WorkoutTimer.defaultProps = {
   getTime: null,
   options: null,
   handleFinish: null,
