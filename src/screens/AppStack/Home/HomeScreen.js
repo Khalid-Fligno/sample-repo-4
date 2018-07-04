@@ -4,7 +4,6 @@ import {
   View,
   Text,
 } from 'react-native';
-import * as firebase from 'firebase';
 import colors from '../../../styles/colors';
 
 export default class HomeScreen extends React.PureComponent {
@@ -13,13 +12,6 @@ export default class HomeScreen extends React.PureComponent {
     this.state = {
       user: null,
     };
-  }
-  componentDidMount = async () => {
-    await firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.setState({ user });
-      }
-    });
   }
   render() {
     const { user } = this.state;
