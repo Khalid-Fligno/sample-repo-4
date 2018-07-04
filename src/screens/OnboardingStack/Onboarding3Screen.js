@@ -75,6 +75,13 @@ export default class Onboarding3Screen extends React.PureComponent {
     this.setState({ timerStart: true, countdownActive: false });
   }
   render() {
+    const {
+      countdownDuration,
+      countdownActive,
+      timerStart,
+      timerReset,
+      totalDuration,
+    } = this.state;
     const startButton = (
       <CustomButton
         title="Ready!"
@@ -83,27 +90,27 @@ export default class Onboarding3Screen extends React.PureComponent {
     );
     const countdownTimer = (
       <CountdownTimer
-        totalDuration={this.state.countdownDuration}
-        start={this.state.countdownActive}
+        totalDuration={countdownDuration}
+        start={countdownActive}
         handleFinish={() => this.finishCountdown()}
       />
     );
     const workoutTimer = (
       <TouchableOpacity
-        onPress={this.state.timerStart ? () => this.resetTimer() : () => this.toggleTimer()}
+        onPress={timerStart ? () => this.resetTimer() : () => this.toggleTimer()}
       >
         <WorkoutTimer
-          totalDuration={this.state.totalDuration}
-          start={this.state.timerStart}
-          reset={this.state.timerReset}
+          totalDuration={totalDuration}
+          start={timerStart}
+          reset={timerReset}
           handleFinish={() => this.handleFinish()}
         />
       </TouchableOpacity>
     );
     const timerView = () => {
-      if (this.state.countdownActive) {
+      if (countdownActive) {
         return countdownTimer;
-      } else if (this.state.timerStart) {
+      } else if (timerStart) {
         return workoutTimer;
       }
       return startButton;
@@ -136,6 +143,7 @@ export default class Onboarding3Screen extends React.PureComponent {
             title="Next Step"
             onPress={() => this.props.navigation.navigate('App')}
             primary
+            disabled={countdownActive || timerStart}
           />
         </View>
       </SafeAreaView>
