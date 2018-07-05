@@ -24,6 +24,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/images/landing-screen-carousel-1.png'),
       require('../../assets/images/landing-screen-carousel-2.png'),
       require('../../assets/images/landing-screen-carousel-3.png'),
+      require('../../assets/videos/burpees-trimmed.mp4'),
     ]);
     const fontAssets = cacheFonts([
       {
