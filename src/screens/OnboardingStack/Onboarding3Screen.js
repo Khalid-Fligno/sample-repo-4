@@ -1,6 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Alert, Dimensions, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Alert,
+  Dimensions,
+  TouchableOpacity,
+  AsyncStorage,
+} from 'react-native';
 import { Video } from 'expo';
+import SelectInput from 'react-native-select-input-ios';
+import { db } from '../../../config/firebase';
 import CustomButton from '../../components/CustomButton';
 import WorkoutTimer from '../../components/WorkoutTimer';
 import CountdownTimer from '../../components/CountdownTimer';
@@ -8,6 +19,29 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
+
+const burpeeOptions = [
+  { value: null, label: 'Select your completed burpee count' },
+];
+
+const populateBurpeeOptions = () => {
+  for (let i = 0; i < 50; i += 1) {
+    burpeeOptions.push({
+      value: i,
+      label: `${i}`,
+    });
+  }
+};
+populateBurpeeOptions();
+
+const findFitnessLevel = (burpeeCount) => {
+  if (burpeeCount < 7) {
+    return 1;
+  } else if (burpeeCount > 15) {
+    return 3;
+  }
+  return 2;
+};
 
 export default class Onboarding3Screen extends React.PureComponent {
   constructor(props) {
@@ -18,6 +52,7 @@ export default class Onboarding3Screen extends React.PureComponent {
       totalDuration: 15,
       countdownDuration: 7,
       countdownActive: false,
+      burpeeCount: null,
     };
   }
   componentWillMount = () => {
@@ -74,6 +109,19 @@ export default class Onboarding3Screen extends React.PureComponent {
   finishCountdown = () => {
     this.setState({ timerStart: true, countdownActive: false });
   }
+  handleSubmit = async () => {
+    try {
+      const uid = await AsyncStorage.getItem('uid');
+      const userRef = db.collection('users').doc(uid);
+      const fitnessLevel = findFitnessLevel(this.state.burpeeCount);
+      await userRef.set({
+        fitnessLevel,
+      }, { merge: true });
+      this.props.navigation.navigate('App');
+    } catch (err) {
+      console.log(err);
+    }
+  }
   render() {
     const {
       countdownDuration,
@@ -81,6 +129,7 @@ export default class Onboarding3Screen extends React.PureComponent {
       timerStart,
       timerReset,
       totalDuration,
+      burpeeCount,
     } = this.state;
     const startButton = (
       <CustomButton
@@ -135,15 +184,36 @@ export default class Onboarding3Screen extends React.PureComponent {
             style={{ width, height: 250 }}
           />
         </View>
-        <View>
+        <View
+          style={{
+            alignItems: 'center',
+          }}
+        >
           {timerView()}
+          <SelectInput
+            onSubmitEditing={(value) => this.setState({ burpeeCount: value })}
+            value={burpeeCount}
+            options={burpeeOptions}
+            style={{
+              borderColor: colors.grey.light,
+              borderWidth: 1,
+              borderRadius: 4,
+              width: width - 30,
+              marginTop: 30,
+              padding: 10,
+              alignItems: 'center',
+            }}
+            labelStyle={{
+              fontFamily: fonts.bold,
+            }}
+          />
         </View>
         <View>
           <CustomButton
             title="Next Step"
-            onPress={() => this.props.navigation.navigate('App')}
+            onPress={() => this.handleSubmit()}
             primary
-            disabled={countdownActive || timerStart}
+            disabled={countdownActive || timerStart || burpeeCount === null}
           />
         </View>
       </SafeAreaView>
