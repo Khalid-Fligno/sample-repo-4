@@ -26,6 +26,9 @@ export default class CountdownTimer extends Component {
       this.reset(newProps.totalDuration);
     }
   }
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
   start = () => {
     const { handleFinish } = this.props;
     const endTime = new Date().getTime() + this.state.remainingTime;

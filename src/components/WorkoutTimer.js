@@ -26,6 +26,9 @@ export default class WorkoutTimer extends Component {
       this.reset(newProps.totalDuration);
     }
   }
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
   finishAlert = () => {
     Alert.alert(
       'Timer Complete',
