@@ -41,11 +41,9 @@ export default class Onboarding1Screen extends React.PureComponent {
   showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
   hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
   handleDatePicked = async (date) => {
-    console.log(date);
     const dob = formatDate(date.getDate(), date.getMonth(), date.getFullYear());
     await this.setState({ dob });
     this.hideDateTimePicker();
-    console.log(this.state.dob);
   };
   toggleModal = () => {
     this.setState((prevState) => ({
