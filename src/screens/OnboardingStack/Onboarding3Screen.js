@@ -174,14 +174,14 @@ export default class Onboarding3Screen extends React.PureComponent {
             To assess your current fitness level
           </Text>
           <Video
-            source={require('../../../assets/videos/burpees-trimmed.mp4')}
+            source={require('../../../assets/videos/burpees-trimmed-square.mp4')}
             rate={1.0}
             volume={1.0}
             isMuted={false}
             resizeMode="contain"
             shouldPlay
             isLooping
-            style={{ width, height: 250 }}
+            style={{ width, height: width }}
           />
         </View>
         <View
