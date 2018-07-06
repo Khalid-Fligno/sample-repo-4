@@ -14,6 +14,7 @@ import Image from 'react-native-scalable-image';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import CustomModal from '../../components/CustomModal';
 import CustomButton from '../../components/CustomButton';
+import Loader from '../../components/Loader';
 import { db } from '../../../config/firebase';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -36,6 +37,7 @@ export default class Onboarding1Screen extends React.PureComponent {
       isModalVisible: false,
       isDateTimePickerVisible: false,
       dob: null,
+      loading: false,
     };
   }
   showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
@@ -51,8 +53,9 @@ export default class Onboarding1Screen extends React.PureComponent {
     }));
   }
   handleSubmit = async (weight, waist, hip, dob) => {
+    this.setState({ loading: true });
     if (!weight || !waist || !hip || !dob) {
-      this.setState({ error: 'Please complete all fields' });
+      this.setState({ error: 'Please complete all fields', loading: false });
       return;
     }
     try {
@@ -65,9 +68,11 @@ export default class Onboarding1Screen extends React.PureComponent {
         dob,
       };
       await userRef.set(data, { merge: true });
+      this.setState({ loading: false });
       this.props.navigation.navigate('Onboarding2');
     } catch (err) {
       console.log(err);
+      this.setState({ loading: false });
     }
   }
   render() {
@@ -78,6 +83,7 @@ export default class Onboarding1Screen extends React.PureComponent {
       dob,
       error,
       isModalVisible,
+      loading,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -214,6 +220,9 @@ export default class Onboarding1Screen extends React.PureComponent {
                 primary
               />
             </View>
+            {
+              loading && <Loader loading={loading} />
+            }
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>

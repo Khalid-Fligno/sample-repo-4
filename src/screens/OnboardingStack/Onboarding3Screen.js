@@ -15,6 +15,7 @@ import { db } from '../../../config/firebase';
 import CustomButton from '../../components/CustomButton';
 import WorkoutTimer from '../../components/WorkoutTimer';
 import CountdownTimer from '../../components/CountdownTimer';
+import Loader from '../../components/Loader';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
@@ -53,6 +54,7 @@ export default class Onboarding3Screen extends React.PureComponent {
       countdownDuration: 7,
       countdownActive: false,
       burpeeCount: null,
+      loading: false,
     };
   }
   componentWillMount = () => {
@@ -110,6 +112,7 @@ export default class Onboarding3Screen extends React.PureComponent {
     this.setState({ timerStart: true, countdownActive: false });
   }
   handleSubmit = async () => {
+    this.setState({ loading: true });
     try {
       const uid = await AsyncStorage.getItem('uid');
       const userRef = db.collection('users').doc(uid);
@@ -117,9 +120,11 @@ export default class Onboarding3Screen extends React.PureComponent {
       await userRef.set({
         fitnessLevel,
       }, { merge: true });
+      this.setState({ loading: false });
       this.props.navigation.navigate('App');
     } catch (err) {
       console.log(err);
+      this.setState({ loading: false });
     }
   }
   render() {
@@ -130,6 +135,7 @@ export default class Onboarding3Screen extends React.PureComponent {
       timerReset,
       totalDuration,
       burpeeCount,
+      loading,
     } = this.state;
     const startButton = (
       <CustomButton
@@ -216,6 +222,9 @@ export default class Onboarding3Screen extends React.PureComponent {
             disabled={countdownActive || timerStart || burpeeCount === null}
           />
         </View>
+        {
+          loading && <Loader loading={loading} />
+        }
       </SafeAreaView>
     );
   }
