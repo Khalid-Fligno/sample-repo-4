@@ -7,9 +7,11 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   AsyncStorage,
+  TouchableOpacity,
 } from 'react-native';
 import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 import Image from 'react-native-scalable-image';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import CustomModal from '../../components/CustomModal';
 import CustomButton from '../../components/CustomButton';
 import { db } from '../../../config/firebase';
@@ -17,6 +19,11 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
+
+const formatDate = (day, month, year) => {
+  const realMonth = month + 1;
+  return `${day <= 9 ? `0${day}` : day}/${realMonth <= 9 ? `0${realMonth}` : realMonth}/${year}`;
+};
 
 export default class Onboarding1Screen extends React.PureComponent {
   constructor(props) {
@@ -27,15 +34,26 @@ export default class Onboarding1Screen extends React.PureComponent {
       hip: null,
       error: null,
       isModalVisible: false,
+      isDateTimePickerVisible: false,
+      dob: null,
     };
   }
+  showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+  hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+  handleDatePicked = async (date) => {
+    console.log(date);
+    const dob = formatDate(date.getDate(), date.getMonth(), date.getFullYear());
+    await this.setState({ dob });
+    this.hideDateTimePicker();
+    console.log(this.state.dob);
+  };
   toggleModal = () => {
     this.setState((prevState) => ({
       isModalVisible: !prevState.isModalVisible,
     }));
   }
-  handleSubmit = async (weight, waist, hip) => {
-    if (!weight || !waist || !hip) {
+  handleSubmit = async (weight, waist, hip, dob) => {
+    if (!weight || !waist || !hip || !dob) {
       this.setState({ error: 'Please complete all fields' });
       return;
     }
@@ -46,6 +64,7 @@ export default class Onboarding1Screen extends React.PureComponent {
         weight,
         waist,
         hip,
+        dob,
       };
       await userRef.set(data, { merge: true });
       this.props.navigation.navigate('Onboarding2');
@@ -58,6 +77,7 @@ export default class Onboarding1Screen extends React.PureComponent {
       weight,
       waist,
       hip,
+      dob,
       error,
       isModalVisible,
     } = this.state;
@@ -96,6 +116,17 @@ export default class Onboarding1Screen extends React.PureComponent {
                 To help us get you FitazFK, we need some information from you.
               </Text>
             </View>
+            <TouchableOpacity onPress={this.showDateTimePicker}>
+              <Text>Show DatePicker</Text>
+            </TouchableOpacity>
+            <DateTimePicker
+              isVisible={this.state.isDateTimePickerVisible}
+              onConfirm={(date) => this.handleDatePicked(date)}
+              onCancel={this.hideDateTimePicker}
+              mode="date"
+              minimumDate={new Date('1930-01-01')}
+            />
+            <Text>{dob}</Text>
             <View>
               <FormLabel
                 fontFamily={fonts.bold}
@@ -181,7 +212,7 @@ export default class Onboarding1Screen extends React.PureComponent {
               }
               <CustomButton
                 title="Next Step"
-                onPress={() => this.handleSubmit(weight, waist, hip)}
+                onPress={() => this.handleSubmit(weight, waist, hip, dob)}
                 primary
               />
             </View>
