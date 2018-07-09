@@ -16,6 +16,7 @@ import RecipeScreen from '../src/screens/AppStack/Nutrition/RecipeScreen';
 import WorkoutsHomeScreen from '../src/screens/AppStack/Workouts/WorkoutsHomeScreen';
 import WorkoutsLocationScreen from '../src/screens/AppStack/Workouts/WorkoutsLocationScreen';
 import WorkoutsSelectionScreen from '../src/screens/AppStack/Workouts/WorkoutsSelectionScreen';
+import WorkoutInfoScreen from '../src/screens/AppStack/Workouts/WorkoutInfoScreen';
 import CalendarHomeScreen from '../src/screens/AppStack/Calendar/CalendarHomeScreen';
 import ProfileHomeScreen from '../src/screens/AppStack/Profile/ProfileHomeScreen';
 import colors from '../src/styles/colors';
@@ -105,6 +106,7 @@ const WorkoutsStack = createStackNavigator(
     WorkoutsHome: WorkoutsHomeScreen,
     WorkoutsLocation: WorkoutsLocationScreen,
     WorkoutsSelection: WorkoutsSelectionScreen,
+    WorkoutInfo: WorkoutInfoScreen,
   },
   {
     initialRouteName: 'WorkoutsHome',

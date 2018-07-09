@@ -12,7 +12,7 @@ export const workoutsBackButtonMap = {
   WorkoutsHome: false,
   WorkoutsLocation: true,
   WorkoutsSelection: true,
-  Workout: true,
+  WorkoutInfo: true,
 };
 
 export const nutritionBackButtonMap = {
