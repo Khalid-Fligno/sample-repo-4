@@ -36,9 +36,9 @@ const populateBurpeeOptions = () => {
 populateBurpeeOptions();
 
 const findFitnessLevel = (burpeeCount) => {
-  if (burpeeCount < 7) {
+  if (burpeeCount < 12) {
     return 1;
-  } else if (burpeeCount > 15) {
+  } else if (burpeeCount > 16) {
     return 3;
   }
   return 2;
@@ -158,7 +158,8 @@ export default class Onboarding3Screen extends React.PureComponent {
           totalDuration={totalDuration}
           start={timerStart}
           reset={timerReset}
-          handleFinish={() => this.handleFinish()}
+          // handleFinish={() => this.handleFinish()}
+          handleFinish={() => this.props.navigation.navigate('App')}
         />
       </TouchableOpacity>
     );
