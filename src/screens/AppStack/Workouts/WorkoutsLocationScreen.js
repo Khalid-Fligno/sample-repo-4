@@ -27,7 +27,7 @@ export default class WorkoutsLocationScreen extends React.PureComponent {
           title="Gym"
           onPress={() => navigate('WorkoutsSelection', {
             workoutType,
-            workoutLocation: 'Gym',
+            workoutLocation: 'gym',
           })}
           containerViewStyle={styles.buttonContainer}
           buttonStyle={styles.button}
@@ -37,7 +37,7 @@ export default class WorkoutsLocationScreen extends React.PureComponent {
           title="Home"
           onPress={() => navigate('WorkoutsSelection', {
             workoutType,
-            workoutLocation: 'Home',
+            workoutLocation: 'home',
           })}
           containerViewStyle={styles.buttonContainer}
           buttonStyle={styles.button}
@@ -47,7 +47,7 @@ export default class WorkoutsLocationScreen extends React.PureComponent {
           title="Park"
           onPress={() => navigate('WorkoutsSelection', {
             workoutType,
-            workoutLocation: 'Park',
+            workoutLocation: 'park',
           })}
           containerViewStyle={styles.buttonContainer}
           buttonStyle={styles.button}

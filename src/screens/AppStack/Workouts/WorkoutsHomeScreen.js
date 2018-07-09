@@ -21,28 +21,28 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
         </Text>
         <Button
           title="Full Body"
-          onPress={() => navigate('WorkoutsLocation', { workoutType: 'Full Body' })}
+          onPress={() => navigate('WorkoutsLocation', { workoutType: 'fullBody' })}
           containerViewStyle={styles.buttonContainer}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
         />
         <Button
           title="Upper Body"
-          onPress={() => navigate('WorkoutsLocation', { workoutType: 'Upper Body' })}
+          onPress={() => navigate('WorkoutsLocation', { workoutType: 'upperBody' })}
           containerViewStyle={styles.buttonContainer}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
         />
         <Button
           title="Lower Body"
-          onPress={() => navigate('WorkoutsLocation', { workoutType: 'Lower Body' })}
+          onPress={() => navigate('WorkoutsLocation', { workoutType: 'lowerBody' })}
           containerViewStyle={styles.buttonContainer}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
         />
         <Button
           title="Core"
-          onPress={() => navigate('WorkoutsLocation', { workoutType: 'Core' })}
+          onPress={() => navigate('WorkoutsLocation', { workoutType: 'core' })}
           containerViewStyle={styles.buttonContainer}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
