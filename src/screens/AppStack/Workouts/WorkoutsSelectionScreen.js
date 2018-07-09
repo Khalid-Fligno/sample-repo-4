@@ -9,10 +9,20 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     };
   }
   render() {
+    const { getParam } = this.props.navigation;
+    const workoutType = getParam('workoutType', null);
+    const workoutLocation = getParam('workoutLocation', null);
+
     return (
       <View style={styles.container}>
         <Text>
           Workouts Selection Screen
+        </Text>
+        <Text>
+          {workoutType}
+        </Text>
+        <Text>
+          {workoutLocation}
         </Text>
       </View>
     );
