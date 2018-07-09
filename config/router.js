@@ -29,6 +29,13 @@ const tabColorMap = {
   Profile: colors.blue.standard,
 };
 
+const workoutsBackButtonMap = {
+  WorkoutsHome: false,
+  WorkoutsLocation: true,
+  WorkoutsSelection: true,
+  Workout: true,
+};
+
 const nutritionBackButtonMap = {
   NutritionHome: false,
   RecipeSelection: true,
@@ -122,9 +129,18 @@ const WorkoutsStack = createStackNavigator(
   },
   {
     initialRouteName: 'WorkoutsHome',
-    navigationOptions: {
-      header: <Header stack="workouts" />,
-    },
+    navigationOptions: ({ navigation }) => ({
+      header: () => {
+        const { routeName } = navigation.state;
+        return (
+          <Header
+            navigation={navigation}
+            withBackButton={workoutsBackButtonMap[routeName]}
+            stack="workouts"
+          />
+        );
+      },
+    }),
   },
 );
 
