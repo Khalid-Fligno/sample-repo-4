@@ -20,33 +20,12 @@ import CalendarHomeScreen from '../src/screens/AppStack/Calendar/CalendarHomeScr
 import ProfileHomeScreen from '../src/screens/AppStack/Profile/ProfileHomeScreen';
 import colors from '../src/styles/colors';
 import fonts from '../src/styles/fonts';
-
-const tabColorMap = {
-  Home: colors.charcoal.standard,
-  Nutrition: colors.violet.standard,
-  Workouts: colors.coral.standard,
-  Calendar: colors.green.standard,
-  Profile: colors.blue.standard,
-};
-
-const workoutsBackButtonMap = {
-  WorkoutsHome: false,
-  WorkoutsLocation: true,
-  WorkoutsSelection: true,
-  Workout: true,
-};
-
-const nutritionBackButtonMap = {
-  NutritionHome: false,
-  RecipeSelection: true,
-  Recipe: true,
-};
-
-const onboardingHeaderButtonMap = {
-  Onboarding1: false,
-  Onboarding2: true,
-  Onboarding3: true,
-};
+import {
+  tabColorMap,
+  workoutsBackButtonMap,
+  nutritionBackButtonMap,
+  onboardingHeaderButtonMap,
+} from './routerUtils';
 
 const AuthStack = createStackNavigator(
   {
