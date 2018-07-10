@@ -9,22 +9,23 @@ export default class Exercise1Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      exerciseVideoURL: '',
+      exerciseList: [],
+      currentExercise: {},
     };
   }
+  componentWillMount() {
+    const exerciseList = this.props.navigation.getParam('exerciseList', null);
+    this.setState({ exerciseList, currentExercise: exerciseList[0] });
+  }
   render() {
-    const { name, exerciseVideoURL } = this.state;
+    const { currentExercise, exerciseList } = this.state;
     return (
       <View style={styles.container}>
         <Text>
           Exercise 1
         </Text>
         <Text>
-          {name}
-        </Text>
-        <Text>
-          {exerciseVideoURL}
+          {currentExercise.name}
         </Text>
         <Video
           source={{ uri: `${FileSystem.documentDirectory}exercise-1.mp4` }}
@@ -36,6 +37,13 @@ export default class Exercise1Screen extends React.PureComponent {
           isLooping
           style={{ width, height: width }}
         />
+        <Text
+          onPress={() => this.props.navigation.navigate('Exercise2', {
+            exerciseList,
+          })}
+        >
+          Next
+        </Text>
       </View>
     );
   }

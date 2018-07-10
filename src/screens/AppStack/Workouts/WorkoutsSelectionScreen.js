@@ -14,7 +14,6 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     this.fetchWorkouts();
   }
   fetchWorkouts = () => {
-    // this.setState({ loading: true });
     const type = this.props.navigation.getParam('workoutType', null);
     const location = this.props.navigation.getParam('workoutLocation', null);
     db.collection('workouts')
@@ -27,7 +26,6 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
         });
         this.setState({
           workouts,
-          // loading: false,
         });
       });
   }
