@@ -17,6 +17,9 @@ import WorkoutsHomeScreen from '../src/screens/AppStack/Workouts/WorkoutsHomeScr
 import WorkoutsLocationScreen from '../src/screens/AppStack/Workouts/WorkoutsLocationScreen';
 import WorkoutsSelectionScreen from '../src/screens/AppStack/Workouts/WorkoutsSelectionScreen';
 import WorkoutInfoScreen from '../src/screens/AppStack/Workouts/WorkoutInfoScreen';
+import Exercise1Screen from '../src/screens/AppStack/Workouts/Exercise1Screen';
+import Exercise2Screen from '../src/screens/AppStack/Workouts/Exercise2Screen';
+import Exercise3Screen from '../src/screens/AppStack/Workouts/Exercise3Screen';
 import CalendarHomeScreen from '../src/screens/AppStack/Calendar/CalendarHomeScreen';
 import ProfileHomeScreen from '../src/screens/AppStack/Profile/ProfileHomeScreen';
 import colors from '../src/styles/colors';
@@ -225,12 +228,27 @@ const AppStack = createBottomTabNavigator(
   },
 );
 
+const ExerciseStack = createStackNavigator(
+  {
+    Exercise1: Exercise1Screen,
+    Exercise2: Exercise2Screen,
+    Exercise3: Exercise3Screen,
+  },
+  {
+    initialRouteName: 'Exercise1',
+    navigationOptions: {
+      header: null,
+    },
+  },
+);
+
 const SwitchNavigator = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
     Auth: AuthStack,
     Onboarding: OnboardingStack,
     App: AppStack,
+    Exercise: ExerciseStack,
   },
   {
     initialRouteName: 'AuthLoading',
