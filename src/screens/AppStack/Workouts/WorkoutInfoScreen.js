@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { FileSystem } from 'expo';
 import { db } from '../../../../config/firebase';
+import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
 
 export default class WorkoutInfoScreen extends React.PureComponent {
@@ -9,63 +10,57 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     super(props);
     this.state = {
       exerciseList: [],
+      loading: false,
     };
   }
   componentWillMount = async () => {
     const exercises = this.props.navigation.getParam('exercises', null);
+    await this.fetchWorkout(exercises);
+  }
+  fetchWorkout = (exercises) => {
     try {
       const exerciseList = [];
-      await exercises.map(async (exercise, index) => {
-        await db.collection('exercises')
+      exercises.forEach((exercise) => {
+        db.collection('exercises')
           .doc(exercise.id)
           .onSnapshot(async (doc) => {
             const exerciseObject = await doc.data();
             exerciseList.push(exerciseObject);
-            await FileSystem.downloadAsync(
-              exerciseObject.videoURL,
-              `${FileSystem.documentDirectory}exercise-${index + 1}.mp4`,
-            );
           });
       });
       this.setState({ exerciseList });
     } catch (err) {
       console.log(err);
     }
-    // await exercises.forEach((exercise, index) => {
-    //   db.collection('exercises')
-    //     .doc(exercise)
-    //     .onSnapshot(async (doc) => {
-    //       const { videoURL, name } = doc.data();
-    //       exerciseNames.push(name);
-    //       await FileSystem.downloadAsync(
-    //         videoURL,
-    //         `${FileSystem.documentDirectory}exercise-${index + 1}.mp4`,
-    //       )
-    //         .catch((error) => {
-    //           console.error(error);
-    //         });
-    //     });
-    // });
+  }
+  loadExercises = async (exerciseList) => {
+    this.setState({ loading: true });
+    await Promise.all(exerciseList.map(async (exercise, index) => {
+      await FileSystem.downloadAsync(
+        exercise.videoURL,
+        `${FileSystem.documentDirectory}exercise-${index + 1}.mp4`,
+      );
+    }));
+    this.setState({ loading: false });
+    this.props.navigation.navigate('Exercise1', { exerciseList });
   }
   render() {
-    const { exerciseList } = this.state;
-    const exerciseDisplay = exerciseList.map((exercise) => {
+    const { exerciseList, loading } = this.state;
+    if (loading) {
       return (
-        <Text key={exercise.id}>
-          {exercise.name}
-        </Text>
+        <Loader
+          loading={loading}
+          color={colors.coral.standard}
+        />
       );
-    });
+    }
     return (
       <View style={styles.container}>
         <Text>
           Workout Info Screen
         </Text>
-        {exerciseDisplay}
         <Text
-          onPress={() => this.props.navigation.navigate('Exercise1', {
-            exerciseList,
-          })}
+          onPress={() => this.loadExercises(exerciseList)}
         >
           Start
         </Text>
