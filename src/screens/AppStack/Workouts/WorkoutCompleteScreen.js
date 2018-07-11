@@ -11,13 +11,16 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
   }
   componentWillMount = async () => {
     const exerciseList = this.props.navigation.getParam('exerciseList', null);
-    await exerciseList.forEach((exercise, index) => {
-      try {
-        FileSystem.deleteAsync(`${FileSystem.documentDirectory}exercise-${index + 1}.mp4`);
-      } catch (err) {
-        console.log(`Error: ${err}`);
-      }
-    });
+    try {
+      await Promise.all(exerciseList.map(async (exercise, index) => {
+        await FileSystem.downloadAsync(
+          exercise.videoURL,
+          `${FileSystem.documentDirectory}exercise-${index + 1}.mp4`,
+        );
+      }));
+    } catch (err) {
+      console.log(`Filesystem delete error: ${err}`);
+    }
   }
   render() {
     return (

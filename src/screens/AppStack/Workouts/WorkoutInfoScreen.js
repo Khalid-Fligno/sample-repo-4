@@ -38,14 +38,18 @@ export default class WorkoutInfoScreen extends React.PureComponent {
   }
   loadExercises = async (exerciseList) => {
     this.setState({ loading: true });
-    await Promise.all(exerciseList.map(async (exercise, index) => {
-      await FileSystem.downloadAsync(
-        exercise.videoURL,
-        `${FileSystem.documentDirectory}exercise-${index + 1}.mp4`,
-      );
-    }));
-    this.setState({ loading: false });
-    this.props.navigation.navigate('Exercise1', { exerciseList });
+    try {
+      await Promise.all(exerciseList.map(async (exercise, index) => {
+        await FileSystem.downloadAsync(
+          exercise.videoURL,
+          `${FileSystem.documentDirectory}exercise-${index + 1}.mp4`,
+        );
+      }));
+      this.setState({ loading: false });
+      this.props.navigation.navigate('Exercise1', { exerciseList });
+    } catch (err) {
+      console.log(`Filesystem download error: ${err}`);
+    }
   }
   render() {
     const { exerciseList, loading } = this.state;
