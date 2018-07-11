@@ -33,10 +33,13 @@ export default class RecipeScreen extends React.PureComponent {
   componentWillMount = async () => {
     await this.fetchRecipe();
   }
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
   fetchRecipe = () => {
     this.setState({ loading: true });
     const recipeName = this.props.navigation.getParam('recipeName', null);
-    db.collection('recipes')
+    this.unsubscribe = db.collection('recipes')
       .doc(recipeName)
       .onSnapshot((doc) => {
         this.setState({
