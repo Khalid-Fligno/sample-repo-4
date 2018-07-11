@@ -25,6 +25,11 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
         <Text>
           Workout Complete
         </Text>
+        <Text
+          onPress={() => this.props.navigation.navigate('WorkoutsHome')}
+        >
+          Done
+        </Text>
       </View>
     );
   }
