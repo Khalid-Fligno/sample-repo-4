@@ -47,7 +47,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     const workoutList = workouts.map((workout) => (
       <Text
         key={workout.name}
-        onPress={() => navigate('WorkoutInfo', { exercises: workout.exercises })}
+        onPress={() => navigate('WorkoutInfo', { exercises: workout.exercises, workout })}
       >
         {workout.name}
       </Text>
