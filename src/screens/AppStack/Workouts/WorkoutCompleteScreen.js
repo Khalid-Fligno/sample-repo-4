@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import { FileSystem } from 'expo';
 import colors from '../../../styles/colors';
 
 export default class WorkoutCompleteScreen extends React.PureComponent {
@@ -7,6 +8,16 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     super(props);
     this.state = {
     };
+  }
+  componentWillMount = async () => {
+    const exerciseList = this.props.navigation.getParam('exerciseList', null);
+    await exerciseList.forEach((exercise, index) => {
+      try {
+        FileSystem.deleteAsync(`${FileSystem.documentDirectory}exercise-${index + 1}.mp4`);
+      } catch (err) {
+        console.log(`Error: ${err}`);
+      }
+    });
   }
   render() {
     return (
