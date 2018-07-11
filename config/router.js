@@ -23,6 +23,7 @@ import Exercise3Screen from '../src/screens/AppStack/Workouts/Exercise3Screen';
 import Exercise4Screen from '../src/screens/AppStack/Workouts/Exercise4Screen';
 import Exercise5Screen from '../src/screens/AppStack/Workouts/Exercise5Screen';
 import Exercise6Screen from '../src/screens/AppStack/Workouts/Exercise6Screen';
+import WorkoutCompleteScreen from '../src/screens/AppStack/Workouts/WorkoutCompleteScreen';
 import CalendarHomeScreen from '../src/screens/AppStack/Calendar/CalendarHomeScreen';
 import ProfileHomeScreen from '../src/screens/AppStack/Profile/ProfileHomeScreen';
 import colors from '../src/styles/colors';
@@ -33,7 +34,6 @@ import {
   nutritionBackButtonMap,
   onboardingHeaderButtonMap,
 } from './routerUtils';
-import WorkoutCompleteScreen from '../src/screens/AppStack/Workouts/WorkoutCompleteScreen';
 
 const AuthStack = createStackNavigator(
   {
