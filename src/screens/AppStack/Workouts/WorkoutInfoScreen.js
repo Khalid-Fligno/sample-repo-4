@@ -11,10 +11,13 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     this.state = {
       exerciseList: [],
       loading: false,
+      workout: null,
     };
   }
   componentWillMount = async () => {
     const exercises = this.props.navigation.getParam('exercises', null);
+    const workout = this.props.navigation.getParam('workout', null);
+    this.setState({ workout });
     await this.fetchWorkout(exercises);
   }
   fetchWorkout = (exercises) => {
@@ -22,7 +25,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       const exerciseList = [];
       exercises.forEach((exercise) => {
         db.collection('exercises')
-          .doc(exercise.id)
+          .doc(exercise)
           .onSnapshot(async (doc) => {
             const exerciseObject = await doc.data();
             exerciseList.push(exerciseObject);
@@ -57,7 +60,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     return (
       <View style={styles.container}>
         <Text>
-          Workout Info Screen
+          Workout Info Screen {this.state.workout && this.state.workout.name}
         </Text>
         <Text
           onPress={() => this.loadExercises(exerciseList)}
