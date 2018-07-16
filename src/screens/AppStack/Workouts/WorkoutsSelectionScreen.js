@@ -1,8 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { Button } from 'react-native-elements';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
+import fonts from '../../../styles/fonts';
+
+const { width } = Dimensions.get('window');
 
 export default class WorkoutsSelectionScreen extends React.PureComponent {
   constructor(props) {
@@ -45,12 +49,13 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     const workoutType = getParam('workoutType', null);
     const workoutLocation = getParam('workoutLocation', null);
     const workoutList = workouts.map((workout) => (
-      <Text
-        key={workout.name}
+      <Button
+        title={workout.name}
         onPress={() => navigate('WorkoutInfo', { exercises: workout.exercises, workout })}
-      >
-        {workout.name}
-      </Text>
+        containerViewStyle={styles.buttonContainer}
+        buttonStyle={styles.button}
+        textStyle={styles.buttonText}
+      />
     ));
     if (loading) {
       return (
@@ -83,5 +88,20 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonContainer: {
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  button: {
+    width: width - 30,
+    backgroundColor: colors.coral.standard,
+    borderRadius: 4,
+  },
+  buttonText: {
+    fontFamily: fonts.bold,
+    fontSize: 16,
+    color: colors.white,
+    marginTop: 3,
   },
 });
