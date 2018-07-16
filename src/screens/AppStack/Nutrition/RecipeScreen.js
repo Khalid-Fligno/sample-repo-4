@@ -13,7 +13,6 @@ import Image from 'react-native-scalable-image';
 import { db } from '../../../../config/firebase';
 import CustomButton from '../../../components/CustomButton';
 import Icon from '../../../components/Icon';
-import recipeScreenImageMap from '../../../utils/recipeScreenImageMap';
 import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
 
@@ -38,9 +37,9 @@ export default class RecipeScreen extends React.PureComponent {
   }
   fetchRecipe = () => {
     this.setState({ loading: true });
-    const recipeName = this.props.navigation.getParam('recipeName', null);
+    const recipeId = this.props.navigation.getParam('recipeId', null);
     this.unsubscribe = db.collection('recipes')
-      .doc(recipeName)
+      .doc(recipeId)
       .onSnapshot((doc) => {
         this.setState({
           recipe: doc.data(),
@@ -101,7 +100,7 @@ export default class RecipeScreen extends React.PureComponent {
             }
           </View>
           <Image
-            source={recipeScreenImageMap[`${recipe.id}${index + 1}`]}
+            source={{ uri: recipe.coverImage }}
             width={width - 52}
           />
         </View>
@@ -152,7 +151,7 @@ export default class RecipeScreen extends React.PureComponent {
       <View style={styles.container}>
         <ScrollView>
           <Image
-            source={recipeScreenImageMap[recipe.id]}
+            source={{ uri: recipe.coverImage }}
             width={width}
           />
           <View style={styles.recipeInfoContainer}>
@@ -160,7 +159,7 @@ export default class RecipeScreen extends React.PureComponent {
               {recipe.title}
             </Text>
             <Text style={styles.recipeSubTitle}>
-              {recipe.subTitle}
+              {recipe.subtitle}
             </Text>
             <Divider style={styles.divider} />
             <Text style={styles.recipeSummaryText}>

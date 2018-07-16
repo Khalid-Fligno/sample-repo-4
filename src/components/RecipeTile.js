@@ -2,7 +2,6 @@ import React from 'react';
 import { Dimensions, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Card } from 'react-native-elements';
 import PropTypes from 'prop-types';
-import recipeTileImageMap from '../utils/recipeTileImageMap';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 
@@ -19,7 +18,7 @@ const RecipeTile = ({
     style={styles.cardContainer}
   >
     <Card
-      image={recipeTileImageMap[image]}
+      image={{ uri: image }}
       containerStyle={styles.card}
     >
       <Text style={styles.title}>

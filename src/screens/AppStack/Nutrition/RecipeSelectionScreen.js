@@ -56,10 +56,10 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     const recipeList = recipes.map((recipe) => (
       <RecipeTile
         key={recipe.id}
-        image={recipe.id}
+        image={recipe.coverImage}
         title={recipe.title}
-        subTitle={recipe.subTitle}
-        onPress={() => this.props.navigation.navigate('Recipe', { recipeName: recipe.id })}
+        subTitle={recipe.subtitle}
+        onPress={() => this.props.navigation.navigate('Recipe', { recipeId: recipe.id })}
       />
     ));
     return (
