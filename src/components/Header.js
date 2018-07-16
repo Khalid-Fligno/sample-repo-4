@@ -20,6 +20,7 @@ const Header = ({
   navigation,
   withBackButton,
   withSkipButton,
+  withStartButton,
 }) => (
   <SafeAreaView>
     <StatusBar
@@ -58,19 +59,41 @@ const Header = ({
           }}
         />
       </View>
-      <TouchableOpacity
-        style={styles.headerContentContainer}
-        onPress={() => withSkipButton && navigation.state.params.handleSkip()}
-      >
-        {
-          withSkipButton &&
+      {
+        withSkipButton && (
+          <TouchableOpacity
+            style={styles.headerContentContainer}
+            onPress={() => navigation.state.params.handleSkip()}
+          >
             <Text
               style={styles.skipButton}
             >
               Skip
             </Text>
-        }
-      </TouchableOpacity>
+          </TouchableOpacity>
+        )
+      }
+      {
+        withStartButton && (
+          <TouchableOpacity
+            style={styles.headerContentContainer}
+            onPress={() => navigation.state.params.handleStart()}
+          >
+            <Text
+              style={styles.skipButton}
+            >
+              Start
+            </Text>
+          </TouchableOpacity>
+        )
+      }
+      {
+        !withStartButton && !withSkipButton && (
+          <View
+            style={styles.headerContentContainer}
+          />
+        )
+      }
     </View>
   </SafeAreaView>
 );
@@ -78,12 +101,14 @@ const Header = ({
 Header.propTypes = {
   withBackButton: PropTypes.bool,
   withSkipButton: PropTypes.bool,
+  withStartButton: PropTypes.bool,
   stack: PropTypes.string,
 };
 
 Header.defaultProps = {
   withBackButton: false,
   withSkipButton: false,
+  withStartButton: false,
   stack: null,
 };
 
@@ -135,7 +160,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.blue.dark,
   },
   headerContentContainer: {
-    width: 50,
+    width: 60,
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',

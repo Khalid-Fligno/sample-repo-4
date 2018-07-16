@@ -100,6 +100,7 @@ const NutritionStack = createStackNavigator(
           <Header
             navigation={navigation}
             withBackButton={nutritionBackButtonMap[routeName]}
+            withStartButton={routeName === 'Recipe'}
             stack="nutrition"
           />
         );
