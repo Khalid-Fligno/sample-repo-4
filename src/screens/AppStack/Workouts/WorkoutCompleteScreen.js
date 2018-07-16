@@ -15,7 +15,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
       await Promise.all(exerciseList.map(async (exercise, index) => {
         await FileSystem.downloadAsync(
           exercise.videoURL,
-          `${FileSystem.documentDirectory}exercise-${index + 1}.mp4`,
+          `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
         );
       }));
     } catch (err) {
