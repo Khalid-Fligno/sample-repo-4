@@ -56,7 +56,7 @@ export default class Exercise4Screen extends React.PureComponent {
           {currentExercise.name}
         </Text>
         <Video
-          source={{ uri: `${FileSystem.documentDirectory}exercise-4.mp4` }}
+          source={{ uri: `${FileSystem.cacheDirectory}exercise-4.mp4` }}
           rate={1.0}
           volume={1.0}
           isMuted={false}
