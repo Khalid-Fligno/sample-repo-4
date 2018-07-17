@@ -13,6 +13,7 @@ import HomeScreen from '../src/screens/AppStack/Home/HomeScreen';
 import NutritionHomeScreen from '../src/screens/AppStack/Nutrition/NutritionHomeScreen';
 import RecipeSelectionScreen from '../src/screens/AppStack/Nutrition/RecipeSelectionScreen';
 import RecipeScreen from '../src/screens/AppStack/Nutrition/RecipeScreen';
+import RecipeStepsScreen from '../src/screens/AppStack/Nutrition/RecipeStepsScreen';
 import WorkoutsHomeScreen from '../src/screens/AppStack/Workouts/WorkoutsHomeScreen';
 import WorkoutsLocationScreen from '../src/screens/AppStack/Workouts/WorkoutsLocationScreen';
 import WorkoutsSelectionScreen from '../src/screens/AppStack/Workouts/WorkoutsSelectionScreen';
@@ -90,6 +91,7 @@ const NutritionStack = createStackNavigator(
     NutritionHome: NutritionHomeScreen,
     RecipeSelection: RecipeSelectionScreen,
     Recipe: RecipeScreen,
+    RecipeSteps: RecipeStepsScreen,
   },
   {
     initialRouteName: 'NutritionHome',
@@ -251,6 +253,18 @@ const ExerciseStack = createStackNavigator(
   },
 );
 
+// const RecipeStepsStack = createStackNavigator(
+//   {
+//     RecipeSteps: RecipeStepsScreen,
+//   },
+//   {
+//     initialRouteName: 'RecipeSteps',
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+// );
+
 const SwitchNavigator = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
@@ -258,6 +272,7 @@ const SwitchNavigator = createSwitchNavigator(
     Onboarding: OnboardingStack,
     App: AppStack,
     Exercise: ExerciseStack,
+    // Recipe: RecipeStepsStack,
   },
   {
     initialRouteName: 'AuthLoading',

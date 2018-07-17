@@ -19,6 +19,7 @@ export const nutritionBackButtonMap = {
   NutritionHome: false,
   RecipeSelection: true,
   Recipe: true,
+  RecipeSteps: true,
 };
 
 export const onboardingHeaderButtonMap = {
