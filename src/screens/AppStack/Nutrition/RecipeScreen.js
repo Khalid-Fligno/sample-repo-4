@@ -5,14 +5,10 @@ import {
   Text,
   ScrollView,
   Dimensions,
-  TouchableOpacity,
 } from 'react-native';
 import { Divider } from 'react-native-elements';
-import Carousel from 'react-native-snap-carousel';
 import Image from 'react-native-scalable-image';
 import { db } from '../../../../config/firebase';
-import CustomButton from '../../../components/CustomButton';
-import Icon from '../../../components/Icon';
 import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
 
@@ -25,11 +21,16 @@ export default class RecipeScreen extends React.PureComponent {
       recipe: {},
       ingredients: [],
       steps: [],
-      started: false,
       loading: false,
     };
   }
   componentWillMount = async () => {
+    this.props.navigation.setParams({
+      handleStart: () => this.props.navigation.navigate('RecipeSteps', {
+        recipe: this.state.recipe,
+        steps: this.state.steps,
+      }),
+    });
     await this.fetchRecipe();
   }
   componentWillUnmount() {
@@ -49,76 +50,10 @@ export default class RecipeScreen extends React.PureComponent {
         });
       });
   }
-  toggleRecipeStart = () => {
-    this.setState((prevState) => ({
-      started: !prevState.started,
-    }));
-  }
-  renderItem = ({ item, index }) => {
-    const { steps, recipe } = this.state;
-    return (
-      <View style={styles.carouselCard}>
-        <View style={styles.carouselHeaderContainer}>
-          <View style={styles.carouselHeaderContentContainer}>
-            <TouchableOpacity
-              onPress={this.toggleRecipeStart}
-              style={styles.carouselHeaderButton}
-            >
-              <Icon
-                name="cross"
-                size={16}
-                color={colors.violet.standard}
-              />
-            </TouchableOpacity>
-            <Text style={styles.carouselHeaderText}>
-              STEP {index + 1} OF {steps.length}
-            </Text>
-            {
-              index + 1 === steps.length ? (
-                <TouchableOpacity
-                  onPress={this.toggleRecipeStart}
-                  style={styles.carouselHeaderButton}
-                >
-                  <Icon
-                    name="tick"
-                    size={22}
-                    color={colors.violet.standard}
-                  />
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  onPress={() => this.carousel.snapToNext()}
-                  style={styles.carouselHeaderButton}
-                >
-                  <Icon
-                    name="arrow-right"
-                    size={20}
-                    color={colors.violet.standard}
-                  />
-                </TouchableOpacity>
-              )
-            }
-          </View>
-          <Image
-            source={{ uri: recipe.coverImage }}
-            width={width - 52}
-          />
-        </View>
-        <View style={styles.carouselTextContainer}>
-          <ScrollView>
-            <Text style={styles.carouselText}>
-              {item}
-            </Text>
-          </ScrollView>
-        </View>
-      </View>
-    );
-  }
   render() {
     const {
       recipe,
       ingredients,
-      started,
       loading,
     } = this.state;
     if (loading) {
@@ -127,24 +62,6 @@ export default class RecipeScreen extends React.PureComponent {
           loading={loading}
           color={colors.violet.dark}
         />
-      );
-    }
-    if (started) {
-      return (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: colors.white,
-          }}
-        >
-          <Carousel
-            ref={(c) => this.carousel = c}
-            data={this.state.steps}
-            renderItem={this.renderItem}
-            sliderWidth={width}
-            itemWidth={width - 50}
-          />
-        </View>
       );
     }
     return (
@@ -184,16 +101,6 @@ export default class RecipeScreen extends React.PureComponent {
             </View>
           </View>
         </ScrollView>
-        <View
-          style={styles.startButtonContainer}
-        >
-          <CustomButton
-            secondary
-            // outline
-            title="START COOKING"
-            onPress={this.toggleRecipeStart}
-          />
-        </View>
       </View>
     );
   }
@@ -302,12 +209,5 @@ const styles = StyleSheet.create({
     color: colors.charcoal.standard,
     marginTop: 3,
     marginBottom: 3,
-  },
-  startButtonContainer: {
-    backgroundColor: colors.offWhite,
-    borderTopColor: colors.grey.light,
-    borderTopWidth: 1,
-    paddingTop: 15,
-    paddingBottom: 15,
   },
 });
