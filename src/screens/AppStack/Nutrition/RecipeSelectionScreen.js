@@ -58,6 +58,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         key={recipe.id}
         image={recipe.coverImage}
         title={recipe.title}
+        tags={recipe.tags}
         subTitle={recipe.subtitle}
         onPress={() => this.props.navigation.navigate('Recipe', { recipeId: recipe.id })}
       />
