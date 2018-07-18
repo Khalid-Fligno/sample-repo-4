@@ -6,11 +6,13 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
+import { FileSystem } from 'expo';
 import { Divider } from 'react-native-elements';
 import Image from 'react-native-scalable-image';
-import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
+import Icon from '../../../components/Icon';
 import colors from '../../../styles/colors';
+import fonts from '../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
@@ -20,41 +22,31 @@ export default class RecipeScreen extends React.PureComponent {
     this.state = {
       recipe: {},
       ingredients: [],
-      steps: [],
+      utensils: [],
       loading: false,
     };
   }
   componentWillMount = async () => {
+    const recipe = this.props.navigation.getParam('recipe', null);
+    this.setState({
+      recipe,
+      ingredients: recipe.ingredients,
+      utensils: recipe.utensils,
+      loading: false,
+    });
     this.props.navigation.setParams({
       handleStart: () => this.props.navigation.navigate('RecipeSteps', {
-        recipe: this.state.recipe,
-        steps: this.state.steps,
+        steps: recipe.steps,
+        recipe,
       }),
     });
-    await this.fetchRecipe();
-  }
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-  fetchRecipe = () => {
-    this.setState({ loading: true });
-    const recipeId = this.props.navigation.getParam('recipeId', null);
-    this.unsubscribe = db.collection('recipes')
-      .doc(recipeId)
-      .onSnapshot((doc) => {
-        this.setState({
-          recipe: doc.data(),
-          ingredients: doc.data().ingredients,
-          steps: doc.data().steps,
-          loading: false,
-        });
-      });
   }
   render() {
     const {
       recipe,
       ingredients,
       loading,
+      utensils,
     } = this.state;
     if (loading) {
       return (
@@ -68,7 +60,7 @@ export default class RecipeScreen extends React.PureComponent {
       <View style={styles.container}>
         <ScrollView>
           <Image
-            source={{ uri: recipe.coverImage }}
+            source={{ uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
             width={width}
           />
           <View style={styles.recipeInfoContainer}>
@@ -78,6 +70,29 @@ export default class RecipeScreen extends React.PureComponent {
             <Text style={styles.recipeSubTitle}>
               {recipe.subtitle}
             </Text>
+            <Divider style={styles.divider} />
+            <View style={styles.infoBar}>
+              <Icon
+                name="timer"
+                size={22}
+                color={colors.violet.standard}
+              />
+              <Text style={styles.timeText}>
+                {recipe.time}
+              </Text>
+              {
+                recipe.tags && recipe.tags.map((tag) => (
+                  <View
+                    style={styles.tagCircle}
+                    key={tag}
+                  >
+                    <Text style={styles.tagText}>
+                      {tag}
+                    </Text>
+                  </View>
+                ))
+              }
+            </View>
             <Divider style={styles.divider} />
             <Text style={styles.recipeSummaryText}>
               {recipe.summary}
@@ -94,6 +109,23 @@ export default class RecipeScreen extends React.PureComponent {
                       style={styles.ingredientsText}
                     >
                       - {ingredient}
+                    </Text>
+                  );
+                })
+              }
+            </View>
+            <View style={styles.ingredientsContainer}>
+              <Text style={styles.ingredientsHeading} >
+                Utensils
+              </Text>
+              {
+                utensils.map((utensil) => {
+                  return (
+                    <Text
+                      key={utensil}
+                      style={styles.ingredientsText}
+                    >
+                      - {utensil}
                     </Text>
                   );
                 })
@@ -180,6 +212,35 @@ const styles = StyleSheet.create({
   },
   divider: {
     backgroundColor: colors.grey.light,
+  },
+  infoBar: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  timeText: {
+    fontFamily: fonts.standard,
+    color: colors.violet.standard,
+    marginTop: 3,
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  tagCircle: {
+    height: 24,
+    width: 24,
+    marginLeft: 10,
+    borderWidth: 2.5,
+    borderColor: colors.violet.standard,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tagText: {
+    fontFamily: fonts.bold,
+    fontSize: 11,
+    color: colors.violet.standard,
+    marginTop: 4,
   },
   recipeSummaryText: {
     fontFamily: 'GothamBook',
