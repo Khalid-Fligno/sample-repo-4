@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
+import { FileSystem } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 import Image from 'react-native-scalable-image';
+import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
 import colors from '../../../styles/colors';
 
@@ -11,20 +13,27 @@ export default class RecipeStepsScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      recipe: {},
       steps: [],
+      loading: false,
     };
   }
-  componentWillMount() {
-    const recipe = this.props.navigation.getParam('recipe', null);
+  componentWillMount = async () => {
     const steps = this.props.navigation.getParam('steps', null);
-    this.setState({
-      recipe,
-      steps,
-    });
+    const recipe = this.props.navigation.getParam('recipe', null);
+    await this.fetchImages(recipe, steps);
+  }
+  fetchImages = async (recipe, steps) => {
+    this.setState({ loading: true });
+    await Promise.all(recipe.stepsImages.map(async (stepImage, index) => {
+      await FileSystem.downloadAsync(
+        stepImage,
+        `${FileSystem.cacheDirectory}step-${index + 1}.jpg`,
+      );
+    }));
+    this.setState({ loading: false, steps });
   }
   renderItem = ({ item, index }) => {
-    const { steps, recipe } = this.state;
+    const { steps } = this.state;
     return (
       <View style={styles.carouselCard}>
         <View style={styles.carouselHeaderContainer}>
@@ -69,7 +78,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
             }
           </View>
           <Image
-            source={{ uri: recipe.stepsImages[index] }}
+            source={{ uri: `${FileSystem.cacheDirectory}step-${index + 1}.jpg` }}
             width={width - 52}
           />
         </View>
@@ -84,6 +93,15 @@ export default class RecipeStepsScreen extends React.PureComponent {
     );
   }
   render() {
+    const { loading } = this.state;
+    if (loading) {
+      return (
+        <Loader
+          loading={loading}
+          color={colors.violet.dark}
+        />
+      );
+    }
     return (
       <View style={styles.container}>
         <Carousel
