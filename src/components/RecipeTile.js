@@ -12,7 +12,7 @@ const RecipeTile = ({
   title,
   subTitle,
   image,
-  tags
+  tags,
 }) => (
   <TouchableOpacity
     onPress={onPress}
@@ -35,6 +35,7 @@ const RecipeTile = ({
           tags && tags.map((tag) => (
             <View
               style={styles.tagCircle}
+              key={tag}
             >
               <Text
                 style={styles.tagText}
@@ -54,6 +55,11 @@ RecipeTile.propTypes = {
   title: PropTypes.string.isRequired,
   subTitle: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.string),
+};
+
+RecipeTile.defaultProps = {
+  tags: null,
 };
 
 const styles = StyleSheet.create({
