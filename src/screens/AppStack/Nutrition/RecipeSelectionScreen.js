@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
+import { FileSystem } from 'expo';
 import { db } from '../../../../config/firebase';
 import RecipeTile from '../../../components/RecipeTile';
 import Loader from '../../../components/Loader';
@@ -23,7 +24,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       loading: false,
     };
   }
-  componentWillMount = () => {
+  componentDidMount = () => {
     this.fetchRecipes();
   }
   componentWillUnmount() {
@@ -34,11 +35,17 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     const meal = this.props.navigation.getParam('meal', null);
     this.unsubscribe = db.collection('recipes')
       .where('meal', '==', meal)
-      .onSnapshot((querySnapshot) => {
+      .onSnapshot(async (querySnapshot) => {
         const recipes = [];
         querySnapshot.forEach((doc) => {
           recipes.push(doc.data());
         });
+        await Promise.all(recipes.map(async (recipe) => {
+          await FileSystem.downloadAsync(
+            recipe.coverImage,
+            `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
+          );
+        }));
         this.setState({ recipes, loading: false });
       });
   }
@@ -56,11 +63,11 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     const recipeList = recipes.map((recipe) => (
       <RecipeTile
         key={recipe.id}
-        image={recipe.coverImage}
+        image={`${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`}
         title={recipe.title}
         tags={recipe.tags}
         subTitle={recipe.subtitle}
-        onPress={() => this.props.navigation.navigate('Recipe', { recipeId: recipe.id })}
+        onPress={() => this.props.navigation.navigate('Recipe', { recipe })}
       />
     ));
     return (
@@ -74,7 +81,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             {mealNameMap[meal]}
           </Text>
         </View>
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.scrollView}>
           {recipeList}
         </ScrollView>
       </View>
@@ -108,5 +115,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 24,
     color: colors.violet.dark,
+  },
+  scrollView: {
+    paddingBottom: 15,
   },
 });
