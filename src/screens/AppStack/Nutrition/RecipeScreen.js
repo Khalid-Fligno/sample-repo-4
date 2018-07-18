@@ -35,10 +35,7 @@ export default class RecipeScreen extends React.PureComponent {
       loading: false,
     });
     this.props.navigation.setParams({
-      handleStart: () => this.props.navigation.navigate('RecipeSteps', {
-        steps: recipe.steps,
-        recipe,
-      }),
+      handleStart: () => this.props.navigation.navigate('RecipeSteps', { recipe }),
     });
   }
   render() {
