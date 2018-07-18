@@ -36,7 +36,7 @@ const Header = ({
       ]}
     >
       <TouchableOpacity
-        style={styles.headerContentContainer}
+        style={styles.headerContentContainerLeft}
         onPress={() => withBackButton && navigation.goBack()}
       >
         {
@@ -62,7 +62,7 @@ const Header = ({
       {
         withSkipButton && (
           <TouchableOpacity
-            style={styles.headerContentContainer}
+            style={styles.headerContentContainerRight}
             onPress={() => navigation.state.params.handleSkip()}
           >
             <Text
@@ -76,7 +76,7 @@ const Header = ({
       {
         withStartButton && (
           <TouchableOpacity
-            style={styles.headerContentContainer}
+            style={styles.headerContentContainerRight}
             onPress={() => navigation.state.params.handleStart()}
           >
             <Text
@@ -84,13 +84,18 @@ const Header = ({
             >
               Start
             </Text>
+            <Icon
+              name="chevron-right"
+              size={20}
+              color={colors.white}
+            />
           </TouchableOpacity>
         )
       }
       {
         !withStartButton && !withSkipButton && (
           <View
-            style={styles.headerContentContainer}
+            style={styles.headerContentContainerRight}
           />
         )
       }
@@ -124,9 +129,9 @@ const styles = StyleSheet.create({
   },
   skipButton: {
     fontFamily: fonts.standard,
-    fontSize: 16,
+    fontSize: 17,
     color: colors.white,
-    marginTop: 4,
+    marginTop: 5,
     marginRight: 4,
   },
   defaultHeader: {
@@ -160,9 +165,25 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.blue.dark,
   },
   headerContentContainer: {
-    width: 60,
+    width: 50,
     height: 50,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerContentContainerLeft: {
+    width: 100,
+    height: 50,
+    paddingLeft: 15,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  headerContentContainerRight: {
+    width: 100,
+    height: 50,
+    paddingRight: 15,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
 });
