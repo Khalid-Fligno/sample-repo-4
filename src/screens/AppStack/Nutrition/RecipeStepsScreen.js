@@ -93,16 +93,18 @@ export default class RecipeStepsScreen extends React.PureComponent {
               )
             }
           </View>
-          <Image
-            source={{ uri: `${FileSystem.cacheDirectory}step-${index + 1}.jpg` }}
-            width={width - 52}
-          />
         </View>
-        <View style={styles.carouselTextContainer}>
+        <View style={styles.carouselContentContainer}>
           <ScrollView>
-            <Text style={styles.carouselText}>
-              {item}
-            </Text>
+            <Image
+              source={{ uri: `${FileSystem.cacheDirectory}step-${index + 1}.jpg` }}
+              width={width - 52}
+            />
+            <View style={styles.carouselTextContainer}>
+              <Text style={styles.carouselText}>
+                {item}
+              </Text>
+            </View>
           </ScrollView>
         </View>
       </View>
@@ -180,8 +182,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowRadius: 1,
   },
-  carouselTextContainer: {
+  carouselContentContainer: {
     flex: 1,
+  },
+  carouselTextContainer: {
     paddingTop: 15,
     paddingRight: 10,
     paddingBottom: 15,
