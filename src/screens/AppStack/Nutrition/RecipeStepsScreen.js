@@ -38,16 +38,32 @@ export default class RecipeStepsScreen extends React.PureComponent {
       <View style={styles.carouselCard}>
         <View style={styles.carouselHeaderContainer}>
           <View style={styles.carouselHeaderContentContainer}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}
-              style={styles.carouselHeaderButton}
-            >
-              <Icon
-                name="cross"
-                size={16}
-                color={colors.violet.standard}
-              />
-            </TouchableOpacity>
+            {
+              index === 0 ? (
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.goBack()}
+                  style={styles.carouselHeaderButton}
+                >
+                  <Icon
+                    name="cross"
+                    size={16}
+                    color={colors.violet.standard}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => this.carousel.snapToPrev()}
+                  style={styles.carouselHeaderButton}
+                >
+                  <Icon
+                    name="arrow-left"
+                    size={20}
+                    color={colors.violet.standard}
+                  />
+                </TouchableOpacity>
+              )
+            }
+
             <Text style={styles.carouselHeaderText}>
               STEP {index + 1} OF {steps.length}
             </Text>
