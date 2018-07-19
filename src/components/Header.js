@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   skipButton: {
     fontFamily: fonts.standard,
-    fontSize: 17,
+    fontSize: 16,
     color: colors.white,
     marginTop: 5,
     marginRight: 4,
