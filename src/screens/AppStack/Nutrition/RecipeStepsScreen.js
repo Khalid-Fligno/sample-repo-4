@@ -6,6 +6,7 @@ import Image from 'react-native-scalable-image';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
 import colors from '../../../styles/colors';
+import fonts from '../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
@@ -17,7 +18,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
       loading: false,
     };
   }
-  componentWillMount = async () => {
+  componentDidMount = async () => {
     const recipe = this.props.navigation.getParam('recipe', null);
     const { stepsImages, steps } = recipe;
     await this.fetchImages(stepsImages, steps);
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 5,
   },
   carouselHeaderText: {
-    fontFamily: 'GothamBold',
+    fontFamily: fonts.bold,
     fontSize: 16,
     color: colors.violet.standard,
     marginTop: 3,
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   carouselText: {
-    fontFamily: 'GothamBook',
+    fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.standard,
   },

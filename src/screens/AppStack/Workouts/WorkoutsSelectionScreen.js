@@ -13,20 +13,21 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     super(props);
     this.state = {
       workouts: [],
+      loading: false,
     };
   }
-  componentDidMount = () => {
-    this.fetchWorkouts();
+  componentDidMount = async () => {
+    await this.fetchWorkouts();
   }
-  componentWillUnmount() {
-    this.unsubscribe();
+  componentWillUnmount = async () => {
+    await this.unsubscribe();
   }
   fetchWorkouts = async () => {
     this.setState({ loading: true });
     const type = this.props.navigation.getParam('workoutType', null);
     const location = this.props.navigation.getParam('workoutLocation', null);
     try {
-      this.unsubscribe = db.collection('workouts')
+      this.unsubscribe = await db.collection('workouts')
         .where('type', '==', type)
         .where('location', '==', location)
         .onSnapshot((querySnapshot) => {
@@ -50,6 +51,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     const workoutLocation = getParam('workoutLocation', null);
     const workoutList = workouts.map((workout) => (
       <Button
+        key={workout.id}
         title={workout.name}
         onPress={() => navigate('WorkoutInfo', { exercises: workout.exercises, workout })}
         containerViewStyle={styles.buttonContainer}

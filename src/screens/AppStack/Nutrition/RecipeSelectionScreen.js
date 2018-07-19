@@ -24,17 +24,17 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       loading: false,
     };
   }
-  componentDidMount = () => {
-    this.fetchRecipes();
+  componentDidMount = async () => {
+    await this.fetchRecipes();
   }
-  componentWillUnmount() {
-    this.unsubscribe();
+  componentWillUnmount = async () => {
+    await this.unsubscribe();
   }
-  fetchRecipes = () => {
+  fetchRecipes = async () => {
     this.setState({ loading: true });
     const meal = this.props.navigation.getParam('meal', null);
-    this.unsubscribe = db.collection('recipes')
-      .where('meal', '==', meal)
+    this.unsubscribe = await db.collection('recipes')
+      .where(meal, '==', true)
       .onSnapshot(async (querySnapshot) => {
         const recipes = [];
         querySnapshot.forEach((doc) => {
