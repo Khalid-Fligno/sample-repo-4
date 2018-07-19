@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 5,
   },
   carouselHeaderText: {
-    fontFamily: 'GothamBold',
+    fontFamily: fonts.bold,
     fontSize: 16,
     color: colors.violet.standard,
     marginTop: 3,
@@ -192,17 +192,17 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   carouselText: {
-    fontFamily: 'GothamBook',
+    fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.standard,
   },
   recipeTitle: {
-    fontFamily: 'GothamBold',
+    fontFamily: fonts.bold,
     fontSize: 28,
     color: colors.charcoal.standard,
   },
   recipeSubTitle: {
-    fontFamily: 'GothamBook',
+    fontFamily: fonts.standard,
     fontSize: 16,
     color: colors.charcoal.standard,
     marginBottom: 15,
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   recipeSummaryText: {
-    fontFamily: 'GothamBook',
+    fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.standard,
     marginTop: 15,
@@ -256,13 +256,13 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   ingredientsHeading: {
-    fontFamily: 'GothamBold',
+    fontFamily: fonts.bold,
     fontSize: 18,
     color: colors.charcoal.standard,
     marginBottom: 5,
   },
   ingredientsText: {
-    fontFamily: 'GothamBook',
+    fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.standard,
     marginTop: 3,

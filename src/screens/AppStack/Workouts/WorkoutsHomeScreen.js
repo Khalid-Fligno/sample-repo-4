@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
-import { Button } from 'react-native-elements';
+import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -16,37 +15,38 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-        <Text>
-          WorkoutsHomeScreen
-        </Text>
-        <Button
-          title="Full Body"
+        <TouchableOpacity
           onPress={() => navigate('WorkoutsLocation', { workoutType: 'fullBody' })}
-          containerViewStyle={styles.buttonContainer}
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-        />
-        <Button
-          title="Upper Body"
+          style={styles.workoutButton}
+        >
+          <Text style={styles.workoutButtonText}>
+            Full Body
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => navigate('WorkoutsLocation', { workoutType: 'upperBody' })}
-          containerViewStyle={styles.buttonContainer}
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-        />
-        <Button
-          title="Lower Body"
+          style={styles.workoutButton}
+        >
+          <Text style={styles.workoutButtonText}>
+            Upper Body
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => navigate('WorkoutsLocation', { workoutType: 'lowerBody' })}
-          containerViewStyle={styles.buttonContainer}
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-        />
-        <Button
-          title="Core"
+          style={styles.workoutButton}
+        >
+          <Text style={styles.workoutButtonText}>
+            Lower Body
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => navigate('WorkoutsLocation', { workoutType: 'core' })}
-          containerViewStyle={styles.buttonContainer}
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-        />
+          style={styles.workoutButton}
+        >
+          <Text style={styles.workoutButtonText}>
+            Core
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -58,20 +58,28 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 7.5,
+    paddingBottom: 7.5,
   },
-  buttonContainer: {
-    marginTop: 5,
-    marginBottom: 5,
-  },
-  button: {
+  workoutButton: {
+    opacity: 0.9,
+    flex: 1,
+    justifyContent: 'flex-end',
     width: width - 30,
-    backgroundColor: colors.coral.standard,
+    marginTop: 7.5,
+    marginBottom: 7.5,
+    paddingLeft: 20,
+    paddingBottom: 5,
     borderRadius: 4,
+    backgroundColor: colors.coral.standard,
+    shadowColor: colors.black,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
   },
-  buttonText: {
-    fontFamily: fonts.bold,
-    fontSize: 16,
+  workoutButtonText: {
+    fontFamily: fonts.boldItalic,
+    fontSize: 34,
     color: colors.white,
-    marginTop: 3,
   },
 });
