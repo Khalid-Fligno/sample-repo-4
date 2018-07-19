@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 18,
+    fontSize: 16,
   },
   subTitle: {
     fontFamily: fonts.standard,
@@ -87,19 +87,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   tagCircle: {
-    height: 24,
-    width: 24,
+    height: 28,
+    width: 28,
     marginTop: 3,
     marginRight: 5,
     borderWidth: 2.5,
     borderColor: colors.violet.standard,
-    borderRadius: 12,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
   },
   tagText: {
     fontFamily: fonts.bold,
-    fontSize: 11,
+    fontSize: 12,
     color: colors.violet.standard,
     marginTop: 4,
   },
