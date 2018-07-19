@@ -172,7 +172,6 @@ const AppStack = createBottomTabNavigator(
     navigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
-        // const activeState = focused ? colors.coral.standard : colors.charcoal.light;
         const activeState = tabColorMap[routeName];
         const inactiveState = colors.charcoal.standard;
         let icon;
@@ -253,18 +252,6 @@ const ExerciseStack = createStackNavigator(
   },
 );
 
-// const RecipeStepsStack = createStackNavigator(
-//   {
-//     RecipeSteps: RecipeStepsScreen,
-//   },
-//   {
-//     initialRouteName: 'RecipeSteps',
-//     navigationOptions: {
-//       header: null,
-//     },
-//   },
-// );
-
 const SwitchNavigator = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
@@ -272,7 +259,6 @@ const SwitchNavigator = createSwitchNavigator(
     Onboarding: OnboardingStack,
     App: AppStack,
     Exercise: ExerciseStack,
-    // Recipe: RecipeStepsStack,
   },
   {
     initialRouteName: 'AuthLoading',
