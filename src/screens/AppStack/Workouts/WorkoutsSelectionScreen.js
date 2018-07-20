@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
-import { Button } from 'react-native-elements';
+import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
@@ -50,14 +49,15 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     const workoutType = getParam('workoutType', null);
     const workoutLocation = getParam('workoutLocation', null);
     const workoutList = workouts.map((workout) => (
-      <Button
+      <TouchableOpacity
         key={workout.id}
-        title={workout.name}
         onPress={() => navigate('WorkoutInfo', { exercises: workout.exercises, workout })}
-        containerViewStyle={styles.buttonContainer}
-        buttonStyle={styles.button}
-        textStyle={styles.buttonText}
-      />
+        style={styles.workoutButton}
+      >
+        <Text style={styles.workoutButtonText}>
+          {workout.name}
+        </Text>
+      </TouchableOpacity>
     ));
     if (loading) {
       return (
@@ -90,6 +90,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 7.5,
+    paddingBottom: 7.5,
   },
   buttonContainer: {
     marginTop: 5,
@@ -105,5 +107,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.white,
     marginTop: 3,
+  },
+  workoutButton: {
+    opacity: 0.9,
+    flex: 1,
+    justifyContent: 'flex-end',
+    width: width - 30,
+    marginTop: 7.5,
+    marginBottom: 7.5,
+    paddingLeft: 20,
+    paddingBottom: 5,
+    borderRadius: 4,
+    backgroundColor: colors.coral.standard,
+    shadowColor: colors.black,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+  },
+  workoutButtonText: {
+    fontFamily: fonts.boldItalic,
+    fontSize: 34,
+    color: colors.white,
   },
 });
