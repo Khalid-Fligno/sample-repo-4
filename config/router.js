@@ -127,6 +127,7 @@ const WorkoutsStack = createStackNavigator(
           <Header
             navigation={navigation}
             withBackButton={workoutsBackButtonMap[routeName]}
+            withStartButton={routeName === 'WorkoutInfo'}
             stack="workouts"
           />
         );
