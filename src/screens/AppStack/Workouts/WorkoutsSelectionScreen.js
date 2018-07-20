@@ -28,8 +28,8 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     const location = this.props.navigation.getParam('workoutLocation', null);
     try {
       this.unsubscribe = await db.collection('workouts')
-        .where('type', '==', type)
-        .where('location', '==', location)
+        .where(type, '==', true)
+        .where(location, '==', true)
         .onSnapshot((querySnapshot) => {
           const workouts = [];
           querySnapshot.forEach((doc) => {
