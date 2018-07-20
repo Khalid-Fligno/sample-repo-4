@@ -19,6 +19,9 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     const workout = this.props.navigation.getParam('workout', null);
     this.setState({ workout });
     await this.fetchWorkout(exercises);
+    this.props.navigation.setParams({
+      handleStart: () => this.loadExercises(this.state.exerciseList),
+    });
   }
   fetchWorkout = (exercises) => {
     try {
@@ -52,7 +55,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     }
   }
   render() {
-    const { exerciseList, loading } = this.state;
+    const { loading } = this.state;
     if (loading) {
       return (
         <Loader
@@ -65,11 +68,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       <View style={styles.container}>
         <Text>
           Workout Info Screen {this.state.workout && this.state.workout.name}
-        </Text>
-        <Text
-          onPress={() => this.loadExercises(exerciseList)}
-        >
-          Start
         </Text>
       </View>
     );
