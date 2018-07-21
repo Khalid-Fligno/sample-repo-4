@@ -1,4 +1,5 @@
 import React from 'react';
+import { Animated, Easing } from 'react-native';
 import { createSwitchNavigator, createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import Icon from '../src//components/Icon';
 import Header from '../src/components/Header';
@@ -35,6 +36,27 @@ import {
   nutritionBackButtonMap,
   onboardingHeaderButtonMap,
 } from './routerUtils';
+
+const fadeSpec = {
+  duration: 800,
+  easing: Easing.out(Easing.poly(4)),
+  timing: Animated.timing,
+};
+
+const fade = (props) => {
+  const { position, scene } = props;
+  const { index } = scene;
+  const translateX = 0;
+  const translateY = 0;
+  const opacity = position.interpolate({
+    inputRange: [index - 0.7, index, index + 0.7],
+    outputRange: [0.3, 1, 0.3],
+  });
+  return {
+    opacity,
+    transform: [{ translateX }, { translateY }],
+  };
+};
 
 const AuthStack = createStackNavigator(
   {
@@ -95,6 +117,12 @@ const NutritionStack = createStackNavigator(
   },
   {
     initialRouteName: 'NutritionHome',
+    transitionConfig: () => ({
+      transitionSpec: fadeSpec,
+      screenInterpolator: (props) => {
+        return fade(props);
+      },
+    }),
     navigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
