@@ -103,10 +103,12 @@ export default class RecipeStepsScreen extends React.PureComponent {
               source={{ uri: `${FileSystem.cacheDirectory}step-${index + 1}.jpg` }}
               width={width - 52}
             />
-            <View style={styles.carouselTextContainer}>
-              <Text style={styles.carouselText}>
-                {item}
-              </Text>
+            <View style={styles.carouselBottomContainer}>
+              <View style={styles.carouselTextContainer}>
+                <Text style={styles.carouselText}>
+                  {item}
+                </Text>
+              </View>
             </View>
           </ScrollView>
         </View>
@@ -188,15 +190,24 @@ const styles = StyleSheet.create({
   carouselContentContainer: {
     flex: 1,
   },
-  carouselTextContainer: {
-    paddingTop: 15,
+  carouselBottomContainer: {
+    paddingTop: 10,
     paddingRight: 10,
-    paddingBottom: 15,
-    paddingLeft: 15,
+    paddingBottom: 10,
+    paddingLeft: 10,
+  },
+  carouselTextContainer: {
+    backgroundColor: colors.violet.standard,
+    borderRadius: 15,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 12,
   },
   carouselText: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.medium,
     fontSize: 14,
-    color: colors.charcoal.standard,
+    fontWeight: 'bold',
+    color: colors.white,
   },
 });
