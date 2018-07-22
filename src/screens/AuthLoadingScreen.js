@@ -35,6 +35,9 @@ export default class AuthLoadingScreen extends React.PureComponent {
         GothamBoldItalic: require('../../assets/fonts/gotham-bold-italic.otf'),
       },
       {
+        GothamMedium: require('../../assets/fonts/gotham-medium.otf'),
+      },
+      {
         GothamBook: require('../../assets/fonts/gotham-book.otf'),
       },
       {
