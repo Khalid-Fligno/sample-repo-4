@@ -1,42 +1,50 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
 import { FileSystem } from 'expo';
-import { db } from '../../../../config/firebase';
+import { db, auth } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
+import fonts from '../../../styles/fonts';
+
+const { width } = Dimensions.get('window');
+
+const findReps = (fitnessLevel) => {
+  if (fitnessLevel === '1') {
+    return 8;
+  } else if (fitnessLevel === '2') {
+    return 12;
+  } else if (fitnessLevel === '3') {
+    return 16;
+  }
+  return 12;
+};
 
 export default class WorkoutInfoScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      exerciseList: [],
       loading: false,
       workout: null,
+      reps: null,
     };
   }
-  componentWillMount = async () => {
-    const exercises = this.props.navigation.getParam('exercises', null);
+  componentDidMount = async () => {
     const workout = this.props.navigation.getParam('workout', null);
     this.setState({ workout });
-    await this.fetchWorkout(exercises);
     this.props.navigation.setParams({
-      handleStart: () => this.loadExercises(this.state.exerciseList),
+      handleStart: () => this.loadExercises(workout.exercises),
     });
-  }
-  fetchWorkout = (exercises) => {
-    try {
-      const exerciseList = [];
-      exercises.forEach((exercise) => {
-        db.collection('exercises')
-          .doc(exercise)
-          .onSnapshot(async (doc) => {
-            const exerciseObject = await doc.data();
-            exerciseList.push(exerciseObject);
-          });
-      });
-      this.setState({ exerciseList });
-    } catch (err) {
-      console.log(err);
+    const user = auth.currentUser;
+    if (user) {
+      db.collection('users')
+        .doc(user.uid)
+        .get()
+        .then(async (doc) => {
+          if (doc.exists) {
+            const reps = findReps(await doc.data().fitnessLevel);
+            this.setState({ reps });
+          }
+        });
     }
   }
   loadExercises = async (exerciseList) => {
@@ -55,7 +63,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     }
   }
   render() {
-    const { loading } = this.state;
+    const { loading, workout, reps } = this.state;
     if (loading) {
       return (
         <Loader
@@ -64,11 +72,76 @@ export default class WorkoutInfoScreen extends React.PureComponent {
         />
       );
     }
+    let workoutName;
+    let exerciseDisplay;
+    if (workout) {
+      workoutName = workout.name;
+      exerciseDisplay = workout.exercises.map((exercise, index) => {
+        return (
+          <View
+            key={exercise.id}
+            style={{
+              width: width - 30,
+              height: 100,
+              marginTop: 7.5,
+              marginBottom: 7.5,
+              borderWidth: 1,
+              borderRadius: 4,
+              borderColor: colors.grey.light,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <View>
+                <Text
+                  style={{
+                    fontFamily: fonts.bold,
+                    fontSize: 22,
+                  }}
+                >
+                  {index + 1}. {exercise.name}
+                </Text>
+              </View>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: fonts.bold,
+                    fontSize: 22,
+                  }}
+                >
+                  {reps} reps
+                </Text>
+              </View>
+            </View>
+          </View>
+        );
+      });
+    }
     return (
       <View style={styles.container}>
-        <Text>
-          Workout Info Screen {this.state.workout && this.state.workout.name}
-        </Text>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            alignItems: 'center',
+            paddingTop: 7.5,
+            paddingBottom: 7.5,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: fonts.bold,
+              fontSize: 72,
+              paddingRight: 10,
+            }}
+          >
+            {workoutName}
+          </Text>
+          {exerciseDisplay}
+        </ScrollView>
       </View>
     );
   }
@@ -79,6 +152,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
-    justifyContent: 'center',
   },
 });
