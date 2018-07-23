@@ -44,6 +44,9 @@ export default class AuthLoadingScreen extends React.PureComponent {
         GothamNarrowLight: require('../../assets/fonts/gotham-narrow-light.otf'),
       },
       {
+        Knucklebones: require('../../assets/fonts/dk-knucklebones.otf'),
+      },
+      {
         icomoon: require('../../assets/fonts/icomoon.ttf'),
       },
     ]);
