@@ -45,13 +45,11 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
   }
   render() {
     const { workouts, loading } = this.state;
-    const { navigate, getParam } = this.props.navigation;
-    const workoutType = getParam('workoutType', null);
-    const workoutLocation = getParam('workoutLocation', null);
+    const { navigate } = this.props.navigation;
     const workoutList = workouts.map((workout) => (
       <TouchableOpacity
         key={workout.id}
-        onPress={() => navigate('WorkoutInfo', { exercises: workout.exercises, workout })}
+        onPress={() => navigate('WorkoutInfo', { workout })}
         style={styles.workoutButton}
       >
         <Text style={styles.workoutButtonText}>
@@ -69,15 +67,6 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     }
     return (
       <View style={styles.container}>
-        <Text>
-          Workouts Selection Screen
-        </Text>
-        <Text>
-          {workoutType}
-        </Text>
-        <Text>
-          {workoutLocation}
-        </Text>
         {workoutList}
       </View>
     );
