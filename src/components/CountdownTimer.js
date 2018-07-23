@@ -83,7 +83,7 @@ const defaultStyles = {
   },
   text: {
     fontFamily: fonts.bold,
-    fontSize: 72,
+    fontSize: 84,
     color: colors.charcoal.standard,
   },
 };
