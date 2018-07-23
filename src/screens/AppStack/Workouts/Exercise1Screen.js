@@ -4,6 +4,7 @@ import { Video, FileSystem } from 'expo';
 import WorkoutTimer from '../../../components/WorkoutTimer';
 import CountdownTimer from '../../../components/CountdownTimer';
 import colors from '../../../styles/colors';
+import fonts from '../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
@@ -16,7 +17,7 @@ export default class Exercise1Screen extends React.PureComponent {
       timerStart: false,
       timerReset: false,
       totalDuration: 6,
-      countdownDuration: 4,
+      countdownDuration: 5,
       countdownActive: false,
     };
   }
@@ -68,6 +69,15 @@ export default class Exercise1Screen extends React.PureComponent {
             start={countdownActive}
             handleFinish={() => this.finishCountdown()}
           />
+          <Text
+            style={{
+              fontFamily: fonts.bold,
+              fontSize: 28,
+              color: colors.charcoal.standard,
+            }}
+          >
+            GET READY!
+          </Text>
         </View>
       );
     }
