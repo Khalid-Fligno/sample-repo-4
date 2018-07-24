@@ -28,7 +28,7 @@ export default class Onboarding3Screen extends React.PureComponent {
     this.state = {
       timerStart: false,
       timerReset: false,
-      totalDuration: 15,
+      totalDuration: 10,
       countdownDuration: 7,
       countdownActive: false,
       burpeeCount: null,
@@ -136,8 +136,7 @@ export default class Onboarding3Screen extends React.PureComponent {
           totalDuration={totalDuration}
           start={timerStart}
           reset={timerReset}
-          // handleFinish={() => this.handleFinish()}
-          handleFinish={() => this.props.navigation.navigate('App')}
+          handleFinish={() => this.handleFinish()}
         />
       </TouchableOpacity>
     );
