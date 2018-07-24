@@ -1,3 +1,9 @@
+export const formatDate = (day, month, year) => {
+  const realMonth = month + 1;
+  return `${day <= 9 ? `0${day}` : day}/${realMonth <= 9 ? `0${realMonth}` : realMonth}/${year}`;
+};
+
+
 export const burpeeOptions = [
   { value: null, label: 'Select your completed burpee count' },
 ];
