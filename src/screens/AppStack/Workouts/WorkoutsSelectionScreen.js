@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
-import { db } from '../../../../config/firebase';
+import { FileSystem } from 'expo';
+import { db, auth } from '../../../../config/firebase';
+import { findReps } from '../../../utils/index';
 import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -43,13 +45,40 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
       this.setState({ loading: false });
     }
   }
+  loadExercises = async (workout) => {
+    this.setState({ loading: true });
+    const user = auth.currentUser;
+    let reps;
+    if (user) {
+      db.collection('users')
+        .doc(user.uid)
+        .get()
+        .then(async (doc) => {
+          if (doc.exists) {
+            reps = findReps(await doc.data().fitnessLevel);
+          }
+        });
+    }
+    const { exercises } = workout;
+    try {
+      await Promise.all(exercises.map(async (exercise, index) => {
+        await FileSystem.downloadAsync(
+          exercise.videoURL,
+          `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+        );
+      }));
+      this.setState({ loading: false });
+      this.props.navigation.navigate('WorkoutInfo', { workout, reps });
+    } catch (err) {
+      console.log(`Filesystem download error: ${err}`);
+    }
+  }
   render() {
     const { workouts, loading } = this.state;
-    const { navigate } = this.props.navigation;
     const workoutList = workouts.map((workout) => (
       <TouchableOpacity
         key={workout.id}
-        onPress={() => navigate('WorkoutInfo', { workout })}
+        onPress={() => this.loadExercises(workout)}
         style={styles.workoutButton}
       >
         <Text style={styles.workoutButtonText}>
@@ -62,6 +91,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
         <Loader
           loading={loading}
           color={colors.coral.standard}
+          textContent="Loading your workout..."
         />
       );
     }
