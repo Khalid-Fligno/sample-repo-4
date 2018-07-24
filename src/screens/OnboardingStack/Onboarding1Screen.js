@@ -14,17 +14,13 @@ import Image from 'react-native-scalable-image';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import CustomModal from '../../components/CustomModal';
 import CustomButton from '../../components/CustomButton';
+import { formatDate } from '../../utils/index';
 import Loader from '../../components/Loader';
 import { db } from '../../../config/firebase';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
-
-const formatDate = (day, month, year) => {
-  const realMonth = month + 1;
-  return `${day <= 9 ? `0${day}` : day}/${realMonth <= 9 ? `0${realMonth}` : realMonth}/${year}`;
-};
 
 export default class Onboarding1Screen extends React.PureComponent {
   constructor(props) {
