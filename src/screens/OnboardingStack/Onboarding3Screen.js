@@ -12,6 +12,7 @@ import {
 import { Video } from 'expo';
 import SelectInput from 'react-native-select-input-ios';
 import { db } from '../../../config/firebase';
+import { burpeeOptions, findFitnessLevel } from '../../utils/index';
 import CustomButton from '../../components/CustomButton';
 import WorkoutTimer from '../../components/WorkoutTimer';
 import CountdownTimer from '../../components/CountdownTimer';
@@ -20,29 +21,6 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
-
-const burpeeOptions = [
-  { value: null, label: 'Select your completed burpee count' },
-];
-
-const populateBurpeeOptions = () => {
-  for (let i = 0; i < 50; i += 1) {
-    burpeeOptions.push({
-      value: i,
-      label: `${i}`,
-    });
-  }
-};
-populateBurpeeOptions();
-
-const findFitnessLevel = (burpeeCount) => {
-  if (burpeeCount < 12) {
-    return 1;
-  } else if (burpeeCount > 16) {
-    return 3;
-  }
-  return 2;
-};
 
 export default class Onboarding3Screen extends React.PureComponent {
   constructor(props) {
