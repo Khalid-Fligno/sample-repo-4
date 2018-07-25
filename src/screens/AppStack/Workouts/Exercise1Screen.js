@@ -34,6 +34,7 @@ export default class Exercise1Screen extends React.PureComponent {
       totalDuration: 5,
       countdownDuration: 5,
       countdownActive: false,
+      reps: null,
     };
   }
   componentWillMount() {
@@ -50,13 +51,14 @@ export default class Exercise1Screen extends React.PureComponent {
       timerReset: false,
     });
   }
-  handleFinish = (exerciseList) => {
+  handleFinish = (exerciseList, reps) => {
     this.setState({
       timerStart: false,
       timerReset: false,
     });
     this.props.navigation.navigate('Exercise2', {
       exerciseList,
+      reps,
     });
   }
   startCountdown = () => {
@@ -111,7 +113,7 @@ export default class Exercise1Screen extends React.PureComponent {
             totalDuration={totalDuration}
             start={timerStart}
             reset={timerReset}
-            handleFinish={() => this.handleFinish(exerciseList)}
+            handleFinish={() => this.handleFinish(exerciseList, reps)}
             options={workoutTimerStyle}
           />
           <View style={styles.exerciseInfoContainer}>
@@ -166,9 +168,6 @@ const styles = StyleSheet.create({
   exerciseInfoTile: {
     marginTop: 7.5,
     marginBottom: 7.5,
-    borderWidth: 2,
-    borderRadius: 4,
-    borderColor: colors.charcoal.standard,
     overflow: 'hidden',
   },
   exerciseInfoTileHeader: {
@@ -177,6 +176,7 @@ const styles = StyleSheet.create({
     padding: 8,
     paddingBottom: 5,
     backgroundColor: colors.charcoal.standard,
+    borderRadius: 4,
   },
   exerciseInfoTileHeaderText: {
     fontFamily: fonts.bold,

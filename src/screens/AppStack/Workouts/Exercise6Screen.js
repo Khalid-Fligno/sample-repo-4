@@ -1,10 +1,26 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, SafeAreaView } from 'react-native';
 import { Video, FileSystem } from 'expo';
 import WorkoutTimer from '../../../components/WorkoutTimer';
 import colors from '../../../styles/colors';
+import fonts from '../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
+
+export const workoutTimerStyle = {
+  container: {
+    width,
+    backgroundColor: colors.charcoal.standard,
+    paddingTop: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontFamily: fonts.bold,
+    fontSize: 72,
+    color: colors.white,
+  },
+};
 
 export default class Exercise6Screen extends React.PureComponent {
   constructor(props) {
@@ -15,11 +31,13 @@ export default class Exercise6Screen extends React.PureComponent {
       timerStart: false,
       timerReset: false,
       totalDuration: 6,
+      reps: null,
     };
   }
   componentWillMount() {
     const exerciseList = this.props.navigation.getParam('exerciseList', null);
-    this.setState({ exerciseList, currentExercise: exerciseList[5] });
+    const reps = this.props.navigation.getParam('reps', null);
+    this.setState({ exerciseList, currentExercise: exerciseList[5], reps });
   }
   componentDidMount() {
     this.startTimer();
@@ -30,13 +48,14 @@ export default class Exercise6Screen extends React.PureComponent {
       timerReset: false,
     });
   }
-  handleFinish = (exerciseList) => {
+  handleFinish = (exerciseList, reps) => {
     this.setState({
       timerStart: false,
       timerReset: false,
     });
     this.props.navigation.navigate('WorkoutComplete', {
       exerciseList,
+      reps,
     });
   }
   render() {
@@ -46,39 +65,49 @@ export default class Exercise6Screen extends React.PureComponent {
       timerStart,
       timerReset,
       totalDuration,
+      reps,
     } = this.state;
     return (
-      <View style={styles.container}>
-        <Text>
-          Exercise 6
-        </Text>
-        <Text>
-          {currentExercise.name}
-        </Text>
-        <Video
-          source={{ uri: `${FileSystem.cacheDirectory}exercise-6.mp4` }}
-          rate={1.0}
-          volume={1.0}
-          isMuted={false}
-          resizeMode="contain"
-          shouldPlay
-          isLooping
-          style={{ width, height: width }}
-        />
-        <WorkoutTimer
-          totalDuration={totalDuration}
-          start={timerStart}
-          reset={timerReset}
-          handleFinish={() => this.handleFinish(exerciseList)}
-        />
-        <Text
-          onPress={() => this.props.navigation.navigate('WorkoutComplete', {
-            exerciseList,
-          })}
-        >
-          Next
-        </Text>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.flexContainer}>
+          <Video
+            source={{ uri: `${FileSystem.cacheDirectory}exercise-6.mp4` }}
+            rate={1.0}
+            volume={1.0}
+            isMuted={false}
+            resizeMode="contain"
+            shouldPlay
+            isLooping
+            style={{ width, height: width }}
+          />
+        </View>
+        <View style={styles.flexContainer}>
+          <WorkoutTimer
+            totalDuration={totalDuration}
+            start={timerStart}
+            reset={timerReset}
+            handleFinish={() => this.handleFinish(exerciseList, reps)}
+            options={workoutTimerStyle}
+          />
+          <View style={styles.exerciseInfoContainer}>
+            <View style={styles.exerciseInfoTile}>
+              <View style={styles.exerciseInfoTileHeader}>
+                <Text style={styles.exerciseInfoTileHeaderText}>
+                  {currentExercise.name}
+                </Text>
+              </View>
+              <View style={styles.exerciseInfoTileContent}>
+                <Text style={styles.exerciseInfoTileTextLarge}>
+                  {reps}
+                </Text>
+                <Text style={styles.exerciseInfoTileTextSmall}>
+                  reps
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </SafeAreaView>
     );
   }
 }
@@ -88,6 +117,50 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  flexContainer: {
+    flex: 1,
+  },
+  exerciseInfoContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  exerciseInfoTile: {
+    marginTop: 7.5,
+    marginBottom: 7.5,
+    overflow: 'hidden',
+  },
+  exerciseInfoTileHeader: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 8,
+    paddingBottom: 5,
+    backgroundColor: colors.charcoal.standard,
+    borderRadius: 4,
+  },
+  exerciseInfoTileHeaderText: {
+    fontFamily: fonts.bold,
+    fontSize: 24,
+    color: colors.white,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  exerciseInfoTileContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  exerciseInfoTileTextLarge: {
+    marginTop: 15,
+    fontFamily: fonts.bold,
+    fontSize: 48,
+    color: colors.charcoal.standard,
+  },
+  exerciseInfoTileTextSmall: {
+    marginBottom: 10,
+    fontFamily: fonts.bold,
+    fontSize: 16,
+    color: colors.charcoal.standard,
   },
 });
