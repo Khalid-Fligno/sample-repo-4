@@ -17,7 +17,6 @@ export default class NutritionHomeScreen extends React.PureComponent {
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
-          // style={styles.mealButton}
           style={{
             flex: 1,
             width: width - 30,
