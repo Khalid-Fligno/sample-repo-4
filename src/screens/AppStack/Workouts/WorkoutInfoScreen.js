@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
 import { FileSystem, Video } from 'expo';
 import Loader from '../../../components/Loader';
+import { findFocus, findLocation } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -21,7 +22,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     const reps = this.props.navigation.getParam('reps', null);
     this.setState({ workout, reps });
     this.props.navigation.setParams({
-      handleStart: () => this.props.navigation.navigate('Exercise1', { exerciseList: workout.exercises }),
+      handleStart: () => this.props.navigation.navigate('Exercise1', { exerciseList: workout.exercises, reps }),
     });
   }
   render() {
@@ -70,6 +71,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
         );
       });
     }
+
     return (
       <View style={styles.container}>
         <ScrollView
@@ -79,6 +81,38 @@ export default class WorkoutInfoScreen extends React.PureComponent {
           <Text style={styles.workoutName}>
             {workoutName}
           </Text>
+          <View style={styles.workoutInfoSectionTop}>
+            <Text style={styles.workoutInfoField}>
+              Time
+            </Text>
+            <Text style={styles.workoutInfoFieldData}>
+              6 minutes
+            </Text>
+          </View>
+          <View style={styles.workoutInfoSectionMiddle}>
+            <Text style={styles.workoutInfoField}>
+              Total Reps
+            </Text>
+            <Text style={styles.workoutInfoFieldData}>
+              {reps * 6}
+            </Text>
+          </View>
+          <View style={styles.workoutInfoSectionMiddle}>
+            <Text style={styles.workoutInfoField}>
+              Workout Location
+            </Text>
+            <Text style={styles.workoutInfoFieldData}>
+              {findLocation(workout)}
+            </Text>
+          </View>
+          <View style={styles.workoutInfoSectionBottom}>
+            <Text style={styles.workoutInfoField}>
+              Focus
+            </Text>
+            <Text style={styles.workoutInfoFieldData}>
+              {findFocus(workout)}
+            </Text>
+          </View>
           <View style={styles.workoutPreviewHeaderContainer}>
             <Text style={styles.workoutPreviewHeaderText}>
               Workout Preview
@@ -106,6 +140,48 @@ const styles = StyleSheet.create({
     fontFamily: fonts.knucklebones,
     fontSize: 72,
     paddingRight: 10,
+  },
+  workoutInfoSectionTop: {
+    width: width - 30,
+    marginTop: 15,
+    paddingTop: 8,
+    paddingBottom: 5,
+    borderTopWidth: 1,
+    borderTopColor: colors.grey.light,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.grey.light,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  workoutInfoSectionMiddle: {
+    width: width - 30,
+    paddingTop: 8,
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.grey.light,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  workoutInfoSectionBottom: {
+    width: width - 30,
+    marginBottom: 15,
+    paddingTop: 8,
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.grey.light,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  workoutInfoField: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.charcoal.standard,
+  },
+  workoutInfoFieldData: {
+    margin: 3,
+    fontFamily: fonts.bold,
+    fontSize: 16,
+    color: colors.charcoal.standard,
   },
   workoutPreviewHeaderContainer: {
     width,
