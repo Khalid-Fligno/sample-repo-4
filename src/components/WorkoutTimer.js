@@ -122,7 +122,7 @@ const defaultStyles = {
 WorkoutTimer.propTypes = {
   totalDuration: PropTypes.number.isRequired,
   start: PropTypes.bool.isRequired,
-  options: PropTypes.objectOf(PropTypes.string || PropTypes.number),
+  options: PropTypes.objectOf(PropTypes.object || PropTypes.string || PropTypes.number),
   getTime: PropTypes.func,
   handleFinish: PropTypes.func,
 };
