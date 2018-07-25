@@ -148,6 +148,12 @@ const WorkoutsStack = createStackNavigator(
   },
   {
     initialRouteName: 'WorkoutsHome',
+    transitionConfig: () => ({
+      transitionSpec: fadeSpec,
+      screenInterpolator: (props) => {
+        return fade(props);
+      },
+    }),
     navigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
@@ -275,6 +281,12 @@ const ExerciseStack = createStackNavigator(
   },
   {
     initialRouteName: 'Exercise1',
+    transitionConfig: () => ({
+      transitionSpec: fadeSpec,
+      screenInterpolator: (props) => {
+        return fade(props);
+      },
+    }),
     navigationOptions: {
       header: null,
     },
