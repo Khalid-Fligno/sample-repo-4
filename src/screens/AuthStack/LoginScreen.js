@@ -1,5 +1,14 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, SafeAreaView } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  StatusBar,
+  TouchableOpacity,
+  SafeAreaView,
+  AsyncStorage,
+} from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
 import { Facebook } from 'expo';
@@ -31,7 +40,9 @@ export default class LoginScreen extends React.PureComponent {
       if (type === 'success') {
         this.setState({ loading: true });
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        auth.signInAndRetrieveDataWithCredential(credential);
+        const response = await auth.signInAndRetrieveDataWithCredential(credential);
+        const { uid } = response.user;
+        await AsyncStorage.setItem('uid', uid);
         this.setState({ loading: false });
         this.props.navigation.navigate('App');
       }
@@ -46,7 +57,9 @@ export default class LoginScreen extends React.PureComponent {
     try {
       const response = await firebase.auth().signInWithEmailAndPassword(email, password);
       if (response) {
+        const { uid } = response.user;
         this.setState({ loading: false });
+        await AsyncStorage.setItem('uid', uid);
         this.props.navigation.navigate('App');
       }
     } catch (err) {
