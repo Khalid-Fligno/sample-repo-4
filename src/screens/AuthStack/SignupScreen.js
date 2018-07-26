@@ -42,6 +42,7 @@ export default class SignupScreen extends React.PureComponent {
         permissions: ['public_profile', 'email'],
       });
       if (type === 'success') {
+        this.setState({ loading: true });
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
         const { user, additionalUserInfo } = await auth.signInAndRetrieveDataWithCredential(credential);
         const { profile } = additionalUserInfo;
@@ -53,6 +54,7 @@ export default class SignupScreen extends React.PureComponent {
         };
         await db.collection('users').doc(user.uid).set(data);
         await AsyncStorage.setItem('uid', user.uid);
+        this.setState({ loading: false });
         this.props.navigation.navigate('Onboarding');
       }
     } catch (err) {
