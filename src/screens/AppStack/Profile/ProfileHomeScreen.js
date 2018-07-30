@@ -17,7 +17,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
     try {
       const end = new Date();
       const start = new Date();
-      start.setDate(end.getDate() - 1);
+      start.setHours(0, 0, 0, 0);
       Pedometer.getStepCountAsync(start, end).then((result) => {
         this.setState({ stepCount: result.steps });
       });
