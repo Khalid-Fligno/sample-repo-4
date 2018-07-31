@@ -1,10 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, ScrollView, AsyncStorage, DatePickerIOS, Button } from 'react-native';
 import { FileSystem, Video } from 'expo';
+import Modal from 'react-native-modal';
+import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
+import Icon from '../../../components/Icon';
 import { findFocus, findLocation } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+
+const moment = require('moment');
 
 const { width } = Dimensions.get('window');
 
@@ -15,6 +20,8 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       loading: false,
       workout: null,
       reps: null,
+      chosenDate: new Date(),
+      modalVisible: false,
     };
   }
   componentDidMount = async () => {
@@ -25,8 +32,30 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       handleStart: () => this.props.navigation.navigate('Exercise1', { exerciseList: workout.exercises, reps }),
     });
   }
+  setDate = (newDate) => {
+    this.setState({ chosenDate: newDate });
+  }
+  toggleModal = () => {
+    this.setState((prevState) => ({ modalVisible: !prevState.modalVisible }));
+  }
+  addWorkoutToCalendar = async (date) => {
+    const formattedDate = moment(date).format('YYYY-MM-DD');
+    const { workout } = this.state;
+    const uid = await AsyncStorage.getItem('uid');
+    const calendarRef = db.collection('users').doc(uid).collection('calendarEntries').doc(formattedDate);
+    const data = {
+      workout,
+    };
+    await calendarRef.set(data, { merge: true });
+  }
   render() {
-    const { loading, workout, reps } = this.state;
+    const {
+      loading,
+      workout,
+      reps,
+      chosenDate,
+      modalVisible,
+    } = this.state;
     if (loading) {
       return (
         <Loader
@@ -71,17 +100,65 @@ export default class WorkoutInfoScreen extends React.PureComponent {
         );
       });
     }
-
     return (
       <View style={styles.container}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollView}
         >
+          <Modal
+            isVisible={modalVisible}
+            onBackdropPress={() => this.toggleModal()}
+          >
+            <View
+              style={{
+                backgroundColor: colors.white,
+                borderRadius: 8,
+              }}
+            >
+              <DatePickerIOS
+                mode="date"
+                date={chosenDate}
+                onDateChange={this.setDate}
+                minimumDate={new Date()}
+              />
+              <Button
+                title="Add to calendar"
+                onPress={() => this.addWorkoutToCalendar(chosenDate)}
+              />
+            </View>
+          </Modal>
           <Text style={styles.workoutName}>
             {workoutName}
           </Text>
-          <View style={styles.workoutInfoSectionTop}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: width - 30,
+              marginTop: 15,
+              paddingTop: 8,
+              paddingBottom: 5,
+              borderTopWidth: 1,
+              borderTopColor: colors.grey.light,
+              borderBottomWidth: 1,
+              borderBottomColor: colors.grey.light,
+            }}
+          >
+            <Icon
+              name="add-circle"
+              size={22}
+              color={colors.charcoal.standard}
+            />
+            <Text
+              style={styles.workoutInfoFieldData}
+              onPress={() => this.toggleModal()}
+            >
+              Add to Calendar
+            </Text>
+          </View>
+          <View style={styles.workoutInfoSectionMiddle}>
             <Text style={styles.workoutInfoField}>
               Time
             </Text>
