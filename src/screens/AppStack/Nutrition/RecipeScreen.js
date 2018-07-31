@@ -5,14 +5,21 @@ import {
   Text,
   ScrollView,
   Dimensions,
+  AsyncStorage,
+  DatePickerIOS,
+  Button,
 } from 'react-native';
 import { FileSystem } from 'expo';
+import Modal from 'react-native-modal';
 import { Divider } from 'react-native-elements';
 import Image from 'react-native-scalable-image';
+import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+
+const moment = require('moment');
 
 const { width } = Dimensions.get('window');
 
@@ -24,6 +31,9 @@ export default class RecipeScreen extends React.PureComponent {
       ingredients: [],
       utensils: [],
       loading: false,
+      chosenDate: new Date(),
+      modalVisible: false,
+      calendarMeal: null,
     };
   }
   componentWillMount = async () => {
@@ -38,12 +48,31 @@ export default class RecipeScreen extends React.PureComponent {
       handleStart: () => this.props.navigation.navigate('RecipeSteps', { recipe }),
     });
   }
+  setDate = (newDate) => {
+    this.setState({ chosenDate: newDate });
+  }
+  toggleModal = () => {
+    this.setState((prevState) => ({ modalVisible: !prevState.modalVisible }));
+  }
+  addRecipeToCalendar = async (date) => {
+    const formattedDate = moment(date).format('YYYY-MM-DD');
+    const { recipe, calendarMeal } = this.state;
+    const uid = await AsyncStorage.getItem('uid');
+    const calendarRef = db.collection('users').doc(uid).collection('calendarEntries').doc(formattedDate);
+    const data = {
+      [calendarMeal]: recipe,
+    };
+    await calendarRef.set(data, { merge: true });
+  }
   render() {
     const {
       recipe,
       ingredients,
       loading,
       utensils,
+      chosenDate,
+      modalVisible,
+      calendarMeal,
     } = this.state;
     if (loading) {
       return (
@@ -56,11 +85,62 @@ export default class RecipeScreen extends React.PureComponent {
     return (
       <View style={styles.container}>
         <ScrollView>
+          <Modal
+            isVisible={modalVisible}
+            onBackdropPress={() => this.toggleModal()}
+          >
+            <View
+              style={{
+                backgroundColor: colors.white,
+                borderRadius: 8,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}
+              >
+                <Button
+                  title="Breakfast"
+                  onPress={() => this.setState({ calendarMeal: 'breakfast' })}
+                  color={calendarMeal === 'breakfast' ? colors.violet.standard : colors.grey.light}
+                />
+                <Button
+                  title="Lunch"
+                  onPress={() => this.setState({ calendarMeal: 'lunch' })}
+                  color={calendarMeal === 'lunch' ? colors.violet.standard : colors.grey.light}
+                />
+                <Button
+                  title="Dinner"
+                  onPress={() => this.setState({ calendarMeal: 'dinner' })}
+                  color={calendarMeal === 'dinner' ? colors.violet.standard : colors.grey.light}
+                />
+                <Button
+                  title="Snack"
+                  onPress={() => this.setState({ calendarMeal: 'snack' })}
+                  color={calendarMeal === 'snack' ? colors.violet.standard : colors.grey.light}
+                />
+              </View>
+              <DatePickerIOS
+                mode="date"
+                date={chosenDate}
+                onDateChange={this.setDate}
+                minimumDate={new Date()}
+              />
+              <Button
+                title="Add to calendar"
+                onPress={() => this.addRecipeToCalendar(chosenDate)}
+              />
+            </View>
+          </Modal>
           <Image
             source={{ uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
             width={width}
           />
           <View style={styles.recipeInfoContainer}>
+            <Text onPress={() => this.toggleModal()}>
+              Add to calendar
+            </Text>
             <Text style={styles.recipeTitle}>
               {recipe.title}
             </Text>
