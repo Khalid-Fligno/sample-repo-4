@@ -1,5 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, ScrollView, AsyncStorage, DatePickerIOS, Button } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  ScrollView,
+  AsyncStorage,
+  DatePickerIOS,
+  Button,
+  TouchableOpacity,
+} from 'react-native';
 import { FileSystem, Video } from 'expo';
 import Modal from 'react-native-modal';
 import { db } from '../../../../config/firebase';
@@ -110,12 +120,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             isVisible={modalVisible}
             onBackdropPress={() => this.toggleModal()}
           >
-            <View
-              style={{
-                backgroundColor: colors.white,
-                borderRadius: 8,
-              }}
-            >
+            <View style={styles.modalContainer}>
               <DatePickerIOS
                 mode="date"
                 date={chosenDate}
@@ -131,32 +136,20 @@ export default class WorkoutInfoScreen extends React.PureComponent {
           <Text style={styles.workoutName}>
             {workoutName}
           </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: width - 30,
-              marginTop: 15,
-              paddingTop: 8,
-              paddingBottom: 5,
-              borderTopWidth: 1,
-              borderTopColor: colors.grey.light,
-              borderBottomWidth: 1,
-              borderBottomColor: colors.grey.light,
-            }}
-          >
-            <Icon
-              name="add-circle"
-              size={22}
-              color={colors.charcoal.standard}
-            />
-            <Text
-              style={styles.workoutInfoFieldData}
+          <View style={styles.workoutInfoSectionTop}>
+            <TouchableOpacity
               onPress={() => this.toggleModal()}
+              style={styles.addToCalendarButton}
             >
-              Add to Calendar
-            </Text>
+              <Icon
+                name="calendar-outline"
+                size={18}
+                color={colors.charcoal.light}
+              />
+              <Text style={styles.addToCalendarButtonText}>
+                Add to calendar
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.workoutInfoSectionMiddle}>
             <Text style={styles.workoutInfoField}>
@@ -218,11 +211,31 @@ const styles = StyleSheet.create({
     fontSize: 72,
     paddingRight: 10,
   },
+  modalContainer: {
+    backgroundColor: colors.white,
+    borderRadius: 8,
+  },
+  addToCalendarButton: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    width: 150,
+    padding: 3,
+    borderWidth: 2,
+    borderColor: colors.charcoal.light,
+    borderRadius: 4,
+  },
+  addToCalendarButtonText: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.charcoal.light,
+    marginTop: 3,
+    marginLeft: 5,
+  },
   workoutInfoSectionTop: {
     width: width - 30,
     marginTop: 15,
     paddingTop: 8,
-    paddingBottom: 5,
+    paddingBottom: 8,
     borderTopWidth: 1,
     borderTopColor: colors.grey.light,
     borderBottomWidth: 1,

@@ -8,6 +8,7 @@ import {
   AsyncStorage,
   DatePickerIOS,
   Button,
+  TouchableOpacity,
 } from 'react-native';
 import { FileSystem } from 'expo';
 import Modal from 'react-native-modal';
@@ -95,6 +96,12 @@ export default class RecipeScreen extends React.PureComponent {
                 borderRadius: 8,
               }}
             >
+              <DatePickerIOS
+                mode="date"
+                date={chosenDate}
+                onDateChange={this.setDate}
+                minimumDate={new Date()}
+              />
               <View
                 style={{
                   flexDirection: 'row',
@@ -121,12 +128,6 @@ export default class RecipeScreen extends React.PureComponent {
                   color={calendarMeal === 'snack' ? colors.violet.standard : colors.grey.light}
                 />
               </View>
-              <DatePickerIOS
-                mode="date"
-                date={chosenDate}
-                onDateChange={this.setDate}
-                minimumDate={new Date()}
-              />
               <Button
                 title="Add to calendar"
                 onPress={() => this.addRecipeToCalendar(chosenDate)}
@@ -138,15 +139,25 @@ export default class RecipeScreen extends React.PureComponent {
             width={width}
           />
           <View style={styles.recipeInfoContainer}>
-            <Text onPress={() => this.toggleModal()}>
-              Add to calendar
-            </Text>
             <Text style={styles.recipeTitle}>
               {recipe.title}
             </Text>
             <Text style={styles.recipeSubTitle}>
               {recipe.subtitle}
             </Text>
+            <TouchableOpacity
+              onPress={() => this.toggleModal()}
+              style={styles.addToCalendarButton}
+            >
+              <Icon
+                name="calendar-outline"
+                size={18}
+                color={colors.charcoal.light}
+              />
+              <Text style={styles.addToCalendarButtonText}>
+                Add to calendar
+              </Text>
+            </TouchableOpacity>
             <Divider style={styles.divider} />
             <View style={styles.infoBar}>
               <Icon
@@ -285,7 +296,24 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 16,
     color: colors.charcoal.standard,
-    marginBottom: 15,
+    marginBottom: 8,
+  },
+  addToCalendarButton: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    width: 150,
+    marginBottom: 8,
+    padding: 3,
+    borderWidth: 2,
+    borderColor: colors.charcoal.light,
+    borderRadius: 4,
+  },
+  addToCalendarButtonText: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.charcoal.light,
+    marginTop: 3,
+    marginLeft: 5,
   },
   divider: {
     backgroundColor: colors.grey.light,
