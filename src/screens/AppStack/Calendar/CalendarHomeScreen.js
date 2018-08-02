@@ -158,7 +158,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              onPress={() => this.props.navigation.push('NutritionHome')}
+              onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'breakfast' })}
               style={styles.blankTile}
             >
               <Icon
@@ -184,7 +184,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              onPress={() => this.props.navigation.push('NutritionHome')}
+              onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'lunch' })}
               style={styles.blankTile}
             >
               <Icon
@@ -210,7 +210,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              onPress={() => this.props.navigation.push('NutritionHome')}
+              onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'dinner' })}
               style={styles.blankTile}
             >
               <Icon
@@ -236,7 +236,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              onPress={() => this.props.navigation.push('NutritionHome')}
+              onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'snack' })}
               style={styles.blankTile}
             >
               <Icon
