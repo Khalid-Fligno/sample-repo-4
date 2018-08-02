@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View, Text, Dimensions, SafeAreaView } from 'react-native';
 import { Video, FileSystem } from 'expo';
 import WorkoutTimer from '../../../components/WorkoutTimer';
-import CountdownTimer from '../../../components/CountdownTimer';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -32,8 +31,6 @@ export default class Exercise1Screen extends React.PureComponent {
       timerStart: false,
       timerReset: false,
       totalDuration: 5,
-      countdownDuration: 5,
-      countdownActive: false,
       reps: null,
     };
   }
@@ -43,7 +40,7 @@ export default class Exercise1Screen extends React.PureComponent {
     this.setState({ exerciseList, currentExercise: exerciseList[0], reps });
   }
   componentDidMount() {
-    this.startCountdown();
+    this.startTimer();
   }
   startTimer = () => {
     this.setState({
@@ -56,44 +53,30 @@ export default class Exercise1Screen extends React.PureComponent {
       timerStart: false,
       timerReset: false,
     });
-    this.props.navigation.navigate('Exercise2', {
-      exerciseList,
-      reps,
-    });
-  }
-  startCountdown = () => {
-    this.setState({
-      countdownActive: true,
-    });
-  }
-  finishCountdown = () => {
-    this.setState({ timerStart: true, countdownActive: false });
+    let setCount = this.props.navigation.getParam('setCount', 0);
+    setCount += 1;
+    if (setCount === 3) {
+      this.props.navigation.push('Exercise2', {
+        exerciseList,
+        reps,
+      });
+    } else {
+      this.props.navigation.push('Exercise1', {
+        exerciseList,
+        reps,
+        setCount,
+      });
+    }
   }
   render() {
     const {
       currentExercise,
       exerciseList,
-      countdownDuration,
-      countdownActive,
       timerStart,
       timerReset,
       totalDuration,
       reps,
     } = this.state;
-    if (countdownActive) {
-      return (
-        <View style={styles.countdownContainer}>
-          <CountdownTimer
-            totalDuration={countdownDuration}
-            start={countdownActive}
-            handleFinish={() => this.finishCountdown()}
-          />
-          <Text style={styles.countdownText}>
-            GET READY!
-          </Text>
-        </View>
-      );
-    }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
@@ -140,17 +123,6 @@ export default class Exercise1Screen extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
-  countdownContainer: {
-    flex: 1,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  countdownText: {
-    fontFamily: fonts.bold,
-    fontSize: 28,
-    color: colors.charcoal.standard,
-  },
   container: {
     flex: 1,
     backgroundColor: colors.white,

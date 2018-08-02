@@ -53,10 +53,20 @@ export default class Exercise6Screen extends React.PureComponent {
       timerStart: false,
       timerReset: false,
     });
-    this.props.navigation.navigate('WorkoutComplete', {
-      exerciseList,
-      reps,
-    });
+    let setCount = this.props.navigation.getParam('setCount', 0);
+    setCount += 1;
+    if (setCount === 3) {
+      this.props.navigation.navigate('WorkoutComplete', {
+        exerciseList,
+        reps,
+      });
+    } else {
+      this.props.navigation.push('Exercise6', {
+        exerciseList,
+        reps,
+        setCount,
+      });
+    }
   }
   render() {
     const {
