@@ -19,6 +19,7 @@ import WorkoutsHomeScreen from '../src/screens/AppStack/Workouts/WorkoutsHomeScr
 import WorkoutsLocationScreen from '../src/screens/AppStack/Workouts/WorkoutsLocationScreen';
 import WorkoutsSelectionScreen from '../src/screens/AppStack/Workouts/WorkoutsSelectionScreen';
 import WorkoutInfoScreen from '../src/screens/AppStack/Workouts/WorkoutInfoScreen';
+import CountdownScreen from '../src/screens/AppStack/Workouts/CountdownScreen';
 import Exercise1Screen from '../src/screens/AppStack/Workouts/Exercise1Screen';
 import Exercise2Screen from '../src/screens/AppStack/Workouts/Exercise2Screen';
 import Exercise3Screen from '../src/screens/AppStack/Workouts/Exercise3Screen';
@@ -271,6 +272,7 @@ const AppStack = createBottomTabNavigator(
 
 const ExerciseStack = createStackNavigator(
   {
+    Countdown: CountdownScreen,
     Exercise1: Exercise1Screen,
     Exercise2: Exercise2Screen,
     Exercise3: Exercise3Screen,
@@ -280,7 +282,7 @@ const ExerciseStack = createStackNavigator(
     WorkoutComplete: WorkoutCompleteScreen,
   },
   {
-    initialRouteName: 'Exercise1',
+    initialRouteName: 'Countdown',
     transitionConfig: () => ({
       transitionSpec: fadeSpec,
       screenInterpolator: (props) => {
