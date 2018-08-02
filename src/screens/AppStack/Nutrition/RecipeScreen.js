@@ -105,28 +105,89 @@ export default class RecipeScreen extends React.PureComponent {
               <View
                 style={{
                   flexDirection: 'row',
+                  width: '100%',
                 }}
               >
-                <Button
-                  title="Breakfast"
-                  onPress={() => this.setState({ calendarMeal: 'breakfast' })}
-                  color={calendarMeal === 'breakfast' ? colors.violet.standard : colors.grey.light}
-                />
-                <Button
-                  title="Lunch"
-                  onPress={() => this.setState({ calendarMeal: 'lunch' })}
-                  color={calendarMeal === 'lunch' ? colors.violet.standard : colors.grey.light}
-                />
-                <Button
-                  title="Dinner"
-                  onPress={() => this.setState({ calendarMeal: 'dinner' })}
-                  color={calendarMeal === 'dinner' ? colors.violet.standard : colors.grey.light}
-                />
-                <Button
-                  title="Snack"
-                  onPress={() => this.setState({ calendarMeal: 'snack' })}
-                  color={calendarMeal === 'snack' ? colors.violet.standard : colors.grey.light}
-                />
+                {
+                  recipe.breakfast && (
+                    <TouchableOpacity
+                      onPress={() => this.setState({ calendarMeal: 'breakfast' })}
+                      style={[
+                        styles.calendarMealButton,
+                        calendarMeal === 'breakfast' && styles.calendarMealButtonActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.calendarMealButtonText,
+                          calendarMeal === 'breakfast' && styles.calendarMealButtonTextActive,
+                        ]}
+                      >
+                        Breakfast
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                }
+                {
+                  recipe.lunch && (
+                    <TouchableOpacity
+                      onPress={() => this.setState({ calendarMeal: 'lunch' })}
+                      style={[
+                        styles.calendarMealButton,
+                        calendarMeal === 'lunch' && styles.calendarMealButtonActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.calendarMealButtonText,
+                          calendarMeal === 'lunch' && styles.calendarMealButtonTextActive,
+                        ]}
+                      >
+                      Lunch
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                }
+                {
+                  recipe.dinner && (
+                    <TouchableOpacity
+                      onPress={() => this.setState({ calendarMeal: 'dinner' })}
+                      style={[
+                        styles.calendarMealButton,
+                        calendarMeal === 'dinner' && styles.calendarMealButtonActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.calendarMealButtonText,
+                          calendarMeal === 'dinner' && styles.calendarMealButtonTextActive,
+                        ]}
+                      >
+                        Dinner
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                }
+                {
+                  recipe.snack && (
+                    <TouchableOpacity
+                      onPress={() => this.setState({ calendarMeal: 'snack' })}
+                      style={[
+                        styles.calendarMealButton,
+                        calendarMeal === 'snack' && styles.calendarMealButtonActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.calendarMealButtonText,
+                          calendarMeal === 'snack' && styles.calendarMealButtonTextActive,
+                        ]}
+                      >
+                        Snack
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                }
               </View>
               <Button
                 title="Add to calendar"
@@ -314,6 +375,33 @@ const styles = StyleSheet.create({
     color: colors.charcoal.light,
     marginTop: 3,
     marginLeft: 5,
+  },
+  calendarMealButton: {
+    flex: 1,
+    margin: 4,
+    paddingTop: 8,
+    paddingBottom: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: colors.violet.standard,
+    borderRadius: 4,
+  },
+  calendarMealButtonActive: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.violet.standard,
+  },
+  calendarMealButtonText: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.violet.standard,
+  },
+  calendarMealButtonTextActive: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.white,
   },
   divider: {
     backgroundColor: colors.grey.light,
