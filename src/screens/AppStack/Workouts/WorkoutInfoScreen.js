@@ -39,7 +39,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     const reps = this.props.navigation.getParam('reps', null);
     this.setState({ workout, reps });
     this.props.navigation.setParams({
-      handleStart: () => this.props.navigation.navigate('Exercise1', { exerciseList: workout.exercises, reps }),
+      handleStart: () => this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps }),
     });
   }
   setDate = (newDate) => {
