@@ -198,7 +198,8 @@ const styles = StyleSheet.create({
   },
   carouselTextContainer: {
     backgroundColor: colors.violet.standard,
-    borderRadius: 15,
+    borderRadius: 18,
+    borderBottomRightRadius: 5,
     paddingTop: 10,
     paddingRight: 10,
     paddingBottom: 10,
