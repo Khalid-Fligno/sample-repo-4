@@ -21,9 +21,10 @@ export default class RecipeStepsScreen extends React.PureComponent {
   componentDidMount = async () => {
     const recipe = this.props.navigation.getParam('recipe', null);
     const { stepsImages, steps } = recipe;
-    await this.fetchImages(stepsImages, steps);
+    this.setState({ steps });
+    await this.fetchImages(stepsImages);
   }
-  fetchImages = async (stepsImages, steps) => {
+  fetchImages = async (stepsImages) => {
     // Downloads images for each step to cache to improve performance.
     // Will overwrite previous recipe step images if they exist.
     this.setState({ loading: true });
@@ -33,7 +34,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
         `${FileSystem.cacheDirectory}step-${index + 1}.jpg`,
       );
     }));
-    this.setState({ loading: false, steps });
+    this.setState({ loading: false });
   }
   renderItem = ({ item, index }) => {
     const { steps } = this.state;

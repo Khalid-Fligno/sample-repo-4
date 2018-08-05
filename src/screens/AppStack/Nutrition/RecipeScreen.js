@@ -37,7 +37,8 @@ export default class RecipeScreen extends React.PureComponent {
       calendarMeal: null,
     };
   }
-  componentDidMount = async () => {
+  componentWillMount = async () => {
+    this.setState({ loading: true });
     const recipe = this.props.navigation.getParam('recipe', null);
     this.setState({
       recipe,
