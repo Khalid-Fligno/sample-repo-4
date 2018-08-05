@@ -156,7 +156,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               Time
             </Text>
             <Text style={styles.workoutInfoFieldData}>
-              6 minutes
+              18 minutes
             </Text>
           </View>
           <View style={styles.workoutInfoSectionMiddle}>
@@ -164,7 +164,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               Total Reps
             </Text>
             <Text style={styles.workoutInfoFieldData}>
-              {reps * 6}
+              {reps * 18}
             </Text>
           </View>
           <View style={styles.workoutInfoSectionMiddle}>
