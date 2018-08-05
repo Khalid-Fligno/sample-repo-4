@@ -15,7 +15,7 @@ export default class NutritionHomeScreen extends React.PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
           style={{
             flex: 1,
@@ -60,6 +60,14 @@ export default class NutritionHomeScreen extends React.PureComponent {
               </Text>
             </LinearGradient>
           </ImageBackground>
+        </TouchableOpacity> */}
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
+          style={styles.mealButton}
+        >
+          <Text style={styles.mealButtonText}>
+            Breakfast
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'lunch' })}
