@@ -29,8 +29,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
     await db.collection('users').doc(uid)
       .collection('calendarEntries').doc(stringDate)
-      .get()
-      .then(async (doc) => {
+      .onSnapshot(async (doc) => {
         if (doc.exists) {
           this.setState({
             workout: await doc.data().workout,
@@ -51,8 +50,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
     const stringDate = date.format('YYYY-MM-DD').toString();
     await db.collection('users').doc(uid)
       .collection('calendarEntries').doc(stringDate)
-      .get()
-      .then(async (doc) => {
+      .onSnapshot(async (doc) => {
         if (doc.exists) {
           this.setState({
             workout: await doc.data().workout,
@@ -81,8 +79,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
     if (user) {
       db.collection('users')
         .doc(user.uid)
-        .get()
-        .then(async (doc) => {
+        .onSnapshot(async (doc) => {
           if (doc.exists) {
             reps = findReps(await doc.data().fitnessLevel);
           }
