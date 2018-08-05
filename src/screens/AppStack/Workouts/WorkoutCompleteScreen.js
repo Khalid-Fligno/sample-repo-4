@@ -13,10 +13,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     const exerciseList = this.props.navigation.getParam('exerciseList', null);
     try {
       await Promise.all(exerciseList.map(async (exercise, index) => {
-        await FileSystem.deleteAsync(
-          exercise.videoURL,
-          `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-        );
+        await FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`);
       }));
     } catch (err) {
       console.log(`Filesystem delete error: ${err}`);
