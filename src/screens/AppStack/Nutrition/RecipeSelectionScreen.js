@@ -37,8 +37,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       .where(meal, '==', true)
       .onSnapshot(async (querySnapshot) => {
         const recipes = [];
-        querySnapshot.forEach((doc) => {
-          recipes.push(doc.data());
+        await querySnapshot.forEach(async (doc) => {
+          await recipes.push(await doc.data());
         });
         await Promise.all(recipes.map(async (recipe) => {
           await FileSystem.downloadAsync(
@@ -67,7 +67,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         title={recipe.title}
         tags={recipe.tags}
         subTitle={recipe.subtitle}
-        onPress={() => this.props.navigation.navigate('Recipe', { recipe })}
+        onPress={() => this.props.navigation.push('Recipe', { recipe })}
       />
     ));
     return (
