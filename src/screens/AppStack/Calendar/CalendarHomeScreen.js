@@ -27,7 +27,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
-    await db.collection('users').doc(uid)
+    this.unsubscribe = await db.collection('users').doc(uid)
       .collection('calendarEntries').doc(stringDate)
       .onSnapshot(async (doc) => {
         if (doc.exists) {
@@ -44,11 +44,14 @@ export default class CalendarHomeScreen extends React.PureComponent {
         }
       });
   }
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
   handleDateSelected = async (date) => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = date.format('YYYY-MM-DD').toString();
-    await db.collection('users').doc(uid)
+    this.unsubscribe = await db.collection('users').doc(uid)
       .collection('calendarEntries').doc(stringDate)
       .onSnapshot(async (doc) => {
         if (doc.exists) {
@@ -115,7 +118,13 @@ export default class CalendarHomeScreen extends React.PureComponent {
     );
     const dayDisplay = (
       <View style={styles.dayDisplayContainer}>
-        <Text>Workout</Text>
+        <Text
+          style={{
+            fontFamily: fonts.bold,
+          }}
+        >
+          Workout
+        </Text>
         {
           workout ? (
             <TouchableOpacity
@@ -142,7 +151,13 @@ export default class CalendarHomeScreen extends React.PureComponent {
             </TouchableOpacity>
           )
         }
-        <Text>Meals</Text>
+        <Text
+          style={{
+            fontFamily: fonts.bold,
+          }}
+        >
+          Meals
+        </Text>
         {
           breakfast ? (
             <TouchableOpacity
