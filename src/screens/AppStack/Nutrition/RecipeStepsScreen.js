@@ -15,26 +15,25 @@ export default class RecipeStepsScreen extends React.PureComponent {
     super(props);
     this.state = {
       steps: [],
-      loading: false,
+      loading: true,
     };
   }
   componentDidMount = async () => {
-    const recipe = this.props.navigation.getParam('recipe', null);
-    const { stepsImages, steps } = recipe;
+    this.setState({ loading: true });
+    const { stepsImages, steps } = await this.props.navigation.getParam('recipe', null);
     this.setState({ steps });
     await this.fetchImages(stepsImages);
+    this.setState({ loading: false });
   }
   fetchImages = async (stepsImages) => {
     // Downloads images for each step to cache to improve performance.
     // Will overwrite previous recipe step images if they exist.
-    this.setState({ loading: true });
     await Promise.all(stepsImages.map(async (stepImage, index) => {
       await FileSystem.downloadAsync(
         stepImage,
         `${FileSystem.cacheDirectory}step-${index + 1}.jpg`,
       );
     }));
-    this.setState({ loading: false });
   }
   renderItem = ({ item, index }) => {
     const { steps } = this.state;
