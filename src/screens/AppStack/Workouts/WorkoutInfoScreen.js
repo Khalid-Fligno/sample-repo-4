@@ -9,6 +9,7 @@ import {
   DatePickerIOS,
   Button,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { FileSystem, Video } from 'expo';
 import Modal from 'react-native-modal';
@@ -58,6 +59,14 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       workout,
     };
     await calendarRef.set(data, { merge: true });
+    Alert.alert(
+      'Added to calendar!',
+      `${workout.name}\n${formattedDate}`,
+      [
+        { text: 'Ok', onPress: () => this.toggleModal(), style: 'cancel' },
+      ],
+      { cancelable: false },
+    );
   }
   render() {
     const {
@@ -141,6 +150,10 @@ export default class WorkoutInfoScreen extends React.PureComponent {
           <Modal
             isVisible={modalVisible}
             onBackdropPress={() => this.toggleModal()}
+            animationIn="fadeIn"
+            animationInTiming={600}
+            animationOut="fadeOut"
+            animationOutTiming={600}
           >
             <View style={styles.modalContainer}>
               <DatePickerIOS
