@@ -26,4 +26,5 @@ export const onboardingHeaderButtonMap = {
   Onboarding1: false,
   Onboarding2: true,
   Onboarding3: true,
+  Onboarding4: true,
 };
