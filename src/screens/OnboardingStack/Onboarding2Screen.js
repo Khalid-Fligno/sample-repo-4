@@ -1,49 +1,39 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Button, Image, ActionSheetIOS, AsyncStorage, Alert } from 'react-native';
-import { ImagePicker, ImageManipulator, Permissions, Linking } from 'expo';
-import { db } from '../../../config/firebase';
-import Loader from '../../components/Loader';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Dimensions,
+  KeyboardAvoidingView,
+  AsyncStorage,
+  Alert,
+} from 'react-native';
+import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
+import Image from 'react-native-scalable-image';
+import Modal from 'react-native-modal';
 import CustomButton from '../../components/CustomButton';
+import Loader from '../../components/Loader';
+import { db } from '../../../config/firebase';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
-const uploadImageAsync = async (uri) => {
-  const uid = await AsyncStorage.getItem('uid');
-  const firebase = require('firebase');
-  const response = await fetch(uri);
-  const blob = await response.blob();
-  const storageRef = firebase.storage().ref();
-  const usersStorageRef = storageRef.child('user-photos');
-  const userStorageRef = usersStorageRef.child(uid);
-  const beforePhotoStorageRef = userStorageRef.child('before-photo.jpeg');
-  const snapshot = await beforePhotoStorageRef.put(blob);
-  const url = await snapshot.ref.getDownloadURL();
-  await db.collection('users').doc(uid).set({ beforePhoto: url }, { merge: true });
-};
+const { width } = Dimensions.get('window');
 
 export default class Onboarding2Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      hasCameraPermission: null,
-      hasCameraRollPermission: null,
-      image: null,
-      uploading: false,
+      weight: null,
+      waist: null,
+      hip: null,
       error: null,
+      isModalVisible: false,
+      loading: false,
     };
   }
   componentWillMount = () => {
-    this.getCameraPermission();
-    this.getCameraRollPermission();
     this.props.navigation.setParams({ handleSkip: this.handleSkip });
-  }
-  getCameraPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({ hasCameraPermission: status === 'granted' });
-  }
-  getCameraRollPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    this.setState({ hasCameraRollPermission: status === 'granted' });
   }
   handleSkip = () => {
     Alert.alert(
@@ -60,160 +50,236 @@ export default class Onboarding2Screen extends React.PureComponent {
       { cancelable: false },
     );
   }
-  appSettingsPrompt = () => {
-    Alert.alert(
-      'FitazFK needs permissions to do this',
-      'Go to app settings and enable camera and camera roll permissions',
-      [
-        {
-          text: 'Cancel', style: 'cancel',
-        },
-        {
-          text: 'Go to Settings', onPress: () => Linking.openURL('app-settings:'),
-        },
-      ],
-      { cancelable: false },
-    );
+  toggleModal = () => {
+    this.setState((prevState) => ({
+      isModalVisible: !prevState.isModalVisible,
+    }));
   }
-  chooseUploadType = () => {
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options: ['Cancel', 'Take photo', 'Upload from Camera Roll'],
-        cancelButtonIndex: 0,
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 1) {
-          if (!this.state.hasCameraPermission) {
-            this.appSettingsPrompt();
-            return;
-          }
-          this.takePhoto();
-        } else if (buttonIndex === 2) {
-          if (!this.state.hasCameraRollPermission) {
-            this.appSettingsPrompt();
-            return;
-          }
-          this.pickImage();
-        }
-      },
-    );
-  }
-  takePhoto = async () => {
-    const result = await ImagePicker.launchCameraAsync();
-    if (!result.cancelled) {
-      const manipResult = await ImageManipulator.manipulate(
-        result.uri,
-        [{ resize: { width: 600, height: 800 } }],
-        { format: 'jpeg' },
-      );
-      this.setState({ image: manipResult });
+  handleSubmit = async (weight, waist, hip) => {
+    this.setState({ loading: true });
+    if (!weight || !waist || !hip) {
+      this.setState({ error: 'Please complete all fields', loading: false });
+      return;
     }
-  };
-  pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    });
-    const originXValue = result.width > result.height ? 130 : 0;
-    if (!result.cancelled) {
-      try {
-        const manipResult = await ImageManipulator.manipulate(
-          result.uri,
-          [{ resize: { height: 800 } }, {
-            crop: {
-              originX: originXValue, originY: 0, width: 600, height: 800,
-            },
-          }],
-          { format: 'jpeg' },
-        );
-        this.setState({ image: manipResult });
-      } catch (err) {
-        this.setState({ error: 'There was a problem with that image, please try a different one' });
-      }
-    }
-  };
-  handleImagePicked = async (pickerResult) => {
     try {
-      this.setState({ uploading: true });
-      if (this.state.image !== null) {
-        await uploadImageAsync(pickerResult.uri);
-        this.props.navigation.navigate('Onboarding3');
-      } else {
-        this.setState({ error: 'Please select an image' });
-      }
+      const uid = await AsyncStorage.getItem('uid');
+      const userRef = db.collection('users').doc(uid);
+      const data = {
+        weight,
+        waist,
+        hip,
+      };
+      await userRef.set(data, { merge: true });
+      this.setState({ loading: false });
+      this.props.navigation.navigate('Onboarding3');
     } catch (err) {
-      this.setState({ error: 'Problem uploading image, please try again' });
-    } finally {
-      this.setState({ uploading: false });
+      console.log(err);
+      this.setState({ loading: false });
     }
-  };
+  }
   render() {
-    const { image, uploading, error } = this.state;
+    const {
+      weight,
+      waist,
+      hip,
+      error,
+      isModalVisible,
+      loading,
+    } = this.state;
     return (
-      <SafeAreaView style={styles.container}>
-        <View>
-          <Text style={styles.headerText}>
-            Header Text
-          </Text>
-          <Text style={styles.bodyText}>
-            Body Text
-          </Text>
-        </View>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+      <SafeAreaView style={styles.safeAreaContainer}>
+        <KeyboardAvoidingView
+          keyboardVerticalOffset={-60}
+          behavior="position"
         >
-          {
-            image && (
-              <Image
-                resizeMode="contain"
-                source={{ uri: image.uri }}
-                style={{
-                  width: 120,
-                  height: 160,
-                }}
+          <View style={styles.container}>
+            <Modal isVisible={isModalVisible}>
+              <View style={styles.modalContainer}>
+                <View style={styles.modalContentContainer}>
+                  <Image
+                    source={require('../../../assets/images/landing-page-1.png')}
+                    width={width - 70}
+                  />
+                  <Text>I am the modal content!</Text>
+                </View>
+                <Button
+                  title="Ok, got it!"
+                  onPress={this.toggleModal}
+                  containerViewStyle={styles.modalButtonContainer}
+                  buttonStyle={styles.modalButton}
+                  textStyle={styles.modalButtonText}
+                />
+              </View>
+            </Modal>
+            <View style={styles.textContainer}>
+              <Text style={styles.headerText}>
+                Welcome to FitazFK!
+              </Text>
+              <Text style={styles.bodyText}>
+                To help us get you FitazFK, we need some information from you.
+              </Text>
+            </View>
+            <View>
+              <FormLabel
+                fontFamily={fonts.bold}
+                labelStyle={styles.inputLabel}
+              >
+                Your Weight (kgs)
+              </FormLabel>
+              <FormInput
+                placeholder="Weight"
+                value={weight}
+                maxLength={3}
+                keyboardType="numeric"
+                returnKeyType="done"
+                onChangeText={(text) => this.setState({ weight: text })}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                enablesReturnKeyAutomatically
               />
-            )
-          }
-          <Button
-            title="Choose a photo"
-            onPress={this.chooseUploadType}
-          />
-        </View>
-        <View>
-          {
-            error && <Text>{error}</Text>
-          }
-          <CustomButton
-            title="Next Step"
-            onPress={() => this.handleImagePicked(image)}
-            primary
-          />
-        </View>
-        {
-          uploading && <Loader loading={uploading} />
-        }
+              <FormLabel
+                fontFamily={fonts.bold}
+                labelStyle={styles.inputLabel}
+              >
+                Waist Measurement (cm)
+              </FormLabel>
+              <FormInput
+                placeholder="Waist"
+                value={waist}
+                maxLength={3}
+                keyboardType="numeric"
+                returnKeyType="done"
+                onChangeText={(text) => this.setState({ waist: text })}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+              />
+              <FormLabel
+                fontFamily={fonts.bold}
+                labelStyle={styles.inputLabel}
+              >
+                Hip Measurement (cm)
+              </FormLabel>
+              <FormInput
+                placeholder="Hip"
+                value={hip}
+                maxLength={3}
+                keyboardType="numeric"
+                returnKeyType="done"
+                onChangeText={(text) => this.setState({ hip: text })}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+              />
+              <Button
+                title="How do I measure this?"
+                onPress={this.toggleModal}
+                containerViewStyle={styles.modalTriggerButtonContainer}
+                buttonStyle={styles.modalTriggerButton}
+                textStyle={styles.modalTriggerButtonText}
+              />
+            </View>
+            <View style={styles.buttonContainer}>
+              {
+                error && (
+                  <FormValidationMessage>
+                    {error}
+                  </FormValidationMessage>
+                )
+              }
+              <CustomButton
+                title="Next Step"
+                onPress={() => this.handleSubmit(weight, waist, hip)}
+                primary
+              />
+            </View>
+            {
+              loading && <Loader loading={loading} />
+            }
+          </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeAreaContainer: {
     flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 15,
+  },
+  modalContainer: {
+    backgroundColor: colors.white,
+    borderRadius: 4,
+  },
+  modalContentContainer: {
+    margin: 15,
+  },
+  modalButtonContainer: {
+    margin: 15,
+  },
+  modalButton: {
+    backgroundColor: colors.violet.standard,
+    borderRadius: 4,
+  },
+  modalButtonText: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+  },
+  textContainer: {
+    padding: 15,
+  },
   headerText: {
     textAlign: 'center',
     fontFamily: fonts.bold,
     fontSize: 24,
+    marginBottom: 15,
   },
   bodyText: {
     textAlign: 'center',
     fontFamily: fonts.standard,
     fontSize: 14,
+  },
+  inputLabel: {
+    color: colors.charcoal.standard,
+  },
+  inputContainer: {
+    marginTop: 5,
+    marginBottom: 5,
+    borderBottomWidth: 0,
+  },
+  input: {
+    width: width - 100,
+    padding: 12,
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.charcoal.standard,
+    borderWidth: 1,
+    borderColor: colors.grey.standard,
+    borderRadius: 4,
+  },
+  modalTriggerContainer: {
+    marginTop: 15,
+  },
+  modalTriggerButton: {
+    width: width - 100,
+    alignSelf: 'center',
+    borderRadius: 4,
+    backgroundColor: colors.violet.standard,
+  },
+  modalTriggerButtonText: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+  },
+  buttonContainer: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    alignItems: 'center',
   },
 });
