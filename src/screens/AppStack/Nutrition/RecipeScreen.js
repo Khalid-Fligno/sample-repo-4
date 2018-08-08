@@ -9,6 +9,7 @@ import {
   DatePickerIOS,
   Button,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { FileSystem } from 'expo';
 import Modal from 'react-native-modal';
@@ -65,6 +66,14 @@ export default class RecipeScreen extends React.PureComponent {
       [calendarMeal]: recipe,
     };
     await calendarRef.set(data, { merge: true });
+    Alert.alert(
+      'Added to calendar!',
+      `${recipe.title}\n${calendarMeal}\n${formattedDate}`,
+      [
+        { text: 'Ok', onPress: () => this.toggleModal(), style: 'cancel' },
+      ],
+      { cancelable: false },
+    );
   }
   render() {
     const {
@@ -90,6 +99,10 @@ export default class RecipeScreen extends React.PureComponent {
           <Modal
             isVisible={modalVisible}
             onBackdropPress={() => this.toggleModal()}
+            animationIn="fadeIn"
+            animationInTiming={600}
+            animationOut="fadeOut"
+            animationOutTiming={600}
           >
             <View
               style={{
@@ -107,6 +120,7 @@ export default class RecipeScreen extends React.PureComponent {
                 style={{
                   flexDirection: 'row',
                   width: '100%',
+                  padding: 5,
                 }}
               >
                 {
@@ -379,7 +393,7 @@ const styles = StyleSheet.create({
   },
   calendarMealButton: {
     flex: 1,
-    margin: 4,
+    margin: 5,
     paddingTop: 8,
     paddingBottom: 5,
     alignItems: 'center',
