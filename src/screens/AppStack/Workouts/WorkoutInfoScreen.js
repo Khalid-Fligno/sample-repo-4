@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { FileSystem, Video } from 'expo';
 import Modal from 'react-native-modal';
+import Carousel from 'react-native-carousel';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
@@ -80,33 +81,54 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       workoutName = workout.name;
       exerciseDisplay = workout.exercises.map((exercise, index) => {
         return (
-          <View
+          <Carousel
             key={exercise.id}
-            style={styles.exerciseTile}
+            width={width}
+            inactiveIndicatorColor={colors.grey.standard}
+            indicatorColor={colors.coral.standard}
+            indicatorOffset={-10}
+            indicatorSize={30}
+            animate={false}
           >
-            <View style={styles.exerciseTileHeaderBar}>
-              <View>
-                <Text style={styles.exerciseTileHeaderTextLeft}>
-                  {index + 1}. {exercise.name}
-                </Text>
+            <View
+              key={exercise.id}
+              style={styles.exerciseTile}
+            >
+              <View style={styles.exerciseTileHeaderBar}>
+                <View>
+                  <Text style={styles.exerciseTileHeaderTextLeft}>
+                    {index + 1}. {exercise.name}
+                  </Text>
+                </View>
+                <View>
+                  <Text style={styles.exerciseTileHeaderBarRight}>
+                    {reps} reps
+                  </Text>
+                </View>
               </View>
-              <View>
-                <Text style={styles.exerciseTileHeaderBarRight}>
-                  {reps} reps
-                </Text>
-              </View>
+              <Video
+                source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
+                rate={1.0}
+                volume={1.0}
+                isMuted={false}
+                resizeMode="contain"
+                shouldPlay
+                isLooping
+                style={{ width: width - 30, height: width - 30 }}
+              />
             </View>
-            <Video
-              source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
-              rate={1.0}
-              volume={1.0}
-              isMuted={false}
-              resizeMode="contain"
-              shouldPlay
-              isLooping
-              style={{ width, height: width }}
-            />
-          </View>
+            <View
+              style={{
+                height: '100%',
+                width,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'transparent',
+              }}
+            >
+              <Text>This is an exercise description</Text>
+            </View>
+          </Carousel>
         );
       });
     }
@@ -289,7 +311,9 @@ const styles = StyleSheet.create({
   exerciseTile: {
     width: width - 30,
     marginTop: 7.5,
-    marginBottom: 7.5,
+    marginBottom: 20,
+    marginLeft: 15,
+    marginRight: 15,
     borderWidth: 2,
     borderRadius: 4,
     borderColor: colors.coral.standard,
