@@ -1,70 +1,49 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Alert,
-  Dimensions,
-  TouchableOpacity,
-  AsyncStorage,
-} from 'react-native';
-import { Video } from 'expo';
-import SelectInput from 'react-native-select-input-ios';
+import { View, Text, StyleSheet, SafeAreaView, Button, Image, ActionSheetIOS, AsyncStorage, Alert } from 'react-native';
+import { ImagePicker, ImageManipulator, Permissions, Linking } from 'expo';
 import { db } from '../../../config/firebase';
-import { burpeeOptions, findFitnessLevel } from '../../utils/index';
-import CustomButton from '../../components/CustomButton';
-import WorkoutTimer from '../../components/WorkoutTimer';
-import CountdownTimer from '../../components/CountdownTimer';
 import Loader from '../../components/Loader';
+import CustomButton from '../../components/CustomButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
-const { width } = Dimensions.get('window');
+const uploadImageAsync = async (uri) => {
+  const uid = await AsyncStorage.getItem('uid');
+  const firebase = require('firebase');
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  const storageRef = firebase.storage().ref();
+  const usersStorageRef = storageRef.child('user-photos');
+  const userStorageRef = usersStorageRef.child(uid);
+  const beforePhotoStorageRef = userStorageRef.child('before-photo.jpeg');
+  const snapshot = await beforePhotoStorageRef.put(blob);
+  const url = await snapshot.ref.getDownloadURL();
+  await db.collection('users').doc(uid).set({ beforePhoto: url }, { merge: true });
+};
 
 export default class Onboarding3Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      timerStart: false,
-      timerReset: false,
-      totalDuration: 10,
-      countdownDuration: 7,
-      countdownActive: false,
-      burpeeCount: null,
-      loading: false,
+      hasCameraPermission: null,
+      hasCameraRollPermission: null,
+      image: null,
+      uploading: false,
+      error: null,
     };
   }
   componentWillMount = () => {
+    this.getCameraPermission();
+    this.getCameraRollPermission();
     this.props.navigation.setParams({ handleSkip: this.handleSkip });
   }
-  toggleTimer = () => {
-    this.setState({
-      timerStart: true,
-      timerReset: false,
-    });
+  getCameraPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    this.setState({ hasCameraPermission: status === 'granted' });
   }
-  resetTimer = () => {
-    this.setState({
-      timerStart: false,
-      timerReset: true,
-    });
-  }
-  handleFinish = () => {
-    Alert.alert(
-      'Complete',
-      'Well done',
-      [
-        {
-          text: 'Ok', style: 'Cancel',
-        },
-      ],
-      { cancelable: false },
-    );
-    this.setState({
-      timerStart: false,
-      timerReset: false,
-    });
+  getCameraRollPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    this.setState({ hasCameraRollPermission: status === 'granted' });
   }
   handleSkip = () => {
     Alert.alert(
@@ -75,133 +54,137 @@ export default class Onboarding3Screen extends React.PureComponent {
           text: 'Cancel', style: 'cancel',
         },
         {
-          text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
+          text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('Onboarding4'),
         },
       ],
       { cancelable: false },
     );
   }
-  startCountdown = () => {
-    this.setState({
-      countdownActive: true,
-    });
+  appSettingsPrompt = () => {
+    Alert.alert(
+      'FitazFK needs permissions to do this',
+      'Go to app settings and enable camera and camera roll permissions',
+      [
+        {
+          text: 'Cancel', style: 'cancel',
+        },
+        {
+          text: 'Go to Settings', onPress: () => Linking.openURL('app-settings:'),
+        },
+      ],
+      { cancelable: false },
+    );
   }
-  finishCountdown = () => {
-    this.setState({ timerStart: true, countdownActive: false });
+  chooseUploadType = () => {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ['Cancel', 'Take photo', 'Upload from Camera Roll'],
+        cancelButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 1) {
+          if (!this.state.hasCameraPermission) {
+            this.appSettingsPrompt();
+            return;
+          }
+          this.takePhoto();
+        } else if (buttonIndex === 2) {
+          if (!this.state.hasCameraRollPermission) {
+            this.appSettingsPrompt();
+            return;
+          }
+          this.pickImage();
+        }
+      },
+    );
   }
-  handleSubmit = async () => {
-    this.setState({ loading: true });
-    try {
-      const uid = await AsyncStorage.getItem('uid');
-      const userRef = db.collection('users').doc(uid);
-      const fitnessLevel = findFitnessLevel(this.state.burpeeCount);
-      await userRef.set({
-        fitnessLevel,
-      }, { merge: true });
-      this.setState({ loading: false });
-      this.props.navigation.navigate('App');
-    } catch (err) {
-      console.log(err);
-      this.setState({ loading: false });
+  takePhoto = async () => {
+    const result = await ImagePicker.launchCameraAsync();
+    if (!result.cancelled) {
+      const manipResult = await ImageManipulator.manipulate(
+        result.uri,
+        [{ resize: { width: 600, height: 800 } }],
+        { format: 'jpeg' },
+      );
+      this.setState({ image: manipResult });
     }
-  }
-  render() {
-    const {
-      countdownDuration,
-      countdownActive,
-      timerStart,
-      timerReset,
-      totalDuration,
-      burpeeCount,
-      loading,
-    } = this.state;
-    const startButton = (
-      <CustomButton
-        title="Ready!"
-        onPress={() => this.startCountdown()}
-      />
-    );
-    const countdownTimer = (
-      <CountdownTimer
-        totalDuration={countdownDuration}
-        start={countdownActive}
-        handleFinish={() => this.finishCountdown()}
-      />
-    );
-    const workoutTimer = (
-      <TouchableOpacity
-        onPress={timerStart ? () => this.resetTimer() : () => this.toggleTimer()}
-      >
-        <WorkoutTimer
-          totalDuration={totalDuration}
-          start={timerStart}
-          reset={timerReset}
-          handleFinish={() => this.handleFinish()}
-        />
-      </TouchableOpacity>
-    );
-    const timerView = () => {
-      if (countdownActive) {
-        return countdownTimer;
-      } else if (timerStart) {
-        return workoutTimer;
+  };
+  pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    });
+    const originXValue = result.width > result.height ? 130 : 0;
+    if (!result.cancelled) {
+      try {
+        const manipResult = await ImageManipulator.manipulate(
+          result.uri,
+          [{ resize: { height: 800 } }, {
+            crop: {
+              originX: originXValue, originY: 0, width: 600, height: 800,
+            },
+          }],
+          { format: 'jpeg' },
+        );
+        this.setState({ image: manipResult });
+      } catch (err) {
+        this.setState({ error: 'There was a problem with that image, please try a different one' });
       }
-      return startButton;
-    };
+    }
+  };
+  handleImagePicked = async (pickerResult) => {
+    try {
+      this.setState({ uploading: true });
+      if (this.state.image !== null) {
+        await uploadImageAsync(pickerResult.uri);
+        this.props.navigation.navigate('Onboarding4');
+      } else {
+        this.setState({ error: 'Please select an image' });
+      }
+    } catch (err) {
+      this.setState({ error: 'Problem uploading image, please try again' });
+    } finally {
+      this.setState({ uploading: false });
+    }
+  };
+  render() {
+    const { image, uploading, error } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <View>
           <Text style={styles.headerText}>
-            Burpee Test
+            Header Text
           </Text>
           <Text style={styles.bodyText}>
-            To assess your current fitness level
+            Body Text
           </Text>
-          <Video
-            source={require('../../../assets/videos/burpees-trimmed-square.mp4')}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizeMode="contain"
-            shouldPlay
-            isLooping
-            style={{ width, height: width }}
-          />
         </View>
-        <View
-          style={{
-            alignItems: 'center',
-          }}
-        >
-          {timerView()}
-          <SelectInput
-            onSubmitEditing={(value) => this.setState({ burpeeCount: value })}
-            value={burpeeCount}
-            options={burpeeOptions}
-            style={{
-              borderColor: colors.grey.light,
-              borderWidth: 1,
-              borderRadius: 4,
-              width: width - 30,
-              marginTop: 30,
-              padding: 10,
-              alignItems: 'center',
-            }}
-            labelStyle={{
-              fontFamily: fonts.bold,
-            }}
+        <View style={styles.imageContainer}>
+          {
+            image && (
+              <Image
+                resizeMode="contain"
+                source={{ uri: image.uri }}
+                style={styles.image}
+              />
+            )
+          }
+          <Button
+            title="Choose a photo"
+            onPress={this.chooseUploadType}
           />
         </View>
         <View>
+          {
+            error && <Text>{error}</Text>
+          }
           <CustomButton
             title="Next Step"
-            onPress={() => this.handleSubmit()}
+            onPress={() => this.handleImagePicked(image)}
             primary
-            disabled={countdownActive || timerStart || burpeeCount === null}
           />
         </View>
         {
-          loading && <Loader loading={loading} />
+          uploading && <Loader loading={uploading} />
         }
       </SafeAreaView>
     );
@@ -224,5 +207,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: fonts.standard,
     fontSize: 14,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    width: 120,
+    height: 160,
   },
 });
