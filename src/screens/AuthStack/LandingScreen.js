@@ -48,7 +48,7 @@ export default class LandingScreen extends React.PureComponent {
                 </View>
                 <View style={styles.carouselCardTextContainer}>
                   <Text style={styles.carouselCardText}>
-                    A fuckload of workouts
+                    Workouts
                   </Text>
                 </View>
               </View>
@@ -61,20 +61,7 @@ export default class LandingScreen extends React.PureComponent {
                 </View>
                 <View style={styles.carouselCardTextContainer}>
                   <Text style={styles.carouselCardText}>
-                    Shit-tonnes of recipes
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.carouselCardContainer}>
-                <View style={styles.carouselCardImageContainer}>
-                  <ScalableImage
-                    source={require('../../../assets/images/landing-screen-carousel-3.png')}
-                    width={180}
-                  />
-                </View>
-                <View style={styles.carouselCardTextContainer}>
-                  <Text style={styles.carouselCardText}>
-                    Created by a lovely homosexual couple
+                    Recipes
                   </Text>
                 </View>
               </View>
