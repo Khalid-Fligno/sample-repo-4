@@ -48,9 +48,6 @@ export default class Onboarding1Screen extends React.PureComponent {
       loading,
       chosenDate,
     } = this.state;
-    if (loading) {
-      return <Loader loading={loading} />;
-    }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
@@ -81,6 +78,9 @@ export default class Onboarding1Screen extends React.PureComponent {
               primary
             />
           </View>
+          {
+            loading && <Loader loading={loading} />
+          }
         </View>
       </SafeAreaView>
     );
@@ -96,10 +96,10 @@ const styles = StyleSheet.create({
   },
   flexContainer: {
     flex: 1,
+    padding: 15,
   },
   textContainer: {
     flex: 1,
-    paddingTop: 15,
   },
   headerText: {
     textAlign: 'center',
@@ -115,6 +115,5 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
     justifyContent: 'flex-end',
-    paddingBottom: 15,
   },
 });
