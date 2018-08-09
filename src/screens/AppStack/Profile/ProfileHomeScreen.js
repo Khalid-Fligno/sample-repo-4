@@ -24,7 +24,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
     } catch (err) {
       this.setState({ stepCount: 'Pedometer info not available' });
     }
-  };
+  }
   render() {
     return (
       <View style={styles.container}>
