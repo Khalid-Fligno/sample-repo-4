@@ -150,42 +150,44 @@ export default class Onboarding3Screen extends React.PureComponent {
     const { image, uploading, error } = this.state;
     return (
       <SafeAreaView style={styles.container}>
-        <View>
-          <Text style={styles.headerText}>
-            Header Text
-          </Text>
-          <Text style={styles.bodyText}>
-            Body Text
-          </Text>
-        </View>
-        <View style={styles.imageContainer}>
+        <View style={styles.flexContainer}>
+          <View>
+            <Text style={styles.headerText}>
+              Header Text
+            </Text>
+            <Text style={styles.bodyText}>
+              Body Text
+            </Text>
+          </View>
+          <View style={styles.imageContainer}>
+            {
+              image && (
+                <Image
+                  resizeMode="contain"
+                  source={{ uri: image.uri }}
+                  style={styles.image}
+                />
+              )
+            }
+            <Button
+              title="Choose a photo"
+              onPress={this.chooseUploadType}
+            />
+          </View>
+          <View>
+            {
+              error && <Text>{error}</Text>
+            }
+            <CustomButton
+              title="Next Step"
+              onPress={() => this.handleImagePicked(image)}
+              primary
+            />
+          </View>
           {
-            image && (
-              <Image
-                resizeMode="contain"
-                source={{ uri: image.uri }}
-                style={styles.image}
-              />
-            )
+            uploading && <Loader loading={uploading} />
           }
-          <Button
-            title="Choose a photo"
-            onPress={this.chooseUploadType}
-          />
         </View>
-        <View>
-          {
-            error && <Text>{error}</Text>
-          }
-          <CustomButton
-            title="Next Step"
-            onPress={() => this.handleImagePicked(image)}
-            primary
-          />
-        </View>
-        {
-          uploading && <Loader loading={uploading} />
-        }
       </SafeAreaView>
     );
   }
@@ -194,7 +196,12 @@ export default class Onboarding3Screen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 15,
     backgroundColor: colors.white,
+  },
+  flexContainer: {
+    flex: 1,
+    padding: 15,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
