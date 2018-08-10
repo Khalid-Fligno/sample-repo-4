@@ -7,10 +7,10 @@ import {
   ScrollView,
   AsyncStorage,
   DatePickerIOS,
-  Button,
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import { Button } from 'react-native-elements';
 import { FileSystem, Video } from 'expo';
 import Modal from 'react-native-modal';
 import Carousel from 'react-native-carousel';
@@ -34,6 +34,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       reps: null,
       chosenDate: new Date(),
       modalVisible: false,
+      addingToCalendar: false,
     };
   }
   componentDidMount = async () => {
@@ -51,6 +52,10 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     this.setState((prevState) => ({ modalVisible: !prevState.modalVisible }));
   }
   addWorkoutToCalendar = async (date) => {
+    if (this.state.addingToCalendar) {
+      return;
+    }
+    this.setState({ addingToCalendar: true });
     const formattedDate = moment(date).format('YYYY-MM-DD');
     const { workout } = this.state;
     const uid = await AsyncStorage.getItem('uid');
@@ -59,6 +64,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       workout,
     };
     await calendarRef.set(data, { merge: true });
+    this.setState({ addingToCalendar: false });
     Alert.alert(
       'Added to calendar!',
       `${workout.name}\n${formattedDate}`,
@@ -75,6 +81,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       reps,
       chosenDate,
       modalVisible,
+      addingToCalendar,
     } = this.state;
     if (loading) {
       return (
@@ -162,10 +169,24 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                 onDateChange={this.setDate}
                 minimumDate={new Date()}
               />
-              <Button
-                title="Add to calendar"
-                onPress={() => this.addWorkoutToCalendar(chosenDate)}
-              />
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: 10,
+                }}
+              >
+                <Button
+                  title="Add to calendar"
+                  onPress={() => this.addWorkoutToCalendar(chosenDate)}
+                  loading={addingToCalendar}
+                  buttonStyle={{
+                    width: width - 60,
+                    backgroundColor: colors.coral.standard,
+                    borderRadius: 4,
+                  }}
+                />
+              </View>
             </View>
           </Modal>
           <Text style={styles.workoutName}>
