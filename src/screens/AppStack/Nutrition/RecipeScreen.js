@@ -7,13 +7,12 @@ import {
   Dimensions,
   AsyncStorage,
   DatePickerIOS,
-  Button,
   TouchableOpacity,
   Alert,
 } from 'react-native';
 import { FileSystem } from 'expo';
 import Modal from 'react-native-modal';
-import { Divider } from 'react-native-elements';
+import { Divider, Button } from 'react-native-elements';
 import Image from 'react-native-scalable-image';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
@@ -36,6 +35,7 @@ export default class RecipeScreen extends React.PureComponent {
       chosenDate: new Date(),
       modalVisible: false,
       calendarMeal: null,
+      addingToCalendar: false,
     };
   }
   componentWillMount = async () => {
@@ -58,6 +58,13 @@ export default class RecipeScreen extends React.PureComponent {
     this.setState((prevState) => ({ modalVisible: !prevState.modalVisible }));
   }
   addRecipeToCalendar = async (date) => {
+    if (this.state.addingToCalendar) {
+      return;
+    }
+    if (this.state.calendarMeal === null) {
+      return;
+    }
+    this.setState({ addingToCalendar: true });
     const formattedDate = moment(date).format('YYYY-MM-DD');
     const { recipe, calendarMeal } = this.state;
     const uid = await AsyncStorage.getItem('uid');
@@ -66,6 +73,7 @@ export default class RecipeScreen extends React.PureComponent {
       [calendarMeal]: recipe,
     };
     await calendarRef.set(data, { merge: true });
+    this.setState({ addingToCalendar: false });
     Alert.alert(
       'Added to calendar!',
       `${recipe.title}\n${calendarMeal}\n${formattedDate}`,
@@ -84,6 +92,7 @@ export default class RecipeScreen extends React.PureComponent {
       chosenDate,
       modalVisible,
       calendarMeal,
+      addingToCalendar,
     } = this.state;
     if (loading) {
       return (
@@ -204,10 +213,24 @@ export default class RecipeScreen extends React.PureComponent {
                   )
                 }
               </View>
-              <Button
-                title="Add to calendar"
-                onPress={() => this.addRecipeToCalendar(chosenDate)}
-              />
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: 10,
+                }}
+              >
+                <Button
+                  title="Add to calendar"
+                  onPress={() => this.addRecipeToCalendar(chosenDate)}
+                  loading={addingToCalendar}
+                  buttonStyle={{
+                    width: width - 60,
+                    backgroundColor: colors.violet.standard,
+                    borderRadius: 4,
+                  }}
+                />
+              </View>
             </View>
           </Modal>
           <Image
