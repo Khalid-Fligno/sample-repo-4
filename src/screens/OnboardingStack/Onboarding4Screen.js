@@ -199,6 +199,8 @@ export default class Onboarding4Screen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 15,
+    paddingBottom: 15,
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'space-between',
