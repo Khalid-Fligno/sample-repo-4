@@ -1,6 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, AsyncStorage, ActivityIndicator, Dimensions, TouchableOpacity, Text } from 'react-native';
-import { FileSystem } from 'expo';
+import {
+  StyleSheet,
+  View,
+  AsyncStorage,
+  ActivityIndicator,
+  Dimensions,
+  TouchableOpacity,
+  Text,
+  Alert,
+} from 'react-native';
+import { FileSystem, Calendar, Permissions } from 'expo';
 import CalendarStrip from 'react-native-calendar-strip';
 import { db, auth } from '../../../../config/firebase';
 import Icon from '../../../components/Icon';
@@ -102,6 +111,27 @@ export default class CalendarHomeScreen extends React.PureComponent {
       console.log(`Filesystem download error: ${err}`);
     }
   }
+  addToCalendarApp = async (workout) => {
+    const { status } = await Permissions.askAsync(Permissions.CALENDAR);
+    if (status !== 'granted') {
+      Alert.alert('No Permission for Calendar');
+      return;
+    }
+
+    const y = new Date(this.calendarStrip.current.getSelectedDate()).getFullYear();
+    const mth = new Date(this.calendarStrip.current.getSelectedDate()).getMonth();
+    const d = new Date(this.calendarStrip.current.getSelectedDate()).getDate();
+    const h = 12;
+    const m = 30;
+    const s = 0;
+    Calendar.createEventAsync(Calendar.DEFAULT, {
+      title: 'FitazFK Workout',
+      startDate: new Date(y, mth, d, h, m, s),
+      endDate: new Date(y, mth, d, h, m + 18, s),
+      notes: `${workout.name}`,
+      alarms: [{ absoluteDate: new Date(y, mth, d, h, m - 15, s) }],
+    });
+  }
   render() {
     const {
       loading,
@@ -129,6 +159,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
           workout ? (
             <TouchableOpacity
               onPress={() => this.loadExercises(workout)}
+              onLongPress={() => this.addToCalendarApp(workout)}
               style={styles.workoutTile}
             >
               <Text style={styles.tileText}>
