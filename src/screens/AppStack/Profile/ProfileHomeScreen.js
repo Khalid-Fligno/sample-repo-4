@@ -1,17 +1,18 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { Pedometer } from 'expo';
+import WorkoutProgress from '../../../components/WorkoutProgress';
 import colors from '../../../styles/colors';
 
 export default class ProfileHomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      stepCount: 0,
+      // stepCount: 0,
     };
   }
   componentDidMount() {
-    this.getPedometerInfo();
+    // this.getPedometerInfo();
   }
   getPedometerInfo = () => {
     try {
@@ -31,7 +32,8 @@ export default class ProfileHomeScreen extends React.PureComponent {
         <Text>
           ProfileHomeScreen
         </Text>
-        <Text>Walk! And watch this go up: {this.state.stepCount}</Text>
+        {/* <Text>Walk! And watch this go up: {this.state.stepCount}</Text> */}
+        <WorkoutProgress />
       </View>
     );
   }
