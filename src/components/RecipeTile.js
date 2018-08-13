@@ -44,7 +44,7 @@ const RecipeTile = ({
               </Text>
             </View>
           ))
-      }
+        }
       </View>
     </Card>
   </TouchableOpacity>
