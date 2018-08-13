@@ -21,6 +21,7 @@ const Header = ({
   withBackButton,
   withSkipButton,
   withStartButton,
+  headerTitleParams,
 }) => (
   <SafeAreaView>
     <StatusBar
@@ -51,13 +52,28 @@ const Header = ({
       <View
         style={styles.headerContentContainer}
       >
-        <Image
-          source={require('../../assets/icons/fitazfk-icon-solid-white.png')}
-          style={{
-            width: 30,
-            height: 30,
-          }}
-        />
+        {
+          headerTitleParams ? (
+            <Text
+              style={{
+                fontFamily: fonts.bold,
+                fontSize: 18,
+                color: colors.white,
+                marginTop: 5,
+              }}
+            >
+              {headerTitleParams}
+            </Text>
+          ) : (
+            <Image
+              source={require('../../assets/icons/fitazfk-icon-solid-white.png')}
+              style={{
+                width: 30,
+                height: 30,
+              }}
+            />
+          )
+        }
       </View>
       {
         withSkipButton && (
@@ -108,6 +124,7 @@ Header.propTypes = {
   withSkipButton: PropTypes.bool,
   withStartButton: PropTypes.bool,
   stack: PropTypes.string,
+  headerTitleParams: PropTypes.string,
 };
 
 Header.defaultProps = {
@@ -115,6 +132,7 @@ Header.defaultProps = {
   withSkipButton: false,
   withStartButton: false,
   stack: null,
+  headerTitleParams: null,
 };
 
 const styles = StyleSheet.create({
@@ -165,7 +183,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.blue.dark,
   },
   headerContentContainer: {
-    width: 50,
+    width: 130,
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
