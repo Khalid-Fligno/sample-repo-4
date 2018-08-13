@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
 import WorkoutTimer from '../../../components/WorkoutTimer';
+import WorkoutProgress from '../../../components/WorkoutProgress';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -115,6 +117,10 @@ export default class Exercise2Screen extends React.PureComponent {
                 </Text>
               </View>
             </View>
+            <WorkoutProgress
+              currentExercise={2}
+              currentSet={this.props.navigation.getParam('setCount', 0) + 1}
+            />
           </View>
         </View>
       </SafeAreaView>
