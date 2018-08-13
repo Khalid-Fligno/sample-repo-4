@@ -28,3 +28,19 @@ export const onboardingHeaderButtonMap = {
   Onboarding3: true,
   Onboarding4: true,
 };
+
+export const mealNameMap = {
+  breakfast: 'BREAKFAST',
+  lunch: 'LUNCH',
+  dinner: 'DINNER',
+  snack: 'SNACK',
+};
+
+export const findNutritionHeaderTitle = (routeName) => {
+  if (routeName === 'Recipe') {
+    return 'RECIPE';
+  } else if (routeName === 'RecipeSteps') {
+    return 'METHOD';
+  }
+  return null;
+};

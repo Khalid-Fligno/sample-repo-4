@@ -37,6 +37,8 @@ import {
   workoutsBackButtonMap,
   nutritionBackButtonMap,
   onboardingHeaderButtonMap,
+  findNutritionHeaderTitle,
+  mealNameMap,
 } from './routerUtils';
 
 const fadeSpec = {
@@ -141,6 +143,7 @@ const NutritionStack = createStackNavigator(
             withBackButton={nutritionBackButtonMap[routeName]}
             withStartButton={routeName === 'Recipe'}
             stack="nutrition"
+            headerTitleParams={routeName === 'RecipeSelection' ? mealNameMap[navigation.getParam('meal', null)] : findNutritionHeaderTitle(routeName)}
           />
         );
       },
