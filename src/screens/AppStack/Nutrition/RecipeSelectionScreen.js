@@ -1,20 +1,11 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { FileSystem } from 'expo';
 import { db } from '../../../../config/firebase';
 import RecipeTile from '../../../components/RecipeTile';
 import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
-
-const { width } = Dimensions.get('window');
-
-const mealNameMap = {
-  breakfast: 'BREAKFAST',
-  lunch: 'LUNCH',
-  dinner: 'DINNER',
-  snack: 'SNACK',
-};
 
 export default class RecipeSelectionScreen extends React.PureComponent {
   constructor(props) {
@@ -50,7 +41,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       });
   }
   render() {
-    const meal = this.props.navigation.getParam('meal', null);
+    // const meal = this.props.navigation.getParam('meal', null);
     const { recipes, loading } = this.state;
     if (loading) {
       return (
@@ -72,15 +63,6 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     ));
     return (
       <View style={styles.container}>
-        <View
-          style={styles.headingContainer}
-        >
-          <Text
-            style={styles.heading}
-          >
-            {mealNameMap[meal]}
-          </Text>
-        </View>
         <ScrollView contentContainerStyle={styles.scrollView}>
           {recipeList}
         </ScrollView>
@@ -94,22 +76,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
-    paddingTop: 15,
-  },
-  headingContainer: {
-    width,
-    alignItems: 'center',
-    paddingTop: 8,
-    paddingBottom: 2,
-    backgroundColor: colors.offWhite,
-    borderTopWidth: 4,
-    borderTopColor: colors.violet.dark,
-    borderBottomWidth: 4,
-    borderBottomColor: colors.violet.dark,
-    shadowColor: colors.violet.dark,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 4,
   },
   heading: {
     fontFamily: fonts.bold,
