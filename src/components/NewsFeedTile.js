@@ -18,7 +18,8 @@ const NewsFeedTile = ({
     style={styles.cardContainer}
   >
     <Card
-      image={{ uri: image }}
+      // image={{ uri: image }}
+      image={image}
       containerStyle={styles.card}
     >
       <Text style={styles.title}>
