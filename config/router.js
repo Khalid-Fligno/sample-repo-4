@@ -30,6 +30,7 @@ import Exercise6Screen from '../src/screens/AppStack/Workouts/Exercise6Screen';
 import WorkoutCompleteScreen from '../src/screens/AppStack/Workouts/WorkoutCompleteScreen';
 import CalendarHomeScreen from '../src/screens/AppStack/Calendar/CalendarHomeScreen';
 import ProfileHomeScreen from '../src/screens/AppStack/Profile/ProfileHomeScreen';
+import EditProfileScreen from '../src/screens/AppStack/Profile/EditProfileScreen';
 import colors from '../src/styles/colors';
 import fonts from '../src/styles/fonts';
 import {
@@ -197,12 +198,23 @@ const CalendarStack = createStackNavigator(
 const ProfileStack = createStackNavigator(
   {
     ProfileHome: ProfileHomeScreen,
+    EditProfile: EditProfileScreen,
   },
   {
     initialRouteName: 'ProfileHome',
-    navigationOptions: {
-      header: <Header stack="profile" />,
-    },
+    navigationOptions: ({ navigation }) => ({
+      header: () => {
+        const { routeName } = navigation.state;
+        return (
+          <Header
+            navigation={navigation}
+            stack="profile"
+            withBackButton={routeName === 'EditProfile' && true}
+            headerTitleParams={routeName === 'EditProfile' ? 'Edit Profile' : null}
+          />
+        );
+      },
+    }),
   },
 );
 
