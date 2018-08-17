@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
-import { Pedometer } from 'expo';
+import { StyleSheet, View, Text, AsyncStorage, Button } from 'react-native';
+// import { Pedometer } from 'expo';
 import { db } from '../../../../config/firebase';
-import WorkoutProgress from '../../../components/WorkoutProgress';
+import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
 
 export default class ProfileHomeScreen extends React.PureComponent {
@@ -10,6 +10,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
     super(props);
     this.state = {
       profile: null,
+      loading: false,
       // stepCount: 0,
     };
   }
@@ -17,30 +18,40 @@ export default class ProfileHomeScreen extends React.PureComponent {
     // this.getPedometerInfo();
     this.fetchProfile();
   }
-
-  getPedometerInfo = () => {
-    try {
-      const end = new Date();
-      const start = new Date();
-      start.setHours(0, 0, 0, 0);
-      Pedometer.getStepCountAsync(start, end).then((result) => {
-        this.setState({ stepCount: result.steps });
-      });
-    } catch (err) {
-      this.setState({ stepCount: 'Pedometer info not available' });
-    }
-  }
+  // getPedometerInfo = () => {
+  //   try {
+  //     const end = new Date();
+  //     const start = new Date();
+  //     start.setHours(0, 0, 0, 0);
+  //     Pedometer.getStepCountAsync(start, end).then((result) => {
+  //       this.setState({ stepCount: result.steps });
+  //     });
+  //   } catch (err) {
+  //     this.setState({ stepCount: 'Pedometer info not available' });
+  //   }
+  // }
   fetchProfile = async () => {
+    this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
-    console.log(uid)
     db.collection('users').doc(uid)
       .onSnapshot(async (doc) => {
-        this.setState({ profile: await doc.data() });
+        if (doc.exists) {
+          this.setState({ profile: await doc.data(), loading: false });
+        } else {
+          this.setState({ loading: false });
+        }
       });
   }
   render() {
-    const { profile } = this.state;
-    console.log(profile)
+    const { profile, loading } = this.state;
+    if (loading) {
+      return (
+        <Loader
+          loading={loading}
+          color={colors.blue.standard}
+        />
+      );
+    }
     return (
       <View style={styles.container}>
         <Text>
@@ -49,11 +60,20 @@ export default class ProfileHomeScreen extends React.PureComponent {
         <Text>
           {profile && profile.firstName}
         </Text>
-        {/* <Text>Walk! And watch this go up: {this.state.stepCount}</Text> */}
-        <WorkoutProgress
-          currentExercise={5}
-          currentSet={2}
+        <Text>
+          {profile && profile.lastName}
+        </Text>
+        <Text>
+          {profile && profile.email}
+        </Text>
+        <Text>
+          {profile && profile.dob}
+        </Text>
+        <Button
+          title="Edit Account Info"
+          onPress={() => this.props.navigation.navigate('EditProfile')}
         />
+        {/* <Text>Walk! And watch this go up: {this.state.stepCount}</Text> */}
       </View>
     );
   }
