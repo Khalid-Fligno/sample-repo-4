@@ -36,7 +36,8 @@ NewsFeedTile.propTypes = {
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   subTitle: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired,
+  // image: PropTypes.string.isRequired,
+  image: PropTypes.number.isRequired,
 };
 
 const styles = StyleSheet.create({
