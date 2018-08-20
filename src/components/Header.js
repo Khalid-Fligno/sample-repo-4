@@ -21,6 +21,7 @@ const Header = ({
   withBackButton,
   withSkipButton,
   withStartButton,
+  withProfileButton,
   headerTitleParams,
 }) => (
   <SafeAreaView>
@@ -33,12 +34,12 @@ const Header = ({
         stack === 'nutrition' && styles.nutritionHeader,
         stack === 'workouts' && styles.workoutsHeader,
         stack === 'calendar' && styles.calendarHeader,
-        stack === 'profile' && styles.profileHeader,
+        stack === 'progress' && styles.progressHeader,
       ]}
     >
       <TouchableOpacity
         style={styles.headerContentContainerLeft}
-        onPress={() => withBackButton && navigation.goBack()}
+        onPress={() => withBackButton && navigation.pop()}
       >
         {
           withBackButton &&
@@ -109,7 +110,21 @@ const Header = ({
         )
       }
       {
-        !withStartButton && !withSkipButton && (
+        withProfileButton && (
+          <TouchableOpacity
+            style={styles.headerContentContainerRight}
+            onPress={() => navigation.navigate('ProfileHome')}
+          >
+            <Icon
+              name="profile-solid"
+              size={26}
+              color={colors.white}
+            />
+          </TouchableOpacity>
+        )
+      }
+      {
+        !withStartButton && !withSkipButton && !withProfileButton && (
           <View
             style={styles.headerContentContainerRight}
           />
@@ -123,6 +138,7 @@ Header.propTypes = {
   withBackButton: PropTypes.bool,
   withSkipButton: PropTypes.bool,
   withStartButton: PropTypes.bool,
+  withProfileButton: PropTypes.bool,
   stack: PropTypes.string,
   headerTitleParams: PropTypes.string,
 };
@@ -131,6 +147,7 @@ Header.defaultProps = {
   withBackButton: false,
   withSkipButton: false,
   withStartButton: false,
+  withProfileButton: false,
   stack: null,
   headerTitleParams: null,
 };
@@ -176,7 +193,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.green.dark,
   },
-  profileHeader: {
+  progressHeader: {
     ...headerContainer,
     backgroundColor: colors.blue.standard,
     borderBottomWidth: 1,
