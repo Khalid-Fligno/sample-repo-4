@@ -5,7 +5,7 @@ export const tabColorMap = {
   Nutrition: colors.violet.standard,
   Workouts: colors.coral.standard,
   Calendar: colors.green.standard,
-  Profile: colors.blue.standard,
+  Progress: colors.blue.standard,
 };
 
 export const workoutsBackButtonMap = {
