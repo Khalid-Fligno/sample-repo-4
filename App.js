@@ -1,5 +1,5 @@
 import React from 'react';
-import SwitchNavigator from './config/router';
+import SwitchNavigator from './config/router/index';
 
 export default class App extends React.PureComponent {
   constructor(props) {
