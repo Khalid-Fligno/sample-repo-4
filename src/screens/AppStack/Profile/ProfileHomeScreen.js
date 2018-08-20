@@ -1,10 +1,22 @@
 import React from 'react';
-import { StyleSheet, View, Text, AsyncStorage, Button, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, AsyncStorage, ScrollView, Dimensions } from 'react-native';
+import { List, ListItem } from 'react-native-elements';
 // import { Pedometer } from 'expo';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
+import Icon from '../../../components/Icon';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+
+const { width } = Dimensions.get('window');
+
+const list = [
+  { title: 'Help & Support' },
+  { title: 'Privacy Policy' },
+  { title: 'Terms of Service' },
+  { title: 'Billing Terms' },
+  { title: 'Log Out' },
+];
 
 export default class ProfileHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -52,36 +64,53 @@ export default class ProfileHomeScreen extends React.PureComponent {
       return (
         <Loader
           loading={loading}
-          color={colors.blue.standard}
+          color={colors.charcoal.standard}
         />
       );
     }
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollView}>
+          <Icon
+            name="profile-outline"
+            size={100}
+            color={colors.charcoal.standard}
+          />
           <Text
             style={{
+              marginTop: 15,
               fontFamily: fonts.bold,
               fontSize: 24,
             }}
           >
             {profile && profile.firstName} {profile && profile.lastName}
           </Text>
-          <Text>
-            {profile && profile.email}
-          </Text>
-          <Text>
-            {profile && profile.dob}
-          </Text>
-          <Button
-            title="Edit Account Info"
-            onPress={() => this.props.navigation.navigate('EditProfile')}
-          />
-          <Button
-            title="Progress"
-            onPress={() => this.props.navigation.navigate('Progress')}
-          />
+          <List containerStyle={styles.listContainer}>
+            <ListItem
+              key="My Profile"
+              title="My Profile"
+              titleStyle={{
+                fontFamily: fonts.bold,
+                color: colors.charcoal.standard,
+              }}
+              onPress={() => this.props.navigation.navigate('Profile')}
+            />
+          </List>
           {/* <Text>Walk! And watch this go up: {this.state.stepCount}</Text> */}
+          <List containerStyle={styles.listContainer}>
+            {
+              list.map((l) => (
+                <ListItem
+                  key={l.title}
+                  title={l.title}
+                  titleStyle={{
+                    fontFamily: fonts.bold,
+                    color: colors.charcoal.standard,
+                  }}
+                />
+              ))
+            }
+          </List>
         </ScrollView>
       </View>
     );
@@ -95,7 +124,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scrollView: {
-    padding: 15,
+    paddingTop: 15,
     alignItems: 'center',
+  },
+  listContainer: {
+    width,
+    marginBottom: 20,
   },
 });
