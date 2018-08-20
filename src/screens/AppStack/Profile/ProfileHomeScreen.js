@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, AsyncStorage, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, AsyncStorage, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
-// import { Pedometer } from 'expo';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
@@ -11,11 +10,10 @@ import fonts from '../../../styles/fonts';
 const { width } = Dimensions.get('window');
 
 const list = [
-  { title: 'Help & Support' },
-  { title: 'Privacy Policy' },
-  { title: 'Terms of Service' },
-  { title: 'Billing Terms' },
-  { title: 'Log Out' },
+  { title: 'Help & Support', route: 'HelpAndSupport' },
+  { title: 'Privacy Policy', route: 'PrivacyPolicy' },
+  { title: 'Terms of Service', route: 'TermsOfService' },
+  { title: 'Billing Terms', route: 'BillingTerms' },
 ];
 
 export default class ProfileHomeScreen extends React.PureComponent {
@@ -24,28 +22,14 @@ export default class ProfileHomeScreen extends React.PureComponent {
     this.state = {
       profile: null,
       loading: false,
-      // stepCount: 0,
     };
   }
   componentDidMount() {
-    // this.getPedometerInfo();
     this.fetchProfile();
   }
   componentWillUnmount() {
     this.unsubscribe();
   }
-  // getPedometerInfo = () => {
-  //   try {
-  //     const end = new Date();
-  //     const start = new Date();
-  //     start.setHours(0, 0, 0, 0);
-  //     Pedometer.getStepCountAsync(start, end).then((result) => {
-  //       this.setState({ stepCount: result.steps });
-  //     });
-  //   } catch (err) {
-  //     this.setState({ stepCount: 'Pedometer info not available' });
-  //   }
-  // }
   fetchProfile = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
@@ -87,8 +71,10 @@ export default class ProfileHomeScreen extends React.PureComponent {
           </Text>
           <List containerStyle={styles.listContainer}>
             <ListItem
+              activeOpacity={0.5}
               key="My Profile"
               title="My Profile"
+              containerStyle={styles.listItemContainer}
               titleStyle={{
                 fontFamily: fonts.bold,
                 color: colors.charcoal.standard,
@@ -96,20 +82,25 @@ export default class ProfileHomeScreen extends React.PureComponent {
               onPress={() => this.props.navigation.navigate('Profile')}
             />
           </List>
-          {/* <Text>Walk! And watch this go up: {this.state.stepCount}</Text> */}
           <List containerStyle={styles.listContainer}>
             {
               list.map((l) => (
                 <ListItem
+                  activeOpacity={0.5}
                   key={l.title}
                   title={l.title}
-                  titleStyle={{
-                    fontFamily: fonts.bold,
-                    color: colors.charcoal.standard,
-                  }}
+                  containerStyle={styles.listItemContainer}
+                  titleStyle={styles.listItemTitle}
+                  onPress={() => this.props.navigation.navigate(l.route)}
                 />
               ))
             }
+            <ListItem
+              activeOpacity={0.5}
+              title="Log Out"
+              containerStyle={styles.listItemContainer}
+              titleStyle={styles.listItemTitle}
+            />
           </List>
         </ScrollView>
       </View>
@@ -130,5 +121,16 @@ const styles = StyleSheet.create({
   listContainer: {
     width,
     marginBottom: 20,
+    borderColor: colors.grey.light,
+  },
+  listItemContainer: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    borderBottomColor: colors.grey.light,
+    backgroundColor: colors.white,
+  },
+  listItemTitle: {
+    fontFamily: fonts.bold,
+    color: colors.charcoal.standard,
   },
 });
