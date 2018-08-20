@@ -29,6 +29,7 @@ import Exercise5Screen from '../src/screens/AppStack/Workouts/Exercise5Screen';
 import Exercise6Screen from '../src/screens/AppStack/Workouts/Exercise6Screen';
 import WorkoutCompleteScreen from '../src/screens/AppStack/Workouts/WorkoutCompleteScreen';
 import CalendarHomeScreen from '../src/screens/AppStack/Calendar/CalendarHomeScreen';
+import ProgressHomeScreen from '../src/screens/AppStack/Progress/ProgressHomeScreen';
 import ProfileHomeScreen from '../src/screens/AppStack/Profile/ProfileHomeScreen';
 import EditProfileScreen from '../src/screens/AppStack/Profile/EditProfileScreen';
 import colors from '../src/styles/colors';
@@ -114,9 +115,17 @@ const HomeStack = createStackNavigator(
   },
   {
     initialRouteName: 'HomeHome',
-    navigationOptions: {
-      header: <Header />,
-    },
+    navigationOptions: ({ navigation }) => ({
+      header: () => {
+        const { routeName } = navigation.state;
+        return (
+          <Header
+            navigation={navigation}
+            withProfileButton={routeName === 'HomeHome'}
+          />
+        );
+      },
+    }),
   },
 );
 
@@ -143,6 +152,7 @@ const NutritionStack = createStackNavigator(
             navigation={navigation}
             withBackButton={nutritionBackButtonMap[routeName]}
             withStartButton={routeName === 'Recipe'}
+            withProfileButton={routeName === 'NutritionHome'}
             stack="nutrition"
             headerTitleParams={routeName === 'RecipeSelection' ? mealNameMap[navigation.getParam('meal', null)] : findNutritionHeaderTitle(routeName)}
           />
@@ -175,6 +185,7 @@ const WorkoutsStack = createStackNavigator(
             navigation={navigation}
             withBackButton={workoutsBackButtonMap[routeName]}
             withStartButton={routeName === 'WorkoutInfo'}
+            withProfileButton={routeName === 'WorkoutsHome'}
             stack="workouts"
           />
         );
@@ -189,9 +200,40 @@ const CalendarStack = createStackNavigator(
   },
   {
     initialRouteName: 'CalendarHome',
-    navigationOptions: {
-      header: <Header stack="calendar" />,
-    },
+    navigationOptions: ({ navigation }) => ({
+      header: () => {
+        return (
+          <Header
+            navigation={navigation}
+            stack="calendar"
+            withProfileButton
+          />
+        );
+      },
+    }),
+  },
+);
+
+const ProgressStack = createStackNavigator(
+  {
+    ProgressHome: ProgressHomeScreen,
+  },
+  {
+    initialRouteName: 'ProgressHome',
+    navigationOptions: ({ navigation }) => ({
+      header: () => {
+        const { routeName } = navigation.state;
+        return (
+          <Header
+            navigation={navigation}
+            stack="progress"
+            // withBackButton={routeName === 'EditProfile' && true}
+            withProfileButton={routeName === 'ProgressHome'}
+            // headerTitleParams={routeName === 'EditProfile' ? 'Edit Profile' : null}
+          />
+        );
+      },
+    }),
   },
 );
 
@@ -209,8 +251,8 @@ const ProfileStack = createStackNavigator(
           <Header
             navigation={navigation}
             stack="profile"
-            withBackButton={routeName === 'EditProfile' && true}
-            headerTitleParams={routeName === 'EditProfile' ? 'Edit Profile' : null}
+            withBackButton
+            headerTitleParams={routeName === 'EditProfile' ? 'EDIT' : 'PROFILE'}
           />
         );
       },
@@ -218,13 +260,13 @@ const ProfileStack = createStackNavigator(
   },
 );
 
-const AppStack = createBottomTabNavigator(
+const TabStack = createBottomTabNavigator(
   {
     Home: HomeStack,
     Nutrition: NutritionStack,
     Workouts: WorkoutsStack,
     Calendar: CalendarStack,
-    Profile: ProfileStack,
+    Progress: ProgressStack,
   },
   {
     initialRouteName: 'Home',
@@ -266,7 +308,7 @@ const AppStack = createBottomTabNavigator(
               color={focused ? activeState : inactiveState}
             />
           );
-        } else if (routeName === 'Profile') {
+        } else if (routeName === 'Progress') {
           icon = (
             <Icon
               name={focused ? 'profile-solid' : 'profile-outline'}
@@ -318,13 +360,32 @@ const ExerciseStack = createStackNavigator(
   },
 );
 
+const AppStack = createStackNavigator(
+  {
+    Tabs: { screen: TabStack },
+    Profile: { screen: ProfileStack },
+    Exercise: { screen: ExerciseStack },
+  },
+  {
+    initialRouteName: 'Tabs',
+    transitionConfig: () => ({
+      transitionSpec: fadeSpec,
+      screenInterpolator: (props) => {
+        return fade(props);
+      },
+    }),
+    navigationOptions: {
+      header: null,
+    },
+  },
+);
+
 const SwitchNavigator = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
     Auth: AuthStack,
     Onboarding: OnboardingStack,
     App: AppStack,
-    Exercise: ExerciseStack,
   },
   {
     initialRouteName: 'AuthLoading',
