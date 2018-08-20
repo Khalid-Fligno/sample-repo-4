@@ -31,6 +31,11 @@ import WorkoutCompleteScreen from '../src/screens/AppStack/Workouts/WorkoutCompl
 import CalendarHomeScreen from '../src/screens/AppStack/Calendar/CalendarHomeScreen';
 import ProgressHomeScreen from '../src/screens/AppStack/Progress/ProgressHomeScreen';
 import ProfileHomeScreen from '../src/screens/AppStack/Profile/ProfileHomeScreen';
+import ProfileScreen from '../src/screens/AppStack/Profile/ProfileScreen';
+import HelpAndSupportScreen from '../src/screens/AppStack/Profile/HelpAndSupportScreen';
+import PrivacyPolicyScreen from '../src/screens/AppStack/Profile/PrivacyPolicyScreen';
+import TermsOfServiceScreen from '../src/screens/AppStack/Profile/TermsOfServiceScreen';
+import BillingTermsScreen from '../src/screens/AppStack/Profile/BillingTermsScreen';
 import EditProfileScreen from '../src/screens/AppStack/Profile/EditProfileScreen';
 import colors from '../src/styles/colors';
 import fonts from '../src/styles/fonts';
@@ -227,9 +232,7 @@ const ProgressStack = createStackNavigator(
           <Header
             navigation={navigation}
             stack="progress"
-            // withBackButton={routeName === 'EditProfile' && true}
             withProfileButton={routeName === 'ProgressHome'}
-            // headerTitleParams={routeName === 'EditProfile' ? 'Edit Profile' : null}
           />
         );
       },
@@ -240,6 +243,11 @@ const ProgressStack = createStackNavigator(
 const ProfileStack = createStackNavigator(
   {
     ProfileHome: ProfileHomeScreen,
+    Profile: ProfileScreen,
+    HelpAndSupport: HelpAndSupportScreen,
+    PrivacyPolicy: PrivacyPolicyScreen,
+    TermsOfService: TermsOfServiceScreen,
+    BillingTerms: BillingTermsScreen,
     EditProfile: EditProfileScreen,
   },
   {
@@ -252,7 +260,7 @@ const ProfileStack = createStackNavigator(
             navigation={navigation}
             stack="profile"
             withBackButton
-            headerTitleParams={routeName === 'EditProfile' ? 'EDIT' : 'PROFILE'}
+            headerTitleParams={routeName === 'Profile' ? 'PROFILE' : null}
           />
         );
       },
