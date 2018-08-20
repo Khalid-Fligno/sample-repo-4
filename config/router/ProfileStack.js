@@ -1,0 +1,40 @@
+import React from 'react';
+import { createStackNavigator } from 'react-navigation';
+import ProfileHomeScreen from '../../src/screens/AppStack/Profile/ProfileHomeScreen';
+import ProfileScreen from '../../src/screens/AppStack/Profile/ProfileScreen';
+import HelpAndSupportScreen from '../../src/screens/AppStack/Profile/HelpAndSupportScreen';
+import PrivacyPolicyScreen from '../../src/screens/AppStack/Profile/PrivacyPolicyScreen';
+import TermsOfServiceScreen from '../../src/screens/AppStack/Profile/TermsOfServiceScreen';
+import BillingTermsScreen from '../../src/screens/AppStack/Profile/BillingTermsScreen';
+import EditProfileScreen from '../../src/screens/AppStack/Profile/EditProfileScreen';
+import Header from '../../src/components/Header';
+
+const ProfileStack = createStackNavigator(
+  {
+    ProfileHome: ProfileHomeScreen,
+    Profile: ProfileScreen,
+    HelpAndSupport: HelpAndSupportScreen,
+    PrivacyPolicy: PrivacyPolicyScreen,
+    TermsOfService: TermsOfServiceScreen,
+    BillingTerms: BillingTermsScreen,
+    EditProfile: EditProfileScreen,
+  },
+  {
+    initialRouteName: 'ProfileHome',
+    navigationOptions: ({ navigation }) => ({
+      header: () => {
+        const { routeName } = navigation.state;
+        return (
+          <Header
+            navigation={navigation}
+            stack="profile"
+            withBackButton
+            headerTitleParams={routeName === 'Profile' ? 'PROFILE' : null}
+          />
+        );
+      },
+    }),
+  },
+);
+
+export default ProfileStack;
