@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, AsyncStorage, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, AsyncStorage, ScrollView, Dimensions, Alert } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
-import { db } from '../../../../config/firebase';
+import { auth, db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
 import colors from '../../../styles/colors';
@@ -33,7 +33,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
   fetchProfile = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
-    this.unsubscribe = db.collection('users').doc(uid)
+    this.unsubscribe = await db.collection('users').doc(uid)
       .onSnapshot(async (doc) => {
         if (doc.exists) {
           this.setState({ profile: await doc.data(), loading: false });
@@ -41,6 +41,29 @@ export default class ProfileHomeScreen extends React.PureComponent {
           this.setState({ loading: false });
         }
       });
+  }
+  logOutAlert = () => {
+    Alert.alert(
+      'Are you sure you want to log out?',
+      '',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'OK', onPress: () => this.logOut() },
+      ],
+      { cancelable: false },
+    );
+  }
+  logOut = async () => {
+    try {
+      this.setState({ loading: true });
+      await auth.signOut();
+      await AsyncStorage.removeItem('uid');
+      this.setState({ loading: false });
+      this.props.navigation.navigate('Auth');
+    } catch (err) {
+      this.setState({ loading: false });
+      console.log(err);
+    }
   }
   render() {
     const { profile, loading } = this.state;
@@ -100,6 +123,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
               title="Log Out"
               containerStyle={styles.listItemContainer}
               titleStyle={styles.listItemTitle}
+              onPress={() => this.logOutAlert()}
             />
           </List>
         </ScrollView>
