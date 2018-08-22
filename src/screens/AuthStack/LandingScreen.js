@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image, StatusBar } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, TouchableOpacity, StatusBar, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import ScalableImage from 'react-native-scalable-image';
 import Carousel from 'react-native-carousel';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default class LandingScreen extends React.PureComponent {
   constructor(props) {
@@ -19,75 +19,89 @@ export default class LandingScreen extends React.PureComponent {
       <SafeAreaView style={styles.safeAreaContainer}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" />
-          <Image
-            source={require('../../../assets/images/landing-page-1.png')}
-            resizeMode="cover"
-            style={styles.backgroundImage}
-          />
-          <View style={styles.opacityOverlay}>
-            <Carousel
-              width={width}
-              inactiveIndicatorColor={colors.grey.dark}
-              indicatorColor={colors.white}
-              indicatorOffset={10}
-              indicatorSize={30}
-              animate={false}
-            >
-              <View style={styles.carouselCardContainer}>
-                <ScalableImage
-                  source={require('../../../assets/icons/fitazfk-logo-outline-white.png')}
-                  width={180}
-                />
-              </View>
-              <View style={styles.carouselCardContainer}>
-                <View style={styles.carouselCardImageContainer}>
+          <Carousel
+            width={width}
+            inactiveIndicatorColor={colors.white}
+            indicatorColor={colors.white}
+            indicatorOffset={100}
+            indicatorSize={15}
+            inactiveIndicatorText="○"
+            indicatorText="●"
+            animate={false}
+          >
+            <View style={styles.carouselCardContainer}>
+              <ImageBackground
+                source={require('../../../assets/images/landing-page-1.png')}
+                style={styles.carouselImageBackground}
+              >
+                <View style={styles.opacityOverlay}>
                   <ScalableImage
-                    source={require('../../../assets/images/landing-screen-carousel-1.png')}
+                    source={require('../../../assets/icons/fitazfk-logo-outline-white.png')}
                     width={180}
+                    style={styles.logo}
                   />
                 </View>
-                <View style={styles.carouselCardTextContainer}>
+              </ImageBackground>
+            </View>
+            <View style={styles.carouselCardContainer}>
+              <ImageBackground
+                source={require('../../../assets/images/landing-page-1.png')}
+                style={styles.carouselImageBackground}
+              >
+                <View style={styles.opacityOverlay}>
                   <Text style={styles.carouselCardText}>
-                    Workouts
+                    WORKOUTS
                   </Text>
                 </View>
-              </View>
-              <View style={styles.carouselCardContainer}>
-                <View style={styles.carouselCardImageContainer}>
-                  <ScalableImage
-                    source={require('../../../assets/images/landing-screen-carousel-2.png')}
-                    width={180}
-                  />
-                </View>
-                <View style={styles.carouselCardTextContainer}>
+              </ImageBackground>
+            </View>
+            <View style={styles.carouselCardContainer}>
+              <ImageBackground
+                source={require('../../../assets/images/landing-page-1.png')}
+                style={styles.carouselImageBackground}
+              >
+                <View style={styles.opacityOverlay}>
                   <Text style={styles.carouselCardText}>
-                    Recipes
+                    RECIPES
                   </Text>
                 </View>
-              </View>
-            </Carousel>
-
+              </ImageBackground>
+            </View>
+            <View style={styles.carouselCardContainer}>
+              <ImageBackground
+                source={require('../../../assets/images/landing-page-1.png')}
+                style={styles.carouselImageBackground}
+              >
+                <View style={styles.opacityOverlay}>
+                  <Text style={styles.carouselCardText}>
+                    INSPIRATION
+                  </Text>
+                </View>
+              </ImageBackground>
+            </View>
+          </Carousel>
+          <View style={styles.absoluteButtonContainer}>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('Signup')}
+                activeOpacity={0.6}
+                style={styles.signupButton}
+              >
+                <Text style={styles.signupButtonText}>
+                  SIGN UP
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('Login')}
+                activeOpacity={0.6}
+                style={styles.loginButton}
+              >
+                <Text style={styles.loginButtonText}>
+                  LOG IN
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Signup')}
-            activeOpacity={0.6}
-            style={styles.signupButton}
-          >
-            <Text style={styles.signupButtonText}>
-              SIGN UP
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Login')}
-            activeOpacity={0.6}
-            style={styles.loginButton}
-          >
-            <Text style={styles.loginButtonText}>
-              LOG IN
-            </Text>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -103,49 +117,46 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.black,
   },
-  backgroundImage: {
-    flex: 1,
-    width,
-  },
-  opacityOverlay: {
-    flex: 1,
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   carouselCardContainer: {
-    height: '100%',
+    flex: 1,
     width,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
-  carouselCardImageContainer: {
-    borderRadius: 3,
-    overflow: 'hidden',
+  carouselImageBackground: {
+    flex: 1,
+    width: undefined,
+    height: undefined,
   },
-  carouselCardTextContainer: {
-    width: 180,
-    marginTop: 15,
+  opacityOverlay: {
+    width,
+    height,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+  },
+  logo: {
+    marginBottom: 45,
   },
   carouselCardText: {
+    marginBottom: 45,
     textAlign: 'center',
     color: colors.white,
     fontFamily: fonts.bold,
-    fontSize: 18,
+    fontSize: 32,
+  },
+  absoluteButtonContainer: {
+    flex: 1,
+    position: 'absolute',
+    bottom: 0,
   },
   buttonContainer: {
     flexDirection: 'row',
     width,
     height: 70,
-    backgroundColor: colors.white,
-    borderColor: colors.grey.standard,
-    borderWidth: 1,
+    backgroundColor: 'transparent',
     padding: 10,
-    borderRadius: 3,
   },
   signupButton: {
     flex: 1,
@@ -165,16 +176,14 @@ const styles = StyleSheet.create({
     marginTop: 4,
     color: colors.white,
     fontFamily: fonts.bold,
-    fontSize: 15,
+    fontSize: 16,
   },
   loginButton: {
     flex: 1,
     marginLeft: 5,
     backgroundColor: 'white',
-    borderColor: colors.coral.dark,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 4,
     borderRadius: 4,
     shadowColor: colors.charcoal.dark,
     shadowOpacity: 0.5,
@@ -185,6 +194,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     color: colors.coral.dark,
     fontFamily: fonts.bold,
-    fontSize: 15,
+    fontSize: 16,
   },
 });
