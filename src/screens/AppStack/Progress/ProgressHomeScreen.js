@@ -15,15 +15,22 @@ export default class ProgressHomeScreen extends React.PureComponent {
       initialProgressInfo: null,
     };
   }
-  componentDidMount = async () => {
+  componentDidMount() {
+    this.fetchProgressInfo();
+  }
+  fetchProgressInfo = async () => {
+    this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     db.collection('users').doc(uid)
       .get()
       .then(async (doc) => {
         if (doc.exists && doc.data().initialProgressInfo) {
-          this.setState({ initialProgressInfo: await doc.data().initialProgressInfo });
+          this.setState({
+            initialProgressInfo: await doc.data().initialProgressInfo,
+            loading: false,
+          });
         } else {
-          console.log("No such document!");
+          this.setState({ loading: false });
         }
       });
   }
@@ -50,19 +57,15 @@ export default class ProgressHomeScreen extends React.PureComponent {
               style={{
                 backgroundColor: 'blue',
                 width: width / 2,
-                height: width / 3 * 2
+                height: (width / 3) * 2,
               }}
-            >
-              
-            </View>
+            />
             <View
               style={{
                 backgroundColor: 'green',
                 width: width / 2,
               }}
-            >
-              
-            </View>
+            />
           </View>
           <View
             style={{
