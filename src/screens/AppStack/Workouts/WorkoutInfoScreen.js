@@ -100,10 +100,12 @@ export default class WorkoutInfoScreen extends React.PureComponent {
           <Carousel
             key={exercise.id}
             width={width}
-            inactiveIndicatorColor={colors.grey.standard}
+            inactiveIndicatorColor={colors.coral.standard}
             indicatorColor={colors.coral.standard}
-            indicatorOffset={-10}
-            indicatorSize={30}
+            indicatorOffset={-2}
+            indicatorSize={15}
+            inactiveIndicatorText="○"
+            indicatorText="●"
             animate={false}
           >
             <View
