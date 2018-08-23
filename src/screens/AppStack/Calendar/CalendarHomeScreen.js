@@ -299,6 +299,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
       <View style={styles.container}>
         <CalendarStrip
           ref={this.calendarStrip}
+          maxDayComponentSize={50}
           onDateSelected={(date) => this.handleDateSelected(date)}
           calendarAnimation={{
             type: 'parallel',
@@ -360,7 +361,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
   },
   loadingViewContainer: {
     flexGrow: 1,
@@ -417,7 +418,7 @@ const styles = StyleSheet.create({
     width: width - 30,
     marginTop: 7.5,
     marginBottom: 7.5,
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.white,
     borderRadius: 4,
     borderWidth: 1,
     borderColor: colors.grey.light,
