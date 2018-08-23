@@ -69,7 +69,9 @@ export default class Onboarding2Screen extends React.PureComponent {
         waist,
         hip,
       };
-      await userRef.set(data, { merge: true });
+      await userRef.set({
+        initialProgressInfo: data,
+      }, { merge: true });
       this.setState({ loading: false });
       this.props.navigation.navigate('Onboarding3');
     } catch (err) {
