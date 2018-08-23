@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
 import WorkoutTimer from '../../../components/WorkoutTimer';
@@ -81,6 +81,7 @@ export default class Exercise4Screen extends React.PureComponent {
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" />
         <View style={styles.flexContainer}>
           <Video
             source={{ uri: `${FileSystem.cacheDirectory}exercise-4.mp4` }}
@@ -92,8 +93,14 @@ export default class Exercise4Screen extends React.PureComponent {
             isLooping
             style={{ width, height: width }}
           />
-        </View>
-        <View style={styles.flexContainer}>
+          <View style={styles.currentExerciseTextContainer}>
+            <Text style={styles.currentExerciseNameText}>
+              {currentExercise.name.toUpperCase()}
+            </Text>
+            <Text style={styles.currentExerciseRepsText}>
+              {reps} REPS
+            </Text>
+          </View>
           <WorkoutTimer
             totalDuration={totalDuration}
             start={timerStart}
@@ -101,26 +108,15 @@ export default class Exercise4Screen extends React.PureComponent {
             handleFinish={() => this.handleFinish(exerciseList, reps)}
             options={workoutTimerStyle}
           />
-          <View style={styles.exerciseInfoContainer}>
-            <View style={styles.exerciseInfoTile}>
-              <View style={styles.exerciseInfoTileHeader}>
-                <Text style={styles.exerciseInfoTileHeaderText}>
-                  {currentExercise.name}
-                </Text>
-              </View>
-              <View style={styles.exerciseInfoTileContent}>
-                <Text style={styles.exerciseInfoTileTextLarge}>
-                  {reps}
-                </Text>
-                <Text style={styles.exerciseInfoTileTextSmall}>
-                  reps
-                </Text>
-              </View>
-            </View>
-            <WorkoutProgress
-              currentExercise={4}
-              currentSet={this.props.navigation.getParam('setCount', 0) + 1}
-            />
+          <WorkoutProgress
+            currentExercise={4}
+            currentSet={this.props.navigation.getParam('setCount', 0) + 1}
+          />
+          <View style={styles.nextExerciseContainer}>
+            <Text>
+              <Text style={styles.nextExercise}> NEXT EXERCISE: </Text>
+              <Text style={styles.nextExerciseName}>{exerciseList[4].name.toUpperCase()}</Text>
+            </Text>
           </View>
         </View>
       </SafeAreaView>
@@ -132,51 +128,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'space-between',
   },
   flexContainer: {
     flex: 1,
-  },
-  exerciseInfoContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  exerciseInfoTile: {
-    marginTop: 7.5,
-    marginBottom: 7.5,
-    overflow: 'hidden',
-  },
-  exerciseInfoTileHeader: {
+  currentExerciseTextContainer: {
+    width,
     flexDirection: 'row',
-    justifyContent: 'center',
-    padding: 8,
-    paddingBottom: 5,
-    backgroundColor: colors.charcoal.standard,
-    borderRadius: 4,
+    justifyContent: 'space-between',
+    padding: 10,
   },
-  exerciseInfoTileHeaderText: {
+  currentExerciseNameText: {
     fontFamily: fonts.bold,
-    fontSize: 24,
-    color: colors.white,
-    paddingLeft: 10,
-    paddingRight: 10,
+    fontSize: 20,
+    color: colors.coral.standard,
   },
-  exerciseInfoTileContent: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  exerciseInfoTileTextLarge: {
-    marginTop: 15,
+  currentExerciseRepsText: {
     fontFamily: fonts.bold,
-    fontSize: 48,
-    color: colors.charcoal.standard,
+    fontSize: 20,
   },
-  exerciseInfoTileTextSmall: {
+  nextExerciseContainer: {
+    marginTop: 10,
     marginBottom: 10,
+  },
+  nextExercise: {
+    fontFamily: fonts.standard,
+    fontSize: 12,
+  },
+  nextExerciseName: {
     fontFamily: fonts.bold,
-    fontSize: 16,
-    color: colors.charcoal.standard,
+    fontSize: 12,
   },
 });
