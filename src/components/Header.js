@@ -78,6 +78,10 @@ const Header = ({
               style={{
                 width: 30,
                 height: 30,
+                shadowColor: colors.charcoal.light,
+                shadowOffset: { width: 1, height: 1 },
+                shadowOpacity: 0.7,
+                shadowRadius: 1,
               }}
             />
           )
@@ -124,8 +128,14 @@ const Header = ({
           >
             <Icon
               name="profile-solid"
-              size={26}
+              size={30}
               color={colors.white}
+              style={{
+                shadowColor: colors.charcoal.light,
+                shadowOffset: { width: 1, height: 1 },
+                shadowOpacity: 0.7,
+                shadowRadius: 1,
+              }}
             />
           </TouchableOpacity>
         )
