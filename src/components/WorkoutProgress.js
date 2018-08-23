@@ -1,9 +1,52 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import PropTypes from 'prop-types';
+import { PieChart } from 'react-native-svg-charts';
 import Icon from '../components/Icon';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+
+const pieDataIncomplete = [0, 100]
+  .map((value, index) => ({
+    value,
+    svg: {
+      fill: index === 0 ? colors.coral.standard : colors.grey.light,
+    },
+    key: `pie-${index}`,
+  }));
+
+const pieDataSet1 = [33, 67]
+  .map((value, index) => ({
+    value,
+    svg: {
+      fill: index === 0 ? colors.coral.standard : colors.grey.light,
+    },
+    key: `pie-${index}`,
+  }));
+
+const pieDataSet2 = [33, 34, 33]
+  .map((value, index) => ({
+    value,
+    svg: {
+      fill: index === 1 ? colors.grey.light : colors.coral.standard,
+    },
+    key: `pie-${index}`,
+  }));
+
+const pieDataComplete = [100, 0]
+  .map((value, index) => ({
+    value,
+    svg: {
+      fill: colors.coral.standard,
+    },
+    key: `pie-${index}`,
+  }));
+
+const pieDataMap = {
+  1: pieDataIncomplete,
+  2: pieDataSet1,
+  3: pieDataSet2,
+};
 
 const WorkoutProgress = ({
   currentExercise,
@@ -11,160 +54,325 @@ const WorkoutProgress = ({
 }) => (
   <View style={styles.container}>
     <View style={styles.exercise}>
-      <View
-        style={[
-          styles.outlineIncomplete,
-          currentExercise === 1 && styles.outlineActive,
-          currentExercise > 1 && styles.outlineComplete,
-        ]}
-      >
-        {
-          currentExercise > 1 && (
-            <Icon
-              name="tick-heavy"
-              color={colors.grey.light}
-              size={22}
-            />
-          )
-        }
-        {
-          currentExercise === 1 && (
-            <Text style={styles.currentSetText}>
-              {currentSet}
-            </Text>
-          )
-        }
-      </View>
+      {
+        currentExercise > 1 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataComplete}
+            innerRadius="80%"
+          />
+        )
+      }
+      {
+        currentExercise > 1 && (
+          <View style={styles.invisibleView}>
+            <View style={styles.tickContainer}>
+              <Icon
+                name="tick-heavy"
+                color={colors.charcoal.dark}
+                size={24}
+              />
+            </View>
+          </View>
+        )
+      }
+      {
+        currentExercise === 1 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataMap[currentSet]}
+            innerRadius="80%"
+            startAngle={Math.PI * 2}
+            endAngle={0}
+          />
+        )
+      }
+      {
+        currentExercise === 1 && (
+          <View style={styles.invisibleView}>
+            <View style={styles.currentSetTextContainer}>
+              <Text style={styles.currentSetText}>
+                {currentSet}
+              </Text>
+            </View>
+          </View>
+        )
+      }
     </View>
     <View style={styles.exercise}>
-      <View
-        style={[
-          styles.outlineIncomplete,
-          currentExercise === 2 && styles.outlineActive,
-          currentExercise > 2 && styles.outlineComplete,
-        ]}
-      >
-        {
-          currentExercise > 2 && (
-            <Icon
-              name="tick-heavy"
-              color={colors.grey.light}
-              size={22}
-            />
-          )
-        }
-        {
-          currentExercise === 2 && (
-            <Text style={styles.currentSetText}>
-              {currentSet}
-            </Text>
-          )
-        }
-      </View>
+      {
+        currentExercise > 2 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataComplete}
+            innerRadius="80%"
+          />
+        )
+      }
+      {
+        currentExercise > 2 && (
+          <View style={styles.invisibleView}>
+            <View style={styles.tickContainer}>
+              <Icon
+                name="tick-heavy"
+                color={colors.charcoal.dark}
+                size={24}
+              />
+            </View>
+          </View>
+        )
+      }
+      {
+        currentExercise === 2 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataMap[currentSet]}
+            innerRadius="80%"
+            startAngle={Math.PI * 2}
+            endAngle={0}
+          />
+        )
+      }
+      {
+        currentExercise === 2 && (
+          <View style={styles.invisibleView}>
+            <View style={styles.currentSetTextContainer}>
+              <Text style={styles.currentSetText}>
+                {currentSet}
+              </Text>
+            </View>
+          </View>
+        )
+      }
+      {
+        currentExercise < 2 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataIncomplete}
+            innerRadius="80%"
+          />
+        )
+      }
     </View>
     <View style={styles.exercise}>
-      <View
-        style={[
-          styles.outlineIncomplete,
-          currentExercise === 3 && styles.outlineActive,
-          currentExercise > 3 && styles.outlineComplete,
-        ]}
-      >
-        {
-          currentExercise > 3 && (
-            <Icon
-              name="tick-heavy"
-              color={colors.grey.light}
-              size={22}
-            />
-          )
-        }
-        {
-          currentExercise === 3 && (
-            <Text style={styles.currentSetText}>
-              {currentSet}
-            </Text>
-          )
-        }
-      </View>
+      {
+        currentExercise > 3 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataComplete}
+            innerRadius="80%"
+          />
+        )
+      }
+      {
+        currentExercise > 3 && (
+          <View style={styles.invisibleView}>
+            <View style={styles.tickContainer}>
+              <Icon
+                name="tick-heavy"
+                color={colors.charcoal.dark}
+                size={24}
+              />
+            </View>
+          </View>
+        )
+      }
+      {
+        currentExercise === 3 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataMap[currentSet]}
+            innerRadius="80%"
+            startAngle={Math.PI * 2}
+            endAngle={0}
+          />
+        )
+      }
+      {
+        currentExercise === 3 && (
+          <View style={styles.invisibleView}>
+            <View style={styles.currentSetTextContainer}>
+              <Text style={styles.currentSetText}>
+                {currentSet}
+              </Text>
+            </View>
+          </View>
+        )
+      }
+      {
+        currentExercise < 3 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataIncomplete}
+            innerRadius="80%"
+          />
+        )
+      }
     </View>
     <View style={styles.exercise}>
-      <View
-        style={[
-          styles.outlineIncomplete,
-          currentExercise === 4 && styles.outlineActive,
-          currentExercise > 4 && styles.outlineComplete,
-        ]}
-      >
-        {
-          currentExercise > 4 && (
-            <Icon
-              name="tick-heavy"
-              color={colors.grey.light}
-              size={22}
-            />
-          )
-        }
-        {
-          currentExercise === 4 && (
-            <Text style={styles.currentSetText}>
-              {currentSet}
-            </Text>
-          )
-        }
-      </View>
+      {
+        currentExercise > 4 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataComplete}
+            innerRadius="80%"
+          />
+        )
+      }
+      {
+        currentExercise > 4 && (
+          <View style={styles.invisibleView}>
+            <View style={styles.tickContainer}>
+              <Icon
+                name="tick-heavy"
+                color={colors.charcoal.dark}
+                size={24}
+              />
+            </View>
+          </View>
+        )
+      }
+      {
+        currentExercise === 4 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataMap[currentSet]}
+            innerRadius="80%"
+            startAngle={Math.PI * 2}
+            endAngle={0}
+          />
+        )
+      }
+      {
+        currentExercise === 4 && (
+          <View style={styles.invisibleView}>
+            <View style={styles.currentSetTextContainer}>
+              <Text style={styles.currentSetText}>
+                {currentSet}
+              </Text>
+            </View>
+          </View>
+        )
+      }
+      {
+        currentExercise < 4 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataIncomplete}
+            innerRadius="80%"
+          />
+        )
+      }
     </View>
     <View style={styles.exercise}>
-      <View
-        style={[
-          styles.outlineIncomplete,
-          currentExercise === 5 && styles.outlineActive,
-          currentExercise > 5 && styles.outlineComplete,
-        ]}
-      >
-        {
-          currentExercise > 5 && (
-            <Icon
-              name="tick-heavy"
-              color={colors.grey.light}
-              size={22}
-            />
-          )
-        }
-        {
-          currentExercise === 5 && (
-            <Text style={styles.currentSetText}>
-              {currentSet}
-            </Text>
-          )
-        }
-      </View>
+      {
+        currentExercise > 5 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataComplete}
+            innerRadius="80%"
+          />
+        )
+      }
+      {
+        currentExercise > 5 && (
+          <View style={styles.invisibleView}>
+            <View style={styles.tickContainer}>
+              <Icon
+                name="tick-heavy"
+                color={colors.charcoal.dark}
+                size={24}
+              />
+            </View>
+          </View>
+        )
+      }
+      {
+        currentExercise === 5 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataMap[currentSet]}
+            innerRadius="80%"
+            startAngle={Math.PI * 2}
+            endAngle={0}
+          />
+        )
+      }
+      {
+        currentExercise === 5 && (
+          <View style={styles.invisibleView}>
+            <View style={styles.currentSetTextContainer}>
+              <Text style={styles.currentSetText}>
+                {currentSet}
+              </Text>
+            </View>
+          </View>
+        )
+      }
+      {
+        currentExercise < 5 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataIncomplete}
+            innerRadius="80%"
+          />
+        )
+      }
     </View>
     <View style={styles.exercise}>
-      <View
-        style={[
-          styles.outlineIncomplete,
-          currentExercise === 6 && styles.outlineActive,
-          currentExercise > 6 && styles.outlineComplete,
-        ]}
-      >
-        {
-          currentExercise > 6 && (
-            <Icon
-              name="tick-heavy"
-              color={colors.grey.light}
-              size={22}
-            />
-          )
-        }
-        {
-          currentExercise === 6 && (
-            <Text style={styles.currentSetText}>
-              {currentSet}
-            </Text>
-          )
-        }
-      </View>
+      {
+        currentExercise > 6 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataComplete}
+            innerRadius="80%"
+          />
+        )
+      }
+      {
+        currentExercise > 6 && (
+          <View style={styles.invisibleView}>
+            <View style={styles.tickContainer}>
+              <Icon
+                name="tick-heavy"
+                color={colors.charcoal.dark}
+                size={24}
+              />
+            </View>
+          </View>
+        )
+      }
+      {
+        currentExercise === 6 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataMap[currentSet]}
+            innerRadius="80%"
+            startAngle={Math.PI * 2}
+            endAngle={0}
+          />
+        )
+      }
+      {
+        currentExercise === 6 && (
+          <View style={styles.invisibleView}>
+            <View style={styles.currentSetTextContainer}>
+              <Text style={styles.currentSetText}>
+                {currentSet}
+              </Text>
+            </View>
+          </View>
+        )
+      }
+      {
+        currentExercise < 6 && (
+          <PieChart
+            style={styles.pieChart}
+            data={pieDataIncomplete}
+            innerRadius="80%"
+          />
+        )
+      }
     </View>
   </View>
 );
@@ -188,38 +396,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  outlineIncomplete: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  pieChart: {
     height: 50,
     width: 50,
-    borderRadius: 25,
-    borderColor: colors.grey.light,
-    borderWidth: 4,
   },
-  outlineActive: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 50,
-    width: 50,
-    borderRadius: 25,
-    borderColor: colors.coral.standard,
-    borderWidth: 4,
+  invisibleView: {
+    height: 0,
   },
-  outlineComplete: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 50,
-    width: 50,
-    borderRadius: 25,
-    borderColor: colors.grey.light,
-    borderWidth: 4,
+  tickContainer: {
+    marginTop: -36,
+  },
+  currentSetTextContainer: {
+    marginTop: -40,
   },
   currentSetText: {
     fontFamily: fonts.bold,
-    fontSize: 22,
+    fontSize: 24,
     marginTop: 4,
-    color: colors.coral.standard,
+    color: colors.charcoal.dark,
   },
 });
 
