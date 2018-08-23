@@ -69,6 +69,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
               titleStyle={styles.listItemTitleStyle}
               subtitle={`${profile && profile.firstName} ${profile && profile.lastName}`}
               subtitleStyle={styles.listItemSubtitleStyle}
+              containerStyle={styles.listItemContainer}
               hideChevron
             />
             <ListItem
@@ -76,6 +77,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
               titleStyle={styles.listItemTitleStyle}
               subtitle={profile && moment().diff(profile.dob, 'years')}
               subtitleStyle={styles.listItemSubtitleStyle}
+              containerStyle={styles.listItemContainer}
               hideChevron
             />
             <ListItem
@@ -83,6 +85,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
               titleStyle={styles.listItemTitleStyle}
               subtitle={profile && profile.email}
               subtitleStyle={styles.listItemSubtitleStyle}
+              containerStyle={styles.listItemContainer}
               hideChevron
             />
             <ListItem
@@ -90,6 +93,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
               titleStyle={styles.listItemTitleStyle}
               subtitle={timezone}
               subtitleStyle={styles.listItemSubtitleStyle}
+              containerStyle={styles.listItemContainer}
               hideChevron
             />
           </List>
@@ -102,7 +106,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
     alignItems: 'center',
   },
   scrollView: {
@@ -116,6 +120,11 @@ const styles = StyleSheet.create({
   listContainer: {
     width,
     marginBottom: 20,
+    borderColor: colors.grey.light,
+  },
+  listItemContainer: {
+    borderBottomColor: colors.grey.light,
+    backgroundColor: colors.white,
   },
   listItemTitleStyle: {
     fontFamily: fonts.bold,

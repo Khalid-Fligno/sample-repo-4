@@ -55,7 +55,7 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 7.5,

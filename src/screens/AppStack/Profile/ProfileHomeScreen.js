@@ -135,7 +135,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
     alignItems: 'center',
   },
   scrollView: {
