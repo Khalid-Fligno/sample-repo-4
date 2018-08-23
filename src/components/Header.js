@@ -11,8 +11,7 @@ const headerContainer = {
   justifyContent: 'space-between',
   alignItems: 'center',
   height: 50,
-  borderBottomColor: colors.black,
-  borderBottomWidth: 1,
+  borderBottomWidth: 0,
 };
 
 const Header = ({
@@ -24,7 +23,15 @@ const Header = ({
   withProfileButton,
   headerTitleParams,
 }) => (
-  <SafeAreaView>
+  <SafeAreaView
+    style={[
+      styles.defaultHeaderShadow,
+      stack === 'nutrition' && styles.nutritionHeaderShadow,
+      stack === 'workouts' && styles.workoutsHeaderShadow,
+      stack === 'calendar' && styles.noShadow,
+      stack === 'progress' && styles.noShadow,
+    ]}
+  >
     <StatusBar
       barStyle="light-content"
     />
@@ -153,14 +160,29 @@ Header.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: colors.violet.standard,
-    height: 50,
-    borderBottomColor: colors.charcoal.standard,
-    borderBottomWidth: 1,
+  defaultHeaderShadow: {
+    shadowColor: colors.grey.dark,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 2,
+  },
+  nutritionHeaderShadow: {
+    shadowColor: colors.grey.dark,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 2,
+  },
+  workoutsHeaderShadow: {
+    shadowColor: colors.grey.dark,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 2,
+  },
+  noShadow: {
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    borderBottomWidth: 0,
   },
   skipButton: {
     fontFamily: fonts.standard,
@@ -172,20 +194,14 @@ const styles = StyleSheet.create({
   defaultHeader: {
     ...headerContainer,
     backgroundColor: colors.charcoal.standard,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.charcoal.dark,
   },
   nutritionHeader: {
     ...headerContainer,
     backgroundColor: colors.violet.standard,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.violet.dark,
   },
   workoutsHeader: {
     ...headerContainer,
     backgroundColor: colors.coral.standard,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.coral.dark,
   },
   calendarHeader: {
     ...headerContainer,
@@ -196,8 +212,6 @@ const styles = StyleSheet.create({
   progressHeader: {
     ...headerContainer,
     backgroundColor: colors.blue.standard,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.blue.dark,
   },
   headerContentContainer: {
     width: 130,
