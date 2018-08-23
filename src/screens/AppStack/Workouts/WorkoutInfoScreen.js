@@ -103,7 +103,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             inactiveIndicatorColor={colors.coral.standard}
             indicatorColor={colors.coral.standard}
             indicatorOffset={-2}
-            indicatorSize={15}
+            indicatorSize={13}
             inactiveIndicatorText="○"
             indicatorText="●"
             animate={false}
@@ -191,62 +191,74 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               </View>
             </View>
           </Modal>
-          <Text style={styles.workoutName}>
-            {workoutName}
-          </Text>
-          <View style={styles.workoutInfoSectionTop}>
-            <TouchableOpacity
-              onPress={() => this.toggleModal()}
-              style={styles.addToCalendarButton}
-            >
-              <Icon
-                name="calendar-outline"
-                size={18}
-                color={colors.charcoal.light}
-              />
-              <Text style={styles.addToCalendarButtonText}>
-                Add to calendar
+          <View style={styles.workoutInfoContainer}>
+            <View style={styles.workoutNameContainer}>
+              <Text style={styles.workoutName}>
+                {workout && workoutName.toUpperCase()}
               </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.toggleModal()}
+                style={styles.addToCalendarButton}
+              >
+                <Icon
+                  name="calendar-outline"
+                  size={18}
+                  color={colors.charcoal.light}
+                />
+                <Text style={styles.addToCalendarButtonText}>
+                  Add to calendar
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.workoutIconsRow}>
+              <View style={styles.workoutIconContainer}>
+                <Icon
+                  name="timer"
+                  size={40}
+                  color={colors.charcoal.standard}
+                />
+                <Text style={styles.workoutInfoFieldData}>
+                  18 Mins
+                </Text>
+              </View>
+              <View style={styles.workoutIconContainer}>
+                <Icon
+                  name="timer"
+                  size={40}
+                  color={colors.charcoal.standard}
+                />
+                <Text style={styles.workoutInfoFieldData}>
+                  {reps * 18} Reps
+                </Text>
+              </View>
+              <View style={styles.workoutIconContainer}>
+                <Icon
+                  name="timer"
+                  size={40}
+                  color={colors.charcoal.standard}
+                />
+                <Text style={styles.workoutInfoFieldData}>
+                  {findLocation(workout)}
+                </Text>
+              </View>
+              <View style={styles.workoutIconContainer}>
+                <Icon
+                  name="timer"
+                  size={40}
+                  color={colors.charcoal.standard}
+                />
+                <Text style={styles.workoutInfoFieldData}>
+                  {findFocus(workout)}
+                </Text>
+              </View>
+            </View>
           </View>
-          <View style={styles.workoutInfoSectionMiddle}>
-            <Text style={styles.workoutInfoField}>
-              Time
-            </Text>
-            <Text style={styles.workoutInfoFieldData}>
-              18 minutes
-            </Text>
-          </View>
-          <View style={styles.workoutInfoSectionMiddle}>
-            <Text style={styles.workoutInfoField}>
-              Total Reps
-            </Text>
-            <Text style={styles.workoutInfoFieldData}>
-              {reps * 18}
-            </Text>
-          </View>
-          <View style={styles.workoutInfoSectionMiddle}>
-            <Text style={styles.workoutInfoField}>
-              Workout Location
-            </Text>
-            <Text style={styles.workoutInfoFieldData}>
-              {findLocation(workout)}
-            </Text>
-          </View>
-          <View style={styles.workoutInfoSectionBottom}>
-            <Text style={styles.workoutInfoField}>
-              Focus
-            </Text>
-            <Text style={styles.workoutInfoFieldData}>
-              {findFocus(workout)}
-            </Text>
-          </View>
-          <View style={styles.workoutPreviewHeaderContainer}>
+          <View style={styles.workoutPreviewContainer}>
             <Text style={styles.workoutPreviewHeaderText}>
-              Workout Preview
+              WORKOUT PREVIEW
             </Text>
+            {exerciseDisplay}
           </View>
-          {exerciseDisplay}
         </ScrollView>
       </View>
     );
@@ -262,19 +274,33 @@ const styles = StyleSheet.create({
   scrollView: {
     alignItems: 'center',
     paddingTop: 7.5,
-    paddingBottom: 7.5,
-  },
-  workoutName: {
-    fontFamily: fonts.knucklebones,
-    fontSize: 72,
-    paddingRight: 10,
   },
   modalContainer: {
     backgroundColor: colors.white,
     borderRadius: 8,
   },
+  workoutInfoContainer: {
+    backgroundColor: colors.white,
+  },
+  workoutNameContainer: {
+    width,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+    paddingLeft: 20,
+    paddingBottom: 10,
+    paddingRight: 20,
+  },
+  workoutName: {
+    marginTop: 6,
+    fontFamily: fonts.bold,
+    fontSize: 24,
+    color: colors.coral.standard,
+  },
   addToCalendarButton: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-start',
     width: 150,
     padding: 3,
@@ -289,60 +315,35 @@ const styles = StyleSheet.create({
     marginTop: 3,
     marginLeft: 5,
   },
-  workoutInfoSectionTop: {
-    width: width - 30,
-    marginTop: 15,
-    paddingTop: 8,
-    paddingBottom: 8,
-    borderTopWidth: 1,
-    borderTopColor: colors.grey.light,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.grey.light,
+  workoutIconsRow: {
+    width,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+    paddingBottom: 15,
+  },
+  workoutIconContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  workoutInfoSectionMiddle: {
-    width: width - 30,
-    paddingTop: 8,
-    paddingBottom: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.grey.light,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  workoutInfoSectionBottom: {
-    width: width - 30,
-    marginBottom: 15,
-    paddingTop: 8,
-    paddingBottom: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.grey.light,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  workoutInfoField: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.standard,
   },
   workoutInfoFieldData: {
-    margin: 3,
     fontFamily: fonts.bold,
-    fontSize: 16,
+    fontSize: 12,
     color: colors.charcoal.standard,
+    marginTop: 8,
   },
-  workoutPreviewHeaderContainer: {
+  workoutPreviewContainer: {
     width,
-    backgroundColor: colors.coral.standard,
-    marginBottom: 7.5,
+    backgroundColor: colors.grey.light,
+    paddingTop: 13,
+    paddingBottom: 15,
   },
   workoutPreviewHeaderText: {
     textAlign: 'center',
-    fontFamily: fonts.bold,
-    fontSize: 20,
-    color: colors.white,
-    paddingTop: 8,
-    paddingBottom: 5,
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.charcoal.dark,
   },
   exerciseTile: {
     width: width - 30,
