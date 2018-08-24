@@ -4,6 +4,7 @@ import { FileSystem } from 'expo';
 import { db, auth } from '../../../../config/firebase';
 import { findReps } from '../../../utils/index';
 import Loader from '../../../components/Loader';
+import Tile from '../../../components/Tile';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -76,15 +77,21 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
   render() {
     const { workouts, loading } = this.state;
     const workoutList = workouts.map((workout) => (
-      <TouchableOpacity
+      // <TouchableOpacity
+      //   key={workout.id}
+      //   onPress={() => this.loadExercises(workout)}
+      //   style={styles.workoutButton}
+      // >
+      //   <Text style={styles.workoutButtonText}>
+      //     {}
+      //   </Text>
+      // </TouchableOpacity>
+      <Tile
         key={workout.id}
+        title1={workout.name.toUpperCase()}
+        image={require('../../../../assets/images/workouts-upper.jpg')}
         onPress={() => this.loadExercises(workout)}
-        style={styles.workoutButton}
-      >
-        <Text style={styles.workoutButtonText}>
-          {workout.name}
-        </Text>
-      </TouchableOpacity>
+      />
     ));
     if (loading) {
       return (
@@ -109,8 +116,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 7.5,
-    paddingBottom: 7.5,
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   buttonContainer: {
     marginTop: 5,
