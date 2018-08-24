@@ -1,57 +1,81 @@
 import React from 'react';
-import { Image, Text, TouchableOpacity } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
-import { LinearGradient } from 'expo';
+import colors from '../styles/colors';
+import fonts from '../styles/fonts';
 
-const Tile = ({ imageSrc, title }) => (
+const { width } = Dimensions.get('window');
+
+const Tile = ({
+  image,
+  title1,
+  title2,
+  onPress,
+}) => (
   <TouchableOpacity
-    style={{
-      margin: 10,
-      shadowColor: 'black',
-      shadowOpacity: 0.6,
-      shadowOffset: { width: 0, height: 5 },
-      shadowRadius: 5,
-    }}
-    activeOpacity={0.7}
+    style={styles.cardContainer}
+    onPress={onPress}
   >
-    <Image
-      source={imageSrc}
-      style={{
-        width: 200,
-        height: 120,
-        borderRadius: 10,
-      }}
-    />
-    <LinearGradient
-      colors={['transparent', 'rgba(0, 0, 0, 0.5)']}
-      style={{
-        position: 'absolute',
-        bottom: 0,
-        borderRadius: 10,
-        width: 200,
-        height: 120,
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingLeft: 12,
-        paddingBottom: 4,
-      }}
+    <ImageBackground
+      source={image}
+      style={styles.image}
     >
-      <Text
-        style={{
-          color: 'white',
-          fontSize: 18,
-          fontFamily: 'GothamBold',
-        }}
-      >
-        {title}
-      </Text>
-    </LinearGradient>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>
+          {title1}
+        </Text>
+        {
+          title2 && (
+            <Text style={styles.title}>
+              {title2}
+            </Text>
+          )
+        }
+      </View>
+    </ImageBackground>
   </TouchableOpacity>
 );
 
 Tile.propTypes = {
-  imageSrc: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
+  image: PropTypes.number.isRequired,
+  title1: PropTypes.string.isRequired,
+  title2: PropTypes.string,
+  onPress: PropTypes.func.isRequired,
 };
+
+Tile.defaultProps = {
+  title2: null,
+};
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    width: width - 20,
+    flex: 1 / 4,
+    margin: 5,
+    height: 100,
+    shadowColor: colors.grey.dark,
+    shadowOpacity: 0.6,
+    shadowOffset: { width: 0, height: -2 },
+    shadowRadius: 1.5,
+  },
+  image: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    borderRadius: 1,
+    paddingLeft: 15,
+  },
+  titleContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0 )',
+    padding: 10,
+    paddingBottom: 5,
+    borderRadius: 2,
+  },
+  title: {
+    fontFamily: fonts.bold,
+    fontSize: 26,
+  },
+});
 
 export default Tile;
