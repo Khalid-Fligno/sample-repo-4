@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Dimensions, ImageBackground } from 'react-native';
-import { LinearGradient } from 'expo';
+import { StyleSheet, View, TouchableOpacity, Text, Dimensions } from 'react-native';
+// import { LinearGradient } from 'expo';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -101,26 +101,22 @@ export default class NutritionHomeScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
     alignItems: 'center',
-    paddingTop: 7.5,
-    paddingBottom: 7.5,
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   mealButton: {
     opacity: 0.9,
     flex: 1,
     justifyContent: 'flex-end',
-    width: width - 30,
-    marginTop: 7.5,
-    marginBottom: 7.5,
+    width: width - 20,
+    marginTop: 5,
+    marginBottom: 5,
     paddingLeft: 20,
     paddingBottom: 5,
-    borderRadius: 4,
+    borderRadius: 1,
     backgroundColor: colors.violet.standard,
-    shadowColor: colors.black,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
   },
   mealButtonText: {
     fontFamily: fonts.boldItalic,
