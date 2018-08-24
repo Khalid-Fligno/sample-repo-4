@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
+import Tile from '../../../components/Tile';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -16,39 +17,31 @@ export default class WorkoutsLocationScreen extends React.PureComponent {
     const workoutType = getParam('workoutType', null);
     return (
       <View style={styles.container}>
-        <TouchableOpacity
+        <Tile
+          title1="GYM"
+          image={require('../../../../assets/images/workouts-full.jpg')}
           onPress={() => navigate('WorkoutsSelection', {
             workoutType,
             workoutLocation: 'gym',
           })}
-          style={styles.workoutButton}
-        >
-          <Text style={styles.workoutButtonText}>
-            Gym
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        />
+        <Tile
+          title1="HOME"
+          image={require('../../../../assets/images/workouts-upper.jpg')}
           onPress={() => navigate('WorkoutsSelection', {
             workoutType,
             workoutLocation: 'home',
           })}
-          style={styles.workoutButton}
-        >
-          <Text style={styles.workoutButtonText}>
-            Home
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        />
+        <Tile
+          title1="PARK"
+          image={require('../../../../assets/images/workouts-lower.jpg')}
           onPress={() => navigate('WorkoutsSelection', {
             workoutType,
             workoutLocation: 'park',
           })}
-          style={styles.workoutButton}
-        >
-          <Text style={styles.workoutButtonText}>
-            Park
-          </Text>
-        </TouchableOpacity>
+        />
+        <View style={styles.spacer} />
       </View>
     );
   }
@@ -59,9 +52,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 7.5,
-    paddingBottom: 7.5,
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   buttonContainer: {
     marginTop: 5,
@@ -87,5 +79,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.boldItalic,
     fontSize: 34,
     color: colors.white,
+  },
+  spacer: {
+    flex: 1 / 4,
+    margin: 5,
   },
 });
