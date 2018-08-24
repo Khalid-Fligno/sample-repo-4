@@ -34,7 +34,7 @@ export default class LandingScreen extends React.PureComponent {
                 source={require('../../../assets/images/landing-page-1.png')}
                 style={styles.carouselImageBackground}
               >
-                <View style={styles.opacityOverlay}>
+                <View style={styles.opacityOverlayDark}>
                   <ScalableImage
                     source={require('../../../assets/icons/fitazfk-logo-outline-white.png')}
                     width={180}
@@ -45,10 +45,10 @@ export default class LandingScreen extends React.PureComponent {
             </View>
             <View style={styles.carouselCardContainer}>
               <ImageBackground
-                source={require('../../../assets/images/landing-page-1.png')}
+                source={require('../../../assets/images/landing-page-2.jpg')}
                 style={styles.carouselImageBackground}
               >
-                <View style={styles.opacityOverlay}>
+                <View style={styles.opacityOverlayLight}>
                   <Text style={styles.carouselCardText}>
                     WORKOUTS
                   </Text>
@@ -57,10 +57,10 @@ export default class LandingScreen extends React.PureComponent {
             </View>
             <View style={styles.carouselCardContainer}>
               <ImageBackground
-                source={require('../../../assets/images/landing-page-1.png')}
+                source={require('../../../assets/images/landing-page-3.jpg')}
                 style={styles.carouselImageBackground}
               >
-                <View style={styles.opacityOverlay}>
+                <View style={styles.opacityOverlayLight}>
                   <Text style={styles.carouselCardText}>
                     RECIPES
                   </Text>
@@ -69,10 +69,10 @@ export default class LandingScreen extends React.PureComponent {
             </View>
             <View style={styles.carouselCardContainer}>
               <ImageBackground
-                source={require('../../../assets/images/landing-page-1.png')}
+                source={require('../../../assets/images/landing-page-4.jpg')}
                 style={styles.carouselImageBackground}
               >
-                <View style={styles.opacityOverlay}>
+                <View style={styles.opacityOverlayLight}>
                   <Text style={styles.carouselCardText}>
                     INSPIRATION
                   </Text>
@@ -129,12 +129,19 @@ const styles = StyleSheet.create({
     width: undefined,
     height: undefined,
   },
-  opacityOverlay: {
+  opacityOverlayDark: {
     width,
     height,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
+  },
+  opacityOverlayLight: {
+    width,
+    height,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   logo: {
     marginBottom: 45,
