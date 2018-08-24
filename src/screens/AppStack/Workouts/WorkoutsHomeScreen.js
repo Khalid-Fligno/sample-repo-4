@@ -1,9 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import Tile from '../../../components/Tile';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
-
-const { width } = Dimensions.get('window');
 
 export default class WorkoutsHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -15,38 +13,29 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-        <TouchableOpacity
+        <Tile
+          title1="FULL"
+          title2="BODY"
+          image={require('../../../../assets/images/workouts-full.jpg')}
           onPress={() => navigate('WorkoutsLocation', { workoutType: 'fullBody' })}
-          style={styles.workoutButton}
-        >
-          <Text style={styles.workoutButtonText}>
-            Full Body
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        />
+        <Tile
+          title1="UPPER"
+          title2="BODY"
+          image={require('../../../../assets/images/workouts-upper.jpg')}
           onPress={() => navigate('WorkoutsLocation', { workoutType: 'upperBody' })}
-          style={styles.workoutButton}
-        >
-          <Text style={styles.workoutButtonText}>
-            Upper Body
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        />
+        <Tile
+          title1="LOWER"
+          title2="BODY"
+          image={require('../../../../assets/images/workouts-lower.jpg')}
           onPress={() => navigate('WorkoutsLocation', { workoutType: 'lowerBody' })}
-          style={styles.workoutButton}
-        >
-          <Text style={styles.workoutButtonText}>
-            Lower Body
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        />
+        <Tile
+          title1="CORE"
+          image={require('../../../../assets/images/workouts-core.jpg')}
           onPress={() => navigate('WorkoutsLocation', { workoutType: 'core' })}
-          style={styles.workoutButton}
-        >
-          <Text style={styles.workoutButtonText}>
-            Core
-          </Text>
-        </TouchableOpacity>
+        />
       </View>
     );
   }
@@ -58,28 +47,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.offWhite,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 7.5,
-    paddingBottom: 7.5,
-  },
-  workoutButton: {
-    opacity: 0.9,
-    flex: 1,
-    justifyContent: 'flex-end',
-    width: width - 30,
-    marginTop: 7.5,
-    marginBottom: 7.5,
-    paddingLeft: 20,
+    paddingTop: 5,
     paddingBottom: 5,
-    borderRadius: 4,
-    backgroundColor: colors.coral.standard,
-    shadowColor: colors.black,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-  },
-  workoutButtonText: {
-    fontFamily: fonts.boldItalic,
-    fontSize: 34,
-    color: colors.white,
   },
 });
