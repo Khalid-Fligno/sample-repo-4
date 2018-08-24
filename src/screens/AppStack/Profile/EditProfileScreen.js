@@ -30,13 +30,14 @@ export default class EditProfileScreen extends React.PureComponent {
       email,
       dob,
     } = this.state;
-    db.collection('users').doc(uid)
+    await db.collection('users').doc(uid)
       .set({
         firstName,
         lastName,
         email,
         dob,
       }, { merge: true });
+    this.props.navigation.navigate('ProfileHome');
   }
   fetchProfile = async () => {
     this.setState({ loading: true });
