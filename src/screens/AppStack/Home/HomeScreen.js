@@ -58,12 +58,12 @@ export default class HomeScreen extends React.PureComponent {
             </TouchableOpacity>
           </View>
           <NewsFeedTile
-            image={require('../../../../assets/images/fitazfk-facebook-group.jpg')}
-            title="Join the FitazFK Army"
+            image={require('../../../../assets/images/fitazfk-army.jpg')}
+            title="Join our facebook group"
             onPress={() => Linking.openURL('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
           />
           <NewsFeedTile
-            image={require('../../../../assets/images/fitazfk-shop-now.jpg')}
+            image={require('../../../../assets/images/shop-bundles.jpg')}
             title="Shop Bundles Online"
             onPress={() => Linking.openURL('https://fitazfk.com/collections/equipment')}
           />
@@ -102,15 +102,15 @@ const styles = StyleSheet.create({
     borderRadius: 1,
   },
   titleContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8 )',
-    padding: 5,
-    paddingBottom: 0,
-    maxWidth: width / 3,
-    borderRadius: 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.6 )',
+    padding: 8,
+    paddingBottom: 3,
+    maxWidth: width / 2.4,
+    borderRadius: 1,
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 16,
+    fontSize: 15,
     textAlign: 'center',
   },
 });
