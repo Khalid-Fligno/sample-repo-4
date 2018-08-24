@@ -21,6 +21,9 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/icons/fitazfk-icon-solid-white.png'),
       require('../../assets/images/recipes/baked-eggs.png'),
       require('../../assets/images/landing-page-1.png'),
+      require('../../assets/images/landing-page-2.jpg'),
+      require('../../assets/images/landing-page-3.jpg'),
+      require('../../assets/images/landing-page-4.jpg'),
       require('../../assets/images/landing-screen-carousel-1.png'),
       require('../../assets/images/landing-screen-carousel-2.png'),
       require('../../assets/images/landing-screen-carousel-3.png'),
@@ -53,7 +56,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
     await Promise.all([...imageAssets, ...fontAssets]);
   }
   cachingComplete = async () => {
-    this.props.navigation.navigate('CalendarHome');
+    this.props.navigation.navigate('Workouts');
   }
   render() {
     return (
