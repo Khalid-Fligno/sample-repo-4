@@ -1,65 +1,71 @@
 import React from 'react';
-import { Dimensions, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Card } from 'react-native-elements';
+import { Dimensions, TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
 import PropTypes from 'prop-types';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+import { View } from '../../node_modules/react-native-animatable';
 
 const { width } = Dimensions.get('window');
 
 const NewsFeedTile = ({
   onPress,
   title,
-  subTitle,
+  // subTitle,
   image,
 }) => (
   <TouchableOpacity
     onPress={onPress}
     style={styles.cardContainer}
   >
-    <Card
-      // image={{ uri: image }}
-      image={image}
-      containerStyle={styles.card}
+    <ImageBackground
+      // source={{ uri: image }}
+      source={image}
+      style={styles.image}
     >
-      <Text style={styles.title}>
-        {title}
-      </Text>
-      <Text style={styles.subTitle}>
-        {subTitle}
-      </Text>
-    </Card>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>
+          {title.toUpperCase()}
+        </Text>
+      </View>
+    </ImageBackground>
   </TouchableOpacity>
 );
 
 NewsFeedTile.propTypes = {
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  subTitle: PropTypes.string.isRequired,
   // image: PropTypes.string.isRequired,
   image: PropTypes.number.isRequired,
 };
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width,
-    shadowColor: colors.black,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
+    flex: 1,
+    margin: 5,
+    height: 100,
+    shadowColor: colors.grey.dark,
+    shadowOpacity: 0.6,
+    shadowOffset: { width: 0, height: -2 },
+    shadowRadius: 1.5,
   },
-  card: {
-    borderRadius: 5,
+  image: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     overflow: 'hidden',
-    borderWidth: 0,
+    borderRadius: 1,
+  },
+  titleContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8 )',
+    padding: 5,
+    paddingBottom: 0,
+    maxWidth: width / 2,
+    borderRadius: 2,
   },
   title: {
     fontFamily: fonts.bold,
     fontSize: 16,
-  },
-  subTitle: {
-    fontFamily: fonts.standard,
-    fontSize: 12,
+    textAlign: 'center',
   },
 });
 
