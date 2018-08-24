@@ -56,15 +56,15 @@ const styles = StyleSheet.create({
     borderRadius: 1,
   },
   titleContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8 )',
-    padding: 5,
-    paddingBottom: 0,
-    maxWidth: width / 2,
-    borderRadius: 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.6 )',
+    padding: 8,
+    paddingBottom: 3,
+    maxWidth: width / 2.1,
+    borderRadius: 1,
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 16,
+    fontSize: 15,
     textAlign: 'center',
   },
 });
