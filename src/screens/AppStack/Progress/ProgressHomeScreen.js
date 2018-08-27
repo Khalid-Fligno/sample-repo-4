@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, Image } from 'react-native';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
@@ -13,6 +13,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
     this.state = {
       loading: false,
       initialProgressInfo: null,
+      currentProgressInfo: null,
     };
   }
   componentDidMount() {
@@ -27,6 +28,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
         if (doc.exists && doc.data().initialProgressInfo) {
           this.setState({
             initialProgressInfo: await doc.data().initialProgressInfo,
+            currentProgressInfo: await doc.data().currentProgressInfo,
             loading: false,
           });
         } else {
@@ -35,7 +37,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
       });
   }
   render() {
-    const { loading, initialProgressInfo } = this.state;
+    const { loading, initialProgressInfo, currentProgressInfo } = this.state;
     if (loading) {
       return (
         <Loader
@@ -53,24 +55,50 @@ export default class ProgressHomeScreen extends React.PureComponent {
               flexDirection: 'row',
             }}
           >
-            <View
-              style={{
-                backgroundColor: 'blue',
-                width: width / 2,
-                height: (width / 3) * 2,
-              }}
-            />
-            <View
-              style={{
-                backgroundColor: 'green',
-                width: width / 2,
-              }}
-            />
+            {
+              initialProgressInfo ? (
+                <Image
+                  source={{ uri: initialProgressInfo.photoURL }}
+                  style={{
+                    width: width / 2,
+                    height: (width / 3) * 2,
+                  }}
+                />
+              ) : (
+                <View
+                  style={{
+                    backgroundColor: 'blue',
+                    width: width / 2,
+                    height: (width / 3) * 2,
+                  }}
+                />
+              )
+            }
+            {
+              currentProgressInfo ? (
+                <Image
+                  source={{ uri: currentProgressInfo.photoURL }}
+                  style={{
+                    width: width / 2,
+                    height: (width / 3) * 2,
+                  }}
+                />
+              ) : (
+                <View
+                  style={{
+                    backgroundColor: 'green',
+                    width: width / 2,
+                    height: (width / 3) * 2,
+                  }}
+                />
+              )
+            }
           </View>
           <View
             style={{
               width,
               flexDirection: 'row',
+              backgroundColor: colors.white,
             }}
           >
             <View
@@ -123,13 +151,13 @@ export default class ProgressHomeScreen extends React.PureComponent {
                 Current
               </Text>
               <Text style={styles.dataText}>
-                150
+                {currentProgressInfo && currentProgressInfo.weight}
               </Text>
               <Text style={styles.dataText}>
-                90
+                {currentProgressInfo && currentProgressInfo.hip}
               </Text>
               <Text style={styles.dataText}>
-                120
+                {currentProgressInfo && currentProgressInfo.waist}
               </Text>
             </View>
           </View>
