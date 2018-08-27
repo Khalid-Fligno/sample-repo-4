@@ -189,7 +189,7 @@ export default class Onboarding4Screen extends React.PureComponent {
           />
         </View>
         {
-          loading && <Loader loading={loading} />
+          loading && <Loader loading={loading} color={colors.charcoal.standard} />
         }
       </SafeAreaView>
     );
