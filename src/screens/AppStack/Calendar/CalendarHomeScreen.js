@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   AsyncStorage,
-  ActivityIndicator,
   Dimensions,
   TouchableOpacity,
   Text,
@@ -12,6 +11,7 @@ import {
 import { FileSystem, Calendar, Permissions } from 'expo';
 import CalendarStrip from 'react-native-calendar-strip';
 import { db, auth } from '../../../../config/firebase';
+import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
 import { findReps } from '../../../utils';
 import colors from '../../../styles/colors';
@@ -117,7 +117,6 @@ export default class CalendarHomeScreen extends React.PureComponent {
       Alert.alert('No Permission for Calendar');
       return;
     }
-
     const y = new Date(this.calendarStrip.current.getSelectedDate()).getFullYear();
     const mth = new Date(this.calendarStrip.current.getSelectedDate()).getMonth();
     const d = new Date(this.calendarStrip.current.getSelectedDate()).getDate();
@@ -142,9 +141,10 @@ export default class CalendarHomeScreen extends React.PureComponent {
       snack,
     } = this.state;
     const loadingView = (
-      <View style={styles.loadingViewContainer}>
-        <ActivityIndicator size="large" />
-      </View>
+      <Loader
+        loading={loading}
+        color={colors.green.standard}
+      />
     );
     const dayDisplay = (
       <View style={styles.dayDisplayContainer}>
@@ -364,9 +364,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.offWhite,
   },
   loadingViewContainer: {
-    flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    // flexGrow: 1,
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   dayDisplayContainer: {
     flexGrow: 1,
