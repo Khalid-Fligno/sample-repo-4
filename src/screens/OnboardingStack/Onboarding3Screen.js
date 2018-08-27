@@ -18,7 +18,7 @@ const uploadImageAsync = async (uri) => {
   const beforePhotoStorageRef = userStorageRef.child('before-photo.jpeg');
   const snapshot = await beforePhotoStorageRef.put(blob);
   const url = await snapshot.ref.getDownloadURL();
-  await db.collection('users').doc(uid).set({ beforePhoto: url }, { merge: true });
+  await db.collection('users').doc(uid).set({ initialProgressInfo: { beforePhoto: url } }, { merge: true });
 };
 
 export default class Onboarding3Screen extends React.PureComponent {
@@ -185,7 +185,7 @@ export default class Onboarding3Screen extends React.PureComponent {
             />
           </View>
           {
-            uploading && <Loader loading={uploading} />
+            uploading && <Loader loading={uploading} color={colors.charcoal.standard} />
           }
         </View>
       </SafeAreaView>
