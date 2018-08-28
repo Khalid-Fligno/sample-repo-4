@@ -1,25 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Button, Image, ActionSheetIOS, AsyncStorage, Alert } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Button, Image, ActionSheetIOS, Alert } from 'react-native';
 import { ImagePicker, ImageManipulator, Permissions, Linking } from 'expo';
-import { db } from '../../../config/firebase';
 import Loader from '../../components/Loader';
 import CustomButton from '../../components/CustomButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
-
-const uploadImageAsync = async (uri) => {
-  const uid = await AsyncStorage.getItem('uid');
-  const firebase = require('firebase');
-  const response = await fetch(uri);
-  const blob = await response.blob();
-  const storageRef = firebase.storage().ref();
-  const usersStorageRef = storageRef.child('user-photos');
-  const userStorageRef = usersStorageRef.child(uid);
-  const beforePhotoStorageRef = userStorageRef.child('before-photo.jpeg');
-  const snapshot = await beforePhotoStorageRef.put(blob);
-  const url = await snapshot.ref.getDownloadURL();
-  await db.collection('users').doc(uid).set({ initialProgressInfo: { beforePhoto: url } }, { merge: true });
-};
 
 export default class Onboarding3Screen extends React.PureComponent {
   constructor(props) {
@@ -135,8 +120,19 @@ export default class Onboarding3Screen extends React.PureComponent {
     try {
       this.setState({ uploading: true });
       if (this.state.image !== null) {
-        await uploadImageAsync(pickerResult.uri);
-        this.props.navigation.navigate('Onboarding4');
+        const {
+          weight,
+          waist,
+          hip,
+          isInitial,
+        } = this.props.navigation.state.params;
+        this.props.navigation.navigate('Onboarding4', {
+          image: pickerResult,
+          weight,
+          waist,
+          hip,
+          isInitial: isInitial || false,
+        });
       } else {
         this.setState({ error: 'Please select an image' });
       }
