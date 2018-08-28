@@ -44,7 +44,7 @@ export default class Onboarding2Screen extends React.PureComponent {
           text: 'Cancel', style: 'cancel',
         },
         {
-          text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('Onboarding3'),
+          text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
         },
       ],
       { cancelable: false },
