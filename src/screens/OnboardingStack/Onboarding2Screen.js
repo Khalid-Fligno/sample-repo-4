@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   Dimensions,
   KeyboardAvoidingView,
-  AsyncStorage,
   Alert,
 } from 'react-native';
 import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
@@ -14,7 +13,6 @@ import Image from 'react-native-scalable-image';
 import Modal from 'react-native-modal';
 import CustomButton from '../../components/CustomButton';
 import Loader from '../../components/Loader';
-import { db } from '../../../config/firebase';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
@@ -62,20 +60,15 @@ export default class Onboarding2Screen extends React.PureComponent {
       return;
     }
     try {
-      const uid = await AsyncStorage.getItem('uid');
-      const userRef = db.collection('users').doc(uid);
-      const data = {
+      const isInitial = this.props.navigation.getParam('isInitial', false);
+      this.setState({ loading: false });
+      this.props.navigation.navigate('Onboarding3', {
+        isInitial,
         weight,
         waist,
         hip,
-      };
-      await userRef.set({
-        initialProgressInfo: data,
-      }, { merge: true });
-      this.setState({ loading: false });
-      this.props.navigation.navigate('Onboarding3');
+      });
     } catch (err) {
-      console.log(err);
       this.setState({ loading: false });
     }
   }
