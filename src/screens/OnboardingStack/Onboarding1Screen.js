@@ -37,7 +37,7 @@ export default class Onboarding1Screen extends React.PureComponent {
       };
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
-      this.props.navigation.navigate('Onboarding2');
+      this.props.navigation.navigate('Onboarding2', { isInitial: true });
     } catch (err) {
       console.log(err);
       this.setState({ loading: false });
