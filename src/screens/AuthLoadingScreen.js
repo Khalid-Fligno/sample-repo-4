@@ -27,6 +27,10 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/images/landing-screen-carousel-1.png'),
       require('../../assets/images/landing-screen-carousel-2.png'),
       require('../../assets/images/landing-screen-carousel-3.png'),
+      require('../../assets/images/workouts-core.jpg'),
+      require('../../assets/images/workouts-upper.jpg'),
+      require('../../assets/images/workouts-lower.jpg'),
+      require('../../assets/images/workouts-full.jpg'),
       require('../../assets/videos/burpees-trimmed.mp4'),
       require('../../assets/videos/burpees-trimmed-square.mp4'),
     ]);
@@ -56,7 +60,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
     await Promise.all([...imageAssets, ...fontAssets]);
   }
   cachingComplete = async () => {
-    this.props.navigation.navigate('Workouts');
+    this.props.navigation.navigate('Progress');
   }
   render() {
     return (
