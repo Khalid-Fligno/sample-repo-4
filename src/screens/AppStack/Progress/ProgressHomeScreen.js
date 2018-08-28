@@ -49,20 +49,12 @@ export default class ProgressHomeScreen extends React.PureComponent {
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollView}>
-          <View
-            style={{
-              width,
-              flexDirection: 'row',
-            }}
-          >
+          <View style={styles.imagesContainer}>
             {
               initialProgressInfo ? (
                 <Image
                   source={{ uri: initialProgressInfo.photoURL }}
-                  style={{
-                    width: width / 2,
-                    height: (width / 3) * 2,
-                  }}
+                  style={styles.image}
                 />
               ) : (
                 <View
@@ -78,10 +70,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
               currentProgressInfo ? (
                 <Image
                   source={{ uri: currentProgressInfo.photoURL }}
-                  style={{
-                    width: width / 2,
-                    height: (width / 3) * 2,
-                  }}
+                  style={styles.image}
                 />
               ) : (
                 <View
@@ -96,9 +85,10 @@ export default class ProgressHomeScreen extends React.PureComponent {
           </View>
           <View
             style={{
-              width,
+              width: width - 20,
               flexDirection: 'row',
               backgroundColor: colors.white,
+              borderRadius: 4,
             }}
           >
             <View
@@ -119,18 +109,18 @@ export default class ProgressHomeScreen extends React.PureComponent {
               <Text style={styles.dataText}>
                 {initialProgressInfo && initialProgressInfo.waist}
               </Text>
+              <Text style={styles.dataText}>
+                {initialProgressInfo && initialProgressInfo.burpeeCount}
+              </Text>
             </View>
             <View
               style={{
                 flex: 1,
                 backgroundColor: colors.blue.light,
                 alignItems: 'center',
-                borderRadius: 4,
               }}
             >
-              <Text style={styles.fieldText}>
-                -
-              </Text>
+              <Text style={styles.fieldText} />
               <Text style={styles.fieldText}>
                 Weight
               </Text>
@@ -139,6 +129,9 @@ export default class ProgressHomeScreen extends React.PureComponent {
               </Text>
               <Text style={styles.fieldText}>
                 Waist
+              </Text>
+              <Text style={styles.fieldText}>
+                Burpees
               </Text>
             </View>
             <View
@@ -159,6 +152,9 @@ export default class ProgressHomeScreen extends React.PureComponent {
               <Text style={styles.dataText}>
                 {currentProgressInfo && currentProgressInfo.waist}
               </Text>
+              <Text style={styles.dataText}>
+                {currentProgressInfo && currentProgressInfo.burpeeCount}
+              </Text>
             </View>
           </View>
         </ScrollView>
@@ -170,11 +166,19 @@ export default class ProgressHomeScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.grey.light,
     alignItems: 'center',
   },
   scrollView: {
     alignItems: 'center',
+  },
+  imagesContainer: {
+    width,
+    flexDirection: 'row',
+  },
+  image: {
+    width: width / 2,
+    height: (width / 3) * 2,
   },
   fieldText: {
     marginTop: 10,
