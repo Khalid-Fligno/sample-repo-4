@@ -22,6 +22,30 @@ import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
+const storeProgressInfo = async (uri, isInitial, weight, waist, hip, burpeeCount) => {
+  const uid = await AsyncStorage.getItem('uid');
+  const firebase = require('firebase');
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  const storageRef = firebase.storage().ref();
+  const userPhotosStorageRef = storageRef.child('user-photos');
+  const userStorageRef = userPhotosStorageRef.child(uid);
+  const progressDataFieldName = isInitial ? 'initialProgressInfo' : 'currentProgressInfo';
+  const progressPhotoFilename = isInitial ? 'initial-progress-photo.jpeg' : 'current-progress-photo.jpeg';
+  const initialPhotoStorageRef = userStorageRef.child(progressPhotoFilename);
+  const snapshot = await initialPhotoStorageRef.put(blob);
+  const url = await snapshot.ref.getDownloadURL();
+  await db.collection('users').doc(uid).set({
+    [progressDataFieldName]: {
+      photoURL: url,
+      weight: parseInt(weight, 10),
+      waist: parseInt(waist, 10),
+      hip: parseInt(hip, 10),
+      burpeeCount,
+    },
+  }, { merge: true });
+};
+
 export default class Onboarding4Screen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -92,9 +116,18 @@ export default class Onboarding4Screen extends React.PureComponent {
   handleSubmit = async () => {
     this.setState({ loading: true });
     try {
+      const { burpeeCount } = this.state;
       const uid = await AsyncStorage.getItem('uid');
       const userRef = db.collection('users').doc(uid);
-      const fitnessLevel = findFitnessLevel(this.state.burpeeCount);
+      const {
+        weight,
+        waist,
+        hip,
+        isInitial,
+        image,
+      } = this.props.navigation.state.params;
+      await storeProgressInfo(image.uri, isInitial, weight, waist, hip, burpeeCount);
+      const fitnessLevel = findFitnessLevel(burpeeCount);
       await userRef.set({
         fitnessLevel,
       }, { merge: true });
