@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Video } from 'expo';
 import SelectInput from 'react-native-select-input-ios';
+import moment from 'moment';
 import { db } from '../../../config/firebase';
 import { burpeeOptions, findFitnessLevel } from '../../utils/index';
 import CustomButton from '../../components/CustomButton';
@@ -42,6 +43,7 @@ const storeProgressInfo = async (uri, isInitial, weight, waist, hip, burpeeCount
       waist: parseInt(waist, 10),
       hip: parseInt(hip, 10),
       burpeeCount,
+      date: moment().format('YYYY-MM-DD'),
     },
   }, { merge: true });
 };
