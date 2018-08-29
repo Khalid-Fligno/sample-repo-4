@@ -44,7 +44,14 @@ export const nutritionBackButtonMap = {
   RecipeSteps: true,
 };
 
-export const onboardingHeaderButtonMap = {
+export const onboardingBackButtonMap = {
+  Onboarding1: false,
+  Onboarding2: false,
+  Onboarding3: true,
+  Onboarding4: true,
+};
+
+export const onboardingSkipButtonMap = {
   Onboarding1: false,
   Onboarding2: true,
   Onboarding3: true,

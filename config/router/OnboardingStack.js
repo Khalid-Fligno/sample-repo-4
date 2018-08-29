@@ -5,7 +5,7 @@ import Onboarding2Screen from '../../src/screens/OnboardingStack/Onboarding2Scre
 import Onboarding3Screen from '../../src/screens/OnboardingStack/Onboarding3Screen';
 import Onboarding4Screen from '../../src/screens/OnboardingStack/Onboarding4Screen';
 import Header from '../../src/components/Header';
-import { fadeSpec, fade, onboardingHeaderButtonMap } from './utils';
+import { fadeSpec, fade, onboardingBackButtonMap, onboardingSkipButtonMap } from './utils';
 
 const OnboardingStack = createStackNavigator(
   {
@@ -28,8 +28,8 @@ const OnboardingStack = createStackNavigator(
         return (
           <Header
             navigation={navigation}
-            withBackButton={onboardingHeaderButtonMap[routeName]}
-            withSkipButton={onboardingHeaderButtonMap[routeName]}
+            withBackButton={onboardingBackButtonMap[routeName]}
+            withSkipButton={onboardingSkipButtonMap[routeName]}
           />
         );
       },
