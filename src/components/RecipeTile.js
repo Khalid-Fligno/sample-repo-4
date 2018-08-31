@@ -64,13 +64,20 @@ RecipeTile.defaultProps = {
 
 const styles = StyleSheet.create({
   cardContainer: {
+    height: 250,
     width,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 5,
     shadowColor: colors.black,
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
   },
   card: {
+    height: 240,
+    width: width - 20,
     borderRadius: 5,
     overflow: 'hidden',
     borderWidth: 0,
