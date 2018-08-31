@@ -8,6 +8,7 @@ import {
   Text,
   Alert,
 } from 'react-native';
+import { List, ListItem } from 'react-native-elements';
 import { FileSystem, Calendar, Permissions } from 'expo';
 import CalendarStrip from 'react-native-calendar-strip';
 import { db, auth } from '../../../../config/firebase';
@@ -148,151 +149,209 @@ export default class CalendarHomeScreen extends React.PureComponent {
     );
     const dayDisplay = (
       <View style={styles.dayDisplayContainer}>
-        <Text
-          style={{
-            fontFamily: fonts.bold,
+        <Text style={styles.headerText}>
+          WORKOUT
+        </Text>
+        <List
+          containerStyle={{
+            width, marginTop: 0, paddingTop: 0,
           }}
         >
-          Workout
-        </Text>
-        {
-          workout ? (
-            <TouchableOpacity
-              onPress={() => this.loadExercises(workout)}
-              onLongPress={() => this.addToCalendarApp(workout)}
-              style={styles.workoutTile}
-            >
-              <Text style={styles.tileText}>
-                {workout && workout.name}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              onPress={() => this.props.navigation.push('WorkoutsHome')}
-              style={styles.blankTile}
-            >
-              <Icon
-                name="add-circle"
-                size={22}
-                color={colors.grey.standard}
+          {
+            workout ? (
+              <ListItem
+                title="ZEUS"
+                onPress={() => this.loadExercises(workout)}
+                onLongPress={() => this.addToCalendarApp(workout)}
+                containerStyle={{
+                  width,
+                  height: 60,
+                  justifyContent: 'center',
+                }}
+                chevronColor={colors.charcoal.standard}
+                titleStyle={{
+                  fontFamily: fonts.bold,
+                  color: colors.coral.standard,
+                }}
+                subtitle={
+                  <View style={{ flexDirection: 'row' }}>
+                    <Icon name="add-circle" size={18} color={colors.charcoal.standard} />
+                    <Text style={{}}>5 months ago</Text>
+                  </View>
+                }
+                rightIcon={<Icon name="add-circle" size={18} color={colors.charcoal.standard} />}
               />
-              <Text style={styles.blankTileText}>
-                Add a workout
-              </Text>
-            </TouchableOpacity>
+            ) : (
+              <ListItem
+                title="NO WORKOUT SELECTED"
+                subtitle="Press to see available workouts"
+                onPress={() => this.props.navigation.push('WorkoutsHome')}
+                containerStyle={styles.blankListItem}
+                chevronColor={colors.charcoal.standard}
+                titleStyle={styles.blankListItemTitle}
+                subtitleStyle={styles.blankListItemSubtitle}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.standard} />}
+              />
           )
         }
+        </List>
         <Text
           style={{
-            fontFamily: fonts.bold,
+            fontFamily: fonts.standard,
           }}
         >
-          Meals
+          MEALS
         </Text>
-        {
-          breakfast ? (
-            <TouchableOpacity
-              onPress={() => this.props.navigation.push('Recipe', { recipe: breakfast })}
-              style={styles.nutritionTile}
-            >
-              <Text style={styles.tileText}>
-                {breakfast && breakfast.title}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'breakfast' })}
-              style={styles.blankTile}
-            >
-              <Icon
-                name="add-circle"
-                size={22}
-                color={colors.grey.standard}
+        <List
+          containerStyle={{
+            width, marginTop: 0, paddingTop: 0,
+          }}
+        >
+          {
+            breakfast ? (
+              <TouchableOpacity
+                onPress={() => this.props.navigation.push('Recipe', { recipe: breakfast })}
+                style={styles.nutritionTile}
+              >
+                <Text style={styles.tileText}>
+                  {breakfast && breakfast.title}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <ListItem
+                title="NO BREAKFAST RECIPE SELECTED"
+                subtitle="Press to see available workouts"
+                onPress={() => this.props.navigation.push('WorkoutsHome')}
+                containerStyle={styles.blankListItem}
+                chevronColor={colors.charcoal.standard}
+                titleStyle={styles.blankListItemTitle}
+                subtitleStyle={styles.blankListItemSubtitle}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.standard} />}
               />
-              <Text style={styles.blankTileText}>
-                Add a breakfast recipe
-              </Text>
-            </TouchableOpacity>
-          )
-        }
-        {
-          lunch ? (
-            <TouchableOpacity
-              onPress={() => this.props.navigation.push('Recipe', { recipe: lunch })}
-              style={styles.nutritionTile}
-            >
-              <Text style={styles.tileText}>
-                {lunch && lunch.title}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'lunch' })}
-              style={styles.blankTile}
-            >
-              <Icon
-                name="add-circle"
-                size={22}
-                color={colors.grey.standard}
+              // <TouchableOpacity
+              //   onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'breakfast' })}
+              //   style={styles.blankTile}
+              // >
+              //   <Icon
+              //     name="add-circle"
+              //     size={22}
+              //     color={colors.grey.standard}
+              //   />
+              //   <Text style={styles.blankTileText}>
+              //     Add a breakfast recipe
+              //   </Text>
+              // </TouchableOpacity>
+            )
+          }
+          {
+            lunch ? (
+              <TouchableOpacity
+                onPress={() => this.props.navigation.push('Recipe', { recipe: lunch })}
+                style={styles.nutritionTile}
+              >
+                <Text style={styles.tileText}>
+                  {lunch && lunch.title}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <ListItem
+                title="NO LUNCH RECIPE SELECTED"
+                subtitle="Press to see available workouts"
+                onPress={() => this.props.navigation.push('WorkoutsHome')}
+                containerStyle={styles.blankListItem}
+                chevronColor={colors.charcoal.standard}
+                titleStyle={styles.blankListItemTitle}
+                subtitleStyle={styles.blankListItemSubtitle}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.standard} />}
               />
-              <Text style={styles.blankTileText}>
-                Add a lunch recipe
-              </Text>
-            </TouchableOpacity>
-          )
-        }
-        {
-          dinner ? (
-            <TouchableOpacity
-              onPress={() => this.props.navigation.push('Recipe', { recipe: dinner })}
-              style={styles.nutritionTile}
-            >
-              <Text style={styles.tileText}>
-                {dinner && dinner.title}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'dinner' })}
-              style={styles.blankTile}
-            >
-              <Icon
-                name="add-circle"
-                size={22}
-                color={colors.grey.standard}
+              // <TouchableOpacity
+              //   onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'lunch' })}
+              //   style={styles.blankTile}
+              // >
+              //   <Icon
+              //     name="add-circle"
+              //     size={22}
+              //     color={colors.grey.standard}
+              //   />
+              //   <Text style={styles.blankTileText}>
+              //     Add a lunch recipe
+              //   </Text>
+              // </TouchableOpacity>
+            )
+          }
+          {
+            dinner ? (
+              <TouchableOpacity
+                onPress={() => this.props.navigation.push('Recipe', { recipe: dinner })}
+                style={styles.nutritionTile}
+              >
+                <Text style={styles.tileText}>
+                  {dinner && dinner.title}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <ListItem
+                title="NO DINNER RECIPE SELECTED"
+                subtitle="Press to see available workouts"
+                onPress={() => this.props.navigation.push('WorkoutsHome')}
+                containerStyle={styles.blankListItem}
+                chevronColor={colors.charcoal.standard}
+                titleStyle={styles.blankListItemTitle}
+                subtitleStyle={styles.blankListItemSubtitle}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.standard} />}
               />
-              <Text style={styles.blankTileText}>
-                Add a dinner recipe
-              </Text>
-            </TouchableOpacity>
-          )
-        }
-        {
-          snack ? (
-            <TouchableOpacity
-              onPress={() => this.props.navigation.push('Recipe', { recipe: snack })}
-              style={styles.nutritionTile}
-            >
-              <Text style={styles.tileText}>
-                {snack && snack.title}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'snack' })}
-              style={styles.blankTile}
-            >
-              <Icon
-                name="add-circle"
-                size={22}
-                color={colors.grey.standard}
+              // <TouchableOpacity
+              //   onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'dinner' })}
+              //   style={styles.blankTile}
+              // >
+              //   <Icon
+              //     name="add-circle"
+              //     size={22}
+              //     color={colors.grey.standard}
+              //   />
+              //   <Text style={styles.blankTileText}>
+              //     Add a dinner recipe
+              //   </Text>
+              // </TouchableOpacity>
+            )
+          }
+          {
+            snack ? (
+              <TouchableOpacity
+                onPress={() => this.props.navigation.push('Recipe', { recipe: snack })}
+                style={styles.nutritionTile}
+              >
+                <Text style={styles.tileText}>
+                  {snack && snack.title}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <ListItem
+                title="NO SNACK RECIPE SELECTED"
+                subtitle="Press to see available workouts"
+                onPress={() => this.props.navigation.push('WorkoutsHome')}
+                containerStyle={styles.blankListItem}
+                chevronColor={colors.charcoal.standard}
+                titleStyle={styles.blankListItemTitle}
+                subtitleStyle={styles.blankListItemSubtitle}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.standard} />}
               />
-              <Text style={styles.blankTileText}>
-                Add a snack recipe
-              </Text>
-            </TouchableOpacity>
-          )
-        }
+              // <TouchableOpacity
+              //   onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'snack' })}
+              //   style={styles.blankTile}
+              // >
+              //   <Icon
+              //     name="add-circle"
+              //     size={22}
+              //     color={colors.grey.standard}
+              //   />
+              //   <Text style={styles.blankTileText}>
+              //     Add a snack recipe
+              //   </Text>
+              // </TouchableOpacity>
+            )
+          }
+        </List>
       </View>
     );
     return (
@@ -360,7 +419,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: colors.offWhite,
   },
   loadingViewContainer: {
@@ -369,69 +428,86 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
   },
   dayDisplayContainer: {
-    flexGrow: 1,
+    // flex: 1,
     alignItems: 'center',
     paddingTop: 7.5,
     paddingBottom: 7.5,
   },
-  workoutTile: {
-    opacity: 0.9,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: width - 30,
-    marginTop: 7.5,
-    marginBottom: 7.5,
-    backgroundColor: colors.coral.standard,
-    borderRadius: 4,
-    shadowColor: colors.black,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-  },
-  nutritionTile: {
-    opacity: 0.9,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: width - 30,
-    marginTop: 7.5,
-    marginBottom: 7.5,
-    backgroundColor: colors.violet.standard,
-    borderRadius: 4,
-    shadowColor: colors.black,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-  },
-  tileText: {
-    fontFamily: fonts.boldItalic,
-    fontSize: 24,
-    color: colors.white,
-    textAlign: 'center',
-  },
-  blankTile: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: width - 30,
-    marginTop: 7.5,
-    marginBottom: 7.5,
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: colors.grey.light,
-    shadowColor: colors.black,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-  },
-  blankTileText: {
-    marginTop: 4,
-    marginLeft: 10,
+  headerText: {
     fontFamily: fonts.standard,
-    fontSize: 20,
+    color: colors.charcoal.light,
+  },
+  blankListItem: {
+    width,
+    height: 60,
+    justifyContent: 'center',
+  },
+  blankListItemTitle: {
+    fontFamily: fonts.bold,
     color: colors.grey.standard,
   },
+  blankListItemSubtitle: {
+    fontFamily: fonts.standard,
+    color: colors.grey.standard,
+  },
+  // workoutTile: {
+  //   opacity: 0.9,
+  //   flex: 1,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   width: width - 30,
+  //   marginTop: 7.5,
+  //   marginBottom: 7.5,
+  //   backgroundColor: colors.coral.standard,
+  //   borderRadius: 4,
+  //   shadowColor: colors.black,
+  //   shadowOpacity: 0.5,
+  //   shadowOffset: { width: 0, height: 2 },
+  //   shadowRadius: 5,
+  // },
+  // nutritionTile: {
+  //   opacity: 0.9,
+  //   flex: 1,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   width: width - 30,
+  //   marginTop: 7.5,
+  //   marginBottom: 7.5,
+  //   backgroundColor: colors.violet.standard,
+  //   borderRadius: 4,
+  //   shadowColor: colors.black,
+  //   shadowOpacity: 0.5,
+  //   shadowOffset: { width: 0, height: 2 },
+  //   shadowRadius: 5,
+  // },
+  // tileText: {
+  //   fontFamily: fonts.boldItalic,
+  //   fontSize: 24,
+  //   color: colors.white,
+  //   textAlign: 'center',
+  // },
+  // blankTile: {
+  //   flex: 1,
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   width: width - 30,
+  //   marginTop: 7.5,
+  //   marginBottom: 7.5,
+  //   backgroundColor: colors.white,
+  //   borderRadius: 4,
+  //   borderWidth: 1,
+  //   borderColor: colors.grey.light,
+  //   shadowColor: colors.black,
+  //   shadowOpacity: 0.5,
+  //   shadowOffset: { width: 0, height: 2 },
+  //   shadowRadius: 5,
+  // },
+  // blankTileText: {
+  //   marginTop: 4,
+  //   marginLeft: 10,
+  //   fontFamily: fonts.standard,
+  //   fontSize: 20,
+  //   color: colors.grey.standard,
+  // },
 });
