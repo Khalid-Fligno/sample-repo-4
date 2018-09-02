@@ -195,11 +195,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
           )
         }
         </List>
-        <Text
-          style={{
-            fontFamily: fonts.standard,
-          }}
-        >
+        <Text style={styles.headerText}>
           MEALS
         </Text>
         <List
@@ -209,19 +205,28 @@ export default class CalendarHomeScreen extends React.PureComponent {
         >
           {
             breakfast ? (
-              <TouchableOpacity
+              // <TouchableOpacity
+              //   onPress={() => this.props.navigation.push('Recipe', { recipe: breakfast })}
+              //   style={styles.nutritionTile}
+              // >
+              //   <Text style={styles.tileText}>
+              //     {breakfast && breakfast.title}
+              //   </Text>
+              // </TouchableOpacity>
+              <ListItem
+                title={breakfast.title.toUpperCase()}
+                subtitle="Press to see available recipes"
                 onPress={() => this.props.navigation.push('Recipe', { recipe: breakfast })}
-                style={styles.nutritionTile}
-              >
-                <Text style={styles.tileText}>
-                  {breakfast && breakfast.title}
-                </Text>
-              </TouchableOpacity>
+                containerStyle={styles.blankListItem}
+                chevronColor={colors.charcoal.standard}
+                titleStyle={styles.recipeListItemTitle}
+                subtitleStyle={styles.blankListItemSubtitle}
+              />
             ) : (
               <ListItem
                 title="NO BREAKFAST RECIPE SELECTED"
-                subtitle="Press to see available workouts"
-                onPress={() => this.props.navigation.push('WorkoutsHome')}
+                subtitle="Press to see available recipes"
+                onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'breakfast' })}
                 containerStyle={styles.blankListItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -256,8 +261,8 @@ export default class CalendarHomeScreen extends React.PureComponent {
             ) : (
               <ListItem
                 title="NO LUNCH RECIPE SELECTED"
-                subtitle="Press to see available workouts"
-                onPress={() => this.props.navigation.push('WorkoutsHome')}
+                subtitle="Press to see available recipes"
+                onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'lunch' })}
                 containerStyle={styles.blankListItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -292,8 +297,8 @@ export default class CalendarHomeScreen extends React.PureComponent {
             ) : (
               <ListItem
                 title="NO DINNER RECIPE SELECTED"
-                subtitle="Press to see available workouts"
-                onPress={() => this.props.navigation.push('WorkoutsHome')}
+                subtitle="Press to see available recipes"
+                onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'dinner' })}
                 containerStyle={styles.blankListItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -328,8 +333,8 @@ export default class CalendarHomeScreen extends React.PureComponent {
             ) : (
               <ListItem
                 title="NO SNACK RECIPE SELECTED"
-                subtitle="Press to see available workouts"
-                onPress={() => this.props.navigation.push('WorkoutsHome')}
+                subtitle="Press to see available recipes"
+                onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'snack' })}
                 containerStyle={styles.blankListItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -430,12 +435,12 @@ const styles = StyleSheet.create({
   dayDisplayContainer: {
     // flex: 1,
     alignItems: 'center',
-    paddingTop: 7.5,
-    paddingBottom: 7.5,
   },
   headerText: {
     fontFamily: fonts.standard,
     color: colors.charcoal.light,
+    marginTop: 10,
+    marginBottom: 10,
   },
   blankListItem: {
     width,
@@ -449,6 +454,10 @@ const styles = StyleSheet.create({
   blankListItemSubtitle: {
     fontFamily: fonts.standard,
     color: colors.grey.standard,
+  },
+  recipeListItemTitle: {
+    fontFamily: fonts.bold,
+    color: colors.violet.standard,
   },
   // workoutTile: {
   //   opacity: 0.9,
