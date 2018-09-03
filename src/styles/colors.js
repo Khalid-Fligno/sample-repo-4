@@ -5,6 +5,7 @@ const colors = {
   grey: {
     dark: 'rgb(113, 114, 115)', // #717273
     standard: 'rgb(188, 188, 189)', // #bcbcbd
+    medium: 'rgb(210, 210, 210)', // #c8c8c8
     light: 'rgb(234, 234, 235)', // #eaeaeb
   },
   charcoal: {
