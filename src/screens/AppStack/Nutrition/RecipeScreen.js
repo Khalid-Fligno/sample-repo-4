@@ -78,7 +78,7 @@ export default class RecipeScreen extends React.PureComponent {
       'Added to calendar!',
       `${recipe.title}\n${calendarMeal}\n${formattedDate}`,
       [
-        { text: 'Ok', onPress: () => this.toggleModal(), style: 'cancel' },
+        { text: 'Ok', onPress: () => this.setState({ modalVisible: false }), style: 'cancel' },
       ],
       { cancelable: false },
     );
