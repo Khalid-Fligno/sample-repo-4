@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   addToCalendarModalButton: {
-    width: width - 50,
+    width: width - 55,
     backgroundColor: colors.violet.standard,
     borderRadius: 4,
   },
