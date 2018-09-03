@@ -113,25 +113,14 @@ export default class RecipeScreen extends React.PureComponent {
             animationOut="fadeOut"
             animationOutTiming={600}
           >
-            <View
-              style={{
-                backgroundColor: colors.white,
-                borderRadius: 8,
-              }}
-            >
+            <View style={styles.modalContainer}>
               <DatePickerIOS
                 mode="date"
                 date={chosenDate}
                 onDateChange={this.setDate}
                 minimumDate={new Date()}
               />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  width: '100%',
-                  padding: 5,
-                }}
-              >
+              <View style={styles.calendarMealButtonContainer}>
                 {
                   recipe.breakfast && (
                     <TouchableOpacity
@@ -213,22 +202,13 @@ export default class RecipeScreen extends React.PureComponent {
                   )
                 }
               </View>
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: 10,
-                }}
-              >
+              <View style={styles.addToCalendarModalButtonContainer}>
                 <Button
                   title="Add to calendar"
                   onPress={() => this.addRecipeToCalendar(chosenDate)}
                   loading={addingToCalendar}
-                  buttonStyle={{
-                    width: width - 60,
-                    backgroundColor: colors.violet.standard,
-                    borderRadius: 4,
-                  }}
+                  buttonStyle={styles.addToCalendarModalButton}
+                  disabled={!calendarMeal}
                 />
               </View>
             </View>
@@ -407,12 +387,31 @@ const styles = StyleSheet.create({
     borderColor: colors.charcoal.light,
     borderRadius: 4,
   },
+  modalContainer: {
+    backgroundColor: colors.white,
+    borderRadius: 8,
+  },
+  addToCalendarModalButtonContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 10,
+  },
+  addToCalendarModalButton: {
+    width: width - 50,
+    backgroundColor: colors.violet.standard,
+    borderRadius: 4,
+  },
   addToCalendarButtonText: {
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.light,
     marginTop: 3,
     marginLeft: 5,
+  },
+  calendarMealButtonContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    padding: 4,
   },
   calendarMealButton: {
     flex: 1,
@@ -452,7 +451,6 @@ const styles = StyleSheet.create({
     maxWidth: width,
   },
   timeText: {
-
     fontFamily: fonts.standard,
     color: colors.violet.standard,
     marginTop: 3,
