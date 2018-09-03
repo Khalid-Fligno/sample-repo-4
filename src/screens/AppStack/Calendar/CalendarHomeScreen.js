@@ -1,22 +1,25 @@
 import React from 'react';
 import {
   StyleSheet,
+  ScrollView,
   View,
   AsyncStorage,
   Dimensions,
-  TouchableOpacity,
   Text,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import { FileSystem, Calendar, Permissions } from 'expo';
 import CalendarStrip from 'react-native-calendar-strip';
+import Swipeable from 'react-native-swipeable';
 import { db, auth } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
 import { findReps } from '../../../utils';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+import { firebase } from '../../../../node_modules/@firebase/app';
 
 const { width } = Dimensions.get('window');
 
@@ -30,6 +33,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
       dinner: undefined,
       snack: undefined,
       loading: false,
+      isSwiping: false,
     };
     this.calendarStrip = React.createRef();
   }
@@ -132,6 +136,15 @@ export default class CalendarHomeScreen extends React.PureComponent {
       alarms: [{ absoluteDate: new Date(y, mth, d, h, m - 15, s) }],
     });
   }
+  deleteCalendarEntry = async (fieldToDelete) => {
+    const uid = await AsyncStorage.getItem('uid');
+    const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
+    this.unsubscribe = await db.collection('users').doc(uid)
+      .collection('calendarEntries').doc(stringDate)
+      .update({
+        [fieldToDelete]: firebase.firestore.FieldValue.delete(),
+      });
+  }
   render() {
     const {
       loading,
@@ -147,30 +160,51 @@ export default class CalendarHomeScreen extends React.PureComponent {
         color={colors.green.standard}
       />
     );
+    const deleteButton = (fieldToDelete) => [
+      <TouchableOpacity
+        onPress={() => this.deleteCalendarEntry(fieldToDelete)}
+        style={styles.deleteButton}
+      >
+        <Text style={styles.deleteButtonText}>
+          Delete
+        </Text>
+      </TouchableOpacity>,
+    ];
     const dayDisplay = (
-      <View style={styles.dayDisplayContainer}>
+      <ScrollView
+        contentContainerStyle={styles.dayDisplayContainer}
+        scrollEnabled={!this.state.isSwiping}
+      >
         <Text style={styles.headerText}>
           WORKOUT
         </Text>
         <List containerStyle={styles.listContainer}>
           {
             workout ? (
-              <ListItem
-                title={workout.name.toUpperCase()}
-                // subtitle={
-                //   <View style={{ flexDirection: 'row', marginLeft: 8 }}>
-                //     <Icon name="timer" size={18} color={colors.charcoal.standard} />
-                //     <Text style={{ color: colors.charcoal.standard, marginTop: 1, marginLeft: 5, marginRight: 5 }}>Home</Text>
-                //     <Icon name="timer" size={18} color={colors.charcoal.standard} />
-                //     <Text style={{ color: colors.charcoal.standard, marginTop: 1, marginLeft: 5, marginRight: 5 }}>Upper</Text>
-                //   </View>
-                // }
-                onPress={() => this.loadExercises(workout)}
-                containerStyle={styles.listItem}
-                chevronColor={colors.charcoal.standard}
-                titleStyle={styles.workoutListItemTitle}
-                rightIcon={<Icon name="chevron-right" size={18} color={colors.coral.standard} />}
-              />
+              <Swipeable
+                rightButtons={deleteButton('workout')}
+                rightButtonWidth={75}
+                rightContainerStyle={styles.deleteButtonContainer}
+                onSwipeStart={() => this.setState({ isSwiping: true })}
+                onSwipeRelease={() => this.setState({ isSwiping: false })}
+              >
+                <ListItem
+                  title={workout.name.toUpperCase()}
+                  // subtitle={
+                  //   <View style={{ flexDirection: 'row', marginLeft: 8 }}>
+                  //     <Icon name="timer" size={18} color={colors.charcoal.standard} />
+                  //     <Text style={{ color: colors.charcoal.standard, marginTop: 1, marginLeft: 5, marginRight: 5 }}>Home</Text>
+                  //     <Icon name="timer" size={18} color={colors.charcoal.standard} />
+                  //     <Text style={{ color: colors.charcoal.standard, marginTop: 1, marginLeft: 5, marginRight: 5 }}>Upper</Text>
+                  //   </View>
+                  // }
+                  onPress={() => this.loadExercises(workout)}
+                  containerStyle={styles.listItem}
+                  chevronColor={colors.charcoal.standard}
+                  titleStyle={styles.workoutListItemTitle}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.coral.standard} />}
+                />
+              </Swipeable>
             ) : (
               <ListItem
                 title="WORKOUT"
@@ -191,16 +225,24 @@ export default class CalendarHomeScreen extends React.PureComponent {
         <List containerStyle={styles.listContainer}>
           {
             breakfast ? (
-              <ListItem
-                title={breakfast.title.toUpperCase()}
-                subtitle={breakfast.subtitle}
-                onPress={() => this.props.navigation.push('Recipe', { recipe: breakfast })}
-                containerStyle={styles.listItem}
-                chevronColor={colors.charcoal.standard}
-                titleStyle={styles.recipeListItemTitle}
-                subtitleStyle={styles.recipeListItemSubtitle}
-                rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
-              />
+              <Swipeable
+                rightButtons={deleteButton('breakfast')}
+                rightButtonWidth={75}
+                rightContainerStyle={styles.deleteButtonContainer}
+                onSwipeStart={() => this.setState({ isSwiping: true })}
+                onSwipeRelease={() => this.setState({ isSwiping: false })}
+              >
+                <ListItem
+                  title={breakfast.title.toUpperCase()}
+                  subtitle={breakfast.subtitle}
+                  onPress={() => this.props.navigation.push('Recipe', { recipe: breakfast })}
+                  containerStyle={styles.listItem}
+                  chevronColor={colors.charcoal.standard}
+                  titleStyle={styles.recipeListItemTitle}
+                  subtitleStyle={styles.recipeListItemSubtitle}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
+                />
+              </Swipeable>
             ) : (
               <ListItem
                 title="BREAKFAST"
@@ -216,22 +258,30 @@ export default class CalendarHomeScreen extends React.PureComponent {
           }
           {
             lunch ? (
-              <ListItem
-                title={lunch.title.toUpperCase()}
-                subtitle={lunch.subtitle}
-                onPress={() => this.props.navigation.push('Recipe', { recipe: lunch })}
-                containerStyle={styles.listItem}
-                chevronColor={colors.charcoal.standard}
-                titleStyle={styles.recipeListItemTitle}
-                subtitleStyle={styles.recipeListItemSubtitle}
-                rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
-              />
+              <Swipeable
+                rightButtons={deleteButton('lunch')}
+                rightButtonWidth={75}
+                rightContainerStyle={styles.deleteButtonContainer}
+                onSwipeStart={() => this.setState({ isSwiping: true })}
+                onSwipeRelease={() => this.setState({ isSwiping: false })}
+              >
+                <ListItem
+                  title={lunch.title.toUpperCase()}
+                  subtitle={lunch.subtitle}
+                  onPress={() => this.props.navigation.push('Recipe', { recipe: lunch })}
+                  containerStyle={styles.listItem}
+                  chevronColor={colors.charcoal.standard}
+                  titleStyle={styles.recipeListItemTitle}
+                  subtitleStyle={styles.recipeListItemSubtitle}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
+                />
+              </Swipeable>
             ) : (
               <ListItem
                 title="LUNCH"
                 subtitle="Press here to see available recipes"
                 onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'lunch' })}
-                containerStyle={styles.blankListItem}
+                containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
                 subtitleStyle={styles.blankListItemSubtitle}
@@ -241,16 +291,24 @@ export default class CalendarHomeScreen extends React.PureComponent {
           }
           {
             dinner ? (
-              <ListItem
-                title={dinner.title.toUpperCase()}
-                subtitle={dinner.subtitle}
-                onPress={() => this.props.navigation.push('Recipe', { recipe: dinner })}
-                containerStyle={styles.listItem}
-                chevronColor={colors.charcoal.standard}
-                titleStyle={styles.recipeListItemTitle}
-                subtitleStyle={styles.recipeListItemSubtitle}
-                rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
-              />
+              <Swipeable
+                rightButtons={deleteButton('dinner')}
+                rightButtonWidth={75}
+                rightContainerStyle={styles.deleteButtonContainer}
+                onSwipeStart={() => this.setState({ isSwiping: true })}
+                onSwipeRelease={() => this.setState({ isSwiping: false })}
+              >
+                <ListItem
+                  title={dinner.title.toUpperCase()}
+                  subtitle={dinner.subtitle}
+                  onPress={() => this.props.navigation.push('Recipe', { recipe: dinner })}
+                  containerStyle={styles.listItem}
+                  chevronColor={colors.charcoal.standard}
+                  titleStyle={styles.recipeListItemTitle}
+                  subtitleStyle={styles.recipeListItemSubtitle}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
+                />
+              </Swipeable>
             ) : (
               <ListItem
                 title="DINNER"
@@ -266,16 +324,24 @@ export default class CalendarHomeScreen extends React.PureComponent {
           }
           {
             snack ? (
-              <ListItem
-                title={snack.title.toUpperCase()}
-                subtitle={snack.subtitle}
-                onPress={() => this.props.navigation.push('Recipe', { recipe: snack })}
-                containerStyle={styles.listItem}
-                chevronColor={colors.charcoal.standard}
-                titleStyle={styles.recipeListItemTitle}
-                subtitleStyle={styles.recipeListItemSubtitle}
-                rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
-              />
+              <Swipeable
+                rightButtons={deleteButton('snack')}
+                rightButtonWidth={75}
+                rightContainerStyle={styles.deleteButtonContainer}
+                onSwipeStart={() => this.setState({ isSwiping: true })}
+                onSwipeRelease={() => this.setState({ isSwiping: false })}
+              >
+                <ListItem
+                  title={snack.title.toUpperCase()}
+                  subtitle={snack.subtitle}
+                  onPress={() => this.props.navigation.push('Recipe', { recipe: snack })}
+                  containerStyle={styles.listItem}
+                  chevronColor={colors.charcoal.standard}
+                  titleStyle={styles.recipeListItemTitle}
+                  subtitleStyle={styles.recipeListItemSubtitle}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
+                />
+              </Swipeable>
             ) : (
               <ListItem
                 title="SNACK"
@@ -290,7 +356,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
             )
           }
         </List>
-      </View>
+      </ScrollView>
     );
     return (
       <View style={styles.container}>
@@ -349,7 +415,8 @@ export default class CalendarHomeScreen extends React.PureComponent {
           leftSelector={<Icon name="chevron-left" size={20} color={colors.charcoal.standard} />}
           rightSelector={<Icon name="chevron-right" size={20} color={colors.charcoal.standard} />}
         />
-        {loading ? loadingView : dayDisplay}
+        {dayDisplay}
+        {loading && loadingView}
       </View>
     );
   }
@@ -367,7 +434,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     color: colors.charcoal.light,
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 8,
   },
   listContainer: {
     width,
@@ -375,12 +442,13 @@ const styles = StyleSheet.create({
   },
   listItem: {
     width,
-    height: 60,
+    height: 65,
     justifyContent: 'center',
   },
   blankListItemTitle: {
     fontFamily: fonts.bold,
     color: colors.grey.standard,
+    marginBottom: 5,
   },
   blankListItemSubtitle: {
     fontFamily: fonts.standard,
@@ -389,6 +457,7 @@ const styles = StyleSheet.create({
   workoutListItemTitle: {
     fontFamily: fonts.bold,
     color: colors.coral.standard,
+    marginBottom: 5,
   },
   workoutListItemSubtitle: {
     fontFamily: fonts.standard,
@@ -397,9 +466,24 @@ const styles = StyleSheet.create({
   recipeListItemTitle: {
     fontFamily: fonts.bold,
     color: colors.violet.standard,
+    marginBottom: 5,
   },
   recipeListItemSubtitle: {
     fontFamily: fonts.standard,
     color: colors.charcoal.standard,
+  },
+  deleteButtonContainer: {
+    backgroundColor: colors.coral.standard,
+  },
+  deleteButton: {
+    width: 75,
+    height: 65,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.coral.standard,
+  },
+  deleteButtonText: {
+    fontFamily: fonts.bold,
+    color: colors.white,
   },
 });
