@@ -62,27 +62,13 @@ const Header = ({
       >
         {
           headerTitleParams ? (
-            <Text
-              style={{
-                fontFamily: fonts.bold,
-                fontSize: 18,
-                color: colors.white,
-                marginTop: 5,
-              }}
-            >
+            <Text style={styles.headerTitleText}>
               {headerTitleParams}
             </Text>
           ) : (
             <Image
               source={require('../../assets/icons/fitazfk-icon-solid-white.png')}
-              style={{
-                width: 30,
-                height: 30,
-                shadowColor: colors.charcoal.light,
-                shadowOffset: { width: 1, height: 1 },
-                shadowOpacity: 0.7,
-                shadowRadius: 1,
-              }}
+              style={styles.fitazfkIcon}
             />
           )
         }
@@ -93,9 +79,7 @@ const Header = ({
             style={styles.headerContentContainerRight}
             onPress={() => navigation.state.params.handleSkip()}
           >
-            <Text
-              style={styles.skipButton}
-            >
+            <Text style={styles.skipButton}>
               Skip
             </Text>
           </TouchableOpacity>
@@ -107,9 +91,7 @@ const Header = ({
             style={styles.headerContentContainerRight}
             onPress={() => navigation.state.params.handleStart()}
           >
-            <Text
-              style={styles.skipButton}
-            >
+            <Text style={styles.skipButton}>
               Start
             </Text>
             <Icon
@@ -130,12 +112,7 @@ const Header = ({
               name="profile-solid"
               size={30}
               color={colors.white}
-              style={{
-                shadowColor: colors.charcoal.light,
-                shadowOffset: { width: 1, height: 1 },
-                shadowOpacity: 0.7,
-                shadowRadius: 1,
-              }}
+              style={styles.profileIcon}
             />
           </TouchableOpacity>
         )
@@ -244,6 +221,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
+  },
+  headerTitleText: {
+    fontFamily: fonts.bold,
+    fontSize: 18,
+    color: colors.white,
+    marginTop: 5,
+  },
+  fitazfkIcon: {
+    width: 30,
+    height: 30,
+    shadowColor: colors.charcoal.light,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.7,
+    shadowRadius: 1,
+  },
+  profileIcon: {
+    shadowColor: colors.charcoal.light,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.7,
+    shadowRadius: 1,
   },
 });
 
