@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   },
   recipeTitle: {
     fontFamily: fonts.bold,
-    fontSize: 28,
+    fontSize: 24,
     color: colors.charcoal.standard,
   },
   recipeSubTitle: {
@@ -449,8 +449,10 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     flexDirection: 'row',
     alignItems: 'center',
+    maxWidth: width,
   },
   timeText: {
+
     fontFamily: fonts.standard,
     color: colors.violet.standard,
     marginTop: 3,
