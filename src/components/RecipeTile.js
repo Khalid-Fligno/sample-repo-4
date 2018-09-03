@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   card: {
-    height: 240,
     width: width - 20,
     borderRadius: 5,
     overflow: 'hidden',
