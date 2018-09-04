@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { FileSystem } from 'expo';
 import { db, auth } from '../../../../config/firebase';
 import { findReps } from '../../../utils/index';
@@ -77,15 +77,6 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
   render() {
     const { workouts, loading } = this.state;
     const workoutList = workouts.map((workout) => (
-      // <TouchableOpacity
-      //   key={workout.id}
-      //   onPress={() => this.loadExercises(workout)}
-      //   style={styles.workoutButton}
-      // >
-      //   <Text style={styles.workoutButtonText}>
-      //     {}
-      //   </Text>
-      // </TouchableOpacity>
       <Tile
         key={workout.id}
         title1={workout.name.toUpperCase()}
