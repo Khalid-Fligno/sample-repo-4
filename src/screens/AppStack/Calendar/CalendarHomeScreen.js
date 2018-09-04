@@ -13,13 +13,14 @@ import { List, ListItem } from 'react-native-elements';
 import { FileSystem, Calendar, Permissions } from 'expo';
 import CalendarStrip from 'react-native-calendar-strip';
 import Swipeable from 'react-native-swipeable';
+import firebase from 'firebase';
 import { db, auth } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
 import { findReps } from '../../../utils';
+import { findFocus, findLocation } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
-import { firebase } from '../../../../node_modules/@firebase/app';
 
 const { width } = Dimensions.get('window');
 
@@ -170,6 +171,30 @@ export default class CalendarHomeScreen extends React.PureComponent {
         </Text>
       </TouchableOpacity>,
     ];
+    const findLocationIcon = () => {
+      let location;
+      if (workout.home) {
+        location = 'home';
+      } else if (workout.gym) {
+        location = 'gym';
+      } else if (workout.park) {
+        location = 'park';
+      }
+      return `workouts-${location}`;
+    };
+    const findFocusIcon = () => {
+      let focus;
+      if (workout.fullBody) {
+        focus = 'full';
+      } else if (workout.upperBody) {
+        focus = 'upper';
+      } else if (workout.lowerBody) {
+        focus = 'lower';
+      } else if (workout.core) {
+        focus = 'core';
+      }
+      return `workouts-${focus}`;
+    };
     const dayDisplay = (
       <ScrollView
         contentContainerStyle={styles.dayDisplayContainer}
@@ -190,14 +215,26 @@ export default class CalendarHomeScreen extends React.PureComponent {
               >
                 <ListItem
                   title={workout.name.toUpperCase()}
-                  // subtitle={
-                  //   <View style={{ flexDirection: 'row', marginLeft: 8 }}>
-                  //     <Icon name="timer" size={18} color={colors.charcoal.standard} />
-                  //     <Text style={{ color: colors.charcoal.standard, marginTop: 1, marginLeft: 5, marginRight: 5 }}>Home</Text>
-                  //     <Icon name="timer" size={18} color={colors.charcoal.standard} />
-                  //     <Text style={{ color: colors.charcoal.standard, marginTop: 1, marginLeft: 5, marginRight: 5 }}>Upper</Text>
-                  //   </View>
-                  // }
+                  subtitle={
+                    <View style={styles.workoutSubtitleContainer}>
+                      <Icon
+                        name={findLocationIcon()}
+                        size={20}
+                        color={colors.charcoal.standard}
+                      />
+                      <Text style={styles.workoutSubtitleText}>
+                        {findLocation(workout)}
+                      </Text>
+                      <Icon
+                        name={findFocusIcon()}
+                        size={20}
+                        color={colors.charcoal.standard}
+                      />
+                      <Text style={styles.workoutSubtitleText}>
+                        {findFocus(workout)}
+                      </Text>
+                    </View>
+                  }
                   onPress={() => this.loadExercises(workout)}
                   containerStyle={styles.listItem}
                   chevronColor={colors.charcoal.standard}
@@ -214,7 +251,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
                 subtitleStyle={styles.blankListItemSubtitle}
-                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.standard} />}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
               />
           )
         }
@@ -252,7 +289,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
                 subtitleStyle={styles.blankListItemSubtitle}
-                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.standard} />}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
               />
             )
           }
@@ -285,7 +322,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
                 subtitleStyle={styles.blankListItemSubtitle}
-                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.standard} />}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
               />
             )
           }
@@ -318,7 +355,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
                 subtitleStyle={styles.blankListItemSubtitle}
-                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.standard} />}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
               />
             )
           }
@@ -351,7 +388,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
                 subtitleStyle={styles.blankListItemSubtitle}
-                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.standard} />}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
               />
             )
           }
@@ -360,61 +397,59 @@ export default class CalendarHomeScreen extends React.PureComponent {
     );
     return (
       <View style={styles.container}>
-        <CalendarStrip
-          ref={this.calendarStrip}
-          maxDayComponentSize={50}
-          onDateSelected={(date) => this.handleDateSelected(date)}
-          calendarAnimation={{
-            type: 'parallel',
-            duration: 500,
-          }}
-          daySelectionAnimation={{
-            type: 'background',
-            duration: 400,
-            highlightColor: colors.green.standard,
-          }}
-          style={{
-            height: 90,
-            paddingTop: 10,
-            paddingBottom: 20,
-          }}
-          calendarHeaderStyle={{
-            fontFamily: fonts.bold,
-            color: colors.white,
-            marginTop: 0,
-            marginBottom: 15,
-          }}
-          calendarColor={colors.green.dark}
-          dateNumberStyle={{
-            fontFamily: fonts.bold,
-            color: colors.white,
-          }}
-          dateNameStyle={{
-            fontFamily: fonts.bold,
-            color: colors.white,
-          }}
-          highlightDateNumberStyle={{
-            fontFamily: fonts.bold,
-            color: colors.charcoal.dark,
-          }}
-          highlightDateNameStyle={{
-            fontFamily: fonts.bold,
-            color: colors.charcoal.dark,
-          }}
-          weekendDateNameStyle={{
-            fontFamily: fonts.bold,
-            color: colors.grey.standard,
-          }}
-          weekendDateNumberStyle={{
-            fontFamily: fonts.bold,
-            color: colors.grey.standard,
-          }}
-          iconContainer={{
-            flex: 0.15,
-          }}
-          leftSelector={<Icon name="chevron-left" size={20} color={colors.charcoal.standard} />}
-          rightSelector={<Icon name="chevron-right" size={20} color={colors.charcoal.standard} />}
-        />
+        <View style={styles.calendarStripContainer}>
+          <CalendarStrip
+            ref={this.calendarStrip}
+            maxDayComponentSize={50}
+            onDateSelected={(date) => this.handleDateSelected(date)}
+            daySelectionAnimation={{
+              type: 'background',
+              duration: 400,
+              highlightColor: colors.green.standard,
+            }}
+            style={{
+              height: 90,
+              paddingTop: 10,
+              paddingBottom: 20,
+            }}
+            calendarHeaderStyle={{
+              fontFamily: fonts.bold,
+              color: colors.white,
+              marginTop: 0,
+              marginBottom: 15,
+            }}
+            calendarColor={colors.green.dark}
+            dateNumberStyle={{
+              fontFamily: fonts.bold,
+              color: colors.white,
+            }}
+            dateNameStyle={{
+              fontFamily: fonts.bold,
+              color: colors.white,
+            }}
+            highlightDateNumberStyle={{
+              fontFamily: fonts.bold,
+              color: colors.charcoal.dark,
+            }}
+            highlightDateNameStyle={{
+              fontFamily: fonts.bold,
+              color: colors.charcoal.dark,
+            }}
+            weekendDateNameStyle={{
+              fontFamily: fonts.bold,
+              color: colors.grey.standard,
+            }}
+            weekendDateNumberStyle={{
+              fontFamily: fonts.bold,
+              color: colors.grey.standard,
+            }}
+            iconContainer={{
+              flex: 0.15,
+            }}
+            leftSelector={<Icon name="chevron-left" size={20} color={colors.charcoal.standard} />}
+            rightSelector={<Icon name="chevron-right" size={20} color={colors.charcoal.standard} />}
+          />
+        </View>
         {dayDisplay}
         {loading && loadingView}
       </View>
@@ -427,49 +462,70 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.offWhite,
   },
+  calendarStripContainer: {
+    shadowColor: colors.grey.dark,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 2,
+  },
   dayDisplayContainer: {
     alignItems: 'center',
   },
   headerText: {
     fontFamily: fonts.standard,
-    color: colors.charcoal.light,
+    fontSize: 14,
+    color: colors.charcoal.dark,
     marginTop: 10,
     marginBottom: 8,
   },
   listContainer: {
     width,
     marginTop: 0,
+    borderTopColor: colors.grey.standard,
   },
   listItem: {
     width,
     height: 65,
     justifyContent: 'center',
+    borderBottomColor: colors.grey.standard,
   },
   blankListItemTitle: {
     fontFamily: fonts.bold,
-    color: colors.grey.standard,
+    fontSize: 14,
+    color: colors.grey.medium,
     marginBottom: 5,
   },
   blankListItemSubtitle: {
     fontFamily: fonts.standard,
-    color: colors.grey.standard,
+    fontSize: 12,
+    color: colors.grey.medium,
   },
   workoutListItemTitle: {
     fontFamily: fonts.bold,
+    fontSize: 14,
     color: colors.coral.standard,
     marginBottom: 5,
   },
-  workoutListItemSubtitle: {
+  workoutSubtitleContainer: {
+    flexDirection: 'row',
+    marginLeft: 8,
+  },
+  workoutSubtitleText: {
     fontFamily: fonts.standard,
-    color: colors.coral.standard,
+    color: colors.charcoal.standard,
+    marginTop: 4,
+    marginLeft: 5,
+    marginRight: 15,
   },
   recipeListItemTitle: {
     fontFamily: fonts.bold,
+    fontSize: 14,
     color: colors.violet.standard,
     marginBottom: 5,
   },
   recipeListItemSubtitle: {
     fontFamily: fonts.standard,
+    fontSize: 12,
     color: colors.charcoal.standard,
   },
   deleteButtonContainer: {
