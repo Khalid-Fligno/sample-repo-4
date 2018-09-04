@@ -61,7 +61,7 @@ const TabStack = createBottomTabNavigator(
         } else if (routeName === 'Progress') {
           icon = (
             <Icon
-              name={focused ? 'profile-solid' : 'profile-outline'}
+              name={focused ? 'progress-solid' : 'progress-outline'}
               size={24}
               color={focused ? activeState : inactiveState}
             />
