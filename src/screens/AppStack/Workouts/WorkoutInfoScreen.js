@@ -69,7 +69,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       'Added to calendar!',
       `${workout.name}\n${formattedDate}`,
       [
-        { text: 'Ok', onPress: () => this.toggleModal(), style: 'cancel' },
+        { text: 'Ok', onPress: () => this.setState({ modalVisible: false }), style: 'cancel' },
       ],
       { cancelable: false },
     );
@@ -150,6 +150,30 @@ export default class WorkoutInfoScreen extends React.PureComponent {
         );
       });
     }
+    const findLocationIcon = () => {
+      let location;
+      if (workout.home) {
+        location = 'home';
+      } else if (workout.gym) {
+        location = 'gym';
+      } else if (workout.park) {
+        location = 'park';
+      }
+      return `workouts-${location}`;
+    };
+    const findFocusIcon = () => {
+      let focus;
+      if (workout.fullBody) {
+        focus = 'full';
+      } else if (workout.upperBody) {
+        focus = 'upper';
+      } else if (workout.lowerBody) {
+        focus = 'lower';
+      } else if (workout.core) {
+        focus = 'core';
+      }
+      return `workouts-${focus}`;
+    };
     return (
       <View style={styles.container}>
         <ScrollView
@@ -171,22 +195,12 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                 onDateChange={this.setDate}
                 minimumDate={new Date()}
               />
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: 10,
-                }}
-              >
+              <View style={styles.addToCalendarModalButtonContainer}>
                 <Button
                   title="Add to calendar"
                   onPress={() => this.addWorkoutToCalendar(chosenDate)}
                   loading={addingToCalendar}
-                  buttonStyle={{
-                    width: width - 60,
-                    backgroundColor: colors.coral.standard,
-                    borderRadius: 4,
-                  }}
+                  buttonStyle={styles.addToCalendarModalButton}
                 />
               </View>
             </View>
@@ -213,7 +227,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             <View style={styles.workoutIconsRow}>
               <View style={styles.workoutIconContainer}>
                 <Icon
-                  name="timer"
+                  name="workouts-time"
                   size={40}
                   color={colors.charcoal.standard}
                 />
@@ -223,7 +237,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               </View>
               <View style={styles.workoutIconContainer}>
                 <Icon
-                  name="timer"
+                  name="workouts-reps"
                   size={40}
                   color={colors.charcoal.standard}
                 />
@@ -233,7 +247,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               </View>
               <View style={styles.workoutIconContainer}>
                 <Icon
-                  name="timer"
+                  name={workout && findLocationIcon()}
                   size={40}
                   color={colors.charcoal.standard}
                 />
@@ -243,7 +257,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               </View>
               <View style={styles.workoutIconContainer}>
                 <Icon
-                  name="timer"
+                  name={workout && findFocusIcon()}
                   size={40}
                   color={colors.charcoal.standard}
                 />
@@ -278,6 +292,16 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: colors.white,
     borderRadius: 8,
+  },
+  addToCalendarModalButtonContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 10,
+  },
+  addToCalendarModalButton: {
+    width: width - 60,
+    backgroundColor: colors.coral.standard,
+    borderRadius: 4,
   },
   workoutInfoContainer: {
     backgroundColor: colors.white,
