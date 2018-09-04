@@ -1,5 +1,6 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, Dimensions } from 'react-native';
+import { ButtonGroup } from 'react-native-elements';
 import { FileSystem } from 'expo';
 import { db } from '../../../../config/firebase';
 import RecipeTile from '../../../components/RecipeTile';
@@ -7,12 +8,15 @@ import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
+const { width } = Dimensions.get('window');
+
 export default class RecipeSelectionScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       recipes: [],
       loading: false,
+      filterIndex: 0,
     };
   }
   componentDidMount = async () => {
@@ -40,9 +44,12 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         this.setState({ recipes, loading: false });
       });
   }
+  updateFilter = (filterIndex) => {
+    this.setState({ filterIndex });
+  }
   render() {
-    // const meal = this.props.navigation.getParam('meal', null);
-    const { recipes, loading } = this.state;
+    const { recipes, loading, filterIndex } = this.state;
+    const filterButtons = ['All', 'Vegetarian', 'Vegan', 'Gluten-Free'];
     if (loading) {
       return (
         <Loader
@@ -51,21 +58,45 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         />
       );
     }
-    const recipeList = recipes.map((recipe) => (
-      <RecipeTile
-        key={recipe.id}
-        image={`${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`}
-        title={recipe.title}
-        tags={recipe.tags}
-        subTitle={recipe.subtitle}
-        onPress={() => this.props.navigation.push('Recipe', { recipe })}
-      />
-    ));
+    const recipeList = recipes
+      .filter((recipe) => {
+        if (filterIndex === 1) {
+          return recipe.tags.includes('V');
+        } else if (filterIndex === 2) {
+          return recipe.tags.includes('V+');
+        } if (filterIndex === 3) {
+          return recipe.tags.includes('GF');
+        }
+        return recipes;
+      })
+      .map((recipe) => (
+        <RecipeTile
+          key={recipe.id}
+          image={`${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`}
+          title={recipe.title}
+          tags={recipe.tags}
+          subTitle={recipe.subtitle}
+          onPress={() => this.props.navigation.push('Recipe', { recipe })}
+        />
+      ));
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollView}>
           {recipeList}
         </ScrollView>
+        <View style={styles.absoluteFilterButtonsContainer}>
+          <ButtonGroup
+            onPress={this.updateFilter}
+            selectedIndex={filterIndex}
+            buttons={filterButtons}
+            containerStyle={styles.filterButtonsContainer}
+            buttonStyle={styles.filterButton}
+            textStyle={styles.filterButtonText}
+            selectedButtonStyle={styles.filterButtonSelected}
+            selectedTextStyle={styles.filterButtonTextSelected}
+            innerBorderStyle={styles.filterButtonInnerBorder}
+          />
+        </View>
       </View>
     );
   }
@@ -83,6 +114,40 @@ const styles = StyleSheet.create({
     color: colors.violet.dark,
   },
   scrollView: {
+    paddingTop: 35,
     paddingBottom: 15,
+  },
+  absoluteFilterButtonsContainer: {
+    position: 'absolute',
+    top: 5,
+    left: 10,
+    width: width - 20,
+  },
+  filterButtonsContainer: {
+    height: 30,
+    borderColor: colors.violet.standard,
+  },
+  filterButton: {
+    backgroundColor: colors.white,
+    borderColor: colors.violet.standard,
+  },
+  filterButtonText: {
+    fontFamily: fonts.standard,
+    fontSize: 11,
+    color: colors.violet.standard,
+    marginTop: 2,
+  },
+  filterButtonSelected: {
+    backgroundColor: colors.violet.standard,
+    borderColor: colors.violet.standard,
+  },
+  filterButtonTextSelected: {
+    fontFamily: fonts.standard,
+    fontSize: 11,
+    color: colors.white,
+    marginTop: 2,
+  },
+  filterButtonInnerBorder: {
+    color: colors.violet.standard,
   },
 });
