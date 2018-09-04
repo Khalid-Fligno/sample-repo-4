@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Dimensions } from 'react-native';
-// import { LinearGradient } from 'expo';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -15,52 +14,6 @@ export default class NutritionHomeScreen extends React.PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        {/* <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
-          style={{
-            flex: 1,
-            width: width - 30,
-            marginTop: 7.5,
-            marginBottom: 7.5,
-            borderRadius: 4,
-            shadowColor: colors.black,
-            shadowOpacity: 0.8,
-            shadowOffset: { width: 0, height: 2 },
-            shadowRadius: 5,
-          }}
-        >
-          <ImageBackground
-            source={require('../../../../assets/images/recipes/baked-eggs.png')}
-            style={{
-              height: null,
-              width: null,
-              flexGrow: 1,
-              borderRadius: 4,
-              overflow: 'hidden',
-            }}
-          >
-            <LinearGradient
-              colors={['rgba(0,0,0,0.8)', 'transparent']}
-              start={[0.4, 1]}
-              end={[1, 0]}
-              style={{
-                flex: 1,
-                justifyContent: 'flex-end',
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: fonts.boldItalic,
-                  fontSize: 34,
-                  color: colors.white,
-                  marginLeft: 12,
-                }}
-              >
-                Breakfast
-              </Text>
-            </LinearGradient>
-          </ImageBackground>
-        </TouchableOpacity> */}
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
           style={styles.mealButton}
