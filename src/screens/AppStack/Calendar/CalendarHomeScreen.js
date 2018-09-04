@@ -541,5 +541,6 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     fontFamily: fonts.bold,
     color: colors.white,
+    marginTop: 4,
   },
 });
