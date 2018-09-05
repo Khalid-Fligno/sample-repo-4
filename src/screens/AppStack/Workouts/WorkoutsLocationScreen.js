@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import Tile from '../../../components/Tile';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
@@ -19,7 +18,7 @@ export default class WorkoutsLocationScreen extends React.PureComponent {
       <View style={styles.container}>
         <Tile
           title1="GYM"
-          image={require('../../../../assets/images/workouts-full.jpg')}
+          image={require('../../../../assets/images/workouts-gym.jpg')}
           onPress={() => navigate('WorkoutsSelection', {
             workoutType,
             workoutLocation: 'gym',
@@ -27,7 +26,7 @@ export default class WorkoutsLocationScreen extends React.PureComponent {
         />
         <Tile
           title1="HOME"
-          image={require('../../../../assets/images/workouts-upper.jpg')}
+          image={require('../../../../assets/images/workouts-home.jpg')}
           onPress={() => navigate('WorkoutsSelection', {
             workoutType,
             workoutLocation: 'home',
@@ -35,13 +34,12 @@ export default class WorkoutsLocationScreen extends React.PureComponent {
         />
         <Tile
           title1="PARK"
-          image={require('../../../../assets/images/workouts-lower.jpg')}
+          image={require('../../../../assets/images/workouts-park.jpg')}
           onPress={() => navigate('WorkoutsSelection', {
             workoutType,
             workoutLocation: 'park',
           })}
         />
-        <View style={styles.spacer} />
       </View>
     );
   }
@@ -50,38 +48,10 @@ export default class WorkoutsLocationScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width,
     backgroundColor: colors.white,
     alignItems: 'center',
     paddingTop: 5,
     paddingBottom: 5,
-  },
-  buttonContainer: {
-    marginTop: 5,
-    marginBottom: 5,
-  },
-  workoutButton: {
-    opacity: 0.9,
-    flex: 1,
-    justifyContent: 'flex-end',
-    width: width - 30,
-    marginTop: 7.5,
-    marginBottom: 7.5,
-    paddingLeft: 20,
-    paddingBottom: 5,
-    borderRadius: 4,
-    backgroundColor: colors.coral.standard,
-    shadowColor: colors.black,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-  },
-  workoutButtonText: {
-    fontFamily: fonts.boldItalic,
-    fontSize: 34,
-    color: colors.white,
-  },
-  spacer: {
-    flex: 1 / 4,
-    margin: 5,
   },
 });
