@@ -7,14 +7,13 @@ import fonts from '../styles/fonts';
 const { width } = Dimensions.get('window');
 
 const Tile = ({
-  image,
-  title1,
-  title2,
   onPress,
+  title1,
+  image,
 }) => (
   <TouchableOpacity
-    style={styles.cardContainer}
     onPress={onPress}
+    style={styles.cardContainer}
   >
     <ImageBackground
       source={image}
@@ -22,37 +21,26 @@ const Tile = ({
     >
       <View style={styles.titleContainer}>
         <Text style={styles.title}>
-          {title1}
+          {title1.toUpperCase()}
         </Text>
-        {
-          title2 && (
-            <Text style={styles.title}>
-              {title2}
-            </Text>
-          )
-        }
       </View>
     </ImageBackground>
   </TouchableOpacity>
 );
 
 Tile.propTypes = {
-  image: PropTypes.number.isRequired,
-  title1: PropTypes.string.isRequired,
-  title2: PropTypes.string,
   onPress: PropTypes.func.isRequired,
-};
-
-Tile.defaultProps = {
-  title2: null,
+  title1: PropTypes.string.isRequired,
+  image: PropTypes.number.isRequired,
 };
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: width - 20,
-    flex: 1 / 4,
+    flex: 1,
     margin: 5,
-    height: 100,
+    paddingLeft: 10,
+    paddingRight: 10,
+    width,
     shadowColor: colors.grey.dark,
     shadowOpacity: 0.6,
     shadowOffset: { width: 0, height: -2 },
@@ -62,19 +50,25 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'center',
+    paddingLeft: 25,
     overflow: 'hidden',
-    borderRadius: 1,
-    paddingLeft: 15,
+    borderRadius: 2,
+
   },
   titleContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0 )',
-    padding: 10,
-    paddingBottom: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.65 )',
+    paddingTop: 8,
+    paddingRight: 12,
+    paddingBottom: 3,
+    paddingLeft: 12,
+
     borderRadius: 2,
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 26,
+    fontSize: 24,
+    color: colors.black,
+    textAlign: 'center',
   },
 });
 
