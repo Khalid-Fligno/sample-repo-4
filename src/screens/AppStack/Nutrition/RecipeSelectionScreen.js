@@ -94,7 +94,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             textStyle={styles.filterButtonText}
             selectedButtonStyle={styles.filterButtonSelected}
             selectedTextStyle={styles.filterButtonTextSelected}
-            innerBorderStyle={styles.filterButtonInnerBorder}
+            innerBorderStyle={{ color: colors.violet.standard }}
           />
         </View>
       </View>
@@ -122,6 +122,10 @@ const styles = StyleSheet.create({
     top: 5,
     left: 10,
     width: width - 20,
+    shadowColor: colors.grey.dark,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 2,
   },
   filterButtonsContainer: {
     height: 30,
@@ -146,8 +150,5 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: colors.white,
     marginTop: 2,
-  },
-  filterButtonInnerBorder: {
-    color: colors.violet.standard,
   },
 });
