@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Linking,
-  ScrollView,
   Text,
   TouchableOpacity,
   ImageBackground,
@@ -24,50 +23,48 @@ export default class HomeScreen extends React.PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          <View style={styles.doubleTileContainer}>
-            <TouchableOpacity
-              onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/7/3/the-18-min-workout-that-will-transform-your-life')}
-              style={styles.cardContainer}
+        <View style={styles.doubleTileContainer}>
+          <TouchableOpacity
+            onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/7/3/the-18-min-workout-that-will-transform-your-life')}
+            style={styles.cardContainer}
+          >
+            <ImageBackground
+              source={require('../../../../assets/images/fitazfk-blog.jpg')}
+              style={styles.image}
             >
-              <ImageBackground
-                source={require('../../../../assets/images/fitazfk-blog.jpg')}
-                style={styles.image}
-              >
-                <View style={styles.titleContainer}>
-                  <Text style={styles.title}>
-                    CHECK OUT SOME TACOS
-                  </Text>
-                </View>
-              </ImageBackground>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/7/3/the-18-min-workout-that-will-transform-your-life')}
-              style={styles.cardContainer}
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>
+                  CHECK OUT SOME TACOS
+                </Text>
+              </View>
+            </ImageBackground>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/7/3/the-18-min-workout-that-will-transform-your-life')}
+            style={styles.cardContainer}
+          >
+            <ImageBackground
+              source={require('../../../../assets/images/fitazfk-blog.jpg')}
+              style={styles.image}
             >
-              <ImageBackground
-                source={require('../../../../assets/images/fitazfk-blog.jpg')}
-                style={styles.image}
-              >
-                <View style={styles.titleContainer}>
-                  <Text style={styles.title}>
-                    CHECK OUT SOME TACOS
-                  </Text>
-                </View>
-              </ImageBackground>
-            </TouchableOpacity>
-          </View>
-          <NewsFeedTile
-            image={require('../../../../assets/images/fitazfk-army.jpg')}
-            title="Join our facebook group"
-            onPress={() => Linking.openURL('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
-          />
-          <NewsFeedTile
-            image={require('../../../../assets/images/shop-bundles.jpg')}
-            title="Shop Bundles Online"
-            onPress={() => Linking.openURL('https://fitazfk.com/collections/equipment')}
-          />
-        </ScrollView>
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>
+                  CHECK OUT SOME TACOS
+                </Text>
+              </View>
+            </ImageBackground>
+          </TouchableOpacity>
+        </View>
+        <NewsFeedTile
+          image={require('../../../../assets/images/fitazfk-army.jpg')}
+          title="Join our facebook group"
+          onPress={() => Linking.openURL('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
+        />
+        <NewsFeedTile
+          image={require('../../../../assets/images/shop-bundles.jpg')}
+          title="Shop Bundles Online"
+          onPress={() => Linking.openURL('https://fitazfk.com/collections/equipment')}
+        />
       </View>
     );
   }
@@ -77,9 +74,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.offWhite,
-  },
-  scrollView: {
-    flex: 1,
     padding: 5,
   },
   doubleTileContainer: {
