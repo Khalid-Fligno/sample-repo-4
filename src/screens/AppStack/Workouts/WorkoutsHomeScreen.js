@@ -14,20 +14,17 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
     return (
       <View style={styles.container}>
         <Tile
-          title1="FULL"
-          title2="BODY"
+          title1="FULL BODY"
           image={require('../../../../assets/images/workouts-full.jpg')}
           onPress={() => navigate('WorkoutsLocation', { workoutType: 'fullBody' })}
         />
         <Tile
-          title1="UPPER"
-          title2="BODY"
+          title1="UPPER BODY"
           image={require('../../../../assets/images/workouts-upper.jpg')}
           onPress={() => navigate('WorkoutsLocation', { workoutType: 'upperBody' })}
         />
         <Tile
-          title1="LOWER"
-          title2="BODY"
+          title1="LOWER BODY"
           image={require('../../../../assets/images/workouts-lower.jpg')}
           onPress={() => navigate('WorkoutsLocation', { workoutType: 'lowerBody' })}
         />
