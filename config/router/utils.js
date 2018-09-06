@@ -2,7 +2,7 @@ import { Animated, Easing } from 'react-native';
 import colors from '../../src/styles/colors';
 
 export const fadeSpec = {
-  duration: 800,
+  duration: 1200,
   easing: Easing.out(Easing.poly(4)),
   timing: Animated.timing,
 };
