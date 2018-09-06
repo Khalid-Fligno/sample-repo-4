@@ -51,6 +51,7 @@ export default class SignupScreen extends React.PureComponent {
           email: profile.email,
           firstName: profile.first_name,
           lastName: profile.last_name,
+          signUpDate: new Date(),
         };
         await db.collection('users').doc(user.uid).set(data);
         await AsyncStorage.setItem('uid', user.uid);
@@ -77,6 +78,7 @@ export default class SignupScreen extends React.PureComponent {
         firstName,
         lastName,
         email,
+        signUpDate: new Date(),
       };
       await db.collection('users').doc(uid).set(data);
       await AsyncStorage.setItem('uid', uid);
