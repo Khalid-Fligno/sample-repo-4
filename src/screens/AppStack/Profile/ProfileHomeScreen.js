@@ -104,6 +104,17 @@ export default class ProfileHomeScreen extends React.PureComponent {
               }}
               onPress={() => this.props.navigation.navigate('Profile')}
             />
+            <ListItem
+              activeOpacity={0.5}
+              key="Settings"
+              title="Settings"
+              containerStyle={styles.listItemContainer}
+              titleStyle={{
+                fontFamily: fonts.bold,
+                color: colors.charcoal.standard,
+              }}
+              onPress={() => this.props.navigation.navigate('Settings')}
+            />
           </List>
           <List containerStyle={styles.listContainer}>
             {
@@ -156,5 +167,6 @@ const styles = StyleSheet.create({
   listItemTitle: {
     fontFamily: fonts.bold,
     color: colors.charcoal.standard,
+    marginTop: 5,
   },
 });
