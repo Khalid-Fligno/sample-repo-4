@@ -7,6 +7,7 @@ import PrivacyPolicyScreen from '../../src/screens/AppStack/Profile/PrivacyPolic
 import TermsOfServiceScreen from '../../src/screens/AppStack/Profile/TermsOfServiceScreen';
 import BillingTermsScreen from '../../src/screens/AppStack/Profile/BillingTermsScreen';
 import EditProfileScreen from '../../src/screens/AppStack/Profile/EditProfileScreen';
+import SettingsScreen from '../../src/screens/AppStack/Profile/SettingsScreen';
 import Header from '../../src/components/Header';
 
 const ProfileStack = createStackNavigator(
@@ -18,6 +19,7 @@ const ProfileStack = createStackNavigator(
     TermsOfService: TermsOfServiceScreen,
     BillingTerms: BillingTermsScreen,
     EditProfile: EditProfileScreen,
+    Settings: SettingsScreen,
   },
   {
     initialRouteName: 'ProfileHome',
