@@ -8,6 +8,7 @@ import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
+
 const diff = (a, b) => {
   if ((b - a) > 0) {
     return `+${(b - a)}`;
@@ -95,118 +96,127 @@ export default class ProgressHomeScreen extends React.PureComponent {
               )
             }
           </View>
-          <View
-            style={{
-              width,
-              flexDirection: 'row',
-              backgroundColor: colors.white,
-              borderRadius: 4,
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: colors.blue.light,
-                alignItems: 'center',
-              }}
-            >
-              <Text style={styles.fieldText}>
-                Date
-              </Text>
-              <Text style={styles.fieldText}>
-                Weight
-              </Text>
-              <Text style={styles.fieldText}>
-                Hip
-              </Text>
-              <Text style={styles.fieldText}>
-                Waist
-              </Text>
-              <Text style={styles.fieldText}>
-                Burpees
-              </Text>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.fieldText}>
+              DATE
+            </Text>
+            <View style={styles.dataRowContainer}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {initialProgressInfo && moment(initialProgressInfo.date).format('DD/MM/YYYY')}
+                </Text>
+              </View>
+              <View style={styles.dataContainer} />
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {currentProgressInfo && moment(currentProgressInfo.date).format('DD/MM/YYYY')}
+                </Text>
+              </View>
             </View>
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-              }}
-            >
-              <Text style={styles.dataText}>
-                {initialProgressInfo && moment(initialProgressInfo.date).format('DD/MM/YYYY')}
-              </Text>
-              <Text style={styles.dataText}>
-                {initialProgressInfo && initialProgressInfo.weight}
-              </Text>
-              <Text style={styles.dataText}>
-                {initialProgressInfo && initialProgressInfo.hip}
-              </Text>
-              <Text style={styles.dataText}>
-                {initialProgressInfo && initialProgressInfo.waist}
-              </Text>
-              <Text style={styles.dataText}>
-                {initialProgressInfo && initialProgressInfo.burpeeCount}
-              </Text>
+          </View>
+
+          <View style={styles.sectionContainer}>
+            <Text style={styles.fieldText}>
+              WEIGHT
+            </Text>
+            <View style={styles.dataRowContainer}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {initialProgressInfo && initialProgressInfo.weight}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={[
+                    styles.dataTextNegative,
+                    weightDifference >= 0 && styles.dataTextPositive,
+                  ]}
+                >
+                  {weightDifference}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {currentProgressInfo && currentProgressInfo.weight}
+                </Text>
+              </View>
             </View>
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-              }}
-            >
-              <Text style={styles.dataText}>
-                {currentProgressInfo && moment(currentProgressInfo.date).format('DD/MM/YYYY')}
-              </Text>
-              <Text style={styles.dataText}>
-                {currentProgressInfo && currentProgressInfo.weight}
-              </Text>
-              <Text style={styles.dataText}>
-                {currentProgressInfo && currentProgressInfo.hip}
-              </Text>
-              <Text style={styles.dataText}>
-                {currentProgressInfo && currentProgressInfo.waist}
-              </Text>
-              <Text style={styles.dataText}>
-                {currentProgressInfo && currentProgressInfo.burpeeCount}
-              </Text>
+          </View>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.fieldText}>
+              HIP
+            </Text>
+            <View style={styles.dataRowContainer}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {initialProgressInfo && initialProgressInfo.hip}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={[
+                    styles.dataTextNegative,
+                    hipDifference >= 0 && styles.dataTextPositive,
+                  ]}
+                >
+                  {hipDifference}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {currentProgressInfo && currentProgressInfo.hip}
+                </Text>
+              </View>
             </View>
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-              }}
-            >
-              <Text style={styles.dataText}>
-                -
-              </Text>
-              <Text style={[
-                  styles.dataTextNegative,
-                  weightDifference >= 0 && styles.dataTextPositive,
-                ]}
-              >
-                {weightDifference}
-              </Text>
-              <Text style={[
-                  styles.dataTextNegative,
-                  hipDifference >= 0 && styles.dataTextPositive,
-                ]}
-              >
-                {hipDifference}
-              </Text>
-              <Text style={[
-                  styles.dataTextNegative,
-                  waistDifference >= 0 && styles.dataTextPositive,
-                ]}
-              >
-                {waistDifference}
-              </Text>
-              <Text style={[
-                  styles.dataTextNegative,
-                  burpeesDifference >= 0 && styles.dataTextPositive,
-                ]}
-              >
-                {burpeesDifference}
-              </Text>
+          </View>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.fieldText}>
+              WAIST
+            </Text>
+            <View style={styles.dataRowContainer}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {initialProgressInfo && initialProgressInfo.waist}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={[
+                    styles.dataTextNegative,
+                    waistDifference >= 0 && styles.dataTextPositive,
+                  ]}
+                >
+                  {waistDifference}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {currentProgressInfo && currentProgressInfo.waist}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.fieldText}>
+              BURPEES
+            </Text>
+            <View style={styles.dataRowContainer}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {initialProgressInfo && initialProgressInfo.burpeeCount}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={[
+                    styles.dataTextNegative,
+                    burpeesDifference >= 0 && styles.dataTextPositive,
+                  ]}
+                >
+                  {burpeesDifference}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {currentProgressInfo && currentProgressInfo.burpeeCount}
+                </Text>
+              </View>
             </View>
           </View>
           <View
@@ -217,7 +227,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
               paddingRight: 5,
             }}
           >
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => this.props.navigation.navigate('Onboarding2', { isInitial: true })}
               style={{
                 flex: 1,
@@ -229,7 +239,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
               }}
             >
               <Text>Add Initial</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate('Onboarding2', { isInitial: false })}
               style={{
@@ -237,11 +247,11 @@ export default class ProgressHomeScreen extends React.PureComponent {
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: 5,
-                padding: 20,
+                padding: 10,
                 backgroundColor: colors.blue.standard,
               }}
             >
-              <Text>Add Current</Text>
+              <Text>RETEST</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -253,7 +263,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.grey.light,
+    backgroundColor: colors.offWhite,
     alignItems: 'center',
   },
   scrollView: {
@@ -267,32 +277,44 @@ const styles = StyleSheet.create({
     width: width / 2,
     height: (width / 3) * 2,
   },
+  sectionContainer: {
+    alignItems: 'center',
+  },
   fieldText: {
-    marginTop: 10,
-    marginBottom: 10,
-    fontFamily: fonts.bold,
+    marginTop: 5,
+    marginBottom: 5,
+    fontFamily: fonts.standard,
     fontSize: 14,
-    color: colors.charcoal.dark,
+    color: colors.charcoal.standard,
+  },
+  dataRowContainer: {
+    width,
+    flexDirection: 'row',
+    backgroundColor: colors.white,
+  },
+  dataContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
   dataText: {
     marginTop: 10,
     marginBottom: 10,
     fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.charcoal.dark,
+    fontSize: 16,
+    color: colors.black,
   },
   dataTextPositive: {
     marginTop: 10,
     marginBottom: 10,
     fontFamily: fonts.bold,
-    fontSize: 14,
+    fontSize: 16,
     color: colors.green.standard,
   },
   dataTextNegative: {
     marginTop: 10,
     marginBottom: 10,
     fontFamily: fonts.bold,
-    fontSize: 14,
+    fontSize: 16,
     color: colors.coral.standard,
   },
 });
