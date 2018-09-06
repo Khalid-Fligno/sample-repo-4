@@ -43,6 +43,11 @@ export default class Exercise4Screen extends React.PureComponent {
   }
   componentDidMount() {
     this.startTimer();
+    try {
+      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-3.mp4`, { idempotent: true });
+    } catch (err) {
+      console.log(err);
+    }
   }
   startTimer = () => {
     this.setState({
@@ -58,12 +63,12 @@ export default class Exercise4Screen extends React.PureComponent {
     let setCount = this.props.navigation.getParam('setCount', 0);
     setCount += 1;
     if (setCount === 3) {
-      this.props.navigation.navigate('Exercise5', {
+      this.props.navigation.replace('Exercise5', {
         exerciseList,
         reps,
       });
     } else {
-      this.props.navigation.push('Exercise4', {
+      this.props.navigation.replace('Exercise4', {
         exerciseList,
         reps,
         setCount,

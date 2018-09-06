@@ -10,14 +10,19 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     };
   }
   componentWillMount = async () => {
-    const exerciseList = this.props.navigation.getParam('exerciseList', null);
+    // const exerciseList = this.props.navigation.getParam('exerciseList', null);
     try {
-      await Promise.all(exerciseList.map(async (exercise, index) => {
-        await FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`);
-      }));
+      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-6.mp4`, { idempotent: true });
     } catch (err) {
-      console.log(`Filesystem delete error: ${err}`);
+      console.log(err);
     }
+    // try {
+    //   await Promise.all(exerciseList.map(async (exercise, index) => {
+    //     await FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`);
+    //   }));
+    // } catch (err) {
+    //   console.log(`Filesystem delete error: ${err}`);
+    // }
   }
   render() {
     return (
