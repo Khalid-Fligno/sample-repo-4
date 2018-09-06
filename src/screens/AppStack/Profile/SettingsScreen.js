@@ -88,6 +88,7 @@ export default class SettingsScreen extends React.PureComponent {
               containerStyle={styles.listItemContainer}
             />
             {
+              // Only show password change if an email/password account is present
               isPasswordAccount && (
                 <ListItem
                   title="Change Password"
