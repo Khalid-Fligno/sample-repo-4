@@ -31,6 +31,13 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/images/workouts-upper.jpg'),
       require('../../assets/images/workouts-lower.jpg'),
       require('../../assets/images/workouts-full.jpg'),
+      require('../../assets/images/workouts-home.jpg'),
+      require('../../assets/images/workouts-gym.jpg'),
+      require('../../assets/images/workouts-park.jpg'),
+      require('../../assets/images/nutrition-breakfast.jpg'),
+      require('../../assets/images/nutrition-lunch.jpg'),
+      require('../../assets/images/nutrition-dinner.jpg'),
+      require('../../assets/images/nutrition-snack.jpg'),
       require('../../assets/videos/burpees-trimmed.mp4'),
       require('../../assets/videos/burpees-trimmed-square.mp4'),
     ]);
@@ -60,7 +67,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
     await Promise.all([...imageAssets, ...fontAssets]);
   }
   cachingComplete = async () => {
-    this.props.navigation.navigate('Calendar');
+    this.props.navigation.navigate('Auth');
   }
   render() {
     return (
