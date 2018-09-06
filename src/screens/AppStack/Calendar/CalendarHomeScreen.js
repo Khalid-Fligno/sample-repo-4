@@ -112,7 +112,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
         );
       }));
       this.setState({ loading: false });
-      this.props.navigation.push('WorkoutInfo', { workout, reps });
+      this.props.navigation.navigate('WorkoutInfo', { workout, reps });
     } catch (err) {
       console.log(`Filesystem download error: ${err}`);
     }
@@ -246,7 +246,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="WORKOUT"
                 subtitle="Press here to see available workouts"
-                onPress={() => this.props.navigation.push('WorkoutsHome')}
+                onPress={() => this.props.navigation.navigate('WorkoutsHome')}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -272,7 +272,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 <ListItem
                   title={breakfast.title.toUpperCase()}
                   subtitle={breakfast.subtitle}
-                  onPress={() => this.props.navigation.push('Recipe', { recipe: breakfast })}
+                  onPress={() => this.props.navigation.navigate('Recipe', { recipe: breakfast })}
                   containerStyle={styles.listItem}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
@@ -284,7 +284,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="BREAKFAST"
                 subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'breakfast' })}
+                onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -305,7 +305,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 <ListItem
                   title={lunch.title.toUpperCase()}
                   subtitle={lunch.subtitle}
-                  onPress={() => this.props.navigation.push('Recipe', { recipe: lunch })}
+                  onPress={() => this.props.navigation.navigate('Recipe', { recipe: lunch })}
                   containerStyle={styles.listItem}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
@@ -317,7 +317,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="LUNCH"
                 subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'lunch' })}
+                onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'lunch' })}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -338,7 +338,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 <ListItem
                   title={dinner.title.toUpperCase()}
                   subtitle={dinner.subtitle}
-                  onPress={() => this.props.navigation.push('Recipe', { recipe: dinner })}
+                  onPress={() => this.props.navigation.navigate('Recipe', { recipe: dinner })}
                   containerStyle={styles.listItem}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
@@ -350,7 +350,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="DINNER"
                 subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'dinner' })}
+                onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'dinner' })}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -371,7 +371,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 <ListItem
                   title={snack.title.toUpperCase()}
                   subtitle={snack.subtitle}
-                  onPress={() => this.props.navigation.push('Recipe', { recipe: snack })}
+                  onPress={() => this.props.navigation.navigate('Recipe', { recipe: snack })}
                   containerStyle={styles.listItem}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
@@ -383,7 +383,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="SNACK"
                 subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.push('RecipeSelection', { meal: 'snack' })}
+                onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'snack' })}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
