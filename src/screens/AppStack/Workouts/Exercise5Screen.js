@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Dimensions, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
+import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../components/WorkoutTimer';
 import WorkoutProgress from '../../../components/WorkoutProgress';
 import colors from '../../../styles/colors';
@@ -87,7 +88,10 @@ export default class Exercise5Screen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="dark-content" />
-        <View style={styles.flexContainer}>
+        <FadeInView
+          duration={1000}
+          style={styles.flexContainer}
+        >
           <Video
             source={{ uri: `${FileSystem.cacheDirectory}exercise-5.mp4` }}
             rate={1.0}
@@ -117,13 +121,11 @@ export default class Exercise5Screen extends React.PureComponent {
             currentExercise={5}
             currentSet={this.props.navigation.getParam('setCount', 0) + 1}
           />
-          <View style={styles.nextExerciseContainer}>
-            <Text>
-              <Text style={styles.nextExercise}> NEXT EXERCISE: </Text>
-              <Text style={styles.nextExerciseName}>{exerciseList[5].name.toUpperCase()}</Text>
-            </Text>
-          </View>
-        </View>
+          <Text>
+            <Text style={styles.nextExercise}> NEXT EXERCISE: </Text>
+            <Text style={styles.nextExerciseName}>{exerciseList[5].name.toUpperCase()}</Text>
+          </Text>
+        </FadeInView>
       </SafeAreaView>
     );
   }
@@ -143,7 +145,9 @@ const styles = StyleSheet.create({
     width,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 10,
+    paddingTop: 5,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   currentExerciseNameText: {
     fontFamily: fonts.bold,
@@ -153,10 +157,6 @@ const styles = StyleSheet.create({
   currentExerciseRepsText: {
     fontFamily: fonts.bold,
     fontSize: 20,
-  },
-  nextExerciseContainer: {
-    marginTop: 10,
-    marginBottom: 10,
   },
   nextExercise: {
     fontFamily: fonts.standard,
