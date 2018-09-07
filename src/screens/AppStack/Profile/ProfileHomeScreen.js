@@ -95,8 +95,8 @@ export default class ProfileHomeScreen extends React.PureComponent {
           <List containerStyle={styles.listContainer}>
             <ListItem
               activeOpacity={0.5}
-              key="My Profile"
-              title="My Profile"
+              key="Profile"
+              title="Profile"
               containerStyle={styles.listItemContainer}
               titleStyle={{
                 fontFamily: fonts.bold,
