@@ -2,7 +2,8 @@ import React from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import { FileSystem } from 'expo';
 import Carousel from 'react-native-snap-carousel';
-import Image from 'react-native-scalable-image';
+// import Image from 'react-native-scalable-image';
+import Image from 'react-native-image-progress';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
 import colors from '../../../styles/colors';
@@ -15,14 +16,15 @@ export default class RecipeStepsScreen extends React.PureComponent {
     super(props);
     this.state = {
       steps: [],
+      stepsImages: [],
       loading: true,
     };
   }
   componentDidMount = async () => {
     this.setState({ loading: true });
     const { stepsImages, steps } = await this.props.navigation.getParam('recipe', null);
-    this.setState({ steps });
-    await this.fetchImages(stepsImages);
+    this.setState({ steps, stepsImages });
+    // await this.fetchImages(stepsImages);
     this.setState({ loading: false });
   }
   fetchImages = async (stepsImages) => {
@@ -100,8 +102,13 @@ export default class RecipeStepsScreen extends React.PureComponent {
         <View style={styles.carouselContentContainer}>
           <ScrollView>
             <Image
-              source={{ uri: `${FileSystem.cacheDirectory}step-${index + 1}.jpg` }}
-              width={width - 52}
+              // source={{ uri: `${FileSystem.cacheDirectory}step-${index + 1}.jpg` }}
+              source={{ uri: this.state.stepsImages[index] }}
+              // width={width - 52}
+              style={{
+                width: width - 52,
+                height: width - 52,
+              }}
             />
             <View style={styles.carouselBottomContainer}>
               <View style={styles.carouselTextContainer}>
