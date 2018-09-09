@@ -10,6 +10,12 @@ import EditProfileScreen from '../../src/screens/AppStack/Profile/EditProfileScr
 import SettingsScreen from '../../src/screens/AppStack/Profile/SettingsScreen';
 import Header from '../../src/components/Header';
 
+const findProfileHeaderTitle = {
+  ProfileHome: 'ACCOUNT',
+  Profile: 'PROFILE',
+  Settings: 'SETTINGS',
+};
+
 const ProfileStack = createStackNavigator(
   {
     ProfileHome: ProfileHomeScreen,
@@ -31,7 +37,7 @@ const ProfileStack = createStackNavigator(
             navigation={navigation}
             stack="profile"
             withBackButton
-            headerTitleParams={routeName === 'Profile' ? 'PROFILE' : null}
+            headerTitleParams={findProfileHeaderTitle[routeName]}
           />
         );
       },
