@@ -112,7 +112,6 @@ const Header = ({
               name="profile-solid"
               size={30}
               color={colors.white}
-              style={styles.profileIcon}
             />
           </TouchableOpacity>
         )
@@ -201,7 +200,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue.standard,
   },
   headerContentContainer: {
-    width: 130,
+    width: 120,
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
@@ -209,7 +208,7 @@ const styles = StyleSheet.create({
   headerContentContainerLeft: {
     width: 100,
     height: 50,
-    paddingLeft: 15,
+    paddingLeft: 10,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -217,7 +216,7 @@ const styles = StyleSheet.create({
   headerContentContainerRight: {
     width: 100,
     height: 50,
-    paddingRight: 15,
+    paddingRight: 10,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -231,16 +230,6 @@ const styles = StyleSheet.create({
   fitazfkIcon: {
     width: 30,
     height: 30,
-    shadowColor: colors.charcoal.light,
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.7,
-    shadowRadius: 1,
-  },
-  profileIcon: {
-    shadowColor: colors.charcoal.light,
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.7,
-    shadowRadius: 1,
   },
 });
 
