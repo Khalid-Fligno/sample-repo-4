@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import Image from 'react-native-image-progress';
+import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import colors from '../../../styles/colors';
@@ -68,6 +69,12 @@ export default class ProgressHomeScreen extends React.PureComponent {
                 <Image
                   source={{ uri: initialProgressInfo.photoURL }}
                   style={styles.image}
+                  indicator={DotIndicator}
+                  indicatorProps={{
+                    color: colors.blue.standard,
+                    count: 3,
+                    size: 6,
+                  }}
                 />
               ) : (
                 <View style={styles.imagePlaceholder} />
@@ -78,132 +85,140 @@ export default class ProgressHomeScreen extends React.PureComponent {
                 <Image
                   source={{ uri: currentProgressInfo.photoURL }}
                   style={styles.image}
+                  indicator={DotIndicator}
+                  indicatorProps={{
+                    color: colors.blue.standard,
+                    count: 3,
+                    size: 6,
+                  }}
                 />
               ) : (
                 <View style={styles.imagePlaceholder} />
               )
             }
           </View>
-          <View style={styles.dateRowContainer}>
-            <View style={styles.dateContainer}>
-              <Text style={styles.dateText}>
-                {initialProgressInfo && moment(initialProgressInfo.date).format('DD/MM/YYYY')}
-              </Text>
+          <View style={styles.contentContainer}>
+            <View style={styles.dateRowContainer}>
+              <View style={styles.dateContainer}>
+                <Text style={styles.dateText}>
+                  {initialProgressInfo && moment(initialProgressInfo.date).format('DD/MM/YYYY')}
+                </Text>
+              </View>
+              <View style={styles.dateContainer}>
+                <Text style={styles.dateText}>
+                  {currentProgressInfo && moment(currentProgressInfo.date).format('DD/MM/YYYY')}
+                </Text>
+              </View>
             </View>
-            <View style={styles.dateContainer}>
-              <Text style={styles.dateText}>
-                {currentProgressInfo && moment(currentProgressInfo.date).format('DD/MM/YYYY')}
-              </Text>
+            <View style={styles.dataRowContainer}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {initialProgressInfo && initialProgressInfo.weight}
+                </Text>
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldText}>
+                  WEIGHT
+                </Text>
+                <Text
+                  style={[
+                    styles.dataTextNegative,
+                    weightDifference >= 0 && styles.dataTextPositive,
+                  ]}
+                >
+                  {weightDifference}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {currentProgressInfo && currentProgressInfo.weight}
+                </Text>
+              </View>
             </View>
+            <View style={styles.dataRowContainer}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {initialProgressInfo && initialProgressInfo.waist}
+                </Text>
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldText}>
+                  WAIST
+                </Text>
+                <Text
+                  style={[
+                    styles.dataTextNegative,
+                    waistDifference >= 0 && styles.dataTextPositive,
+                  ]}
+                >
+                  {waistDifference}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {currentProgressInfo && currentProgressInfo.waist}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.dataRowContainer}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {initialProgressInfo && initialProgressInfo.hip}
+                </Text>
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldText}>
+                  HIP
+                </Text>
+                <Text
+                  style={[
+                    styles.dataTextNegative,
+                    hipDifference >= 0 && styles.dataTextPositive,
+                  ]}
+                >
+                  {hipDifference}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {currentProgressInfo && currentProgressInfo.hip}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.dataRowContainer}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {initialProgressInfo && initialProgressInfo.burpeeCount}
+                </Text>
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldText}>
+                  BURPEES
+                </Text>
+                <Text
+                  style={[
+                    styles.dataTextNegative,
+                    burpeesDifference >= 0 && styles.dataTextPositive,
+                  ]}
+                >
+                  {burpeesDifference}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dataText}>
+                  {currentProgressInfo && currentProgressInfo.burpeeCount}
+                </Text>
+              </View>
+            </View>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Onboarding2', { isInitial: false })}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>
+                RETEST YOUR PROGRESS
+              </Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.dataRowContainer}>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dataText}>
-                {initialProgressInfo && initialProgressInfo.weight}
-              </Text>
-            </View>
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldText}>
-                WEIGHT
-              </Text>
-              <Text
-                style={[
-                  styles.dataTextNegative,
-                  weightDifference >= 0 && styles.dataTextPositive,
-                ]}
-              >
-                {weightDifference}
-              </Text>
-            </View>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dataText}>
-                {currentProgressInfo && currentProgressInfo.weight}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.dataRowContainer}>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dataText}>
-                {initialProgressInfo && initialProgressInfo.waist}
-              </Text>
-            </View>
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldText}>
-                WAIST
-              </Text>
-              <Text
-                style={[
-                  styles.dataTextNegative,
-                  waistDifference >= 0 && styles.dataTextPositive,
-                ]}
-              >
-                {waistDifference}
-              </Text>
-            </View>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dataText}>
-                {currentProgressInfo && currentProgressInfo.waist}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.dataRowContainer}>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dataText}>
-                {initialProgressInfo && initialProgressInfo.hip}
-              </Text>
-            </View>
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldText}>
-                HIP
-              </Text>
-              <Text
-                style={[
-                  styles.dataTextNegative,
-                  hipDifference >= 0 && styles.dataTextPositive,
-                ]}
-              >
-                {hipDifference}
-              </Text>
-            </View>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dataText}>
-                {currentProgressInfo && currentProgressInfo.hip}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.dataRowContainer}>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dataText}>
-                {initialProgressInfo && initialProgressInfo.burpeeCount}
-              </Text>
-            </View>
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldText}>
-                BURPEES
-              </Text>
-              <Text
-                style={[
-                  styles.dataTextNegative,
-                  burpeesDifference >= 0 && styles.dataTextPositive,
-                ]}
-              >
-                {burpeesDifference}
-              </Text>
-            </View>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dataText}>
-                {currentProgressInfo && currentProgressInfo.burpeeCount}
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Onboarding2', { isInitial: false })}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>
-              RETEST YOUR PROGRESS
-            </Text>
-          </TouchableOpacity>
         </ScrollView>
       </View>
     );
@@ -231,6 +246,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grey.standard,
     width: width / 2,
     height: (width / 3) * 2,
+  },
+  contentContainer: {
+    backgroundColor: colors.white,
+    paddingBottom: 10,
+    alignItems: 'center',
   },
   dateRowContainer: {
     width,
