@@ -4,6 +4,7 @@ import { FileSystem } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 // import Image from 'react-native-scalable-image';
 import Image from 'react-native-image-progress';
+import{ DotIndicator } from 'react-native-indicators';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
 import colors from '../../../styles/colors';
@@ -105,6 +106,12 @@ export default class RecipeStepsScreen extends React.PureComponent {
               // source={{ uri: `${FileSystem.cacheDirectory}step-${index + 1}.jpg` }}
               source={{ uri: this.state.stepsImages[index] }}
               // width={width - 52}
+              indicator={DotIndicator}
+              indicatorProps={{
+                color: colors.violet.standard,
+                count: 3,
+                size: 8,
+              }}
               style={{
                 width: width - 52,
                 height: width - 52,
