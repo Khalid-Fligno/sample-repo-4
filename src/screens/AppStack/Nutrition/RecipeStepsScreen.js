@@ -4,7 +4,7 @@ import { FileSystem } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 // import Image from 'react-native-scalable-image';
 import Image from 'react-native-image-progress';
-import{ DotIndicator } from 'react-native-indicators';
+import { DotIndicator } from 'react-native-indicators';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
 import colors from '../../../styles/colors';
