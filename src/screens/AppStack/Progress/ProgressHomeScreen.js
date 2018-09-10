@@ -63,41 +63,41 @@ export default class ProgressHomeScreen extends React.PureComponent {
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollView}>
-          <View style={styles.imagesContainer}>
-            {
-              initialProgressInfo ? (
-                <Image
-                  source={{ uri: initialProgressInfo.photoURL }}
-                  style={styles.image}
-                  indicator={DotIndicator}
-                  indicatorProps={{
-                    color: colors.blue.standard,
-                    count: 3,
-                    size: 6,
-                  }}
-                />
-              ) : (
-                <View style={styles.imagePlaceholder} />
-              )
-            }
-            {
-              currentProgressInfo ? (
-                <Image
-                  source={{ uri: currentProgressInfo.photoURL }}
-                  style={styles.image}
-                  indicator={DotIndicator}
-                  indicatorProps={{
-                    color: colors.blue.standard,
-                    count: 3,
-                    size: 6,
-                  }}
-                />
-              ) : (
-                <View style={styles.imagePlaceholder} />
-              )
-            }
-          </View>
           <View style={styles.contentContainer}>
+            <View style={styles.imagesContainer}>
+              {
+                initialProgressInfo ? (
+                  <Image
+                    source={{ uri: initialProgressInfo.photoURL }}
+                    style={styles.image}
+                    indicator={DotIndicator}
+                    indicatorProps={{
+                      color: colors.blue.standard,
+                      count: 3,
+                      size: 6,
+                    }}
+                  />
+                ) : (
+                  <View style={styles.imagePlaceholder} />
+                )
+              }
+              {
+                currentProgressInfo ? (
+                  <Image
+                    source={{ uri: currentProgressInfo.photoURL }}
+                    style={styles.image}
+                    indicator={DotIndicator}
+                    indicatorProps={{
+                      color: colors.blue.standard,
+                      count: 3,
+                      size: 6,
+                    }}
+                  />
+                ) : (
+                  <View style={styles.imagePlaceholder} />
+                )
+              }
+            </View>
             <View style={styles.dateRowContainer}>
               <View style={styles.dateContainer}>
                 <Text style={styles.dateText}>
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     height: (width / 3) * 2,
   },
   contentContainer: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
     paddingBottom: 10,
     alignItems: 'center',
   },
@@ -273,8 +273,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
     flexDirection: 'row',
-    backgroundColor: colors.grey.light,
-    borderRadius: 4,
+    backgroundColor: colors.white,
+    borderRadius: 2,
+    shadowColor: colors.grey.standard,
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
   fieldContainer: {
     flex: 1,
@@ -289,7 +293,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   dataContainer: {
-    flex: 1.5,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -317,12 +321,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 5,
     backgroundColor: colors.charcoal.dark,
-    borderRadius: 4,
+    borderRadius: 2,
+    shadowColor: colors.charcoal.standard,
+    shadowOpacity: 0.6,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 1.5,
   },
   buttonText: {
     color: colors.white,
     fontFamily: fonts.standard,
-    fontSize: 16,
+    fontSize: 14,
     marginTop: 3,
   },
 });
