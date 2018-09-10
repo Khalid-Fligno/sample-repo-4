@@ -13,7 +13,7 @@ import {
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
 import { Facebook } from 'expo';
-import { db } from '../../../config/firebase';
+import { db, auth } from '../../../config/firebase';
 import Loader from '../../components/Loader';
 import Icon from '../../components/Icon';
 import colors from '../../styles/colors';
@@ -35,15 +35,13 @@ export default class SignupScreen extends React.PureComponent {
     };
   }
   signupWithFacebook = async () => {
-    const firebase = require('firebase');
-    const auth = firebase.auth();
     try {
       const { type, token } = await Facebook.logInWithReadPermissionsAsync('1825444707513470', {
         permissions: ['public_profile', 'email'],
       });
       if (type === 'success') {
         this.setState({ loading: true });
-        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+        const credential = auth.FacebookAuthProvider.credential(token);
         const { user, additionalUserInfo } = await auth.signInAndRetrieveDataWithCredential(credential);
         const { profile } = additionalUserInfo;
         const data = {
@@ -51,6 +49,7 @@ export default class SignupScreen extends React.PureComponent {
           email: profile.email,
           firstName: profile.first_name,
           lastName: profile.last_name,
+          onboarded: false,
           signUpDate: new Date(),
         };
         await db.collection('users').doc(user.uid).set(data);
@@ -78,12 +77,14 @@ export default class SignupScreen extends React.PureComponent {
         firstName,
         lastName,
         email,
+        onboarded: false,
         signUpDate: new Date(),
       };
       await db.collection('users').doc(uid).set(data);
       await AsyncStorage.setItem('uid', uid);
+      auth.currentUser.sendEmailVerification();
       this.setState({ loading: false });
-      this.props.navigation.navigate('Onboarding');
+      this.props.navigation.navigate('EmailVerification');
     } catch (err) {
       const errorCode = err.code;
       this.setState({ error: errors.createUser[errorCode], loading: false });
@@ -140,6 +141,7 @@ export default class SignupScreen extends React.PureComponent {
               onSubmitEditing={() => this.lastNameInput.focus()}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
+              clearButtonMode="while-editing"
             />
             <FormInput
               placeholder="Last Name"
@@ -153,6 +155,7 @@ export default class SignupScreen extends React.PureComponent {
               onSubmitEditing={() => this.emailInput.focus()}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
+              clearButtonMode="while-editing"
             />
             <FormInput
               placeholder="Email"
@@ -168,6 +171,7 @@ export default class SignupScreen extends React.PureComponent {
               onSubmitEditing={() => this.passwordInput.focus()}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
+              clearButtonMode="while-editing"
             />
             <FormInput
               placeholder="Password"
@@ -183,6 +187,7 @@ export default class SignupScreen extends React.PureComponent {
               onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
+              clearButtonMode="while-editing"
             />
             {
               error && (
