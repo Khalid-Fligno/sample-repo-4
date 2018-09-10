@@ -12,6 +12,7 @@ import {
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
 import { Facebook } from 'expo';
+import { db, auth } from '../../../config/firebase';
 import Loader from '../../components/Loader';
 import Icon from '../../components/Icon';
 import colors from '../../styles/colors';
@@ -31,15 +32,13 @@ export default class LoginScreen extends React.PureComponent {
     };
   }
   loginWithFacebook = async () => {
-    const firebase = require('firebase');
-    const auth = firebase.auth();
     try {
       const { type, token } = await Facebook.logInWithReadPermissionsAsync('1825444707513470', {
         permissions: ['public_profile', 'email'],
       });
       if (type === 'success') {
         this.setState({ loading: true });
-        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+        const credential = auth.FacebookAuthProvider.credential(token);
         const response = await auth.signInAndRetrieveDataWithCredential(credential);
         const { uid } = response.user;
         await AsyncStorage.setItem('uid', uid);
@@ -53,14 +52,27 @@ export default class LoginScreen extends React.PureComponent {
   }
   login = async (email, password) => {
     this.setState({ loading: true });
-    const firebase = require('firebase');
     try {
-      const response = await firebase.auth().signInWithEmailAndPassword(email, password);
+      const response = await auth.signInWithEmailAndPassword(email, password);
       if (response) {
         const { uid } = response.user;
-        this.setState({ loading: false });
         await AsyncStorage.setItem('uid', uid);
-        this.props.navigation.navigate('App');
+        if (auth.currentUser.emailVerified) {
+          db.collection('users').doc(uid)
+            .get()
+            .then(async (doc) => {
+              if (await doc.data().onboarded) {
+                this.setState({ loading: false });
+                this.props.navigation.navigate('App');
+              } else {
+                this.setState({ loading: false });
+                this.props.navigation.navigate('Onboarding');
+              }
+            });
+        } else {
+          this.setState({ loading: false });
+          this.props.navigation.navigate('EmailVerification');
+        }
       }
     } catch (err) {
       const errorCode = err.code;
@@ -111,6 +123,7 @@ export default class LoginScreen extends React.PureComponent {
             onSubmitEditing={() => this.passwordInput.focus()}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
+            clearButtonMode="while-editing"
           />
           <FormInput
             placeholder="Password"
@@ -126,6 +139,7 @@ export default class LoginScreen extends React.PureComponent {
             onSubmitEditing={() => this.login(this.state.email, this.state.password)}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
+            clearButtonMode="while-editing"
           />
           {
             error && (
@@ -157,7 +171,6 @@ export default class LoginScreen extends React.PureComponent {
             buttonStyle={styles.facebookLoginButton}
             textStyle={styles.facebookLoginButtonText}
           />
-
           <Text
             onPress={() => this.navigateToSignup()}
             style={styles.navigateToSignup}
