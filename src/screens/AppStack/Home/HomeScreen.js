@@ -83,10 +83,10 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     margin: 5,
-    shadowColor: colors.grey.dark,
-    shadowOpacity: 0.6,
-    shadowOffset: { width: 0, height: -2 },
-    shadowRadius: 1.5,
+    shadowColor: colors.charcoal.standard,
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
   image: {
     flex: 1,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     padding: 8,
     paddingBottom: 3,
     maxWidth: width / 2.4,
-    borderRadius: 1,
+    borderRadius: 2,
   },
   title: {
     fontFamily: fonts.bold,

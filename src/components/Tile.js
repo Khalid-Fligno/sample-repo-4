@@ -41,10 +41,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     width,
-    shadowColor: colors.grey.dark,
-    shadowOpacity: 0.6,
-    shadowOffset: { width: 0, height: -2 },
-    shadowRadius: 1.5,
+    shadowColor: colors.charcoal.standard,
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
   image: {
     flex: 1,
@@ -52,8 +52,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: 25,
     overflow: 'hidden',
-    borderRadius: 2,
-
   },
   titleContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.65 )',
@@ -61,7 +59,6 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     paddingBottom: 3,
     paddingLeft: 12,
-
     borderRadius: 2,
   },
   title: {
