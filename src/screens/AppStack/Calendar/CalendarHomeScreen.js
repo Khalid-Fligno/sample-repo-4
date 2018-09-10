@@ -487,6 +487,7 @@ const styles = StyleSheet.create({
     width,
     height: 65,
     justifyContent: 'center',
+    backgroundColor: colors.white,
     borderBottomColor: colors.grey.standard,
   },
   blankListItemTitle: {
