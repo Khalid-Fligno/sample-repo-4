@@ -70,13 +70,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
                   style={styles.image}
                 />
               ) : (
-                <View
-                  style={{
-                    backgroundColor: 'blue',
-                    width: width / 2,
-                    height: (width / 3) * 2,
-                  }}
-                />
+                <View style={styles.imagePlaceholder} />
               )
             }
             {
@@ -86,174 +80,130 @@ export default class ProgressHomeScreen extends React.PureComponent {
                   style={styles.image}
                 />
               ) : (
-                <View
-                  style={{
-                    backgroundColor: 'green',
-                    width: width / 2,
-                    height: (width / 3) * 2,
-                  }}
-                />
+                <View style={styles.imagePlaceholder} />
               )
             }
           </View>
-          <View style={styles.sectionContainer}>
-            <Text style={styles.fieldText}>
-              DATE
-            </Text>
-            <View style={styles.dataRowContainer}>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {initialProgressInfo && moment(initialProgressInfo.date).format('DD/MM/YYYY')}
-                </Text>
-              </View>
-              <View style={styles.dataContainer} />
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {currentProgressInfo && moment(currentProgressInfo.date).format('DD/MM/YYYY')}
-                </Text>
-              </View>
+          <View style={styles.dateRowContainer}>
+            <View style={styles.dateContainer}>
+              <Text style={styles.dateText}>
+                {initialProgressInfo && moment(initialProgressInfo.date).format('DD/MM/YYYY')}
+              </Text>
+            </View>
+            <View style={styles.dateContainer}>
+              <Text style={styles.dateText}>
+                {currentProgressInfo && moment(currentProgressInfo.date).format('DD/MM/YYYY')}
+              </Text>
             </View>
           </View>
-
-          <View style={styles.sectionContainer}>
-            <Text style={styles.fieldText}>
-              WEIGHT
-            </Text>
-            <View style={styles.dataRowContainer}>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {initialProgressInfo && initialProgressInfo.weight}
-                </Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={[
-                    styles.dataTextNegative,
-                    weightDifference >= 0 && styles.dataTextPositive,
-                  ]}
-                >
-                  {weightDifference}
-                </Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {currentProgressInfo && currentProgressInfo.weight}
-                </Text>
-              </View>
+          <View style={styles.dataRowContainer}>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {initialProgressInfo && initialProgressInfo.weight}
+              </Text>
+            </View>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldText}>
+                WEIGHT
+              </Text>
+              <Text
+                style={[
+                  styles.dataTextNegative,
+                  weightDifference >= 0 && styles.dataTextPositive,
+                ]}
+              >
+                {weightDifference}
+              </Text>
+            </View>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {currentProgressInfo && currentProgressInfo.weight}
+              </Text>
             </View>
           </View>
-          <View style={styles.sectionContainer}>
-            <Text style={styles.fieldText}>
-              HIP
-            </Text>
-            <View style={styles.dataRowContainer}>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {initialProgressInfo && initialProgressInfo.hip}
-                </Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={[
-                    styles.dataTextNegative,
-                    hipDifference >= 0 && styles.dataTextPositive,
-                  ]}
-                >
-                  {hipDifference}
-                </Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {currentProgressInfo && currentProgressInfo.hip}
-                </Text>
-              </View>
+          <View style={styles.dataRowContainer}>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {initialProgressInfo && initialProgressInfo.waist}
+              </Text>
+            </View>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldText}>
+                WAIST
+              </Text>
+              <Text
+                style={[
+                  styles.dataTextNegative,
+                  waistDifference >= 0 && styles.dataTextPositive,
+                ]}
+              >
+                {waistDifference}
+              </Text>
+            </View>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {currentProgressInfo && currentProgressInfo.waist}
+              </Text>
             </View>
           </View>
-          <View style={styles.sectionContainer}>
-            <Text style={styles.fieldText}>
-              WAIST
-            </Text>
-            <View style={styles.dataRowContainer}>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {initialProgressInfo && initialProgressInfo.waist}
-                </Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={[
-                    styles.dataTextNegative,
-                    waistDifference >= 0 && styles.dataTextPositive,
-                  ]}
-                >
-                  {waistDifference}
-                </Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {currentProgressInfo && currentProgressInfo.waist}
-                </Text>
-              </View>
+          <View style={styles.dataRowContainer}>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {initialProgressInfo && initialProgressInfo.hip}
+              </Text>
+            </View>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldText}>
+                HIP
+              </Text>
+              <Text
+                style={[
+                  styles.dataTextNegative,
+                  hipDifference >= 0 && styles.dataTextPositive,
+                ]}
+              >
+                {hipDifference}
+              </Text>
+            </View>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {currentProgressInfo && currentProgressInfo.hip}
+              </Text>
             </View>
           </View>
-          <View style={styles.sectionContainer}>
-            <Text style={styles.fieldText}>
-              BURPEES
-            </Text>
-            <View style={styles.dataRowContainer}>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {initialProgressInfo && initialProgressInfo.burpeeCount}
-                </Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={[
-                    styles.dataTextNegative,
-                    burpeesDifference >= 0 && styles.dataTextPositive,
-                  ]}
-                >
-                  {burpeesDifference}
-                </Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {currentProgressInfo && currentProgressInfo.burpeeCount}
-                </Text>
-              </View>
+          <View style={styles.dataRowContainer}>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {initialProgressInfo && initialProgressInfo.burpeeCount}
+              </Text>
+            </View>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldText}>
+                BURPEES
+              </Text>
+              <Text
+                style={[
+                  styles.dataTextNegative,
+                  burpeesDifference >= 0 && styles.dataTextPositive,
+                ]}
+              >
+                {burpeesDifference}
+              </Text>
+            </View>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {currentProgressInfo && currentProgressInfo.burpeeCount}
+              </Text>
             </View>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              width,
-              paddingLeft: 5,
-              paddingRight: 5,
-            }}
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Onboarding2', { isInitial: false })}
+            style={styles.button}
           >
-            {/* <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Onboarding2', { isInitial: true })}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: 5,
-                padding: 20,
-                backgroundColor: colors.blue.standard,
-              }}
-            >
-              <Text>Add Initial</Text>
-            </TouchableOpacity> */}
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Onboarding2', { isInitial: false })}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: 5,
-                padding: 10,
-                backgroundColor: colors.blue.standard,
-              }}
-            >
-              <Text>RETEST</Text>
-            </TouchableOpacity>
-          </View>
+            <Text style={styles.buttonText}>
+              RETEST YOUR PROGRESS
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     );
@@ -277,44 +227,82 @@ const styles = StyleSheet.create({
     width: width / 2,
     height: (width / 3) * 2,
   },
-  sectionContainer: {
-    alignItems: 'center',
+  imagePlaceholder: {
+    backgroundColor: colors.grey.standard,
+    width: width / 2,
+    height: (width / 3) * 2,
   },
-  fieldText: {
-    marginTop: 5,
-    marginBottom: 5,
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.standard,
-  },
-  dataRowContainer: {
+  dateRowContainer: {
     width,
     flexDirection: 'row',
-    backgroundColor: colors.white,
+    paddingTop: 10,
+    paddingBottom: 5,
   },
-  dataContainer: {
+  dateContainer: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dateText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.black,
+  },
+  dataRowContainer: {
+    width: width - 20,
+    marginTop: 5,
+    marginBottom: 5,
+    flexDirection: 'row',
+    backgroundColor: colors.grey.light,
+    borderRadius: 4,
+  },
+  fieldContainer: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: colors.blue.standard,
+  },
+  fieldText: {
+    fontFamily: fonts.standard,
+    fontSize: 12,
+    color: colors.white,
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  dataContainer: {
+    flex: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   dataText: {
-    marginTop: 10,
-    marginBottom: 10,
-    fontFamily: fonts.bold,
-    fontSize: 16,
+    fontFamily: fonts.standard,
+    fontSize: 14,
     color: colors.black,
   },
   dataTextPositive: {
-    marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 5,
     fontFamily: fonts.bold,
-    fontSize: 16,
-    color: colors.green.standard,
+    fontSize: 14,
+    color: colors.white,
   },
   dataTextNegative: {
-    marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 5,
     fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+  },
+  button: {
+    width: width - 20,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 5,
+    backgroundColor: colors.charcoal.dark,
+    borderRadius: 4,
+  },
+  buttonText: {
+    color: colors.white,
+    fontFamily: fonts.standard,
     fontSize: 16,
-    color: colors.coral.standard,
+    marginTop: 3,
   },
 });
