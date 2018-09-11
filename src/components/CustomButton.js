@@ -77,11 +77,11 @@ CustomButton.defaultProps = {
 const styles = StyleSheet.create({
   default: {
     ...common.button.solid,
-    backgroundColor: colors.charcoal.standard,
-    shadowColor: colors.charcoal.standard,
+    backgroundColor: colors.charcoal.dark,
+    shadowColor: colors.charcoal.dark,
   },
   defaultDisabled: {
-    backgroundColor: colors.charcoal.standard,
+    backgroundColor: colors.charcoal.dark,
     opacity: 0.5,
   },
   whiteText: {
@@ -90,14 +90,14 @@ const styles = StyleSheet.create({
   },
   defaultOutline: {
     ...common.button.outline,
-    borderColor: colors.charcoal.standard,
-    shadowColor: colors.charcoal.standard,
+    borderColor: colors.charcoal.dark,
+    shadowColor: colors.charcoal.dark,
   },
   defaultOutlineDisabled: {
     ...common.button.outlineDisabled,
   },
   defaultOutlineText: {
-    color: colors.charcoal.standard,
+    color: colors.charcoal.dark,
     ...common.button.text,
   },
   primary: {
