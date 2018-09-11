@@ -5,6 +5,7 @@ import Image from 'react-native-image-progress';
 import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
+import CustomButton from '../../../components/CustomButton';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -210,15 +211,11 @@ export default class ProgressHomeScreen extends React.PureComponent {
                 </Text>
               </View>
             </View>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Onboarding2', { isInitial: false })}
-              style={styles.button}
-            >
-              <Text style={styles.buttonText}>
-                RETEST YOUR PROGRESS
-              </Text>
-            </TouchableOpacity>
           </View>
+          <CustomButton
+            title="RETEST YOUR PROGRESS"
+            onPress={() => this.props.navigation.navigate('Onboarding2', { isInitial: false })}
+          />
         </ScrollView>
       </View>
     );
@@ -233,6 +230,8 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     alignItems: 'center',
+    paddingBottom: 10,
+    width,
   },
   imagesContainer: {
     width,
@@ -249,8 +248,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: colors.offWhite,
-    paddingBottom: 10,
     alignItems: 'center',
+    paddingBottom: 5,
   },
   dateRowContainer: {
     width,
@@ -313,24 +312,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 14,
     color: colors.white,
-  },
-  button: {
-    width: width - 20,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 5,
-    backgroundColor: colors.charcoal.dark,
-    borderRadius: 2,
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.6,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 1.5,
-  },
-  buttonText: {
-    color: colors.white,
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    marginTop: 3,
   },
 });
