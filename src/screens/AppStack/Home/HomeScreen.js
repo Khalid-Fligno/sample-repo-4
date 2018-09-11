@@ -56,14 +56,14 @@ export default class HomeScreen extends React.PureComponent {
           </TouchableOpacity>
         </View>
         <NewsFeedTile
-          image={require('../../../../assets/images/fitazfk-army.jpg')}
-          title="Join our facebook group"
-          onPress={() => Linking.openURL('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
+          image={require('../../../../assets/images/shop-bundles.jpg')}
+          title="GRAB YOUR FITAZFK WORKOUT EQUIPMENT"
+          onPress={() => Linking.openURL('https://fitazfk.com/collections/equipment')}
         />
         <NewsFeedTile
-          image={require('../../../../assets/images/shop-bundles.jpg')}
-          title="Shop Bundles Online"
-          onPress={() => Linking.openURL('https://fitazfk.com/collections/equipment')}
+          image={require('../../../../assets/images/fitazfk-army.jpg')}
+          title="JOIN OUR FACEBOOK GROUP"
+          onPress={() => Linking.openURL('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
         />
       </View>
     );
