@@ -264,7 +264,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 1,
   },
-
   inputContainer: {
     marginTop: 5,
     marginBottom: 5,
