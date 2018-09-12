@@ -33,8 +33,8 @@ const common = {
       opacity: 0.5,
     },
     text: {
-      fontFamily: fonts.standard,
-      fontSize: 14,
+      fontFamily: fonts.bold,
+      fontSize: 16,
       marginTop: 3,
     },
   },
