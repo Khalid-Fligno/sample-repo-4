@@ -27,6 +27,7 @@ const OnboardingStack = createStackNavigator(
         const { routeName } = navigation.state;
         return (
           <Header
+            stack="onboarding"
             navigation={navigation}
             withBackButton={onboardingBackButtonMap[routeName]}
             withSkipButton={onboardingSkipButtonMap[routeName]}
