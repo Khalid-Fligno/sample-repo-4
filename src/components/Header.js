@@ -38,6 +38,7 @@ const Header = ({
     <View
       style={[
         styles.defaultHeader,
+        stack === 'onboarding' && styles.workoutsHeader,
         stack === 'nutrition' && styles.nutritionHeader,
         stack === 'workouts' && styles.workoutsHeader,
         stack === 'calendar' && styles.calendarHeader,
