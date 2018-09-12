@@ -199,7 +199,7 @@ export default class SignupScreen extends React.PureComponent {
               )
             }
             <Button
-              title="Create Account"
+              title="CREATE ACCOUNT"
               onPress={() => this.signup(firstName, lastName, email, password)}
               containerViewStyle={styles.loginButtonContainer}
               buttonStyle={styles.loginButton}
@@ -212,7 +212,7 @@ export default class SignupScreen extends React.PureComponent {
               </Text>
             </View>
             <Button
-              title="Register with Facebook"
+              title="REGISTER WITH FACEBOOK"
               onPress={() => this.signupWithFacebook()}
               containerViewStyle={styles.facebookLoginButtonContainer}
               buttonStyle={styles.facebookLoginButton}
