@@ -151,7 +151,7 @@ export default class LoginScreen extends React.PureComponent {
             )
           }
           <Button
-            title="Log In"
+            title="LOG IN"
             onPress={() => this.login(this.state.email, this.state.password)}
             containerViewStyle={styles.loginButtonContainer}
             buttonStyle={styles.loginButton}
@@ -165,7 +165,7 @@ export default class LoginScreen extends React.PureComponent {
             </Text>
           </View>
           <Button
-            title="Log In with Facebook"
+            title="LOG IN WITH FACEBOOK"
             onPress={() => this.loginWithFacebook()}
             containerViewStyle={styles.facebookLoginButtonContainer}
             buttonStyle={styles.facebookLoginButton}
