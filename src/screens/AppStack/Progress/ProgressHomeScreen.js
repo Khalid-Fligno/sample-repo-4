@@ -25,6 +25,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
       loading: false,
       initialProgressInfo: null,
       currentProgressInfo: null,
+      unitsOfMeasurement: null,
     };
   }
   componentDidMount() {
@@ -40,6 +41,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
           this.setState({
             initialProgressInfo: await doc.data().initialProgressInfo,
             currentProgressInfo: await doc.data().currentProgressInfo,
+            unitsOfMeasurement: await doc.data().unitsOfMeasurement,
             loading: false,
           });
         } else {
@@ -48,7 +50,12 @@ export default class ProgressHomeScreen extends React.PureComponent {
       });
   }
   render() {
-    const { loading, initialProgressInfo, currentProgressInfo } = this.state;
+    const {
+      loading,
+      initialProgressInfo,
+      currentProgressInfo,
+      unitsOfMeasurement,
+    } = this.state;
     if (loading) {
       return (
         <Loader
@@ -114,7 +121,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
             <View style={styles.dataRowContainer}>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {initialProgressInfo && initialProgressInfo.weight}
+                  {initialProgressInfo && initialProgressInfo.weight} {unitsOfMeasurement === 'metric' && 'kg'}{unitsOfMeasurement === 'imperial' && 'lbs'}
                 </Text>
               </View>
               <View style={styles.fieldContainer}>
@@ -127,19 +134,19 @@ export default class ProgressHomeScreen extends React.PureComponent {
                     weightDifference >= 0 && styles.dataTextPositive,
                   ]}
                 >
-                  {weightDifference}
+                  {weightDifference} {unitsOfMeasurement === 'metric' && 'kg'}{unitsOfMeasurement === 'imperial' && 'lbs'}
                 </Text>
               </View>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {currentProgressInfo && currentProgressInfo.weight}
+                  {currentProgressInfo && currentProgressInfo.weight} {unitsOfMeasurement === 'metric' && 'kg'}{unitsOfMeasurement === 'imperial' && 'lbs'}
                 </Text>
               </View>
             </View>
             <View style={styles.dataRowContainer}>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {initialProgressInfo && initialProgressInfo.waist}
+                  {initialProgressInfo && initialProgressInfo.waist} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
                 </Text>
               </View>
               <View style={styles.fieldContainer}>
@@ -152,19 +159,19 @@ export default class ProgressHomeScreen extends React.PureComponent {
                     waistDifference >= 0 && styles.dataTextPositive,
                   ]}
                 >
-                  {waistDifference}
+                  {waistDifference} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
                 </Text>
               </View>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {currentProgressInfo && currentProgressInfo.waist}
+                  {currentProgressInfo && currentProgressInfo.waist} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
                 </Text>
               </View>
             </View>
             <View style={styles.dataRowContainer}>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {initialProgressInfo && initialProgressInfo.hip}
+                  {initialProgressInfo && initialProgressInfo.hip} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
                 </Text>
               </View>
               <View style={styles.fieldContainer}>
@@ -177,12 +184,12 @@ export default class ProgressHomeScreen extends React.PureComponent {
                     hipDifference >= 0 && styles.dataTextPositive,
                   ]}
                 >
-                  {hipDifference}
+                  {hipDifference} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
                 </Text>
               </View>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {currentProgressInfo && currentProgressInfo.hip}
+                  {currentProgressInfo && currentProgressInfo.hip} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
                 </Text>
               </View>
             </View>
