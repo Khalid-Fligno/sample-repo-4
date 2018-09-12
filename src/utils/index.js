@@ -31,3 +31,45 @@ export const findReps = (fitnessLevel) => {
   }
   return 10;
 };
+
+export const weightOptions = [
+  { value: 30, label: '30' },
+];
+
+const populateWeightOptions = () => {
+  for (let i = 31; i < 120; i += 1) {
+    weightOptions.push({
+      value: i,
+      label: `${i}`,
+    });
+  }
+};
+populateWeightOptions();
+
+export const waistOptions = [
+  { value: 20, label: '20' },
+];
+
+const populateWaistOptions = () => {
+  for (let i = 21; i < 120; i += 1) {
+    waistOptions.push({
+      value: i,
+      label: `${i}`,
+    });
+  }
+};
+populateWaistOptions();
+
+export const hipOptions = [
+  { value: 20, label: '20' },
+];
+
+const populateHipOptions = () => {
+  for (let i = 21; i < 120; i += 1) {
+    hipOptions.push({
+      value: i,
+      label: `${i}`,
+    });
+  }
+};
+populateHipOptions();
