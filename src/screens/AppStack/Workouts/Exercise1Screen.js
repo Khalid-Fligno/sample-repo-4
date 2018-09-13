@@ -60,34 +60,11 @@ export default class Exercise1Screen extends React.PureComponent {
     let setCount = this.props.navigation.getParam('setCount', 0);
     setCount += 1;
     if (setCount === 3) {
-      // const resetAction = StackActions.reset({
-      //   index: 0,
-      //   actions: [NavigationActions.navigate({
-      //     routeName: 'Exercise2',
-      //     params: {
-      //       exerciseList,
-      //       reps,
-      //     },
-      //   })],
-      // });
-      // this.props.navigation.dispatch(resetAction);
       this.props.navigation.replace('Exercise2', {
         exerciseList,
         reps,
       });
     } else {
-      // const resetAction = StackActions.reset({
-      //   index: 0,
-      //   actions: [NavigationActions.navigate({
-      //     routeName: 'Exercise1',
-      //     params: {
-      //       exerciseList,
-      //       reps,
-      //       setCount,
-      //     },
-      //   })],
-      // });
-      // this.props.navigation.dispatch(resetAction);
       this.props.navigation.replace('Exercise1', {
         exerciseList,
         reps,
