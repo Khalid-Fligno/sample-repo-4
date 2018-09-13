@@ -46,16 +46,22 @@ export const nutritionBackButtonMap = {
 
 export const onboardingBackButtonMap = {
   Onboarding1: false,
-  Onboarding2: false,
-  Onboarding3: true,
-  Onboarding4: true,
+  Progress1: false,
+  Progress2: true,
+  Progress3: false,
+  Progress4: false,
+  Progress5: false,
+  Progress6: false,
 };
 
 export const onboardingSkipButtonMap = {
   Onboarding1: false,
-  Onboarding2: true,
-  Onboarding3: true,
-  Onboarding4: true,
+  Progress1: true,
+  Progress2: true,
+  Progress3: false,
+  Progress4: false,
+  Progress5: false,
+  Progress6: true,
 };
 
 export const mealNameMap = {
