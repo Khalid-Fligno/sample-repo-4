@@ -221,7 +221,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
           </View>
           <CustomButton
             title="RETEST YOUR PROGRESS"
-            onPress={() => this.props.navigation.navigate('Onboarding2', { isInitial: false })}
+            onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
           />
         </ScrollView>
       </View>
