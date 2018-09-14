@@ -122,8 +122,9 @@ export default class Progress1Screen extends React.PureComponent {
                     Progress
                   </Text>
                   <Text style={styles.bodyText}>
-                    Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test.
-                    You will need to complete all three to successfully add an entry.  If you can't do all this right now, press skip in the top right corner.
+                    {'Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test.\n\n'}
+                    {'You will need to complete all three to successfully add an entry.\n\n'}
+                    {'If you can\'t do all this right now, press skip in the top right corner.'}
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -311,7 +312,7 @@ export default class Progress1Screen extends React.PureComponent {
 const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.black,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -319,9 +320,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  helperModalContentContainer: {
-    padding: 15,
+    backgroundColor: colors.white,
   },
   textContainer: {
     flex: 1,
@@ -339,11 +338,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.charcoal.light,
     marginLeft: 5,
+    marginBottom: 5,
   },
   modalContainer: {
+    flexShrink: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: colors.white,
     borderRadius: 4,
     overflow: 'hidden',
+  },
+  helperModalContentContainer: {
+    justifyContent: 'space-between',
+    padding: 15,
   },
   modalButton: {
     justifyContent: 'center',
