@@ -35,6 +35,7 @@ export const workoutsBackButtonMap = {
   WorkoutsLocation: true,
   WorkoutsSelection: true,
   WorkoutInfo: true,
+  HiitWorkoutInfo: true,
 };
 
 export const nutritionBackButtonMap = {
