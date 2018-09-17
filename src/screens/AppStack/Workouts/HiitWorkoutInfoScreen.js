@@ -14,35 +14,47 @@ import { Button } from 'react-native-elements';
 import { FileSystem, Video } from 'expo';
 import Modal from 'react-native-modal';
 import Carousel from 'react-native-carousel';
-import { db } from '../../../../../config/firebase';
-import Loader from '../../../../components/Loader';
-import Icon from '../../../../components/Icon';
-import { findFocus, findLocation } from '../../../../utils/workouts';
-import colors from '../../../../styles/colors';
-import fonts from '../../../../styles/fonts';
+import { db } from '../../../../config/firebase';
+import Loader from '../../../components/Loader';
+import Icon from '../../../components/Icon';
+import colors from '../../../styles/colors';
+import fonts from '../../../styles/fonts';
 
 const moment = require('moment');
 
 const { width } = Dimensions.get('window');
 
-export default class WorkoutInfoScreen extends React.PureComponent {
+const workIntervalMap = {
+  1: 30,
+  2: 60,
+  3: 90,
+};
+
+const restIntervalMap = {
+  1: 90,
+  2: 60,
+  3: 30,
+};
+
+export default class HiitWorkoutInfoScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
       workout: null,
-      reps: null,
+      fitnessLevel: null,
       chosenDate: new Date(),
       modalVisible: false,
       addingToCalendar: false,
     };
   }
   componentDidMount = async () => {
+    this.setState({ loading: true });
     const workout = this.props.navigation.getParam('workout', null);
-    const reps = this.props.navigation.getParam('reps', null);
-    this.setState({ workout, reps });
+    const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
+    this.setState({ workout, loading: false, fitnessLevel: parseInt(fitnessLevel, 10) });
     this.props.navigation.setParams({
-      handleStart: () => this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps }),
+      handleStart: () => this.props.navigation.navigate('HiitCountdown', { exerciseList: workout.exercises, fitnessLevel }),
     });
   }
   setDate = (newDate) => {
@@ -78,10 +90,10 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     const {
       loading,
       workout,
-      reps,
       chosenDate,
       modalVisible,
       addingToCalendar,
+      fitnessLevel,
     } = this.state;
     if (loading) {
       return (
@@ -91,10 +103,8 @@ export default class WorkoutInfoScreen extends React.PureComponent {
         />
       );
     }
-    let workoutName;
     let exerciseDisplay;
     if (workout) {
-      workoutName = workout.name;
       exerciseDisplay = workout.exercises.map((exercise, index) => {
         return (
           <Carousel
@@ -120,7 +130,8 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                 </View>
                 <View>
                   <Text style={styles.exerciseTileHeaderBarRight}>
-                    {reps} reps
+                    {index === 0 && `${workIntervalMap[fitnessLevel]} seconds`}
+                    {index === 1 && `${restIntervalMap[fitnessLevel]} seconds`}
                   </Text>
                 </View>
               </View>
@@ -150,30 +161,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
         );
       });
     }
-    const findLocationIcon = () => {
-      let location;
-      if (workout.home) {
-        location = 'home';
-      } else if (workout.gym) {
-        location = 'gym';
-      } else if (workout.park) {
-        location = 'park';
-      }
-      return `workouts-${location}`;
-    };
-    const findFocusIcon = () => {
-      let focus;
-      if (workout.fullBody) {
-        focus = 'full';
-      } else if (workout.upperBody) {
-        focus = 'upper';
-      } else if (workout.lowerBody) {
-        focus = 'lower';
-      } else if (workout.core) {
-        focus = 'core';
-      }
-      return `workouts-${focus}`;
-    };
     return (
       <View style={styles.container}>
         <ScrollView
@@ -208,7 +195,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
           <View style={styles.workoutInfoContainer}>
             <View style={styles.workoutNameContainer}>
               <Text style={styles.workoutName}>
-                {workout && workoutName.toUpperCase()}
+                {workout && workout.name.toUpperCase()}
               </Text>
               <TouchableOpacity
                 onPress={() => this.toggleModal()}
@@ -227,12 +214,22 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             <View style={styles.workoutIconsRow}>
               <View style={styles.workoutIconContainer}>
                 <Icon
+                  name="timer"
+                  size={40}
+                  color={colors.charcoal.standard}
+                />
+                <Text style={styles.workoutInfoFieldData}>
+                  HIIT
+                </Text>
+              </View>
+              <View style={styles.workoutIconContainer}>
+                <Icon
                   name="workouts-time"
                   size={40}
                   color={colors.charcoal.standard}
                 />
                 <Text style={styles.workoutInfoFieldData}>
-                  18 Mins
+                  16 mins
                 </Text>
               </View>
               <View style={styles.workoutIconContainer}>
@@ -242,28 +239,18 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                   color={colors.charcoal.standard}
                 />
                 <Text style={styles.workoutInfoFieldData}>
-                  {reps * 18} Reps
+                  8 rounds
                 </Text>
               </View>
               <View style={styles.workoutIconContainer}>
-                <Icon
-                  name={workout && findLocationIcon()}
-                  size={40}
-                  color={colors.charcoal.standard}
-                />
-                <Text style={styles.workoutInfoFieldData}>
-                  {findLocation(workout)}
-                </Text>
-              </View>
-              <View style={styles.workoutIconContainer}>
-                <Icon
+                {/* <Icon
                   name={workout && findFocusIcon()}
                   size={40}
                   color={colors.charcoal.standard}
                 />
                 <Text style={styles.workoutInfoFieldData}>
                   {findFocus(workout)}
-                </Text>
+                </Text> */}
               </View>
             </View>
           </View>
