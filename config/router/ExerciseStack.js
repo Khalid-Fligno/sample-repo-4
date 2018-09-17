@@ -1,12 +1,13 @@
 import { createStackNavigator } from 'react-navigation';
-import CountdownScreen from '../../src/screens/AppStack/Workouts/CountdownScreen';
-import Exercise1Screen from '../../src/screens/AppStack/Workouts/Exercise1Screen';
-import Exercise2Screen from '../../src/screens/AppStack/Workouts/Exercise2Screen';
-import Exercise3Screen from '../../src/screens/AppStack/Workouts/Exercise3Screen';
-import Exercise4Screen from '../../src/screens/AppStack/Workouts/Exercise4Screen';
-import Exercise5Screen from '../../src/screens/AppStack/Workouts/Exercise5Screen';
-import Exercise6Screen from '../../src/screens/AppStack/Workouts/Exercise6Screen';
-import WorkoutCompleteScreen from '../../src/screens/AppStack/Workouts/WorkoutCompleteScreen';
+import CountdownScreen from '../../src/screens/AppStack/Workouts/Resistance/CountdownScreen';
+import Exercise1Screen from '../../src/screens/AppStack/Workouts/Resistance/Exercise1Screen';
+import Exercise2Screen from '../../src/screens/AppStack/Workouts/Resistance/Exercise2Screen';
+import Exercise3Screen from '../../src/screens/AppStack/Workouts/Resistance/Exercise3Screen';
+import Exercise4Screen from '../../src/screens/AppStack/Workouts/Resistance/Exercise4Screen';
+import Exercise5Screen from '../../src/screens/AppStack/Workouts/Resistance/Exercise5Screen';
+import Exercise6Screen from '../../src/screens/AppStack/Workouts/Resistance/Exercise6Screen';
+import WorkoutCompleteScreen from '../../src/screens/AppStack/Workouts/Resistance/WorkoutCompleteScreen';
+
 import { fadeSpec, fade } from './utils';
 
 const ExerciseStack = createStackNavigator(
@@ -21,7 +22,7 @@ const ExerciseStack = createStackNavigator(
     WorkoutComplete: WorkoutCompleteScreen,
   },
   {
-    initialRouteName: 'Countdown',
+    // initialRouteName: 'Countdown',
     transitionConfig: () => ({
       transitionSpec: fadeSpec,
       screenInterpolator: (props) => {
