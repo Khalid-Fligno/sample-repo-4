@@ -3,10 +3,10 @@ import { StyleSheet, View, Text, Dimensions, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
-import WorkoutTimer from '../../../components/WorkoutTimer';
-import WorkoutProgress from '../../../components/WorkoutProgress';
-import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
+import WorkoutTimer from '../../../../components/WorkoutTimer';
+import WorkoutProgress from '../../../../components/WorkoutProgress';
+import colors from '../../../../styles/colors';
+import fonts from '../../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
@@ -25,7 +25,7 @@ export const workoutTimerStyle = {
   },
 };
 
-export default class Exercise4Screen extends React.PureComponent {
+export default class Exercise5Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,12 +40,12 @@ export default class Exercise4Screen extends React.PureComponent {
   componentWillMount() {
     const exerciseList = this.props.navigation.getParam('exerciseList', null);
     const reps = this.props.navigation.getParam('reps', null);
-    this.setState({ exerciseList, currentExercise: exerciseList[3], reps });
+    this.setState({ exerciseList, currentExercise: exerciseList[4], reps });
   }
   componentDidMount() {
     this.startTimer();
     try {
-      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-3.mp4`, { idempotent: true });
+      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-4.mp4`, { idempotent: true });
     } catch (err) {
       console.log(err);
     }
@@ -64,12 +64,12 @@ export default class Exercise4Screen extends React.PureComponent {
     let setCount = this.props.navigation.getParam('setCount', 0);
     setCount += 1;
     if (setCount === 3) {
-      this.props.navigation.replace('Exercise5', {
+      this.props.navigation.replace('Exercise6', {
         exerciseList,
         reps,
       });
     } else {
-      this.props.navigation.replace('Exercise4', {
+      this.props.navigation.replace('Exercise5', {
         exerciseList,
         reps,
         setCount,
@@ -93,7 +93,7 @@ export default class Exercise4Screen extends React.PureComponent {
           style={styles.flexContainer}
         >
           <Video
-            source={{ uri: `${FileSystem.cacheDirectory}exercise-4.mp4` }}
+            source={{ uri: `${FileSystem.cacheDirectory}exercise-5.mp4` }}
             rate={1.0}
             volume={1.0}
             isMuted={false}
@@ -118,12 +118,12 @@ export default class Exercise4Screen extends React.PureComponent {
             options={workoutTimerStyle}
           />
           <WorkoutProgress
-            currentExercise={4}
+            currentExercise={5}
             currentSet={this.props.navigation.getParam('setCount', 0) + 1}
           />
           <Text>
             <Text style={styles.nextExercise}> NEXT EXERCISE: </Text>
-            <Text style={styles.nextExerciseName}>{exerciseList[4].name.toUpperCase()}</Text>
+            <Text style={styles.nextExerciseName}>{exerciseList[5].name.toUpperCase()}</Text>
           </Text>
         </FadeInView>
       </SafeAreaView>

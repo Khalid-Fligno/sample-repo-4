@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { FileSystem } from 'expo';
-import colors from '../../../styles/colors';
+import colors from '../../../../styles/colors';
 
 export default class WorkoutCompleteScreen extends React.PureComponent {
   constructor(props) {

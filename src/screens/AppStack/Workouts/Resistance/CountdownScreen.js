@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import CountdownTimer from '../../../components/CountdownTimer';
-import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
+import CountdownTimer from '../../../../components/CountdownTimer';
+import colors from '../../../../styles/colors';
+import fonts from '../../../../styles/fonts';
 
 export default class CountdownScreen extends React.PureComponent {
   constructor(props) {

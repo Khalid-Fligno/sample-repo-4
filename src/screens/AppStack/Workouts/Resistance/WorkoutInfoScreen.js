@@ -14,12 +14,12 @@ import { Button } from 'react-native-elements';
 import { FileSystem, Video } from 'expo';
 import Modal from 'react-native-modal';
 import Carousel from 'react-native-carousel';
-import { db } from '../../../../config/firebase';
-import Loader from '../../../components/Loader';
-import Icon from '../../../components/Icon';
-import { findFocus, findLocation } from '../../../utils/workouts';
-import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
+import { db } from '../../../../../config/firebase';
+import Loader from '../../../../components/Loader';
+import Icon from '../../../../components/Icon';
+import { findFocus, findLocation } from '../../../../utils/workouts';
+import colors from '../../../../styles/colors';
+import fonts from '../../../../styles/fonts';
 
 const moment = require('moment');
 
