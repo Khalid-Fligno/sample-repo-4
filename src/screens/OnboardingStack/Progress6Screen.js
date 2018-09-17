@@ -88,6 +88,7 @@ export default class Progress6Screen extends React.PureComponent {
       } = this.props.navigation.state.params;
       await storeProgressInfo(image.uri, isInitial, weight, waist, hip, burpeeCount);
       const fitnessLevel = findFitnessLevel(burpeeCount);
+      AsyncStorage.setItem('fitnessLevel', fitnessLevel);
       await userRef.set({
         fitnessLevel,
       }, { merge: true });

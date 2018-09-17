@@ -42,8 +42,18 @@ export default class LoginScreen extends React.PureComponent {
         const response = await auth.signInAndRetrieveDataWithCredential(credential);
         const { uid } = response.user;
         await AsyncStorage.setItem('uid', uid);
-        this.setState({ loading: false });
-        this.props.navigation.navigate('App');
+        db.collection('users').doc(uid)
+          .get()
+          .then(async (doc) => {
+            if (await doc.data().onboarded) {
+              await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+              this.setState({ loading: false });
+              this.props.navigation.navigate('App');
+            } else {
+              this.setState({ loading: false });
+              this.props.navigation.navigate('Onboarding');
+            }
+          });
       }
     } catch (err) {
       console.log(err);
@@ -62,6 +72,7 @@ export default class LoginScreen extends React.PureComponent {
             .get()
             .then(async (doc) => {
               if (await doc.data().onboarded) {
+                await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
                 this.setState({ loading: false });
                 this.props.navigation.navigate('App');
               } else {
