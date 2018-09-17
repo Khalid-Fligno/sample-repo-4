@@ -4,6 +4,7 @@ import WorkoutsHomeScreen from '../../src/screens/AppStack/Workouts/WorkoutsHome
 import WorkoutsLocationScreen from '../../src/screens/AppStack/Workouts/WorkoutsLocationScreen';
 import WorkoutsSelectionScreen from '../../src/screens/AppStack/Workouts/WorkoutsSelectionScreen';
 import WorkoutInfoScreen from '../../src/screens/AppStack/Workouts/WorkoutInfoScreen';
+import HiitWorkoutInfoScreen from '../../src/screens/AppStack/Workouts/HiitWorkoutInfoScreen';
 import Header from '../../src/components/Header';
 import {
   workoutsBackButtonMap,
@@ -17,6 +18,7 @@ const WorkoutsStack = createStackNavigator(
     WorkoutsLocation: WorkoutsLocationScreen,
     WorkoutsSelection: WorkoutsSelectionScreen,
     WorkoutInfo: WorkoutInfoScreen,
+    HiitWorkoutInfo: HiitWorkoutInfoScreen,
   },
   {
     initialRouteName: 'WorkoutsHome',
@@ -33,7 +35,7 @@ const WorkoutsStack = createStackNavigator(
           <Header
             navigation={navigation}
             withBackButton={workoutsBackButtonMap[routeName]}
-            withStartButton={routeName === 'WorkoutInfo'}
+            withStartButton={routeName === 'WorkoutInfo' || routeName === 'HiitWorkoutInfo'}
             withProfileButton={routeName === 'WorkoutsHome'}
             stack="workouts"
           />
