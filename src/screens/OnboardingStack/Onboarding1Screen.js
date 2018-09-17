@@ -194,13 +194,14 @@ export default class Onboarding1Screen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.black,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   flexContainer: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: colors.white,
   },
   modalContainer: {
     backgroundColor: colors.white,
