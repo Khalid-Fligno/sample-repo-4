@@ -71,7 +71,9 @@ export default class Progress3Screen extends React.PureComponent {
             </Text>
           </View>
           <View style={styles.contentContainer}>
-
+            <Text style={styles.bodyText}>
+              How to do a burpee info here?
+            </Text>
           </View>
           <View style={styles.buttonContainer}>
             <CustomButton
