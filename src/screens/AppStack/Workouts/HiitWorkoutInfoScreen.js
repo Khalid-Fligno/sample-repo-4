@@ -214,9 +214,10 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
             <View style={styles.workoutIconsRow}>
               <View style={styles.workoutIconContainer}>
                 <Icon
-                  name="timer"
-                  size={40}
+                  name="workouts-hiit"
+                  size={36}
                   color={colors.charcoal.standard}
+                  style={{ margin: 2 }}
                 />
                 <Text style={styles.workoutInfoFieldData}>
                   HIIT
@@ -241,16 +242,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                 <Text style={styles.workoutInfoFieldData}>
                   8 rounds
                 </Text>
-              </View>
-              <View style={styles.workoutIconContainer}>
-                {/* <Icon
-                  name={workout && findFocusIcon()}
-                  size={40}
-                  color={colors.charcoal.standard}
-                />
-                <Text style={styles.workoutInfoFieldData}>
-                  {findFocus(workout)}
-                </Text> */}
               </View>
             </View>
           </View>
