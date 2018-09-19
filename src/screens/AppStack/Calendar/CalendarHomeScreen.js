@@ -117,6 +117,22 @@ export default class CalendarHomeScreen extends React.PureComponent {
       console.log(`Filesystem download error: ${err}`);
     }
   }
+  loadHiitExercises = async (workout) => {
+    this.setState({ loading: true });
+    const { exercises } = workout;
+    try {
+      await Promise.all(exercises.map(async (exercise, index) => {
+        await FileSystem.downloadAsync(
+          exercise.videoURL,
+          `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+        );
+      }));
+      this.setState({ loading: false });
+      this.props.navigation.navigate('HiitWorkoutInfo', { workout });
+    } catch (err) {
+      console.log(`Filesystem download error: ${err}`);
+    }
+  }
   addToCalendarApp = async (workout) => {
     const { status } = await Permissions.askAsync(Permissions.CALENDAR);
     if (status !== 'granted') {
@@ -216,26 +232,39 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 <ListItem
                   title={workout.name.toUpperCase()}
                   subtitle={
-                    <View style={styles.workoutSubtitleContainer}>
-                      <Icon
-                        name={findLocationIcon()}
-                        size={20}
-                        color={colors.charcoal.standard}
-                      />
-                      <Text style={styles.workoutSubtitleText}>
-                        {findLocation(workout)}
-                      </Text>
-                      <Icon
-                        name={findFocusIcon()}
-                        size={20}
-                        color={colors.charcoal.standard}
-                      />
-                      <Text style={styles.workoutSubtitleText}>
-                        {findFocus(workout)}
-                      </Text>
-                    </View>
+                    workout.resistance ? (
+                      <View style={styles.workoutSubtitleContainer}>
+                        <Icon
+                          name={findLocationIcon()}
+                          size={20}
+                          color={colors.charcoal.standard}
+                        />
+                        <Text style={styles.workoutSubtitleText}>
+                          {findLocation(workout)}
+                        </Text>
+                        <Icon
+                          name={findFocusIcon()}
+                          size={20}
+                          color={colors.charcoal.standard}
+                        />
+                        <Text style={styles.workoutSubtitleText}>
+                          {findFocus(workout)}
+                        </Text>
+                      </View>
+                    ) : (
+                      <View style={styles.workoutSubtitleContainer}>
+                        <Icon
+                          name="workouts-hiit"
+                          size={18}
+                          color={colors.charcoal.standard}
+                        />
+                        <Text style={styles.workoutSubtitleText}>
+                          HIIT
+                        </Text>
+                      </View>
+                    )
                   }
-                  onPress={() => this.loadExercises(workout)}
+                  onPress={workout.resistance ? () => this.loadExercises(workout) : () => this.loadHiitExercises(workout)}
                   containerStyle={styles.listItem}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.workoutListItemTitle}
@@ -284,7 +313,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="BREAKFAST"
                 subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
+                onPress={() => this.props.navigation.push('NutritionHome')}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -317,7 +346,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="LUNCH"
                 subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'lunch' })}
+                onPress={() => this.props.navigation.push('NutritionHome')}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -350,7 +379,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="DINNER"
                 subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'dinner' })}
+                onPress={() => this.props.navigation.push('NutritionHome')}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -383,7 +412,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="SNACK"
                 subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: 'snack' })}
+                onPress={() => this.props.navigation.push('NutritionHome')}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
