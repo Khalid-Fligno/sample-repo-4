@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, AsyncStorage } from 'react-native';
 import { FileSystem } from 'expo';
-import { db, auth } from '../../../../config/firebase';
+import { db } from '../../../../config/firebase';
 import { findReps } from '../../../utils/index';
 import Loader from '../../../components/Loader';
 import Tile from '../../../components/Tile';
@@ -48,18 +48,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
   }
   loadExercises = async (workout) => {
     this.setState({ loading: true });
-    const user = auth.currentUser;
-    let reps;
-    if (user) {
-      db.collection('users')
-        .doc(user.uid)
-        .get()
-        .then(async (doc) => {
-          if (doc.exists) {
-            reps = findReps(await doc.data().fitnessLevel);
-          }
-        });
-    }
+    const fitnessLevel = await AsyncStorage.getItem('fitnessLevel');
     const { exercises } = workout;
     try {
       await Promise.all(exercises.map(async (exercise, index) => {
@@ -69,7 +58,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
         );
       }));
       this.setState({ loading: false });
-      this.props.navigation.navigate('WorkoutInfo', { workout, reps });
+      this.props.navigation.navigate('WorkoutInfo', { workout, reps: findReps(fitnessLevel) });
     } catch (err) {
       console.log(`Filesystem download error: ${err}`);
     }
@@ -84,18 +73,18 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
         onPress={() => this.loadExercises(workout)}
       />
     ));
-    if (loading) {
-      return (
-        <Loader
-          loading={loading}
-          color={colors.coral.standard}
-          textContent="Loading your workout..."
-        />
-      );
-    }
+
     return (
       <View style={styles.container}>
         {workoutList}
+        {
+          loading && (
+            <Loader
+              loading={loading}
+              color={colors.coral.standard}
+            />
+          )
+        }
       </View>
     );
   }
