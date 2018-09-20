@@ -301,7 +301,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 <ListItem
                   title={breakfast.title.toUpperCase()}
                   subtitle={breakfast.subtitle}
-                  onPress={() => this.props.navigation.navigate('Recipe', { recipe: breakfast })}
+                  onPress={() => this.props.navigation.push('Recipe', { recipe: breakfast })}
                   containerStyle={styles.listItem}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
@@ -313,7 +313,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="BREAKFAST"
                 subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.push('NutritionHome')}
+                onPress={() => this.props.navigation.navigate('NutritionHome')}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -334,7 +334,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 <ListItem
                   title={lunch.title.toUpperCase()}
                   subtitle={lunch.subtitle}
-                  onPress={() => this.props.navigation.navigate('Recipe', { recipe: lunch })}
+                  onPress={() => this.props.navigation.push('Recipe', { recipe: lunch })}
                   containerStyle={styles.listItem}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
@@ -346,7 +346,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="LUNCH"
                 subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.push('NutritionHome')}
+                onPress={() => this.props.navigation.navigate('NutritionHome')}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -367,7 +367,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 <ListItem
                   title={dinner.title.toUpperCase()}
                   subtitle={dinner.subtitle}
-                  onPress={() => this.props.navigation.navigate('Recipe', { recipe: dinner })}
+                  onPress={() => this.props.navigation.push('Recipe', { recipe: dinner })}
                   containerStyle={styles.listItem}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
@@ -379,7 +379,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="DINNER"
                 subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.push('NutritionHome')}
+                onPress={() => this.props.navigation.navigate('NutritionHome')}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
@@ -400,7 +400,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
                 <ListItem
                   title={snack.title.toUpperCase()}
                   subtitle={snack.subtitle}
-                  onPress={() => this.props.navigation.navigate('Recipe', { recipe: snack })}
+                  onPress={() => this.props.navigation.push('Recipe', { recipe: snack })}
                   containerStyle={styles.listItem}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
@@ -412,7 +412,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
               <ListItem
                 title="SNACK"
                 subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.push('NutritionHome')}
+                onPress={() => this.props.navigation.navigate('NutritionHome')}
                 containerStyle={styles.listItem}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
