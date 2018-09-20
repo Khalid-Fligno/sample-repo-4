@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../../components/WorkoutTimer';
-// import WorkoutProgress from '../../../../components/WorkoutProgress';
+import HiitWorkoutProgress from '../../../../components/HiitWorkoutProgress';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
 
@@ -67,11 +67,11 @@ export default class HiitExercise1Screen extends React.PureComponent {
       timerStart: false,
       timerReset: false,
     });
-    const setCount = this.props.navigation.getParam('setCount', 0);
+    const roundCount = this.props.navigation.getParam('roundCount', 0);
     this.props.navigation.replace('HiitExercise2', {
       exerciseList,
       fitnessLevel,
-      setCount,
+      roundCount,
     });
   }
   render() {
@@ -104,9 +104,6 @@ export default class HiitExercise1Screen extends React.PureComponent {
             <Text style={styles.currentExerciseNameText}>
               {currentExercise.name.toUpperCase()}
             </Text>
-            <Text style={styles.currentExerciseRepsText}>
-              {/* {fitnessLevel} REPS */}
-            </Text>
           </View>
           <WorkoutTimer
             totalDuration={totalDuration}
@@ -115,14 +112,10 @@ export default class HiitExercise1Screen extends React.PureComponent {
             handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
             options={workoutTimerStyle}
           />
-          {/* <WorkoutProgress
-            currentExercise={1}
-            currentSet={this.props.navigation.getParam('setCount', 0) + 1}
-          /> */}
-          {/* <Text>
-            <Text style={styles.nextExercise}> NEXT EXERCISE: </Text>
-            <Text style={styles.nextExerciseName}>{exerciseList[1].name.toUpperCase()}</Text>
-          </Text> */}
+          <HiitWorkoutProgress
+            currentRound={this.props.navigation.getParam('roundCount', 0) + 1}
+            currentSet={1}
+          />
         </FadeInView>
       </SafeAreaView>
     );
@@ -151,17 +144,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 20,
     color: colors.coral.standard,
-  },
-  currentExerciseRepsText: {
-    fontFamily: fonts.bold,
-    fontSize: 20,
-  },
-  nextExercise: {
-    fontFamily: fonts.standard,
-    fontSize: 12,
-  },
-  nextExerciseName: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
   },
 });
