@@ -12,7 +12,7 @@ const common = {
       height: 50,
       width: width - 20,
       borderRadius: 2,
-      shadowOpacity: 0.5,
+      shadowOpacity: 1,
       shadowOffset: { width: 0, height: 2 },
       shadowRadius: 3,
     },
