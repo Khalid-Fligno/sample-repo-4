@@ -148,6 +148,7 @@ Header.defaultProps = {
 
 const styles = StyleSheet.create({
   defaultHeaderShadow: {
+    backgroundColor: colors.black,
     shadowColor: colors.grey.dark,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.7,
