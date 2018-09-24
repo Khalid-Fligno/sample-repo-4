@@ -68,24 +68,13 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
       selectedResistanceFocusIndex: 0,
     };
   }
-  handleWorkoutSelected = () => {
-    const {
-      selectedWorkoutTypeIndex,
-      selectedWorkoutLocationIndex,
-      selectedHiitWorkoutIndex,
-      selectedResistanceFocusIndex,
-    } = this.state;
-    if (selectedWorkoutTypeIndex === 0) {
-      const workoutType = workoutFocusMap[selectedResistanceFocusIndex];
-      const workoutLocation = workoutLocationMap[selectedWorkoutLocationIndex];
-      this.props.navigation.navigate('WorkoutsSelection', {
-        workoutType,
-        workoutLocation,
-      });
-    } else {
-      console.log(selectedWorkoutTypeIndex);
-      console.log(selectedHiitWorkoutIndex);
-    }
+  handleWorkoutSelected = (selectedWorkoutLocationIndex, selectedResistanceFocusIndex) => {
+    const workoutLocation = workoutLocationMap[selectedWorkoutLocationIndex];
+    const workoutType = workoutFocusMap[selectedResistanceFocusIndex];
+    this.props.navigation.navigate('WorkoutsSelection', {
+      workoutType,
+      workoutLocation,
+    });
   }
   handleHiitWorkoutSelected = async (selectedHiitWorkoutIndex) => {
     this.setState({ loading: true });
@@ -147,21 +136,21 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
               data={workoutTypes}
               renderItem={this.renderItem}
               sliderWidth={width}
-              itemWidth={width * 0.85}
+              itemWidth={width * 0.8}
               onSnapToItem={(slideIndex) => this.setState({ selectedWorkoutTypeIndex: slideIndex })}
             />
           </View>
           <View style={{ flex: 1 }}>
             {
               selectedWorkoutTypeIndex === 0 && (
-                <FadeInView duration={1000} style={{ flex: 1 }}>
+                <FadeInView duration={1500} style={{ flex: 1 }}>
                   <Carousel
                     ref={(c) => { this.carousel = c; }}
-                    data={resistanceWorkouts}
+                    data={workoutLocations}
                     renderItem={this.renderItem}
                     sliderWidth={width}
-                    itemWidth={width * 0.85}
-                    onSnapToItem={(slideIndex) => this.setState({ selectedResistanceFocusIndex: slideIndex })}
+                    itemWidth={width * 0.8}
+                    onSnapToItem={(slideIndex) => this.setState({ selectedWorkoutLocationIndex: slideIndex })}
                   />
                 </FadeInView>
               )
@@ -174,7 +163,7 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
                     data={hiitWorkouts}
                     renderItem={this.renderItem}
                     sliderWidth={width}
-                    itemWidth={width * 0.85}
+                    itemWidth={width * 0.8}
                     onSnapToItem={(slideIndex) => this.setState({ selectedHiitWorkoutIndex: slideIndex })}
                   />
                 </FadeInView>
@@ -184,14 +173,14 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
           <View style={{ flex: 1 }}>
             {
               selectedWorkoutTypeIndex === 0 && (
-                <FadeInView duration={1500} style={{ flex: 1 }}>
+                <FadeInView duration={1000} style={{ flex: 1 }}>
                   <Carousel
                     ref={(c) => { this.carousel = c; }}
-                    data={workoutLocations}
+                    data={resistanceWorkouts}
                     renderItem={this.renderItem}
                     sliderWidth={width}
-                    itemWidth={width * 0.85}
-                    onSnapToItem={(slideIndex) => this.setState({ selectedWorkoutLocationIndex: slideIndex })}
+                    itemWidth={width * 0.8}
+                    onSnapToItem={(slideIndex) => this.setState({ selectedResistanceFocusIndex: slideIndex })}
                   />
                 </FadeInView>
               )
@@ -201,30 +190,13 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
         <View style={{ paddingBottom: 10 }}>
           <CustomButton
             title={selectedWorkoutTypeIndex === 0 ? 'SHOW WORKOUTS' : 'GO TO WORKOUT'}
-            onPress={selectedWorkoutTypeIndex === 0 ? () => this.handleWorkoutSelected() : () => this.handleHiitWorkoutSelected(selectedHiitWorkoutIndex)}
+            onPress={
+              selectedWorkoutTypeIndex === 0 ?
+                () => this.handleWorkoutSelected(selectedWorkoutLocationIndex, selectedResistanceFocusIndex) :
+                () => this.handleHiitWorkoutSelected(selectedHiitWorkoutIndex)}
             primary
           />
         </View>
-        {/* <Tile
-          title1="FULL BODY"
-          image={require('../../../../assets/images/workouts-full.jpg')}
-          onPress={() => navigate('WorkoutsLocation', { workoutType: 'fullBody' })}
-        />
-        <Tile
-          title1="UPPER BODY"
-          image={require('../../../../assets/images/workouts-upper.jpg')}
-          onPress={() => navigate('WorkoutsLocation', { workoutType: 'upperBody' })}
-        />
-        <Tile
-          title1="LOWER BODY"
-          image={require('../../../../assets/images/workouts-lower.jpg')}
-          onPress={() => navigate('WorkoutsLocation', { workoutType: 'lowerBody' })}
-        />
-        <Tile
-          title1="CORE"
-          image={require('../../../../assets/images/workouts-core.jpg')}
-          onPress={() => navigate('WorkoutsLocation', { workoutType: 'core' })}
-        /> */}
         {
           loading && <Loader color={colors.coral.standard} loading={loading} />
         }
