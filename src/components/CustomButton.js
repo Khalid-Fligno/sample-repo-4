@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   default: {
     ...common.button.solid,
     backgroundColor: colors.charcoal.dark,
-    shadowColor: colors.charcoal.dark,
+    shadowColor: colors.charcoal.standard,
   },
   defaultDisabled: {
     backgroundColor: colors.charcoal.dark,
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   primary: {
     ...common.button.solid,
     backgroundColor: colors.coral.standard,
-    shadowColor: colors.coral.light,
+    shadowColor: colors.coral.standard,
   },
   primaryDisabled: {
     backgroundColor: colors.coral.standard,
