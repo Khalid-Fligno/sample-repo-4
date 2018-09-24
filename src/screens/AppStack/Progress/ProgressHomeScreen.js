@@ -109,19 +109,19 @@ export default class ProgressHomeScreen extends React.PureComponent {
             <View style={styles.dateRowContainer}>
               <View style={styles.dateContainer}>
                 <Text style={styles.dateText}>
-                  {initialProgressInfo && moment(initialProgressInfo.date).format('DD/MM/YYYY')}
+                  {initialProgressInfo ? moment(initialProgressInfo.date).format('DD/MM/YYYY') : '-'}
                 </Text>
               </View>
               <View style={styles.dateContainer}>
                 <Text style={styles.dateText}>
-                  {currentProgressInfo && moment(currentProgressInfo.date).format('DD/MM/YYYY')}
+                  {currentProgressInfo ? moment(currentProgressInfo.date).format('DD/MM/YYYY') : '-'}
                 </Text>
               </View>
             </View>
             <View style={styles.dataRowContainer}>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {initialProgressInfo && initialProgressInfo.weight} {unitsOfMeasurement === 'metric' && 'kg'}{unitsOfMeasurement === 'imperial' && 'lbs'}
+                  {initialProgressInfo ? initialProgressInfo.weight : '-'} {unitsOfMeasurement === 'metric' && 'kg'}{unitsOfMeasurement === 'imperial' && 'lbs'}
                 </Text>
               </View>
               <View style={styles.fieldContainer}>
@@ -134,19 +134,19 @@ export default class ProgressHomeScreen extends React.PureComponent {
                     weightDifference >= 0 && styles.dataTextPositive,
                   ]}
                 >
-                  {weightDifference} {unitsOfMeasurement === 'metric' && 'kg'}{unitsOfMeasurement === 'imperial' && 'lbs'}
+                  {weightDifference || '-'} {weightDifference && unitsOfMeasurement === 'metric' && 'kg'}{weightDifference && unitsOfMeasurement === 'imperial' && 'lbs'}
                 </Text>
               </View>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {currentProgressInfo && currentProgressInfo.weight} {unitsOfMeasurement === 'metric' && 'kg'}{unitsOfMeasurement === 'imperial' && 'lbs'}
+                  {currentProgressInfo ? currentProgressInfo.weight : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'kg'}{currentProgressInfo && unitsOfMeasurement === 'imperial' && 'lbs'}
                 </Text>
               </View>
             </View>
             <View style={styles.dataRowContainer}>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {initialProgressInfo && initialProgressInfo.waist} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
+                  {initialProgressInfo ? initialProgressInfo.waist : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{initialProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
                 </Text>
               </View>
               <View style={styles.fieldContainer}>
@@ -159,19 +159,19 @@ export default class ProgressHomeScreen extends React.PureComponent {
                     waistDifference >= 0 && styles.dataTextPositive,
                   ]}
                 >
-                  {waistDifference} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
+                  {waistDifference || '-'} {waistDifference && unitsOfMeasurement === 'metric' && 'cm'}{waistDifference && unitsOfMeasurement === 'imperial' && 'inches'}
                 </Text>
               </View>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {currentProgressInfo && currentProgressInfo.waist} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
+                  {currentProgressInfo ? currentProgressInfo.waist : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{currentProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
                 </Text>
               </View>
             </View>
             <View style={styles.dataRowContainer}>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {initialProgressInfo && initialProgressInfo.hip} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
+                  {initialProgressInfo ? initialProgressInfo.hip : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{initialProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
                 </Text>
               </View>
               <View style={styles.fieldContainer}>
@@ -184,19 +184,19 @@ export default class ProgressHomeScreen extends React.PureComponent {
                     hipDifference >= 0 && styles.dataTextPositive,
                   ]}
                 >
-                  {hipDifference} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
+                  {hipDifference || '-'} {hipDifference && unitsOfMeasurement === 'metric' && 'cm'}{hipDifference && unitsOfMeasurement === 'imperial' && 'inches'}
                 </Text>
               </View>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {currentProgressInfo && currentProgressInfo.hip} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
+                  {currentProgressInfo ? currentProgressInfo.hip : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{currentProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
                 </Text>
               </View>
             </View>
             <View style={styles.dataRowContainer}>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {initialProgressInfo && initialProgressInfo.burpeeCount}
+                  {initialProgressInfo ? initialProgressInfo.burpeeCount : '-'}
                 </Text>
               </View>
               <View style={styles.fieldContainer}>
@@ -209,12 +209,12 @@ export default class ProgressHomeScreen extends React.PureComponent {
                     burpeesDifference >= 0 && styles.dataTextPositive,
                   ]}
                 >
-                  {burpeesDifference}
+                  {burpeesDifference || '-'}
                 </Text>
               </View>
               <View style={styles.dataContainer}>
                 <Text style={styles.dataText}>
-                  {currentProgressInfo && currentProgressInfo.burpeeCount}
+                  {currentProgressInfo ? currentProgressInfo.burpeeCount : '-'}
                 </Text>
               </View>
             </View>
