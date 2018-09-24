@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    borderRadius: 1,
+    borderRadius: 2,
   },
   titleContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.6 )',

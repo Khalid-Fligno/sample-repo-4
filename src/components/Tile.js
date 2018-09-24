@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
     paddingLeft: 25,
+    borderRadius: 2,
     overflow: 'hidden',
   },
   titleContainer: {
