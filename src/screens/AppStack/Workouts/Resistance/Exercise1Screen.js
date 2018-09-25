@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { Video, FileSystem } from 'expo';
+import { Video, FileSystem, Audio } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../../components/WorkoutTimer';
 import WorkoutProgress from '../../../../components/WorkoutProgress';
@@ -51,11 +51,18 @@ export default class Exercise1Screen extends React.PureComponent {
       timerReset: false,
     });
   }
-  handleFinish = (exerciseList, reps) => {
+  handleFinish = async (exerciseList, reps) => {
     this.setState({
       timerStart: false,
       timerReset: false,
     });
+    const soundObject = new Audio.Sound();
+    try {
+      await soundObject.loadAsync(require('../../../../../assets/sounds/airhorn.mp3'));
+      await soundObject.playAsync();
+    } catch (error) {
+      console.log(error);
+    }
     let setCount = this.props.navigation.getParam('setCount', 0);
     setCount += 1;
     if (setCount === 3) {
