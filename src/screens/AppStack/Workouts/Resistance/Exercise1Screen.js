@@ -89,7 +89,7 @@ export default class Exercise1Screen extends React.PureComponent {
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" />
+        <StatusBar barStyle="light-content" />
         <FadeInView
           duration={1000}
           style={styles.flexContainer}
@@ -136,12 +136,13 @@ export default class Exercise1Screen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.black,
   },
   flexContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: colors.white,
   },
   currentExerciseTextContainer: {
     width,
