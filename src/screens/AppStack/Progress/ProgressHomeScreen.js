@@ -5,6 +5,7 @@ import Image from 'react-native-image-progress';
 import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
+import Icon from '../../../components/Icon';
 import CustomButton from '../../../components/CustomButton';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -14,8 +15,10 @@ const { width } = Dimensions.get('window');
 const diff = (a, b) => {
   if ((b - a) > 0) {
     return `+${(b - a)}`;
+  } else if ((b - a) < 0) {
+    return (b - a);
   }
-  return (b - a);
+  return null;
 };
 
 export default class ProgressHomeScreen extends React.PureComponent {
@@ -86,7 +89,22 @@ export default class ProgressHomeScreen extends React.PureComponent {
                     }}
                   />
                 ) : (
-                  <View style={styles.imagePlaceholder} />
+                  <View style={styles.imagePlaceholder}>
+                    <TouchableOpacity
+                      onPress={() => this.props.navigation.navigate('Progress1', { isInitial: true })}
+                      style={styles.imagePlaceholderButton}
+                    >
+                      <Icon
+                        name="add-circle"
+                        color={colors.white}
+                        size={20}
+                        style={{ alignSelf: 'center', marginBottom: 10 }}
+                      />
+                      <Text style={styles.imagePlaceholderButtonText}>
+                        Add initial progress info
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 )
               }
               {
@@ -102,7 +120,22 @@ export default class ProgressHomeScreen extends React.PureComponent {
                     }}
                   />
                 ) : (
-                  <View style={styles.imagePlaceholder} />
+                  <View style={styles.imagePlaceholder}>
+                    <TouchableOpacity
+                      onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
+                      style={styles.imagePlaceholderButton}
+                    >
+                      <Icon
+                        name="add-circle"
+                        color={colors.white}
+                        size={20}
+                        style={{ alignSelf: 'center', marginBottom: 10 }}
+                      />
+                      <Text style={styles.imagePlaceholderButtonText}>
+                        Add current progress info
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 )
               }
             </View>
@@ -219,10 +252,14 @@ export default class ProgressHomeScreen extends React.PureComponent {
               </View>
             </View>
           </View>
-          <CustomButton
-            title="RETEST YOUR PROGRESS"
-            onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
-          />
+          {
+            initialProgressInfo && currentProgressInfo && (
+              <CustomButton
+                title="RETEST YOUR PROGRESS"
+                onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
+              />
+            )
+          }
         </ScrollView>
       </View>
     );
@@ -249,9 +286,23 @@ const styles = StyleSheet.create({
     height: (width / 3) * 2,
   },
   imagePlaceholder: {
-    backgroundColor: colors.grey.standard,
+    backgroundColor: colors.grey.light,
     width: width / 2,
     height: (width / 3) * 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imagePlaceholderButton: {
+    backgroundColor: colors.blue.standard,
+    maxWidth: '70%',
+    padding: 10,
+    borderRadius: 2,
+  },
+  imagePlaceholderButtonText: {
+    color: colors.white,
+    fontFamily: fonts.bold,
+    fontSize: 12,
+    textAlign: 'center',
   },
   contentContainer: {
     backgroundColor: colors.offWhite,
