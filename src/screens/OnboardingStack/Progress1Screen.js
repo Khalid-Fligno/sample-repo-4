@@ -14,7 +14,7 @@ import {
 import Modal from 'react-native-modal';
 import CustomButton from '../../components/CustomButton';
 import Loader from '../../components/Loader';
-import { weightOptions, waistOptions, hipOptions } from '../../utils';
+import { weightOptions, waistOptions, hipOptions } from '../../utils/index';
 import { db } from '../../../config/firebase';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -116,14 +116,18 @@ export default class Progress1Screen extends React.PureComponent {
               animationOut="fadeOut"
               animationOutTiming={800}
             >
-              <View style={styles.modalContainer}>
-                <View style={styles.helperModalContentContainer}>
+              <View style={styles.helperModalContainer}>
+                <View style={styles.helperModalTextContainer}>
                   <Text style={styles.headerText}>
                     Progress
                   </Text>
                   <Text style={styles.bodyText}>
                     {'Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test.\n\n'}
+                  </Text>
+                  <Text style={styles.bodyText}>
                     {'You will need to complete all three to successfully add an entry.\n\n'}
+                  </Text>
+                  <Text style={styles.bodyText}>
                     {'If you can\'t do all this right now, press skip in the top right corner.'}
                   </Text>
                 </View>
@@ -331,6 +335,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 28,
     color: colors.charcoal.light,
+    marginLeft: 5,
+    marginTop: 5,
     marginBottom: 10,
   },
   bodyText: {
@@ -342,15 +348,23 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flexShrink: 1,
+    justifyContent: 'space-between',
+    backgroundColor: colors.white,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  helperModalContainer: {
+    flexShrink: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: colors.white,
     borderRadius: 4,
     overflow: 'hidden',
   },
-  helperModalContentContainer: {
+  helperModalTextContainer: {
+    flexGrow: 1,
     justifyContent: 'space-between',
-    padding: 15,
+    padding: 10,
   },
   modalButton: {
     justifyContent: 'center',
@@ -358,6 +372,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.coral.standard,
     height: 50,
     width: '100%',
+    marginBottom: 0,
   },
   modalButtonText: {
     fontFamily: fonts.bold,
