@@ -18,6 +18,7 @@ const Header = ({
   stack,
   navigation,
   withBackButton,
+  withHelpButton,
   withSkipButton,
   withStartButton,
   withProfileButton,
@@ -45,19 +46,41 @@ const Header = ({
         stack === 'progress' && styles.progressHeader,
       ]}
     >
-      <TouchableOpacity
-        style={styles.headerContentContainerLeft}
-        onPress={() => withBackButton && navigation.pop()}
-      >
-        {
-          withBackButton &&
+      {
+        withBackButton && (
+          <TouchableOpacity
+            style={styles.headerContentContainerLeft}
+            onPress={() => navigation.pop()}
+          >
             <Icon
               name="chevron-left"
               size={20}
               color={colors.white}
             />
-        }
-      </TouchableOpacity>
+          </TouchableOpacity>
+        )
+      }
+      {
+        withHelpButton && (
+          <TouchableOpacity
+            style={styles.headerContentContainerLeft}
+            onPress={() => navigation.state.params.toggleHelperModal()}
+          >
+            <Icon
+              name="information"
+              size={30}
+              color={colors.white}
+            />
+          </TouchableOpacity>
+        )
+      }
+      {
+        !withBackButton && !withHelpButton && (
+          <View
+            style={styles.headerContentContainerLeft}
+          />
+        )
+      }
       <View
         style={styles.headerContentContainer}
       >
@@ -130,6 +153,7 @@ const Header = ({
 
 Header.propTypes = {
   withBackButton: PropTypes.bool,
+  withHelpButton: PropTypes.bool,
   withSkipButton: PropTypes.bool,
   withStartButton: PropTypes.bool,
   withProfileButton: PropTypes.bool,
@@ -139,6 +163,7 @@ Header.propTypes = {
 
 Header.defaultProps = {
   withBackButton: false,
+  withHelpButton: false,
   withSkipButton: false,
   withStartButton: false,
   withProfileButton: false,
