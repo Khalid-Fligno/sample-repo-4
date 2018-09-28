@@ -37,10 +37,13 @@ export default class Progress1Screen extends React.PureComponent {
     };
   }
   componentWillMount = () => {
-    this.props.navigation.setParams({ handleSkip: this.handleSkip });
+    this.props.navigation.setParams({ handleSkip: this.handleSkip, toggleHelperModal: this.toggleHelperModal });
   }
   componentDidMount = () => {
     this.fetchUom();
+  }
+  toggleHelperModal = () => {
+    this.setState((prevState) => ({ helperModalVisible: !prevState.helperModalVisible }));
   }
   fetchUom = async () => {
     this.setState({ loading: true });
