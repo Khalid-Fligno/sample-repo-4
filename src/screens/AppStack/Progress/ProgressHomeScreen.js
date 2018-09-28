@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import Image from 'react-native-image-progress';
+import Modal from 'react-native-modal';
 import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
@@ -29,10 +30,19 @@ export default class ProgressHomeScreen extends React.PureComponent {
       initialProgressInfo: null,
       currentProgressInfo: null,
       unitsOfMeasurement: null,
+      helperModalVisible: false,
     };
+  }
+  componentWillMount = () => {
+    this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
   }
   componentDidMount() {
     this.fetchProgressInfo();
+  }
+  toggleHelperModal = () => {
+    this.setState((prevState) => ({
+      helperModalVisible: !prevState.helperModalVisible,
+    }));
   }
   fetchProgressInfo = async () => {
     this.setState({ loading: true });
@@ -58,6 +68,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
       initialProgressInfo,
       currentProgressInfo,
       unitsOfMeasurement,
+      helperModalVisible,
     } = this.state;
     if (loading) {
       return (
@@ -261,6 +272,39 @@ export default class ProgressHomeScreen extends React.PureComponent {
             )
           }
         </ScrollView>
+        <Modal
+          isVisible={helperModalVisible}
+          animationIn="fadeIn"
+          animationInTiming={800}
+          animationOut="fadeOut"
+          animationOutTiming={800}
+        >
+          <View style={styles.helperModalContainer}>
+            <ScrollView contentContainerStyle={styles.helperModalTextContainer}>
+              <Text style={styles.headerText}>
+                Progress
+              </Text>
+              <Text style={styles.bodyText}>
+                {'Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test.\n\n'}
+              </Text>
+              <Text style={styles.bodyText}>
+                {'You will need to complete all three to successfully add an entry.\n\n'}
+              </Text>
+              <Text style={styles.bodyText}>
+                {'If you can\'t do all this right now, press skip in the top right corner.'}
+              </Text>
+            </ScrollView>
+            <TouchableOpacity
+              title="DONE"
+              onPress={() => this.toggleHelperModal()}
+              style={styles.modalButton}
+            >
+              <Text style={styles.modalButtonText}>
+                Ok, got it!
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -370,5 +414,47 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 14,
     color: colors.white,
+  },
+  helperModalContainer: {
+    flexShrink: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.white,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  helperModalTextContainer: {
+    // flexGrow: 1,
+    justifyContent: 'space-between',
+    padding: 10,
+  },
+  modalButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.blue.standard,
+    height: 50,
+    width: '100%',
+    marginBottom: 0,
+  },
+  modalButtonText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    marginTop: 3,
+  },
+  headerText: {
+    fontFamily: fonts.bold,
+    fontSize: 28,
+    color: colors.charcoal.light,
+    marginLeft: 5,
+    marginTop: 5,
+    marginBottom: 10,
+  },
+  bodyText: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.charcoal.light,
+    marginLeft: 5,
+    marginBottom: 5,
   },
 });
