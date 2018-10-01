@@ -67,7 +67,7 @@ const Header = ({
             onPress={() => navigation.state.params.toggleHelperModal()}
           >
             <Icon
-              name="information"
+              name="question-speech-bubble"
               size={30}
               color={colors.white}
             />
