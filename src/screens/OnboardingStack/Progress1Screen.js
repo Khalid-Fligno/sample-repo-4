@@ -404,6 +404,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   helperModalTextContainer: {
+    width: '100%',
     justifyContent: 'space-between',
     padding: 10,
     backgroundColor: colors.white,
