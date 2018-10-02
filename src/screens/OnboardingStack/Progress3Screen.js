@@ -72,7 +72,7 @@ export default class Progress3Screen extends React.PureComponent {
           </View>
           <View style={styles.contentContainer}>
             <Text style={styles.bodyText}>
-              How to do a burpee info here?
+              This is how you do a burpee
             </Text>
           </View>
           <View style={styles.buttonContainer}>
@@ -102,7 +102,8 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     width,
-    padding: 20,
+    padding: 10,
+    paddingTop: 15,
   },
   headerText: {
     fontFamily: fonts.bold,
