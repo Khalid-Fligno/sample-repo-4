@@ -3,47 +3,89 @@ export const uomMap = {
   imperial: 'Imperial (inch, lb)',
 };
 
-export const weightOptions = [
+export const weightOptionsMetric = [
   { value: 30, label: '30' },
 ];
 
-const populateWeightOptions = () => {
+const populateWeightOptionsMetric = () => {
   for (let i = 31; i <= 120; i += 1) {
-    weightOptions.push({
+    weightOptionsMetric.push({
       value: i,
       label: `${i}`,
     });
   }
 };
-populateWeightOptions();
+populateWeightOptionsMetric();
 
-export const waistOptions = [
+export const waistOptionsMetric = [
   { value: 20, label: '20' },
 ];
 
-const populateWaistOptions = () => {
+const populateWaistOptionsMetric = () => {
   for (let i = 21; i <= 120; i += 1) {
-    waistOptions.push({
+    waistOptionsMetric.push({
       value: i,
       label: `${i}`,
     });
   }
 };
-populateWaistOptions();
+populateWaistOptionsMetric();
 
-export const hipOptions = [
+export const hipOptionsMetric = [
   { value: 20, label: '20' },
 ];
 
-const populateHipOptions = () => {
+const populateHipOptionsMetric = () => {
   for (let i = 21; i <= 120; i += 1) {
-    hipOptions.push({
+    hipOptionsMetric.push({
       value: i,
       label: `${i}`,
     });
   }
 };
-populateHipOptions();
+populateHipOptionsMetric();
+
+export const weightOptionsImperial = [
+  { value: 60, label: '60' },
+];
+
+const populateWeightOptionsImperial = () => {
+  for (let i = 61; i <= 240; i += 1) {
+    weightOptionsImperial.push({
+      value: i,
+      label: `${i}`,
+    });
+  }
+};
+populateWeightOptionsImperial();
+
+export const waistOptionsImperial = [
+  { value: 15, label: '15' },
+];
+
+const populateWaistOptionsImperial = () => {
+  for (let i = 16; i <= 60; i += 1) {
+    waistOptionsImperial.push({
+      value: i,
+      label: `${i}`,
+    });
+  }
+};
+populateWaistOptionsImperial();
+
+export const hipOptionsImperial = [
+  { value: 15, label: '15' },
+];
+
+const populateHipOptionsImperial = () => {
+  for (let i = 16; i <= 60; i += 1) {
+    hipOptionsImperial.push({
+      value: i,
+      label: `${i}`,
+    });
+  }
+};
+populateHipOptionsImperial();
 
 export const burpeeOptions = [
   { value: 0, label: '0' },
