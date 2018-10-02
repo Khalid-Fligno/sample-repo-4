@@ -124,15 +124,6 @@ export default class Progress6Screen extends React.PureComponent {
             </Text>
           </View>
           <View style={styles.contentContainer}>
-            {/* <SelectInput
-              onSubmitEditing={(value) => this.setState({ burpeeCount: value })}
-              value={burpeeCount}
-              options={burpeeOptions}
-              style={styles.selector}
-              labelStyle={{
-                fontFamily: fonts.bold,
-              }}
-            /> */}
             <View style={styles.inputFieldContainer}>
               <Text style={styles.inputFieldTitle}>
                 Burpee Count
@@ -209,7 +200,8 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     width,
-    padding: 20,
+    padding: 10,
+    paddingTop: 15,
   },
   headerText: {
     fontFamily: fonts.bold,
