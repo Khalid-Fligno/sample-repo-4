@@ -103,12 +103,20 @@ export default class Exercise4Screen extends React.PureComponent {
             style={{ width, height: width }}
           />
           <View style={styles.currentExerciseTextContainer}>
-            <Text style={styles.currentExerciseNameText}>
-              {currentExercise.name.toUpperCase()}
-            </Text>
-            <Text style={styles.currentExerciseRepsText}>
-              {reps} REPS
-            </Text>
+            <View style={styles.currentExerciseNameTextContainer}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.currentExerciseNameText}
+              >
+                {currentExercise.name.toUpperCase()}
+              </Text>
+            </View>
+            <View style={styles.currentExerciseRepsTextContainer}>
+              <Text style={styles.currentExerciseRepsText}>
+                {reps} REPS
+              </Text>
+            </View>
           </View>
           <WorkoutTimer
             totalDuration={totalDuration}
@@ -145,15 +153,20 @@ const styles = StyleSheet.create({
   currentExerciseTextContainer: {
     width,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     paddingTop: 5,
     paddingLeft: 5,
     paddingRight: 5,
+  },
+  currentExerciseNameTextContainer: {
+    width: width - 100,
   },
   currentExerciseNameText: {
     fontFamily: fonts.bold,
     fontSize: 20,
     color: colors.coral.standard,
+  },
+  currentExerciseRepsTextContainer: {
+    width: 100,
   },
   currentExerciseRepsText: {
     fontFamily: fonts.bold,
