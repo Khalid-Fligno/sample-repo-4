@@ -272,22 +272,21 @@ export default class ProgressHomeScreen extends React.PureComponent {
           animationOutTiming={800}
         >
           <View style={styles.helperModalContainer}>
-            <ScrollView contentContainerStyle={styles.helperModalTextContainer}>
+            <View style={styles.helperModalTextContainer}>
               <Text style={styles.headerText}>
                 Progress
               </Text>
               <Text style={styles.bodyText}>
-                {'Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test.\n\n'}
+                {"This tab will show you how far you've come from when you first started.\n"}
               </Text>
               <Text style={styles.bodyText}>
-                {'You will need to complete all three to successfully add an entry.\n\n'}
+                {'Your initial progress photo and info will always stay on the left of this screen.\n'}
               </Text>
               <Text style={styles.bodyText}>
-                {'If you can\'t do all this right now, press skip in the top right corner.'}
+                {'Re-testing your progress will update the photo and information on the right hand side.'}
               </Text>
-            </ScrollView>
+            </View>
             <TouchableOpacity
-              title="DONE"
               onPress={() => this.toggleHelperModal()}
               style={styles.modalButton}
             >
@@ -415,6 +414,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   helperModalTextContainer: {
+    width: '100%',
     backgroundColor: colors.white,
     justifyContent: 'space-between',
     padding: 10,
