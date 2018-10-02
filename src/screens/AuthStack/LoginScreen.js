@@ -82,7 +82,7 @@ export default class LoginScreen extends React.PureComponent {
             });
         } else {
           this.setState({ loading: false });
-          this.props.navigation.navigate('EmailVerification');
+          this.props.navigation.navigate('EmailVerification', { email, password });
         }
       }
     } catch (err) {
