@@ -120,3 +120,12 @@ export const findReps = (fitnessLevel) => {
   }
   return 10;
 };
+
+export const diff = (a, b) => {
+  if ((b - a) > 0) {
+    return `+${(b - a)}`;
+  } else if ((b - a) < 0) {
+    return (b - a);
+  }
+  return null;
+};

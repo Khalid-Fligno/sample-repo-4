@@ -8,19 +8,11 @@ import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
 import CustomButton from '../../../components/CustomButton';
+import { diff } from '../../../utils/index';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
-
-const diff = (a, b) => {
-  if ((b - a) > 0) {
-    return `+${(b - a)}`;
-  } else if ((b - a) < 0) {
-    return (b - a);
-  }
-  return null;
-};
 
 export default class ProgressHomeScreen extends React.PureComponent {
   constructor(props) {
