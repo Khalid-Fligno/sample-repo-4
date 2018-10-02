@@ -82,11 +82,6 @@ export default class SettingsScreen extends React.PureComponent {
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollView}>
           <List containerStyle={styles.listContainer}>
-            <ListItem
-              title="Change Email"
-              titleStyle={styles.listItemTitle}
-              containerStyle={styles.listItemContainer}
-            />
             {
               // Only show password change if an email/password account is present
               isPasswordAccount && (
@@ -98,11 +93,6 @@ export default class SettingsScreen extends React.PureComponent {
                 />
               )
             }
-            <ListItem
-              title="Change Measurement Units"
-              titleStyle={styles.listItemTitle}
-              containerStyle={styles.listItemContainer}
-            />
           </List>
         </ScrollView>
       </View>
