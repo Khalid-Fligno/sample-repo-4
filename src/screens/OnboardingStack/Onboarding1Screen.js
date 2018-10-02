@@ -30,7 +30,7 @@ export default class Onboarding1Screen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
-      chosenDate: new Date(2008, 0, 1),
+      chosenDate: new Date(1990, 0, 1),
       dobModalVisible: false,
       chosenUom: 'metric',
       uomModalVisible: false,
@@ -224,7 +224,8 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     width,
-    padding: 20,
+    padding: 10,
+    paddingTop: 15,
   },
   headerText: {
     fontFamily: fonts.bold,
@@ -236,7 +237,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.light,
-    marginLeft: 5,
+    marginLeft: 3,
   },
   contentContainer: {
     flex: 1,
