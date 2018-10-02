@@ -13,6 +13,7 @@ import {
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
 import { Facebook } from 'expo';
+import Modal from 'react-native-modal';
 import { db, auth } from '../../../config/firebase';
 import Loader from '../../components/Loader';
 import Icon from '../../components/Icon';
@@ -32,6 +33,7 @@ export default class SignupScreen extends React.PureComponent {
       password: '',
       error: null,
       loading: false,
+      emailVerificationModalVisible: false,
     };
   }
   signupWithFacebook = async () => {
@@ -82,9 +84,10 @@ export default class SignupScreen extends React.PureComponent {
       };
       await db.collection('users').doc(uid).set(data);
       await AsyncStorage.setItem('uid', uid);
-      auth.currentUser.sendEmailVerification();
       this.setState({ loading: false });
-      this.props.navigation.navigate('EmailVerification');
+      auth.currentUser.sendEmailVerification().then(() => {
+        this.setState({ emailVerificationModalVisible: true });
+      });
     } catch (err) {
       const errorCode = err.code;
       this.setState({ error: errors.createUser[errorCode], loading: false });
@@ -108,6 +111,7 @@ export default class SignupScreen extends React.PureComponent {
       password,
       error,
       loading,
+      emailVerificationModalVisible,
     } = this.state;
     return (
       <SafeAreaView style={styles.safeAreaContainer} >
@@ -234,6 +238,32 @@ export default class SignupScreen extends React.PureComponent {
               )
             }
           </ScrollView>
+          <Modal
+            isVisible={emailVerificationModalVisible}
+            animationIn="fadeIn"
+            animationInTiming={800}
+            animationOut="fadeOut"
+            animationOutTiming={800}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalTextContainer}>
+                <Text style={styles.modalHeaderText}>
+                  Verify Email
+                </Text>
+                <Text style={styles.modalBodyText}>
+                  A verification email has been sent to your email address.  Please verify your email then log in to continue.
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => this.setState({ emailVerificationModalVisible: false })}
+                style={styles.modalButton}
+              >
+                <Text style={styles.modalButtonText}>
+                  OK
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
         </View>
       </SafeAreaView>
     );
@@ -345,5 +375,40 @@ const styles = StyleSheet.create({
     textDecorationStyle: 'solid',
     textDecorationColor: colors.grey.dark,
     textDecorationLine: 'underline',
+  },
+  modalContainer: {
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  modalTextContainer: {
+    backgroundColor: colors.white,
+    padding: 10,
+    paddingTop: 15,
+  },
+  modalHeaderText: {
+    fontFamily: fonts.bold,
+    fontSize: 28,
+    color: colors.charcoal.light,
+    marginBottom: 10,
+  },
+  modalBodyText: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.charcoal.dark,
+    marginLeft: 3,
+  },
+  modalButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.coral.standard,
+    height: 50,
+    width: '100%',
+    marginBottom: 0,
+  },
+  modalButtonText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    marginTop: 3,
   },
 });
