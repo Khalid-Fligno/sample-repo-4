@@ -8,6 +8,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import { auth } from '../../../config/firebase';
 import Loader from '../../components/Loader';
 import Icon from '../../components/Icon';
 import colors from '../../styles/colors';
@@ -21,6 +22,18 @@ export default class EmailVerificationScreen extends React.PureComponent {
     this.state = {
       loading: false,
     };
+  }
+  resendVerificationEmail = () => {
+    this.setState({ loading: true });
+    const { email, password } = this.props.navigation.state.params;
+    auth.signInWithEmailAndPassword(email, password);
+    const user = auth.currentUser;
+    user.sendEmailVerification().then(() => {
+      this.setState({ loading: false });
+      this.props.navigation.navigate('Login');
+    }).catch((error) => {
+      console.log(error);
+    });
   }
   render() {
     const {
@@ -44,7 +57,10 @@ export default class EmailVerificationScreen extends React.PureComponent {
           </View>
           <View style={styles.contentContainer}>
             <Text style={styles.text}>
-              A verification email has been sent to your email address
+              {'A verification email has been sent to your email address.\n'}
+            </Text>
+            <Text style={styles.text}>
+              {'Please verify your email address and then login to continue.'}
             </Text>
             <Icon
               name="email"
@@ -53,7 +69,16 @@ export default class EmailVerificationScreen extends React.PureComponent {
               style={styles.icon}
             />
             <Text style={styles.text}>
-              Please verify your email address and then login to continue
+              {'If the verification email is not in your inbox, check your junk mail.\n'}
+            </Text>
+            <Text style={styles.text}>
+              {'If you accidentally deleted it, you can re-send it by pressing below.'}
+            </Text>
+            <Text
+              onPress={() => this.resendVerificationEmail()}
+              style={styles.resendEmailLink}
+            >
+              Re-send verification email
             </Text>
           </View>
           {
@@ -108,5 +133,16 @@ const styles = StyleSheet.create({
   icon: {
     marginTop: 15,
     marginBottom: 15,
+  },
+  resendEmailLink: {
+    width: width - 30,
+    marginTop: 10,
+    paddingTop: 15,
+    paddingBottom: 15,
+    textAlign: 'center',
+    color: colors.grey.dark,
+    textDecorationStyle: 'solid',
+    textDecorationColor: colors.grey.dark,
+    textDecorationLine: 'underline',
   },
 });
