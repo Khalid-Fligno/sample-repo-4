@@ -419,12 +419,11 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.white,
     borderRadius: 4,
     overflow: 'hidden',
   },
   helperModalTextContainer: {
-    // flexGrow: 1,
+    backgroundColor: colors.white,
     justifyContent: 'space-between',
     padding: 10,
   },
