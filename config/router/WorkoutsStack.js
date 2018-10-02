@@ -37,6 +37,7 @@ const WorkoutsStack = createStackNavigator(
             withBackButton={workoutsBackButtonMap[routeName]}
             withStartButton={routeName === 'WorkoutInfo' || routeName === 'HiitWorkoutInfo'}
             withProfileButton={routeName === 'WorkoutsHome'}
+            withHelpButton={routeName === 'WorkoutsHome'}
             stack="workouts"
           />
         );

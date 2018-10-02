@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, ImageBackground, TouchableOpacity } from 'react-native';
 import { FileSystem } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 import FadeInView from 'react-native-fade-in-view';
+import Modal from 'react-native-modal';
 import CustomButton from '../../../components/CustomButton';
 import Loader from '../../../components/Loader';
-// import Tile from '../../../components/Tile';
 import { db } from '../../../../config/firebase';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -66,7 +66,16 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
       selectedWorkoutLocationIndex: 0,
       selectedHiitWorkoutIndex: 0,
       selectedResistanceFocusIndex: 0,
+      helperModalVisible: false,
     };
+  }
+  componentWillMount = () => {
+    this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
+  }
+  toggleHelperModal = () => {
+    this.setState((prevState) => ({
+      helperModalVisible: !prevState.helperModalVisible,
+    }));
   }
   handleWorkoutSelected = (selectedWorkoutLocationIndex, selectedResistanceFocusIndex) => {
     const workoutLocation = workoutLocationMap[selectedWorkoutLocationIndex];
@@ -126,6 +135,7 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
       selectedWorkoutLocationIndex,
       selectedHiitWorkoutIndex,
       selectedResistanceFocusIndex,
+      helperModalVisible,
     } = this.state;
     return (
       <View style={styles.container}>
@@ -197,6 +207,35 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
             primary
           />
         </View>
+        <Modal
+          isVisible={helperModalVisible}
+          animationIn="fadeIn"
+          animationInTiming={800}
+          animationOut="fadeOut"
+          animationOutTiming={800}
+        >
+          <View style={styles.helperModalContainer}>
+            <View style={styles.helperModalTextContainer}>
+              <Text style={styles.headerText}>
+                Workouts
+              </Text>
+              <Text style={styles.bodyText}>
+                {"Select what type of workout you'd like to do, working from top to bottom.\n"}
+              </Text>
+              <Text style={styles.bodyText}>
+                {'When you have finished selecting your workout type, press the button at the bottom of your screen to continue.'}
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => this.toggleHelperModal()}
+              style={styles.modalButton}
+            >
+              <Text style={styles.modalButtonText}>
+                Ok, got it!
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
         {
           loading && <Loader color={colors.coral.standard} loading={loading} />
         }
@@ -248,5 +287,47 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: colors.black,
     textAlign: 'center',
+  },
+  helperModalContainer: {
+    flexShrink: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  helperModalTextContainer: {
+    width: '100%',
+    backgroundColor: colors.white,
+    justifyContent: 'space-between',
+    padding: 10,
+  },
+  modalButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.coral.standard,
+    height: 50,
+    width: '100%',
+    marginBottom: 0,
+  },
+  modalButtonText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    marginTop: 3,
+  },
+  headerText: {
+    fontFamily: fonts.bold,
+    fontSize: 28,
+    color: colors.charcoal.light,
+    marginLeft: 5,
+    marginTop: 5,
+    marginBottom: 10,
+  },
+  bodyText: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.charcoal.light,
+    marginLeft: 5,
+    marginBottom: 5,
   },
 });
