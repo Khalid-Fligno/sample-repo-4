@@ -14,7 +14,14 @@ import {
 import Modal from 'react-native-modal';
 import CustomButton from '../../components/CustomButton';
 import Loader from '../../components/Loader';
-import { weightOptions, waistOptions, hipOptions } from '../../utils/index';
+import {
+  weightOptionsMetric,
+  waistOptionsMetric,
+  hipOptionsMetric,
+  weightOptionsImperial,
+  waistOptionsImperial,
+  hipOptionsImperial,
+} from '../../utils/index';
 import { db } from '../../../config/firebase';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -26,9 +33,9 @@ export default class Progress1Screen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
-      weight: 50,
-      waist: 50,
-      hip: 70,
+      weight: 60,
+      waist: 60,
+      hip: 60,
       weightModalVisible: false,
       waistModalVisible: false,
       hipModalVisible: false,
@@ -125,10 +132,10 @@ export default class Progress1Screen extends React.PureComponent {
                     Progress
                   </Text>
                   <Text style={styles.bodyText}>
-                    {'Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test.\n\n'}
+                    {'Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test.\n'}
                   </Text>
                   <Text style={styles.bodyText}>
-                    {'You will need to complete all three to successfully add an entry.\n\n'}
+                    {'You will need to complete all three to successfully add an entry.\n'}
                   </Text>
                   <Text style={styles.bodyText}>
                     {'If you can\'t do all this right now, press skip in the top right corner.'}
@@ -179,13 +186,25 @@ export default class Progress1Screen extends React.PureComponent {
                       selectedValue={weight}
                       onValueChange={(value) => this.setState({ weight: value })}
                     >
-                      {waistOptions.map((i) => (
-                        <Picker.Item
-                          key={i.value}
-                          label={`${i.label} ${unitsOfMeasurement === 'metric' ? 'kg' : ''}${unitsOfMeasurement === 'imperial' ? 'lbs' : ''}`}
-                          value={i.value}
-                        />
-                      ))}
+                      {
+                        unitsOfMeasurement === 'metric'
+                        ?
+                          weightOptionsMetric.map((i) => (
+                            <Picker.Item
+                              key={i.value}
+                              label={`${i.label} kg`}
+                              value={i.value}
+                            />
+                          ))
+                        :
+                          weightOptionsImperial.map((i) => (
+                            <Picker.Item
+                              key={i.value}
+                              label={`${i.label} lbs`}
+                              value={i.value}
+                            />
+                          ))
+                      }
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
@@ -225,13 +244,25 @@ export default class Progress1Screen extends React.PureComponent {
                       selectedValue={waist}
                       onValueChange={(value) => this.setState({ waist: value })}
                     >
-                      {weightOptions.map((i) => (
-                        <Picker.Item
-                          key={i.value}
-                          label={`${i.label} ${unitsOfMeasurement === 'metric' ? 'cm' : ''}${unitsOfMeasurement === 'imperial' ? 'inches' : ''}`}
-                          value={i.value}
-                        />
-                      ))}
+                      {
+                        unitsOfMeasurement === 'metric'
+                        ?
+                          waistOptionsMetric.map((i) => (
+                            <Picker.Item
+                              key={i.value}
+                              label={`${i.label} cm`}
+                              value={i.value}
+                            />
+                          ))
+                        :
+                          waistOptionsImperial.map((i) => (
+                            <Picker.Item
+                              key={i.value}
+                              label={`${i.label} inches`}
+                              value={i.value}
+                            />
+                          ))
+                      }
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
@@ -271,13 +302,25 @@ export default class Progress1Screen extends React.PureComponent {
                       selectedValue={hip}
                       onValueChange={(value) => this.setState({ hip: value })}
                     >
-                      {hipOptions.map((i) => (
-                        <Picker.Item
-                          key={i.value}
-                          label={`${i.label} ${unitsOfMeasurement === 'metric' ? 'cm' : ''}${unitsOfMeasurement === 'imperial' ? 'inches' : ''}`}
-                          value={i.value}
-                        />
-                      ))}
+                      {
+                        unitsOfMeasurement === 'metric'
+                        ?
+                          hipOptionsMetric.map((i) => (
+                            <Picker.Item
+                              key={i.value}
+                              label={`${i.label} cm`}
+                              value={i.value}
+                            />
+                          ))
+                        :
+                          hipOptionsImperial.map((i) => (
+                            <Picker.Item
+                              key={i.value}
+                              label={`${i.label} inches`}
+                              value={i.value}
+                            />
+                          ))
+                      }
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
@@ -332,25 +375,22 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     width,
-    padding: 20,
+    padding: 10,
+    paddingTop: 15,
   },
   headerText: {
     fontFamily: fonts.bold,
     fontSize: 28,
     color: colors.charcoal.light,
-    marginLeft: 5,
-    marginTop: 5,
     marginBottom: 10,
   },
   bodyText: {
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.light,
-    marginLeft: 5,
-    marginBottom: 5,
+    marginLeft: 3,
   },
   modalContainer: {
-    flexShrink: 1,
     justifyContent: 'space-between',
     backgroundColor: colors.white,
     borderRadius: 4,
@@ -360,14 +400,13 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.white,
     borderRadius: 4,
     overflow: 'hidden',
   },
   helperModalTextContainer: {
-    flexGrow: 1,
     justifyContent: 'space-between',
     padding: 10,
+    backgroundColor: colors.white,
   },
   modalButton: {
     justifyContent: 'center',
@@ -375,7 +414,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.coral.standard,
     height: 50,
     width: '100%',
-    marginBottom: 0,
   },
   modalButtonText: {
     fontFamily: fonts.bold,
@@ -384,7 +422,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
   contentContainer: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
   },
   inputFieldContainer: {
