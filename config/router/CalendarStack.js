@@ -16,6 +16,7 @@ const CalendarStack = createStackNavigator(
             navigation={navigation}
             stack="calendar"
             withProfileButton
+            withHelpButton
           />
         );
       },

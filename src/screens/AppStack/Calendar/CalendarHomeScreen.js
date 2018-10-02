@@ -14,6 +14,7 @@ import { FileSystem, Calendar, Permissions } from 'expo';
 import CalendarStrip from 'react-native-calendar-strip';
 import Swipeable from 'react-native-swipeable';
 import firebase from 'firebase';
+import Modal from 'react-native-modal';
 import { db, auth } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
@@ -35,8 +36,12 @@ export default class CalendarHomeScreen extends React.PureComponent {
       snack: undefined,
       loading: false,
       isSwiping: false,
+      helperModalVisible: false,
     };
     this.calendarStrip = React.createRef();
+  }
+  componentWillMount = () => {
+    this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
   }
   componentDidMount = async () => {
     this.setState({ loading: true });
@@ -61,6 +66,11 @@ export default class CalendarHomeScreen extends React.PureComponent {
   }
   componentWillUnmount() {
     this.unsubscribe();
+  }
+  toggleHelperModal = () => {
+    this.setState((prevState) => ({
+      helperModalVisible: !prevState.helperModalVisible,
+    }));
   }
   handleDateSelected = async (date) => {
     this.setState({ loading: true });
@@ -170,6 +180,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
       lunch,
       dinner,
       snack,
+      helperModalVisible,
     } = this.state;
     const loadingView = (
       <Loader
@@ -481,6 +492,38 @@ export default class CalendarHomeScreen extends React.PureComponent {
         </View>
         {dayDisplay}
         {loading && loadingView}
+        <Modal
+          isVisible={helperModalVisible}
+          animationIn="fadeIn"
+          animationInTiming={800}
+          animationOut="fadeOut"
+          animationOutTiming={800}
+        >
+          <View style={styles.helperModalContainer}>
+            <View style={styles.helperModalTextContainer}>
+              <Text style={styles.modalHeaderText}>
+                Calendar
+              </Text>
+              <Text style={styles.modalBodyText}>
+                {'Keep track of your scheduled workouts and meals using this tab.\n'}
+              </Text>
+              <Text style={styles.modalBodyText}>
+                {'You can go directly to your workouts or meals from this tab once you have added them.\n'}
+              </Text>
+              <Text style={styles.modalBodyText}>
+                {'To add a meal or workout, go to the recipe/workout page via the Nutrition/Workout tab and press the \'Add to Calendar\' button'}
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => this.toggleHelperModal()}
+              style={styles.modalButton}
+            >
+              <Text style={styles.modalButtonText}>
+                Ok, got it!
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -572,5 +615,47 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     color: colors.white,
     marginTop: 4,
+  },
+  helperModalContainer: {
+    flexShrink: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  helperModalTextContainer: {
+    width: '100%',
+    backgroundColor: colors.white,
+    justifyContent: 'space-between',
+    padding: 10,
+  },
+  modalButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.green.standard,
+    height: 50,
+    width: '100%',
+    marginBottom: 0,
+  },
+  modalButtonText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    marginTop: 3,
+  },
+  modalHeaderText: {
+    fontFamily: fonts.bold,
+    fontSize: 28,
+    color: colors.charcoal.light,
+    marginLeft: 5,
+    marginTop: 5,
+    marginBottom: 10,
+  },
+  modalBodyText: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.charcoal.light,
+    marginLeft: 5,
+    marginBottom: 5,
   },
 });
