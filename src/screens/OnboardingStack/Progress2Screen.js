@@ -162,7 +162,7 @@ export default class Progress2Screen extends React.PureComponent {
         <View style={styles.flexContainer}>
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>
-              Add a progress photo
+              Progress photo
             </Text>
             <Text style={styles.bodyText}>
               Take a progress photo, or upload one from your camera roll.  Photos must be portrait.
@@ -200,7 +200,7 @@ export default class Progress2Screen extends React.PureComponent {
           </View>
           <View style={styles.buttonContainer}>
             {
-              error && <Text style={{ textAlign: 'center', margin: 10 }}>{error}</Text>
+              error && <Text style={styles.errorText}>{error}</Text>
             }
             <CustomButton
               title="NEXT"
@@ -231,7 +231,8 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     width,
-    padding: 20,
+    padding: 10,
+    paddingTop: 15,
   },
   headerText: {
     fontFamily: fonts.bold,
@@ -243,10 +244,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.light,
-    marginLeft: 5,
+    marginLeft: 3,
   },
   contentContainer: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -289,5 +290,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: 10,
+  },
+  errorText: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.coral.standard,
+    textAlign: 'center',
+    margin: 10,
   },
 });
