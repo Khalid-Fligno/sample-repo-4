@@ -112,7 +112,7 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
     }
   }
 
-  renderItem = ({ item, index }) => {
+  renderItem = ({ item }) => {
     return (
       <View style={styles.slide}>
         <ImageBackground
