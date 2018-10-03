@@ -79,9 +79,9 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
     this.setState({ addingToCalendar: false });
     Alert.alert(
       'Added to calendar!',
-      `${workout.name}\n${formattedDate}`,
+      `${workout.name.toUpperCase()}}`,
       [
-        { text: 'Ok', onPress: () => this.setState({ modalVisible: false }), style: 'cancel' },
+        { text: 'OK', onPress: () => this.setState({ modalVisible: false }), style: 'cancel' },
       ],
       { cancelable: false },
     );
