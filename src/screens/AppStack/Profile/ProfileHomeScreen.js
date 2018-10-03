@@ -83,15 +83,15 @@ export default class ProfileHomeScreen extends React.PureComponent {
             size={100}
             color={colors.charcoal.standard}
           />
-          <Text
-            style={{
-              marginTop: 15,
-              fontFamily: fonts.bold,
-              fontSize: 24,
-            }}
-          >
-            {profile && profile.firstName} {profile && profile.lastName}
-          </Text>
+          <View style={styles.nameTextContainer}>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={styles.nameText}
+            >
+              {profile && profile.firstName} {profile && profile.lastName}
+            </Text>
+          </View>
           <List containerStyle={styles.listContainer}>
             <ListItem
               activeOpacity={0.5}
@@ -152,6 +152,15 @@ const styles = StyleSheet.create({
   scrollView: {
     paddingTop: 15,
     alignItems: 'center',
+  },
+  nameTextContainer: {
+    width,
+    alignItems: 'center',
+  },
+  nameText: {
+    marginTop: 15,
+    fontFamily: fonts.bold,
+    fontSize: 24,
   },
   listContainer: {
     width,
