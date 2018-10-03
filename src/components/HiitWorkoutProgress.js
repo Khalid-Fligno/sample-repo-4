@@ -54,7 +54,7 @@ class HiitWorkoutProgress extends React.PureComponent {
           <Icon
             name="tick-heavy"
             color={colors.charcoal.dark}
-            size={20}
+            size={18}
           />
         </View>
       </View>
@@ -174,9 +174,11 @@ HiitWorkoutProgress.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height: 40,
+    height: 35,
     paddingLeft: 10,
     paddingRight: 10,
+    marginTop: 10,
+    marginBottom: 10,
   },
   exercise: {
     flex: 1,
@@ -186,31 +188,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pieChart: {
-    height: 40,
-    width: 40,
+    height: 35,
+    width: 35,
   },
   invisibleView: {
     height: 0,
   },
   tickContainer: {
-    marginTop: -30,
+    marginTop: -26,
   },
   currentRoundTextContainer: {
-    marginTop: -34,
+    marginTop: -26,
   },
   currentRoundText: {
     fontFamily: fonts.bold,
-    fontSize: 20,
-    marginTop: 4,
+    fontSize: 18,
     color: colors.charcoal.dark,
   },
   inactiveRoundTextContainer: {
-    marginTop: -34,
+    marginTop: -26,
   },
   inactiveRoundText: {
     fontFamily: fonts.bold,
-    fontSize: 20,
-    marginTop: 4,
+    fontSize: 18,
     color: colors.grey.light,
   },
 });
