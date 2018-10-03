@@ -49,7 +49,7 @@ export default class HiitCountdownScreen extends React.PureComponent {
           handleFinish={() => this.finishCountdown(exerciseList, fitnessLevel)}
         />
         <Text style={styles.countdownText}>
-          GET READY! HIIT
+          GET READY!
         </Text>
       </View>
     );
