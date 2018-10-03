@@ -10,8 +10,10 @@ const Tile = ({
   onPress,
   title1,
   image,
+  disabled,
 }) => (
   <TouchableOpacity
+    disabled={disabled}
     onPress={onPress}
     style={styles.cardContainer}
   >
@@ -32,6 +34,11 @@ Tile.propTypes = {
   onPress: PropTypes.func.isRequired,
   title1: PropTypes.string.isRequired,
   image: PropTypes.number.isRequired,
+  disabled: PropTypes.bool,
+};
+
+Tile.defaultProps = {
+  disabled: false,
 };
 
 const styles = StyleSheet.create({
