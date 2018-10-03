@@ -71,6 +71,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
         title1={workout.name.toUpperCase()}
         image={require('../../../../assets/images/workouts-upper.jpg')}
         onPress={() => this.loadExercises(workout)}
+        disabled={workout.disabled}
       />
     ));
 
