@@ -64,7 +64,7 @@ export default class Progress1Screen extends React.PureComponent {
   handleSkip = () => {
     Alert.alert(
       'Warning',
-      'You will need to do this before your first workout',
+      'Skipping means that you will lose any information that you have already entered.',
       [
         {
           text: 'Cancel', style: 'cancel',
