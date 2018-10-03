@@ -627,7 +627,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: colors.white,
     justifyContent: 'space-between',
-    padding: 10,
+    padding: 15,
   },
   modalButton: {
     justifyContent: 'center',
@@ -647,8 +647,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 28,
     color: colors.charcoal.light,
-    marginLeft: 5,
-    marginTop: 5,
     marginBottom: 10,
   },
   modalBodyText: {
@@ -656,6 +654,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.charcoal.light,
     marginLeft: 5,
-    marginBottom: 5,
+    marginRight: 5,
   },
 });

@@ -273,16 +273,16 @@ export default class ProgressHomeScreen extends React.PureComponent {
         >
           <View style={styles.helperModalContainer}>
             <View style={styles.helperModalTextContainer}>
-              <Text style={styles.headerText}>
+              <Text style={styles.modalHeaderText}>
                 Progress
               </Text>
-              <Text style={styles.bodyText}>
+              <Text style={styles.modalBodyText}>
                 {"This tab will show you how far you've come from when you first started.\n"}
               </Text>
-              <Text style={styles.bodyText}>
+              <Text style={styles.modalBodyText}>
                 {'Your initial progress photo and info will always stay on the left of this screen.\n'}
               </Text>
-              <Text style={styles.bodyText}>
+              <Text style={styles.modalBodyText}>
                 {'Re-testing your progress will update the photo and information on the right hand side.'}
               </Text>
             </View>
@@ -417,7 +417,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: colors.white,
     justifyContent: 'space-between',
-    padding: 10,
+    padding: 15,
   },
   modalButton: {
     justifyContent: 'center',
@@ -425,7 +425,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue.standard,
     height: 50,
     width: '100%',
-    marginBottom: 0,
   },
   modalButtonText: {
     fontFamily: fonts.bold,
@@ -433,19 +432,17 @@ const styles = StyleSheet.create({
     color: colors.white,
     marginTop: 3,
   },
-  headerText: {
+  modalHeaderText: {
     fontFamily: fonts.bold,
     fontSize: 28,
     color: colors.charcoal.light,
-    marginLeft: 5,
-    marginTop: 5,
     marginBottom: 10,
   },
-  bodyText: {
+  modalBodyText: {
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.light,
     marginLeft: 5,
-    marginBottom: 5,
+    marginRight: 5,
   },
 });
