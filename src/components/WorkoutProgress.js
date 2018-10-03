@@ -69,7 +69,7 @@ class WorkoutProgress extends React.PureComponent {
           <Icon
             name="tick-heavy"
             color={colors.charcoal.dark}
-            size={24}
+            size={22}
           />
         </View>
       </View>
@@ -155,7 +155,7 @@ WorkoutProgress.propTypes = {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height: 50,
+    height: 48,
     paddingLeft: 10,
     paddingRight: 10,
   },
@@ -167,8 +167,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pieChart: {
-    height: 50,
-    width: 50,
+    height: 48,
+    width: 48,
   },
   invisibleView: {
     height: 0,
@@ -177,12 +177,11 @@ const styles = StyleSheet.create({
     marginTop: -36,
   },
   currentSetTextContainer: {
-    marginTop: -40,
+    marginTop: -36,
   },
   currentSetText: {
     fontFamily: fonts.bold,
     fontSize: 24,
-    marginTop: 4,
     color: colors.charcoal.dark,
   },
 });
