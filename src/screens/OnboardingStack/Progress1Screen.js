@@ -39,7 +39,7 @@ export default class Progress1Screen extends React.PureComponent {
       weightModalVisible: false,
       waistModalVisible: false,
       hipModalVisible: false,
-      helperModalVisible: true,
+      helperModalVisible: false,
       unitsOfMeasurement: null,
     };
   }
