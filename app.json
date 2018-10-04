@@ -8,6 +8,7 @@
     "splash": {
       "image": "./assets/icons/fitazfk-splash-dark.png",
       "backgroundColor": "#000000"
-    }
+    },
+    "orientation": "portrait"
   }
 }
