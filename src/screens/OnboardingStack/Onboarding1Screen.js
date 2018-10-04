@@ -55,6 +55,11 @@ export default class Onboarding1Screen extends React.PureComponent {
         dob,
         unitsOfMeasurement: chosenUom,
         onboarded: true,
+        resistanceWeeklyTarget: 3,
+        hiitWeeklyTarget: 2,
+        resistanceWeeklyComplete: 0,
+        hiitWeeklyComplete: 0,
+        currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
       };
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
