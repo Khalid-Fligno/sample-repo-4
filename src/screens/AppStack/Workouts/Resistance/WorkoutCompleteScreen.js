@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
 import { FileSystem } from 'expo';
+import { db } from '../../../../../config/firebase';
 import colors from '../../../../styles/colors';
 
 export default class WorkoutCompleteScreen extends React.PureComponent {
@@ -23,6 +24,16 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     // } catch (err) {
     //   console.log(`Filesystem delete error: ${err}`);
     // }
+  }
+  componentDidMount = async () => {
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    return db.runTransaction((transaction) => {
+      return transaction.get(userRef).then((userDoc) => {
+        const newResistanceWeeklyComplete = userDoc.data().resistanceWeeklyComplete + 1;
+        transaction.update(userRef, { resistanceWeeklyComplete: newResistanceWeeklyComplete });
+      });
+    });
   }
   render() {
     return (

@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
 import { FileSystem } from 'expo';
+import { db } from '../../../../../config/firebase';
 import colors from '../../../../styles/colors';
 
 export default class HiitWorkoutCompleteScreen extends React.PureComponent {
@@ -10,20 +11,22 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
     };
   }
   componentWillMount = async () => {
-    // const exerciseList = this.props.navigation.getParam('exerciseList', null);
     try {
       FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-1.mp4`, { idempotent: true });
       FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-2.mp4`, { idempotent: true });
     } catch (err) {
       console.log(err);
     }
-    // try {
-    //   await Promise.all(exerciseList.map(async (exercise, index) => {
-    //     await FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`);
-    //   }));
-    // } catch (err) {
-    //   console.log(`Filesystem delete error: ${err}`);
-    // }
+  }
+  componentDidMount = async () => {
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    return db.runTransaction((transaction) => {
+      return transaction.get(userRef).then((userDoc) => {
+        const newHiitWeeklyComplete = userDoc.data().hiitWeeklyComplete + 1;
+        transaction.update(userRef, { hiitWeeklyComplete: newHiitWeeklyComplete });
+      });
+    });
   }
   render() {
     return (
