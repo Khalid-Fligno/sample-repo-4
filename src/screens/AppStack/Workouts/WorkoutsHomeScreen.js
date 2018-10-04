@@ -1,9 +1,18 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, ImageBackground, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  ImageBackground,
+  TouchableOpacity,
+  AsyncStorage,
+} from 'react-native';
 import { FileSystem } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 import FadeInView from 'react-native-fade-in-view';
 import Modal from 'react-native-modal';
+import moment from 'moment';
 import CustomButton from '../../../components/CustomButton';
 import Loader from '../../../components/Loader';
 import { db } from '../../../../config/firebase';
@@ -13,8 +22,8 @@ import fonts from '../../../styles/fonts';
 const { width } = Dimensions.get('window');
 
 const workoutTypes = [
-  { displayName: 'RESISTANCE' },
-  { displayName: 'HIIT' },
+  { displayName: 'RESISTANCE', resistance: true },
+  { displayName: 'HIIT', hiit: true },
 ];
 
 const workoutLocations = [
@@ -67,10 +76,39 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
       selectedHiitWorkoutIndex: 0,
       selectedResistanceFocusIndex: 0,
       helperModalVisible: false,
+      resistanceWeeklyTarget: undefined,
+      hiitWeeklyTarget: undefined,
+      resistanceWeeklyComplete: undefined,
+      hiitWeeklyComplete: undefined,
     };
   }
   componentWillMount = () => {
     this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
+  }
+  componentDidMount = () => {
+    this.fetchWeeklyTargetInfo();
+  }
+  fetchWeeklyTargetInfo = async () => {
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem('uid', null);
+    const userRef = db.collection('users').doc(uid);
+    userRef.onSnapshot(async (doc) => {
+      this.setState({
+        resistanceWeeklyTarget: await doc.data().resistanceWeeklyTarget,
+        hiitWeeklyTarget: await doc.data().hiitWeeklyTarget,
+        resistanceWeeklyComplete: await doc.data().resistanceWeeklyComplete,
+        hiitWeeklyComplete: await doc.data().hiitWeeklyComplete,
+        loading: false,
+      });
+      if (await doc.data().currentWeekStartDate !== moment().startOf('week').format('YYYY-MM-DD')) {
+        const data = {
+          resistanceWeeklyComplete: 0,
+          hiitWeeklyComplete: 0,
+          currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
+        };
+        await userRef.set(data, { merge: true });
+      }
+    });
   }
   toggleHelperModal = () => {
     this.setState((prevState) => ({
@@ -113,6 +151,12 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
   }
 
   renderItem = ({ item }) => {
+    const {
+      resistanceWeeklyTarget,
+      hiitWeeklyTarget,
+      resistanceWeeklyComplete,
+      hiitWeeklyComplete,
+    } = this.state;
     return (
       <View style={styles.slide}>
         <ImageBackground
@@ -123,6 +167,24 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
             <Text style={styles.title}>
               {item.displayName}
             </Text>
+            {
+              item.resistance && (
+                <Text style={styles.weeklyTargetText}>
+                  {
+                    resistanceWeeklyTarget && (resistanceWeeklyTarget - resistanceWeeklyComplete > 0) ?
+                    `${resistanceWeeklyTarget - resistanceWeeklyComplete} sessions remaining` :
+                    'Weekly sessions complete'
+                  }
+                </Text>
+              )
+            }
+            {
+              item.hiit && (
+                <Text style={styles.weeklyTargetText}>
+                  {hiitWeeklyTarget && `${hiitWeeklyTarget - hiitWeeklyComplete} sessions remaining`}
+                </Text>
+              )
+            }
           </View>
         </ImageBackground>
       </View>
@@ -275,6 +337,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   titleContainer: {
+    justifyContent: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.65 )',
     paddingTop: 8,
     paddingRight: 12,
@@ -282,11 +345,23 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
     borderRadius: 2,
   },
+  weeklyTargetContainer: {
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.65 )',
+    paddingTop: 8,
+    paddingRight: 12,
+    paddingBottom: 3,
+    paddingLeft: 12,
+    borderRadius: 2,
+  },
+  weeklyTargetText: {
+    fontFamily: fonts.standard,
+    fontSize: 12,
+  },
   title: {
     fontFamily: fonts.bold,
     fontSize: 24,
     color: colors.black,
-    textAlign: 'center',
   },
   helperModalContainer: {
     flexShrink: 1,
