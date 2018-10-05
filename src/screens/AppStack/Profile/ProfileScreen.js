@@ -1,10 +1,21 @@
 import React from 'react';
-import { StyleSheet, View, AsyncStorage, ScrollView, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  AsyncStorage,
+  ScrollView,
+  Dimensions,
+  Picker,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import { DangerZone } from 'expo';
+import Modal from 'react-native-modal';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
+import { weeklySessionsPickerOptions } from '../../../utils';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -17,9 +28,13 @@ export default class ProfileHomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      profile: null,
+      profile: undefined,
       loading: false,
-      timezone: null,
+      timezone: undefined,
+      resistanceModalVisible: false,
+      resistanceWeeklyTarget: undefined,
+      hiitModalVisible: false,
+      hiitWeeklyTarget: undefined,
     };
   }
   componentDidMount = async () => {
@@ -27,6 +42,26 @@ export default class ProfileHomeScreen extends React.PureComponent {
   }
   componentWillUnmount() {
     this.unsubscribe();
+  }
+  toggleResistanceModal = () => {
+    this.setState((prevState) => ({ resistanceModalVisible: !prevState.resistanceModalVisible }));
+  }
+  toggleHiitModal = () => {
+    this.setState((prevState) => ({ hiitModalVisible: !prevState.hiitModalVisible }));
+  }
+  updateWeeklyTarget = async (workoutType, newValue) => {
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    let data;
+    if (workoutType === 'resistance') {
+      data = { resistanceWeeklyTarget: newValue };
+      userRef.set(data, { merge: true });
+      this.toggleResistanceModal();
+    } else {
+      data = { hiitWeeklyTarget: newValue };
+      userRef.set(data, { merge: true });
+      this.toggleHiitModal();
+    }
   }
   fetchProfile = async () => {
     this.setState({ loading: true });
@@ -39,6 +74,8 @@ export default class ProfileHomeScreen extends React.PureComponent {
             profile: await doc.data(),
             timezone,
             loading: false,
+            resistanceWeeklyTarget: await doc.data().resistanceWeeklyTarget,
+            hiitWeeklyTarget: await doc.data().hiitWeeklyTarget,
           });
         } else {
           this.setState({ loading: false });
@@ -46,15 +83,15 @@ export default class ProfileHomeScreen extends React.PureComponent {
       });
   }
   render() {
-    const { profile, timezone, loading } = this.state;
-    if (loading) {
-      return (
-        <Loader
-          loading={loading}
-          color={colors.charcoal.standard}
-        />
-      );
-    }
+    const {
+      profile,
+      timezone,
+      loading,
+      resistanceModalVisible,
+      resistanceWeeklyTarget,
+      hiitModalVisible,
+      hiitWeeklyTarget,
+    } = this.state;
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollView}>
@@ -96,7 +133,110 @@ export default class ProfileHomeScreen extends React.PureComponent {
               containerStyle={styles.listItemContainer}
               hideChevron
             />
+            <ListItem
+              title="Weekly Resistance Goal"
+              titleStyle={styles.listItemTitleStyle}
+              subtitle={profile && `${profile.resistanceWeeklyTarget} sessions`}
+              subtitleStyle={styles.listItemSubtitleStyle}
+              containerStyle={styles.listItemContainer}
+              onPress={() => this.toggleResistanceModal()}
+              rightIcon={<Icon name="edit-outline" size={20} color={colors.grey.dark} />}
+            />
+            <ListItem
+              title="Weekly HIIT Goal"
+              titleStyle={styles.listItemTitleStyle}
+              subtitle={profile && `${profile.hiitWeeklyTarget} sessions`}
+              subtitleStyle={styles.listItemSubtitleStyle}
+              containerStyle={styles.listItemContainer}
+              onPress={() => this.toggleHiitModal()}
+              rightIcon={<Icon name="edit-outline" size={20} color={colors.grey.dark} />}
+            />
           </List>
+          <Modal
+            isVisible={resistanceModalVisible}
+            onBackdropPress={() => this.toggleResistanceModal()}
+            animationIn="fadeIn"
+            animationInTiming={600}
+            animationOut="fadeOut"
+            animationOutTiming={600}
+          >
+            <View style={styles.modalContainer}>
+              <Picker
+                selectedValue={resistanceWeeklyTarget}
+                onValueChange={(value) => this.setState({ resistanceWeeklyTarget: value })}
+              >
+                {weeklySessionsPickerOptions.map((i) => (
+                  <Picker.Item
+                    key={i.value}
+                    label={i.label}
+                    value={i.value}
+                  />
+                ))}
+              </Picker>
+              <TouchableOpacity
+                title="DONE"
+                onPress={() => this.toggleResistanceModal()}
+                style={styles.modalCancelButton}
+              >
+                <Text style={styles.modalButtonText}>
+                  CANCEL
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                title="DONE"
+                onPress={() => this.updateWeeklyTarget('resistance', resistanceWeeklyTarget)}
+                style={styles.modalButton}
+              >
+                <Text style={styles.modalButtonText}>
+                  UPDATE
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+          <Modal
+            isVisible={hiitModalVisible}
+            onBackdropPress={() => this.toggleHiitModal()}
+            animationIn="fadeIn"
+            animationInTiming={600}
+            animationOut="fadeOut"
+            animationOutTiming={600}
+          >
+            <View style={styles.modalContainer}>
+              <Picker
+                selectedValue={hiitWeeklyTarget}
+                onValueChange={(value) => this.setState({ hiitWeeklyTarget: value })}
+              >
+                {weeklySessionsPickerOptions.map((i) => (
+                  <Picker.Item
+                    key={i.value}
+                    label={i.label}
+                    value={i.value}
+                  />
+                ))}
+              </Picker>
+              <TouchableOpacity
+                title="DONE"
+                onPress={() => this.toggleHiitModal()}
+                style={styles.modalCancelButton}
+              >
+                <Text style={styles.modalButtonText}>
+                  CANCEL
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                title="DONE"
+                onPress={() => this.updateWeeklyTarget('hiit', hiitWeeklyTarget)}
+                style={styles.modalButton}
+              >
+                <Text style={styles.modalButtonText}>
+                  UPDATE
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+          {
+            loading && <Loader loading={loading} color={colors.charcoal.standard} />
+          }
         </ScrollView>
       </View>
     );
@@ -128,13 +268,38 @@ const styles = StyleSheet.create({
   },
   listItemTitleStyle: {
     fontFamily: fonts.bold,
-    color: colors.charcoal.standard,
+    color: colors.grey.standard,
     fontSize: 16,
   },
   listItemSubtitleStyle: {
     fontFamily: fonts.bold,
-    color: colors.grey.standard,
+    color: colors.charcoal.standard,
     fontSize: 16,
     marginTop: 5,
+  },
+  modalContainer: {
+    backgroundColor: colors.white,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  modalCancelButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.charcoal.light,
+    height: 50,
+    width: '100%',
+  },
+  modalButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.charcoal.standard,
+    height: 50,
+    width: '100%',
+  },
+  modalButtonText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    marginTop: 3,
   },
 });
