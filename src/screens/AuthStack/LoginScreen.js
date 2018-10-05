@@ -12,6 +12,7 @@ import {
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
 import { Facebook } from 'expo';
+import firebase from 'firebase';
 import { db, auth } from '../../../config/firebase';
 import Loader from '../../components/Loader';
 import Icon from '../../components/Icon';
@@ -63,6 +64,7 @@ export default class LoginScreen extends React.PureComponent {
   login = async (email, password) => {
     this.setState({ loading: true });
     try {
+      await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       const response = await auth.signInWithEmailAndPassword(email, password);
       if (response) {
         const { uid } = response.user;
