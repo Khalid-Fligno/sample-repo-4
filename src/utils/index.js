@@ -129,3 +129,17 @@ export const diff = (a, b) => {
   }
   return null;
 };
+
+export const weeklySessionsPickerOptions = [
+  { value: 0, label: '0' },
+];
+
+const populateWeeklySessionsPickerOptions = () => {
+  for (let i = 1; i <= 5; i += 1) {
+    weeklySessionsPickerOptions.push({
+      value: i,
+      label: `${i}`,
+    });
+  }
+};
+populateWeeklySessionsPickerOptions();
