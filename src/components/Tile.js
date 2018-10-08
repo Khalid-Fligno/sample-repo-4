@@ -55,9 +55,8 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: 25,
     borderRadius: 2,
     overflow: 'hidden',
   },
