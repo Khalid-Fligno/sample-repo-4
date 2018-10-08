@@ -10,10 +10,10 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { Button } from 'react-native-elements';
 import { FileSystem, Video } from 'expo';
 import Modal from 'react-native-modal';
 import Carousel from 'react-native-carousel';
+import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
@@ -79,7 +79,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
     this.setState({ addingToCalendar: false });
     Alert.alert(
       'Added to calendar!',
-      `${workout.name.toUpperCase()}}`,
+      `${workout.name.toUpperCase()}`,
       [
         { text: 'OK', onPress: () => this.setState({ modalVisible: false }), style: 'cancel' },
       ],
@@ -182,14 +182,24 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                 onDateChange={this.setDate}
                 minimumDate={new Date()}
               />
-              <View style={styles.addToCalendarModalButtonContainer}>
-                <Button
-                  title="Add to calendar"
-                  onPress={() => this.addWorkoutToCalendar(chosenDate)}
-                  loading={addingToCalendar}
-                  buttonStyle={styles.addToCalendarModalButton}
-                />
-              </View>
+              <TouchableOpacity
+                onPress={() => this.addWorkoutToCalendar(chosenDate)}
+                style={styles.modalButton}
+              >
+                {
+                  addingToCalendar ? (
+                    <DotIndicator
+                      color={colors.white}
+                      count={3}
+                      size={6}
+                    />
+                  ) : (
+                    <Text style={styles.modalButtonText}>
+                      ADD TO CALENDAR
+                    </Text>
+                  )
+                }
+              </TouchableOpacity>
             </View>
           </Modal>
           <View style={styles.workoutInfoContainer}>
@@ -269,17 +279,22 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: colors.white,
-    borderRadius: 8,
-  },
-  addToCalendarModalButtonContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 10,
-  },
-  addToCalendarModalButton: {
-    width: width - 60,
-    backgroundColor: colors.coral.standard,
     borderRadius: 4,
+    overflow: 'hidden',
+  },
+  modalButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.coral.standard,
+    height: 50,
+    width: '100%',
+    marginBottom: 0,
+  },
+  modalButtonText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    marginTop: 3,
   },
   workoutInfoContainer: {
     backgroundColor: colors.white,

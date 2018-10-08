@@ -12,8 +12,9 @@ import {
 } from 'react-native';
 import { FileSystem } from 'expo';
 import Modal from 'react-native-modal';
-import { Divider, Button } from 'react-native-elements';
+import { Divider } from 'react-native-elements';
 import Image from 'react-native-scalable-image';
+import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
@@ -202,15 +203,25 @@ export default class RecipeScreen extends React.PureComponent {
                   )
                 }
               </View>
-              <View style={styles.addToCalendarModalButtonContainer}>
-                <Button
-                  title="Add to calendar"
-                  onPress={() => this.addRecipeToCalendar(chosenDate)}
-                  loading={addingToCalendar}
-                  buttonStyle={styles.addToCalendarModalButton}
-                  disabled={!calendarMeal}
-                />
-              </View>
+              <TouchableOpacity
+                onPress={() => this.addRecipeToCalendar(chosenDate)}
+                style={[styles.modalButton, !calendarMeal && styles.disabledModalButton]}
+                disabled={!calendarMeal}
+              >
+                {
+                  addingToCalendar ? (
+                    <DotIndicator
+                      color={colors.white}
+                      count={3}
+                      size={6}
+                    />
+                  ) : (
+                    <Text style={styles.modalButtonText}>
+                      ADD TO CALENDAR
+                    </Text>
+                  )
+                }
+              </TouchableOpacity>
             </View>
           </Modal>
           <Image
@@ -389,17 +400,30 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: colors.white,
-    borderRadius: 8,
-  },
-  addToCalendarModalButtonContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 10,
-  },
-  addToCalendarModalButton: {
-    width: width - 55,
-    backgroundColor: colors.violet.standard,
     borderRadius: 4,
+    overflow: 'hidden',
+  },
+  modalButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.violet.standard,
+    height: 50,
+    width: '100%',
+    marginBottom: 0,
+  },
+  disabledModalButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.grey.standard,
+    height: 50,
+    width: '100%',
+    marginBottom: 0,
+  },
+  modalButtonText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    marginTop: 3,
   },
   addToCalendarButtonText: {
     fontFamily: fonts.standard,
