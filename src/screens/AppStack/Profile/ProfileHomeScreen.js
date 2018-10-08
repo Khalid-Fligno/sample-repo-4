@@ -53,7 +53,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
       { cancelable: false },
     );
   }
-  logOut = async () => {
+  logOut = () => {
     try {
       this.setState({ loading: true });
       AsyncStorage.removeItem('uid');
