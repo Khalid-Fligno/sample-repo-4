@@ -39,20 +39,23 @@ export default class LoginScreen extends React.PureComponent {
       });
       if (type === 'success') {
         this.setState({ loading: true });
-        const credential = auth.FacebookAuthProvider.credential(token);
-        const response = await auth.signInAndRetrieveDataWithCredential(credential);
+        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+        const response = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
         const { uid } = response.user;
         await AsyncStorage.setItem('uid', uid);
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
-            if (await doc.data().onboarded) {
-              await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
-              this.setState({ loading: false });
-              this.props.navigation.navigate('App');
-            } else {
+            if (await doc.data().onboarded !== true) {
               this.setState({ loading: false });
               this.props.navigation.navigate('Onboarding');
+            } else {
+              if (await doc.data().fitnessLevel) {
+                await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+              }
+              this.setState({ loading: false });
+              this.props.navigation.navigate('App');
             }
           });
       }
@@ -73,13 +76,15 @@ export default class LoginScreen extends React.PureComponent {
           db.collection('users').doc(uid)
             .get()
             .then(async (doc) => {
-              if (await doc.data().onboarded) {
-                await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
-                this.setState({ loading: false });
-                this.props.navigation.navigate('App');
-              } else {
+              if (await doc.data().onboarded !== true) {
                 this.setState({ loading: false });
                 this.props.navigation.navigate('Onboarding');
+              } else {
+                if (await doc.data().fitnessLevel) {
+                  await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+                }
+                this.setState({ loading: false });
+                this.props.navigation.navigate('App');
               }
             });
         } else {

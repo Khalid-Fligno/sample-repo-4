@@ -14,6 +14,7 @@ import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
 import { Facebook } from 'expo';
 import Modal from 'react-native-modal';
+import firebase from 'firebase';
 import { db, auth } from '../../../config/firebase';
 import Loader from '../../components/Loader';
 import Icon from '../../components/Icon';
@@ -43,8 +44,8 @@ export default class SignupScreen extends React.PureComponent {
       });
       if (type === 'success') {
         this.setState({ loading: true });
-        const credential = auth.FacebookAuthProvider.credential(token);
-        const { user, additionalUserInfo } = await auth.signInAndRetrieveDataWithCredential(credential);
+        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+        const { user, additionalUserInfo } = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
         const { profile } = additionalUserInfo;
         const data = {
           id: user.uid,
@@ -70,7 +71,6 @@ export default class SignupScreen extends React.PureComponent {
       this.setState({ error: 'Please complete all fields', loading: false });
       return;
     }
-    const firebase = require('firebase');
     try {
       const response = await firebase.auth().createUserWithEmailAndPassword(email, password);
       const { uid } = response.user;
