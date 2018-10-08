@@ -33,7 +33,7 @@ export default class Exercise1Screen extends React.PureComponent {
       currentExercise: {},
       timerStart: false,
       timerReset: false,
-      totalDuration: 5,
+      totalDuration: 60,
       reps: null,
     };
   }
