@@ -89,7 +89,6 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
     this.fetchWeeklyTargetInfo();
   }
   fetchWeeklyTargetInfo = async () => {
-    this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid', null);
     const userRef = db.collection('users').doc(uid);
     userRef.onSnapshot(async (doc) => {
@@ -98,7 +97,6 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
         hiitWeeklyTarget: await doc.data().hiitWeeklyTarget,
         resistanceWeeklyComplete: await doc.data().resistanceWeeklyComplete,
         hiitWeeklyComplete: await doc.data().hiitWeeklyComplete,
-        loading: false,
       });
       if (await doc.data().currentWeekStartDate !== moment().startOf('week').format('YYYY-MM-DD')) {
         const data = {
@@ -341,9 +339,8 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: 25,
     overflow: 'hidden',
   },
   titleContainer: {
@@ -367,11 +364,13 @@ const styles = StyleSheet.create({
   weeklyTargetText: {
     fontFamily: fonts.standard,
     fontSize: 12,
+    textAlign: 'center',
   },
   title: {
     fontFamily: fonts.bold,
     fontSize: 24,
     color: colors.black,
+    textAlign: 'center',
   },
   helperModalContainer: {
     flexShrink: 1,
