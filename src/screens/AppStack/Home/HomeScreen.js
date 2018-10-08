@@ -25,31 +25,39 @@ export default class HomeScreen extends React.PureComponent {
       <View style={styles.container}>
         <View style={styles.doubleTileContainer}>
           <TouchableOpacity
-            onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/7/3/the-18-min-workout-that-will-transform-your-life')}
+            onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/9/27/hitting-the-hay-the-right-way')}
             style={styles.cardContainer}
           >
             <ImageBackground
-              source={require('../../../../assets/images/fitazfk-blog.jpg')}
+              resizeMode="cover"
+              source={require('../../../../assets/images/fitazfk-blog-sleep.jpg')}
               style={styles.image}
             >
               <View style={styles.titleContainer}>
                 <Text style={styles.title}>
-                  CHECK OUT SOME TACOS
+                  BLOG POST:
+                </Text>
+                <Text style={styles.title}>
+                  SLEEP
                 </Text>
               </View>
             </ImageBackground>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/7/3/the-18-min-workout-that-will-transform-your-life')}
+            onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/9/3/get-your-head-in-the-weight-loss-game')}
             style={styles.cardContainer}
           >
             <ImageBackground
-              source={require('../../../../assets/images/fitazfk-blog.jpg')}
+              resizeMode="cover"
+              source={require('../../../../assets/images/fitazfk-blog-mindset.jpg')}
               style={styles.image}
             >
               <View style={styles.titleContainer}>
                 <Text style={styles.title}>
-                  CHECK OUT SOME TACOS
+                  BLOG POST:
+                </Text>
+                <Text style={styles.title}>
+                  MINDSET
                 </Text>
               </View>
             </ImageBackground>
