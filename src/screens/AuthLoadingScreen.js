@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppLoading, Asset, Font } from 'expo';
+import { auth, db } from '../../config/firebase';
 
 const cacheImages = (images) => {
   return images.map((image) => {
@@ -17,7 +18,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
   loadAssetsAsync = async () => {
     const imageAssets = cacheImages([
       require('../../assets/icons/fitazfk-app-icon-dark.png'),
-      require('../../assets/icons/fitazfk-splash-dark.png'),
+      require('../../assets/icons/fitazfk-splash-dark-logo.png'),
       require('../../assets/icons/fitazfk-icon-solid-white.png'),
       require('../../assets/images/recipes/baked-eggs.png'),
       require('../../assets/images/landing-page-1.png'),
@@ -27,7 +28,8 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/images/landing-screen-carousel-1.png'),
       require('../../assets/images/landing-screen-carousel-2.png'),
       require('../../assets/images/landing-screen-carousel-3.png'),
-      require('../../assets/images/fitazfk-blog.jpg'),
+      require('../../assets/images/fitazfk-blog-sleep.jpg'),
+      require('../../assets/images/fitazfk-blog-mindset.jpg'),
       require('../../assets/images/shop-bundles.jpg'),
       require('../../assets/images/fitazfk-army.jpg'),
       require('../../assets/images/workouts-core.jpg'),
@@ -70,7 +72,25 @@ export default class AuthLoadingScreen extends React.PureComponent {
     await Promise.all([...imageAssets, ...fontAssets]);
   }
   cachingComplete = async () => {
-    this.props.navigation.navigate('Auth');
+    const unsuscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const { uid } = user;
+        db.collection('users').doc(uid)
+          .get()
+          .then(async (doc) => {
+            if (await doc.data().onboarded) {
+              unsuscribe();
+              this.props.navigation.navigate('App');
+            } else {
+              unsuscribe();
+              this.props.navigation.navigate('Onboarding1');
+            }
+          });
+      } else {
+        unsuscribe();
+        this.props.navigation.navigate('WorkoutsHome');
+      }
+    });
   }
   render() {
     return (
