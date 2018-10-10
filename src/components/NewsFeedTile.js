@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.6 )',
     padding: 8,
     paddingBottom: 3,
-    maxWidth: width / 2.1,
+    maxWidth: width / 1.8,
     borderRadius: 2,
   },
   title: {
