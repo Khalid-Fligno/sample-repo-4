@@ -50,20 +50,6 @@ export default class HiitExercise2Screen extends React.PureComponent {
       timerReset: false,
     });
   }
-  handlePause = () => {
-    this.setState({
-      timerStart: false,
-      timerReset: false,
-    });
-    this.togglePauseModal();
-  }
-  handleUnpause = () => {
-    this.togglePauseModal();
-    this.setState({
-      timerStart: true,
-      timerReset: false,
-    });
-  }
   handleFinish = (exerciseList, fitnessLevel) => {
     this.setState({
       timerStart: false,
@@ -83,6 +69,20 @@ export default class HiitExercise2Screen extends React.PureComponent {
         roundCount,
       });
     }
+  }
+  handlePause = () => {
+    this.setState({
+      timerStart: false,
+      timerReset: false,
+    });
+    this.togglePauseModal();
+  }
+  handleUnpause = () => {
+    this.togglePauseModal();
+    this.setState({
+      timerStart: true,
+      timerReset: false,
+    });
   }
   togglePauseModal = () => {
     this.setState((prevState) => ({ pauseModalVisible: !prevState.pauseModalVisible }));
@@ -214,41 +214,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 20,
     color: colors.coral.standard,
-  },
-  pauseModalContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  modalButtonQuit: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.coral.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  modalButtonRestart: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.green.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  modalButtonContinue: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.charcoal.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
   },
   pauseButtonContainer: {
     width,

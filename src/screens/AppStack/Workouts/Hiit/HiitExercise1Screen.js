@@ -3,10 +3,10 @@ import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert 
 import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
-import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
 import Icon from '../../../../components/Shared/Icon';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
+import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
 
@@ -50,6 +50,18 @@ export default class HiitExercise1Screen extends React.PureComponent {
       timerReset: false,
     });
   }
+  handleFinish = (exerciseList, fitnessLevel) => {
+    this.setState({
+      timerStart: false,
+      timerReset: false,
+    });
+    const roundCount = this.props.navigation.getParam('roundCount', 0);
+    this.props.navigation.replace('HiitExercise2', {
+      exerciseList,
+      fitnessLevel,
+      roundCount,
+    });
+  }
   handlePause = () => {
     this.setState({
       timerStart: false,
@@ -62,18 +74,6 @@ export default class HiitExercise1Screen extends React.PureComponent {
     this.setState({
       timerStart: true,
       timerReset: false,
-    });
-  }
-  handleFinish = (exerciseList, fitnessLevel) => {
-    this.setState({
-      timerStart: false,
-      timerReset: false,
-    });
-    const roundCount = this.props.navigation.getParam('roundCount', 0);
-    this.props.navigation.replace('HiitExercise2', {
-      exerciseList,
-      fitnessLevel,
-      roundCount,
     });
   }
   togglePauseModal = () => {
