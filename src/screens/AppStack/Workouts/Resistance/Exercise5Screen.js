@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../../components/WorkoutTimer';
-import WorkoutProgress from '../../../../components/WorkoutProgress';
+import WorkoutProgress from '../../../../components/Workouts/WorkoutProgress';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
 
