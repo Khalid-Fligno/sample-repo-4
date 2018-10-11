@@ -3,10 +3,10 @@ import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert 
 import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
-import Modal from 'react-native-modal';
 import Icon from '../../../../components/Shared/Icon';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
+import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
 
@@ -16,21 +16,6 @@ const restIntervalMap = {
   1: 90,
   2: 60,
   3: 30,
-};
-
-export const workoutTimerStyle = {
-  container: {
-    width,
-    backgroundColor: colors.charcoal.standard,
-    paddingTop: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontFamily: fonts.bold,
-    fontSize: 72,
-    color: colors.white,
-  },
 };
 
 export default class HiitExercise2Screen extends React.PureComponent {
@@ -172,7 +157,6 @@ export default class HiitExercise2Screen extends React.PureComponent {
             start={timerStart}
             reset={timerReset}
             handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
-            options={workoutTimerStyle}
           />
           <HiitWorkoutProgress
             currentRound={this.props.navigation.getParam('roundCount', 0) + 1}
@@ -193,40 +177,14 @@ export default class HiitExercise2Screen extends React.PureComponent {
               </Text>
             </TouchableOpacity>
           </View>
-          <Modal
+          <WorkoutPauseModal
             isVisible={pauseModalVisible}
-            animationIn="fadeIn"
-            animationInTiming={800}
-            animationOut="fadeOut"
-            animationOutTiming={800}
-          >
-            <View style={styles.pauseModalContainer}>
-              <TouchableOpacity
-                onPress={() => this.quitWorkout()}
-                style={styles.modalButtonQuit}
-              >
-                <Text style={styles.modalButtonText}>
-                  QUIT
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => this.restartWorkout(exerciseList, fitnessLevel)}
-                style={styles.modalButtonRestart}
-              >
-                <Text style={styles.modalButtonText}>
-                  RESTART
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => this.handleUnpause()}
-                style={styles.modalButtonContinue}
-              >
-                <Text style={styles.modalButtonText}>
-                  CONTINUE
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </Modal>
+            handleQuit={this.quitWorkout}
+            handleRestart={this.restartWorkout}
+            handleUnpause={this.handleUnpause}
+            exerciseList={exerciseList}
+            fitnessLevel={fitnessLevel}
+          />
         </FadeInView>
       </SafeAreaView>
     );

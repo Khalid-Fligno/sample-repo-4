@@ -1,8 +1,40 @@
 import React, { Component } from 'react';
-import { Text, View, Alert } from 'react-native';
+import { Text, View, Alert, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
+
+const { width } = Dimensions.get('window');
+
+export const defaultStyles = {
+  container: {
+    width,
+    backgroundColor: colors.charcoal.standard,
+    paddingTop: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontFamily: fonts.bold,
+    fontSize: 60,
+    color: colors.white,
+  },
+};
+
+const warningStyles = {
+  container: {
+    width,
+    backgroundColor: colors.coral.dark,
+    paddingTop: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontFamily: fonts.bold,
+    fontSize: 60,
+    color: colors.white,
+  },
+};
 
 export default class WorkoutTimer extends Component {
   constructor(props) {
@@ -73,8 +105,7 @@ export default class WorkoutTimer extends Component {
     return formatted;
   }
   render() {
-    const presetStyles = this.state.remainingTime < 10000 ? warningStyles : defaultStyles;
-    const styles = this.props.options ? this.props.options : presetStyles;
+    const styles = this.state.remainingTime < 6000 ? warningStyles : defaultStyles;
     return (
       <View style={styles.container}>
         <Text style={styles.text}>{this.formatTime()}</Text>
@@ -83,52 +114,14 @@ export default class WorkoutTimer extends Component {
   }
 }
 
-const warningStyles = {
-  container: {
-    backgroundColor: colors.white,
-    paddingTop: 5,
-    paddingRight: 5,
-    paddingBottom: 0,
-    paddingLeft: 5,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontFamily: fonts.bold,
-    fontSize: 72,
-    color: colors.coral.standard,
-  },
-};
-
-const defaultStyles = {
-  container: {
-    backgroundColor: colors.white,
-    paddingTop: 5,
-    paddingRight: 5,
-    paddingBottom: 0,
-    paddingLeft: 5,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontFamily: fonts.bold,
-    fontSize: 72,
-    color: colors.charcoal.standard,
-  },
-};
-
 WorkoutTimer.propTypes = {
   totalDuration: PropTypes.number.isRequired,
   start: PropTypes.bool.isRequired,
-  options: PropTypes.objectOf(PropTypes.object || PropTypes.string || PropTypes.number),
   getTime: PropTypes.func,
   handleFinish: PropTypes.func,
 };
 
 WorkoutTimer.defaultProps = {
   getTime: null,
-  options: null,
   handleFinish: null,
 };

@@ -10,21 +10,6 @@ import fonts from '../../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
-export const workoutTimerStyle = {
-  container: {
-    width,
-    backgroundColor: colors.charcoal.standard,
-    paddingTop: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontFamily: fonts.bold,
-    fontSize: 72,
-    color: colors.white,
-  },
-};
-
 export default class Exercise4Screen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -123,7 +108,6 @@ export default class Exercise4Screen extends React.PureComponent {
             start={timerStart}
             reset={timerReset}
             handleFinish={() => this.handleFinish(exerciseList, reps)}
-            options={workoutTimerStyle}
           />
           <WorkoutProgress
             currentExercise={4}

@@ -18,21 +18,6 @@ const workIntervalMap = {
   3: 90,
 };
 
-export const workoutTimerStyle = {
-  container: {
-    width,
-    backgroundColor: colors.charcoal.standard,
-    paddingTop: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontFamily: fonts.bold,
-    fontSize: 72,
-    color: colors.white,
-  },
-};
-
 export default class HiitExercise1Screen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -164,7 +149,6 @@ export default class HiitExercise1Screen extends React.PureComponent {
             start={timerStart}
             reset={timerReset}
             handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
-            options={workoutTimerStyle}
           />
           <HiitWorkoutProgress
             currentRound={this.props.navigation.getParam('roundCount', 0) + 1}
