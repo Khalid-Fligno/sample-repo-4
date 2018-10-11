@@ -91,7 +91,7 @@ const Header = ({
             </Text>
           ) : (
             <Image
-              source={require('../../assets/icons/fitazfk-icon-solid-white.png')}
+              source={require('../../../assets/icons/fitazfk-icon-solid-white.png')}
               style={styles.fitazfkIcon}
             />
           )
