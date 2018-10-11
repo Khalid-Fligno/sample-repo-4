@@ -5,7 +5,7 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
-import CountdownTimer from '../../components/CountdownTimer';
+import CountdownTimer from '../../components/Workouts/CountdownTimer';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 

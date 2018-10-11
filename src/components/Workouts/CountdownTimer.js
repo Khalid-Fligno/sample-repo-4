@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import PropTypes from 'prop-types';
-import fonts from '../styles/fonts';
-import colors from '../styles/colors';
+import fonts from '../../styles/fonts';
+import colors from '../../styles/colors';
 
 export default class CountdownTimer extends Component {
   constructor(props) {
