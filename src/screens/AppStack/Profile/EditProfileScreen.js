@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, AsyncStorage, Dimensions, Button } from 'react-native';
 import { FormInput } from 'react-native-elements';
 import { db } from '../../../../config/firebase';
-import Loader from '../../../components/Loader';
+import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 

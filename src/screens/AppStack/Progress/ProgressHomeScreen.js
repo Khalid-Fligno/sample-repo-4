@@ -5,7 +5,7 @@ import Image from 'react-native-image-progress';
 import Modal from 'react-native-modal';
 import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
-import Loader from '../../../components/Loader';
+import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
 import CustomButton from '../../../components/Shared/CustomButton';
 import { diff } from '../../../utils/index';

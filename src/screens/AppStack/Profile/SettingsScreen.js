@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, AsyncStorage, ScrollView, Dimensions, Alert } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import { db, auth } from '../../../../config/firebase';
-import Loader from '../../../components/Loader';
+import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 

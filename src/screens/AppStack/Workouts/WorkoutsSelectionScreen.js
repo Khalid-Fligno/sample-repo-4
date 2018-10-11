@@ -3,7 +3,7 @@ import { StyleSheet, View, Dimensions, AsyncStorage } from 'react-native';
 import { FileSystem } from 'expo';
 import { db } from '../../../../config/firebase';
 import { findReps } from '../../../utils/index';
-import Loader from '../../../components/Loader';
+import Loader from '../../../components/Shared/Loader';
 import Tile from '../../../components/Tile';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';

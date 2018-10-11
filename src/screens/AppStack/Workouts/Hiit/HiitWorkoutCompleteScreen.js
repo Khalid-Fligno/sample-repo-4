@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
 import { FileSystem } from 'expo';
-import Loader from '../../../../components/Loader';
+import Loader from '../../../../components/Shared/Loader';
 import { db } from '../../../../../config/firebase';
 import colors from '../../../../styles/colors';
 

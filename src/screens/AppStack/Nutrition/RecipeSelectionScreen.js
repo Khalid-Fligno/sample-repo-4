@@ -4,7 +4,7 @@ import { ButtonGroup } from 'react-native-elements';
 import { FileSystem } from 'expo';
 import { db } from '../../../../config/firebase';
 import RecipeTile from '../../../components/RecipeTile';
-import Loader from '../../../components/Loader';
+import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 

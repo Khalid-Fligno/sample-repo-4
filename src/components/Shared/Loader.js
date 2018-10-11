@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { DotIndicator } from 'react-native-indicators';
 import PropTypes from 'prop-types';
-import colors from '../styles/colors';
+import colors from '../../styles/colors';
 
 const Loader = ({
   loading,

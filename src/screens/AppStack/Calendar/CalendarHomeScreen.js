@@ -16,7 +16,7 @@ import Swipeable from 'react-native-swipeable';
 import firebase from 'firebase';
 import Modal from 'react-native-modal';
 import { db, auth } from '../../../../config/firebase';
-import Loader from '../../../components/Loader';
+import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
 import { findReps } from '../../../utils';
 import { findFocus, findLocation } from '../../../utils/workouts';

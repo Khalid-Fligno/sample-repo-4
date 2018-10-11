@@ -15,7 +15,7 @@ import moment from 'moment';
 import { db } from '../../../config/firebase';
 import { burpeeOptions, findFitnessLevel } from '../../utils';
 import CustomButton from '../../components/Shared/CustomButton';
-import Loader from '../../components/Loader';
+import Loader from '../../components/Shared/Loader';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
