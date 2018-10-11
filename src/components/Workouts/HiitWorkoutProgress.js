@@ -2,9 +2,9 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import PropTypes from 'prop-types';
 import { PieChart } from 'react-native-svg-charts';
-import Icon from '../components/Icon';
-import colors from '../styles/colors';
-import fonts from '../styles/fonts';
+import Icon from '../Icon';
+import colors from '../../styles/colors';
+import fonts from '../../styles/fonts';
 
 const pieDataIncomplete = [0, 100]
   .map((value, index) => ({

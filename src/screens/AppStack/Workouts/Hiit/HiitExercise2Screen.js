@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
+import Modal from 'react-native-modal';
+import Icon from '../../../../components/Icon';
 import WorkoutTimer from '../../../../components/WorkoutTimer';
-import HiitWorkoutProgress from '../../../../components/HiitWorkoutProgress';
+import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
 
@@ -41,6 +43,7 @@ export default class HiitExercise2Screen extends React.PureComponent {
       timerReset: false,
       totalDuration: null,
       fitnessLevel: null,
+      pauseModalVisible: false,
     };
   }
   componentWillMount() {
@@ -57,6 +60,20 @@ export default class HiitExercise2Screen extends React.PureComponent {
     this.startTimer();
   }
   startTimer = () => {
+    this.setState({
+      timerStart: true,
+      timerReset: false,
+    });
+  }
+  handlePause = () => {
+    this.setState({
+      timerStart: false,
+      timerReset: false,
+    });
+    this.togglePauseModal();
+  }
+  handleUnpause = () => {
+    this.togglePauseModal();
     this.setState({
       timerStart: true,
       timerReset: false,
@@ -82,6 +99,42 @@ export default class HiitExercise2Screen extends React.PureComponent {
       });
     }
   }
+  togglePauseModal = () => {
+    this.setState((prevState) => ({ pauseModalVisible: !prevState.pauseModalVisible }));
+  }
+  quitWorkout = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to quit this workout?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: () => {
+            this.togglePauseModal();
+            this.props.navigation.navigate('WorkoutsHome');
+          },
+        },
+      ],
+      { cancelable: false },
+    );
+  }
+  restartWorkout = (exerciseList, fitnessLevel) => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to restart this workout?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: () => {
+            this.props.navigation.replace('HiitCountdown', { exerciseList, fitnessLevel });
+          },
+        },
+      ],
+      { cancelable: false },
+    );
+  }
   render() {
     const {
       currentExercise,
@@ -90,6 +143,7 @@ export default class HiitExercise2Screen extends React.PureComponent {
       timerReset,
       totalDuration,
       fitnessLevel,
+      pauseModalVisible,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -124,6 +178,55 @@ export default class HiitExercise2Screen extends React.PureComponent {
             currentRound={this.props.navigation.getParam('roundCount', 0) + 1}
             rest
           />
+          <View style={styles.pauseButtonContainer}>
+            <TouchableOpacity
+              onPress={this.handlePause}
+              style={styles.pauseButton}
+            >
+              <Icon
+                name="pause"
+                size={15}
+                color={colors.coral.standard}
+              />
+              <Text style={styles.pauseButtonText}>
+                PAUSE
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Modal
+            isVisible={pauseModalVisible}
+            animationIn="fadeIn"
+            animationInTiming={800}
+            animationOut="fadeOut"
+            animationOutTiming={800}
+          >
+            <View style={styles.pauseModalContainer}>
+              <TouchableOpacity
+                onPress={() => this.quitWorkout()}
+                style={styles.modalButtonQuit}
+              >
+                <Text style={styles.modalButtonText}>
+                  QUIT
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.restartWorkout(exerciseList, fitnessLevel)}
+                style={styles.modalButtonRestart}
+              >
+                <Text style={styles.modalButtonText}>
+                  RESTART
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.handleUnpause()}
+                style={styles.modalButtonContinue}
+              >
+                <Text style={styles.modalButtonText}>
+                  CONTINUE
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
         </FadeInView>
       </SafeAreaView>
     );
@@ -153,5 +256,57 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 20,
     color: colors.coral.standard,
+  },
+  pauseModalContainer: {
+    backgroundColor: colors.white,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  modalButtonQuit: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.coral.standard,
+    height: 50,
+    width: '100%',
+    marginBottom: 0,
+  },
+  modalButtonRestart: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.green.standard,
+    height: 50,
+    width: '100%',
+    marginBottom: 0,
+  },
+  modalButtonContinue: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.charcoal.standard,
+    height: 50,
+    width: '100%',
+    marginBottom: 0,
+  },
+  modalButtonText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    marginTop: 3,
+  },
+  pauseButtonContainer: {
+    width,
+    alignItems: 'center',
+  },
+  pauseButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 3,
+  },
+  pauseButtonText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.coral.standard,
+    marginLeft: 5,
+    marginTop: 4,
   },
 });
