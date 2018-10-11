@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, StatusBar, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import WorkoutProgress from '../../../../components/Workouts/WorkoutProgress';
+import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
+import PauseButtonRow from '../../../../components/Workouts/PauseButtonRow';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
 
@@ -18,8 +20,9 @@ export default class Exercise5Screen extends React.PureComponent {
       currentExercise: {},
       timerStart: false,
       timerReset: false,
-      totalDuration: 60,
+      totalDuration: 3,
       reps: null,
+      pauseModalVisible: false,
     };
   }
   componentWillMount() {
@@ -61,6 +64,56 @@ export default class Exercise5Screen extends React.PureComponent {
       });
     }
   }
+  handlePause = () => {
+    this.setState({
+      timerStart: false,
+      timerReset: false,
+    });
+    this.togglePauseModal();
+  }
+  handleUnpause = () => {
+    this.togglePauseModal();
+    this.setState({
+      timerStart: true,
+      timerReset: false,
+    });
+  }
+  togglePauseModal = () => {
+    this.setState((prevState) => ({ pauseModalVisible: !prevState.pauseModalVisible }));
+  }
+  quitWorkout = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to quit this workout?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: () => {
+            this.togglePauseModal();
+            this.props.navigation.navigate('WorkoutsHome');
+          },
+        },
+      ],
+      { cancelable: false },
+    );
+  }
+  restartWorkout = (exerciseList, reps) => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to restart this workout?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: () => {
+            this.props.navigation.replace('Countdown', { exerciseList, reps });
+          },
+        },
+      ],
+      { cancelable: false },
+    );
+  }
   render() {
     const {
       currentExercise,
@@ -69,6 +122,7 @@ export default class Exercise5Screen extends React.PureComponent {
       timerReset,
       totalDuration,
       reps,
+      pauseModalVisible,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -113,10 +167,18 @@ export default class Exercise5Screen extends React.PureComponent {
             currentExercise={5}
             currentSet={this.props.navigation.getParam('setCount', 0) + 1}
           />
-          <Text>
-            <Text style={styles.nextExercise}> NEXT EXERCISE: </Text>
-            <Text style={styles.nextExerciseName}>{exerciseList[5].name.toUpperCase()}</Text>
-          </Text>
+          <PauseButtonRow
+            handlePause={this.handlePause}
+            nextExerciseName={exerciseList[1].name}
+          />
+          <WorkoutPauseModal
+            isVisible={pauseModalVisible}
+            handleQuit={this.quitWorkout}
+            handleRestart={this.restartWorkout}
+            handleUnpause={this.handleUnpause}
+            exerciseList={exerciseList}
+            reps={reps}
+          />
         </FadeInView>
       </SafeAreaView>
     );
@@ -155,13 +217,5 @@ const styles = StyleSheet.create({
   currentExerciseRepsText: {
     fontFamily: fonts.bold,
     fontSize: 20,
-  },
-  nextExercise: {
-    fontFamily: fonts.standard,
-    fontSize: 12,
-  },
-  nextExerciseName: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
   },
 });

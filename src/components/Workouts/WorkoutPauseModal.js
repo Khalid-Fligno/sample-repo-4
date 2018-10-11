@@ -21,6 +21,7 @@ export default class WorkoutPauseModal extends React.PureComponent {
       handleUnpause,
       exerciseList,
       fitnessLevel,
+      reps,
     } = this.props;
     return (
       <Modal
@@ -40,7 +41,7 @@ export default class WorkoutPauseModal extends React.PureComponent {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleRestart(exerciseList, fitnessLevel)}
+            onPress={() => handleRestart(exerciseList, fitnessLevel || reps)}
             style={styles.modalButtonRestart}
           >
             <Text style={styles.modalButtonText}>
@@ -67,7 +68,13 @@ WorkoutPauseModal.propTypes = {
   handleRestart: PropTypes.func.isRequired,
   handleUnpause: PropTypes.func.isRequired,
   exerciseList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  fitnessLevel: PropTypes.string.isRequired,
+  fitnessLevel: PropTypes.string,
+  reps: PropTypes.number,
+};
+
+WorkoutPauseModal.defaultProps = {
+  fitnessLevel: undefined,
+  reps: undefined,
 };
 
 const styles = StyleSheet.create({
