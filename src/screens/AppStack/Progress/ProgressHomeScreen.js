@@ -7,7 +7,7 @@ import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
 import Icon from '../../../components/Icon';
-import CustomButton from '../../../components/CustomButton';
+import CustomButton from '../../../components/Shared/CustomButton';
 import { diff } from '../../../utils/index';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';

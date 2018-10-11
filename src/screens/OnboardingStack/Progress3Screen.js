@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 // import Loader from '../../components/Loader';
-import CustomButton from '../../components/CustomButton';
+import CustomButton from '../../components/Shared/CustomButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 

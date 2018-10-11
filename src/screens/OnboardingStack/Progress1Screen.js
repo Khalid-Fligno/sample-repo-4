@@ -12,7 +12,7 @@ import {
   AsyncStorage,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import CustomButton from '../../components/CustomButton';
+import CustomButton from '../../components/Shared/CustomButton';
 import Loader from '../../components/Loader';
 import {
   weightOptionsMetric,

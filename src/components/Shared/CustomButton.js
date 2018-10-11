@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 import PropTypes from 'prop-types';
-import colors from '../styles/colors';
-import common from '../styles/common';
+import colors from '../../styles/colors';
+import common from '../../styles/common';
 
 const CustomButton = ({
   onPress,

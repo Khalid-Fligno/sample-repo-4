@@ -13,7 +13,7 @@ import Carousel from 'react-native-snap-carousel';
 import FadeInView from 'react-native-fade-in-view';
 import Modal from 'react-native-modal';
 import moment from 'moment';
-import CustomButton from '../../../components/CustomButton';
+import CustomButton from '../../../components/Shared/CustomButton';
 import Loader from '../../../components/Loader';
 import { db } from '../../../../config/firebase';
 import colors from '../../../styles/colors';

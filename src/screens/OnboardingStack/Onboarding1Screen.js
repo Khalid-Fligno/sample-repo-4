@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { DangerZone } from 'expo';
 import Modal from 'react-native-modal';
-import CustomButton from '../../components/CustomButton';
+import CustomButton from '../../components/Shared/CustomButton';
 import Loader from '../../components/Loader';
 import { db } from '../../../config/firebase';
 import { uomMap } from '../../utils/index';
