@@ -169,7 +169,7 @@ export default class Exercise4Screen extends React.PureComponent {
           />
           <PauseButtonRow
             handlePause={this.handlePause}
-            nextExerciseName={exerciseList[1].name}
+            nextExerciseName={exerciseList[4].name}
           />
           <WorkoutPauseModal
             isVisible={pauseModalVisible}

@@ -169,7 +169,7 @@ export default class Exercise6Screen extends React.PureComponent {
           />
           <PauseButtonRow
             handlePause={this.handlePause}
-            nextExerciseName={exerciseList[1].name}
+            nextExerciseName="LAST EXERCISE!"
           />
           <WorkoutPauseModal
             isVisible={pauseModalVisible}
