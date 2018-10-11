@@ -4,7 +4,7 @@ import NutritionHomeScreen from '../../src/screens/AppStack/Nutrition/NutritionH
 import RecipeSelectionScreen from '../../src/screens/AppStack/Nutrition/RecipeSelectionScreen';
 import RecipeScreen from '../../src/screens/AppStack/Nutrition/RecipeScreen';
 import RecipeStepsScreen from '../../src/screens/AppStack/Nutrition/RecipeStepsScreen';
-import Header from '../../src/components/Header';
+import Header from '../../src/components/Shared/Header';
 import {
   nutritionBackButtonMap,
   findNutritionHeaderTitle,

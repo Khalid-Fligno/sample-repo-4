@@ -5,7 +5,7 @@ import WorkoutsLocationScreen from '../../src/screens/AppStack/Workouts/Workouts
 import WorkoutsSelectionScreen from '../../src/screens/AppStack/Workouts/WorkoutsSelectionScreen';
 import WorkoutInfoScreen from '../../src/screens/AppStack/Workouts/WorkoutInfoScreen';
 import HiitWorkoutInfoScreen from '../../src/screens/AppStack/Workouts/HiitWorkoutInfoScreen';
-import Header from '../../src/components/Header';
+import Header from '../../src/components/Shared/Header';
 import {
   workoutsBackButtonMap,
   fadeSpec,

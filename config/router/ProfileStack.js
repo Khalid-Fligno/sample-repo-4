@@ -8,7 +8,7 @@ import TermsOfServiceScreen from '../../src/screens/AppStack/Profile/TermsOfServ
 import BillingTermsScreen from '../../src/screens/AppStack/Profile/BillingTermsScreen';
 import EditProfileScreen from '../../src/screens/AppStack/Profile/EditProfileScreen';
 import SettingsScreen from '../../src/screens/AppStack/Profile/SettingsScreen';
-import Header from '../../src/components/Header';
+import Header from '../../src/components/Shared/Header';
 
 const findProfileHeaderTitle = {
   ProfileHome: 'ACCOUNT',
