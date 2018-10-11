@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
-import Tile from '../../../components/Tile';
+import Tile from '../../../components/Shared/Tile';
 import colors from '../../../styles/colors';
 
 const { width } = Dimensions.get('window');

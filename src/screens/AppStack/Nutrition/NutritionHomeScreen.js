@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import Tile from '../../../components/Tile';
+import Tile from '../../../components/Shared/Tile';
 import colors from '../../../styles/colors';
 
 export default class NutritionHomeScreen extends React.PureComponent {

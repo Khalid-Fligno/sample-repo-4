@@ -4,7 +4,7 @@ import { FileSystem } from 'expo';
 import { db } from '../../../../config/firebase';
 import { findReps } from '../../../utils/index';
 import Loader from '../../../components/Shared/Loader';
-import Tile from '../../../components/Tile';
+import Tile from '../../../components/Shared/Tile';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
