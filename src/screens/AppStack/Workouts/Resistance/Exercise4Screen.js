@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Dimensions, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
-import WorkoutTimer from '../../../../components/WorkoutTimer';
+import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import WorkoutProgress from '../../../../components/Workouts/WorkoutProgress';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
