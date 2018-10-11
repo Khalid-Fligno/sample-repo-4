@@ -170,7 +170,7 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
                 <Text style={styles.weeklyTargetText}>
                   {
                     resistanceWeeklyTarget > resistanceWeeklyComplete &&
-                    `${resistanceWeeklyTarget - resistanceWeeklyComplete} sessions remaining`
+                    `${resistanceWeeklyTarget - resistanceWeeklyComplete} session${resistanceWeeklyTarget - resistanceWeeklyComplete > 1 ? 's' : ''} remaining`
                   }
                   {
                     resistanceWeeklyTarget <= resistanceWeeklyComplete &&
@@ -184,7 +184,7 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
                 <Text style={styles.weeklyTargetText}>
                   {
                     hiitWeeklyTarget > hiitWeeklyComplete &&
-                    `${hiitWeeklyTarget - hiitWeeklyComplete} sessions remaining`
+                    `${hiitWeeklyTarget - hiitWeeklyComplete} session${hiitWeeklyTarget - hiitWeeklyComplete > 1 ? 's' : ''} remaining`
                   }
                   {
                     hiitWeeklyTarget <= hiitWeeklyComplete &&
