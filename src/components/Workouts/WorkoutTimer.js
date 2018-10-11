@@ -9,7 +9,7 @@ const { width } = Dimensions.get('window');
 export const defaultStyles = {
   container: {
     width,
-    backgroundColor: colors.charcoal.standard,
+    backgroundColor: colors.charcoal.dark,
     paddingTop: 15,
     alignItems: 'center',
     justifyContent: 'center',
@@ -24,7 +24,7 @@ export const defaultStyles = {
 const warningStyles = {
   container: {
     width,
-    backgroundColor: colors.coral.dark,
+    backgroundColor: colors.charcoal.dark,
     paddingTop: 15,
     alignItems: 'center',
     justifyContent: 'center',
