@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Video } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
-import WorkoutTimer from '../../components/WorkoutTimer';
+import WorkoutTimer from '../../components/Workouts/WorkoutTimer';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 

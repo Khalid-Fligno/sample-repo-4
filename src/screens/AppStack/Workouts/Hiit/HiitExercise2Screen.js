@@ -5,7 +5,7 @@ import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
 import Modal from 'react-native-modal';
 import Icon from '../../../../components/Shared/Icon';
-import WorkoutTimer from '../../../../components/WorkoutTimer';
+import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
