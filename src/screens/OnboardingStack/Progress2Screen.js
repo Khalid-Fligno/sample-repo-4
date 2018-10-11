@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { ImagePicker, ImageManipulator, Permissions, Linking } from 'expo';
 import Loader from '../../components/Loader';
-import Icon from '../../components/Icon';
+import Icon from '../../components/Shared/Icon';
 import CustomButton from '../../components/Shared/CustomButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';

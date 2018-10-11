@@ -17,7 +17,7 @@ import firebase from 'firebase';
 import Modal from 'react-native-modal';
 import { db, auth } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
-import Icon from '../../../components/Icon';
+import Icon from '../../../components/Shared/Icon';
 import { findReps } from '../../../utils';
 import { findFocus, findLocation } from '../../../utils/workouts';
 import colors from '../../../styles/colors';

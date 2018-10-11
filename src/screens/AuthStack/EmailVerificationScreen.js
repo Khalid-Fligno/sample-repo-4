@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { auth } from '../../../config/firebase';
 import Loader from '../../components/Loader';
-import Icon from '../../components/Icon';
+import Icon from '../../components/Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 

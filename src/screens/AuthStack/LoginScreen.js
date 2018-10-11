@@ -15,7 +15,7 @@ import { Facebook } from 'expo';
 import firebase from 'firebase';
 import { db, auth } from '../../../config/firebase';
 import Loader from '../../components/Loader';
-import Icon from '../../components/Icon';
+import Icon from '../../components/Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import errors from '../../utils/errors';

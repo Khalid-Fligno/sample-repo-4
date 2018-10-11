@@ -5,7 +5,7 @@ import NutritionStack from './NutritionStack';
 import WorkoutsStack from './WorkoutsStack';
 import CalendarStack from './CalendarStack';
 import ProgressStack from './ProgressStack';
-import Icon from '../../src/components/Icon';
+import Icon from '../../src/components/Shared/Icon';
 import colors from '../../src/styles/colors';
 import fonts from '../../src/styles/fonts';
 import { tabColorMap } from './utils';

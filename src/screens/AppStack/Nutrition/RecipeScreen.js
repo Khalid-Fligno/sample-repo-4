@@ -17,7 +17,7 @@ import Image from 'react-native-scalable-image';
 import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
-import Icon from '../../../components/Icon';
+import Icon from '../../../components/Shared/Icon';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 

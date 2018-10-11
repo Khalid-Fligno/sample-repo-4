@@ -14,7 +14,7 @@ import { DangerZone } from 'expo';
 import Modal from 'react-native-modal';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Loader';
-import Icon from '../../../components/Icon';
+import Icon from '../../../components/Shared/Icon';
 import { weeklySessionsPickerOptions } from '../../../utils';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';

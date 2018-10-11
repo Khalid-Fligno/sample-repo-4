@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import PropTypes from 'prop-types';
 import { PieChart } from 'react-native-svg-charts';
-import Icon from '../components/Icon';
+import Icon from '../components/Shared/Icon';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 

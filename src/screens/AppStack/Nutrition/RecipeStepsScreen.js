@@ -6,7 +6,7 @@ import Carousel from 'react-native-snap-carousel';
 import Image from 'react-native-image-progress';
 import { DotIndicator } from 'react-native-indicators';
 import Loader from '../../../components/Loader';
-import Icon from '../../../components/Icon';
+import Icon from '../../../components/Shared/Icon';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 

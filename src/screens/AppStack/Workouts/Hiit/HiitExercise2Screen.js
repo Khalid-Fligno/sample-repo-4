@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
 import Modal from 'react-native-modal';
-import Icon from '../../../../components/Icon';
+import Icon from '../../../../components/Shared/Icon';
 import WorkoutTimer from '../../../../components/WorkoutTimer';
 import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
 import colors from '../../../../styles/colors';
