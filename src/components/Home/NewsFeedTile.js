@@ -1,9 +1,8 @@
 import React from 'react';
-import { Dimensions, TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
+import { Dimensions, TouchableOpacity, Text, StyleSheet, ImageBackground, View } from 'react-native';
 import PropTypes from 'prop-types';
-import colors from '../styles/colors';
-import fonts from '../styles/fonts';
-import { View } from '../../node_modules/react-native-animatable';
+import colors from '../../styles/colors';
+import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 

@@ -8,7 +8,7 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native';
-import NewsFeedTile from '../../../components/NewsFeedTile';
+import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
