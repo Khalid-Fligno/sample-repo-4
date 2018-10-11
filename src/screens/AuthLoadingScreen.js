@@ -88,7 +88,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
           });
       } else {
         unsuscribe();
-        this.props.navigation.navigate('WorkoutsHome');
+        this.props.navigation.navigate('Auth');
       }
     });
   }
