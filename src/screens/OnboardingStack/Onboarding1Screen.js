@@ -55,7 +55,7 @@ export default class Onboarding1Screen extends React.PureComponent {
         dob,
         unitsOfMeasurement: chosenUom,
         onboarded: true,
-        resistanceWeeklyTarget: 3,
+        resistanceWeeklyTarget: 4,
         hiitWeeklyTarget: 2,
         resistanceWeeklyComplete: 0,
         hiitWeeklyComplete: 0,
