@@ -35,6 +35,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
       resistanceWeeklyTarget: undefined,
       hiitModalVisible: false,
       hiitWeeklyTarget: undefined,
+      buttonDisabled: false,
     };
   }
   componentDidMount = async () => {
@@ -50,16 +51,19 @@ export default class ProfileHomeScreen extends React.PureComponent {
     this.setState((prevState) => ({ hiitModalVisible: !prevState.hiitModalVisible }));
   }
   updateWeeklyTarget = async (workoutType, newValue) => {
+    this.setState({ buttonDisabled: true });
     const uid = await AsyncStorage.getItem('uid');
     const userRef = db.collection('users').doc(uid);
     let data;
     if (workoutType === 'resistance') {
       data = { resistanceWeeklyTarget: newValue };
       userRef.set(data, { merge: true });
+      this.setState({ buttonDisabled: false });
       this.toggleResistanceModal();
     } else {
       data = { hiitWeeklyTarget: newValue };
       userRef.set(data, { merge: true });
+      this.setState({ buttonDisabled: false });
       this.toggleHiitModal();
     }
   }
@@ -91,6 +95,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
       resistanceWeeklyTarget,
       hiitModalVisible,
       hiitWeeklyTarget,
+      buttonDisabled,
     } = this.state;
     return (
       <View style={styles.container}>
@@ -174,21 +179,21 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 ))}
               </Picker>
               <TouchableOpacity
-                title="DONE"
-                onPress={() => this.toggleResistanceModal()}
-                style={styles.modalCancelButton}
-              >
-                <Text style={styles.modalButtonText}>
-                  CANCEL
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                title="DONE"
                 onPress={() => this.updateWeeklyTarget('resistance', resistanceWeeklyTarget)}
+                disabled={buttonDisabled}
                 style={styles.modalButton}
               >
                 <Text style={styles.modalButtonText}>
                   UPDATE
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.toggleResistanceModal()}
+                disabled={buttonDisabled}
+                style={styles.modalCancelButton}
+              >
+                <Text style={styles.modalButtonText}>
+                  CANCEL
                 </Text>
               </TouchableOpacity>
             </View>
@@ -215,21 +220,21 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 ))}
               </Picker>
               <TouchableOpacity
-                title="DONE"
-                onPress={() => this.toggleHiitModal()}
-                style={styles.modalCancelButton}
-              >
-                <Text style={styles.modalButtonText}>
-                  CANCEL
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                title="DONE"
                 onPress={() => this.updateWeeklyTarget('hiit', hiitWeeklyTarget)}
+                disabled={buttonDisabled}
                 style={styles.modalButton}
               >
                 <Text style={styles.modalButtonText}>
                   UPDATE
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.toggleHiitModal()}
+                disabled={buttonDisabled}
+                style={styles.modalCancelButton}
+              >
+                <Text style={styles.modalButtonText}>
+                  CANCEL
                 </Text>
               </TouchableOpacity>
             </View>
