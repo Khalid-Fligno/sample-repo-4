@@ -5,7 +5,7 @@
     "version": "0.0.1",
     "sdkVersion": "28.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icons/fitazfk-app-icon-dark.png",
+    "icon": "./assets/icons/fitazfk-app-icon-gradient-dark.png",
     "splash": {
       "image": "./assets/icons/fitazfk-splash-dark-logo.png",
       "backgroundColor": "#000000"
