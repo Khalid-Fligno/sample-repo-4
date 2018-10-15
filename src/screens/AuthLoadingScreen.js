@@ -17,7 +17,7 @@ const cacheFonts = (fonts) => {
 export default class AuthLoadingScreen extends React.PureComponent {
   loadAssetsAsync = async () => {
     const imageAssets = cacheImages([
-      require('../../assets/icons/fitazfk-app-icon-dark.png'),
+      require('../../assets/icons/fitazfk-app-icon-gradient-dark.png'),
       require('../../assets/icons/fitazfk-splash-dark-logo.png'),
       require('../../assets/icons/fitazfk-icon-solid-white.png'),
       require('../../assets/images/recipes/baked-eggs.png'),
