@@ -69,7 +69,7 @@ WorkoutPauseModal.propTypes = {
   handleUnpause: PropTypes.func.isRequired,
   exerciseList: PropTypes.arrayOf(PropTypes.object).isRequired,
   fitnessLevel: PropTypes.string,
-  reps: PropTypes.number,
+  reps: PropTypes.string,
 };
 
 WorkoutPauseModal.defaultProps = {
