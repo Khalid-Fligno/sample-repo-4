@@ -112,13 +112,13 @@ export const findFitnessLevel = (burpeeCount) => {
 
 export const findReps = (fitnessLevel) => {
   if (fitnessLevel === '1') {
-    return 10;
+    return '10';
   } else if (fitnessLevel === '2') {
-    return 14;
+    return '14';
   } else if (fitnessLevel === '3') {
-    return 18;
+    return '18';
   }
-  return 10;
+  return '10';
 };
 
 export const diff = (a, b) => {
