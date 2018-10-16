@@ -35,7 +35,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       workout: null,
       reps: null,
       chosenDate: new Date(),
-      modalVisible: false,
+      calendarModalVisible: false,
       addingToCalendar: false,
       musicModalVisible: false,
     };
@@ -55,8 +55,8 @@ export default class WorkoutInfoScreen extends React.PureComponent {
   toggleMusicModal = () => {
     this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
   }
-  toggleModal = () => {
-    this.setState((prevState) => ({ modalVisible: !prevState.modalVisible }));
+  toggleCalendarModal = () => {
+    this.setState((prevState) => ({ calendarModalVisible: !prevState.calendarModalVisible }));
   }
   addWorkoutToCalendar = async (date) => {
     if (this.state.addingToCalendar) {
@@ -76,13 +76,13 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       'Added to calendar!',
       `${workout.name.toUpperCase()}`,
       [
-        { text: 'OK', onPress: () => this.setState({ modalVisible: false }), style: 'cancel' },
+        { text: 'OK', onPress: () => this.setState({ calendarModalVisible: false }), style: 'cancel' },
       ],
       { cancelable: false },
     );
   }
   handleWorkoutStart = (workout, reps) => {
-    this.toggleMusicModal();
+    this.setState({ musicModalVisible: false });
     this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps });
   }
   render() {
@@ -91,7 +91,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       workout,
       reps,
       chosenDate,
-      modalVisible,
+      calendarModalVisible,
       addingToCalendar,
       musicModalVisible,
     } = this.state;
@@ -193,8 +193,8 @@ export default class WorkoutInfoScreen extends React.PureComponent {
           contentContainerStyle={styles.scrollView}
         >
           <Modal
-            isVisible={modalVisible}
-            onBackdropPress={() => this.toggleModal()}
+            isVisible={calendarModalVisible}
+            onBackdropPress={() => this.toggleCalendarModal()}
             animationIn="fadeIn"
             animationInTiming={600}
             animationOut="fadeOut"
@@ -233,7 +233,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                 {workout && workoutName.toUpperCase()}
               </Text>
               <TouchableOpacity
-                onPress={() => this.toggleModal()}
+                onPress={() => this.toggleCalendarModal()}
                 style={styles.addToCalendarButton}
               >
                 <Icon
