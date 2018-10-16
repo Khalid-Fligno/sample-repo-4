@@ -9,6 +9,8 @@ import {
   DatePickerIOS,
   TouchableOpacity,
   Alert,
+  Linking,
+  Image,
 } from 'react-native';
 import { FileSystem, Video } from 'expo';
 import Modal from 'react-native-modal';
@@ -35,18 +37,23 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       chosenDate: new Date(),
       modalVisible: false,
       addingToCalendar: false,
+      musicModalVisible: false,
     };
   }
-  componentDidMount = async () => {
+  componentWillMount = async () => {
     const workout = this.props.navigation.getParam('workout', null);
     const reps = this.props.navigation.getParam('reps', null);
     this.setState({ workout, reps });
-    this.props.navigation.setParams({
-      handleStart: () => this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps }),
+    await this.props.navigation.setParams({
+      handleStart: () => this.toggleMusicModal(),
+      // handleStart: () => this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps }),
     });
   }
   setDate = (newDate) => {
     this.setState({ chosenDate: newDate });
+  }
+  toggleMusicModal = () => {
+    this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
   }
   toggleModal = () => {
     this.setState((prevState) => ({ modalVisible: !prevState.modalVisible }));
@@ -74,6 +81,10 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       { cancelable: false },
     );
   }
+  handleWorkoutStart = (workout, reps) => {
+    this.toggleMusicModal();
+    this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps });
+  }
   render() {
     const {
       loading,
@@ -82,6 +93,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       chosenDate,
       modalVisible,
       addingToCalendar,
+      musicModalVisible,
     } = this.state;
     if (loading) {
       return (
@@ -284,6 +296,71 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             {exerciseDisplay}
           </View>
         </ScrollView>
+        <Modal
+          isVisible={musicModalVisible}
+          animationIn="fadeIn"
+          animationInTiming={800}
+          animationOut="fadeOut"
+          animationOutTiming={800}
+        >
+          <View style={styles.musicModalContainer}>
+            <View style={styles.musicModalTextContainer}>
+              <Text style={styles.musicModalHeaderText}>
+                Choose your music
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  padding: 10,
+                  backgroundColor: colors.grey.light,
+                  borderRadius: 4,
+                }}
+              >
+                <TouchableOpacity
+                  style={{ marginRight: 10 }}
+                  onPress={() => Linking.openURL('music:')}
+                >
+                  <Image
+                    source={require('../../../../assets/icons/apple-music-icon.png')}
+                    style={{
+                      height: 50,
+                      width: 50,
+                    }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => Linking.openURL('spotify:')}
+                >
+                  <Image
+                    source={require('../../../../assets/icons/spotify-icon.png')}
+                    style={{
+                      height: 50,
+                      width: 50,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{ backgroundColor: colors.white, width: '100%' }}>
+              <TouchableOpacity
+                onPress={() => this.toggleMusicModal()}
+                style={styles.musicModalCancelButton}
+              >
+                <Text style={styles.musicModalButtonText}>
+                  BACK
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.handleWorkoutStart(workout, reps)}
+                style={styles.musicModalContinueButton}
+              >
+                <Text style={styles.musicModalButtonText}>
+                  CONTINUE
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -411,5 +488,44 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 16,
     color: 'white',
+  },
+  musicModalContainer: {
+    flexShrink: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  musicModalHeaderText: {
+    fontFamily: fonts.bold,
+    fontSize: 28,
+    color: colors.charcoal.light,
+    marginBottom: 10,
+  },
+  musicModalTextContainer: {
+    width: '100%',
+    backgroundColor: colors.white,
+    justifyContent: 'space-between',
+    padding: 15,
+  },
+  musicModalCancelButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.charcoal.standard,
+    height: 50,
+    width: '100%',
+  },
+  musicModalContinueButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.coral.standard,
+    height: 50,
+    width: '100%',
+  },
+  musicModalButtonText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    marginTop: 3,
   },
 });
