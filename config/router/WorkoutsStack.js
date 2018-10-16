@@ -24,8 +24,26 @@ const WorkoutsStack = createStackNavigator(
     initialRouteName: 'WorkoutsHome',
     transitionConfig: () => ({
       transitionSpec: fadeSpec,
-      screenInterpolator: (props) => {
-        return fade(props);
+      screenInterpolator: (sceneProps) => {
+        const {
+          scene,
+          index,
+          scenes,
+        } = sceneProps;
+        const toIndex = index;
+        const lastSceneIndex = scenes[scenes.length - 1].index;
+        // Test whether we're skipping back more than one screen
+        if (lastSceneIndex - toIndex > 1) {
+          // Do not transform the screen being navigated to
+          if (scene.index === toIndex) {
+            return {};
+          }
+          // Hide all screens in between
+          if (scene.index !== lastSceneIndex) {
+            return { opacity: 0 };
+          }
+        }
+        return fade(sceneProps);
       },
     }),
     navigationOptions: ({ navigation }) => ({
