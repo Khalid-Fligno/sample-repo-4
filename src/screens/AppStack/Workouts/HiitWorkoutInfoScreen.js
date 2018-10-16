@@ -95,14 +95,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       addingToCalendar,
       fitnessLevel,
     } = this.state;
-    if (loading) {
-      return (
-        <Loader
-          loading={loading}
-          color={colors.coral.standard}
-        />
-      );
-    }
     let exerciseDisplay;
     if (workout) {
       exerciseDisplay = workout.exercises.map((exercise, index) => {
@@ -262,6 +254,14 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
             {exerciseDisplay}
           </View>
         </ScrollView>
+        {
+          loading && (
+            <Loader
+              loading={loading}
+              color={colors.coral.standard}
+            />
+          )
+        }
       </View>
     );
   }
