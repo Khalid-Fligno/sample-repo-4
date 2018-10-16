@@ -9,6 +9,8 @@ import {
   DatePickerIOS,
   TouchableOpacity,
   Alert,
+  Image,
+  Linking,
 } from 'react-native';
 import { FileSystem, Video } from 'expo';
 import Modal from 'react-native-modal';
@@ -44,7 +46,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       workout: null,
       fitnessLevel: null,
       chosenDate: new Date(),
-      modalVisible: false,
+      calendarModalVisible: false,
       addingToCalendar: false,
     };
   }
@@ -52,16 +54,24 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
     this.setState({ loading: true });
     const workout = this.props.navigation.getParam('workout', null);
     const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
-    this.setState({ workout, loading: false, fitnessLevel: parseInt(fitnessLevel, 10) });
+    this.setState({ workout, loading: false, fitnessLevel });
     this.props.navigation.setParams({
-      handleStart: () => this.props.navigation.navigate('HiitCountdown', { exerciseList: workout.exercises, fitnessLevel }),
+      handleStart: () => this.toggleMusicModal(),
+      // handleStart: () => this.props.navigation.navigate('HiitCountdown', { exerciseList: workout.exercises, fitnessLevel }),
     });
   }
   setDate = (newDate) => {
     this.setState({ chosenDate: newDate });
   }
-  toggleModal = () => {
-    this.setState((prevState) => ({ modalVisible: !prevState.modalVisible }));
+  toggleCalendarModal = () => {
+    this.setState((prevState) => ({ calendarModalVisible: !prevState.calendarModalVisible }));
+  }
+  toggleMusicModal = () => {
+    this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
+  }
+  handleHiitWorkoutStart = (workout, fitnessLevel) => {
+    this.setState({ musicModalVisible: false });
+    this.props.navigation.navigate('HiitCountdown', { exerciseList: workout.exercises, fitnessLevel });
   }
   addWorkoutToCalendar = async (date) => {
     if (this.state.addingToCalendar) {
@@ -81,7 +91,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       'Added to calendar!',
       `${workout.name.toUpperCase()}`,
       [
-        { text: 'OK', onPress: () => this.setState({ modalVisible: false }), style: 'cancel' },
+        { text: 'OK', onPress: () => this.setState({ calendarModalVisible: false }), style: 'cancel' },
       ],
       { cancelable: false },
     );
@@ -91,9 +101,10 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       loading,
       workout,
       chosenDate,
-      modalVisible,
+      calendarModalVisible,
       addingToCalendar,
       fitnessLevel,
+      musicModalVisible,
     } = this.state;
     let exerciseDisplay;
     if (workout) {
@@ -160,8 +171,8 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
           contentContainerStyle={styles.scrollView}
         >
           <Modal
-            isVisible={modalVisible}
-            onBackdropPress={() => this.toggleModal()}
+            isVisible={calendarModalVisible}
+            onBackdropPress={() => this.toggleCalendarModal()}
             animationIn="fadeIn"
             animationInTiming={600}
             animationOut="fadeOut"
@@ -200,7 +211,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                 {workout && workout.name.toUpperCase()}
               </Text>
               <TouchableOpacity
-                onPress={() => this.toggleModal()}
+                onPress={() => this.toggleCalendarModal()}
                 style={styles.addToCalendarButton}
               >
                 <Icon
@@ -262,6 +273,71 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
             />
           )
         }
+        <Modal
+          isVisible={musicModalVisible}
+          animationIn="fadeIn"
+          animationInTiming={800}
+          animationOut="fadeOut"
+          animationOutTiming={800}
+        >
+          <View style={styles.musicModalContainer}>
+            <View style={styles.musicModalTextContainer}>
+              <Text style={styles.musicModalHeaderText}>
+                Choose your music
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  padding: 10,
+                  backgroundColor: colors.grey.light,
+                  borderRadius: 4,
+                }}
+              >
+                <TouchableOpacity
+                  style={{ marginRight: 10 }}
+                  onPress={() => Linking.openURL('music:')}
+                >
+                  <Image
+                    source={require('../../../../assets/icons/apple-music-icon.png')}
+                    style={{
+                      height: 50,
+                      width: 50,
+                    }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => Linking.openURL('spotify:')}
+                >
+                  <Image
+                    source={require('../../../../assets/icons/spotify-icon.png')}
+                    style={{
+                      height: 50,
+                      width: 50,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{ backgroundColor: colors.white, width: '100%' }}>
+              <TouchableOpacity
+                onPress={() => this.toggleMusicModal()}
+                style={styles.musicModalCancelButton}
+              >
+                <Text style={styles.musicModalButtonText}>
+                  BACK
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.handleHiitWorkoutStart(workout, fitnessLevel)}
+                style={styles.musicModalContinueButton}
+              >
+                <Text style={styles.musicModalButtonText}>
+                  CONTINUE
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -389,5 +465,44 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 16,
     color: 'white',
+  },
+  musicModalContainer: {
+    flexShrink: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  musicModalHeaderText: {
+    fontFamily: fonts.bold,
+    fontSize: 28,
+    color: colors.charcoal.light,
+    marginBottom: 10,
+  },
+  musicModalTextContainer: {
+    width: '100%',
+    backgroundColor: colors.white,
+    justifyContent: 'space-between',
+    padding: 15,
+  },
+  musicModalCancelButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.charcoal.standard,
+    height: 50,
+    width: '100%',
+  },
+  musicModalContinueButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.coral.standard,
+    height: 50,
+    width: '100%',
+  },
+  musicModalButtonText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    marginTop: 3,
   },
 });
