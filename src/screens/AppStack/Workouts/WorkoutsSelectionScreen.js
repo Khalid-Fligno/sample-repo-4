@@ -74,7 +74,6 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
         disabled={workout.disabled}
       />
     ));
-
     return (
       <View style={styles.container}>
         {workoutList}
