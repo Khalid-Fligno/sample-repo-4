@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, Alert, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
+import { Audio } from 'expo';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
@@ -72,6 +73,8 @@ export default class WorkoutTimer extends Component {
     );
   }
   start = () => {
+    const soundObject = new Audio.Sound();
+    soundObject.loadAsync(require('../../../assets/sounds/ding.mp3'));
     const handleFinish = this.props.handleFinish ? this.props.handleFinish : () => this.finishAlert();
     const endTime = new Date().getTime() + this.state.remainingTime;
     this.interval = setInterval(() => {
@@ -79,6 +82,7 @@ export default class WorkoutTimer extends Component {
       if (remaining <= 1000) {
         this.setState({ remainingTime: 0 });
         this.stop();
+        soundObject.playAsync();
         handleFinish();
         return;
       }
