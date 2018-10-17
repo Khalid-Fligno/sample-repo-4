@@ -14,7 +14,7 @@ export default class PauseButtonRow extends React.PureComponent {
     };
   }
   render() {
-    const { nextExerciseName, handlePause } = this.props;
+    const { nextExerciseName, handlePause, lastExercise } = this.props;
     return (
       <View style={styles.pauseButtonRow}>
         <TouchableOpacity
@@ -31,7 +31,7 @@ export default class PauseButtonRow extends React.PureComponent {
           </Text>
         </TouchableOpacity>
         <View style={styles.nextExerciseContainer}>
-          <Text style={styles.nextExercise}> NEXT EXERCISE: </Text>
+          <Text style={styles.nextExercise}>{!lastExercise ? 'NEXT EXERCISE:' : 'LAST EXERCISE'}</Text>
           <Text style={styles.nextExerciseName}>{nextExerciseName.toUpperCase()}</Text>
         </View>
       </View>
@@ -42,6 +42,11 @@ export default class PauseButtonRow extends React.PureComponent {
 PauseButtonRow.propTypes = {
   nextExerciseName: PropTypes.string.isRequired,
   handlePause: PropTypes.func.isRequired,
+  lastExercise: PropTypes.bool,
+};
+
+PauseButtonRow.defaultProps = {
+  lastExercise: false,
 };
 
 const styles = StyleSheet.create({
@@ -78,7 +83,7 @@ const styles = StyleSheet.create({
   },
   nextExercise: {
     fontFamily: fonts.standard,
-    fontSize: 12,
+    fontSize: 10,
   },
   nextExerciseName: {
     fontFamily: fonts.bold,
