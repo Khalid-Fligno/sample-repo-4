@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, StatusBar, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { Video, FileSystem, Audio } from 'expo';
+import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import WorkoutProgress from '../../../../components/Workouts/WorkoutProgress';
@@ -16,19 +16,14 @@ export default class Exercise1Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      exerciseList: [],
-      currentExercise: {},
+      exerciseList: props.navigation.getParam('exerciseList', null),
+      currentExercise: props.navigation.getParam('exerciseList', null)[0],
+      reps: props.navigation.getParam('reps', null),
       timerStart: false,
       timerReset: false,
-      totalDuration: 3,
-      reps: null,
+      totalDuration: 8,
       pauseModalVisible: false,
     };
-  }
-  componentWillMount() {
-    const exerciseList = this.props.navigation.getParam('exerciseList', null);
-    const reps = this.props.navigation.getParam('reps', null);
-    this.setState({ exerciseList, currentExercise: exerciseList[0], reps });
   }
   componentDidMount() {
     this.startTimer();
@@ -44,13 +39,6 @@ export default class Exercise1Screen extends React.PureComponent {
       timerStart: false,
       timerReset: false,
     });
-    const soundObject = new Audio.Sound();
-    try {
-      await soundObject.loadAsync(require('../../../../../assets/sounds/airhorn.mp3'));
-      await soundObject.playAsync();
-    } catch (error) {
-      console.log(error);
-    }
     let setCount = this.props.navigation.getParam('setCount', 0);
     setCount += 1;
     if (setCount === 3) {

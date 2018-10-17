@@ -16,27 +16,17 @@ export default class Exercise6Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      exerciseList: [],
-      currentExercise: {},
+      exerciseList: props.navigation.getParam('exerciseList', null),
+      currentExercise: props.navigation.getParam('exerciseList', null)[5],
+      reps: props.navigation.getParam('reps', null),
       timerStart: false,
       timerReset: false,
       totalDuration: 3,
-      reps: null,
       pauseModalVisible: false,
     };
   }
-  componentWillMount() {
-    const exerciseList = this.props.navigation.getParam('exerciseList', null);
-    const reps = this.props.navigation.getParam('reps', null);
-    this.setState({ exerciseList, currentExercise: exerciseList[5], reps });
-  }
   componentDidMount() {
     this.startTimer();
-    try {
-      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-5.mp4`, { idempotent: true });
-    } catch (err) {
-      console.log(err);
-    }
   }
   startTimer = () => {
     this.setState({
@@ -169,7 +159,8 @@ export default class Exercise6Screen extends React.PureComponent {
           />
           <PauseButtonRow
             handlePause={this.handlePause}
-            nextExerciseName="LAST EXERCISE!"
+            nextExerciseName="NEARLY DONE!"
+            lastExercise
           />
           <WorkoutPauseModal
             isVisible={pauseModalVisible}
