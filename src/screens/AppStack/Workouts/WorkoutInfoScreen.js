@@ -19,6 +19,7 @@ import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
+import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
 import { findFocus, findLocation } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -232,19 +233,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               <Text style={styles.workoutName}>
                 {workout && workoutName.toUpperCase()}
               </Text>
-              <TouchableOpacity
-                onPress={() => this.toggleCalendarModal()}
-                style={styles.addToCalendarButton}
-              >
-                <Icon
-                  name="calendar-outline"
-                  size={18}
-                  color={colors.charcoal.light}
-                />
-                <Text style={styles.addToCalendarButtonText}>
-                  Add to calendar
-                </Text>
-              </TouchableOpacity>
+              <AddToCalendarButton onPress={() => this.toggleCalendarModal()} />
             </View>
             <View style={styles.workoutIconsRow}>
               <View style={styles.workoutIconContainer}>
@@ -413,23 +402,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 24,
     color: colors.coral.standard,
-  },
-  addToCalendarButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: 150,
-    padding: 3,
-    borderWidth: 2,
-    borderColor: colors.charcoal.light,
-    borderRadius: 4,
-  },
-  addToCalendarButtonText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.light,
-    marginTop: 3,
-    marginLeft: 5,
   },
   workoutIconsRow: {
     width,
