@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 15,
     paddingRight: 15,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: colors.coral.standard,
     borderRadius: 4,
   },
