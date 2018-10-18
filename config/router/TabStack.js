@@ -74,9 +74,9 @@ const TabStack = createBottomTabNavigator(
       activeTintColor: colors.charcoal.standard,
       inactiveTintColor: colors.charcoal.standard,
       style: {
-        shadowColor: colors.grey.standard,
+        shadowColor: colors.charcoal.standard,
         shadowOffset: { width: 0, height: -1 },
-        shadowOpacity: 0.7,
+        shadowOpacity: 0.3,
         shadowRadius: 2,
         borderTopWidth: 0,
         backgroundColor: colors.white,

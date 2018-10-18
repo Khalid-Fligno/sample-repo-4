@@ -174,21 +174,21 @@ Header.defaultProps = {
 const styles = StyleSheet.create({
   defaultHeaderShadow: {
     backgroundColor: colors.black,
-    shadowColor: colors.grey.dark,
+    shadowColor: colors.charcoal.standard,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.7,
+    shadowOpacity: 0.5,
     shadowRadius: 2,
   },
   nutritionHeaderShadow: {
-    shadowColor: colors.grey.dark,
+    shadowColor: colors.charcoal.standard,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.7,
+    shadowOpacity: 0.5,
     shadowRadius: 2,
   },
   workoutsHeaderShadow: {
-    shadowColor: colors.grey.dark,
+    shadowColor: colors.charcoal.standard,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.7,
+    shadowOpacity: 0.5,
     shadowRadius: 2,
   },
   noShadow: {
