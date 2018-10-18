@@ -43,7 +43,7 @@ Tile.defaultProps = {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    flex: 1,
+    flex: 0.25,
     margin: 5,
     paddingLeft: 10,
     paddingRight: 10,
