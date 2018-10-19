@@ -7,7 +7,6 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-// import Loader from '../../components/Shared/Loader';
 import CustomButton from '../../components/Shared/CustomButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -18,7 +17,6 @@ export default class Progress3Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      // loading: false,
     };
   }
   componentWillMount = () => {
@@ -56,9 +54,6 @@ export default class Progress3Screen extends React.PureComponent {
     });
   }
   render() {
-    // const {
-    //   loading,
-    // } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
