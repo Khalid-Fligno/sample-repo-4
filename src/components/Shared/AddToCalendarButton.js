@@ -18,14 +18,14 @@ export default class AddToCalendarButton extends React.PureComponent {
         onPress={onPress}
         style={styles.addToCalendarButton}
       >
-        <Text style={styles.addToCalendarButtonText}>
-          Add to
-        </Text>
         <Icon
-          name="calendar-outline"
-          size={18}
-          color={colors.charcoal.light}
+          name="add-to-calendar"
+          size={28}
+          color={colors.charcoal.standard}
         />
+        <Text style={styles.addToCalendarButtonText}>
+          Add to calendar
+        </Text>
       </TouchableOpacity>
     );
   }
@@ -40,11 +40,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: 90,
+    backgroundColor: colors.white,
     padding: 3,
     borderWidth: 2,
     borderColor: colors.charcoal.light,
     borderRadius: 4,
+    shadowColor: colors.charcoal.light,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   addToCalendarButtonText: {
     fontFamily: fonts.standard,
