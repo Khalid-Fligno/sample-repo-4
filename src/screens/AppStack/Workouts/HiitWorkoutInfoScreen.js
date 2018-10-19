@@ -58,7 +58,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
     this.setState({ workout, loading: false, fitnessLevel });
     this.props.navigation.setParams({
       handleStart: () => this.toggleMusicModal(),
-      // handleStart: () => this.props.navigation.navigate('HiitCountdown', { exerciseList: workout.exercises, fitnessLevel }),
     });
   }
   setDate = (newDate) => {
