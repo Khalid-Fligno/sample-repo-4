@@ -189,12 +189,16 @@ const styles = StyleSheet.create({
   currentExerciseTextContainer: {
     width,
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingTop: 5,
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   currentExerciseNameTextContainer: {
-    width: width - 100,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   currentExerciseNameText: {
     fontFamily: fonts.bold,
@@ -202,7 +206,8 @@ const styles = StyleSheet.create({
     color: colors.coral.standard,
   },
   currentExerciseRepsTextContainer: {
-    width: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   currentExerciseRepsText: {
     fontFamily: fonts.bold,
