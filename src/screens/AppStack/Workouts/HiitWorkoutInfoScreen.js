@@ -366,6 +366,7 @@ const styles = StyleSheet.create({
   workoutNameContainer: {
     width,
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: 10,
