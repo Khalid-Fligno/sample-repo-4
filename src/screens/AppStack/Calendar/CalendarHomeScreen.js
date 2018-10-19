@@ -14,8 +14,8 @@ import { FileSystem, Calendar, Permissions } from 'expo';
 import CalendarStrip from 'react-native-calendar-strip';
 import Swipeable from 'react-native-swipeable';
 import firebase from 'firebase';
-import Modal from 'react-native-modal';
 import { db, auth } from '../../../../config/firebase';
+import HelperModal from '../../../components/Shared/HelperModal';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
 import { findReps } from '../../../utils';
@@ -492,38 +492,15 @@ export default class CalendarHomeScreen extends React.PureComponent {
         </View>
         {dayDisplay}
         {loading && loadingView}
-        <Modal
-          isVisible={helperModalVisible}
-          animationIn="fadeIn"
-          animationInTiming={800}
-          animationOut="fadeOut"
-          animationOutTiming={800}
-        >
-          <View style={styles.helperModalContainer}>
-            <View style={styles.helperModalTextContainer}>
-              <Text style={styles.modalHeaderText}>
-                Calendar
-              </Text>
-              <Text style={styles.modalBodyText}>
-                {'Keep track of your scheduled workouts and meals using this tab.\n'}
-              </Text>
-              <Text style={styles.modalBodyText}>
-                {'You can go directly to your workouts or meals from this tab once you have added them.\n'}
-              </Text>
-              <Text style={styles.modalBodyText}>
-                {'To add a meal or workout, go to the recipe/workout page via the Nutrition/Workout tab and press the \'Add to Calendar\' button'}
-              </Text>
-            </View>
-            <TouchableOpacity
-              onPress={() => this.toggleHelperModal()}
-              style={styles.modalButton}
-            >
-              <Text style={styles.modalButtonText}>
-                Ok, got it!
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
+        <HelperModal
+          helperModalVisible={helperModalVisible}
+          toggleHelperModal={() => this.toggleHelperModal()}
+          headingText="Calendar"
+          bodyText="Keep track of your scheduled workouts and meals using this tab."
+          bodyText2="You can go directly to your workouts or meals from this tab once you have added them."
+          bodyText3="To add a meal or workout, go to the recipe/workout page via the Nutrition/Workout tab and press the 'Add to Calendar' button."
+          color="green"
+        />
       </View>
     );
   }
@@ -615,45 +592,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     color: colors.white,
     marginTop: 4,
-  },
-  helperModalContainer: {
-    flexShrink: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  helperModalTextContainer: {
-    width: '100%',
-    backgroundColor: colors.white,
-    justifyContent: 'space-between',
-    padding: 15,
-  },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.green.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
-  modalHeaderText: {
-    fontFamily: fonts.bold,
-    fontSize: 28,
-    color: colors.charcoal.light,
-    marginBottom: 10,
-  },
-  modalBodyText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.light,
-    marginLeft: 5,
-    marginRight: 5,
   },
 });

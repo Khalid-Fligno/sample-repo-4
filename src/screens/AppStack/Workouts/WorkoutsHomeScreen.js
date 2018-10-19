@@ -5,16 +5,15 @@ import {
   Text,
   Dimensions,
   ImageBackground,
-  TouchableOpacity,
   AsyncStorage,
 } from 'react-native';
 import { FileSystem } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 import FadeInView from 'react-native-fade-in-view';
-import Modal from 'react-native-modal';
 import moment from 'moment';
 import CustomButton from '../../../components/Shared/CustomButton';
 import Loader from '../../../components/Shared/Loader';
+import HelperModal from '../../../components/Shared/HelperModal';
 import { db } from '../../../../config/firebase';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -277,35 +276,14 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
             primary
           />
         </View>
-        <Modal
-          isVisible={helperModalVisible}
-          animationIn="fadeIn"
-          animationInTiming={800}
-          animationOut="fadeOut"
-          animationOutTiming={800}
-        >
-          <View style={styles.helperModalContainer}>
-            <View style={styles.helperModalTextContainer}>
-              <Text style={styles.headerText}>
-                Workouts
-              </Text>
-              <Text style={styles.bodyText}>
-                {"Select what type of workout you'd like to do, working from top to bottom.\n"}
-              </Text>
-              <Text style={styles.bodyText}>
-                {'When you have finished selecting your workout type, press the button at the bottom of your screen to continue.'}
-              </Text>
-            </View>
-            <TouchableOpacity
-              onPress={() => this.toggleHelperModal()}
-              style={styles.modalButton}
-            >
-              <Text style={styles.modalButtonText}>
-                Ok, got it!
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
+        <HelperModal
+          helperModalVisible={helperModalVisible}
+          toggleHelperModal={() => this.toggleHelperModal()}
+          headingText="Workouts"
+          bodyText="Select what type of workout you'd like to do, working from top to bottom."
+          bodyText2="When you have finished selecting your workout type, press the button at the bottom of your screen to continue."
+          color="coral"
+        />
         {
           loading && <Loader color={colors.coral.standard} loading={loading} />
         }
@@ -371,45 +349,5 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: colors.black,
     textAlign: 'center',
-  },
-  helperModalContainer: {
-    flexShrink: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  helperModalTextContainer: {
-    width: '100%',
-    backgroundColor: colors.white,
-    justifyContent: 'space-between',
-    padding: 15,
-  },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.coral.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
-  headerText: {
-    fontFamily: fonts.bold,
-    fontSize: 28,
-    color: colors.charcoal.light,
-    marginBottom: 10,
-  },
-  bodyText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.light,
-    marginLeft: 5,
-    marginRight: 5,
   },
 });

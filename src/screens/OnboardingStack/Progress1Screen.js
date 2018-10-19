@@ -12,6 +12,7 @@ import {
   AsyncStorage,
 } from 'react-native';
 import Modal from 'react-native-modal';
+import HelperModal from '../../components/Shared/HelperModal';
 import CustomButton from '../../components/Shared/CustomButton';
 import Loader from '../../components/Shared/Loader';
 import {
@@ -119,39 +120,6 @@ export default class Progress1Screen extends React.PureComponent {
           behavior="position"
         >
           <View style={styles.container}>
-            <Modal
-              isVisible={helperModalVisible}
-              animationIn="fadeIn"
-              animationInTiming={800}
-              animationOut="fadeOut"
-              animationOutTiming={800}
-            >
-              <View style={styles.helperModalContainer}>
-                <View style={styles.helperModalTextContainer}>
-                  <Text style={styles.headerText}>
-                    Progress
-                  </Text>
-                  <Text style={styles.bodyText}>
-                    {'Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test.\n'}
-                  </Text>
-                  <Text style={styles.bodyText}>
-                    {'You will need to complete all three to successfully add an entry.\n'}
-                  </Text>
-                  <Text style={styles.bodyText}>
-                    {'If you can\'t do all this right now, press skip in the top right corner.'}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  title="DONE"
-                  onPress={() => this.toggleHelperModal()}
-                  style={styles.modalButton}
-                >
-                  <Text style={styles.modalButtonText}>
-                    Ok, got it!
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </Modal>
             <View style={styles.textContainer}>
               <Text style={styles.headerText}>
                 Measurements
@@ -354,6 +322,15 @@ export default class Progress1Screen extends React.PureComponent {
             }
           </View>
         </KeyboardAvoidingView>
+        <HelperModal
+          helperModalVisible={helperModalVisible}
+          toggleHelperModal={() => this.toggleHelperModal()}
+          headingText="Progress"
+          bodyText="Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test."
+          bodyText2="You will need to complete all three to successfully add an entry."
+          bodyText3="If you can't do all of this right now, press skip in the top right corner to complete it later."
+          color="coral"
+        />
       </SafeAreaView>
     );
   }

@@ -2,11 +2,11 @@ import React from 'react';
 import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import Image from 'react-native-image-progress';
-import Modal from 'react-native-modal';
 import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
+import HelperModal from '../../../components/Shared/HelperModal';
 import CustomButton from '../../../components/Shared/CustomButton';
 import { diff } from '../../../utils/index';
 import colors from '../../../styles/colors';
@@ -264,38 +264,15 @@ export default class ProgressHomeScreen extends React.PureComponent {
             )
           }
         </ScrollView>
-        <Modal
-          isVisible={helperModalVisible}
-          animationIn="fadeIn"
-          animationInTiming={800}
-          animationOut="fadeOut"
-          animationOutTiming={800}
-        >
-          <View style={styles.helperModalContainer}>
-            <View style={styles.helperModalTextContainer}>
-              <Text style={styles.modalHeaderText}>
-                Progress
-              </Text>
-              <Text style={styles.modalBodyText}>
-                {"This tab will show you how far you've come from when you first started.\n"}
-              </Text>
-              <Text style={styles.modalBodyText}>
-                {'Your initial progress photo and info will always stay on the left of this screen.\n'}
-              </Text>
-              <Text style={styles.modalBodyText}>
-                {'Re-testing your progress will update the photo and information on the right hand side.'}
-              </Text>
-            </View>
-            <TouchableOpacity
-              onPress={() => this.toggleHelperModal()}
-              style={styles.modalButton}
-            >
-              <Text style={styles.modalButtonText}>
-                Ok, got it!
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
+        <HelperModal
+          helperModalVisible={helperModalVisible}
+          toggleHelperModal={() => this.toggleHelperModal()}
+          headingText="Progress"
+          bodyText="This tab will show you how far you've come from when you first started."
+          bodyText2="Your initial progress photo and info will always stay on the left of this screen."
+          bodyText3="Re-testing your progress will update the photo and information on the right hand side."
+          color="blue"
+        />
       </View>
     );
   }
@@ -405,44 +382,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 14,
     color: colors.white,
-  },
-  helperModalContainer: {
-    flexShrink: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  helperModalTextContainer: {
-    width: '100%',
-    backgroundColor: colors.white,
-    justifyContent: 'space-between',
-    padding: 15,
-  },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.blue.standard,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
-  modalHeaderText: {
-    fontFamily: fonts.bold,
-    fontSize: 28,
-    color: colors.charcoal.light,
-    marginBottom: 10,
-  },
-  modalBodyText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.light,
-    marginLeft: 5,
-    marginRight: 5,
   },
 });
