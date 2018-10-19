@@ -197,10 +197,11 @@ const styles = StyleSheet.create({
   currentExerciseTextContainer: {
     width,
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
     paddingTop: 5,
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   currentExerciseNameText: {
     fontFamily: fonts.bold,
