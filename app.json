@@ -12,7 +12,7 @@
     },
     "ios": {
       "bundleIdentifier": "com.fitazfk.fitazfkapp",
-      "buildNumber": "1"
+      "buildNumber": "2"
     },
     "android": {
       "package": "com.fitazfk.fitazfkapp"
