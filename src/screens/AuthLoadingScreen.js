@@ -20,7 +20,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/icons/fitazfk-app-icon-gradient-dark.png'),
       require('../../assets/icons/fitazfk-splash-dark-logo.png'),
       require('../../assets/icons/fitazfk-icon-solid-white.png'),
-      require('../../assets/images/recipes/baked-eggs.png'),
       require('../../assets/images/landing-page-1.png'),
       require('../../assets/images/landing-page-2.jpg'),
       require('../../assets/images/landing-page-3.jpg'),
@@ -43,8 +42,9 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/images/nutrition-lunch.jpg'),
       require('../../assets/images/nutrition-dinner.jpg'),
       require('../../assets/images/nutrition-snack.jpg'),
-      require('../../assets/videos/burpees-trimmed.mp4'),
-      require('../../assets/videos/burpees-trimmed-square.mp4'),
+      require('../../assets/icons/apple-music-icon.png'),
+      require('../../assets/icons/spotify-icon.png'),
+      require('../../assets/icons/facebook-icon-white.png'),
     ]);
     const fontAssets = cacheFonts([
       {
