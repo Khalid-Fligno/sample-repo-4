@@ -376,6 +376,7 @@ const styles = StyleSheet.create({
   },
   workoutName: {
     marginTop: 6,
+    marginRight: 10,
     fontFamily: fonts.bold,
     fontSize: 24,
     color: colors.coral.standard,
