@@ -311,7 +311,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 12.5,
     marginBottom: 12.5,
-    backgroundColor: 'green',
     borderRadius: 2,
     overflow: 'hidden',
   },
