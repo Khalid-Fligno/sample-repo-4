@@ -18,6 +18,7 @@ import firebase from 'firebase';
 import { db, auth } from '../../../config/firebase';
 import Loader from '../../components/Shared/Loader';
 import Icon from '../../components/Shared/Icon';
+import FacebookButton from '../../components/Auth/FacebookButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import errors from '../../utils/errors';
@@ -203,7 +204,7 @@ export default class SignupScreen extends React.PureComponent {
               )
             }
             <Button
-              title="CREATE ACCOUNT"
+              title="SIGN UP"
               onPress={() => this.signup(firstName, lastName, email, password)}
               containerViewStyle={styles.loginButtonContainer}
               buttonStyle={styles.loginButton}
@@ -215,12 +216,9 @@ export default class SignupScreen extends React.PureComponent {
                 OR
               </Text>
             </View>
-            <Button
-              title="REGISTER WITH FACEBOOK"
+            <FacebookButton
+              title="SIGN UP WITH FACEBOOK"
               onPress={() => this.signupWithFacebook()}
-              containerViewStyle={styles.facebookLoginButtonContainer}
-              buttonStyle={styles.facebookLoginButton}
-              textStyle={styles.facebookLoginButtonText}
             />
             <Text
               onPress={() => this.navigateToLogin()}
@@ -346,24 +344,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 14,
     color: colors.grey.dark,
-  },
-  facebookLoginButtonContainer: {
-    marginTop: 8,
-    shadowColor: colors.charcoal.dark,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
-  },
-  facebookLoginButton: {
-    backgroundColor: 'rgb(59,89,152)',
-    height: 50,
-    width: width - 30,
-    borderRadius: 4,
-  },
-  facebookLoginButtonText: {
-    marginTop: 4,
-    fontFamily: fonts.bold,
-    fontSize: 15,
   },
   navigateToLogin: {
     width: width - 30,
