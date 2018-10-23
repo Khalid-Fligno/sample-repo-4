@@ -1,10 +1,12 @@
 import React from 'react';
 import { StyleSheet, View, Dimensions, AsyncStorage } from 'react-native';
 import { FileSystem } from 'expo';
+import moment from 'moment';
+import sortBy from 'lodash.sortby';
 import { db } from '../../../../config/firebase';
 import { findReps } from '../../../utils/index';
 import Loader from '../../../components/Shared/Loader';
-import Tile from '../../../components/Shared/Tile';
+import WorkoutTile from '../../../components/Workouts/WorkoutTile';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -16,10 +18,12 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     this.state = {
       workouts: [],
       loading: false,
+      completedWorkoutTally: undefined,
     };
   }
   componentDidMount = async () => {
     await this.fetchWorkouts();
+    this.fetchTargetInfo();
   }
   componentWillUnmount = async () => {
     await this.unsubscribe();
@@ -28,23 +32,45 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     this.setState({ loading: true });
     const type = this.props.navigation.getParam('workoutType', null);
     const location = this.props.navigation.getParam('workoutLocation', null);
-    try {
-      this.unsubscribe = await db.collection('workouts')
-        .where(type, '==', true)
-        .where(location, '==', true)
-        .onSnapshot((querySnapshot) => {
-          const workouts = [];
-          querySnapshot.forEach((doc) => {
-            workouts.push(doc.data());
-          });
-          this.setState({
-            workouts,
-            loading: false,
-          });
+    this.unsubscribe = await db.collection('workouts')
+      .where(type, '==', true)
+      .where(location, '==', true)
+      .onSnapshot(async (querySnapshot) => {
+        const workouts = [];
+        await querySnapshot.forEach(async (doc) => {
+          await workouts.push(await doc.data());
         });
-    } catch (err) {
-      this.setState({ loading: false });
-    }
+        this.setState({ workouts, loading: false });
+      });
+  }
+  fetchTargetInfo = async () => {
+    const uid = await AsyncStorage.getItem('uid', null);
+    const userRef = db.collection('users').doc(uid);
+    userRef.onSnapshot(async (doc) => {
+      this.setState({
+        completedWorkoutTally: await doc.data().completedWorkoutTally,
+      });
+      if (await doc.data().completedWorkoutTally.cycleStartDate < moment().startOf('week').subtract(11, 'weeks').format('YYYY-MM-DD')) {
+        const data = {
+          completedWorkoutTally: {
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0,
+            6: 0,
+            7: 0,
+            8: 0,
+            9: 0,
+            10: 0,
+            11: 0,
+            12: 0,
+            cycleStartDate: moment().startOf('week').format('YYYY-MM-DD'),
+          },
+        };
+        await userRef.set(data, { merge: true });
+      }
+    });
   }
   loadExercises = async (workout) => {
     this.setState({ loading: true });
@@ -64,27 +90,26 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     }
   }
   render() {
-    const { workouts, loading } = this.state;
-    const workoutList = workouts.map((workout) => (
-      <Tile
+    const { workouts, loading, completedWorkoutTally } = this.state;
+    const workoutList = sortBy(workouts, 'resistanceCategoryId').map((workout) => (
+      <WorkoutTile
         key={workout.id}
         title1={workout.name.toUpperCase()}
-        image={require('../../../../assets/images/workouts-upper.jpg')}
+        // image={require('../../../../assets/images/workouts-upper.jpg')}
         onPress={() => this.loadExercises(workout)}
         disabled={workout.disabled}
+        completedWorkoutTally={completedWorkoutTally}
+        resistanceCategoryId={workout.resistanceCategoryId}
       />
     ));
+
     return (
       <View style={styles.container}>
         {workoutList}
-        {
-          loading && (
-            <Loader
-              loading={loading}
-              color={colors.coral.standard}
-            />
-          )
-        }
+        <Loader
+          loading={loading}
+          color={colors.coral.standard}
+        />
       </View>
     );
   }
