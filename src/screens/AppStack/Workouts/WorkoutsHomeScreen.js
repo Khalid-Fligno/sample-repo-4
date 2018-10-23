@@ -168,12 +168,8 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
               item.resistance && (
                 <Text style={styles.weeklyTargetText}>
                   {
-                    resistanceWeeklyTarget > resistanceWeeklyComplete &&
-                    `${resistanceWeeklyTarget - resistanceWeeklyComplete} session${resistanceWeeklyTarget - resistanceWeeklyComplete > 1 ? 's' : ''} remaining`
-                  }
-                  {
-                    resistanceWeeklyTarget <= resistanceWeeklyComplete &&
-                    'Weekly sessions complete'
+                    resistanceWeeklyTarget &&
+                    `${resistanceWeeklyComplete}/${resistanceWeeklyTarget} sessions this week`
                   }
                 </Text>
               )
@@ -182,12 +178,8 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
               item.hiit && (
                 <Text style={styles.weeklyTargetText}>
                   {
-                    hiitWeeklyTarget > hiitWeeklyComplete &&
-                    `${hiitWeeklyTarget - hiitWeeklyComplete} session${hiitWeeklyTarget - hiitWeeklyComplete > 1 ? 's' : ''} remaining`
-                  }
-                  {
-                    hiitWeeklyTarget <= hiitWeeklyComplete &&
-                    'Weekly sessions complete'
+                    hiitWeeklyTarget &&
+                    `${hiitWeeklyComplete}/${hiitWeeklyTarget} sessions this week`
                   }
                 </Text>
               )
@@ -198,6 +190,9 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
     );
   }
   render() {
+    // const start = moment('2018-08-05').startOf('week').format('YYYY-MM-DD');
+    // const now = moment().startOf('week').format('YYYY-MM-DD');
+    // console.log(moment().startOf('week').subtract(11, 'weeks').format('YYYY-MM-DD') === moment('2018-08-04').startOf('week').format('YYYY-MM-DD'));
     const {
       loading,
       selectedWorkoutTypeIndex,
