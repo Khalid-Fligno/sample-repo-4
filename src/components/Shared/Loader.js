@@ -9,22 +9,27 @@ const Loader = ({
   loading,
   color,
   overlayColor,
-}) => (
-  <View style={styles.loaderContainer}>
-    <Spinner
-      visible={loading}
-      animation="fade"
-      size="small"
-      overlayColor={overlayColor}
-    >
-      <DotIndicator
-        color={color}
-        count={3}
-        size={10}
-      />
-    </Spinner>
-  </View>
-);
+}) => {
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <Spinner
+          visible
+          animation="fade"
+          size="small"
+          overlayColor={overlayColor}
+        >
+          <DotIndicator
+            color={color}
+            count={3}
+            size={10}
+          />
+        </Spinner>
+      </View>
+    );
+  }
+  return null;
+};
 
 Loader.propTypes = {
   loading: PropTypes.bool.isRequired,
