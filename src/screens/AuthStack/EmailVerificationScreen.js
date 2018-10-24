@@ -81,14 +81,10 @@ export default class EmailVerificationScreen extends React.PureComponent {
               Re-send verification email
             </Text>
           </View>
-          {
-            loading && (
-              <Loader
-                loading={loading}
-                color={colors.charcoal.standard}
-              />
-            )
-          }
+          <Loader
+            loading={loading}
+            color={colors.charcoal.standard}
+          />
         </View>
       </SafeAreaView>
     );

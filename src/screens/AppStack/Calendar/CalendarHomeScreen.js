@@ -180,12 +180,6 @@ export default class CalendarHomeScreen extends React.PureComponent {
       snack,
       helperModalVisible,
     } = this.state;
-    const loadingView = (
-      <Loader
-        loading={loading}
-        color={colors.green.standard}
-      />
-    );
     const deleteButton = (fieldToDelete) => [
       <TouchableOpacity
         onPress={() => this.deleteCalendarEntry(fieldToDelete)}
@@ -489,7 +483,6 @@ export default class CalendarHomeScreen extends React.PureComponent {
           />
         </View>
         {dayDisplay}
-        {loading && loadingView}
         <HelperModal
           helperModalVisible={helperModalVisible}
           toggleHelperModal={() => this.toggleHelperModal()}
@@ -498,6 +491,10 @@ export default class CalendarHomeScreen extends React.PureComponent {
           bodyText2="You can go directly to your workouts or meals from this tab once you have added them."
           bodyText3="To add a meal or workout, go to the recipe/workout page via the Nutrition/Workout tab and press the 'Add to Calendar' button."
           color="green"
+        />
+        <Loader
+          loading={loading}
+          color={colors.green.standard}
         />
       </View>
     );

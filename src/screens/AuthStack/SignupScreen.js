@@ -226,15 +226,10 @@ export default class SignupScreen extends React.PureComponent {
             >
               Already signed up? Log in here
             </Text>
-            {
-              loading && (
-                <Loader
-                  loading={loading}
-                  color={colors.black}
-                  overlayColor="rgba(0, 0, 0, 0.3)'"
-                />
-              )
-            }
+            <Loader
+              loading={loading}
+              color={colors.black}
+            />
           </ScrollView>
           <Modal
             isVisible={emailVerificationModalVisible}

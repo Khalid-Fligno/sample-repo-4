@@ -315,9 +315,7 @@ export default class Progress1Screen extends React.PureComponent {
                 primary
               />
             </View>
-            {
-              loading && <Loader loading={loading} color={colors.coral.standard} />
-            }
+            <Loader loading={loading} color={colors.coral.standard} />
           </View>
         </KeyboardAvoidingView>
         <HelperModal

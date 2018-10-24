@@ -193,15 +193,11 @@ export default class LoginScreen extends React.PureComponent {
           >
             {"Don't have an account? Sign up here"}
           </Text>
-          {
-            loading && (
-              <Loader
-                loading={loading}
-                color={colors.black}
-                overlayColor="rgba(0, 0, 0, 0.3)'"
-              />
-            )
-          }
+          <Loader
+            loading={loading}
+            color={colors.black}
+            overlayColor="rgba(0, 0, 0, 0.3)'"
+          />
         </View>
       </SafeAreaView>
     );

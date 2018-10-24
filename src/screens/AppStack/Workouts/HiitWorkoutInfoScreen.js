@@ -253,14 +253,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
             {exerciseDisplay}
           </View>
         </ScrollView>
-        {
-          loading && (
-            <Loader
-              loading={loading}
-              color={colors.coral.standard}
-            />
-          )
-        }
         <Modal
           isVisible={musicModalVisible}
           animationIn="fadeIn"
@@ -326,6 +318,10 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
             </View>
           </View>
         </Modal>
+        <Loader
+          loading={loading}
+          color={colors.coral.standard}
+        />
       </View>
     );
   }
