@@ -27,6 +27,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
   }
   componentWillUnmount = async () => {
     await this.unsubscribe();
+    await this.unsubscribe2();
   }
   fetchWorkouts = async () => {
     this.setState({ loading: true });
@@ -46,7 +47,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
   fetchTargetInfo = async () => {
     const uid = await AsyncStorage.getItem('uid', null);
     const userRef = db.collection('users').doc(uid);
-    userRef.onSnapshot(async (doc) => {
+    this.unsubscribe2 = userRef.onSnapshot(async (doc) => {
       this.setState({
         completedWorkoutTally: await doc.data().completedWorkoutTally,
       });
