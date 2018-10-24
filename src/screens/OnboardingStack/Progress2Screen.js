@@ -30,10 +30,10 @@ export default class Progress2Screen extends React.PureComponent {
       error: null,
     };
   }
-  componentWillMount = () => {
+  componentDidMount = () => {
+    this.props.navigation.setParams({ handleSkip: this.handleSkip });
     this.getCameraPermission();
     this.getCameraRollPermission();
-    this.props.navigation.setParams({ handleSkip: this.handleSkip });
   }
   getCameraPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);

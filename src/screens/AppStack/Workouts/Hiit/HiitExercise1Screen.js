@@ -22,24 +22,14 @@ export default class HiitExercise1Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      exerciseList: [],
-      currentExercise: {},
+      exerciseList: this.props.navigation.getParam('exerciseList', null),
+      currentExercise: this.props.navigation.getParam('exerciseList', null)[0],
+      fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
+      totalDuration: workIntervalMap[this.props.navigation.getParam('fitnessLevel', null)],
       timerStart: false,
       timerReset: false,
-      totalDuration: null,
-      fitnessLevel: null,
       pauseModalVisible: false,
     };
-  }
-  componentWillMount() {
-    const exerciseList = this.props.navigation.getParam('exerciseList', null);
-    const fitnessLevel = this.props.navigation.getParam('fitnessLevel', null);
-    this.setState({
-      exerciseList,
-      currentExercise: exerciseList[0],
-      fitnessLevel,
-      totalDuration: workIntervalMap[fitnessLevel],
-    });
   }
   componentDidMount() {
     this.startTimer();

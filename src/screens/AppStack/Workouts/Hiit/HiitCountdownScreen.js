@@ -8,16 +8,11 @@ export default class HiitCountdownScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      exerciseList: [],
+      exerciseList: this.props.navigation.getParam('exerciseList', null),
+      fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
       countdownDuration: 5,
       countdownActive: false,
-      fitnessLevel: null,
     };
-  }
-  componentWillMount() {
-    const exerciseList = this.props.navigation.getParam('exerciseList', null);
-    const fitnessLevel = this.props.navigation.getParam('fitnessLevel', null);
-    this.setState({ exerciseList, fitnessLevel });
   }
   componentDidMount() {
     this.startCountdown();

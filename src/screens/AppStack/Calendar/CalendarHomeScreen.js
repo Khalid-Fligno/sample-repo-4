@@ -40,11 +40,9 @@ export default class CalendarHomeScreen extends React.PureComponent {
     };
     this.calendarStrip = React.createRef();
   }
-  componentWillMount = () => {
-    this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
-  }
   componentDidMount = async () => {
     this.setState({ loading: true });
+    this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
     this.unsubscribe = await db.collection('users').doc(uid)

@@ -39,10 +39,8 @@ export default class Progress5Screen extends React.PureComponent {
       totalDuration: 5,
     };
   }
-  componentWillMount = () => {
-    this.props.navigation.setParams({ handleSkip: this.handleSkip });
-  }
   componentDidMount() {
+    this.props.navigation.setParams({ handleSkip: this.handleSkip });
     this.startTimer();
   }
   startTimer = () => {

@@ -12,7 +12,7 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
       loading: false,
     };
   }
-  componentWillMount = async () => {
+  componentDidMount = () => {
     try {
       FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-1.mp4`, { idempotent: true });
       FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-2.mp4`, { idempotent: true });

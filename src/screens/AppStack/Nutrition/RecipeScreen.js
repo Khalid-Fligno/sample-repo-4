@@ -29,9 +29,9 @@ export default class RecipeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      recipe: {},
-      ingredients: [],
-      utensils: [],
+      recipe: this.props.navigation.getParam('recipe', null),
+      ingredients: this.props.navigation.getParam('recipe', null).ingredients,
+      utensils: this.props.navigation.getParam('recipe', null).utensils,
       loading: false,
       chosenDate: new Date(),
       modalVisible: false,
@@ -39,18 +39,13 @@ export default class RecipeScreen extends React.PureComponent {
       addingToCalendar: false,
     };
   }
-  componentWillMount = async () => {
+  componentDidMount = async () => {
     this.setState({ loading: true });
-    const recipe = this.props.navigation.getParam('recipe', null);
-    this.setState({
-      recipe,
-      ingredients: recipe.ingredients,
-      utensils: recipe.utensils,
-      loading: false,
-    });
+    const { recipe } = this.state;
     this.props.navigation.setParams({
       handleStart: () => this.props.navigation.navigate('RecipeSteps', { recipe }),
     });
+    this.setState({ loading: false });
   }
   setDate = (newDate) => {
     this.setState({ chosenDate: newDate });

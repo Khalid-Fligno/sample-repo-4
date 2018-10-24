@@ -19,7 +19,7 @@ export default class Progress3Screen extends React.PureComponent {
     this.state = {
     };
   }
-  componentWillMount = () => {
+  componentDidMount = () => {
     this.props.navigation.setParams({ handleSkip: this.handleSkip });
   }
   handleSkip = () => {

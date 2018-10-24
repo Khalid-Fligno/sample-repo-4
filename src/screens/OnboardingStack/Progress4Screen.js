@@ -17,10 +17,8 @@ export default class Progress4Screen extends React.PureComponent {
       countdownActive: false,
     };
   }
-  componentWillMount = () => {
-    this.props.navigation.setParams({ handleSkip: this.handleSkip });
-  }
   componentDidMount() {
+    this.props.navigation.setParams({ handleSkip: this.handleSkip });
     this.startCountdown();
   }
   startCountdown = () => {

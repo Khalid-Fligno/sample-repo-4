@@ -25,10 +25,8 @@ export default class ProgressHomeScreen extends React.PureComponent {
       helperModalVisible: false,
     };
   }
-  componentWillMount = () => {
-    this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
-  }
   componentDidMount() {
+    this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
     this.fetchProgressInfo();
   }
   toggleHelperModal = () => {

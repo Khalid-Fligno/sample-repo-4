@@ -81,16 +81,18 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
       hiitWeeklyComplete: undefined,
     };
   }
-  componentWillMount = () => {
-    this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
-  }
   componentDidMount = () => {
+    this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
     this.fetchWeeklyTargetInfo();
+  }
+  componentWillUnmount = () => {
+    this.unsubscribe();
+    this.unsubscribe2();
   }
   fetchWeeklyTargetInfo = async () => {
     const uid = await AsyncStorage.getItem('uid', null);
     const userRef = db.collection('users').doc(uid);
-    userRef.onSnapshot(async (doc) => {
+    this.unsubscribe2 = userRef.onSnapshot(async (doc) => {
       this.setState({
         resistanceWeeklyTarget: await doc.data().resistanceWeeklyTarget,
         hiitWeeklyTarget: await doc.data().hiitWeeklyTarget,
@@ -146,7 +148,6 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
       this.setState({ loading: false });
     }
   }
-
   renderItem = ({ item }) => {
     const {
       resistanceWeeklyTarget,

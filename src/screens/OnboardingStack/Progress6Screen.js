@@ -55,7 +55,7 @@ export default class Progress6Screen extends React.PureComponent {
       loading: false,
     };
   }
-  componentWillMount = () => {
+  componentDidMount = () => {
     this.props.navigation.setParams({ handleSkip: this.handleSkip });
   }
   handleSkip = () => {
