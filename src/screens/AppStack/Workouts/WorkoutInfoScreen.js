@@ -33,18 +33,15 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
-      workout: null,
-      reps: null,
+      workout: this.props.navigation.getParam('workout', null),
+      reps: this.props.navigation.getParam('reps', null),
       chosenDate: new Date(),
       calendarModalVisible: false,
       addingToCalendar: false,
       musicModalVisible: false,
     };
   }
-  componentWillMount = async () => {
-    const workout = this.props.navigation.getParam('workout', null);
-    const reps = this.props.navigation.getParam('reps', null);
-    this.setState({ workout, reps });
+  componentDidMount = async () => {
     await this.props.navigation.setParams({
       handleStart: () => this.toggleMusicModal(),
     });
@@ -83,7 +80,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
   }
   handleWorkoutStart = (workout, reps) => {
     this.setState({ musicModalVisible: false });
-    this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps });
+    this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
   }
   render() {
     const {

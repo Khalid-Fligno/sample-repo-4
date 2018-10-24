@@ -20,6 +20,7 @@ export default class Exercise3Screen extends React.PureComponent {
       currentExercise: props.navigation.getParam('exerciseList', null)[2],
       reps: props.navigation.getParam('reps', null),
       timerStart: false,
+      resistanceCategoryId: props.navigation.getParam('resistanceCategoryId', null),
       timerReset: false,
       totalDuration: 3,
       pauseModalVisible: false,
@@ -34,7 +35,7 @@ export default class Exercise3Screen extends React.PureComponent {
       timerReset: false,
     });
   }
-  handleFinish = (exerciseList, reps) => {
+  handleFinish = (exerciseList, reps, resistanceCategoryId) => {
     this.setState({
       timerStart: false,
       timerReset: false,
@@ -45,12 +46,14 @@ export default class Exercise3Screen extends React.PureComponent {
       this.props.navigation.replace('Exercise4', {
         exerciseList,
         reps,
+        resistanceCategoryId,
       });
     } else {
       this.props.navigation.replace('Exercise3', {
         exerciseList,
         reps,
         setCount,
+        resistanceCategoryId,
       });
     }
   }
@@ -113,6 +116,7 @@ export default class Exercise3Screen extends React.PureComponent {
       totalDuration,
       reps,
       pauseModalVisible,
+      resistanceCategoryId,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -151,7 +155,7 @@ export default class Exercise3Screen extends React.PureComponent {
             totalDuration={totalDuration}
             start={timerStart}
             reset={timerReset}
-            handleFinish={() => this.handleFinish(exerciseList, reps)}
+            handleFinish={() => this.handleFinish(exerciseList, reps, resistanceCategoryId)}
           />
           <WorkoutProgress
             currentExercise={3}
