@@ -60,14 +60,6 @@ export default class ProgressHomeScreen extends React.PureComponent {
       unitsOfMeasurement,
       helperModalVisible,
     } = this.state;
-    if (loading) {
-      return (
-        <Loader
-          loading={loading}
-          color={colors.blue.standard}
-        />
-      );
-    }
     const weightDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.weight, currentProgressInfo.weight);
     const hipDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.hip, currentProgressInfo.hip);
     const waistDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.waist, currentProgressInfo.waist);
@@ -270,6 +262,10 @@ export default class ProgressHomeScreen extends React.PureComponent {
           bodyText2="Your initial progress photo and info will always stay on the left of this screen."
           bodyText3="Re-testing your progress will update the photo and information on the right hand side."
           color="blue"
+        />
+        <Loader
+          loading={loading}
+          color={colors.blue.standard}
         />
       </View>
     );

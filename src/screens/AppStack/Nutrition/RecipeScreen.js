@@ -90,14 +90,6 @@ export default class RecipeScreen extends React.PureComponent {
       calendarMeal,
       addingToCalendar,
     } = this.state;
-    if (loading) {
-      return (
-        <Loader
-          loading={loading}
-          color={colors.violet.dark}
-        />
-      );
-    }
     return (
       <View style={styles.container}>
         <ScrollView>
@@ -306,6 +298,10 @@ export default class RecipeScreen extends React.PureComponent {
             </View>
           </View>
         </ScrollView>
+        <Loader
+          loading={loading}
+          color={colors.violet.dark}
+        />
       </View>
     );
   }

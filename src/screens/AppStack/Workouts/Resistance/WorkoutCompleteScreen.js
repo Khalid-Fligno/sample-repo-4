@@ -66,7 +66,10 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
         >
           Done
         </Text>
-        <Loader color={colors.coral.standard} loading={loading} />
+        <Loader
+          color={colors.coral.standard}
+          loading={loading}
+        />
       </View>
     );
   }

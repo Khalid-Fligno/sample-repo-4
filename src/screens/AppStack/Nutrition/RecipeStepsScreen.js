@@ -1,11 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
-import { FileSystem } from 'expo';
 import Carousel from 'react-native-snap-carousel';
-// import Image from 'react-native-scalable-image';
 import Image from 'react-native-image-progress';
 import { DotIndicator } from 'react-native-indicators';
-import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -16,27 +13,9 @@ export default class RecipeStepsScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      steps: [],
-      stepsImages: [],
-      loading: true,
+      steps: this.props.navigation.getParam('recipe', null).steps,
+      stepsImages: this.props.navigation.getParam('recipe', null).stepsImages,
     };
-  }
-  componentDidMount = async () => {
-    this.setState({ loading: true });
-    const { stepsImages, steps } = await this.props.navigation.getParam('recipe', null);
-    this.setState({ steps, stepsImages });
-    // await this.fetchImages(stepsImages);
-    this.setState({ loading: false });
-  }
-  fetchImages = async (stepsImages) => {
-    // Downloads images for each step to cache to improve performance.
-    // Will overwrite previous recipe step images if they exist.
-    await Promise.all(stepsImages.map(async (stepImage, index) => {
-      await FileSystem.downloadAsync(
-        stepImage,
-        `${FileSystem.cacheDirectory}step-${index + 1}.jpg`,
-      );
-    }));
   }
   renderItem = ({ item, index }) => {
     const { steps } = this.state;
@@ -69,7 +48,6 @@ export default class RecipeStepsScreen extends React.PureComponent {
                 </TouchableOpacity>
               )
             }
-
             <Text style={styles.carouselHeaderText}>
               STEP {index + 1} OF {steps.length}
             </Text>
@@ -103,9 +81,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
         <View style={styles.carouselContentContainer}>
           <ScrollView>
             <Image
-              // source={{ uri: `${FileSystem.cacheDirectory}step-${index + 1}.jpg` }}
               source={{ uri: this.state.stepsImages[index] }}
-              // width={width - 52}
               indicator={DotIndicator}
               indicatorProps={{
                 color: colors.violet.standard,
@@ -130,15 +106,6 @@ export default class RecipeStepsScreen extends React.PureComponent {
     );
   }
   render() {
-    const { loading } = this.state;
-    if (loading) {
-      return (
-        <Loader
-          loading={loading}
-          color={colors.violet.dark}
-        />
-      );
-    }
     return (
       <View style={styles.container}>
         <Carousel

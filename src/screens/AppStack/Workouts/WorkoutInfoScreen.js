@@ -92,14 +92,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       addingToCalendar,
       musicModalVisible,
     } = this.state;
-    if (loading) {
-      return (
-        <Loader
-          loading={loading}
-          color={colors.coral.standard}
-        />
-      );
-    }
     let workoutName;
     let exerciseDisplay;
     if (workout) {
@@ -346,6 +338,10 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             </View>
           </View>
         </Modal>
+        <Loader
+          loading={loading}
+          color={colors.coral.standard}
+        />
       </View>
     );
   }

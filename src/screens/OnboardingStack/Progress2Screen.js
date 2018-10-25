@@ -208,9 +208,10 @@ export default class Progress2Screen extends React.PureComponent {
               primary
             />
           </View>
-          {
-            uploading && <Loader loading={uploading} color={colors.coral.standard} />
-          }
+          <Loader
+            loading={uploading}
+            color={colors.coral.standard}
+          />
         </View>
       </SafeAreaView>
     );

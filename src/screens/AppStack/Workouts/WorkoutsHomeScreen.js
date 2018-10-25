@@ -280,7 +280,10 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
           bodyText2="When you have finished selecting your workout type, press the button at the bottom of your screen to continue."
           color="coral"
         />
-        <Loader color={colors.coral.standard} loading={loading} />
+        <Loader
+          color={colors.coral.standard}
+          loading={loading}
+        />
       </View>
     );
   }

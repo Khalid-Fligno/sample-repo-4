@@ -196,7 +196,6 @@ export default class LoginScreen extends React.PureComponent {
           <Loader
             loading={loading}
             color={colors.black}
-            overlayColor="rgba(0, 0, 0, 0.3)'"
           />
         </View>
       </SafeAreaView>

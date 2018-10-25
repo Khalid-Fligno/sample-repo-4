@@ -67,14 +67,6 @@ export default class ProfileHomeScreen extends React.PureComponent {
   }
   render() {
     const { profile, loading } = this.state;
-    if (loading) {
-      return (
-        <Loader
-          loading={loading}
-          color={colors.charcoal.standard}
-        />
-      );
-    }
     return (
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
@@ -139,6 +131,10 @@ export default class ProfileHomeScreen extends React.PureComponent {
               />
             </List>
           </ScrollView>
+          <Loader
+            loading={loading}
+            color={colors.charcoal.standard}
+          />
         </View>
       </SafeAreaView>
     );

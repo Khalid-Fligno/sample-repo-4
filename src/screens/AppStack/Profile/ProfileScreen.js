@@ -241,7 +241,10 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 </TouchableOpacity>
               </View>
             </Modal>
-            <Loader loading={loading} color={colors.charcoal.standard} />
+            <Loader
+              loading={loading}
+              color={colors.charcoal.standard}
+            />
           </ScrollView>
         </View>
       </SafeAreaView>

@@ -50,14 +50,6 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   render() {
     const { recipes, loading, filterIndex } = this.state;
     const filterButtons = ['All', 'Vegetarian', 'Vegan', 'Gluten-Free'];
-    if (loading) {
-      return (
-        <Loader
-          loading={loading}
-          color={colors.violet.standard}
-        />
-      );
-    }
     const recipeList = recipes
       .filter((recipe) => {
         if (filterIndex === 1) {
@@ -97,6 +89,10 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             innerBorderStyle={{ color: colors.violet.standard }}
           />
         </View>
+        <Loader
+          loading={loading}
+          color={colors.violet.standard}
+        />
       </View>
     );
   }

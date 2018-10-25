@@ -177,7 +177,10 @@ export default class Progress6Screen extends React.PureComponent {
               primary
             />
           </View>
-          <Loader loading={loading} color={colors.coral.standard} />
+          <Loader
+            loading={loading}
+            color={colors.coral.standard}
+          />
         </View>
       </SafeAreaView>
     );
