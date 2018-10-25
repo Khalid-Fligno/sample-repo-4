@@ -6,7 +6,6 @@ import HelpAndSupportScreen from '../../src/screens/AppStack/Profile/HelpAndSupp
 import PrivacyPolicyScreen from '../../src/screens/AppStack/Profile/PrivacyPolicyScreen';
 import TermsOfServiceScreen from '../../src/screens/AppStack/Profile/TermsOfServiceScreen';
 import BillingTermsScreen from '../../src/screens/AppStack/Profile/BillingTermsScreen';
-import EditProfileScreen from '../../src/screens/AppStack/Profile/EditProfileScreen';
 import SettingsScreen from '../../src/screens/AppStack/Profile/SettingsScreen';
 import Header from '../../src/components/Shared/Header';
 
@@ -24,7 +23,6 @@ const ProfileStack = createStackNavigator(
     PrivacyPolicy: PrivacyPolicyScreen,
     TermsOfService: TermsOfServiceScreen,
     BillingTerms: BillingTermsScreen,
-    EditProfile: EditProfileScreen,
     Settings: SettingsScreen,
   },
   {
