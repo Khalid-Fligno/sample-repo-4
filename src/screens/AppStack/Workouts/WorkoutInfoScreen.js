@@ -67,7 +67,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     const data = {
       workout,
     };
-    await calendarRef.set(data, { merge: true });
+    await calendarRef.set(data);
     this.setState({ addingToCalendar: false });
     Alert.alert(
       'Added to calendar!',
@@ -251,7 +251,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                   color={colors.charcoal.standard}
                 />
                 <Text style={styles.workoutInfoFieldData}>
-                  {findLocation(workout)}
+                  {workout && findLocation(workout)}
                 </Text>
               </View>
               <View style={styles.workoutIconContainer}>
@@ -261,7 +261,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                   color={colors.charcoal.standard}
                 />
                 <Text style={styles.workoutInfoFieldData}>
-                  {findFocus(workout)}
+                  {workout && findFocus(workout)}
                 </Text>
               </View>
             </View>
