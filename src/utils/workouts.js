@@ -1,22 +1,22 @@
 export const findFocus = (workoutObject) => {
-  if (workoutObject && workoutObject.upperBody) {
+  if (workoutObject.upperBody) {
     return 'Upper';
-  } else if (workoutObject && workoutObject.lowerBody) {
+  } else if (workoutObject.lowerBody) {
     return 'Lower';
-  } else if (workoutObject && workoutObject.fullBody) {
+  } else if (workoutObject.fullBody) {
     return 'Full';
-  } else if (workoutObject && workoutObject.core) {
+  } else if (workoutObject.core) {
     return 'Core';
   }
   return null;
 };
 
 export const findLocation = (workoutObject) => {
-  if (workoutObject && workoutObject.gym) {
+  if (workoutObject.gym) {
     return 'Gym';
-  } else if (workoutObject && workoutObject.home) {
+  } else if (workoutObject.home) {
     return 'Home';
-  } else if (workoutObject && workoutObject.park) {
+  } else if (workoutObject.park) {
     return 'Park';
   }
   return null;
