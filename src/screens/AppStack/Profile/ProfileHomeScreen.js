@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, AsyncStorage, ScrollView, Dimensions, Alert } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Text, AsyncStorage, ScrollView, Dimensions, Alert } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import { auth, db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
@@ -76,74 +76,80 @@ export default class ProfileHomeScreen extends React.PureComponent {
       );
     }
     return (
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          <Icon
-            name="profile-outline"
-            size={100}
-            color={colors.charcoal.standard}
-          />
-          <View style={styles.nameTextContainer}>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.nameText}
-            >
-              {profile && profile.firstName} {profile && profile.lastName}
-            </Text>
-          </View>
-          <List containerStyle={styles.listContainer}>
-            <ListItem
-              activeOpacity={0.5}
-              key="Profile"
-              title="Profile"
-              containerStyle={styles.listItemContainer}
-              titleStyle={{
-                fontFamily: fonts.bold,
-                color: colors.charcoal.standard,
-              }}
-              onPress={() => this.props.navigation.navigate('Profile')}
+      <SafeAreaView style={styles.safeContainer}>
+        <View style={styles.container}>
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            <Icon
+              name="profile-outline"
+              size={100}
+              color={colors.charcoal.standard}
             />
-            <ListItem
-              activeOpacity={0.5}
-              key="Settings"
-              title="Settings"
-              containerStyle={styles.listItemContainer}
-              titleStyle={{
-                fontFamily: fonts.bold,
-                color: colors.charcoal.standard,
-              }}
-              onPress={() => this.props.navigation.navigate('Settings')}
-            />
-          </List>
-          <List containerStyle={styles.listContainer}>
-            {
-              list.map((l) => (
-                <ListItem
-                  activeOpacity={0.5}
-                  key={l.title}
-                  title={l.title}
-                  containerStyle={styles.listItemContainer}
-                  titleStyle={styles.listItemTitle}
-                  onPress={() => this.props.navigation.navigate(l.route)}
-                />
-              ))
-            }
-            <ListItem
-              activeOpacity={0.5}
-              title="Log Out"
-              containerStyle={styles.listItemContainer}
-              titleStyle={styles.listItemTitle}
-              onPress={() => this.logOutAlert()}
-            />
-          </List>
-        </ScrollView>
-      </View>
+            <View style={styles.nameTextContainer}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.nameText}
+              >
+                {profile && profile.firstName} {profile && profile.lastName}
+              </Text>
+            </View>
+            <List containerStyle={styles.listContainer}>
+              <ListItem
+                activeOpacity={0.5}
+                key="Profile"
+                title="Profile"
+                containerStyle={styles.listItemContainer}
+                titleStyle={{
+                  fontFamily: fonts.bold,
+                  color: colors.charcoal.standard,
+                }}
+                onPress={() => this.props.navigation.navigate('Profile')}
+              />
+              <ListItem
+                activeOpacity={0.5}
+                key="Settings"
+                title="Settings"
+                containerStyle={styles.listItemContainer}
+                titleStyle={{
+                  fontFamily: fonts.bold,
+                  color: colors.charcoal.standard,
+                }}
+                onPress={() => this.props.navigation.navigate('Settings')}
+              />
+            </List>
+            <List containerStyle={styles.listContainer}>
+              {
+                list.map((l) => (
+                  <ListItem
+                    activeOpacity={0.5}
+                    key={l.title}
+                    title={l.title}
+                    containerStyle={styles.listItemContainer}
+                    titleStyle={styles.listItemTitle}
+                    onPress={() => this.props.navigation.navigate(l.route)}
+                  />
+                ))
+              }
+              <ListItem
+                activeOpacity={0.5}
+                title="Log Out"
+                containerStyle={styles.listItemContainer}
+                titleStyle={styles.listItemTitle}
+                onPress={() => this.logOutAlert()}
+              />
+            </List>
+          </ScrollView>
+        </View>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: colors.black,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.offWhite,

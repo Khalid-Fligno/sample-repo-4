@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, AsyncStorage, ScrollView, Dimensions, Alert } from 'react-native';
+import { StyleSheet, SafeAreaView, View, AsyncStorage, ScrollView, Dimensions, Alert } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import { db, auth } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
@@ -70,37 +70,39 @@ export default class SettingsScreen extends React.PureComponent {
   }
   render() {
     const { isPasswordAccount, loading } = this.state;
-    if (loading) {
-      return (
-        <Loader
-          loading={loading}
-          color={colors.charcoal.standard}
-        />
-      );
-    }
     return (
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          <List containerStyle={styles.listContainer}>
-            {
-              // Only show password change if an email/password account is present
-              isPasswordAccount && (
-                <ListItem
-                  title="Change Password"
-                  titleStyle={styles.listItemTitle}
-                  containerStyle={styles.listItemContainer}
-                  onPress={() => this.changePasswordAlert()}
-                />
-              )
-            }
-          </List>
-        </ScrollView>
-      </View>
+      <SafeAreaView style={styles.safeContainer}>
+        <View style={styles.container}>
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            <List containerStyle={styles.listContainer}>
+              {
+                // Only show password change if an email/password account is present
+                isPasswordAccount && (
+                  <ListItem
+                    title="Change Password"
+                    titleStyle={styles.listItemTitle}
+                    containerStyle={styles.listItemContainer}
+                    onPress={() => this.changePasswordAlert()}
+                  />
+                )
+              }
+            </List>
+          </ScrollView>
+          <Loader
+            loading={loading}
+            color={colors.charcoal.standard}
+          />
+        </View>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: colors.black,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.offWhite,

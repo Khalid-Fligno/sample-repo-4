@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Text, ScrollView, Dimensions } from 'react-native';
+import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -10,35 +11,48 @@ export default class BillingTermsScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      text: undefined,
       loading: false,
     };
   }
+  componentDidMount() {
+    db.collection('legalDocuments').doc('WOTvmNeeo3NiFdw0C00N')
+      .get()
+      .then(async (doc) => {
+        if (doc.exists) {
+          this.setState({ text: await doc.data().text });
+        }
+      });
+  }
+  fetch
   render() {
-    const { loading } = this.state;
-    if (loading) {
-      return (
-        <Loader
-          loading={loading}
-          color={colors.charcoal.standard}
-        />
-      );
-    }
+    const { text, loading } = this.state;
     return (
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          <Text style={styles.header}>
-            Billing Terms
-          </Text>
-          <Text style={styles.paragraph}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-          </Text>
-        </ScrollView>
-      </View>
+      <SafeAreaView style={styles.safeContainer}>
+        <View style={styles.container}>
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            <Text style={styles.header}>
+              Billing Terms
+            </Text>
+            <Text style={styles.paragraph}>
+              {text && text.replace('\\n', '\n\n')}
+            </Text>
+          </ScrollView>
+          <Loader
+            loading={loading}
+            color={colors.charcoal.standard}
+          />
+        </View>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: colors.black,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.white,
@@ -51,6 +65,7 @@ const styles = StyleSheet.create({
   header: {
     fontFamily: fonts.bold,
     fontSize: 24,
+    marginBottom: 10,
   },
   paragraph: {
     fontFamily: fonts.standard,
