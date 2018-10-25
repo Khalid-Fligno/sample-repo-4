@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, View, Text, ScrollView, Dimensions } from 'react-native';
+import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -10,11 +11,27 @@ export default class TermsOfServiceScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      text: undefined,
       loading: false,
     };
   }
+  componentDidMount() {
+    this.fetchText();
+  }
+  fetchText = () => {
+    this.setState({ loading: true });
+    db.collection('legalDocuments').doc('Q2MYOtT0tYIDvrVFWwge')
+      .get()
+      .then(async (doc) => {
+        if (doc.exists) {
+          this.setState({ text: await doc.data().text, loading: false });
+        } else {
+          this.setState({ loading: false });
+        }
+      });
+  }
   render() {
-    const { loading } = this.state;
+    const { text, loading } = this.state;
     return (
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
@@ -23,7 +40,7 @@ export default class TermsOfServiceScreen extends React.PureComponent {
               Terms of Service
             </Text>
             <Text style={styles.paragraph}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+              {text && text.replace('\\n', '\n\n')}
             </Text>
           </ScrollView>
           <Loader

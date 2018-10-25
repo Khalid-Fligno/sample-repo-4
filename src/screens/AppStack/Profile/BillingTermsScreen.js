@@ -16,11 +16,17 @@ export default class BillingTermsScreen extends React.PureComponent {
     };
   }
   componentDidMount() {
+    this.fetchText();
+  }
+  fetchText = () => {
+    this.setState({ loading: true });
     db.collection('legalDocuments').doc('WOTvmNeeo3NiFdw0C00N')
       .get()
       .then(async (doc) => {
         if (doc.exists) {
-          this.setState({ text: await doc.data().text });
+          this.setState({ text: await doc.data().text, loading: false });
+        } else {
+          this.setState({ loading: false });
         }
       });
   }
