@@ -170,6 +170,9 @@ const styles = StyleSheet.create({
   },
   carouselContentContainer: {
     flex: 1,
+    backgroundColor: colors.offWhite,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
   },
   carouselBottomContainer: {
     paddingTop: 10,
