@@ -91,10 +91,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 key="Profile"
                 title="Profile"
                 containerStyle={styles.listItemContainer}
-                titleStyle={{
-                  fontFamily: fonts.bold,
-                  color: colors.charcoal.standard,
-                }}
+                titleStyle={styles.listItemTitleStyle}
                 onPress={() => this.props.navigation.navigate('Profile')}
               />
               <ListItem
@@ -102,10 +99,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 key="Settings"
                 title="Settings"
                 containerStyle={styles.listItemContainer}
-                titleStyle={{
-                  fontFamily: fonts.bold,
-                  color: colors.charcoal.standard,
-                }}
+                titleStyle={styles.listItemTitleStyle}
                 onPress={() => this.props.navigation.navigate('Settings')}
               />
             </List>
@@ -117,7 +111,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                     key={l.title}
                     title={l.title}
                     containerStyle={styles.listItemContainer}
-                    titleStyle={styles.listItemTitle}
+                    titleStyle={styles.listItemTitleStyle}
                     onPress={() => this.props.navigation.navigate(l.route)}
                   />
                 ))
@@ -126,7 +120,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 activeOpacity={0.5}
                 title="Log Out"
                 containerStyle={styles.listItemContainer}
-                titleStyle={styles.listItemTitle}
+                titleStyle={styles.listItemTitleStyle}
                 onPress={() => this.logOutAlert()}
               />
             </List>
@@ -175,9 +169,10 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.grey.light,
     backgroundColor: colors.white,
   },
-  listItemTitle: {
+  listItemTitleStyle: {
     fontFamily: fonts.bold,
     color: colors.charcoal.standard,
     marginTop: 5,
+    fontSize: 14,
   },
 });

@@ -282,12 +282,12 @@ const styles = StyleSheet.create({
   listItemTitleStyle: {
     fontFamily: fonts.bold,
     color: colors.grey.standard,
-    fontSize: 16,
+    fontSize: 14,
   },
   listItemSubtitleStyle: {
     fontFamily: fonts.bold,
     color: colors.charcoal.standard,
-    fontSize: 16,
+    fontSize: 14,
     marginTop: 5,
   },
   modalContainer: {
