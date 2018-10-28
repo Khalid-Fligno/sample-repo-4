@@ -17,6 +17,7 @@ const RecipeTile = ({
   <TouchableOpacity
     onPress={onPress}
     style={styles.cardContainer}
+    delayPressIn={50}
   >
     <Card
       image={{ uri: image }}
