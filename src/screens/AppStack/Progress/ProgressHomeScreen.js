@@ -303,6 +303,9 @@ const styles = StyleSheet.create({
     maxWidth: '70%',
     padding: 10,
     borderRadius: 2,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
   },
   imagePlaceholderButtonText: {
     color: colors.white,
