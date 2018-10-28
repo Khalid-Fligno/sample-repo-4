@@ -12,6 +12,7 @@ const CustomButton = ({
   primary,
   secondary,
   green,
+  blue,
   outline,
   loading,
 }) => (
@@ -30,6 +31,7 @@ const CustomButton = ({
       secondary && outline && styles.secondaryOutline,
       green && styles.green,
       green && outline && styles.greenOutline,
+      blue && styles.blue,
     ]}
     textStyle={[
       styles.whiteText,
@@ -40,6 +42,7 @@ const CustomButton = ({
       secondary && outline && styles.secondaryOutlineText,
       green && styles.whiteText,
       green && outline && styles.greenText,
+      blue && styles.whiteText,
     ]}
     disabledStyle={[
       styles.defaultDisabled,
@@ -62,6 +65,7 @@ CustomButton.propTypes = {
   outline: PropTypes.bool,
   disabled: PropTypes.bool,
   green: PropTypes.bool,
+  blue: PropTypes.bool,
   loading: PropTypes.bool,
 };
 
@@ -71,6 +75,7 @@ CustomButton.defaultProps = {
   outline: false,
   disabled: false,
   green: false,
+  blue: false,
   loading: false,
 };
 
@@ -162,6 +167,11 @@ const styles = StyleSheet.create({
   greenOutlineText: {
     color: colors.green.standard,
     ...common.button.text,
+  },
+  blue: {
+    ...common.button.solid,
+    backgroundColor: colors.blue.standard,
+    shadowColor: colors.blue.standard,
   },
 });
 
