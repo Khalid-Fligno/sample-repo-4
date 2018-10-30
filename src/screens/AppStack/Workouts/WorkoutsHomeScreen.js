@@ -11,6 +11,7 @@ import { FileSystem } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 import FadeInView from 'react-native-fade-in-view';
 import moment from 'moment';
+import Icon from '../../../components/Shared/Icon';
 import CustomButton from '../../../components/Shared/CustomButton';
 import Loader from '../../../components/Shared/Loader';
 import HelperModal from '../../../components/Shared/HelperModal';
@@ -214,6 +215,12 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
               itemWidth={width * 0.8}
               onSnapToItem={(slideIndex) => this.setState({ selectedWorkoutTypeIndex: slideIndex })}
             />
+            <Icon
+              name="chevron-down"
+              size={20}
+              style={{ alignSelf: 'center' }}
+              color={colors.grey.standard}
+            />
           </View>
           <View style={{ flex: 1 }}>
             {
@@ -244,6 +251,12 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
                 </FadeInView>
               )
             }
+            <Icon
+              name="chevron-down"
+              size={20}
+              style={{ alignSelf: 'center' }}
+              color={colors.grey.standard}
+            />
           </View>
           <View style={{ flex: 1 }}>
             {
@@ -258,6 +271,16 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
                     onSnapToItem={(slideIndex) => this.setState({ selectedResistanceFocusIndex: slideIndex })}
                   />
                 </FadeInView>
+              )
+            }
+            {
+              selectedWorkoutTypeIndex === 0 && (
+                <Icon
+                  name="chevron-down"
+                  size={20}
+                  color={colors.grey.standard}
+                  style={{ alignSelf: 'center' }}
+                />
               )
             }
           </View>
@@ -299,10 +322,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 15,
     paddingBottom: 15,
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
   },
   slide: {
     flex: 1,
@@ -315,7 +334,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'hidden',
+    // overflow: 'hidden',
+    shadowColor: colors.charcoal.standard,
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
   titleContainer: {
     justifyContent: 'center',
