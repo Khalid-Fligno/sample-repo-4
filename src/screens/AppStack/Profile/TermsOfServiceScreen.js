@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   header: {
     fontFamily: fonts.bold,
     fontSize: 24,
+    marginBottom: 10,
   },
   paragraph: {
     fontFamily: fonts.standard,
