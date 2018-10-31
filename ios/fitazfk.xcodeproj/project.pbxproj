@@ -151,7 +151,7 @@
 				TargetAttributes = {
 					B56386401DB9693800A0598C = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = C8D8QTF339;
+						DevelopmentTeam = 2RJMZUB4PS;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -396,7 +396,7 @@
 			baseConfigurationReference = 2C1548D9E4CB1AEFA5CCAE6D /* Pods-fitazfk.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = C8D8QTF339;
+				DEVELOPMENT_TEAM = 2RJMZUB4PS;
 				INFOPLIST_FILE = "$(SRCROOT)/fitazfk/Supporting/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fitazfk.fitazfkapp;
@@ -410,7 +410,7 @@
 			baseConfigurationReference = A47FE4D7F70906B7DC8CE39B /* Pods-fitazfk.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = C8D8QTF339;
+				DEVELOPMENT_TEAM = 2RJMZUB4PS;
 				INFOPLIST_FILE = "$(SRCROOT)/fitazfk/Supporting/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fitazfk.fitazfkapp;
