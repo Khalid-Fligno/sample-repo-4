@@ -49,6 +49,14 @@ export default class WorkoutInfoScreen extends React.PureComponent {
   setDate = (newDate) => {
     this.setState({ chosenDate: newDate });
   }
+  openApp = (url, appStoreURL) => {
+    Linking.canOpenURL(url).then((supported) => {
+      if (!supported) {
+        return Linking.openURL(appStoreURL);
+      }
+      return Linking.openURL(url);
+    }).catch((err) => console.error('An error occurred', err));
+  }
   toggleMusicModal = () => {
     this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
   }
@@ -295,7 +303,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               >
                 <TouchableOpacity
                   style={{ marginRight: 10 }}
-                  onPress={() => Linking.openURL('music:')}
+                  onPress={() => this.openApp('music:', 'https://itunes.apple.com/us/app/apple-music/id1108187390?mt=8')}
                 >
                   <Image
                     source={require('../../../../assets/icons/apple-music-icon.png')}
@@ -306,7 +314,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => Linking.openURL('spotify:')}
+                  onPress={() => this.openApp('spotify:', 'https://itunes.apple.com/au/app/spotify-music/id324684580?mt=8')}
                 >
                   <Image
                     source={require('../../../../assets/icons/spotify-icon.png')}
