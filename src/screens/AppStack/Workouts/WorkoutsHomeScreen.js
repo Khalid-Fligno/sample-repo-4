@@ -27,16 +27,16 @@ const workoutTypes = [
 ];
 
 const workoutLocations = [
-  { displayName: 'GYM', image: require('../../../../assets/images/workouts-gym.jpg') },
-  { displayName: 'HOME', image: require('../../../../assets/images/workouts-home.jpg') },
-  { displayName: 'PARK', image: require('../../../../assets/images/workouts-park.jpg') },
+  { displayName: 'GYM', image: require('../../../../assets/images/workouts-blank-tile.png') },
+  { displayName: 'HOME', image: require('../../../../assets/images/workouts-blank-tile.png') },
+  { displayName: 'PARK', image: require('../../../../assets/images/workouts-blank-tile.png') },
 ];
 
 const resistanceWorkouts = [
-  { displayName: 'FULL BODY', image: require('../../../../assets/images/workouts-full.jpg') },
-  { displayName: 'UPPER BODY', image: require('../../../../assets/images/workouts-upper.jpg') },
-  { displayName: 'LOWER BODY', image: require('../../../../assets/images/workouts-lower.jpg') },
-  { displayName: 'CORE', image: require('../../../../assets/images/workouts-core.jpg') },
+  { displayName: 'FULL BODY', image: require('../../../../assets/images/workouts-blank-tile.png') },
+  { displayName: 'UPPER BODY', image: require('../../../../assets/images/workouts-blank-tile.png') },
+  { displayName: 'LOWER BODY', image: require('../../../../assets/images/workouts-blank-tile.png') },
+  { displayName: 'CORE', image: require('../../../../assets/images/workouts-blank-tile.png') },
 ];
 
 const hiitWorkouts = [
@@ -159,7 +159,7 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
     return (
       <View style={styles.slide}>
         <ImageBackground
-          source={item.image || require('../../../../assets/images/workouts-upper.jpg')}
+          source={item.image || require('../../../../assets/images/workouts-blank-tile.png')}
           style={styles.image}
         >
           <View style={styles.titleContainer}>
@@ -217,7 +217,7 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
             />
             <Icon
               name="chevron-down"
-              size={20}
+              size={18}
               style={{ alignSelf: 'center' }}
               color={colors.grey.standard}
             />
@@ -253,7 +253,7 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
             }
             <Icon
               name="chevron-down"
-              size={20}
+              size={18}
               style={{ alignSelf: 'center' }}
               color={colors.grey.standard}
             />
@@ -277,7 +277,7 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
               selectedWorkoutTypeIndex === 0 && (
                 <Icon
                   name="chevron-down"
-                  size={20}
+                  size={18}
                   color={colors.grey.standard}
                   style={{ alignSelf: 'center' }}
                 />
@@ -321,12 +321,12 @@ const styles = StyleSheet.create({
   carouselsContainer: {
     flex: 1,
     paddingTop: 15,
-    paddingBottom: 15,
+    paddingBottom: 5,
   },
   slide: {
     flex: 1,
-    marginTop: 12.5,
-    marginBottom: 12.5,
+    marginTop: 5,
+    marginBottom: 5,
     borderRadius: 2,
     overflow: 'hidden',
   },
