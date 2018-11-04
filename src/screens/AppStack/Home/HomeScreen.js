@@ -14,9 +14,9 @@ import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
-const { width } = Dimensions.get('window');
-
 const { InAppUtils } = NativeModules;
+
+const { width } = Dimensions.get('window');
 
 export default class HomeScreen extends React.PureComponent {
   constructor(props) {
@@ -36,6 +36,8 @@ export default class HomeScreen extends React.PureComponent {
     InAppUtils.canMakePayments((canMakePayments) => {
       if (!canMakePayments) {
         Alert.alert('Not Allowed', 'This device is not allowed to make purchases. Please check restrictions on device');
+      } else {
+        console.log('sweet');
       }
     });
   }
@@ -45,8 +47,8 @@ export default class HomeScreen extends React.PureComponent {
         <View style={styles.doubleTileContainer}>
           <TouchableOpacity
             // onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/9/27/hitting-the-hay-the-right-way')}
-            onPress={() => this.canMakePayments()}
-            // onPress={() => this.loadProducts()}
+            // onPress={() => this.canMakePayments()}
+            onPress={() => this.loadProducts()}
             style={styles.cardContainer}
           >
             <ImageBackground
