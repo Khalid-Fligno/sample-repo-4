@@ -6,6 +6,11 @@
 # firebase
 /config/firebase.js
 
+# Xcode
+*.xcuserstate
+project.xcworkspace/
+xcuserdata/
+
 # dependencies
 /node_modules
 /ios/Pods/
