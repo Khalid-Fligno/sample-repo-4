@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
     alignItems: 'center',
   },
   closeIconContainer: {
@@ -237,6 +237,7 @@ const styles = StyleSheet.create({
     padding: 12,
     fontFamily: fonts.bold,
     fontSize: 14,
+    backgroundColor: colors.white,
     color: colors.charcoal.standard,
     borderWidth: 1,
     borderColor: colors.grey.standard,
@@ -273,7 +274,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingLeft: 20,
     paddingRight: 20,
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
   },
   dividerOverlayText: {
     fontFamily: fonts.bold,

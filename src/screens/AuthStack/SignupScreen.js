@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
     alignItems: 'center',
     width,
   },
@@ -295,6 +295,7 @@ const styles = StyleSheet.create({
   input: {
     width: width - 30,
     padding: 12,
+    backgroundColor: colors.white,
     fontFamily: fonts.bold,
     fontSize: 14,
     color: colors.charcoal.standard,
@@ -333,7 +334,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingLeft: 20,
     paddingRight: 20,
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
   },
   dividerOverlayText: {
     fontFamily: fonts.bold,
