@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
   },
   textContainer: {
     flex: 1,

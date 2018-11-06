@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
   },
   modalContainer: {
     backgroundColor: colors.white,
@@ -279,6 +279,7 @@ const styles = StyleSheet.create({
     width: width - 20,
     padding: 15,
     paddingBottom: 12,
+    backgroundColor: colors.white,
     borderWidth: 1,
     borderColor: colors.grey.light,
     borderRadius: 2,

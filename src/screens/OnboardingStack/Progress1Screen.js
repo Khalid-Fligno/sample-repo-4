@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
   },
   textContainer: {
     flex: 1,
@@ -416,6 +416,7 @@ const styles = StyleSheet.create({
     width: width - 20,
     padding: 15,
     paddingBottom: 12,
+    backgroundColor: colors.white,
     borderWidth: 1,
     borderColor: colors.grey.light,
     borderRadius: 2,

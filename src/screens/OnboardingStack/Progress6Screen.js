@@ -120,7 +120,7 @@ export default class Progress6Screen extends React.PureComponent {
               Results
             </Text>
             <Text style={styles.bodyText}>
-              Please enter the number of burpees you completed
+              Please enter the number of burpees you completed.
             </Text>
           </View>
           <View style={styles.contentContainer}>
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
   },
   textContainer: {
     flex: 1,
@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
     width: width - 20,
     padding: 15,
     paddingBottom: 12,
+    backgroundColor: colors.white,
     borderWidth: 1,
     borderColor: colors.grey.light,
     borderRadius: 2,
