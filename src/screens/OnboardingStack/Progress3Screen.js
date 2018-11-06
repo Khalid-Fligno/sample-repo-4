@@ -7,7 +7,9 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
+import { FileSystem } from 'expo';
 import CustomButton from '../../components/Shared/CustomButton';
+import Loader from '../../components/Shared/Loader';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
@@ -17,6 +19,7 @@ export default class Progress3Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
     };
   }
   componentDidMount = () => {
@@ -37,7 +40,8 @@ export default class Progress3Screen extends React.PureComponent {
       { cancelable: false },
     );
   }
-  handleNext = () => {
+  handleNext = async () => {
+    this.setState({ loading: true });
     const {
       image,
       weight,
@@ -45,6 +49,11 @@ export default class Progress3Screen extends React.PureComponent {
       hip,
       isInitial,
     } = this.props.navigation.state.params;
+    await FileSystem.downloadAsync(
+      'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2Fexercises%2Fburpees.mp4?alt=media&token=5f0b095e-1b71-419f-b8b6-3feb5f77847c',
+      `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
+    );
+    this.setState({ loading: false });
     this.props.navigation.navigate('Progress4', {
       image,
       weight,
@@ -54,6 +63,7 @@ export default class Progress3Screen extends React.PureComponent {
     });
   }
   render() {
+    const { loading } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
@@ -62,7 +72,7 @@ export default class Progress3Screen extends React.PureComponent {
               Burpee Test
             </Text>
             <Text style={styles.bodyText}>
-              Complete as many burpees as you can in one minute
+              Complete as many burpees as you can in one minute!
             </Text>
           </View>
           <View style={styles.contentContainer}>
@@ -77,6 +87,10 @@ export default class Progress3Screen extends React.PureComponent {
               primary
             />
           </View>
+          <Loader
+            color={colors.coral.standard}
+            loading={loading}
+          />
         </View>
       </SafeAreaView>
     );
@@ -92,7 +106,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
   },
   textContainer: {
     flex: 1,

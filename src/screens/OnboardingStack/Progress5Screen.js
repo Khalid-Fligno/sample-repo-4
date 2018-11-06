@@ -7,7 +7,7 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-import { Video } from 'expo';
+import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../components/Workouts/WorkoutTimer';
 import colors from '../../styles/colors';
@@ -97,7 +97,7 @@ export default class Progress5Screen extends React.PureComponent {
           style={styles.flexContainer}
         >
           <Video
-            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2Fexercises%2Fair-squats-480x480.mp4?alt=media&token=65b73321-3e9e-47d1-9862-44e7cb426428' }}
+            source={{ uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4` }}
             rate={1.0}
             volume={1.0}
             isMuted={false}
