@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   },
   imagePlaceholderButton: {
     backgroundColor: colors.blue.standard,
-    maxWidth: '70%',
+    width: '70%',
     padding: 10,
     borderRadius: 2,
     shadowOpacity: 0.5,
