@@ -50,7 +50,7 @@ export default class LoginScreen extends React.PureComponent {
           .then(async (doc) => {
             if (await doc.data().onboarded !== true) {
               this.setState({ loading: false });
-              this.props.navigation.navigate('Onboarding');
+              this.props.navigation.navigate('Subscription');
             } else {
               if (await doc.data().fitnessLevel) {
                 await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
@@ -79,7 +79,7 @@ export default class LoginScreen extends React.PureComponent {
             .then(async (doc) => {
               if (await doc.data().onboarded !== true) {
                 this.setState({ loading: false });
-                this.props.navigation.navigate('Onboarding');
+                this.props.navigation.navigate('Subscription');
               } else {
                 if (await doc.data().fitnessLevel) {
                   await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());

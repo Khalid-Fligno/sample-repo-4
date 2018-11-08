@@ -59,7 +59,7 @@ export default class SignupScreen extends React.PureComponent {
         await db.collection('users').doc(user.uid).set(data);
         await AsyncStorage.setItem('uid', user.uid);
         this.setState({ loading: false });
-        this.props.navigation.navigate('Onboarding');
+        this.props.navigation.navigate('Subscription');
       }
     } catch (err) {
       console.log(err);
