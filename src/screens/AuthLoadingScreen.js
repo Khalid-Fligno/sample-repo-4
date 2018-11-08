@@ -72,22 +72,22 @@ export default class AuthLoadingScreen extends React.PureComponent {
     await Promise.all([...imageAssets, ...fontAssets]);
   }
   cachingComplete = async () => {
-    const unsuscribe = auth.onAuthStateChanged(async (user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const { uid } = user;
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
             if (await doc.data().onboarded) {
-              unsuscribe();
+              unsubscribe();
               this.props.navigation.navigate('App');
             } else {
-              unsuscribe();
+              unsubscribe();
               this.props.navigation.navigate('Onboarding1');
             }
           });
       } else {
-        unsuscribe();
+        unsubscribe();
         this.props.navigation.navigate('Auth');
       }
     });
