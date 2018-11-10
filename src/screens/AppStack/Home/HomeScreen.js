@@ -7,14 +7,10 @@ import {
   TouchableOpacity,
   ImageBackground,
   Dimensions,
-  NativeModules,
-  Alert,
 } from 'react-native';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
-
-const { InAppUtils } = NativeModules;
 
 const { width } = Dimensions.get('window');
 
@@ -24,31 +20,12 @@ export default class HomeScreen extends React.PureComponent {
     this.state = {
     };
   }
-  loadProducts = () => {
-    InAppUtils.loadProducts((['com.fitazfk.fitazfkapp.sub.fullaccess.monthly']), (error, products) => {
-      if (error) {
-        console.log(error);
-      }
-      console.log(products);
-    });
-  }
-  canMakePayments = () => {
-    InAppUtils.canMakePayments((canMakePayments) => {
-      if (!canMakePayments) {
-        Alert.alert('Not Allowed', 'This device is not allowed to make purchases. Please check restrictions on device');
-      } else {
-        console.log('sweet');
-      }
-    });
-  }
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.doubleTileContainer}>
           <TouchableOpacity
-            // onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/9/27/hitting-the-hay-the-right-way')}
-            // onPress={() => this.canMakePayments()}
-            onPress={() => this.loadProducts()}
+            onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/9/27/hitting-the-hay-the-right-way')}
             style={styles.cardContainer}
           >
             <ImageBackground
