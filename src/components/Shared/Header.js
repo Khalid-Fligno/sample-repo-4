@@ -20,6 +20,7 @@ const Header = ({
   withBackButton,
   withHelpButton,
   withSkipButton,
+  withRestoreButton,
   withStartButton,
   withProfileButton,
   headerTitleParams,
@@ -110,6 +111,18 @@ const Header = ({
         )
       }
       {
+        withRestoreButton && (
+          <TouchableOpacity
+            style={styles.headerContentContainerRight}
+            onPress={() => navigation.state.params.restore()}
+          >
+            <Text style={styles.skipButton}>
+              Restore
+            </Text>
+          </TouchableOpacity>
+        )
+      }
+      {
         withStartButton && (
           <TouchableOpacity
             style={styles.headerContentContainerRight}
@@ -155,6 +168,7 @@ Header.propTypes = {
   withBackButton: PropTypes.bool,
   withHelpButton: PropTypes.bool,
   withSkipButton: PropTypes.bool,
+  withRestoreButton: PropTypes.bool,
   withStartButton: PropTypes.bool,
   withProfileButton: PropTypes.bool,
   stack: PropTypes.string,
@@ -165,6 +179,7 @@ Header.defaultProps = {
   withBackButton: false,
   withHelpButton: false,
   withSkipButton: false,
+  withRestoreButton: false,
   withStartButton: false,
   withProfileButton: false,
   stack: null,
