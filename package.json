@@ -29,6 +29,7 @@
     "expo": "^30.0.0",
     "expokit": "1.7.1",
     "firebase": "^5.0.4",
+    "iap-receipt-validator": "^1.0.6",
     "lodash.sortby": "^4.7.0",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.21",
