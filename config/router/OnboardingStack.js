@@ -40,6 +40,7 @@ const OnboardingStack = createStackNavigator(
             withBackButton={onboardingBackButtonMap[routeName]}
             withSkipButton={onboardingSkipButtonMap[routeName]}
             withHelpButton={routeName === 'Progress1'}
+            withRestoreButton={routeName === 'Subscription'}
           />
         );
       },
