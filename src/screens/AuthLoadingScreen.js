@@ -1,6 +1,10 @@
 import React from 'react';
+import { Alert, NativeModules } from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
+import { validateReceipt, compareExpiry } from '../../config/apple';
 import { auth, db } from '../../config/firebase';
+
+const { InAppUtils } = NativeModules;
 
 const cacheImages = (images) => {
   return images.map((image) => {
@@ -74,15 +78,27 @@ export default class AuthLoadingScreen extends React.PureComponent {
   cachingComplete = async () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
+        unsubscribe();
         const { uid } = user;
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
             if (await doc.data().onboarded) {
-              unsubscribe();
-              this.props.navigation.navigate('App');
+              InAppUtils.receiptData(async (error, receiptData) => {
+                if (error) {
+                  Alert.alert('itunes Error', 'Receipt not found.');
+                } else {
+                  const subscribed = await this.validate(receiptData);
+                  if (subscribed) {
+                    this.props.navigation.navigate('Subscription');
+
+                    // this.props.navigation.navigate('App');
+                  } else {
+                    this.props.navigation.navigate('Subscription');
+                  }
+                }
+              });
             } else {
-              unsubscribe();
               this.props.navigation.navigate('Onboarding1');
             }
           });
@@ -91,6 +107,13 @@ export default class AuthLoadingScreen extends React.PureComponent {
         this.props.navigation.navigate('Auth');
       }
     });
+  }
+  validate = async (receiptData) => {
+    const validationData = await validateReceipt(receiptData).catch((err) => {
+      console.log(err.valid, err.error, err.message);
+    });
+    const sortedReceipts = validationData.latest_receipt_info.slice().sort(compareExpiry);
+    return sortedReceipts[0].expires_date_ms > Date.now();
   }
   render() {
     return (
