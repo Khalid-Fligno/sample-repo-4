@@ -70,7 +70,6 @@ export default class HelperModal extends React.PureComponent {
               </Text>
             </TouchableOpacity>
           </View>
-
         </View>
       </Modal>
     );
