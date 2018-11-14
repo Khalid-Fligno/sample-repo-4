@@ -24,11 +24,11 @@ export default class HelperModal extends React.PureComponent {
     return (
       <Modal
         isVisible={helperModalVisible}
-        onBackdropPress={toggleHelperModal}
+        // onBackdropPress={toggleHelperModal}
         animationIn="fadeIn"
-        animationInTiming={800}
+        animationInTiming={400}
         animationOut="fadeOut"
-        animationOutTiming={800}
+        animationOutTiming={400}
       >
         <View style={styles.helperModalContainer}>
           <View style={styles.helperModalTextContainer}>
@@ -106,8 +106,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     justifyContent: 'space-between',
     paddingTop: 15,
-    paddingLeft: 15,
-    paddingRight: 15,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   modalHeaderText: {
     fontFamily: fonts.bold,
