@@ -25,6 +25,7 @@
 /* Begin PBXFileReference section */
 		2C1548D9E4CB1AEFA5CCAE6D /* Pods-fitazfk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fitazfk.debug.xcconfig"; path = "Pods/Target Support Files/Pods-fitazfk/Pods-fitazfk.debug.xcconfig"; sourceTree = "<group>"; };
 		9E480E77218FB6980028D5A1 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		9EAB429F219BDCB600173BA4 /* fitazfk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = fitazfk.entitlements; sourceTree = "<group>"; };
 		A47FE4D7F70906B7DC8CE39B /* Pods-fitazfk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fitazfk.release.xcconfig"; path = "Pods/Target Support Files/Pods-fitazfk/Pods-fitazfk.release.xcconfig"; sourceTree = "<group>"; };
 		B501732A1DC01252003445D9 /* EXShell.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = EXShell.plist; sourceTree = "<group>"; };
 		B56386411DB9693800A0598C /* fitazfk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fitazfk.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,6 +96,7 @@
 		B56386431DB9693800A0598C /* fitazfk */ = {
 			isa = PBXGroup;
 			children = (
+				9EAB429F219BDCB600173BA4 /* fitazfk.entitlements */,
 				B56386471DB9693800A0598C /* AppDelegate.h */,
 				B56386481DB9693800A0598C /* AppDelegate.m */,
 				B56386501DB9693800A0598C /* Assets.xcassets */,
@@ -159,6 +161,9 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -405,6 +410,7 @@
 			baseConfigurationReference = 2C1548D9E4CB1AEFA5CCAE6D /* Pods-fitazfk.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = fitazfk/fitazfk.entitlements;
 				DEVELOPMENT_TEAM = 2RJMZUB4PS;
 				INFOPLIST_FILE = "$(SRCROOT)/fitazfk/Supporting/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -419,6 +425,7 @@
 			baseConfigurationReference = A47FE4D7F70906B7DC8CE39B /* Pods-fitazfk.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = fitazfk/fitazfk.entitlements;
 				DEVELOPMENT_TEAM = 2RJMZUB4PS;
 				INFOPLIST_FILE = "$(SRCROOT)/fitazfk/Supporting/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -23,20 +23,12 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>exp271e59a0a54746e48be47b1b075fa126</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>OAuthRedirect</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.fitazfk.fitazfkapp</string>
+				<string>fb1825444707513470</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -51,6 +43,10 @@
 			</dict>
 		</array>
 	</dict>
+	<key>FacebookAppID</key>
+	<string>1825444707513470</string>
+	<key>FacebookDisplayName</key>
+	<string>FitazFK</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -90,18 +86,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-		<key>CFBundleURLSchemes</key>
-		<array>
-			<string>fb1825444707513470</string>
-		</array>
-		</dict>
-	</array>
-	<key>FacebookAppID</key>
-	<string>1825444707513470</string>
-	<key>FacebookDisplayName</key>
-	<string>FitazFK</string>
 </dict>
 </plist>

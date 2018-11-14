@@ -25,9 +25,12 @@ public class AppConstants {
   static {
     List<Constants.EmbeddedResponse> embeddedResponses = new ArrayList<>();
 
-    // ADD EMBEDDED RESPONSES HERE
-    // START EMBEDDED RESPONSES
-    // END EMBEDDED RESPONSES
+    
+        // ADD EMBEDDED RESPONSES HERE
+        // START EMBEDDED RESPONSES
+        embeddedResponses.add(new Constants.EmbeddedResponse("https://exp.host/@fitazfk/fitazfk-app", "assets://shell-app-manifest.json", "application/json"));
+        embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40fitazfk%2Ffitazfk-app%2F0.0.1%2F5a1bb5740413ed2c41f4da31d556e0f9-30.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
+        // END EMBEDDED RESPONSES
     EMBEDDED_RESPONSES = embeddedResponses;
   }
 
