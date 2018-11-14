@@ -90,9 +90,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
                 } else {
                   const subscribed = await this.validate(receiptData);
                   if (subscribed) {
-                    this.props.navigation.navigate('Subscription');
-
-                    // this.props.navigation.navigate('App');
+                    this.props.navigation.navigate('App');
                   } else {
                     this.props.navigation.navigate('Subscription');
                   }
