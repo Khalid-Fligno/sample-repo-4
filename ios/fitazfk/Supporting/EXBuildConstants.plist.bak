@@ -13,7 +13,9 @@
 	<string>2.8.4</string>
 	<key>STANDALONE_CONTEXT_TYPE</key>
 	<string>user</string>
+	<key>TEMPORARY_SDK_VERSION</key>
+	<string>30.0.0</string>
 	<key>developmentUrl</key>
-	<string>exp271e59a0a54746e48be47b1b075fa126://192.168.1.33:19000</string>
+	<string>exp271e59a0a54746e48be47b1b075fa126://10.2.2.12:19000</string>
 </dict>
 </plist>
