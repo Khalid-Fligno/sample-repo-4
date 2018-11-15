@@ -42,6 +42,7 @@ export default class SubscriptionScreen extends React.PureComponent {
         Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
       } else {
         if (response.length === 0) {
+          this.setState({ loading: false });
           Alert.alert('No Purchases to restore');
           return;
         }
