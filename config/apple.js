@@ -1,7 +1,7 @@
 import iapReceiptValidator from 'iap-receipt-validator';
 
 const password = '4c613681bae44a4a956e11e6411d86fd'; // Shared Secret from iTunes connect
-const isProduction = false; // true = prod, false = sandbox
+const isProduction = true; // true = prod, false = sandbox
 
 export const validateReceipt = iapReceiptValidator(password, isProduction);
 
