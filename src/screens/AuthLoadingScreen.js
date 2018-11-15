@@ -87,6 +87,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
               InAppUtils.receiptData(async (error, receiptData) => {
                 if (error) {
                   Alert.alert('itunes Error', 'Receipt not found.');
+                  this.props.navigate('Subscription');
                 } else {
                   const subscribed = await this.validate(receiptData);
                   if (subscribed) {
