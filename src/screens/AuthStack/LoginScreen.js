@@ -8,12 +8,15 @@ import {
   TouchableOpacity,
   SafeAreaView,
   AsyncStorage,
+  Alert,
+  NativeModules,
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
 import { Facebook } from 'expo';
 import firebase from 'firebase';
 import { db, auth } from '../../../config/firebase';
+import { validateReceiptProduction, validateReceiptSandbox, compareExpiry } from '../../../config/apple';
 import Loader from '../../components/Shared/Loader';
 import Icon from '../../components/Shared/Icon';
 import FacebookButton from '../../components/Auth/FacebookButton';
@@ -21,6 +24,7 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import errors from '../../utils/errors';
 
+const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get('window');
 
 export default class LoginScreen extends React.PureComponent {
@@ -48,16 +52,30 @@ export default class LoginScreen extends React.PureComponent {
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
-            if (await doc.data().onboarded !== true) {
-              this.setState({ loading: false });
-              this.props.navigation.navigate('Subscription');
-            } else {
+            InAppUtils.receiptData(async (error, receiptData) => {
               if (await doc.data().fitnessLevel) {
                 await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
               }
-              this.setState({ loading: false });
-              this.props.navigation.navigate('App');
-            }
+              if (error) {
+                Alert.alert('iTunes Error', 'Receipt not found.');
+                this.props.navigate('Subscription');
+              } else {
+                const validationData = await this.validate(receiptData);
+                if (validationData === undefined) {
+                  this.props.navigation.navigate('Subscription');
+                }
+                const sortedReceipts = validationData.latest_receipt_info.slice().sort(compareExpiry);
+                console.log(sortedReceipts[0]);
+                const isSubscribed = sortedReceipts[0].expires_date_ms > Date.now();
+                if (isSubscribed && await doc.data().onboarded) {
+                  this.props.navigation.navigate('App');
+                } else if (isSubscribed && await !doc.data().onboarded) {
+                  this.props.navigation.navigate('Onboarding1');
+                } else {
+                  this.props.navigation.navigate('Subscription');
+                }
+              }
+            });
           });
       }
     } catch (err) {
@@ -77,16 +95,30 @@ export default class LoginScreen extends React.PureComponent {
           db.collection('users').doc(uid)
             .get()
             .then(async (doc) => {
-              if (await doc.data().onboarded !== true) {
-                this.setState({ loading: false });
-                this.props.navigation.navigate('Subscription');
-              } else {
+              InAppUtils.receiptData(async (error, receiptData) => {
                 if (await doc.data().fitnessLevel) {
                   await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
                 }
-                this.setState({ loading: false });
-                this.props.navigation.navigate('App');
-              }
+                if (error) {
+                  Alert.alert('iTunes Error', 'Receipt not found.');
+                  this.props.navigate('Subscription');
+                } else {
+                  const validationData = await this.validate(receiptData);
+                  if (validationData === undefined) {
+                    this.props.navigation.navigate('Subscription');
+                  }
+                  const sortedReceipts = validationData.latest_receipt_info.slice().sort(compareExpiry);
+                  console.log(sortedReceipts[0]);
+                  const isSubscribed = sortedReceipts[0].expires_date_ms > Date.now();
+                  if (isSubscribed && await doc.data().onboarded) {
+                    this.props.navigation.navigate('App');
+                  } else if (isSubscribed && await !doc.data().onboarded) {
+                    this.props.navigation.navigate('Onboarding1');
+                  } else {
+                    this.props.navigation.navigate('Subscription');
+                  }
+                }
+              });
             });
         } else {
           this.setState({ loading: false });
@@ -97,6 +129,16 @@ export default class LoginScreen extends React.PureComponent {
       const errorCode = err.code;
       this.setState({ error: errors.login[errorCode], loading: false });
     }
+  }
+  validate = async (receiptData) => {
+    const validationData = await validateReceiptProduction(receiptData).catch(async (err) => {
+      const validationDataSandbox = await validateReceiptSandbox(receiptData);
+      return validationDataSandbox;
+    });
+    if (validationData !== undefined) {
+      return validationData;
+    }
+    return undefined;
   }
   navigateToSignup = () => {
     const resetAction = StackActions.reset({
