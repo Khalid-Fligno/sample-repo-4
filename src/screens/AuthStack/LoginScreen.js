@@ -108,7 +108,6 @@ export default class LoginScreen extends React.PureComponent {
                     this.props.navigation.navigate('Subscription');
                   }
                   const sortedReceipts = validationData.latest_receipt_info.slice().sort(compareExpiry);
-                  console.log(sortedReceipts[0]);
                   const isSubscribed = sortedReceipts[0].expires_date_ms > Date.now();
                   if (isSubscribed && await doc.data().onboarded) {
                     this.props.navigation.navigate('App');
