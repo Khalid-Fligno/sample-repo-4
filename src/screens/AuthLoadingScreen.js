@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, NativeModules } from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
-import { validateReceipt, compareExpiry } from '../../config/apple';
+import { validateReceiptProduction, validateReceiptSandbox, compareExpiry } from '../../config/apple';
 import { auth, db } from '../../config/firebase';
 
 const { InAppUtils } = NativeModules;
@@ -35,13 +35,14 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/images/fitazfk-blog-mindset.jpg'),
       require('../../assets/images/shop-bundles.jpg'),
       require('../../assets/images/fitazfk-army.jpg'),
-      require('../../assets/images/workouts-core.jpg'),
-      require('../../assets/images/workouts-upper.jpg'),
-      require('../../assets/images/workouts-lower.jpg'),
-      require('../../assets/images/workouts-full.jpg'),
-      require('../../assets/images/workouts-home.jpg'),
-      require('../../assets/images/workouts-gym.jpg'),
-      require('../../assets/images/workouts-park.jpg'),
+      // require('../../assets/images/workouts-core.jpg'),
+      // require('../../assets/images/workouts-upper.jpg'),
+      // require('../../assets/images/workouts-lower.jpg'),
+      // require('../../assets/images/workouts-full.jpg'),
+      // require('../../assets/images/workouts-home.jpg'),
+      // require('../../assets/images/workouts-gym.jpg'),
+      // require('../../assets/images/workouts-park.jpg'),
+      require('../../assets/images/workouts-blank-tile.png'),
       require('../../assets/images/nutrition-breakfast.jpg'),
       require('../../assets/images/nutrition-lunch.jpg'),
       require('../../assets/images/nutrition-dinner.jpg'),
@@ -83,23 +84,27 @@ export default class AuthLoadingScreen extends React.PureComponent {
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
-            if (await doc.data().onboarded) {
-              InAppUtils.receiptData(async (error, receiptData) => {
-                if (error) {
-                  Alert.alert('itunes Error', 'Receipt not found.');
-                  this.props.navigate('Subscription');
-                } else {
-                  const subscribed = await this.validate(receiptData);
-                  if (subscribed) {
-                    this.props.navigation.navigate('App');
-                  } else {
-                    this.props.navigation.navigate('Subscription');
-                  }
+            InAppUtils.receiptData(async (error, receiptData) => {
+              if (error) {
+                Alert.alert('itunes Error', 'Receipt not found.');
+                this.props.navigate('Subscription');
+              } else {
+                const validationData = await this.validate(receiptData);
+                if (validationData === undefined) {
+                  this.props.navigation.navigate('Subscription');
                 }
-              });
-            } else {
-              this.props.navigation.navigate('Onboarding1');
-            }
+                const sortedReceipts = validationData.latest_receipt_info.slice().sort(compareExpiry);
+                console.log(sortedReceipts[0]);
+                const isSubscribed = sortedReceipts[0].expires_date_ms > Date.now();
+                if (isSubscribed && await doc.data().onboarded) {
+                  this.props.navigation.navigate('App');
+                } else if (isSubscribed && await !doc.data().onboarded) {
+                  this.props.navigation.navigate('Onboarding1');
+                } else {
+                  this.props.navigation.navigate('Subscription');
+                }
+              }
+            });
           });
       } else {
         unsubscribe();
@@ -108,11 +113,14 @@ export default class AuthLoadingScreen extends React.PureComponent {
     });
   }
   validate = async (receiptData) => {
-    const validationData = await validateReceipt(receiptData).catch((err) => {
-      console.log(err.valid, err.error, err.message);
+    const validationData = await validateReceiptProduction(receiptData).catch(async (err) => {
+      const validationDataSandbox = await validateReceiptSandbox(receiptData);
+      return validationDataSandbox;
     });
-    const sortedReceipts = validationData.latest_receipt_info.slice().sort(compareExpiry);
-    return sortedReceipts[0].expires_date_ms > Date.now();
+    if (validationData !== undefined) {
+      return validationData;
+    }
+    return undefined;
   }
   render() {
     return (
