@@ -96,7 +96,6 @@ export default class SubscriptionScreen extends React.PureComponent {
           if (validationData === undefined) {
             Alert.alert('Receipt validation error');
           }
-          console.log(validationData.latest_receipt_info);
           const isSubscribed = validationData.latest_receipt_info.expires_date > Date.now();
           if (isSubscribed === true) {
             this.setState({ loading: false });
