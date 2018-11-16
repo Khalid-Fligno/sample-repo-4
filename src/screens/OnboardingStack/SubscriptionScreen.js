@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { DotIndicator } from 'react-native-indicators';
-import { identifiers, validateReceipt, compare } from '../../../config/apple';
+import { identifiers, validateReceiptProduction, validateReceiptSandbox, compare } from '../../../config/apple';
 import SubscriptionTile from '../../components/Onboarding/SubscriptionTile';
 import Loader from '../../components/Shared/Loader';
 import colors from '../../styles/colors';
@@ -48,7 +48,10 @@ export default class SubscriptionScreen extends React.PureComponent {
         }
         const sortedPurchases = response.slice().sort(compare);
         try {
-          const validationData = await validateReceipt(sortedPurchases[0].transactionReceipt);
+          const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
+          if (validationData === undefined) {
+            Alert.alert('Receipt Validation Error');
+          }
           if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
             this.setState({ loading: false });
             Alert.alert('Restore Successful', 'Successfully restored your purchase.');
@@ -71,7 +74,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     this.setState({ loadingProducts: true });
     InAppUtils.loadProducts(identifiers, (error, products) => {
       if (error) {
-        console.log(error);
+        Alert.alert('Could not load subscription products');
       }
       this.setState({ products, subscriptionSelected: products[1], loadingProducts: false });
     });
@@ -89,19 +92,35 @@ export default class SubscriptionScreen extends React.PureComponent {
           Alert.alert('Something went wrong');
         }
         if (response && response.productIdentifier) {
-          const validationData = await validateReceipt(response.transactionReceipt);
-          console.log(validationData)
-          if (validationData.latest_receipt_info.expires_date > Date.now()) {
+          const validationData = await this.validate(response.transactionReceipt);
+          if (validationData === undefined) {
+            Alert.alert('Receipt validation error');
+          }
+          console.log(validationData.latest_receipt_info);
+          const isSubscribed = validationData.latest_receipt_info.expires_date > Date.now();
+          if (isSubscribed === true) {
             this.setState({ loading: false });
             Alert.alert('Purchase Successful', `Your Transaction ID is ${response.transactionIdentifier}`);
             this.props.navigation.navigate('App');
+          } else if (isSubscribed === false) {
+            Alert.alert('Purchase Unsuccessful');
           } else {
-            this.setState({ loading: false });
-            Alert.alert('WTF', 'wtf');
+            Alert.alert('Something went wrong', `${isSubscribed.message}`);
           }
         }
       });
     });
+  }
+  validate = async (receiptData) => {
+    const validationData = await validateReceiptProduction(receiptData).catch(async (err) => {
+      console.log(err);
+      const validationDataSandbox = await validateReceiptSandbox(receiptData);
+      return validationDataSandbox;
+    });
+    if (validationData) {
+      return validationData;
+    }
+    return undefined;
   }
   toggleSubscriptionSelected = (subscriptionSelected) => {
     this.setState({ subscriptionSelected });
