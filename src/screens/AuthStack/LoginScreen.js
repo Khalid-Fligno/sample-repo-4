@@ -128,7 +128,7 @@ export default class LoginScreen extends React.PureComponent {
     }
   }
   validate = async (receiptData) => {
-    const validationData = await validateReceiptProduction(receiptData).catch(async (err) => {
+    const validationData = await validateReceiptProduction(receiptData).catch(async () => {
       const validationDataSandbox = await validateReceiptSandbox(receiptData);
       return validationDataSandbox;
     });
