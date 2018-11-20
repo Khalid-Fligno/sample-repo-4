@@ -41,8 +41,15 @@ export default class CalendarHomeScreen extends React.PureComponent {
     this.calendarStrip = React.createRef();
   }
   componentDidMount = async () => {
-    this.setState({ loading: true });
     this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
+    await this.fetchCalendarEntries();
+    this.showHelperOnFirstOpen();
+  }
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+  fetchCalendarEntries = async () => {
+    this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
     this.unsubscribe = await db.collection('users').doc(uid)
@@ -62,8 +69,12 @@ export default class CalendarHomeScreen extends React.PureComponent {
         }
       });
   }
-  componentWillUnmount() {
-    this.unsubscribe();
+  showHelperOnFirstOpen = async () => {
+    const helperShownOnFirstOpen = await AsyncStorage.getItem('calendarHelperShownOnFirstOpen');
+    if (helperShownOnFirstOpen === null) {
+      setTimeout(() => this.setState({ helperModalVisible: true }), 1200);
+      AsyncStorage.setItem('calendarHelperShownOnFirstOpen', 'true');
+    }
   }
   toggleHelperModal = () => {
     this.setState((prevState) => ({

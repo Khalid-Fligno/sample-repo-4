@@ -28,6 +28,14 @@ export default class ProgressHomeScreen extends React.PureComponent {
   componentDidMount() {
     this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
     this.fetchProgressInfo();
+    this.showHelperOnFirstOpen();
+  }
+  showHelperOnFirstOpen = async () => {
+    const helperShownOnFirstOpen = await AsyncStorage.getItem('progressHelperShownOnFirstOpen');
+    if (helperShownOnFirstOpen === null) {
+      setTimeout(() => this.setState({ helperModalVisible: true }), 1200);
+      AsyncStorage.setItem('progressHelperShownOnFirstOpen', 'true');
+    }
   }
   toggleHelperModal = () => {
     this.setState((prevState) => ({

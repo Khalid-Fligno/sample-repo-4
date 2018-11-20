@@ -85,15 +85,23 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
   componentDidMount = () => {
     this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
     this.fetchWeeklyTargetInfo();
+    this.showHelperOnFirstOpen();
   }
   componentWillUnmount = () => {
-    this.unsubscribe();
-    this.unsubscribe2();
+    this.unsubscribeFromWorkouts();
+    this.unsubscribeFromTargets();
+  }
+  showHelperOnFirstOpen = async () => {
+    const helperShownOnFirstOpen = await AsyncStorage.getItem('workoutHelperShownOnFirstOpen');
+    if (helperShownOnFirstOpen === null) {
+      setTimeout(() => this.setState({ helperModalVisible: true }), 500);
+      AsyncStorage.setItem('workoutHelperShownOnFirstOpen', 'true');
+    }
   }
   fetchWeeklyTargetInfo = async () => {
     const uid = await AsyncStorage.getItem('uid', null);
     const userRef = db.collection('users').doc(uid);
-    this.unsubscribe2 = userRef.onSnapshot(async (doc) => {
+    this.unsubscribeFromTargets = userRef.onSnapshot(async (doc) => {
       this.setState({
         resistanceWeeklyTarget: await doc.data().resistanceWeeklyTarget,
         hiitWeeklyTarget: await doc.data().hiitWeeklyTarget,
@@ -127,7 +135,7 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
     this.setState({ loading: true });
     const type = hiitTypeMap[selectedHiitWorkoutIndex];
     try {
-      this.unsubscribe = await db.collection('workouts')
+      this.unsubscribeFromWorkouts = await db.collection('workouts')
         .where(type, '==', true)
         .get()
         .then(async (querySnapshot) => {
