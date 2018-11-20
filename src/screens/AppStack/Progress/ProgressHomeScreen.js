@@ -124,7 +124,11 @@ export default class ProgressHomeScreen extends React.PureComponent {
                   <View style={styles.imagePlaceholder}>
                     <TouchableOpacity
                       onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
-                      style={styles.imagePlaceholderButton}
+                      disabled={initialProgressInfo === null}
+                      style={[
+                        styles.imagePlaceholderButton,
+                        initialProgressInfo === null && styles.disabledImagePlaceHolderButton,
+                      ]}
                     >
                       <Icon
                         name="add-circle"
@@ -315,6 +319,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
+  },
+  disabledImagePlaceHolderButton: {
+    backgroundColor: colors.blue.standard,
+    width: '70%',
+    padding: 10,
+    borderRadius: 2,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    opacity: 0.5,
   },
   imagePlaceholderButtonText: {
     color: colors.white,
