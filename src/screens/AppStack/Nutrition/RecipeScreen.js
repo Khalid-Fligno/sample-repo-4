@@ -237,26 +237,44 @@ export default class RecipeScreen extends React.PureComponent {
             </TouchableOpacity>
             <Divider style={styles.divider} />
             <View style={styles.infoBar}>
-              <Icon
-                name="timer"
-                size={22}
-                color={colors.violet.standard}
-              />
-              <Text style={styles.timeText}>
-                {recipe.time}
-              </Text>
+              <View style={styles.infoFieldContainer}>
+                <Icon
+                  name="timer"
+                  size={24}
+                  color={colors.violet.standard}
+                />
+                <Text style={styles.timeText}>
+                  {recipe.time}
+                </Text>
+              </View>
               {
-                recipe.tags && recipe.tags.map((tag) => (
-                  <View
-                    style={styles.tagCircle}
-                    key={tag}
-                  >
-                    <Text style={styles.tagText}>
-                      {tag}
+                recipe.portions && (
+                  <View style={styles.infoFieldContainer}>
+                    <Icon
+                      name="portions"
+                      size={20}
+                      color={colors.violet.standard}
+                    />
+                    <Text style={styles.portionsText}>
+                      {recipe.portions}
                     </Text>
                   </View>
-                ))
+                )
               }
+              <View style={styles.infoFieldContainer}>
+                {
+                  recipe.tags && recipe.tags.map((tag) => (
+                    <View
+                      style={styles.tagCircle}
+                      key={tag}
+                    >
+                      <Text style={styles.tagText}>
+                        {tag}
+                      </Text>
+                    </View>
+                  ))
+                }
+              </View>
             </View>
             <Divider style={styles.divider} />
             <Text style={styles.recipeSummaryText}>
@@ -310,63 +328,12 @@ export default class RecipeScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  carouselCard: {
-    flex: 1,
-    marginTop: 15,
-    marginBottom: 15,
-    borderRadius: 5,
-    backgroundColor: colors.white,
-    shadowColor: colors.violet.dark,
-    shadowOpacity: 0.4,
-    shadowOffset: { width: 0, height: 5 },
-    shadowRadius: 5,
-    borderWidth: 1,
-    borderColor: colors.violet.dark,
-  },
-  carouselHeaderContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 5,
-  },
-  carouselHeaderContentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.violet.dark,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-  },
-  carouselHeaderText: {
-    fontFamily: fonts.bold,
-    fontSize: 16,
-    color: colors.violet.standard,
-    marginTop: 3,
-  },
-  carouselHeaderButton: {
-    width: 45,
-    height: 45,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: colors.violet.dark,
-    shadowOpacity: 0.4,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 1,
-  },
-  carouselTextContainer: {
-    flex: 1,
-    paddingTop: 15,
-    paddingRight: 10,
-    paddingBottom: 15,
-    paddingLeft: 15,
-  },
-  carouselText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.standard,
+  recipeInfoContainer: {
+    padding: 15,
   },
   recipeTitle: {
     fontFamily: fonts.bold,
@@ -459,23 +426,27 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grey.light,
   },
   infoBar: {
-    paddingTop: 5,
-    paddingBottom: 5,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    width: width - 30,
+  },
+  infoFieldContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    maxWidth: width,
+    padding: 5,
   },
   timeText: {
     fontFamily: fonts.standard,
     color: colors.violet.standard,
-    marginTop: 3,
+    marginTop: 4,
     marginLeft: 5,
     marginRight: 5,
   },
   tagCircle: {
     height: 24,
     width: 24,
-    marginLeft: 10,
+    marginRight: 10,
     borderWidth: 2.5,
     borderColor: colors.violet.standard,
     borderRadius: 12,
@@ -488,14 +459,18 @@ const styles = StyleSheet.create({
     color: colors.violet.standard,
     marginTop: 4,
   },
+  portionsText: {
+    fontFamily: fonts.standard,
+    color: colors.violet.standard,
+    marginTop: 4,
+    marginLeft: 5,
+    marginRight: 5,
+  },
   recipeSummaryText: {
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.standard,
     marginTop: 15,
-  },
-  recipeInfoContainer: {
-    padding: 15,
   },
   ingredientsContainer: {
     padding: 15,
