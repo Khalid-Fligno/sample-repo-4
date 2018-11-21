@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import Image from 'react-native-image-progress';
 import { DotIndicator } from 'react-native-indicators';
+import ReactTimeout from 'react-timeout';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
@@ -14,7 +16,7 @@ import fonts from '../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
-export default class ProgressHomeScreen extends React.PureComponent {
+class ProgressHomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,7 +35,7 @@ export default class ProgressHomeScreen extends React.PureComponent {
   showHelperOnFirstOpen = async () => {
     const helperShownOnFirstOpen = await AsyncStorage.getItem('progressHelperShownOnFirstOpen');
     if (helperShownOnFirstOpen === null) {
-      setTimeout(() => this.setState({ helperModalVisible: true }), 1200);
+      this.props.setTimeout(() => this.setState({ helperModalVisible: true }), 1200);
       AsyncStorage.setItem('progressHelperShownOnFirstOpen', 'true');
     }
   }
@@ -285,6 +287,10 @@ export default class ProgressHomeScreen extends React.PureComponent {
   }
 }
 
+ProgressHomeScreen.propTypes = {
+  setTimeout: PropTypes.func.isRequired,
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -404,3 +410,5 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
 });
+
+export default ReactTimeout(ProgressHomeScreen);

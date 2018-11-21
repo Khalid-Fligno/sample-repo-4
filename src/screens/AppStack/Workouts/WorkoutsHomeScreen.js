@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   StyleSheet,
   View,
@@ -11,6 +12,7 @@ import { FileSystem } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 import FadeInView from 'react-native-fade-in-view';
 import moment from 'moment';
+import ReactTimeout from 'react-timeout';
 import Icon from '../../../components/Shared/Icon';
 import CustomButton from '../../../components/Shared/CustomButton';
 import Loader from '../../../components/Shared/Loader';
@@ -66,7 +68,7 @@ const hiitTypeMap = {
   3: 'skipping',
 };
 
-export default class WorkoutsHomeScreen extends React.PureComponent {
+class WorkoutsHomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -94,7 +96,7 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
   showHelperOnFirstOpen = async () => {
     const helperShownOnFirstOpen = await AsyncStorage.getItem('workoutHelperShownOnFirstOpen');
     if (helperShownOnFirstOpen === null) {
-      setTimeout(() => this.setState({ helperModalVisible: true }), 500);
+      this.props.setTimeout(() => this.setState({ helperModalVisible: true }), 500);
       AsyncStorage.setItem('workoutHelperShownOnFirstOpen', 'true');
     }
   }
@@ -200,9 +202,6 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
     );
   }
   render() {
-    // const start = moment('2018-08-05').startOf('week').format('YYYY-MM-DD');
-    // const now = moment().startOf('week').format('YYYY-MM-DD');
-    // console.log(moment().startOf('week').subtract(11, 'weeks').format('YYYY-MM-DD') === moment('2018-08-04').startOf('week').format('YYYY-MM-DD'));
     const {
       loading,
       selectedWorkoutTypeIndex,
@@ -320,6 +319,10 @@ export default class WorkoutsHomeScreen extends React.PureComponent {
   }
 }
 
+WorkoutsHomeScreen.propTypes = {
+  setTimeout: PropTypes.func.isRequired,
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -342,7 +345,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    // overflow: 'hidden',
     shadowColor: colors.charcoal.standard,
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 2 },
@@ -378,3 +380,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default ReactTimeout(WorkoutsHomeScreen);

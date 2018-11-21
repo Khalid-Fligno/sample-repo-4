@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   StyleSheet,
   ScrollView,
@@ -14,6 +15,7 @@ import { FileSystem, Calendar, Permissions } from 'expo';
 import CalendarStrip from 'react-native-calendar-strip';
 import Swipeable from 'react-native-swipeable';
 import firebase from 'firebase';
+import ReactTimeout from 'react-timeout';
 import { db, auth } from '../../../../config/firebase';
 import HelperModal from '../../../components/Shared/HelperModal';
 import Loader from '../../../components/Shared/Loader';
@@ -25,7 +27,7 @@ import fonts from '../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
-export default class CalendarHomeScreen extends React.PureComponent {
+class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -72,7 +74,7 @@ export default class CalendarHomeScreen extends React.PureComponent {
   showHelperOnFirstOpen = async () => {
     const helperShownOnFirstOpen = await AsyncStorage.getItem('calendarHelperShownOnFirstOpen');
     if (helperShownOnFirstOpen === null) {
-      setTimeout(() => this.setState({ helperModalVisible: true }), 1200);
+      this.props.setTimeout(() => this.setState({ helperModalVisible: true }), 1200);
       AsyncStorage.setItem('calendarHelperShownOnFirstOpen', 'true');
     }
   }
@@ -512,6 +514,10 @@ export default class CalendarHomeScreen extends React.PureComponent {
   }
 }
 
+CalendarHomeScreen.propTypes = {
+  setTimeout: PropTypes.func.isRequired,
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -600,3 +606,5 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
+
+export default ReactTimeout(CalendarHomeScreen);
