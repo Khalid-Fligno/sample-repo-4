@@ -48,13 +48,15 @@ class CalendarHomeScreen extends React.PureComponent {
     this.showHelperOnFirstOpen();
   }
   componentWillUnmount() {
-    this.unsubscribe();
+    this.unsubscribeFromEntries();
+    this.unsubscribeFromEntries2();
+    this.unsubscribeFromUsers();
   }
   fetchCalendarEntries = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
-    this.unsubscribe = await db.collection('users').doc(uid)
+    this.unsubscribeFromEntries = await db.collection('users').doc(uid)
       .collection('calendarEntries').doc(stringDate)
       .onSnapshot(async (doc) => {
         if (doc.exists) {
@@ -87,7 +89,7 @@ class CalendarHomeScreen extends React.PureComponent {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = date.format('YYYY-MM-DD').toString();
-    this.unsubscribe = await db.collection('users').doc(uid)
+    this.unsubscribeFromEntries2 = await db.collection('users').doc(uid)
       .collection('calendarEntries').doc(stringDate)
       .onSnapshot(async (doc) => {
         if (doc.exists) {
@@ -116,7 +118,7 @@ class CalendarHomeScreen extends React.PureComponent {
     const user = auth.currentUser;
     let reps;
     if (user) {
-      db.collection('users')
+      this.unsubscribeFromUsers = db.collection('users')
         .doc(user.uid)
         .onSnapshot(async (doc) => {
           if (doc.exists) {
