@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Dimensions, AsyncStorage, Alert } from 'react-native';
 import { FileSystem } from 'expo';
 import moment from 'moment';
 import sortBy from 'lodash.sortby';
@@ -87,7 +87,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
       this.setState({ loading: false });
       this.props.navigation.navigate('WorkoutInfo', { workout, reps: findReps(fitnessLevel) });
     } catch (err) {
-      console.log(`Filesystem download error: ${err}`);
+      Alert.alert('Filesystem download error', `${err}`);
     }
   }
   render() {
