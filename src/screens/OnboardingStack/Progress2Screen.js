@@ -102,7 +102,7 @@ export default class Progress2Screen extends React.PureComponent {
       const manipResult = await ImageManipulator.manipulate(
         result.uri,
         [{ resize: { width: 600, height: 800 } }],
-        { format: 'jpeg' },
+        { format: 'jpeg', compress: 0.75 },
       );
       this.setState({ image: manipResult });
     }
@@ -121,7 +121,7 @@ export default class Progress2Screen extends React.PureComponent {
               originX: originXValue, originY: 0, width: 600, height: 800,
             },
           }],
-          { format: 'jpeg' },
+          { format: 'jpeg', compress: 0.75 },
         );
         this.setState({ image: manipResult });
       } catch (err) {
