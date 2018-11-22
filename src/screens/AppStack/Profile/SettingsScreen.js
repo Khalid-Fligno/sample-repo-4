@@ -8,7 +8,6 @@ import fonts from '../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
-
 export default class SettingsScreen extends React.PureComponent {
   constructor(props) {
     super(props);
