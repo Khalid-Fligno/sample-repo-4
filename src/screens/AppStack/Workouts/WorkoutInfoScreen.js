@@ -19,6 +19,7 @@ import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
+import HelperModal from '../../../components/Shared/HelperModal';
 import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
 import { findFocus, findLocation } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
@@ -39,23 +40,45 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       calendarModalVisible: false,
       addingToCalendar: false,
       musicModalVisible: false,
+      initialProgressInfoExists: undefined,
+      helperModalVisible: false,
     };
   }
   componentDidMount = async () => {
     await this.props.navigation.setParams({
-      handleStart: () => this.toggleMusicModal(),
+      handleStart: () => this.handleStart(),
     });
+    this.checkInitialProgressCompleted();
+  }
+  componentWillUnmount = () => {
+    this.unsubscribe();
   }
   setDate = (newDate) => {
     this.setState({ chosenDate: newDate });
   }
+  handleStart = () => {
+    if (this.state.initialProgressInfoExists) {
+      this.toggleMusicModal();
+    } else {
+      this.toggleHelperModal();
+    }
+  }
+  checkInitialProgressCompleted = async () => {
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem('uid');
+    this.unsubscribe = await db.collection('users').doc(uid)
+      .onSnapshot(async (doc) => {
+        this.setState({ initialProgressInfoExists: await doc.data().initialProgressInfo && true });
+      });
+    this.setState({ loading: false });
+  }
   openApp = (url, appStoreURL) => {
     Linking.canOpenURL(url).then((supported) => {
       if (!supported) {
-        return Linking.openURL(appStoreURL);
+        Linking.openURL(appStoreURL);
       }
-      return Linking.openURL(url);
-    }).catch((err) => console.error('An error occurred', err));
+      Linking.openURL(url);
+    }).catch((err) => Alert.alert('An error occurred', err));
   }
   toggleMusicModal = () => {
     this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
@@ -90,6 +113,11 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     this.setState({ musicModalVisible: false });
     this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
   }
+  toggleHelperModal = () => {
+    this.setState((prevState) => ({
+      helperModalVisible: !prevState.helperModalVisible,
+    }));
+  }
   render() {
     const {
       loading,
@@ -99,6 +127,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       calendarModalVisible,
       addingToCalendar,
       musicModalVisible,
+      helperModalVisible,
     } = this.state;
     let workoutName;
     let exerciseDisplay;
@@ -346,6 +375,14 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             </View>
           </View>
         </Modal>
+        <HelperModal
+          helperModalVisible={helperModalVisible}
+          toggleHelperModal={() => this.toggleHelperModal()}
+          headingText="Hold Up"
+          bodyText="Please complete your initial progress check in to continue to your workout."
+          bodyText2="This is a good way to stay accountable blah blah etc."
+          color="coral"
+        />
         <Loader
           loading={loading}
           color={colors.coral.standard}
