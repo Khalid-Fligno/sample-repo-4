@@ -1,10 +1,17 @@
 import React from 'react';
-import { Alert, NativeModules } from 'react-native';
+import {
+  AsyncStorage,
+  // NativeModules,
+} from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
-import { validateReceiptProduction, validateReceiptSandbox, compareExpiry } from '../../config/apple';
+import {
+  validateReceiptProduction,
+  validateReceiptSandbox,
+  // compareExpiry,
+} from '../../config/apple';
 import { auth, db } from '../../config/firebase';
 
-const { InAppUtils } = NativeModules;
+// const { InAppUtils } = NativeModules;
 
 const cacheImages = (images) => {
   return images.map((image) => {
@@ -76,34 +83,58 @@ export default class AuthLoadingScreen extends React.PureComponent {
     ]);
     await Promise.all([...imageAssets, ...fontAssets]);
   }
+  // // Include payments
+  // cachingComplete = async () => {
+  //   const unsubscribe = auth.onAuthStateChanged(async (user) => {
+  //     if (user) {
+  //       unsubscribe();
+  //       const { uid } = user;
+  //       db.collection('users').doc(uid)
+  //         .get()
+  //         .then(async (doc) => {
+  //           InAppUtils.receiptData(async (error, receiptData) => {
+  //             if (error) {
+  //               Alert.alert('itunes Error', 'Receipt not found.');
+  //               this.props.navigate('Subscription');
+  //             } else {
+  //               const validationData = await this.validate(receiptData);
+  //               if (validationData === undefined) {
+  //                 this.props.navigation.navigate('Subscription');
+  //               }
+  //               const sortedReceipts = validationData.latest_receipt_info.slice().sort(compareExpiry);
+  //               const isSubscribed = sortedReceipts[0].expires_date_ms > Date.now();
+  //               if (isSubscribed && await doc.data().onboarded) {
+  //                 this.props.navigation.navigate('App');
+  //               } else if (isSubscribed && await !doc.data().onboarded) {
+  //                 this.props.navigation.navigate('Onboarding1');
+  //               } else {
+  //                 this.props.navigation.navigate('Subscription');
+  //               }
+  //             }
+  //           });
+  //         });
+  //     } else {
+  //       unsubscribe();
+  //       this.props.navigation.navigate('Auth');
+  //     }
+  //   });
+  // }
   cachingComplete = async () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         unsubscribe();
         const { uid } = user;
-        db.collection('users').doc(uid)
+        await db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
-            InAppUtils.receiptData(async (error, receiptData) => {
-              if (error) {
-                Alert.alert('itunes Error', 'Receipt not found.');
-                this.props.navigate('Subscription');
-              } else {
-                const validationData = await this.validate(receiptData);
-                if (validationData === undefined) {
-                  this.props.navigation.navigate('Subscription');
-                }
-                const sortedReceipts = validationData.latest_receipt_info.slice().sort(compareExpiry);
-                const isSubscribed = sortedReceipts[0].expires_date_ms > Date.now();
-                if (isSubscribed && await doc.data().onboarded) {
-                  this.props.navigation.navigate('App');
-                } else if (isSubscribed && await !doc.data().onboarded) {
-                  this.props.navigation.navigate('Onboarding1');
-                } else {
-                  this.props.navigation.navigate('Subscription');
-                }
-              }
-            });
+            if (await doc.data().fitnessLevel) {
+              await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+            }
+            if (await doc.data().onboarded !== true) {
+              this.props.navigation.navigate('Onboarding1');
+            } else {
+              this.props.navigation.navigate('App');
+            }
           });
       } else {
         unsubscribe();
