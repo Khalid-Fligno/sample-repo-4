@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Text, AsyncStorage, Alert } from 'react-native';
 import { FileSystem } from 'expo';
 import Loader from '../../../../components/Shared/Loader';
 import { db } from '../../../../../config/firebase';
@@ -17,7 +17,7 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
       FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-1.mp4`, { idempotent: true });
       FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-2.mp4`, { idempotent: true });
     } catch (err) {
-      console.log(err);
+      Alert.alert('Filesystem delete error', `${err}`);
     }
   }
   completeHiitWorkout = async () => {

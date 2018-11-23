@@ -9,6 +9,7 @@ import {
   Picker,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from 'react-native';
 import { DangerZone } from 'expo';
 import Modal from 'react-native-modal';
@@ -81,7 +82,7 @@ export default class Onboarding1Screen extends React.PureComponent {
       this.setState({ loading: false });
       this.props.navigation.navigate('Progress1', { isInitial: true });
     } catch (err) {
-      console.log(err);
+      Alert.alert('Database write error', `${err}`);
       this.setState({ loading: false });
     }
   }

@@ -62,7 +62,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
       this.props.navigation.navigate('Auth');
     } catch (err) {
       this.setState({ loading: false });
-      console.log(err);
+      Alert.alert('Error logging out', `${err}`);
     }
   }
   render() {

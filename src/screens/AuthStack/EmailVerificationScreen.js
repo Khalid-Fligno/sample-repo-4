@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { auth } from '../../../config/firebase';
 import Loader from '../../components/Shared/Loader';
@@ -31,8 +32,8 @@ export default class EmailVerificationScreen extends React.PureComponent {
     user.sendEmailVerification().then(() => {
       this.setState({ loading: false });
       this.props.navigation.navigate('Login');
-    }).catch((error) => {
-      console.log(error);
+    }).catch((err) => {
+      Alert.alert('Email verification send error', `${err}`);
     });
   }
   render() {

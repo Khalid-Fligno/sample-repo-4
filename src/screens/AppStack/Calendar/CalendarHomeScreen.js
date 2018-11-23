@@ -137,7 +137,7 @@ class CalendarHomeScreen extends React.PureComponent {
       this.setState({ loading: false });
       this.props.navigation.navigate('WorkoutInfo', { workout, reps });
     } catch (err) {
-      console.log(`Filesystem download error: ${err}`);
+      Alert.alert('Filesystem download error', `${err}`);
     }
   }
   loadHiitExercises = async (workout) => {
@@ -153,7 +153,7 @@ class CalendarHomeScreen extends React.PureComponent {
       this.setState({ loading: false });
       this.props.navigation.navigate('HiitWorkoutInfo', { workout });
     } catch (err) {
-      console.log(`Filesystem download error: ${err}`);
+      Alert.alert('Filesystem download error', `${err}`);
     }
   }
   addToCalendarApp = async (workout) => {

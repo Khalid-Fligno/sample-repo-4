@@ -112,7 +112,6 @@ export default class SubscriptionScreen extends React.PureComponent {
   }
   validate = async (receiptData) => {
     const validationData = await validateReceiptProduction(receiptData).catch(async (err) => {
-      console.log(err);
       const validationDataSandbox = await validateReceiptSandbox(receiptData);
       return validationDataSandbox;
     });

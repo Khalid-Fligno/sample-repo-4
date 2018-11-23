@@ -75,20 +75,20 @@ export default class Progress6Screen extends React.PureComponent {
   }
   handleSubmit = async () => {
     this.setState({ loading: true });
+    const { burpeeCount } = this.state;
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    const {
+      weight,
+      waist,
+      hip,
+      isInitial,
+      image,
+    } = this.props.navigation.state.params;
+    await storeProgressInfo(image.uri, isInitial, weight, waist, hip, burpeeCount);
+    const fitnessLevel = findFitnessLevel(burpeeCount);
+    AsyncStorage.setItem('fitnessLevel', fitnessLevel.toString());
     try {
-      const { burpeeCount } = this.state;
-      const uid = await AsyncStorage.getItem('uid');
-      const userRef = db.collection('users').doc(uid);
-      const {
-        weight,
-        waist,
-        hip,
-        isInitial,
-        image,
-      } = this.props.navigation.state.params;
-      await storeProgressInfo(image.uri, isInitial, weight, waist, hip, burpeeCount);
-      const fitnessLevel = findFitnessLevel(burpeeCount);
-      AsyncStorage.setItem('fitnessLevel', fitnessLevel.toString());
       await userRef.set({
         fitnessLevel,
       }, { merge: true });
@@ -99,7 +99,7 @@ export default class Progress6Screen extends React.PureComponent {
         this.props.navigation.navigate('ProgressHome');
       }
     } catch (err) {
-      console.log(err);
+      Alert.alert('Database write error', `${err}`);
       this.setState({ loading: false });
     }
   }
