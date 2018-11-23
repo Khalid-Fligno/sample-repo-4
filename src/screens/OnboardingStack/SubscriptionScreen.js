@@ -161,10 +161,18 @@ export default class SubscriptionScreen extends React.PureComponent {
             <ScrollView>
               <View style={styles.disclaimerTextContainer}>
                 <Text style={styles.disclaimerText}>
-                  A <Text style={{ fontFamily: fonts.bold }}>{subscriptionSelected && `${subscriptionSelected.priceString} `}{subscriptionSelected && `${subscriptionSelected.currencyCode} `}{subscriptionSelected && `${subscriptionSelected.title.toLowerCase()} `}</Text>purchase will be applied to your iTunes account at the end of your 7-day free trial.
+                  A
+                  <Text style={{ fontFamily: fonts.bold }}>
+                    {subscriptionSelected && ` ${subscriptionSelected.priceString} `}
+                    {subscriptionSelected && `${subscriptionSelected.currencyCode} `}
+                    {subscriptionSelected && `${subscriptionSelected.title.toLowerCase()} `}
+                  </Text>
+                  purchase will be applied to your iTunes account at the end of your 7-day free trial.
                 </Text>
                 <Text style={styles.disclaimerText}>
-                  Subscriptions will automatically renew unless canceled within 24-hours before the end of the current period. You can cancel anytime with your iTunes account settings. Any unused portion of a free trial will be forfeited if you purchase a subscription.
+                  Subscriptions will automatically renew unless canceled within 24-hours before the end of the current period.
+                  You can cancel anytime with your iTunes account settings.
+                  Any unused portion of a free trial will be forfeited if you purchase a subscription.
                 </Text>
                 <Text style={styles.disclaimerText}>
                   For more information, see our [link to ToS] and [link to Privacy Policy].
