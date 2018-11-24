@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import { ImagePicker, ImageManipulator, Permissions, Linking } from 'expo';
+import { ImagePicker, ImageManipulator, Permissions, Linking, FileSystem } from 'expo';
 import Loader from '../../components/Shared/Loader';
 import Icon from '../../components/Shared/Icon';
 import CustomButton from '../../components/Shared/CustomButton';
@@ -44,19 +44,35 @@ export default class Progress2Screen extends React.PureComponent {
     this.setState({ hasCameraRollPermission: status === 'granted' });
   }
   handleSkip = () => {
-    Alert.alert(
-      'Warning',
-      'You will need to do this before your first workout',
-      [
-        {
-          text: 'Cancel', style: 'cancel',
-        },
-        {
-          text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
-        },
-      ],
-      { cancelable: false },
-    );
+    if (this.props.navigation.getParam('isInitial', false)) {
+      Alert.alert(
+        'Warning',
+        'You will need to do this before your first workout',
+        [
+          {
+            text: 'Cancel', style: 'cancel',
+          },
+          {
+            text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
+          },
+        ],
+        { cancelable: false },
+      );
+    } else {
+      Alert.alert(
+        'Warning',
+        'Skipping means that you will lose any information that you have already entered.',
+        [
+          {
+            text: 'Cancel', style: 'cancel',
+          },
+          {
+            text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
+          },
+        ],
+        { cancelable: false },
+      );
+    }
   }
   appSettingsPrompt = () => {
     Alert.alert(
@@ -130,8 +146,8 @@ export default class Progress2Screen extends React.PureComponent {
     }
   };
   handleImagePicked = async (pickerResult) => {
+    this.setState({ uploading: true });
     try {
-      this.setState({ uploading: true });
       if (this.state.image !== null) {
         const {
           weight,
@@ -139,6 +155,11 @@ export default class Progress2Screen extends React.PureComponent {
           hip,
           isInitial,
         } = this.props.navigation.state.params;
+        await FileSystem.downloadAsync(
+          'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2Fexercises%2Fburpees.m4v?alt=media&token=cfd6adaa-8ec0-4d0f-be46-f7623a8b598c',
+          `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
+        );
+        this.setState({ uploading: false });
         this.props.navigation.navigate('Progress3', {
           image: pickerResult,
           weight,
@@ -147,12 +168,10 @@ export default class Progress2Screen extends React.PureComponent {
           isInitial,
         });
       } else {
-        this.setState({ error: 'Please select an image to continue' });
+        this.setState({ error: 'Please select an image to continue', uploading: false });
       }
     } catch (err) {
-      this.setState({ error: 'Problem uploading image, please try again' });
-    } finally {
-      this.setState({ uploading: false });
+      this.setState({ error: 'Problem uploading image, please try again', uploading: false });
     }
   };
   render() {

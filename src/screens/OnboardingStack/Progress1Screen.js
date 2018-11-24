@@ -61,19 +61,35 @@ export default class Progress1Screen extends React.PureComponent {
       });
   }
   handleSkip = () => {
-    Alert.alert(
-      'Warning',
-      'Skipping means that you will lose any information that you have already entered.',
-      [
-        {
-          text: 'Cancel', style: 'cancel',
-        },
-        {
-          text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
-        },
-      ],
-      { cancelable: false },
-    );
+    if (this.props.navigation.getParam('isInitial', false)) {
+      Alert.alert(
+        'Warning',
+        'You will need to do this before your first workout',
+        [
+          {
+            text: 'Cancel', style: 'cancel',
+          },
+          {
+            text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
+          },
+        ],
+        { cancelable: false },
+      );
+    } else {
+      Alert.alert(
+        'Warning',
+        'Skipping means that you will lose any information that you have already entered.',
+        [
+          {
+            text: 'Cancel', style: 'cancel',
+          },
+          {
+            text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
+          },
+        ],
+        { cancelable: false },
+      );
+    }
   }
   toggleWeightModal = () => {
     this.setState((prevState) => ({ weightModalVisible: !prevState.weightModalVisible }));
@@ -184,7 +200,6 @@ export default class Progress1Screen extends React.PureComponent {
                   </View>
                 </Modal>
               </View>
-
               <View style={styles.inputFieldContainer}>
                 <Text style={styles.inputFieldTitle}>
                   Waist
@@ -242,7 +257,6 @@ export default class Progress1Screen extends React.PureComponent {
                   </View>
                 </Modal>
               </View>
-
               <View style={styles.inputFieldContainer}>
                 <Text style={styles.inputFieldTitle}>
                   Hip
