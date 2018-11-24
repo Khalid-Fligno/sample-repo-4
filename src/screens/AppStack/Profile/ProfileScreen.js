@@ -140,7 +140,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 containerStyle={styles.listItemContainer}
                 hideChevron
               />
-              <ListItem
+              {/* <ListItem
                 title="Weekly Resistance Goal"
                 titleStyle={styles.listItemTitleStyle}
                 subtitle={profile && `${profile.resistanceWeeklyTarget} sessions`}
@@ -157,7 +157,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 containerStyle={styles.listItemContainer}
                 onPress={() => this.toggleHiitModal()}
                 rightIcon={<Icon name="edit-outline" size={20} color={colors.grey.dark} />}
-              />
+              /> */}
             </List>
             <Modal
               isVisible={resistanceModalVisible}
