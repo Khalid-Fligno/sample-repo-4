@@ -11,6 +11,10 @@
 fitazfk.xcworkspace/
 xcuserdata/
 
+EXBuildConstants.json
+EXBuildConstants.plist
+EXBuildConstants.plist.bak
+
 # dependencies
 /node_modules
 /ios/Pods/
