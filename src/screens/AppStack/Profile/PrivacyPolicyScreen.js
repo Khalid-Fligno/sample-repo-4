@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, View, Text, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Text, ScrollView, Dimensions, Linking } from 'react-native';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
@@ -30,6 +30,9 @@ export default class PrivacyPolicyScreen extends React.PureComponent {
         }
       });
   }
+  openLink = (url) => {
+    Linking.openURL(url);
+  }
   render() {
     const { text, loading } = this.state;
     return (
@@ -39,9 +42,21 @@ export default class PrivacyPolicyScreen extends React.PureComponent {
             <Text style={styles.header}>
               Privacy Policy
             </Text>
-            <Text style={styles.paragraph}>
-              {text && text.replace('\\n', '\n\n')}
-            </Text>
+            {
+              text && text.map((paragraph) => (
+                <Text
+                  key={paragraph.id}
+                  onPress={() => paragraph.url && this.openLink(paragraph.url)}
+                  style={[
+                    styles.paragraph,
+                    paragraph.heading && styles.paragraphHeading,
+                    paragraph.url && styles.link,
+                  ]}
+                >
+                  {paragraph.value}
+                </Text>
+              ))
+            }
           </ScrollView>
           <Loader
             loading={loading}
@@ -70,10 +85,29 @@ const styles = StyleSheet.create({
   header: {
     fontFamily: fonts.bold,
     fontSize: 24,
+    color: colors.charcoal.standard,
     marginBottom: 10,
+  },
+  paragraphHeading: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.charcoal.dark,
+    marginTop: 5,
+    marginBottom: 8,
   },
   paragraph: {
     fontFamily: fonts.standard,
     fontSize: 14,
+    color: colors.charcoal.standard,
+    marginBottom: 8,
+  },
+  link: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: 'blue',
+    marginBottom: 8,
+    textDecorationStyle: 'solid',
+    textDecorationColor: 'blue',
+    textDecorationLine: 'underline',
   },
 });

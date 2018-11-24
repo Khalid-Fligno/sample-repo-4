@@ -39,9 +39,21 @@ export default class TermsOfServiceScreen extends React.PureComponent {
             <Text style={styles.header}>
               Terms of Service
             </Text>
-            <Text style={styles.paragraph}>
-              {text && text.replace('\\n', '\n\n')}
-            </Text>
+            {
+              text && text.map((paragraph) => (
+                <Text
+                  key={paragraph.id}
+                  onPress={() => paragraph.url && this.openLink(paragraph.url)}
+                  style={[
+                    styles.paragraph,
+                    paragraph.heading && styles.paragraphHeading,
+                    paragraph.url && styles.link,
+                  ]}
+                >
+                  {paragraph.value}
+                </Text>
+              ))
+            }
           </ScrollView>
           <Loader
             loading={loading}
@@ -72,8 +84,26 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 10,
   },
+  paragraphHeading: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.charcoal.dark,
+    marginTop: 5,
+    marginBottom: 8,
+  },
   paragraph: {
     fontFamily: fonts.standard,
     fontSize: 14,
+    color: colors.charcoal.standard,
+    marginBottom: 8,
+  },
+  link: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: 'blue',
+    marginBottom: 8,
+    textDecorationStyle: 'solid',
+    textDecorationColor: 'blue',
+    textDecorationLine: 'underline',
   },
 });
