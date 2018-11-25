@@ -47,6 +47,11 @@
 	<string>1825444707513470</string>
 	<key>FacebookDisplayName</key>
 	<string>FitazFK</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>spotify</string>
+		<string>music</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
