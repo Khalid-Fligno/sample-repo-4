@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native';
+import { Haptic } from 'expo';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -20,12 +21,16 @@ export default class HomeScreen extends React.PureComponent {
     this.state = {
     };
   }
+  openLink = (url) => {
+    Haptic.impact(Haptic.ImpactFeedbackStyle.Medium);
+    Linking.openURL(url);
+  }
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.doubleTileContainer}>
           <TouchableOpacity
-            onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/9/27/hitting-the-hay-the-right-way')}
+            onPress={() => this.openLink('https://www.fitazfkblog.com/home/2018/9/27/hitting-the-hay-the-right-way')}
             style={styles.cardContainer}
           >
             <ImageBackground
@@ -44,7 +49,7 @@ export default class HomeScreen extends React.PureComponent {
             </ImageBackground>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => Linking.openURL('https://www.fitazfkblog.com/home/2018/9/3/get-your-head-in-the-weight-loss-game')}
+            onPress={() => this.openLink('https://www.fitazfkblog.com/home/2018/9/3/get-your-head-in-the-weight-loss-game')}
             style={styles.cardContainer}
           >
             <ImageBackground
@@ -66,12 +71,12 @@ export default class HomeScreen extends React.PureComponent {
         <NewsFeedTile
           image={require('../../../../assets/images/shop-bundles.jpg')}
           title="GRAB YOUR FITAZFK WORKOUT EQUIPMENT"
-          onPress={() => Linking.openURL('https://fitazfk.com/collections/equipment')}
+          onPress={() => this.openLink('https://fitazfk.com/collections/equipment')}
         />
         <NewsFeedTile
           image={require('../../../../assets/images/fitazfk-army.jpg')}
           title="JOIN OUR FACEBOOK GROUP"
-          onPress={() => Linking.openURL('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
+          onPress={() => this.openLink('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
         />
       </View>
     );

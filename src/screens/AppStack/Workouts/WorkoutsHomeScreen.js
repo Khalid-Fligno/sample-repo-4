@@ -8,7 +8,7 @@ import {
   ImageBackground,
   AsyncStorage,
 } from 'react-native';
-import { FileSystem } from 'expo';
+import { FileSystem, Haptic } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 import FadeInView from 'react-native-fade-in-view';
 import moment from 'moment';
@@ -93,6 +93,10 @@ class WorkoutsHomeScreen extends React.PureComponent {
     this.unsubscribeFromWorkouts();
     this.unsubscribeFromTargets();
   }
+  onSnapToItem = (field, slideIndex) => {
+    Haptic.selection();
+    this.setState({ [field]: slideIndex });
+  }
   showHelperOnFirstOpen = async () => {
     const helperShownOnFirstOpen = await AsyncStorage.getItem('workoutHelperShownOnFirstOpen');
     if (helperShownOnFirstOpen === null) {
@@ -159,6 +163,15 @@ class WorkoutsHomeScreen extends React.PureComponent {
       this.setState({ loading: false });
     }
   }
+  goToWorkouts = (selectedWorkoutTypeIndex) => {
+    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    const { selectedWorkoutLocationIndex, selectedResistanceFocusIndex, selectedHiitWorkoutIndex } = this.state;
+    if (selectedWorkoutTypeIndex === 0) {
+      this.handleWorkoutSelected(selectedWorkoutLocationIndex, selectedResistanceFocusIndex);
+    } else {
+      this.handleHiitWorkoutSelected(selectedHiitWorkoutIndex);
+    }
+  }
   renderItem = ({ item }) => {
     const {
       resistanceWeeklyTarget,
@@ -220,7 +233,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
               renderItem={this.renderItem}
               sliderWidth={width}
               itemWidth={width * 0.8}
-              onSnapToItem={(slideIndex) => this.setState({ selectedWorkoutTypeIndex: slideIndex })}
+              onSnapToItem={(slideIndex) => this.onSnapToItem('selectedWorkoutTypeIndex', slideIndex)}
             />
             <Icon
               name="chevron-down"
@@ -239,7 +252,8 @@ class WorkoutsHomeScreen extends React.PureComponent {
                     renderItem={this.renderItem}
                     sliderWidth={width}
                     itemWidth={width * 0.8}
-                    onSnapToItem={(slideIndex) => this.setState({ selectedWorkoutLocationIndex: slideIndex })}
+                    // onSnapToItem={(slideIndex) => this.setState({ selectedWorkoutLocationIndex: slideIndex })}
+                    onSnapToItem={(slideIndex) => this.onSnapToItem('selectedWorkoutLocationIndex', slideIndex)}
                   />
                 </FadeInView>
               )
@@ -253,7 +267,8 @@ class WorkoutsHomeScreen extends React.PureComponent {
                     renderItem={this.renderItem}
                     sliderWidth={width}
                     itemWidth={width * 0.8}
-                    onSnapToItem={(slideIndex) => this.setState({ selectedHiitWorkoutIndex: slideIndex })}
+                    // onSnapToItem={(slideIndex) => this.setState({ selectedHiitWorkoutIndex: slideIndex })}
+                    onSnapToItem={(slideIndex) => this.onSnapToItem('selectedHiitWorkoutIndex', slideIndex)}
                   />
                 </FadeInView>
               )
@@ -275,7 +290,8 @@ class WorkoutsHomeScreen extends React.PureComponent {
                     renderItem={this.renderItem}
                     sliderWidth={width}
                     itemWidth={width * 0.8}
-                    onSnapToItem={(slideIndex) => this.setState({ selectedResistanceFocusIndex: slideIndex })}
+                    // onSnapToItem={(slideIndex) => this.setState({ selectedResistanceFocusIndex: slideIndex })}
+                    onSnapToItem={(slideIndex) => this.onSnapToItem('selectedResistanceFocusIndex', slideIndex)}
                   />
                 </FadeInView>
               )
@@ -295,10 +311,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
         <View style={{ paddingBottom: 10 }}>
           <CustomButton
             title={selectedWorkoutTypeIndex === 0 ? 'SHOW WORKOUTS' : 'GO TO WORKOUT'}
-            onPress={
-              selectedWorkoutTypeIndex === 0 ?
-                () => this.handleWorkoutSelected(selectedWorkoutLocationIndex, selectedResistanceFocusIndex) :
-                () => this.handleHiitWorkoutSelected(selectedHiitWorkoutIndex)}
+            onPress={() => this.goToWorkouts(selectedWorkoutTypeIndex)}
             primary
           />
         </View>
