@@ -1,5 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation';
+import { Haptic } from 'expo';
 import HomeStack from './HomeStack';
 import NutritionStack from './NutritionStack';
 import WorkoutsStack from './WorkoutsStack';
@@ -21,6 +22,10 @@ const TabStack = createBottomTabNavigator(
   {
     initialRouteName: 'Home',
     navigationOptions: ({ navigation }) => ({
+      tabBarOnPress: ({ defaultHandler }) => {
+        Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+        defaultHandler();
+      },
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
         const activeState = tabColorMap[routeName];
