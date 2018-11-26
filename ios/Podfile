@@ -1,10 +1,10 @@
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '9.0'
+platform :ios, '10.0'
 
 target 'fitazfk' do
   pod 'ExpoKit',
     :git => "http://github.com/expo/expo.git",
-    :tag => "ios/2.8.4",
+    :tag => "ios/2.9.0",
     :subspecs => [
       "Core"
     ],
