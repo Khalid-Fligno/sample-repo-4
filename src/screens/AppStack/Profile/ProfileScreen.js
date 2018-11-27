@@ -10,8 +10,8 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
+import { Localization } from 'expo';
 import { List, ListItem } from 'react-native-elements';
-import { DangerZone } from 'expo';
 import Modal from 'react-native-modal';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
@@ -20,7 +20,6 @@ import { weeklySessionsPickerOptions } from '../../../utils';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
-const { Localization } = DangerZone;
 const { width } = Dimensions.get('window');
 
 const moment = require('moment');
@@ -71,7 +70,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
   fetchProfile = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
-    const timezone = await Localization.getCurrentTimeZoneAsync();
+    const { timezone } = Localization;
     this.unsubscribe = db.collection('users').doc(uid)
       .onSnapshot(async (doc) => {
         if (doc.exists) {
