@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  ScrollView,
   Dimensions,
   AsyncStorage,
   DatePickerIOS,
@@ -15,6 +14,7 @@ import Modal from 'react-native-modal';
 import { Divider } from 'react-native-elements';
 import Image from 'react-native-scalable-image';
 import { DotIndicator } from 'react-native-indicators';
+import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
@@ -92,7 +92,17 @@ export default class RecipeScreen extends React.PureComponent {
     } = this.state;
     return (
       <View style={styles.container}>
-        <ScrollView>
+        <ParallaxScrollView
+          backgroundScrollSpeed={3}
+          contentBackgroundColor={colors.white}
+          parallaxHeaderHeight={width}
+          renderBackground={() => (
+            <Image
+              source={{ uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
+              width={width}
+            />
+          )}
+        >
           <Modal
             isVisible={modalVisible}
             onBackdropPress={() => this.toggleModal()}
@@ -211,10 +221,10 @@ export default class RecipeScreen extends React.PureComponent {
               </TouchableOpacity>
             </View>
           </Modal>
-          <Image
+          {/* <Image
             source={{ uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
             width={width}
-          />
+          /> */}
           <View style={styles.recipeInfoContainer}>
             <Text style={styles.recipeTitle}>
               {recipe.title}
@@ -315,7 +325,7 @@ export default class RecipeScreen extends React.PureComponent {
               }
             </View>
           </View>
-        </ScrollView>
+        </ParallaxScrollView>
         <Loader
           loading={loading}
           color={colors.violet.dark}
