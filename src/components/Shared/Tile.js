@@ -1,34 +1,64 @@
 import React from 'react';
-import { View, ImageBackground, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity, StyleSheet, Dimensions, Animated } from 'react-native';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
-const Tile = ({
-  onPress,
-  title1,
-  image,
-  disabled,
-}) => (
-  <TouchableOpacity
-    disabled={disabled}
-    onPress={onPress}
-    style={styles.cardContainer}
-  >
-    <ImageBackground
-      source={image}
-      style={styles.image}
-    >
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>
-          {title1.toUpperCase()}
-        </Text>
-      </View>
-    </ImageBackground>
-  </TouchableOpacity>
-);
+export default class Tile extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.animatedValue = new Animated.Value(1);
+  }
+  handlePressIn = () => {
+    Animated.spring(this.animatedValue, {
+      toValue: 0.92,
+    }).start();
+  }
+  handlePressOut = () => {
+    Animated.spring(this.animatedValue, {
+      toValue: 1,
+      friction: 3,
+      tension: 40,
+    }).start();
+  }
+  render() {
+    const {
+      onPress,
+      title1,
+      image,
+      disabled,
+    } = this.props;
+    const animatedStyle = {
+      transform: [{ scale: this.animatedValue }],
+    };
+    return (
+      <TouchableOpacity
+        disabled={disabled}
+        onPress={onPress}
+        style={styles.cardContainer}
+        onPressIn={this.handlePressIn}
+        onPressOut={this.handlePressOut}
+      >
+        <Animated.View
+          style={[{ flex: 1 }, animatedStyle]}
+        >
+          <ImageBackground
+            source={image}
+            style={styles.image}
+          >
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>
+                {title1.toUpperCase()}
+              </Text>
+            </View>
+          </ImageBackground>
+        </Animated.View>
+      </TouchableOpacity>
+    );
+  }
+}
 
 Tile.propTypes = {
   onPress: PropTypes.func.isRequired,
@@ -76,4 +106,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Tile;
+// export default Tile;

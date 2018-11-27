@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, TouchableOpacity, Text, StyleSheet, View } from 'react-native';
+import { Dimensions, TouchableOpacity, Text, StyleSheet, View, Animated } from 'react-native';
 import { Card } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
@@ -7,49 +7,79 @@ import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
-const RecipeTile = ({
-  onPress,
-  title,
-  subTitle,
-  image,
-  tags,
-}) => (
-  <TouchableOpacity
-    onPress={onPress}
-    style={styles.cardContainer}
-    delayPressIn={50}
-  >
-    <Card
-      image={{ uri: image }}
-      containerStyle={styles.card}
-    >
-      <Text style={styles.title}>
-        {title}
-      </Text>
-      <Text style={styles.subTitle}>
-        {subTitle}
-      </Text>
-      <View
-        style={styles.tagContainer}
+export default class RecipeTile extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.animatedValue = new Animated.Value(1);
+  }
+  handlePressIn = () => {
+    Animated.spring(this.animatedValue, {
+      toValue: 0.92,
+    }).start();
+  }
+  handlePressOut = () => {
+    Animated.spring(this.animatedValue, {
+      toValue: 1,
+      friction: 3,
+      tension: 40,
+    }).start();
+  }
+  render() {
+    const {
+      onPress,
+      title,
+      subTitle,
+      image,
+      tags,
+    } = this.props;
+    const animatedStyle = {
+      transform: [{ scale: this.animatedValue }],
+    };
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        style={styles.cardContainer}
+        delayPressIn={50}
+        onPressIn={this.handlePressIn}
+        onPressOut={this.handlePressOut}
       >
-        {
-          tags && tags.map((tag) => (
+        <Animated.View
+          style={[{ flex: 1 }, animatedStyle]}
+        >
+          <Card
+            image={{ uri: image }}
+            containerStyle={styles.card}
+          >
+            <Text style={styles.title}>
+              {title}
+            </Text>
+            <Text style={styles.subTitle}>
+              {subTitle}
+            </Text>
             <View
-              style={styles.tagCircle}
-              key={tag}
+              style={styles.tagContainer}
             >
-              <Text
-                style={styles.tagText}
-              >
-                {tag}
-              </Text>
+              {
+                tags && tags.map((tag) => (
+                  <View
+                    style={styles.tagCircle}
+                    key={tag}
+                  >
+                    <Text
+                      style={styles.tagText}
+                    >
+                      {tag}
+                    </Text>
+                  </View>
+                ))
+              }
             </View>
-          ))
-        }
-      </View>
-    </Card>
-  </TouchableOpacity>
-);
+          </Card>
+        </Animated.View>
+      </TouchableOpacity>
+    );
+  }
+}
 
 RecipeTile.propTypes = {
   onPress: PropTypes.func.isRequired,
@@ -109,5 +139,3 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
-
-export default RecipeTile;
