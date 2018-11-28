@@ -218,9 +218,6 @@ class WorkoutsHomeScreen extends React.PureComponent {
     const {
       loading,
       selectedWorkoutTypeIndex,
-      selectedWorkoutLocationIndex,
-      selectedHiitWorkoutIndex,
-      selectedResistanceFocusIndex,
       helperModalVisible,
     } = this.state;
     return (
@@ -252,7 +249,6 @@ class WorkoutsHomeScreen extends React.PureComponent {
                     renderItem={this.renderItem}
                     sliderWidth={width}
                     itemWidth={width * 0.8}
-                    // onSnapToItem={(slideIndex) => this.setState({ selectedWorkoutLocationIndex: slideIndex })}
                     onSnapToItem={(slideIndex) => this.onSnapToItem('selectedWorkoutLocationIndex', slideIndex)}
                   />
                 </FadeInView>
@@ -267,7 +263,6 @@ class WorkoutsHomeScreen extends React.PureComponent {
                     renderItem={this.renderItem}
                     sliderWidth={width}
                     itemWidth={width * 0.8}
-                    // onSnapToItem={(slideIndex) => this.setState({ selectedHiitWorkoutIndex: slideIndex })}
                     onSnapToItem={(slideIndex) => this.onSnapToItem('selectedHiitWorkoutIndex', slideIndex)}
                   />
                 </FadeInView>
@@ -290,7 +285,6 @@ class WorkoutsHomeScreen extends React.PureComponent {
                     renderItem={this.renderItem}
                     sliderWidth={width}
                     itemWidth={width * 0.8}
-                    // onSnapToItem={(slideIndex) => this.setState({ selectedResistanceFocusIndex: slideIndex })}
                     onSnapToItem={(slideIndex) => this.onSnapToItem('selectedResistanceFocusIndex', slideIndex)}
                   />
                 </FadeInView>
