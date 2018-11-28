@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Dimensions, Text } from 'react-native';
-import { ButtonGroup, Card } from 'react-native-elements';
+import { ScrollView, StyleSheet, View, Dimensions, Alert } from 'react-native';
+import { ButtonGroup } from 'react-native-elements';
 import { FileSystem } from 'expo';
 import { db } from '../../../../config/firebase';
 import RecipeTile from '../../../components/Nutrition/RecipeTile';
@@ -40,19 +40,18 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         await Promise.all(recipes.map(async (recipe) => {
           const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
           await FileSystem.getInfoAsync(fileUri)
-            .then(async ({ exists, uri }) => {
-              if (exists) {
-                await this.loadCacheImage(uri);
-              } else {
+            .then(async ({ exists }) => {
+              if (!exists) {
                 await FileSystem.downloadAsync(
                   recipe.coverImage,
                   `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
                 );
               }
-            }).catch((err) => {
-              console.log(err);
+            }).catch(() => {
+              Alert.alert('Image download error');
             });
         }));
+        // OLD CODE - DOWNLOADING ALL IMAGES EVERY TIME
         // await Promise.all(recipes.map(async (recipe) => {
         //   await FileSystem.downloadAsync(
         //     recipe.coverImage,
@@ -82,7 +81,6 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       .map((recipe) => (
         <RecipeTile
           key={recipe.id}
-          // image={recipe.coverImage}
           image={`${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` || { uri: recipe.coverImage }}
           title={recipe.title}
           tags={recipe.tags}
