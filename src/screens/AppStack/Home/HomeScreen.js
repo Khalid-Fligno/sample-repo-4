@@ -3,17 +3,11 @@ import {
   StyleSheet,
   View,
   Linking,
-  Text,
-  TouchableOpacity,
-  ImageBackground,
-  Dimensions,
 } from 'react-native';
 import { Haptic } from 'expo';
+import DoubleNewsFeedTile from '../../../components/Home/DoubleNewsFeedTile';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
-
-const { width } = Dimensions.get('window');
 
 export default class HomeScreen extends React.PureComponent {
   constructor(props) {
@@ -28,46 +22,16 @@ export default class HomeScreen extends React.PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.doubleTileContainer}>
-          <TouchableOpacity
-            onPress={() => this.openLink('https://www.fitazfkblog.com/home/2018/9/27/hitting-the-hay-the-right-way')}
-            style={styles.cardContainer}
-          >
-            <ImageBackground
-              resizeMode="cover"
-              source={require('../../../../assets/images/fitazfk-blog-sleep.jpg')}
-              style={styles.image}
-            >
-              <View style={styles.titleContainer}>
-                <Text style={styles.title}>
-                  BLOG POST:
-                </Text>
-                <Text style={styles.title}>
-                  SLEEP
-                </Text>
-              </View>
-            </ImageBackground>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.openLink('https://www.fitazfkblog.com/home/2018/9/3/get-your-head-in-the-weight-loss-game')}
-            style={styles.cardContainer}
-          >
-            <ImageBackground
-              resizeMode="cover"
-              source={require('../../../../assets/images/fitazfk-blog-mindset.jpg')}
-              style={styles.image}
-            >
-              <View style={styles.titleContainer}>
-                <Text style={styles.title}>
-                  BLOG POST:
-                </Text>
-                <Text style={styles.title}>
-                  MINDSET
-                </Text>
-              </View>
-            </ImageBackground>
-          </TouchableOpacity>
-        </View>
+        <DoubleNewsFeedTile
+          imageLeft={require('../../../../assets/images/fitazfk-blog-sleep.jpg')}
+          imageRight={require('../../../../assets/images/fitazfk-blog-mindset.jpg')}
+          titleLeft1="BLOG POST:"
+          titleLeft2="SLEEP"
+          titleRight1="BLOG POST:"
+          titleRight2="MINDSET"
+          onPressLeft={() => this.openLink('https://www.fitazfkblog.com/home/2018/9/27/hitting-the-hay-the-right-way')}
+          onPressRight={() => this.openLink('https://www.fitazfkblog.com/home/2018/9/3/get-your-head-in-the-weight-loss-game')}
+        />
         <NewsFeedTile
           image={require('../../../../assets/images/shop-bundles.jpg')}
           title="GRAB YOUR FITAZFK WORKOUT EQUIPMENT"
@@ -88,36 +52,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.offWhite,
     padding: 5,
-  },
-  doubleTileContainer: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  cardContainer: {
-    flex: 1,
-    margin: 5,
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-  },
-  image: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    borderRadius: 1,
-  },
-  titleContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.6 )',
-    padding: 8,
-    paddingBottom: 3,
-    maxWidth: width / 2.4,
-    borderRadius: 2,
-  },
-  title: {
-    fontFamily: fonts.bold,
-    fontSize: 15,
-    textAlign: 'center',
   },
 });
