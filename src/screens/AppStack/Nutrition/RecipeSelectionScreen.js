@@ -1,9 +1,10 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Dimensions } from 'react-native';
-import { ButtonGroup } from 'react-native-elements';
+import { ScrollView, StyleSheet, View, Dimensions, Text } from 'react-native';
+import { ButtonGroup, Card } from 'react-native-elements';
 import { FileSystem } from 'expo';
 import { db } from '../../../../config/firebase';
 import RecipeTile from '../../../components/Nutrition/RecipeTile';
+import RecipeTileSkeleton from '../../../components/Nutrition/RecipeTileSkeleton';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -35,12 +36,29 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         await querySnapshot.forEach(async (doc) => {
           await recipes.push(await doc.data());
         });
+
         await Promise.all(recipes.map(async (recipe) => {
-          await FileSystem.downloadAsync(
-            recipe.coverImage,
-            `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
-          );
+          const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
+          await FileSystem.getInfoAsync(fileUri)
+            .then(async ({ exists, uri }) => {
+              if (exists) {
+                await this.loadCacheImage(uri);
+              } else {
+                await FileSystem.downloadAsync(
+                  recipe.coverImage,
+                  `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
+                );
+              }
+            }).catch((err) => {
+              console.log(err);
+            });
         }));
+        // await Promise.all(recipes.map(async (recipe) => {
+        //   await FileSystem.downloadAsync(
+        //     recipe.coverImage,
+        //     `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
+        //   );
+        // }));
         this.setState({ recipes, loading: false });
       });
   }
@@ -64,17 +82,25 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       .map((recipe) => (
         <RecipeTile
           key={recipe.id}
-          image={`${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`}
+          // image={recipe.coverImage}
+          image={`${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` || { uri: recipe.coverImage }}
           title={recipe.title}
           tags={recipe.tags}
           subTitle={recipe.subtitle}
           onPress={() => this.props.navigation.push('Recipe', { recipe })}
         />
       ));
+    const skeleton = (
+      <View>
+        <RecipeTileSkeleton />
+        <RecipeTileSkeleton />
+        <RecipeTileSkeleton />
+      </View>
+    );
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollView}>
-          {recipeList}
+          {loading ? skeleton : recipeList}
         </ScrollView>
         <View style={styles.absoluteFilterButtonsContainer}>
           <ButtonGroup
@@ -146,5 +172,50 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: colors.white,
     marginTop: 2,
+  },
+
+  cardContainer: {
+    margin: 0,
+    width,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: colors.charcoal.standard,
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+  },
+  card: {
+    width: width - 20,
+    borderRadius: 3,
+    overflow: 'hidden',
+    borderWidth: 0,
+  },
+  title: {
+    fontFamily: fonts.bold,
+    fontSize: 16,
+  },
+  subTitle: {
+    fontFamily: fonts.standard,
+    fontSize: 12,
+  },
+  tagContainer: {
+    flexDirection: 'row',
+  },
+  tagCircle: {
+    height: 28,
+    width: 28,
+    marginTop: 3,
+    marginRight: 5,
+    borderWidth: 2.5,
+    borderColor: colors.violet.standard,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tagText: {
+    fontFamily: fonts.bold,
+    fontSize: 12,
+    color: colors.violet.standard,
+    marginTop: 4,
   },
 });
