@@ -93,7 +93,8 @@ export default class RecipeScreen extends React.PureComponent {
     return (
       <View style={styles.container}>
         <ParallaxScrollView
-          backgroundScrollSpeed={3}
+          outputScaleValue={2}
+          backgroundScrollSpeed={2}
           contentBackgroundColor={colors.white}
           parallaxHeaderHeight={width}
           renderBackground={() => (
