@@ -1,39 +1,74 @@
 import React from 'react';
-import { Dimensions, TouchableOpacity, Text, StyleSheet, ImageBackground, View } from 'react-native';
+import {
+  Dimensions,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  View,
+  Animated,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
-const NewsFeedTile = ({
-  onPress,
-  title,
-  // subTitle,
-  image,
-}) => (
-  <TouchableOpacity
-    onPress={onPress}
-    style={styles.cardContainer}
-  >
-    <ImageBackground
-      // source={{ uri: image }}
-      source={image}
-      style={styles.image}
-    >
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>
-          {title.toUpperCase()}
-        </Text>
-      </View>
-    </ImageBackground>
-  </TouchableOpacity>
-);
+export default class NewsFeedTile extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.animatedValue = new Animated.Value(1);
+  }
+  handlePressIn = () => {
+    Animated.spring(this.animatedValue, {
+      toValue: 0.92,
+    }).start();
+  }
+  handlePressOut = () => {
+    Animated.spring(this.animatedValue, {
+      toValue: 1,
+      friction: 3,
+      tension: 40,
+    }).start();
+  }
+  render() {
+    const {
+      onPress,
+      title,
+      image,
+    } = this.props;
+    const animatedStyle = {
+      transform: [{ scale: this.animatedValue }],
+    };
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        style={styles.cardContainer}
+        onPressIn={this.handlePressIn}
+        onPressOut={this.handlePressOut}
+      >
+        <Animated.View
+          style={[{ flex: 1 }, animatedStyle]}
+        >
+          <ImageBackground
+            source={image}
+            style={styles.image}
+          >
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>
+                {title.toUpperCase()}
+              </Text>
+            </View>
+          </ImageBackground>
+        </Animated.View>
+      </TouchableOpacity>
+    );
+  }
+}
 
 NewsFeedTile.propTypes = {
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  // image: PropTypes.string.isRequired,
   image: PropTypes.number.isRequired,
 };
 
@@ -67,5 +102,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
-export default NewsFeedTile;
