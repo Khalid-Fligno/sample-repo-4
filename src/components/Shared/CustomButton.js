@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
   primary: {
     ...common.button.solid,
     backgroundColor: colors.coral.standard,
-    shadowColor: colors.coral.standard,
+    shadowColor: colors.grey.dark,
+
   },
   primaryDisabled: {
     backgroundColor: colors.coral.standard,
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
   secondary: {
     ...common.button.solid,
     backgroundColor: colors.violet.standard,
-    shadowColor: colors.violet.standard,
+    shadowColor: colors.grey.dark,
   },
   secondaryDisabled: {
     backgroundColor: colors.violet.standard,
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
   green: {
     ...common.button.solid,
     backgroundColor: colors.green.standard,
-    shadowColor: colors.green.standard,
+    shadowColor: colors.grey.dark,
   },
   greenDisabled: {
     backgroundColor: colors.green.standard,
@@ -171,7 +172,8 @@ const styles = StyleSheet.create({
   blue: {
     ...common.button.solid,
     backgroundColor: colors.blue.standard,
-    shadowColor: colors.blue.standard,
+    shadowColor: colors.grey.dark,
+
   },
 });
 

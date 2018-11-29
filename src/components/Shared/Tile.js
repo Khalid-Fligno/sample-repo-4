@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     width,
     shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
   },
