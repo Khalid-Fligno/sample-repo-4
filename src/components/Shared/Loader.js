@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dotIndicatorContainer: {
-    height: 30,
+    height: 50,
   },
   loaderText: {
     color: colors.white,
