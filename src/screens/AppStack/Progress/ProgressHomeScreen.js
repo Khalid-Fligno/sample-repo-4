@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, TouchableOpacity, Alert } from 'react-native';
+import { FileSystem } from 'expo';
 import moment from 'moment';
 import Image from 'react-native-image-progress';
 import { DotIndicator } from 'react-native-indicators';
@@ -10,6 +11,7 @@ import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
 import HelperModal from '../../../components/Shared/HelperModal';
 import CustomButton from '../../../components/Shared/CustomButton';
+import ImageModal from '../../../components/Progress/ImageModal';
 import { diff } from '../../../utils/index';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -25,6 +27,8 @@ class ProgressHomeScreen extends React.PureComponent {
       currentProgressInfo: null,
       unitsOfMeasurement: null,
       helperModalVisible: false,
+      imageModalVisible: false,
+      imageModalSource: undefined,
     };
   }
   componentDidMount() {
@@ -44,6 +48,12 @@ class ProgressHomeScreen extends React.PureComponent {
       helperModalVisible: !prevState.helperModalVisible,
     }));
   }
+  toggleImageModal = (imageSource) => {
+    this.setState((prevState) => ({
+      imageModalSource: imageSource,
+      imageModalVisible: !prevState.imageModalVisible,
+    }));
+  }
   fetchProgressInfo = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
@@ -51,6 +61,24 @@ class ProgressHomeScreen extends React.PureComponent {
       .get()
       .then(async (doc) => {
         if (doc.exists && doc.data().initialProgressInfo) {
+          const images = [];
+          await images.push(await doc.data().initialProgressInfo.photoURL, await doc.data().currentProgressInfo && await doc.data().currentProgressInfo.photoURL)
+          console.log(images)
+          await Promise.all(images.map(async (image, index) => {
+          const fileUri = `${FileSystem.cacheDirectory}progress-photo-${index}.jpg`;
+          await FileSystem.getInfoAsync(fileUri)
+            .then(async ({ exists }) => {
+              if (!exists) {
+                await FileSystem.downloadAsync(
+                  image,
+                  `${FileSystem.cacheDirectory}progress-photo-${index}.jpg`,
+                );
+              }
+            }).catch(() => {
+              Alert.alert('Image download error');
+            });
+        }));
+
           this.setState({
             initialProgressInfo: await doc.data().initialProgressInfo,
             currentProgressInfo: await doc.data().currentProgressInfo,
@@ -69,6 +97,8 @@ class ProgressHomeScreen extends React.PureComponent {
       currentProgressInfo,
       unitsOfMeasurement,
       helperModalVisible,
+      imageModalVisible,
+      imageModalSource,
     } = this.state;
     const weightDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.weight, currentProgressInfo.weight);
     const hipDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.hip, currentProgressInfo.hip);
@@ -76,13 +106,15 @@ class ProgressHomeScreen extends React.PureComponent {
     const burpeesDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.burpeeCount, currentProgressInfo.burpeeCount);
     return (
       <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          <View style={styles.contentContainer}>
-            <View style={styles.imagesContainer}>
-              {
-                initialProgressInfo ? (
+        <ScrollView contentContainerStyle={styles.contentContainer}>
+          <View style={styles.imagesContainer}>
+            {
+              initialProgressInfo ? (
+                <TouchableOpacity
+                  onPress={() => this.toggleImageModal(`${FileSystem.cacheDirectory}progress-photo-0.jpg`)}
+                >
                   <Image
-                    source={{ uri: initialProgressInfo.photoURL }}
+                    source={{ uri: `${FileSystem.cacheDirectory}progress-photo-0.jpg` || { uri: initialProgressInfo.photoURL } }}
                     style={styles.image}
                     indicator={DotIndicator}
                     indicatorProps={{
@@ -91,29 +123,33 @@ class ProgressHomeScreen extends React.PureComponent {
                       size: 6,
                     }}
                   />
-                ) : (
-                  <View style={styles.imagePlaceholder}>
-                    <TouchableOpacity
-                      onPress={() => this.props.navigation.navigate('Progress1', { isInitial: true })}
-                      style={styles.imagePlaceholderButton}
-                    >
-                      <Icon
-                        name="add-circle"
-                        color={colors.white}
-                        size={20}
-                        style={{ alignSelf: 'center', marginBottom: 10 }}
-                      />
-                      <Text style={styles.imagePlaceholderButtonText}>
-                        Add initial progress info
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                )
-              }
-              {
-                currentProgressInfo ? (
+                </TouchableOpacity>
+              ) : (
+                <View style={styles.imagePlaceholder}>
+                  <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('Progress1', { isInitial: true })}
+                    style={styles.imagePlaceholderButton}
+                  >
+                    <Icon
+                      name="add-circle"
+                      color={colors.white}
+                      size={20}
+                      style={{ alignSelf: 'center', marginBottom: 10 }}
+                    />
+                    <Text style={styles.imagePlaceholderButtonText}>
+                      Add initial progress info
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )
+            }
+            {
+              currentProgressInfo ? (
+                <TouchableOpacity
+                  onPress={() => this.toggleImageModal(`${FileSystem.cacheDirectory}progress-photo-1.jpg`)}
+                >
                   <Image
-                    source={{ uri: currentProgressInfo.photoURL }}
+                    source={{ uri: `${FileSystem.cacheDirectory}progress-photo-1.jpg` || { uri: currentProgressInfo.photoURL } }}
                     style={styles.image}
                     indicator={DotIndicator}
                     indicatorProps={{
@@ -122,150 +158,152 @@ class ProgressHomeScreen extends React.PureComponent {
                       size: 6,
                     }}
                   />
-                ) : (
-                  <View style={styles.imagePlaceholder}>
-                    <TouchableOpacity
-                      onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
-                      disabled={initialProgressInfo === null}
-                      style={[
-                        styles.imagePlaceholderButton,
-                        initialProgressInfo === null && styles.disabledImagePlaceHolderButton,
-                      ]}
-                    >
-                      <Icon
-                        name="add-circle"
-                        color={colors.white}
-                        size={20}
-                        style={{ alignSelf: 'center', marginBottom: 10 }}
-                      />
-                      <Text style={styles.imagePlaceholderButtonText}>
-                        Add current progress info
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                )
-              }
+                </TouchableOpacity>
+              ) : (
+                <View style={styles.imagePlaceholder}>
+                  <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
+                    disabled={initialProgressInfo === null}
+                    style={[
+                      styles.imagePlaceholderButton,
+                      initialProgressInfo === null && styles.disabledImagePlaceHolderButton,
+                    ]}
+                  >
+                    <Icon
+                      name="add-circle"
+                      color={colors.white}
+                      size={20}
+                      style={{ alignSelf: 'center', marginBottom: 10 }}
+                    />
+                    <Text style={styles.imagePlaceholderButtonText}>
+                      Add current progress info
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )
+            }
+          </View>
+          <View style={styles.dateRowContainer}>
+            <View style={styles.dateContainer}>
+              <Text style={styles.dateText}>
+                {initialProgressInfo ? moment(initialProgressInfo.date).format('DD/MM/YYYY') : '-'}
+              </Text>
             </View>
-            <View style={styles.dateRowContainer}>
-              <View style={styles.dateContainer}>
-                <Text style={styles.dateText}>
-                  {initialProgressInfo ? moment(initialProgressInfo.date).format('DD/MM/YYYY') : '-'}
-                </Text>
-              </View>
-              <View style={styles.dateContainer}>
-                <Text style={styles.dateText}>
-                  {currentProgressInfo ? moment(currentProgressInfo.date).format('DD/MM/YYYY') : '-'}
-                </Text>
-              </View>
+            <View style={styles.dateContainer}>
+              <Text style={styles.dateText}>
+                {currentProgressInfo ? moment(currentProgressInfo.date).format('DD/MM/YYYY') : '-'}
+              </Text>
             </View>
-            <View style={styles.dataRowContainer}>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {initialProgressInfo ? initialProgressInfo.weight : '-'} {unitsOfMeasurement === 'metric' && 'kg'}{unitsOfMeasurement === 'imperial' && 'lbs'}
-                </Text>
-              </View>
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldText}>
-                  WEIGHT
-                </Text>
-                <Text
-                  style={[
-                    styles.dataTextNegative,
-                    weightDifference >= 0 && styles.dataTextPositive,
-                  ]}
-                >
-                  {weightDifference || '-'} {weightDifference && unitsOfMeasurement === 'metric' && 'kg'}{weightDifference && unitsOfMeasurement === 'imperial' && 'lbs'}
-                </Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {currentProgressInfo ? currentProgressInfo.weight : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'kg'}{currentProgressInfo && unitsOfMeasurement === 'imperial' && 'lbs'}
-                </Text>
-              </View>
+          </View>
+          <View style={styles.dataRowContainer}>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {initialProgressInfo ? initialProgressInfo.weight : '-'} {unitsOfMeasurement === 'metric' && 'kg'}{unitsOfMeasurement === 'imperial' && 'lbs'}
+              </Text>
             </View>
-            <View style={styles.dataRowContainer}>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {initialProgressInfo ? initialProgressInfo.waist : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{initialProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
-                </Text>
-              </View>
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldText}>
-                  WAIST
-                </Text>
-                <Text
-                  style={[
-                    styles.dataTextNegative,
-                    waistDifference >= 0 && styles.dataTextPositive,
-                  ]}
-                >
-                  {waistDifference || '-'} {waistDifference && unitsOfMeasurement === 'metric' && 'cm'}{waistDifference && unitsOfMeasurement === 'imperial' && 'inches'}
-                </Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {currentProgressInfo ? currentProgressInfo.waist : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{currentProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
-                </Text>
-              </View>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldText}>
+                WEIGHT
+              </Text>
+              <Text
+                style={[
+                  styles.dataTextNegative,
+                  weightDifference >= 0 && styles.dataTextPositive,
+                ]}
+              >
+                {weightDifference || '-'} {weightDifference && unitsOfMeasurement === 'metric' && 'kg'}{weightDifference && unitsOfMeasurement === 'imperial' && 'lbs'}
+              </Text>
             </View>
-            <View style={styles.dataRowContainer}>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {initialProgressInfo ? initialProgressInfo.hip : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{initialProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
-                </Text>
-              </View>
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldText}>
-                  HIP
-                </Text>
-                <Text
-                  style={[
-                    styles.dataTextNegative,
-                    hipDifference >= 0 && styles.dataTextPositive,
-                  ]}
-                >
-                  {hipDifference || '-'} {hipDifference && unitsOfMeasurement === 'metric' && 'cm'}{hipDifference && unitsOfMeasurement === 'imperial' && 'inches'}
-                </Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {currentProgressInfo ? currentProgressInfo.hip : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{currentProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
-                </Text>
-              </View>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {currentProgressInfo ? currentProgressInfo.weight : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'kg'}{currentProgressInfo && unitsOfMeasurement === 'imperial' && 'lbs'}
+              </Text>
             </View>
-            <View style={styles.dataRowContainer}>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {initialProgressInfo ? initialProgressInfo.burpeeCount : '-'}
-                </Text>
-              </View>
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldText}>
-                  BURPEES
-                </Text>
-                <Text
-                  style={[
-                    styles.dataTextNegative,
-                    burpeesDifference >= 0 && styles.dataTextPositive,
-                  ]}
-                >
-                  {burpeesDifference || '-'}
-                </Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dataText}>
-                  {currentProgressInfo ? currentProgressInfo.burpeeCount : '-'}
-                </Text>
-              </View>
+          </View>
+          <View style={styles.dataRowContainer}>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {initialProgressInfo ? initialProgressInfo.waist : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{initialProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
+              </Text>
+            </View>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldText}>
+                WAIST
+              </Text>
+              <Text
+                style={[
+                  styles.dataTextNegative,
+                  waistDifference >= 0 && styles.dataTextPositive,
+                ]}
+              >
+                {waistDifference || '-'} {waistDifference && unitsOfMeasurement === 'metric' && 'cm'}{waistDifference && unitsOfMeasurement === 'imperial' && 'inches'}
+              </Text>
+            </View>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {currentProgressInfo ? currentProgressInfo.waist : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{currentProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.dataRowContainer}>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {initialProgressInfo ? initialProgressInfo.hip : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{initialProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
+              </Text>
+            </View>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldText}>
+                HIP
+              </Text>
+              <Text
+                style={[
+                  styles.dataTextNegative,
+                  hipDifference >= 0 && styles.dataTextPositive,
+                ]}
+              >
+                {hipDifference || '-'} {hipDifference && unitsOfMeasurement === 'metric' && 'cm'}{hipDifference && unitsOfMeasurement === 'imperial' && 'inches'}
+              </Text>
+            </View>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {currentProgressInfo ? currentProgressInfo.hip : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{currentProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.dataRowContainer}>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {initialProgressInfo ? initialProgressInfo.burpeeCount : '-'}
+              </Text>
+            </View>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldText}>
+                BURPEES
+              </Text>
+              <Text
+                style={[
+                  styles.dataTextNegative,
+                  burpeesDifference >= 0 && styles.dataTextPositive,
+                ]}
+              >
+                {burpeesDifference || '-'}
+              </Text>
+            </View>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dataText}>
+                {currentProgressInfo ? currentProgressInfo.burpeeCount : '-'}
+              </Text>
             </View>
           </View>
           {
             initialProgressInfo && currentProgressInfo && (
-              <CustomButton
-                title="RETEST YOUR PROGRESS"
-                onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
-                blue
-              />
+              <View style={styles.buttonContainer}>
+                <CustomButton
+                  title="RETEST YOUR PROGRESS"
+                  onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
+                  blue
+                />
+              </View>
             )
           }
         </ScrollView>
@@ -277,6 +315,12 @@ class ProgressHomeScreen extends React.PureComponent {
           bodyText2="Your initial progress photo and info will always stay on the left of this screen."
           bodyText3="Re-testing your progress will update the photo and information on the right hand side."
           color="blue"
+        />
+        <ImageModal
+          imageModalVisible={imageModalVisible}
+          toggleImageModal={() => this.toggleImageModal()}
+          color="blue"
+          imageSource={{ uri: imageModalSource }}
         />
         <Loader
           loading={loading}
@@ -297,14 +341,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors.offWhite,
     alignItems: 'center',
   },
-  scrollView: {
-    alignItems: 'center',
-    paddingBottom: 10,
+  contentContainer: {
     width,
+    backgroundColor: colors.offWhite,
+    alignItems: 'center',
+    paddingBottom: 5,
   },
   imagesContainer: {
     width,
     flexDirection: 'row',
+    shadowColor: colors.charcoal.standard,
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
   },
   image: {
     width: width / 2,
@@ -341,11 +390,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 12,
     textAlign: 'center',
-  },
-  contentContainer: {
-    backgroundColor: colors.offWhite,
-    alignItems: 'center',
-    paddingBottom: 5,
   },
   dateRowContainer: {
     width,
@@ -409,6 +453,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.white,
   },
+  buttonContainer: {
+    paddingTop: 5,
+    paddingBottom: 5,
+  }
 });
 
 export default ReactTimeout(ProgressHomeScreen);
