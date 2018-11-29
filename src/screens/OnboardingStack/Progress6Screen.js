@@ -21,11 +21,27 @@ import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
+const uriToBlob = (url) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onerror = reject;
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        resolve(xhr.response);
+      }
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob'; // convert type
+    xhr.send();
+  });
+};
+
 const storeProgressInfo = async (uri, isInitial, weight, waist, hip, burpeeCount) => {
   const uid = await AsyncStorage.getItem('uid');
   const firebase = require('firebase');
-  const response = await fetch(uri);
-  const blob = await response.blob();
+  // const response = await fetch(uri);
+  const blob = await uriToBlob(uri);
+  // const blob = await response.blob();
   const storageRef = firebase.storage().ref();
   const userPhotosStorageRef = storageRef.child('user-photos');
   const userStorageRef = userPhotosStorageRef.child(uid);
@@ -196,6 +212,7 @@ export default class Progress6Screen extends React.PureComponent {
           <Loader
             loading={loading}
             color={colors.coral.standard}
+            text="SAVING"
           />
         </View>
       </SafeAreaView>

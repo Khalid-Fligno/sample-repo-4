@@ -115,10 +115,10 @@ export default class Progress2Screen extends React.PureComponent {
   takePhoto = async () => {
     const result = await ImagePicker.launchCameraAsync();
     if (!result.cancelled) {
-      const manipResult = await ImageManipulator.manipulate(
+      const manipResult = await ImageManipulator.manipulateAsync(
         result.uri,
         [{ resize: { width: 600, height: 800 } }],
-        { format: 'jpeg', compress: 0.75 },
+        { format: 'jpeg', compress: 0.7 },
       );
       this.setState({ image: manipResult });
     }
@@ -130,14 +130,14 @@ export default class Progress2Screen extends React.PureComponent {
     const originXValue = result.width > result.height ? 130 : 0;
     if (!result.cancelled) {
       try {
-        const manipResult = await ImageManipulator.manipulate(
+        const manipResult = await ImageManipulator.manipulateAsync(
           result.uri,
           [{ resize: { height: 800 } }, {
             crop: {
               originX: originXValue, originY: 0, width: 600, height: 800,
             },
           }],
-          { format: 'jpeg', compress: 0.75 },
+          { format: 'jpeg', compress: 0.7 },
         );
         this.setState({ image: manipResult });
       } catch (err) {
