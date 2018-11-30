@@ -42,7 +42,7 @@ export default class Tile extends React.PureComponent {
         onPressOut={this.handlePressOut}
       >
         <Animated.View
-          style={[{ flex: 1 }, animatedStyle]}
+          style={[styles.flexContainer, animatedStyle]}
         >
           <ImageBackground
             source={image}
@@ -83,6 +83,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
   },
+  flexContainer: {
+    flex: 1,
+  },
   image: {
     flex: 1,
     alignItems: 'center',
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   titleContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.65 )',
+    backgroundColor: colors.transparentWhite,
     paddingTop: 8,
     paddingRight: 12,
     paddingBottom: 3,
@@ -105,5 +108,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
-// export default Tile;

@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   titleContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.65 )',
+    backgroundColor: colors.transparentWhite,
     paddingTop: 8,
     paddingRight: 12,
     paddingBottom: 3,

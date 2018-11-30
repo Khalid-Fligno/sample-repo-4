@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
-
-const { width } = Dimensions.get('window');
 
 export default class WorkoutPauseModal extends React.PureComponent {
   constructor(props) {
@@ -113,22 +111,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.white,
     marginTop: 3,
-  },
-  pauseButtonContainer: {
-    width,
-    alignItems: 'center',
-  },
-  pauseButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 3,
-  },
-  pauseButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.coral.standard,
-    marginLeft: 5,
-    marginTop: 4,
   },
 });

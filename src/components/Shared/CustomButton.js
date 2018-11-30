@@ -41,7 +41,7 @@ const CustomButton = ({
       secondary && styles.whiteText,
       secondary && outline && styles.secondaryOutlineText,
       green && styles.whiteText,
-      green && outline && styles.greenText,
+      green && outline && styles.greenOutlineText,
       blue && styles.whiteText,
     ]}
     disabledStyle={[
@@ -50,9 +50,9 @@ const CustomButton = ({
       primary && styles.primaryDisabled,
       primary && outline && styles.primaryOutlineDisabled,
       secondary && styles.secondaryDisabled,
-      secondary && outline && styles.secondaryOutline,
+      secondary && outline && styles.secondaryOutlineDisabled,
       green && styles.greenDisabled,
-      green && outline && styles.greenOutline,
+      green && outline && styles.greenOutlineDisabled,
     ]}
   />
 );

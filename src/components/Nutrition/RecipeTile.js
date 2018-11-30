@@ -44,7 +44,7 @@ export default class RecipeTile extends React.PureComponent {
         onPressOut={this.handlePressOut}
       >
         <Animated.View
-          style={[{ flex: 1 }, animatedStyle]}
+          style={[styles.flexContainer, animatedStyle]}
         >
           <Card
             image={{ uri: image }}
@@ -103,6 +103,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
+  },
+  flexContainer: {
+    flex: 1,
   },
   card: {
     width: width - 20,

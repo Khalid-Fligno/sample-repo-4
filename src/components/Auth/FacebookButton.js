@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgb(59,89,152)',
+    backgroundColor: colors.facebookBlue,
     height: 50,
     width: width - 30,
     marginTop: 8,

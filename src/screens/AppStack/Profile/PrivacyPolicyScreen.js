@@ -104,10 +104,10 @@ const styles = StyleSheet.create({
   link: {
     fontFamily: fonts.standard,
     fontSize: 14,
-    color: 'blue',
+    color: colors.blue.vivid,
     marginBottom: 8,
     textDecorationStyle: 'solid',
-    textDecorationColor: 'blue',
+    textDecorationColor: colors.blue.vivid,
     textDecorationLine: 'underline',
   },
 });

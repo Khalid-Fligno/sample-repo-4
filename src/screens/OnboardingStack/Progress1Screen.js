@@ -314,13 +314,6 @@ export default class Progress1Screen extends React.PureComponent {
                   </View>
                 </Modal>
               </View>
-              {/* <Button
-                title="How do I measure this?"
-                onPress={this.toggleModal}
-                containerViewStyle={styles.modalTriggerButtonContainer}
-                buttonStyle={styles.modalTriggerButton}
-                textStyle={styles.modalTriggerButtonText}
-              /> */}
             </View>
             <View style={styles.buttonContainer}>
               <CustomButton
@@ -385,19 +378,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 4,
     overflow: 'hidden',
-  },
-  helperModalContainer: {
-    flexShrink: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  helperModalTextContainer: {
-    width: '100%',
-    justifyContent: 'space-between',
-    padding: 10,
-    backgroundColor: colors.white,
   },
   modalButton: {
     justifyContent: 'center',

@@ -265,10 +265,6 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     alignItems: 'center',
   },
-  name: {
-    fontFamily: fonts.bold,
-    fontSize: 24,
-  },
   listContainer: {
     width,
     marginBottom: 20,

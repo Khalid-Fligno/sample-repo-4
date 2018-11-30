@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     width,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: colors.transparent,
   },
   carouselImageBackground: {
     flex: 1,
@@ -134,14 +134,14 @@ const styles = StyleSheet.create({
     height,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backgroundColor: colors.transparentBlackDark,
   },
   opacityOverlayLight: {
     width,
     height,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: colors.transparentBlackLight,
   },
   logo: {
     marginBottom: 45,
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width,
     height: 70,
-    backgroundColor: 'transparent',
+    backgroundColor: colors.transparent,
     padding: 10,
   },
   signupButton: {
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   loginButton: {
     width: (width - 30) / 2,
     marginLeft: 5,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 2,

@@ -1,6 +1,5 @@
 import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation';
-import { Haptic } from 'expo';
 import HomeStack from './HomeStack';
 import NutritionStack from './NutritionStack';
 import WorkoutsStack from './WorkoutsStack';

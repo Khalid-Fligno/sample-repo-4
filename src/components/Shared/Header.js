@@ -154,7 +154,7 @@ const Header = ({
         )
       }
       {
-        !withStartButton && !withSkipButton && !withProfileButton && (
+        !withStartButton && !withSkipButton && !withProfileButton && !withRestoreButton && (
           <View
             style={styles.headerContentContainerRight}
           />

@@ -70,7 +70,7 @@ export default class DoubleNewsFeedTile extends React.PureComponent {
           onPressOut={this.handlePressOut}
         >
           <Animated.View
-            style={[{ flex: 1 }, animatedStyleLeft]}
+            style={[styles.flexContainer, animatedStyleLeft]}
           >
             <ImageBackground
               resizeMode="cover"
@@ -95,7 +95,7 @@ export default class DoubleNewsFeedTile extends React.PureComponent {
           onPressOut={this.handlePressOutRight}
         >
           <Animated.View
-            style={[{ flex: 1 }, animatedStyleRight]}
+            style={[styles.flexContainer, animatedStyleRight]}
           >
             <ImageBackground
               resizeMode="cover"
@@ -142,6 +142,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
   },
+  flexContainer: {
+    flex: 1,
+  },
   image: {
     flex: 1,
     alignItems: 'center',
@@ -150,7 +153,7 @@ const styles = StyleSheet.create({
     borderRadius: 1,
   },
   titleContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.6 )',
+    backgroundColor: colors.transparentWhite,
     padding: 8,
     paddingBottom: 3,
     maxWidth: width / 2.4,

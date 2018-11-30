@@ -62,23 +62,21 @@ class ProgressHomeScreen extends React.PureComponent {
       .then(async (doc) => {
         if (doc.exists && doc.data().initialProgressInfo) {
           const images = [];
-          await images.push(await doc.data().initialProgressInfo.photoURL, await doc.data().currentProgressInfo && await doc.data().currentProgressInfo.photoURL)
-          console.log(images)
+          await images.push(await doc.data().initialProgressInfo.photoURL, await doc.data().currentProgressInfo && await doc.data().currentProgressInfo.photoURL);
           await Promise.all(images.map(async (image, index) => {
-          const fileUri = `${FileSystem.cacheDirectory}progress-photo-${index}.jpg`;
-          await FileSystem.getInfoAsync(fileUri)
-            .then(async ({ exists }) => {
-              if (!exists) {
-                await FileSystem.downloadAsync(
-                  image,
-                  `${FileSystem.cacheDirectory}progress-photo-${index}.jpg`,
-                );
-              }
-            }).catch(() => {
-              Alert.alert('Image download error');
-            });
-        }));
-
+            const fileUri = `${FileSystem.cacheDirectory}progress-photo-${index}.jpg`;
+            await FileSystem.getInfoAsync(fileUri)
+              .then(async ({ exists }) => {
+                if (!exists) {
+                  await FileSystem.downloadAsync(
+                    image,
+                    `${FileSystem.cacheDirectory}progress-photo-${index}.jpg`,
+                  );
+                }
+              }).catch(() => {
+                Alert.alert('Image download error');
+              });
+          }));
           this.setState({
             initialProgressInfo: await doc.data().initialProgressInfo,
             currentProgressInfo: await doc.data().currentProgressInfo,
@@ -134,7 +132,7 @@ class ProgressHomeScreen extends React.PureComponent {
                       name="add-circle"
                       color={colors.white}
                       size={20}
-                      style={{ alignSelf: 'center', marginBottom: 10 }}
+                      style={styles.addIcon}
                     />
                     <Text style={styles.imagePlaceholderButtonText}>
                       Add initial progress info
@@ -173,7 +171,7 @@ class ProgressHomeScreen extends React.PureComponent {
                       name="add-circle"
                       color={colors.white}
                       size={20}
-                      style={{ alignSelf: 'center', marginBottom: 10 }}
+                      style={styles.addIcon}
                     />
                     <Text style={styles.imagePlaceholderButtonText}>
                       Add current progress info
@@ -391,6 +389,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
   },
+  addIcon: {
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
   dateRowContainer: {
     width,
     flexDirection: 'row',
@@ -456,7 +458,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingTop: 5,
     paddingBottom: 5,
-  }
+  },
 });
 
 export default ReactTimeout(ProgressHomeScreen);

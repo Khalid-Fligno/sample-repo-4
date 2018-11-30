@@ -22,17 +22,13 @@
         "import/no-unresolved": [2, { "ignore": ["local_settings"] }],
         "import/extensions": [2, { "ignore": ["local_settings"] }],
         "import/prefer-default-export": 0,
-        "max-len": [1, { "code": 150 }],
+        "max-len": [1, { "code": 200 }],
         "arrow-body-style": 0,
         "arrow-parens": [2, "always"],
         "no-return-assign": 0,
         "react-native/no-unused-styles": 2,
-        "react-native/split-platform-components": 2,
         "react-native/no-inline-styles": 2,
         "react-native/no-color-literals": 2,
         "react-native/no-raw-text": 2
-    },
-    "ecmaFeatures": {
-        "jsx": true
     }
 }

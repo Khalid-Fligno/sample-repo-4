@@ -180,26 +180,24 @@ export default class SubscriptionScreen extends React.PureComponent {
               </View>
             </ScrollView>
           </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => this.purchaseProduct(subscriptionSelected.identifier)}
-              style={styles.button}
-            >
-              {
-                loading ? (
-                  <DotIndicator
-                    color={colors.white}
-                    count={3}
-                    size={6}
-                  />
-                ) : (
-                  <Text style={styles.buttonText}>
-                    CONTINUE
-                  </Text>
-                )
-              }
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => this.purchaseProduct(subscriptionSelected.identifier)}
+            style={styles.button}
+          >
+            {
+              loading ? (
+                <DotIndicator
+                  color={colors.white}
+                  count={3}
+                  size={6}
+                />
+              ) : (
+                <Text style={styles.buttonText}>
+                  CONTINUE
+                </Text>
+              )
+            }
+          </TouchableOpacity>
           <Loader
             loading={loadingProducts}
             color={colors.coral.standard}
@@ -276,11 +274,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.charcoal.light,
     marginBottom: 10,
-  },
-  containerButton: {
-    flexShrink: 1,
-    justifyContent: 'flex-end',
-    height: 70,
   },
   button: {
     justifyContent: 'center',

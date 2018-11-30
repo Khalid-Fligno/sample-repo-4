@@ -1,6 +1,10 @@
 const colors = {
   black: 'rgb(0, 0, 0)', // #000000
   white: 'rgb(255, 255, 255)', // #FFFFFF
+  transparent: 'rgba(0, 0, 0, 0)',
+  transparentWhite: 'rgba(255, 255, 255, 0.65 )',
+  transparentBlackDark: 'rgba(0, 0, 0, 0.75 )',
+  transparentBlackLight: 'rgba(0, 0, 0, 0.75 )',
   offWhite: 'rgb(250, 250, 250)', // ##f5f5f5
   grey: {
     dark: 'rgb(113, 114, 115)', // #717273
@@ -32,7 +36,9 @@ const colors = {
     standard: 'rgb(122, 155, 224)', // #7A9BE0
     light: 'rgb(131, 161, 226)', // #83A1E2
     dark: 'rgb(110, 145, 221)', // #6e91dd
+    vivid: 'rgb(0, 0, 255)', // #0000FF
   },
+  facebookBlue: 'rgb(59,89,152)', // #3B5998
 };
 
 export default colors;

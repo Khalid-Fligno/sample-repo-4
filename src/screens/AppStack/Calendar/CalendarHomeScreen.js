@@ -454,17 +454,8 @@ class CalendarHomeScreen extends React.PureComponent {
               duration: 400,
               highlightColor: colors.green.standard,
             }}
-            style={{
-              height: 90,
-              paddingTop: 10,
-              paddingBottom: 20,
-            }}
-            calendarHeaderStyle={{
-              fontFamily: fonts.bold,
-              color: colors.white,
-              marginTop: 0,
-              marginBottom: 15,
-            }}
+            style={styles.calendarStrip}
+            calendarHeaderStyle={styles.calendarStripHeader}
             calendarColor={colors.green.dark}
             dateNumberStyle={{
               fontFamily: fonts.bold,
@@ -530,6 +521,17 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.7,
     shadowRadius: 2,
+  },
+  calendarStrip: {
+    height: 90,
+    paddingTop: 10,
+    paddingBottom: 20,
+  },
+  calendarStripHeader: {
+    fontFamily: fonts.bold,
+    color: colors.white,
+    marginTop: 0,
+    marginBottom: 15,
   },
   dayDisplayContainer: {
     alignItems: 'center',

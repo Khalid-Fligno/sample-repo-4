@@ -128,11 +128,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.offWhite,
     alignItems: 'center',
   },
-  heading: {
-    fontFamily: fonts.bold,
-    fontSize: 24,
-    color: colors.violet.dark,
-  },
   scrollView: {
     paddingTop: 35,
     paddingBottom: 15,
@@ -170,50 +165,5 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: colors.white,
     marginTop: 2,
-  },
-
-  cardContainer: {
-    margin: 0,
-    width,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-  },
-  card: {
-    width: width - 20,
-    borderRadius: 3,
-    overflow: 'hidden',
-    borderWidth: 0,
-  },
-  title: {
-    fontFamily: fonts.bold,
-    fontSize: 16,
-  },
-  subTitle: {
-    fontFamily: fonts.standard,
-    fontSize: 12,
-  },
-  tagContainer: {
-    flexDirection: 'row',
-  },
-  tagCircle: {
-    height: 28,
-    width: 28,
-    marginTop: 3,
-    marginRight: 5,
-    borderWidth: 2.5,
-    borderColor: colors.violet.standard,
-    borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tagText: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
-    color: colors.violet.standard,
-    marginTop: 4,
   },
 });

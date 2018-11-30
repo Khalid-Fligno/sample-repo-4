@@ -223,7 +223,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
     return (
       <View style={styles.container}>
         <View style={styles.carouselsContainer}>
-          <View style={{ flex: 1 }}>
+          <View style={styles.flexContainer}>
             <Carousel
               ref={(c) => { this.carousel = c; }}
               data={workoutTypes}
@@ -235,14 +235,14 @@ class WorkoutsHomeScreen extends React.PureComponent {
             <Icon
               name="chevron-down"
               size={18}
-              style={{ alignSelf: 'center' }}
+              style={styles.chevron}
               color={colors.grey.standard}
             />
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={styles.flexContainer}>
             {
               selectedWorkoutTypeIndex === 0 && (
-                <FadeInView duration={1500} style={{ flex: 1 }}>
+                <FadeInView duration={1500} style={styles.flexContainer}>
                   <Carousel
                     ref={(c) => { this.carousel = c; }}
                     data={workoutLocations}
@@ -256,7 +256,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
             }
             {
               selectedWorkoutTypeIndex === 1 && (
-                <FadeInView duration={1000} style={{ flex: 1 }}>
+                <FadeInView duration={1000} style={styles.flexContainer}>
                   <Carousel
                     ref={(c) => { this.carousel = c; }}
                     data={hiitWorkouts}
@@ -271,14 +271,14 @@ class WorkoutsHomeScreen extends React.PureComponent {
             <Icon
               name="chevron-down"
               size={18}
-              style={{ alignSelf: 'center' }}
+              style={styles.chevron}
               color={colors.grey.standard}
             />
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={styles.flexContainer}>
             {
               selectedWorkoutTypeIndex === 0 && (
-                <FadeInView duration={1000} style={{ flex: 1 }}>
+                <FadeInView duration={1000} style={styles.flexContainer}>
                   <Carousel
                     ref={(c) => { this.carousel = c; }}
                     data={resistanceWorkouts}
@@ -296,13 +296,13 @@ class WorkoutsHomeScreen extends React.PureComponent {
                   name="chevron-down"
                   size={18}
                   color={colors.grey.standard}
-                  style={{ alignSelf: 'center' }}
+                  style={styles.chevron}
                 />
               )
             }
           </View>
         </View>
-        <View style={{ paddingBottom: 10 }}>
+        <View style={styles.buttonContainer}>
           <CustomButton
             title={selectedWorkoutTypeIndex === 0 ? 'SHOW WORKOUTS' : 'GO TO WORKOUT'}
             onPress={() => this.goToWorkouts(selectedWorkoutTypeIndex)}
@@ -341,6 +341,9 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 5,
   },
+  flexContainer: {
+    flex: 1,
+  },
   slide: {
     flex: 1,
     marginTop: 5,
@@ -359,16 +362,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     justifyContent: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.65 )',
-    paddingTop: 8,
-    paddingRight: 12,
-    paddingBottom: 3,
-    paddingLeft: 12,
-    borderRadius: 2,
-  },
-  weeklyTargetContainer: {
-    justifyContent: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.65 )',
+    backgroundColor: colors.transparentWhite,
     paddingTop: 8,
     paddingRight: 12,
     paddingBottom: 3,
@@ -385,6 +379,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: colors.black,
     textAlign: 'center',
+  },
+  chevron: {
+    alignSelf: 'center',
+  },
+  buttonContainer: {
+    paddingBottom: 10,
   },
 });
 

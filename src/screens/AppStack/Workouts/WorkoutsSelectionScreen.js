@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions, AsyncStorage, Alert } from 'react-native';
+import { StyleSheet, View, AsyncStorage, Alert } from 'react-native';
 import { FileSystem } from 'expo';
 import moment from 'moment';
 import sortBy from 'lodash.sortby';
@@ -8,9 +8,6 @@ import { findReps } from '../../../utils/index';
 import Loader from '../../../components/Shared/Loader';
 import WorkoutTile from '../../../components/Workouts/WorkoutTile';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
-
-const { width } = Dimensions.get('window');
 
 export default class WorkoutsSelectionScreen extends React.PureComponent {
   constructor(props) {
@@ -124,41 +121,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 5,
     paddingBottom: 5,
-  },
-  buttonContainer: {
-    marginTop: 5,
-    marginBottom: 5,
-  },
-  button: {
-    width: width - 30,
-    backgroundColor: colors.coral.standard,
-    borderRadius: 4,
-  },
-  buttonText: {
-    fontFamily: fonts.bold,
-    fontSize: 16,
-    color: colors.white,
-    marginTop: 3,
-  },
-  workoutButton: {
-    opacity: 0.9,
-    flex: 1,
-    justifyContent: 'flex-end',
-    width: width - 30,
-    marginTop: 7.5,
-    marginBottom: 7.5,
-    paddingLeft: 20,
-    paddingBottom: 5,
-    borderRadius: 4,
-    backgroundColor: colors.coral.standard,
-    shadowColor: colors.black,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-  },
-  workoutButtonText: {
-    fontFamily: fonts.boldItalic,
-    fontSize: 34,
-    color: colors.white,
   },
 });

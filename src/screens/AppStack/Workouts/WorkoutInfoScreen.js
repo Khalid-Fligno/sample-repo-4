@@ -173,15 +173,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                 style={{ width: width - 30, height: width - 30 }}
               />
             </View>
-            <View
-              style={{
-                height: '100%',
-                width,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'transparent',
-              }}
-            >
+            <View style={styles.exerciseDescriptionContainer}>
               <Text>This is an exercise description</Text>
             </View>
           </Carousel>
@@ -322,24 +314,14 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               <Text style={styles.musicModalHeaderText}>
                 Choose your music
               </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  padding: 10,
-                  backgroundColor: colors.grey.light,
-                  borderRadius: 4,
-                }}
-              >
+              <View style={styles.musicIconContainer}>
                 <TouchableOpacity
-                  style={{ marginRight: 10 }}
+                  style={styles.appleMusicIcon}
                   onPress={() => this.openApp('music:', 'https://itunes.apple.com/us/app/apple-music/id1108187390?mt=8')}
                 >
                   <Image
                     source={require('../../../../assets/icons/apple-music-icon.png')}
-                    style={{
-                      height: 50,
-                      width: 50,
-                    }}
+                    style={styles.musicIconImage}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -347,15 +329,12 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                 >
                   <Image
                     source={require('../../../../assets/icons/spotify-icon.png')}
-                    style={{
-                      height: 50,
-                      width: 50,
-                    }}
+                    style={styles.musicIconImage}
                   />
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={{ backgroundColor: colors.white, width: '100%' }}>
+            <View style={styles.musicModalButtonContainer}>
               <TouchableOpacity
                 onPress={() => this.toggleMusicModal()}
                 style={styles.musicModalCancelButton}
@@ -493,12 +472,19 @@ const styles = StyleSheet.create({
   exerciseTileHeaderTextLeft: {
     fontFamily: fonts.standard,
     fontSize: 16,
-    color: 'white',
+    color: colors.white,
   },
   exerciseTileHeaderBarRight: {
     fontFamily: fonts.standard,
     fontSize: 16,
-    color: 'white',
+    color: colors.white,
+  },
+  exerciseDescriptionContainer: {
+    height: '100%',
+    width,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.transparent,
   },
   musicModalContainer: {
     flexShrink: 1,
@@ -518,6 +504,23 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     justifyContent: 'space-between',
     padding: 15,
+  },
+  musicIconContainer: {
+    flexDirection: 'row',
+    padding: 10,
+    backgroundColor: colors.grey.light,
+    borderRadius: 4,
+  },
+  appleMusicIcon: {
+    marginRight: 10,
+  },
+  musicIconImage: {
+    height: 50,
+    width: 50,
+  },
+  musicModalButtonContainer: {
+    backgroundColor: colors.white,
+    width: '100%',
   },
   musicModalCancelButton: {
     justifyContent: 'center',

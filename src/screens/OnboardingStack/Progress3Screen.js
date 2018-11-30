@@ -133,15 +133,7 @@ export default class Progress3Screen extends React.PureComponent {
                     style={{ width: width - 80, height: width - 80 }}
                   />
                 </View>
-                <View
-                  style={{
-                    height: '100%',
-                    width,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: 'transparent',
-                  }}
-                >
+                <View style={styles.exerciseDescriptionContainer}>
                   <Text>This is an exercise description</Text>
                 </View>
               </Carousel>
@@ -222,12 +214,19 @@ const styles = StyleSheet.create({
   exerciseTileHeaderTextLeft: {
     fontFamily: fonts.standard,
     fontSize: 16,
-    color: 'white',
+    color: colors.white,
   },
   exerciseTileHeaderBarRight: {
     fontFamily: fonts.standard,
     fontSize: 16,
-    color: 'white',
+    color: colors.white,
+  },
+  exerciseDescriptionContainer: {
+    height: '100%',
+    width,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.transparent,
   },
   buttonContainer: {
     flexShrink: 1,
