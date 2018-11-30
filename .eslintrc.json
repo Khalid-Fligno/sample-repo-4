@@ -5,8 +5,13 @@
     "env": {
         "node": true,
         "es6": true,
-        "jest": true
+        "jest": true,
+        "react-native/react-native": true
     },
+    "plugins": [
+        "react",
+        "react-native"
+    ],
     "parser": "babel-eslint",
     "extends": "airbnb",
     "rules": {
@@ -21,6 +26,13 @@
         "arrow-body-style": 0,
         "arrow-parens": [2, "always"],
         "no-return-assign": 0,
-        "no-undef": [2, { "ignore": ["XMLHttpRequest"] }]
+        "react-native/no-unused-styles": 2,
+        "react-native/split-platform-components": 2,
+        "react-native/no-inline-styles": 2,
+        "react-native/no-color-literals": 2,
+        "react-native/no-raw-text": 2
+    },
+    "ecmaFeatures": {
+        "jsx": true
     }
 }
