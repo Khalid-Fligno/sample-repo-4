@@ -73,7 +73,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
           <ScrollView contentContainerStyle={styles.scrollView}>
             <Icon
               name="profile-outline"
-              size={100}
+              size={80}
               color={colors.charcoal.standard}
             />
             <View style={styles.nameTextContainer}>
