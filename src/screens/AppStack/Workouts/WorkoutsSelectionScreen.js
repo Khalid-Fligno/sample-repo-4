@@ -15,7 +15,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     this.state = {
       workouts: [],
       loading: false,
-      completedWorkoutTally: undefined,
+      cycleTargets: undefined,
     };
   }
   componentDidMount = async () => {
@@ -46,11 +46,11 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     const userRef = db.collection('users').doc(uid);
     this.unsubscribe2 = userRef.onSnapshot(async (doc) => {
       this.setState({
-        completedWorkoutTally: await doc.data().completedWorkoutTally,
+        cycleTargets: await doc.data().cycleTargets,
       });
-      if (await doc.data().completedWorkoutTally.cycleStartDate < moment().startOf('week').subtract(11, 'weeks').format('YYYY-MM-DD')) {
+      if (await doc.data().cycleTargets.cycleStartDate < moment().startOf('week').subtract(11, 'weeks').format('YYYY-MM-DD')) {
         const data = {
-          completedWorkoutTally: {
+          cycleTargets: {
             1: 0,
             2: 0,
             3: 0,
@@ -88,7 +88,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     }
   }
   render() {
-    const { workouts, loading, completedWorkoutTally } = this.state;
+    const { workouts, loading, cycleTargets } = this.state;
     const workoutList = sortBy(workouts, 'resistanceCategoryId').map((workout) => (
       <WorkoutTile
         key={workout.id}
@@ -96,7 +96,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
         // image={require('../../../../assets/images/workouts-upper.jpg')}
         onPress={() => this.loadExercises(workout)}
         disabled={workout.disabled}
-        completedWorkoutTally={completedWorkoutTally}
+        cycleTargets={cycleTargets}
         resistanceCategoryId={workout.resistanceCategoryId}
       />
     ));

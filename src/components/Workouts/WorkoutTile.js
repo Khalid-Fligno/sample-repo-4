@@ -18,7 +18,7 @@ const WorkoutTile = ({
   title1,
   // image,
   disabled,
-  completedWorkoutTally,
+  cycleTargets,
   resistanceCategoryId,
 }) => (
   <TouchableOpacity
@@ -35,7 +35,7 @@ const WorkoutTile = ({
         </Text>
         <Text style={styles.targetText}>
           {
-            completedWorkoutTally && `${completedWorkoutTally[resistanceCategoryId]}/3 this 12 week cycle`
+            cycleTargets && `${cycleTargets[resistanceCategoryId]}/3 this 12 week cycle`
           }
         </Text>
       </View>
@@ -56,7 +56,7 @@ const WorkoutTile = ({
 WorkoutTile.propTypes = {
   onPress: PropTypes.func.isRequired,
   title1: PropTypes.string.isRequired,
-  completedWorkoutTally: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])).isRequired,
+  cycleTargets: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])).isRequired,
   resistanceCategoryId: PropTypes.number.isRequired,
   // image: PropTypes.number.isRequired,
   disabled: PropTypes.bool,

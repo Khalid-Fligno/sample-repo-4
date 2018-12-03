@@ -109,16 +109,18 @@ class WorkoutsHomeScreen extends React.PureComponent {
     const userRef = db.collection('users').doc(uid);
     this.unsubscribeFromTargets = userRef.onSnapshot(async (doc) => {
       this.setState({
-        resistanceWeeklyTarget: await doc.data().resistanceWeeklyTarget,
-        hiitWeeklyTarget: await doc.data().hiitWeeklyTarget,
-        resistanceWeeklyComplete: await doc.data().resistanceWeeklyComplete,
-        hiitWeeklyComplete: await doc.data().hiitWeeklyComplete,
+        resistanceWeeklyTarget: await doc.data().weeklyTargets.resistanceWeeklyTarget,
+        hiitWeeklyTarget: await doc.data().weeklyTargets.hiitWeeklyTarget,
+        resistanceWeeklyComplete: await doc.data().weeklyTargets.resistanceWeeklyComplete,
+        hiitWeeklyComplete: await doc.data().weeklyTargets.hiitWeeklyComplete,
       });
-      if (await doc.data().currentWeekStartDate !== moment().startOf('week').format('YYYY-MM-DD')) {
+      if (await doc.data().weeklyTargets.currentWeekStartDate !== moment().startOf('week').format('YYYY-MM-DD')) {
         const data = {
-          resistanceWeeklyComplete: 0,
-          hiitWeeklyComplete: 0,
-          currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
+          weeklyTargets: {
+            resistanceWeeklyComplete: 0,
+            hiitWeeklyComplete: 0,
+            currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
+          },
         };
         await userRef.set(data, { merge: true });
       }

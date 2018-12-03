@@ -12,6 +12,10 @@ import colors from '../../../../styles/colors';
 
 const { width } = Dimensions.get('window');
 
+const updateWeeklyTargets = (obj, field, newTally) => {
+  return Object.assign({}, obj, { [field]: newTally });
+};
+
 const pieDataComplete = [100, 0]
   .map((value, index) => ({
     value,
@@ -42,8 +46,10 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
     const userRef = db.collection('users').doc(uid);
     return db.runTransaction((transaction) => {
       return transaction.get(userRef).then((userDoc) => {
-        const newHiitWeeklyComplete = userDoc.data().hiitWeeklyComplete + 1;
-        transaction.update(userRef, { hiitWeeklyComplete: newHiitWeeklyComplete });
+        const newHiitWeeklyComplete = userDoc.data().weeklyTargets.hiitWeeklyComplete + 1;
+        const oldWeeklyTargets = userDoc.data().weeklyTargets;
+        const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'resistanceWeeklyComplete', newHiitWeeklyComplete);
+        transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
         this.setState({ loading: false });
         this.props.navigation.navigate('WorkoutsHome');
       });

@@ -12,8 +12,12 @@ import colors from '../../../../styles/colors';
 
 const { width } = Dimensions.get('window');
 
-const updateTallies = (obj, resistanceCategoryId, newTally) => {
+const updateCycleTargets = (obj, resistanceCategoryId, newTally) => {
   return Object.assign({}, obj, { [resistanceCategoryId]: newTally });
+};
+
+const updateWeeklyTargets = (obj, field, newTally) => {
+  return Object.assign({}, obj, { [field]: newTally });
 };
 
 const pieDataComplete = [100, 0]
@@ -55,18 +59,20 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
   updateWeekly = (userRef) => {
     return db.runTransaction((transaction) => {
       return transaction.get(userRef).then((userDoc) => {
-        const newResistanceWeeklyComplete = userDoc.data().resistanceWeeklyComplete + 1;
-        transaction.update(userRef, { resistanceWeeklyComplete: newResistanceWeeklyComplete });
+        const newResistanceWeeklyComplete = userDoc.data().weeklyTargets.resistanceWeeklyComplete + 1;
+        const oldWeeklyTargets = userDoc.data().weeklyTargets;
+        const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'resistanceWeeklyComplete', newResistanceWeeklyComplete);
+        transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
       });
     });
   }
   updateCycle = (userRef, resistanceCategoryId) => {
     return db.runTransaction((transaction) => {
       return transaction.get(userRef).then((userDoc) => {
-        const newResistanceCategoryTally = userDoc.data().completedWorkoutTally[resistanceCategoryId] + 1;
-        const oldCompletedWorkoutTally = userDoc.data().completedWorkoutTally;
-        const newCompletedWorkoutTally = updateTallies(oldCompletedWorkoutTally, resistanceCategoryId, newResistanceCategoryTally);
-        transaction.update(userRef, { completedWorkoutTally: newCompletedWorkoutTally });
+        const newResistanceCategoryTally = userDoc.data().cycleTargets[resistanceCategoryId] + 1;
+        const oldCycleTargets = userDoc.data().cycleTargets;
+        const newCycleTargets = updateCycleTargets(oldCycleTargets, resistanceCategoryId, newResistanceCategoryTally);
+        transaction.update(userRef, { cycleTargets: newCycleTargets });
       });
     });
   }
