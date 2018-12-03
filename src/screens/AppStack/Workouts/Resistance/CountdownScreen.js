@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import CountdownTimer from '../../../../components/Workouts/CountdownTimer';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
@@ -40,21 +41,27 @@ export default class CountdownScreen extends React.PureComponent {
       resistanceCategoryId,
     } = this.state;
     return (
-      <View style={styles.countdownContainer}>
-        <CountdownTimer
-          totalDuration={countdownDuration}
-          start={countdownActive}
-          handleFinish={() => this.finishCountdown(exerciseList, reps, resistanceCategoryId)}
-        />
-        <Text style={styles.countdownText}>
-          GET READY!
-        </Text>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.countdownContainer}>
+          <CountdownTimer
+            totalDuration={countdownDuration}
+            start={countdownActive}
+            handleFinish={() => this.finishCountdown(exerciseList, reps, resistanceCategoryId)}
+          />
+          <Text style={styles.countdownText}>
+            GET READY!
+          </Text>
+        </View>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.black,
+  },
   countdownContainer: {
     flex: 1,
     backgroundColor: colors.white,
