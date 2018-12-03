@@ -20,7 +20,7 @@ export default class AddToCalendarButton extends React.PureComponent {
       >
         <Icon
           name="add-to-calendar"
-          size={25}
+          size={22}
           color={colors.charcoal.standard}
         />
         <Text style={styles.addToCalendarButtonText}>
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    width: 138,
     backgroundColor: colors.white,
     padding: 3,
     borderWidth: 2,
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
   },
   addToCalendarButtonText: {
     fontFamily: fonts.standard,
-    fontSize: 13,
+    fontSize: 12,
     color: colors.charcoal.light,
     marginTop: 4,
     marginLeft: 5,
