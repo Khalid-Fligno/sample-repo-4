@@ -11,7 +11,7 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import { DangerZone } from 'expo';
+import { Localization } from 'expo';
 import Modal from 'react-native-modal';
 import CustomButton from '../../components/Shared/CustomButton';
 import Loader from '../../components/Shared/Loader';
@@ -21,8 +21,6 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
 const moment = require('moment-timezone');
-
-const { Localization } = DangerZone;
 
 const { width } = Dimensions.get('window');
 
@@ -39,7 +37,7 @@ export default class Onboarding1Screen extends React.PureComponent {
     };
   }
   componentDidMount = async () => {
-    const timezone = await Localization.getCurrentTimeZoneAsync();
+    const timezone = await Localization.timezone;
     this.setState({ timezone });
   }
   setDate = async (newDate) => {
@@ -48,7 +46,7 @@ export default class Onboarding1Screen extends React.PureComponent {
   handleSubmit = async (chosenDate, chosenUom) => {
     this.setState({ loading: true });
     try {
-      const timezone = await Localization.getCurrentTimeZoneAsync();
+      const timezone = await Localization.timezone;
       const dob = moment.tz(chosenDate, timezone).format('YYYY-MM-DD');
       const uid = await AsyncStorage.getItem('uid');
       const userRef = db.collection('users').doc(uid);
@@ -56,12 +54,14 @@ export default class Onboarding1Screen extends React.PureComponent {
         dob,
         unitsOfMeasurement: chosenUom,
         onboarded: true,
-        resistanceWeeklyTarget: 4,
-        hiitWeeklyTarget: 2,
-        resistanceWeeklyComplete: 0,
-        hiitWeeklyComplete: 0,
-        currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
-        completedWorkoutTally: {
+        weeklyTargets: {
+          currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
+          resistanceWeeklyTarget: 4,
+          hiitWeeklyTarget: 2,
+          resistanceWeeklyComplete: 0,
+          hiitWeeklyComplete: 0,
+        },
+        cycleTargets: {
           1: 0,
           2: 0,
           3: 0,
