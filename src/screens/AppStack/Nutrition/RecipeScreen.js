@@ -18,6 +18,7 @@ import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
+import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -233,7 +234,10 @@ export default class RecipeScreen extends React.PureComponent {
             <Text style={styles.recipeSubTitle}>
               {recipe.subtitle}
             </Text>
-            <TouchableOpacity
+            <View style={styles.addToCalendarButtonContainer}>
+              <AddToCalendarButton onPress={() => this.toggleModal()} />
+            </View>
+            {/* <TouchableOpacity
               onPress={() => this.toggleModal()}
               style={styles.addToCalendarButton}
             >
@@ -245,7 +249,7 @@ export default class RecipeScreen extends React.PureComponent {
               <Text style={styles.addToCalendarButtonText}>
                 Add to calendar
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <Divider style={styles.divider} />
             <View style={styles.infoBar}>
               <View style={styles.infoFieldContainer}>
@@ -357,15 +361,8 @@ const styles = StyleSheet.create({
     color: colors.charcoal.standard,
     marginBottom: 8,
   },
-  addToCalendarButton: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    width: 150,
-    marginBottom: 8,
-    padding: 3,
-    borderWidth: 2,
-    borderColor: colors.charcoal.light,
-    borderRadius: 4,
+  addToCalendarButtonContainer: {
+    marginBottom: 10,
   },
   modalContainer: {
     backgroundColor: colors.white,
@@ -393,13 +390,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.white,
     marginTop: 3,
-  },
-  addToCalendarButtonText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.light,
-    marginTop: 3,
-    marginLeft: 5,
   },
   calendarMealButtonContainer: {
     flexDirection: 'row',
