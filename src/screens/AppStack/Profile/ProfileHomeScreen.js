@@ -1,13 +1,41 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, View, Text, AsyncStorage, ScrollView, Dimensions, Alert } from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Text,
+  AsyncStorage,
+  ScrollView,
+  Dimensions,
+  Alert,
+  ActionSheetIOS,
+  TouchableOpacity,
+  Linking,
+  Image,
+} from 'react-native';
+import { ImagePicker, ImageManipulator, Permissions } from 'expo';
 import { List, ListItem } from 'react-native-elements';
 import { auth, db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
-import Icon from '../../../components/Shared/Icon';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
+
+const uriToBlob = (url) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onerror = reject;
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        resolve(xhr.response);
+      }
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob'; // convert type
+    xhr.send();
+  });
+};
 
 const list = [
   { title: 'Help & Support', route: 'HelpAndSupport' },
@@ -20,15 +48,28 @@ export default class ProfileHomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      profile: null,
+      profile: undefined,
       loading: false,
+      hasCameraPermission: undefined,
+      hasCameraRollPermission: undefined,
+      avatar: undefined,
     };
   }
   componentDidMount() {
     this.fetchProfile();
+    this.getCameraPermission();
+    this.getCameraRollPermission();
   }
   componentWillUnmount() {
     this.unsubscribe();
+  }
+  getCameraPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    this.setState({ hasCameraPermission: status === 'granted' });
+  }
+  getCameraRollPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    this.setState({ hasCameraRollPermission: status === 'granted' });
   }
   fetchProfile = async () => {
     this.setState({ loading: true });
@@ -36,11 +77,103 @@ export default class ProfileHomeScreen extends React.PureComponent {
     this.unsubscribe = await db.collection('users').doc(uid)
       .onSnapshot(async (doc) => {
         if (doc.exists) {
-          this.setState({ profile: await doc.data(), loading: false });
+          this.setState({ profile: await doc.data(), avatar: await doc.data().avatar, loading: false });
         } else {
           this.setState({ loading: false });
         }
       });
+  }
+  saveImage = async (uri) => {
+    try {
+      const uid = await AsyncStorage.getItem('uid');
+      const firebase = require('firebase');
+      const blob = await uriToBlob(uri);
+      const storageRef = firebase.storage().ref();
+      const userPhotosStorageRef = storageRef.child('user-photos');
+      const userStorageRef = userPhotosStorageRef.child(uid);
+      const avatarStorageRef = userStorageRef.child('avatar.jpeg');
+      const snapshot = await avatarStorageRef.put(blob);
+      const url = await snapshot.ref.getDownloadURL();
+      await db.collection('users').doc(uid).set({
+        avatar: url,
+      }, { merge: true });
+      this.setState({ avatar: url });
+    } catch (err) {
+      Alert.alert('Image save error');
+    }
+  };
+  chooseUploadType = () => {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ['Cancel', 'Take photo', 'Upload from Camera Roll'],
+        cancelButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 1) {
+          if (!this.state.hasCameraPermission) {
+            this.appSettingsPrompt();
+            return;
+          }
+          this.takePhoto();
+        } else if (buttonIndex === 2) {
+          if (!this.state.hasCameraRollPermission) {
+            this.appSettingsPrompt();
+            return;
+          }
+          this.pickImage();
+        }
+      },
+    );
+  }
+  pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+    });
+    if (!result.cancelled) {
+      try {
+        const manipResult = await ImageManipulator.manipulateAsync(
+          result.uri,
+          [{ resize: { height: 80, width: 80 } }],
+          { format: 'jpeg' },
+        );
+        this.setState({ loading: true });
+        await this.saveImage(manipResult.uri);
+        this.setState({ loading: false });
+      } catch (err) {
+        Alert.alert('Could not upload this image');
+      }
+    }
+  };
+  takePhoto = async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+    });
+    if (!result.cancelled) {
+      const manipResult = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [{ resize: { width: 80, height: 80 } }],
+        { format: 'jpeg' },
+      );
+      this.setState({ loading: true });
+      await this.saveImage(manipResult.uri);
+      this.setState({ loading: false });
+    }
+  };
+  appSettingsPrompt = () => {
+    Alert.alert(
+      'FitazFK needs permissions to do this',
+      'Go to app settings and enable camera and camera roll permissions',
+      [
+        {
+          text: 'Cancel', style: 'cancel',
+        },
+        {
+          text: 'Go to Settings', onPress: () => Linking.openURL('app-settings:'),
+        },
+      ],
+      { cancelable: false },
+    );
   }
   logOutAlert = () => {
     Alert.alert(
@@ -66,16 +199,21 @@ export default class ProfileHomeScreen extends React.PureComponent {
     }
   }
   render() {
-    const { profile, loading } = this.state;
+    const { profile, loading, avatar } = this.state;
     return (
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
           <ScrollView contentContainerStyle={styles.scrollView}>
-            <Icon
-              name="profile-outline"
-              size={80}
-              color={colors.charcoal.standard}
-            />
+            <TouchableOpacity
+              onPress={() => this.chooseUploadType()}
+            >
+              <View style={styles.avatarBackground}>
+                <Image
+                  source={avatar ? { uri: avatar } : require('../../../../assets/images/profile-add.png')}
+                  style={styles.avatar}
+                />
+              </View>
+            </TouchableOpacity>
             <View style={styles.nameTextContainer}>
               <Text
                 numberOfLines={1}
@@ -148,6 +286,19 @@ const styles = StyleSheet.create({
   scrollView: {
     paddingTop: 15,
     alignItems: 'center',
+  },
+  avatarBackground: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
   nameTextContainer: {
     width,
