@@ -104,6 +104,8 @@ target 'fitazfk' do
 
   pod 'react-native-in-app-utils', :path => '../node_modules/react-native-in-app-utils'
 
+  pod 'react-native-fast-image', :path => '../node_modules/react-native-fast-image'
+
   post_install do |installer|
     installer.pods_project.main_group.tab_width = '2';
     installer.pods_project.main_group.indent_width = '2';

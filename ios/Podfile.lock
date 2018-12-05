@@ -134,6 +134,7 @@ PODS:
     - FBSDKCoreKit
   - FBSDKShareKit (4.37.0):
     - FBSDKCoreKit (~> 4.37.0)
+  - FLAnimatedImage (1.0.12)
   - Folly (2016.10.31.00):
     - boost-for-react-native
     - DoubleConversion
@@ -185,6 +186,11 @@ PODS:
   - lottie-ios (2.5.2)
   - React (0.57.1):
     - React/Core (= 0.57.1)
+  - react-native-fast-image (5.1.1):
+    - FLAnimatedImage
+    - React
+    - SDWebImage/Core
+    - SDWebImage/GIF
   - react-native-in-app-utils (6.0.1):
     - React
   - React/ART (0.57.1):
@@ -233,6 +239,10 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - SDWebImage/Core (4.4.2)
+  - SDWebImage/GIF (4.4.2):
+    - FLAnimatedImage (~> 1.0)
+    - SDWebImage/Core
   - Stripe (13.0.3)
   - yoga (0.57.1.React)
 
@@ -270,6 +280,7 @@ DEPENDENCIES:
   - EXSMS (from `../node_modules/expo-sms/ios`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - react-native-fast-image (from `../node_modules/react-native-fast-image`)
   - react-native-in-app-utils (from `../node_modules/react-native-in-app-utils`)
   - React/ART (from `../node_modules/react-native`)
   - React/Core (from `../node_modules/react-native`)
@@ -301,6 +312,7 @@ SPEC REPOS:
     - FBSDKCoreKit
     - FBSDKLoginKit
     - FBSDKShareKit
+    - FLAnimatedImage
     - Google-Maps-iOS-Utils
     - Google-Mobile-Ads-SDK
     - GoogleMaps
@@ -310,6 +322,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - JKBigInteger2
     - lottie-ios
+    - SDWebImage
     - Stripe
 
 EXTERNAL SOURCES:
@@ -382,6 +395,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
+  react-native-fast-image:
+    :path: "../node_modules/react-native-fast-image"
   react-native-in-app-utils:
     :path: "../node_modules/react-native-in-app-utils"
   yoga:
@@ -437,6 +452,7 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: fe5f3474499a81963e11e3f3a5c753d0a95ca2b4
   FBSDKLoginKit: 2f7249686d1e30ce8a5ef5400eedf50b3e3df332
   FBSDKShareKit: 52e0083222c38e930eb6878007478326599195c3
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Folly: c89ac2d5c6ab169cd7397ef27485c44f35f742c7
   glog: e8acf0ebbf99759d3ff18c86c292a5898282dcde
   Google-Maps-iOS-Utils: c32891ff472eaaa1fca032beedafa1a013af7875
@@ -449,10 +465,12 @@ SPEC CHECKSUMS:
   JKBigInteger2: e91672035c42328c48b7dd015b66812ddf40ca9b
   lottie-ios: 3fef45d3fabe63e3c7c2eb603dd64ddfffc73062
   React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
+  react-native-fast-image: cba3d9bf9c2cf8ddb643d887a686c53a5dd90a2c
   react-native-in-app-utils: 655eb59a6ccb31830637cd9b441b91fad35ff7a0
+  SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   Stripe: 76c203e21555089b708e6cbe972a3e3baf1ab4d8
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: f87ed98eeb6a0d16d31f0fe5c059938fe3579cf6
+PODFILE CHECKSUM: 6f60098ebab5eae70d9f45aeaf2b035c7908830f
 
 COCOAPODS: 1.5.3

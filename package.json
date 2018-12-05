@@ -41,6 +41,7 @@
     "react-native-carousel": "^0.11.0",
     "react-native-elements": "^0.19.1",
     "react-native-fade-in-view": "^1.0.5",
+    "react-native-fast-image": "^5.1.1",
     "react-native-image-progress": "^1.1.1",
     "react-native-in-app-utils": "^6.0.1",
     "react-native-indicators": "^0.13.0",
