@@ -47,8 +47,12 @@ const storeProgressInfo = async (uri, isInitial, weight, waist, hip, burpeeCount
   const userStorageRef = userPhotosStorageRef.child(uid);
   const progressDataFieldName = isInitial ? 'initialProgressInfo' : 'currentProgressInfo';
   const progressPhotoFilename = isInitial ? 'initial-progress-photo.jpeg' : 'current-progress-photo.jpeg';
-  const initialPhotoStorageRef = userStorageRef.child(progressPhotoFilename);
-  const snapshot = await initialPhotoStorageRef.put(blob);
+  const progressPhotoStorageRef = userStorageRef.child(progressPhotoFilename);
+  const metadata = {
+    contentType: 'image/jpeg',
+    cacheControl: 'public',
+  };
+  const snapshot = await progressPhotoStorageRef.put(blob, metadata);
   const url = await snapshot.ref.getDownloadURL();
   await db.collection('users').doc(uid).set({
     [progressDataFieldName]: {
