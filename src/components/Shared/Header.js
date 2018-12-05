@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Image, StatusBar, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import PropTypes from 'prop-types';
+import ProfileButton from '../Shared/ProfileButton';
 import Icon from '../Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -141,16 +142,9 @@ const Header = ({
       }
       {
         withProfileButton && (
-          <TouchableOpacity
-            style={styles.headerContentContainerRight}
+          <ProfileButton
             onPress={() => navigation.navigate('ProfileHome')}
-          >
-            <Icon
-              name="profile-solid"
-              size={30}
-              color={colors.white}
-            />
-          </TouchableOpacity>
+          />
         )
       }
       {
