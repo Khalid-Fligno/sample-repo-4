@@ -11,10 +11,10 @@ import {
   ActionSheetIOS,
   TouchableOpacity,
   Linking,
-  Image,
 } from 'react-native';
 import { ImagePicker, ImageManipulator, Permissions } from 'expo';
 import { List, ListItem } from 'react-native-elements';
+import FastImage from 'react-native-fast-image';
 import { auth, db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
@@ -92,12 +92,17 @@ export default class ProfileHomeScreen extends React.PureComponent {
       const userPhotosStorageRef = storageRef.child('user-photos');
       const userStorageRef = userPhotosStorageRef.child(uid);
       const avatarStorageRef = userStorageRef.child('avatar.jpeg');
-      const snapshot = await avatarStorageRef.put(blob);
+      const metadata = {
+        contentType: 'image/jpeg',
+        cacheControl: 'public, max-age=31536000',
+      };
+      const snapshot = await avatarStorageRef.put(blob, metadata);
       const url = await snapshot.ref.getDownloadURL();
+      await FastImage.preload([{ uri: url }]);
+      this.setState({ avatar: url });
       await db.collection('users').doc(uid).set({
         avatar: url,
       }, { merge: true });
-      this.setState({ avatar: url });
     } catch (err) {
       Alert.alert('Image save error');
     }
@@ -134,7 +139,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
       try {
         const manipResult = await ImageManipulator.manipulateAsync(
           result.uri,
-          [{ resize: { height: 80, width: 80 } }],
+          [{ resize: { height: 160, width: 160 } }],
           { format: 'jpeg' },
         );
         this.setState({ loading: true });
@@ -152,7 +157,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
     if (!result.cancelled) {
       const manipResult = await ImageManipulator.manipulateAsync(
         result.uri,
-        [{ resize: { width: 80, height: 80 } }],
+        [{ resize: { width: 160, height: 160 } }],
         { format: 'jpeg' },
       );
       this.setState({ loading: true });
@@ -207,11 +212,17 @@ export default class ProfileHomeScreen extends React.PureComponent {
             <TouchableOpacity
               onPress={() => this.chooseUploadType()}
             >
-              <View style={styles.avatarBackground}>
-                <Image
+              <View style={styles.avatarOutline}>
+                <View style={styles.avatarBackdrop}>
+                  <FastImage
+                    style={styles.avatar}
+                    source={avatar ? { uri: avatar } : require('../../../../assets/images/profile-add.png')}
+                  />
+                </View>
+                {/* <Image
                   source={avatar ? { uri: avatar } : require('../../../../assets/images/profile-add.png')}
                   style={styles.avatar}
-                />
+                /> */}
               </View>
             </TouchableOpacity>
             <View style={styles.nameTextContainer}>
@@ -287,13 +298,19 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     alignItems: 'center',
   },
-  avatarBackground: {
-    width: 84,
-    height: 84,
-    borderRadius: 42,
+  avatarOutline: {
+    width: 88,
+    height: 88,
+    borderRadius: 44,
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  avatarBackdrop: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: colors.grey.standard,
   },
   avatar: {
     width: 80,
