@@ -90,7 +90,6 @@ class WorkoutsHomeScreen extends React.PureComponent {
     this.showHelperOnFirstOpen();
   }
   componentWillUnmount = () => {
-    this.unsubscribeFromWorkouts();
     this.unsubscribeFromTargets();
   }
   onSnapToItem = (field, slideIndex) => {
@@ -143,7 +142,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
     this.setState({ loading: true });
     const type = hiitTypeMap[selectedHiitWorkoutIndex];
     try {
-      this.unsubscribeFromWorkouts = await db.collection('workouts')
+      await db.collection('workouts')
         .where(type, '==', true)
         .get()
         .then(async (querySnapshot) => {
