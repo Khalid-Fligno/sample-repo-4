@@ -2,17 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet, TouchableOpacity, Text, Dimensions, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
-import Image from 'react-native-image-progress';
-import { DotIndicator } from 'react-native-indicators';
+import FastImage from 'react-native-fast-image';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
 const { width } = Dimensions.get('window');
-const indicatorProps = {
-  color: colors.blue.standard,
-  count: 3,
-  size: 6,
-};
 
 export default class ImageModal extends React.PureComponent {
   constructor(props) {
@@ -43,11 +37,9 @@ export default class ImageModal extends React.PureComponent {
               maximumZoomScale={2}
               minimumZoomScale={1}
             >
-              <Image
-                source={imageSource}
-                indicator={DotIndicator}
-                indicatorProps={indicatorProps}
+              <FastImage
                 style={styles.imageStyle}
+                source={imageSource}
               />
             </ScrollView>
           </View>

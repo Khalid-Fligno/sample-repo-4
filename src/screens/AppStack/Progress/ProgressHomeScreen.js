@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, TouchableOpacity, Alert } from 'react-native';
 import { FileSystem } from 'expo';
 import moment from 'moment';
+import FastImage from 'react-native-fast-image';
 import Image from 'react-native-image-progress';
 import { DotIndicator } from 'react-native-indicators';
 import ReactTimeout from 'react-timeout';
@@ -144,9 +145,17 @@ class ProgressHomeScreen extends React.PureComponent {
             {
               currentProgressInfo ? (
                 <TouchableOpacity
-                  onPress={() => this.toggleImageModal(`${FileSystem.cacheDirectory}progress-photo-1.jpg`)}
+                  // onPress={() => this.toggleImageModal(`${FileSystem.cacheDirectory}progress-photo-1.jpg`)}
+                  onPress={() => this.toggleImageModal(currentProgressInfo.photoURL)}
                 >
-                  <Image
+                  <FastImage
+                    style={styles.image}
+                    source={{
+                      uri: currentProgressInfo.photoURL,
+                    }}
+                  />
+                  {/* <Image
+                    key={currentProgressInfo.photoURL}
                     source={{ uri: `${FileSystem.cacheDirectory}progress-photo-1.jpg` || { uri: currentProgressInfo.photoURL } }}
                     style={styles.image}
                     indicator={DotIndicator}
@@ -155,7 +164,7 @@ class ProgressHomeScreen extends React.PureComponent {
                       count: 3,
                       size: 6,
                     }}
-                  />
+                  /> */}
                 </TouchableOpacity>
               ) : (
                 <View style={styles.imagePlaceholder}>
