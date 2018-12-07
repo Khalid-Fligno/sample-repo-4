@@ -9,8 +9,10 @@ import {
   NativeModules,
   Alert,
   TouchableOpacity,
+  AsyncStorage,
 } from 'react-native';
 import { DotIndicator } from 'react-native-indicators';
+import { db } from '../../../config/firebase';
 import { identifiers, validateReceiptProduction, validateReceiptSandbox, compare } from '../../../config/apple';
 import SubscriptionTile from '../../components/Onboarding/SubscriptionTile';
 import Loader from '../../components/Shared/Loader';
@@ -89,22 +91,46 @@ export default class SubscriptionScreen extends React.PureComponent {
       InAppUtils.purchaseProduct(productIdentifier, async (error, response) => {
         if (error) {
           this.setState({ loading: false });
-          Alert.alert('Something went wrong');
+          Alert.alert('Purchase error');
         }
         if (response && response.productIdentifier) {
           const validationData = await this.validate(response.transactionReceipt);
           if (validationData === undefined) {
+            this.setState({ loading: false });
             Alert.alert('Receipt validation error');
           }
-          const isSubscribed = validationData.latest_receipt_info.expires_date > Date.now();
-          if (isSubscribed === true) {
+          const isValid = validationData.latest_receipt_info.expires_date > Date.now();
+          if (isValid === true) {
+            const uid = await AsyncStorage.getItem('uid');
+            const userRef = db.collection('users').doc(uid);
+            const data = {
+              subscriptionInfo: {
+                expiry: validationData.latest_receipt_info.expires_date,
+                originalTransationId: validationData.latest_receipt_info.original_transaction_id,
+                originalPurchaseDate: validationData.latest_receipt_info.original_purchase_date_ms,
+                productId: validationData.latest_receipt_info.product_id,
+                receipt: response.transactionReceipt,
+              },
+            };
+            await userRef.set(data, { merge: true });
             this.setState({ loading: false });
             Alert.alert('Purchase Successful', `Your Transaction ID is ${response.transactionIdentifier}`);
-            this.props.navigation.navigate('App');
-          } else if (isSubscribed === false) {
+            db.collection('users').doc(uid)
+              .get()
+              .then(async (doc) => {
+                this.setState({ loading: false });
+                if (await doc.data().onboarded) {
+                  this.props.navigation.navigate('App');
+                } else {
+                  this.props.navigation.navigate('Onboarding1');
+                }
+              });
+          } else if (isValid === false) {
+            this.setState({ loading: false });
             Alert.alert('Purchase Unsuccessful');
           } else {
-            Alert.alert('Something went wrong', `${isSubscribed.message}`);
+            this.setState({ loading: false });
+            Alert.alert('Something went wrong', `${isValid.message}`);
           }
         }
       });
