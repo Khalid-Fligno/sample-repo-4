@@ -18,18 +18,6 @@ export const compare = (a, b) => {
   return comparison;
 };
 
-export const compareExpiry = (a, b) => {
-  const purchaseA = a.expires_date_ms;
-  const purchaseB = b.expires_date_ms;
-  let comparison = 0;
-  if (purchaseA > purchaseB) {
-    comparison = -1;
-  } else if (purchaseA < purchaseB) {
-    comparison = 1;
-  }
-  return comparison;
-};
-
 export const identifiers = [
   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly',
   'com.fitazfk.fitazfkapp.sub.fullaccess.quarterly',
