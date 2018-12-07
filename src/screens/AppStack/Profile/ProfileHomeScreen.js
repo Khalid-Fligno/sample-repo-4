@@ -209,22 +209,18 @@ export default class ProfileHomeScreen extends React.PureComponent {
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
           <ScrollView contentContainerStyle={styles.scrollView}>
-            <TouchableOpacity
-              onPress={() => this.chooseUploadType()}
-            >
-              <View style={styles.avatarOutline}>
-                <View style={styles.avatarBackdrop}>
+            <View style={styles.avatarOutline}>
+              <View style={styles.avatarBackdrop}>
+                <TouchableOpacity
+                  onPress={() => this.chooseUploadType()}
+                >
                   <FastImage
                     style={styles.avatar}
                     source={avatar ? { uri: avatar } : require('../../../../assets/images/profile-add.png')}
                   />
-                </View>
-                {/* <Image
-                  source={avatar ? { uri: avatar } : require('../../../../assets/images/profile-add.png')}
-                  style={styles.avatar}
-                /> */}
+                </TouchableOpacity>
               </View>
-            </TouchableOpacity>
+            </View>
             <View style={styles.nameTextContainer}>
               <Text
                 numberOfLines={1}
@@ -295,7 +291,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scrollView: {
-    paddingTop: 15,
+    paddingTop: 20,
     alignItems: 'center',
   },
   avatarOutline: {
