@@ -53,14 +53,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   skeletonTitle: {
-    height: 17,
+    height: 16,
     width: width - 40,
     backgroundColor: colors.grey.light,
-    marginBottom: 2,
+    marginBottom: 4,
     borderRadius: 2,
   },
   skeletonSubtitle: {
-    height: 12,
+    height: 11,
     width: width - 40,
     backgroundColor: colors.grey.light,
     marginBottom: 4,
