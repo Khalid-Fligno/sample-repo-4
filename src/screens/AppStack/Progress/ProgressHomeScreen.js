@@ -4,8 +4,6 @@ import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, Touchable
 import { FileSystem } from 'expo';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
-import Image from 'react-native-image-progress';
-import { DotIndicator } from 'react-native-indicators';
 import ReactTimeout from 'react-timeout';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
@@ -110,17 +108,11 @@ class ProgressHomeScreen extends React.PureComponent {
             {
               initialProgressInfo ? (
                 <TouchableOpacity
-                  onPress={() => this.toggleImageModal(`${FileSystem.cacheDirectory}progress-photo-0.jpg`)}
+                  onPress={() => this.toggleImageModal(initialProgressInfo.photoURL)}
                 >
-                  <Image
-                    source={{ uri: `${FileSystem.cacheDirectory}progress-photo-0.jpg` || { uri: initialProgressInfo.photoURL } }}
+                  <FastImage
                     style={styles.image}
-                    indicator={DotIndicator}
-                    indicatorProps={{
-                      color: colors.blue.standard,
-                      count: 3,
-                      size: 6,
-                    }}
+                    source={{ uri: initialProgressInfo.photoURL }}
                   />
                 </TouchableOpacity>
               ) : (
@@ -150,9 +142,7 @@ class ProgressHomeScreen extends React.PureComponent {
                 >
                   <FastImage
                     style={styles.image}
-                    source={{
-                      uri: currentProgressInfo.photoURL,
-                    }}
+                    source={{ uri: currentProgressInfo.photoURL }}
                   />
                   {/* <Image
                     key={currentProgressInfo.photoURL}
