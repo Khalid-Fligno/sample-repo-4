@@ -137,24 +137,12 @@ class ProgressHomeScreen extends React.PureComponent {
             {
               currentProgressInfo ? (
                 <TouchableOpacity
-                  // onPress={() => this.toggleImageModal(`${FileSystem.cacheDirectory}progress-photo-1.jpg`)}
                   onPress={() => this.toggleImageModal(currentProgressInfo.photoURL)}
                 >
                   <FastImage
                     style={styles.image}
                     source={{ uri: currentProgressInfo.photoURL }}
                   />
-                  {/* <Image
-                    key={currentProgressInfo.photoURL}
-                    source={{ uri: `${FileSystem.cacheDirectory}progress-photo-1.jpg` || { uri: currentProgressInfo.photoURL } }}
-                    style={styles.image}
-                    indicator={DotIndicator}
-                    indicatorProps={{
-                      color: colors.blue.standard,
-                      count: 3,
-                      size: 6,
-                    }}
-                  /> */}
                 </TouchableOpacity>
               ) : (
                 <View style={styles.imagePlaceholder}>
