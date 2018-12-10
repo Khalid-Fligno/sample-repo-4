@@ -326,6 +326,10 @@ const styles = StyleSheet.create({
     width,
     marginBottom: 20,
     borderColor: colors.grey.light,
+    shadowColor: colors.grey.standard,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
   },
   listItemContainer: {
     paddingTop: 15,

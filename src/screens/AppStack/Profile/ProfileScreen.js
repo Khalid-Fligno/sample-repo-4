@@ -15,7 +15,6 @@ import { List, ListItem } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
-import Icon from '../../../components/Shared/Icon';
 import { weeklySessionsPickerOptions } from '../../../utils';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -101,11 +100,6 @@ export default class ProfileHomeScreen extends React.PureComponent {
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
           <ScrollView contentContainerStyle={styles.scrollView}>
-            <Icon
-              name="profile-outline"
-              size={100}
-              color={colors.charcoal.standard}
-            />
             <List containerStyle={styles.listContainer}>
               <ListItem
                 title="Name"
@@ -269,6 +263,10 @@ const styles = StyleSheet.create({
     width,
     marginBottom: 20,
     borderColor: colors.grey.light,
+    shadowColor: colors.grey.standard,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
   },
   listItemContainer: {
     borderBottomColor: colors.grey.light,

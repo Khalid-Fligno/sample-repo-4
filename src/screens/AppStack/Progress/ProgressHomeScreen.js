@@ -335,9 +335,9 @@ const styles = StyleSheet.create({
   imagesContainer: {
     width,
     flexDirection: 'row',
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.3,
+    shadowColor: colors.grey.standard,
     shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
     shadowRadius: 3,
   },
   image: {

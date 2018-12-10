@@ -546,14 +546,18 @@ const styles = StyleSheet.create({
   listContainer: {
     width,
     marginTop: 0,
-    borderTopColor: colors.grey.standard,
+    borderTopColor: colors.grey.light,
+    shadowColor: colors.grey.standard,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
   },
   listItem: {
     width,
     height: 65,
     justifyContent: 'center',
     backgroundColor: colors.white,
-    borderBottomColor: colors.grey.standard,
+    borderBottomColor: colors.grey.light,
   },
   blankListItemTitle: {
     fontFamily: fonts.bold,
