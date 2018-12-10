@@ -62,6 +62,7 @@ export default class LoginScreen extends React.PureComponent {
             const { subscriptionInfo } = await doc.data();
             if (subscriptionInfo === undefined) {
               // NO PURCHASE INFORMATION SAVED
+              this.setState({ loading: false });
               this.props.navigation.navigate('Subscription');
             } else if (subscriptionInfo.expiry < Date.now()) {
               // EXPIRED
@@ -85,13 +86,16 @@ export default class LoginScreen extends React.PureComponent {
                         },
                       };
                       await userRef.set(data, { merge: true });
+                      this.setState({ loading: false });
                       this.props.navigation.navigate('App');
                     } else {
+                      this.setState({ loading: false });
                       Alert.alert('Something went wrong');
                       this.props.navigation.navigate('Subscription');
                     }
                   } catch (err) {
                     // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
+                    this.setState({ loading: false });
                     Alert.alert('Subscription has been cancelled');
                     this.props.navigation.navigate('Subscription');
                   }
@@ -99,6 +103,7 @@ export default class LoginScreen extends React.PureComponent {
               });
             } else {
               // RECEIPT STILL VALID
+              this.setState({ loading: false });
               if (await !doc.data().onboarded) {
                 this.props.navigation.navigate('Onboarding1');
               }
@@ -127,6 +132,7 @@ export default class LoginScreen extends React.PureComponent {
             const { subscriptionInfo } = await doc.data();
             if (subscriptionInfo === undefined) {
               // NO PURCHASE INFORMATION SAVED
+              this.setState({ loading: false });
               this.props.navigation.navigate('Subscription');
             } else if (subscriptionInfo.expiry < Date.now()) {
               // EXPIRED
@@ -150,13 +156,16 @@ export default class LoginScreen extends React.PureComponent {
                         },
                       };
                       await userRef.set(data, { merge: true });
+                      this.setState({ loading: false });
                       this.props.navigation.navigate('App');
                     } else {
+                      this.setState({ loading: false });
                       Alert.alert('Something went wrong');
                       this.props.navigation.navigate('Subscription');
                     }
                   } catch (err) {
                     // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
+                    this.setState({ loading: false });
                     Alert.alert('Subscription has been cancelled');
                     this.props.navigation.navigate('Subscription');
                   }
@@ -164,6 +173,7 @@ export default class LoginScreen extends React.PureComponent {
               });
             } else {
               // RECEIPT STILL VALID
+              this.setState({ loading: false });
               if (await !doc.data().onboarded) {
                 this.props.navigation.navigate('Onboarding1');
               }
