@@ -6,6 +6,9 @@
 # firebase
 /config/firebase.js
 
+# segment
+/config/segment.js
+
 # Xcode
 *.xcuserstate
 fitazfk.xcworkspace/
