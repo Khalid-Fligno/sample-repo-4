@@ -130,7 +130,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 titleStyle={styles.listItemTitleStyle}
                 subtitle={timezone}
                 subtitleStyle={styles.listItemSubtitleStyle}
-                containerStyle={styles.listItemContainer}
+                containerStyle={styles.listItemContainerBottom}
                 hideChevron
               />
               {/* <ListItem
@@ -270,6 +270,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   listItemContainer: {
+    borderBottomColor: colors.grey.light,
+    backgroundColor: colors.white,
+  },
+  listItemContainerBottom: {
+    borderBottomWidth: 0,
     borderBottomColor: colors.grey.light,
     backgroundColor: colors.white,
   },

@@ -235,7 +235,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 activeOpacity={0.5}
                 key="Profile"
                 title="Profile"
-                containerStyle={styles.listItemContainer}
+                containerStyle={styles.listItemContainerBottom}
                 titleStyle={styles.listItemTitleStyle}
                 onPress={() => this.props.navigation.navigate('Profile')}
               />
@@ -264,7 +264,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
               <ListItem
                 activeOpacity={0.5}
                 title="Log Out"
-                containerStyle={styles.listItemContainer}
+                containerStyle={styles.listItemContainerBottom}
                 titleStyle={styles.listItemTitleStyle}
                 onPress={() => this.logOutAlert()}
               />
@@ -325,15 +325,23 @@ const styles = StyleSheet.create({
   listContainer: {
     width,
     marginBottom: 20,
+    borderTopWidth: 0,
     borderColor: colors.grey.light,
     shadowColor: colors.grey.standard,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.2,
     shadowRadius: 3,
   },
   listItemContainer: {
     paddingTop: 15,
     paddingBottom: 15,
+    borderBottomColor: colors.grey.light,
+    backgroundColor: colors.white,
+  },
+  listItemContainerBottom: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    borderBottomWidth: 0,
     borderBottomColor: colors.grey.light,
     backgroundColor: colors.white,
   },
