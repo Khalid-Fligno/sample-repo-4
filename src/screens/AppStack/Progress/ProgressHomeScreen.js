@@ -73,6 +73,7 @@ class ProgressHomeScreen extends React.PureComponent {
                   );
                 }
               }).catch(() => {
+                this.setState({ loading: false });
                 Alert.alert('Image download error');
               });
           }));
