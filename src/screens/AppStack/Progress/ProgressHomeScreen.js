@@ -404,9 +404,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 2,
     shadowColor: colors.grey.standard,
-    shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
   },
   fieldContainer: {
     flex: 1,

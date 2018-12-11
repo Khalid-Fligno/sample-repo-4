@@ -262,6 +262,7 @@ const styles = StyleSheet.create({
   listContainer: {
     width,
     marginBottom: 20,
+    borderTopWidth: 0,
     borderColor: colors.grey.light,
     shadowColor: colors.grey.standard,
     shadowOffset: { width: 0, height: 2 },
