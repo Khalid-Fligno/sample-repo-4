@@ -29,8 +29,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>6</string>
-	<key>EXAnalyticsDisabled</key>
-	<true/>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
