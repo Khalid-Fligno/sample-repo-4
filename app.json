@@ -26,6 +26,18 @@
     "detach": {
       "iosExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/ios-v2.8.4-sdk30.0.0-3de13133-1adc-4ba1-8569-a84011e570b4.tar.gz",
       "androidExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/android-v2.8.1-sdk30.0.0-271c32ab-0715-4dfb-8270-ecead3679bb4.tar.gz"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "fitaz-health-pty-ltd",
+            "project": "fitazfk-app",
+            "authToken": "371bd1ce93d84a44bf0b9e9690dba7c6d38f16ffc54c4c3e8c00d36565d76d7d"
+          }
+        }
+      ]
     }
   }
 }
