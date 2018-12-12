@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, TouchableOpacity, Alert } from 'react-native';
-import { FileSystem } from 'expo';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import ReactTimeout from 'react-timeout';
@@ -59,33 +58,12 @@ class ProgressHomeScreen extends React.PureComponent {
     db.collection('users').doc(uid)
       .get()
       .then(async (doc) => {
-        if (doc.exists && doc.data().initialProgressInfo) {
-          const images = [];
-          await images.push(await doc.data().initialProgressInfo.photoURL, await doc.data().currentProgressInfo && await doc.data().currentProgressInfo.photoURL);
-          await Promise.all(images.map(async (image, index) => {
-            const fileUri = `${FileSystem.cacheDirectory}progress-photo-${index}.jpg`;
-            await FileSystem.getInfoAsync(fileUri)
-              .then(async ({ exists }) => {
-                if (!exists) {
-                  await FileSystem.downloadAsync(
-                    image,
-                    `${FileSystem.cacheDirectory}progress-photo-${index}.jpg`,
-                  );
-                }
-              }).catch(() => {
-                this.setState({ loading: false });
-                Alert.alert('Image download error');
-              });
-          }));
-          this.setState({
-            initialProgressInfo: await doc.data().initialProgressInfo,
-            currentProgressInfo: await doc.data().currentProgressInfo,
-            unitsOfMeasurement: await doc.data().unitsOfMeasurement,
-            loading: false,
-          });
-        } else {
-          this.setState({ loading: false });
-        }
+        this.setState({
+          initialProgressInfo: await doc.data().initialProgressInfo,
+          currentProgressInfo: await doc.data().currentProgressInfo,
+          unitsOfMeasurement: await doc.data().unitsOfMeasurement,
+          loading: false,
+        });
       });
   }
   render() {
