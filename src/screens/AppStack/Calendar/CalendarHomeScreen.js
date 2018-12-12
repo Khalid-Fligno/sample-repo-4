@@ -540,8 +540,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.dark,
-    marginTop: 10,
-    marginBottom: 8,
+    marginTop: 14,
+    marginBottom: 12,
   },
   listContainer: {
     width,
