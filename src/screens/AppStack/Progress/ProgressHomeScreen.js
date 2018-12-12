@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import ReactTimeout from 'react-timeout';
