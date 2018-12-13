@@ -8,7 +8,7 @@ import {
   ImageBackground,
   AsyncStorage,
 } from 'react-native';
-import { FileSystem, Haptic } from 'expo';
+import { FileSystem, Haptic, Segment } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 import FadeInView from 'react-native-fade-in-view';
 import moment from 'moment';
@@ -38,7 +38,6 @@ const resistanceWorkouts = [
   { displayName: 'FULL BODY', image: require('../../../../assets/images/workouts-blank-tile.png') },
   { displayName: 'UPPER BODY', image: require('../../../../assets/images/workouts-blank-tile.png') },
   { displayName: 'LOWER BODY', image: require('../../../../assets/images/workouts-blank-tile.png') },
-  { displayName: 'CORE', image: require('../../../../assets/images/workouts-blank-tile.png') },
 ];
 
 const hiitWorkouts = [
@@ -88,6 +87,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
     this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
     this.fetchWeeklyTargetInfo();
     this.showHelperOnFirstOpen();
+    Segment.screen('Workouts Home Screen');
   }
   componentWillUnmount = () => {
     this.unsubscribeFromTargets();

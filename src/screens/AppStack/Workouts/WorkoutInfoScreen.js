@@ -12,7 +12,7 @@ import {
   Linking,
   Image,
 } from 'react-native';
-import { FileSystem, Video } from 'expo';
+import { FileSystem, Video, Segment } from 'expo';
 import Modal from 'react-native-modal';
 import Carousel from 'react-native-carousel';
 import { DotIndicator } from 'react-native-indicators';
@@ -49,6 +49,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       handleStart: () => this.handleStart(),
     });
     this.checkInitialProgressCompleted();
+    Segment.screen('Workout Info Screen');
   }
   componentWillUnmount = () => {
     this.unsubscribe();
@@ -112,6 +113,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
   handleWorkoutStart = (workout, reps) => {
     this.setState({ musicModalVisible: false });
     this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
+    Segment.track('Workout Started');
   }
   toggleHelperModal = () => {
     this.setState((prevState) => ({
