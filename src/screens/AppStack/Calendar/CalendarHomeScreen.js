@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
-import { FileSystem, Calendar, Permissions } from 'expo';
+import { FileSystem, Calendar, Permissions, Segment } from 'expo';
 import CalendarStrip from 'react-native-calendar-strip';
 import Swipeable from 'react-native-swipeable';
 import firebase from 'firebase';
@@ -46,6 +46,7 @@ class CalendarHomeScreen extends React.PureComponent {
     this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
     await this.fetchCalendarEntries();
     this.showHelperOnFirstOpen();
+    Segment.screen('Calendar Screen');
   }
   componentWillUnmount() {
     this.unsubscribeFromEntries();
@@ -224,8 +225,6 @@ class CalendarHomeScreen extends React.PureComponent {
         focus = 'upper';
       } else if (workout.lowerBody) {
         focus = 'lower';
-      } else if (workout.core) {
-        focus = 'core';
       }
       return `workouts-${focus}`;
     };
