@@ -51,7 +51,6 @@ const workoutFocusMap = {
   0: 'fullBody',
   1: 'upperBody',
   2: 'lowerBody',
-  3: 'core',
 };
 
 const workoutLocationMap = {

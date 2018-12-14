@@ -5,8 +5,6 @@ export const findFocus = (workoutObject) => {
     return 'Lower';
   } else if (workoutObject.fullBody) {
     return 'Full';
-  } else if (workoutObject.core) {
-    return 'Core';
   }
   return null;
 };

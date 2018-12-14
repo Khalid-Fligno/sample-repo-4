@@ -201,8 +201,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
         focus = 'upper';
       } else if (workout.lowerBody) {
         focus = 'lower';
-      } else if (workout.core) {
-        focus = 'core';
       }
       return `workouts-${focus}`;
     };
