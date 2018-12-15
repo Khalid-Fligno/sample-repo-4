@@ -3,6 +3,7 @@ const fonts = {
   boldItalic: 'GothamBoldItalic',
   medium: 'GothamMedium',
   standard: 'GothamBook',
+  standardNarrow: 'GothamNarrowBook',
   light: 'GothamNarrowLight',
   knucklebones: 'Knucklebones',
 };
