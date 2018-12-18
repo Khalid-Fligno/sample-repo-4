@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Segment } from 'expo';
 import Tile from '../../../components/Shared/Tile';
 import colors from '../../../styles/colors';
 
@@ -8,6 +9,9 @@ export default class NutritionHomeScreen extends React.PureComponent {
     super(props);
     this.state = {
     };
+  }
+  componentDidMount() {
+    Segment.screen('Nutrition Home Screen');
   }
   render() {
     return (
