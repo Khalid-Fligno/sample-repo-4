@@ -31,17 +31,17 @@ const workoutTypes = [
 const workoutLocations = [
   { displayName: 'GYM', image: require('../../../../assets/images/workouts-blank-tile.png') },
   { displayName: 'HOME', image: require('../../../../assets/images/workouts-blank-tile.png') },
-  { displayName: 'PARK', image: require('../../../../assets/images/workouts-blank-tile.png') },
+  { displayName: 'OUTDOORS', image: require('../../../../assets/images/workouts-blank-tile.png') },
 ];
 
 const resistanceWorkouts = [
   { displayName: 'FULL BODY', image: require('../../../../assets/images/workouts-blank-tile.png') },
   { displayName: 'UPPER BODY', image: require('../../../../assets/images/workouts-blank-tile.png') },
-  { displayName: 'LOWER BODY', image: require('../../../../assets/images/workouts-blank-tile.png') },
+  { displayName: 'ABS, BUTT & THIGHS', image: require('../../../../assets/images/workouts-blank-tile.png') },
 ];
 
 const hiitWorkouts = [
-  { displayName: 'JOGGING' },
+  { displayName: 'RUNNING' },
   { displayName: 'CYCLING' },
   { displayName: 'ROWING' },
   { displayName: 'SKIPPING' },
@@ -56,7 +56,7 @@ const workoutFocusMap = {
 const workoutLocationMap = {
   0: 'gym',
   1: 'home',
-  2: 'park',
+  2: 'outdoors',
 };
 
 const hiitTypeMap = {
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 24,
+    fontSize: 22,
     color: colors.black,
     textAlign: 'center',
   },
