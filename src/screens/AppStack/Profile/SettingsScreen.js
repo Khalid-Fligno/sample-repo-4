@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, View, AsyncStorage, ScrollView, Dimensions, Alert } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
+import firebase from 'firebase';
 import { db, auth } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
@@ -67,8 +68,19 @@ export default class SettingsScreen extends React.PureComponent {
       Alert.alert(error);
     });
   }
+  resetInitialProgress = async () => {
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    await userRef.update({
+      initialProgressInfo: firebase.firestore.FieldValue.delete(),
+      currentProgressInfo: firebase.firestore.FieldValue.delete(),
+    });
+    Alert.alert('Your progress info has been reset');
+    this.setState({ loading: false });
+  }
   render() {
-    const { isPasswordAccount, loading } = this.state;
+    const { isPasswordAccount, profile, loading } = this.state;
     return (
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
@@ -82,6 +94,18 @@ export default class SettingsScreen extends React.PureComponent {
                     titleStyle={styles.listItemTitle}
                     containerStyle={styles.listItemContainer}
                     onPress={() => this.changePasswordAlert()}
+                  />
+                )
+              }
+              {
+                // Only show password change if an email/password account is present
+                profile && (
+                  <ListItem
+                    title="Reset initial progress info"
+                    titleStyle={styles.listItemTitle}
+                    disabled={profile && !profile.initialProgressInfo}
+                    containerStyle={styles.listItemContainer}
+                    onPress={() => this.resetInitialProgress()}
                   />
                 )
               }
@@ -126,5 +150,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     color: colors.charcoal.standard,
     marginTop: 5,
+    fontSize: 14,
   },
 });
