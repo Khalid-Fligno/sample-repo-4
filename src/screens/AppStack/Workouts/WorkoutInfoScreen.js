@@ -160,7 +160,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                 </View>
                 <View>
                   <Text style={styles.exerciseTileHeaderBarRight}>
-                    {reps} reps
+                    x{reps}
                   </Text>
                 </View>
               </View>
@@ -470,13 +470,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.coral.standard,
   },
   exerciseTileHeaderTextLeft: {
-    fontFamily: fonts.standard,
-    fontSize: 16,
+    fontFamily: fonts.standardNarrow,
+    fontSize: 14,
     color: colors.white,
   },
   exerciseTileHeaderBarRight: {
-    fontFamily: fonts.standard,
-    fontSize: 16,
+    fontFamily: fonts.standardNarrow,
+    fontSize: 14,
     color: colors.white,
   },
   exerciseDescriptionContainer: {
