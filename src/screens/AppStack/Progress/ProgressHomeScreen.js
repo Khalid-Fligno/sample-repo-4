@@ -36,6 +36,9 @@ class ProgressHomeScreen extends React.PureComponent {
     this.showHelperOnFirstOpen();
     Segment.screen('Progress Screen');
   }
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
   showHelperOnFirstOpen = async () => {
     const helperShownOnFirstOpen = await AsyncStorage.getItem('progressHelperShownOnFirstOpen');
     if (helperShownOnFirstOpen === null) {
@@ -57,15 +60,16 @@ class ProgressHomeScreen extends React.PureComponent {
   fetchProgressInfo = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
-    db.collection('users').doc(uid)
-      .get()
-      .then(async (doc) => {
-        this.setState({
-          initialProgressInfo: await doc.data().initialProgressInfo,
-          currentProgressInfo: await doc.data().currentProgressInfo,
-          unitsOfMeasurement: await doc.data().unitsOfMeasurement,
-          loading: false,
-        });
+    this.unsubscribe = db.collection('users').doc(uid)
+      .onSnapshot(async (doc) => {
+        if (doc.exists) {
+          this.setState({
+            initialProgressInfo: await doc.data().initialProgressInfo,
+            currentProgressInfo: await doc.data().currentProgressInfo,
+            unitsOfMeasurement: await doc.data().unitsOfMeasurement,
+            loading: false,
+          });
+        }
       });
   }
   render() {
@@ -164,7 +168,7 @@ class ProgressHomeScreen extends React.PureComponent {
           <View style={styles.dataRowContainer}>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {initialProgressInfo ? initialProgressInfo.weight : '-'} {unitsOfMeasurement === 'metric' && 'kg'}{unitsOfMeasurement === 'imperial' && 'lbs'}
+                {initialProgressInfo ? initialProgressInfo.weight : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'kg'}{initialProgressInfo && unitsOfMeasurement === 'imperial' && 'lbs'}
               </Text>
             </View>
             <View style={styles.fieldContainer}>
