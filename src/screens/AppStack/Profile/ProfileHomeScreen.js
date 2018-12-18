@@ -235,18 +235,18 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 activeOpacity={0.5}
                 key="Profile"
                 title="Profile"
-                containerStyle={styles.listItemContainerBottom}
+                containerStyle={styles.listItemContainer}
                 titleStyle={styles.listItemTitleStyle}
                 onPress={() => this.props.navigation.navigate('Profile')}
               />
-              {/* <ListItem
+              <ListItem
                 activeOpacity={0.5}
                 key="Settings"
                 title="Settings"
-                containerStyle={styles.listItemContainer}
+                containerStyle={styles.listItemContainerBottom}
                 titleStyle={styles.listItemTitleStyle}
                 onPress={() => this.props.navigation.navigate('Settings')}
-              /> */}
+              />
             </List>
             <List containerStyle={styles.listContainer}>
               {
