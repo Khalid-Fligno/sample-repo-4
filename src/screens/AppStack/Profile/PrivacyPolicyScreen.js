@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, View, Text, ScrollView, Dimensions, Linking } from 'react-native';
+import { Segment } from 'expo';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
@@ -13,10 +14,12 @@ export default class PrivacyPolicyScreen extends React.PureComponent {
     this.state = {
       text: undefined,
       loading: false,
+      analyticsEnabled: undefined,
     };
   }
-  componentDidMount() {
+  componentDidMount = async () => {
     this.fetchText();
+    this.setState({ analyticsEnabled: await Segment.getEnabledAsync() });
   }
   fetchText = () => {
     this.setState({ loading: true });
@@ -33,8 +36,18 @@ export default class PrivacyPolicyScreen extends React.PureComponent {
   openLink = (url) => {
     Linking.openURL(url);
   }
+  turnOffAnalytics = async () => {
+    this.setState({ loading: true });
+    await Segment.setEnabledAsync(false);
+    this.setState({ analyticsEnabled: false, loading: false });
+  }
+  turnOnAnalytics = async () => {
+    this.setState({ loading: true });
+    await Segment.setEnabledAsync(true);
+    this.setState({ analyticsEnabled: true, loading: false });
+  }
   render() {
-    const { text, loading } = this.state;
+    const { text, loading, analyticsEnabled } = this.state;
     const sortedText = text && text.sort((a, b) => {
       return a.id - b.id;
     });
@@ -59,6 +72,26 @@ export default class PrivacyPolicyScreen extends React.PureComponent {
               Privacy Policy
             </Text>
             {textDisplay}
+            {
+              analyticsEnabled === true && (
+                <Text
+                  onPress={() => this.turnOffAnalytics()}
+                  style={styles.link}
+                >
+                  Turn off analytics
+                </Text>
+              )
+            }
+            {
+              analyticsEnabled === false && (
+                <Text
+                  onPress={() => this.turnOnAnalytics()}
+                  style={styles.link}
+                >
+                  Turn on analytics
+                </Text>
+              )
+            }
           </ScrollView>
           <Loader
             loading={loading}
