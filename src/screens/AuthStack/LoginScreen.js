@@ -115,6 +115,79 @@ export default class LoginScreen extends React.PureComponent {
       this.setState({ error: 'Something went wrong', loading: false });
     }
   }
+  // login = async (email, password) => {
+  //   this.setState({ loading: true });
+  //   try {
+  //     await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  //     const authResponse = await auth.signInWithEmailAndPassword(email, password);
+  //     if (authResponse) {
+  //       const { uid } = authResponse.user;
+  //       await AsyncStorage.setItem('uid', uid);
+  //       db.collection('users').doc(uid)
+  //         .get()
+  //         .then(async (doc) => {
+  //           if (await doc.data().fitnessLevel) {
+  //             await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+  //           }
+  //           const { subscriptionInfo } = await doc.data();
+  //           if (subscriptionInfo === undefined) {
+  //             // NO PURCHASE INFORMATION SAVED
+  //             this.setState({ loading: false });
+  //             this.props.navigation.navigate('Subscription');
+  //           } else if (subscriptionInfo.expiry < Date.now()) {
+  //             // EXPIRED
+  //             InAppUtils.restorePurchases(async (error, response) => {
+  //               if (error) {
+  //                 Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
+  //               } else {
+  //                 const sortedPurchases = response.slice().sort(compare);
+  //                 try {
+  //                   const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
+  //                   if (validationData === undefined) {
+  //                     Alert.alert('Receipt validation error');
+  //                   }
+  //                   if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
+  //                     Alert.alert('Your subscription has been auto-renewed');
+  //                     const userRef = db.collection('users').doc(uid);
+  //                     const data = {
+  //                       subscriptionInfo: {
+  //                         receipt: sortedPurchases[0].transactionReceipt,
+  //                         expiry: validationData.latest_receipt_info.expires_date,
+  //                       },
+  //                     };
+  //                     await userRef.set(data, { merge: true });
+  //                     this.setState({ loading: false });
+  //                     this.props.navigation.navigate('App');
+  //                   } else {
+  //                     this.setState({ loading: false });
+  //                     Alert.alert('Something went wrong');
+  //                     this.props.navigation.navigate('Subscription');
+  //                   }
+  //                 } catch (err) {
+  //                   // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
+  //                   this.setState({ loading: false });
+  //                   Alert.alert('Subscription has been cancelled');
+  //                   this.props.navigation.navigate('Subscription');
+  //                 }
+  //               }
+  //             });
+  //           } else {
+  //             // RECEIPT STILL VALID
+  //             this.setState({ loading: false });
+  //             if (await !doc.data().onboarded) {
+  //               this.props.navigation.navigate('Onboarding1');
+  //             }
+  //             this.props.navigation.navigate('App');
+  //           }
+  //         });
+  //     }
+  //   } catch (err) {
+  //     const errorCode = err.code;
+  //     this.setState({ error: errors.login[errorCode], loading: false });
+  //   }
+  // }
+
+  // WITHOUT PAYMENTS FOR TESTING
   login = async (email, password) => {
     this.setState({ loading: true });
     try {
@@ -129,56 +202,11 @@ export default class LoginScreen extends React.PureComponent {
             if (await doc.data().fitnessLevel) {
               await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
             }
-            const { subscriptionInfo } = await doc.data();
-            if (subscriptionInfo === undefined) {
-              // NO PURCHASE INFORMATION SAVED
-              this.setState({ loading: false });
-              this.props.navigation.navigate('Subscription');
-            } else if (subscriptionInfo.expiry < Date.now()) {
-              // EXPIRED
-              InAppUtils.restorePurchases(async (error, response) => {
-                if (error) {
-                  Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
-                } else {
-                  const sortedPurchases = response.slice().sort(compare);
-                  try {
-                    const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
-                    if (validationData === undefined) {
-                      Alert.alert('Receipt validation error');
-                    }
-                    if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
-                      Alert.alert('Your subscription has been auto-renewed');
-                      const userRef = db.collection('users').doc(uid);
-                      const data = {
-                        subscriptionInfo: {
-                          receipt: sortedPurchases[0].transactionReceipt,
-                          expiry: validationData.latest_receipt_info.expires_date,
-                        },
-                      };
-                      await userRef.set(data, { merge: true });
-                      this.setState({ loading: false });
-                      this.props.navigation.navigate('App');
-                    } else {
-                      this.setState({ loading: false });
-                      Alert.alert('Something went wrong');
-                      this.props.navigation.navigate('Subscription');
-                    }
-                  } catch (err) {
-                    // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
-                    this.setState({ loading: false });
-                    Alert.alert('Subscription has been cancelled');
-                    this.props.navigation.navigate('Subscription');
-                  }
-                }
-              });
-            } else {
-              // RECEIPT STILL VALID
-              this.setState({ loading: false });
-              if (await !doc.data().onboarded) {
-                this.props.navigation.navigate('Onboarding1');
-              }
-              this.props.navigation.navigate('App');
+            this.setState({ loading: false });
+            if (await !doc.data().onboarded) {
+              this.props.navigation.navigate('Onboarding1');
             }
+            this.props.navigation.navigate('App');
           });
       }
     } catch (err) {
@@ -186,6 +214,7 @@ export default class LoginScreen extends React.PureComponent {
       this.setState({ error: errors.login[errorCode], loading: false });
     }
   }
+
   validate = async (receiptData) => {
     const validationData = await validateReceiptProduction(receiptData).catch(async () => {
       const validationDataSandbox = await validateReceiptSandbox(receiptData);
@@ -205,6 +234,9 @@ export default class LoginScreen extends React.PureComponent {
       ],
     });
     this.props.navigation.dispatch(resetAction);
+  }
+  navigateToForgottenPassword = () => {
+    this.props.navigation.navigate('ForgottenPassword');
   }
   render() {
     const {
@@ -286,8 +318,14 @@ export default class LoginScreen extends React.PureComponent {
             onPress={() => this.loginWithFacebook()}
           />
           <Text
+            onPress={() => this.navigateToForgottenPassword()}
+            style={styles.navigateToForgottenPasswordButton}
+          >
+            {'Forgotten your password?'}
+          </Text>
+          <Text
             onPress={() => this.navigateToSignup()}
-            style={styles.navigateToSignup}
+            style={styles.navigateToSignupButton}
           >
             {"Don't have an account? Sign up here"}
           </Text>
@@ -379,9 +417,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.grey.dark,
   },
-  navigateToSignup: {
+  navigateToForgottenPasswordButton: {
     width: width - 30,
     marginTop: 10,
+    paddingTop: 15,
+    paddingBottom: 15,
+    textAlign: 'center',
+    color: colors.grey.dark,
+    textDecorationStyle: 'solid',
+    textDecorationColor: colors.grey.dark,
+    textDecorationLine: 'underline',
+  },
+  navigateToSignupButton: {
+    width: width - 30,
     paddingTop: 15,
     paddingBottom: 15,
     textAlign: 'center',
