@@ -35,7 +35,7 @@ const WorkoutTile = ({
         </Text>
         <Text style={styles.targetText}>
           {
-            cycleTargets && `${cycleTargets[resistanceCategoryId]}/3 this 12 week cycle`
+            cycleTargets && `Completed: ${cycleTargets[resistanceCategoryId]}`
           }
         </Text>
       </View>
