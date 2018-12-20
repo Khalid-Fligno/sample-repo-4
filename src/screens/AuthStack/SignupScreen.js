@@ -60,7 +60,7 @@ export default class SignupScreen extends React.PureComponent {
         await AsyncStorage.setItem('uid', user.uid);
         this.setState({ loading: false });
         // this.props.navigation.navigate('Subscription');
-        this.props.navigation.navigate('Onboarding');
+        this.props.navigation.navigate('Onboarding1');
       }
     } catch (err) {
       this.setState({ error: 'Something went wrong', loading: false });
