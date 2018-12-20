@@ -25,15 +25,6 @@ export default class Progress3Screen extends React.PureComponent {
   }
   componentDidMount = () => {
     this.props.navigation.setParams({ handleSkip: this.handleSkip });
-    this.downloadVideo();
-  }
-  downloadVideo = async () => {
-    this.setState({ loading: true });
-    await FileSystem.downloadAsync(
-      'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2Fexercises%2Fburpees.m4v?alt=media&token=cfd6adaa-8ec0-4d0f-be46-f7623a8b598c',
-      `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
-    );
-    this.setState({ loading: false });
   }
   handleSkip = () => {
     if (this.props.navigation.getParam('isInitial', false)) {
@@ -113,12 +104,12 @@ export default class Progress3Screen extends React.PureComponent {
                   <View style={styles.exerciseTileHeaderBar}>
                     <View>
                       <Text style={styles.exerciseTileHeaderTextLeft}>
-                        Burpees
+                        BURPEES
                       </Text>
                     </View>
                     <View>
                       <Text style={styles.exerciseTileHeaderBarRight}>
-                        AMRAP
+                        MAX
                       </Text>
                     </View>
                   </View>
@@ -134,7 +125,27 @@ export default class Progress3Screen extends React.PureComponent {
                   />
                 </View>
                 <View style={styles.exerciseDescriptionContainer}>
-                  <Text>This is an exercise description</Text>
+                  <View style={styles.exerciseTileHeaderBar}>
+                    <View>
+                      <Text style={styles.exerciseTileHeaderTextLeft}>
+                        ADDITIONAL INFO
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.exerciseDescriptionTextContainer}>
+                    <Text style={styles.exerciseDescriptionHeader}>
+                      Coaching tip:
+                    </Text>
+                    <Text style={styles.exerciseDescriptionText}>
+                      - Land with your feet flat on the ground just outside your hands.
+                    </Text>
+                    <Text style={styles.exerciseDescriptionText}>
+                      - When extending out, avoid keeping your legs dead straight.
+                    </Text>
+                    <Text style={styles.exerciseDescriptionText}>
+                      - Don’t let your hips drop as you land into your push-up.
+                    </Text>
+                  </View>
                 </View>
               </Carousel>
             </View>
@@ -212,21 +223,42 @@ const styles = StyleSheet.create({
     backgroundColor: colors.coral.standard,
   },
   exerciseTileHeaderTextLeft: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.standardNarrow,
     fontSize: 16,
     color: colors.white,
   },
   exerciseTileHeaderBarRight: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.standardNarrow,
     fontSize: 16,
     color: colors.white,
   },
   exerciseDescriptionContainer: {
-    height: '100%',
-    width,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.transparent,
+    width: width - 80,
+    height: width - 45,
+    marginTop: 7.5,
+    marginBottom: 20,
+    marginLeft: 40,
+    marginRight: 40,
+    borderWidth: 2,
+    borderRadius: 4,
+    borderColor: colors.coral.standard,
+    backgroundColor: colors.white,
+    overflow: 'hidden',
+  },
+  exerciseDescriptionTextContainer: {
+    padding: 15,
+  },
+  exerciseDescriptionHeader: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.charcoal.standard,
+  },
+  exerciseDescriptionText: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.charcoal.standard,
+    marginTop: 5,
+    marginBottom: 5,
   },
   buttonContainer: {
     flexShrink: 1,

@@ -156,7 +156,7 @@ export default class Progress2Screen extends React.PureComponent {
           isInitial,
         } = this.props.navigation.state.params;
         await FileSystem.downloadAsync(
-          'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2Fexercises%2Fburpees.m4v?alt=media&token=cfd6adaa-8ec0-4d0f-be46-f7623a8b598c',
+          'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2FBURPEES.mp4?alt=media&token=688885cb-2d70-4fc6-82a9-abc4e95daf89',
           `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
         );
         this.setState({ uploading: false });
