@@ -37,19 +37,10 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/images/landing-page-2.jpg'),
       require('../../assets/images/landing-page-3.jpg'),
       require('../../assets/images/landing-page-4.jpg'),
-      require('../../assets/images/landing-screen-carousel-1.png'),
-      require('../../assets/images/landing-screen-carousel-2.png'),
-      require('../../assets/images/landing-screen-carousel-3.png'),
       require('../../assets/images/fitazfk-blog-sleep.jpg'),
       require('../../assets/images/fitazfk-blog-mindset.jpg'),
       require('../../assets/images/shop-bundles.jpg'),
       require('../../assets/images/fitazfk-army.jpg'),
-      // require('../../assets/images/workouts-upper.jpg'),
-      // require('../../assets/images/workouts-lower.jpg'),
-      // require('../../assets/images/workouts-full.jpg'),
-      // require('../../assets/images/workouts-home.jpg'),
-      // require('../../assets/images/workouts-gym.jpg'),
-      // require('../../assets/images/workouts-park.jpg'),
       require('../../assets/images/workouts-blank-tile.png'),
       require('../../assets/images/nutrition-breakfast.jpg'),
       require('../../assets/images/nutrition-lunch.jpg'),
@@ -66,6 +57,9 @@ export default class AuthLoadingScreen extends React.PureComponent {
         GothamBold: require('../../assets/fonts/gotham-bold.otf'),
       },
       {
+        GothamNarrowBold: require('../../assets/fonts/gotham-narrow-bold.otf'),
+      },
+      {
         GothamBoldItalic: require('../../assets/fonts/gotham-bold-italic.otf'),
       },
       {
@@ -79,9 +73,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
       },
       {
         GothamNarrowLight: require('../../assets/fonts/gotham-narrow-light.otf'),
-      },
-      {
-        Knucklebones: require('../../assets/fonts/dk-knucklebones.otf'),
       },
       {
         icomoon: require('../../assets/fonts/icomoon.ttf'),
