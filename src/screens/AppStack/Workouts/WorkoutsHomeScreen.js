@@ -24,28 +24,46 @@ import fonts from '../../../styles/fonts';
 const { width } = Dimensions.get('window');
 
 const workoutTypes = [
-  { displayName: 'RESISTANCE', resistance: true },
-  { displayName: 'HIIT', hiit: true },
+  { displayName: 'RESISTANCE', resistance: true, image: require('../../../../assets/images/workouts-resistance.jpg') },
+  { displayName: 'HIIT', hiit: true, image: require('../../../../assets/images/workouts-hiit.jpg') },
 ];
 
 const workoutLocations = [
-  { displayName: 'GYM', image: require('../../../../assets/images/workouts-blank-tile.png') },
-  { displayName: 'HOME', image: require('../../../../assets/images/workouts-blank-tile.png') },
-  { displayName: 'OUTDOORS', image: require('../../../../assets/images/workouts-blank-tile.png') },
+  { displayName: 'GYM', image: require('../../../../assets/images/workouts-gym.jpg') },
+  { displayName: 'HOME', image: require('../../../../assets/images/workouts-home.jpg') },
+  { displayName: 'OUTDOORS', image: require('../../../../assets/images/workouts-outdoors.jpg') },
 ];
 
-const resistanceWorkouts = [
-  { displayName: 'FULL BODY', image: require('../../../../assets/images/workouts-blank-tile.png') },
-  { displayName: 'UPPER BODY', image: require('../../../../assets/images/workouts-blank-tile.png') },
-  { displayName: 'ABS, BUTT & THIGHS', image: require('../../../../assets/images/workouts-blank-tile.png') },
+const gymResistanceWorkouts = [
+  { displayName: 'FULL BODY', image: require('../../../../assets/images/workouts-gym-full.jpg') },
+  { displayName: 'UPPER BODY', image: require('../../../../assets/images/workouts-gym-upper.jpg') },
+  { displayName: 'ABS, BUTT & THIGHS', image: require('../../../../assets/images/workouts-gym-abt.jpg') },
+];
+
+const homeResistanceWorkouts = [
+  { displayName: 'FULL BODY', image: require('../../../../assets/images/workouts-home-full.jpg') },
+  { displayName: 'UPPER BODY', image: require('../../../../assets/images/workouts-home-upper.jpg') },
+  { displayName: 'ABS, BUTT & THIGHS', image: require('../../../../assets/images/workouts-home-abt.jpg') },
+];
+
+const outdoorsResistanceWorkouts = [
+  { displayName: 'FULL BODY', image: require('../../../../assets/images/workouts-outdoors-full.jpg') },
+  { displayName: 'UPPER BODY', image: require('../../../../assets/images/workouts-outdoors-upper.jpg') },
+  { displayName: 'ABS, BUTT & THIGHS', image: require('../../../../assets/images/workouts-outdoors-abt.jpg') },
 ];
 
 const hiitWorkouts = [
-  { displayName: 'RUNNING' },
-  { displayName: 'CYCLING' },
-  { displayName: 'ROWING' },
-  { displayName: 'SKIPPING' },
+  { displayName: 'RUNNING', image: require('../../../../assets/images/workouts-hiit-running.jpg') },
+  { displayName: 'CYCLING', image: require('../../../../assets/images/workouts-hiit-airdyne.jpg') },
+  { displayName: 'ROWING', image: require('../../../../assets/images/workouts-hiit-rowing.jpg') },
+  { displayName: 'SKIPPING', image: require('../../../../assets/images/workouts-hiit-skipping.jpg') },
 ];
+
+const workoutTypeImageMap = {
+  0: gymResistanceWorkouts,
+  1: homeResistanceWorkouts,
+  2: outdoorsResistanceWorkouts,
+};
 
 const workoutFocusMap = {
   0: 'fullBody',
@@ -90,6 +108,13 @@ class WorkoutsHomeScreen extends React.PureComponent {
   }
   componentWillUnmount = () => {
     this.unsubscribeFromTargets();
+  }
+  onSnapToItemTopCarousel = (field, slideIndex) => {
+    Haptic.selection();
+    this.setState({
+      selectedWorkoutTypeIndex: slideIndex,
+      selectedWorkoutLocationIndex: 0,
+    });
   }
   onSnapToItem = (field, slideIndex) => {
     Haptic.selection();
@@ -185,30 +210,32 @@ class WorkoutsHomeScreen extends React.PureComponent {
           source={item.image || require('../../../../assets/images/workouts-blank-tile.png')}
           style={styles.image}
         >
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>
-              {item.displayName}
-            </Text>
-            {
-              item.resistance && (
-                <Text style={styles.weeklyTargetText}>
-                  {
-                    resistanceWeeklyTarget &&
-                    `${resistanceWeeklyComplete}/${resistanceWeeklyTarget} sessions this week`
-                  }
-                </Text>
-              )
-            }
-            {
-              item.hiit && (
-                <Text style={styles.weeklyTargetText}>
-                  {
-                    hiitWeeklyTarget &&
-                    `${hiitWeeklyComplete}/${hiitWeeklyTarget} sessions this week`
-                  }
-                </Text>
-              )
-            }
+          <View style={styles.opacityLayer}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>
+                {item.displayName}
+              </Text>
+              {
+                item.resistance && (
+                  <Text style={styles.weeklyTargetText}>
+                    {
+                      resistanceWeeklyTarget &&
+                      `${resistanceWeeklyComplete}/${resistanceWeeklyTarget} sessions this week`
+                    }
+                  </Text>
+                )
+              }
+              {
+                item.hiit && (
+                  <Text style={styles.weeklyTargetText}>
+                    {
+                      hiitWeeklyTarget &&
+                      `${hiitWeeklyComplete}/${hiitWeeklyTarget} sessions this week`
+                    }
+                  </Text>
+                )
+              }
+            </View>
           </View>
         </ImageBackground>
       </View>
@@ -217,6 +244,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
   render() {
     const {
       loading,
+      selectedWorkoutLocationIndex,
       selectedWorkoutTypeIndex,
       helperModalVisible,
     } = this.state;
@@ -230,7 +258,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
               renderItem={this.renderItem}
               sliderWidth={width}
               itemWidth={width * 0.8}
-              onSnapToItem={(slideIndex) => this.onSnapToItem('selectedWorkoutTypeIndex', slideIndex)}
+              onSnapToItem={(slideIndex) => this.onSnapToItemTopCarousel('selectedWorkoutTypeIndex', slideIndex)}
             />
             <Icon
               name="chevron-down"
@@ -281,7 +309,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
                 <FadeInView duration={1000} style={styles.flexContainer}>
                   <Carousel
                     ref={(c) => { this.carousel = c; }}
-                    data={resistanceWorkouts}
+                    data={workoutTypeImageMap[selectedWorkoutLocationIndex]}
                     renderItem={this.renderItem}
                     sliderWidth={width}
                     itemWidth={width * 0.8}
@@ -348,21 +376,29 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 5,
     marginBottom: 5,
-    borderRadius: 2,
+    borderRadius: 3,
     overflow: 'hidden',
   },
   image: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    resizeMode: 'cover',
+    height: '100%',
     shadowColor: colors.charcoal.standard,
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
   },
+  opacityLayer: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.transparentBlackLight,
+  },
   titleContainer: {
     justifyContent: 'center',
-    backgroundColor: colors.transparentWhite,
     paddingTop: 8,
     paddingRight: 12,
     paddingBottom: 3,
@@ -372,13 +408,22 @@ const styles = StyleSheet.create({
   weeklyTargetText: {
     fontFamily: fonts.standard,
     fontSize: 12,
+    color: colors.white,
     textAlign: 'center',
+    shadowColor: colors.black,
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 6,
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 22,
-    color: colors.black,
+    fontSize: 24,
+    color: colors.white,
     textAlign: 'center',
+    shadowColor: colors.charcoal.standard,
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 6,
   },
   chevron: {
     alignSelf: 'center',
