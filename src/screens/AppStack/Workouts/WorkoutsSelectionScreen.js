@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, AsyncStorage, Alert } from 'react-native';
 import { FileSystem } from 'expo';
-import moment from 'moment';
+// import moment from 'moment';
 import sortBy from 'lodash.sortby';
 import { db } from '../../../../config/firebase';
 import { findReps } from '../../../utils/index';
@@ -48,26 +48,26 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
       this.setState({
         cycleTargets: await doc.data().cycleTargets,
       });
-      if (await doc.data().cycleTargets.cycleStartDate < moment().startOf('week').subtract(11, 'weeks').format('YYYY-MM-DD')) {
-        const data = {
-          cycleTargets: {
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-            7: 0,
-            8: 0,
-            9: 0,
-            10: 0,
-            11: 0,
-            12: 0,
-            cycleStartDate: moment().startOf('week').format('YYYY-MM-DD'),
-          },
-        };
-        await userRef.set(data, { merge: true });
-      }
+      // if (await doc.data().cycleTargets.cycleStartDate < moment().startOf('week').subtract(11, 'weeks').format('YYYY-MM-DD')) {
+      //   const data = {
+      //     cycleTargets: {
+      //       1: 0,
+      //       2: 0,
+      //       3: 0,
+      //       4: 0,
+      //       5: 0,
+      //       6: 0,
+      //       7: 0,
+      //       8: 0,
+      //       9: 0,
+      //       10: 0,
+      //       11: 0,
+      //       12: 0,
+      //       cycleStartDate: moment().startOf('week').format('YYYY-MM-DD'),
+      //     },
+      //   };
+      //   await userRef.set(data, { merge: true });
+      // }
     });
   }
   loadExercises = async (workout) => {
@@ -92,7 +92,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     const workoutList = sortBy(workouts, 'resistanceCategoryId').map((workout) => (
       <WorkoutTile
         key={workout.id}
-        title1={workout.name.toUpperCase()}
+        title1={workout.displayName}
         // image={require('../../../../assets/images/workouts-upper.jpg')}
         onPress={() => this.loadExercises(workout)}
         disabled={workout.disabled}
