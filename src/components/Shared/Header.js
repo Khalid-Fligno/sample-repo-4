@@ -183,7 +183,7 @@ Header.defaultProps = {
 const styles = StyleSheet.create({
   defaultHeaderShadow: {
     backgroundColor: colors.black,
-    shadowColor: colors.charcoal.standard,
+    shadowColor: colors.charcoal.dark,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   },
   defaultHeader: {
     ...headerContainer,
-    backgroundColor: colors.charcoal.standard,
+    backgroundColor: colors.charcoal.dark,
   },
   nutritionHeader: {
     ...headerContainer,
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue.standard,
   },
   headerContentContainer: {
-    width: 120,
+    width: 180,
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   headerTitleText: {
     fontFamily: fonts.bold,
-    fontSize: 18,
+    fontSize: 16,
     color: colors.white,
     marginTop: 5,
   },
