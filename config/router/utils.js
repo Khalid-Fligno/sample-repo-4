@@ -72,6 +72,18 @@ export const mealNameMap = {
   snack: 'SNACK',
 };
 
+export const workoutLocationMap = {
+  gym: 'GYM',
+  home: 'HOME',
+  outdoors: 'OUTDOORS',
+};
+
+export const workoutTypeMap = {
+  fullBody: 'FULL',
+  upperBody: 'UPPER',
+  lowerBody: 'ABT',
+};
+
 export const findNutritionHeaderTitle = (routeName) => {
   if (routeName === 'Recipe') {
     return 'RECIPE';
