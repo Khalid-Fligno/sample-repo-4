@@ -219,6 +219,16 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                     <Text style={styles.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
                   )
                 }
+                {
+                  exercise.otherInfo && exercise.otherInfo.map((text) => (
+                    <Text
+                      key={text}
+                      style={styles.exerciseDescriptionHeader}
+                    >
+                      {text}
+                    </Text>
+                  ))
+                }
               </View>
             </View>
           </Carousel>
@@ -546,7 +556,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.standard,
-    marginTop: 3,
+    marginTop: 5,
     marginBottom: 5,
   },
   musicModalContainer: {
