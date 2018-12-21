@@ -139,7 +139,7 @@ export default class Progress1Screen extends React.PureComponent {
                 Measurements
               </Text>
               <Text style={styles.bodyText}>
-                Please enter your measurements, or skip to do this another time.
+                To help you track your progress, let’s find out where you are now.
               </Text>
             </View>
             <View style={styles.contentContainer}>

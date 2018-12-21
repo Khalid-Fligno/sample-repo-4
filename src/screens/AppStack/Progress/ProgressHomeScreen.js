@@ -113,7 +113,7 @@ class ProgressHomeScreen extends React.PureComponent {
                       style={styles.addIcon}
                     />
                     <Text style={styles.imagePlaceholderButtonText}>
-                      Add initial progress info
+                      Add before photo and measurements
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -146,7 +146,7 @@ class ProgressHomeScreen extends React.PureComponent {
                       style={styles.addIcon}
                     />
                     <Text style={styles.imagePlaceholderButtonText}>
-                      Add current progress info
+                      Add after photo and measurements
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -269,7 +269,7 @@ class ProgressHomeScreen extends React.PureComponent {
             initialProgressInfo && currentProgressInfo && (
               <View style={styles.buttonContainer}>
                 <CustomButton
-                  title="RETEST YOUR PROGRESS"
+                  title="UPDATE PROGRESS"
                   onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
                   blue
                 />
@@ -281,9 +281,9 @@ class ProgressHomeScreen extends React.PureComponent {
           helperModalVisible={helperModalVisible}
           toggleHelperModal={() => this.toggleHelperModal()}
           headingText="Progress"
-          bodyText="This tab will show you how far you've come from when you first started."
-          bodyText2="Your initial progress photo and info will always stay on the left of this screen."
-          bodyText3="Re-testing your progress will update the photo and information on the right hand side."
+          bodyText="We want you to enjoy the journey just as much as the destination. By tracking your progress, you can stay accountable and motivate you throughout the journey."
+          bodyText2="Your ‘before’ photo and measurements will stay on the left of screen.  When it comes time to check-in, your ‘after’ photo and measurement will be uploaded on the right."
+          bodyText3="When you want to update your ‘after’ photo, press the update button at the bottom of screen. You can reset your ‘before’ photo in Profile => Settings."
           color="blue"
         />
         <ImageModal
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
   },
   imagePlaceholderButtonText: {
     color: colors.white,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.standard,
     fontSize: 12,
     textAlign: 'center',
   },

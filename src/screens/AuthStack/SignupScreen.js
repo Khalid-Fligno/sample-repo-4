@@ -60,7 +60,7 @@ export default class SignupScreen extends React.PureComponent {
         await AsyncStorage.setItem('uid', user.uid);
         this.setState({ loading: false });
         // this.props.navigation.navigate('Subscription');
-        this.props.navigation.navigate('Onboarding1');
+        this.props.navigation.navigate('Onboarding1', { name: profile.firstName });
       }
     } catch (err) {
       this.setState({ error: 'Something went wrong', loading: false });
@@ -89,7 +89,7 @@ export default class SignupScreen extends React.PureComponent {
       this.setState({ loading: false });
       auth.currentUser.sendEmailVerification().then(() => {
         Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
-        this.props.navigation.navigate('Onboarding1');
+        this.props.navigation.navigate('Onboarding1', { name: firstName });
       });
     } catch (err) {
       const errorCode = err.code;

@@ -341,8 +341,9 @@ class WorkoutsHomeScreen extends React.PureComponent {
           helperModalVisible={helperModalVisible}
           toggleHelperModal={() => this.toggleHelperModal()}
           headingText="Workouts"
-          bodyText="Select what type of workout you'd like to do, working from top to bottom."
-          bodyText2="When you have finished selecting your workout type, press the button at the bottom of your screen to continue."
+          bodyText="What would you like to train today?"
+          bodyText2="Select your workout type, followed by the location that you would to train at.  Finally, select what you would like to focus on today."
+          bodyText3="Once you are happy with your selections, press the ‘Show workouts’ button to continue."
           color="coral"
         />
         <Loader

@@ -34,6 +34,7 @@ export default class Onboarding1Screen extends React.PureComponent {
       chosenUom: 'metric',
       uomModalVisible: false,
       timezone: null,
+      name: props.navigation.getParam('name', null),
     };
   }
   componentDidMount = async () => {
@@ -100,16 +101,17 @@ export default class Onboarding1Screen extends React.PureComponent {
       chosenUom,
       uomModalVisible,
       timezone,
+      name,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>
-              Welcome
+              Welcome{name && `, ${name}`}
             </Text>
             <Text style={styles.bodyText}>
-              To help us get you FitazFK, we need some information from you.
+              It’s time to start your FitazFK journey! Just a few questions before we start.
             </Text>
           </View>
           <View style={styles.contentContainer}>

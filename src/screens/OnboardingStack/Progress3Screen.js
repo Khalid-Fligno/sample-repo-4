@@ -83,7 +83,7 @@ export default class Progress3Screen extends React.PureComponent {
               Burpee Test
             </Text>
             <Text style={styles.bodyText}>
-              Complete as many burpees as you can in one minute!
+              It’s time to test your fitness level - this will help us gauge the intensity of your workouts. Complete as many burpees as possible in 60 seconds.
             </Text>
           </View>
           <View style={styles.contentContainer}>

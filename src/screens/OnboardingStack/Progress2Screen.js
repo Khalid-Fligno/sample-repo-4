@@ -184,7 +184,10 @@ export default class Progress2Screen extends React.PureComponent {
               Progress photo
             </Text>
             <Text style={styles.bodyText}>
-              Take a progress photo, or upload one from your camera roll.  Photos must be portrait.
+              It’s time to get serious. Taking a progress photo is a great way to stay accountable.
+            </Text>
+            <Text style={styles.bodyText}>
+              Tip: Take a front-on, portrait photo.  Try to take your photo in natural light.
             </Text>
           </View>
           <View style={styles.contentContainer}>

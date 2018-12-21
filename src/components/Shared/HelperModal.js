@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     justifyContent: 'space-between',
     paddingTop: 15,
-    paddingLeft: 10,
+    paddingLeft: 15,
     paddingRight: 10,
   },
   modalHeaderText: {
@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.light,
-    marginLeft: 5,
     marginRight: 5,
     marginBottom: 15,
   },

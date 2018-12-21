@@ -410,9 +410,9 @@ export default class WorkoutInfoScreen extends React.PureComponent {
         <HelperModal
           helperModalVisible={helperModalVisible}
           toggleHelperModal={() => this.toggleHelperModal()}
-          headingText="Hold Up"
-          bodyText="Please complete your initial progress check in to continue to your workout."
-          bodyText2="This is a good way to stay accountable blah blah etc."
+          headingText="FK!"
+          bodyText="To continue with this workout, you need to upload your ‘Before’ photo and measurements."
+          bodyText2="You can do this by going to the ‘Progress’ tab."
           color="coral"
         />
         <Loader
