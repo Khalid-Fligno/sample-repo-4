@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   AsyncStorage,
-  Alert,
-  NativeModules,
+  // Alert,
+  // NativeModules,
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
@@ -17,7 +17,7 @@ import { Facebook } from 'expo';
 import firebase from 'firebase';
 import { db, auth } from '../../../config/firebase';
 import {
-  compare,
+  // compare,
   validateReceiptProduction,
   validateReceiptSandbox,
 } from '../../../config/apple';
@@ -28,7 +28,7 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import errors from '../../utils/errors';
 
-const { InAppUtils } = NativeModules;
+// const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get('window');
 
 export default class LoginScreen extends React.PureComponent {
@@ -56,65 +56,91 @@ export default class LoginScreen extends React.PureComponent {
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
-            if (await doc.data().fitnessLevel) {
+            if (await doc.data().fitnessLevel !== undefined) {
               await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
             }
-            const { subscriptionInfo } = await doc.data();
-            if (subscriptionInfo === undefined) {
-              // NO PURCHASE INFORMATION SAVED
-              this.setState({ loading: false });
-              this.props.navigation.navigate('Subscription');
-            } else if (subscriptionInfo.expiry < Date.now()) {
-              // EXPIRED
-              InAppUtils.restorePurchases(async (error, response) => {
-                if (error) {
-                  Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
-                } else {
-                  const sortedPurchases = response.slice().sort(compare);
-                  try {
-                    const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
-                    if (validationData === undefined) {
-                      Alert.alert('Receipt validation error');
-                    }
-                    if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
-                      Alert.alert('Your subscription has been auto-renewed');
-                      const userRef = db.collection('users').doc(uid);
-                      const data = {
-                        subscriptionInfo: {
-                          receipt: sortedPurchases[0].transactionReceipt,
-                          expiry: validationData.latest_receipt_info.expires_date,
-                        },
-                      };
-                      await userRef.set(data, { merge: true });
-                      this.setState({ loading: false });
-                      this.props.navigation.navigate('App');
-                    } else {
-                      this.setState({ loading: false });
-                      Alert.alert('Something went wrong');
-                      this.props.navigation.navigate('Subscription');
-                    }
-                  } catch (err) {
-                    // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
-                    this.setState({ loading: false });
-                    Alert.alert('Subscription has been cancelled');
-                    this.props.navigation.navigate('Subscription');
-                  }
-                }
-              });
-            } else {
-              // RECEIPT STILL VALID
-              this.setState({ loading: false });
-              if (await !doc.data().onboarded) {
-                this.props.navigation.navigate('Onboarding1');
-              }
-              this.props.navigation.navigate('App');
-            }
+            this.setState({ loading: false });
+            this.props.navigation.navigate('App');
           });
       }
     } catch (err) {
       this.setState({ error: 'Something went wrong', loading: false });
     }
   }
+  // loginWithFacebook = async () => {
+  //   try {
+  //     const { type, token } = await Facebook.logInWithReadPermissionsAsync('1825444707513470', {
+  //       permissions: ['public_profile', 'email'],
+  //     });
+  //     if (type === 'success') {
+  //       this.setState({ loading: true });
+  //       await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  //       const credential = firebase.auth.FacebookAuthProvider.credential(token);
+  //       const authResponse = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
+  //       const { uid } = authResponse.user;
+  //       await AsyncStorage.setItem('uid', uid);
+  //       db.collection('users').doc(uid)
+  //         .get()
+  //         .then(async (doc) => {
+  //           if (await doc.data().fitnessLevel) {
+  //             await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+  //           }
+  //           const { subscriptionInfo } = await doc.data();
+  //           if (subscriptionInfo === undefined) {
+  //             // NO PURCHASE INFORMATION SAVED
+  //             this.setState({ loading: false });
+  //             this.props.navigation.navigate('Subscription');
+  //           } else if (subscriptionInfo.expiry < Date.now()) {
+  //             // EXPIRED
+  //             InAppUtils.restorePurchases(async (error, response) => {
+  //               if (error) {
+  //                 Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
+  //               } else {
+  //                 const sortedPurchases = response.slice().sort(compare);
+  //                 try {
+  //                   const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
+  //                   if (validationData === undefined) {
+  //                     Alert.alert('Receipt validation error');
+  //                   }
+  //                   if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
+  //                     Alert.alert('Your subscription has been auto-renewed');
+  //                     const userRef = db.collection('users').doc(uid);
+  //                     const data = {
+  //                       subscriptionInfo: {
+  //                         receipt: sortedPurchases[0].transactionReceipt,
+  //                         expiry: validationData.latest_receipt_info.expires_date,
+  //                       },
+  //                     };
+  //                     await userRef.set(data, { merge: true });
+  //                     this.setState({ loading: false });
+  //                     this.props.navigation.navigate('App');
+  //                   } else {
+  //                     this.setState({ loading: false });
+  //                     Alert.alert('Something went wrong');
+  //                     this.props.navigation.navigate('Subscription');
+  //                   }
+  //                 } catch (err) {
+  //                   // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
+  //                   this.setState({ loading: false });
+  //                   Alert.alert('Subscription has been cancelled');
+  //                   this.props.navigation.navigate('Subscription');
+  //                 }
+  //               }
+  //             });
+  //           } else {
+  //             // RECEIPT STILL VALID
+  //             this.setState({ loading: false });
+  //             if (await !doc.data().onboarded) {
+  //               this.props.navigation.navigate('Onboarding1');
+  //             }
+  //             this.props.navigation.navigate('App');
+  //           }
+  //         });
+  //     }
+  //   } catch (err) {
+  //     this.setState({ error: 'Something went wrong', loading: false });
+  //   }
+  // }
   // login = async (email, password) => {
   //   this.setState({ loading: true });
   //   try {
