@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, View, Text, ScrollView, Dimensions } from 'react-native';
+import { Linking } from 'expo';
 import Loader from '../../../components/Shared/Loader';
+import CustomButton from '../../../components/Shared/CustomButton';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -13,18 +15,30 @@ export default class HelpAndSupportScreen extends React.PureComponent {
       loading: false,
     };
   }
+  goToHelp = () => {
+    Linking.openURL('https://fitazfk.zendesk.com/hc/en-us');
+  }
   render() {
     const { loading } = this.state;
     return (
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
           <ScrollView contentContainerStyle={styles.scrollView}>
-            <Text style={styles.header}>
-              Help & Support
-            </Text>
-            <Text style={styles.paragraph}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            </Text>
+            <View style={styles.textContainer}>
+              <Text style={styles.header}>
+                Help & Support
+              </Text>
+              <Text style={styles.paragraph}>
+                Follow this link to see our frequently asked questions, or submit your own!
+              </Text>
+            </View>
+            <View style={styles.buttonContainer}>
+              <CustomButton
+                title="GO TO FITAZFK HELP"
+                onPress={() => this.goToHelp()}
+                outline
+              />
+            </View>
           </ScrollView>
           <Loader
             loading={loading}
@@ -48,6 +62,9 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width,
+  },
+  textContainer: {
+    width,
     padding: 15,
   },
   header: {
@@ -58,5 +75,12 @@ const styles = StyleSheet.create({
   paragraph: {
     fontFamily: fonts.standard,
     fontSize: 14,
+  },
+  buttonContainer: {
+    width,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    marginBottom: 10,
   },
 });
