@@ -48,7 +48,7 @@ export default class Tile extends React.PureComponent {
             source={image}
             style={styles.image}
           >
-            <View style={styles.titleContainer}>
+            <View style={styles.opacityLayer}>
               <Text style={styles.title}>
                 {title1.toUpperCase()}
               </Text>
@@ -93,18 +93,21 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     overflow: 'hidden',
   },
-  titleContainer: {
-    backgroundColor: colors.transparentWhite,
-    paddingTop: 8,
-    paddingRight: 12,
-    paddingBottom: 3,
-    paddingLeft: 12,
-    borderRadius: 2,
+  opacityLayer: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.transparentBlackLight,
   },
   title: {
     fontFamily: fonts.bold,
     fontSize: 24,
-    color: colors.black,
+    color: colors.white,
     textAlign: 'center',
+    shadowColor: colors.black,
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 5,
   },
 });
