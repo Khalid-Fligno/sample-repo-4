@@ -36,7 +36,7 @@ export default class Progress5Screen extends React.PureComponent {
     this.state = {
       timerStart: false,
       timerReset: false,
-      totalDuration: 5,
+      totalDuration: 60,
     };
   }
   componentDidMount() {
@@ -111,7 +111,7 @@ export default class Progress5Screen extends React.PureComponent {
               BURPEES
             </Text>
             <Text style={styles.currentExerciseRepsText}>
-              AMRAP
+              MAX
             </Text>
           </View>
           <WorkoutTimer
