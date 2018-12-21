@@ -31,13 +31,13 @@ export default class LandingScreen extends React.PureComponent {
           >
             <View style={styles.carouselCardContainer}>
               <ImageBackground
-                source={require('../../../assets/images/landing-page-1.png')}
+                source={require('../../../assets/images/landing-screen-1.jpg')}
                 style={styles.carouselImageBackground}
               >
                 <View style={styles.opacityOverlayDark}>
                   <ScalableImage
                     source={require('../../../assets/icons/fitazfk-logo-outline-white.png')}
-                    width={180}
+                    width={150}
                     style={styles.logo}
                   />
                 </View>
@@ -45,7 +45,7 @@ export default class LandingScreen extends React.PureComponent {
             </View>
             <View style={styles.carouselCardContainer}>
               <ImageBackground
-                source={require('../../../assets/images/landing-page-2.jpg')}
+                source={require('../../../assets/images/landing-screen-2.jpg')}
                 style={styles.carouselImageBackground}
               >
                 <View style={styles.opacityOverlayLight}>
@@ -57,7 +57,7 @@ export default class LandingScreen extends React.PureComponent {
             </View>
             <View style={styles.carouselCardContainer}>
               <ImageBackground
-                source={require('../../../assets/images/landing-page-3.jpg')}
+                source={require('../../../assets/images/landing-screen-3.jpg')}
                 style={styles.carouselImageBackground}
               >
                 <View style={styles.opacityOverlayLight}>
@@ -69,7 +69,7 @@ export default class LandingScreen extends React.PureComponent {
             </View>
             <View style={styles.carouselCardContainer}>
               <ImageBackground
-                source={require('../../../assets/images/landing-page-4.jpg')}
+                source={require('../../../assets/images/landing-screen-4.jpg')}
                 style={styles.carouselImageBackground}
               >
                 <View style={styles.opacityOverlayLight}>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.transparentBlackLight,
   },
   logo: {
-    marginBottom: 45,
+    marginBottom: -20,
   },
   carouselCardText: {
     marginBottom: 45,
