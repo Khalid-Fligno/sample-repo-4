@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StatusBar, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, Image, StatusBar, StyleSheet, TouchableOpacity, Text, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import PropTypes from 'prop-types';
 import ProfileButton from '../Shared/ProfileButton';
@@ -7,7 +7,10 @@ import Icon from '../Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
+const { width } = Dimensions.get('window');
+
 const headerContainer = {
+  width,
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -142,10 +145,13 @@ const Header = ({
       }
       {
         withProfileButton && (
-          <ProfileButton
+          <TouchableOpacity
+            style={styles.headerContentContainerRight}
             onPress={() => navigation.navigate('ProfileHome')}
-          />
-        )
+          >
+            <ProfileButton />
+          </TouchableOpacity>
+          )
       }
       {
         !withStartButton && !withSkipButton && !withProfileButton && !withRestoreButton && (
@@ -236,13 +242,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue.standard,
   },
   headerContentContainer: {
-    width: 180,
+    flexGrow: 1,
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
   headerContentContainerLeft: {
-    width: 100,
+    flex: 1,
     height: 50,
     paddingLeft: 10,
     flexDirection: 'row',
@@ -250,7 +256,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerContentContainerRight: {
-    width: 100,
+    flex: 1,
     height: 50,
     paddingRight: 10,
     flexDirection: 'row',

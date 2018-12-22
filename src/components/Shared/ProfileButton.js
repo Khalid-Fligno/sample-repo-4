@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, AsyncStorage } from 'react-native';
-import PropTypes from 'prop-types';
+import { View, StyleSheet, AsyncStorage } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from '../Shared/Icon';
 import { db } from '../../../config/firebase';
@@ -24,13 +23,9 @@ export default class ProfileButton extends React.PureComponent {
     this.unsubscribe();
   }
   render() {
-    const { onPress } = this.props;
     const { avatar } = this.state;
     return (
-      <TouchableOpacity
-        style={styles.headerContentContainerRight}
-        onPress={onPress}
-      >
+      <View>
         {
           avatar ? (
             <View style={styles.avatarOutline}>
@@ -49,24 +44,12 @@ export default class ProfileButton extends React.PureComponent {
             />
           )
         }
-      </TouchableOpacity>
+      </View>
     );
   }
 }
 
-ProfileButton.propTypes = {
-  onPress: PropTypes.func.isRequired,
-};
-
 const styles = StyleSheet.create({
-  headerContentContainerRight: {
-    width: 100,
-    height: 50,
-    paddingRight: 10,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
   avatarOutline: {
     justifyContent: 'center',
     alignItems: 'center',
