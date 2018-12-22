@@ -61,7 +61,7 @@ export const onboardingSkipButtonMap = {
   Progress2: true,
   Progress3: true,
   Progress4: false,
-  Progress5: false,
+  Progress5: true,
   Progress6: true,
 };
 

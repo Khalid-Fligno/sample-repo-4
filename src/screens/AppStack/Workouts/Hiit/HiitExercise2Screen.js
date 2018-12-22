@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert, Image } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { Video, FileSystem } from 'expo';
+// import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
 import Icon from '../../../../components/Shared/Icon';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
@@ -127,7 +127,7 @@ export default class HiitExercise2Screen extends React.PureComponent {
           duration={1000}
           style={styles.flexContainer}
         >
-          <Video
+          {/* <Video
             source={{ uri: `${FileSystem.cacheDirectory}exercise-2.mp4` }}
             rate={1.0}
             volume={1.0}
@@ -136,10 +136,14 @@ export default class HiitExercise2Screen extends React.PureComponent {
             shouldPlay
             isLooping
             style={{ width, height: width }}
+          /> */}
+          <Image
+            source={require('../../../../../assets/images/hiit-rest-placeholder.jpg')}
+            style={{ width, height: width }}
           />
           <View style={styles.currentExerciseTextContainer}>
             <Text style={styles.currentExerciseNameText}>
-              {currentExercise.name.toUpperCase()}
+              REST
             </Text>
           </View>
           <WorkoutTimer

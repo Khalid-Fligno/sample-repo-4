@@ -70,12 +70,18 @@ export default class Progress5Screen extends React.PureComponent {
     });
   }
   handleSkip = () => {
+    this.setState({
+      timerStart: false,
+      timerReset: false,
+    });
+    const { isInitial } = this.props.navigation.state.params;
+    const message = isInitial ? 'You will need to do this before your first workout' : 'Skipping means you will lose any information you have already entered';
     Alert.alert(
       'Warning',
-      'You will need to do this before your first workout',
+      `${message}`,
       [
         {
-          text: 'Cancel', style: 'cancel',
+          text: 'Cancel', style: 'cancel', onPress: () => this.cancelSkip(),
         },
         {
           text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
@@ -83,6 +89,12 @@ export default class Progress5Screen extends React.PureComponent {
       ],
       { cancelable: false },
     );
+  }
+  cancelSkip = () => {
+    this.setState({
+      timerStart: true,
+      timerReset: false,
+    });
   }
   render() {
     const {

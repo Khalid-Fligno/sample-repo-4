@@ -138,16 +138,28 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                   </Text>
                 </View>
               </View>
-              <Video
-                source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
-                rate={1.0}
-                volume={1.0}
-                isMuted={false}
-                resizeMode="contain"
-                shouldPlay
-                isLooping
-                style={{ width: width - 30, height: width - 30 }}
-              />
+              {
+                index === 0 && (
+                  <Video
+                    source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
+                    rate={1.0}
+                    volume={1.0}
+                    isMuted={false}
+                    resizeMode="contain"
+                    shouldPlay
+                    isLooping
+                    style={{ width: width - 30, height: width - 30 }}
+                  />
+                )
+              }
+              {
+                index === 1 && (
+                  <Image
+                    source={require('../../../../assets/images/hiit-rest-placeholder.jpg')}
+                    style={{ width: width - 30, height: width - 30 }}
+                  />
+                )
+              }
             </View>
             <View style={styles.exerciseDescriptionContainer}>
               <Text>This is an exercise description</Text>

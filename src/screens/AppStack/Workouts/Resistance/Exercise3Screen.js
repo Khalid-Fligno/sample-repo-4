@@ -22,7 +22,7 @@ export default class Exercise3Screen extends React.PureComponent {
       timerStart: false,
       resistanceCategoryId: props.navigation.getParam('resistanceCategoryId', null),
       timerReset: false,
-      totalDuration: 3,
+      totalDuration: 60,
       pauseModalVisible: false,
     };
   }

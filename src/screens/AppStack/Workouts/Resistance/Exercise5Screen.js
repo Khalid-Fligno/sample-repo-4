@@ -22,7 +22,7 @@ export default class Exercise5Screen extends React.PureComponent {
       resistanceCategoryId: props.navigation.getParam('resistanceCategoryId', null),
       timerStart: false,
       timerReset: false,
-      totalDuration: 3,
+      totalDuration: 60,
       pauseModalVisible: false,
     };
   }
