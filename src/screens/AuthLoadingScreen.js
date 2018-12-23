@@ -68,6 +68,18 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/icons/spotify-icon.png'),
       require('../../assets/icons/facebook-icon-white.png'),
       require('../../assets/images/profile-add.png'),
+      require('../../assets/images/splitImages/NINA-1.jpg'),
+      require('../../assets/images/splitImages/NINA-2.jpg'),
+      require('../../assets/images/splitImages/NINA-3.jpg'),
+      require('../../assets/images/splitImages/NINA-4.jpg'),
+      require('../../assets/images/splitImages/SHARNIE-1.jpg'),
+      require('../../assets/images/splitImages/SHARNIE-2.jpg'),
+      require('../../assets/images/splitImages/SHARNIE-3.jpg'),
+      require('../../assets/images/splitImages/SHARNIE-4.jpg'),
+      require('../../assets/images/splitImages/ELLE-1.jpg'),
+      require('../../assets/images/splitImages/ELLE-2.jpg'),
+      require('../../assets/images/splitImages/ELLE-3.jpg'),
+      require('../../assets/images/splitImages/ELLE-4.jpg'),
     ]);
     const fontAssets = cacheFonts([
       {
