@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 24,
+    fontSize: 22,
     color: colors.white,
     textAlign: 'center',
     shadowColor: colors.charcoal.standard,

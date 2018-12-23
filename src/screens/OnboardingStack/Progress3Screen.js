@@ -92,7 +92,7 @@ export default class Progress3Screen extends React.PureComponent {
                 width={width}
                 inactiveIndicatorColor={colors.coral.standard}
                 indicatorColor={colors.coral.standard}
-                indicatorOffset={-2}
+                indicatorOffset={12}
                 indicatorSize={13}
                 inactiveIndicatorText="○"
                 indicatorText="●"
@@ -186,15 +186,14 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: fonts.bold,
-    fontSize: 28,
+    fontSize: 24,
     color: colors.charcoal.light,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   bodyText: {
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.light,
-    marginLeft: 5,
   },
   contentContainer: {
     flex: 1,

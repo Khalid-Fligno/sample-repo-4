@@ -243,15 +243,14 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: fonts.bold,
-    fontSize: 28,
+    fontSize: 24,
     color: colors.charcoal.light,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   bodyText: {
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.light,
-    marginLeft: 5,
   },
   inputFieldContainer: {
     marginBottom: 20,
