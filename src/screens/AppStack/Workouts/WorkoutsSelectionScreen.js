@@ -9,6 +9,33 @@ import Loader from '../../../components/Shared/Loader';
 import WorkoutTile from '../../../components/Workouts/WorkoutTile';
 import colors from '../../../styles/colors';
 
+const homeSplitImages = [
+  require('../../../../assets/images/splitImages/NINA-1.jpg'),
+  require('../../../../assets/images/splitImages/NINA-2.jpg'),
+  require('../../../../assets/images/splitImages/NINA-3.jpg'),
+  require('../../../../assets/images/splitImages/NINA-4.jpg'),
+];
+
+const gymSplitImages = [
+  require('../../../../assets/images/splitImages/SHARNIE-1.jpg'),
+  require('../../../../assets/images/splitImages/SHARNIE-2.jpg'),
+  require('../../../../assets/images/splitImages/SHARNIE-3.jpg'),
+  require('../../../../assets/images/splitImages/SHARNIE-4.jpg'),
+];
+
+const outdoorsSplitImages = [
+  require('../../../../assets/images/splitImages/ELLE-1.jpg'),
+  require('../../../../assets/images/splitImages/ELLE-2.jpg'),
+  require('../../../../assets/images/splitImages/ELLE-3.jpg'),
+  require('../../../../assets/images/splitImages/ELLE-4.jpg'),
+];
+
+const images = {
+  gym: gymSplitImages,
+  home: homeSplitImages,
+  outdoors: outdoorsSplitImages,
+};
+
 export default class WorkoutsSelectionScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -16,6 +43,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
       workouts: [],
       loading: false,
       cycleTargets: undefined,
+      location: props.navigation.getParam('workoutLocation', null),
     };
   }
   componentDidMount = async () => {
@@ -88,12 +116,18 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     }
   }
   render() {
-    const { workouts, loading, cycleTargets } = this.state;
-    const workoutList = sortBy(workouts, 'resistanceCategoryId').map((workout) => (
+    const {
+      workouts,
+      loading,
+      cycleTargets,
+      location,
+    } = this.state;
+    const locationImages = images[location];
+    const workoutList = sortBy(workouts, 'resistanceCategoryId').map((workout, index) => (
       <WorkoutTile
         key={workout.id}
         title1={workout.displayName}
-        // image={require('../../../../assets/images/workouts-upper.jpg')}
+        image={locationImages[index]}
         onPress={() => this.loadExercises(workout)}
         disabled={workout.disabled}
         cycleTargets={cycleTargets}
