@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   View,
-  // ImageBackground,
+  ImageBackground,
   Text,
   TouchableOpacity,
   StyleSheet,
@@ -16,7 +16,7 @@ const { width } = Dimensions.get('window');
 const WorkoutTile = ({
   onPress,
   title1,
-  // image,
+  image,
   disabled,
   cycleTargets,
   resistanceCategoryId,
@@ -26,8 +26,9 @@ const WorkoutTile = ({
     onPress={onPress}
     style={styles.cardContainer}
   >
-    <View
-      style={[styles.image, disabled && styles.imageDisabled]}
+    <ImageBackground
+      source={image}
+      style={styles.image}
     >
       <View style={styles.opacityLayer}>
         <Text style={styles.title}>
@@ -39,17 +40,7 @@ const WorkoutTile = ({
           }
         </Text>
       </View>
-    </View>
-    {/* <ImageBackground
-      source={image}
-      style={styles.image}
-    >
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>
-          {title1.toUpperCase()}
-        </Text>
-      </View>
-    </ImageBackground> */}
+    </ImageBackground>
   </TouchableOpacity>
 );
 
@@ -58,7 +49,7 @@ WorkoutTile.propTypes = {
   title1: PropTypes.string.isRequired,
   cycleTargets: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])).isRequired,
   resistanceCategoryId: PropTypes.number.isRequired,
-  // image: PropTypes.number.isRequired,
+  image: PropTypes.number.isRequired,
   disabled: PropTypes.bool,
 };
 
@@ -86,15 +77,6 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     overflow: 'hidden',
   },
-  imageDisabled: {
-    backgroundColor: colors.grey.standard,
-    opacity: 0.5,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 2,
-    overflow: 'hidden',
-  },
   opacityLayer: {
     flex: 1,
     width: '100%',
@@ -115,7 +97,12 @@ const styles = StyleSheet.create({
   targetText: {
     fontFamily: fonts.standard,
     fontSize: 12,
+    color: colors.white,
     textAlign: 'center',
+    shadowColor: colors.black,
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 5,
   },
 });
 
