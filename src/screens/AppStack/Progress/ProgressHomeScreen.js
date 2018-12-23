@@ -22,9 +22,9 @@ class ProgressHomeScreen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
-      initialProgressInfo: null,
-      currentProgressInfo: null,
-      unitsOfMeasurement: null,
+      initialProgressInfo: undefined,
+      currentProgressInfo: undefined,
+      unitsOfMeasurement: undefined,
       helperModalVisible: false,
       imageModalVisible: false,
       imageModalSource: undefined,
@@ -133,10 +133,10 @@ class ProgressHomeScreen extends React.PureComponent {
                 <View style={styles.imagePlaceholder}>
                   <TouchableOpacity
                     onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
-                    disabled={initialProgressInfo === null}
+                    disabled={initialProgressInfo === undefined}
                     style={[
                       styles.imagePlaceholderButton,
-                      initialProgressInfo === null && styles.disabledImagePlaceHolderButton,
+                      initialProgressInfo === undefined && styles.disabledImagePlaceHolderButton,
                     ]}
                   >
                     <Icon
