@@ -54,10 +54,12 @@ export default class NewsFeedTile extends React.PureComponent {
             source={image}
             style={styles.image}
           >
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>
-                {title.toUpperCase()}
-              </Text>
+            <View style={styles.opacityLayer}>
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>
+                  {title.toUpperCase()}
+                </Text>
+              </View>
             </View>
           </ImageBackground>
         </Animated.View>
@@ -92,16 +94,24 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 2,
   },
+  opacityLayer: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.transparentBlackLight,
+  },
   titleContainer: {
-    backgroundColor: colors.transparentWhite,
-    padding: 8,
-    paddingBottom: 3,
     maxWidth: width / 1.8,
-    borderRadius: 2,
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 15,
+    fontSize: 16,
+    color: colors.white,
     textAlign: 'center',
+    shadowColor: colors.black,
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 5,
   },
 });

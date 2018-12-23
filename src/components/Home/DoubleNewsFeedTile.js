@@ -77,13 +77,15 @@ export default class DoubleNewsFeedTile extends React.PureComponent {
               source={imageLeft}
               style={styles.image}
             >
-              <View style={styles.titleContainer}>
-                <Text style={styles.title}>
-                  {titleLeft1}
-                </Text>
-                <Text style={styles.title}>
-                  {titleLeft2}
-                </Text>
+              <View style={styles.opacityLayer}>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.title}>
+                    {titleLeft1}
+                  </Text>
+                  <Text style={styles.title}>
+                    {titleLeft2}
+                  </Text>
+                </View>
               </View>
             </ImageBackground>
           </Animated.View>
@@ -102,13 +104,15 @@ export default class DoubleNewsFeedTile extends React.PureComponent {
               source={imageRight}
               style={styles.image}
             >
-              <View style={styles.titleContainer}>
-                <Text style={styles.title}>
-                  {titleRight1}
-                </Text>
-                <Text style={styles.title}>
-                  {titleRight2}
-                </Text>
+              <View style={styles.opacityLayer}>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.title}>
+                    {titleRight1}
+                  </Text>
+                  <Text style={styles.title}>
+                    {titleRight2}
+                  </Text>
+                </View>
               </View>
             </ImageBackground>
           </Animated.View>
@@ -152,16 +156,24 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 1,
   },
+  opacityLayer: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.transparentBlackLight,
+  },
   titleContainer: {
-    backgroundColor: colors.transparentWhite,
-    padding: 8,
-    paddingBottom: 3,
     maxWidth: width / 2.4,
-    borderRadius: 2,
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 15,
+    fontSize: 16,
+    color: colors.white,
     textAlign: 'center',
+    shadowColor: colors.black,
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 5,
   },
 });
