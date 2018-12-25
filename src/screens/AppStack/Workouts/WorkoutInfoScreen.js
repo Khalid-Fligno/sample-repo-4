@@ -134,7 +134,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     let workoutName;
     let exerciseDisplay;
     if (workout) {
-      workoutName = workout.name;
+      workoutName = workout.displayName;
       exerciseDisplay = workout.exercises.map((exercise, index) => {
         return (
           <Carousel
