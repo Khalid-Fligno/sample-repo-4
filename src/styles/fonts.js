@@ -1,6 +1,6 @@
 const fonts = {
   bold: 'GothamBold',
-  narrowBold: 'GothamNarrowBold',
+  boldNarrow: 'GothamNarrowBold',
   boldItalic: 'GothamBoldItalic',
   medium: 'GothamMedium',
   standard: 'GothamBook',
