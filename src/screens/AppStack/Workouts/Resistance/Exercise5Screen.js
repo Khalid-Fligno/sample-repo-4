@@ -125,16 +125,24 @@ export default class Exercise5Screen extends React.PureComponent {
           duration={1000}
           style={styles.flexContainer}
         >
-          <Video
-            source={{ uri: `${FileSystem.cacheDirectory}exercise-5.mp4` }}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizeMode="contain"
-            shouldPlay
-            isLooping
-            style={{ width, height: width }}
-          />
+          <View>
+            <Video
+              source={{ uri: `${FileSystem.cacheDirectory}exercise-5.mp4` }}
+              rate={1.0}
+              volume={1.0}
+              isMuted={false}
+              resizeMode="contain"
+              shouldPlay
+              isLooping
+              style={{ width, height: width }}
+            />
+            <WorkoutTimer
+              totalDuration={totalDuration}
+              start={timerStart}
+              reset={timerReset}
+              handleFinish={() => this.handleFinish(exerciseList, reps, resistanceCategoryId)}
+            />
+          </View>
           <View style={styles.currentExerciseTextContainer}>
             <View style={styles.currentExerciseNameTextContainer}>
               <Text
@@ -151,12 +159,6 @@ export default class Exercise5Screen extends React.PureComponent {
               </Text>
             </View>
           </View>
-          <WorkoutTimer
-            totalDuration={totalDuration}
-            start={timerStart}
-            reset={timerReset}
-            handleFinish={() => this.handleFinish(exerciseList, reps, resistanceCategoryId)}
-          />
           <WorkoutProgress
             currentExercise={5}
             currentSet={this.props.navigation.getParam('setCount', 0) + 1}
@@ -199,14 +201,15 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingLeft: 10,
     paddingRight: 10,
+    backgroundColor: colors.white,
   },
   currentExerciseNameTextContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },
   currentExerciseNameText: {
-    fontFamily: fonts.bold,
-    fontSize: 20,
+    fontFamily: fonts.boldNarrow,
+    fontSize: 18,
     color: colors.coral.standard,
   },
   currentExerciseRepsTextContainer: {
@@ -214,7 +217,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   currentExerciseRepsText: {
-    fontFamily: fonts.bold,
-    fontSize: 20,
+    fontFamily: fonts.boldNarrow,
+    fontSize: 18,
   },
 });

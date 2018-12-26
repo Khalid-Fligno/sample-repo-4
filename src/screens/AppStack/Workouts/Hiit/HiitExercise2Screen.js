@@ -23,7 +23,6 @@ export default class HiitExercise2Screen extends React.PureComponent {
     super(props);
     this.state = {
       exerciseList: this.props.navigation.getParam('exerciseList', null),
-      currentExercise: this.props.navigation.getParam('exerciseList', null)[1],
       fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
       totalDuration: restIntervalMap[this.props.navigation.getParam('fitnessLevel', null)],
       timerStart: false,
@@ -112,7 +111,6 @@ export default class HiitExercise2Screen extends React.PureComponent {
   }
   render() {
     const {
-      currentExercise,
       exerciseList,
       timerStart,
       timerReset,
@@ -127,31 +125,23 @@ export default class HiitExercise2Screen extends React.PureComponent {
           duration={1000}
           style={styles.flexContainer}
         >
-          {/* <Video
-            source={{ uri: `${FileSystem.cacheDirectory}exercise-2.mp4` }}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizeMode="contain"
-            shouldPlay
-            isLooping
-            style={{ width, height: width }}
-          /> */}
-          <Image
-            source={require('../../../../../assets/images/hiit-rest-placeholder.jpg')}
-            style={{ width, height: width }}
-          />
+          <View>
+            <Image
+              source={require('../../../../../assets/images/hiit-rest-placeholder.jpg')}
+              style={{ width, height: width }}
+            />
+            <WorkoutTimer
+              totalDuration={totalDuration}
+              start={timerStart}
+              reset={timerReset}
+              handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
+            />
+          </View>
           <View style={styles.currentExerciseTextContainer}>
             <Text style={styles.currentExerciseNameText}>
               REST
             </Text>
           </View>
-          <WorkoutTimer
-            totalDuration={totalDuration}
-            start={timerStart}
-            reset={timerReset}
-            handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
-          />
           <HiitWorkoutProgress
             currentRound={this.props.navigation.getParam('roundCount', 0) + 1}
             rest
@@ -204,10 +194,11 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingLeft: 10,
     paddingRight: 10,
+    backgroundColor: colors.white,
   },
   currentExerciseNameText: {
-    fontFamily: fonts.bold,
-    fontSize: 20,
+    fontFamily: fonts.boldNarrow,
+    fontSize: 18,
     color: colors.coral.standard,
   },
   pauseButtonContainer: {

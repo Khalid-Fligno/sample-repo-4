@@ -119,27 +119,29 @@ export default class HiitExercise1Screen extends React.PureComponent {
           duration={1000}
           style={styles.flexContainer}
         >
-          <Video
-            source={{ uri: `${FileSystem.cacheDirectory}exercise-1.mp4` }}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizeMode="contain"
-            shouldPlay
-            isLooping
-            style={{ width, height: width }}
-          />
+          <View>
+            <Video
+              source={{ uri: `${FileSystem.cacheDirectory}exercise-1.mp4` }}
+              rate={1.0}
+              volume={1.0}
+              isMuted={false}
+              resizeMode="contain"
+              shouldPlay
+              isLooping
+              style={{ width, height: width }}
+            />
+            <WorkoutTimer
+              totalDuration={totalDuration}
+              start={timerStart}
+              reset={timerReset}
+              handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
+            />
+          </View>
           <View style={styles.currentExerciseTextContainer}>
             <Text style={styles.currentExerciseNameText}>
               {currentExercise.name.toUpperCase()}
             </Text>
           </View>
-          <WorkoutTimer
-            totalDuration={totalDuration}
-            start={timerStart}
-            reset={timerReset}
-            handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
-          />
           <HiitWorkoutProgress
             currentRound={this.props.navigation.getParam('roundCount', 0) + 1}
             currentSet={1}
@@ -194,8 +196,8 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   currentExerciseNameText: {
-    fontFamily: fonts.bold,
-    fontSize: 20,
+    fontFamily: fonts.boldNarrow,
+    fontSize: 18,
     color: colors.coral.standard,
   },
   pauseButtonContainer: {
