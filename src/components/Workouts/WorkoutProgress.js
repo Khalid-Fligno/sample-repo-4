@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     height: 48,
     paddingLeft: 10,
     paddingRight: 10,
+    backgroundColor: colors.white,
   },
   exercise: {
     flex: 1,

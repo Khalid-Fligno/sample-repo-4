@@ -10,7 +10,7 @@ const { width } = Dimensions.get('window');
 export const defaultStyles = {
   container: {
     width,
-    backgroundColor: colors.charcoal.dark,
+    backgroundColor: colors.black,
     paddingTop: 15,
     alignItems: 'center',
     justifyContent: 'center',
@@ -22,20 +22,20 @@ export const defaultStyles = {
   },
 };
 
-const warningStyles = {
-  container: {
-    width,
-    backgroundColor: colors.charcoal.dark,
-    paddingTop: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontFamily: fonts.bold,
-    fontSize: 60,
-    color: colors.white,
-  },
-};
+// const warningStyles = {
+//   container: {
+//     width,
+//     backgroundColor: colors.charcoal.dark,
+//     paddingTop: 15,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   text: {
+//     fontFamily: fonts.bold,
+//     fontSize: 60,
+//     color: colors.white,
+//   },
+// };
 
 export default class WorkoutTimer extends Component {
   constructor(props) {
@@ -109,7 +109,8 @@ export default class WorkoutTimer extends Component {
     return formatted;
   }
   render() {
-    const styles = this.state.remainingTime < 6000 ? warningStyles : defaultStyles;
+    // const styles = this.state.remainingTime < 6000 ? warningStyles : defaultStyles;
+    const styles = defaultStyles;
     return (
       <View style={styles.container}>
         <Text style={styles.text}>{this.formatTime()}</Text>
