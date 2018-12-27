@@ -108,16 +108,25 @@ export default class Progress5Screen extends React.PureComponent {
           duration={1000}
           style={styles.flexContainer}
         >
-          <Video
-            source={{ uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4` }}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizeMode="contain"
-            shouldPlay
-            isLooping
-            style={{ width, height: width }}
-          />
+          <View>
+            <Video
+              source={{ uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4` }}
+              rate={1.0}
+              volume={1.0}
+              isMuted={false}
+              resizeMode="contain"
+              shouldPlay
+              isLooping
+              style={{ width, height: width }}
+            />
+            <WorkoutTimer
+              totalDuration={totalDuration}
+              start={timerStart}
+              reset={timerReset}
+              handleFinish={() => this.handleFinish()}
+              options={workoutTimerStyle}
+            />
+          </View>
           <View style={styles.currentExerciseTextContainer}>
             <Text style={styles.currentExerciseNameText}>
               BURPEES
@@ -126,13 +135,6 @@ export default class Progress5Screen extends React.PureComponent {
               MAX
             </Text>
           </View>
-          <WorkoutTimer
-            totalDuration={totalDuration}
-            start={timerStart}
-            reset={timerReset}
-            handleFinish={() => this.handleFinish()}
-            options={workoutTimerStyle}
-          />
           <Text style={styles.bottomText}>REMEMBER TO COUNT YOUR BURPEES!</Text>
         </FadeInView>
       </SafeAreaView>
@@ -155,17 +157,17 @@ const styles = StyleSheet.create({
     width,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   currentExerciseNameText: {
-    fontFamily: fonts.bold,
-    fontSize: 20,
+    fontFamily: fonts.boldNarrow,
+    fontSize: 18,
     color: colors.coral.standard,
   },
   currentExerciseRepsText: {
-    fontFamily: fonts.bold,
-    fontSize: 20,
+    fontFamily: fonts.boldNarrow,
+    fontSize: 18,
   },
   bottomText: {
     fontFamily: fonts.standard,
