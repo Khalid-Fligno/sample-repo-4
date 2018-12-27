@@ -155,7 +155,7 @@ export default class Exercise2Screen extends React.PureComponent {
             </View>
             <View style={styles.currentExerciseRepsTextContainer}>
               <Text style={styles.currentExerciseRepsText}>
-                {reps} REPS
+                x{reps}
               </Text>
             </View>
           </View>
@@ -204,7 +204,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   currentExerciseNameTextContainer: {
-    alignItems: 'center',
+    width: width - 50,
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
   currentExerciseNameText: {
@@ -213,7 +214,8 @@ const styles = StyleSheet.create({
     color: colors.coral.standard,
   },
   currentExerciseRepsTextContainer: {
-    alignItems: 'center',
+    width: 30,
+    alignItems: 'flex-end',
     justifyContent: 'center',
   },
   currentExerciseRepsText: {

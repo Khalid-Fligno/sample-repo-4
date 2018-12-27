@@ -154,7 +154,11 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             >
               <View style={styles.exerciseTileHeaderBar}>
                 <View>
-                  <Text style={styles.exerciseTileHeaderTextLeft}>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={styles.exerciseTileHeaderTextLeft}
+                  >
                     {index + 1}. {exercise.name}
                   </Text>
                 </View>
@@ -516,6 +520,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   exerciseTileHeaderBar: {
+    width: width - 34,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 8,
@@ -523,11 +528,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.coral.standard,
   },
   exerciseTileHeaderTextLeft: {
+    width: width - 70,
     fontFamily: fonts.standardNarrow,
     fontSize: 14,
     color: colors.white,
   },
   exerciseTileHeaderBarRight: {
+    width: 20,
     fontFamily: fonts.standardNarrow,
     fontSize: 14,
     color: colors.white,
