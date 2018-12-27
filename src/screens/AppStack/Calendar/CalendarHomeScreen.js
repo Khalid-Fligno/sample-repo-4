@@ -247,7 +247,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 onSwipeRelease={() => this.setState({ isSwiping: false })}
               >
                 <ListItem
-                  title={workout.displayName.toUpperCase()}
+                  title={workout.displayName}
                   subtitle={
                     workout.resistance ? (
                       <View style={styles.workoutSubtitleContainer}>
