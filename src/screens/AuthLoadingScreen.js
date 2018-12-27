@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  // Alert,
+  Alert,
   // NativeModules,
   AsyncStorage,
 } from 'react-native';
@@ -181,13 +181,18 @@ export default class AuthLoadingScreen extends React.PureComponent {
         await db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
-            if (await doc.data().fitnessLevel) {
-              await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
-            }
-            if (await doc.data().onboarded !== true) {
-              this.props.navigation.navigate('Onboarding1');
+            if (doc.exists) {
+              if (await doc.data().fitnessLevel) {
+                await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+              }
+              if (await doc.data().onboarded !== true) {
+                this.props.navigation.navigate('Onboarding1');
+              } else {
+                this.props.navigation.navigate('App');
+              }
             } else {
-              this.props.navigation.navigate('App');
+              Alert.alert('Account data could not be found');
+              this.props.navigation.navigate('Auth');
             }
           });
       } else {
