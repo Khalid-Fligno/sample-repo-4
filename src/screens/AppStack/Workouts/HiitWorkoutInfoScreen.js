@@ -12,12 +12,13 @@ import {
   Image,
   Linking,
 } from 'react-native';
-import { FileSystem, Video } from 'expo';
+import { FileSystem, Video, Segment } from 'expo';
 import Modal from 'react-native-modal';
 import Carousel from 'react-native-carousel';
 import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
+import HelperModal from '../../../components/Shared/HelperModal';
 import Icon from '../../../components/Shared/Icon';
 import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
 import colors from '../../../styles/colors';
@@ -44,24 +45,45 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
-      workout: null,
-      fitnessLevel: null,
+      workout: this.props.navigation.getParam('workout', null),
+      fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
+      selectedHiitWorkoutIndex: this.props.navigation.getParam('selectedHiitWorkoutIndex', null),
       chosenDate: new Date(),
       calendarModalVisible: false,
       addingToCalendar: false,
+      musicModalVisible: false,
+      initialProgressInfoExists: undefined,
+      helperModalVisible: false,
     };
   }
   componentDidMount = async () => {
-    this.setState({ loading: true });
-    const workout = this.props.navigation.getParam('workout', null);
-    const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
-    this.setState({ workout, loading: false, fitnessLevel });
-    this.props.navigation.setParams({
-      handleStart: () => this.toggleMusicModal(),
+    await this.props.navigation.setParams({
+      handleStart: () => this.handleStart(),
     });
+    this.checkInitialProgressCompleted();
+    Segment.screen('Workout Info Screen');
+  }
+  componentWillUnmount = () => {
+    this.unsubscribe();
   }
   setDate = (newDate) => {
     this.setState({ chosenDate: newDate });
+  }
+  handleStart = () => {
+    if (this.state.initialProgressInfoExists) {
+      this.toggleMusicModal();
+    } else {
+      this.toggleHelperModal();
+    }
+  }
+  checkInitialProgressCompleted = async () => {
+    // this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem('uid');
+    this.unsubscribe = await db.collection('users').doc(uid)
+      .onSnapshot(async (doc) => {
+        this.setState({ initialProgressInfoExists: await doc.data().initialProgressInfo && true });
+      });
+    // this.setState({ loading: false });
   }
   toggleCalendarModal = () => {
     this.setState((prevState) => ({ calendarModalVisible: !prevState.calendarModalVisible }));
@@ -96,6 +118,11 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       { cancelable: false },
     );
   }
+  toggleHelperModal = () => {
+    this.setState((prevState) => ({
+      helperModalVisible: !prevState.helperModalVisible,
+    }));
+  }
   render() {
     const {
       loading,
@@ -105,6 +132,8 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       addingToCalendar,
       fitnessLevel,
       musicModalVisible,
+      helperModalVisible,
+      selectedHiitWorkoutIndex,
     } = this.state;
     let exerciseDisplay;
     if (workout) {
@@ -141,7 +170,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
               {
                 index === 0 && (
                   <Video
-                    source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
+                    source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-${selectedHiitWorkoutIndex}.mp4` }}
                     rate={1.0}
                     volume={1.0}
                     isMuted={false}
@@ -309,6 +338,14 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
             </View>
           </View>
         </Modal>
+        <HelperModal
+          helperModalVisible={helperModalVisible}
+          toggleHelperModal={() => this.toggleHelperModal()}
+          headingText="FK!"
+          bodyText="To continue with this workout, you need to upload your ‘Before’ photo and measurements."
+          bodyText2="You can do this by going to the ‘Progress’ tab."
+          color="coral"
+        />
         <Loader
           loading={loading}
           color={colors.coral.standard}

@@ -175,14 +175,13 @@ class WorkoutsHomeScreen extends React.PureComponent {
             workout = await doc.data();
           });
           const { exercises } = workout;
-          await Promise.all(exercises.map(async (exercise, index) => {
-            await FileSystem.downloadAsync(
-              exercise.videoURL,
-              `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-            );
-          }));
+          await FileSystem.downloadAsync(
+            exercises[0].videoURL,
+            `${FileSystem.cacheDirectory}exercise-hiit-${selectedHiitWorkoutIndex}.mp4`,
+          );
           this.setState({ loading: false });
-          this.props.navigation.navigate('HiitWorkoutInfo', { workout });
+          const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
+          this.props.navigation.navigate('HiitWorkoutInfo', { workout, fitnessLevel, selectedHiitWorkoutIndex });
         });
     } catch (err) {
       this.setState({ loading: false });
