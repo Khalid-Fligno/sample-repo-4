@@ -78,6 +78,7 @@ export default class Onboarding1Screen extends React.PureComponent {
           cycleStartDate: moment().startOf('week').format('YYYY-MM-DD'),
           target: 3,
         },
+        fitnessLevel: 1,
       };
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
