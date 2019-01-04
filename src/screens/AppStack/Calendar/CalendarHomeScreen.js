@@ -492,7 +492,7 @@ class CalendarHomeScreen extends React.PureComponent {
           helperModalVisible={helperModalVisible}
           toggleHelperModal={() => this.toggleHelperModal()}
           headingText="Calendar"
-          bodyText="Are you the type of person who like to stay organised?  This is the perfect tool for you."
+          bodyText="Are you the type of person who likes to stay organised?  This is the perfect tool for you."
           bodyText2="Schedule workouts and recipes weeks in advance, so you know exactly what you’re training and what you are eating each day. Once you have scheduled these, you can go directly to your workout or recipe from this screen."
           bodyText3={'How to add a workout or recipe:\n- Select a recipe/workout\n- On the recipe/workout screen, press ‘Add to Calendar’\n- Select the day you would like to schedule this for'}
           color="green"
