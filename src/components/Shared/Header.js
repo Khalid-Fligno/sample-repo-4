@@ -30,13 +30,14 @@ const Header = ({
   headerTitleParams,
 }) => (
   <SafeAreaView
-    style={[
-      styles.defaultHeaderShadow,
-      stack === 'nutrition' && styles.nutritionHeaderShadow,
-      stack === 'workouts' && styles.workoutsHeaderShadow,
-      stack === 'calendar' && styles.noShadow,
-      stack === 'progress' && styles.noShadow,
-    ]}
+    style={styles.noShadow}
+    // style={[
+    //   styles.defaultHeaderShadow,
+    //   stack === 'nutrition' && styles.nutritionHeaderShadow,
+    //   stack === 'workouts' && styles.workoutsHeaderShadow,
+    //   stack === 'calendar' && styles.noShadow,
+    //   stack === 'progress' && styles.noShadow,
+    // ]}
   >
     <StatusBar
       barStyle="light-content"
@@ -207,6 +208,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   noShadow: {
+    backgroundColor: colors.black,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0,
     shadowRadius: 0,
