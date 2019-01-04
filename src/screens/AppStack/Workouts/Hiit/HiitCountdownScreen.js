@@ -11,6 +11,7 @@ export default class HiitCountdownScreen extends React.PureComponent {
     this.state = {
       exerciseList: this.props.navigation.getParam('exerciseList', null),
       fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
+      selectedHiitWorkoutIndex: this.props.navigation.getParam('selectedHiitWorkoutIndex', null),
       countdownDuration: 5,
       countdownActive: false,
     };
@@ -23,11 +24,12 @@ export default class HiitCountdownScreen extends React.PureComponent {
       countdownActive: true,
     });
   }
-  finishCountdown = (exerciseList, fitnessLevel) => {
+  finishCountdown = (exerciseList, fitnessLevel, selectedHiitWorkoutIndex) => {
     this.setState({ countdownActive: false });
     this.props.navigation.replace('HiitExercise1', {
       exerciseList,
       fitnessLevel,
+      selectedHiitWorkoutIndex,
     });
   }
   render() {
@@ -36,6 +38,7 @@ export default class HiitCountdownScreen extends React.PureComponent {
       countdownDuration,
       countdownActive,
       fitnessLevel,
+      selectedHiitWorkoutIndex,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -43,7 +46,7 @@ export default class HiitCountdownScreen extends React.PureComponent {
           <CountdownTimer
             totalDuration={countdownDuration}
             start={countdownActive}
-            handleFinish={() => this.finishCountdown(exerciseList, fitnessLevel)}
+            handleFinish={() => this.finishCountdown(exerciseList, fitnessLevel, selectedHiitWorkoutIndex)}
           />
           <Text style={styles.countdownText}>
             GET READY!

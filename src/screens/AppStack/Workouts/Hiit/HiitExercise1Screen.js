@@ -26,6 +26,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
       currentExercise: this.props.navigation.getParam('exerciseList', null)[0],
       fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
       totalDuration: workIntervalMap[this.props.navigation.getParam('fitnessLevel', null)],
+      selectedHiitWorkoutIndex: this.props.navigation.getParam('selectedHiitWorkoutIndex', null),
       timerStart: false,
       timerReset: false,
       pauseModalVisible: false,
@@ -40,7 +41,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
       timerReset: false,
     });
   }
-  handleFinish = (exerciseList, fitnessLevel) => {
+  handleFinish = (exerciseList, fitnessLevel, selectedHiitWorkoutIndex) => {
     this.setState({
       timerStart: false,
       timerReset: false,
@@ -50,6 +51,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
       exerciseList,
       fitnessLevel,
       roundCount,
+      selectedHiitWorkoutIndex,
     });
   }
   handlePause = () => {
@@ -86,7 +88,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
       { cancelable: false },
     );
   }
-  restartWorkout = (exerciseList, fitnessLevel) => {
+  restartWorkout = (exerciseList, fitnessLevel, selectedHiitWorkoutIndex) => {
     Alert.alert(
       'Warning',
       'Are you sure you want to restart this workout?',
@@ -95,7 +97,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
         {
           text: 'OK',
           onPress: () => {
-            this.props.navigation.replace('HiitCountdown', { exerciseList, fitnessLevel });
+            this.props.navigation.replace('HiitCountdown', { exerciseList, fitnessLevel, selectedHiitWorkoutIndex });
           },
         },
       ],
@@ -111,6 +113,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
       totalDuration,
       fitnessLevel,
       pauseModalVisible,
+      selectedHiitWorkoutIndex,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -121,7 +124,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
         >
           <View>
             <Video
-              source={{ uri: `${FileSystem.cacheDirectory}exercise-1.mp4` }}
+              source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-${selectedHiitWorkoutIndex}.mp4` }}
               rate={1.0}
               volume={1.0}
               isMuted={false}
@@ -134,7 +137,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
               totalDuration={totalDuration}
               start={timerStart}
               reset={timerReset}
-              handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
+              handleFinish={() => this.handleFinish(exerciseList, fitnessLevel, selectedHiitWorkoutIndex)}
             />
           </View>
           <View style={styles.currentExerciseTextContainer}>

@@ -54,7 +54,7 @@ const outdoorsResistanceWorkouts = [
 
 const hiitWorkouts = [
   { displayName: 'RUNNING', image: require('../../../../assets/images/workouts-hiit-running.jpg') },
-  { displayName: 'CYCLING', image: require('../../../../assets/images/workouts-hiit-airdyne.jpg') },
+  { displayName: 'ASSAULT BIKE', image: require('../../../../assets/images/workouts-hiit-airdyne.jpg') },
   { displayName: 'ROWING', image: require('../../../../assets/images/workouts-hiit-rowing.jpg') },
   { displayName: 'SKIPPING', image: require('../../../../assets/images/workouts-hiit-skipping.jpg') },
 ];
@@ -341,7 +341,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
           toggleHelperModal={() => this.toggleHelperModal()}
           headingText="Workouts"
           bodyText="What would you like to train today?"
-          bodyText2="Select your workout type, followed by the location that you would to train at.  Finally, select what you would like to focus on today."
+          bodyText2="Select your workout type, followed by the location that you would like to train at.  Finally, select what you would like to focus on today."
           bodyText3="Once you are happy with your selections, press the ‘Show workouts’ button to continue."
           color="coral"
         />

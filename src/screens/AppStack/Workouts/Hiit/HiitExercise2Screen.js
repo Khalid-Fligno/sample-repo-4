@@ -25,6 +25,7 @@ export default class HiitExercise2Screen extends React.PureComponent {
       exerciseList: this.props.navigation.getParam('exerciseList', null),
       fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
       totalDuration: restIntervalMap[this.props.navigation.getParam('fitnessLevel', null)],
+      selectedHiitWorkoutIndex: this.props.navigation.getParam('selectedHiitWorkoutIndex', null),
       timerStart: false,
       timerReset: false,
       pauseModalVisible: false,
@@ -39,7 +40,7 @@ export default class HiitExercise2Screen extends React.PureComponent {
       timerReset: false,
     });
   }
-  handleFinish = (exerciseList, fitnessLevel) => {
+  handleFinish = (exerciseList, fitnessLevel, selectedHiitWorkoutIndex) => {
     this.setState({
       timerStart: false,
       timerReset: false,
@@ -56,6 +57,7 @@ export default class HiitExercise2Screen extends React.PureComponent {
         exerciseList,
         fitnessLevel,
         roundCount,
+        selectedHiitWorkoutIndex,
       });
     }
   }
@@ -117,6 +119,7 @@ export default class HiitExercise2Screen extends React.PureComponent {
       totalDuration,
       fitnessLevel,
       pauseModalVisible,
+      selectedHiitWorkoutIndex,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -134,7 +137,7 @@ export default class HiitExercise2Screen extends React.PureComponent {
               totalDuration={totalDuration}
               start={timerStart}
               reset={timerReset}
-              handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
+              handleFinish={() => this.handleFinish(exerciseList, fitnessLevel, selectedHiitWorkoutIndex)}
             />
           </View>
           <View style={styles.currentExerciseTextContainer}>

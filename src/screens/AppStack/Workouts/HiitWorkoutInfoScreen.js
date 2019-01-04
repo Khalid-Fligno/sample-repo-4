@@ -91,9 +91,9 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
   toggleMusicModal = () => {
     this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
   }
-  handleHiitWorkoutStart = (workout, fitnessLevel) => {
+  handleHiitWorkoutStart = (workout, fitnessLevel, selectedHiitWorkoutIndex) => {
     this.setState({ musicModalVisible: false });
-    this.props.navigation.navigate('HiitCountdown', { exerciseList: workout.exercises, fitnessLevel });
+    this.props.navigation.navigate('HiitCountdown', { exerciseList: workout.exercises, fitnessLevel, selectedHiitWorkoutIndex });
   }
   addWorkoutToCalendar = async (date) => {
     if (this.state.addingToCalendar) {
@@ -191,7 +191,60 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
               }
             </View>
             <View style={styles.exerciseDescriptionContainer}>
-              <Text>This is an exercise description</Text>
+              <View style={styles.exerciseTileHeaderBar}>
+                <View>
+                  <Text style={styles.exerciseTileHeaderTextLeft}>
+                    ADDITIONAL INFORMATION
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.exerciseDescriptionTextContainer}>
+                {
+                  exercise.recommendedResistance && (
+                    <Text style={styles.exerciseDescriptionHeader}>Recommended resistance:</Text>
+                  )
+                }
+                {
+                  exercise.recommendedResistance && (
+                    <Text style={styles.exerciseDescriptionText}>{exercise.recommendedResistance}</Text>
+                  )
+                }
+                {
+                  exercise.coachingTip && (
+                    <Text style={styles.exerciseDescriptionHeader}>Coaching tip:</Text>
+                  )
+                }
+                {
+                  exercise.coachingTip && exercise.coachingTip.map((tip) => (
+                    <Text
+                      key={tip}
+                      style={styles.exerciseDescriptionText}
+                    >
+                      {`- ${tip}`}
+                    </Text>
+                  ))
+                }
+                {
+                  exercise.scaledVersion && (
+                    <Text style={styles.exerciseDescriptionHeader}>Scaled version:</Text>
+                  )
+                }
+                {
+                  exercise.scaledVersion && (
+                    <Text style={styles.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
+                  )
+                }
+                {
+                  exercise.otherInfo && exercise.otherInfo.map((text) => (
+                    <Text
+                      key={text}
+                      style={styles.exerciseDescriptionHeader}
+                    >
+                      {text}
+                    </Text>
+                  ))
+                }
+              </View>
             </View>
           </Carousel>
         );
@@ -241,7 +294,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
           <View style={styles.workoutInfoContainer}>
             <View style={styles.workoutNameContainer}>
               <Text style={styles.workoutName}>
-                {workout && workout.name.toUpperCase()}
+                {workout && workout.displayName.toUpperCase()}
               </Text>
               <AddToCalendarButton onPress={() => this.toggleCalendarModal()} />
             </View>
@@ -328,7 +381,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => this.handleHiitWorkoutStart(workout, fitnessLevel)}
+                onPress={() => this.handleHiitWorkoutStart(workout, fitnessLevel, selectedHiitWorkoutIndex)}
                 style={styles.musicModalContinueButton}
               >
                 <Text style={styles.musicModalButtonText}>
@@ -467,11 +520,31 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   exerciseDescriptionContainer: {
-    height: '100%',
-    width,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.transparent,
+    width: width - 30,
+    marginTop: 7.5,
+    marginBottom: 20,
+    marginLeft: 15,
+    marginRight: 15,
+    borderWidth: 2,
+    borderRadius: 4,
+    borderColor: colors.coral.standard,
+    backgroundColor: colors.white,
+    overflow: 'hidden',
+  },
+  exerciseDescriptionTextContainer: {
+    padding: 15,
+  },
+  exerciseDescriptionHeader: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.charcoal.standard,
+  },
+  exerciseDescriptionText: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.charcoal.standard,
+    marginTop: 5,
+    marginBottom: 5,
   },
   musicModalContainer: {
     flexShrink: 1,
