@@ -55,6 +55,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
     });
   }
   handlePause = () => {
+    this.videoRef.pauseAsync();
     this.setState({
       timerStart: false,
       timerReset: false,
@@ -62,6 +63,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
     this.togglePauseModal();
   }
   handleUnpause = () => {
+    this.videoRef.playAsync();
     this.togglePauseModal();
     this.setState({
       timerStart: true,
@@ -124,6 +126,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
         >
           <View>
             <Video
+              ref={(ref) => this.videoRef = ref}
               source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-${selectedHiitWorkoutIndex}.mp4` }}
               rate={1.0}
               volume={1.0}
