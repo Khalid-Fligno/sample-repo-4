@@ -17,22 +17,30 @@ export default class PauseButtonRow extends React.PureComponent {
     const { nextExerciseName, handlePause, lastExercise } = this.props;
     return (
       <View style={styles.pauseButtonRow}>
-        <TouchableOpacity
-          onPress={handlePause}
-          style={styles.pauseButton}
-        >
-          <Icon
-            name="pause"
-            size={15}
-            color={colors.coral.standard}
-          />
-          <Text style={styles.pauseButtonText}>
-            PAUSE
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.pauseButtonContainer}>
+          <TouchableOpacity
+            onPress={handlePause}
+            style={styles.pauseButton}
+          >
+            <Icon
+              name="pause"
+              size={15}
+              color={colors.coral.standard}
+            />
+            <Text style={styles.pauseButtonText}>
+              PAUSE
+            </Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.nextExerciseContainer}>
           <Text style={styles.nextExercise}>{!lastExercise ? 'NEXT EXERCISE:' : 'LAST EXERCISE'}</Text>
-          <Text style={styles.nextExerciseName}>{nextExerciseName.toUpperCase()}</Text>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.nextExerciseName}
+          >
+            {nextExerciseName.toUpperCase()}
+          </Text>
         </View>
       </View>
     );
@@ -58,7 +66,13 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingTop: 0,
   },
+  pauseButtonContainer: {
+    width: 117.5,
+    height: 40,
+  },
   pauseButton: {
+    width: 117.5,
+    height: 40,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -78,7 +92,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   nextExerciseContainer: {
-    flexGrow: 1,
+    width: width - 117.5,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 5,
