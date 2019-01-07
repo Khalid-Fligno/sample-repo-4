@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
   carouselTitle: {
     fontFamily: fonts.bold,
     fontSize: 12,
-    color: colors.grey.standard,
+    color: colors.grey.dark,
   },
   slide: {
     flex: 1,
