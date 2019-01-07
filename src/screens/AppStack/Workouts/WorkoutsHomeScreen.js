@@ -251,6 +251,11 @@ class WorkoutsHomeScreen extends React.PureComponent {
       <View style={styles.container}>
         <View style={styles.carouselsContainer}>
           <View style={styles.flexContainer}>
+            <View style={styles.carouselTitleContainer}>
+              <Text style={styles.carouselTitle}>
+                Workout Type
+              </Text>
+            </View>
             <Carousel
               ref={(c) => { this.carousel = c; }}
               data={workoutTypes}
@@ -267,6 +272,21 @@ class WorkoutsHomeScreen extends React.PureComponent {
             />
           </View>
           <View style={styles.flexContainer}>
+            {
+              selectedWorkoutTypeIndex === 0 ? (
+                <View style={styles.carouselTitleContainer}>
+                  <Text style={styles.carouselTitle}>
+                    Workout Location
+                  </Text>
+                </View>
+              ) : (
+                <View style={styles.carouselTitleContainer}>
+                  <Text style={styles.carouselTitle}>
+                    Select Workout
+                  </Text>
+                </View>
+              )
+            }
             {
               selectedWorkoutTypeIndex === 0 && (
                 <FadeInView duration={1500} style={styles.flexContainer}>
@@ -303,6 +323,15 @@ class WorkoutsHomeScreen extends React.PureComponent {
             />
           </View>
           <View style={styles.flexContainer}>
+            {
+              selectedWorkoutTypeIndex === 0 && (
+                <View style={styles.carouselTitleContainer}>
+                  <Text style={styles.carouselTitle}>
+                    Workout Focus
+                  </Text>
+                </View>
+              )
+            }
             {
               selectedWorkoutTypeIndex === 0 && (
                 <FadeInView duration={1000} style={styles.flexContainer}>
@@ -366,11 +395,20 @@ const styles = StyleSheet.create({
   },
   carouselsContainer: {
     flex: 1,
-    paddingTop: 15,
+    paddingTop: 10,
     paddingBottom: 5,
   },
   flexContainer: {
     flex: 1,
+    alignItems: 'center',
+  },
+  carouselTitleContainer: {
+    width: width * 0.8,
+  },
+  carouselTitle: {
+    fontFamily: fonts.bold,
+    fontSize: 12,
+    color: colors.grey.standard,
   },
   slide: {
     flex: 1,
