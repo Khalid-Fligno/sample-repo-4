@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
+import Icon from '../../components/Shared/Icon';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
@@ -30,31 +31,40 @@ export default class WorkoutPauseModal extends React.PureComponent {
         animationOutTiming={800}
         onBackdropPress={handleUnpause}
       >
-        <View style={styles.pauseModalContainer}>
-          <TouchableOpacity
-            onPress={handleQuit}
-            style={styles.modalButtonQuit}
-          >
-            <Text style={styles.modalButtonText}>
-              QUIT
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => handleRestart(exerciseList, fitnessLevel || reps)}
-            style={styles.modalButtonRestart}
-          >
-            <Text style={styles.modalButtonText}>
-              RESTART
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleUnpause}
-            style={styles.modalButtonContinue}
-          >
-            <Text style={styles.modalButtonText}>
-              CONTINUE
-            </Text>
-          </TouchableOpacity>
+        <View>
+          <View style={styles.pauseIconContainer}>
+            <Icon
+              name="pause"
+              size={100}
+              color={colors.white}
+            />
+          </View>
+          <View style={styles.pauseModalContainer}>
+            <TouchableOpacity
+              onPress={handleQuit}
+              style={styles.modalButtonQuit}
+            >
+              <Text style={styles.modalButtonText}>
+                QUIT
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handleRestart(exerciseList, fitnessLevel || reps)}
+              style={styles.modalButtonRestart}
+            >
+              <Text style={styles.modalButtonText}>
+                RESTART
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleUnpause}
+              style={styles.modalButtonContinue}
+            >
+              <Text style={styles.modalButtonText}>
+                CONTINUE
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     );
@@ -81,6 +91,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 4,
     overflow: 'hidden',
+  },
+  pauseIconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 30,
   },
   modalButtonQuit: {
     justifyContent: 'center',
