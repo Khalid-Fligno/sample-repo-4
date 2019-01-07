@@ -72,9 +72,10 @@ export default class WorkoutTimer extends Component {
       { cancelable: false },
     );
   }
-  start = () => {
+  start = async () => {
+    await Audio.setIsEnabledAsync(true);
     const soundObject = new Audio.Sound();
-    soundObject.loadAsync(require('../../../assets/sounds/ding.mp3'));
+    await soundObject.loadAsync(require('../../../assets/sounds/ding.mp3'));
     const handleFinish = this.props.handleFinish ? this.props.handleFinish : () => this.finishAlert();
     const endTime = new Date().getTime() + this.state.remainingTime;
     this.interval = setInterval(() => {

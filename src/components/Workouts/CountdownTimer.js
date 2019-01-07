@@ -30,9 +30,10 @@ export default class CountdownTimer extends Component {
   componentWillUnmount() {
     clearInterval(this.interval);
   }
-  start = () => {
+  start = async () => {
+    await Audio.setIsEnabledAsync(true);
     const soundObject = new Audio.Sound();
-    soundObject.loadAsync(require('../../../assets/sounds/ding.mp3'));
+    await soundObject.loadAsync(require('../../../assets/sounds/ding.mp3'));
     const { handleFinish } = this.props;
     const endTime = new Date().getTime() + this.state.remainingTime;
     this.interval = setInterval(() => {
