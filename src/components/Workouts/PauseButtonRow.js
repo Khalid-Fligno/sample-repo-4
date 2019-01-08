@@ -62,9 +62,9 @@ const styles = StyleSheet.create({
     width,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: colors.white,
+    backgroundColor: colors.grey.light,
     padding: 5,
-    paddingTop: 0,
+    // paddingTop: 0,
   },
   pauseButtonContainer: {
     width: 117.5,
@@ -82,6 +82,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.coral.standard,
     borderRadius: 4,
+    shadowColor: colors.charcoal.light,
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 2,
   },
   pauseButtonText: {
     fontFamily: fonts.bold,

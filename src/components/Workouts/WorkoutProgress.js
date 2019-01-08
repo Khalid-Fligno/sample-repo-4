@@ -156,8 +156,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     height: 48,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 5,
+    paddingRight: 5,
     backgroundColor: colors.white,
   },
   exercise: {
