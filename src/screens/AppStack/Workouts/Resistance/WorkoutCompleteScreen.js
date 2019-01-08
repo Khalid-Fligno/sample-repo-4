@@ -1,5 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Text, AsyncStorage, Alert, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  AsyncStorage,
+  Dimensions,
+} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { FileSystem, Segment } from 'expo';
 import { PieChart } from 'react-native-svg-charts';
@@ -34,18 +40,19 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
-      exerciseList: props.navigation.getParam('exerciseList', null),
+      // exerciseList: props.navigation.getParam('exerciseList', null),
       resistanceCategoryId: props.navigation.getParam('resistanceCategoryId', null),
     };
   }
   componentDidMount = async () => {
     Segment.track('Workout Completed');
-    try {
-      Promise.all(this.state.exerciseList.map(async (exercise, index) => {
-        FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`, { idempotent: true });
-      }));
-    } catch (err) {
-      Alert.alert('Filesystem delete error', `${err}`);
+    this.manageVideoCache();
+  }
+  manageVideoCache = async () => {
+    const setCount = this.props.navigation.getParam('setCount', 0);
+    if (setCount === 1) {
+      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-1.mp4`);
+      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-6.mp4`);
     }
   }
   completeWorkout = async (resistanceCategoryId) => {

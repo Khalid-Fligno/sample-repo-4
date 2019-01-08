@@ -35,7 +35,6 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
   componentDidMount = () => {
     try {
       FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-1.mp4`, { idempotent: true });
-      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-2.mp4`, { idempotent: true });
     } catch (err) {
       Alert.alert('Filesystem delete error', `${err}`);
     }

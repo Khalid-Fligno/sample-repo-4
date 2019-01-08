@@ -28,6 +28,20 @@ export default class Exercise3Screen extends React.PureComponent {
   }
   componentDidMount() {
     this.startTimer();
+    this.manageVideoCache();
+  }
+  manageVideoCache = async () => {
+    const setCount = this.props.navigation.getParam('setCount', 0);
+    const { exerciseList } = this.state;
+    if (setCount === 0) {
+      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-2.mp4`, { idempotent: true });
+    }
+    if (setCount === 2) {
+      FileSystem.downloadAsync(
+        exerciseList[3].videoURL,
+        `${FileSystem.cacheDirectory}exercise-4.mp4`,
+      );
+    }
   }
   startTimer = () => {
     this.setState({

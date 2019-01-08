@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Dimensions, StatusBar, Alert } from 'react-nati
 import { SafeAreaView } from 'react-navigation';
 import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
+import Carousel from 'react-native-carousel';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import WorkoutProgress from '../../../../components/Workouts/WorkoutProgress';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
@@ -28,6 +29,28 @@ export default class Exercise1Screen extends React.PureComponent {
   }
   componentDidMount() {
     this.startTimer();
+    this.manageVideoCache();
+  }
+  manageVideoCache = () => {
+    const setCount = this.props.navigation.getParam('setCount', 0);
+    const { exerciseList } = this.state;
+    if (setCount === 0) {
+      const exerciseVideos = [
+        `${FileSystem.cacheDirectory}exercise-2.mp4`,
+        `${FileSystem.cacheDirectory}exercise-3.mp4`,
+        `${FileSystem.cacheDirectory}exercise-4.mp4`,
+        `${FileSystem.cacheDirectory}exercise-5.mp4`,
+        `${FileSystem.cacheDirectory}exercise-6.mp4`,
+      ];
+      Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
+        FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
+      }));
+    } else if (setCount === 2) {
+      FileSystem.downloadAsync(
+        exerciseList[1].videoURL,
+        `${FileSystem.cacheDirectory}exercise-2.mp4`,
+      );
+    }
   }
   startTimer = () => {
     this.setState({
@@ -128,17 +151,41 @@ export default class Exercise1Screen extends React.PureComponent {
           style={styles.flexContainer}
         >
           <View>
-            <Video
-              ref={(ref) => this.videoRef = ref}
-              source={{ uri: `${FileSystem.cacheDirectory}exercise-1.mp4` }}
-              rate={1.0}
-              volume={1.0}
-              isMuted={false}
-              resizeMode="contain"
-              shouldPlay
-              isLooping
+            <View
               style={{ width, height: width }}
-            />
+            >
+              <Carousel
+                width={width}
+                inactiveIndicatorColor={colors.coral.standard}
+                indicatorColor={colors.coral.standard}
+                indicatorOffset={10}
+                indicatorSize={16}
+                inactiveIndicatorText="○"
+                indicatorText="●"
+                animate={false}
+              >
+                <Video
+                  ref={(ref) => this.videoRef = ref}
+                  source={{ uri: `${FileSystem.cacheDirectory}exercise-1.mp4` }}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={false}
+                  resizeMode="contain"
+                  shouldPlay
+                  isLooping
+                  style={{ width, height: width }}
+                />
+                <View
+                  style={{
+                    backgroundColor: colors.white,
+                    width,
+                    height: width,
+                  }}
+                >
+                  <Text>bleh</Text>
+                </View>
+              </Carousel>
+            </View>
             <WorkoutTimer
               totalDuration={totalDuration}
               start={timerStart}

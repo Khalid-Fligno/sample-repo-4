@@ -28,6 +28,13 @@ export default class Exercise6Screen extends React.PureComponent {
   }
   componentDidMount() {
     this.startTimer();
+    this.manageVideoCache();
+  }
+  manageVideoCache = async () => {
+    const setCount = this.props.navigation.getParam('setCount', 0);
+    if (setCount === 0) {
+      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-5.mp4`, { idempotent: true });
+    }
   }
   startTimer = () => {
     this.setState({
