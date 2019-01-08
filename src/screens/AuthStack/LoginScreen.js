@@ -225,7 +225,7 @@ export default class LoginScreen extends React.PureComponent {
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
-            if (await doc.data().fitnessLevel) {
+            if (await doc.data().fitnessLevel !== undefined) {
               await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
             }
             this.setState({ loading: false });
