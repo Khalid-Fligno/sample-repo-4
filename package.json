@@ -56,6 +56,7 @@
     "react-native-svg-charts": "^5.2.0",
     "react-native-swipeable": "^0.6.0",
     "react-native-vector-icons": "^4.6.0",
+    "react-native-video": "^4.3.1",
     "react-navigation": "2.16.0",
     "react-timeout": "^1.1.2",
     "sentry-expo": "^1.10.0"

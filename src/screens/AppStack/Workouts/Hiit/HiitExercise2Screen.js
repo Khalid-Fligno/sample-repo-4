@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert, Image } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 // import { Video, FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
+import FastImage from 'react-native-fast-image';
 import Icon from '../../../../components/Shared/Icon';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
@@ -129,7 +130,7 @@ export default class HiitExercise2Screen extends React.PureComponent {
           style={styles.flexContainer}
         >
           <View>
-            <Image
+            <FastImage
               source={require('../../../../../assets/images/hiit-rest-placeholder.jpg')}
               style={{ width, height: width }}
             />

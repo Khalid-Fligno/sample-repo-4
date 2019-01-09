@@ -54,10 +54,12 @@ public class AppConstants {
         
         
         
+        
+        
         // ADD EMBEDDED RESPONSES HERE
         // START EMBEDDED RESPONSES
         embeddedResponses.add(new Constants.EmbeddedResponse("https://exp.host/@fitazfk/fitazfk-app", "assets://shell-app-manifest.json", "application/json"));
-        embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40fitazfk%2Ffitazfk-app%2F0.0.1%2F4f68463bd28b1b3bfbb6aa0124482bb5-31.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
+        embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40fitazfk%2Ffitazfk-app%2F0.0.1%2F8053f0c261d10fb721076ebce280f167-31.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
         // END EMBEDDED RESPONSES
     EMBEDDED_RESPONSES = embeddedResponses;
   }

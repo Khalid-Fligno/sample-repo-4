@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, StatusBar, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { Video, FileSystem } from 'expo';
+import { FileSystem } from 'expo';
+import Video from 'react-native-video';
 import FadeInView from 'react-native-fade-in-view';
-import Carousel from 'react-native-carousel';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import WorkoutProgress from '../../../../components/Workouts/WorkoutProgress';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
@@ -151,41 +151,16 @@ export default class Exercise1Screen extends React.PureComponent {
           style={styles.flexContainer}
         >
           <View>
-            <View
+            <Video
+              ref={(ref) => this.videoRef = ref}
+              source={{ uri: `${FileSystem.cacheDirectory}exercise-1.mp4` || exerciseList[0].videoURL }}
+              rate={1.0}
+              volume={1.0}
+              isMuted={false}
+              resizeMode="contain"
+              repeat
               style={{ width, height: width }}
-            >
-              <Carousel
-                width={width}
-                inactiveIndicatorColor={colors.coral.standard}
-                indicatorColor={colors.coral.standard}
-                indicatorOffset={10}
-                indicatorSize={16}
-                inactiveIndicatorText="○"
-                indicatorText="●"
-                animate={false}
-              >
-                <Video
-                  ref={(ref) => this.videoRef = ref}
-                  source={{ uri: `${FileSystem.cacheDirectory}exercise-1.mp4` || exerciseList[0].videoURL }}
-                  rate={1.0}
-                  volume={1.0}
-                  isMuted={false}
-                  resizeMode="contain"
-                  shouldPlay
-                  isLooping
-                  style={{ width, height: width }}
-                />
-                <View
-                  style={{
-                    backgroundColor: colors.white,
-                    width,
-                    height: width,
-                  }}
-                >
-                  <Text>bleh</Text>
-                </View>
-              </Carousel>
-            </View>
+            />
             <WorkoutTimer
               totalDuration={totalDuration}
               start={timerStart}

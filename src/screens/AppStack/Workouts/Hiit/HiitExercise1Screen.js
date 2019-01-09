@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { Video, FileSystem } from 'expo';
+import { FileSystem } from 'expo';
+import Video from 'react-native-video';
 import FadeInView from 'react-native-fade-in-view';
 import Icon from '../../../../components/Shared/Icon';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
@@ -132,8 +133,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
               volume={1.0}
               isMuted={false}
               resizeMode="contain"
-              shouldPlay
-              isLooping
+              repeat
               style={{ width, height: width }}
             />
             <WorkoutTimer
@@ -210,18 +210,24 @@ const styles = StyleSheet.create({
     width,
     alignItems: 'flex-start',
     padding: 5,
+    backgroundColor: colors.grey.light,
   },
   pauseButton: {
+    width: 117.5,
+    height: 40,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.white,
     paddingLeft: 15,
     paddingRight: 15,
-    paddingTop: 5,
-    paddingBottom: 5,
     borderWidth: 2,
     borderColor: colors.coral.standard,
     borderRadius: 4,
+    shadowColor: colors.charcoal.light,
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 2,
   },
   pauseButtonText: {
     fontFamily: fonts.bold,

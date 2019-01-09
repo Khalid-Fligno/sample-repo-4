@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, StatusBar, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { Video, FileSystem } from 'expo';
+import { FileSystem } from 'expo';
+import Video from 'react-native-video';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import WorkoutProgress from '../../../../components/Workouts/WorkoutProgress';
@@ -146,8 +147,7 @@ export default class Exercise2Screen extends React.PureComponent {
               volume={1.0}
               isMuted={false}
               resizeMode="contain"
-              shouldPlay
-              isLooping
+              repeat
               style={{ width, height: width }}
             />
             <WorkoutTimer
