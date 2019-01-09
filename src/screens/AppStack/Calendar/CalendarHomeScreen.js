@@ -11,7 +11,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
-import { FileSystem, Calendar, Permissions, Segment } from 'expo';
+import {
+  FileSystem,
+  // Calendar,
+  // Permissions,
+  Segment,
+} from 'expo';
 import CalendarStrip from 'react-native-calendar-strip';
 import Swipeable from 'react-native-swipeable';
 import firebase from 'firebase';
@@ -27,6 +32,17 @@ import fonts from '../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
+const recommendedWorkoutMap = {
+  undefined: '',
+  0: 'Press here to see available workouts',
+  1: 'Recommended - Resistance / Full Body',
+  2: 'Recommended - HIIT',
+  3: 'Recommended - Resistance / Upper Body',
+  4: 'Recommended - HIIT',
+  5: 'Recommended - Resistance / ABT',
+  6: 'Press here to see available workouts',
+};
+
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -39,6 +55,7 @@ class CalendarHomeScreen extends React.PureComponent {
       loading: false,
       isSwiping: false,
       helperModalVisible: false,
+      dayOfWeek: undefined,
     };
     this.calendarStrip = React.createRef();
   }
@@ -56,6 +73,7 @@ class CalendarHomeScreen extends React.PureComponent {
   fetchCalendarEntries = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
+    const selectedDate = this.calendarStrip.current.getSelectedDate();
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
     this.unsubscribeFromEntries = await db.collection('users').doc(uid)
       .collection('calendarEntries').doc(stringDate)
@@ -68,9 +86,13 @@ class CalendarHomeScreen extends React.PureComponent {
             dinner: await doc.data().dinner,
             snack: await doc.data().snack,
             loading: false,
+            dayOfWeek: selectedDate.format('d'),
           });
         } else {
-          this.setState({ loading: false });
+          this.setState({
+            loading: false,
+            dayOfWeek: selectedDate.format('d'),
+          });
         }
       });
   }
@@ -101,6 +123,7 @@ class CalendarHomeScreen extends React.PureComponent {
             dinner: await doc.data().dinner,
             snack: await doc.data().snack,
             loading: false,
+            dayOfWeek: date.format('d'),
           });
         } else {
           this.setState({
@@ -110,6 +133,7 @@ class CalendarHomeScreen extends React.PureComponent {
             dinner: undefined,
             snack: undefined,
             loading: false,
+            dayOfWeek: date.format('d'),
           });
         }
       });
@@ -157,26 +181,26 @@ class CalendarHomeScreen extends React.PureComponent {
       Alert.alert('Filesystem download error', `${err}`);
     }
   }
-  addToCalendarApp = async (workout) => {
-    const { status } = await Permissions.askAsync(Permissions.CALENDAR);
-    if (status !== 'granted') {
-      Alert.alert('No Permission for Calendar');
-      return;
-    }
-    const y = new Date(this.calendarStrip.current.getSelectedDate()).getFullYear();
-    const mth = new Date(this.calendarStrip.current.getSelectedDate()).getMonth();
-    const d = new Date(this.calendarStrip.current.getSelectedDate()).getDate();
-    const h = 12;
-    const m = 30;
-    const s = 0;
-    Calendar.createEventAsync(Calendar.DEFAULT, {
-      title: 'FitazFK Workout',
-      startDate: new Date(y, mth, d, h, m, s),
-      endDate: new Date(y, mth, d, h, m + 18, s),
-      notes: `${workout.name}`,
-      alarms: [{ absoluteDate: new Date(y, mth, d, h, m - 15, s) }],
-    });
-  }
+  // addToCalendarApp = async (workout) => {
+  //   const { status } = await Permissions.askAsync(Permissions.CALENDAR);
+  //   if (status !== 'granted') {
+  //     Alert.alert('No Permission for Calendar');
+  //     return;
+  //   }
+  //   const y = new Date(this.calendarStrip.current.getSelectedDate()).getFullYear();
+  //   const mth = new Date(this.calendarStrip.current.getSelectedDate()).getMonth();
+  //   const d = new Date(this.calendarStrip.current.getSelectedDate()).getDate();
+  //   const h = 12;
+  //   const m = 30;
+  //   const s = 0;
+  //   Calendar.createEventAsync(Calendar.DEFAULT, {
+  //     title: 'FitazFK Workout',
+  //     startDate: new Date(y, mth, d, h, m, s),
+  //     endDate: new Date(y, mth, d, h, m + 18, s),
+  //     notes: `${workout.name}`,
+  //     alarms: [{ absoluteDate: new Date(y, mth, d, h, m - 15, s) }],
+  //   });
+  // }
   deleteCalendarEntry = async (fieldToDelete) => {
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
@@ -195,6 +219,7 @@ class CalendarHomeScreen extends React.PureComponent {
       dinner,
       snack,
       helperModalVisible,
+      dayOfWeek,
     } = this.state;
     const deleteButton = (fieldToDelete) => [
       <TouchableOpacity
@@ -291,7 +316,7 @@ class CalendarHomeScreen extends React.PureComponent {
             ) : (
               <ListItem
                 title="WORKOUT"
-                subtitle="Press here to see available workouts"
+                subtitle={recommendedWorkoutMap[dayOfWeek]}
                 onPress={() => this.props.navigation.navigate('WorkoutsHome')}
                 containerStyle={styles.listItemContainerBottom}
                 chevronColor={colors.charcoal.standard}
