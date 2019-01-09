@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginRight: 10,
     fontFamily: fonts.bold,
-    fontSize: 24,
+    fontSize: 22,
     color: colors.coral.standard,
   },
   workoutIconsRow: {
