@@ -307,7 +307,7 @@ export default class RecipeScreen extends React.PureComponent {
                       key={ingredient}
                       style={styles.ingredientsText}
                     >
-                      - {ingredient}
+                      • {ingredient}
                     </Text>
                   );
                 })
@@ -324,7 +324,7 @@ export default class RecipeScreen extends React.PureComponent {
                       key={utensil}
                       style={styles.ingredientsText}
                     >
-                      - {utensil}
+                      • {utensil}
                     </Text>
                   );
                 })
