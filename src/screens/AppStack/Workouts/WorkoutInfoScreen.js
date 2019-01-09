@@ -103,7 +103,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     this.setState({ addingToCalendar: false });
     Alert.alert(
       'Added to calendar!',
-      `${workout.name.toUpperCase()}`,
+      '',
       [
         { text: 'OK', onPress: () => this.setState({ calendarModalVisible: false }), style: 'cancel' },
       ],

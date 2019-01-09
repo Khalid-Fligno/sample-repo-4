@@ -74,7 +74,7 @@ export default class RecipeScreen extends React.PureComponent {
     this.setState({ addingToCalendar: false });
     Alert.alert(
       'Added to calendar!',
-      `${recipe.title.toUpperCase()}`,
+      '',
       [
         { text: 'OK', onPress: () => this.setState({ modalVisible: false }), style: 'cancel' },
       ],
