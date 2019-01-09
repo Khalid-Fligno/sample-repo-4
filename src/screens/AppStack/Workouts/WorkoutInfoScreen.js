@@ -528,13 +528,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.coral.standard,
   },
   exerciseTileHeaderTextLeft: {
-    width: width - 70,
+    width: width - 72,
     fontFamily: fonts.standardNarrow,
     fontSize: 14,
     color: colors.white,
   },
   exerciseTileHeaderBarRight: {
-    width: 20,
+    width: 22,
     fontFamily: fonts.standardNarrow,
     fontSize: 14,
     color: colors.white,
