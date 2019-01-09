@@ -22,20 +22,20 @@ export const defaultStyles = {
   },
 };
 
-// const warningStyles = {
-//   container: {
-//     width,
-//     backgroundColor: colors.charcoal.dark,
-//     paddingTop: 15,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   text: {
-//     fontFamily: fonts.bold,
-//     fontSize: 60,
-//     color: colors.white,
-//   },
-// };
+const warningStyles = {
+  container: {
+    width,
+    backgroundColor: colors.black,
+    paddingTop: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontFamily: fonts.bold,
+    fontSize: 60,
+    color: colors.coral.standard,
+  },
+};
 
 export default class WorkoutTimer extends Component {
   constructor(props) {
@@ -110,9 +110,32 @@ export default class WorkoutTimer extends Component {
     }
     return formatted;
   }
+  findStyles = (remainingTime) => {
+    if (remainingTime < 1000) {
+      return defaultStyles;
+    } else if (remainingTime < 1500) {
+      return warningStyles;
+    } else if (remainingTime < 2000) {
+      return defaultStyles;
+    } else if (remainingTime < 2500) {
+      return warningStyles;
+    } else if (remainingTime < 3000) {
+      return defaultStyles;
+    } else if (remainingTime < 3500) {
+      return warningStyles;
+    } else if (remainingTime < 4000) {
+      return defaultStyles;
+    } else if (remainingTime < 4500) {
+      return warningStyles;
+    } else if (remainingTime < 5000) {
+      return defaultStyles;
+    } else if (remainingTime < 5500) {
+      return warningStyles;
+    }
+    return defaultStyles;
+  }
   render() {
-    // const styles = this.state.remainingTime < 6000 ? warningStyles : defaultStyles;
-    const styles = defaultStyles;
+    const styles = this.findStyles(this.state.remainingTime);
     return (
       <View style={styles.container}>
         <Text style={styles.text}>{this.formatTime()}</Text>
