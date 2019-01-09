@@ -114,22 +114,24 @@ export default class WorkoutTimer extends Component {
     if (remainingTime < 1000) {
       return defaultStyles;
     } else if (remainingTime < 1500) {
-      return warningStyles;
+      return defaultStyles;
     } else if (remainingTime < 2000) {
-      return defaultStyles;
+      return warningStyles;
     } else if (remainingTime < 2500) {
-      return warningStyles;
+      return defaultStyles;
     } else if (remainingTime < 3000) {
-      return defaultStyles;
+      return warningStyles;
     } else if (remainingTime < 3500) {
-      return warningStyles;
+      return defaultStyles;
     } else if (remainingTime < 4000) {
-      return defaultStyles;
-    } else if (remainingTime < 4500) {
       return warningStyles;
-    } else if (remainingTime < 5000) {
+    } else if (remainingTime < 4500) {
       return defaultStyles;
+    } else if (remainingTime < 5000) {
+      return warningStyles;
     } else if (remainingTime < 5500) {
+      return defaultStyles;
+    } else if (remainingTime < 6000) {
       return warningStyles;
     }
     return defaultStyles;
