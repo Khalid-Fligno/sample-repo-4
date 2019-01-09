@@ -61,6 +61,7 @@ export default class WorkoutTimer extends Component {
   }
   componentWillUnmount() {
     clearInterval(this.interval);
+    this.interval = null;
   }
   finishAlert = () => {
     Alert.alert(

@@ -29,6 +29,7 @@ export default class CountdownTimer extends Component {
   }
   componentWillUnmount() {
     clearInterval(this.interval);
+    this.interval = null;
   }
   start = async () => {
     await Audio.setIsEnabledAsync(true);
