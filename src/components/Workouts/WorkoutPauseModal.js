@@ -29,7 +29,6 @@ export default class WorkoutPauseModal extends React.PureComponent {
         animationInTiming={800}
         animationOut="fadeOut"
         animationOutTiming={800}
-        onBackdropPress={handleUnpause}
       >
         <View>
           <View style={styles.pauseIconContainer}>
