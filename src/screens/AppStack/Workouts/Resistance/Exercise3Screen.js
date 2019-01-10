@@ -78,15 +78,15 @@ export default class Exercise3Screen extends React.PureComponent {
       videoPaused: true,
       timerStart: false,
       timerReset: false,
+      pauseModalVisible: true,
     });
-    this.togglePauseModal();
   }
   handleUnpause = () => {
-    this.togglePauseModal();
     this.setState({
       videoPaused: false,
       timerStart: true,
       timerReset: false,
+      pauseModalVisible: false,
     });
   }
   togglePauseModal = () => {
@@ -101,7 +101,7 @@ export default class Exercise3Screen extends React.PureComponent {
         {
           text: 'OK',
           onPress: () => {
-            this.togglePauseModal();
+            this.setState({ pauseModalVisible: false });
             this.props.navigation.navigate('WorkoutsHome');
           },
         },

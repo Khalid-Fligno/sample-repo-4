@@ -71,19 +71,16 @@ export default class Exercise6Screen extends React.PureComponent {
       videoPaused: true,
       timerStart: false,
       timerReset: false,
+      pauseModalVisible: true,
     });
-    this.togglePauseModal();
   }
   handleUnpause = () => {
-    this.togglePauseModal();
     this.setState({
       videoPaused: false,
       timerStart: true,
       timerReset: false,
+      pauseModalVisible: false,
     });
-  }
-  togglePauseModal = () => {
-    this.setState((prevState) => ({ pauseModalVisible: !prevState.pauseModalVisible }));
   }
   quitWorkout = () => {
     Alert.alert(
@@ -94,7 +91,7 @@ export default class Exercise6Screen extends React.PureComponent {
         {
           text: 'OK',
           onPress: () => {
-            this.togglePauseModal();
+            this.setState({ pauseModalVisible: false });
             this.props.navigation.navigate('WorkoutsHome');
           },
         },
