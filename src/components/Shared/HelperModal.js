@@ -24,7 +24,6 @@ export default class HelperModal extends React.PureComponent {
     return (
       <Modal
         isVisible={helperModalVisible}
-        // onBackdropPress={toggleHelperModal}
         animationIn="fadeIn"
         animationInTiming={400}
         animationOut="fadeOut"
@@ -55,7 +54,6 @@ export default class HelperModal extends React.PureComponent {
           </View>
           <View style={styles.helperModalButtonContainer}>
             <TouchableOpacity
-              title="DONE"
               onPress={toggleHelperModal}
               style={[
                 styles.modalButton,
@@ -66,7 +64,7 @@ export default class HelperModal extends React.PureComponent {
               ]}
             >
               <Text style={styles.modalButtonText}>
-                Ok, got it!
+                OK, GOT IT!
               </Text>
             </TouchableOpacity>
           </View>
