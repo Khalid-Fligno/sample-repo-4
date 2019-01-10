@@ -209,7 +209,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                       key={tip}
                       style={styles.exerciseDescriptionText}
                     >
-                      {`- ${tip}`}
+                      {`• ${tip}`}
                     </Text>
                   ))
                 }

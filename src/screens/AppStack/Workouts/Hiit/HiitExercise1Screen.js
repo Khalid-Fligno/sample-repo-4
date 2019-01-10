@@ -7,6 +7,8 @@ import FadeInView from 'react-native-fade-in-view';
 import Icon from '../../../../components/Shared/Icon';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
+import ExerciseInfoModal from '../../../../components/Workouts/ExerciseInfoModal';
+import ExerciseInfoButton from '../../../../components/Workouts/ExerciseInfoButton';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
@@ -32,6 +34,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
       timerReset: false,
       pauseModalVisible: false,
       videoPaused: false,
+      exerciseInfoModalVisible: false,
     };
   }
   componentDidMount() {
@@ -105,6 +108,22 @@ export default class HiitExercise1Screen extends React.PureComponent {
       { cancelable: false },
     );
   }
+  showExerciseInfoModal = () => {
+    this.setState({
+      videoPaused: true,
+      timerStart: false,
+      timerReset: false,
+      exerciseInfoModalVisible: true,
+    });
+  }
+  hideExerciseInfoModal = () => {
+    this.setState({
+      videoPaused: false,
+      timerStart: true,
+      timerReset: false,
+      exerciseInfoModalVisible: false,
+    });
+  }
   render() {
     const {
       currentExercise,
@@ -116,6 +135,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
       pauseModalVisible,
       selectedHiitWorkoutIndex,
       videoPaused,
+      exerciseInfoModalVisible,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -136,6 +156,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
               paused={videoPaused}
               style={{ width, height: width }}
             />
+            <ExerciseInfoButton onPress={() => this.showExerciseInfoModal()} />
             <WorkoutTimer
               totalDuration={totalDuration}
               start={timerStart}
@@ -174,6 +195,11 @@ export default class HiitExercise1Screen extends React.PureComponent {
             handleUnpause={this.handleUnpause}
             exerciseList={exerciseList}
             fitnessLevel={fitnessLevel}
+          />
+          <ExerciseInfoModal
+            exercise={exerciseList[0]}
+            exerciseInfoModalVisible={exerciseInfoModalVisible}
+            hideExerciseInfoModal={this.hideExerciseInfoModal}
           />
         </FadeInView>
       </SafeAreaView>

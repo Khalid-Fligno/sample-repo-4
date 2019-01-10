@@ -7,6 +7,8 @@ import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import WorkoutProgress from '../../../../components/Workouts/WorkoutProgress';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
+import ExerciseInfoModal from '../../../../components/Workouts/ExerciseInfoModal';
+import ExerciseInfoButton from '../../../../components/Workouts/ExerciseInfoButton';
 import PauseButtonRow from '../../../../components/Workouts/PauseButtonRow';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
@@ -23,9 +25,10 @@ export default class Exercise2Screen extends React.PureComponent {
       resistanceCategoryId: props.navigation.getParam('resistanceCategoryId', null),
       timerStart: false,
       timerReset: false,
-      totalDuration: 60,
+      totalDuration: 6,
       pauseModalVisible: false,
       videoPaused: false,
+      exerciseInfoModalVisible: false,
     };
   }
   componentDidMount() {
@@ -119,6 +122,22 @@ export default class Exercise2Screen extends React.PureComponent {
       { cancelable: false },
     );
   }
+  showExerciseInfoModal = () => {
+    this.setState({
+      videoPaused: true,
+      timerStart: false,
+      timerReset: false,
+      exerciseInfoModalVisible: true,
+    });
+  }
+  hideExerciseInfoModal = () => {
+    this.setState({
+      videoPaused: false,
+      timerStart: true,
+      timerReset: false,
+      exerciseInfoModalVisible: false,
+    });
+  }
   render() {
     const {
       currentExercise,
@@ -130,6 +149,7 @@ export default class Exercise2Screen extends React.PureComponent {
       pauseModalVisible,
       resistanceCategoryId,
       videoPaused,
+      exerciseInfoModalVisible,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -150,6 +170,7 @@ export default class Exercise2Screen extends React.PureComponent {
               paused={videoPaused}
               style={{ width, height: width }}
             />
+            <ExerciseInfoButton onPress={() => this.showExerciseInfoModal()} />
             <WorkoutTimer
               totalDuration={totalDuration}
               start={timerStart}
@@ -188,6 +209,11 @@ export default class Exercise2Screen extends React.PureComponent {
             handleUnpause={this.handleUnpause}
             exerciseList={exerciseList}
             reps={reps}
+          />
+          <ExerciseInfoModal
+            exercise={exerciseList[1]}
+            exerciseInfoModalVisible={exerciseInfoModalVisible}
+            hideExerciseInfoModal={this.hideExerciseInfoModal}
           />
         </FadeInView>
       </SafeAreaView>
