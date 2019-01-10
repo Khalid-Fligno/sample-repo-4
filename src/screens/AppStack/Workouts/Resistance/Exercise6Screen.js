@@ -25,6 +25,7 @@ export default class Exercise6Screen extends React.PureComponent {
       timerReset: false,
       totalDuration: 60,
       pauseModalVisible: false,
+      videoPaused: false,
     };
   }
   componentDidMount() {
@@ -66,17 +67,17 @@ export default class Exercise6Screen extends React.PureComponent {
     }
   }
   handlePause = () => {
-    this.videoRef.pauseAsync();
     this.setState({
+      videoPaused: true,
       timerStart: false,
       timerReset: false,
     });
     this.togglePauseModal();
   }
   handleUnpause = () => {
-    this.videoRef.playAsync();
     this.togglePauseModal();
     this.setState({
+      videoPaused: false,
       timerStart: true,
       timerReset: false,
     });
@@ -127,6 +128,7 @@ export default class Exercise6Screen extends React.PureComponent {
       reps,
       pauseModalVisible,
       resistanceCategoryId,
+      videoPaused,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -144,6 +146,7 @@ export default class Exercise6Screen extends React.PureComponent {
               isMuted={false}
               resizeMode="contain"
               repeat
+              paused={videoPaused}
               style={{ width, height: width }}
             />
             <WorkoutTimer

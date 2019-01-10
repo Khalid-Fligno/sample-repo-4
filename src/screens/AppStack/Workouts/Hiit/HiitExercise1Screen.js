@@ -31,6 +31,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
       timerStart: false,
       timerReset: false,
       pauseModalVisible: false,
+      videoPaused: false,
     };
   }
   componentDidMount() {
@@ -56,17 +57,17 @@ export default class HiitExercise1Screen extends React.PureComponent {
     });
   }
   handlePause = () => {
-    this.videoRef.pauseAsync();
     this.setState({
+      videoPaused: true,
       timerStart: false,
       timerReset: false,
     });
     this.togglePauseModal();
   }
   handleUnpause = () => {
-    this.videoRef.playAsync();
     this.togglePauseModal();
     this.setState({
+      videoPaused: false,
       timerStart: true,
       timerReset: false,
     });
@@ -117,6 +118,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
       fitnessLevel,
       pauseModalVisible,
       selectedHiitWorkoutIndex,
+      videoPaused,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -134,6 +136,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
               isMuted={false}
               resizeMode="contain"
               repeat
+              paused={videoPaused}
               style={{ width, height: width }}
             />
             <WorkoutTimer
