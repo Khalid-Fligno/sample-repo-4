@@ -38,7 +38,7 @@ export default class Exercise6Screen extends React.PureComponent {
   manageVideoCache = async () => {
     const setCount = this.props.navigation.getParam('setCount', 0);
     if (setCount === 0) {
-      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-5.mp4`, { idempotent: true });
+      FileSystem.deleteAsync(`${FileSystem.documentDirectory}exercise-5.mp4`, { idempotent: true });
     }
   }
   startTimer = () => {
@@ -157,7 +157,7 @@ export default class Exercise6Screen extends React.PureComponent {
           <View>
             <Video
               ref={(ref) => this.videoRef = ref}
-              source={{ uri: `${FileSystem.cacheDirectory}exercise-6.mp4` || exerciseList[5].videoURL }}
+              source={{ uri: `${FileSystem.documentDirectory}exercise-6.mp4` || exerciseList[5].videoURL }}
               rate={1.0}
               volume={1.0}
               isMuted={false}

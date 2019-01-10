@@ -25,7 +25,7 @@ export default class Exercise4Screen extends React.PureComponent {
       resistanceCategoryId: props.navigation.getParam('resistanceCategoryId', null),
       timerStart: false,
       timerReset: false,
-      totalDuration: 6,
+      totalDuration: 60,
       pauseModalVisible: false,
       videoPaused: false,
       exerciseInfoModalVisible: false,
@@ -39,12 +39,12 @@ export default class Exercise4Screen extends React.PureComponent {
     const setCount = this.props.navigation.getParam('setCount', 0);
     const { exerciseList } = this.state;
     if (setCount === 0) {
-      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-3.mp4`, { idempotent: true });
+      FileSystem.deleteAsync(`${FileSystem.documentDirectory}exercise-3.mp4`, { idempotent: true });
     }
     if (setCount === 2) {
       FileSystem.downloadAsync(
         exerciseList[4].videoURL,
-        `${FileSystem.cacheDirectory}exercise-5.mp4`,
+        `${FileSystem.documentDirectory}exercise-5.mp4`,
       );
     }
   }
@@ -164,7 +164,7 @@ export default class Exercise4Screen extends React.PureComponent {
           <View>
             <Video
               ref={(ref) => this.videoRef = ref}
-              source={{ uri: `${FileSystem.cacheDirectory}exercise-4.mp4` || exerciseList[3].videoURL }}
+              source={{ uri: `${FileSystem.documentDirectory}exercise-4.mp4` || exerciseList[3].videoURL }}
               rate={1.0}
               volume={1.0}
               isMuted={false}

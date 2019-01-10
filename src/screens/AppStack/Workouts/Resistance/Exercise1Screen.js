@@ -25,7 +25,7 @@ export default class Exercise1Screen extends React.PureComponent {
       resistanceCategoryId: props.navigation.getParam('resistanceCategoryId', null),
       timerStart: false,
       timerReset: false,
-      totalDuration: 6,
+      totalDuration: 60,
       pauseModalVisible: false,
       videoPaused: false,
       exerciseInfoModalVisible: false,
@@ -52,7 +52,7 @@ export default class Exercise1Screen extends React.PureComponent {
     } else if (setCount === 2) {
       FileSystem.downloadAsync(
         exerciseList[1].videoURL,
-        `${FileSystem.cacheDirectory}exercise-2.mp4`,
+        `${FileSystem.documentDirectory}exercise-2.mp4`,
       );
     }
   }

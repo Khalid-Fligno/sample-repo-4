@@ -49,11 +49,8 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     this.manageVideoCache();
   }
   manageVideoCache = async () => {
-    const setCount = this.props.navigation.getParam('setCount', 0);
-    if (setCount === 1) {
-      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-1.mp4`);
-      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-6.mp4`);
-    }
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-1.mp4`, { idempotent: true });
+    FileSystem.deleteAsync(`${FileSystem.documentDirectory}exercise-6.mp4`, { idempotent: true });
   }
   completeWorkout = async (resistanceCategoryId) => {
     this.setState({ loading: true });
