@@ -220,7 +220,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                       key={tip}
                       style={styles.exerciseDescriptionText}
                     >
-                      {`- ${tip}`}
+                      {`• ${tip}`}
                     </Text>
                   ))
                 }
