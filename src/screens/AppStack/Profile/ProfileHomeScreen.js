@@ -146,6 +146,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
         await this.saveImage(manipResult.uri);
         this.setState({ loading: false });
       } catch (err) {
+        this.setState({ loading: false });
         Alert.alert('Could not upload this image');
       }
     }

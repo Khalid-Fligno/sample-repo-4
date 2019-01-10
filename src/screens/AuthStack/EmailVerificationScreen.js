@@ -33,6 +33,7 @@ export default class EmailVerificationScreen extends React.PureComponent {
       this.setState({ loading: false });
       this.props.navigation.navigate('Login');
     }).catch((err) => {
+      this.setState({ loading: false });
       Alert.alert('Email verification send error', `${err}`);
     });
   }

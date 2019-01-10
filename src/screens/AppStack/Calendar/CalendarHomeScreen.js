@@ -162,6 +162,7 @@ class CalendarHomeScreen extends React.PureComponent {
       this.setState({ loading: false });
       this.props.navigation.navigate('WorkoutInfo', { workout, reps });
     } catch (err) {
+      this.setState({ loading: false });
       Alert.alert('Filesystem download error', `${err}`);
     }
   }
@@ -178,6 +179,7 @@ class CalendarHomeScreen extends React.PureComponent {
       this.setState({ loading: false });
       this.props.navigation.navigate('HiitWorkoutInfo', { workout });
     } catch (err) {
+      this.setState({ loading: false });
       Alert.alert('Filesystem download error', `${err}`);
     }
   }

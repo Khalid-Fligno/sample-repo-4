@@ -112,6 +112,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
       this.setState({ loading: false });
       this.props.navigation.navigate('WorkoutInfo', { workout, reps: findReps(fitnessLevel) });
     } catch (err) {
+      this.setState({ loading: false });
       Alert.alert('Filesystem download error', `${err}`);
     }
   }
