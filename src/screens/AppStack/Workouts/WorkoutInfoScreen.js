@@ -84,8 +84,11 @@ export default class WorkoutInfoScreen extends React.PureComponent {
   toggleMusicModal = () => {
     this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
   }
-  toggleCalendarModal = () => {
-    this.setState((prevState) => ({ calendarModalVisible: !prevState.calendarModalVisible }));
+  showCalendarModal = () => {
+    this.setState({ calendarModalVisible: true });
+  }
+  hideCalendarModal = () => {
+    this.setState({ calendarModalVisible: false });
   }
   addWorkoutToCalendar = async (date) => {
     if (this.state.addingToCalendar) {
@@ -105,7 +108,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       'Added to calendar!',
       '',
       [
-        { text: 'OK', onPress: () => this.setState({ calendarModalVisible: false }), style: 'cancel' },
+        { text: 'OK', onPress: () => this.hideCalendarModal(), style: 'cancel' },
       ],
       { cancelable: false },
     );
@@ -269,7 +272,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
         >
           <Modal
             isVisible={calendarModalVisible}
-            onBackdropPress={() => this.toggleCalendarModal()}
             animationIn="fadeIn"
             animationInTiming={600}
             animationOut="fadeOut"
@@ -307,7 +309,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               <Text style={styles.workoutName}>
                 {workout && workoutName.toUpperCase()}
               </Text>
-              <AddToCalendarButton onPress={() => this.toggleCalendarModal()} />
+              <AddToCalendarButton onPress={() => this.showCalendarModal()} />
             </View>
             <View style={styles.workoutIconsRow}>
               <View style={styles.workoutIconContainer}>

@@ -52,8 +52,11 @@ export default class RecipeScreen extends React.PureComponent {
   setDate = (newDate) => {
     this.setState({ chosenDate: newDate });
   }
-  toggleModal = () => {
-    this.setState((prevState) => ({ modalVisible: !prevState.modalVisible }));
+  showModal = () => {
+    this.setState({ modalVisible: true });
+  }
+  hideModal = () => {
+    this.setState({ modalVisible: false });
   }
   addRecipeToCalendar = async (date) => {
     if (this.state.addingToCalendar) {
@@ -76,7 +79,7 @@ export default class RecipeScreen extends React.PureComponent {
       'Added to calendar!',
       '',
       [
-        { text: 'OK', onPress: () => this.setState({ modalVisible: false }), style: 'cancel' },
+        { text: 'OK', onPress: () => this.hideModal(), style: 'cancel' },
       ],
       { cancelable: false },
     );
@@ -108,7 +111,6 @@ export default class RecipeScreen extends React.PureComponent {
         >
           <Modal
             isVisible={modalVisible}
-            onBackdropPress={() => this.toggleModal()}
             animationIn="fadeIn"
             animationInTiming={600}
             animationOut="fadeOut"
@@ -224,10 +226,6 @@ export default class RecipeScreen extends React.PureComponent {
               </TouchableOpacity>
             </View>
           </Modal>
-          {/* <Image
-            source={{ uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
-            width={width}
-          /> */}
           <View style={styles.recipeInfoContainer}>
             <Text style={styles.recipeTitle}>
               {recipe.title}
@@ -236,21 +234,8 @@ export default class RecipeScreen extends React.PureComponent {
               {recipe.subtitle}
             </Text>
             <View style={styles.addToCalendarButtonContainer}>
-              <AddToCalendarButton onPress={() => this.toggleModal()} />
+              <AddToCalendarButton onPress={() => this.hideModal()} />
             </View>
-            {/* <TouchableOpacity
-              onPress={() => this.toggleModal()}
-              style={styles.addToCalendarButton}
-            >
-              <Icon
-                name="calendar-outline"
-                size={18}
-                color={colors.charcoal.light}
-              />
-              <Text style={styles.addToCalendarButtonText}>
-                Add to calendar
-              </Text>
-            </TouchableOpacity> */}
             <Divider style={styles.divider} />
             <View style={styles.infoBar}>
               <View style={styles.infoFieldContainer}>
