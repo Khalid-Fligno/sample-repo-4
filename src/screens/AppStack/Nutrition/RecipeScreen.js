@@ -234,7 +234,7 @@ export default class RecipeScreen extends React.PureComponent {
               {recipe.subtitle}
             </Text>
             <View style={styles.addToCalendarButtonContainer}>
-              <AddToCalendarButton onPress={() => this.hideModal()} />
+              <AddToCalendarButton onPress={() => this.showModal()} />
             </View>
             <Divider style={styles.divider} />
             <View style={styles.infoBar}>
