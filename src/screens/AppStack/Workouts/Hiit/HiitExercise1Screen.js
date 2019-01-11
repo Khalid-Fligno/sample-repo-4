@@ -95,13 +95,18 @@ export default class HiitExercise1Screen extends React.PureComponent {
   restartWorkout = (exerciseList, fitnessLevel, selectedHiitWorkoutIndex) => {
     Alert.alert(
       'Warning',
-      'Are you sure you want to restart this workout?',
+      'Are you sure you want to restart this set?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'OK',
           onPress: () => {
-            this.props.navigation.replace('HiitCountdown', { exerciseList, fitnessLevel, selectedHiitWorkoutIndex });
+            this.props.navigation.replace('HiitExercise1', {
+              exerciseList,
+              fitnessLevel,
+              roundCount: this.props.navigation.getParam('roundCount', 0),
+              selectedHiitWorkoutIndex,
+            });
           },
         },
       ],

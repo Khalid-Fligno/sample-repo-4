@@ -105,13 +105,18 @@ export default class Exercise6Screen extends React.PureComponent {
   restartWorkout = (exerciseList, reps) => {
     Alert.alert(
       'Warning',
-      'Are you sure you want to restart this workout?',
+      'Are you sure you want to restart this set?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'OK',
           onPress: () => {
-            this.props.navigation.replace('Countdown', { exerciseList, reps });
+            this.props.navigation.replace('Exercise6', {
+              exerciseList,
+              reps,
+              setCount: this.props.navigation.getParam('setCount', 0),
+              resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
+            });
           },
         },
       ],
