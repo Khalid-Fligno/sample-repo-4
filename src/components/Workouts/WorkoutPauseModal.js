@@ -44,7 +44,7 @@ export default class WorkoutPauseModal extends React.PureComponent {
               style={styles.modalButtonQuit}
             >
               <Text style={styles.modalButtonText}>
-                QUIT
+                QUIT WORKOUT
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -52,7 +52,7 @@ export default class WorkoutPauseModal extends React.PureComponent {
               style={styles.modalButtonRestart}
             >
               <Text style={styles.modalButtonText}>
-                RESTART
+                RESTART THIS SET
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
