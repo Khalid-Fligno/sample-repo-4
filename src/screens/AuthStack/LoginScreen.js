@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   AsyncStorage,
-  // Alert,
+  Alert,
   // NativeModules,
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
@@ -225,14 +225,21 @@ export default class LoginScreen extends React.PureComponent {
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
-            if (await doc.data().fitnessLevel !== undefined) {
-              await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+            if (doc.exists) {
+              if (await doc.data().fitnessLevel !== undefined) {
+                await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+              }
+              this.setState({ loading: false });
+              if (await !doc.data().onboarded) {
+                this.props.navigation.navigate('Onboarding1');
+              }
+              this.props.navigation.navigate('App');
+            } else {
+              authResponse.user.delete().then(() => {
+                this.setState({ loading: false });
+                Alert.alert('Sign up could not be completed', 'Please try again');
+              });
             }
-            this.setState({ loading: false });
-            if (await !doc.data().onboarded) {
-              this.props.navigation.navigate('Onboarding1');
-            }
-            this.props.navigation.navigate('App');
           });
       }
     } catch (err) {

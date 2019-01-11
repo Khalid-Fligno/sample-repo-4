@@ -84,13 +84,21 @@ export default class SignupScreen extends React.PureComponent {
         onboarded: false,
         signUpDate: new Date(),
       };
-      await db.collection('users').doc(uid).set(data);
       await AsyncStorage.setItem('uid', uid);
-      this.setState({ loading: false });
-      auth.currentUser.sendEmailVerification().then(() => {
-        Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
-        this.props.navigation.navigate('Onboarding1', { name: firstName });
-      });
+      await db.collection('users').doc(uid).set(data)
+        .then(() => {
+          this.setState({ loading: false });
+          auth.currentUser.sendEmailVerification().then(() => {
+            Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
+            this.props.navigation.navigate('Onboarding1', { name: firstName });
+          });
+        })
+        .catch(() => {
+          response.user.delete().then(() => {
+            this.setState({ loading: false });
+            Alert.alert('Sign up could not be completed', 'Please try again');
+          });
+        });
     } catch (err) {
       const errorCode = err.code;
       this.setState({ error: errors.createUser[errorCode], loading: false });
