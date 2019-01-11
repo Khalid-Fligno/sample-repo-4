@@ -56,11 +56,24 @@ export default class SignupScreen extends React.PureComponent {
           onboarded: false,
           signUpDate: new Date(),
         };
-        await db.collection('users').doc(user.uid).set(data);
         await AsyncStorage.setItem('uid', user.uid);
+        await db.collection('users').doc(user.uid).set(data, (error) => {
+          if (error) {
+            user.delete().then(() => {
+              this.setState({ loading: false });
+              Alert.alert('Sign up could not be completed', 'Please try again');
+            });
+          }
+        });
         this.setState({ loading: false });
-        // this.props.navigation.navigate('Subscription');
-        this.props.navigation.navigate('Onboarding1', { name: profile.firstName });
+        auth.currentUser.sendEmailVerification().then(() => {
+          Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
+          // this.props.navigation.navigate('Subscription');
+          this.props.navigation.navigate('Onboarding1', { name: profile.first_name });
+        });
+      } else {
+        this.setState({ loading: false });
+        Alert.alert('Could not connect to facebook', 'Please try again, or sign up with your email address');
       }
     } catch (err) {
       this.setState({ error: 'Something went wrong', loading: false });
@@ -85,20 +98,19 @@ export default class SignupScreen extends React.PureComponent {
         signUpDate: new Date(),
       };
       await AsyncStorage.setItem('uid', uid);
-      await db.collection('users').doc(uid).set(data)
-        .then(() => {
-          this.setState({ loading: false });
-          auth.currentUser.sendEmailVerification().then(() => {
-            Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
-            this.props.navigation.navigate('Onboarding1', { name: firstName });
-          });
-        })
-        .catch(() => {
+      await db.collection('users').doc(uid).set(data, (error) => {
+        if (error) {
           response.user.delete().then(() => {
             this.setState({ loading: false });
             Alert.alert('Sign up could not be completed', 'Please try again');
           });
-        });
+        }
+      });
+      this.setState({ loading: false });
+      this.props.navigation.navigate('Onboarding1', { name: firstName });
+      auth.currentUser.sendEmailVerification().then(() => {
+        Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
+      });
     } catch (err) {
       const errorCode = err.code;
       this.setState({ error: errors.createUser[errorCode], loading: false });
