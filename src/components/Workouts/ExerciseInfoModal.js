@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
     borderColor: colors.coral.standard,
-    backgroundColor: colors.white,
     overflow: 'hidden',
   },
   exerciseDescriptionTextContainer: {
@@ -146,12 +145,12 @@ const styles = StyleSheet.create({
   exerciseDescriptionHeader: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.charcoal.standard,
+    color: colors.white,
   },
   exerciseDescriptionText: {
     fontFamily: fonts.standard,
     fontSize: 14,
-    color: colors.charcoal.standard,
+    color: colors.white,
     marginTop: 5,
     marginBottom: 5,
   },
