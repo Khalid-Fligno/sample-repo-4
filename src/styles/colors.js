@@ -38,6 +38,9 @@ const colors = {
     dark: 'rgb(110, 145, 221)', // #6e91dd
     vivid: 'rgb(0, 0, 255)', // #0000FF
   },
+  yellow: {
+    standard: 'rgb(242, 199, 26)', // #f1d519
+  },
   facebookBlue: 'rgb(59,89,152)', // #3B5998
 };
 
