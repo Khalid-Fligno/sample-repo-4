@@ -45,7 +45,7 @@ export default class Progress1Screen extends React.PureComponent {
     };
   }
   componentDidMount = () => {
-    this.props.navigation.setParams({ handleSkip: this.handleSkip, toggleHelperModal: this.toggleHelperModal });
+    this.props.navigation.setParams({ handleSkip: this.handleSkip, toggleHelperModal: this.showHelperModal });
     this.fetchUom();
   }
   toggleHelperModal = () => {
@@ -100,8 +100,11 @@ export default class Progress1Screen extends React.PureComponent {
   toggleHipModal = () => {
     this.setState((prevState) => ({ hipModalVisible: !prevState.hipModalVisible }));
   }
-  toggleHelperModal = () => {
-    this.setState((prevState) => ({ helperModalVisible: !prevState.helperModalVisible }));
+  showHelperModal = () => {
+    this.setState({ helperModalVisible: true });
+  }
+  hideHelperModal = () => {
+    this.setState({ helperModalVisible: false });
   }
   handleSubmit = async (weight, waist, hip) => {
     this.setState({ loading: true });
@@ -330,7 +333,7 @@ export default class Progress1Screen extends React.PureComponent {
         </KeyboardAvoidingView>
         <HelperModal
           helperModalVisible={helperModalVisible}
-          toggleHelperModal={() => this.toggleHelperModal()}
+          toggleHelperModal={this.showHelperModal}
           headingText="Progress"
           bodyText="Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test."
           bodyText2="You will need to complete all three to successfully add an entry."

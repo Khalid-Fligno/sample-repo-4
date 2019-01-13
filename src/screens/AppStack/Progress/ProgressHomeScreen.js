@@ -31,7 +31,7 @@ class ProgressHomeScreen extends React.PureComponent {
     };
   }
   componentDidMount() {
-    this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
+    this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     this.fetchProgressInfo();
     this.showHelperOnFirstOpen();
     Segment.screen('Progress Screen');
@@ -46,10 +46,11 @@ class ProgressHomeScreen extends React.PureComponent {
       AsyncStorage.setItem('progressHelperShownOnFirstOpen', 'true');
     }
   }
-  toggleHelperModal = () => {
-    this.setState((prevState) => ({
-      helperModalVisible: !prevState.helperModalVisible,
-    }));
+  showHelperModal = () => {
+    this.setState({ helperModalVisible: true });
+  }
+  hideHelperModal = () => {
+    this.setState({ helperModalVisible: false });
   }
   toggleImageModal = (imageSource) => {
     this.setState((prevState) => ({
@@ -279,7 +280,7 @@ class ProgressHomeScreen extends React.PureComponent {
         </ScrollView>
         <HelperModal
           helperModalVisible={helperModalVisible}
-          toggleHelperModal={() => this.toggleHelperModal()}
+          hideHelperModal={this.hideHelperModal}
           headingText="Progress"
           bodyText="We want you to enjoy the journey just as much as the destination. By tracking your progress, you can stay accountable and motivate you throughout the journey."
           bodyText2="Your ‘before’ photo and measurements will stay on the left of screen.  When it comes time to check-in, your ‘after’ photo and measurement will be uploaded on the right."

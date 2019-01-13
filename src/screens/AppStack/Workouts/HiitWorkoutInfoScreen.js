@@ -73,7 +73,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
     if (this.state.initialProgressInfoExists) {
       this.toggleMusicModal();
     } else {
-      this.toggleHelperModal();
+      this.showHelperModal();
     }
   }
   checkInitialProgressCompleted = async () => {
@@ -121,10 +121,11 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       { cancelable: false },
     );
   }
-  toggleHelperModal = () => {
-    this.setState((prevState) => ({
-      helperModalVisible: !prevState.helperModalVisible,
-    }));
+  showHelperModal = () => {
+    this.setState({ helperModalVisible: true });
+  }
+  hideHelperModal = () => {
+    this.setState({ helperModalVisible: false });
   }
   render() {
     const {
@@ -396,7 +397,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
         </Modal>
         <HelperModal
           helperModalVisible={helperModalVisible}
-          toggleHelperModal={() => this.toggleHelperModal()}
+          hideHelperModal={this.hideHelperModal}
           headingText="FK!"
           bodyText="To continue with this workout, you need to upload your ‘Before’ photo and measurements."
           bodyText2="You can do this by going to the ‘Progress’ tab."

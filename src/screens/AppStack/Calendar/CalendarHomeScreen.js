@@ -60,7 +60,7 @@ class CalendarHomeScreen extends React.PureComponent {
     this.calendarStrip = React.createRef();
   }
   componentDidMount = async () => {
-    this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
+    this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     await this.fetchCalendarEntries();
     this.showHelperOnFirstOpen();
     Segment.screen('Calendar Screen');
@@ -103,10 +103,11 @@ class CalendarHomeScreen extends React.PureComponent {
       AsyncStorage.setItem('calendarHelperShownOnFirstOpen', 'true');
     }
   }
-  toggleHelperModal = () => {
-    this.setState((prevState) => ({
-      helperModalVisible: !prevState.helperModalVisible,
-    }));
+  showHelperModal = () => {
+    this.setState({ helperModalVisible: true });
+  }
+  hideHelperModal = () => {
+    this.setState({ helperModalVisible: false });
   }
   handleDateSelected = async (date) => {
     this.setState({ loading: true });
@@ -517,7 +518,7 @@ class CalendarHomeScreen extends React.PureComponent {
         {dayDisplay}
         <HelperModal
           helperModalVisible={helperModalVisible}
-          toggleHelperModal={() => this.toggleHelperModal()}
+          hideHelperModal={this.hideHelperModal}
           headingText="Calendar"
           bodyText="Are you the type of person who likes to stay organised?  This is the perfect tool for you."
           bodyText2="Schedule workouts and recipes weeks in advance, so you know exactly what you’re training and what you are eating each day. Once you have scheduled these, you can go directly to your workout or recipe from this screen."

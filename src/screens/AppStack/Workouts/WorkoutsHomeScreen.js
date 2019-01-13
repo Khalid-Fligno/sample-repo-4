@@ -101,7 +101,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
     };
   }
   componentDidMount = () => {
-    this.props.navigation.setParams({ toggleHelperModal: this.toggleHelperModal });
+    this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     this.fetchWeeklyTargetInfo();
     this.showHelperOnFirstOpen();
     Segment.screen('Workouts Home Screen');
@@ -149,10 +149,11 @@ class WorkoutsHomeScreen extends React.PureComponent {
       }
     });
   }
-  toggleHelperModal = () => {
-    this.setState((prevState) => ({
-      helperModalVisible: !prevState.helperModalVisible,
-    }));
+  showHelperModal = () => {
+    this.setState({ helperModalVisible: true });
+  }
+  hideHelperModal = () => {
+    this.setState({ helperModalVisible: false });
   }
   handleWorkoutSelected = (selectedWorkoutLocationIndex, selectedResistanceFocusIndex) => {
     const workoutLocation = workoutLocationMap[selectedWorkoutLocationIndex];
@@ -367,7 +368,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
         </View>
         <HelperModal
           helperModalVisible={helperModalVisible}
-          toggleHelperModal={() => this.toggleHelperModal()}
+          hideHelperModal={this.hideHelperModal}
           headingText="Workouts"
           bodyText="What would you like to train today?"
           bodyText2="Select your workout type, followed by the location that you would like to train at.  Finally, select what you would like to focus on today."

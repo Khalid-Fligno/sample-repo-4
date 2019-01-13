@@ -14,7 +14,7 @@ export default class HelperModal extends React.PureComponent {
   render() {
     const {
       helperModalVisible,
-      toggleHelperModal,
+      hideHelperModal,
       headingText,
       bodyText,
       bodyText2,
@@ -54,7 +54,7 @@ export default class HelperModal extends React.PureComponent {
           </View>
           <View style={styles.helperModalButtonContainer}>
             <TouchableOpacity
-              onPress={toggleHelperModal}
+              onPress={hideHelperModal}
               style={[
                 styles.modalButton,
                 color === 'coral' && styles.modalButtonCoral,
@@ -76,7 +76,7 @@ export default class HelperModal extends React.PureComponent {
 
 HelperModal.propTypes = {
   helperModalVisible: PropTypes.bool.isRequired,
-  toggleHelperModal: PropTypes.func.isRequired,
+  hideHelperModal: PropTypes.func.isRequired,
   headingText: PropTypes.string.isRequired,
   bodyText: PropTypes.string.isRequired,
   bodyText2: PropTypes.string,
