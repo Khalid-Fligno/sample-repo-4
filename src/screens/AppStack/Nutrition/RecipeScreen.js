@@ -115,6 +115,7 @@ export default class RecipeScreen extends React.PureComponent {
             animationInTiming={600}
             animationOut="fadeOut"
             animationOutTiming={600}
+            onBackdropPress={this.hideModal}
           >
             <View style={styles.modalContainer}>
               <DatePickerIOS

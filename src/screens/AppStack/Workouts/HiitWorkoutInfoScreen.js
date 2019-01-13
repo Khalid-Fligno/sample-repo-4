@@ -85,8 +85,11 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       });
     // this.setState({ loading: false });
   }
-  toggleCalendarModal = () => {
-    this.setState((prevState) => ({ calendarModalVisible: !prevState.calendarModalVisible }));
+  showCalendarModal = () => {
+    this.setState({ calendarModalVisible: true });
+  }
+  hideCalendarModal = () => {
+    this.setState({ calendarModalVisible: false });
   }
   toggleMusicModal = () => {
     this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
@@ -258,7 +261,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
         >
           <Modal
             isVisible={calendarModalVisible}
-            onBackdropPress={() => this.toggleCalendarModal()}
+            onBackdropPress={this.hideCalendarModal}
             animationIn="fadeIn"
             animationInTiming={600}
             animationOut="fadeOut"
@@ -296,7 +299,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
               <Text style={styles.workoutName}>
                 {workout && workout.displayName.toUpperCase()}
               </Text>
-              <AddToCalendarButton onPress={() => this.toggleCalendarModal()} />
+              <AddToCalendarButton onPress={this.showCalendarModal} />
             </View>
             <View style={styles.workoutIconsRow}>
               <View style={styles.workoutIconContainer}>
