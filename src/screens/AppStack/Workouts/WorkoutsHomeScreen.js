@@ -265,26 +265,38 @@ class WorkoutsHomeScreen extends React.PureComponent {
               itemWidth={width * 0.8}
               onSnapToItem={(slideIndex) => this.onSnapToItemTopCarousel('selectedWorkoutTypeIndex', slideIndex)}
             />
-            <Icon
-              name="chevron-down"
-              size={18}
-              style={styles.chevron}
-              color={colors.grey.standard}
-            />
           </View>
           <View style={styles.flexContainer}>
             {
               selectedWorkoutTypeIndex === 0 ? (
                 <View style={styles.carouselTitleContainer}>
-                  <Text style={styles.carouselTitle}>
-                    Workout Location
-                  </Text>
+                  <View style={styles.flex}>
+                    <Text style={styles.carouselTitle}>
+                      Location
+                    </Text>
+                  </View>
+                  <Icon
+                    name="chevron-down"
+                    size={18}
+                    style={styles.chevron}
+                    color={colors.grey.standard}
+                  />
+                  <View style={styles.flex} />
                 </View>
               ) : (
                 <View style={styles.carouselTitleContainer}>
-                  <Text style={styles.carouselTitle}>
-                    Select Workout
-                  </Text>
+                  <View style={styles.flex}>
+                    <Text style={styles.carouselTitle}>
+                      Select Workout
+                    </Text>
+                  </View>
+                  <Icon
+                    name="chevron-down"
+                    size={18}
+                    style={styles.chevron}
+                    color={colors.grey.standard}
+                  />
+                  <View style={styles.flex} />
                 </View>
               )
             }
@@ -316,21 +328,31 @@ class WorkoutsHomeScreen extends React.PureComponent {
                 </FadeInView>
               )
             }
-            <Icon
-              name="chevron-down"
-              size={18}
-              style={styles.chevron}
-              color={colors.grey.standard}
-            />
           </View>
           <View style={styles.flexContainer}>
             {
-              selectedWorkoutTypeIndex === 0 && (
+              selectedWorkoutTypeIndex === 0 ? (
                 <View style={styles.carouselTitleContainer}>
-                  <Text style={styles.carouselTitle}>
-                    Workout Focus
-                  </Text>
+                  <View style={styles.flex}>
+                    <Text style={styles.carouselTitle}>
+                      Focus
+                    </Text>
+                  </View>
+                  <Icon
+                    name="chevron-down"
+                    size={18}
+                    style={styles.chevron}
+                    color={colors.grey.standard}
+                  />
+                  <View style={styles.flex} />
                 </View>
+              ) : (
+                <Icon
+                  name="chevron-down"
+                  size={18}
+                  style={styles.chevron}
+                  color={colors.grey.standard}
+                />
               )
             }
             {
@@ -347,17 +369,17 @@ class WorkoutsHomeScreen extends React.PureComponent {
                 </FadeInView>
               )
             }
-            {
-              selectedWorkoutTypeIndex === 0 && (
-                <Icon
-                  name="chevron-down"
-                  size={18}
-                  color={colors.grey.standard}
-                  style={styles.chevron}
-                />
-              )
-            }
           </View>
+          {
+            selectedWorkoutTypeIndex === 0 && (
+              <Icon
+                name="chevron-down"
+                size={18}
+                style={styles.chevron}
+                color={colors.grey.standard}
+              />
+            )
+          }
         </View>
         <View style={styles.buttonContainer}>
           <CustomButton
@@ -396,20 +418,26 @@ const styles = StyleSheet.create({
   },
   carouselsContainer: {
     flex: 1,
-    paddingTop: 10,
+    paddingTop: 4,
     paddingBottom: 5,
   },
   flexContainer: {
     flex: 1,
     alignItems: 'center',
   },
+  flex: {
+    flex: 1,
+  },
   carouselTitleContainer: {
     width: width * 0.8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   carouselTitle: {
     fontFamily: fonts.bold,
     fontSize: 12,
     color: colors.grey.dark,
+    marginTop: 3,
   },
   slide: {
     flex: 1,
