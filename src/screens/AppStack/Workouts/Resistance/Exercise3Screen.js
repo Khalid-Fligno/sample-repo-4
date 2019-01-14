@@ -95,6 +95,11 @@ export default class Exercise3Screen extends React.PureComponent {
   togglePauseModal = () => {
     this.setState((prevState) => ({ pauseModalVisible: !prevState.pauseModalVisible }));
   }
+  handleQuitWorkout = () => {
+    this.setState({ pauseModalVisible: false });
+    this.props.navigation.navigate('WorkoutsHome');
+    FileSystem.deleteAsync(`${FileSystem.documentDirectory}exercise-3.mp4`, { idempotent: true });
+  }
   quitWorkout = () => {
     Alert.alert(
       'Warning',
@@ -103,10 +108,7 @@ export default class Exercise3Screen extends React.PureComponent {
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'OK',
-          onPress: () => {
-            this.setState({ pauseModalVisible: false });
-            this.props.navigation.navigate('WorkoutsHome');
-          },
+          onPress: () => this.handleQuitWorkout(),
         },
       ],
       { cancelable: false },

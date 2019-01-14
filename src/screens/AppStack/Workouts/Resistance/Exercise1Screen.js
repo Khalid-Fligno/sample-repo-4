@@ -100,6 +100,11 @@ export default class Exercise1Screen extends React.PureComponent {
       pauseModalVisible: false,
     });
   }
+  handleQuitWorkout = () => {
+    this.setState({ pauseModalVisible: false });
+    this.props.navigation.navigate('WorkoutsHome');
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-1.mp4`, { idempotent: true });
+  }
   quitWorkout = () => {
     Alert.alert(
       'Warning',
@@ -108,10 +113,7 @@ export default class Exercise1Screen extends React.PureComponent {
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'OK',
-          onPress: () => {
-            this.setState({ pauseModalVisible: false });
-            this.props.navigation.navigate('WorkoutsHome');
-          },
+          onPress: () => this.handleQuitWorkout(),
         },
       ],
       { cancelable: false },
