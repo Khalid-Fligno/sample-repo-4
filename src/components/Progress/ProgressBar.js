@@ -21,7 +21,7 @@ export default class ProgressBar extends React.PureComponent {
     return (
       <View style={styles.container}>
         <Text style={styles.progressBarLabel}>
-          {progressBarType}
+          {`${progressBarType} `}
           {completedWorkouts}/{progressBarType === 'Resistance' ? 3 : 2}
         </Text>
         <View style={styles.progressBarOuter}>
