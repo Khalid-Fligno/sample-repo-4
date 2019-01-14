@@ -42,6 +42,7 @@ export default class NewsFeedTile extends React.PureComponent {
     };
     return (
       <TouchableOpacity
+        delayPressIn={50}
         onPress={onPress}
         style={styles.cardContainer}
         onPressIn={this.handlePressIn}
@@ -77,8 +78,8 @@ NewsFeedTile.propTypes = {
 const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
+    height: (width - 30) / 2.5,
     margin: 5,
-    height: 100,
     shadowColor: colors.charcoal.standard,
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },

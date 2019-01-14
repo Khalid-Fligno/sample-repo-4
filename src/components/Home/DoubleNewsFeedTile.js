@@ -64,6 +64,7 @@ export default class DoubleNewsFeedTile extends React.PureComponent {
     return (
       <View style={styles.doubleTileContainer}>
         <TouchableOpacity
+          delayPressIn={50}
           onPress={onPressLeft}
           style={styles.cardContainer}
           onPressIn={this.handlePressIn}
@@ -82,15 +83,20 @@ export default class DoubleNewsFeedTile extends React.PureComponent {
                   <Text style={styles.title}>
                     {titleLeft1}
                   </Text>
-                  <Text style={styles.title}>
-                    {titleLeft2}
-                  </Text>
+                  {
+                    titleLeft2 && (
+                      <Text style={styles.title}>
+                        {titleLeft2}
+                      </Text>
+                    )
+                  }
                 </View>
               </View>
             </ImageBackground>
           </Animated.View>
         </TouchableOpacity>
         <TouchableOpacity
+          delayPressIn={50}
           onPress={onPressRight}
           style={styles.cardContainer}
           onPressIn={this.handlePressInRight}
@@ -109,9 +115,13 @@ export default class DoubleNewsFeedTile extends React.PureComponent {
                   <Text style={styles.title}>
                     {titleRight1}
                   </Text>
-                  <Text style={styles.title}>
-                    {titleRight2}
-                  </Text>
+                  {
+                    titleRight2 && (
+                      <Text style={styles.title}>
+                        {titleRight2}
+                      </Text>
+                    )
+                  }
                 </View>
               </View>
             </ImageBackground>
@@ -126,16 +136,22 @@ DoubleNewsFeedTile.propTypes = {
   imageLeft: PropTypes.number.isRequired,
   imageRight: PropTypes.number.isRequired,
   titleLeft1: PropTypes.string.isRequired,
-  titleLeft2: PropTypes.string.isRequired,
+  titleLeft2: PropTypes.string,
   titleRight1: PropTypes.string.isRequired,
-  titleRight2: PropTypes.string.isRequired,
+  titleRight2: PropTypes.string,
   onPressLeft: PropTypes.func.isRequired,
   onPressRight: PropTypes.func.isRequired,
+};
+
+DoubleNewsFeedTile.defaultProps = {
+  titleLeft2: null,
+  titleRight2: null,
 };
 
 const styles = StyleSheet.create({
   doubleTileContainer: {
     flex: 1,
+    height: (width - 30) / 2,
     flexDirection: 'row',
   },
   cardContainer: {
