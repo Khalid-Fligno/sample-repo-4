@@ -474,6 +474,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   sectionHeader: {
+    alignItems: 'center',
     backgroundColor: colors.blue.standard,
     width: width - 20,
     borderTopLeftRadius: 2,
