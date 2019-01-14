@@ -369,17 +369,17 @@ class WorkoutsHomeScreen extends React.PureComponent {
                 </FadeInView>
               )
             }
+            {
+              selectedWorkoutTypeIndex === 0 && (
+                <Icon
+                  name="chevron-down"
+                  size={18}
+                  style={styles.chevron}
+                  color={colors.grey.standard}
+                />
+              )
+            }
           </View>
-          {
-            selectedWorkoutTypeIndex === 0 && (
-              <Icon
-                name="chevron-down"
-                size={18}
-                style={styles.chevron}
-                color={colors.grey.standard}
-              />
-            )
-          }
         </View>
         <View style={styles.buttonContainer}>
           <CustomButton
