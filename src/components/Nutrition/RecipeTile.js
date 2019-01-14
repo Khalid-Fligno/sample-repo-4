@@ -2,6 +2,7 @@ import React from 'react';
 import { Dimensions, TouchableOpacity, Text, StyleSheet, View, Animated } from 'react-native';
 import { Card } from 'react-native-elements';
 import PropTypes from 'prop-types';
+import Icon from '../../components/Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
@@ -31,6 +32,7 @@ export default class RecipeTile extends React.PureComponent {
       subTitle,
       image,
       tags,
+      time,
     } = this.props;
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
@@ -57,21 +59,39 @@ export default class RecipeTile extends React.PureComponent {
               {subTitle}
             </Text>
             <View
-              style={styles.tagContainer}
+              style={styles.recipeInfoContainer}
             >
               {
-                tags && tags.map((tag) => (
-                  <View
-                    style={styles.tagCircle}
-                    key={tag}
-                  >
-                    <Text
-                      style={styles.tagText}
-                    >
-                      {tag}
+                tags && (
+                  <View style={styles.recipeInfoSection}>
+                    {
+                      tags.map((tag) => (
+                        <View
+                          style={styles.tagCircle}
+                          key={tag}
+                        >
+                          <Text style={styles.tagText}>
+                            {tag}
+                          </Text>
+                        </View>
+                      ))
+                    }
+                  </View>
+                )
+              }
+              {
+                time && (
+                  <View style={styles.recipeInfoSection}>
+                    <Icon
+                      name="timer"
+                      size={25}
+                      color={colors.violet.standard}
+                    />
+                    <Text style={styles.timerText}>
+                      {time}
                     </Text>
                   </View>
-                ))
+                )
               }
             </View>
           </Card>
@@ -87,6 +107,7 @@ RecipeTile.propTypes = {
   subTitle: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string),
+  time: PropTypes.string.isRequired,
 };
 
 RecipeTile.defaultProps = {
@@ -121,13 +142,18 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 12,
   },
-  tagContainer: {
+  recipeInfoContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 3,
+  },
+  recipeInfoSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   tagCircle: {
     height: 28,
     width: 28,
-    marginTop: 3,
     marginRight: 5,
     borderWidth: 2.5,
     borderColor: colors.violet.standard,
@@ -140,5 +166,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.violet.standard,
     marginTop: 4,
+  },
+  timerText: {
+    fontFamily: fonts.standard,
+    fontSize: 12,
+    color: colors.violet.standard,
+    marginTop: 6,
+    marginLeft: 4,
   },
 });

@@ -82,11 +82,12 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       .map((recipe) => (
         <RecipeTile
           key={recipe.id}
-          image={`${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` || { uri: recipe.coverImage }}
+          onPress={() => this.props.navigation.push('Recipe', { recipe })}
+          image={`${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` || recipe.coverImage}
           title={recipe.title}
           tags={recipe.tags}
           subTitle={recipe.subtitle}
-          onPress={() => this.props.navigation.push('Recipe', { recipe })}
+          time={recipe.time}
         />
       ));
     const skeleton = (
