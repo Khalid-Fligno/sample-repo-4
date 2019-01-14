@@ -64,6 +64,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/images/workouts-outdoors-full.jpg'),
       require('../../assets/images/workouts-outdoors-upper.jpg'),
       require('../../assets/images/workouts-resistance.jpg'),
+      require('../../assets/images/hiit-rest-placeholder.jpg'),
       require('../../assets/icons/apple-music-icon.png'),
       require('../../assets/icons/spotify-icon.png'),
       require('../../assets/icons/facebook-icon-white.png'),
