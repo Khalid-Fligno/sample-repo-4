@@ -29,11 +29,11 @@ export default class ProgressBar extends React.PureComponent {
             style={[
               styles.progressBarEmpty,
               completedWorkouts === 0 && styles.progressBarEmpty,
-              progressBarType === 'resistance' && completedWorkouts === 1 && styles.resistance1,
-              progressBarType === 'resistance' && completedWorkouts === 2 && styles.resistance2,
-              progressBarType === 'resistance' && completedWorkouts >= 3 && styles.progressBarFull,
-              progressBarType === 'hiit' && completedWorkouts === 1 && styles.hiit1,
-              progressBarType === 'hiit' && completedWorkouts >= 2 && styles.progressBarFull,
+              progressBarType === 'Resistance' && completedWorkouts === 1 && styles.resistance1,
+              progressBarType === 'Resistance' && completedWorkouts === 2 && styles.resistance2,
+              progressBarType === 'Resistance' && completedWorkouts >= 3 && styles.progressBarFull,
+              progressBarType === 'HIIT' && completedWorkouts === 1 && styles.hiit1,
+              progressBarType === 'HIIT' && completedWorkouts >= 2 && styles.progressBarFull,
             ]}
           />
         </View>
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 12,
     color: colors.grey.dark,
+    marginTop: 3,
     marginBottom: 3,
   },
   progressBarOuter: {
