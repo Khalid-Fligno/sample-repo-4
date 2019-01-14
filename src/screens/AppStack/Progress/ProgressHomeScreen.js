@@ -7,6 +7,7 @@ import FastImage from 'react-native-fast-image';
 import ReactTimeout from 'react-timeout';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
+import ProgressBar from '../../../components/Progress/ProgressBar';
 import Icon from '../../../components/Shared/Icon';
 import HelperModal from '../../../components/Shared/HelperModal';
 import CustomButton from '../../../components/Shared/CustomButton';
@@ -22,6 +23,7 @@ class ProgressHomeScreen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
+      profile: undefined,
       initialProgressInfo: undefined,
       currentProgressInfo: undefined,
       unitsOfMeasurement: undefined,
@@ -65,6 +67,7 @@ class ProgressHomeScreen extends React.PureComponent {
       .onSnapshot(async (doc) => {
         if (doc.exists) {
           this.setState({
+            profile: await doc.data(),
             initialProgressInfo: await doc.data().initialProgressInfo,
             currentProgressInfo: await doc.data().currentProgressInfo,
             unitsOfMeasurement: await doc.data().unitsOfMeasurement,
@@ -76,6 +79,7 @@ class ProgressHomeScreen extends React.PureComponent {
   render() {
     const {
       loading,
+      profile,
       initialProgressInfo,
       currentProgressInfo,
       unitsOfMeasurement,
@@ -277,6 +281,29 @@ class ProgressHomeScreen extends React.PureComponent {
               </View>
             )
           }
+          <View style={styles.workoutProgressContainer}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.bodyText}>
+                WEEKLY WORKOUT PROGRESS
+              </Text>
+            </View>
+            {
+              profile && (
+                <ProgressBar
+                  progressBarType="Resistance"
+                  completedWorkouts={profile.weeklyTargets.resistanceWeeklyComplete}
+                />
+              )
+            }
+            {
+              profile && (
+                <ProgressBar
+                  progressBarType="HIIT"
+                  completedWorkouts={profile.weeklyTargets.hiitWeeklyComplete}
+                />
+              )
+            }
+          </View>
         </ScrollView>
         <HelperModal
           helperModalVisible={helperModalVisible}
@@ -431,6 +458,33 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingTop: 5,
     paddingBottom: 5,
+  },
+  workoutProgressContainer: {
+    alignItems: 'center',
+    width: width - 20,
+    marginTop: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    backgroundColor: colors.white,
+    borderRadius: 2,
+    shadowColor: colors.grey.standard,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+  },
+  sectionHeader: {
+    backgroundColor: colors.blue.standard,
+    width: width - 20,
+    borderTopLeftRadius: 2,
+    borderTopRightRadius: 2,
+    padding: 8,
+    paddingBottom: 5,
+  },
+  bodyText: {
+    fontFamily: fonts.standard,
+    fontSize: 12,
+    color: colors.white,
   },
 });
 
