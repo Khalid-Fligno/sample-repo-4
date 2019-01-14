@@ -30,14 +30,17 @@ const Header = ({
   headerTitleParams,
 }) => (
   <SafeAreaView
-    style={styles.noShadow}
-    // style={[
-    //   styles.defaultHeaderShadow,
-    //   stack === 'nutrition' && styles.nutritionHeaderShadow,
-    //   stack === 'workouts' && styles.workoutsHeaderShadow,
-    //   stack === 'calendar' && styles.noShadow,
-    //   stack === 'progress' && styles.noShadow,
-    // ]}
+    style={[
+      styles.noShadow,
+      stack === 'home' && styles.defaultHeaderShadow,
+      stack === 'calendar' && styles.defaultHeaderShadow,
+      stack === 'progress' && styles.defaultHeaderShadow,
+      navigation.state.routeName === 'RecipeSelection' && styles.defaultHeaderShadow,
+      navigation.state.routeName === 'Recipe' && styles.defaultHeaderShadow,
+      navigation.state.routeName === 'WorkoutInfo' && styles.defaultHeaderShadow,
+      navigation.state.routeName === 'HiitWorkoutInfo' && styles.defaultHeaderShadow,
+      navigation.state.routeName === 'ProfileHome' && styles.defaultHeaderShadow,
+    ]}
   >
     <StatusBar
       barStyle="light-content"
@@ -191,18 +194,6 @@ const styles = StyleSheet.create({
   defaultHeaderShadow: {
     backgroundColor: colors.black,
     shadowColor: colors.charcoal.dark,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-  },
-  nutritionHeaderShadow: {
-    shadowColor: colors.charcoal.standard,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-  },
-  workoutsHeaderShadow: {
-    shadowColor: colors.charcoal.standard,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
