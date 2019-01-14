@@ -21,8 +21,8 @@ export default class ProgressBar extends React.PureComponent {
     return (
       <View style={styles.container}>
         <Text style={styles.progressBarLabel}>
-          {`${progressBarType.charAt(0).toUpperCase()}${progressBarType.slice(1)} `}
-          {completedWorkouts}/{progressBarType === 'resistance' ? 3 : 2}
+          {progressBarType}
+          {completedWorkouts}/{progressBarType === 'Resistance' ? 3 : 2}
         </Text>
         <View style={styles.progressBarOuter}>
           <View
@@ -43,7 +43,7 @@ export default class ProgressBar extends React.PureComponent {
 }
 
 ProgressBar.propTypes = {
-  progressBarType: PropTypes.oneOf(['resistance', 'hiit']).isRequired,
+  progressBarType: PropTypes.oneOf(['Resistance', 'HIIT']).isRequired,
   completedWorkouts: PropTypes.number.isRequired,
 };
 
