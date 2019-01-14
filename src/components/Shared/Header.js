@@ -33,7 +33,6 @@ const Header = ({
     style={[
       styles.noShadow,
       stack === 'home' && styles.defaultHeaderShadow,
-      stack === 'calendar' && styles.defaultHeaderShadow,
       stack === 'progress' && styles.defaultHeaderShadow,
       navigation.state.routeName === 'RecipeSelection' && styles.defaultHeaderShadow,
       navigation.state.routeName === 'Recipe' && styles.defaultHeaderShadow,
