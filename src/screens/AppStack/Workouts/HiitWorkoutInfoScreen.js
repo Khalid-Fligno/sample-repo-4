@@ -174,7 +174,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
               {
                 index === 0 && (
                   <Video
-                    source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-${selectedHiitWorkoutIndex}.mp4` }}
+                    source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-1.mp4` }}
                     rate={1.0}
                     volume={1.0}
                     isMuted={false}

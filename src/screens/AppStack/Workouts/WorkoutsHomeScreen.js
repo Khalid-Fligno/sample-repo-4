@@ -178,7 +178,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
           const { exercises } = workout;
           await FileSystem.downloadAsync(
             exercises[0].videoURL,
-            `${FileSystem.cacheDirectory}exercise-hiit-${selectedHiitWorkoutIndex}.mp4`,
+            `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
           );
           this.setState({ loading: false });
           const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
