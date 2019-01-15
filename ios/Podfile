@@ -101,7 +101,6 @@ target 'fitazfk' do
     :podspec => "../node_modules/react-native/third-party-podspecs/glog.podspec",
     :inhibit_warnings => true
 
-
   pod 'react-native-in-app-utils', :path => '../node_modules/react-native-in-app-utils'
 
   pod 'react-native-fast-image', :path => '../node_modules/react-native-fast-image'
