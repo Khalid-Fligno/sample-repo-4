@@ -7,6 +7,7 @@ import {
   Dimensions,
   ImageBackground,
   AsyncStorage,
+  Alert,
 } from 'react-native';
 import { FileSystem, Haptic, Segment } from 'expo';
 import Carousel from 'react-native-snap-carousel';
@@ -186,6 +187,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
         });
     } catch (err) {
       this.setState({ loading: false });
+      Alert.alert('Could not download exercise video', 'Please check your internet connection');
     }
   }
   goToWorkouts = (selectedWorkoutTypeIndex) => {
@@ -369,17 +371,24 @@ class WorkoutsHomeScreen extends React.PureComponent {
                 </FadeInView>
               )
             }
-            {
-              selectedWorkoutTypeIndex === 0 && (
-                <Icon
-                  name="chevron-down"
-                  size={18}
-                  style={styles.chevron}
-                  color={colors.grey.standard}
-                />
-              )
-            }
           </View>
+          {
+            selectedWorkoutTypeIndex === 0 ? (
+              <Icon
+                name="chevron-down"
+                size={18}
+                style={styles.chevron}
+                color={colors.grey.standard}
+              />
+            ) : (
+              <Icon
+                name="chevron-down"
+                size={18}
+                style={styles.chevron}
+                color={colors.transparent}
+              />
+            )
+          }
         </View>
         <View style={styles.buttonContainer}>
           <CustomButton
