@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-// import { Video, FileSystem } from 'expo';
+import { FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
 import FastImage from 'react-native-fast-image';
 import Icon from '../../../../components/Shared/Icon';
@@ -79,6 +79,11 @@ export default class HiitExercise2Screen extends React.PureComponent {
   togglePauseModal = () => {
     this.setState((prevState) => ({ pauseModalVisible: !prevState.pauseModalVisible }));
   }
+  handleQuitWorkout = () => {
+    this.setState({ pauseModalVisible: false });
+    this.props.navigation.navigate('Workouts');
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-hiit-1.mp4`, { idempotent: true });
+  }
   quitWorkout = () => {
     Alert.alert(
       'Warning',
@@ -87,10 +92,7 @@ export default class HiitExercise2Screen extends React.PureComponent {
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'OK',
-          onPress: () => {
-            this.togglePauseModal();
-            this.props.navigation.navigate('WorkoutsHome');
-          },
+          onPress: this.handleQuitWorkout,
         },
       ],
       { cancelable: false },

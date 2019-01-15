@@ -33,7 +33,7 @@ export default class Exercise2Screen extends React.PureComponent {
   }
   componentDidMount() {
     this.startTimer();
-    this.manageVideoCache();
+    // this.manageVideoCache();
   }
   manageVideoCache = async () => {
     const setCount = this.props.navigation.getParam('setCount', 0);
@@ -92,10 +92,20 @@ export default class Exercise2Screen extends React.PureComponent {
       pauseModalVisible: false,
     });
   }
-  handleQuitWorkout = () => {
+  handleQuitWorkout = async () => {
     this.setState({ pauseModalVisible: false });
-    this.props.navigation.navigate('WorkoutsHome');
-    FileSystem.deleteAsync(`${FileSystem.documentDirectory}exercise-2.mp4`, { idempotent: true });
+    this.props.navigation.navigate('Workouts');
+    const exerciseVideos = [
+      `${FileSystem.cacheDirectory}exercise-1.mp4`,
+      `${FileSystem.cacheDirectory}exercise-2.mp4`,
+      `${FileSystem.cacheDirectory}exercise-3.mp4`,
+      `${FileSystem.cacheDirectory}exercise-4.mp4`,
+      `${FileSystem.cacheDirectory}exercise-5.mp4`,
+      `${FileSystem.cacheDirectory}exercise-6.mp4`,
+    ];
+    Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
+      FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
+    }));
   }
   quitWorkout = () => {
     Alert.alert(
@@ -105,7 +115,7 @@ export default class Exercise2Screen extends React.PureComponent {
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'OK',
-          onPress: () => this.handleQuitWorkout(),
+          onPress: this.handleQuitWorkout,
         },
       ],
       { cancelable: false },
@@ -171,7 +181,7 @@ export default class Exercise2Screen extends React.PureComponent {
           <View>
             <Video
               ref={(ref) => this.videoRef = ref}
-              source={{ uri: `${FileSystem.documentDirectory}exercise-2.mp4` || exerciseList[1].videoURL }}
+              source={{ uri: `${FileSystem.cacheDirectory}exercise-2.mp4` || exerciseList[1].videoURL }}
               rate={1.0}
               volume={1.0}
               isMuted={false}

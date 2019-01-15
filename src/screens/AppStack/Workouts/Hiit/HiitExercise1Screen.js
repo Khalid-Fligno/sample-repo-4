@@ -77,7 +77,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
   }
   handleQuitWorkout = () => {
     this.setState({ pauseModalVisible: false });
-    this.props.navigation.navigate('WorkoutsHome');
+    this.props.navigation.navigate('Workouts');
     FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-hiit-1.mp4`, { idempotent: true });
   }
   quitWorkout = () => {
@@ -88,7 +88,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'OK',
-          onPress: () => this.handleQuitWorkout(),
+          onPress: this.handleQuitWorkout,
         },
       ],
       { cancelable: false },
