@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert, AppState } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
@@ -30,10 +30,22 @@ export default class HiitExercise2Screen extends React.PureComponent {
       timerStart: false,
       timerReset: false,
       pauseModalVisible: false,
+      appState: AppState.currentState,
     };
   }
   componentDidMount() {
     this.startTimer();
+    AppState.addEventListener('change', this.handleAppStateChange);
+  }
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+  handleAppStateChange = (nextAppState) => {
+    const { appState } = this.state;
+    if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+      this.handlePause();
+    }
+    this.setState({ appState: nextAppState });
   }
   startTimer = () => {
     this.setState({

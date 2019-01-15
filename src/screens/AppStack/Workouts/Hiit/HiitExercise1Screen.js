@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert, AppState } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { FileSystem } from 'expo';
 import Video from 'react-native-video';
@@ -35,10 +35,22 @@ export default class HiitExercise1Screen extends React.PureComponent {
       pauseModalVisible: false,
       videoPaused: false,
       exerciseInfoModalVisible: false,
+      appState: AppState.currentState,
     };
   }
   componentDidMount() {
     this.startTimer();
+    AppState.addEventListener('change', this.handleAppStateChange);
+  }
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+  handleAppStateChange = (nextAppState) => {
+    const { appState } = this.state;
+    if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+      this.handlePause();
+    }
+    this.setState({ appState: nextAppState });
   }
   startTimer = () => {
     this.setState({
@@ -154,7 +166,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
           <View>
             <Video
               ref={(ref) => this.videoRef = ref}
-              source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-${selectedHiitWorkoutIndex}.mp4` || exerciseList[0].videoURL }}
+              source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-1.mp4` || exerciseList[0].videoURL }}
               rate={1.0}
               volume={1.0}
               isMuted={false}

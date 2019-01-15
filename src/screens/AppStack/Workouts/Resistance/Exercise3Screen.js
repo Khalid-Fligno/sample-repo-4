@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar, Alert } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, StatusBar, Alert, AppState } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { FileSystem } from 'expo';
 import Video from 'react-native-video';
@@ -29,11 +29,23 @@ export default class Exercise3Screen extends React.PureComponent {
       pauseModalVisible: false,
       videoPaused: false,
       exerciseInfoModalVisible: false,
+      appState: AppState.currentState,
     };
   }
   componentDidMount() {
     this.startTimer();
+    AppState.addEventListener('change', this.handleAppStateChange);
     // this.manageVideoCache();
+  }
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+  handleAppStateChange = (nextAppState) => {
+    const { appState } = this.state;
+    if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+      this.handlePause();
+    }
+    this.setState({ appState: nextAppState });
   }
   manageVideoCache = async () => {
     const setCount = this.props.navigation.getParam('setCount', 0);
