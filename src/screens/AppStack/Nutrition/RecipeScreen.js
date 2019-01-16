@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { FileSystem, Segment } from 'expo';
+import { FileSystem } from 'expo';
 import Modal from 'react-native-modal';
 import { Divider } from 'react-native-elements';
 import Image from 'react-native-scalable-image';
@@ -46,7 +46,6 @@ export default class RecipeScreen extends React.PureComponent {
     this.props.navigation.setParams({
       handleStart: () => this.props.navigation.navigate('RecipeSteps', { recipe }),
     });
-    Segment.screen('Recipe Screen');
     this.setState({ loading: false });
   }
   setDate = (newDate) => {

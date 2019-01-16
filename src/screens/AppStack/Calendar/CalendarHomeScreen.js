@@ -15,7 +15,6 @@ import {
   FileSystem,
   // Calendar,
   // Permissions,
-  Segment,
 } from 'expo';
 import CalendarStrip from 'react-native-calendar-strip';
 import Swipeable from 'react-native-swipeable';
@@ -63,7 +62,6 @@ class CalendarHomeScreen extends React.PureComponent {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     await this.fetchCalendarEntries();
     this.showHelperOnFirstOpen();
-    Segment.screen('Calendar Screen');
   }
   componentWillUnmount() {
     this.unsubscribeFromEntries();

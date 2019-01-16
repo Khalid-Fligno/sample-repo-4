@@ -12,7 +12,7 @@ import {
   Image,
   Linking,
 } from 'react-native';
-import { FileSystem, Video, Segment } from 'expo';
+import { FileSystem, Video } from 'expo';
 import Modal from 'react-native-modal';
 import Carousel from 'react-native-carousel';
 import { DotIndicator } from 'react-native-indicators';
@@ -61,7 +61,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       handleStart: () => this.handleStart(),
     });
     this.checkInitialProgressCompleted();
-    Segment.screen('Workout Info Screen');
   }
   componentWillUnmount = () => {
     this.unsubscribe();

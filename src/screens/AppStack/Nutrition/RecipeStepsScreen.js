@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
-import { Segment } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 import Image from 'react-native-image-progress';
 import { DotIndicator } from 'react-native-indicators';
@@ -17,9 +16,6 @@ export default class RecipeStepsScreen extends React.PureComponent {
       steps: this.props.navigation.getParam('recipe', null).steps,
       stepsImages: this.props.navigation.getParam('recipe', null).stepsImages,
     };
-  }
-  componentDidMount() {
-    Segment.screen('Recipe Steps Screen');
   }
   renderItem = ({ item, index }) => {
     const { steps } = this.state;

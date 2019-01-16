@@ -5,7 +5,7 @@ import {
   Linking,
   ScrollView,
 } from 'react-native';
-import { Haptic, Segment } from 'expo';
+import { Haptic } from 'expo';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import DoubleNewsFeedTile from '../../../components/Home/DoubleNewsFeedTile';
 import TripleNewsFeedTile from '../../../components/Home/TripleNewsFeedTile';
@@ -19,10 +19,9 @@ export default class HomeScreen extends React.PureComponent {
       loading: false,
     };
   }
-  openLink = (url, analyticsKey) => {
+  openLink = (url) => {
     Haptic.impact(Haptic.ImpactFeedbackStyle.Medium);
     Linking.openURL(url);
-    Segment.track(`Link opened: ${analyticsKey}`);
   }
   render() {
     const { loading } = this.state;
@@ -51,7 +50,7 @@ export default class HomeScreen extends React.PureComponent {
           <NewsFeedTile
             image={require('../../../../assets/images/shop-bundles.jpg')}
             title="GRAB YOUR FITAZFK WORKOUT EQUIPMENT"
-            onPress={() => this.openLink('https://fitazfk.com/collections/equipment', 'Online Store')}
+            onPress={() => this.openLink('https://fitazfk.com/collections/equipment')}
           />
           <TripleNewsFeedTile
             imageLeft={require('../../../../assets/images/hiit-rest-placeholder.jpg')}
@@ -60,14 +59,14 @@ export default class HomeScreen extends React.PureComponent {
             titleLeft="FAQ"
             titleCenter="PROFILE"
             titleRight="PROGRESS"
-            onPressLeft={() => this.openLink('https://fitazfk.zendesk.com/hc/en-us', 'FAQ')}
+            onPressLeft={() => this.openLink('https://fitazfk.zendesk.com/hc/en-us')}
             onPressCenter={() => this.props.navigation.navigate('ProfileHome')}
             onPressRight={() => this.props.navigation.navigate('Progress')}
           />
           <NewsFeedTile
             image={require('../../../../assets/images/fitazfk-army.jpg')}
             title="JOIN OUR FACEBOOK GROUP"
-            onPress={() => this.openLink('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572', 'Facebook Group')}
+            onPress={() => this.openLink('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
           />
         </ScrollView>
         <Loader

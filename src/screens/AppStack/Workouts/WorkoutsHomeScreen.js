@@ -9,7 +9,7 @@ import {
   AsyncStorage,
   Alert,
 } from 'react-native';
-import { FileSystem, Haptic, Segment } from 'expo';
+import { FileSystem, Haptic } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 import FadeInView from 'react-native-fade-in-view';
 import moment from 'moment';
@@ -105,7 +105,6 @@ class WorkoutsHomeScreen extends React.PureComponent {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     this.fetchWeeklyTargetInfo();
     this.showHelperOnFirstOpen();
-    Segment.screen('Workouts Home Screen');
   }
   componentWillUnmount = () => {
     this.unsubscribeFromTargets();

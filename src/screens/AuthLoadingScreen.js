@@ -8,7 +8,6 @@ import {
   AppLoading,
   Asset,
   Font,
-  // Segment,
 } from 'expo';
 import {
   validateReceiptProduction,
@@ -181,9 +180,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
   //     if (user) {
   //       unsubscribe();
   //       const { uid } = user;
-  //       await Segment.setEnabledAsync(true);
-  //       Segment.identify(uid);
-  //       Segment.track('App opened');
   //       await db.collection('users').doc(uid)
   //         .get()
   //         .then(async (doc) => {

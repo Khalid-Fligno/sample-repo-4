@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, Text, ScrollView, Dimensions, AsyncStorage, TouchableOpacity } from 'react-native';
-import { Segment } from 'expo';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import ReactTimeout from 'react-timeout';
@@ -36,7 +35,6 @@ class ProgressHomeScreen extends React.PureComponent {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     this.fetchProgressInfo();
     this.showHelperOnFirstOpen();
-    Segment.screen('Progress Screen');
   }
   componentWillUnmount() {
     this.unsubscribe();

@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { FileSystem, Segment } from 'expo';
+import { FileSystem } from 'expo';
 import { PieChart } from 'react-native-svg-charts';
 import Loader from '../../../../components/Shared/Loader';
 import Icon from '../../../../components/Shared/Icon';
@@ -45,7 +45,6 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     };
   }
   componentDidMount = async () => {
-    Segment.track('Workout Completed');
     this.manageVideoCache();
   }
   manageVideoCache = async () => {
