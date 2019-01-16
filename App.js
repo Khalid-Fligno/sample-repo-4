@@ -1,7 +1,8 @@
 import React from 'react';
 import Sentry from 'sentry-expo';
-import { Alert, NetInfo } from 'react-native';
+import { Alert, NetInfo, SafeAreaView, StyleSheet, StatusBar } from 'react-native';
 import SwitchNavigator from './config/router/index';
+import colors from './src/styles/colors';
 
 Sentry.config('https://ad25f20f55644584bd7ef1ffd7dfe1f1@sentry.io/1342308').install();
 
@@ -26,7 +27,19 @@ export default class App extends React.PureComponent {
   }
   render() {
     return (
-      <SwitchNavigator />
+      <SafeAreaView style={styles.appContainer}>
+        <StatusBar
+          barStyle="light-content"
+        />
+        <SwitchNavigator />
+      </SafeAreaView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  appContainer: {
+    flex: 1,
+    backgroundColor: colors.black,
+  },
+});
