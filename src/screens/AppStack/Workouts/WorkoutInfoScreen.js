@@ -136,10 +136,10 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       musicModalVisible,
       helperModalVisible,
     } = this.state;
-    let workoutName;
+    // let workoutName;
     let exerciseDisplay;
     if (workout) {
-      workoutName = workout.displayName;
+      // workoutName = workout.displayName;
       exerciseDisplay = workout.exercises.map((exercise, index) => {
         return (
           <Carousel
@@ -310,7 +310,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
           <View style={styles.workoutInfoContainer}>
             <View style={styles.workoutNameContainer}>
               <Text style={styles.workoutName}>
-                {workout && workoutName.toUpperCase()}
+                {workout && workout.displayName.toUpperCase()}
               </Text>
               <AddToCalendarButton onPress={() => this.showCalendarModal()} />
             </View>
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginRight: 10,
     fontFamily: fonts.bold,
-    fontSize: 22,
+    fontSize: 20,
     color: colors.coral.standard,
   },
   workoutIconsRow: {
