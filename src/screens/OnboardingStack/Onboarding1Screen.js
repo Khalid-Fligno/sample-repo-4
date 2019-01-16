@@ -11,7 +11,7 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import { Localization } from 'expo';
+import { Localization, Haptic } from 'expo';
 import Modal from 'react-native-modal';
 import CustomButton from '../../components/Shared/CustomButton';
 import Loader from '../../components/Shared/Loader';
@@ -45,6 +45,7 @@ export default class Onboarding1Screen extends React.PureComponent {
     this.setState({ chosenDate: newDate });
   }
   handleSubmit = async (chosenDate, chosenUom) => {
+    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     try {
       const timezone = await Localization.timezone;
@@ -109,7 +110,7 @@ export default class Onboarding1Screen extends React.PureComponent {
         <View style={styles.flexContainer}>
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>
-              Welcome{name && `, ${name}`}
+              Welcome{name !== null && `, ${name}`}
             </Text>
             <Text style={styles.bodyText}>
               It’s time to start your FitazFK journey! Just a few questions before we start.

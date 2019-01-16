@@ -10,7 +10,14 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import { ImagePicker, ImageManipulator, Permissions, Linking, FileSystem } from 'expo';
+import {
+  ImagePicker,
+  ImageManipulator,
+  Permissions,
+  Linking,
+  FileSystem,
+  Haptic,
+} from 'expo';
 import Loader from '../../components/Shared/Loader';
 import Icon from '../../components/Shared/Icon';
 import CustomButton from '../../components/Shared/CustomButton';
@@ -146,6 +153,7 @@ export default class Progress2Screen extends React.PureComponent {
     }
   };
   handleImagePicked = async (pickerResult) => {
+    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
     this.setState({ uploading: true });
     try {
       if (this.state.image !== null) {

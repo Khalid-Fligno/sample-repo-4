@@ -7,7 +7,7 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-import { FileSystem, Video } from 'expo';
+import { FileSystem, Video, Haptic } from 'expo';
 import Carousel from 'react-native-carousel';
 import CustomButton from '../../components/Shared/CustomButton';
 import Loader from '../../components/Shared/Loader';
@@ -58,6 +58,7 @@ export default class Progress3Screen extends React.PureComponent {
     }
   }
   handleNext = async () => {
+    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
     const {
       image,
       weight,

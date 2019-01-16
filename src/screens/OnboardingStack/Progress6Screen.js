@@ -10,6 +10,7 @@ import {
   AsyncStorage,
   Picker,
 } from 'react-native';
+import { Haptic } from 'expo';
 import Modal from 'react-native-modal';
 import moment from 'moment';
 import { db } from '../../../config/firebase';
@@ -110,6 +111,7 @@ export default class Progress6Screen extends React.PureComponent {
     }
   }
   handleSubmit = async () => {
+    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     const { burpeeCount } = this.state;
     const uid = await AsyncStorage.getItem('uid');
