@@ -23,3 +23,9 @@ export const identifiers = [
   'com.fitazfk.fitazfkapp.sub.fullaccess.quarterly',
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly',
 ];
+
+export const foundationIdentifiers = [
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.quarterly.foundation',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation',
+];

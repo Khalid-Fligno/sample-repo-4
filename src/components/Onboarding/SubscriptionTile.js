@@ -5,6 +5,12 @@ import Icon from '../../components/Shared/Icon';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
+const fullPriceMap = {
+  '$15.99': '$19.99',
+  '$39.99': '$49.99',
+  '$111.99': '$139.99',
+};
+
 export default class SubscriptionTile extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -17,6 +23,7 @@ export default class SubscriptionTile extends React.PureComponent {
       price,
       onPress,
       active,
+      foundation,
     } = this.props;
     return (
       <TouchableOpacity
@@ -26,6 +33,13 @@ export default class SubscriptionTile extends React.PureComponent {
         <Text style={active ? styles.subscriptionTileHeaderActive : styles.subscriptionTileHeaderInactive}>
           {title}
         </Text>
+        {
+          foundation && (
+          <Text style={active ? styles.subscriptionPriceTextActiveStrikethrough : styles.subscriptionPriceTextInactiveStrikethrough}>
+            {fullPriceMap[price]}
+          </Text>
+        )
+        }
         <Text style={active ? styles.subscriptionPriceTextActive : styles.subscriptionPriceTextInactive}>
           {price}
         </Text>
@@ -50,6 +64,11 @@ SubscriptionTile.propTypes = {
   price: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   active: PropTypes.bool.isRequired,
+  foundation: PropTypes.bool,
+};
+
+SubscriptionTile.defaultProps = {
+  foundation: false,
 };
 
 const styles = StyleSheet.create({
@@ -86,26 +105,40 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     color: colors.grey.standard,
+    marginBottom: 5,
   },
   subscriptionTileHeaderActive: {
     fontFamily: fonts.bold,
     fontSize: 14,
     textAlign: 'center',
     color: colors.charcoal.standard,
+    marginBottom: 5,
   },
-  subscriptionPriceTextInactive: {
+  subscriptionPriceTextInactiveStrikethrough: {
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.grey.standard,
-    paddingTop: 7,
-    paddingBottom: 5,
+    textDecorationLine: 'line-through',
+    textDecorationStyle: 'solid',
   },
-  subscriptionPriceTextActive: {
+  subscriptionPriceTextActiveStrikethrough: {
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.standard,
-    paddingTop: 7,
-    paddingBottom: 5,
+    textDecorationLine: 'line-through',
+    textDecorationStyle: 'solid',
+  },
+  subscriptionPriceTextInactive: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.grey.standard,
+    marginBottom: 5,
+  },
+  subscriptionPriceTextActive: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.charcoal.standard,
+    marginBottom: 5,
   },
   tickCircleInactive: {
     alignItems: 'center',
