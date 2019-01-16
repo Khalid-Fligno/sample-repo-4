@@ -36,7 +36,6 @@ export default class HelpAndSupportScreen extends React.PureComponent {
               <CustomButton
                 title="GO TO FITAZFK HELP"
                 onPress={() => this.goToHelp()}
-                outline
               />
             </View>
           </ScrollView>
