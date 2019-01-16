@@ -158,6 +158,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     return undefined;
   }
   toggleSubscriptionSelected = (subscriptionSelected) => {
+    Haptic.selection();
     this.setState({ subscriptionSelected });
   }
   render() {
