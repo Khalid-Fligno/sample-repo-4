@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Dimensions, Alert } from 'react-native';
+import { StyleSheet, View, Dimensions, Alert, FlatList } from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 import { FileSystem } from 'expo';
 import { db } from '../../../../config/firebase';
@@ -65,6 +65,17 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   updateFilter = (filterIndex) => {
     this.setState({ filterIndex });
   }
+  keyExtractor = (item) => item.id;
+  renderItem = ({ item }) => (
+    <RecipeTile
+      onPress={() => this.props.navigation.push('Recipe', { recipe: item })}
+      image={`${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage}
+      title={item.title}
+      tags={item.tags}
+      subTitle={item.subtitle}
+      time={item.time}
+    />
+  );
   render() {
     const { recipes, loading, filterIndex } = this.state;
     const filterButtons = ['All', 'Vegetarian', 'Vegan', 'Gluten-Free'];
@@ -78,18 +89,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           return recipe.tags.includes('GF');
         }
         return recipes;
-      })
-      .map((recipe) => (
-        <RecipeTile
-          key={recipe.id}
-          onPress={() => this.props.navigation.push('Recipe', { recipe })}
-          image={`${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` || recipe.coverImage}
-          title={recipe.title}
-          tags={recipe.tags}
-          subTitle={recipe.subtitle}
-          time={recipe.time}
-        />
-      ));
+      });
     const skeleton = (
       <View>
         <RecipeTileSkeleton />
@@ -99,9 +99,16 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     );
     return (
       <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          {loading ? skeleton : recipeList}
-        </ScrollView>
+        {
+          loading ? skeleton : (
+            <FlatList
+              contentContainerStyle={styles.scrollView}
+              data={recipeList}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderItem}
+            />
+          )
+        }
         <View style={styles.absoluteFilterButtonsContainer}>
           <ButtonGroup
             onPress={this.updateFilter}
