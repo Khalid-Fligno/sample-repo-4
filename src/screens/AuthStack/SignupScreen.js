@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
-import { Facebook } from 'expo';
+import { Facebook, Haptic } from 'expo';
 // import Modal from 'react-native-modal';
 import firebase from 'firebase';
 import { db, auth } from '../../../config/firebase';
@@ -39,6 +39,7 @@ export default class SignupScreen extends React.PureComponent {
     };
   }
   signupWithFacebook = async () => {
+    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
     try {
       const { type, token } = await Facebook.logInWithReadPermissionsAsync('1825444707513470', {
         permissions: ['public_profile', 'email'],
@@ -68,8 +69,7 @@ export default class SignupScreen extends React.PureComponent {
         this.setState({ loading: false });
         auth.currentUser.sendEmailVerification().then(() => {
           Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
-          // this.props.navigation.navigate('Subscription');
-          this.props.navigation.navigate('Onboarding1', { name: profile.first_name });
+          this.props.navigation.navigate('Subscription', { name: profile.first_name });
         });
       } else {
         this.setState({ loading: false });
@@ -80,6 +80,7 @@ export default class SignupScreen extends React.PureComponent {
     }
   }
   signup = async (firstName, lastName, email, password) => {
+    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     if (!firstName || !lastName) {
       this.setState({ error: 'Please complete all fields', loading: false });
@@ -107,7 +108,7 @@ export default class SignupScreen extends React.PureComponent {
         }
       });
       this.setState({ loading: false });
-      this.props.navigation.navigate('Onboarding1', { name: firstName });
+      this.props.navigation.navigate('Subscription', { name: firstName });
       auth.currentUser.sendEmailVerification().then(() => {
         Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
       });
