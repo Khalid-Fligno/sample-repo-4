@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
-// import SubscriptionScreen from '../../src/screens/OnboardingStack/SubscriptionScreen';
+import SubscriptionScreen from '../../src/screens/OnboardingStack/SubscriptionScreen';
 import Onboarding1Screen from '../../src/screens/OnboardingStack/Onboarding1Screen';
 import Progress1Screen from '../../src/screens/OnboardingStack/Progress1Screen';
 import Progress2Screen from '../../src/screens/OnboardingStack/Progress2Screen';
@@ -13,7 +13,7 @@ import { fadeSpec, fade, onboardingBackButtonMap, onboardingSkipButtonMap } from
 
 const OnboardingStack = createStackNavigator(
   {
-    // Subscription: SubscriptionScreen,
+    Subscription: SubscriptionScreen,
     Onboarding1: Onboarding1Screen,
     Progress1: Progress1Screen,
     Progress2: Progress2Screen,
@@ -23,7 +23,7 @@ const OnboardingStack = createStackNavigator(
     Progress6: Progress6Screen,
   },
   {
-    // initialRouteName: 'Subscription',
+    initialRouteName: 'Subscription',
     transitionConfig: () => ({
       transitionSpec: fadeSpec,
       screenInterpolator: (props) => {
@@ -40,7 +40,7 @@ const OnboardingStack = createStackNavigator(
             withBackButton={onboardingBackButtonMap[routeName]}
             withSkipButton={onboardingSkipButtonMap[routeName]}
             withHelpButton={routeName === 'Progress1'}
-            // withRestoreButton={routeName === 'Subscription'}
+            withRestoreButton={routeName === 'Subscription'}
           />
         );
       },
