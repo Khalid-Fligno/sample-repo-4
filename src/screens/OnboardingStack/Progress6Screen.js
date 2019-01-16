@@ -165,7 +165,7 @@ export default class Progress6Screen extends React.PureComponent {
                 Burpee Count
               </Text>
               <TouchableOpacity
-                onPress={() => this.toggleBurpeeModal()}
+                onPress={this.toggleBurpeeModal}
                 style={styles.inputButton}
               >
                 <Text style={styles.inputSelectionText}>
@@ -174,7 +174,7 @@ export default class Progress6Screen extends React.PureComponent {
               </TouchableOpacity>
               <Modal
                 isVisible={burpeeModalVisible}
-                onBackdropPress={() => this.toggleBurpeeModal()}
+                onBackdropPress={this.toggleBurpeeModal}
                 animationIn="fadeIn"
                 animationInTiming={600}
                 animationOut="fadeOut"
@@ -195,7 +195,7 @@ export default class Progress6Screen extends React.PureComponent {
                   </Picker>
                   <TouchableOpacity
                     title="DONE"
-                    onPress={() => this.toggleBurpeeModal()}
+                    onPress={this.toggleBurpeeModal}
                     style={styles.modalButton}
                   >
                     <Text style={styles.modalButtonText}>
@@ -209,7 +209,7 @@ export default class Progress6Screen extends React.PureComponent {
           <View style={styles.buttonContainer}>
             <CustomButton
               title="NEXT"
-              onPress={() => this.handleSubmit()}
+              onPress={this.handleSubmit}
               primary
             />
           </View>

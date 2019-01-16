@@ -77,7 +77,7 @@ export default class EmailVerificationScreen extends React.PureComponent {
               {'If you accidentally deleted it, you can re-send it by pressing below.'}
             </Text>
             <Text
-              onPress={() => this.resendVerificationEmail()}
+              onPress={this.resendVerificationEmail}
               style={styles.resendEmailLink}
             >
               Re-send verification email

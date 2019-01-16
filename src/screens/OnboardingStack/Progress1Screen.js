@@ -91,14 +91,11 @@ export default class Progress1Screen extends React.PureComponent {
       );
     }
   }
-  toggleWeightModal = () => {
-    this.setState((prevState) => ({ weightModalVisible: !prevState.weightModalVisible }));
+  showModal = (modalNameVisible) => {
+    this.setState({ [modalNameVisible]: true });
   }
-  toggleWaistModal = () => {
-    this.setState((prevState) => ({ waistModalVisible: !prevState.waistModalVisible }));
-  }
-  toggleHipModal = () => {
-    this.setState((prevState) => ({ hipModalVisible: !prevState.hipModalVisible }));
+  hideModal = (modalNameVisible) => {
+    this.setState({ [modalNameVisible]: false });
   }
   showHelperModal = () => {
     this.setState({ helperModalVisible: true });
@@ -151,7 +148,7 @@ export default class Progress1Screen extends React.PureComponent {
                   Weight
                 </Text>
                 <TouchableOpacity
-                  onPress={() => this.toggleWeightModal()}
+                  onPress={() => this.showModal('weightModalVisible')}
                   style={styles.inputButton}
                 >
                   <Text style={styles.inputSelectionText}>
@@ -160,7 +157,7 @@ export default class Progress1Screen extends React.PureComponent {
                 </TouchableOpacity>
                 <Modal
                   isVisible={weightModalVisible}
-                  onBackdropPress={() => this.toggleWeightModal()}
+                  onBackdropPress={() => this.hideModal('weightModalVisible')}
                   animationIn="fadeIn"
                   animationInTiming={600}
                   animationOut="fadeOut"
@@ -193,7 +190,7 @@ export default class Progress1Screen extends React.PureComponent {
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
-                      onPress={() => this.toggleWeightModal()}
+                      onPress={() => this.hideModal('weightModalVisible')}
                       style={styles.modalButton}
                     >
                       <Text style={styles.modalButtonText}>
@@ -208,7 +205,7 @@ export default class Progress1Screen extends React.PureComponent {
                   Waist
                 </Text>
                 <TouchableOpacity
-                  onPress={() => this.toggleWaistModal()}
+                  onPress={() => this.showModal('waistModalVisible')}
                   style={styles.inputButton}
                 >
                   <Text style={styles.inputSelectionText}>
@@ -217,7 +214,7 @@ export default class Progress1Screen extends React.PureComponent {
                 </TouchableOpacity>
                 <Modal
                   isVisible={waistModalVisible}
-                  onBackdropPress={() => this.toggleWaistModal()}
+                  onBackdropPress={() => this.hideModal('waistModalVisible')}
                   animationIn="fadeIn"
                   animationInTiming={600}
                   animationOut="fadeOut"
@@ -250,7 +247,7 @@ export default class Progress1Screen extends React.PureComponent {
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
-                      onPress={() => this.toggleWaistModal()}
+                      onPress={() => this.hideModal('waistModalVisible')}
                       style={styles.modalButton}
                     >
                       <Text style={styles.modalButtonText}>
@@ -265,7 +262,7 @@ export default class Progress1Screen extends React.PureComponent {
                   Hip
                 </Text>
                 <TouchableOpacity
-                  onPress={() => this.toggleHipModal()}
+                  onPress={() => this.showModal('hipModalVisible')}
                   style={styles.inputButton}
                 >
                   <Text style={styles.inputSelectionText}>
@@ -274,7 +271,7 @@ export default class Progress1Screen extends React.PureComponent {
                 </TouchableOpacity>
                 <Modal
                   isVisible={hipModalVisible}
-                  onBackdropPress={() => this.toggleHipModal()}
+                  onBackdropPress={() => this.hideModal('hipModalVisible')}
                   animationIn="fadeIn"
                   animationInTiming={600}
                   animationOut="fadeOut"
@@ -307,7 +304,7 @@ export default class Progress1Screen extends React.PureComponent {
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
-                      onPress={() => this.toggleHipModal()}
+                      onPress={() => this.hideModal('hipModalVisible')}
                       style={styles.modalButton}
                     >
                       <Text style={styles.modalButtonText}>

@@ -233,10 +233,10 @@ export default class SignupScreen extends React.PureComponent {
             </View>
             <FacebookButton
               title="SIGN UP WITH FACEBOOK"
-              onPress={() => this.signupWithFacebook()}
+              onPress={this.signupWithFacebook}
             />
             <Text
-              onPress={() => this.navigateToLogin()}
+              onPress={this.navigateToLogin}
               style={styles.navigateToLogin}
             >
               Already signed up? Log in here

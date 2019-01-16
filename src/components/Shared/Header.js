@@ -18,154 +18,183 @@ const headerContainer = {
   borderBottomWidth: 0,
 };
 
-const Header = ({
-  stack,
-  navigation,
-  withBackButton,
-  withHelpButton,
-  withSkipButton,
-  withRestoreButton,
-  withStartButton,
-  withProfileButton,
-  headerTitleParams,
-}) => (
-  <SafeAreaView
-    style={[
-      styles.noShadow,
-      stack === 'home' && styles.defaultHeaderShadow,
-      stack === 'progress' && styles.defaultHeaderShadow,
-      navigation.state.routeName === 'RecipeSelection' && styles.defaultHeaderShadow,
-      navigation.state.routeName === 'Recipe' && styles.defaultHeaderShadow,
-      navigation.state.routeName === 'WorkoutInfo' && styles.defaultHeaderShadow,
-      navigation.state.routeName === 'HiitWorkoutInfo' && styles.defaultHeaderShadow,
-      navigation.state.routeName === 'ProfileHome' && styles.defaultHeaderShadow,
-    ]}
-  >
-    <StatusBar
-      barStyle="light-content"
-    />
-    <View
-      style={[
-        styles.defaultHeader,
-        stack === 'onboarding' && styles.workoutsHeader,
-        stack === 'nutrition' && styles.nutritionHeader,
-        stack === 'workouts' && styles.workoutsHeader,
-        stack === 'calendar' && styles.calendarHeader,
-        stack === 'progress' && styles.progressHeader,
-      ]}
-    >
-      {
-        withBackButton && (
-          <TouchableOpacity
-            style={styles.headerContentContainerLeft}
-            onPress={() => navigation.pop()}
-          >
-            <Icon
-              name="chevron-left"
-              size={20}
-              color={colors.white}
-            />
-          </TouchableOpacity>
-        )
-      }
-      {
-        withHelpButton && (
-          <TouchableOpacity
-            style={styles.headerContentContainerLeft}
-            onPress={() => navigation.state.params.toggleHelperModal()}
-          >
-            <Icon
-              name="question-speech-bubble"
-              size={30}
-              color={colors.white}
-            />
-          </TouchableOpacity>
-        )
-      }
-      {
-        !withBackButton && !withHelpButton && (
-          <View
-            style={styles.headerContentContainerLeft}
-          />
-        )
-      }
-      <View
-        style={styles.headerContentContainer}
+export default class Header extends React.PureComponent {
+  handleBack = () => {
+    const { navigation } = this.props;
+    navigation.pop();
+  }
+  handleHelper = () => {
+    const { navigation } = this.props;
+    navigation.state.params.toggleHelperModal();
+  }
+  handleSkip = () => {
+    const { navigation } = this.props;
+    navigation.state.params.handleSkip();
+  }
+  handleProfileButton = () => {
+    const { navigation } = this.props;
+    navigation.navigate('ProfileHome');
+  }
+  handleRestore = () => {
+    const { navigation } = this.props;
+    navigation.state.params.restore();
+  }
+  handleStart = () => {
+    const { navigation } = this.props;
+    navigation.state.params.handleStart();
+  }
+  render() {
+    const {
+      stack,
+      navigation,
+      withBackButton,
+      withHelpButton,
+      withSkipButton,
+      withRestoreButton,
+      withStartButton,
+      withProfileButton,
+      headerTitleParams,
+    } = this.props;
+    return (
+      <SafeAreaView
+        style={[
+          styles.noShadow,
+          stack === 'home' && styles.defaultHeaderShadow,
+          stack === 'progress' && styles.defaultHeaderShadow,
+          navigation.state.routeName === 'RecipeSelection' && styles.defaultHeaderShadow,
+          navigation.state.routeName === 'Recipe' && styles.defaultHeaderShadow,
+          navigation.state.routeName === 'WorkoutInfo' && styles.defaultHeaderShadow,
+          navigation.state.routeName === 'HiitWorkoutInfo' && styles.defaultHeaderShadow,
+          navigation.state.routeName === 'ProfileHome' && styles.defaultHeaderShadow,
+        ]}
       >
-        {
-          headerTitleParams ? (
-            <Text style={styles.headerTitleText}>
-              {headerTitleParams}
-            </Text>
-          ) : (
-            <Image
-              source={require('../../../assets/icons/fitazfk-icon-outline-white.png')}
-              style={styles.fitazfkIcon}
-            />
-          )
-        }
-      </View>
-      {
-        withSkipButton && (
-          <TouchableOpacity
-            style={styles.headerContentContainerRight}
-            onPress={() => navigation.state.params.handleSkip()}
-          >
-            <Text style={styles.skipButton}>
-              Skip
-            </Text>
-          </TouchableOpacity>
-        )
-      }
-      {
-        withRestoreButton && (
-          <TouchableOpacity
-            style={styles.headerContentContainerRight}
-            onPress={() => navigation.state.params.restore()}
-          >
-            <Text style={styles.skipButton}>
-              Restore
-            </Text>
-          </TouchableOpacity>
-        )
-      }
-      {
-        withStartButton && (
-          <TouchableOpacity
-            style={styles.headerContentContainerRight}
-            onPress={() => navigation.state.params.handleStart()}
-          >
-            <Text style={styles.skipButton}>
-              Start
-            </Text>
-            <Icon
-              name="chevron-right"
-              size={20}
-              color={colors.white}
-            />
-          </TouchableOpacity>
-        )
-      }
-      {
-        withProfileButton && (
-          <TouchableOpacity
-            style={styles.headerContentContainerRight}
-            onPress={() => navigation.navigate('ProfileHome')}
-          >
-            <ProfileButton />
-          </TouchableOpacity>
-          )
-      }
-      {
-        !withStartButton && !withSkipButton && !withProfileButton && !withRestoreButton && (
+        <StatusBar
+          barStyle="light-content"
+        />
+        <View
+          style={[
+            styles.defaultHeader,
+            stack === 'onboarding' && styles.workoutsHeader,
+            stack === 'nutrition' && styles.nutritionHeader,
+            stack === 'workouts' && styles.workoutsHeader,
+            stack === 'calendar' && styles.calendarHeader,
+            stack === 'progress' && styles.progressHeader,
+          ]}
+        >
+          {
+            withBackButton && (
+              <TouchableOpacity
+                style={styles.headerContentContainerLeft}
+                onPress={this.handleBack}
+              >
+                <Icon
+                  name="chevron-left"
+                  size={20}
+                  color={colors.white}
+                />
+              </TouchableOpacity>
+            )
+          }
+          {
+            withHelpButton && (
+              <TouchableOpacity
+                style={styles.headerContentContainerLeft}
+                onPress={this.handleHelper}
+              >
+                <Icon
+                  name="question-speech-bubble"
+                  size={30}
+                  color={colors.white}
+                />
+              </TouchableOpacity>
+            )
+          }
+          {
+            !withBackButton && !withHelpButton && (
+              <View
+                style={styles.headerContentContainerLeft}
+              />
+            )
+          }
           <View
-            style={styles.headerContentContainerRight}
-          />
-        )
-      }
-    </View>
-  </SafeAreaView>
-);
+            style={styles.headerContentContainer}
+          >
+            {
+              headerTitleParams ? (
+                <Text style={styles.headerTitleText}>
+                  {headerTitleParams}
+                </Text>
+              ) : (
+                <Image
+                  source={require('../../../assets/icons/fitazfk-icon-outline-white.png')}
+                  style={styles.fitazfkIcon}
+                />
+              )
+            }
+          </View>
+          {
+            withSkipButton && (
+              <TouchableOpacity
+                style={styles.headerContentContainerRight}
+                onPress={this.handleSkip}
+              >
+                <Text style={styles.skipButton}>
+                  Skip
+                </Text>
+              </TouchableOpacity>
+            )
+          }
+          {
+            withRestoreButton && (
+              <TouchableOpacity
+                style={styles.headerContentContainerRight}
+                onPress={this.handleRestore}
+              >
+                <Text style={styles.skipButton}>
+                  Restore
+                </Text>
+              </TouchableOpacity>
+            )
+          }
+          {
+            withStartButton && (
+              <TouchableOpacity
+                style={styles.headerContentContainerRight}
+                onPress={this.handleStart}
+              >
+                <Text style={styles.skipButton}>
+                  Start
+                </Text>
+                <Icon
+                  name="chevron-right"
+                  size={20}
+                  color={colors.white}
+                />
+              </TouchableOpacity>
+            )
+          }
+          {
+            withProfileButton && (
+              <TouchableOpacity
+                style={styles.headerContentContainerRight}
+                onPress={this.handleProfileButton}
+              >
+                <ProfileButton />
+              </TouchableOpacity>
+              )
+          }
+          {
+            !withStartButton && !withSkipButton && !withProfileButton && !withRestoreButton && (
+              <View
+                style={styles.headerContentContainerRight}
+              />
+            )
+          }
+        </View>
+      </SafeAreaView>
+    );
+  }
+}
 
 Header.propTypes = {
   withBackButton: PropTypes.bool,
@@ -266,5 +295,3 @@ const styles = StyleSheet.create({
     height: 30,
   },
 });
-
-export default Header;

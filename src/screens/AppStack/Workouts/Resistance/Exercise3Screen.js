@@ -205,7 +205,7 @@ export default class Exercise3Screen extends React.PureComponent {
               paused={videoPaused}
               style={{ width, height: width }}
             />
-            <ExerciseInfoButton onPress={() => this.showExerciseInfoModal()} />
+            <ExerciseInfoButton onPress={this.showExerciseInfoModal} />
             <WorkoutTimer
               totalDuration={totalDuration}
               start={timerStart}

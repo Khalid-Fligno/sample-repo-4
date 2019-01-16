@@ -108,12 +108,13 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       'Added to calendar!',
       '',
       [
-        { text: 'OK', onPress: () => this.hideCalendarModal(), style: 'cancel' },
+        { text: 'OK', onPress: this.hideCalendarModal, style: 'cancel' },
       ],
       { cancelable: false },
     );
   }
-  handleWorkoutStart = (workout, reps) => {
+  handleWorkoutStart = () => {
+    const { workout, reps } = this.state;
     this.setState({ musicModalVisible: false });
     this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
     Segment.track('Workout Started');
@@ -397,7 +398,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             </View>
             <View style={styles.musicModalButtonContainer}>
               <TouchableOpacity
-                onPress={() => this.toggleMusicModal()}
+                onPress={this.toggleMusicModal}
                 style={styles.musicModalCancelButton}
               >
                 <Text style={styles.musicModalButtonText}>
@@ -405,7 +406,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => this.handleWorkoutStart(workout, reps)}
+                onPress={this.handleWorkoutStart}
                 style={styles.musicModalContinueButton}
               >
                 <Text style={styles.musicModalButtonText}>

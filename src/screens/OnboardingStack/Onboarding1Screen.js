@@ -121,7 +121,7 @@ export default class Onboarding1Screen extends React.PureComponent {
                 Date of Birth
               </Text>
               <TouchableOpacity
-                onPress={() => this.toggleDobModal()}
+                onPress={this.toggleDobModal}
                 style={styles.inputButton}
               >
                 <Text style={styles.inputSelectionText}>
@@ -130,7 +130,7 @@ export default class Onboarding1Screen extends React.PureComponent {
               </TouchableOpacity>
               <Modal
                 isVisible={dobModalVisible}
-                onBackdropPress={() => this.toggleDobModal()}
+                onBackdropPress={this.toggleDobModal}
                 animationIn="fadeIn"
                 animationInTiming={600}
                 animationOut="fadeOut"
@@ -149,7 +149,7 @@ export default class Onboarding1Screen extends React.PureComponent {
                   />
                   <TouchableOpacity
                     title="DONE"
-                    onPress={() => this.toggleDobModal()}
+                    onPress={this.toggleDobModal}
                     style={styles.modalButton}
                   >
                     <Text style={styles.modalButtonText}>
@@ -164,7 +164,7 @@ export default class Onboarding1Screen extends React.PureComponent {
                 Units of measurement
               </Text>
               <TouchableOpacity
-                onPress={() => this.toggleUomModal()}
+                onPress={this.toggleUomModal}
                 style={styles.inputButton}
               >
                 <Text style={styles.inputSelectionText}>
@@ -173,7 +173,7 @@ export default class Onboarding1Screen extends React.PureComponent {
               </TouchableOpacity>
               <Modal
                 isVisible={uomModalVisible}
-                onBackdropPress={() => this.toggleUomModal()}
+                onBackdropPress={this.toggleUomModal}
                 animationIn="fadeIn"
                 animationInTiming={600}
                 animationOut="fadeOut"
@@ -189,7 +189,7 @@ export default class Onboarding1Screen extends React.PureComponent {
                   </Picker>
                   <TouchableOpacity
                     title="DONE"
-                    onPress={() => this.toggleUomModal()}
+                    onPress={this.toggleUomModal}
                     style={styles.modalButton}
                   >
                     <Text style={styles.modalButtonText}>

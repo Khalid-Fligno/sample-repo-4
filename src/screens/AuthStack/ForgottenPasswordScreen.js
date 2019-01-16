@@ -83,7 +83,7 @@ export default class ForgottenPasswordScreen extends React.PureComponent {
             clearButtonMode="while-editing"
           />
           <TouchableOpacity
-            onPress={() => this.sendPasswordResetEmail(this.state.email)}
+            onPress={() => this.sendPasswordResetEmail(email)}
             style={styles.loginButton}
           >
             {

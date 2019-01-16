@@ -318,7 +318,7 @@ export default class LoginScreen extends React.PureComponent {
             ref={(input) => {
               this.passwordInput = input;
             }}
-            onSubmitEditing={() => this.login(this.state.email, this.state.password)}
+            onSubmitEditing={() => this.login(email, password)}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             clearButtonMode="while-editing"
@@ -334,7 +334,7 @@ export default class LoginScreen extends React.PureComponent {
           }
           <Button
             title="LOG IN"
-            onPress={() => this.login(this.state.email, this.state.password)}
+            onPress={() => this.login(email, password)}
             containerViewStyle={styles.loginButtonContainer}
             buttonStyle={styles.loginButton}
             textStyle={styles.loginButtonText}
@@ -348,16 +348,16 @@ export default class LoginScreen extends React.PureComponent {
           </View>
           <FacebookButton
             title="LOG IN WITH FACEBOOK"
-            onPress={() => this.loginWithFacebook()}
+            onPress={this.loginWithFacebook}
           />
           <Text
-            onPress={() => this.navigateToForgottenPassword()}
+            onPress={this.navigateToForgottenPassword}
             style={styles.navigateToForgottenPasswordButton}
           >
             {'Forgotten your password?'}
           </Text>
           <Text
-            onPress={() => this.navigateToSignup()}
+            onPress={this.navigateToSignup}
             style={styles.navigateToSignupButton}
           >
             {"Don't have an account? Sign up here"}

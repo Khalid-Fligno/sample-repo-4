@@ -153,7 +153,7 @@ export default class Progress3Screen extends React.PureComponent {
           <View style={styles.buttonContainer}>
             <CustomButton
               title="READY!"
-              onPress={() => this.handleNext()}
+              onPress={this.handleNext}
               primary
             />
           </View>
