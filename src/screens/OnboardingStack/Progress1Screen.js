@@ -333,7 +333,7 @@ export default class Progress1Screen extends React.PureComponent {
         </KeyboardAvoidingView>
         <HelperModal
           helperModalVisible={helperModalVisible}
-          toggleHelperModal={this.showHelperModal}
+          hideHelperModal={this.hideHelperModal}
           headingText="Progress"
           bodyText="Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test."
           bodyText2="You will need to complete all three to successfully add an entry."
