@@ -74,7 +74,6 @@ export default class Header extends React.PureComponent {
         <View
           style={[
             styles.defaultHeader,
-            stack === 'onboarding' && styles.workoutsHeader,
             stack === 'nutrition' && styles.nutritionHeader,
             stack === 'workouts' && styles.workoutsHeader,
             stack === 'calendar' && styles.calendarHeader,
@@ -242,7 +241,7 @@ const styles = StyleSheet.create({
   },
   defaultHeader: {
     ...headerContainer,
-    backgroundColor: colors.charcoal.dark,
+    backgroundColor: colors.charcoal.darkest,
   },
   nutritionHeader: {
     ...headerContainer,

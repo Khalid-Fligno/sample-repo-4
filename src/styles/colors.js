@@ -13,6 +13,7 @@ const colors = {
     light: 'rgb(234, 234, 235)', // #eaeaeb
   },
   charcoal: {
+    darkest: 'rgb(20, 20, 20)', // #
     standard: 'rgb(38, 38, 40)', // #262628
     light: 'rgb(65, 64, 66)', // #414042
     dark: 'rgb(35, 36, 44)', // #23242C
