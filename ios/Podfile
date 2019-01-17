@@ -107,10 +107,6 @@ target 'fitazfk' do
 
   pod 'react-native-video', :path => '../node_modules/react-native-video'
 
-  pod 'EXFirebaseApp', path: '../node_modules/expo-firebase-app/ios'
-
-  pod 'EXFirebaseAnalytics', path: '../node_modules/expo-firebase-analytics/ios'
-
   post_install do |installer|
     installer.pods_project.main_group.tab_width = '2';
     installer.pods_project.main_group.indent_width = '2';

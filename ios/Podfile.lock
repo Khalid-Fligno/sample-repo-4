@@ -54,12 +54,6 @@ PODS:
     - EXFileSystemInterface
   - EXFileSystemInterface (1.1.0):
     - EXCore
-  - EXFirebaseAnalytics (2.0.0):
-    - EXCore
-    - Firebase/Analytics
-  - EXFirebaseApp (2.0.0):
-    - EXCore
-    - Firebase/Core
   - EXFont (1.1.0):
     - EXCore
     - EXFontInterface
@@ -140,28 +134,6 @@ PODS:
     - FBSDKCoreKit
   - FBSDKShareKit (4.37.0):
     - FBSDKCoreKit (~> 4.37.0)
-  - Firebase/Analytics (5.15.0):
-    - Firebase/Core
-  - Firebase/Core (5.15.0):
-    - Firebase/CoreOnly
-    - FirebaseAnalytics (= 5.4.0)
-  - Firebase/CoreOnly (5.15.0):
-    - FirebaseCore (= 5.1.10)
-  - FirebaseAnalytics (5.4.0):
-    - FirebaseCore (~> 5.1)
-    - FirebaseInstanceID (~> 3.3)
-    - GoogleAppMeasurement (= 5.4.0)
-    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
-    - GoogleUtilities/MethodSwizzler (~> 5.2)
-    - GoogleUtilities/Network (~> 5.2)
-    - "GoogleUtilities/NSData+zlib (~> 5.2)"
-    - nanopb (~> 0.3)
-  - FirebaseCore (5.1.10):
-    - GoogleUtilities/Logger (~> 5.2)
-  - FirebaseInstanceID (3.3.0):
-    - FirebaseCore (~> 5.1)
-    - GoogleUtilities/Environment (~> 5.3)
-    - GoogleUtilities/UserDefaults (~> 5.3)
   - FLAnimatedImage (1.0.12)
   - Folly (2016.10.31.00):
     - boost-for-react-native
@@ -185,12 +157,6 @@ PODS:
   - Google-Maps-iOS-Utils/QuadTree (2.1.0):
     - GoogleMaps
   - Google-Mobile-Ads-SDK (7.22.0)
-  - GoogleAppMeasurement (5.4.0):
-    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
-    - GoogleUtilities/MethodSwizzler (~> 5.2)
-    - GoogleUtilities/Network (~> 5.2)
-    - "GoogleUtilities/NSData+zlib (~> 5.2)"
-    - nanopb (~> 0.3)
   - GoogleMaps (2.5.0):
     - GoogleMaps/Maps (= 2.5.0)
   - GoogleMaps/Base (2.5.0)
@@ -208,32 +174,9 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.2.0)
     - "GoogleToolboxForMac/NSString+URLArguments (= 2.2.0)"
   - "GoogleToolboxForMac/NSString+URLArguments (2.2.0)"
-  - GoogleUtilities/AppDelegateSwizzler (5.3.6):
-    - GoogleUtilities/Environment
-    - GoogleUtilities/Logger
-    - GoogleUtilities/Network
-  - GoogleUtilities/Environment (5.3.6)
-  - GoogleUtilities/Logger (5.3.6):
-    - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (5.3.6):
-    - GoogleUtilities/Logger
-  - GoogleUtilities/Network (5.3.6):
-    - GoogleUtilities/Logger
-    - "GoogleUtilities/NSData+zlib"
-    - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (5.3.6)"
-  - GoogleUtilities/Reachability (5.3.6):
-    - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (5.3.6):
-    - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (1.2.1)
   - JKBigInteger2 (0.0.5)
   - lottie-ios (2.5.2)
-  - nanopb (0.3.901):
-    - nanopb/decode (= 0.3.901)
-    - nanopb/encode (= 0.3.901)
-  - nanopb/decode (0.3.901)
-  - nanopb/encode (0.3.901)
   - React (0.57.1):
     - React/Core (= 0.57.1)
   - react-native-fast-image (5.1.1):
@@ -315,8 +258,6 @@ DEPENDENCIES:
   - EXFaceDetectorInterface (from `../node_modules/expo-face-detector-interface/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFileSystemInterface (from `../node_modules/expo-file-system-interface/ios`)
-  - EXFirebaseAnalytics (from `../node_modules/expo-firebase-analytics/ios`)
-  - EXFirebaseApp (from `../node_modules/expo-firebase-app/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXFontInterface (from `../node_modules/expo-font-interface/ios`)
   - EXGL-CPP (from `../node_modules/expo-gl-cpp/cpp`)
@@ -370,22 +311,15 @@ SPEC REPOS:
     - FBSDKCoreKit
     - FBSDKLoginKit
     - FBSDKShareKit
-    - Firebase
-    - FirebaseAnalytics
-    - FirebaseCore
-    - FirebaseInstanceID
     - FLAnimatedImage
     - Google-Maps-iOS-Utils
     - Google-Mobile-Ads-SDK
-    - GoogleAppMeasurement
     - GoogleMaps
     - GoogleSignIn
     - GoogleToolboxForMac
-    - GoogleUtilities
     - GTMSessionFetcher
     - JKBigInteger2
     - lottie-ios
-    - nanopb
     - SDWebImage
     - Stripe
 
@@ -416,10 +350,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-file-system/ios"
   EXFileSystemInterface:
     :path: "../node_modules/expo-file-system-interface/ios"
-  EXFirebaseAnalytics:
-    :path: "../node_modules/expo-firebase-analytics/ios"
-  EXFirebaseApp:
-    :path: "../node_modules/expo-firebase-app/ios"
   EXFont:
     :path: "../node_modules/expo-font/ios"
   EXFontInterface:
@@ -499,8 +429,6 @@ SPEC CHECKSUMS:
   EXFaceDetectorInterface: 8727fe51fbd189a94ccd70152a25cdef913a0ae5
   EXFileSystem: 0872826fd9ebc7d842a5e389b088c93f5b9fab88
   EXFileSystemInterface: 8e1225e4e1776ea7abf997a7ded593b4b8e86863
-  EXFirebaseAnalytics: 2b9d8cca675a56e817dd723969cca15d0b4a559e
-  EXFirebaseApp: b95170bf27798e784619ff585bbe17e155e8826b
   EXFont: 5c0220788732ef1c4bfe0f5079a003b4c64add95
   EXFontInterface: 06126ec4f6a67415426074c3383a82b241f087c1
   EXGL-CPP: 46b589a3ed0c59ae2e7f9434897b66cd8dd2e70c
@@ -524,24 +452,17 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: fe5f3474499a81963e11e3f3a5c753d0a95ca2b4
   FBSDKLoginKit: 2f7249686d1e30ce8a5ef5400eedf50b3e3df332
   FBSDKShareKit: 52e0083222c38e930eb6878007478326599195c3
-  Firebase: 8bb9268bff82374f2cbaaabb143e725743c316ae
-  FirebaseAnalytics: c06f9d70577d79074214700a71fd5d39de5550fb
-  FirebaseCore: 35747502d9e8c6ee217385ad04446c7c2aaf9c5c
-  FirebaseInstanceID: e2fa4cb35ef5558c200f7f0ad8a53e212215f93e
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Folly: c89ac2d5c6ab169cd7397ef27485c44f35f742c7
   glog: e8acf0ebbf99759d3ff18c86c292a5898282dcde
   Google-Maps-iOS-Utils: c32891ff472eaaa1fca032beedafa1a013af7875
   Google-Mobile-Ads-SDK: 1bdf1a4244d0553b1840239874c209c01aef055f
-  GoogleAppMeasurement: 98b71f5e04142793729a5ef23e5b96651ff4b70f
   GoogleMaps: c087b8e5dfe87ca6ebf59adb9b4894a4146bec4f
   GoogleSignIn: 7ff245e1a7b26d379099d3243a562f5747e23d39
   GoogleToolboxForMac: ff31605b7d66400dcec09bed5861689aebadda4d
-  GoogleUtilities: 95996bea7c7d9b8fb811b7507669a4a8762f80c7
   GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
   JKBigInteger2: e91672035c42328c48b7dd015b66812ddf40ca9b
   lottie-ios: 3fef45d3fabe63e3c7c2eb603dd64ddfffc73062
-  nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
   react-native-fast-image: cba3d9bf9c2cf8ddb643d887a686c53a5dd90a2c
   react-native-in-app-utils: 655eb59a6ccb31830637cd9b441b91fad35ff7a0
@@ -550,6 +471,6 @@ SPEC CHECKSUMS:
   Stripe: 76c203e21555089b708e6cbe972a3e3baf1ab4d8
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: 1430c1a7553c61cbbbb0c9b94ec3b768d0f9304a
+PODFILE CHECKSUM: ef5229e552861322cede80fabd22957a57dca6c1
 
 COCOAPODS: 1.5.3

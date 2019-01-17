@@ -28,8 +28,6 @@
   },
   "dependencies": {
     "expo": "^31.0.0",
-    "expo-firebase-analytics": "^2.0.0",
-    "expo-firebase-app": "^2.0.0",
     "expokit": "1.7.1",
     "firebase": "^5.5.9",
     "iap-receipt-validator": "^1.0.6",
