@@ -176,7 +176,7 @@ export default class SubscriptionScreen extends React.PureComponent {
               Subscription
             </Text>
             <Text style={styles.subHeadingText}>
-              Subscribe now for a 7-day free trial!
+              Subscribe now for a 7-day free trial + foundation member discounts!
             </Text>
           </View>
           <View style={styles.contentContainer}>
@@ -268,19 +268,17 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     width,
     padding: 10,
-    paddingTop: 15,
   },
   headerText: {
     fontFamily: fonts.bold,
     fontSize: 28,
     color: colors.charcoal.light,
-    marginBottom: 5,
   },
   subHeadingText: {
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.light,
-    marginLeft: 3,
+    marginLeft: 2,
   },
   contentContainer: {
     flexShrink: 1,

@@ -40,9 +40,7 @@ const uriToBlob = (url) => {
 const storeProgressInfo = async (uri, isInitial, weight, waist, hip, burpeeCount) => {
   const uid = await AsyncStorage.getItem('uid');
   const firebase = require('firebase');
-  // const response = await fetch(uri);
   const blob = await uriToBlob(uri);
-  // const blob = await response.blob();
   const storageRef = firebase.storage().ref();
   const userPhotosStorageRef = storageRef.child('user-photos');
   const userStorageRef = userPhotosStorageRef.child(uid);
@@ -241,7 +239,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width,
     padding: 10,
-    paddingTop: 15,
   },
   headerText: {
     fontFamily: fonts.bold,

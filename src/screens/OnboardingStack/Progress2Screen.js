@@ -263,7 +263,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width,
     padding: 10,
-    paddingTop: 15,
   },
   headerText: {
     fontFamily: fonts.bold,
