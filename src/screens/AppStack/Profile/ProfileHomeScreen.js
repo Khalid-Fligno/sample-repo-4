@@ -57,8 +57,6 @@ export default class ProfileHomeScreen extends React.PureComponent {
   }
   componentDidMount() {
     this.fetchProfile();
-    this.getCameraPermission();
-    this.getCameraRollPermission();
   }
   componentWillUnmount() {
     this.unsubscribe();
@@ -108,14 +106,16 @@ export default class ProfileHomeScreen extends React.PureComponent {
     }
   };
   chooseUploadType = () => {
+    this.getCameraPermission();
+    this.getCameraRollPermission();
     ActionSheetIOS.showActionSheetWithOptions(
       {
         options: ['Cancel', 'Take photo', 'Upload from Camera Roll'],
         cancelButtonIndex: 0,
       },
-      (buttonIndex) => {
+      async (buttonIndex) => {
         if (buttonIndex === 1) {
-          if (!this.state.hasCameraPermission) {
+          if (!this.state.hasCameraPermission || !this.state.hasCameraRollPermission) {
             this.appSettingsPrompt();
             return;
           }
@@ -152,9 +152,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
     }
   };
   takePhoto = async () => {
-    const result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-    });
+    const result = await ImagePicker.launchCameraAsync();
     if (!result.cancelled) {
       const manipResult = await ImageManipulator.manipulateAsync(
         result.uri,
