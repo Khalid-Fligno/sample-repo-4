@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   scrollViewContainer: {
-    height: 250,
+    flex: 1,
     width: width - 20,
     backgroundColor: colors.white,
     borderColor: colors.grey.light,
