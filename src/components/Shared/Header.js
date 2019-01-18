@@ -120,7 +120,7 @@ export default class Header extends React.PureComponent {
                 onPress={this.handleLogout}
               >
                 <Text style={styles.logoutButton}>
-                  Log Out
+                  Logout
                 </Text>
               </TouchableOpacity>
             )

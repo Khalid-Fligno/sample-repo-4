@@ -64,7 +64,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>Allow FitazFK to access your calendar</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow FitazFK to use your camera</string>
+	<string>FitazFK uses the camera to take and upload progress or a profile photo</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Allow FitazFK to access your contacts</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -76,7 +76,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Give FitazFK permission to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Give FitazFK permission to access your photos</string>
+	<string>FitazFK needs permission to access your photos for uploading progress photos or a profile photo</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>Allow FitazFK to access your reminders</string>
 	<key>UILaunchStoryboardName</key>

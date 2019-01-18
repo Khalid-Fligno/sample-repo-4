@@ -41,13 +41,14 @@ export default class SubscriptionTile extends React.PureComponent {
               {title}
             </Text>
             <Text style={solid ? styles.subscriptionPriceTextSolid : styles.subscriptionPriceText}>
-              {price} / {term} <Text style={solid ? styles.subscriptionPriceSubtextSolid : styles.subscriptionPriceSubtext}>after 7 day FREE TRIAL</Text>
+              {price} {term} <Text style={solid ? styles.subscriptionPriceSubtextSolid : styles.subscriptionPriceSubtext}>after 7 day FREE TRIAL</Text>
             </Text>
           </View>
           <Icon
             name="chevron-right"
             size={20}
             color={solid ? colors.white : colors.coral.standard}
+            style={styles.icon}
           />
         </View>
       </TouchableOpacity>
@@ -74,10 +75,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     margin: 5,
     padding: 10,
-    paddingLeft: 15,
+    paddingTop: 0,
     borderWidth: 2,
     borderColor: colors.coral.standard,
     borderRadius: 4,
+    shadowColor: colors.charcoal.standard,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
   },
   subscriptionTileSolid: {
     flex: 1,
@@ -85,7 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.coral.standard,
     margin: 5,
     padding: 10,
-    paddingLeft: 15,
+    paddingTop: 0,
     borderWidth: 2,
     borderColor: colors.coral.standard,
     borderRadius: 4,
@@ -101,8 +106,8 @@ const styles = StyleSheet.create({
   },
   savingsBox: {
     position: 'absolute',
-    marginTop: -35,
-    backgroundColor: colors.coral.dark,
+    marginTop: -15,
+    backgroundColor: colors.coral.darkest,
     borderRadius: 4,
   },
   savingsText: {
@@ -115,6 +120,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   subscriptionTileContent: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -123,32 +129,37 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 16,
     color: colors.coral.standard,
+    marginTop: 8,
     marginBottom: 5,
   },
   subscriptionTileHeaderSolid: {
     fontFamily: fonts.bold,
     fontSize: 16,
     color: colors.white,
+    marginTop: 8,
     marginBottom: 5,
   },
   subscriptionPriceText: {
     fontFamily: fonts.bold,
-    fontSize: 14,
+    fontSize: 13,
     color: colors.coral.standard,
   },
   subscriptionPriceTextSolid: {
     fontFamily: fonts.bold,
-    fontSize: 14,
+    fontSize: 13,
     color: colors.white,
   },
   subscriptionPriceSubtext: {
     fontFamily: fonts.standard,
-    fontSize: 14,
+    fontSize: 11,
     color: colors.coral.standard,
   },
   subscriptionPriceSubtextSolid: {
     fontFamily: fonts.standard,
-    fontSize: 14,
+    fontSize: 11,
     color: colors.white,
+  },
+  icon: {
+    marginTop: 10,
   },
 });

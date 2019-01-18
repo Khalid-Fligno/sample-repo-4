@@ -27,7 +27,7 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
 const { InAppUtils } = NativeModules;
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const productTitleMap = {
   0: 'Yearly',
@@ -45,7 +45,6 @@ export default class SubscriptionScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      loadingProducts: false,
       loading: false,
       products: undefined,
     };
@@ -105,15 +104,15 @@ export default class SubscriptionScreen extends React.PureComponent {
     });
   }
   loadProducts = () => {
-    this.setState({ loadingProducts: true });
+    this.setState({ loading: true });
     InAppUtils.loadProducts(foundationIdentifiers, (error, products) => {
       if (error) {
-        this.setState({ loadingProducts: false });
+        this.setState({ loading: false });
         Alert.alert('Could not load subscription products', 'Please try again later');
       }
       const sortedProducts = products.slice().sort(compareProducts);
 
-      this.setState({ products: sortedProducts, subscriptionSelected: sortedProducts[0], loadingProducts: false });
+      this.setState({ products: sortedProducts, subscriptionSelected: sortedProducts[0], loading: false });
     });
   }
   purchaseProduct = async (productIdentifier) => {
@@ -187,7 +186,6 @@ export default class SubscriptionScreen extends React.PureComponent {
   }
   render() {
     const {
-      loadingProducts,
       loading,
       products,
       subscriptionSelected,
@@ -249,14 +247,10 @@ export default class SubscriptionScreen extends React.PureComponent {
               Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
             </Text>
           </View>
-          <Loader
-            loading={loadingProducts}
-            color={colors.coral.standard}
-          />
         </View>
         {
           loading && (
-            <View style={styles.overlay} />
+            <Loader loading={loading} color={colors.coral.standard} />
           )
         }
       </SafeAreaView>
@@ -283,7 +277,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     width,
-    padding: 15,
+    padding: 12,
   },
   headerText: {
     fontFamily: fonts.bold,
@@ -301,7 +295,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width,
     height: 140,
-    marginBottom: 5,
   },
   subscriptionTileRow: {
     flex: 1,
@@ -330,12 +323,5 @@ const styles = StyleSheet.create({
     fontSize: 8,
     color: colors.charcoal.light,
     marginBottom: 10,
-  },
-  overlay: {
-    position: 'absolute',
-    height,
-    width,
-    backgroundColor: colors.black,
-    opacity: 0.6,
   },
 });
