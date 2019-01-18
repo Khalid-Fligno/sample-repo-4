@@ -139,7 +139,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
                         Alert.alert('Receipt validation error');
                       }
                       if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
-                        Alert.alert('Your subscription has been auto-renewed');
+                        // Alert.alert('Your subscription has been auto-renewed');
                         const userRef = db.collection('users').doc(uid);
                         const data = {
                           subscriptionInfo: {
