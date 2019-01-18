@@ -38,6 +38,7 @@ const OnboardingStack = createStackNavigator(
             stack="onboarding"
             navigation={navigation}
             withBackButton={onboardingBackButtonMap[routeName]}
+            withLogoutButton={routeName === 'Subscription'}
             withSkipButton={onboardingSkipButtonMap[routeName]}
             withHelpButton={routeName === 'Progress1'}
             withRestoreButton={routeName === 'Subscription'}

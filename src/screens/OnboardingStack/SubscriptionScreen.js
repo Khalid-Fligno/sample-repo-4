@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { Haptic } from 'expo';
 import { DotIndicator } from 'react-native-indicators';
-import { db } from '../../../config/firebase';
+import { auth, db } from '../../../config/firebase';
 import {
   // identifiers,
   foundationIdentifiers,
@@ -56,12 +56,22 @@ export default class SubscriptionScreen extends React.PureComponent {
     };
   }
   componentDidMount() {
-    this.props.navigation.setParams({ restore: this.restore });
+    this.props.navigation.setParams({ handleRestore: this.restore });
+    this.props.navigation.setParams({ handleLogout: this.logout });
     this.loadProducts();
   }
   openLink = (url) => {
     Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
     Linking.openURL(url);
+  }
+  logout = () => {
+    try {
+      AsyncStorage.removeItem('uid');
+      auth.signOut();
+      this.props.navigation.navigate('Auth');
+    } catch (err) {
+      Alert.alert('Error logging out');
+    }
   }
   restore = async () => {
     this.setState({ loading: true });
@@ -332,6 +342,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width,
     height: 140,
+    marginBottom: 5,
   },
   scrollViewContainer: {
     flex: 1,

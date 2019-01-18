@@ -23,6 +23,10 @@ export default class Header extends React.PureComponent {
     const { navigation } = this.props;
     navigation.pop();
   }
+  handleLogout = () => {
+    const { navigation } = this.props;
+    navigation.state.params.handleLogout();
+  }
   handleHelper = () => {
     const { navigation } = this.props;
     navigation.state.params.toggleHelperModal();
@@ -37,7 +41,7 @@ export default class Header extends React.PureComponent {
   }
   handleRestore = () => {
     const { navigation } = this.props;
-    navigation.state.params.restore();
+    navigation.state.params.handleRestore();
   }
   handleStart = () => {
     const { navigation } = this.props;
@@ -54,6 +58,7 @@ export default class Header extends React.PureComponent {
       withStartButton,
       withProfileButton,
       headerTitleParams,
+      withLogoutButton,
     } = this.props;
     return (
       <SafeAreaView
@@ -109,7 +114,19 @@ export default class Header extends React.PureComponent {
             )
           }
           {
-            !withBackButton && !withHelpButton && (
+            withLogoutButton && (
+              <TouchableOpacity
+                style={styles.headerContentContainerLeft}
+                onPress={this.handleLogout}
+              >
+                <Text style={styles.logoutButton}>
+                  Log Out
+                </Text>
+              </TouchableOpacity>
+            )
+          }
+          {
+            !withBackButton && !withHelpButton && !withLogoutButton && (
               <View
                 style={styles.headerContentContainerLeft}
               />
@@ -197,6 +214,7 @@ export default class Header extends React.PureComponent {
 
 Header.propTypes = {
   withBackButton: PropTypes.bool,
+  withLogoutButton: PropTypes.bool,
   withHelpButton: PropTypes.bool,
   withSkipButton: PropTypes.bool,
   withRestoreButton: PropTypes.bool,
@@ -208,6 +226,7 @@ Header.propTypes = {
 
 Header.defaultProps = {
   withBackButton: false,
+  withLogoutButton: false,
   withHelpButton: false,
   withSkipButton: false,
   withRestoreButton: false,
@@ -231,6 +250,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
     shadowRadius: 0,
     borderBottomWidth: 0,
+  },
+  logoutButton: {
+    fontFamily: fonts.standard,
+    fontSize: 16,
+    color: colors.white,
+    marginTop: 5,
+    marginLeft: 4,
   },
   skipButton: {
     fontFamily: fonts.standard,
