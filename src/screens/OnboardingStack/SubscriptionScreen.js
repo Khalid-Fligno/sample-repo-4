@@ -10,6 +10,7 @@ import {
   Alert,
   TouchableOpacity,
   AsyncStorage,
+  Linking,
 } from 'react-native';
 import { Haptic } from 'expo';
 import { DotIndicator } from 'react-native-indicators';
@@ -29,6 +30,21 @@ import fonts from '../../styles/fonts';
 const { InAppUtils } = NativeModules;
 const { width, height } = Dimensions.get('window');
 
+const productTitleMap = {
+  0: 'Monthly',
+  1: 'Quarterly',
+  2: 'Yearly',
+};
+
+const subscriptionPeriodMap = {
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation': 'monthly',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.quarterly.foundation': 'quarterly',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation': 'yearly',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly': 'monthly',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.quarterly': 'quarterly',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly': 'yearly',
+};
+
 export default class SubscriptionScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -42,6 +58,10 @@ export default class SubscriptionScreen extends React.PureComponent {
   componentDidMount() {
     this.props.navigation.setParams({ restore: this.restore });
     this.loadProducts();
+  }
+  openLink = (url) => {
+    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Linking.openURL(url);
   }
   restore = async () => {
     this.setState({ loading: true });
@@ -176,17 +196,16 @@ export default class SubscriptionScreen extends React.PureComponent {
               Subscription
             </Text>
             <Text style={styles.subHeadingText}>
-              Subscribe now for a 7-day free trial + foundation member discounts!
+              Subscribe now for a 7-day free trial PLUS discounted foundation member rates!
             </Text>
           </View>
           <View style={styles.contentContainer}>
             <View style={styles.subscriptionTileRow}>
               {
-                products && products.map((product) => (
+                products && products.map((product, index) => (
                   <SubscriptionTile
-                    foundation
                     key={product.identifier}
-                    title={product.title}
+                    title={productTitleMap[index]}
                     price={product.priceString}
                     currencyCode={product.currencyCode}
                     onPress={() => this.toggleSubscriptionSelected(product)}
@@ -204,17 +223,44 @@ export default class SubscriptionScreen extends React.PureComponent {
                   <Text style={{ fontFamily: fonts.bold }}>
                     {subscriptionSelected && ` ${subscriptionSelected.priceString} `}
                     {subscriptionSelected && `${subscriptionSelected.currencyCode} `}
-                    {subscriptionSelected && `${subscriptionSelected.title.toLowerCase()} `}
+                    {subscriptionSelected && `${subscriptionPeriodMap[subscriptionSelected.identifier]} `}
                   </Text>
-                  purchase will be applied to your iTunes account at the end of your 7-day free trial.
+                  purchase for an ongoing subscription to the FitazFK App (FitazFK) will be applied to your iTunes account at the end of your 7-day free trial.
                 </Text>
                 <Text style={styles.disclaimerText}>
-                  Subscriptions will automatically renew unless canceled within 24-hours before the end of the current period.
-                  You can cancel anytime with your iTunes account settings.
-                  Any unused portion of a free trial will be forfeited if you purchase a subscription.
+                  {'By continuing, you accept our '}
+                  <Text
+                    onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-privacy-policy')}
+                    style={styles.link}
+                  >
+                    Privacy Policy
+                  </Text>
+                  {' and '}
+                  <Text
+                    onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-terms-conditions')}
+                    style={styles.link}
+                  >
+                    Terms and Conditions
+                  </Text>
+                  {'.'}
                 </Text>
                 <Text style={styles.disclaimerText}>
-                  For more information, see our [link to ToS] and [link to Privacy Policy].
+                  In agreeing to the Terms and Conditions of the FitazFK App (FitazFK), you agree that:
+                </Text>
+                <Text style={styles.disclaimerText}>
+                  • The subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period.
+                </Text>
+                <Text style={styles.disclaimerText}>
+                  • Account will be charged for renewal within 24-hours prior to the end of the current period, and identify the cost of the renewal.
+                </Text>
+                <Text style={styles.disclaimerText}>
+                  • You can cancel anytime with your iTunes account settings.
+                </Text>
+                <Text style={styles.disclaimerText}>
+                  • Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
+                </Text>
+                <Text style={styles.disclaimerText}>
+                  • Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
                 </Text>
               </View>
             </ScrollView>
@@ -285,13 +331,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width,
     height: 140,
+    marginTop: 5,
     marginBottom: 10,
   },
   scrollViewContainer: {
-    flexShrink: 1,
+    height: 250,
     width: width - 20,
     backgroundColor: colors.white,
-    paddingRight: 5,
     borderColor: colors.grey.light,
     borderWidth: 1,
     borderRadius: 4,
@@ -304,7 +350,12 @@ const styles = StyleSheet.create({
   disclaimerTextContainer: {
     paddingTop: 10,
     paddingLeft: 10,
-    paddingRight: 5,
+    paddingRight: 8,
+  },
+  link: {
+    color: colors.blue.standard,
+    textDecorationLine: 'underline',
+    textDecorationStyle: 'solid',
   },
   disclaimerText: {
     fontFamily: fonts.standard,
