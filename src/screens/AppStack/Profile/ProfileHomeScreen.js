@@ -201,7 +201,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
       this.props.navigation.navigate('Auth');
     } catch (err) {
       this.setState({ loading: false });
-      Alert.alert('Error logging out', `${err}`);
+      Alert.alert('Error logging out');
     }
   }
   render() {
