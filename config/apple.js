@@ -18,14 +18,25 @@ export const compare = (a, b) => {
   return comparison;
 };
 
+export const compareProducts = (a, b) => {
+  const purchaseA = a.price;
+  const purchaseB = b.price;
+  let comparison = 0;
+  if (purchaseA > purchaseB) {
+    comparison = -1;
+  } else if (purchaseA < purchaseB) {
+    comparison = 1;
+  }
+  return comparison;
+};
+
+
 export const identifiers = [
-  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.quarterly',
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly',
 ];
 
 export const foundationIdentifiers = [
-  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.quarterly.foundation',
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation',
 ];

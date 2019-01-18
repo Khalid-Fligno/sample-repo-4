@@ -16,29 +16,39 @@ export default class SubscriptionTile extends React.PureComponent {
       title,
       price,
       onPress,
-      active,
+      solid,
+      term,
     } = this.props;
     return (
       <TouchableOpacity
         onPress={onPress}
-        style={active ? styles.subscriptionTileActive : styles.subscriptionTileInactive}
+        style={solid ? styles.subscriptionTileSolid : styles.subscriptionTile}
       >
-        <Text style={active ? styles.subscriptionTileHeaderActive : styles.subscriptionTileHeaderInactive}>
-          {title}
-        </Text>
-        <Text style={active ? styles.subscriptionPriceTextActive : styles.subscriptionPriceTextInactive}>
-          {price}
-        </Text>
-        <View style={active ? styles.tickCircleActive : styles.tickCircleInactive}>
-          {
-            active && (
-              <Icon
-                name="tick-heavy"
-                size={25}
-                color={active ? colors.charcoal.standard : colors.grey.standard}
-              />
-            )
-          }
+        {
+          solid && (
+            <View style={styles.invisibleView}>
+              <View style={styles.savingsBox}>
+                <Text style={styles.savingsText}>
+                  Save 41%
+                </Text>
+              </View>
+            </View>
+          )
+        }
+        <View style={styles.subscriptionTileContent}>
+          <View>
+            <Text style={solid ? styles.subscriptionTileHeaderSolid : styles.subscriptionTileHeader}>
+              {title}
+            </Text>
+            <Text style={solid ? styles.subscriptionPriceTextSolid : styles.subscriptionPriceText}>
+              {price} / {term} <Text style={solid ? styles.subscriptionPriceSubtextSolid : styles.subscriptionPriceSubtext}>after 7 day FREE TRIAL</Text>
+            </Text>
+          </View>
+          <Icon
+            name="chevron-right"
+            size={20}
+            color={solid ? colors.white : colors.coral.standard}
+          />
         </View>
       </TouchableOpacity>
     );
@@ -48,81 +58,97 @@ export default class SubscriptionTile extends React.PureComponent {
 SubscriptionTile.propTypes = {
   title: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
+  term: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
-  active: PropTypes.bool.isRequired,
+  solid: PropTypes.bool,
+};
+
+SubscriptionTile.defaultProps = {
+  solid: false,
 };
 
 const styles = StyleSheet.create({
-  subscriptionTileInactive: {
+  subscriptionTile: {
     flex: 1,
-    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: colors.white,
-    marginLeft: 5,
-    marginRight: 5,
-    paddingTop: 10,
-    paddingBottom: 10,
+    margin: 5,
+    padding: 10,
+    paddingLeft: 15,
     borderWidth: 2,
-    borderColor: colors.grey.light,
+    borderColor: colors.coral.standard,
     borderRadius: 4,
   },
-  subscriptionTileActive: {
+  subscriptionTileSolid: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: colors.white,
-    marginLeft: 5,
-    marginRight: 5,
-    paddingTop: 10,
-    paddingBottom: 10,
+    justifyContent: 'center',
+    backgroundColor: colors.coral.standard,
+    margin: 5,
+    padding: 10,
+    paddingLeft: 15,
     borderWidth: 2,
-    borderColor: colors.charcoal.standard,
+    borderColor: colors.coral.standard,
     borderRadius: 4,
     shadowColor: colors.charcoal.standard,
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
   },
-  subscriptionTileHeaderInactive: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    textAlign: 'center',
-    color: colors.grey.standard,
-    marginBottom: 5,
+  invisibleView: {
+    height: 0,
+    width: '100%',
+    alignItems: 'flex-end',
   },
-  subscriptionTileHeaderActive: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    textAlign: 'center',
-    color: colors.charcoal.standard,
-    marginBottom: 5,
+  savingsBox: {
+    position: 'absolute',
+    marginTop: -35,
+    backgroundColor: colors.coral.dark,
+    borderRadius: 4,
   },
-  subscriptionPriceTextInactive: {
+  savingsText: {
     fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.grey.standard,
+    fontSize: 12,
+    color: colors.white,
+    marginTop: 8,
+    marginRight: 10,
     marginBottom: 5,
+    marginLeft: 10,
   },
-  subscriptionPriceTextActive: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.charcoal.standard,
-    marginBottom: 5,
-  },
-  tickCircleInactive: {
+  subscriptionTileContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
-    width: 50,
-    height: 50,
-    borderWidth: 5,
-    borderColor: colors.grey.light,
-    borderRadius: 25,
   },
-  tickCircleActive: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 50,
-    height: 50,
-    borderWidth: 5,
-    borderColor: colors.coral.standard,
-    borderRadius: 25,
+  subscriptionTileHeader: {
+    fontFamily: fonts.bold,
+    fontSize: 16,
+    color: colors.coral.standard,
+    marginBottom: 5,
+  },
+  subscriptionTileHeaderSolid: {
+    fontFamily: fonts.bold,
+    fontSize: 16,
+    color: colors.white,
+    marginBottom: 5,
+  },
+  subscriptionPriceText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.coral.standard,
+  },
+  subscriptionPriceTextSolid: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+  },
+  subscriptionPriceSubtext: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.coral.standard,
+  },
+  subscriptionPriceSubtextSolid: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    color: colors.white,
   },
 });

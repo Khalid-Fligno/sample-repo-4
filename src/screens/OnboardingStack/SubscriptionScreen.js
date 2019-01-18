@@ -1,22 +1,21 @@
 import React from 'react';
 import {
   View,
-  ScrollView,
   Text,
   StyleSheet,
   SafeAreaView,
   Dimensions,
   NativeModules,
   Alert,
-  TouchableOpacity,
   AsyncStorage,
   Linking,
+  Image,
 } from 'react-native';
 import { Haptic } from 'expo';
-import { DotIndicator } from 'react-native-indicators';
 import { auth, db } from '../../../config/firebase';
 import {
   // identifiers,
+  compareProducts,
   foundationIdentifiers,
   validateReceiptProduction,
   validateReceiptSandbox,
@@ -31,17 +30,14 @@ const { InAppUtils } = NativeModules;
 const { width, height } = Dimensions.get('window');
 
 const productTitleMap = {
-  0: 'Monthly',
-  1: 'Quarterly',
-  2: 'Yearly',
+  0: 'Yearly',
+  1: 'Monthly',
 };
 
 const subscriptionPeriodMap = {
   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation': 'monthly',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.quarterly.foundation': 'quarterly',
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation': 'yearly',
   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly': 'monthly',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.quarterly': 'quarterly',
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly': 'yearly',
 };
 
@@ -52,7 +48,6 @@ export default class SubscriptionScreen extends React.PureComponent {
       loadingProducts: false,
       loading: false,
       products: undefined,
-      subscriptionSelected: undefined,
     };
   }
   componentDidMount() {
@@ -116,10 +111,13 @@ export default class SubscriptionScreen extends React.PureComponent {
         this.setState({ loadingProducts: false });
         Alert.alert('Could not load subscription products', 'Please try again later');
       }
-      this.setState({ products, subscriptionSelected: products[1], loadingProducts: false });
+      const sortedProducts = products.slice().sort(compareProducts);
+
+      this.setState({ products: sortedProducts, subscriptionSelected: sortedProducts[0], loadingProducts: false });
     });
   }
   purchaseProduct = async (productIdentifier) => {
+    Haptic.selection();
     if (productIdentifier === undefined) {
       this.setState({ loading: false });
       Alert.alert('No subscription selected');
@@ -187,10 +185,6 @@ export default class SubscriptionScreen extends React.PureComponent {
     }
     return undefined;
   }
-  toggleSubscriptionSelected = (subscriptionSelected) => {
-    Haptic.selection();
-    this.setState({ subscriptionSelected });
-  }
   render() {
     const {
       loadingProducts,
@@ -201,12 +195,16 @@ export default class SubscriptionScreen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
+          <Image
+            source={require('../../../assets/images/subscription-screen-header.jpg')}
+            style={styles.headerImage}
+          />
           <View style={styles.headerContainer}>
             <Text style={styles.headerText}>
-              Subscription
+              Get Full Access
             </Text>
             <Text style={styles.subHeadingText}>
-              Subscribe now for a 7-day free trial PLUS discounted foundation member rates!
+              Take advantage of our discounted foundation memberships now!
             </Text>
           </View>
           <View style={styles.contentContainer}>
@@ -215,84 +213,42 @@ export default class SubscriptionScreen extends React.PureComponent {
                 products && products.map((product, index) => (
                   <SubscriptionTile
                     key={product.identifier}
+                    solid={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation'}
                     title={productTitleMap[index]}
                     price={product.priceString}
                     currencyCode={product.currencyCode}
-                    onPress={() => this.toggleSubscriptionSelected(product)}
+                    onPress={() => this.purchaseProduct(product.identifier)}
                     active={subscriptionSelected === product}
+                    term={subscriptionPeriodMap[product.identifier]}
                   />
                 ))
               }
             </View>
           </View>
-          <View style={styles.scrollViewContainer}>
-            <ScrollView>
-              <View style={styles.disclaimerTextContainer}>
-                <Text style={styles.disclaimerText}>
-                  A
-                  <Text style={{ fontFamily: fonts.bold }}>
-                    {subscriptionSelected && ` ${subscriptionSelected.priceString} `}
-                    {subscriptionSelected && `${subscriptionSelected.currencyCode} `}
-                    {subscriptionSelected && `${subscriptionPeriodMap[subscriptionSelected.identifier]} `}
-                  </Text>
-                  purchase for an ongoing subscription to the FitazFK App (FitazFK) will be applied to your iTunes account at the end of your 7-day free trial.
-                </Text>
-                <Text style={styles.disclaimerText}>
-                  {'By continuing, you accept our '}
-                  <Text
-                    onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-privacy-policy')}
-                    style={styles.link}
-                  >
-                    Privacy Policy
-                  </Text>
-                  {' and '}
-                  <Text
-                    onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-terms-conditions')}
-                    style={styles.link}
-                  >
-                    Terms and Conditions
-                  </Text>
-                  {'.'}
-                </Text>
-                <Text style={styles.disclaimerText}>
-                  In agreeing to the Terms and Conditions of the FitazFK App (FitazFK), you agree that:
-                </Text>
-                <Text style={styles.disclaimerText}>
-                  • The subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period.
-                </Text>
-                <Text style={styles.disclaimerText}>
-                  • Account will be charged for renewal within 24-hours prior to the end of the current period, and identify the cost of the renewal.
-                </Text>
-                <Text style={styles.disclaimerText}>
-                  • You can cancel anytime with your iTunes account settings.
-                </Text>
-                <Text style={styles.disclaimerText}>
-                  • Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
-                </Text>
-                <Text style={styles.disclaimerText}>
-                  • Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
-                </Text>
-              </View>
-            </ScrollView>
+          <View style={styles.disclaimerTextContainer}>
+            <Text style={styles.disclaimerText}>
+              <Text style={styles.subscriptionTermsTitle}>Subscription Terms: </Text>
+              {'By continuing, you accept our '}
+              <Text
+                onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-privacy-policy')}
+                style={styles.link}
+              >
+                Privacy Policy
+              </Text>
+              {' and '}
+              <Text
+                onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-terms-conditions')}
+                style={styles.link}
+              >
+                Terms and Conditions
+              </Text>
+              .
+              You also agree that an ongoing subscription to the FitazFK App (FitazFK) will be applied to your iTunes account at the end of your 7-day free trial.
+              Subscriptions will automatically renew and your account charged unless auto-renew is turned off at least 24-hours before the end of the current period.
+              Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
+              Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
+            </Text>
           </View>
-          <TouchableOpacity
-            onPress={() => this.purchaseProduct(subscriptionSelected.identifier)}
-            style={styles.button}
-          >
-            {
-              loading ? (
-                <DotIndicator
-                  color={colors.white}
-                  count={3}
-                  size={6}
-                />
-              ) : (
-                <Text style={styles.buttonText}>
-                  CONTINUE
-                </Text>
-              )
-            }
-          </TouchableOpacity>
           <Loader
             loading={loadingProducts}
             color={colors.coral.standard}
@@ -320,44 +276,40 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: colors.offWhite,
   },
-  headerContainer: {
-    flexShrink: 1,
+  headerImage: {
     width,
-    padding: 10,
-    paddingBottom: 0,
+    height: width / 2,
+    resizeMode: 'cover',
+  },
+  headerContainer: {
+    width,
+    padding: 15,
   },
   headerText: {
     fontFamily: fonts.bold,
-    fontSize: 28,
-    color: colors.charcoal.light,
+    fontSize: 16,
+    color: colors.charcoal.darkest,
+    marginBottom: 5,
   },
   subHeadingText: {
     fontFamily: fonts.standard,
     fontSize: 14,
-    color: colors.charcoal.light,
-    marginLeft: 2,
+    color: colors.charcoal.darkest,
   },
   contentContainer: {
-    flexShrink: 1,
+    flex: 1,
     justifyContent: 'center',
     width,
     height: 140,
     marginBottom: 5,
   },
-  scrollViewContainer: {
-    flex: 1,
-    width: width - 20,
-    backgroundColor: colors.white,
-    borderColor: colors.grey.light,
-    borderWidth: 1,
-    borderRadius: 4,
-  },
   subscriptionTileRow: {
-    flexDirection: 'row',
+    flex: 1,
     paddingLeft: 5,
     paddingRight: 5,
   },
   disclaimerTextContainer: {
+    flexShrink: 1,
     paddingTop: 10,
     paddingLeft: 10,
     paddingRight: 8,
@@ -367,30 +319,17 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     textDecorationStyle: 'solid',
   },
-  disclaimerText: {
-    fontFamily: fonts.standard,
-    fontSize: 12,
+  subscriptionTermsTitle: {
+    fontFamily: fonts.bold,
+    fontSize: 8,
     color: colors.charcoal.light,
     marginBottom: 10,
   },
-  button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 50,
-    margin: 10,
-    width: width - 20,
-    borderRadius: 2,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
-    backgroundColor: colors.coral.standard,
-    shadowColor: colors.charcoal.standard,
-  },
-  buttonText: {
-    color: colors.white,
-    fontFamily: fonts.bold,
-    fontSize: 16,
-    marginTop: 3,
+  disclaimerText: {
+    fontFamily: fonts.standard,
+    fontSize: 8,
+    color: colors.charcoal.light,
+    marginBottom: 10,
   },
   overlay: {
     position: 'absolute',
