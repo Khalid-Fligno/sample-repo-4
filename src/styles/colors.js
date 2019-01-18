@@ -22,6 +22,7 @@ const colors = {
     standard: 'rgb(238, 48, 66)', // #EE2F42
     light: 'rgb(244, 113, 126)', // #f4717e
     dark: 'rgb(236, 19, 41)', // #ec1329
+    darkest: 'rgb(220, 5, 10)', // #ec1329
   },
   violet: {
     standard: 'rgb(179, 95, 165)', // #B35fA5
