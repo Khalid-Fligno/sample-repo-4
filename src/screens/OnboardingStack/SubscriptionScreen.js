@@ -314,6 +314,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     width,
     padding: 10,
+    paddingBottom: 0,
   },
   headerText: {
     fontFamily: fonts.bold,
@@ -331,8 +332,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width,
     height: 140,
-    marginTop: 5,
-    marginBottom: 10,
   },
   scrollViewContainer: {
     flex: 1,
