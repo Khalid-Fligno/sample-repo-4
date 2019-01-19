@@ -118,22 +118,19 @@ export default class SubscriptionScreen extends React.PureComponent {
   purchaseProduct = async (productIdentifier) => {
     Haptic.selection();
     if (productIdentifier === undefined) {
-      this.setState({ loading: false });
       Alert.alert('No subscription selected');
       return;
     }
     Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
-    this.setState({ loading: true });
     InAppUtils.canMakePayments((canMakePayments) => {
       if (!canMakePayments) {
-        this.setState({ loading: false });
         Alert.alert('Not Allowed', 'This device is not allowed to make purchases. Please check restrictions on device');
       }
       InAppUtils.purchaseProduct(productIdentifier, async (error, response) => {
         if (error) {
-          this.setState({ loading: false });
           Alert.alert('Purchase cancelled');
         }
+        this.setState({ loading: true });
         if (response && response.productIdentifier) {
           const validationData = await this.validate(response.transactionReceipt);
           if (validationData === undefined) {
