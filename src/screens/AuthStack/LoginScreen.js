@@ -21,7 +21,7 @@ import {
   validateReceiptProduction,
   validateReceiptSandbox,
 } from '../../../config/apple';
-import Loader from '../../components/Shared/Loader';
+import NativeLoader from '../../components/Shared/NativeLoader';
 import Icon from '../../components/Shared/Icon';
 import FacebookButton from '../../components/Auth/FacebookButton';
 import colors from '../../styles/colors';
@@ -166,6 +166,7 @@ export default class LoginScreen extends React.PureComponent {
               // EXPIRED
               InAppUtils.restorePurchases(async (error, response) => {
                 if (error) {
+                  this.setState({ loading: false });
                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
                 } else {
                   const sortedPurchases = response.slice().sort(compare);
@@ -362,10 +363,9 @@ export default class LoginScreen extends React.PureComponent {
           >
             {"Don't have an account? Sign up here"}
           </Text>
-          <Loader
-            loading={loading}
-            color={colors.black}
-          />
+          {
+            loading && <NativeLoader />
+          }
         </View>
       </SafeAreaView>
     );

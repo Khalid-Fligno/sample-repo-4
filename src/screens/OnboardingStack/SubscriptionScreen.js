@@ -22,7 +22,7 @@ import {
   compare,
 } from '../../../config/apple';
 import SubscriptionTile from '../../components/Onboarding/SubscriptionTile';
-import Loader from '../../components/Shared/Loader';
+import NativeLoader from '../../components/Shared/NativeLoader';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
@@ -83,6 +83,7 @@ export default class SubscriptionScreen extends React.PureComponent {
         try {
           const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
           if (validationData === undefined) {
+            this.setState({ loading: false });
             Alert.alert('Receipt Validation Error');
           }
           if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
@@ -111,11 +112,11 @@ export default class SubscriptionScreen extends React.PureComponent {
         Alert.alert('Could not load subscription products', 'Please try again later');
       }
       const sortedProducts = products.slice().sort(compareProducts);
-
       this.setState({ products: sortedProducts, subscriptionSelected: sortedProducts[0], loading: false });
     });
   }
   purchaseProduct = async (productIdentifier) => {
+    this.setState({ loading: true });
     Haptic.selection();
     if (productIdentifier === undefined) {
       Alert.alert('No subscription selected');
@@ -124,13 +125,14 @@ export default class SubscriptionScreen extends React.PureComponent {
     Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
     InAppUtils.canMakePayments((canMakePayments) => {
       if (!canMakePayments) {
+        this.setState({ loading: false });
         Alert.alert('Not Allowed', 'This device is not allowed to make purchases. Please check restrictions on device');
       }
       InAppUtils.purchaseProduct(productIdentifier, async (error, response) => {
         if (error) {
+          this.setState({ loading: false });
           Alert.alert('Purchase cancelled');
         }
-        this.setState({ loading: true });
         if (response && response.productIdentifier) {
           const validationData = await this.validate(response.transactionReceipt);
           if (validationData === undefined) {
@@ -247,7 +249,8 @@ export default class SubscriptionScreen extends React.PureComponent {
         </View>
         {
           loading && (
-            <Loader loading={loading} color={colors.coral.standard} />
+            <NativeLoader />
+            // <Loader loading={productsLoading} color={colors.coral.standard} />
           )
         }
       </SafeAreaView>

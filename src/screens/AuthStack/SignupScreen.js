@@ -14,10 +14,9 @@ import {
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
 import { Facebook, Haptic } from 'expo';
-// import Modal from 'react-native-modal';
 import firebase from 'firebase';
 import { db, auth } from '../../../config/firebase';
-import Loader from '../../components/Shared/Loader';
+import NativeLoader from '../../components/Shared/NativeLoader';
 import Icon from '../../components/Shared/Icon';
 import FacebookButton from '../../components/Auth/FacebookButton';
 import colors from '../../styles/colors';
@@ -242,10 +241,9 @@ export default class SignupScreen extends React.PureComponent {
             >
               Already signed up? Log in here
             </Text>
-            <Loader
-              loading={loading}
-              color={colors.black}
-            />
+            {
+              loading && <NativeLoader />
+            }
           </ScrollView>
         </View>
       </SafeAreaView>
