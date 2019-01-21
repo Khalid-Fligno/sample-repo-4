@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
+import ImageProgress from 'react-native-image-progress';
 import Loader from '../../../components/Shared/Loader';
 import { db } from '../../../../config/firebase';
 import fonts from '../../../styles/fonts';
@@ -23,10 +24,8 @@ export default class BlogScreen extends React.PureComponent {
       text: undefined,
     };
   }
-  componentDidMount = () => {
-    this.fetchText();
-  }
-  componentWillUnmount = () => {
+  componentDidMount = async () => {
+    await this.fetchText();
   }
   fetchText = () => {
     this.setState({ loading: true });
@@ -34,7 +33,10 @@ export default class BlogScreen extends React.PureComponent {
       .get()
       .then(async (doc) => {
         if (doc.exists) {
-          this.setState({ text: await doc.data().text, loading: false });
+          this.setState({
+            text: await doc.data().text,
+            loading: false,
+          });
         } else {
           this.setState({ loading: false });
         }
@@ -45,20 +47,31 @@ export default class BlogScreen extends React.PureComponent {
     const sortedText = text && text.sort((a, b) => {
       return a.id - b.id;
     });
-    const textDisplay = sortedText && sortedText.map((paragraph) => (
-      <Text
-        key={paragraph.id}
-        onPress={() => paragraph.url && this.openLink(paragraph.url)}
-        style={[
-          styles.paragraph,
-          paragraph.header && styles.header,
-          paragraph.heading && styles.paragraphHeading,
-          paragraph.url && styles.link,
-        ]}
-      >
-        {paragraph.value}
-      </Text>
-    ));
+    const textDisplay = sortedText && sortedText.map((paragraph) => {
+      if (paragraph.imageURL !== undefined) {
+        return (
+          <ImageProgress
+            key={paragraph.id}
+            source={{ uri: paragraph.imageURL }}
+            style={styles.blogImage}
+          />
+        );
+      }
+      return (
+        <Text
+          key={paragraph.id}
+          onPress={() => paragraph.url && this.openLink(paragraph.url)}
+          style={[
+            styles.paragraph,
+            paragraph.header && styles.header,
+            paragraph.heading && styles.paragraphHeading,
+            paragraph.url && styles.link,
+          ]}
+        >
+          {paragraph.value}
+        </Text>
+      );
+    });
     return (
       <View style={styles.container}>
         <ParallaxScrollView
@@ -68,7 +81,8 @@ export default class BlogScreen extends React.PureComponent {
           parallaxHeaderHeight={width / 2}
           renderBackground={() => (
             <Image
-              source={require('../../../../assets/images/homeScreenTiles/home-screen-blog.jpg')}
+              source={require('../../../../assets/images/blog-header.jpg')}
+              style={{ height: width / 2 }}
               width={width}
             />
           )}
@@ -92,25 +106,41 @@ const styles = StyleSheet.create({
     backgroundColor: colors.offWhite,
   },
   textContainer: {
-    padding: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   header: {
     fontFamily: fonts.bold,
     fontSize: 24,
     color: colors.charcoal.standard,
-    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 5,
+    marginBottom: 5,
   },
   paragraphHeading: {
     fontFamily: fonts.bold,
-    fontSize: 14,
+    fontSize: 16,
     color: colors.charcoal.dark,
     marginTop: 5,
-    marginBottom: 8,
+    marginBottom: 5,
+    marginLeft: 10,
+    marginRight: 10,
   },
   paragraph: {
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.standard,
-    marginBottom: 8,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  blogImage: {
+    width,
+    height: width,
+    marginTop: 5,
+    marginBottom: 5,
+    backgroundColor: colors.grey.light,
   },
 });
