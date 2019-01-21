@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   AsyncStorage,
   Alert,
+  Keyboard,
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
@@ -80,6 +81,7 @@ export default class SignupScreen extends React.PureComponent {
   }
   signup = async (firstName, lastName, email, password) => {
     Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Keyboard.dismiss();
     this.setState({ loading: true });
     if (!firstName || !lastName) {
       this.setState({ error: 'Please complete all fields', loading: false });

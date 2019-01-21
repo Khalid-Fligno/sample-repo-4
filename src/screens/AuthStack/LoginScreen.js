@@ -10,6 +10,7 @@ import {
   AsyncStorage,
   Alert,
   NativeModules,
+  Keyboard,
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
@@ -144,6 +145,7 @@ export default class LoginScreen extends React.PureComponent {
   }
   login = async (email, password) => {
     Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Keyboard.dismiss();
     this.setState({ loading: true });
     try {
       await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
