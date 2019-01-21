@@ -250,7 +250,6 @@ export default class SubscriptionScreen extends React.PureComponent {
         {
           loading && (
             <NativeLoader />
-            // <Loader loading={productsLoading} color={colors.coral.standard} />
           )
         }
       </SafeAreaView>
