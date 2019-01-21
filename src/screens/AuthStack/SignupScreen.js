@@ -241,10 +241,10 @@ export default class SignupScreen extends React.PureComponent {
             >
               Already signed up? Log in here
             </Text>
-            {
-              loading && <NativeLoader />
-            }
           </ScrollView>
+          {
+            loading && <NativeLoader />
+          }
         </View>
       </SafeAreaView>
     );
