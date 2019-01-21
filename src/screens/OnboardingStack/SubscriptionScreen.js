@@ -277,6 +277,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     width,
     padding: 12,
+    paddingBottom: 5,
   },
   headerText: {
     fontFamily: fonts.bold,

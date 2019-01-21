@@ -43,7 +43,7 @@ export default class SubscriptionTile extends React.PureComponent {
         <View style={styles.bottomContainer}>
           <Icon
             name="chevron-down"
-            size={24}
+            size={22}
             color={primary ? colors.coral.standard : colors.charcoal.darkest}
             style={styles.icon}
           />
