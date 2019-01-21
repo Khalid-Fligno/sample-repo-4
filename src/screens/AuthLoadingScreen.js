@@ -50,6 +50,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/images/homeScreenTiles/home-screen-calendar.jpg'),
       require('../../assets/images/homeScreenTiles/home-screen-blog.jpg'),
       require('../../assets/images/homeScreenTiles/home-screen-profile.jpg'),
+      require('../../assets/images/blog-header.jpg'),
       require('../../assets/images/shop-bundles.jpg'),
       require('../../assets/images/fitazfk-army.jpg'),
       require('../../assets/images/nutrition-breakfast.jpg'),
