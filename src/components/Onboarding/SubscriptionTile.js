@@ -16,40 +16,48 @@ export default class SubscriptionTile extends React.PureComponent {
       title,
       price,
       onPress,
-      solid,
+      primary,
       term,
     } = this.props;
     return (
       <TouchableOpacity
         onPress={onPress}
-        style={solid ? styles.subscriptionTileSolid : styles.subscriptionTile}
+        style={primary ? styles.subscriptionTilePrimary : styles.subscriptionTile}
       >
-        {
-          solid && (
-            <View style={styles.invisibleView}>
-              <View style={styles.savingsBox}>
+        <View style={primary ? styles.tileHeaderBarPrimary : styles.tileHeaderBar}>
+          <Text style={primary ? styles.subscriptionTileHeaderPrimary : styles.subscriptionTileHeader}>
+            {title}
+          </Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={primary ? styles.subscriptionPriceTextPrimary : styles.subscriptionPriceText}>
+            {price}
+          </Text>
+          <Text style={primary ? styles.subscriptionTermTextPrimary : styles.subscriptionTermText}>
+            {term}
+          </Text>
+          <Text style={primary ? styles.subscriptionPriceSubtextPrimary : styles.subscriptionPriceSubtext}>
+            after 7 day FREE TRIAL
+          </Text>
+        </View>
+        <View style={styles.bottomContainer}>
+          <Icon
+            name="chevron-down"
+            size={30}
+            color={primary ? colors.coral.standard : colors.charcoal.darkest}
+            style={styles.icon}
+          />
+          {
+            primary ? (
+              <View style={styles.savingsContainer}>
                 <Text style={styles.savingsText}>
                   Save 41%
                 </Text>
               </View>
-            </View>
-          )
-        }
-        <View style={styles.subscriptionTileContent}>
-          <View>
-            <Text style={solid ? styles.subscriptionTileHeaderSolid : styles.subscriptionTileHeader}>
-              {title}
-            </Text>
-            <Text style={solid ? styles.subscriptionPriceTextSolid : styles.subscriptionPriceText}>
-              {price} {term} <Text style={solid ? styles.subscriptionPriceSubtextSolid : styles.subscriptionPriceSubtext}>after 7 day FREE TRIAL</Text>
-            </Text>
-          </View>
-          <Icon
-            name="chevron-right"
-            size={20}
-            color={solid ? colors.white : colors.coral.standard}
-            style={styles.icon}
-          />
+            ) : (
+              <View style={styles.blankSavingsContainer} />
+            )
+          }
         </View>
       </TouchableOpacity>
     );
@@ -61,105 +69,127 @@ SubscriptionTile.propTypes = {
   price: PropTypes.string.isRequired,
   term: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
-  solid: PropTypes.bool,
+  primary: PropTypes.bool,
 };
 
 SubscriptionTile.defaultProps = {
-  solid: false,
+  primary: false,
 };
 
 const styles = StyleSheet.create({
   subscriptionTile: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     backgroundColor: colors.white,
     margin: 5,
-    padding: 10,
     paddingTop: 0,
-    borderWidth: 2,
-    borderColor: colors.coral.standard,
+    borderWidth: 3,
+    borderColor: colors.charcoal.standard,
     borderRadius: 4,
     shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.8,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
   },
-  subscriptionTileSolid: {
+  subscriptionTilePrimary: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: colors.coral.standard,
-    margin: 5,
-    padding: 10,
-    paddingTop: 0,
-    borderWidth: 2,
-    borderColor: colors.coral.standard,
-    borderRadius: 4,
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
-  },
-  invisibleView: {
-    height: 0,
-    width: '100%',
-    alignItems: 'flex-end',
-  },
-  savingsBox: {
-    position: 'absolute',
-    marginTop: -15,
-    backgroundColor: colors.coral.darkest,
-    borderRadius: 4,
-  },
-  savingsText: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
-    color: colors.white,
-    marginTop: 8,
-    marginRight: 10,
-    marginBottom: 5,
-    marginLeft: 10,
-  },
-  subscriptionTileContent: {
-    flex: 1,
-    flexDirection: 'row',
     justifyContent: 'space-between',
+    backgroundColor: colors.white,
+    margin: 5,
+    paddingTop: 0,
+    borderWidth: 3,
+    borderColor: colors.coral.dark,
+    borderRadius: 4,
+    shadowColor: colors.charcoal.standard,
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+  },
+  tileHeaderBar: {
+    backgroundColor: colors.charcoal.darkest,
+    width: '100%',
+    alignItems: 'center',
+  },
+  tileHeaderBarPrimary: {
+    backgroundColor: colors.coral.dark,
+    width: '100%',
     alignItems: 'center',
   },
   subscriptionTileHeader: {
     fontFamily: fonts.bold,
-    fontSize: 16,
-    color: colors.coral.standard,
-    marginTop: 8,
-    marginBottom: 5,
-  },
-  subscriptionTileHeaderSolid: {
-    fontFamily: fonts.bold,
-    fontSize: 16,
+    fontSize: 14,
     color: colors.white,
     marginTop: 8,
     marginBottom: 5,
+  },
+  subscriptionTileHeaderPrimary: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    marginTop: 8,
+    marginBottom: 5,
+  },
+  textContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
   subscriptionPriceText: {
     fontFamily: fonts.bold,
-    fontSize: 13,
-    color: colors.coral.standard,
+    fontSize: 18,
+    color: colors.charcoal.darkest,
+    marginBottom: 3,
   },
-  subscriptionPriceTextSolid: {
+  subscriptionPriceTextPrimary: {
     fontFamily: fonts.bold,
-    fontSize: 13,
-    color: colors.white,
+    fontSize: 18,
+    color: colors.coral.dark,
+    marginBottom: 3,
+  },
+  subscriptionTermText: {
+    fontFamily: fonts.bold,
+    fontSize: 12,
+    color: colors.charcoal.darkest,
+    marginBottom: 5,
+  },
+  subscriptionTermTextPrimary: {
+    fontFamily: fonts.bold,
+    fontSize: 12,
+    color: colors.coral.dark,
+    marginBottom: 5,
   },
   subscriptionPriceSubtext: {
     fontFamily: fonts.standard,
     fontSize: 11,
-    color: colors.coral.standard,
+    color: colors.charcoal.darkest,
   },
-  subscriptionPriceSubtextSolid: {
+  subscriptionPriceSubtextPrimary: {
+    fontFamily: fonts.standard,
+    fontSize: 11,
+    color: colors.coral.dark,
+  },
+  bottomContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  savingsContainer: {
+    width: '100%',
+    height: 18,
+    backgroundColor: colors.coral.dark,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  savingsText: {
     fontFamily: fonts.standard,
     fontSize: 11,
     color: colors.white,
+    marginTop: 3,
   },
-  icon: {
-    marginTop: 10,
+  blankSavingsContainer: {
+    width: '100%',
+    height: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

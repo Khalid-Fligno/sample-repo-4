@@ -30,8 +30,8 @@ const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get('window');
 
 const productTitleMap = {
-  0: 'Yearly',
-  1: 'Monthly',
+  0: 'MONTHLY',
+  1: 'YEARLY',
 };
 
 const subscriptionPeriodMap = {
@@ -210,7 +210,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                 products && products.map((product, index) => (
                   <SubscriptionTile
                     key={product.identifier}
-                    solid={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation'}
+                    primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation'}
                     title={productTitleMap[index]}
                     price={product.priceString}
                     currencyCode={product.currencyCode}
@@ -297,6 +297,7 @@ const styles = StyleSheet.create({
   },
   subscriptionTileRow: {
     flex: 1,
+    flexDirection: 'row',
     paddingLeft: 5,
     paddingRight: 5,
   },
