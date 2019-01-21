@@ -36,7 +36,7 @@ const WorkoutTile = ({
         </Text>
         <Text style={styles.targetText}>
           {
-            cycleTargets && `Completed: ${cycleTargets[resistanceCategoryId]}`
+            cycleTargets !== undefined && `Completed: ${cycleTargets[resistanceCategoryId]}`
           }
         </Text>
       </View>

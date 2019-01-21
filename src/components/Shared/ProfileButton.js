@@ -27,7 +27,7 @@ export default class ProfileButton extends React.PureComponent {
     return (
       <View>
         {
-          avatar ? (
+          avatar !== undefined ? (
             <View style={styles.avatarOutline}>
               <View style={styles.avatarBackdrop}>
                 <FastImage
