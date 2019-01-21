@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     width,
-    height: 140,
+    // height: 140,
   },
   subscriptionTileRow: {
     flex: 1,

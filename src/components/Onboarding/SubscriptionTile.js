@@ -43,7 +43,7 @@ export default class SubscriptionTile extends React.PureComponent {
         <View style={styles.bottomContainer}>
           <Icon
             name="chevron-down"
-            size={30}
+            size={24}
             color={primary ? colors.coral.standard : colors.charcoal.darkest}
             style={styles.icon}
           />
@@ -117,17 +117,17 @@ const styles = StyleSheet.create({
   },
   subscriptionTileHeader: {
     fontFamily: fonts.bold,
-    fontSize: 14,
+    fontSize: 12,
     color: colors.white,
-    marginTop: 8,
-    marginBottom: 5,
+    marginTop: 5,
+    marginBottom: 3,
   },
   subscriptionTileHeaderPrimary: {
     fontFamily: fonts.bold,
     fontSize: 14,
     color: colors.white,
-    marginTop: 8,
-    marginBottom: 5,
+    marginTop: 5,
+    marginBottom: 3,
   },
   textContainer: {
     alignItems: 'center',
@@ -136,13 +136,13 @@ const styles = StyleSheet.create({
   },
   subscriptionPriceText: {
     fontFamily: fonts.bold,
-    fontSize: 18,
+    fontSize: 16,
     color: colors.charcoal.darkest,
     marginBottom: 3,
   },
   subscriptionPriceTextPrimary: {
     fontFamily: fonts.bold,
-    fontSize: 18,
+    fontSize: 16,
     color: colors.coral.dark,
     marginBottom: 3,
   },
@@ -160,12 +160,12 @@ const styles = StyleSheet.create({
   },
   subscriptionPriceSubtext: {
     fontFamily: fonts.standard,
-    fontSize: 11,
+    fontSize: 10,
     color: colors.charcoal.darkest,
   },
   subscriptionPriceSubtextPrimary: {
     fontFamily: fonts.standard,
-    fontSize: 11,
+    fontSize: 10,
     color: colors.coral.dark,
   },
   bottomContainer: {
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 11,
     color: colors.white,
-    marginTop: 3,
+    marginTop: 5,
   },
   blankSavingsContainer: {
     width: '100%',
