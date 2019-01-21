@@ -156,7 +156,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
                       }
                     } catch (err) {
                       // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
-                      Alert.alert('Subscription has been cancelled');
+                      Alert.alert('Your subscription has expired');
                       this.props.navigation.navigate('Subscription');
                     }
                   }
