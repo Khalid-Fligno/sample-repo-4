@@ -41,12 +41,16 @@ export default class SubscriptionTile extends React.PureComponent {
           </Text>
         </View>
         <View style={styles.bottomContainer}>
-          <Icon
-            name="chevron-down"
-            size={22}
-            color={primary ? colors.coral.standard : colors.charcoal.darkest}
-            style={styles.icon}
-          />
+          {
+            primary && (
+              <Icon
+                name="chevron-down"
+                size={22}
+                color={colors.coral.standard}
+                style={styles.icon}
+              />
+            )
+          }
           {
             primary ? (
               <View style={styles.savingsContainer}>
@@ -56,6 +60,16 @@ export default class SubscriptionTile extends React.PureComponent {
               </View>
             ) : (
               <View style={styles.blankSavingsContainer} />
+            )
+          }
+          {
+            !primary && (
+              <Icon
+                name="chevron-down"
+                size={22}
+                color={colors.charcoal.darkest}
+                style={styles.icon}
+              />
             )
           }
         </View>
@@ -81,7 +95,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     backgroundColor: colors.white,
-    margin: 5,
+    marginLeft: 5,
+    marginRight: 5,
     paddingTop: 0,
     borderWidth: 3,
     borderColor: colors.charcoal.standard,
@@ -95,7 +110,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     backgroundColor: colors.white,
-    margin: 5,
+    marginLeft: 5,
+    marginRight: 5,
     paddingTop: 0,
     borderWidth: 3,
     borderColor: colors.coral.dark,
@@ -191,5 +207,8 @@ const styles = StyleSheet.create({
     height: 18,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  icon: {
+    marginBottom: 3,
   },
 });

@@ -276,7 +276,9 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     width,
-    padding: 12,
+    paddingLeft: 12,
+    paddingRight: 12,
+    paddingTop: 8,
     paddingBottom: 5,
   },
   headerText: {
@@ -294,7 +296,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     width,
-    // height: 140,
   },
   subscriptionTileRow: {
     flex: 1,
