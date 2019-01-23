@@ -12,8 +12,9 @@ import {
   Image,
   Linking,
 } from 'react-native';
-import { FileSystem, Video } from 'expo';
+import { FileSystem } from 'expo';
 import Modal from 'react-native-modal';
+import Video from 'react-native-video';
 import Carousel from 'react-native-carousel';
 import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
@@ -178,8 +179,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                     volume={1.0}
                     isMuted={false}
                     resizeMode="contain"
-                    shouldPlay
-                    isLooping
+                    repeat
                     style={{ width: width - 30, height: width - 30 }}
                   />
                 )
