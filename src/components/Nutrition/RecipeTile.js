@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   subTitle: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.standardItalic,
     fontSize: 12,
   },
   recipeInfoContainer: {
