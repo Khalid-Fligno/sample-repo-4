@@ -32,6 +32,22 @@ export default class TermsOfServiceScreen extends React.PureComponent {
   }
   render() {
     const { text, loading } = this.state;
+    const sortedText = text && text.sort((a, b) => {
+      return a.id - b.id;
+    });
+    const textDisplay = sortedText && sortedText.map((paragraph) => (
+      <Text
+        key={paragraph.id}
+        onPress={() => paragraph.url && this.openLink(paragraph.url)}
+        style={[
+          styles.paragraph,
+          paragraph.heading && styles.paragraphHeading,
+          paragraph.url && styles.link,
+        ]}
+      >
+        {paragraph.value}
+      </Text>
+    ));
     return (
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
@@ -39,21 +55,7 @@ export default class TermsOfServiceScreen extends React.PureComponent {
             <Text style={styles.header}>
               Terms of Service
             </Text>
-            {
-              text && text.map((paragraph) => (
-                <Text
-                  key={paragraph.id}
-                  onPress={() => paragraph.url && this.openLink(paragraph.url)}
-                  style={[
-                    styles.paragraph,
-                    paragraph.heading && styles.paragraphHeading,
-                    paragraph.url && styles.link,
-                  ]}
-                >
-                  {paragraph.value}
-                </Text>
-              ))
-            }
+            {textDisplay}
           </ScrollView>
           <Loader
             loading={loading}
