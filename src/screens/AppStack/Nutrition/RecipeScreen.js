@@ -239,14 +239,18 @@ export default class RecipeScreen extends React.PureComponent {
             <Divider style={styles.divider} />
             <View style={styles.infoBar}>
               <View style={styles.infoFieldContainer}>
-                <Icon
-                  name="timer"
-                  size={24}
-                  color={colors.violet.standard}
-                />
-                <Text style={styles.timeText}>
-                  {recipe.time}
-                </Text>
+                {
+                  recipe.tags && recipe.tags.map((tag) => (
+                    <View
+                      style={styles.tagCircle}
+                      key={tag}
+                    >
+                      <Text style={styles.tagText}>
+                        {tag}
+                      </Text>
+                    </View>
+                  ))
+                }
               </View>
               {
                 recipe.portions && (
@@ -263,18 +267,14 @@ export default class RecipeScreen extends React.PureComponent {
                 )
               }
               <View style={styles.infoFieldContainer}>
-                {
-                  recipe.tags && recipe.tags.map((tag) => (
-                    <View
-                      style={styles.tagCircle}
-                      key={tag}
-                    >
-                      <Text style={styles.tagText}>
-                        {tag}
-                      </Text>
-                    </View>
-                  ))
-                }
+                <Icon
+                  name="timer"
+                  size={24}
+                  color={colors.violet.standard}
+                />
+                <Text style={styles.timeText}>
+                  {recipe.time}
+                </Text>
               </View>
             </View>
             <Divider style={styles.divider} />
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
     color: colors.charcoal.standard,
   },
   recipeSubTitle: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.standardItalic,
     fontSize: 16,
     color: colors.charcoal.standard,
     marginBottom: 8,
@@ -416,6 +416,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
+    justifyContent: 'space-between',
     width: width - 30,
   },
   infoFieldContainer: {
