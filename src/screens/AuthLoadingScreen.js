@@ -102,6 +102,9 @@ export default class AuthLoadingScreen extends React.PureComponent {
         GothamBook: require('../../assets/fonts/gotham-book.otf'),
       },
       {
+        GothamBookItalic: require('../../assets/fonts/gotham-book-italic.otf'),
+      },
+      {
         GothamNarrowBook: require('../../assets/fonts/gotham-narrow-book.otf'),
       },
       {
@@ -132,12 +135,20 @@ export default class AuthLoadingScreen extends React.PureComponent {
                 InAppUtils.restorePurchases(async (error, response) => {
                   if (error) {
                     Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
+                    AsyncStorage.removeItem('uid');
+                    auth.signOut();
+                    this.props.navigation.navigate('Auth');
                   } else {
+                    if (response.length === 0) {
+                      this.props.navigation.navigate('Subscription');
+                      return;
+                    }
                     const sortedPurchases = response.slice().sort(compare);
                     try {
                       const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
                       if (validationData === undefined) {
                         Alert.alert('Receipt validation error');
+                        return;
                       }
                       if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
                         // Alert.alert('Your subscription has been auto-renewed');
