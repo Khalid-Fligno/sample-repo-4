@@ -96,13 +96,21 @@ export default class LoginScreen extends React.PureComponent {
               // EXPIRED
               InAppUtils.restorePurchases(async (error, response) => {
                 if (error) {
+                  this.setState({ loading: false });
                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
                 } else {
+                  if (response.length === 0) {
+                    this.setState({ loading: false });
+                    this.props.navigation.navigate('Subscription');
+                    return;
+                  }
                   const sortedPurchases = response.slice().sort(compare);
                   try {
                     const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
                     if (validationData === undefined) {
+                      this.setState({ loading: false });
                       Alert.alert('Receipt validation error');
+                      return;
                     }
                     if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
                       // Alert.alert('Your subscription has been auto-renewed');
@@ -171,11 +179,18 @@ export default class LoginScreen extends React.PureComponent {
                   this.setState({ loading: false });
                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
                 } else {
+                  if (response.length === 0) {
+                    this.setState({ loading: false });
+                    this.props.navigation.navigate('Subscription');
+                    return;
+                  }
                   const sortedPurchases = response.slice().sort(compare);
                   try {
                     const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
                     if (validationData === undefined) {
+                      this.setState({ loading: false });
                       Alert.alert('Receipt validation error');
+                      return;
                     }
                     if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
                       // Alert.alert('Your subscription has been auto-renewed');
