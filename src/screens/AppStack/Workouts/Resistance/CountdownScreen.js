@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import { FileSystem } from 'expo';
 import { SafeAreaView } from 'react-navigation';
 import CountdownTimer from '../../../../components/Workouts/CountdownTimer';
 import colors from '../../../../styles/colors';
@@ -18,11 +19,24 @@ export default class CountdownScreen extends React.PureComponent {
   }
   componentDidMount() {
     this.startCountdown();
+    this.checkVideoCache();
   }
   startCountdown = () => {
     this.setState({
       countdownActive: true,
     });
+  }
+  checkVideoCache = async () => {
+    const { exerciseList } = this.state;
+    const video1 = await FileSystem.getInfoAsync(`${FileSystem.cacheDirectory}exercise-1.mp4`);
+    if (!video1.exists) {
+      Promise.all(exerciseList.map(async (exercise, index) => {
+        FileSystem.downloadAsync(
+          exercise.videoURL,
+          `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+        );
+      }));
+    }
   }
   finishCountdown = (exerciseList, reps, resistanceCategoryId) => {
     this.setState({ countdownActive: false });

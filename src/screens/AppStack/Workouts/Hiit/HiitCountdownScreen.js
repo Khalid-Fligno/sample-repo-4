@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import { FileSystem } from 'expo';
 import { SafeAreaView } from 'react-navigation';
 import CountdownTimer from '../../../../components/Workouts/CountdownTimer';
 import colors from '../../../../styles/colors';
@@ -18,11 +19,19 @@ export default class HiitCountdownScreen extends React.PureComponent {
   }
   componentDidMount() {
     this.startCountdown();
+    this.checkVideoCache();
   }
   startCountdown = () => {
     this.setState({
       countdownActive: true,
     });
+  }
+  checkVideoCache = async () => {
+    const { exerciseList } = this.state;
+    const video1 = await FileSystem.getInfoAsync(`${FileSystem.cacheDirectory}exercise-hiit-1.mp4`);
+    if (!video1.exists) {
+      FileSystem.downloadAsync(exerciseList[0].videoURL, `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`);
+    }
   }
   finishCountdown = (exerciseList, fitnessLevel, selectedHiitWorkoutIndex) => {
     this.setState({ countdownActive: false });
