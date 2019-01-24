@@ -91,7 +91,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         return recipes;
       });
     const skeleton = (
-      <View>
+      <View style={styles.recipeTileSkeletonContainer}>
         <RecipeTileSkeleton />
         <RecipeTileSkeleton />
         <RecipeTileSkeleton />
@@ -174,5 +174,8 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: colors.white,
     marginTop: 2,
+  },
+  recipeTileSkeletonContainer: {
+    paddingTop: 35,
   },
 });
