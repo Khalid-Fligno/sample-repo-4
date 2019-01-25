@@ -42,6 +42,8 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       musicModalVisible: false,
       initialProgressInfoExists: undefined,
       helperModalVisible: false,
+      appleMusicAvailable: undefined,
+      spotifyAvailable: undefined,
     };
   }
   componentDidMount = async () => {
@@ -49,12 +51,19 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       handleStart: () => this.handleStart(),
     });
     this.checkInitialProgressCompleted();
+    this.checkMusicAppAvailability();
   }
   componentWillUnmount = () => {
     this.unsubscribe();
   }
   setDate = (newDate) => {
     this.setState({ chosenDate: newDate });
+  }
+  checkMusicAppAvailability = async () => {
+    this.setState({
+      appleMusicAvailable: await Linking.canOpenURL('music:'),
+      spotifyAvailable: await Linking.canOpenURL('spotify:'),
+    });
   }
   handleStart = () => {
     if (this.state.initialProgressInfoExists) {
@@ -72,12 +81,13 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       });
     this.setState({ loading: false });
   }
-  openApp = (url, appStoreURL) => {
+  openApp = (url) => {
     Linking.canOpenURL(url).then((supported) => {
-      if (!supported) {
-        Linking.openURL(appStoreURL);
+      if (supported) {
+        Linking.openURL(url);
+      } else {
+        Alert.alert('Cannot open this app');
       }
-      Linking.openURL(url);
     }).catch((err) => Alert.alert('An error occurred', err));
   }
   toggleMusicModal = () => {
@@ -133,11 +143,11 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       addingToCalendar,
       musicModalVisible,
       helperModalVisible,
+      appleMusicAvailable,
+      spotifyAvailable,
     } = this.state;
-    // let workoutName;
     let exerciseDisplay;
     if (workout) {
-      // workoutName = workout.displayName;
       exerciseDisplay = workout.exercises.map((exercise, index) => {
         return (
           <Carousel
@@ -376,8 +386,12 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               </Text>
               <View style={styles.musicIconContainer}>
                 <TouchableOpacity
-                  style={styles.appleMusicIcon}
-                  onPress={() => this.openApp('music:', 'https://itunes.apple.com/us/app/apple-music/id1108187390?mt=8')}
+                  style={[
+                    styles.appleMusicIcon,
+                    !appleMusicAvailable && styles.appleMusicDisabled,
+                  ]}
+                  disabled={!appleMusicAvailable}
+                  onPress={() => this.openApp('music:')}
                 >
                   <Image
                     source={require('../../../../assets/icons/apple-music-icon.png')}
@@ -385,7 +399,12 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => this.openApp('spotify:', 'https://itunes.apple.com/au/app/spotify-music/id324684580?mt=8')}
+                  onPress={() => this.openApp('spotify:')}
+                  disabled={!spotifyAvailable}
+                  style={[
+                    styles.spotifyIcon,
+                    !spotifyAvailable && styles.spotifyDisabled,
+                  ]}
                 >
                   <Image
                     source={require('../../../../assets/icons/spotify-icon.png')}
@@ -596,10 +615,29 @@ const styles = StyleSheet.create({
   },
   appleMusicIcon: {
     marginRight: 10,
+    shadowColor: colors.grey.dark,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.6,
+    shadowRadius: 3,
+  },
+  spotifyIcon: {
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.6,
+    shadowRadius: 3,
+  },
+  appleMusicDisabled: {
+    marginRight: 10,
+    opacity: 0.1,
+    shadowOpacity: 0,
+  },
+  spotifyDisabled: {
+    opacity: 0.1,
+    shadowOpacity: 0,
   },
   musicIconImage: {
-    height: 50,
-    width: 50,
+    height: 60,
+    width: 60,
   },
   musicModalButtonContainer: {
     backgroundColor: colors.white,
