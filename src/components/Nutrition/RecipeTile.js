@@ -62,7 +62,7 @@ export default class RecipeTile extends React.PureComponent {
               style={styles.recipeInfoContainer}
             >
               {
-                tags && (
+                tags ? (
                   <View style={styles.recipeInfoSection}>
                     {
                       tags.map((tag) => (
@@ -77,10 +77,12 @@ export default class RecipeTile extends React.PureComponent {
                       ))
                     }
                   </View>
+                ) : (
+                  <View style={styles.recipeInfoSection} />
                 )
               }
               {
-                time && (
+                time ? (
                   <View style={styles.recipeInfoSection}>
                     <Icon
                       name="timer"
@@ -91,6 +93,8 @@ export default class RecipeTile extends React.PureComponent {
                       {time}
                     </Text>
                   </View>
+                ) : (
+                  <View style={styles.recipeInfoSection} />
                 )
               }
             </View>
