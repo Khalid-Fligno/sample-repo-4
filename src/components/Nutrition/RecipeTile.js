@@ -61,42 +61,36 @@ export default class RecipeTile extends React.PureComponent {
             <View
               style={styles.recipeInfoContainer}
             >
-              {
-                tags ? (
-                  <View style={styles.recipeInfoSection}>
-                    {
-                      tags.map((tag) => (
-                        <View
-                          style={styles.tagCircle}
-                          key={tag}
-                        >
-                          <Text style={styles.tagText}>
-                            {tag}
-                          </Text>
-                        </View>
-                      ))
-                    }
-                  </View>
-                ) : (
-                  <View style={styles.recipeInfoSection} />
-                )
-              }
-              {
-                time ? (
-                  <View style={styles.recipeInfoSection}>
-                    <Icon
-                      name="timer"
-                      size={25}
-                      color={colors.violet.standard}
-                    />
-                    <Text style={styles.timerText}>
-                      {time}
-                    </Text>
-                  </View>
-                ) : (
-                  <View style={styles.recipeInfoSection} />
-                )
-              }
+              <View style={styles.recipeInfoSection}>
+                {
+                  tags && tags.map((tag) => (
+                    <View
+                      style={styles.tagCircle}
+                      key={tag}
+                    >
+                      <Text style={styles.tagText}>
+                        {tag}
+                      </Text>
+                    </View>
+                  ))
+                }
+              </View>
+              <View style={styles.recipeInfoSection}>
+                {
+                  time && (
+                    <View style={styles.recipeInfoSection}>
+                      <Icon
+                        name="timer"
+                        size={25}
+                        color={colors.violet.standard}
+                      />
+                      <Text style={styles.timerText}>
+                        {time}
+                      </Text>
+                    </View>
+                  )
+                }
+              </View>
             </View>
           </Card>
         </Animated.View>
