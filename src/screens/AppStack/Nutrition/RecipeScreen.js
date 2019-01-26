@@ -238,20 +238,24 @@ export default class RecipeScreen extends React.PureComponent {
             </View>
             <Divider style={styles.divider} />
             <View style={styles.infoBar}>
-              <View style={styles.infoFieldContainer}>
-                {
-                  recipe.tags && recipe.tags.map((tag) => (
-                    <View
-                      style={styles.tagCircle}
-                      key={tag}
-                    >
-                      <Text style={styles.tagText}>
-                        {tag}
-                      </Text>
-                    </View>
-                  ))
-                }
-              </View>
+              {
+                recipe.tags && (
+                  <View style={styles.infoFieldContainer}>
+                    {
+                      recipe.tags.map((tag) => (
+                        <View
+                          style={styles.tagCircle}
+                          key={tag}
+                        >
+                          <Text style={styles.tagText}>
+                            {tag}
+                          </Text>
+                        </View>
+                      ))
+                    }
+                  </View>
+                )
+              }
               {
                 recipe.portions && (
                   <View style={styles.infoFieldContainer}>
