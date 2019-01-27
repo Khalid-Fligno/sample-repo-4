@@ -146,7 +146,7 @@ export default class SubscriptionScreen extends React.PureComponent {
             const data = {
               subscriptionInfo: {
                 expiry: validationData.latest_receipt_info.expires_date,
-                originalTransationId: validationData.latest_receipt_info.original_transaction_id,
+                originalTransactionId: validationData.latest_receipt_info.original_transaction_id,
                 originalPurchaseDate: validationData.latest_receipt_info.original_purchase_date_ms,
                 productId: validationData.latest_receipt_info.product_id,
                 receipt: response.transactionReceipt,
