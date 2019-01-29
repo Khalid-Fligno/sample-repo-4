@@ -436,7 +436,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
         <HelperModal
           helperModalVisible={helperModalVisible}
           hideHelperModal={this.hideHelperModal}
-          headingText="FK!"
+          headingText="Hold up!"
           bodyText="To continue with this workout, you need to upload your ‘Before’ photo and measurements."
           bodyText2="You can do this by going to the ‘Progress’ tab."
           color="coral"
