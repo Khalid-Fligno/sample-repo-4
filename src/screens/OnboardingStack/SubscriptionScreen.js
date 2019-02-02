@@ -122,26 +122,42 @@ export default class SubscriptionScreen extends React.PureComponent {
             },
             {
               text: 'Try Again',
-              onPress: () => {
-                InAppUtils.loadProducts(foundationIdentifiers, (error2, products2) => {
-                  if (error2) {
-                    this.setState({ loading: false });
-                    Alert.alert('Unable to connect to the App Store', 'Please try again later');
-                  } else if (products2.length !== 2) {
-                    // IAP products not retrieved (App Store server down, etc.)
-                    this.setState({ loading: false });
-                    Alert.alert('Unable to connect to the App Store', 'Please try again later');
-                  } else {
-                    const sortedProducts = products2.slice().sort(compareProducts);
-                    this.setState({ products: sortedProducts, subscriptionSelected: sortedProducts[0], loading: false });
-                  }
-                });
-              },
+              onPress: () => this.retryLoadProducts(),
             },
           ],
           { cancelable: false },
         );
         // Alert.alert('Unable to connect to the App Store', 'Please try again later');
+      } else {
+        const sortedProducts = products.slice().sort(compareProducts);
+        this.setState({ products: sortedProducts, subscriptionSelected: sortedProducts[0], loading: false });
+      }
+    });
+  }
+  retryLoadProducts = () => {
+    this.setState({ loading: true });
+    InAppUtils.loadProducts(foundationIdentifiers, (error, products) => {
+      if (error) {
+        this.setState({ loading: false });
+        Alert.alert('Unable to connect to the App Store', 'Please try again later');
+      } else if (products.length !== 2) {
+        // IAP products not retrieved (App Store server down, etc.)
+        this.setState({ loading: false });
+        // Alert.alert('Unable to connect to the App Store', 'Please try again later');
+        Alert.alert(
+          'Unable to connect to the App Store',
+          'Please try again later',
+          [
+            {
+              text: 'Cancel', style: 'cancel',
+            },
+            {
+              text: 'Try Again',
+              onPress: () => this.loadProducts(),
+            },
+          ],
+          { cancelable: false },
+        );
       } else {
         const sortedProducts = products.slice().sort(compareProducts);
         this.setState({ products: sortedProducts, subscriptionSelected: sortedProducts[0], loading: false });
