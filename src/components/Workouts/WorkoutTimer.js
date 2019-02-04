@@ -5,19 +5,19 @@ import { soundObject } from '../../../config/audio';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export const defaultStyles = {
   container: {
     width,
     backgroundColor: colors.black,
-    paddingTop: 15,
+    paddingTop: height > 800 ? 25 : 15,
     alignItems: 'center',
     justifyContent: 'center',
   },
   text: {
     fontFamily: fonts.bold,
-    fontSize: 60,
+    fontSize: height > 800 ? 80 : 60,
     color: colors.white,
   },
 };
@@ -26,13 +26,13 @@ const warningStyles = {
   container: {
     width,
     backgroundColor: colors.black,
-    paddingTop: 15,
+    paddingTop: height > 800 ? 25 : 15,
     alignItems: 'center',
     justifyContent: 'center',
   },
   text: {
     fontFamily: fonts.bold,
-    fontSize: 60,
+    fontSize: height > 800 ? 80 : 60,
     color: colors.coral.standard,
   },
 };
