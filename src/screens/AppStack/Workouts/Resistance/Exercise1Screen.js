@@ -35,7 +35,6 @@ export default class Exercise1Screen extends React.PureComponent {
   componentDidMount() {
     this.startTimer();
     AppState.addEventListener('change', this.handleAppStateChange);
-    // this.manageVideoCache();
   }
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange);
@@ -46,16 +45,6 @@ export default class Exercise1Screen extends React.PureComponent {
       this.handlePause();
     }
     this.setState({ appState: nextAppState });
-  }
-  manageVideoCache = () => {
-    const setCount = this.props.navigation.getParam('setCount', 0);
-    const { exerciseList } = this.state;
-    if (setCount === 2) {
-      FileSystem.downloadAsync(
-        exerciseList[1].videoURL,
-        `${FileSystem.documentDirectory}exercise-2.mp4`,
-      );
-    }
   }
   startTimer = () => {
     this.setState({

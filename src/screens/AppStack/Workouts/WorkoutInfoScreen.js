@@ -49,9 +49,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     });
     this.checkMusicAppAvailability();
   }
-  componentWillUnmount = () => {
-    this.unsubscribe();
-  }
   setDate = (newDate) => {
     this.setState({ chosenDate: newDate });
   }
