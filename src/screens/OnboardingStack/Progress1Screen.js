@@ -65,13 +65,13 @@ export default class Progress1Screen extends React.PureComponent {
     if (this.props.navigation.getParam('isInitial', false)) {
       Alert.alert(
         'Warning',
-        'You will need to do this before your first workout',
+        'Entering your progress information is a good way to stay accountable. Are you sure you want to skip?',
         [
           {
             text: 'Cancel', style: 'cancel',
           },
           {
-            text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
+            text: 'Skip', onPress: () => this.props.navigation.navigate('App'),
           },
         ],
         { cancelable: false },
@@ -85,7 +85,7 @@ export default class Progress1Screen extends React.PureComponent {
             text: 'Cancel', style: 'cancel',
           },
           {
-            text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
+            text: 'Skip', onPress: () => this.props.navigation.navigate('App'),
           },
         ],
         { cancelable: false },
