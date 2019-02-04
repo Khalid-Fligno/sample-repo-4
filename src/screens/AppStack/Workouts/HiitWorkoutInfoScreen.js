@@ -450,9 +450,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: 10,
-    paddingLeft: 20,
+    paddingLeft: 15,
     paddingBottom: 10,
-    paddingRight: 20,
+    paddingRight: 15,
   },
   workoutName: {
     marginTop: 6,
