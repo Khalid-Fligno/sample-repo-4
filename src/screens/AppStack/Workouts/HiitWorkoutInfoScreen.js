@@ -52,18 +52,33 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       calendarModalVisible: false,
       addingToCalendar: false,
       musicModalVisible: false,
+      appleMusicAvailable: undefined,
+      spotifyAvailable: undefined,
     };
   }
   componentDidMount = async () => {
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
     });
-  }
-  componentWillUnmount = () => {
-    this.unsubscribe();
+    this.checkMusicAppAvailability();
   }
   setDate = (newDate) => {
     this.setState({ chosenDate: newDate });
+  }
+  checkMusicAppAvailability = async () => {
+    this.setState({
+      appleMusicAvailable: await Linking.canOpenURL('music:'),
+      spotifyAvailable: await Linking.canOpenURL('spotify:'),
+    });
+  }
+  openApp = (url) => {
+    Linking.canOpenURL(url).then((supported) => {
+      if (supported) {
+        Linking.openURL(url);
+      } else {
+        Alert.alert('Cannot open this app');
+      }
+    }).catch((err) => Alert.alert('An error occurred', err));
   }
   handleStart = () => {
     this.toggleMusicModal();
@@ -114,6 +129,8 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       fitnessLevel,
       musicModalVisible,
       selectedHiitWorkoutIndex,
+      appleMusicAvailable,
+      spotifyAvailable,
     } = this.state;
     let exerciseDisplay;
     if (workout) {
@@ -332,8 +349,12 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
               </Text>
               <View style={styles.musicIconContainer}>
                 <TouchableOpacity
-                  style={styles.appleMusicIcon}
-                  onPress={() => Linking.openURL('music:')}
+                  style={[
+                    styles.appleMusicIcon,
+                    !appleMusicAvailable && styles.appleMusicDisabled,
+                  ]}
+                  disabled={!appleMusicAvailable}
+                  onPress={() => this.openApp('music:')}
                 >
                   <Image
                     source={require('../../../../assets/icons/apple-music-icon.png')}
@@ -341,7 +362,12 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => Linking.openURL('spotify:')}
+                  onPress={() => this.openApp('spotify:')}
+                  disabled={!spotifyAvailable}
+                  style={[
+                    styles.spotifyIcon,
+                    !spotifyAvailable && styles.spotifyDisabled,
+                  ]}
                 >
                   <Image
                     source={require('../../../../assets/icons/spotify-icon.png')}
@@ -544,10 +570,29 @@ const styles = StyleSheet.create({
   },
   appleMusicIcon: {
     marginRight: 10,
+    shadowColor: colors.grey.dark,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.6,
+    shadowRadius: 3,
+  },
+  spotifyIcon: {
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.6,
+    shadowRadius: 3,
+  },
+  appleMusicDisabled: {
+    marginRight: 10,
+    opacity: 0.1,
+    shadowOpacity: 0,
+  },
+  spotifyDisabled: {
+    opacity: 0.1,
+    shadowOpacity: 0,
   },
   musicIconImage: {
-    height: 50,
-    width: 50,
+    height: 60,
+    width: 60,
   },
   musicModalButtonContainer: {
     backgroundColor: colors.white,
