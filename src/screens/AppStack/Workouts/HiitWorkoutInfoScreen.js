@@ -19,7 +19,6 @@ import Carousel from 'react-native-carousel';
 import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
-import HelperModal from '../../../components/Shared/HelperModal';
 import Icon from '../../../components/Shared/Icon';
 import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
 import colors from '../../../styles/colors';
@@ -53,15 +52,12 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       calendarModalVisible: false,
       addingToCalendar: false,
       musicModalVisible: false,
-      initialProgressInfoExists: undefined,
-      helperModalVisible: false,
     };
   }
   componentDidMount = async () => {
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
     });
-    this.checkInitialProgressCompleted();
   }
   componentWillUnmount = () => {
     this.unsubscribe();
@@ -70,20 +66,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
     this.setState({ chosenDate: newDate });
   }
   handleStart = () => {
-    if (this.state.initialProgressInfoExists) {
-      this.toggleMusicModal();
-    } else {
-      this.showHelperModal();
-    }
-  }
-  checkInitialProgressCompleted = async () => {
-    // this.setState({ loading: true });
-    const uid = await AsyncStorage.getItem('uid');
-    this.unsubscribe = await db.collection('users').doc(uid)
-      .onSnapshot(async (doc) => {
-        this.setState({ initialProgressInfoExists: await doc.data().initialProgressInfo && true });
-      });
-    // this.setState({ loading: false });
+    this.toggleMusicModal();
   }
   showCalendarModal = () => {
     this.setState({ calendarModalVisible: true });
@@ -121,12 +104,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       { cancelable: false },
     );
   }
-  showHelperModal = () => {
-    this.setState({ helperModalVisible: true });
-  }
-  hideHelperModal = () => {
-    this.setState({ helperModalVisible: false });
-  }
   render() {
     const {
       loading,
@@ -136,7 +113,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       addingToCalendar,
       fitnessLevel,
       musicModalVisible,
-      helperModalVisible,
       selectedHiitWorkoutIndex,
     } = this.state;
     let exerciseDisplay;
@@ -394,14 +370,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
             </View>
           </View>
         </Modal>
-        <HelperModal
-          helperModalVisible={helperModalVisible}
-          hideHelperModal={this.hideHelperModal}
-          headingText="Hold up!"
-          bodyText="To continue with this workout, you need to upload your ‘Before’ photo and measurements."
-          bodyText2="You can do this by going to the ‘Progress’ tab."
-          color="coral"
-        />
         <Loader
           loading={loading}
           color={colors.coral.standard}
