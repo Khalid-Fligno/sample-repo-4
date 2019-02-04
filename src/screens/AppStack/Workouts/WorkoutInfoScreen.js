@@ -19,7 +19,6 @@ import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
-import HelperModal from '../../../components/Shared/HelperModal';
 import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
 import { findFocus, findLocation } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
@@ -40,8 +39,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       calendarModalVisible: false,
       addingToCalendar: false,
       musicModalVisible: false,
-      initialProgressInfoExists: undefined,
-      helperModalVisible: false,
       appleMusicAvailable: undefined,
       spotifyAvailable: undefined,
     };
@@ -50,7 +47,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
     });
-    this.checkInitialProgressCompleted();
     this.checkMusicAppAvailability();
   }
   componentWillUnmount = () => {
@@ -66,20 +62,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     });
   }
   handleStart = () => {
-    if (this.state.initialProgressInfoExists) {
-      this.toggleMusicModal();
-    } else {
-      this.showHelperModal();
-    }
-  }
-  checkInitialProgressCompleted = async () => {
-    this.setState({ loading: true });
-    const uid = await AsyncStorage.getItem('uid');
-    this.unsubscribe = await db.collection('users').doc(uid)
-      .onSnapshot(async (doc) => {
-        this.setState({ initialProgressInfoExists: await doc.data().initialProgressInfo && true });
-      });
-    this.setState({ loading: false });
+    this.toggleMusicModal();
   }
   openApp = (url) => {
     Linking.canOpenURL(url).then((supported) => {
@@ -127,12 +110,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     this.setState({ musicModalVisible: false });
     this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
   }
-  showHelperModal = () => {
-    this.setState({ helperModalVisible: true });
-  }
-  hideHelperModal = () => {
-    this.setState({ helperModalVisible: false });
-  }
   render() {
     const {
       loading,
@@ -142,7 +119,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       calendarModalVisible,
       addingToCalendar,
       musicModalVisible,
-      helperModalVisible,
       appleMusicAvailable,
       spotifyAvailable,
     } = this.state;
@@ -433,14 +409,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             </View>
           </View>
         </Modal>
-        <HelperModal
-          helperModalVisible={helperModalVisible}
-          hideHelperModal={this.hideHelperModal}
-          headingText="Hold up!"
-          bodyText="To continue with this workout, you need to upload your ‘Before’ photo and measurements."
-          bodyText2="You can do this by going to the ‘Progress’ tab."
-          color="coral"
-        />
         <Loader
           loading={loading}
           color={colors.coral.standard}
