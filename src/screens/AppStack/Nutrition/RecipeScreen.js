@@ -239,10 +239,10 @@ export default class RecipeScreen extends React.PureComponent {
             <Divider style={styles.divider} />
             <View style={styles.infoBar}>
               {
-                recipe.tags && (
+                recipe.tags.length > 0 && (
                   <View style={styles.infoFieldContainer}>
                     {
-                      recipe.tags.map((tag) => (
+                      recipe.tags.length > 0 && recipe.tags.map((tag) => (
                         <View
                           style={styles.tagCircle}
                           key={tag}
