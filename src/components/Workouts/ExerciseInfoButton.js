@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   helpButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 50,
+    height: 52,
     width: 52,
     position: 'absolute',
     marginTop: -50,
