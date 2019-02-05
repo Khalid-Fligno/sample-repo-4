@@ -53,7 +53,7 @@ export default class TermsOfServiceScreen extends React.PureComponent {
         <View style={styles.container}>
           <ScrollView contentContainerStyle={styles.scrollView}>
             <Text style={styles.header}>
-              Terms of Service
+              Terms and Conditions
             </Text>
             {textDisplay}
           </ScrollView>
