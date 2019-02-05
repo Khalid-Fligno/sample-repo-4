@@ -16,7 +16,7 @@ export default class ProfileButton extends React.PureComponent {
     const uid = await AsyncStorage.getItem('uid');
     this.unsubscribe = await db.collection('users').doc(uid)
       .onSnapshot(async (doc) => {
-        this.setState({ avatar: await doc.data().avatar });
+        this.setState({ avatar: await doc.data().avatar || undefined });
       });
   }
   componentWillUnmount = () => {
