@@ -41,7 +41,6 @@ const list = [
   { title: 'Help & Support', route: 'HelpAndSupport' },
   { title: 'Privacy Policy', route: 'PrivacyPolicy' },
   { title: 'Terms of Service', route: 'TermsOfService' },
-  { title: 'Billing Terms', route: 'BillingTerms' },
 ];
 
 export default class ProfileHomeScreen extends React.PureComponent {
