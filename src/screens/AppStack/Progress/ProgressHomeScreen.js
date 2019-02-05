@@ -307,7 +307,7 @@ class ProgressHomeScreen extends React.PureComponent {
           helperModalVisible={helperModalVisible}
           hideHelperModal={this.hideHelperModal}
           headingText="Progress"
-          bodyText="We want you to enjoy the journey just as much as the destination. By tracking your progress, you can stay accountable and motivate you throughout the journey."
+          bodyText="By tracking your progress, you can stay accountable and motivated throughout your fitness journey."
           bodyText2="Your ‘before’ photo and measurements will stay on the left of screen.  When it comes time to check-in, your ‘after’ photo and measurement will be uploaded on the right."
           bodyText3="When you want to update your ‘after’ photo, press the update button at the bottom of screen. You can reset your ‘before’ photo in Profile => Settings."
           color="blue"
