@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   subscriptionTileHeader: {
     fontFamily: fonts.bold,
-    fontSize: 14,
+    fontSize: 13,
     color: colors.white,
     marginTop: 5,
     marginBottom: 3,

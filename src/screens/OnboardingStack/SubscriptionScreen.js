@@ -333,13 +333,13 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: fonts.bold,
-    fontSize: 18,
+    fontSize: 16,
     color: colors.charcoal.darkest,
     marginBottom: 3,
   },
   subHeadingText: {
     fontFamily: fonts.standardNarrow,
-    fontSize: 14,
+    fontSize: 12,
     color: colors.charcoal.darkest,
   },
   contentContainer: {
