@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
+import { KeepAwake } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 import Image from 'react-native-image-progress';
 import { DotIndicator } from 'react-native-indicators';
@@ -108,6 +109,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
   render() {
     return (
       <View style={styles.container}>
+        <KeepAwake />
         <Carousel
           ref={(c) => this.carousel = c}
           data={this.state.steps}
