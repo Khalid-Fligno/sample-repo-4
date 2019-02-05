@@ -25,8 +25,8 @@ export default class SubscriptionTile extends React.PureComponent {
         style={primary ? styles.subscriptionTilePrimary : styles.subscriptionTile}
       >
         <View style={primary ? styles.tileHeaderBarPrimary : styles.tileHeaderBar}>
-          <Text style={primary ? styles.subscriptionTileHeaderPrimary : styles.subscriptionTileHeader}>
-            {title}
+          <Text style={styles.subscriptionTileHeader}>
+            {title} {primary && '- 40% off!'}
           </Text>
         </View>
         <View style={styles.textContainer}>
@@ -49,17 +49,6 @@ export default class SubscriptionTile extends React.PureComponent {
                 color={colors.coral.standard}
                 style={styles.icon}
               />
-            )
-          }
-          {
-            primary ? (
-              <View style={styles.savingsContainer}>
-                <Text style={styles.savingsText}>
-                  Save 41%
-                </Text>
-              </View>
-            ) : (
-              <View style={styles.blankSavingsContainer} />
             )
           }
           {
@@ -99,9 +88,9 @@ const styles = StyleSheet.create({
     marginRight: 5,
     paddingTop: 0,
     borderWidth: 3,
-    borderColor: colors.charcoal.standard,
+    borderColor: colors.charcoal.darkest,
     borderRadius: 4,
-    shadowColor: colors.charcoal.standard,
+    shadowColor: colors.charcoal.darkest,
     shadowOpacity: 0.8,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
@@ -116,7 +105,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: colors.coral.dark,
     borderRadius: 4,
-    shadowColor: colors.charcoal.standard,
+    shadowColor: colors.charcoal.darkest,
     shadowOpacity: 0.8,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
@@ -125,20 +114,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.charcoal.darkest,
     width: '100%',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   tileHeaderBarPrimary: {
     backgroundColor: colors.coral.dark,
     width: '100%',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   subscriptionTileHeader: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 5,
-    marginBottom: 3,
-  },
-  subscriptionTileHeaderPrimary: {
     fontFamily: fonts.bold,
     fontSize: 14,
     color: colors.white,
@@ -186,25 +170,6 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  savingsContainer: {
-    width: '100%',
-    height: 18,
-    backgroundColor: colors.coral.dark,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  savingsText: {
-    fontFamily: fonts.standard,
-    fontSize: 11,
-    color: colors.white,
-    marginTop: 5,
-  },
-  blankSavingsContainer: {
-    width: '100%',
-    height: 18,
     alignItems: 'center',
     justifyContent: 'center',
   },

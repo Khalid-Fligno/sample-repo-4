@@ -247,10 +247,11 @@ export default class SubscriptionScreen extends React.PureComponent {
           />
           <View style={styles.headerContainer}>
             <Text style={styles.headerText}>
-              Get Full Access
+              Get fit fast with Full Access
             </Text>
             <Text style={styles.subHeadingText}>
-              Take advantage of our discounted foundation memberships now!
+              Launch special - 40% off yearly foundation memberships.
+              Commit to a happier, healthier you!
             </Text>
           </View>
           <View style={styles.contentContainer}>
@@ -327,17 +328,17 @@ const styles = StyleSheet.create({
     width,
     paddingLeft: 12,
     paddingRight: 12,
-    paddingTop: 8,
+    paddingTop: 10,
     paddingBottom: 5,
   },
   headerText: {
     fontFamily: fonts.bold,
-    fontSize: 16,
+    fontSize: 18,
     color: colors.charcoal.darkest,
-    marginBottom: 5,
+    marginBottom: 3,
   },
   subHeadingText: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.standardNarrow,
     fontSize: 14,
     color: colors.charcoal.darkest,
   },
