@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
   },
   subHeadingText: {
     fontFamily: fonts.standardNarrow,
-    fontSize: 12,
+    fontSize: 13,
     color: colors.charcoal.darkest,
   },
   contentContainer: {
