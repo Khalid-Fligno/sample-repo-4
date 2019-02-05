@@ -95,8 +95,8 @@ class WorkoutsHomeScreen extends React.PureComponent {
       selectedHiitWorkoutIndex: 0,
       selectedResistanceFocusIndex: 0,
       helperModalVisible: false,
-      resistanceWeeklyTarget: undefined,
-      hiitWeeklyTarget: undefined,
+      resistanceWeeklyTarget: 3,
+      hiitWeeklyTarget: 2,
       resistanceWeeklyComplete: undefined,
       hiitWeeklyComplete: undefined,
     };
@@ -132,8 +132,6 @@ class WorkoutsHomeScreen extends React.PureComponent {
     const userRef = db.collection('users').doc(uid);
     this.unsubscribeFromTargets = userRef.onSnapshot(async (doc) => {
       this.setState({
-        resistanceWeeklyTarget: await doc.data().weeklyTargets.resistanceWeeklyTarget,
-        hiitWeeklyTarget: await doc.data().weeklyTargets.hiitWeeklyTarget,
         resistanceWeeklyComplete: await doc.data().weeklyTargets.resistanceWeeklyComplete,
         hiitWeeklyComplete: await doc.data().weeklyTargets.hiitWeeklyComplete,
       });
@@ -220,7 +218,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
                 item.resistance && (
                   <Text style={styles.weeklyTargetText}>
                     {
-                      resistanceWeeklyTarget &&
+                      resistanceWeeklyComplete !== undefined &&
                       `${resistanceWeeklyComplete}/${resistanceWeeklyTarget} sessions this week`
                     }
                   </Text>
@@ -230,7 +228,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
                 item.hiit && (
                   <Text style={styles.weeklyTargetText}>
                     {
-                      hiitWeeklyTarget &&
+                      hiitWeeklyComplete !== undefined &&
                       `${hiitWeeklyComplete}/${hiitWeeklyTarget} sessions this week`
                     }
                   </Text>
