@@ -8132,26 +8132,10 @@ react-native-maps@expo/react-native-maps#v0.22.1-exp.0:
   version "0.22.1"
   resolved "https://codeload.github.com/expo/react-native-maps/tar.gz/e6f98ff7272e5d0a7fe974a41f28593af2d77bb2"
 
-react-native-modal-datetime-picker@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-modal-datetime-picker/-/react-native-modal-datetime-picker-6.0.0.tgz#8018994524122ad48fd6bc66f26f623c75a49fb3"
-  integrity sha512-O8brvSXgvRtfHzAyCNSrPcylE05cyK30D8/7rM0kjXLnlDcoiXtEl62qDQw8wnJOAL6kQFGn/iQ8H4mGXptiHw==
-  dependencies:
-    prop-types "^15.6.1"
-    react-native-modal "^6.2.0"
-
 react-native-modal@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-6.1.0.tgz#cc63946bd62cebfb8e531aa125796e26f5acd9c3"
   integrity sha512-DBEJlUElTkWw6H1huHWaa1psQhnlsYxIpfNS4Cfw/fXq5rJkY1+hzHzySbXOwDyBKIAI652Grdtx+2XItZG4Bw==
-  dependencies:
-    prop-types "^15.6.1"
-    react-native-animatable "^1.2.4"
-
-react-native-modal@^6.2.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-6.3.0.tgz#872c5c66b1250eb7135f5b087e30c8c8c3e853a2"
-  integrity sha512-Ei6nDaKRr8Y0BEMvaEYEX5Q5tmL+8Z2KaWiO1yXhCapt0TmWOBrN8I3NG4gEuY8q4vQRLxpRWRMMcORvXxsLFw==
   dependencies:
     prop-types "^15.6.1"
     react-native-animatable "^1.2.4"
@@ -8233,11 +8217,6 @@ react-native-snap-carousel@^3.7.0:
   dependencies:
     prop-types "^15.6.1"
     react-addons-shallow-compare "15.6.2"
-
-react-native-stopwatch-timer@^0.0.20:
-  version "0.0.20"
-  resolved "https://registry.yarnpkg.com/react-native-stopwatch-timer/-/react-native-stopwatch-timer-0.0.20.tgz#1badeb3b0d8d5ff02003d38d018c6a2b17fba00b"
-  integrity sha1-G63rOw2NX/AgA9ONAYxqKxf7oAs=
 
 react-native-svg-charts@^5.2.0:
   version "5.2.0"
