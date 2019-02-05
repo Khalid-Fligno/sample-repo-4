@@ -69,7 +69,7 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
           <Icon
             name="tick-heavy"
             color={colors.charcoal.dark}
-            size={60}
+            size={100}
           />
         </View>
       </View>
@@ -79,10 +79,13 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
         <View style={styles.flexContainer}>
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>
-              Workout Complete
+              WORKOUT
+            </Text>
+            <Text style={styles.headerText}>
+              COMPLETE
             </Text>
             <Text style={styles.bodyText}>
-              Congratulations!  Press the button at the bottom of your screen to complete your workout.
+              {"EVERY SESSION GETS YOU CLOSER TO SMASHING YOUR GOALS.  YOU'VE GOT THIS!"}
             </Text>
           </View>
           <View style={styles.iconContainer}>
@@ -118,22 +121,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   textContainer: {
-    flex: 1,
+    alignItems: 'center',
     width,
     padding: 10,
-    paddingTop: 15,
+    paddingTop: 25,
   },
   headerText: {
     fontFamily: fonts.bold,
-    fontSize: 28,
-    color: colors.charcoal.light,
-    marginBottom: 10,
+    fontSize: 48,
+    color: colors.coral.standard,
+    textAlign: 'center',
   },
   bodyText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.light,
-    marginLeft: 3,
+    fontFamily: fonts.bold,
+    fontSize: 16,
+    color: colors.charcoal.dark,
+    marginTop: 10,
+    textAlign: 'center',
   },
   iconContainer: {
     flex: 1,
@@ -141,18 +145,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pieChart: {
-    height: 120,
-    width: 120,
+    height: 160,
+    width: 160,
   },
   invisibleView: {
     height: 0,
   },
   tickContainer: {
-    marginTop: -90,
+    marginTop: -130,
   },
   buttonContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
     padding: 10,
   },
 });
