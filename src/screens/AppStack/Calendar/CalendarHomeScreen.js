@@ -20,7 +20,7 @@ import CalendarStrip from 'react-native-calendar-strip';
 import Swipeable from 'react-native-swipeable';
 import firebase from 'firebase';
 import ReactTimeout from 'react-timeout';
-import { db, auth } from '../../../../config/firebase';
+import { db } from '../../../../config/firebase';
 import HelperModal from '../../../components/Shared/HelperModal';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
@@ -137,50 +137,59 @@ class CalendarHomeScreen extends React.PureComponent {
         }
       });
   }
-  loadExercises = async (workout) => {
+  loadExercises = async (workoutId) => {
     this.setState({ loading: true });
-    const user = auth.currentUser;
-    let reps;
-    if (user) {
-      this.unsubscribeFromUsers = db.collection('users')
-        .doc(user.uid)
-        .onSnapshot(async (doc) => {
-          if (doc.exists) {
-            reps = findReps(await doc.data().fitnessLevel);
-          }
-        });
-    }
-    const { exercises } = workout;
-    try {
-      await Promise.all(exercises.map(async (exercise, index) => {
-        await FileSystem.downloadAsync(
-          exercise.videoURL,
-          `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-        );
-      }));
-      this.setState({ loading: false });
-      this.props.navigation.navigate('WorkoutInfo', { workout, reps });
-    } catch (err) {
-      this.setState({ loading: false });
-      Alert.alert('Filesystem download error', `${err}`);
-    }
+    // const user = auth.currentUser;
+    // let reps;
+    // if (user) {
+    //   this.unsubscribeFromUsers = db.collection('users')
+    //     .doc(user.uid)
+    //     .onSnapshot(async (doc) => {
+    //       if (doc.exists) {
+    //         reps = findReps(await doc.data().fitnessLevel);
+    //       }
+    //     });
+    // }
+    db.collection('workouts').doc(workoutId)
+      .get()
+      .then(async (doc) => {
+        const workout = await doc.data();
+        const { exercises } = workout;
+        await Promise.all(exercises.map(async (exercise, index) => {
+          await FileSystem.downloadAsync(
+            exercise.videoURL,
+            `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+          );
+        }));
+        const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
+        const reps = findReps(fitnessLevel);
+        this.setState({ loading: false });
+        this.props.navigation.navigate('WorkoutInfo', { workout, reps });
+      })
+      .catch(() => {
+        this.setState({ loading: false });
+        Alert.alert('Workout unavailable');
+      });
   }
-  loadHiitExercises = async (workout) => {
+  loadHiitExercises = async (workoutId) => {
     this.setState({ loading: true });
-    const { exercises } = workout;
-    try {
-      await Promise.all(exercises.map(async (exercise, index) => {
+    db.collection('workouts').doc(workoutId)
+      .get()
+      .then(async (doc) => {
+        const workout = await doc.data();
+        const { exercises } = workout;
         await FileSystem.downloadAsync(
-          exercise.videoURL,
-          `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+          exercises[0].videoURL,
+          `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
         );
-      }));
-      this.setState({ loading: false });
-      this.props.navigation.navigate('HiitWorkoutInfo', { workout });
-    } catch (err) {
-      this.setState({ loading: false });
-      Alert.alert('Filesystem download error', `${err}`);
-    }
+        const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
+        this.setState({ loading: false });
+        this.props.navigation.navigate('HiitWorkoutInfo', { workout, fitnessLevel });
+      })
+      .catch(() => {
+        this.setState({ loading: false });
+        Alert.alert('Workout unavailable');
+      });
   }
   // addToCalendarApp = async (workout) => {
   //   const { status } = await Permissions.askAsync(Permissions.CALENDAR);
@@ -307,7 +316,7 @@ class CalendarHomeScreen extends React.PureComponent {
                       </View>
                     )
                   }
-                  onPress={workout.resistance ? () => this.loadExercises(workout) : () => this.loadHiitExercises(workout)}
+                  onPress={workout.resistance ? () => this.loadExercises(workout.id) : () => this.loadHiitExercises(workout.id)}
                   containerStyle={styles.listItemContainerBottom}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.workoutListItemTitle}
