@@ -14,6 +14,7 @@ import {
   validateReceiptSandbox,
   compare,
 } from '../../config/apple';
+import { soundObject } from '../../config/audio';
 import { auth, db } from '../../config/firebase';
 
 const { InAppUtils } = NativeModules;
@@ -111,7 +112,8 @@ export default class AuthLoadingScreen extends React.PureComponent {
         icomoon: require('../../assets/fonts/icomoon.ttf'),
       },
     ]);
-    await Promise.all([...imageAssets, ...fontAssets]);
+    const audioAssets = soundObject.loadAsync(require('../../assets/sounds/ding.mp3'));
+    await Promise.all([...imageAssets, ...fontAssets, audioAssets]);
   }
   // Include payments
   cachingComplete = async () => {

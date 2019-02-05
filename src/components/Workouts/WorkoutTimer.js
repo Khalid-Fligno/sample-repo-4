@@ -74,7 +74,6 @@ export default class WorkoutTimer extends Component {
     );
   }
   start = async () => {
-    soundObject.loadAsync(require('../../../assets/sounds/ding.mp3'));
     const handleFinish = this.props.handleFinish ? this.props.handleFinish : () => this.finishAlert();
     const endTime = new Date().getTime() + this.state.remainingTime;
     this.interval = setInterval(() => {
