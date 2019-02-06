@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, View, Text, ScrollView, Dimensions, Linking } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Text, ScrollView, Dimensions, Linking, Alert } from 'react-native';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
@@ -28,6 +28,10 @@ export default class PrivacyPolicyScreen extends React.PureComponent {
         } else {
           this.setState({ loading: false });
         }
+      })
+      .catch(() => {
+        Alert.alert('Connection error', 'Please try again later');
+        this.setState({ loading: false });
       });
   }
   openLink = (url) => {
