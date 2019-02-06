@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  Animated,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
@@ -13,36 +14,66 @@ import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
-const WorkoutTile = ({
-  onPress,
-  title1,
-  image,
-  disabled,
-  cycleTargets,
-  resistanceCategoryId,
-}) => (
-  <TouchableOpacity
-    disabled={disabled}
-    onPress={onPress}
-    style={styles.cardContainer}
-  >
-    <ImageBackground
-      source={image}
-      style={styles.image}
-    >
-      <View style={styles.opacityLayer}>
-        <Text style={styles.title}>
-          {title1.toUpperCase()}
-        </Text>
-        <Text style={styles.targetText}>
-          {
-            cycleTargets !== undefined && `Completed: ${cycleTargets[resistanceCategoryId]}`
-          }
-        </Text>
-      </View>
-    </ImageBackground>
-  </TouchableOpacity>
-);
+export default class WorkoutTile extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.animatedValue = new Animated.Value(1);
+  }
+  handlePressIn = () => {
+    Animated.spring(this.animatedValue, {
+      toValue: 0.92,
+    }).start();
+  }
+  handlePressOut = () => {
+    Animated.spring(this.animatedValue, {
+      toValue: 1,
+      friction: 3,
+      tension: 40,
+    }).start();
+  }
+  render() {
+    const {
+      onPress,
+      title1,
+      image,
+      disabled,
+      cycleTargets,
+      resistanceCategoryId,
+    } = this.props;
+    const animatedStyle = {
+      transform: [{ scale: this.animatedValue }],
+    };
+    return (
+      <TouchableOpacity
+        disabled={disabled}
+        onPress={onPress}
+        style={styles.cardContainer}
+        onPressIn={this.handlePressIn}
+        onPressOut={this.handlePressOut}
+      >
+        <Animated.View
+          style={[styles.flexContainer, animatedStyle]}
+        >
+          <ImageBackground
+            source={image}
+            style={styles.image}
+          >
+            <View style={styles.opacityLayer}>
+              <Text style={styles.title}>
+                {title1.toUpperCase()}
+              </Text>
+              <Text style={styles.targetText}>
+                {
+                  cycleTargets !== undefined && `Completed: ${cycleTargets[resistanceCategoryId]}`
+                }
+              </Text>
+            </View>
+          </ImageBackground>
+        </Animated.View>
+      </TouchableOpacity>
+    );
+  }
+}
 
 WorkoutTile.propTypes = {
   onPress: PropTypes.func.isRequired,
@@ -68,6 +99,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
+  },
+  flexContainer: {
+    flex: 1,
   },
   image: {
     backgroundColor: colors.black,
@@ -105,5 +139,3 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
 });
-
-export default WorkoutTile;

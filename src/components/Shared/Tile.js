@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, ImageBackground, Text, TouchableOpacity, StyleSheet, Dimensions, Animated } from 'react-native';
+import {
+  View,
+  ImageBackground,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  Animated,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
