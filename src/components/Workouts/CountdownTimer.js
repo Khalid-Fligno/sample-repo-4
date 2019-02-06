@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import PropTypes from 'prop-types';
-import { soundObject } from '../../../config/audio';
+import { Audio } from 'expo';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
@@ -32,6 +32,9 @@ export default class CountdownTimer extends Component {
     this.interval = null;
   }
   start = async () => {
+    await Audio.setIsEnabledAsync(true);
+    const soundObject = new Audio.Sound();
+    soundObject.loadAsync(require('../../../assets/sounds/ding.mp3'));
     const { handleFinish } = this.props;
     const endTime = new Date().getTime() + this.state.remainingTime;
     this.interval = setInterval(() => {
