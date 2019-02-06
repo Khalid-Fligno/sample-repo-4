@@ -8,7 +8,7 @@ export const weightOptionsMetric = [
 ];
 
 const populateWeightOptionsMetric = () => {
-  for (let i = 31; i <= 120; i += 1) {
+  for (let i = 31; i <= 130; i += 1) {
     weightOptionsMetric.push({
       value: i,
       label: `${i}`,
@@ -22,7 +22,7 @@ export const waistOptionsMetric = [
 ];
 
 const populateWaistOptionsMetric = () => {
-  for (let i = 21; i <= 120; i += 1) {
+  for (let i = 21; i <= 250; i += 1) {
     waistOptionsMetric.push({
       value: i,
       label: `${i}`,
@@ -36,7 +36,7 @@ export const hipOptionsMetric = [
 ];
 
 const populateHipOptionsMetric = () => {
-  for (let i = 21; i <= 120; i += 1) {
+  for (let i = 21; i <= 250; i += 1) {
     hipOptionsMetric.push({
       value: i,
       label: `${i}`,
@@ -50,7 +50,7 @@ export const weightOptionsImperial = [
 ];
 
 const populateWeightOptionsImperial = () => {
-  for (let i = 61; i <= 240; i += 1) {
+  for (let i = 61; i <= 280; i += 1) {
     weightOptionsImperial.push({
       value: i,
       label: `${i}`,
@@ -64,7 +64,7 @@ export const waistOptionsImperial = [
 ];
 
 const populateWaistOptionsImperial = () => {
-  for (let i = 16; i <= 60; i += 1) {
+  for (let i = 16; i <= 100; i += 1) {
     waistOptionsImperial.push({
       value: i,
       label: `${i}`,
@@ -78,7 +78,7 @@ export const hipOptionsImperial = [
 ];
 
 const populateHipOptionsImperial = () => {
-  for (let i = 16; i <= 60; i += 1) {
+  for (let i = 16; i <= 100; i += 1) {
     hipOptionsImperial.push({
       value: i,
       label: `${i}`,
