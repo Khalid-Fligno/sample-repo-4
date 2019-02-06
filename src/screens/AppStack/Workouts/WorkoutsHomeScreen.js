@@ -179,7 +179,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
             `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
           );
           this.setState({ loading: false });
-          const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', 1);
+          const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', '1');
           this.props.navigation.navigate('HiitWorkoutInfo', { workout, fitnessLevel, selectedHiitWorkoutIndex });
         });
     } catch (err) {
