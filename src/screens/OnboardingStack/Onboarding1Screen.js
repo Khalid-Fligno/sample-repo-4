@@ -80,6 +80,7 @@ export default class Onboarding1Screen extends React.PureComponent {
         fitnessLevel: 1,
       };
       await userRef.set(data, { merge: true });
+      await AsyncStorage.setItem('fitnessLevel', 1);
       this.setState({ loading: false });
       this.props.navigation.navigate('Progress1', { isInitial: true });
     } catch (err) {
