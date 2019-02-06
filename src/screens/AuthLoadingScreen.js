@@ -126,7 +126,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
               if (await doc.data().fitnessLevel !== undefined) {
                 await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
               }
-              const { subscriptionInfo } = await doc.data();
+              const { subscriptionInfo, onboarded } = await doc.data();
               if (subscriptionInfo === undefined) {
                 // NO PURCHASE INFORMATION SAVED
                 this.props.navigation.navigate('Subscription');
@@ -160,7 +160,11 @@ export default class AuthLoadingScreen extends React.PureComponent {
                           },
                         };
                         await userRef.set(data, { merge: true });
-                        this.props.navigation.navigate('App');
+                        if (onboarded) {
+                          this.props.navigation.navigate('App');
+                        } else {
+                          this.props.navigation.navigate('Onboarding');
+                        }
                       } else {
                         Alert.alert('Something went wrong');
                         this.props.navigation.navigate('Subscription');
@@ -172,9 +176,13 @@ export default class AuthLoadingScreen extends React.PureComponent {
                     }
                   }
                 });
-              } else {
+              } else if (subscriptionInfo.expiry > Date.now()) {
                 // RECEIPT STILL VALID
-                this.props.navigation.navigate('App');
+                if (onboarded) {
+                  this.props.navigation.navigate('App');
+                } else {
+                  this.props.navigation.navigate('Onboarding');
+                }
               }
             } else {
               Alert.alert('Account data could not be found');

@@ -87,9 +87,20 @@ export default class SubscriptionScreen extends React.PureComponent {
             Alert.alert('Receipt Validation Error');
           }
           if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
-            this.setState({ loading: false });
-            Alert.alert('Restore Successful', 'Successfully restored your purchase.');
-            this.props.navigation.navigate('App');
+            const uid = await AsyncStorage.getItem('uid');
+            db.collection('users').doc(uid).get()
+              .then(async (doc) => {
+                this.setState({ loading: false });
+                if (await doc.data().onboarded) {
+                  this.setState({ loading: false });
+                  Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+                  this.props.navigation.navigate('App');
+                } else {
+                  this.setState({ loading: false });
+                  Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+                  this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+                }
+              });
           } else if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date < Date.now()) {
             this.setState({ loading: false });
             Alert.alert('Expired', 'Your most recent subscription has expired');
