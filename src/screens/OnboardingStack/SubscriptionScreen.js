@@ -74,11 +74,11 @@ export default class SubscriptionScreen extends React.PureComponent {
         this.setState({ loading: false });
         Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
       } else {
-        if (response.length === 0) {
-          this.setState({ loading: false });
-          Alert.alert('No Purchases to restore');
-          return;
-        }
+        // if (response.length === 0) {
+        //   this.setState({ loading: false });
+        //   Alert.alert('No Purchases to restore');
+        //   return;
+        // }
         const sortedPurchases = response.slice().sort(compare);
         try {
           const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
