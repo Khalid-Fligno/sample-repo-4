@@ -29,6 +29,18 @@ import fonts from '../../styles/fonts';
 const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get('window');
 
+// export const compareLatest = (a, b) => {
+//   const purchaseA = a.purchase_date_ms;
+//   const purchaseB = b.purchase_date_ms;
+//   let comparison = 0;
+//   if (purchaseA > purchaseB) {
+//     comparison = -1;
+//   } else if (purchaseA < purchaseB) {
+//     comparison = 1;
+//   }
+//   return comparison;
+// };
+
 const productTitleMap = {
   0: 'MONTHLY',
   1: 'YEARLY',
@@ -74,11 +86,45 @@ export default class SubscriptionScreen extends React.PureComponent {
         this.setState({ loading: false });
         Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
       } else {
-        // if (response.length === 0) {
-        //   this.setState({ loading: false });
-        //   Alert.alert('No Purchases to restore');
-        //   return;
-        // }
+        if (response.length === 0) {
+          this.setState({ loading: false });
+          Alert.alert('No Purchases to restore');
+          return;
+          // InAppUtils.receiptData(async (error, receiptData) => {
+          //   if (error) {
+          //     Alert.alert('itunes Error', 'Receipt not found.');
+          //   } else {
+          //     const validationData = await this.validate(receiptData);
+          //     const sortedReceipts = validationData.latest_receipt_info.slice().sort(compare);
+          //     const latestReceipt = sortedReceipts[0];
+          //     if (latestReceipt.product_id === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation') {
+          //       const uid = await AsyncStorage.getItem('uid');
+          //       const userRef = db.collection('users').doc(uid);
+          //       const data = {
+          //         subscriptionInfo: {
+          //           expiry: latestReceipt.expires_date_ms,
+          //           originalTransactionId: latestReceipt.original_transaction_id,
+          //           originalPurchaseDate: latestReceipt.original_purchase_date_ms,
+          //           productId: latestReceipt.product_id,
+          //         },
+          //       };
+          //       await userRef.set(data, { merge: true });
+          //       userRef.get()
+          //         .then(async (doc) => {
+          //           if (await doc.data().onboarded) {
+          //             this.setState({ loading: false });
+          //             Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+          //             this.props.navigation.navigate('App');
+          //           } else {
+          //             this.setState({ loading: false });
+          //             Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+          //             this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+          //           }
+          //         });
+          //     }
+          //   }
+          // });
+        }
         const sortedPurchases = response.slice().sort(compare);
         try {
           const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
