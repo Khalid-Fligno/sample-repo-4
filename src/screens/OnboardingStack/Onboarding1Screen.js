@@ -77,10 +77,8 @@ export default class Onboarding1Screen extends React.PureComponent {
           cycleStartDate: moment().startOf('week').format('YYYY-MM-DD'),
           target: 3,
         },
-        fitnessLevel: 1,
       };
       await userRef.set(data, { merge: true });
-      await AsyncStorage.setItem('fitnessLevel', 1);
       this.setState({ loading: false });
       this.props.navigation.navigate('Progress1', { isInitial: true });
     } catch (err) {

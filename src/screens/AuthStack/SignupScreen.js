@@ -56,8 +56,10 @@ export default class SignupScreen extends React.PureComponent {
           lastName: profile.last_name,
           onboarded: false,
           signUpDate: new Date(),
+          fitnessLevel: 1,
         };
         await AsyncStorage.setItem('uid', user.uid);
+        await AsyncStorage.setItem('fitnessLevel', '1');
         await db.collection('users').doc(user.uid).set(data, (error) => {
           if (error) {
             user.delete().then(() => {
