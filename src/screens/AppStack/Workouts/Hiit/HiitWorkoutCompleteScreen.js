@@ -47,7 +47,7 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
       return transaction.get(userRef).then((userDoc) => {
         const newHiitWeeklyComplete = userDoc.data().weeklyTargets.hiitWeeklyComplete + 1;
         const oldWeeklyTargets = userDoc.data().weeklyTargets;
-        const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'resistanceWeeklyComplete', newHiitWeeklyComplete);
+        const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'hiitWeeklyComplete', newHiitWeeklyComplete);
         transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
         this.setState({ loading: false });
         this.props.navigation.navigate('WorkoutsHome');
