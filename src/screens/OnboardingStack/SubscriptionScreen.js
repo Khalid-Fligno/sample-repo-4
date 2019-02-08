@@ -134,7 +134,18 @@ export default class SubscriptionScreen extends React.PureComponent {
           }
           if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
             const uid = await AsyncStorage.getItem('uid');
-            db.collection('users').doc(uid).get()
+            const userRef = db.collection('users').doc(uid);
+            const data = {
+              subscriptionInfo: {
+                receipt: sortedPurchases[0].transactionReceipt,
+                expiry: validationData.latest_receipt_info.expires_date,
+                originalTransactionId: validationData.latest_receipt_info.original_transaction_id,
+                originalPurchaseDate: validationData.latest_receipt_info.original_purchase_date_ms,
+                productId: validationData.latest_receipt_info.product_id,
+              },
+            };
+            await userRef.set(data, { merge: true });
+            userRef.get()
               .then(async (doc) => {
                 this.setState({ loading: false });
                 if (await doc.data().onboarded) {
