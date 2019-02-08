@@ -96,6 +96,10 @@ export default class SubscriptionScreen extends React.PureComponent {
               Alert.alert('itunes Error', 'Receipt not found.');
             } else {
               const validationData = await this.validate(receiptData);
+              if (validationData.latest_receipt_info === undefined) {
+                this.setState({ loading: false });
+                Alert.alert('No Purchases to restore');
+              }
               const sortedReceipts = validationData.latest_receipt_info.slice().sort(compare);
               const latestReceipt = sortedReceipts[0];
               if (latestReceipt.product_id === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation') {
