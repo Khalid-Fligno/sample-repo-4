@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 16,
+    fontSize: 14,
     color: colors.white,
     textAlign: 'center',
     shadowColor: colors.black,
