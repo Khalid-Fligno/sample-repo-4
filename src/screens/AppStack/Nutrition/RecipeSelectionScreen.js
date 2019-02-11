@@ -74,6 +74,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       tags={item.tags}
       subTitle={item.subtitle}
       time={item.time}
+      newBadge={item.newBadge}
     />
   );
   render() {

@@ -2,6 +2,7 @@ import React from 'react';
 import { Dimensions, TouchableOpacity, Text, StyleSheet, View, Animated } from 'react-native';
 import { Card } from 'react-native-elements';
 import PropTypes from 'prop-types';
+import NewRecipeBadge from './NewRecipeBadge';
 import Icon from '../../components/Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -33,6 +34,7 @@ export default class RecipeTile extends React.PureComponent {
       image,
       tags,
       time,
+      newBadge,
     } = this.props;
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
@@ -52,9 +54,12 @@ export default class RecipeTile extends React.PureComponent {
             image={{ uri: image }}
             containerStyle={styles.card}
           >
-            <Text style={styles.title}>
-              {title}
-            </Text>
+            <View style={styles.titleRow}>
+              <Text style={styles.title}>
+                {title}
+              </Text>
+              {newBadge && <NewRecipeBadge />}
+            </View>
             <Text style={styles.subTitle}>
               {subTitle}
             </Text>
@@ -106,10 +111,12 @@ RecipeTile.propTypes = {
   image: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string),
   time: PropTypes.string.isRequired,
+  newBadge: PropTypes.bool,
 };
 
 RecipeTile.defaultProps = {
   tags: null,
+  newBadge: false,
 };
 
 const styles = StyleSheet.create({
@@ -131,6 +138,10 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     overflow: 'hidden',
     borderWidth: 0,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     fontFamily: fonts.bold,
