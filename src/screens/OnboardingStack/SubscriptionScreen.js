@@ -102,31 +102,31 @@ export default class SubscriptionScreen extends React.PureComponent {
               }
               const sortedReceipts = validationData.latest_receipt_info.slice().sort(compare);
               const latestReceipt = sortedReceipts[0];
-              if (latestReceipt.product_id === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation') {
-                const uid = await AsyncStorage.getItem('uid');
-                const userRef = db.collection('users').doc(uid);
-                const data = {
-                  subscriptionInfo: {
-                    expiry: latestReceipt.expires_date_ms,
-                    originalTransactionId: latestReceipt.original_transaction_id,
-                    originalPurchaseDate: latestReceipt.original_purchase_date_ms,
-                    productId: latestReceipt.product_id,
-                  },
-                };
-                await userRef.set(data, { merge: true });
-                userRef.get()
-                  .then(async (doc) => {
-                    if (await doc.data().onboarded) {
-                      this.setState({ loading: false });
-                      Alert.alert('Restore Successful', 'Successfully restored your purchase.');
-                      this.props.navigation.navigate('App');
-                    } else {
-                      this.setState({ loading: false });
-                      Alert.alert('Restore Successful', 'Successfully restored your purchase.');
-                      this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-                    }
-                  });
-              }
+              // if (latestReceipt.product_id === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation') {
+              const uid = await AsyncStorage.getItem('uid');
+              const userRef = db.collection('users').doc(uid);
+              const data = {
+                subscriptionInfo: {
+                  expiry: latestReceipt.expires_date_ms,
+                  originalTransactionId: latestReceipt.original_transaction_id,
+                  originalPurchaseDate: latestReceipt.original_purchase_date_ms,
+                  productId: latestReceipt.product_id,
+                },
+              };
+              await userRef.set(data, { merge: true });
+              userRef.get()
+                .then(async (doc) => {
+                  if (await doc.data().onboarded) {
+                    this.setState({ loading: false });
+                    Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+                    this.props.navigation.navigate('App');
+                  } else {
+                    this.setState({ loading: false });
+                    Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+                    this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+                  }
+                });
+              // }
             }
           });
         }
@@ -152,14 +152,13 @@ export default class SubscriptionScreen extends React.PureComponent {
             await userRef.set(data, { merge: true });
             userRef.get()
               .then(async (doc) => {
-                this.setState({ loading: false });
                 if (await doc.data().onboarded) {
                   this.setState({ loading: false });
-                  Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+                  Alert.alert('Success', 'Successfully restored your purchase.');
                   this.props.navigation.navigate('App');
                 } else {
                   this.setState({ loading: false });
-                  Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+                  Alert.alert('Success', 'Successfully restored your purchase.');
                   this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
                 }
               });
