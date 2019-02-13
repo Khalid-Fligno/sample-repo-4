@@ -41,9 +41,14 @@ export default class SignupScreen extends React.PureComponent {
   signupWithFacebook = async () => {
     Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
     try {
-      const { type, token } = await Facebook.logInWithReadPermissionsAsync('1825444707513470', {
+      const { type, token, declinedPermissions } = await Facebook.logInWithReadPermissionsAsync('1825444707513470', {
         permissions: ['public_profile', 'email'],
       });
+      if (declinedPermissions.length > 0) {
+        this.setState({ loading: false });
+        Alert.alert('Could not connect to facebook', 'Please sign up with your email address');
+        return;
+      }
       if (type === 'success') {
         this.setState({ loading: true });
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
@@ -75,7 +80,7 @@ export default class SignupScreen extends React.PureComponent {
         });
       } else {
         this.setState({ loading: false });
-        Alert.alert('Could not connect to facebook', 'Please try again, or sign up with your email address');
+        Alert.alert('Could not connect to facebook', 'Please sign up with your email address');
       }
     } catch (err) {
       this.setState({ error: 'Something went wrong', loading: false });
