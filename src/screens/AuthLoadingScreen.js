@@ -163,7 +163,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
                         if (onboarded) {
                           this.props.navigation.navigate('App');
                         } else {
-                          this.props.navigation.navigate('Onboarding');
+                          this.props.navigation.navigate('Onboarding1');
                         }
                       } else {
                         Alert.alert('Something went wrong');
@@ -181,7 +181,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
                 if (onboarded) {
                   this.props.navigation.navigate('App');
                 } else {
-                  this.props.navigation.navigate('Onboarding');
+                  this.props.navigation.navigate('Onboarding1');
                 }
               }
             } else {
