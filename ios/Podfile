@@ -4,13 +4,21 @@ platform :ios, '10.0'
 target 'fitazfk' do
   pod 'ExpoKit',
     :git => "http://github.com/expo/expo.git",
-    :tag => "ios/2.9.0",
+    :tag => "ios/2.10.4",
     :subspecs => [
       "Core"
     ],
     :inhibit_warnings => true
   pod 'EXAdsAdMob',
     :path => "../node_modules/expo-ads-admob/ios"
+  pod 'EXSegment',
+    :path => "../node_modules/expo-analytics-segment/ios"
+  pod 'EXAppAuth',
+    :path => "../node_modules/expo-app-auth/ios"
+  pod 'EXAppLoaderProvider',
+    :path => "../node_modules/expo-app-loader-provider/ios"
+  pod 'EXBackgroundFetch',
+    :path => "../node_modules/expo-background-fetch/ios"
   pod 'EXBarCodeScanner',
     :path => "../node_modules/expo-barcode-scanner/ios"
   pod 'EXBarCodeScannerInterface',
@@ -27,6 +35,8 @@ target 'fitazfk' do
     :path => "../node_modules/expo-contacts/ios"
   pod 'EXCore',
     :path => "../node_modules/expo-core/ios"
+  pod 'EXErrors',
+    :path => "../node_modules/expo-errors/ios"
   pod 'EXFaceDetectorInterface',
     :path => "../node_modules/expo-face-detector-interface/ios"
   pod 'EXFileSystem',
@@ -37,10 +47,12 @@ target 'fitazfk' do
     :path => "../node_modules/expo-font/ios"
   pod 'EXFontInterface',
     :path => "../node_modules/expo-font-interface/ios"
-  # pod 'EXGL',
-  #   :path => "../node_modules/expo-gl/ios"
+  pod 'EXGL',
+    :path => "../node_modules/expo-gl/ios"
   pod 'EXGL-CPP',
     :path => "../node_modules/expo-gl-cpp/cpp"
+  pod 'EXGoogleSignIn',
+    :path => "../node_modules/expo-google-sign-in/ios"
   pod 'EXImageLoaderInterface',
     :path => "../node_modules/expo-image-loader-interface/ios"
   pod 'EXLocalAuthentication',
@@ -51,8 +63,6 @@ target 'fitazfk' do
     :path => "../node_modules/expo-location/ios"
   pod 'EXMediaLibrary',
     :path => "../node_modules/expo-media-library/ios"
-  pod 'EXPaymentsStripe',
-    :path => "../node_modules/expo-payments-stripe/ios"
   pod 'EXPermissions',
     :path => "../node_modules/expo-permissions/ios"
   pod 'EXPermissionsInterface',
@@ -61,14 +71,16 @@ target 'fitazfk' do
     :path => "../node_modules/expo-print/ios"
   pod 'EXReactNativeAdapter',
     :path => "../node_modules/expo-react-native-adapter/ios"
-  pod 'EXSegment',
-    :path => "../node_modules/expo-analytics-segment/ios"
   pod 'EXSensors',
     :path => "../node_modules/expo-sensors/ios"
   pod 'EXSensorsInterface',
     :path => "../node_modules/expo-sensors-interface/ios"
   pod 'EXSMS',
     :path => "../node_modules/expo-sms/ios"
+  pod 'EXTaskManager',
+    :path => "../node_modules/expo-task-manager/ios"
+  pod 'EXTaskManagerInterface',
+    :path => "../node_modules/expo-task-manager-interface/ios"
 
   pod 'React',
     :path => "../node_modules/react-native",
