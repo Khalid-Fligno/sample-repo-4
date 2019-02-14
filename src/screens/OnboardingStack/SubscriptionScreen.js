@@ -61,10 +61,10 @@ export default class SubscriptionScreen extends React.PureComponent {
       products: undefined,
     };
   }
-  componentDidMount() {
+  componentDidMount = async () => {
     this.props.navigation.setParams({ handleRestore: this.restore });
     this.props.navigation.setParams({ handleLogout: this.logout });
-    this.loadProducts();
+    await this.loadProducts();
   }
   openLink = (url) => {
     Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
@@ -176,9 +176,9 @@ export default class SubscriptionScreen extends React.PureComponent {
       }
     });
   }
-  loadProducts = () => {
+  loadProducts = async () => {
     this.setState({ loading: true });
-    InAppUtils.loadProducts(foundationIdentifiers, (error, products) => {
+    await InAppUtils.loadProducts(foundationIdentifiers, (error, products) => {
       if (error) {
         this.setState({ loading: false });
         Alert.alert('Unable to connect to the App Store', 'Please try again later');
