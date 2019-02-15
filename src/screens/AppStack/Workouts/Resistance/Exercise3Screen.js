@@ -183,9 +183,8 @@ export default class Exercise3Screen extends React.PureComponent {
             <Video
               ref={(ref) => this.videoRef = ref}
               source={{ uri: `${FileSystem.cacheDirectory}exercise-3.mp4` || exerciseList[2].videoURL }}
-              rate={1.0}
-              volume={1.0}
-              isMuted={false}
+              rate={0.9}
+              isMuted
               resizeMode="contain"
               repeat
               paused={videoPaused}
