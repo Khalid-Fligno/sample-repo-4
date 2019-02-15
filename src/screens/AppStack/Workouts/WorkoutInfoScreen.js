@@ -156,8 +156,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               </View>
               <Video
                 source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
-                rate={1.0}
-                volume={1.0}
                 isMuted
                 resizeMode="contain"
                 shouldPlay

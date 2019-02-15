@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import { FileSystem, Video } from 'expo';
 import Modal from 'react-native-modal';
-// import Video from 'react-native-video';
 import Carousel from 'react-native-carousel';
 import { DotIndicator } from 'react-native-indicators';
 import { db } from '../../../../config/firebase';
@@ -168,8 +167,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                 index === 0 && (
                   <Video
                     source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-1.mp4` }}
-                    rate={1.0}
-                    volume={1.0}
                     isMuted
                     resizeMode="contain"
                     shouldPlay
