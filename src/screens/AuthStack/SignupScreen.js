@@ -83,6 +83,11 @@ export default class SignupScreen extends React.PureComponent {
         Alert.alert('Could not connect to facebook', 'Please sign up with your email address');
       }
     } catch (err) {
+      if (err.message === 'MISSING_EMAIL') {
+        this.setState({ loading: false });
+        Alert.alert('Facebook signup failed', 'Please sign up with your email address');
+        return;
+      }
       this.setState({ error: 'Something went wrong', loading: false });
     }
   }
