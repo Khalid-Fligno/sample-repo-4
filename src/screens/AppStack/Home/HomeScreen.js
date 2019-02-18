@@ -34,22 +34,22 @@ export default class HomeScreen extends React.PureComponent {
           <DoubleNewsFeedTile
             imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-nutrition.jpg')}
             imageRight={require('../../../../assets/images/homeScreenTiles/home-screen-workouts.jpg')}
-            titleLeft1="NUTRITION"
-            titleRight1="WORKOUTS"
+            titleLeft1="EAT"
+            titleRight1="TRAIN"
             onPressLeft={() => this.props.navigation.navigate('Nutrition')}
             onPressRight={() => this.props.navigation.navigate('Workouts')}
           />
           <DoubleNewsFeedTile
             imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-calendar.jpg')}
             imageRight={require('../../../../assets/images/homeScreenTiles/home-screen-blog.jpg')}
-            titleLeft1="CALENDAR"
-            titleRight1="BLOG"
+            titleLeft1="PLAN"
+            titleRight1="LEARN"
             onPressLeft={() => this.props.navigation.navigate('Calendar')}
             onPressRight={() => this.props.navigation.navigate('HomeBlog')}
           />
           <NewsFeedTile
             image={require('../../../../assets/images/shop-bundles.jpg')}
-            title="GRAB YOUR FITAZFK WORKOUT EQUIPMENT"
+            title="SHOP WORKOUT EQUIPMENT"
             onPress={() => this.openLink('https://fitazfk.com/collections/equipment')}
           />
           <TripleNewsFeedTile
@@ -65,7 +65,7 @@ export default class HomeScreen extends React.PureComponent {
           />
           <NewsFeedTile
             image={require('../../../../assets/images/fitazfk-army.jpg')}
-            title="JOIN OUR FACEBOOK GROUP"
+            title="JOIN THE FITAZFK ARMY"
             onPress={() => this.openLink('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
           />
         </ScrollView>
