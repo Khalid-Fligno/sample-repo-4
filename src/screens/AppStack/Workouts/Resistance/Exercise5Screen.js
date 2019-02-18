@@ -180,7 +180,6 @@ export default class Exercise5Screen extends React.PureComponent {
             <Video
               ref={(ref) => this.videoRef = ref}
               source={{ uri: `${FileSystem.cacheDirectory}exercise-5.mp4` || exerciseList[4].videoURL }}
-              rate={0.9}
               isMuted
               resizeMode="contain"
               repeat
