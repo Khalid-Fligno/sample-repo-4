@@ -22,8 +22,8 @@ export default class LandingScreen extends React.PureComponent {
           <Carousel
             width={width}
             inactiveIndicatorColor={colors.white}
-            indicatorColor={colors.white}
-            indicatorOffset={100}
+            indicatorColor={colors.transparentWhite}
+            indicatorOffset={130}
             indicatorSize={15}
             inactiveIndicatorText="○"
             indicatorText="●"
@@ -37,7 +37,7 @@ export default class LandingScreen extends React.PureComponent {
                 <View style={styles.opacityOverlayDark}>
                   <ScalableImage
                     source={require('../../../assets/icons/fitazfk-logo-outline-white.png')}
-                    width={150}
+                    width={160}
                     style={styles.logo}
                   />
                 </View>
@@ -83,21 +83,21 @@ export default class LandingScreen extends React.PureComponent {
           <View style={styles.absoluteButtonContainer}>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('Login')}
+                activeOpacity={0.3}
+                style={styles.loginButton}
+              >
+                <Text style={styles.loginButtonText}>
+                  LOG IN
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('Signup')}
                 activeOpacity={0.6}
                 style={styles.signupButton}
               >
                 <Text style={styles.signupButtonText}>
                   SIGN UP
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Login')}
-                activeOpacity={0.6}
-                style={styles.loginButton}
-              >
-                <Text style={styles.loginButtonText}>
-                  LOG IN
                 </Text>
               </TouchableOpacity>
             </View>
@@ -144,7 +144,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.transparentBlackLight,
   },
   logo: {
-    marginBottom: -20,
+    marginBottom: 20,
+    // opacity: 0.65,
   },
   carouselCardText: {
     marginBottom: 45,
@@ -159,47 +160,48 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   buttonContainer: {
-    flexDirection: 'row',
     width,
-    height: 70,
     backgroundColor: colors.transparent,
     padding: 10,
   },
-  signupButton: {
-    width: (width - 30) / 2,
-    marginRight: 5,
-    backgroundColor: colors.coral.dark,
+  loginButton: {
+    width: width - 20,
+    height: 50,
+    marginBottom: 5,
+    backgroundColor: colors.transparent,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 2,
-    borderWidth: 4,
+    borderWidth: 1,
     borderColor: colors.coral.dark,
     shadowColor: colors.charcoal.dark,
-    shadowOpacity: 0.7,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    opacity: 0.65,
+  },
+  loginButtonText: {
+    marginTop: 4,
+    color: colors.coral.dark,
+    fontFamily: fonts.bold,
+    fontSize: 16,
+  },
+  signupButton: {
+    width: width - 20,
+    height: 50,
+    marginTop: 5,
+    backgroundColor: colors.coral.dark,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: colors.charcoal.dark,
+    borderRadius: 2,
+    shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
   },
   signupButtonText: {
     marginTop: 4,
     color: colors.white,
-    fontFamily: fonts.bold,
-    fontSize: 16,
-  },
-  loginButton: {
-    width: (width - 30) / 2,
-    marginLeft: 5,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 2,
-    shadowColor: colors.charcoal.dark,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
-  },
-  loginButtonText: {
-    marginTop: 4,
-    color: colors.coral.dark,
     fontFamily: fonts.bold,
     fontSize: 16,
   },
