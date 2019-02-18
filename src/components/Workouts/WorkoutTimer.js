@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Text, View, Alert, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import { Audio } from 'expo';
@@ -37,17 +37,20 @@ const warningStyles = {
   },
 };
 
-export default class WorkoutTimer extends Component {
+export default class WorkoutTimer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      remainingTime: (props.totalDuration * 1000) + 900,
+      remainingTime: (props.totalDuration * 1000) + 990,
     };
   }
-  componentDidMount() {
+  componentDidMount = async () => {
     if (this.props.start) {
       this.start();
     }
+    await Audio.setIsEnabledAsync(true);
+    this.soundObject = new Audio.Sound();
+    this.soundObject.loadAsync(require('../../../assets/sounds/ding.mp3'));
   }
   componentWillReceiveProps(newProps) {
     if (newProps.start) {
@@ -62,6 +65,7 @@ export default class WorkoutTimer extends Component {
   componentWillUnmount() {
     clearInterval(this.interval);
     this.interval = null;
+    this.soundObject = null;
   }
   finishAlert = () => {
     Alert.alert(
@@ -74,9 +78,6 @@ export default class WorkoutTimer extends Component {
     );
   }
   start = async () => {
-    await Audio.setIsEnabledAsync(true);
-    const soundObject = new Audio.Sound();
-    soundObject.loadAsync(require('../../../assets/sounds/ding.mp3'));
     const handleFinish = this.props.handleFinish ? this.props.handleFinish : () => this.finishAlert();
     const endTime = new Date().getTime() + this.state.remainingTime;
     this.interval = setInterval(() => {
@@ -84,12 +85,12 @@ export default class WorkoutTimer extends Component {
       if (remaining <= 1000) {
         this.setState({ remainingTime: 0 });
         this.stop();
-        soundObject.playAsync();
+        this.soundObject.playAsync();
         handleFinish();
         return;
       }
       this.setState({ remainingTime: remaining });
-    }, 1);
+    }, 1000);
   }
   stop = () => {
     clearInterval(this.interval);
@@ -113,23 +114,13 @@ export default class WorkoutTimer extends Component {
   findStyles = (remainingTime) => {
     if (remainingTime < 1000) {
       return defaultStyles;
-    } else if (remainingTime < 1500) {
-      return defaultStyles;
     } else if (remainingTime < 2000) {
       return warningStyles;
-    } else if (remainingTime < 2500) {
-      return defaultStyles;
     } else if (remainingTime < 3000) {
-      return warningStyles;
-    } else if (remainingTime < 3500) {
       return defaultStyles;
     } else if (remainingTime < 4000) {
       return warningStyles;
-    } else if (remainingTime < 4500) {
-      return defaultStyles;
     } else if (remainingTime < 5000) {
-      return warningStyles;
-    } else if (remainingTime < 5500) {
       return defaultStyles;
     } else if (remainingTime < 6000) {
       return warningStyles;
