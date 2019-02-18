@@ -125,6 +125,8 @@ export default class AuthLoadingScreen extends React.PureComponent {
             if (doc.exists) {
               if (await doc.data().fitnessLevel !== undefined) {
                 await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+              } else {
+                await AsyncStorage.setItem('fitnessLevel', '1');
               }
               const { subscriptionInfo, onboarded } = await doc.data();
               if (subscriptionInfo === undefined) {
