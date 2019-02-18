@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "expo": "^32.0.0",
-    "expokit": "1.7.1",
+    "expokit": "32.0.6",
     "firebase": "^5.5.9",
     "iap-receipt-validator": "^1.0.6",
     "lodash.sortby": "^4.7.0",
