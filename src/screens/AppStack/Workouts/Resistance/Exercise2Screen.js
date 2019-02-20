@@ -140,6 +140,26 @@ export default class Exercise2Screen extends React.PureComponent {
       { cancelable: false },
     );
   }
+  skipExercise = (exerciseList, reps) => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to skip this exercise?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Skip',
+          onPress: () => {
+            this.props.navigation.replace('Exercise3', {
+              exerciseList,
+              reps,
+              resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
+            });
+          },
+        },
+      ],
+      { cancelable: false },
+    );
+  }
   showExerciseInfoModal = () => {
     this.setState({
       videoPaused: true,
@@ -222,6 +242,7 @@ export default class Exercise2Screen extends React.PureComponent {
             isVisible={pauseModalVisible}
             handleQuit={this.quitWorkout}
             handleRestart={this.restartWorkout}
+            handleSkip={this.skipExercise}
             handleUnpause={this.handleUnpause}
             exerciseList={exerciseList}
             reps={reps}
