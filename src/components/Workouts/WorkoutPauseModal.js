@@ -17,6 +17,7 @@ export default class WorkoutPauseModal extends React.PureComponent {
       isVisible,
       handleQuit,
       handleRestart,
+      handleSkip,
       handleUnpause,
       exerciseList,
       fitnessLevel,
@@ -43,7 +44,7 @@ export default class WorkoutPauseModal extends React.PureComponent {
               onPress={handleQuit}
               style={styles.modalButtonQuit}
             >
-              <Text style={styles.modalButtonText}>
+              <Text style={styles.modalButtonTextDark}>
                 QUIT WORKOUT
               </Text>
             </TouchableOpacity>
@@ -55,6 +56,18 @@ export default class WorkoutPauseModal extends React.PureComponent {
                 RESTART THIS SET
               </Text>
             </TouchableOpacity>
+            {
+              handleSkip && (
+                <TouchableOpacity
+                  onPress={() => handleSkip(exerciseList, reps)}
+                  style={styles.modalButtonSkip}
+                >
+                  <Text style={styles.modalButtonText}>
+                    SKIP THIS EXERCISE
+                  </Text>
+                </TouchableOpacity>
+              )
+            }
             <TouchableOpacity
               onPress={handleUnpause}
               style={styles.modalButtonContinue}
@@ -74,6 +87,7 @@ WorkoutPauseModal.propTypes = {
   isVisible: PropTypes.bool.isRequired,
   handleQuit: PropTypes.func.isRequired,
   handleRestart: PropTypes.func.isRequired,
+  handleSkip: PropTypes.func,
   handleUnpause: PropTypes.func.isRequired,
   exerciseList: PropTypes.arrayOf(PropTypes.object).isRequired,
   fitnessLevel: PropTypes.string,
@@ -83,6 +97,7 @@ WorkoutPauseModal.propTypes = {
 WorkoutPauseModal.defaultProps = {
   fitnessLevel: undefined,
   reps: undefined,
+  handleSkip: undefined,
 };
 
 const styles = StyleSheet.create({
@@ -99,7 +114,7 @@ const styles = StyleSheet.create({
   modalButtonQuit: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.coral.standard,
+    backgroundColor: colors.grey.standard,
     height: 50,
     width: '100%',
     marginBottom: 0,
@@ -107,7 +122,15 @@ const styles = StyleSheet.create({
   modalButtonRestart: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.green.standard,
+    backgroundColor: colors.charcoal.standard,
+    height: 50,
+    width: '100%',
+    marginBottom: 0,
+  },
+  modalButtonSkip: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.charcoal.darkest,
     height: 50,
     width: '100%',
     marginBottom: 0,
@@ -115,7 +138,7 @@ const styles = StyleSheet.create({
   modalButtonContinue: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.charcoal.standard,
+    backgroundColor: colors.coral.standard,
     height: 50,
     width: '100%',
     marginBottom: 0,
@@ -124,6 +147,12 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 14,
     color: colors.white,
-    marginTop: 3,
+    marginTop: 4,
+  },
+  modalButtonTextDark: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.black,
+    marginTop: 4,
   },
 });
