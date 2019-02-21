@@ -468,6 +468,8 @@ const styles = StyleSheet.create({
     color: colors.grey.dark,
   },
   navigateToForgottenPasswordButton: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
     width: width - 30,
     marginTop: 10,
     paddingTop: 15,
@@ -479,6 +481,8 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   navigateToSignupButton: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
     width: width - 30,
     paddingTop: 15,
     paddingBottom: 15,

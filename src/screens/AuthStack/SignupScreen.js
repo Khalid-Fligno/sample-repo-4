@@ -253,7 +253,7 @@ export default class SignupScreen extends React.PureComponent {
               onPress={this.navigateToLogin}
               style={styles.navigateToLogin}
             >
-              Already signed up? Log in here
+              Already have an account? Log in here
             </Text>
           </ScrollView>
           {
@@ -349,6 +349,8 @@ const styles = StyleSheet.create({
     color: colors.grey.dark,
   },
   navigateToLogin: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
     width: width - 30,
     marginTop: 10,
     paddingTop: 15,
