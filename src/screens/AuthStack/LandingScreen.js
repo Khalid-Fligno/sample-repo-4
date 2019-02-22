@@ -23,7 +23,7 @@ export default class LandingScreen extends React.PureComponent {
             width={width}
             inactiveIndicatorColor={colors.white}
             indicatorColor={colors.transparentWhite}
-            indicatorOffset={130}
+            indicatorOffset={70}
             indicatorSize={15}
             inactiveIndicatorText="○"
             indicatorText="●"
@@ -31,7 +31,39 @@ export default class LandingScreen extends React.PureComponent {
           >
             <View style={styles.carouselCardContainer}>
               <ImageBackground
-                source={require('../../../assets/images/landing-screen-1.jpg')}
+                source={require('../../../assets/images/landing-screen-carousel-1.jpg')}
+                style={styles.carouselImageBackground}
+              >
+                <View style={styles.opacityOverlayLight} />
+              </ImageBackground>
+            </View>
+            <View style={styles.carouselCardContainer}>
+              <ImageBackground
+                source={require('../../../assets/images/landing-screen-carousel-2.jpg')}
+                style={styles.carouselImageBackground}
+              >
+                <View style={styles.opacityOverlayLight} />
+              </ImageBackground>
+            </View>
+            <View style={styles.carouselCardContainer}>
+              <ImageBackground
+                source={require('../../../assets/images/landing-screen-carousel-3.jpg')}
+                style={styles.carouselImageBackground}
+              >
+                <View style={styles.opacityOverlayLight} />
+              </ImageBackground>
+            </View>
+            <View style={styles.carouselCardContainer}>
+              <ImageBackground
+                source={require('../../../assets/images/landing-screen-carousel-4.jpg')}
+                style={styles.carouselImageBackground}
+              >
+                <View style={styles.opacityOverlayLight} />
+              </ImageBackground>
+            </View>
+            <View style={styles.carouselCardContainer}>
+              <ImageBackground
+                source={require('../../../assets/images/landing-screen-carousel-5.jpg')}
                 style={styles.carouselImageBackground}
               >
                 <View style={styles.opacityOverlayDark}>
@@ -43,61 +75,16 @@ export default class LandingScreen extends React.PureComponent {
                 </View>
               </ImageBackground>
             </View>
-            <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require('../../../assets/images/landing-screen-2.jpg')}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayLight}>
-                  <Text style={styles.carouselCardText}>
-                    WORKOUTS
-                  </Text>
-                </View>
-              </ImageBackground>
-            </View>
-            <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require('../../../assets/images/landing-screen-3.jpg')}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayLight}>
-                  <Text style={styles.carouselCardText}>
-                    RECIPES
-                  </Text>
-                </View>
-              </ImageBackground>
-            </View>
-            <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require('../../../assets/images/landing-screen-4.jpg')}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayLight}>
-                  <Text style={styles.carouselCardText}>
-                    INSPIRATION
-                  </Text>
-                </View>
-              </ImageBackground>
-            </View>
           </Carousel>
           <View style={styles.absoluteButtonContainer}>
             <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Login')}
-                activeOpacity={0.3}
-                style={styles.loginButton}
-              >
-                <Text style={styles.loginButtonText}>
-                  LOG IN
-                </Text>
-              </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('Signup')}
                 activeOpacity={0.6}
                 style={styles.signupButton}
               >
                 <Text style={styles.signupButtonText}>
-                  SIGN UP
+                  GET STARTED
                 </Text>
               </TouchableOpacity>
             </View>
@@ -141,18 +128,10 @@ const styles = StyleSheet.create({
     height,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.transparentBlackLight,
+    backgroundColor: colors.transparentBlackLightest,
   },
   logo: {
-    marginBottom: 20,
-    // opacity: 0.65,
-  },
-  carouselCardText: {
-    marginBottom: 45,
-    textAlign: 'center',
-    color: colors.white,
-    fontFamily: fonts.bold,
-    fontSize: 32,
+    marginBottom: 60,
   },
   absoluteButtonContainer: {
     flex: 1,
@@ -163,28 +142,6 @@ const styles = StyleSheet.create({
     width,
     backgroundColor: colors.transparent,
     padding: 10,
-  },
-  loginButton: {
-    width: width - 20,
-    height: 50,
-    marginBottom: 5,
-    backgroundColor: colors.transparent,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 2,
-    borderWidth: 1,
-    borderColor: colors.coral.dark,
-    shadowColor: colors.charcoal.dark,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
-    opacity: 0.65,
-  },
-  loginButtonText: {
-    marginTop: 4,
-    color: colors.coral.dark,
-    fontFamily: fonts.bold,
-    fontSize: 16,
   },
   signupButton: {
     width: width - 20,
