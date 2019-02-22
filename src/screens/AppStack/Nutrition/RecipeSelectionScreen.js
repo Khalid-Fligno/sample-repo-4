@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Dimensions, Alert, FlatList } from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 import { FileSystem } from 'expo';
+import sortBy from 'lodash.sortby';
 import { db } from '../../../../config/firebase';
 import RecipeTile from '../../../components/Nutrition/RecipeTile';
 import RecipeTileSkeleton from '../../../components/Nutrition/RecipeTileSkeleton';
@@ -59,7 +60,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         //     `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
         //   );
         // }));
-        this.setState({ recipes, loading: false });
+        this.setState({ recipes: sortBy(recipes, 'title'), loading: false });
       });
   }
   updateFilter = (filterIndex) => {
@@ -80,7 +81,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   render() {
     const { recipes, loading, filterIndex } = this.state;
     const filterButtons = ['All', 'Vegetarian', 'Vegan', 'Gluten-Free'];
-    const recipeList = recipes
+    const recipeList = sortBy(recipes, 'newBadge')
       .filter((recipe) => {
         if (filterIndex === 1) {
           return recipe.tags.includes('V');
