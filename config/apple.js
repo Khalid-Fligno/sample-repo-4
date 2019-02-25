@@ -36,7 +36,7 @@ export const identifiers = [
   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly',
 ];
 
-export const foundationIdentifiers = [
-  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation',
-];
+// export const foundationIdentifiers = [
+//   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation',
+//   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation',
+// ];
