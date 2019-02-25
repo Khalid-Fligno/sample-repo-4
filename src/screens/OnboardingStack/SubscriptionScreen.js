@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   View,
+  ScrollView,
   Text,
   StyleSheet,
   SafeAreaView,
@@ -14,9 +15,9 @@ import {
 import { Haptic } from 'expo';
 import { auth, db } from '../../../config/firebase';
 import {
-  // identifiers,
+  identifiers,
+  // foundationIdentifiers,
   compareProducts,
-  foundationIdentifiers,
   validateReceiptProduction,
   validateReceiptSandbox,
   compare,
@@ -178,7 +179,7 @@ export default class SubscriptionScreen extends React.PureComponent {
   }
   loadProducts = async () => {
     this.setState({ loading: true });
-    await InAppUtils.loadProducts(foundationIdentifiers, (error, products) => {
+    await InAppUtils.loadProducts(identifiers, (error, products) => {
       if (error) {
         this.setState({ loading: false });
         Alert.alert('Unable to connect to the App Store', 'Please try again later');
@@ -202,13 +203,13 @@ export default class SubscriptionScreen extends React.PureComponent {
         // Alert.alert('Unable to connect to the App Store', 'Please try again later');
       } else {
         const sortedProducts = products.slice().sort(compareProducts);
-        this.setState({ products: sortedProducts, subscriptionSelected: sortedProducts[0], loading: false });
+        this.setState({ products: sortedProducts, loading: false });
       }
     });
   }
   retryLoadProducts = () => {
     this.setState({ loading: true });
-    InAppUtils.loadProducts(foundationIdentifiers, (error, products) => {
+    InAppUtils.loadProducts(identifiers, (error, products) => {
       if (error) {
         this.setState({ loading: false });
         Alert.alert('Unable to connect to the App Store', 'Please try again later');
@@ -232,7 +233,7 @@ export default class SubscriptionScreen extends React.PureComponent {
         );
       } else {
         const sortedProducts = products.slice().sort(compareProducts);
-        this.setState({ products: sortedProducts, subscriptionSelected: sortedProducts[0], loading: false });
+        this.setState({ products: sortedProducts, loading: false });
       }
     });
   }
@@ -308,7 +309,6 @@ export default class SubscriptionScreen extends React.PureComponent {
     const {
       loading,
       products,
-      subscriptionSelected,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -322,8 +322,7 @@ export default class SubscriptionScreen extends React.PureComponent {
               Get fit fast with Full Access
             </Text>
             <Text style={styles.subHeadingText}>
-              Launch special - 40% off yearly foundation memberships.
-              Commit to a happier, healthier you!
+              Save 40% when you subscribe to a yearly membership.  Commit to a happier, healthier you!
             </Text>
           </View>
           <View style={styles.contentContainer}>
@@ -332,12 +331,11 @@ export default class SubscriptionScreen extends React.PureComponent {
                 products && products.map((product, index) => (
                   <SubscriptionTile
                     key={product.identifier}
-                    primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation'}
+                    primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly'}
                     title={productTitleMap[index]}
                     price={product.priceString}
                     currencyCode={product.currencyCode}
                     onPress={() => this.purchaseProduct(product.identifier)}
-                    active={subscriptionSelected === product}
                     term={subscriptionPeriodMap[product.identifier]}
                   />
                 ))
@@ -345,28 +343,30 @@ export default class SubscriptionScreen extends React.PureComponent {
             </View>
           </View>
           <View style={styles.disclaimerTextContainer}>
-            <Text style={styles.disclaimerText}>
-              <Text style={styles.subscriptionTermsTitle}>Subscription Terms: </Text>
-              {'By continuing, you accept our '}
-              <Text
-                onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-privacy-policy')}
-                style={styles.link}
-              >
-                Privacy Policy
+            <ScrollView contentContainerStyle={styles.disclaimerScrollContainer}>
+              <Text style={styles.disclaimerText}>
+                <Text style={styles.subscriptionTermsTitle}>Subscription Terms: </Text>
+                {'By continuing, you accept our '}
+                <Text
+                  onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-privacy-policy')}
+                  style={styles.link}
+                >
+                  Privacy Policy
+                </Text>
+                {' and '}
+                <Text
+                  onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-terms-conditions')}
+                  style={styles.link}
+                >
+                  Terms and Conditions
+                </Text>
+                .
+                You also agree that an ongoing subscription to the FitazFK App (FitazFK) will be applied to your iTunes account at the end of your 7-day free trial.
+                Subscriptions will automatically renew and your account charged unless auto-renew is turned off at least 24-hours before the end of the current period.
+                Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
+                Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
               </Text>
-              {' and '}
-              <Text
-                onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-terms-conditions')}
-                style={styles.link}
-              >
-                Terms and Conditions
-              </Text>
-              .
-              You also agree that an ongoing subscription to the FitazFK App (FitazFK) will be applied to your iTunes account at the end of your 7-day free trial.
-              Subscriptions will automatically renew and your account charged unless auto-renew is turned off at least 24-hours before the end of the current period.
-              Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
-              Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
-            </Text>
+            </ScrollView>
           </View>
         </View>
         {
@@ -426,10 +426,13 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   disclaimerTextContainer: {
-    flexShrink: 1,
-    paddingTop: 10,
-    paddingLeft: 10,
-    paddingRight: 8,
+    backgroundColor: colors.white,
+    borderRadius: 3,
+    height: 110,
+    margin: 10,
+  },
+  disclaimerScrollContainer: {
+    padding: 10,
   },
   link: {
     color: colors.blue.standard,
@@ -440,12 +443,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 8,
     color: colors.charcoal.light,
-    marginBottom: 10,
   },
   disclaimerText: {
     fontFamily: fonts.standard,
     fontSize: 8,
     color: colors.charcoal.light,
-    marginBottom: 10,
   },
 });

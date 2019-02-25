@@ -25,7 +25,11 @@ export default class SubscriptionTile extends React.PureComponent {
         style={primary ? styles.subscriptionTilePrimary : styles.subscriptionTile}
       >
         <View style={primary ? styles.tileHeaderBarPrimary : styles.tileHeaderBar}>
-          <Text style={styles.subscriptionTileHeader}>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.subscriptionTileHeader}
+          >
             {title} {primary && '- 40% off!'}
           </Text>
         </View>
