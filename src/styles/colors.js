@@ -5,7 +5,7 @@ const colors = {
   transparentWhite: 'rgba(255, 255, 255, 0.65 )',
   transparentBlackDark: 'rgba(0, 0, 0, 0.75 )',
   transparentBlackLight: 'rgba(0, 0, 0, 0.5 )',
-  transparentBlackLightest: 'rgba(0, 0, 0, 0.25 )',
+  transparentBlackLightest: 'rgba(0, 0, 0, 0.3 )',
   offWhite: 'rgb(250, 250, 250)', // ##f5f5f5
   grey: {
     dark: 'rgb(113, 114, 115)', // #717273
