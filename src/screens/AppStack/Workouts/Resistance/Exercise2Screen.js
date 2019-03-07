@@ -6,7 +6,7 @@ import {
   Dimensions,
   StatusBar,
   Alert,
-  // AppState,
+  AppState,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { FileSystem } from 'expo';
@@ -37,23 +37,23 @@ export default class Exercise2Screen extends React.PureComponent {
       pauseModalVisible: false,
       videoPaused: false,
       exerciseInfoModalVisible: false,
-      // appState: AppState.currentState,
+      appState: AppState.currentState,
     };
   }
   componentDidMount() {
     this.startTimer();
-    // AppState.addEventListener('change', this.handleAppStateChange);
+    AppState.addEventListener('change', this.handleAppStateChange);
   }
-  // componentWillUnmount() {
-  //   AppState.removeEventListener('change', this.handleAppStateChange);
-  // }
-  // handleAppStateChange = (nextAppState) => {
-  //   const { appState } = this.state;
-  //   if (appState === 'active' && nextAppState.match(/inactive|background/)) {
-  //     this.handlePause();
-  //   }
-  //   this.setState({ appState: nextAppState });
-  // }
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+  handleAppStateChange = (nextAppState) => {
+    const { appState } = this.state;
+    if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+      this.handlePause();
+    }
+    this.setState({ appState: nextAppState });
+  }
   startTimer = () => {
     this.setState({
       timerStart: true,
