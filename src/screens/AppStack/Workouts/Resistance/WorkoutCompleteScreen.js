@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from 'react-navigation';
 import { FileSystem } from 'expo';
 import { PieChart } from 'react-native-svg-charts';
+import * as StoreReview from 'react-native-store-review';
 import Loader from '../../../../components/Shared/Loader';
 import Icon from '../../../../components/Shared/Icon';
 import CustomButton from '../../../../components/Shared/CustomButton';
@@ -46,6 +47,9 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
   }
   componentDidMount = async () => {
     this.manageVideoCache();
+    if (StoreReview.isAvailable) {
+      StoreReview.requestReview();
+    }
   }
   manageVideoCache = async () => {
     const exerciseVideos = [
