@@ -1,9 +1,11 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 import PropTypes from 'prop-types';
+import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
-import common from '../../styles/common';
+
+const { width } = Dimensions.get('window');
 
 const CustomButton = ({
   onPress,
@@ -77,6 +79,42 @@ CustomButton.defaultProps = {
   green: false,
   blue: false,
   loading: false,
+};
+
+const common = {
+  button: {
+    solid: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 50,
+      width: width - 20,
+      borderRadius: 2,
+      shadowOpacity: 0.8,
+      shadowOffset: { width: 0, height: 2 },
+      shadowRadius: 2,
+    },
+    outline: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 50,
+      width: width - 20,
+      borderRadius: 2,
+      borderWidth: 4,
+      shadowOpacity: 0.5,
+      shadowOffset: { width: 0, height: 2 },
+      shadowRadius: 3,
+      backgroundColor: colors.white,
+    },
+    outlineDisabled: {
+      backgroundColor: colors.white,
+      opacity: 0.5,
+    },
+    text: {
+      fontFamily: fonts.bold,
+      fontSize: 16,
+      marginTop: 3,
+    },
+  },
 };
 
 const styles = StyleSheet.create({
