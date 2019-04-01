@@ -8372,10 +8372,10 @@ react-native-scripts@1.14.0:
     rimraf "^2.6.1"
     xdl "48.1.4"
 
-react-native-sentry@^0.39.0:
-  version "0.39.1"
-  resolved "https://registry.yarnpkg.com/react-native-sentry/-/react-native-sentry-0.39.1.tgz#61fc1214515bea614f03aa9f76fee1b48aae3671"
-  integrity sha512-WnKyJj2WXsoTnulKwfdLbId/qy8ANiBryi3fVBO9MMcsa1jQY6W2mDuj8RFa5zmjf+9UL3KILagTbi+Nm5Y5Qw==
+react-native-sentry@^0.42.0:
+  version "0.42.0"
+  resolved "https://registry.yarnpkg.com/react-native-sentry/-/react-native-sentry-0.42.0.tgz#9cd59659d9b6cd36d6fc4c48f50613cd82cde25f"
+  integrity sha512-Nt3/yDSiK0QCtuWMEX04e4DJ3sWyMbjUPiiRNs3omD0rCzt51i4F5/fORDz7aMuYH2tSUw6RWCfJmxc3ILvx7Q==
   dependencies:
     "@sentry/wizard" "^0.12.1"
     raven-js "^3.24.2"
@@ -9187,14 +9187,14 @@ sentence-case@^1.1.1, sentence-case@^1.1.2:
   dependencies:
     lower-case "^1.1.1"
 
-sentry-expo@^1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/sentry-expo/-/sentry-expo-1.10.0.tgz#cca654148e5aa7162ac728277a3ccf2180ba89e4"
-  integrity sha512-XHrKAFzVl2698pX0n+blX4gKKmTrFlRmh1Li3Yb7MkM+9yeOfmNlTqgKnVRWaMjqveASIPKyXOOhZv5etIuF+w==
+sentry-expo@^1.12.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/sentry-expo/-/sentry-expo-1.12.0.tgz#250e513e2b9b31a51b212d347bcf38fd0b5d6d7a"
+  integrity sha512-tvgcglaOwcXdX1iBJYSiN3VjNkpDwJ5urUMiI/QMIYln1VXpYpoFdc2w3LMT/t/w2aU2ehg9rQoItAFxzjnIwA==
   dependencies:
     "@expo/spawn-async" "^1.2.8"
     mkdirp "^0.5.1"
-    react-native-sentry "^0.39.0"
+    react-native-sentry "^0.42.0"
     rimraf "^2.6.1"
 
 serialize-error@^2.1.0:

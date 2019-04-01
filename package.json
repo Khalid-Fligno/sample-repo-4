@@ -57,6 +57,6 @@
     "react-native-video": "^4.4.0",
     "react-navigation": "2.18.2",
     "react-timeout": "^1.1.2",
-    "sentry-expo": "^1.10.0"
+    "sentry-expo": "^1.12.0"
   }
 }
