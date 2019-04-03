@@ -1,5 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions, Alert, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Alert,
+  FlatList,
+} from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 import { FileSystem } from 'expo';
 import sortBy from 'lodash.sortby';
