@@ -4,12 +4,16 @@ import {
   View,
   Linking,
   ScrollView,
+  AsyncStorage,
+  Text,
 } from 'react-native';
 import { Haptic } from 'expo';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import DoubleNewsFeedTile from '../../../components/Home/DoubleNewsFeedTile';
 import TripleNewsFeedTile from '../../../components/Home/TripleNewsFeedTile';
 import Loader from '../../../components/Shared/Loader';
+import { db } from '../../../../config/firebase';
+import fonts from '../../../styles/fonts';
 import colors from '../../../styles/colors';
 
 export default class HomeScreen extends React.PureComponent {
@@ -17,20 +21,40 @@ export default class HomeScreen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
+      profile: undefined,
     };
+  }
+  componentDidMount = () => {
+    this.fetchProfile();
+  }
+  fetchProfile = async () => {
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem('uid');
+    this.unsubscribe = db.collection('users').doc(uid)
+      .onSnapshot(async (doc) => {
+        if (doc.exists) {
+          this.setState({
+            profile: await doc.data(),
+            loading: false,
+          });
+        }
+      });
   }
   openLink = (url) => {
     Haptic.impact(Haptic.ImpactFeedbackStyle.Medium);
     Linking.openURL(url);
   }
   render() {
-    const { loading } = this.state;
+    const { loading, profile } = this.state;
     return (
       <View style={styles.container}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollView}
         >
+          <Text style={styles.welcomeText}>
+            Hi{profile && `, ${profile.firstName}`}
+          </Text>
           <DoubleNewsFeedTile
             imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-nutrition.jpg')}
             imageRight={require('../../../../assets/images/homeScreenTiles/home-screen-workouts.jpg')}
@@ -85,5 +109,10 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     padding: 5,
+  },
+  welcomeText: {
+    fontFamily: fonts.bold,
+    fontSize: 16,
+    margin: 5,
   },
 });
