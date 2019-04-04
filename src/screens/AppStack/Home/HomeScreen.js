@@ -6,15 +6,19 @@ import {
   ScrollView,
   AsyncStorage,
   Text,
+  Dimensions,
 } from 'react-native';
 import { Haptic } from 'expo';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import DoubleNewsFeedTile from '../../../components/Home/DoubleNewsFeedTile';
 import TripleNewsFeedTile from '../../../components/Home/TripleNewsFeedTile';
 import Loader from '../../../components/Shared/Loader';
+import ProgressBar from '../../../components/Progress/ProgressBar';
 import { db } from '../../../../config/firebase';
 import fonts from '../../../styles/fonts';
 import colors from '../../../styles/colors';
+
+const { width } = Dimensions.get('window');
 
 export default class HomeScreen extends React.PureComponent {
   constructor(props) {
@@ -55,6 +59,29 @@ export default class HomeScreen extends React.PureComponent {
           <Text style={styles.welcomeText}>
             Hi{profile && `, ${profile.firstName}`}
           </Text>
+          <View style={styles.workoutProgressContainer}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.bodyText}>
+                WEEKLY WORKOUT PROGRESS
+              </Text>
+            </View>
+            {
+              profile && (
+                <ProgressBar
+                  progressBarType="Resistance"
+                  completedWorkouts={profile.weeklyTargets.resistanceWeeklyComplete}
+                />
+              )
+            }
+            {
+              profile && (
+                <ProgressBar
+                  progressBarType="HIIT"
+                  completedWorkouts={profile.weeklyTargets.hiitWeeklyComplete}
+                />
+              )
+            }
+          </View>
           <DoubleNewsFeedTile
             imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-nutrition.jpg')}
             imageRight={require('../../../../assets/images/homeScreenTiles/home-screen-workouts.jpg')}
@@ -114,5 +141,33 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 16,
     margin: 5,
+  },
+  workoutProgressContainer: {
+    alignItems: 'center',
+    width: width - 20,
+    margin: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    backgroundColor: colors.white,
+    borderRadius: 2,
+    shadowColor: colors.grey.standard,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+  },
+  sectionHeader: {
+    alignItems: 'center',
+    backgroundColor: colors.charcoal.dark,
+    width: width - 20,
+    borderTopLeftRadius: 2,
+    borderTopRightRadius: 2,
+    padding: 8,
+    paddingBottom: 5,
+  },
+  bodyText: {
+    fontFamily: fonts.standard,
+    fontSize: 12,
+    color: colors.white,
   },
 });
