@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5D740C0E939441D1AAAAD8ED /* libRNStoreReview.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F6329D44E6564465B15DD02C /* libRNStoreReview.a */; };
 		9E480E78218FB6980028D5A1 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E480E77218FB6980028D5A1 /* StoreKit.framework */; };
 		B501732B1DC01252003445D9 /* EXShell.plist in Resources */ = {isa = PBXBuildFile; fileRef = B501732A1DC01252003445D9 /* EXShell.plist */; };
 		B56386491DB9693800A0598C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B56386481DB9693800A0598C /* AppDelegate.m */; };
@@ -23,19 +22,8 @@
 		EBB8117C1BFA0514F79CAF74 /* libPods-fitazfk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4A88D15726AD99E8A257BC7 /* libPods-fitazfk.a */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		9E2A271022489F6F00441B37 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2E91C97EDFA34414882F3393 /* RNStoreReview.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNStoreReview;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		2C1548D9E4CB1AEFA5CCAE6D /* Pods-fitazfk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fitazfk.debug.xcconfig"; path = "Pods/Target Support Files/Pods-fitazfk/Pods-fitazfk.debug.xcconfig"; sourceTree = "<group>"; };
-		2E91C97EDFA34414882F3393 /* RNStoreReview.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNStoreReview.xcodeproj; path = "../node_modules/react-native-store-review/ios/RNStoreReview.xcodeproj"; sourceTree = "<group>"; };
 		9E480E77218FB6980028D5A1 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9E4C4A3A21EFFDC30047F03D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		9EAB429F219BDCB600173BA4 /* fitazfk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = fitazfk.entitlements; sourceTree = "<group>"; };
@@ -65,7 +53,6 @@
 			files = (
 				EBB8117C1BFA0514F79CAF74 /* libPods-fitazfk.a in Frameworks */,
 				9E480E78218FB6980028D5A1 /* StoreKit.framework in Frameworks */,
-				5D740C0E939441D1AAAAD8ED /* libRNStoreReview.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,14 +76,6 @@
 				A47FE4D7F70906B7DC8CE39B /* Pods-fitazfk.release.xcconfig */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		9E2A270D22489F6F00441B37 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9E2A271122489F6F00441B37 /* libRNStoreReview.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		9EF89F9621ED506B00BD3DE5 /* Recovered References */ = {
@@ -159,7 +138,6 @@
 		FBA8B85095FD497EA488FA79 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				2E91C97EDFA34414882F3393 /* RNStoreReview.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -224,28 +202,12 @@
 			mainGroup = B56386381DB9693800A0598C;
 			productRefGroup = B56386421DB9693800A0598C /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 9E2A270D22489F6F00441B37 /* Products */;
-					ProjectRef = 2E91C97EDFA34414882F3393 /* RNStoreReview.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				B56386401DB9693800A0598C /* fitazfk */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		9E2A271122489F6F00441B37 /* libRNStoreReview.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNStoreReview.a;
-			remoteRef = 9E2A271022489F6F00441B37 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		B563863F1DB9693800A0598C /* Resources */ = {
