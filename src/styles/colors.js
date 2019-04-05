@@ -4,6 +4,7 @@ const colors = {
   transparent: 'rgba(0, 0, 0, 0)',
   transparentWhite: 'rgba(255, 255, 255, 0.65 )',
   transparentBlackDark: 'rgba(0, 0, 0, 0.75 )',
+  transparentBlackMid: 'rgba(0, 0, 0, 0.6 )',
   transparentBlackLight: 'rgba(0, 0, 0, 0.5 )',
   transparentBlackLightest: 'rgba(0, 0, 0, 0.3 )',
   offWhite: 'rgb(250, 250, 250)', // ##F5F5F5
