@@ -30,41 +30,42 @@ export default class SubscriptionTile extends React.PureComponent {
             ellipsizeMode="tail"
             style={styles.subscriptionTileHeader}
           >
-            {title} {primary && '- 40% off!'}
+            {title} {primary && '- SAVE 40%'}
           </Text>
         </View>
-        <View style={styles.textContainer}>
-          <Text style={primary ? styles.subscriptionPriceTextPrimary : styles.subscriptionPriceText}>
-            {price}
-          </Text>
-          <Text style={primary ? styles.subscriptionTermTextPrimary : styles.subscriptionTermText}>
-            {term}
-          </Text>
-          <Text style={primary ? styles.subscriptionPriceSubtextPrimary : styles.subscriptionPriceSubtext}>
-            after 7 day FREE TRIAL
-          </Text>
-        </View>
-        <View style={styles.bottomContainer}>
-          {
-            primary && (
-              <Icon
-                name="chevron-down"
-                size={22}
-                color={colors.coral.standard}
-                style={styles.icon}
-              />
-            )
-          }
-          {
-            !primary && (
-              <Icon
-                name="chevron-down"
-                size={22}
-                color={colors.charcoal.darkest}
-                style={styles.icon}
-              />
-            )
-          }
+        <View style={styles.subscriptionTileContainer}>
+          <View style={styles.blankSubscriptionTileColumn} />
+          <View style={styles.textContainer}>
+            <Text style={primary ? styles.subscriptionPriceTextPrimary : styles.subscriptionPriceText}>
+              {price}
+            </Text>
+            <Text style={primary ? styles.subscriptionTermTextPrimary : styles.subscriptionTermText}>
+              {term}
+            </Text>
+            <Text style={primary ? styles.subscriptionPriceSubtextPrimary : styles.subscriptionPriceSubtext}>
+              after 7 day FREE trial
+            </Text>
+          </View>
+          <View style={styles.iconSubscriptionTileColumn}>
+            {
+              primary && (
+                <Icon
+                  name="chevron-right"
+                  size={22}
+                  color={colors.coral.standard}
+                />
+              )
+            }
+            {
+              !primary && (
+                <Icon
+                  name="chevron-right"
+                  size={22}
+                  color={colors.white}
+                />
+              )
+            }
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -87,14 +88,15 @@ const styles = StyleSheet.create({
   subscriptionTile: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: colors.white,
+    backgroundColor: colors.transparentBlackLight,
     marginLeft: 5,
     marginRight: 5,
+    marginBottom: 10,
     paddingTop: 0,
     borderWidth: 3,
-    borderColor: colors.charcoal.darkest,
+    borderColor: colors.black,
     borderRadius: 4,
-    shadowColor: colors.charcoal.darkest,
+    shadowColor: colors.black,
     shadowOpacity: 0.8,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
   subscriptionTilePrimary: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: colors.white,
+    backgroundColor: colors.transparentBlackLight,
     marginLeft: 5,
     marginRight: 5,
     paddingTop: 0,
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   tileHeaderBar: {
-    backgroundColor: colors.charcoal.darkest,
+    backgroundColor: colors.black,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -133,6 +135,18 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 3,
   },
+  subscriptionTileContainer: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  blankSubscriptionTileColumn: {
+    width: 30,
+  },
+  iconSubscriptionTileColumn: {
+    width: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   textContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -141,43 +155,37 @@ const styles = StyleSheet.create({
   subscriptionPriceText: {
     fontFamily: fonts.bold,
     fontSize: 16,
-    color: colors.charcoal.darkest,
+    color: colors.white,
     marginBottom: 3,
   },
   subscriptionPriceTextPrimary: {
     fontFamily: fonts.bold,
     fontSize: 16,
-    color: colors.coral.dark,
+    color: colors.white,
     marginBottom: 3,
   },
   subscriptionTermText: {
     fontFamily: fonts.bold,
-    fontSize: 12,
-    color: colors.charcoal.darkest,
+    fontSize: 11,
+    color: colors.white,
     marginBottom: 5,
   },
   subscriptionTermTextPrimary: {
     fontFamily: fonts.bold,
-    fontSize: 12,
-    color: colors.coral.dark,
+    fontSize: 11,
+    color: colors.white,
     marginBottom: 5,
   },
   subscriptionPriceSubtext: {
     fontFamily: fonts.standard,
-    fontSize: 10,
-    color: colors.charcoal.darkest,
+    fontSize: 12,
+    color: colors.white,
+    textDecorationLine: 'underline',
   },
   subscriptionPriceSubtextPrimary: {
     fontFamily: fonts.standard,
-    fontSize: 10,
-    color: colors.coral.dark,
-  },
-  bottomContainer: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    marginBottom: 3,
+    fontSize: 12,
+    color: colors.white,
+    textDecorationLine: 'underline',
   },
 });
