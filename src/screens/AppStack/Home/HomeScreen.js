@@ -11,7 +11,6 @@ import {
 import { Haptic } from 'expo';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import DoubleNewsFeedTile from '../../../components/Home/DoubleNewsFeedTile';
-import TripleNewsFeedTile from '../../../components/Home/TripleNewsFeedTile';
 import Loader from '../../../components/Shared/Loader';
 import ProgressBar from '../../../components/Progress/ProgressBar';
 import { db } from '../../../../config/firebase';
@@ -26,10 +25,19 @@ export default class HomeScreen extends React.PureComponent {
     this.state = {
       loading: false,
       profile: undefined,
+      switchWelcomeHeader: true,
     };
   }
   componentDidMount = () => {
     this.fetchProfile();
+    this.switchWelcomeHeader();
+  }
+  switchWelcomeHeader = async () => {
+    const switchWelcomeHeader = await AsyncStorage.getItem('switchWelcomeHeader');
+    if (switchWelcomeHeader === null) {
+      this.setState({ switchWelcomeHeader: false });
+      AsyncStorage.setItem('switchWelcomeHeader', 'true');
+    }
   }
   fetchProfile = async () => {
     this.setState({ loading: true });
@@ -49,15 +57,28 @@ export default class HomeScreen extends React.PureComponent {
     Linking.openURL(url);
   }
   render() {
-    const { loading, profile } = this.state;
+    const { loading, profile, switchWelcomeHeader } = this.state;
+    const personalisedMessage = () => {
+      const { resistanceWeeklyComplete, hiitWeeklyComplete } = profile.weeklyTargets;
+      const totalWeeklyWorkoutsCompleted = resistanceWeeklyComplete + hiitWeeklyComplete;
+      if (totalWeeklyWorkoutsCompleted === 0) {
+        return 'Time to get started!';
+      } else if (resistanceWeeklyComplete > 2 && hiitWeeklyComplete > 1) {
+        return 'Well done!';
+      }
+      return 'Keep working, you\'ve got this!';
+    };
     return (
       <View style={styles.container}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollView}
         >
-          <Text style={styles.welcomeText}>
-            Hi{profile && `, ${profile.firstName}`}
+          <Text style={styles.welcomeHeaderText}>
+            {switchWelcomeHeader ? 'Welcome back' : 'Hi'}{profile && `, ${profile.firstName}`}
+          </Text>
+          <Text style={styles.welcomeBodyText}>
+            Here is your progress for the week. {profile && personalisedMessage()}
           </Text>
           <View style={styles.workoutProgressContainer}>
             <View style={styles.sectionHeader}>
@@ -83,36 +104,17 @@ export default class HomeScreen extends React.PureComponent {
             }
           </View>
           <DoubleNewsFeedTile
-            imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-nutrition.jpg')}
-            imageRight={require('../../../../assets/images/homeScreenTiles/home-screen-workouts.jpg')}
-            titleLeft1="EAT"
-            titleRight1="TRAIN"
-            onPressLeft={() => this.props.navigation.navigate('Nutrition')}
-            onPressRight={() => this.props.navigation.navigate('Workouts')}
-          />
-          <DoubleNewsFeedTile
-            imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-calendar.jpg')}
-            imageRight={require('../../../../assets/images/homeScreenTiles/home-screen-blog.jpg')}
-            titleLeft1="PLAN"
-            titleRight1="LEARN"
-            onPressLeft={() => this.props.navigation.navigate('Calendar')}
-            onPressRight={() => this.props.navigation.navigate('HomeBlog')}
+            imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-blog.jpg')}
+            imageRight={require('../../../../assets/images/hiit-rest-placeholder.jpg')}
+            titleLeft1="BLOG"
+            titleRight1="FAQ"
+            onPressLeft={() => this.props.navigation.navigate('HomeBlog')}
+            onPressRight={() => this.openLink('https://fitazfk.zendesk.com/hc/en-us')}
           />
           <NewsFeedTile
             image={require('../../../../assets/images/shop-bundles.jpg')}
             title="SHOP WORKOUT EQUIPMENT"
             onPress={() => this.openLink('https://fitazfk.com/collections/equipment')}
-          />
-          <TripleNewsFeedTile
-            imageLeft={require('../../../../assets/images/hiit-rest-placeholder.jpg')}
-            imageCenter={require('../../../../assets/images/homeScreenTiles/home-screen-profile.jpg')}
-            imageRight={require('../../../../assets/images/workouts-hiit-rowing.jpg')}
-            titleLeft="FAQ"
-            titleCenter="PROFILE"
-            titleRight="PROGRESS"
-            onPressLeft={() => this.openLink('https://fitazfk.zendesk.com/hc/en-us')}
-            onPressCenter={() => this.props.navigation.navigate('ProfileHome')}
-            onPressRight={() => this.props.navigation.navigate('Progress')}
           />
           <NewsFeedTile
             image={require('../../../../assets/images/fitazfk-army.jpg')}
@@ -137,9 +139,17 @@ const styles = StyleSheet.create({
   scrollView: {
     padding: 5,
   },
-  welcomeText: {
+  welcomeHeaderText: {
     fontFamily: fonts.bold,
+    fontSize: 20,
+    color: colors.black,
+    margin: 5,
+    marginTop: 10,
+  },
+  welcomeBodyText: {
+    fontFamily: fonts.standard,
     fontSize: 16,
+    color: colors.black,
     margin: 5,
   },
   workoutProgressContainer: {
