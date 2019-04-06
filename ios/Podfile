@@ -119,6 +119,8 @@ target 'fitazfk' do
 
   pod 'react-native-video', :path => '../node_modules/react-native-video'
 
+  pod 'RNRate', :path => '../node_modules/react-native-rate/ios'
+
   post_install do |installer|
     installer.pods_project.main_group.tab_width = '2';
     installer.pods_project.main_group.indent_width = '2';

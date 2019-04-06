@@ -48,6 +48,7 @@
     "react-native-loading-spinner-overlay": "^1.0.1",
     "react-native-modal": "^6.1.0",
     "react-native-parallax-scroll-view": "^0.21.3",
+    "react-native-rate": "^1.1.6",
     "react-native-scalable-image": "^0.4.0",
     "react-native-snap-carousel": "^3.7.0",
     "react-native-svg-charts": "^5.2.0",
