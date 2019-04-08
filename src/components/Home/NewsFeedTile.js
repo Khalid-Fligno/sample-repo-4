@@ -78,7 +78,7 @@ NewsFeedTile.propTypes = {
 const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
-    height: (width - 30) / 2.5,
+    height: (width - 30) / 2.2,
     margin: 5,
     shadowColor: colors.charcoal.standard,
     shadowOpacity: 0.5,
