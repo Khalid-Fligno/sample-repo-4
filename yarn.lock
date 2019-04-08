@@ -8317,6 +8317,11 @@ react-native-parallax-scroll-view@^0.21.3:
   dependencies:
     prop-types "^15.6.0"
 
+react-native-rate@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/react-native-rate/-/react-native-rate-1.1.6.tgz#55f087a8376fc6e5bdca02698c03662b450e3d12"
+  integrity sha512-/vnGkMTsxI+5y1togItXd2l/6JZzlUjsvQjCj9RWsOja9mVJxWdDacCrVHTf041k83fwX2Nw6ru6xxOWyU8Y+w==
+
 react-native-reanimated@1.0.0-alpha.11:
   version "1.0.0-alpha.11"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.0.0-alpha.11.tgz#b78c839bae878d149561b56a3c750414957ea86d"
@@ -8387,11 +8392,6 @@ react-native-snap-carousel@^3.7.0:
   dependencies:
     prop-types "^15.6.1"
     react-addons-shallow-compare "15.6.2"
-
-react-native-store-review@^0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/react-native-store-review/-/react-native-store-review-0.1.5.tgz#9df69786a137580748e368641698d2104519e4cf"
-  integrity sha512-vVx7NYaQva3bGU5MdqXn4yEB+o+GPdmjqAuj7PnkepfeCS6Bi3sqniiKoXmKOKDgRTfIobBZjUkHzWeHli1+3A==
 
 react-native-svg-charts@^5.2.0:
   version "5.2.0"
