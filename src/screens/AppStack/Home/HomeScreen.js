@@ -103,6 +103,11 @@ export default class HomeScreen extends React.PureComponent {
               )
             }
           </View>
+          <NewsFeedTile
+            image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
+            title="SHOP APPAREL"
+            onPress={() => this.openLink('https://fitazfk.com/collections/wear-fitazfk-apparel')}
+          />
           <DoubleNewsFeedTile
             imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-blog.jpg')}
             imageRight={require('../../../../assets/images/hiit-rest-placeholder.jpg')}
