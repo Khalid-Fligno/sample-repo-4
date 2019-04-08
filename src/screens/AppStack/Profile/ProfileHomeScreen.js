@@ -189,10 +189,11 @@ export default class ProfileHomeScreen extends React.PureComponent {
       { cancelable: false },
     );
   }
-  logOut = () => {
+  logOut = async () => {
     try {
       this.setState({ loading: true });
       AsyncStorage.removeItem('uid');
+      await this.unsubscribe();
       auth.signOut();
       this.setState({ loading: false });
       this.props.navigation.navigate('Auth');

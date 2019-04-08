@@ -207,10 +207,10 @@ PODS:
     - SDWebImage/GIF
   - react-native-in-app-utils (6.0.1):
     - React
-  - react-native-video (4.3.1):
+  - react-native-video (4.4.0):
     - React
-    - react-native-video/Video (= 4.3.1)
-  - react-native-video/Video (4.3.1):
+    - react-native-video/Video (= 4.4.0)
+  - react-native-video/Video (4.4.0):
     - React
   - React/ART (0.57.1):
     - React/Core
@@ -258,7 +258,7 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - RNStoreReview (0.1.5):
+  - RNRate (1.0.1):
     - React
   - SDWebImage/Core (4.4.5)
   - SDWebImage/GIF (4.4.5):
@@ -323,7 +323,7 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
-  - RNStoreReview (from `../node_modules/react-native-store-review/ios`)
+  - RNRate (from `../node_modules/react-native-rate/ios`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -442,8 +442,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-in-app-utils"
   react-native-video:
     :path: "../node_modules/react-native-video"
-  RNStoreReview:
-    :path: "../node_modules/react-native-store-review/ios"
+  RNRate:
+    :path: "../node_modules/react-native-rate/ios"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -519,10 +519,10 @@ SPEC CHECKSUMS:
   react-native-fast-image: cba3d9bf9c2cf8ddb643d887a686c53a5dd90a2c
   react-native-in-app-utils: 655eb59a6ccb31830637cd9b441b91fad35ff7a0
   react-native-video: 44c6befbc1526283ca1919891fcebe4680feade4
-  RNStoreReview: 628ef9b80e75cbd6a6f37a1bda14295c82022638
+  RNRate: 72b5c9c2e62de9a01710918eb83d75fb99b44c7b
   SDWebImage: ecc03494e973b93b80213649d32175f8d2d17d4d
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: dcb4b9e1e16904f22c0c9e6d52dd66a11b0280ec
+PODFILE CHECKSUM: f13a5da8c202d547da1d45c190cfe93a5738af81
 
 COCOAPODS: 1.5.3

@@ -10,13 +10,13 @@ import {
   Alert,
   AsyncStorage,
   Linking,
-  Image,
+  ImageBackground,
 } from 'react-native';
 import { Haptic } from 'expo';
 import { auth, db } from '../../../config/firebase';
 import {
-  identifiers,
   // foundationIdentifiers,
+  identifiers,
   compareProducts,
   validateReceiptProduction,
   validateReceiptSandbox,
@@ -312,63 +312,61 @@ export default class SubscriptionScreen extends React.PureComponent {
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.flexContainer}>
-          <Image
-            source={require('../../../assets/images/subscription-screen-header.jpg')}
-            style={styles.headerImage}
-          />
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>
-              Get fit fast with Full Access
-            </Text>
-            <Text style={styles.subHeadingText}>
-              Save 40% when you subscribe to a yearly membership.  Commit to a happier, healthier you!
-            </Text>
-          </View>
-          <View style={styles.contentContainer}>
-            <View style={styles.subscriptionTileRow}>
-              {
-                products && products.map((product, index) => (
-                  <SubscriptionTile
-                    key={product.identifier}
-                    primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly'}
-                    title={productTitleMap[index]}
-                    price={product.priceString}
-                    currencyCode={product.currencyCode}
-                    onPress={() => this.purchaseProduct(product.identifier)}
-                    term={subscriptionPeriodMap[product.identifier]}
-                  />
-                ))
-              }
+        <ImageBackground
+          source={require('../../../assets/images/subscription-screen-background.jpg')}
+          style={styles.flexContainer}
+        >
+          <View style={styles.opacityOverlay}>
+            <View style={styles.headerContainer}>
+              <Text style={styles.headerText}>
+                START YOUR 7 DAY FREE TRIAL TODAY!
+              </Text>
+            </View>
+            <View style={styles.contentContainer}>
+              <View style={styles.subscriptionTileRow}>
+                {
+                  products && products.map((product, index) => (
+                    <SubscriptionTile
+                      key={product.identifier}
+                      primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly'}
+                      title={productTitleMap[index]}
+                      price={product.priceString}
+                      currencyCode={product.currencyCode}
+                      onPress={() => this.purchaseProduct(product.identifier)}
+                      term={subscriptionPeriodMap[product.identifier]}
+                    />
+                  ))
+                }
+              </View>
+            </View>
+            <View style={styles.disclaimerTextContainer}>
+              <ScrollView contentContainerStyle={styles.disclaimerScrollContainer}>
+                <Text style={styles.disclaimerText}>
+                  <Text style={styles.subscriptionTermsTitle}>Subscription Terms: </Text>
+                  {'By continuing, you accept our '}
+                  <Text
+                    onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-privacy-policy')}
+                    style={styles.link}
+                  >
+                    Privacy Policy
+                  </Text>
+                  {' and '}
+                  <Text
+                    onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-terms-conditions')}
+                    style={styles.link}
+                  >
+                    Terms and Conditions
+                  </Text>
+                  .
+                  You also agree that an ongoing subscription to the FitazFK App (FitazFK) will be applied to your iTunes account at the end of your 7-day free trial.
+                  Subscriptions will automatically renew and your account charged unless auto-renew is turned off at least 24-hours before the end of the current period.
+                  Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
+                  Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
+                </Text>
+              </ScrollView>
             </View>
           </View>
-          <View style={styles.disclaimerTextContainer}>
-            <ScrollView contentContainerStyle={styles.disclaimerScrollContainer}>
-              <Text style={styles.disclaimerText}>
-                <Text style={styles.subscriptionTermsTitle}>Subscription Terms: </Text>
-                {'By continuing, you accept our '}
-                <Text
-                  onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-privacy-policy')}
-                  style={styles.link}
-                >
-                  Privacy Policy
-                </Text>
-                {' and '}
-                <Text
-                  onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-terms-conditions')}
-                  style={styles.link}
-                >
-                  Terms and Conditions
-                </Text>
-                .
-                You also agree that an ongoing subscription to the FitazFK App (FitazFK) will be applied to your iTunes account at the end of your 7-day free trial.
-                Subscriptions will automatically renew and your account charged unless auto-renew is turned off at least 24-hours before the end of the current period.
-                Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
-                Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
-              </Text>
-            </ScrollView>
-          </View>
-        </View>
+        </ImageBackground>
         {
           loading && (
             <NativeLoader />
@@ -391,28 +389,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: colors.offWhite,
   },
-  headerImage: {
-    width,
-    height: width / 2,
-    resizeMode: 'cover',
+  opacityOverlay: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.transparentBlackMid,
   },
   headerContainer: {
-    width,
-    paddingLeft: 12,
-    paddingRight: 12,
-    paddingTop: 10,
-    paddingBottom: 5,
+    padding: 10,
+    shadowColor: colors.black,
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 3,
   },
   headerText: {
     fontFamily: fonts.bold,
-    fontSize: 16,
-    color: colors.charcoal.darkest,
-    marginBottom: 3,
-  },
-  subHeadingText: {
-    fontFamily: fonts.standardNarrow,
-    fontSize: 13,
-    color: colors.charcoal.darkest,
+    fontSize: 24,
+    color: colors.white,
+    textAlign: 'center',
+    marginTop: 4,
   },
   contentContainer: {
     flex: 1,
@@ -421,15 +416,14 @@ const styles = StyleSheet.create({
   },
   subscriptionTileRow: {
     flex: 1,
-    flexDirection: 'row',
     paddingLeft: 5,
     paddingRight: 5,
   },
   disclaimerTextContainer: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.transparentBlackLight,
     borderRadius: 3,
-    height: 110,
     margin: 10,
+    maxHeight: 110,
   },
   disclaimerScrollContainer: {
     padding: 10,
@@ -442,11 +436,11 @@ const styles = StyleSheet.create({
   subscriptionTermsTitle: {
     fontFamily: fonts.bold,
     fontSize: 8,
-    color: colors.charcoal.light,
+    color: colors.white,
   },
   disclaimerText: {
     fontFamily: fonts.standard,
     fontSize: 8,
-    color: colors.charcoal.light,
+    color: colors.white,
   },
 });
