@@ -121,7 +121,7 @@ export default class HomeScreen extends React.PureComponent {
           />
           <NewsFeedTile
             image={require('../../../../assets/images/shop-bundles.jpg')}
-            title="SHOP WORKOUT EQUIPMENT"
+            title="SHOP EQUIPMENT"
             onPress={() => this.openLink('https://fitazfk.com/collections/equipment')}
           />
           <NewsFeedTile
