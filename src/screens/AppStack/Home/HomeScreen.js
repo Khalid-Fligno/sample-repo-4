@@ -152,11 +152,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: colors.black,
     margin: 5,
-    marginTop: 10,
+    marginTop: 12,
   },
   welcomeBodyText: {
     fontFamily: fonts.standard,
-    fontSize: 16,
+    fontSize: 14,
     color: colors.black,
     margin: 5,
   },
