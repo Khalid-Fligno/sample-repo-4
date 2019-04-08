@@ -32,6 +32,9 @@ export default class HomeScreen extends React.PureComponent {
     this.fetchProfile();
     this.switchWelcomeHeader();
   }
+  componentWillUnmount = () => {
+    this.unsubscribe();
+  }
   switchWelcomeHeader = async () => {
     const switchWelcomeHeader = await AsyncStorage.getItem('switchWelcomeHeader');
     if (switchWelcomeHeader === null) {
