@@ -47,7 +47,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
   }
   componentDidMount = async () => {
     this.manageVideoCache();
-    if (Rate !== undefined) {
+    if (Rate.rate !== undefined) {
       Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
     }
   }
