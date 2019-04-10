@@ -100,6 +100,7 @@ export default class SubscriptionScreen extends React.PureComponent {
               if (validationData.latest_receipt_info === undefined) {
                 this.setState({ loading: false });
                 Alert.alert('No Purchases to restore');
+                return;
               }
               const sortedReceipts = validationData.latest_receipt_info.slice().sort(compare);
               const latestReceipt = sortedReceipts[0];
@@ -137,6 +138,7 @@ export default class SubscriptionScreen extends React.PureComponent {
           if (validationData === undefined) {
             this.setState({ loading: false });
             Alert.alert('Receipt Validation Error');
+            return;
           }
           if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
             const uid = await AsyncStorage.getItem('uid');
@@ -249,17 +251,20 @@ export default class SubscriptionScreen extends React.PureComponent {
       if (!canMakePayments) {
         this.setState({ loading: false });
         Alert.alert('Not Allowed', 'This device is not allowed to make purchases. Please check restrictions on device');
+        return;
       }
       InAppUtils.purchaseProduct(productIdentifier, async (error, response) => {
         if (error) {
           this.setState({ loading: false });
           Alert.alert('Purchase cancelled');
+          return;
         }
         if (response && response.productIdentifier) {
           const validationData = await this.validate(response.transactionReceipt);
           if (validationData === undefined) {
             this.setState({ loading: false });
             Alert.alert('Receipt validation error');
+            return;
           }
           const isValid = validationData.latest_receipt_info.expires_date > Date.now();
           if (isValid === true) {
