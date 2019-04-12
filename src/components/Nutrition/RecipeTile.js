@@ -1,5 +1,12 @@
 import React from 'react';
-import { Dimensions, TouchableOpacity, Text, StyleSheet, View, Animated } from 'react-native';
+import {
+  Dimensions,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  View,
+  Animated,
+} from 'react-native';
 import { Card } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import NewRecipeBadge from './NewRecipeBadge';
