@@ -78,7 +78,7 @@ export const workoutLocationMap = {
   outdoors: 'OUTDOORS',
 };
 
-export const workoutTypeMap = {
+export const workoutFocusMap = {
   fullBody: 'FULL',
   upperBody: 'UPPER',
   lowerBody: 'ABT',
