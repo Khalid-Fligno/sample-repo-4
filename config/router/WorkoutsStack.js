@@ -10,12 +10,7 @@ import {
   workoutsBackButtonMap,
   fadeSpec,
   fade,
-<<<<<<< HEAD
   findWorkoutsSelectionTitle,
-=======
-  workoutLocationMap,
-  workoutFocusMap,
->>>>>>> Correct naming for workout focus variables
 } from './utils';
 
 const WorkoutsStack = createStackNavigator(
@@ -63,11 +58,7 @@ const WorkoutsStack = createStackNavigator(
             withProfileButton={routeName === 'WorkoutsHome'}
             withHelpButton={routeName === 'WorkoutsHome'}
             stack="workouts"
-<<<<<<< HEAD
             headerTitleParams={findWorkoutsSelectionTitle(routeName, navigation.getParam('workoutLocation', null), navigation.getParam('workoutFocus', null), navigation.getParam('hiitWorkoutStyle', null))}
-=======
-            headerTitleParams={routeName === 'WorkoutsSelection' ? `${workoutLocationMap[navigation.getParam('workoutLocation', null)]} / ${workoutFocusMap[navigation.getParam('workoutFocus', null)]}` : null}
->>>>>>> Correct naming for workout focus variables
           />
         );
       },
