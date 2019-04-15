@@ -56,10 +56,10 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
   }
   fetchWorkouts = async () => {
     this.setState({ loading: true });
-    const type = this.props.navigation.getParam('workoutType', null);
+    const focus = this.props.navigation.getParam('workoutFocus', null);
     const location = this.props.navigation.getParam('workoutLocation', null);
     this.unsubscribe = await db.collection('workouts')
-      .where(type, '==', true)
+      .where(focus, '==', true)
       .where(location, '==', true)
       .onSnapshot(async (querySnapshot) => {
         const workouts = [];
