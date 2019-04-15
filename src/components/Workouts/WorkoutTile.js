@@ -62,11 +62,15 @@ export default class WorkoutTile extends React.PureComponent {
               <Text style={styles.title}>
                 {title1.toUpperCase()}
               </Text>
-              <Text style={styles.targetText}>
-                {
-                  cycleTargets !== undefined && `Completed: ${cycleTargets[resistanceCategoryId]}`
-                }
-              </Text>
+              {
+                cycleTargets !== undefined && (
+                  <Text style={styles.targetText}>
+                    {
+                      cycleTargets !== undefined && `Completed: ${cycleTargets[resistanceCategoryId]}`
+                    }
+                  </Text>
+                )
+              }
             </View>
           </ImageBackground>
         </Animated.View>
@@ -78,14 +82,16 @@ export default class WorkoutTile extends React.PureComponent {
 WorkoutTile.propTypes = {
   onPress: PropTypes.func.isRequired,
   title1: PropTypes.string.isRequired,
-  cycleTargets: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])).isRequired,
-  resistanceCategoryId: PropTypes.number.isRequired,
+  cycleTargets: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
+  resistanceCategoryId: PropTypes.number,
   image: PropTypes.number.isRequired,
   disabled: PropTypes.bool,
 };
 
 WorkoutTile.defaultProps = {
   disabled: false,
+  cycleTargets: undefined,
+  resistanceCategoryId: undefined,
 };
 
 const styles = StyleSheet.create({
