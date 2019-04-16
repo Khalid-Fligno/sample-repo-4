@@ -16,9 +16,9 @@ import fonts from '../../../../styles/fonts';
 const { width } = Dimensions.get('window');
 
 const workIntervalMap = {
-  1: 30,
+  1: 40,
   2: 60,
-  3: 90,
+  3: 80,
 };
 
 export default class HiitExercise1Screen extends React.PureComponent {
@@ -29,7 +29,6 @@ export default class HiitExercise1Screen extends React.PureComponent {
       currentExercise: this.props.navigation.getParam('exerciseList', null)[0],
       fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
       totalDuration: workIntervalMap[this.props.navigation.getParam('fitnessLevel', null)],
-      selectedHiitWorkoutIndex: this.props.navigation.getParam('selectedHiitWorkoutIndex', null),
       timerStart: false,
       timerReset: false,
       pauseModalVisible: false,
@@ -106,7 +105,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
       { cancelable: false },
     );
   }
-  restartWorkout = (exerciseList, fitnessLevel, selectedHiitWorkoutIndex) => {
+  restartWorkout = (exerciseList, fitnessLevel) => {
     Alert.alert(
       'Warning',
       'Are you sure you want to restart this set?',
@@ -119,7 +118,6 @@ export default class HiitExercise1Screen extends React.PureComponent {
               exerciseList,
               fitnessLevel,
               roundCount: this.props.navigation.getParam('roundCount', 0),
-              selectedHiitWorkoutIndex,
             });
           },
         },
@@ -152,7 +150,6 @@ export default class HiitExercise1Screen extends React.PureComponent {
       totalDuration,
       fitnessLevel,
       pauseModalVisible,
-      selectedHiitWorkoutIndex,
       videoPaused,
       exerciseInfoModalVisible,
     } = this.state;
@@ -178,7 +175,7 @@ export default class HiitExercise1Screen extends React.PureComponent {
               totalDuration={totalDuration}
               start={timerStart}
               reset={timerReset}
-              handleFinish={() => this.handleFinish(exerciseList, fitnessLevel, selectedHiitWorkoutIndex)}
+              handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
             />
           </View>
           <View style={styles.currentExerciseTextContainer}>
