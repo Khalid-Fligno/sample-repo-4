@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import WorkoutsHomeScreen from '../../src/screens/AppStack/Workouts/WorkoutsHomeScreen';
 import WorkoutsSelectionScreen from '../../src/screens/AppStack/Workouts/WorkoutsSelectionScreen';
+import HiitWorkoutsSelectionScreen from '../../src/screens/AppStack/Workouts/HiitWorkoutsSelectionScreen';
 import WorkoutInfoScreen from '../../src/screens/AppStack/Workouts/WorkoutInfoScreen';
 import HiitWorkoutInfoScreen from '../../src/screens/AppStack/Workouts/HiitWorkoutInfoScreen';
 import Header from '../../src/components/Shared/Header';
@@ -9,14 +10,14 @@ import {
   workoutsBackButtonMap,
   fadeSpec,
   fade,
-  workoutLocationMap,
-  workoutFocusMap,
+  findWorkoutsSelectionTitle,
 } from './utils';
 
 const WorkoutsStack = createStackNavigator(
   {
     WorkoutsHome: WorkoutsHomeScreen,
     WorkoutsSelection: WorkoutsSelectionScreen,
+    HiitWorkoutsSelection: HiitWorkoutsSelectionScreen,
     WorkoutInfo: WorkoutInfoScreen,
     HiitWorkoutInfo: HiitWorkoutInfoScreen,
   },
@@ -57,7 +58,7 @@ const WorkoutsStack = createStackNavigator(
             withProfileButton={routeName === 'WorkoutsHome'}
             withHelpButton={routeName === 'WorkoutsHome'}
             stack="workouts"
-            headerTitleParams={routeName === 'WorkoutsSelection' ? `${workoutLocationMap[navigation.getParam('workoutLocation', null)]} / ${workoutFocusMap[navigation.getParam('workoutFocus', null)]}` : null}
+            headerTitleParams={findWorkoutsSelectionTitle(routeName, navigation.getParam('workoutLocation', null), navigation.getParam('workoutFocus', null), navigation.getParam('hiitWorkoutStyle', null))}
           />
         );
       },
