@@ -34,6 +34,7 @@ export const workoutsBackButtonMap = {
   WorkoutsHome: false,
   WorkoutsLocation: true,
   WorkoutsSelection: true,
+  HiitWorkoutsSelection: true,
   WorkoutInfo: true,
   HiitWorkoutInfo: true,
 };
@@ -82,6 +83,20 @@ export const workoutFocusMap = {
   fullBody: 'FULL',
   upperBody: 'UPPER',
   lowerBody: 'ABT',
+};
+
+export const hiitWorkoutStyleMap = {
+  interval: 'INTERVAL',
+  circuit: 'CIRCUIT',
+};
+
+export const findWorkoutsSelectionTitle = (routeName, workoutLocation, workoutFocus, hiitWorkoutStyle) => {
+  if (routeName === 'WorkoutsSelection') {
+    return `${workoutLocationMap[workoutLocation]} / ${workoutFocusMap[workoutFocus]}`;
+  } else if (routeName === 'HiitWorkoutsSelection') {
+    return `${workoutLocationMap[workoutLocation]} / ${hiitWorkoutStyleMap[hiitWorkoutStyle]}`;
+  }
+  return null;
 };
 
 export const findNutritionHeaderTitle = (routeName) => {
