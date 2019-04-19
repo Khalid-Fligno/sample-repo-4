@@ -28,15 +28,15 @@ const moment = require('moment');
 const { width } = Dimensions.get('window');
 
 const workIntervalMap = {
-  1: 30,
+  1: 40,
   2: 60,
-  3: 90,
+  3: 80,
 };
 
 const restIntervalMap = {
-  1: 90,
+  1: 80,
   2: 60,
-  3: 30,
+  3: 40,
 };
 
 export default class HiitWorkoutInfoScreen extends React.PureComponent {
@@ -46,7 +46,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       loading: false,
       workout: this.props.navigation.getParam('workout', null),
       fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
-      selectedHiitWorkoutIndex: this.props.navigation.getParam('selectedHiitWorkoutIndex', null),
       chosenDate: new Date(),
       calendarModalVisible: false,
       addingToCalendar: false,
@@ -91,9 +90,9 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
   toggleMusicModal = () => {
     this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
   }
-  handleHiitWorkoutStart = (workout, fitnessLevel, selectedHiitWorkoutIndex) => {
+  handleHiitWorkoutStart = (workout, fitnessLevel) => {
     this.setState({ musicModalVisible: false });
-    this.props.navigation.navigate('HiitCountdown', { exerciseList: workout.exercises, fitnessLevel, selectedHiitWorkoutIndex });
+    this.props.navigation.navigate('HiitCountdown', { exerciseList: workout.exercises, fitnessLevel });
   }
   addWorkoutToCalendar = async (date) => {
     if (this.state.addingToCalendar) {
@@ -127,7 +126,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       addingToCalendar,
       fitnessLevel,
       musicModalVisible,
-      selectedHiitWorkoutIndex,
       appleMusicAvailable,
       spotifyAvailable,
     } = this.state;
@@ -384,7 +382,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => this.handleHiitWorkoutStart(workout, fitnessLevel, selectedHiitWorkoutIndex)}
+                onPress={() => this.handleHiitWorkoutStart(workout, fitnessLevel)}
                 style={styles.musicModalContinueButton}
               >
                 <Text style={styles.musicModalButtonText}>
