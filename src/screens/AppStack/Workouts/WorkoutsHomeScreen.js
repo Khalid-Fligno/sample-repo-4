@@ -7,9 +7,9 @@ import {
   Dimensions,
   ImageBackground,
   AsyncStorage,
-  Alert,
+  // Alert,
 } from 'react-native';
-import { FileSystem, Haptic } from 'expo';
+import { Haptic } from 'expo';
 import Carousel from 'react-native-snap-carousel';
 import FadeInView from 'react-native-fade-in-view';
 import moment from 'moment';
@@ -53,17 +53,21 @@ const outdoorsResistanceWorkouts = [
   { displayName: 'ABS, BUTT & THIGHS', image: require('../../../../assets/images/workouts-outdoors-abt.jpg') },
 ];
 
-const hiitWorkouts = [
-  { displayName: 'RUNNING', image: require('../../../../assets/images/workouts-hiit-running.jpg') },
-  { displayName: 'ASSAULT BIKE', image: require('../../../../assets/images/workouts-hiit-airdyne.jpg') },
-  { displayName: 'ROWING', image: require('../../../../assets/images/workouts-hiit-rowing.jpg') },
-  { displayName: 'SKIPPING', image: require('../../../../assets/images/workouts-hiit-skipping.jpg') },
-];
-
 const workoutTypeImageMap = {
   0: gymResistanceWorkouts,
   1: homeResistanceWorkouts,
   2: outdoorsResistanceWorkouts,
+};
+
+const hiitStyles = [
+  { displayName: 'INTERVAL', image: require('../../../../assets/images/workouts-hiit-airdyne.jpg') },
+  { displayName: 'CIRCUIT', image: require('../../../../assets/images/workouts-hiit-skipping.jpg') },
+];
+
+const workoutLocationMap = {
+  0: 'gym',
+  1: 'home',
+  2: 'outdoors',
 };
 
 const workoutFocusMap = {
@@ -72,17 +76,9 @@ const workoutFocusMap = {
   2: 'lowerBody',
 };
 
-const workoutLocationMap = {
-  0: 'gym',
-  1: 'home',
-  2: 'outdoors',
-};
-
-const hiitTypeMap = {
-  0: 'jogging',
-  1: 'cycling',
-  2: 'rowing',
-  3: 'skipping',
+const hiitWorkoutStyleMap = {
+  0: 'interval',
+  1: 'circuit',
 };
 
 class WorkoutsHomeScreen extends React.PureComponent {
@@ -92,8 +88,9 @@ class WorkoutsHomeScreen extends React.PureComponent {
       loading: false,
       selectedWorkoutTypeIndex: 0,
       selectedWorkoutLocationIndex: 0,
-      selectedHiitWorkoutIndex: 0,
+      // selectedHiitWorkoutIndex: 0,
       selectedResistanceFocusIndex: 0,
+      selectedHiitStyleIndex: 0,
       helperModalVisible: false,
       resistanceWeeklyTarget: 3,
       hiitWeeklyTarget: 2,
@@ -113,7 +110,8 @@ class WorkoutsHomeScreen extends React.PureComponent {
     Haptic.selection();
     this.setState({
       selectedWorkoutTypeIndex: slideIndex,
-      selectedWorkoutLocationIndex: 0,
+      selectedHiitStyleIndex: 0,
+      selectedResistanceFocusIndex: 0,
     });
   }
   onSnapToItem = (field, slideIndex) => {
@@ -155,45 +153,27 @@ class WorkoutsHomeScreen extends React.PureComponent {
   }
   handleWorkoutSelected = (selectedWorkoutLocationIndex, selectedResistanceFocusIndex) => {
     const workoutLocation = workoutLocationMap[selectedWorkoutLocationIndex];
-    const workoutType = workoutFocusMap[selectedResistanceFocusIndex];
+    const workoutFocus = workoutFocusMap[selectedResistanceFocusIndex];
     this.props.navigation.navigate('WorkoutsSelection', {
-      workoutType,
+      workoutFocus,
       workoutLocation,
     });
   }
-  handleHiitWorkoutSelected = async (selectedHiitWorkoutIndex) => {
-    this.setState({ loading: true });
-    const type = hiitTypeMap[selectedHiitWorkoutIndex];
-    try {
-      await db.collection('workouts')
-        .where(type, '==', true)
-        .get()
-        .then(async (querySnapshot) => {
-          let workout;
-          await querySnapshot.forEach(async (doc) => {
-            workout = await doc.data();
-          });
-          const { exercises } = workout;
-          await FileSystem.downloadAsync(
-            exercises[0].videoURL,
-            `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
-          );
-          this.setState({ loading: false });
-          const fitnessLevel = await AsyncStorage.getItem('fitnessLevel') || '1';
-          this.props.navigation.navigate('HiitWorkoutInfo', { workout, fitnessLevel, selectedHiitWorkoutIndex });
-        });
-    } catch (err) {
-      this.setState({ loading: false });
-      Alert.alert('Could not download exercise video', 'Please check your internet connection');
-    }
+  handleHiitWorkoutSelected = (selectedWorkoutLocationIndex, selectedHiitStyleIndex) => {
+    const workoutLocation = workoutLocationMap[selectedWorkoutLocationIndex];
+    const hiitWorkoutStyle = hiitWorkoutStyleMap[selectedHiitStyleIndex];
+    this.props.navigation.navigate('HiitWorkoutsSelection', {
+      hiitWorkoutStyle,
+      workoutLocation,
+    });
   }
   goToWorkouts = (selectedWorkoutTypeIndex) => {
     Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
-    const { selectedWorkoutLocationIndex, selectedResistanceFocusIndex, selectedHiitWorkoutIndex } = this.state;
+    const { selectedWorkoutLocationIndex, selectedResistanceFocusIndex, selectedHiitStyleIndex } = this.state;
     if (selectedWorkoutTypeIndex === 0) {
       this.handleWorkoutSelected(selectedWorkoutLocationIndex, selectedResistanceFocusIndex);
     } else {
-      this.handleHiitWorkoutSelected(selectedHiitWorkoutIndex);
+      this.handleHiitWorkoutSelected(selectedWorkoutLocationIndex, selectedHiitStyleIndex);
     }
   }
   renderItem = ({ item }) => {
@@ -266,67 +246,30 @@ class WorkoutsHomeScreen extends React.PureComponent {
             />
           </View>
           <View style={styles.flexContainer}>
-            {
-              selectedWorkoutTypeIndex === 0 ? (
-                <View style={styles.carouselTitleContainer}>
-                  <View style={styles.flex}>
-                    <Text style={styles.carouselTitle}>
-                      Location
-                    </Text>
-                  </View>
-                  <Icon
-                    name="chevron-down"
-                    size={18}
-                    style={styles.chevron}
-                    color={colors.grey.standard}
-                  />
-                  <View style={styles.flex} />
-                </View>
-              ) : (
-                <View style={styles.carouselTitleContainer}>
-                  <View style={styles.flex}>
-                    <Text style={styles.carouselTitle}>
-                      Select Workout
-                    </Text>
-                  </View>
-                  <Icon
-                    name="chevron-down"
-                    size={18}
-                    style={styles.chevron}
-                    color={colors.grey.standard}
-                  />
-                  <View style={styles.flex} />
-                </View>
-              )
-            }
-            {
-              selectedWorkoutTypeIndex === 0 && (
-                <FadeInView duration={1500} style={styles.flexContainer}>
-                  <Carousel
-                    ref={(c) => { this.carousel = c; }}
-                    data={workoutLocations}
-                    renderItem={this.renderItem}
-                    sliderWidth={width}
-                    itemWidth={width * 0.8}
-                    onSnapToItem={(slideIndex) => this.onSnapToItem('selectedWorkoutLocationIndex', slideIndex)}
-                  />
-                </FadeInView>
-              )
-            }
-            {
-              selectedWorkoutTypeIndex === 1 && (
-                <FadeInView duration={1000} style={styles.flexContainer}>
-                  <Carousel
-                    ref={(c) => { this.carousel = c; }}
-                    data={hiitWorkouts}
-                    renderItem={this.renderItem}
-                    sliderWidth={width}
-                    itemWidth={width * 0.8}
-                    onSnapToItem={(slideIndex) => this.onSnapToItem('selectedHiitWorkoutIndex', slideIndex)}
-                  />
-                </FadeInView>
-              )
-            }
+            <View style={styles.carouselTitleContainer}>
+              <View style={styles.flex}>
+                <Text style={styles.carouselTitle}>
+                  Location
+                </Text>
+              </View>
+              <Icon
+                name="chevron-down"
+                size={18}
+                style={styles.chevron}
+                color={colors.grey.standard}
+              />
+              <View style={styles.flex} />
+            </View>
+            <FadeInView duration={1500} style={styles.flexContainer}>
+              <Carousel
+                ref={(c) => { this.carousel = c; }}
+                data={workoutLocations}
+                renderItem={this.renderItem}
+                sliderWidth={width}
+                itemWidth={width * 0.8}
+                onSnapToItem={(slideIndex) => this.onSnapToItem('selectedWorkoutLocationIndex', slideIndex)}
+              />
+            </FadeInView>
           </View>
           <View style={styles.flexContainer}>
             {
@@ -346,12 +289,20 @@ class WorkoutsHomeScreen extends React.PureComponent {
                   <View style={styles.flex} />
                 </View>
               ) : (
-                <Icon
-                  name="chevron-down"
-                  size={18}
-                  style={styles.chevron}
-                  color={colors.grey.standard}
-                />
+                <View style={styles.carouselTitleContainer}>
+                  <View style={styles.flex}>
+                    <Text style={styles.carouselTitle}>
+                      HIIT Style
+                    </Text>
+                  </View>
+                  <Icon
+                    name="chevron-down"
+                    size={18}
+                    style={styles.chevron}
+                    color={colors.grey.standard}
+                  />
+                  <View style={styles.flex} />
+                </View>
               )
             }
             {
@@ -368,28 +319,31 @@ class WorkoutsHomeScreen extends React.PureComponent {
                 </FadeInView>
               )
             }
+            {
+              selectedWorkoutTypeIndex === 1 && (
+                <FadeInView duration={1000} style={styles.flexContainer}>
+                  <Carousel
+                    ref={(c) => { this.carousel = c; }}
+                    data={hiitStyles}
+                    renderItem={this.renderItem}
+                    sliderWidth={width}
+                    itemWidth={width * 0.8}
+                    onSnapToItem={(slideIndex) => this.onSnapToItem('selectedHiitStyleIndex', slideIndex)}
+                  />
+                </FadeInView>
+              )
+            }
           </View>
-          {
-            selectedWorkoutTypeIndex === 0 ? (
-              <Icon
-                name="chevron-down"
-                size={18}
-                style={styles.chevron}
-                color={colors.grey.standard}
-              />
-            ) : (
-              <Icon
-                name="chevron-down"
-                size={18}
-                style={styles.chevron}
-                color={colors.transparent}
-              />
-            )
-          }
+          <Icon
+            name="chevron-down"
+            size={18}
+            style={styles.chevron}
+            color={colors.grey.standard}
+          />
         </View>
         <View style={styles.buttonContainer}>
           <CustomButton
-            title={selectedWorkoutTypeIndex === 0 ? 'SHOW WORKOUTS' : 'GO TO WORKOUT'}
+            title="SHOW WORKOUTS"
             onPress={() => this.goToWorkouts(selectedWorkoutTypeIndex)}
             primary
           />
