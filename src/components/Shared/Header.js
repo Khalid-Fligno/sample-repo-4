@@ -35,6 +35,10 @@ export default class Header extends React.PureComponent {
     const { navigation } = this.props;
     navigation.state.params.handleSkip();
   }
+  handleCancel = () => {
+    const { navigation } = this.props;
+    navigation.state.params.handleCancel();
+  }
   handleProfileButton = () => {
     const { navigation } = this.props;
     navigation.navigate('ProfileHome');
@@ -54,6 +58,7 @@ export default class Header extends React.PureComponent {
       withBackButton,
       withHelpButton,
       withSkipButton,
+      withCancelButton,
       withRestoreButton,
       withStartButton,
       withProfileButton,
@@ -161,6 +166,18 @@ export default class Header extends React.PureComponent {
             )
           }
           {
+            withCancelButton && (
+              <TouchableOpacity
+                style={styles.headerContentContainerRight}
+                onPress={this.handleCancel}
+              >
+                <Text style={styles.skipButton}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            )
+          }
+          {
             withRestoreButton && (
               <TouchableOpacity
                 style={styles.headerContentContainerRight}
@@ -200,7 +217,7 @@ export default class Header extends React.PureComponent {
               )
           }
           {
-            !withStartButton && !withSkipButton && !withProfileButton && !withRestoreButton && (
+            !withStartButton && !withSkipButton && !withCancelButton && !withProfileButton && !withRestoreButton && (
               <View
                 style={styles.headerContentContainerRight}
               />
@@ -217,6 +234,7 @@ Header.propTypes = {
   withLogoutButton: PropTypes.bool,
   withHelpButton: PropTypes.bool,
   withSkipButton: PropTypes.bool,
+  withCancelButton: PropTypes.bool,
   withRestoreButton: PropTypes.bool,
   withStartButton: PropTypes.bool,
   withProfileButton: PropTypes.bool,
@@ -229,6 +247,7 @@ Header.defaultProps = {
   withLogoutButton: false,
   withHelpButton: false,
   withSkipButton: false,
+  withCancelButton: false,
   withRestoreButton: false,
   withStartButton: false,
   withProfileButton: false,
