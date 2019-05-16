@@ -18,6 +18,16 @@ const findProfileHeaderTitle = {
   Settings: 'SETTINGS',
 };
 
+const backButtonMap = {
+  ProfileHome: true,
+  Profile: true,
+  HelpAndSupport: true,
+  PrivacyPolicy: true,
+  TermsOfService: true,
+  Settings: true,
+  Burpee1: true,
+};
+
 const cancelButtonMap = {
   Burpee3: true,
   Burpee4: true,
@@ -45,7 +55,7 @@ const ProfileStack = createStackNavigator(
           <Header
             navigation={navigation}
             stack="profile"
-            withBackButton
+            withBackButton={backButtonMap[routeName]}
             withCancelButton={cancelButtonMap[routeName]}
             headerTitleParams={findProfileHeaderTitle[routeName]}
           />
