@@ -6,12 +6,21 @@ import HelpAndSupportScreen from '../../src/screens/AppStack/Profile/HelpAndSupp
 import PrivacyPolicyScreen from '../../src/screens/AppStack/Profile/PrivacyPolicyScreen';
 import TermsOfServiceScreen from '../../src/screens/AppStack/Profile/TermsOfServiceScreen';
 import SettingsScreen from '../../src/screens/AppStack/Profile/SettingsScreen';
+import Burpee1Screen from '../../src/screens/AppStack/Profile/Burpee1Screen';
+import Burpee2Screen from '../../src/screens/AppStack/Profile/Burpee2Screen';
+import Burpee3Screen from '../../src/screens/AppStack/Profile/Burpee3Screen';
+import Burpee4Screen from '../../src/screens/AppStack/Profile/Burpee4Screen';
 import Header from '../../src/components/Shared/Header';
 
 const findProfileHeaderTitle = {
   ProfileHome: 'ACCOUNT',
   Profile: 'PROFILE',
   Settings: 'SETTINGS',
+};
+
+const cancelButtonMap = {
+  Burpee3: true,
+  Burpee4: true,
 };
 
 const ProfileStack = createStackNavigator(
@@ -22,6 +31,10 @@ const ProfileStack = createStackNavigator(
     PrivacyPolicy: PrivacyPolicyScreen,
     TermsOfService: TermsOfServiceScreen,
     Settings: SettingsScreen,
+    Burpee1: Burpee1Screen,
+    Burpee2: Burpee2Screen,
+    Burpee3: Burpee3Screen,
+    Burpee4: Burpee4Screen,
   },
   {
     initialRouteName: 'ProfileHome',
@@ -33,6 +46,7 @@ const ProfileStack = createStackNavigator(
             navigation={navigation}
             stack="profile"
             withBackButton
+            withCancelButton={cancelButtonMap[routeName]}
             headerTitleParams={findProfileHeaderTitle[routeName]}
           />
         );
