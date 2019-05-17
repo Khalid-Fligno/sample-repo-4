@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, View, AsyncStorage, ScrollView, Dimensions, Alert } from 'react-native';
+import { FileSystem } from 'expo';
 import { List, ListItem } from 'react-native-elements';
 import firebase from 'firebase';
 import { db, auth } from '../../../../config/firebase';
@@ -79,6 +80,15 @@ export default class SettingsScreen extends React.PureComponent {
     Alert.alert('Your progress info has been reset');
     this.setState({ loading: false });
   }
+  retakeBurpeeTest = async () => {
+    this.setState({ loading: true });
+    await FileSystem.downloadAsync(
+      'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2FBURPEES.mp4?alt=media&token=688885cb-2d70-4fc6-82a9-abc4e95daf89',
+      `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
+    );
+    this.setState({ loading: false });
+    this.props.navigation.navigate('Burpee1');
+  }
   render() {
     const { isPasswordAccount, profile, loading } = this.state;
     return (
@@ -109,6 +119,12 @@ export default class SettingsScreen extends React.PureComponent {
                   />
                 )
               }
+              <ListItem
+                title="Re-take burpee test"
+                titleStyle={styles.listItemTitle}
+                containerStyle={styles.listItemContainer}
+                onPress={() => this.retakeBurpeeTest()}
+              />
             </List>
           </ScrollView>
           <Loader
