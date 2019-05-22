@@ -208,15 +208,15 @@ const styles = StyleSheet.create({
     width,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     paddingTop: 5,
     paddingLeft: 10,
     paddingRight: 10,
     backgroundColor: colors.white,
   },
   currentExerciseNameText: {
-    fontFamily: fonts.boldNarrow,
-    fontSize: 18,
+    fontFamily: fonts.bold,
+    fontSize: 20,
     color: colors.coral.standard,
   },
   pauseButtonContainer: {
