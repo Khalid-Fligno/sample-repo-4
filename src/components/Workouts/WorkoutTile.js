@@ -96,7 +96,7 @@ WorkoutTile.defaultProps = {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    flex: 0.25,
+    flex: 1,
     margin: 5,
     paddingLeft: 10,
     paddingRight: 10,
