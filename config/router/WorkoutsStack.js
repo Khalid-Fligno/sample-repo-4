@@ -5,6 +5,7 @@ import WorkoutsSelectionScreen from '../../src/screens/AppStack/Workouts/Workout
 import HiitWorkoutsSelectionScreen from '../../src/screens/AppStack/Workouts/HiitWorkoutsSelectionScreen';
 import WorkoutInfoScreen from '../../src/screens/AppStack/Workouts/WorkoutInfoScreen';
 import HiitWorkoutInfoScreen from '../../src/screens/AppStack/Workouts/HiitWorkoutInfoScreen';
+import HiitCircuitWorkoutInfoScreen from '../../src/screens/AppStack/Workouts/HiitCircuitWorkoutInfoScreen';
 import Header from '../../src/components/Shared/Header';
 import {
   workoutsBackButtonMap,
@@ -20,6 +21,7 @@ const WorkoutsStack = createStackNavigator(
     HiitWorkoutsSelection: HiitWorkoutsSelectionScreen,
     WorkoutInfo: WorkoutInfoScreen,
     HiitWorkoutInfo: HiitWorkoutInfoScreen,
+    HiitCircuitWorkoutInfo: HiitCircuitWorkoutInfoScreen,
   },
   {
     initialRouteName: 'WorkoutsHome',
