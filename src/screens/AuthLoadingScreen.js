@@ -8,6 +8,7 @@ import {
   AppLoading,
   Asset,
   Font,
+  Audio,
 } from 'expo';
 import {
   validateReceiptProduction,
@@ -15,6 +16,7 @@ import {
   compare,
 } from '../../config/apple';
 import { auth, db } from '../../config/firebase';
+import { timerSound } from '../../config/audio';
 
 const { InAppUtils } = NativeModules;
 
@@ -113,6 +115,8 @@ export default class AuthLoadingScreen extends React.PureComponent {
   }
   // Include payments
   cachingComplete = async () => {
+    Audio.setIsEnabledAsync(true);
+    timerSound.loadAsync(require('../../assets/sounds/ding.mp3'));
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         unsubscribe();
