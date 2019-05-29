@@ -1,7 +1,8 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import PropTypes from 'prop-types';
-import { Audio } from 'expo';
+// import { Audio } from 'expo';
+import { timerSound } from '../../../config/audio';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
@@ -16,9 +17,6 @@ export default class CountdownTimer extends React.PureComponent {
     if (this.props.start) {
       this.start();
     }
-    await Audio.setIsEnabledAsync(true);
-    this.soundObject = new Audio.Sound();
-    this.soundObject.loadAsync(require('../../../assets/sounds/ding.mp3'));
   }
   componentWillReceiveProps(newProps) {
     if (newProps.start) {
@@ -36,17 +34,15 @@ export default class CountdownTimer extends React.PureComponent {
     this.soundObject = null;
   }
   start = async () => {
-    // await Audio.setIsEnabledAsync(true);
-    // const soundObject = new Audio.Sound();
-    // await soundObject.loadAsync(require('../../../assets/sounds/ding.mp3'));
     const { handleFinish } = this.props;
     const endTime = new Date().getTime() + this.state.remainingTime;
-    this.interval = setInterval(() => {
+    this.interval = setInterval(async () => {
       const remaining = endTime - new Date();
       if (remaining <= 1000) {
         this.setState({ remainingTime: 0 });
         this.stop();
-        this.soundObject.playAsync();
+        await timerSound.setPositionAsync(0);
+        await timerSound.playAsync();
         handleFinish();
         return;
       }
