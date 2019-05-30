@@ -62,7 +62,6 @@ export default class WorkoutTimer extends React.PureComponent {
   componentWillUnmount() {
     clearInterval(this.interval);
     this.interval = null;
-    this.soundObject = null;
   }
   finishAlert = () => {
     Alert.alert(
