@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import PropTypes from 'prop-types';
-// import { Audio } from 'expo';
 import { timerSound } from '../../../config/audio';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
@@ -31,7 +30,6 @@ export default class CountdownTimer extends React.PureComponent {
   componentWillUnmount() {
     clearInterval(this.interval);
     this.interval = null;
-    this.soundObject = null;
   }
   start = async () => {
     const { handleFinish } = this.props;
@@ -51,6 +49,7 @@ export default class CountdownTimer extends React.PureComponent {
   }
   stop = () => {
     clearInterval(this.interval);
+    this.interval = null;
   }
   reset = (newDuration) => {
     this.setState({
