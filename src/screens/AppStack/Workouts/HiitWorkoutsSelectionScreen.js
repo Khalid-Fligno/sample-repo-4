@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, AsyncStorage, Alert } from 'react-native';
+import { StyleSheet, View, AsyncStorage } from 'react-native';
 import { FileSystem } from 'expo';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
@@ -63,19 +63,37 @@ export default class HiitWorkoutsSelectionScreen extends React.PureComponent {
   loadExercises = async (workout) => {
     this.setState({ loading: true });
     const { exercises } = workout;
-    try {
+    const fitnessLevel = await AsyncStorage.getItem('fitnessLevel') || '1';
+    if (workout.interval) {
       await FileSystem.downloadAsync(
         exercises[0].videoURL,
         `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
       );
       this.setState({ loading: false });
-      const fitnessLevel = await AsyncStorage.getItem('fitnessLevel') || '1';
-      this.setState({ loading: false });
       this.props.navigation.navigate('HiitWorkoutInfo', { workout, fitnessLevel });
-    } catch (err) {
+    } else {
+      await Promise.all(exercises.map(async (exercise, index) => {
+        await FileSystem.downloadAsync(
+          exercise.videoURL,
+          `${FileSystem.cacheDirectory}exercise-hiit-circuit-${index + 1}.mp4`,
+        );
+      }));
       this.setState({ loading: false });
-      Alert.alert('Could not download exercise videos', 'Please check your internet connection');
+      this.props.navigation.navigate('HiitCircuitWorkoutInfo', { workout, fitnessLevel });
     }
+    // try {
+    //   await FileSystem.downloadAsync(
+    //     exercises[0].videoURL,
+    //     `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
+    //   );
+    //   this.setState({ loading: false });
+    //   const fitnessLevel = await AsyncStorage.getItem('fitnessLevel') || '1';
+    //   this.setState({ loading: false });
+    //   this.props.navigation.navigate('HiitWorkoutInfo', { workout, fitnessLevel });
+    // } catch (err) {
+    //   this.setState({ loading: false });
+    //   Alert.alert('Could not download exercise videos', 'Please check your internet connection');
+    // }
   }
   render() {
     const {
