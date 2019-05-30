@@ -59,7 +59,7 @@ export default class WorkoutPauseModal extends React.PureComponent {
             {
               handleSkip && (
                 <TouchableOpacity
-                  onPress={() => handleSkip(exerciseList, reps)}
+                  onPress={() => handleSkip(exerciseList, fitnessLevel || reps)}
                   style={styles.modalButtonSkip}
                 >
                   <Text style={styles.modalButtonText}>
