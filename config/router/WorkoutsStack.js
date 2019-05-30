@@ -9,6 +9,7 @@ import HiitCircuitWorkoutInfoScreen from '../../src/screens/AppStack/Workouts/Hi
 import Header from '../../src/components/Shared/Header';
 import {
   workoutsBackButtonMap,
+  workoutsStartButtonMap,
   fadeSpec,
   fade,
   findWorkoutsSelectionTitle,
@@ -56,7 +57,7 @@ const WorkoutsStack = createStackNavigator(
           <Header
             navigation={navigation}
             withBackButton={workoutsBackButtonMap[routeName]}
-            withStartButton={routeName === 'WorkoutInfo' || routeName === 'HiitWorkoutInfo'}
+            withStartButton={workoutsStartButtonMap[routeName]}
             withProfileButton={routeName === 'WorkoutsHome'}
             withHelpButton={routeName === 'WorkoutsHome'}
             stack="workouts"

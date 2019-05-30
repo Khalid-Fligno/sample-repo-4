@@ -40,6 +40,12 @@ export const workoutsBackButtonMap = {
   HiitCircuitWorkoutInfo: true,
 };
 
+export const workoutsStartButtonMap = {
+  WorkoutInfo: true,
+  HiitWorkoutInfo: true,
+  HiitCircuitWorkoutInfo: true,
+};
+
 export const nutritionBackButtonMap = {
   NutritionHome: false,
   RecipeSelection: true,
