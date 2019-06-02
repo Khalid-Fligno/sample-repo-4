@@ -178,13 +178,24 @@ class CalendarHomeScreen extends React.PureComponent {
       .then(async (doc) => {
         const workout = await doc.data();
         const { exercises } = workout;
-        await FileSystem.downloadAsync(
-          exercises[0].videoURL,
-          `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
-        );
         const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
-        this.setState({ loading: false });
-        this.props.navigation.navigate('HiitWorkoutInfo', { workout, fitnessLevel });
+        if (workout.interval) {
+          await FileSystem.downloadAsync(
+            exercises[0].videoURL,
+            `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
+          );
+          this.setState({ loading: false });
+          this.props.navigation.navigate('HiitWorkoutInfo', { workout, fitnessLevel });
+        } else {
+          await Promise.all(exercises.map(async (exercise, index) => {
+            await FileSystem.downloadAsync(
+              exercise.videoURL,
+              `${FileSystem.cacheDirectory}exercise-hiit-circuit-${index + 1}.mp4`,
+            );
+          }));
+          this.setState({ loading: false });
+          this.props.navigation.navigate('HiitCircuitWorkoutInfo', { workout, fitnessLevel });
+        }
       })
       .catch(() => {
         this.setState({ loading: false });
