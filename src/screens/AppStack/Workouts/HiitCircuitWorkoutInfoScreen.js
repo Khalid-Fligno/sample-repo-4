@@ -317,7 +317,7 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
             </Text>
             {exerciseDisplay}
             <Text style={styles.workoutPreviewFooterText}>
-              REPEAT 3 TIMES
+              3 TIMES THROUGH
             </Text>
           </View>
         </ScrollView>
