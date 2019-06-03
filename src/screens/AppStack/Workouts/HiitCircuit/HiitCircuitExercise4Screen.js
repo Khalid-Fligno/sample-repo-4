@@ -241,11 +241,11 @@ export default class HiitCircuitExercise4Screen extends React.PureComponent {
                 {currentExercise.name.toUpperCase()}
               </Text>
             </View>
-            {/* <View style={styles.currentExerciseRepsTextContainer}>
+            <View style={styles.currentExerciseRepsTextContainer}>
               <Text style={styles.currentExerciseRepsText}>
-                x{reps}
+                {workIntervalMap[this.props.navigation.getParam('fitnessLevel', null)]} sec
               </Text>
-            </View> */}
+            </View>
           </View>
           <HiitCircuitWorkoutProgress
             currentExercise={4}
@@ -289,16 +289,12 @@ const styles = StyleSheet.create({
   currentExerciseTextContainer: {
     width,
     flexDirection: 'row',
-    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
     backgroundColor: colors.white,
   },
   currentExerciseNameTextContainer: {
-    width: width - 50,
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
@@ -306,14 +302,15 @@ const styles = StyleSheet.create({
     fontFamily: fonts.boldNarrow,
     fontSize: 18,
     color: colors.coral.standard,
+    marginLeft: 15,
   },
-  // currentExerciseRepsTextContainer: {
-  //   width: 30,
-  //   alignItems: 'flex-end',
-  //   justifyContent: 'center',
-  // },
-  // currentExerciseRepsText: {
-  //   fontFamily: fonts.boldNarrow,
-  //   fontSize: 18,
-  // },
+  currentExerciseRepsTextContainer: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  currentExerciseRepsText: {
+    fontFamily: fonts.boldNarrow,
+    fontSize: 18,
+    marginRight: 15,
+  },
 });
