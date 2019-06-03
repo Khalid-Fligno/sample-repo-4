@@ -1,13 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Alert, AppState } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, StatusBar, Alert, AppState } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { FileSystem } from 'expo';
 import FadeInView from 'react-native-fade-in-view';
 import FastImage from 'react-native-fast-image';
-import Icon from '../../../../components/Shared/Icon';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
+import PauseButtonRow from '../../../../components/Workouts/PauseButtonRow';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
 
@@ -153,29 +153,25 @@ export default class HiitExercise2Screen extends React.PureComponent {
             />
           </View>
           <View style={styles.currentExerciseTextContainer}>
-            <Text style={styles.currentExerciseNameText}>
-              REST
-            </Text>
+            <View style={styles.currentExerciseNameTextContainer}>
+              <Text style={styles.currentExerciseNameText}>
+                REST
+              </Text>
+            </View>
+            <View style={styles.currentExerciseRepsTextContainer}>
+              <Text style={styles.currentExerciseRepsText}>
+                {restIntervalMap[this.props.navigation.getParam('fitnessLevel', null)]} sec
+              </Text>
+            </View>
           </View>
           <HiitWorkoutProgress
             currentRound={this.props.navigation.getParam('roundCount', 0) + 1}
             rest
           />
-          <View style={styles.pauseButtonContainer}>
-            <TouchableOpacity
-              onPress={this.handlePause}
-              style={styles.pauseButton}
-            >
-              <Icon
-                name="pause"
-                size={15}
-                color={colors.coral.standard}
-              />
-              <Text style={styles.pauseButtonText}>
-                PAUSE
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <PauseButtonRow
+            handlePause={this.handlePause}
+            nextExerciseName={exerciseList[0].name}
+          />
           <WorkoutPauseModal
             isVisible={pauseModalVisible}
             handleQuit={this.quitWorkout}
@@ -204,47 +200,28 @@ const styles = StyleSheet.create({
   currentExerciseTextContainer: {
     width,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingTop: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
     backgroundColor: colors.white,
+  },
+  currentExerciseNameTextContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
   },
   currentExerciseNameText: {
-    fontFamily: fonts.bold,
-    fontSize: 20,
+    fontFamily: fonts.boldNarrow,
+    fontSize: 18,
     color: colors.coral.standard,
+    marginLeft: 15,
   },
-  pauseButtonContainer: {
-    width,
-    alignItems: 'flex-start',
-    padding: 5,
-    backgroundColor: colors.grey.light,
-  },
-  pauseButton: {
-    width: 117.5,
-    height: 40,
-    flexDirection: 'row',
+  currentExerciseRepsTextContainer: {
+    alignItems: 'flex-end',
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.white,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderWidth: 2,
-    borderColor: colors.coral.standard,
-    borderRadius: 4,
-    shadowColor: colors.charcoal.light,
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 2,
   },
-  pauseButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.coral.standard,
-    marginTop: 4,
-    marginLeft: 5,
-    marginRight: 5,
+  currentExerciseRepsText: {
+    fontFamily: fonts.boldNarrow,
+    fontSize: 18,
+    marginRight: 15,
   },
 });
