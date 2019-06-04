@@ -12,7 +12,8 @@ import {
   Image,
   Linking,
 } from 'react-native';
-import { FileSystem, Video } from 'expo';
+import { FileSystem } from 'expo';
+import Video from 'react-native-video';
 import Modal from 'react-native-modal';
 import Carousel from 'react-native-carousel';
 import { DotIndicator } from 'react-native-indicators';
@@ -164,11 +165,11 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
               {
                 index === 0 && (
                   <Video
+                    ref={(ref) => this.videoRef = ref}
                     source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-1.mp4` }}
                     isMuted
                     resizeMode="contain"
-                    shouldPlay
-                    isLooping
+                    repeat
                     style={{ width: width - 30, height: width - 30 }}
                   />
                 )
