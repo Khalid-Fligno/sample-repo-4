@@ -120,9 +120,8 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
     );
   }
   keyExtractor = (item) => item.id;
-  renderItem = ({ exercise, index }) => (
+  renderItem = ({ item: exercise, index }) => (
     <Carousel
-      key={exercise.id}
       width={width}
       inactiveIndicatorColor={colors.coral.standard}
       indicatorColor={colors.coral.standard}
@@ -133,7 +132,6 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
       animate={false}
     >
       <View
-        key={exercise.id}
         style={styles.exerciseTile}
       >
         <View style={styles.exerciseTileHeaderBar}>
@@ -149,11 +147,11 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
           </View>
         </View>
         <Video
+          ref={(ref) => this.videoRef = ref}
           source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-circuit-${index + 1}.mp4` }}
           isMuted
           resizeMode="contain"
-          shouldPlay
-          isLooping
+          repeat
           style={{ width: width - 30, height: width - 30 }}
         />
       </View>
@@ -316,7 +314,6 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
             {
               workout && (
                 <FlatList
-                  contentContainerStyle={styles.scrollView}
                   data={workout.exercises}
                   keyExtractor={this.keyExtractor}
                   renderItem={this.renderItem}

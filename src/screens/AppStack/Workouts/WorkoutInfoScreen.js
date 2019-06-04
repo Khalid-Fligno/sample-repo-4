@@ -110,7 +110,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
   }
   keyExtractor = (exercise) => exercise.id;
-  renderItem = ({ exercise, index }) => (
+  renderItem = ({ item: exercise, index }) => (
     <Carousel
       key={exercise.id}
       width={width}
@@ -341,7 +341,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             {
               workout && (
                 <FlatList
-                  contentContainerStyle={styles.scrollView}
                   data={workout.exercises}
                   keyExtractor={this.keyExtractor}
                   renderItem={this.renderItem}

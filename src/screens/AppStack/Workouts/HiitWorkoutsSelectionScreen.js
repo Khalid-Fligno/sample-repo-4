@@ -65,23 +65,23 @@ export default class HiitWorkoutsSelectionScreen extends React.PureComponent {
     const { exercises } = workout;
     const fitnessLevel = await AsyncStorage.getItem('fitnessLevel') || '1';
     if (workout.interval) {
-      const exerciseVideos = [
-        `${FileSystem.cacheDirectory}exercise-1.mp4`,
-        `${FileSystem.cacheDirectory}exercise-2.mp4`,
-        `${FileSystem.cacheDirectory}exercise-3.mp4`,
-        `${FileSystem.cacheDirectory}exercise-4.mp4`,
-        `${FileSystem.cacheDirectory}exercise-5.mp4`,
-        `${FileSystem.cacheDirectory}exercise-6.mp4`,
-        `${FileSystem.cacheDirectory}exercise-hiit-circuit-1.mp4`,
-        `${FileSystem.cacheDirectory}exercise-hiit-circuit-2.mp4`,
-        `${FileSystem.cacheDirectory}exercise-hiit-circuit-3.mp4`,
-        `${FileSystem.cacheDirectory}exercise-hiit-circuit-4.mp4`,
-        `${FileSystem.cacheDirectory}exercise-hiit-circuit-5.mp4`,
-        `${FileSystem.cacheDirectory}exercise-hiit-circuit-6.mp4`,
-      ];
-      Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
-        FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
-      }));
+      // const exerciseVideos = [
+      //   `${FileSystem.cacheDirectory}exercise-1.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-2.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-3.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-4.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-5.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-6.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-hiit-circuit-1.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-hiit-circuit-2.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-hiit-circuit-3.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-hiit-circuit-4.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-hiit-circuit-5.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-hiit-circuit-6.mp4`,
+      // ];
+      // Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
+      //   FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
+      // }));
       await FileSystem.downloadAsync(
         exercises[0].videoURL,
         `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
@@ -89,18 +89,18 @@ export default class HiitWorkoutsSelectionScreen extends React.PureComponent {
       this.setState({ loading: false });
       this.props.navigation.navigate('HiitWorkoutInfo', { workout, fitnessLevel });
     } else {
-      const exerciseVideos = [
-        `${FileSystem.cacheDirectory}exercise-1.mp4`,
-        `${FileSystem.cacheDirectory}exercise-2.mp4`,
-        `${FileSystem.cacheDirectory}exercise-3.mp4`,
-        `${FileSystem.cacheDirectory}exercise-4.mp4`,
-        `${FileSystem.cacheDirectory}exercise-5.mp4`,
-        `${FileSystem.cacheDirectory}exercise-6.mp4`,
-        `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
-      ];
-      Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
-        FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
-      }));
+      // const exerciseVideos = [
+      //   `${FileSystem.cacheDirectory}exercise-1.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-2.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-3.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-4.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-5.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-6.mp4`,
+      //   `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
+      // ];
+      // Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
+      //   FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
+      // }));
       await Promise.all(exercises.map(async (exercise, index) => {
         await FileSystem.downloadAsync(
           exercise.videoURL,
