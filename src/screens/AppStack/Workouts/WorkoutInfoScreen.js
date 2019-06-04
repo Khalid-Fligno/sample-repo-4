@@ -11,8 +11,10 @@ import {
   Alert,
   Linking,
   Image,
+  FlatList,
 } from 'react-native';
-import { FileSystem, Video } from 'expo';
+import { FileSystem } from 'expo';
+import Video from 'react-native-video';
 import Modal from 'react-native-modal';
 import Carousel from 'react-native-carousel';
 import { DotIndicator } from 'react-native-indicators';
@@ -107,6 +109,106 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     this.setState({ musicModalVisible: false });
     this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
   }
+  keyExtractor = (item) => item.id;
+  renderItem = ({ exercise, index }) => (
+    <Carousel
+      key={exercise.id}
+      width={width}
+      inactiveIndicatorColor={colors.coral.standard}
+      indicatorColor={colors.coral.standard}
+      indicatorOffset={-2}
+      indicatorSize={13}
+      inactiveIndicatorText="○"
+      indicatorText="●"
+      animate={false}
+    >
+      <View
+        key={exercise.id}
+        style={styles.exerciseTile}
+      >
+        <View style={styles.exerciseTileHeaderBar}>
+          <View>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={styles.exerciseTileHeaderTextLeft}
+            >
+              {index + 1}. {exercise.name}
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.exerciseTileHeaderBarRight}>
+              x{this.state.reps}
+            </Text>
+          </View>
+        </View>
+        <Video
+          ref={(ref) => this.videoRef = ref}
+          source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
+          isMuted
+          resizeMode="contain"
+          repeat
+          style={{ width: width - 30, height: width - 30 }}
+        />
+      </View>
+      <View style={styles.exerciseDescriptionContainer}>
+        <View style={styles.exerciseTileHeaderBar}>
+          <View>
+            <Text style={styles.exerciseTileHeaderTextLeft}>
+              ADDITIONAL INFORMATION
+            </Text>
+          </View>
+        </View>
+        <View style={styles.exerciseDescriptionTextContainer}>
+          {
+            exercise.recommendedResistance && (
+              <Text style={styles.exerciseDescriptionHeader}>Recommended resistance:</Text>
+            )
+          }
+          {
+            exercise.recommendedResistance && (
+              <Text style={styles.exerciseDescriptionText}>{exercise.recommendedResistance}</Text>
+            )
+          }
+          {
+            exercise.coachingTip && (
+              <Text style={styles.exerciseDescriptionHeader}>Coaching tip:</Text>
+            )
+          }
+          {
+            exercise.coachingTip && exercise.coachingTip.map((tip) => (
+              <Text
+                key={tip}
+                style={styles.exerciseDescriptionText}
+              >
+                {`• ${tip}`}
+              </Text>
+            ))
+          }
+          {
+            exercise.scaledVersion && (
+              <Text style={styles.exerciseDescriptionHeader}>Scaled version:</Text>
+            )
+          }
+          {
+            exercise.scaledVersion && (
+              <Text style={styles.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
+            )
+          }
+          {
+            exercise.otherInfo && exercise.otherInfo.map((text) => (
+              <Text
+                key={text}
+                style={styles.exerciseDescriptionHeader}
+              >
+                {text}
+              </Text>
+            ))
+          }
+        </View>
+      </View>
+    </Carousel>
+  );
   render() {
     const {
       loading,
@@ -119,110 +221,110 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       appleMusicAvailable,
       spotifyAvailable,
     } = this.state;
-    let exerciseDisplay;
-    if (workout) {
-      exerciseDisplay = workout.exercises.map((exercise, index) => {
-        return (
-          <Carousel
-            key={exercise.id}
-            width={width}
-            inactiveIndicatorColor={colors.coral.standard}
-            indicatorColor={colors.coral.standard}
-            indicatorOffset={-2}
-            indicatorSize={13}
-            inactiveIndicatorText="○"
-            indicatorText="●"
-            animate={false}
-          >
-            <View
-              key={exercise.id}
-              style={styles.exerciseTile}
-            >
-              <View style={styles.exerciseTileHeaderBar}>
-                <View>
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    style={styles.exerciseTileHeaderTextLeft}
-                  >
-                    {index + 1}. {exercise.name}
-                  </Text>
-                </View>
-                <View>
-                  <Text style={styles.exerciseTileHeaderBarRight}>
-                    x{reps}
-                  </Text>
-                </View>
-              </View>
-              <Video
-                source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
-                isMuted
-                resizeMode="contain"
-                shouldPlay
-                isLooping
-                style={{ width: width - 30, height: width - 30 }}
-              />
-            </View>
-            <View style={styles.exerciseDescriptionContainer}>
-              <View style={styles.exerciseTileHeaderBar}>
-                <View>
-                  <Text style={styles.exerciseTileHeaderTextLeft}>
-                    ADDITIONAL INFORMATION
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.exerciseDescriptionTextContainer}>
-                {
-                  exercise.recommendedResistance && (
-                    <Text style={styles.exerciseDescriptionHeader}>Recommended resistance:</Text>
-                  )
-                }
-                {
-                  exercise.recommendedResistance && (
-                    <Text style={styles.exerciseDescriptionText}>{exercise.recommendedResistance}</Text>
-                  )
-                }
-                {
-                  exercise.coachingTip && (
-                    <Text style={styles.exerciseDescriptionHeader}>Coaching tip:</Text>
-                  )
-                }
-                {
-                  exercise.coachingTip && exercise.coachingTip.map((tip) => (
-                    <Text
-                      key={tip}
-                      style={styles.exerciseDescriptionText}
-                    >
-                      {`• ${tip}`}
-                    </Text>
-                  ))
-                }
-                {
-                  exercise.scaledVersion && (
-                    <Text style={styles.exerciseDescriptionHeader}>Scaled version:</Text>
-                  )
-                }
-                {
-                  exercise.scaledVersion && (
-                    <Text style={styles.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
-                  )
-                }
-                {
-                  exercise.otherInfo && exercise.otherInfo.map((text) => (
-                    <Text
-                      key={text}
-                      style={styles.exerciseDescriptionHeader}
-                    >
-                      {text}
-                    </Text>
-                  ))
-                }
-              </View>
-            </View>
-          </Carousel>
-        );
-      });
-    }
+    // let exerciseDisplay;
+    // if (workout) {
+    //   exerciseDisplay = workout.exercises.map((exercise, index) => {
+    //     return (
+    //       <Carousel
+    //         key={exercise.id}
+    //         width={width}
+    //         inactiveIndicatorColor={colors.coral.standard}
+    //         indicatorColor={colors.coral.standard}
+    //         indicatorOffset={-2}
+    //         indicatorSize={13}
+    //         inactiveIndicatorText="○"
+    //         indicatorText="●"
+    //         animate={false}
+    //       >
+    //         <View
+    //           key={exercise.id}
+    //           style={styles.exerciseTile}
+    //         >
+    //           <View style={styles.exerciseTileHeaderBar}>
+    //             <View>
+    //               <Text
+    //                 numberOfLines={1}
+    //                 ellipsizeMode="tail"
+    //                 style={styles.exerciseTileHeaderTextLeft}
+    //               >
+    //                 {index + 1}. {exercise.name}
+    //               </Text>
+    //             </View>
+    //             <View>
+    //               <Text style={styles.exerciseTileHeaderBarRight}>
+    //                 x{reps}
+    //               </Text>
+    //             </View>
+    //           </View>
+    //           <Video
+    //             ref={(ref) => this.videoRef = ref}
+    //             source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
+    //             isMuted
+    //             resizeMode="contain"
+    //             repeat
+    //             style={{ width: width - 30, height: width - 30 }}
+    //           />
+    //         </View>
+    //         <View style={styles.exerciseDescriptionContainer}>
+    //           <View style={styles.exerciseTileHeaderBar}>
+    //             <View>
+    //               <Text style={styles.exerciseTileHeaderTextLeft}>
+    //                 ADDITIONAL INFORMATION
+    //               </Text>
+    //             </View>
+    //           </View>
+    //           <View style={styles.exerciseDescriptionTextContainer}>
+    //             {
+    //               exercise.recommendedResistance && (
+    //                 <Text style={styles.exerciseDescriptionHeader}>Recommended resistance:</Text>
+    //               )
+    //             }
+    //             {
+    //               exercise.recommendedResistance && (
+    //                 <Text style={styles.exerciseDescriptionText}>{exercise.recommendedResistance}</Text>
+    //               )
+    //             }
+    //             {
+    //               exercise.coachingTip && (
+    //                 <Text style={styles.exerciseDescriptionHeader}>Coaching tip:</Text>
+    //               )
+    //             }
+    //             {
+    //               exercise.coachingTip && exercise.coachingTip.map((tip) => (
+    //                 <Text
+    //                   key={tip}
+    //                   style={styles.exerciseDescriptionText}
+    //                 >
+    //                   {`• ${tip}`}
+    //                 </Text>
+    //               ))
+    //             }
+    //             {
+    //               exercise.scaledVersion && (
+    //                 <Text style={styles.exerciseDescriptionHeader}>Scaled version:</Text>
+    //               )
+    //             }
+    //             {
+    //               exercise.scaledVersion && (
+    //                 <Text style={styles.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
+    //               )
+    //             }
+    //             {
+    //               exercise.otherInfo && exercise.otherInfo.map((text) => (
+    //                 <Text
+    //                   key={text}
+    //                   style={styles.exerciseDescriptionHeader}
+    //                 >
+    //                   {text}
+    //                 </Text>
+    //               ))
+    //             }
+    //           </View>
+    //         </View>
+    //       </Carousel>
+    //     );
+    //   });
+    // }
     const findLocationIcon = () => {
       let location;
       if (workout.home) {
@@ -340,7 +442,17 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             <Text style={styles.workoutPreviewHeaderText}>
               WORKOUT PREVIEW
             </Text>
-            {exerciseDisplay}
+            {/* {exerciseDisplay} */}
+            {
+              workout && (
+                <FlatList
+                  contentContainerStyle={styles.scrollView}
+                  data={workout.exercises}
+                  keyExtractor={this.keyExtractor}
+                  renderItem={this.renderItem}
+                />
+              )
+            }
           </View>
         </ScrollView>
         <Modal
