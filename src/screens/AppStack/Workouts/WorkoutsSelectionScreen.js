@@ -103,6 +103,18 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     const fitnessLevel = await AsyncStorage.getItem('fitnessLevel');
     const { exercises } = workout;
     try {
+      const exerciseVideos = [
+        `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
+        `${FileSystem.cacheDirectory}exercise-hiit-circuit-1.mp4`,
+        `${FileSystem.cacheDirectory}exercise-hiit-circuit-2.mp4`,
+        `${FileSystem.cacheDirectory}exercise-hiit-circuit-3.mp4`,
+        `${FileSystem.cacheDirectory}exercise-hiit-circuit-4.mp4`,
+        `${FileSystem.cacheDirectory}exercise-hiit-circuit-5.mp4`,
+        `${FileSystem.cacheDirectory}exercise-hiit-circuit-6.mp4`,
+      ];
+      Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
+        FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
+      }));
       await Promise.all(exercises.map(async (exercise, index) => {
         await FileSystem.downloadAsync(
           exercise.videoURL,
