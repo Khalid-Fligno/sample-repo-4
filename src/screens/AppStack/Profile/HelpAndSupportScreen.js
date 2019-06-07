@@ -1,5 +1,12 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, View, Text, ScrollView, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Text,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import { Linking } from 'expo';
 import Loader from '../../../components/Shared/Loader';
 import CustomButton from '../../../components/Shared/CustomButton';
