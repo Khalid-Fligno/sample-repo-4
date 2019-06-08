@@ -76,22 +76,6 @@ export default class HiitCircuitExercise2Screen extends React.PureComponent {
       fitnessLevel,
       setCount,
     });
-    // let setCount = this.props.navigation.getParam('setCount', 0);
-    // setCount += 1;
-    // if (setCount === 3) {
-    //   this.props.navigation.replace('Exercise2', {
-    //     exerciseList,
-    //     reps,
-    //     resistanceCategoryId,
-    //   });
-    // } else {
-    //   this.props.navigation.replace('Exercise1', {
-    //     exerciseList,
-    //     reps,
-    //     setCount,
-    //     resistanceCategoryId,
-    //   });
-    // }
   }
   handlePause = () => {
     this.setState({
