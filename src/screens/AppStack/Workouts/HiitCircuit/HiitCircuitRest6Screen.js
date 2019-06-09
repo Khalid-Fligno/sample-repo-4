@@ -154,13 +154,6 @@ export default class HiitCircuitRest6Screen extends React.PureComponent {
         {
           text: 'Skip',
           onPress: () => this.handleFinish(exerciseList, fitnessLevel),
-          // onPress: () => {
-          //   this.props.navigation.replace('HiitCircuitExercise1', {
-          //     exerciseList,
-          //     fitnessLevel,
-          //     setCount: this.props.navigation.getParam('setCount', 1) + 1,
-          //   });
-          // },
         },
       ],
       { cancelable: false },
