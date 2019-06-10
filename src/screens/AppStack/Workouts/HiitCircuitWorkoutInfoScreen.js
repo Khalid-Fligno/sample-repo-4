@@ -142,7 +142,7 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
           </View>
           <View>
             <Text style={styles.exerciseTileHeaderBarRight}>
-              {workIntervalMap[this.state.fitnessLevel]}s ON/{restIntervalMap[this.state.fitnessLevel]}s OFF
+              {workIntervalMap[this.state.fitnessLevel]}s on/{restIntervalMap[this.state.fitnessLevel]}s off
             </Text>
           </View>
         </View>
@@ -504,13 +504,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.coral.standard,
   },
   exerciseTileHeaderTextLeft: {
-    fontFamily: fonts.standard,
-    fontSize: 16,
+    fontFamily: fonts.standardNarrow,
+    fontSize: 15,
     color: colors.white,
   },
   exerciseTileHeaderBarRight: {
-    fontFamily: fonts.standard,
-    fontSize: 16,
+    fontFamily: fonts.standardNarrow,
+    fontSize: 15,
     color: colors.white,
   },
   exerciseDescriptionContainer: {

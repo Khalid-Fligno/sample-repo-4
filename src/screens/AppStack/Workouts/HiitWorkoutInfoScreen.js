@@ -157,8 +157,8 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                 </View>
                 <View>
                   <Text style={styles.exerciseTileHeaderBarRight}>
-                    {index === 0 && `${workIntervalMap[fitnessLevel]} seconds`}
-                    {index === 1 && `${restIntervalMap[fitnessLevel]} seconds`}
+                    {index === 0 && `${workIntervalMap[fitnessLevel]}s`}
+                    {index === 1 && `${restIntervalMap[fitnessLevel]}s`}
                   </Text>
                 </View>
               </View>
@@ -504,12 +504,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.coral.standard,
   },
   exerciseTileHeaderTextLeft: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.standardNarrow,
     fontSize: 16,
     color: colors.white,
   },
   exerciseTileHeaderBarRight: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.standardNarrow,
     fontSize: 16,
     color: colors.white,
   },
