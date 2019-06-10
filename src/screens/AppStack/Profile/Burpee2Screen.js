@@ -14,25 +14,14 @@ export default class Progress4Screen extends React.PureComponent {
     super(props);
     this.state = {
       countdownDuration: 5,
-      countdownActive: false,
     };
   }
-  componentDidMount() {
-    this.startCountdown();
-  }
-  startCountdown = () => {
-    this.setState({
-      countdownActive: true,
-    });
-  }
   finishCountdown = () => {
-    this.setState({ countdownActive: false });
     this.props.navigation.navigate('Burpee3');
   }
   render() {
     const {
       countdownDuration,
-      countdownActive,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -40,7 +29,6 @@ export default class Progress4Screen extends React.PureComponent {
           <View style={styles.contentContainer}>
             <CountdownTimer
               totalDuration={countdownDuration}
-              start={countdownActive}
               handleFinish={() => this.finishCountdown()}
             />
             <Text style={styles.countdownText}>

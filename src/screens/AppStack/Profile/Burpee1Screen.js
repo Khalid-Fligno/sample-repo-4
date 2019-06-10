@@ -69,9 +69,9 @@ export default class Progress3Screen extends React.PureComponent {
                   </View>
                   <Video
                     source={{ uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4` }}
-                    isMuted
                     resizeMode="contain"
                     repeat
+                    muted
                     style={{ width: width - 80, height: width - 80 }}
                   />
                 </View>
