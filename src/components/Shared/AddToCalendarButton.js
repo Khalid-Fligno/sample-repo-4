@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: 138,
+    width: 140,
     backgroundColor: colors.white,
     padding: 3,
     borderWidth: 2,

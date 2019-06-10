@@ -1,14 +1,22 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar, Alert, AppState } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  StatusBar,
+  Alert,
+  AppState,
+} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { FileSystem } from 'expo';
 import Video from 'react-native-video';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
-import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
+import HiitCircuitWorkoutProgress from '../../../../components/Workouts/HiitCircuitWorkoutProgress';
+import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
 import ExerciseInfoModal from '../../../../components/Workouts/ExerciseInfoModal';
 import ExerciseInfoButton from '../../../../components/Workouts/ExerciseInfoButton';
-import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
 import PauseButtonRow from '../../../../components/Workouts/PauseButtonRow';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
@@ -16,21 +24,21 @@ import fonts from '../../../../styles/fonts';
 const { width } = Dimensions.get('window');
 
 const workIntervalMap = {
-  1: 40,
-  2: 60,
-  3: 80,
+  1: 30,
+  2: 40,
+  3: 50,
 };
 
-export default class HiitExercise1Screen extends React.PureComponent {
+export default class HiitCircuitExercise1Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      exerciseList: this.props.navigation.getParam('exerciseList', null),
-      currentExercise: this.props.navigation.getParam('exerciseList', null)[0],
-      fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
-      totalDuration: workIntervalMap[this.props.navigation.getParam('fitnessLevel', null)],
+      exerciseList: props.navigation.getParam('exerciseList', null),
+      currentExercise: props.navigation.getParam('exerciseList', null)[0],
+      fitnessLevel: props.navigation.getParam('fitnessLevel', null),
       timerStart: false,
       timerReset: false,
+      totalDuration: workIntervalMap[this.props.navigation.getParam('fitnessLevel', null)],
       pauseModalVisible: false,
       videoPaused: false,
       exerciseInfoModalVisible: false,
@@ -57,17 +65,16 @@ export default class HiitExercise1Screen extends React.PureComponent {
       timerReset: false,
     });
   }
-  handleFinish = (exerciseList, fitnessLevel, selectedHiitWorkoutIndex) => {
+  handleFinish = async (exerciseList, fitnessLevel) => {
     this.setState({
       timerStart: false,
       timerReset: false,
     });
-    const roundCount = this.props.navigation.getParam('roundCount', 0);
-    this.props.navigation.replace('HiitExercise2', {
+    const setCount = this.props.navigation.getParam('setCount', 1);
+    this.props.navigation.replace('HiitCircuitRest1', {
       exerciseList,
       fitnessLevel,
-      roundCount,
-      selectedHiitWorkoutIndex,
+      setCount,
     });
   }
   handlePause = () => {
@@ -86,10 +93,20 @@ export default class HiitExercise1Screen extends React.PureComponent {
       pauseModalVisible: false,
     });
   }
-  handleQuitWorkout = () => {
+  handleQuitWorkout = async () => {
     this.setState({ pauseModalVisible: false });
     this.props.navigation.navigate('Workouts');
-    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-hiit-1.mp4`, { idempotent: true });
+    const exerciseVideos = [
+      `${FileSystem.cacheDirectory}exercise-hiit-circuit-1.mp4`,
+      `${FileSystem.cacheDirectory}exercise-hiit-circuit-2.mp4`,
+      `${FileSystem.cacheDirectory}exercise-hiit-circuit-3.mp4`,
+      `${FileSystem.cacheDirectory}exercise-hiit-circuit-4.mp4`,
+      `${FileSystem.cacheDirectory}exercise-hiit-circuit-5.mp4`,
+      `${FileSystem.cacheDirectory}exercise-hiit-circuit-6.mp4`,
+    ];
+    Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
+      FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
+    }));
   }
   quitWorkout = () => {
     Alert.alert(
@@ -114,10 +131,30 @@ export default class HiitExercise1Screen extends React.PureComponent {
         {
           text: 'OK',
           onPress: () => {
-            this.props.navigation.replace('HiitExercise1', {
+            this.props.navigation.replace('HiitCircuitExercise1', {
               exerciseList,
               fitnessLevel,
-              roundCount: this.props.navigation.getParam('roundCount', 0),
+              setCount: this.props.navigation.getParam('setCount', 1),
+            });
+          },
+        },
+      ],
+      { cancelable: false },
+    );
+  }
+  skipExercise = (exerciseList, fitnessLevel) => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to skip this exercise?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Skip',
+          onPress: () => {
+            this.props.navigation.replace('HiitCircuitExercise2', {
+              exerciseList,
+              fitnessLevel,
+              setCount: this.props.navigation.getParam('setCount', 1),
             });
           },
         },
@@ -163,14 +200,14 @@ export default class HiitExercise1Screen extends React.PureComponent {
           <View>
             <Video
               ref={(ref) => this.videoRef = ref}
-              source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-1.mp4` || exerciseList[0].videoURL }}
+              source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-circuit-1.mp4` || exerciseList[0].videoURL }}
               isMuted
               resizeMode="contain"
               repeat
               paused={videoPaused}
               style={{ width, height: width }}
             />
-            <ExerciseInfoButton onPress={() => this.showExerciseInfoModal()} />
+            <ExerciseInfoButton onPress={this.showExerciseInfoModal} />
             <WorkoutTimer
               totalDuration={totalDuration}
               start={timerStart}
@@ -180,7 +217,11 @@ export default class HiitExercise1Screen extends React.PureComponent {
           </View>
           <View style={styles.currentExerciseTextContainer}>
             <View style={styles.currentExerciseNameTextContainer}>
-              <Text style={styles.currentExerciseNameText}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.currentExerciseNameText}
+              >
                 {currentExercise.name.toUpperCase()}
               </Text>
             </View>
@@ -190,18 +231,19 @@ export default class HiitExercise1Screen extends React.PureComponent {
               </Text>
             </View>
           </View>
-          <HiitWorkoutProgress
-            currentRound={this.props.navigation.getParam('roundCount', 0) + 1}
-            currentSet={1}
+          <HiitCircuitWorkoutProgress
+            currentExercise={1}
+            currentSet={this.props.navigation.getParam('setCount', 1)}
           />
           <PauseButtonRow
             handlePause={this.handlePause}
-            nextExerciseName="REST"
+            nextExerciseName={exerciseList[1].name}
           />
           <WorkoutPauseModal
             isVisible={pauseModalVisible}
             handleQuit={this.quitWorkout}
             handleRestart={this.restartWorkout}
+            handleSkip={this.skipExercise}
             handleUnpause={this.handleUnpause}
             exerciseList={exerciseList}
             fitnessLevel={fitnessLevel}

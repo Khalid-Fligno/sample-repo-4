@@ -1,5 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar, Alert, AppState } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  StatusBar,
+  Alert,
+  AppState,
+} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { FileSystem } from 'expo';
 import Video from 'react-native-video';

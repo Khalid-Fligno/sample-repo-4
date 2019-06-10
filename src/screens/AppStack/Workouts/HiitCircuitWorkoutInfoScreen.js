@@ -9,8 +9,8 @@ import {
   DatePickerIOS,
   TouchableOpacity,
   Alert,
-  Linking,
   Image,
+  Linking,
   FlatList,
 } from 'react-native';
 import { FileSystem } from 'expo';
@@ -22,7 +22,6 @@ import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
 import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
-import { findFocus, findLocation } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -30,13 +29,25 @@ const moment = require('moment');
 
 const { width } = Dimensions.get('window');
 
-export default class WorkoutInfoScreen extends React.PureComponent {
+const workIntervalMap = {
+  1: 30,
+  2: 40,
+  3: 50,
+};
+
+const restIntervalMap = {
+  1: 30,
+  2: 20,
+  3: 10,
+};
+
+export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
       workout: this.props.navigation.getParam('workout', null),
-      reps: this.props.navigation.getParam('reps', null),
+      fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
       chosenDate: new Date(),
       calendarModalVisible: false,
       addingToCalendar: false,
@@ -60,9 +71,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       spotifyAvailable: await Linking.canOpenURL('spotify:'),
     });
   }
-  handleStart = () => {
-    this.toggleMusicModal();
-  }
   openApp = (url) => {
     Linking.canOpenURL(url).then((supported) => {
       if (supported) {
@@ -72,14 +80,21 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       }
     }).catch((err) => Alert.alert('An error occurred', err));
   }
-  toggleMusicModal = () => {
-    this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
+  handleStart = () => {
+    this.toggleMusicModal();
   }
   showCalendarModal = () => {
     this.setState({ calendarModalVisible: true });
   }
   hideCalendarModal = () => {
     this.setState({ calendarModalVisible: false });
+  }
+  toggleMusicModal = () => {
+    this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
+  }
+  handleHiitWorkoutStart = (workout, fitnessLevel) => {
+    this.setState({ musicModalVisible: false });
+    this.props.navigation.navigate('HiitCircuitCountdown', { exerciseList: workout.exercises, fitnessLevel });
   }
   addWorkoutToCalendar = async (date) => {
     if (this.state.addingToCalendar) {
@@ -93,26 +108,20 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     const data = {
       workout,
     };
-    await calendarRef.set(data);
+    await calendarRef.set(data, { merge: true });
     this.setState({ addingToCalendar: false });
     Alert.alert(
       'Added to calendar!',
       '',
       [
-        { text: 'OK', onPress: this.hideCalendarModal, style: 'cancel' },
+        { text: 'OK', onPress: () => this.setState({ calendarModalVisible: false }), style: 'cancel' },
       ],
       { cancelable: false },
     );
   }
-  handleWorkoutStart = () => {
-    const { workout, reps } = this.state;
-    this.setState({ musicModalVisible: false });
-    this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
-  }
-  keyExtractor = (exercise) => exercise.id;
+  keyExtractor = (item) => item.id;
   renderItem = ({ item: exercise, index }) => (
     <Carousel
-      key={exercise.id}
       width={width}
       inactiveIndicatorColor={colors.coral.standard}
       indicatorColor={colors.coral.standard}
@@ -123,28 +132,23 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       animate={false}
     >
       <View
-        key={exercise.id}
         style={styles.exerciseTile}
       >
         <View style={styles.exerciseTileHeaderBar}>
           <View>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.exerciseTileHeaderTextLeft}
-            >
+            <Text style={styles.exerciseTileHeaderTextLeft}>
               {index + 1}. {exercise.name}
             </Text>
           </View>
           <View>
             <Text style={styles.exerciseTileHeaderBarRight}>
-              x{this.state.reps}
+              {workIntervalMap[this.state.fitnessLevel]}s on/{restIntervalMap[this.state.fitnessLevel]}s off
             </Text>
           </View>
         </View>
         <Video
           ref={(ref) => this.videoRef = ref}
-          source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
+          source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-circuit-${index + 1}.mp4` }}
           isMuted
           resizeMode="contain"
           repeat
@@ -213,37 +217,14 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     const {
       loading,
       workout,
-      reps,
       chosenDate,
       calendarModalVisible,
       addingToCalendar,
+      fitnessLevel,
       musicModalVisible,
       appleMusicAvailable,
       spotifyAvailable,
     } = this.state;
-
-    const findLocationIcon = () => {
-      let location;
-      if (workout.home) {
-        location = 'home';
-      } else if (workout.gym) {
-        location = 'gym';
-      } else if (workout.park) {
-        location = 'park';
-      }
-      return `workouts-${location}`;
-    };
-    const findFocusIcon = () => {
-      let focus;
-      if (workout.fullBody) {
-        focus = 'full';
-      } else if (workout.upperBody) {
-        focus = 'upper';
-      } else if (workout.lowerBody) {
-        focus = 'lower';
-      }
-      return `workouts-${focus}`;
-    };
     return (
       <View style={styles.container}>
         <ScrollView
@@ -252,11 +233,11 @@ export default class WorkoutInfoScreen extends React.PureComponent {
         >
           <Modal
             isVisible={calendarModalVisible}
+            onBackdropPress={this.hideCalendarModal}
             animationIn="fadeIn"
             animationInTiming={600}
             animationOut="fadeOut"
             animationOutTiming={600}
-            onBackdropPress={this.hideCalendarModal}
           >
             <View style={styles.modalContainer}>
               <DatePickerIOS
@@ -290,9 +271,20 @@ export default class WorkoutInfoScreen extends React.PureComponent {
               <Text style={styles.workoutName}>
                 {workout && workout.displayName.toUpperCase()}
               </Text>
-              <AddToCalendarButton onPress={() => this.showCalendarModal()} />
+              <AddToCalendarButton onPress={this.showCalendarModal} />
             </View>
             <View style={styles.workoutIconsRow}>
+              <View style={styles.workoutIconContainer}>
+                <Icon
+                  name="workouts-hiit"
+                  size={36}
+                  color={colors.charcoal.standard}
+                  style={styles.hiitIcon}
+                />
+                <Text style={styles.workoutInfoFieldData}>
+                  HIIT CIRCUIT
+                </Text>
+              </View>
               <View style={styles.workoutIconContainer}>
                 <Icon
                   name="workouts-time"
@@ -300,7 +292,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                   color={colors.charcoal.standard}
                 />
                 <Text style={styles.workoutInfoFieldData}>
-                  18 Mins
+                  18 mins
                 </Text>
               </View>
               <View style={styles.workoutIconContainer}>
@@ -310,27 +302,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                   color={colors.charcoal.standard}
                 />
                 <Text style={styles.workoutInfoFieldData}>
-                  {reps * 18} Reps
-                </Text>
-              </View>
-              <View style={styles.workoutIconContainer}>
-                <Icon
-                  name={workout && findLocationIcon()}
-                  size={40}
-                  color={colors.charcoal.standard}
-                />
-                <Text style={styles.workoutInfoFieldData}>
-                  {workout && findLocation(workout)}
-                </Text>
-              </View>
-              <View style={styles.workoutIconContainer}>
-                <Icon
-                  name={workout && findFocusIcon()}
-                  size={40}
-                  color={colors.charcoal.standard}
-                />
-                <Text style={styles.workoutInfoFieldData}>
-                  {workout && findFocus(workout)}
+                  3 rounds
                 </Text>
               </View>
             </View>
@@ -348,6 +320,9 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                 />
               )
             }
+            <Text style={styles.workoutPreviewFooterText}>
+              3 TIMES THROUGH
+            </Text>
           </View>
         </ScrollView>
         <Modal
@@ -393,7 +368,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             </View>
             <View style={styles.musicModalButtonContainer}>
               <TouchableOpacity
-                onPress={this.toggleMusicModal}
+                onPress={() => this.toggleMusicModal()}
                 style={styles.musicModalCancelButton}
               >
                 <Text style={styles.musicModalButtonText}>
@@ -401,7 +376,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={this.handleWorkoutStart}
+                onPress={() => this.handleHiitWorkoutStart(workout, fitnessLevel)}
                 style={styles.musicModalContinueButton}
               >
                 <Text style={styles.musicModalButtonText}>
@@ -459,9 +434,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: 10,
-    paddingLeft: 20,
+    paddingLeft: 15,
     paddingBottom: 10,
-    paddingRight: 20,
+    paddingRight: 15,
   },
   workoutName: {
     marginTop: 6,
@@ -482,6 +457,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  hiitIcon: {
+    margin: 2,
+  },
   workoutInfoFieldData: {
     fontFamily: fonts.bold,
     fontSize: 12,
@@ -500,6 +478,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.charcoal.dark,
   },
+  workoutPreviewFooterText: {
+    textAlign: 'center',
+    fontFamily: fonts.bold,
+    fontSize: 24,
+    color: colors.black,
+    marginTop: 15,
+  },
   exerciseTile: {
     width: width - 30,
     marginTop: 7.5,
@@ -512,7 +497,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   exerciseTileHeaderBar: {
-    width: width - 34,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 8,
@@ -520,15 +504,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.coral.standard,
   },
   exerciseTileHeaderTextLeft: {
-    width: width - 72,
     fontFamily: fonts.standardNarrow,
-    fontSize: 14,
+    fontSize: 15,
     color: colors.white,
   },
   exerciseTileHeaderBarRight: {
-    width: 22,
     fontFamily: fonts.standardNarrow,
-    fontSize: 14,
+    fontSize: 15,
     color: colors.white,
   },
   exerciseDescriptionContainer: {

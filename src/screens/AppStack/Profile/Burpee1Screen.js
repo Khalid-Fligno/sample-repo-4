@@ -6,7 +6,8 @@ import {
   SafeAreaView,
   Dimensions,
 } from 'react-native';
-import { FileSystem, Video, Haptic } from 'expo';
+import { FileSystem, Haptic } from 'expo';
+import Video from 'react-native-video';
 import Carousel from 'react-native-carousel';
 import CustomButton from '../../../components/Shared/CustomButton';
 import Loader from '../../../components/Shared/Loader';
@@ -68,12 +69,9 @@ export default class Progress3Screen extends React.PureComponent {
                   </View>
                   <Video
                     source={{ uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4` }}
-                    rate={1.0}
-                    volume={1.0}
-                    isMuted={false}
+                    isMuted
                     resizeMode="contain"
-                    shouldPlay
-                    isLooping
+                    repeat
                     style={{ width: width - 80, height: width - 80 }}
                   />
                 </View>

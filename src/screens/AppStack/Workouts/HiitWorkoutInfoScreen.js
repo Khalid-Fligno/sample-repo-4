@@ -29,15 +29,15 @@ const moment = require('moment');
 const { width } = Dimensions.get('window');
 
 const workIntervalMap = {
-  1: 30,
+  1: 40,
   2: 60,
-  3: 90,
+  3: 80,
 };
 
 const restIntervalMap = {
-  1: 90,
+  1: 80,
   2: 60,
-  3: 30,
+  3: 40,
 };
 
 export default class HiitWorkoutInfoScreen extends React.PureComponent {
@@ -47,7 +47,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       loading: false,
       workout: this.props.navigation.getParam('workout', null),
       fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
-      selectedHiitWorkoutIndex: this.props.navigation.getParam('selectedHiitWorkoutIndex', null),
       chosenDate: new Date(),
       calendarModalVisible: false,
       addingToCalendar: false,
@@ -92,9 +91,9 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
   toggleMusicModal = () => {
     this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
   }
-  handleHiitWorkoutStart = (workout, fitnessLevel, selectedHiitWorkoutIndex) => {
+  handleHiitWorkoutStart = (workout, fitnessLevel) => {
     this.setState({ musicModalVisible: false });
-    this.props.navigation.navigate('HiitCountdown', { exerciseList: workout.exercises, fitnessLevel, selectedHiitWorkoutIndex });
+    this.props.navigation.navigate('HiitCountdown', { exerciseList: workout.exercises, fitnessLevel });
   }
   addWorkoutToCalendar = async (date) => {
     if (this.state.addingToCalendar) {
@@ -128,7 +127,6 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
       addingToCalendar,
       fitnessLevel,
       musicModalVisible,
-      selectedHiitWorkoutIndex,
       appleMusicAvailable,
       spotifyAvailable,
     } = this.state;
@@ -159,8 +157,8 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                 </View>
                 <View>
                   <Text style={styles.exerciseTileHeaderBarRight}>
-                    {index === 0 && `${workIntervalMap[fitnessLevel]} seconds`}
-                    {index === 1 && `${restIntervalMap[fitnessLevel]} seconds`}
+                    {index === 0 && `${workIntervalMap[fitnessLevel]}s`}
+                    {index === 1 && `${restIntervalMap[fitnessLevel]}s`}
                   </Text>
                 </View>
               </View>
@@ -385,7 +383,7 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => this.handleHiitWorkoutStart(workout, fitnessLevel, selectedHiitWorkoutIndex)}
+                onPress={() => this.handleHiitWorkoutStart(workout, fitnessLevel)}
                 style={styles.musicModalContinueButton}
               >
                 <Text style={styles.musicModalButtonText}>
@@ -506,12 +504,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.coral.standard,
   },
   exerciseTileHeaderTextLeft: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.standardNarrow,
     fontSize: 16,
     color: colors.white,
   },
   exerciseTileHeaderBarRight: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.standardNarrow,
     fontSize: 16,
     color: colors.white,
   },
@@ -532,15 +530,15 @@ const styles = StyleSheet.create({
   },
   exerciseDescriptionHeader: {
     fontFamily: fonts.bold,
-    fontSize: 14,
+    fontSize: 13,
     color: colors.charcoal.standard,
   },
   exerciseDescriptionText: {
     fontFamily: fonts.standard,
-    fontSize: 14,
+    fontSize: 13,
     color: colors.charcoal.standard,
-    marginTop: 5,
-    marginBottom: 5,
+    marginTop: 3,
+    marginBottom: 3,
   },
   musicModalContainer: {
     flexShrink: 1,

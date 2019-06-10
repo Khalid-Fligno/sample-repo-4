@@ -2,23 +2,27 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import WorkoutsHomeScreen from '../../src/screens/AppStack/Workouts/WorkoutsHomeScreen';
 import WorkoutsSelectionScreen from '../../src/screens/AppStack/Workouts/WorkoutsSelectionScreen';
+import HiitWorkoutsSelectionScreen from '../../src/screens/AppStack/Workouts/HiitWorkoutsSelectionScreen';
 import WorkoutInfoScreen from '../../src/screens/AppStack/Workouts/WorkoutInfoScreen';
 import HiitWorkoutInfoScreen from '../../src/screens/AppStack/Workouts/HiitWorkoutInfoScreen';
+import HiitCircuitWorkoutInfoScreen from '../../src/screens/AppStack/Workouts/HiitCircuitWorkoutInfoScreen';
 import Header from '../../src/components/Shared/Header';
 import {
   workoutsBackButtonMap,
+  workoutsStartButtonMap,
   fadeSpec,
   fade,
-  workoutLocationMap,
-  workoutTypeMap,
+  findWorkoutsSelectionTitle,
 } from './utils';
 
 const WorkoutsStack = createStackNavigator(
   {
     WorkoutsHome: WorkoutsHomeScreen,
     WorkoutsSelection: WorkoutsSelectionScreen,
+    HiitWorkoutsSelection: HiitWorkoutsSelectionScreen,
     WorkoutInfo: WorkoutInfoScreen,
     HiitWorkoutInfo: HiitWorkoutInfoScreen,
+    HiitCircuitWorkoutInfo: HiitCircuitWorkoutInfoScreen,
   },
   {
     initialRouteName: 'WorkoutsHome',
@@ -53,11 +57,11 @@ const WorkoutsStack = createStackNavigator(
           <Header
             navigation={navigation}
             withBackButton={workoutsBackButtonMap[routeName]}
-            withStartButton={routeName === 'WorkoutInfo' || routeName === 'HiitWorkoutInfo'}
+            withStartButton={workoutsStartButtonMap[routeName]}
             withProfileButton={routeName === 'WorkoutsHome'}
             withHelpButton={routeName === 'WorkoutsHome'}
             stack="workouts"
-            headerTitleParams={routeName === 'WorkoutsSelection' ? `${workoutLocationMap[navigation.getParam('workoutLocation', null)]} / ${workoutTypeMap[navigation.getParam('workoutType', null)]}` : null}
+            headerTitleParams={findWorkoutsSelectionTitle(routeName, navigation.getParam('workoutLocation', null), navigation.getParam('workoutFocus', null), navigation.getParam('hiitWorkoutStyle', null))}
           />
         );
       },
