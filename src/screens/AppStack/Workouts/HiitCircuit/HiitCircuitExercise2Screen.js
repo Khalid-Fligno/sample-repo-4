@@ -37,7 +37,6 @@ export default class HiitCircuitExercise2Screen extends React.PureComponent {
       currentExercise: props.navigation.getParam('exerciseList', null)[1],
       fitnessLevel: props.navigation.getParam('fitnessLevel', null),
       timerStart: false,
-      timerReset: false,
       totalDuration: workIntervalMap[this.props.navigation.getParam('fitnessLevel', null)],
       pauseModalVisible: false,
       videoPaused: false,
@@ -60,16 +59,10 @@ export default class HiitCircuitExercise2Screen extends React.PureComponent {
     this.setState({ appState: nextAppState });
   }
   startTimer = () => {
-    this.setState({
-      timerStart: true,
-      timerReset: false,
-    });
+    this.setState({ timerStart: true });
   }
   handleFinish = async (exerciseList, fitnessLevel) => {
-    this.setState({
-      timerStart: false,
-      timerReset: false,
-    });
+    this.setState({ timerStart: false });
     const setCount = this.props.navigation.getParam('setCount', 1);
     this.props.navigation.replace('HiitCircuitRest2', {
       exerciseList,
@@ -81,7 +74,6 @@ export default class HiitCircuitExercise2Screen extends React.PureComponent {
     this.setState({
       videoPaused: true,
       timerStart: false,
-      timerReset: false,
       pauseModalVisible: true,
     });
   }
@@ -89,7 +81,6 @@ export default class HiitCircuitExercise2Screen extends React.PureComponent {
     this.setState({
       videoPaused: false,
       timerStart: true,
-      timerReset: false,
       pauseModalVisible: false,
     });
   }
@@ -166,7 +157,6 @@ export default class HiitCircuitExercise2Screen extends React.PureComponent {
     this.setState({
       videoPaused: true,
       timerStart: false,
-      timerReset: false,
       exerciseInfoModalVisible: true,
     });
   }
@@ -174,7 +164,6 @@ export default class HiitCircuitExercise2Screen extends React.PureComponent {
     this.setState({
       videoPaused: false,
       timerStart: true,
-      timerReset: false,
       exerciseInfoModalVisible: false,
     });
   }
@@ -183,7 +172,6 @@ export default class HiitCircuitExercise2Screen extends React.PureComponent {
       currentExercise,
       exerciseList,
       timerStart,
-      timerReset,
       totalDuration,
       fitnessLevel,
       pauseModalVisible,
@@ -201,9 +189,9 @@ export default class HiitCircuitExercise2Screen extends React.PureComponent {
             <Video
               ref={(ref) => this.videoRef = ref}
               source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-circuit-2.mp4` || exerciseList[1].videoURL }}
-              isMuted
               resizeMode="contain"
               repeat
+              muted
               paused={videoPaused}
               style={{ width, height: width }}
             />
@@ -211,7 +199,6 @@ export default class HiitCircuitExercise2Screen extends React.PureComponent {
             <WorkoutTimer
               totalDuration={totalDuration}
               start={timerStart}
-              reset={timerReset}
               handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
             />
           </View>
