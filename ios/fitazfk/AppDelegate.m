@@ -2,6 +2,8 @@
 
 #import "AppDelegate.h"
 
+#import <AVFoundation/AVFoundation.h>
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -11,6 +13,7 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+  [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
   [super applicationWillEnterForeground:application];
 }
 
