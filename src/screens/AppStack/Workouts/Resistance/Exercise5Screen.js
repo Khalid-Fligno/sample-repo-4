@@ -32,7 +32,6 @@ export default class Exercise5Screen extends React.PureComponent {
       reps: props.navigation.getParam('reps', null),
       resistanceCategoryId: props.navigation.getParam('resistanceCategoryId', null),
       timerStart: false,
-      timerReset: false,
       totalDuration: 60,
       pauseModalVisible: false,
       videoPaused: false,
@@ -55,16 +54,10 @@ export default class Exercise5Screen extends React.PureComponent {
     this.setState({ appState: nextAppState });
   }
   startTimer = () => {
-    this.setState({
-      timerStart: true,
-      timerReset: false,
-    });
+    this.setState({ timerStart: true });
   }
   handleFinish = (exerciseList, reps, resistanceCategoryId) => {
-    this.setState({
-      timerStart: false,
-      timerReset: false,
-    });
+    this.setState({ timerStart: false });
     let setCount = this.props.navigation.getParam('setCount', 0);
     setCount += 1;
     if (setCount === 3) {
@@ -86,7 +79,6 @@ export default class Exercise5Screen extends React.PureComponent {
     this.setState({
       videoPaused: true,
       timerStart: false,
-      timerReset: false,
       pauseModalVisible: true,
     });
   }
@@ -94,7 +86,6 @@ export default class Exercise5Screen extends React.PureComponent {
     this.setState({
       videoPaused: false,
       timerStart: true,
-      timerReset: false,
       pauseModalVisible: false,
     });
   }
@@ -172,7 +163,6 @@ export default class Exercise5Screen extends React.PureComponent {
     this.setState({
       videoPaused: true,
       timerStart: false,
-      timerReset: false,
       exerciseInfoModalVisible: true,
     });
   }
@@ -180,7 +170,6 @@ export default class Exercise5Screen extends React.PureComponent {
     this.setState({
       videoPaused: false,
       timerStart: true,
-      timerReset: false,
       exerciseInfoModalVisible: false,
     });
   }
@@ -189,7 +178,6 @@ export default class Exercise5Screen extends React.PureComponent {
       currentExercise,
       exerciseList,
       timerStart,
-      timerReset,
       totalDuration,
       reps,
       pauseModalVisible,
@@ -208,9 +196,9 @@ export default class Exercise5Screen extends React.PureComponent {
             <Video
               ref={(ref) => this.videoRef = ref}
               source={{ uri: `${FileSystem.cacheDirectory}exercise-5.mp4` || exerciseList[4].videoURL }}
-              isMuted
               resizeMode="contain"
               repeat
+              muted
               paused={videoPaused}
               style={{ width, height: width }}
             />
@@ -218,7 +206,6 @@ export default class Exercise5Screen extends React.PureComponent {
             <WorkoutTimer
               totalDuration={totalDuration}
               start={timerStart}
-              reset={timerReset}
               handleFinish={() => this.handleFinish(exerciseList, reps, resistanceCategoryId)}
             />
           </View>
