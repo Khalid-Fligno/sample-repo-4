@@ -547,15 +547,15 @@ const styles = StyleSheet.create({
   },
   exerciseDescriptionHeader: {
     fontFamily: fonts.bold,
-    fontSize: 14,
+    fontSize: 13,
     color: colors.charcoal.standard,
   },
   exerciseDescriptionText: {
     fontFamily: fonts.standard,
-    fontSize: 14,
+    fontSize: 13,
     color: colors.charcoal.standard,
-    marginTop: 5,
-    marginBottom: 5,
+    marginTop: 3,
+    marginBottom: 3,
   },
   musicModalContainer: {
     flexShrink: 1,
