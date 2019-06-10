@@ -14,17 +14,10 @@ export default class CountdownScreen extends React.PureComponent {
       reps: this.props.navigation.getParam('reps', null),
       resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
       countdownDuration: 5,
-      countdownActive: false,
     };
   }
   componentDidMount() {
-    this.startCountdown();
     this.checkVideoCache();
-  }
-  startCountdown = () => {
-    this.setState({
-      countdownActive: true,
-    });
   }
   checkVideoCache = async () => {
     const { exerciseList } = this.state;
@@ -39,7 +32,6 @@ export default class CountdownScreen extends React.PureComponent {
     }
   }
   finishCountdown = (exerciseList, reps, resistanceCategoryId) => {
-    this.setState({ countdownActive: false });
     this.props.navigation.navigate('Exercise1', {
       exerciseList,
       reps,
@@ -50,7 +42,6 @@ export default class CountdownScreen extends React.PureComponent {
     const {
       exerciseList,
       countdownDuration,
-      countdownActive,
       reps,
       resistanceCategoryId,
     } = this.state;
@@ -59,7 +50,6 @@ export default class CountdownScreen extends React.PureComponent {
         <View style={styles.countdownContainer}>
           <CountdownTimer
             totalDuration={countdownDuration}
-            start={countdownActive}
             handleFinish={() => this.finishCountdown(exerciseList, reps, resistanceCategoryId)}
           />
           <Text style={styles.countdownText}>
