@@ -6,7 +6,7 @@ import CountdownTimer from '../../../../components/Workouts/CountdownTimer';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
 
-export default class HiitCountdownScreen extends React.PureComponent {
+export default class HiitCircuitCountdownScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,14 +27,19 @@ export default class HiitCountdownScreen extends React.PureComponent {
   }
   checkVideoCache = async () => {
     const { exerciseList } = this.state;
-    const video1 = await FileSystem.getInfoAsync(`${FileSystem.cacheDirectory}exercise-hiit-1.mp4`);
+    const video1 = await FileSystem.getInfoAsync(`${FileSystem.cacheDirectory}exercise-hiit-circuit-1.mp4`);
     if (!video1.exists) {
-      FileSystem.downloadAsync(exerciseList[0].videoURL, `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`);
+      Promise.all(exerciseList.map(async (exercise, index) => {
+        FileSystem.downloadAsync(
+          exercise.videoURL,
+          `${FileSystem.cacheDirectory}exercise-hiit-circuit-${index + 1}.mp4`,
+        );
+      }));
     }
   }
   finishCountdown = (exerciseList, fitnessLevel) => {
     this.setState({ countdownActive: false });
-    this.props.navigation.replace('HiitExercise1', {
+    this.props.navigation.navigate('HiitCircuitExercise1', {
       exerciseList,
       fitnessLevel,
     });

@@ -7,7 +7,8 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-import { Video, FileSystem } from 'expo';
+import { FileSystem } from 'expo';
+import Video from 'react-native-video';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../components/Workouts/WorkoutTimer';
 import colors from '../../styles/colors';
@@ -111,12 +112,9 @@ export default class Progress5Screen extends React.PureComponent {
           <View>
             <Video
               source={{ uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4` }}
-              rate={1.0}
-              volume={1.0}
-              isMuted={false}
+              isMuted
               resizeMode="contain"
-              shouldPlay
-              isLooping
+              repeat
               style={{ width, height: width }}
             />
             <WorkoutTimer
