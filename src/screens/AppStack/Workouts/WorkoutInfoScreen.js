@@ -221,6 +221,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       appleMusicAvailable,
       spotifyAvailable,
     } = this.state;
+
     const findLocationIcon = () => {
       let location;
       if (workout.home) {
