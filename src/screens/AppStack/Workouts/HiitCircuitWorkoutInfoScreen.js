@@ -149,7 +149,7 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
         <Video
           ref={(ref) => this.videoRef = ref}
           source={{ uri: `${FileSystem.cacheDirectory}exercise-hiit-circuit-${index + 1}.mp4` }}
-          isMuted
+          playWhenInactive
           resizeMode="contain"
           repeat
           style={{ width: width - 30, height: width - 30 }}
