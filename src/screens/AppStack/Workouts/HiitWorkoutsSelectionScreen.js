@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, AsyncStorage } from 'react-native';
 import { FileSystem } from 'expo';
+import sortBy from 'lodash.sortby';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import WorkoutTile from '../../../components/Workouts/WorkoutTile';
@@ -131,7 +132,7 @@ export default class HiitWorkoutsSelectionScreen extends React.PureComponent {
       location,
     } = this.state;
     const locationImages = images[location];
-    const workoutList = workouts.map((workout, index) => (
+    const workoutList = sortBy(workouts, 'sortOrder').map((workout, index) => (
       <WorkoutTile
         key={workout.id}
         title1={workout.displayName}
