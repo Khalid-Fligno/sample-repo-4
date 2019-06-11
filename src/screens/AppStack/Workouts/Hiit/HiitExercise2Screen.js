@@ -27,7 +27,6 @@ export default class HiitExercise2Screen extends React.PureComponent {
       fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
       totalDuration: restIntervalMap[this.props.navigation.getParam('fitnessLevel', null)],
       timerStart: false,
-      timerReset: false,
       pauseModalVisible: false,
       appState: AppState.currentState,
     };
@@ -47,16 +46,10 @@ export default class HiitExercise2Screen extends React.PureComponent {
     this.setState({ appState: nextAppState });
   }
   startTimer = () => {
-    this.setState({
-      timerStart: true,
-      timerReset: false,
-    });
+    this.setState({ timerStart: true });
   }
   handleFinish = (exerciseList, fitnessLevel) => {
-    this.setState({
-      timerStart: false,
-      timerReset: false,
-    });
+    this.setState({ timerStart: false });
     let roundCount = this.props.navigation.getParam('roundCount', 0);
     roundCount += 1;
     if (roundCount === 8) {
@@ -73,18 +66,12 @@ export default class HiitExercise2Screen extends React.PureComponent {
     }
   }
   handlePause = () => {
-    this.setState({
-      timerStart: false,
-      timerReset: false,
-    });
+    this.setState({ timerStart: false });
     this.togglePauseModal();
   }
   handleUnpause = () => {
     this.togglePauseModal();
-    this.setState({
-      timerStart: true,
-      timerReset: false,
-    });
+    this.setState({ timerStart: true });
   }
   togglePauseModal = () => {
     this.setState((prevState) => ({ pauseModalVisible: !prevState.pauseModalVisible }));
@@ -128,7 +115,6 @@ export default class HiitExercise2Screen extends React.PureComponent {
     const {
       exerciseList,
       timerStart,
-      timerReset,
       totalDuration,
       fitnessLevel,
       pauseModalVisible,
@@ -148,7 +134,6 @@ export default class HiitExercise2Screen extends React.PureComponent {
             <WorkoutTimer
               totalDuration={totalDuration}
               start={timerStart}
-              reset={timerReset}
               handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
             />
           </View>

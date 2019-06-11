@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Alert, Dimensions } from 'react-native';
+import { Text, View, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import { timerSound } from '../../../config/audio';
 import fonts from '../../styles/fonts';
@@ -42,39 +42,36 @@ export default class WorkoutTimer extends React.PureComponent {
     super(props);
     this.state = {
       remainingTime: (props.totalDuration * 1000) + 990,
+      start: undefined,
     };
   }
-  componentDidMount = async () => {
-    if (this.props.start) {
-      this.start();
+  static getDerivedStateFromProps(props, state) {
+    if (props.start !== state.start) {
+      return { start: props.start };
     }
+    return null;
   }
-  componentWillReceiveProps(newProps) {
-    if (newProps.start) {
-      this.start();
-    } else {
-      this.stop();
-    }
-    if (newProps.reset) {
-      this.reset(newProps.totalDuration);
+  componentDidMount = async () => {
+    this.setState({ start: true });
+  }
+  componentDidUpdate(props, prevState) {
+    if (prevState.start !== this.state.start) {
+      this.onPropsChange();
     }
   }
   componentWillUnmount() {
     clearInterval(this.interval);
     this.interval = null;
   }
-  finishAlert = () => {
-    Alert.alert(
-      'Timer Complete',
-      'Timer name here',
-      [
-        { text: 'OK', style: 'cancel' },
-      ],
-      { cancelable: false },
-    );
+  onPropsChange = () => {
+    if (this.state.start) {
+      this.start();
+    } else {
+      this.stop();
+    }
   }
   start = async () => {
-    const handleFinish = this.props.handleFinish ? this.props.handleFinish : () => this.finishAlert();
+    const { handleFinish } = this.props;
     const endTime = new Date().getTime() + this.state.remainingTime;
     this.interval = setInterval(async () => {
       const remaining = endTime - new Date();
@@ -91,11 +88,7 @@ export default class WorkoutTimer extends React.PureComponent {
   }
   stop = () => {
     clearInterval(this.interval);
-  }
-  reset = (newDuration) => {
-    this.setState({
-      remainingTime: this.props.totalDuration !== newDuration ? newDuration : this.props.totalDuration,
-    });
+    this.interval = null;
   }
   formatTime = () => {
     const now = this.state.remainingTime;

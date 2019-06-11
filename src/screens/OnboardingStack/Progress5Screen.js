@@ -36,7 +36,6 @@ export default class Progress5Screen extends React.PureComponent {
     super(props);
     this.state = {
       timerStart: false,
-      timerReset: false,
       totalDuration: 60,
     };
   }
@@ -45,16 +44,10 @@ export default class Progress5Screen extends React.PureComponent {
     this.startTimer();
   }
   startTimer = () => {
-    this.setState({
-      timerStart: true,
-      timerReset: false,
-    });
+    this.setState({ timerStart: true });
   }
   handleFinish = () => {
-    this.setState({
-      timerStart: false,
-      timerReset: false,
-    });
+    this.setState({ timerStart: false });
     const {
       image,
       weight,
@@ -71,10 +64,7 @@ export default class Progress5Screen extends React.PureComponent {
     });
   }
   handleSkip = () => {
-    this.setState({
-      timerStart: false,
-      timerReset: false,
-    });
+    this.setState({ timerStart: false });
     const { isInitial } = this.props.navigation.state.params;
     const message = isInitial ? 'You will need to do this before your first workout' : 'Skipping means you will lose any information you have already entered';
     Alert.alert(
@@ -92,15 +82,11 @@ export default class Progress5Screen extends React.PureComponent {
     );
   }
   cancelSkip = () => {
-    this.setState({
-      timerStart: true,
-      timerReset: false,
-    });
+    this.setState({ timerStart: true });
   }
   render() {
     const {
       timerStart,
-      timerReset,
       totalDuration,
     } = this.state;
     return (
@@ -112,15 +98,14 @@ export default class Progress5Screen extends React.PureComponent {
           <View>
             <Video
               source={{ uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4` }}
-              isMuted
               resizeMode="contain"
               repeat
+              muted
               style={{ width, height: width }}
             />
             <WorkoutTimer
               totalDuration={totalDuration}
               start={timerStart}
-              reset={timerReset}
               handleFinish={() => this.handleFinish()}
               options={workoutTimerStyle}
             />

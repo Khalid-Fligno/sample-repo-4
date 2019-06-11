@@ -36,7 +36,6 @@ export default class HiitCircuitRest6Screen extends React.PureComponent {
       exerciseList: props.navigation.getParam('exerciseList', null),
       fitnessLevel: props.navigation.getParam('fitnessLevel', null),
       timerStart: false,
-      timerReset: false,
       totalDuration: restIntervalMap[this.props.navigation.getParam('fitnessLevel', null)],
       pauseModalVisible: false,
       exerciseInfoModalVisible: false,
@@ -58,16 +57,10 @@ export default class HiitCircuitRest6Screen extends React.PureComponent {
     this.setState({ appState: nextAppState });
   }
   startTimer = () => {
-    this.setState({
-      timerStart: true,
-      timerReset: false,
-    });
+    this.setState({ timerStart: true });
   }
   handleFinish = async (exerciseList, fitnessLevel) => {
-    this.setState({
-      timerStart: false,
-      timerReset: false,
-    });
+    this.setState({ timerStart: false });
     const setCount = this.props.navigation.getParam('setCount', 1) + 1;
     if (setCount === 4) {
       this.props.navigation.replace('HiitCircuitWorkoutComplete', {
@@ -85,14 +78,12 @@ export default class HiitCircuitRest6Screen extends React.PureComponent {
   handlePause = () => {
     this.setState({
       timerStart: false,
-      timerReset: false,
       pauseModalVisible: true,
     });
   }
   handleUnpause = () => {
     this.setState({
       timerStart: true,
-      timerReset: false,
       pauseModalVisible: false,
     });
   }
@@ -162,14 +153,12 @@ export default class HiitCircuitRest6Screen extends React.PureComponent {
   showExerciseInfoModal = () => {
     this.setState({
       timerStart: false,
-      timerReset: false,
       exerciseInfoModalVisible: true,
     });
   }
   hideExerciseInfoModal = () => {
     this.setState({
       timerStart: true,
-      timerReset: false,
       exerciseInfoModalVisible: false,
     });
   }
@@ -177,7 +166,6 @@ export default class HiitCircuitRest6Screen extends React.PureComponent {
     const {
       exerciseList,
       timerStart,
-      timerReset,
       totalDuration,
       fitnessLevel,
       pauseModalVisible,
@@ -199,7 +187,6 @@ export default class HiitCircuitRest6Screen extends React.PureComponent {
             <WorkoutTimer
               totalDuration={totalDuration}
               start={timerStart}
-              reset={timerReset}
               handleFinish={() => this.handleFinish(exerciseList, fitnessLevel)}
             />
           </View>

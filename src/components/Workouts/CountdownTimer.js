@@ -12,20 +12,8 @@ export default class CountdownTimer extends React.PureComponent {
       remainingTime: (props.totalDuration * 1000) + 990,
     };
   }
-  componentDidMount = async () => {
-    if (this.props.start) {
-      this.start();
-    }
-  }
-  componentWillReceiveProps(newProps) {
-    if (newProps.start) {
-      this.start();
-    } else {
-      this.stop();
-    }
-    if (newProps.reset) {
-      this.reset(newProps.totalDuration);
-    }
+  componentDidMount() {
+    this.start();
   }
   componentWillUnmount() {
     clearInterval(this.interval);
@@ -50,11 +38,6 @@ export default class CountdownTimer extends React.PureComponent {
   stop = () => {
     clearInterval(this.interval);
     this.interval = null;
-  }
-  reset = (newDuration) => {
-    this.setState({
-      remainingTime: this.props.totalDuration !== newDuration ? newDuration : this.props.totalDuration,
-    });
   }
   formatTime = () => {
     const now = this.state.remainingTime;
@@ -95,7 +78,6 @@ const defaultStyles = {
 
 CountdownTimer.propTypes = {
   totalDuration: PropTypes.number.isRequired,
-  start: PropTypes.bool.isRequired,
   options: PropTypes.objectOf(PropTypes.string || PropTypes.number),
   getTime: PropTypes.func,
   handleFinish: PropTypes.func.isRequired,
