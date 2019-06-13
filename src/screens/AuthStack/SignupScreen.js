@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
-import { Facebook, Haptic } from 'expo';
+import { Facebook, Haptic, Localization } from 'expo';
 import firebase from 'firebase';
 import { db, auth } from '../../../config/firebase';
 import NativeLoader from '../../components/Shared/NativeLoader';
@@ -102,6 +102,7 @@ export default class SignupScreen extends React.PureComponent {
     try {
       const response = await firebase.auth().createUserWithEmailAndPassword(email, password);
       await response.user.updateProfile({ displayName: `${firstName} ${lastName}` });
+      const { country } = Localization;
       const { uid } = response.user;
       const data = {
         id: uid,
@@ -109,6 +110,7 @@ export default class SignupScreen extends React.PureComponent {
         lastName,
         email,
         onboarded: false,
+        country,
         signUpDate: new Date(),
       };
       await AsyncStorage.setItem('uid', uid);
