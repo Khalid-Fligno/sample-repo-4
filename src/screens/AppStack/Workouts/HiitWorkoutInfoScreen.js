@@ -170,6 +170,10 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
                     playWhenInactive
                     resizeMode="contain"
                     repeat
+                    muted
+                    selectedAudioTrack={{
+                      type: 'disabled',
+                    }}
                     style={{ width: width - 30, height: width - 30 }}
                   />
                 )
