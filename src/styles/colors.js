@@ -3,11 +3,13 @@ const colors = {
   white: 'rgb(255, 255, 255)', // #FFFFFF
   transparent: 'rgba(0, 0, 0, 0)',
   transparentWhite: 'rgba(255, 255, 255, 0.65 )',
+  transparentWhiteLight: 'rgba(255, 255, 255, 0.3 )',
   transparentBlackDark: 'rgba(0, 0, 0, 0.75 )',
   transparentBlackMid: 'rgba(0, 0, 0, 0.6 )',
   transparentBlackLight: 'rgba(0, 0, 0, 0.5 )',
+  transparentBlackLighter: 'rgba(0, 0, 0, 0.4 )',
   transparentBlackLightest: 'rgba(0, 0, 0, 0.3 )',
-  transparentCoral: 'rgba(236, 19, 41, 0.45)',
+  transparentCoral: 'rgba(238, 48, 66, 0.4)',
   offWhite: 'rgb(250, 250, 250)', // ##F5F5F5
   grey: {
     dark: 'rgb(113, 114, 115)', // #717273
