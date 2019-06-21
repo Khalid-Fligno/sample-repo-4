@@ -42,11 +42,12 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/icons/apple-music-icon.png'),
       require('../../assets/icons/spotify-icon.png'),
       require('../../assets/icons/facebook-icon-white.png'),
-      require('../../assets/images/landing-screen-carousel-1.jpg'),
-      require('../../assets/images/landing-screen-carousel-2.jpg'),
-      require('../../assets/images/landing-screen-carousel-3.jpg'),
-      require('../../assets/images/landing-screen-carousel-4.jpg'),
-      require('../../assets/images/landing-screen-carousel-5.jpg'),
+      require('../../assets/images/app-onboarding-carousel-1.jpg'),
+      require('../../assets/images/app-onboarding-carousel-2.jpg'),
+      require('../../assets/images/app-onboarding-carousel-3.jpg'),
+      require('../../assets/images/app-onboarding-carousel-4.jpg'),
+      require('../../assets/images/app-onboarding-carousel-5.jpg'),
+      require('../../assets/images/signup-screen-background.jpg'),
       require('../../assets/images/homeScreenTiles/home-screen-blog.jpg'),
       require('../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg'),
       require('../../assets/images/subscription-screen-background.jpg'),
@@ -106,6 +107,12 @@ export default class AuthLoadingScreen extends React.PureComponent {
       },
       {
         GothamNarrowBook: require('../../assets/fonts/gotham-narrow-book.otf'),
+      },
+      {
+        GothamUltraItalic: require('../../assets/fonts/gotham-ultra-italic.otf'),
+      },
+      {
+        TuesdayNight: require('../../assets/fonts/tuesday-night.otf'),
       },
       {
         icomoon: require('../../assets/fonts/icomoon.ttf'),

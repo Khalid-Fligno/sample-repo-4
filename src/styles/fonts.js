@@ -4,6 +4,8 @@ const fonts = {
   standard: 'GothamBook',
   standardNarrow: 'GothamNarrowBook',
   standardItalic: 'GothamBookItalic',
+  ultraItalic: 'GothamUltraItalic',
+  tuesdayNight: 'TuesdayNight',
 };
 
 export default fonts;
