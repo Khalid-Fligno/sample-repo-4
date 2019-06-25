@@ -318,58 +318,59 @@ export default class SubscriptionScreen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground
-          source={require('../../../assets/images/subscription-screen-background.jpg')}
+          source={require('../../../assets/images/signup-screen-background.jpg')}
           style={styles.flexContainer}
         >
-          <View style={styles.opacityOverlay}>
-            <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>
-                START YOUR 7 DAY FREE TRIAL TODAY!
-              </Text>
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>
+              START YOUR FREE TRIAL
+            </Text>
+            <Text style={styles.headerText2}>
+              today!
+            </Text>
+          </View>
+          <View style={styles.contentContainer}>
+            <View style={styles.subscriptionTileRow}>
+              {
+                products && products.map((product, index) => (
+                  <SubscriptionTile
+                    key={product.identifier}
+                    primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly'}
+                    title={productTitleMap[index]}
+                    price={product.priceString}
+                    currencyCode={product.currencyCode}
+                    onPress={() => this.purchaseProduct(product.identifier)}
+                    term={subscriptionPeriodMap[product.identifier]}
+                  />
+                ))
+              }
             </View>
-            <View style={styles.contentContainer}>
-              <View style={styles.subscriptionTileRow}>
-                {
-                  products && products.map((product, index) => (
-                    <SubscriptionTile
-                      key={product.identifier}
-                      primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly'}
-                      title={productTitleMap[index]}
-                      price={product.priceString}
-                      currencyCode={product.currencyCode}
-                      onPress={() => this.purchaseProduct(product.identifier)}
-                      term={subscriptionPeriodMap[product.identifier]}
-                    />
-                  ))
-                }
-              </View>
-            </View>
-            <View style={styles.disclaimerTextContainer}>
-              <ScrollView contentContainerStyle={styles.disclaimerScrollContainer}>
-                <Text style={styles.disclaimerText}>
-                  <Text style={styles.subscriptionTermsTitle}>Subscription Terms: </Text>
-                  {'By continuing, you accept our '}
-                  <Text
-                    onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-privacy-policy')}
-                    style={styles.link}
-                  >
-                    Privacy Policy
-                  </Text>
-                  {' and '}
-                  <Text
-                    onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-terms-conditions')}
-                    style={styles.link}
-                  >
-                    Terms and Conditions
-                  </Text>
-                  .
-                  You also agree that an ongoing subscription to the FitazFK App (FitazFK) will be applied to your iTunes account at the end of your 7-day free trial.
-                  Subscriptions will automatically renew and your account charged unless auto-renew is turned off at least 24-hours before the end of the current period.
-                  Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
-                  Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
+          </View>
+          <View style={styles.disclaimerTextContainer}>
+            <ScrollView contentContainerStyle={styles.disclaimerScrollContainer}>
+              <Text style={styles.disclaimerText}>
+                <Text style={styles.subscriptionTermsTitle}>Subscription Terms: </Text>
+                {'By continuing, you accept our '}
+                <Text
+                  onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-privacy-policy')}
+                  style={styles.link}
+                >
+                  Privacy Policy
                 </Text>
-              </ScrollView>
-            </View>
+                {' and '}
+                <Text
+                  onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-terms-conditions')}
+                  style={styles.link}
+                >
+                  Terms and Conditions
+                </Text>
+                .
+                You also agree that an ongoing subscription to the FitazFK App (FitazFK) will be applied to your iTunes account at the end of your 7-day free trial.
+                Subscriptions will automatically renew and your account charged unless auto-renew is turned off at least 24-hours before the end of the current period.
+                Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
+                Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
+              </Text>
+            </ScrollView>
           </View>
         </ImageBackground>
         {
@@ -394,12 +395,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: colors.offWhite,
   },
-  opacityOverlay: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: colors.transparentBlackMid,
-  },
   headerContainer: {
     padding: 10,
     shadowColor: colors.black,
@@ -408,11 +403,18 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   headerText: {
-    fontFamily: fonts.bold,
-    fontSize: 24,
+    fontFamily: fonts.ultraItalic,
+    fontSize: 22,
     color: colors.white,
     textAlign: 'center',
     marginTop: 4,
+  },
+  headerText2: {
+    fontFamily: fonts.tuesdayNight,
+    fontSize: 30,
+    color: colors.white,
+    textAlign: 'center',
+    marginTop: -10,
   },
   contentContainer: {
     flex: 1,
@@ -425,7 +427,7 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   disclaimerTextContainer: {
-    backgroundColor: colors.transparentBlackLight,
+    backgroundColor: colors.transparentBlackLightest,
     borderRadius: 3,
     margin: 10,
     maxHeight: 110,

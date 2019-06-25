@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.facebookBlue,
-    height: 50,
+    height: 45,
     width: width - 30,
     marginTop: 8,
     borderRadius: 4,

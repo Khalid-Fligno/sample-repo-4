@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   StyleSheet,
+  ScrollView,
   View,
   Text,
   Dimensions,
@@ -11,6 +12,7 @@ import {
   Alert,
   NativeModules,
   Keyboard,
+  ImageBackground,
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
@@ -300,89 +302,98 @@ export default class LoginScreen extends React.PureComponent {
       <SafeAreaView style={styles.safeAreaContainer}>
         <StatusBar barStyle="light-content" />
         <View style={styles.container}>
-          <View style={styles.closeIconContainer}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}
-              style={styles.closeIconButton}
-            >
-              <Icon
-                name="cross"
-                color={colors.charcoal.standard}
-                size={22}
-              />
-            </TouchableOpacity>
-          </View>
-          <FormInput
-            placeholder="Email"
-            value={email}
-            returnKeyType="next"
-            keyboardType="email-address"
-            autoCorrect={false}
-            autoCapitalize="none"
-            onChangeText={(text) => this.setState({ email: text })}
-            onSubmitEditing={() => this.passwordInput.focus()}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            clearButtonMode="while-editing"
-          />
-          <FormInput
-            placeholder="Password"
-            value={password}
-            returnKeyType="go"
-            autoCorrect={false}
-            autoCapitalize="none"
-            onChangeText={(text) => this.setState({ password: text })}
-            secureTextEntry
-            ref={(input) => {
-              this.passwordInput = input;
-            }}
-            onSubmitEditing={() => this.login(email, password)}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            clearButtonMode="while-editing"
-          />
-          {
-            error && (
-              <View>
-                <FormValidationMessage>
-                  {error}
-                </FormValidationMessage>
+          <ImageBackground
+            source={require('../../../assets/images/signup-screen-background.jpg')}
+            style={styles.imageBackground}
+          >
+            <ScrollView contentContainerStyle={styles.scrollView}>
+              <View style={styles.closeIconContainer}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.goBack()}
+                  style={styles.closeIconButton}
+                >
+                  <Icon
+                    name="cross"
+                    color={colors.white}
+                    size={22}
+                  />
+                </TouchableOpacity>
               </View>
-            )
-          }
-          <Button
-            title="LOG IN"
-            onPress={() => this.login(email, password)}
-            containerViewStyle={styles.loginButtonContainer}
-            buttonStyle={styles.loginButton}
-            textStyle={styles.loginButtonText}
-            fontFamily={fonts.bold}
-          />
-          <Divider style={styles.divider} />
-          <View style={styles.dividerOverlay} >
-            <Text style={styles.dividerOverlayText}>
-              OR
-            </Text>
-          </View>
-          <FacebookButton
-            title="LOG IN WITH FACEBOOK"
-            onPress={this.loginWithFacebook}
-          />
-          <Text
-            onPress={this.navigateToForgottenPassword}
-            style={styles.navigateToForgottenPasswordButton}
-          >
-            {'Forgotten your password?'}
-          </Text>
-          <Text
-            onPress={this.navigateToSignup}
-            style={styles.navigateToSignupButton}
-          >
-            {"Don't have an account? Sign up here"}
-          </Text>
-          {
-            loading && <NativeLoader />
-          }
+              <FormInput
+                placeholder="Email"
+                placeholderTextColor={colors.transparentWhiteLight}
+                value={email}
+                returnKeyType="next"
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoCapitalize="none"
+                onChangeText={(text) => this.setState({ email: text })}
+                onSubmitEditing={() => this.passwordInput.focus()}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                clearButtonMode="while-editing"
+              />
+              <FormInput
+                placeholder="Password"
+                placeholderTextColor={colors.transparentWhiteLight}
+                value={password}
+                returnKeyType="go"
+                autoCorrect={false}
+                autoCapitalize="none"
+                onChangeText={(text) => this.setState({ password: text })}
+                secureTextEntry
+                ref={(input) => {
+                  this.passwordInput = input;
+                }}
+                onSubmitEditing={() => this.login(email, password)}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                clearButtonMode="while-editing"
+              />
+              {
+                error && (
+                  <View>
+                    <FormValidationMessage>
+                      {error}
+                    </FormValidationMessage>
+                  </View>
+                )
+              }
+              <Button
+                title="LOG IN"
+                onPress={() => this.login(email, password)}
+                containerViewStyle={styles.loginButtonContainer}
+                buttonStyle={styles.loginButton}
+                textStyle={styles.loginButtonText}
+                fontFamily={fonts.bold}
+              />
+              <Divider style={styles.divider} />
+              <View style={styles.dividerOverlay} >
+                <Text style={styles.dividerOverlayText}>
+                  OR
+                </Text>
+              </View>
+              <FacebookButton
+                title="LOG IN WITH FACEBOOK"
+                onPress={this.loginWithFacebook}
+              />
+              <Text
+                onPress={this.navigateToForgottenPassword}
+                style={styles.navigateToForgottenPasswordButton}
+              >
+                {'Forgotten your password?'}
+              </Text>
+              <Text
+                onPress={this.navigateToSignup}
+                style={styles.navigateToSignupButton}
+              >
+                {"Don't have an account? Sign up here"}
+              </Text>
+              {
+                loading && <NativeLoader />
+              }
+            </ScrollView>
+          </ImageBackground>
         </View>
       </SafeAreaView>
     );
@@ -393,11 +404,21 @@ const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
     backgroundColor: colors.black,
-    borderTopColor: colors.black,
   },
   container: {
     flex: 1,
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.transparent,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width,
+  },
+  imageBackground: {
+    flex: 1,
+    width: undefined,
+    height: undefined,
+  },
+  scrollView: {
+    flex: 1,
     alignItems: 'center',
   },
   closeIconContainer: {
@@ -417,16 +438,16 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
     borderBottomWidth: 0,
+    backgroundColor: colors.transparentWhiteLight,
   },
   input: {
     width: width - 30,
     padding: 12,
     fontFamily: fonts.bold,
     fontSize: 14,
-    backgroundColor: colors.white,
-    color: colors.charcoal.standard,
+    color: colors.white,
     borderWidth: 1,
-    borderColor: colors.grey.standard,
+    borderColor: colors.grey.light,
     borderRadius: 4,
   },
   loginButtonContainer: {
@@ -439,7 +460,7 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     backgroundColor: colors.coral.standard,
-    height: 50,
+    height: 45,
     width: width - 30,
     borderRadius: 4,
   },
@@ -449,7 +470,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   divider: {
-    backgroundColor: colors.grey.standard,
+    backgroundColor: colors.transparent,
     width: width - 30,
     marginTop: 15,
     marginBottom: 15,
@@ -460,12 +481,12 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingLeft: 20,
     paddingRight: 20,
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.transparent,
   },
   dividerOverlayText: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.grey.dark,
+    color: colors.grey.medium,
   },
   navigateToForgottenPasswordButton: {
     fontFamily: fonts.standard,
@@ -475,9 +496,9 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
     textAlign: 'center',
-    color: colors.grey.dark,
+    color: colors.grey.light,
     textDecorationStyle: 'solid',
-    textDecorationColor: colors.grey.dark,
+    textDecorationColor: colors.grey.light,
     textDecorationLine: 'underline',
   },
   navigateToSignupButton: {
@@ -487,9 +508,9 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
     textAlign: 'center',
-    color: colors.grey.dark,
+    color: colors.grey.light,
     textDecorationStyle: 'solid',
-    textDecorationColor: colors.grey.dark,
+    textDecorationColor: colors.grey.light,
     textDecorationLine: 'underline',
   },
 });

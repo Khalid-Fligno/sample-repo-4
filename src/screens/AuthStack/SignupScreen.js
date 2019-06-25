@@ -11,6 +11,8 @@ import {
   AsyncStorage,
   Alert,
   Keyboard,
+  ImageBackground,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
@@ -155,112 +157,132 @@ export default class SignupScreen extends React.PureComponent {
       <SafeAreaView style={styles.safeAreaContainer} >
         <StatusBar barStyle="light-content" />
         <View style={styles.container}>
-          <ScrollView contentContainerStyle={styles.scrollView}>
-            <View style={styles.closeIconContainer}>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.goBack()}
-                style={styles.closeIconButton}
-              >
-                <Icon
-                  name="cross"
-                  color={colors.charcoal.standard}
-                  size={22}
-                />
-              </TouchableOpacity>
-            </View>
-            <FormInput
-              placeholder="First Name"
-              value={firstName}
-              returnKeyType="next"
-              autoCorrect={false}
-              onChangeText={(text) => this.setState({ firstName: text })}
-              onSubmitEditing={() => this.lastNameInput.focus()}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              clearButtonMode="while-editing"
-            />
-            <FormInput
-              placeholder="Last Name"
-              value={lastName}
-              returnKeyType="next"
-              autoCorrect={false}
-              onChangeText={(text) => this.setState({ lastName: text })}
-              ref={(input) => {
-                this.lastNameInput = input;
-              }}
-              onSubmitEditing={() => this.emailInput.focus()}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              clearButtonMode="while-editing"
-            />
-            <FormInput
-              placeholder="Email"
-              value={email}
-              returnKeyType="next"
-              keyboardType="email-address"
-              autoCorrect={false}
-              autoCapitalize="none"
-              onChangeText={(text) => this.setState({ email: text })}
-              ref={(input) => {
-                this.emailInput = input;
-              }}
-              onSubmitEditing={() => this.passwordInput.focus()}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              clearButtonMode="while-editing"
-            />
-            <FormInput
-              placeholder="Password"
-              value={password}
-              returnKeyType="go"
-              autoCorrect={false}
-              autoCapitalize="none"
-              onChangeText={(text) => this.setState({ password: text })}
-              secureTextEntry
-              ref={(input) => {
-                this.passwordInput = input;
-              }}
-              onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              clearButtonMode="while-editing"
-            />
-            {
-              error && (
-                <View>
-                  <FormValidationMessage>
-                    {error}
-                  </FormValidationMessage>
-                </View>
-              )
-            }
-            <Button
-              title="SIGN UP"
-              onPress={() => this.signup(firstName, lastName, email, password)}
-              containerViewStyle={styles.loginButtonContainer}
-              buttonStyle={styles.loginButton}
-              textStyle={styles.loginButtonText}
-            />
-            <Divider style={styles.divider} />
-            <View style={styles.dividerOverlay}>
-              <Text style={styles.dividerOverlayText}>
-                OR
+          <ImageBackground
+            source={require('../../../assets/images/signup-screen-background.jpg')}
+            style={styles.imageBackground}
+          >
+            <ScrollView contentContainerStyle={styles.scrollView}>
+              <View style={styles.closeIconContainer}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.goBack()}
+                  style={styles.closeIconButton}
+                >
+                  <Icon
+                    name="cross"
+                    color={colors.white}
+                    size={22}
+                  />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.headerText1}>
+                CREATE YOUR
               </Text>
-            </View>
-            <FacebookButton
-              title="SIGN UP WITH FACEBOOK"
-              onPress={this.signupWithFacebook}
-            />
-            <Text
-              onPress={this.navigateToLogin}
-              style={styles.navigateToLogin}
-            >
-              Already have an account? Log in here
-            </Text>
-          </ScrollView>
-          {
-            loading && <NativeLoader />
-          }
+              <Text style={styles.headerText1}>
+                ACCOUNT TO
+              </Text>
+              <Text style={styles.headerText2}>
+                get started
+              </Text>
+              <KeyboardAvoidingView keyboardVerticalOffset={40} behavior="position" enabled>
+                <FormInput
+                  placeholder="First Name"
+                  placeholderTextColor={colors.transparentWhiteLight}
+                  value={firstName}
+                  returnKeyType="next"
+                  autoCorrect={false}
+                  onChangeText={(text) => this.setState({ firstName: text })}
+                  onSubmitEditing={() => this.lastNameInput.focus()}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  clearButtonMode="while-editing"
+                />
+                <FormInput
+                  placeholder="Last Name"
+                  placeholderTextColor={colors.transparentWhiteLight}
+                  value={lastName}
+                  returnKeyType="next"
+                  autoCorrect={false}
+                  onChangeText={(text) => this.setState({ lastName: text })}
+                  ref={(input) => {
+                    this.lastNameInput = input;
+                  }}
+                  onSubmitEditing={() => this.emailInput.focus()}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  clearButtonMode="while-editing"
+                />
+                <FormInput
+                  placeholder="Email"
+                  placeholderTextColor={colors.transparentWhiteLight}
+                  value={email}
+                  returnKeyType="next"
+                  keyboardType="email-address"
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  onChangeText={(text) => this.setState({ email: text })}
+                  ref={(input) => {
+                    this.emailInput = input;
+                  }}
+                  onSubmitEditing={() => this.passwordInput.focus()}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  clearButtonMode="while-editing"
+                />
+                <FormInput
+                  placeholder="Password"
+                  placeholderTextColor={colors.transparentWhiteLight}
+                  value={password}
+                  returnKeyType="go"
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  onChangeText={(text) => this.setState({ password: text })}
+                  secureTextEntry
+                  ref={(input) => {
+                    this.passwordInput = input;
+                  }}
+                  onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  clearButtonMode="while-editing"
+                />
+              </KeyboardAvoidingView>
+              {
+                error && (
+                  <View>
+                    <FormValidationMessage>
+                      {error}
+                    </FormValidationMessage>
+                  </View>
+                )
+              }
+              <Button
+                title="SIGN ME UP"
+                onPress={() => this.signup(firstName, lastName, email, password)}
+                containerViewStyle={styles.signupButtonContainer}
+                buttonStyle={styles.signupButton}
+                textStyle={styles.signupButtonText}
+              />
+              <Divider style={styles.divider} />
+              <View style={styles.dividerOverlay}>
+                <Text style={styles.dividerOverlayText}>
+                  OR
+                </Text>
+              </View>
+              <FacebookButton
+                title="SIGN UP WITH FACEBOOK"
+                onPress={this.signupWithFacebook}
+              />
+              <Text
+                onPress={this.navigateToLogin}
+                style={styles.navigateToLogin}
+              >
+                Already have an account? Log in here
+              </Text>
+              {
+                loading && <NativeLoader />
+              }
+            </ScrollView>
+          </ImageBackground>
         </View>
       </SafeAreaView>
     );
@@ -274,14 +296,19 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.transparent,
+    justifyContent: 'center',
     alignItems: 'center',
     width,
   },
-  scrollView: {
+  imageBackground: {
     flex: 1,
+    width: undefined,
+    height: undefined,
+  },
+  scrollView: {
+    // flex: 1,
     alignItems: 'center',
-    width: width - 30,
   },
   closeIconContainer: {
     alignItems: 'flex-end',
@@ -289,50 +316,60 @@ const styles = StyleSheet.create({
   },
   closeIconButton: {
     padding: 15,
-    paddingLeft: 20,
-    paddingBottom: 20,
+    paddingBottom: 0,
     shadowColor: colors.charcoal.standard,
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 1,
   },
+  headerText1: {
+    fontFamily: fonts.ultraItalic,
+    fontSize: 20,
+    color: colors.white,
+  },
+  headerText2: {
+    fontFamily: fonts.tuesdayNight,
+    fontSize: 28,
+    color: colors.white,
+    marginTop: -10,
+  },
   inputContainer: {
     marginTop: 5,
     marginBottom: 5,
     borderBottomWidth: 0,
+    backgroundColor: colors.transparentWhiteLight,
   },
   input: {
     width: width - 30,
     padding: 12,
-    backgroundColor: colors.white,
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.charcoal.standard,
+    color: colors.white,
     borderWidth: 1,
-    borderColor: colors.grey.standard,
+    borderColor: colors.grey.light,
     borderRadius: 4,
   },
-  loginButtonContainer: {
+  signupButtonContainer: {
     marginTop: 7,
     marginBottom: 7,
     shadowColor: colors.charcoal.dark,
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
+    shadowRadius: 2,
   },
-  loginButton: {
+  signupButton: {
     backgroundColor: colors.coral.standard,
-    height: 50,
+    height: 45,
     width: width - 30,
     borderRadius: 4,
   },
-  loginButtonText: {
+  signupButtonText: {
     marginTop: 4,
     fontFamily: fonts.bold,
     fontSize: 15,
   },
   divider: {
-    backgroundColor: colors.grey.light,
+    backgroundColor: colors.transparent,
     width: width - 30,
     marginTop: 15,
     marginBottom: 15,
@@ -343,12 +380,12 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingLeft: 20,
     paddingRight: 20,
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.transparent,
   },
   dividerOverlayText: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.grey.dark,
+    color: colors.grey.medium,
   },
   navigateToLogin: {
     fontFamily: fonts.standard,
@@ -358,9 +395,9 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
     textAlign: 'center',
-    color: colors.grey.dark,
+    color: colors.grey.light,
     textDecorationStyle: 'solid',
-    textDecorationColor: colors.grey.dark,
+    textDecorationColor: colors.grey.light,
     textDecorationLine: 'underline',
   },
 });
