@@ -32,6 +32,11 @@ const cacheFonts = (fonts) => {
   });
 };
 
+const cacheSound = async () => {
+  await Audio.setIsEnabledAsync(true);
+  return timerSound.loadAsync(require('../../assets/sounds/ding.mp3'));
+};
+
 export default class AuthLoadingScreen extends React.PureComponent {
   loadAssetsAsync = async () => {
     const imageAssets = cacheImages([
@@ -118,12 +123,13 @@ export default class AuthLoadingScreen extends React.PureComponent {
         icomoon: require('../../assets/fonts/icomoon.ttf'),
       },
     ]);
-    await Promise.all([...imageAssets, ...fontAssets]);
+    const soundAsset = cacheSound();
+    await Promise.all([...imageAssets, ...fontAssets, soundAsset]);
   }
   // Include payments
   cachingComplete = async () => {
-    Audio.setIsEnabledAsync(true);
-    timerSound.loadAsync(require('../../assets/sounds/ding.mp3'));
+    // await Audio.setIsEnabledAsync(true);
+    // await timerSound.loadAsync(require('../../assets/sounds/ding.mp3'));
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         unsubscribe();
