@@ -12,7 +12,7 @@ import {
   Linking,
   ImageBackground,
 } from 'react-native';
-import { Haptic } from 'expo';
+import * as Haptics from 'expo-haptics';
 import { auth, db } from '../../../config/firebase';
 import {
   // foundationIdentifiers,
@@ -68,7 +68,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     await this.loadProducts();
   }
   openLink = (url) => {
-    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Linking.openURL(url);
   }
   logout = () => {
@@ -241,12 +241,12 @@ export default class SubscriptionScreen extends React.PureComponent {
   }
   purchaseProduct = async (productIdentifier) => {
     this.setState({ loading: true });
-    Haptic.selection();
+    Haptics.selectionAsync();
     if (productIdentifier === undefined) {
       Alert.alert('No subscription selected');
       return;
     }
-    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     InAppUtils.canMakePayments((canMakePayments) => {
       if (!canMakePayments) {
         this.setState({ loading: false });

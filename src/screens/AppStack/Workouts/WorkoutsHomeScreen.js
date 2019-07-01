@@ -9,7 +9,7 @@ import {
   AsyncStorage,
   // Alert,
 } from 'react-native';
-import { Haptic } from 'expo';
+import * as Haptics from 'expo-haptics';
 import Carousel from 'react-native-snap-carousel';
 import FadeInView from 'react-native-fade-in-view';
 import moment from 'moment';
@@ -107,7 +107,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
     this.unsubscribeFromTargets();
   }
   onSnapToItemTopCarousel = (field, slideIndex) => {
-    Haptic.selection();
+    Haptics.selectionAsync();
     this.setState({
       selectedWorkoutTypeIndex: slideIndex,
       selectedHiitStyleIndex: 0,
@@ -115,7 +115,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
     });
   }
   onSnapToItem = (field, slideIndex) => {
-    Haptic.selection();
+    Haptics.selectionAsync();
     this.setState({ [field]: slideIndex });
   }
   showHelperOnFirstOpen = async () => {
@@ -168,7 +168,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
     });
   }
   goToWorkouts = (selectedWorkoutTypeIndex) => {
-    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     const { selectedWorkoutLocationIndex, selectedResistanceFocusIndex, selectedHiitStyleIndex } = this.state;
     if (selectedWorkoutTypeIndex === 0) {
       this.handleWorkoutSelected(selectedWorkoutLocationIndex, selectedResistanceFocusIndex);

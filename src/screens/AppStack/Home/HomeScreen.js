@@ -8,7 +8,7 @@ import {
   Text,
   Dimensions,
 } from 'react-native';
-import { Haptic } from 'expo';
+import * as Haptics from 'expo-haptics';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import DoubleNewsFeedTile from '../../../components/Home/DoubleNewsFeedTile';
 import Loader from '../../../components/Shared/Loader';
@@ -56,7 +56,7 @@ export default class HomeScreen extends React.PureComponent {
       });
   }
   openLink = (url) => {
-    Haptic.impact(Haptic.ImpactFeedbackStyle.Medium);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Linking.openURL(url);
   }
   render() {

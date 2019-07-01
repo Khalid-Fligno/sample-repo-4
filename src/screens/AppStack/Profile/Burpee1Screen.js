@@ -6,7 +6,8 @@ import {
   SafeAreaView,
   Dimensions,
 } from 'react-native';
-import { FileSystem, Haptic } from 'expo';
+import * as Haptics from 'expo-haptics';
+import * as FileSystem from 'expo-file-system';
 import Video from 'react-native-video';
 import Carousel from 'react-native-carousel';
 import CustomButton from '../../../components/Shared/CustomButton';
@@ -24,7 +25,7 @@ export default class Progress3Screen extends React.PureComponent {
     };
   }
   handleNext = async () => {
-    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.props.navigation.navigate('Burpee2');
   }
   render() {

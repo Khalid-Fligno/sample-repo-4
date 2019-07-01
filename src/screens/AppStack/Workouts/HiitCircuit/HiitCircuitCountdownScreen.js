@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { FileSystem } from 'expo';
+import * as FileSystem from 'expo-file-system';
 import { SafeAreaView } from 'react-navigation';
 import CountdownTimer from '../../../../components/Workouts/CountdownTimer';
 import colors from '../../../../styles/colors';

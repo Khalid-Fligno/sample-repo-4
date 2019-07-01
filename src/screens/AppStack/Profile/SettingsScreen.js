@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, View, AsyncStorage, ScrollView, Dimensions, Alert } from 'react-native';
-import { FileSystem } from 'expo';
+import * as FileSystem from 'expo-file-system';
 import { List, ListItem } from 'react-native-elements';
 import firebase from 'firebase';
 import { db, auth } from '../../../../config/firebase';

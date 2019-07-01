@@ -11,7 +11,7 @@ import {
   Picker,
   AsyncStorage,
 } from 'react-native';
-import { Haptic } from 'expo';
+import * as Haptics from 'expo-haptics';
 import Modal from 'react-native-modal';
 import HelperModal from '../../components/Shared/HelperModal';
 import CustomButton from '../../components/Shared/CustomButton';
@@ -105,7 +105,7 @@ export default class Progress1Screen extends React.PureComponent {
     this.setState({ helperModalVisible: false });
   }
   handleSubmit = async (weight, waist, hip) => {
-    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     const isInitial = this.props.navigation.getParam('isInitial', false);
     this.setState({ loading: false });

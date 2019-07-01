@@ -11,7 +11,8 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import { Localization, Haptic } from 'expo';
+import * as Haptics from 'expo-haptics';
+import * as Localization from 'expo-localization';
 import Modal from 'react-native-modal';
 import CustomButton from '../../components/Shared/CustomButton';
 import Loader from '../../components/Shared/Loader';
@@ -45,7 +46,7 @@ export default class Onboarding1Screen extends React.PureComponent {
     this.setState({ chosenDate: newDate });
   }
   handleSubmit = async (chosenDate, chosenUom) => {
-    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     try {
       const timezone = await Localization.timezone;

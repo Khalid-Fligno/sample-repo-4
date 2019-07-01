@@ -1,3 +1,3 @@
-import { Audio } from 'expo';
+import { Audio } from 'expo-av';
 
 export const timerSound = new Audio.Sound();

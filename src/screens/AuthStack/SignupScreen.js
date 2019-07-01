@@ -16,7 +16,9 @@ import {
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
-import { Facebook, Haptic, Localization } from 'expo';
+import * as Localization from 'expo-localization';
+import * as Haptics from 'expo-haptics';
+import * as Facebook from 'expo-facebook';
 import firebase from 'firebase';
 import { db, auth } from '../../../config/firebase';
 import NativeLoader from '../../components/Shared/NativeLoader';
@@ -41,7 +43,7 @@ export default class SignupScreen extends React.PureComponent {
     };
   }
   signupWithFacebook = async () => {
-    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
       const { type, token, declinedPermissions } = await Facebook.logInWithReadPermissionsAsync('1825444707513470', {
         permissions: ['public_profile', 'email'],
@@ -94,7 +96,7 @@ export default class SignupScreen extends React.PureComponent {
     }
   }
   signup = async (firstName, lastName, email, password) => {
-    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
     this.setState({ loading: true });
     if (!firstName || !lastName) {
