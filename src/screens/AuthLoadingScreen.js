@@ -4,12 +4,10 @@ import {
   NativeModules,
   AsyncStorage,
 } from 'react-native';
-import {
-  AppLoading,
-  Asset,
-  Font,
-  Audio,
-} from 'expo';
+import { AppLoading } from 'expo';
+import { Audio } from 'expo-av';
+import * as Font from 'expo-font';
+import { Asset } from 'expo-asset';
 import {
   validateReceiptProduction,
   validateReceiptSandbox,

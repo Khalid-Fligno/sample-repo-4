@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import { Localization } from 'expo';
+import * as Localization from 'expo-localization';
 import { List, ListItem } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import { db } from '../../../../config/firebase';

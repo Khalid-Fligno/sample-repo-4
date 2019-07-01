@@ -11,11 +11,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
-import {
-  FileSystem,
-  // Calendar,
-  // Permissions,
-} from 'expo';
+import * as FileSystem from 'expo-file-system';
 import CalendarStrip from 'react-native-calendar-strip';
 import Swipeable from 'react-native-swipeable';
 import firebase from 'firebase';

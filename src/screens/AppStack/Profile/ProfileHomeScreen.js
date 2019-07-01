@@ -12,7 +12,9 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import { ImagePicker, ImageManipulator, Permissions } from 'expo';
+import * as Permissions from 'expo-permissions';
+import * as ImageManipulator from 'expo-image-manipulator';
+import * as ImagePicker from 'expo-image-picker';
 import { List, ListItem } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
 import { auth, db } from '../../../../config/firebase';

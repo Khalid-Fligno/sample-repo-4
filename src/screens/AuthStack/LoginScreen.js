@@ -16,7 +16,8 @@ import {
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
-import { Facebook, Haptic } from 'expo';
+import * as Haptics from 'expo-haptics';
+import * as Facebook from 'expo-facebook';
 import firebase from 'firebase';
 import { db, auth } from '../../../config/firebase';
 import {
@@ -71,7 +72,7 @@ export default class LoginScreen extends React.PureComponent {
     }
   }
   loginWithFacebook = async () => {
-    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
       const { type, token } = await Facebook.logInWithReadPermissionsAsync('1825444707513470', {
         permissions: ['public_profile', 'email'],
@@ -154,7 +155,7 @@ export default class LoginScreen extends React.PureComponent {
     }
   }
   login = async (email, password) => {
-    Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
     this.setState({ loading: true });
     try {

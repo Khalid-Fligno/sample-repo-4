@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { FileSystem } from 'expo';
+import * as FileSystem from 'expo-file-system';
 import Modal from 'react-native-modal';
 import { Divider } from 'react-native-elements';
 import Image from 'react-native-scalable-image';

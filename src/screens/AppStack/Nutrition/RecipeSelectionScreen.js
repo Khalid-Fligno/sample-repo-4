@@ -7,7 +7,7 @@ import {
   FlatList,
 } from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
-import { FileSystem } from 'expo';
+import * as FileSystem from 'expo-file-system';
 import sortBy from 'lodash.sortby';
 import { db } from '../../../../config/firebase';
 import RecipeTile from '../../../components/Nutrition/RecipeTile';

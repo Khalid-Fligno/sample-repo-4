@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { FileSystem } from 'expo';
+import * as FileSystem from 'expo-file-system';
 import { PieChart } from 'react-native-svg-charts';
 import Rate from 'react-native-rate';
 import Loader from '../../../../components/Shared/Loader';
