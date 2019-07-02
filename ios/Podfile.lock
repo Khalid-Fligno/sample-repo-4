@@ -258,10 +258,10 @@ PODS:
     - SDWebImage/GIF
   - react-native-in-app-utils (6.0.1):
     - React
-  - react-native-video (4.4.0):
+  - react-native-video (4.4.2):
     - React
-    - react-native-video/Video (= 4.4.0)
-  - react-native-video/Video (4.4.0):
+    - react-native-video/Video (= 4.4.2)
+  - react-native-video/Video (4.4.2):
     - React
   - React/ART (0.59.8):
     - React/Core
@@ -729,7 +729,7 @@ SPEC CHECKSUMS:
   React: 76e6aa2b87d05eb6cccb6926d72685c9a07df152
   react-native-fast-image: 47487b71169aea34868e7b38bf870b6b3f2157c5
   react-native-in-app-utils: e87b9a1de664b82176600b5c5d1c9d485c63c801
-  react-native-video: e34cded54b134e40fd67fd84fc6f395c584db91d
+  react-native-video: aed899073f5572418696ba6af3f31e4d371fd2f1
   RNRate: 29be49c24b314c4e8ec09d848c3965f61cb0be47
   SDWebImage: c10d14a8883ebd89664f02a422006f66a85c0c5d
   UMBarCodeScannerInterface: d5602e23de37f95bb4ee49ee3b2711e128058ae9
