@@ -12,7 +12,7 @@
     },
     "ios": {
       "bundleIdentifier": "com.fitazfk.fitazfkapp",
-      "buildNumber": "1",
+      "buildNumber": "2",
       "publishBundlePath": "ios/fitazfk/Supporting/shell-app.bundle",
       "publishManifestPath": "ios/fitazfk/Supporting/shell-app-manifest.json"
     },
