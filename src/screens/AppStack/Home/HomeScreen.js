@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import DoubleNewsFeedTile from '../../../components/Home/DoubleNewsFeedTile';
 import Loader from '../../../components/Shared/Loader';
@@ -27,14 +28,21 @@ export default class HomeScreen extends React.PureComponent {
       loading: false,
       profile: undefined,
       switchWelcomeHeader: true,
+      dayOfWeek: undefined,
     };
   }
   componentDidMount = () => {
     this.fetchProfile();
     this.switchWelcomeHeader();
+    this.setDayOfWeek();
   }
   componentWillUnmount = () => {
     this.unsubscribe();
+  }
+  setDayOfWeek = async () => {
+    const timezone = await Localization.timezone;
+    const dayOfWeek = momentTimezone.tz(timezone).day();
+    this.setState({ dayOfWeek });
   }
   switchWelcomeHeader = async () => {
     const switchWelcomeHeader = await AsyncStorage.getItem('switchWelcomeHeader');
@@ -69,7 +77,12 @@ export default class HomeScreen extends React.PureComponent {
     Linking.openURL(url);
   }
   render() {
-    const { loading, profile, switchWelcomeHeader } = this.state;
+    const {
+      loading,
+      profile,
+      switchWelcomeHeader,
+      dayOfWeek,
+    } = this.state;
     const personalisedMessage = () => {
       const { resistanceWeeklyComplete, hiitWeeklyComplete } = profile.weeklyTargets;
       const totalWeeklyWorkoutsCompleted = resistanceWeeklyComplete + hiitWeeklyComplete;
@@ -115,6 +128,20 @@ export default class HomeScreen extends React.PureComponent {
               )
             }
           </View>
+          {
+            (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) && (
+              <View style={styles.workoutProgressContainer}>
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.bodyText}>
+                    TODAYS RECOMMENDED WORKOUT
+                  </Text>
+                </View>
+                <Text>
+                  Resistance
+                </Text>
+              </View>
+            )
+          }
           <NewsFeedTile
             image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
             title="SHOP APPAREL"
