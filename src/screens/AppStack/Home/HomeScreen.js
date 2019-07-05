@@ -142,6 +142,20 @@ export default class HomeScreen extends React.PureComponent {
               </View>
             )
           }
+          {
+            (dayOfWeek === 2 || dayOfWeek === 4) && (
+              <View style={styles.workoutProgressContainer}>
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.bodyText}>
+                    TODAYS RECOMMENDED WORKOUT
+                  </Text>
+                </View>
+                <Text>
+                  HIIT
+                </Text>
+              </View>
+            )
+          }
           <NewsFeedTile
             image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
             title="SHOP APPAREL"
