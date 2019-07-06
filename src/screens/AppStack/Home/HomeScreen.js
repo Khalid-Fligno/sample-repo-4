@@ -16,10 +16,42 @@ import DoubleNewsFeedTile from '../../../components/Home/DoubleNewsFeedTile';
 import Loader from '../../../components/Shared/Loader';
 import ProgressBar from '../../../components/Progress/ProgressBar';
 import { db } from '../../../../config/firebase';
+import Icon from '../../../components/Shared/Icon';
 import fonts from '../../../styles/fonts';
 import colors from '../../../styles/colors';
 
 const { width } = Dimensions.get('window');
+
+const workoutTypeMap = {
+  0: 'Rest Day',
+  1: 'Resistance',
+  2: 'HIIT',
+  3: 'Resistance',
+  4: 'HIIT',
+  5: 'Resistance',
+  6: 'Rest Day',
+};
+
+const workoutIconMap = {
+  0: undefined,
+  1: 'workouts-outline',
+  2: 'workouts-hiit',
+  3: 'workouts-outline',
+  4: 'workouts-hiit',
+  5: 'workouts-outline',
+};
+
+const resistanceFocusMap = {
+  1: 'Full Body',
+  3: 'Upper Body',
+  5: 'Abs, Butt & Thighs',
+};
+
+const resistanceFocusIconMap = {
+  1: 'workouts-full',
+  3: 'workouts-upper',
+  5: 'workouts-lower',
+};
 
 export default class HomeScreen extends React.PureComponent {
   constructor(props) {
@@ -128,34 +160,37 @@ export default class HomeScreen extends React.PureComponent {
               )
             }
           </View>
-          {
-            (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) && (
-              <View style={styles.workoutProgressContainer}>
-                <View style={styles.sectionHeader}>
-                  <Text style={styles.bodyText}>
-                    TODAYS RECOMMENDED WORKOUT
+          <View style={styles.workoutProgressContainer}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.bodyText}>
+                TODAYS RECOMMENDED WORKOUT
+              </Text>
+            </View>
+            <View style={styles.recommendedWorkoutSection}>
+              <Icon
+                name={workoutIconMap[dayOfWeek]}
+                size={22}
+                color={colors.charcoal.standard}
+              />
+              <Text style={styles.recommendedWorkoutText}>
+                {workoutTypeMap[dayOfWeek]}
+              </Text>
+            </View>
+            {
+              (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) && (
+                <View style={styles.recommendedWorkoutSection}>
+                  <Icon
+                    name={resistanceFocusIconMap[dayOfWeek]}
+                    size={22}
+                    color={colors.charcoal.standard}
+                  />
+                  <Text style={styles.recommendedWorkoutText}>
+                    {resistanceFocusMap[dayOfWeek]}
                   </Text>
                 </View>
-                <Text>
-                  Resistance
-                </Text>
-              </View>
-            )
-          }
-          {
-            (dayOfWeek === 2 || dayOfWeek === 4) && (
-              <View style={styles.workoutProgressContainer}>
-                <View style={styles.sectionHeader}>
-                  <Text style={styles.bodyText}>
-                    TODAYS RECOMMENDED WORKOUT
-                  </Text>
-                </View>
-                <Text>
-                  HIIT
-                </Text>
-              </View>
-            )
-          }
+              )
+            }
+          </View>
           <NewsFeedTile
             image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
             title="SHOP APPAREL"
@@ -232,6 +267,18 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 2,
     padding: 8,
     paddingBottom: 5,
+  },
+  recommendedWorkoutSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+  recommendedWorkoutText: {
+    fontFamily: fonts.bold,
+    fontSize: 18,
+    color: colors.charcoal.standard,
+    marginLeft: 8,
+    marginTop: 4,
   },
   bodyText: {
     fontFamily: fonts.standard,
