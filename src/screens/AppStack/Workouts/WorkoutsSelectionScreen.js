@@ -61,7 +61,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     this.unsubscribe = await db.collection('workouts')
       .where(focus, '==', true)
       .where(location, '==', true)
-      .where('workoutRotation', '==', 1)
+      .where('workoutRotation', '==', 2)
       .onSnapshot(async (querySnapshot) => {
         const workouts = [];
         await querySnapshot.forEach(async (doc) => {
@@ -137,7 +137,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
       location,
     } = this.state;
     const locationImages = images[location];
-    const workoutList = sortBy(workouts, 'resistanceCategoryId').map((workout, index) => (
+    const workoutList = sortBy(workouts, 'sortOrder').map((workout, index) => (
       <WorkoutTile
         key={workout.id}
         title1={workout.displayName}
@@ -145,7 +145,6 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
         onPress={() => this.loadExercises(workout)}
         disabled={workout.disabled}
         cycleTargets={cycleTargets}
-        resistanceCategoryId={workout.resistanceCategoryId}
       />
     ));
 
