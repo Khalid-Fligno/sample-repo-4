@@ -8490,6 +8490,13 @@ react-native-modal@^6.1.0:
     prop-types "^15.6.1"
     react-native-animatable "^1.2.4"
 
+react-native-onesignal@^3.2.14:
+  version "3.2.14"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-3.2.14.tgz#421a3b34c226e5b6ea9e801b7b3f914d8e3c0abb"
+  integrity sha512-pL5eSTUAPSeVZQcYJcuFhAUGA+Pl22WgBn4VXYGI93Dtmzklhpuzxtkdm4LZSu08tHkhbe3VzYuziconJ33AKw==
+  dependencies:
+    invariant "^2.2.2"
+
 react-native-parallax-scroll-view@^0.21.3:
   version "0.21.3"
   resolved "https://registry.yarnpkg.com/react-native-parallax-scroll-view/-/react-native-parallax-scroll-view-0.21.3.tgz#d956ad224ce3b0a2725b80574bcbf688bbeda14e"
