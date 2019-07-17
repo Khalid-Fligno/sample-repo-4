@@ -50,6 +50,10 @@ target 'fitazfk' do
 
   pod 'RNRate', :path => '../node_modules/react-native-rate/ios'
 
+  pod 'react-native-onesignal',
+    :path => "../node_modules/react-native-onesignal/react-native-onesignal.podspec",
+    :inhibit_warnings => true
+
   use_unimodules!
 
   post_install do |installer|
