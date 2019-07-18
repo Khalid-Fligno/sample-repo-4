@@ -180,6 +180,9 @@
 						DevelopmentTeam = 2RJMZUB4PS;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.InAppPurchase = {
 								enabled = 1;
 							};
@@ -444,6 +447,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2C1548D9E4CB1AEFA5CCAE6D /* Pods-fitazfk.debug.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = fitazfk/fitazfk.entitlements;
 				DEVELOPMENT_TEAM = 2RJMZUB4PS;
@@ -460,6 +464,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A47FE4D7F70906B7DC8CE39B /* Pods-fitazfk.release.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = fitazfk/fitazfk.entitlements;
 				DEVELOPMENT_TEAM = 2RJMZUB4PS;
