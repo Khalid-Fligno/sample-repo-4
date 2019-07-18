@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.3.0</string>
+	<string>1.4.0</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -68,6 +68,8 @@
 	<key>NSContactsUsageDescription</key>
 	<string>Allow FitazFK to access your contacts</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allow FitazFK to use your location</string>
+	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Allow FitazFK to use your location</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Allow FitazfFK to access your microphone</string>
