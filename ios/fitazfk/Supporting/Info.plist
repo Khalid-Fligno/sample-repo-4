@@ -28,7 +28,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>EXAnalyticsDisabled</key>
 	<true/>
 	<key>Fabric</key>
@@ -67,9 +67,9 @@
 	<string>FitazFK uses the camera to take and upload progress or a profile photo</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Allow FitazFK to access your contacts</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Allow FitazFK to use your location</string>
 	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allow FitazFK to use your location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allow FitazFK to use your location</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Allow FitazfFK to access your microphone</string>
