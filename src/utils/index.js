@@ -8,7 +8,7 @@ export const weightOptionsMetric = [
 ];
 
 const populateWeightOptionsMetric = () => {
-  for (let i = 31; i <= 130; i += 1) {
+  for (let i = 31; i <= 150; i += 1) {
     weightOptionsMetric.push({
       value: i,
       label: `${i}`,
@@ -50,7 +50,7 @@ export const weightOptionsImperial = [
 ];
 
 const populateWeightOptionsImperial = () => {
-  for (let i = 61; i <= 280; i += 1) {
+  for (let i = 61; i <= 350; i += 1) {
     weightOptionsImperial.push({
       value: i,
       label: `${i}`,
