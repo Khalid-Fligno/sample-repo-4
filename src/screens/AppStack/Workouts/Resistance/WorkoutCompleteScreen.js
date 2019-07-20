@@ -19,9 +19,9 @@ import colors from '../../../../styles/colors';
 
 const { width } = Dimensions.get('window');
 
-const updateCycleTargets = (obj, resistanceCategoryId, newTally) => {
-  return Object.assign({}, obj, { [resistanceCategoryId]: newTally });
-};
+// const updateCycleTargets = (obj, resistanceCategoryId, newTally) => {
+//   return Object.assign({}, obj, { [resistanceCategoryId]: newTally });
+// };
 
 const updateWeeklyTargets = (obj, field, newTally) => {
   return Object.assign({}, obj, { [field]: newTally });
@@ -83,16 +83,16 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
       });
     });
   }
-  updateCycle = (userRef, resistanceCategoryId) => {
-    return db.runTransaction((transaction) => {
-      return transaction.get(userRef).then((userDoc) => {
-        const newResistanceCategoryTally = userDoc.data().cycleTargets[resistanceCategoryId] + 1;
-        const oldCycleTargets = userDoc.data().cycleTargets;
-        const newCycleTargets = updateCycleTargets(oldCycleTargets, resistanceCategoryId, newResistanceCategoryTally);
-        transaction.update(userRef, { cycleTargets: newCycleTargets });
-      });
-    });
-  }
+  // updateCycle = (userRef, resistanceCategoryId) => {
+  //   return db.runTransaction((transaction) => {
+  //     return transaction.get(userRef).then((userDoc) => {
+  //       const newResistanceCategoryTally = userDoc.data().cycleTargets[resistanceCategoryId] + 1;
+  //       const oldCycleTargets = userDoc.data().cycleTargets;
+  //       const newCycleTargets = updateCycleTargets(oldCycleTargets, resistanceCategoryId, newResistanceCategoryTally);
+  //       transaction.update(userRef, { cycleTargets: newCycleTargets });
+  //     });
+  //   });
+  // }
   render() {
     const { loading, resistanceCategoryId } = this.state;
     const completePieChart = (
