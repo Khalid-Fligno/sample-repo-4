@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import moment from 'moment';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import DoubleNewsFeedTile from '../../../components/Home/DoubleNewsFeedTile';
 import Loader from '../../../components/Shared/Loader';
@@ -45,15 +46,23 @@ export default class HomeScreen extends React.PureComponent {
   fetchProfile = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
-    this.unsubscribe = db.collection('users').doc(uid)
-      .onSnapshot(async (doc) => {
-        if (doc.exists) {
-          this.setState({
-            profile: await doc.data(),
-            loading: false,
-          });
-        }
+    const userRef = db.collection('users').doc(uid);
+    this.unsubscribe = userRef.onSnapshot(async (doc) => {
+      this.setState({
+        profile: await doc.data(),
+        loading: false,
       });
+      if (await doc.data().weeklyTargets.currentWeekStartDate !== moment().startOf('week').format('YYYY-MM-DD')) {
+        const data = {
+          weeklyTargets: {
+            resistanceWeeklyComplete: 0,
+            hiitWeeklyComplete: 0,
+            currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
+          },
+        };
+        await userRef.set(data, { merge: true });
+      }
+    });
   }
   openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
