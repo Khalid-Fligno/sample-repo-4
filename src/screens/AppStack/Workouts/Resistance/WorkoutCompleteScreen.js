@@ -64,12 +64,12 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
       FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
     }));
   }
-  completeWorkout = async (resistanceCategoryId) => {
+  completeWorkout = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     const userRef = db.collection('users').doc(uid);
     this.updateWeekly(userRef);
-    this.updateCycle(userRef, resistanceCategoryId);
+    // this.updateCycle(userRef, resistanceCategoryId);
     this.setState({ loading: false });
     this.props.navigation.navigate('WorkoutsHome');
   }
