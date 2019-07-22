@@ -6,16 +6,16 @@ import {
   AsyncStorage,
   ScrollView,
   Dimensions,
-  Picker,
-  TouchableOpacity,
-  Text,
+  // Picker,
+  // TouchableOpacity,
+  // Text,
 } from 'react-native';
 import * as Localization from 'expo-localization';
 import { List, ListItem } from 'react-native-elements';
-import Modal from 'react-native-modal';
+// import Modal from 'react-native-modal';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
-import { weeklySessionsPickerOptions } from '../../../utils';
+// import { weeklySessionsPickerOptions } from '../../../utils';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -30,11 +30,11 @@ export default class ProfileHomeScreen extends React.PureComponent {
       profile: undefined,
       loading: false,
       timezone: undefined,
-      resistanceModalVisible: false,
-      resistanceWeeklyTarget: undefined,
-      hiitModalVisible: false,
-      hiitWeeklyTarget: undefined,
-      buttonDisabled: false,
+      // resistanceModalVisible: false,
+      // resistanceWeeklyTarget: undefined,
+      // hiitModalVisible: false,
+      // hiitWeeklyTarget: undefined,
+      // buttonDisabled: false,
     };
   }
   componentDidMount = async () => {
@@ -49,23 +49,23 @@ export default class ProfileHomeScreen extends React.PureComponent {
   toggleHiitModal = () => {
     this.setState((prevState) => ({ hiitModalVisible: !prevState.hiitModalVisible }));
   }
-  updateWeeklyTarget = async (workoutType, newValue) => {
-    this.setState({ buttonDisabled: true });
-    const uid = await AsyncStorage.getItem('uid');
-    const userRef = db.collection('users').doc(uid);
-    let data;
-    if (workoutType === 'resistance') {
-      data = { resistanceWeeklyTarget: newValue };
-      userRef.set(data, { merge: true });
-      this.setState({ buttonDisabled: false });
-      this.toggleResistanceModal();
-    } else {
-      data = { hiitWeeklyTarget: newValue };
-      userRef.set(data, { merge: true });
-      this.setState({ buttonDisabled: false });
-      this.toggleHiitModal();
-    }
-  }
+  // updateWeeklyTarget = async (workoutType, newValue) => {
+  //   this.setState({ buttonDisabled: true });
+  //   const uid = await AsyncStorage.getItem('uid');
+  //   const userRef = db.collection('users').doc(uid);
+  //   let data;
+  //   if (workoutType === 'resistance') {
+  //     data = { resistanceWeeklyTarget: newValue };
+  //     userRef.set(data, { merge: true });
+  //     this.setState({ buttonDisabled: false });
+  //     this.toggleResistanceModal();
+  //   } else {
+  //     data = { hiitWeeklyTarget: newValue };
+  //     userRef.set(data, { merge: true });
+  //     this.setState({ buttonDisabled: false });
+  //     this.toggleHiitModal();
+  //   }
+  // }
   fetchProfile = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
@@ -77,8 +77,8 @@ export default class ProfileHomeScreen extends React.PureComponent {
             profile: await doc.data(),
             timezone,
             loading: false,
-            resistanceWeeklyTarget: await doc.data().resistanceWeeklyTarget,
-            hiitWeeklyTarget: await doc.data().hiitWeeklyTarget,
+            // resistanceWeeklyTarget: await doc.data().resistanceWeeklyTarget,
+            // hiitWeeklyTarget: await doc.data().hiitWeeklyTarget,
           });
         } else {
           this.setState({ loading: false });
@@ -90,11 +90,11 @@ export default class ProfileHomeScreen extends React.PureComponent {
       profile,
       timezone,
       loading,
-      resistanceModalVisible,
-      resistanceWeeklyTarget,
-      hiitModalVisible,
-      hiitWeeklyTarget,
-      buttonDisabled,
+      // resistanceModalVisible,
+      // resistanceWeeklyTarget,
+      // hiitModalVisible,
+      // hiitWeeklyTarget,
+      // buttonDisabled,
     } = this.state;
     return (
       <SafeAreaView style={styles.safeContainer}>
@@ -152,7 +152,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 rightIcon={<Icon name="edit-outline" size={20} color={colors.grey.dark} />}
               /> */}
             </List>
-            <Modal
+            {/* <Modal
               isVisible={resistanceModalVisible}
               onBackdropPress={() => this.toggleResistanceModal()}
               animationIn="fadeIn"
@@ -233,7 +233,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                   </Text>
                 </TouchableOpacity>
               </View>
-            </Modal>
+            </Modal> */}
             <Loader
               loading={loading}
               color={colors.charcoal.standard}
@@ -289,29 +289,29 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
   },
-  modalContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  modalCancelButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.charcoal.light,
-    height: 50,
-    width: '100%',
-  },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.charcoal.standard,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
+  // modalContainer: {
+  //   backgroundColor: colors.white,
+  //   borderRadius: 4,
+  //   overflow: 'hidden',
+  // },
+  // modalCancelButton: {
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   backgroundColor: colors.charcoal.light,
+  //   height: 50,
+  //   width: '100%',
+  // },
+  // modalButton: {
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   backgroundColor: colors.charcoal.standard,
+  //   height: 50,
+  //   width: '100%',
+  // },
+  // modalButtonText: {
+  //   fontFamily: fonts.bold,
+  //   fontSize: 14,
+  //   color: colors.white,
+  //   marginTop: 3,
+  // },
 });
