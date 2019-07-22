@@ -48,11 +48,11 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
   }
   componentDidMount = async () => {
     await this.fetchWorkouts();
-    await this.fetchTargetInfo();
+    // await this.fetchTargetInfo();
   }
   componentWillUnmount = async () => {
     await this.unsubscribe();
-    await this.unsubscribe2();
+    // await this.unsubscribe2();
   }
   fetchWorkouts = async () => {
     this.setState({ loading: true });
