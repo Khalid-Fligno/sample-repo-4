@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import * as Localization from 'expo-localization';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
@@ -166,30 +167,42 @@ export default class HomeScreen extends React.PureComponent {
                 TODAYS RECOMMENDED WORKOUT
               </Text>
             </View>
-            <View style={styles.recommendedWorkoutSection}>
-              <Icon
-                name={workoutIconMap[dayOfWeek]}
-                size={22}
-                color={colors.charcoal.standard}
-              />
-              <Text style={styles.recommendedWorkoutText}>
-                {workoutTypeMap[dayOfWeek]}
-              </Text>
+            <View style={styles.recommendedWorkoutContainer}>
+              {
+                (dayOfWeek > 0 && dayOfWeek < 6) ? (
+                  <View style={styles.recommendedWorkoutSection}>
+                    <Icon
+                      name={workoutIconMap[dayOfWeek]}
+                      size={28}
+                      color={colors.charcoal.light}
+                    />
+                    <Text style={styles.recommendedWorkoutText}>
+                      {workoutTypeMap[dayOfWeek]}
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={styles.recommendedWorkoutSection}>
+                    <Text style={styles.restDayText}>
+                      Rest day
+                    </Text>
+                  </View>
+                )
+              }
+              {
+                (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) && (
+                  <View style={styles.recommendedWorkoutSection}>
+                    <Icon
+                      name={resistanceFocusIconMap[dayOfWeek]}
+                      size={28}
+                      color={colors.charcoal.standard}
+                    />
+                    <Text style={styles.recommendedWorkoutText}>
+                      {resistanceFocusMap[dayOfWeek]}
+                    </Text>
+                  </View>
+                )
+              }
             </View>
-            {
-              (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) && (
-                <View style={styles.recommendedWorkoutSection}>
-                  <Icon
-                    name={resistanceFocusIconMap[dayOfWeek]}
-                    size={22}
-                    color={colors.charcoal.standard}
-                  />
-                  <Text style={styles.recommendedWorkoutText}>
-                    {resistanceFocusMap[dayOfWeek]}
-                  </Text>
-                </View>
-              )
-            }
           </View>
           <NewsFeedTile
             image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
@@ -268,17 +281,26 @@ const styles = StyleSheet.create({
     padding: 8,
     paddingBottom: 5,
   },
-  recommendedWorkoutSection: {
+  recommendedWorkoutContainer: {
     flexDirection: 'row',
+  },
+  recommendedWorkoutSection: {
+    flex: 1,
     alignItems: 'center',
-    padding: 10,
+    justifyContent: 'center',
+    paddingTop: 15,
   },
   recommendedWorkoutText: {
     fontFamily: fonts.bold,
-    fontSize: 18,
+    fontSize: 12,
     color: colors.charcoal.standard,
-    marginLeft: 8,
-    marginTop: 4,
+    marginTop: 15,
+  },
+  restDayText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.charcoal.standard,
+    margin: 15,
   },
   bodyText: {
     fontFamily: fonts.standard,
