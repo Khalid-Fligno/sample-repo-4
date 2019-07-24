@@ -9,6 +9,6 @@
 	<key>manifestUrl</key>
 	<string>exp://exp.host/@fitazfk/fitazfk-app</string>
 	<key>releaseChannel</key>
-	<string>prod-v1.4</string>
+	<string>default</string>
 </dict>
 </plist>
