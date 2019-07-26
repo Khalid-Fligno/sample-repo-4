@@ -24,17 +24,17 @@ import colors from '../../../styles/colors';
 const { width } = Dimensions.get('window');
 
 const workoutTypeMap = {
-  0: 'Rest Day',
+  // 0: 'Rest Day',
   1: 'Resistance',
   2: 'HIIT',
   3: 'Resistance',
   4: 'HIIT',
   5: 'Resistance',
-  6: 'Rest Day',
+  // 6: 'Rest Day',
 };
 
 const workoutIconMap = {
-  0: undefined,
+  // 0: undefined,
   1: 'workouts-outline',
   2: 'workouts-hiit',
   3: 'workouts-outline',
@@ -183,7 +183,7 @@ export default class HomeScreen extends React.PureComponent {
                 ) : (
                   <View style={styles.recommendedWorkoutSection}>
                     <Text style={styles.restDayText}>
-                      Rest day
+                      Rest Day
                     </Text>
                   </View>
                 )
@@ -294,13 +294,13 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 12,
     color: colors.charcoal.standard,
-    marginTop: 15,
+    marginTop: 12,
   },
   restDayText: {
     fontFamily: fonts.bold,
     fontSize: 14,
     color: colors.charcoal.standard,
-    margin: 15,
+    margin: 12,
   },
   bodyText: {
     fontFamily: fonts.standard,
