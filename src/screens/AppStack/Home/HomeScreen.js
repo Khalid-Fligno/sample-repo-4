@@ -24,17 +24,14 @@ import colors from '../../../styles/colors';
 const { width } = Dimensions.get('window');
 
 const workoutTypeMap = {
-  // 0: 'Rest Day',
   1: 'Resistance',
   2: 'HIIT',
   3: 'Resistance',
   4: 'HIIT',
   5: 'Resistance',
-  // 6: 'Rest Day',
 };
 
 const workoutIconMap = {
-  // 0: undefined,
   1: 'workouts-outline',
   2: 'workouts-hiit',
   3: 'workouts-outline',
