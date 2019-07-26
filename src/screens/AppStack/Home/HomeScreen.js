@@ -9,16 +9,47 @@ import {
   Dimensions,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import * as Localization from 'expo-localization';
 import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
 import DoubleNewsFeedTile from '../../../components/Home/DoubleNewsFeedTile';
 import Loader from '../../../components/Shared/Loader';
 import ProgressBar from '../../../components/Progress/ProgressBar';
 import { db } from '../../../../config/firebase';
+import Icon from '../../../components/Shared/Icon';
 import fonts from '../../../styles/fonts';
 import colors from '../../../styles/colors';
 
 const { width } = Dimensions.get('window');
+
+const workoutTypeMap = {
+  1: 'Resistance',
+  2: 'HIIT',
+  3: 'Resistance',
+  4: 'HIIT',
+  5: 'Resistance',
+};
+
+const workoutIconMap = {
+  1: 'workouts-outline',
+  2: 'workouts-hiit',
+  3: 'workouts-outline',
+  4: 'workouts-hiit',
+  5: 'workouts-outline',
+};
+
+const resistanceFocusMap = {
+  1: 'Full Body',
+  3: 'Upper Body',
+  5: 'Abs, Butt & Thighs',
+};
+
+const resistanceFocusIconMap = {
+  1: 'workouts-full',
+  3: 'workouts-upper',
+  5: 'workouts-lower',
+};
 
 export default class HomeScreen extends React.PureComponent {
   constructor(props) {
@@ -27,14 +58,21 @@ export default class HomeScreen extends React.PureComponent {
       loading: false,
       profile: undefined,
       switchWelcomeHeader: true,
+      dayOfWeek: undefined,
     };
   }
   componentDidMount = () => {
     this.fetchProfile();
     this.switchWelcomeHeader();
+    this.setDayOfWeek();
   }
   componentWillUnmount = () => {
     this.unsubscribe();
+  }
+  setDayOfWeek = async () => {
+    const timezone = await Localization.timezone;
+    const dayOfWeek = momentTimezone.tz(timezone).day();
+    this.setState({ dayOfWeek });
   }
   switchWelcomeHeader = async () => {
     const switchWelcomeHeader = await AsyncStorage.getItem('switchWelcomeHeader');
@@ -69,7 +107,12 @@ export default class HomeScreen extends React.PureComponent {
     Linking.openURL(url);
   }
   render() {
-    const { loading, profile, switchWelcomeHeader } = this.state;
+    const {
+      loading,
+      profile,
+      switchWelcomeHeader,
+      dayOfWeek,
+    } = this.state;
     const personalisedMessage = () => {
       const { resistanceWeeklyComplete, hiitWeeklyComplete } = profile.weeklyTargets;
       const totalWeeklyWorkoutsCompleted = resistanceWeeklyComplete + hiitWeeklyComplete;
@@ -114,6 +157,49 @@ export default class HomeScreen extends React.PureComponent {
                 />
               )
             }
+          </View>
+          <View style={styles.workoutProgressContainer}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.bodyText}>
+                TODAYS RECOMMENDED WORKOUT
+              </Text>
+            </View>
+            <View style={styles.recommendedWorkoutContainer}>
+              {
+                (dayOfWeek > 0 && dayOfWeek < 6) ? (
+                  <View style={styles.recommendedWorkoutSection}>
+                    <Icon
+                      name={workoutIconMap[dayOfWeek]}
+                      size={28}
+                      color={colors.charcoal.light}
+                    />
+                    <Text style={styles.recommendedWorkoutText}>
+                      {workoutTypeMap[dayOfWeek]}
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={styles.recommendedWorkoutSection}>
+                    <Text style={styles.restDayText}>
+                      Rest Day
+                    </Text>
+                  </View>
+                )
+              }
+              {
+                (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) && (
+                  <View style={styles.recommendedWorkoutSection}>
+                    <Icon
+                      name={resistanceFocusIconMap[dayOfWeek]}
+                      size={28}
+                      color={colors.charcoal.standard}
+                    />
+                    <Text style={styles.recommendedWorkoutText}>
+                      {resistanceFocusMap[dayOfWeek]}
+                    </Text>
+                  </View>
+                )
+              }
+            </View>
           </View>
           <NewsFeedTile
             image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
@@ -191,6 +277,27 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 2,
     padding: 8,
     paddingBottom: 5,
+  },
+  recommendedWorkoutContainer: {
+    flexDirection: 'row',
+  },
+  recommendedWorkoutSection: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 15,
+  },
+  recommendedWorkoutText: {
+    fontFamily: fonts.bold,
+    fontSize: 12,
+    color: colors.charcoal.standard,
+    marginTop: 12,
+  },
+  restDayText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.charcoal.standard,
+    margin: 12,
   },
   bodyText: {
     fontFamily: fonts.standard,
