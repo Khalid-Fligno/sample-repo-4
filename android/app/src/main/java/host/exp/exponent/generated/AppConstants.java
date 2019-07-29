@@ -14,7 +14,7 @@ public class AppConstants {
   public static final String VERSION_NAME = "2.8.1";
   public static String INITIAL_URL = "exp://exp.host/@fitazfk/fitazfk-app";
   public static final boolean IS_DETACHED = true;
-  public static final String SHELL_APP_SCHEME = "exp271e59a0a54746e48be47b1b075fa126";
+  public static final String SHELL_APP_SCHEME = "fitazfk";
   public static final String RELEASE_CHANNEL = "prod-v1.4";
   public static boolean SHOW_LOADING_VIEW_IN_SHELL_APP = false;
   public static boolean ARE_REMOTE_UPDATES_ENABLED = true;

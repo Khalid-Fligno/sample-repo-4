@@ -23,6 +23,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>fitazfk</string>
 				<string>fb1825444707513470</string>
 			</array>
 		</dict>
