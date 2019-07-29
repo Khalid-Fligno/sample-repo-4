@@ -249,16 +249,17 @@ const styles = StyleSheet.create({
   },
   welcomeHeaderText: {
     fontFamily: fonts.bold,
-    fontSize: 20,
+    fontSize: 18,
     color: colors.black,
-    margin: 5,
-    marginTop: 12,
+    margin: 8,
+    marginTop: 10,
   },
   welcomeBodyText: {
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.black,
-    margin: 5,
+    margin: 8,
+    marginTop: 0,
   },
   workoutProgressContainer: {
     alignItems: 'center',
