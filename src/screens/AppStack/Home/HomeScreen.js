@@ -32,11 +32,11 @@ const workoutTypeMap = {
 };
 
 const workoutIconMap = {
-  1: 'workouts-outline',
+  1: 'dumbbell',
   2: 'workouts-hiit',
-  3: 'workouts-outline',
+  3: 'dumbbell',
   4: 'workouts-hiit',
-  5: 'workouts-outline',
+  5: 'dumbbell',
 };
 
 const resistanceFocusMap = {
@@ -179,7 +179,12 @@ export default class HomeScreen extends React.PureComponent {
                   </View>
                 ) : (
                   <View style={styles.recommendedWorkoutSection}>
-                    <Text style={styles.restDayText}>
+                    <Icon
+                      name="calendar-tick"
+                      size={28}
+                      color={colors.charcoal.light}
+                    />
+                    <Text style={styles.recommendedWorkoutText}>
                       Rest Day
                     </Text>
                   </View>
@@ -292,12 +297,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.charcoal.standard,
     marginTop: 12,
-  },
-  restDayText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.charcoal.standard,
-    margin: 12,
   },
   bodyText: {
     fontFamily: fonts.standard,
