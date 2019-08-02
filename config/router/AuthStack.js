@@ -4,6 +4,7 @@ import LoginScreen from '../../src/screens/AuthStack/LoginScreen';
 import SignupScreen from '../../src/screens/AuthStack/SignupScreen';
 import EmailVerificationScreen from '../../src/screens/AuthStack/EmailVerificationScreen';
 import ForgottenPasswordScreen from '../../src/screens/AuthStack/ForgottenPasswordScreen';
+import SpecialOfferScreen from '../../src/screens/AuthStack/SpecialOfferScreen';
 
 const AuthStack = createStackNavigator(
   {
@@ -12,6 +13,7 @@ const AuthStack = createStackNavigator(
     Login: LoginScreen,
     EmailVerification: EmailVerificationScreen,
     ForgottenPassword: ForgottenPasswordScreen,
+    SpecialOffer: SpecialOfferScreen,
   },
   {
     initialRouteName: 'Landing',
