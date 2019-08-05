@@ -86,9 +86,9 @@ const common = {
     solid: {
       justifyContent: 'center',
       alignItems: 'center',
-      height: 50,
+      height: 45,
       width: width - 20,
-      borderRadius: 2,
+      borderRadius: 4,
       shadowOpacity: 0.8,
       shadowOffset: { width: 0, height: 2 },
       shadowRadius: 2,
@@ -96,7 +96,7 @@ const common = {
     outline: {
       justifyContent: 'center',
       alignItems: 'center',
-      height: 50,
+      height: 45,
       width: width - 20,
       borderRadius: 2,
       borderWidth: 4,

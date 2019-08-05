@@ -46,32 +46,6 @@ export default class LoginScreen extends React.PureComponent {
     };
   }
   loginWithFacebook = async () => {
-    try {
-      const { type, token } = await Facebook.logInWithReadPermissionsAsync('1825444707513470', {
-        permissions: ['public_profile', 'email'],
-      });
-      if (type === 'success') {
-        this.setState({ loading: true });
-        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-        const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        const authResponse = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
-        const { uid } = authResponse.user;
-        await AsyncStorage.setItem('uid', uid);
-        db.collection('users').doc(uid)
-          .get()
-          .then(async (doc) => {
-            if (await doc.data().fitnessLevel !== undefined) {
-              await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
-            }
-            this.setState({ loading: false });
-            this.props.navigation.navigate('App');
-          });
-      }
-    } catch (err) {
-      this.setState({ error: 'Something went wrong', loading: false });
-    }
-  }
-  loginWithFacebook = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
       const { type, token } = await Facebook.logInWithReadPermissionsAsync('1825444707513470', {
@@ -131,6 +105,7 @@ export default class LoginScreen extends React.PureComponent {
                       this.setState({ loading: false });
                       Alert.alert('Something went wrong');
                       this.props.navigation.navigate('Subscription');
+                      return;
                     }
                   } catch (err) {
                     // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
@@ -145,6 +120,7 @@ export default class LoginScreen extends React.PureComponent {
               this.setState({ loading: false });
               if (await !doc.data().onboarded) {
                 this.props.navigation.navigate('Onboarding1');
+                return;
               }
               this.props.navigation.navigate('App');
             }
@@ -211,6 +187,7 @@ export default class LoginScreen extends React.PureComponent {
                       this.setState({ loading: false });
                       Alert.alert('Something went wrong');
                       this.props.navigation.navigate('Subscription');
+                      return;
                     }
                   } catch (err) {
                     // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
@@ -225,6 +202,7 @@ export default class LoginScreen extends React.PureComponent {
               this.setState({ loading: false });
               if (await !doc.data().onboarded) {
                 this.props.navigation.navigate('Onboarding1');
+                return;
               }
               this.props.navigation.navigate('App');
             }
@@ -235,40 +213,6 @@ export default class LoginScreen extends React.PureComponent {
       this.setState({ error: errors.login[errorCode], loading: false });
     }
   }
-  // WITHOUT PAYMENTS FOR TESTING
-  // login = async (email, password) => {
-  //   this.setState({ loading: true });
-  //   try {
-  //     await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-  //     const authResponse = await auth.signInWithEmailAndPassword(email, password);
-  //     if (authResponse) {
-  //       const { uid } = authResponse.user;
-  //       await AsyncStorage.setItem('uid', uid);
-  //       db.collection('users').doc(uid)
-  //         .get()
-  //         .then(async (doc) => {
-  //           if (doc.exists) {
-  //             if (await doc.data().fitnessLevel !== undefined) {
-  //               await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
-  //             }
-  //             this.setState({ loading: false });
-  //             if (await !doc.data().onboarded) {
-  //               this.props.navigation.navigate('Onboarding1');
-  //             }
-  //             this.props.navigation.navigate('App');
-  //           } else {
-  //             authResponse.user.delete().then(() => {
-  //               this.setState({ loading: false });
-  //               Alert.alert('Sign up could not be completed', 'Please try again');
-  //             });
-  //           }
-  //         });
-  //     }
-  //   } catch (err) {
-  //     const errorCode = err.code;
-  //     this.setState({ error: errors.login[errorCode], loading: false });
-  //   }
-  // }
   validate = async (receiptData) => {
     const validationData = await validateReceiptProduction(receiptData).catch(async () => {
       const validationDataSandbox = await validateReceiptSandbox(receiptData);

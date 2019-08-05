@@ -40,3 +40,8 @@ export const identifiers = [
 //   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation',
 //   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation',
 // ];
+
+export const discountedIdentifiers = [
+  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discounted',
+];

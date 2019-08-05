@@ -16,6 +16,7 @@ import * as Haptics from 'expo-haptics';
 import { auth, db } from '../../../config/firebase';
 import {
   // foundationIdentifiers,
+  discountedIdentifiers,
   identifiers,
   compareProducts,
   validateReceiptProduction,
@@ -48,6 +49,8 @@ const productTitleMap = {
 };
 
 const subscriptionPeriodMap = {
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discounted': 'monthly',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted': 'yearly',
   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation': 'monthly',
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation': 'yearly',
   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly': 'monthly',
@@ -60,12 +63,17 @@ export default class SubscriptionScreen extends React.PureComponent {
     this.state = {
       loading: false,
       products: undefined,
+      specialOffer: props.navigation.getParam('specialOffer', undefined),
     };
   }
   componentDidMount = async () => {
     this.props.navigation.setParams({ handleRestore: this.restore });
     this.props.navigation.setParams({ handleLogout: this.logout });
-    await this.loadProducts();
+    if (this.state.specialOffer) {
+      await this.loadDiscountedProducts();
+    } else {
+      await this.loadProducts();
+    }
   }
   openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -209,6 +217,36 @@ export default class SubscriptionScreen extends React.PureComponent {
       }
     });
   }
+  loadDiscountedProducts = async () => {
+    this.setState({ loading: true });
+    await InAppUtils.loadProducts(discountedIdentifiers, (error, products) => {
+      if (error) {
+        this.setState({ loading: false });
+        Alert.alert('Unable to connect to the App Store', 'Please try again later');
+      } else if (products.length !== 2) {
+        // IAP products not retrieved (App Store server down, etc.)
+        this.setState({ loading: false });
+        Alert.alert(
+          'Unable to connect to the App Store',
+          'Please try again later',
+          [
+            {
+              text: 'Cancel', style: 'cancel',
+            },
+            {
+              text: 'Try Again',
+              onPress: () => this.retryLoadDiscountedProducts(),
+            },
+          ],
+          { cancelable: false },
+        );
+        // Alert.alert('Unable to connect to the App Store', 'Please try again later');
+      } else {
+        const sortedProducts = products.slice().sort(compareProducts);
+        this.setState({ products: sortedProducts, loading: false });
+      }
+    });
+  }
   retryLoadProducts = () => {
     this.setState({ loading: true });
     InAppUtils.loadProducts(identifiers, (error, products) => {
@@ -229,6 +267,36 @@ export default class SubscriptionScreen extends React.PureComponent {
             {
               text: 'Try Again',
               onPress: () => this.loadProducts(),
+            },
+          ],
+          { cancelable: false },
+        );
+      } else {
+        const sortedProducts = products.slice().sort(compareProducts);
+        this.setState({ products: sortedProducts, loading: false });
+      }
+    });
+  }
+  retryLoadDiscountedProducts = () => {
+    this.setState({ loading: true });
+    InAppUtils.loadProducts(discountedIdentifiers, (error, products) => {
+      if (error) {
+        this.setState({ loading: false });
+        Alert.alert('Unable to connect to the App Store', 'Please try again later');
+      } else if (products.length !== 2) {
+        // IAP products not retrieved (App Store server down, etc.)
+        this.setState({ loading: false });
+        // Alert.alert('Unable to connect to the App Store', 'Please try again later');
+        Alert.alert(
+          'Unable to connect to the App Store',
+          'Please try again later',
+          [
+            {
+              text: 'Cancel', style: 'cancel',
+            },
+            {
+              text: 'Try Again',
+              onPress: () => this.loadDiscountedProducts(),
             },
           ],
           { cancelable: false },
@@ -335,7 +403,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                 products && products.map((product, index) => (
                   <SubscriptionTile
                     key={product.identifier}
-                    primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly'}
+                    primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted'}
                     title={productTitleMap[index]}
                     price={product.priceString}
                     currencyCode={product.currencyCode}
@@ -365,7 +433,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                   Terms and Conditions
                 </Text>
                 .
-                You also agree that an ongoing subscription to the FitazFK App (FitazFK) will be applied to your iTunes account at the end of your 7-day free trial.
+                You also agree that an ongoing subscription to the FitazFK App (FitazFK Fitness & Nutrition) will be applied to your iTunes account at the end of your 7-day free trial.
                 Subscriptions will automatically renew and your account charged unless auto-renew is turned off at least 24-hours before the end of the current period.
                 Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
                 Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
@@ -397,6 +465,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     padding: 10,
+    paddingBottom: 0,
     shadowColor: colors.black,
     shadowOpacity: 1,
     shadowOffset: { width: 0, height: 0 },
