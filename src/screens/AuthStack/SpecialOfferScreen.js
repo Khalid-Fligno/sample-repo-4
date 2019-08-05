@@ -28,11 +28,17 @@ export default class SpecialOfferScreen extends React.PureComponent {
     return (
       <View style={styles.container}>
         <View style={styles.contentContainer}>
-          <Text
-            onPress={this.continue}
-            style={styles.heading}
-          >
-            Special Offer
+          <Text style={styles.headingLarge}>
+            20% off*
+          </Text>
+          <Text style={styles.heading}>
+            full-priced
+          </Text>
+          <Text style={styles.heading}>
+            subscriptions
+          </Text>
+          <Text style={styles.body}>
+            *Based on Australian App store prices.  Discount may be higher or lower based on your App Store territory pricing tiers.
           </Text>
         </View>
         <View style={styles.buttonContainer}>
@@ -59,9 +65,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  headingLarge: {
+    fontFamily: fonts.ultraItalic,
+    fontSize: 28,
+    marginBottom: 20,
+  },
   heading: {
     fontFamily: fonts.ultraItalic,
     fontSize: 20,
+    marginBottom: 20,
+  },
+  body: {
+    fontFamily: fonts.standard,
+    fontSize: 14,
+    padding: 15,
   },
   buttonContainer: {
     padding: 10,
