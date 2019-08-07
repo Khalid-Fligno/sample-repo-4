@@ -49,7 +49,7 @@ const productTitleMap = {
 };
 
 const subscriptionPeriodMap = {
-  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discounted': 'monthly',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount': 'monthly',
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted': 'yearly',
   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation': 'monthly',
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation': 'yearly',

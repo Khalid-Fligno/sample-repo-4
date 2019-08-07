@@ -43,5 +43,5 @@ export const identifiers = [
 
 export const discountedIdentifiers = [
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discounted',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount',
 ];
