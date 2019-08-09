@@ -5,9 +5,10 @@ import {
   View,
   Text,
   Alert,
+  AsyncStorage,
 } from 'react-native';
 import CustomButton from '../../components/Shared/CustomButton';
-import { auth } from '../../../config/firebase';
+import { auth, db } from '../../../config/firebase';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
@@ -20,7 +21,17 @@ export default class SpecialOfferScreen extends React.PureComponent {
   continue = () => {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        this.props.navigation.navigate('Subscription', { specialOffer: true });
+        const uid = await AsyncStorage.getItem('uid');
+        await db.collection('users').doc(uid)
+          .get()
+          .then(async (doc) => {
+            if (await doc.data().subscriptionInfo.expiry > Date.now()) {
+              this.props.navigation.navigate('App');
+              Alert.alert('', 'This offer is only valid for users without an active subscription');
+            } else {
+              this.props.navigation.navigate('Subscription', { specialOffer: true });
+            }
+          });
       } else {
         this.props.navigation.navigate('Landing', { specialOffer: true });
         Alert.alert('', 'Log in or sign up to redeem this offer');
