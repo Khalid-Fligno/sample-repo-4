@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   },
   body: {
     fontFamily: fonts.standard,
-    fontSize: 12,
+    fontSize: 10,
     padding: 15,
   },
   buttonContainer: {
