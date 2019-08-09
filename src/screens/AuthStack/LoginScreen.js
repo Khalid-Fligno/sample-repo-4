@@ -62,7 +62,6 @@ export default class LoginScreen extends React.PureComponent {
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
-            this.setState({ loading: false });
             if (await doc.data().fitnessLevel !== undefined) {
               await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
             }
@@ -75,7 +74,7 @@ export default class LoginScreen extends React.PureComponent {
               // EXPIRED
               InAppUtils.restorePurchases(async (error, response) => {
                 if (error) {
-                  // this.setState({ loading: false });
+                  this.setState({ loading: false });
                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
                 } else {
                   if (response.length === 0) {
@@ -101,7 +100,7 @@ export default class LoginScreen extends React.PureComponent {
                         },
                       };
                       await userRef.set(data, { merge: true });
-                      // this.setState({ loading: false });
+                      this.setState({ loading: false });
                       this.props.navigation.navigate('App');
                     } else {
                       // this.setState({ loading: false });
