@@ -5,6 +5,12 @@ import Icon from '../../components/Shared/Icon';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
+const tileHeaderInfoMap = {
+  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly': '- SAVE 40%',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount': '- DISCOUNTED',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted': '- DISCOUNTED',
+};
+
 export default class SubscriptionTile extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -18,6 +24,7 @@ export default class SubscriptionTile extends React.PureComponent {
       onPress,
       primary,
       term,
+      identifier,
     } = this.props;
     return (
       <TouchableOpacity
@@ -30,7 +37,7 @@ export default class SubscriptionTile extends React.PureComponent {
             ellipsizeMode="tail"
             style={styles.subscriptionTileHeader}
           >
-            {title} {primary && '- SAVE 40%'}
+            {title} {tileHeaderInfoMap[identifier]}
           </Text>
         </View>
         <View style={styles.subscriptionTileContainer}>
@@ -78,6 +85,7 @@ SubscriptionTile.propTypes = {
   term: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   primary: PropTypes.bool,
+  identifier: PropTypes.string.isRequired,
 };
 
 SubscriptionTile.defaultProps = {
