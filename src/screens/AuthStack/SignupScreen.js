@@ -78,7 +78,7 @@ export default class SignupScreen extends React.PureComponent {
             });
           }
         });
-        this.setState({ loading: false });
+        // this.setState({ loading: false });
         auth.currentUser.sendEmailVerification().then(() => {
           Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
           this.props.navigation.navigate('Subscription', { name: profile.first_name, specialOffer: this.state.specialOffer });
@@ -127,7 +127,7 @@ export default class SignupScreen extends React.PureComponent {
           });
         }
       });
-      this.setState({ loading: false });
+      // this.setState({ loading: false });
       this.props.navigation.navigate('Subscription', { name: firstName, specialOffer: this.state.specialOffer });
       auth.currentUser.sendEmailVerification().then(() => {
         Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
