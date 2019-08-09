@@ -219,6 +219,7 @@ export default class SubscriptionScreen extends React.PureComponent {
   }
   loadDiscountedProducts = async () => {
     this.setState({ loading: true });
+    Alert.alert('', 'Discounts applied');
     await InAppUtils.loadProducts(discountedIdentifiers, (error, products) => {
       if (error) {
         this.setState({ loading: false });
@@ -409,6 +410,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                     currencyCode={product.currencyCode}
                     onPress={() => this.purchaseProduct(product.identifier)}
                     term={subscriptionPeriodMap[product.identifier]}
+                    identifier={product.identifier}
                   />
                 ))
               }
