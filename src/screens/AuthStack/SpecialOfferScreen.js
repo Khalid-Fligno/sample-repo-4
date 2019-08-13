@@ -53,7 +53,7 @@ export default class SpecialOfferScreen extends React.PureComponent {
               subscriptions
             </Text>
             <Text style={styles.body}>
-              *Based on Australian App store prices.  Discount may be higher or lower based on your App Store territory pricing tiers.
+              *Based on AU App Store prices.  Discount may be higher or lower based on your App Store territory pricing tiers.
             </Text>
           </View>
           <View style={styles.buttonContainer}>
