@@ -1,6 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, TouchableOpacity, Text, Dimensions, ScrollView } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Dimensions,
+  ScrollView,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import fonts from '../../styles/fonts';
