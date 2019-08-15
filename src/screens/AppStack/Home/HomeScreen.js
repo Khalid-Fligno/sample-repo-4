@@ -11,6 +11,7 @@ import {
 import { Button } from 'react-native-elements';
 import * as Haptics from 'expo-haptics';
 import * as Localization from 'expo-localization';
+import * as FileSystem from 'expo-file-system';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
@@ -106,6 +107,15 @@ export default class HomeScreen extends React.PureComponent {
   openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Linking.openURL(url);
+  }
+  goToBurpeeTest = async () => {
+    this.setState({ loading: true });
+    await FileSystem.downloadAsync(
+      'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2FBURPEES.mp4?alt=media&token=688885cb-2d70-4fc6-82a9-abc4e95daf89',
+      `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
+    );
+    this.setState({ loading: false });
+    this.props.navigation.navigate('Burpee1');
   }
   render() {
     const {
@@ -207,21 +217,26 @@ export default class HomeScreen extends React.PureComponent {
               }
             </View>
           </View>
-          <View style={styles.workoutProgressContainer}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.bodyText}>
-                REMINDER
-              </Text>
-            </View>
-            <Text style={styles.reminderText}>
-              Complete a burpee test to assess your current fitness.  The results from this test will determine the intensity of your workouts!
-            </Text>
-            <Button
-              title="GO TO BURPEE TEST"
-              buttonStyle={styles.button}
-              textStyle={styles.buttonText}
-            />
-          </View>
+          {
+            profile && profile.initialBurpeeTestCompleted === undefined && (
+              <View style={styles.workoutProgressContainer}>
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.bodyText}>
+                    REMINDER
+                  </Text>
+                </View>
+                <Text style={styles.reminderText}>
+                  Complete a burpee test to assess your current fitness.  The results from this test will determine the intensity of your workouts!
+                </Text>
+                <Button
+                  title="GO TO BURPEE TEST"
+                  buttonStyle={styles.button}
+                  textStyle={styles.buttonText}
+                  onPress={this.goToBurpeeTest}
+                />
+              </View>
+            )
+          }
           <NewsFeedTile
             image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
             title="SHOP APPAREL"
@@ -281,6 +296,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 12,
     color: colors.black,
+    margin: 4,
     marginTop: 10,
     marginBottom: 10,
   },
