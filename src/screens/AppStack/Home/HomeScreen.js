@@ -8,6 +8,7 @@ import {
   Text,
   Dimensions,
 } from 'react-native';
+import { Button } from 'react-native-elements';
 import * as Haptics from 'expo-haptics';
 import * as Localization from 'expo-localization';
 import moment from 'moment';
@@ -206,6 +207,21 @@ export default class HomeScreen extends React.PureComponent {
               }
             </View>
           </View>
+          <View style={styles.workoutProgressContainer}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.bodyText}>
+                REMINDER
+              </Text>
+            </View>
+            <Text style={styles.reminderText}>
+              Complete a burpee test to assess your current fitness.  The results from this test will determine the intensity of your workouts!
+            </Text>
+            <Button
+              title="GO TO BURPEE TEST"
+              buttonStyle={styles.button}
+              textStyle={styles.buttonText}
+            />
+          </View>
           <NewsFeedTile
             image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
             title="SHOP APPAREL"
@@ -261,6 +277,13 @@ const styles = StyleSheet.create({
     margin: 8,
     marginTop: 0,
   },
+  reminderText: {
+    fontFamily: fonts.standard,
+    fontSize: 12,
+    color: colors.black,
+    marginTop: 10,
+    marginBottom: 10,
+  },
   workoutProgressContainer: {
     alignItems: 'center',
     width: width - 20,
@@ -303,5 +326,22 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 12,
     color: colors.white,
+  },
+  button: {
+    backgroundColor: colors.charcoal.standard,
+    shadowColor: colors.grey.dark,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 40,
+    width: width - 40,
+    borderRadius: 4,
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 2,
+  },
+  buttonText: {
+    fontFamily: fonts.bold,
+    fontSize: 12,
+    marginTop: 3,
   },
 });
