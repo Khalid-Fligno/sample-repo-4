@@ -5,6 +5,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Dimensions,
+  Alert,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as FileSystem from 'expo-file-system';
@@ -24,9 +25,27 @@ export default class Progress3Screen extends React.PureComponent {
       loading: false,
     };
   }
+  componentDidMount() {
+    this.props.navigation.setParams({ handleCancel: this.handleCancel });
+  }
   handleNext = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.props.navigation.navigate('Burpee2');
+  }
+  handleCancel = () => {
+    Alert.alert(
+      'Stop burpee test?',
+      '',
+      [
+        {
+          text: 'Cancel', style: 'cancel', onPress: () => this.cancelSkip(),
+        },
+        {
+          text: 'Yes', onPress: () => this.props.navigation.navigate('Home'),
+        },
+      ],
+      { cancelable: false },
+    );
   }
   render() {
     const { loading } = this.state;
