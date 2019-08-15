@@ -42,7 +42,7 @@ export default class Progress6Screen extends React.PureComponent {
           text: 'Cancel', style: 'cancel',
         },
         {
-          text: 'Yes', onPress: () => this.props.navigation.navigate('Settings'),
+          text: 'Yes', onPress: () => this.props.navigation.navigate('Home'),
         },
       ],
       { cancelable: false },

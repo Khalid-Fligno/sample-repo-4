@@ -71,7 +71,7 @@ export default class Progress5Screen extends React.PureComponent {
           text: 'Cancel', style: 'cancel', onPress: () => this.cancelSkip(),
         },
         {
-          text: 'Yes', onPress: () => this.props.navigation.navigate('Settings'),
+          text: 'Yes', onPress: () => this.props.navigation.navigate('Home'),
         },
       ],
       { cancelable: false },
