@@ -351,6 +351,7 @@ const styles = StyleSheet.create({
   },
   reminderIcon: {
     margin: 5,
+    marginRight: 8,
   },
   reminderTextContainer: {
     flex: 1,
