@@ -225,11 +225,21 @@ export default class HomeScreen extends React.PureComponent {
                     REMINDER
                   </Text>
                 </View>
-                <Text style={styles.reminderText}>
-                  Complete a burpee test to assess your current fitness.  The results from this test will determine the intensity of your workouts!
-                </Text>
+                <View style={styles.reminderContentContainer}>
+                  <Icon
+                    name="stopwatch"
+                    size={32}
+                    color={colors.charcoal.dark}
+                    style={styles.reminderIcon}
+                  />
+                  <View style={styles.reminderTextContainer}>
+                    <Text style={styles.reminderText}>
+                      Complete a burpee test to assess your current fitness level.  The results from this test will determine the intensity of your workouts!
+                    </Text>
+                  </View>
+                </View>
                 <Button
-                  title="GO TO BURPEE TEST"
+                  title="START BURPEE TEST"
                   buttonStyle={styles.button}
                   textStyle={styles.buttonText}
                   onPress={this.goToBurpeeTest}
@@ -292,14 +302,6 @@ const styles = StyleSheet.create({
     margin: 8,
     marginTop: 0,
   },
-  reminderText: {
-    fontFamily: fonts.standard,
-    fontSize: 12,
-    color: colors.black,
-    margin: 4,
-    marginTop: 10,
-    marginBottom: 10,
-  },
   workoutProgressContainer: {
     alignItems: 'center',
     width: width - 20,
@@ -316,12 +318,17 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     alignItems: 'center',
-    backgroundColor: colors.charcoal.dark,
+    backgroundColor: colors.charcoal.darkest,
     width: width - 20,
     borderTopLeftRadius: 2,
     borderTopRightRadius: 2,
     padding: 8,
     paddingBottom: 5,
+  },
+  bodyText: {
+    fontFamily: fonts.standard,
+    fontSize: 12,
+    color: colors.white,
   },
   recommendedWorkoutContainer: {
     flexDirection: 'row',
@@ -338,13 +345,26 @@ const styles = StyleSheet.create({
     color: colors.charcoal.standard,
     marginTop: 12,
   },
-  bodyText: {
+  reminderContentContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  reminderIcon: {
+    margin: 5,
+  },
+  reminderTextContainer: {
+    flex: 1,
+  },
+  reminderText: {
     fontFamily: fonts.standard,
     fontSize: 12,
-    color: colors.white,
+    color: colors.black,
+    margin: 4,
+    marginTop: 12,
+    marginBottom: 12,
   },
   button: {
-    backgroundColor: colors.charcoal.standard,
+    backgroundColor: colors.charcoal.darkest,
     shadowColor: colors.grey.dark,
     justifyContent: 'center',
     alignItems: 'center',
