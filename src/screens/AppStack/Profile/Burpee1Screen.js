@@ -157,13 +157,13 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: fonts.bold,
     fontSize: 24,
-    color: colors.charcoal.light,
+    color: colors.charcoal.darkest,
     marginBottom: 5,
   },
   bodyText: {
     fontFamily: fonts.standard,
     fontSize: 14,
-    color: colors.charcoal.light,
+    color: colors.charcoal.darkest,
   },
   contentContainer: {
     flex: 1,
@@ -220,12 +220,12 @@ const styles = StyleSheet.create({
   exerciseDescriptionHeader: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.charcoal.standard,
+    color: colors.charcoal.darkest,
   },
   exerciseDescriptionText: {
     fontFamily: fonts.standard,
     fontSize: 14,
-    color: colors.charcoal.standard,
+    color: colors.charcoal.darkest,
     marginTop: 5,
     marginBottom: 5,
   },
