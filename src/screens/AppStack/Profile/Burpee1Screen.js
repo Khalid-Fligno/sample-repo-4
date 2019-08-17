@@ -38,7 +38,7 @@ export default class Progress3Screen extends React.PureComponent {
       '',
       [
         {
-          text: 'Cancel', style: 'cancel', onPress: () => this.cancelSkip(),
+          text: 'Cancel', style: 'cancel',
         },
         {
           text: 'Yes', onPress: () => this.props.navigation.navigate('Home'),
