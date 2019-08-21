@@ -154,13 +154,13 @@ const styles = StyleSheet.create({
   },
   subscriptionPriceText: {
     fontFamily: fonts.ultraItalic,
-    fontSize: 16,
+    fontSize: 17,
     color: colors.white,
     marginBottom: 3,
   },
   subscriptionPriceTextPrimary: {
     fontFamily: fonts.ultraItalic,
-    fontSize: 16,
+    fontSize: 17,
     color: colors.white,
     marginBottom: 3,
   },
@@ -178,14 +178,12 @@ const styles = StyleSheet.create({
   },
   subscriptionPriceSubtext: {
     fontFamily: fonts.standard,
-    fontSize: 12,
+    fontSize: 14,
     color: colors.white,
-    textDecorationLine: 'underline',
   },
   subscriptionPriceSubtextPrimary: {
     fontFamily: fonts.standard,
-    fontSize: 12,
+    fontSize: 14,
     color: colors.white,
-    textDecorationLine: 'underline',
   },
 });
