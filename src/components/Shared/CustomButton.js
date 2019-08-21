@@ -147,7 +147,6 @@ const styles = StyleSheet.create({
     ...common.button.solid,
     backgroundColor: colors.coral.standard,
     shadowColor: colors.grey.dark,
-
   },
   primaryDisabled: {
     backgroundColor: colors.coral.standard,
