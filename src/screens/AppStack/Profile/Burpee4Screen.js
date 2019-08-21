@@ -42,7 +42,7 @@ export default class Progress6Screen extends React.PureComponent {
           text: 'Cancel', style: 'cancel',
         },
         {
-          text: 'Yes', onPress: () => this.props.navigation.navigate('Settings'),
+          text: 'Yes', onPress: () => this.props.navigation.navigate('Home'),
         },
       ],
       { cancelable: false },
@@ -59,9 +59,10 @@ export default class Progress6Screen extends React.PureComponent {
     try {
       await userRef.set({
         fitnessLevel,
+        initialBurpeeTestCompleted: true,
       }, { merge: true });
       this.setState({ loading: false });
-      this.props.navigation.navigate('Settings');
+      this.props.navigation.navigate('Home');
     } catch (err) {
       Alert.alert('Database write error', `${err}`);
       this.setState({ loading: false });

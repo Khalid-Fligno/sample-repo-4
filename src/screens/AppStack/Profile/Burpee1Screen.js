@@ -5,6 +5,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Dimensions,
+  Alert,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as FileSystem from 'expo-file-system';
@@ -24,9 +25,27 @@ export default class Progress3Screen extends React.PureComponent {
       loading: false,
     };
   }
+  componentDidMount() {
+    this.props.navigation.setParams({ handleCancel: this.handleCancel });
+  }
   handleNext = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.props.navigation.navigate('Burpee2');
+  }
+  handleCancel = () => {
+    Alert.alert(
+      'Stop burpee test?',
+      '',
+      [
+        {
+          text: 'Cancel', style: 'cancel',
+        },
+        {
+          text: 'Yes', onPress: () => this.props.navigation.navigate('Home'),
+        },
+      ],
+      { cancelable: false },
+    );
   }
   render() {
     const { loading } = this.state;
@@ -138,13 +157,13 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: fonts.bold,
     fontSize: 24,
-    color: colors.charcoal.light,
+    color: colors.charcoal.darkest,
     marginBottom: 5,
   },
   bodyText: {
     fontFamily: fonts.standard,
     fontSize: 14,
-    color: colors.charcoal.light,
+    color: colors.charcoal.darkest,
   },
   contentContainer: {
     flex: 1,
@@ -201,12 +220,12 @@ const styles = StyleSheet.create({
   exerciseDescriptionHeader: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.charcoal.standard,
+    color: colors.charcoal.darkest,
   },
   exerciseDescriptionText: {
     fontFamily: fonts.standard,
     fontSize: 14,
-    color: colors.charcoal.standard,
+    color: colors.charcoal.darkest,
     marginTop: 5,
     marginBottom: 5,
   },

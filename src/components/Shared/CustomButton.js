@@ -111,7 +111,7 @@ const common = {
     },
     text: {
       fontFamily: fonts.bold,
-      fontSize: 16,
+      fontSize: 14,
       marginTop: 3,
     },
   },
@@ -120,7 +120,7 @@ const common = {
 const styles = StyleSheet.create({
   default: {
     ...common.button.solid,
-    backgroundColor: colors.charcoal.dark,
+    backgroundColor: colors.charcoal.darkest,
     shadowColor: colors.charcoal.standard,
   },
   defaultDisabled: {
@@ -147,7 +147,6 @@ const styles = StyleSheet.create({
     ...common.button.solid,
     backgroundColor: colors.coral.standard,
     shadowColor: colors.grey.dark,
-
   },
   primaryDisabled: {
     backgroundColor: colors.coral.standard,
@@ -209,7 +208,7 @@ const styles = StyleSheet.create({
   },
   blue: {
     ...common.button.solid,
-    backgroundColor: colors.blue.standard,
+    backgroundColor: colors.blue.dark,
     shadowColor: colors.grey.dark,
 
   },

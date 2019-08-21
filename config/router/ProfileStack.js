@@ -25,10 +25,10 @@ const backButtonMap = {
   PrivacyPolicy: true,
   TermsOfService: true,
   Settings: true,
-  Burpee1: true,
 };
 
 const cancelButtonMap = {
+  Burpee1: true,
   Burpee3: true,
   Burpee4: true,
 };
