@@ -8832,6 +8832,11 @@ react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-appsflyer@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/react-native-appsflyer/-/react-native-appsflyer-1.4.4.tgz#470aefd8e423eeacb417ff6c98867f6d4c7fbc72"
+  integrity sha512-LhL1vABTYoezZOtwN1z+itD/26yZKL/0zLL/YOINQxNhXFGuZfiZMan6HAW3VOrbilcKpC6fvVsJdW7u9pjfiw==
+
 react-native-branch@~3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-3.0.1.tgz#5b07b61cbd290168cd3c3662e017ebe0f356d2ca"
