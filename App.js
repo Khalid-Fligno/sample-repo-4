@@ -2,8 +2,10 @@ import React from 'react';
 import Sentry from 'sentry-expo';
 import { Alert, NetInfo, View, SafeAreaView, StyleSheet, StatusBar, Linking } from 'react-native';
 import OneSignal from 'react-native-onesignal';
+import appsFlyer from 'react-native-appsflyer';
 import { NavigationActions } from 'react-navigation';
 import SwitchNavigator from './config/router/index';
+import { appsFlyerDevKey, appId } from './config/appsFlyer';
 import colors from './src/styles/colors';
 
 let navigator;
@@ -18,6 +20,20 @@ function navigate(routeName, params) {
     params,
   }));
 }
+
+appsFlyer.initSdk(
+  {
+    devKey: appsFlyerDevKey,
+    isDebug: false,
+    appId,
+  },
+  (result) => {
+    console.log(result);
+  },
+  (error) => {
+    console.error(error);
+  },
+);
 
 Sentry.config('https://ad25f20f55644584bd7ef1ffd7dfe1f1@sentry.io/1342308').install();
 
