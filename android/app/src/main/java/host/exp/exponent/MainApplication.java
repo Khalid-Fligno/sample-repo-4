@@ -10,6 +10,7 @@ import expolib_v1.okhttp3.OkHttpClient;
 
 // Needed for `react-native link`
 // import com.facebook.react.ReactApplication;
+import com.appsflyer.reactnative.RNAppsFlyerPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
@@ -29,6 +30,7 @@ public class MainApplication extends ExpoApplication {
 
         // Needed for `react-native link`
         // new MainReactPackage(),
+            new RNAppsFlyerPackage(),
             new ReactNativeOneSignalPackage(),
             new ReactVideoPackage(),
             new FastImageViewPackage()
