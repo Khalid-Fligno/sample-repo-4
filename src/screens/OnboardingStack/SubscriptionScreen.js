@@ -13,6 +13,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import appsFlyer from 'react-native-appsflyer';
 import { auth, db } from '../../../config/firebase';
 import {
   // foundationIdentifiers,
@@ -307,7 +308,7 @@ export default class SubscriptionScreen extends React.PureComponent {
       }
     });
   }
-  purchaseProduct = async (productIdentifier) => {
+  purchaseProduct = async (productIdentifier, productPrice, productCurrencyCode) => {
     this.setState({ loading: true });
     Haptics.selectionAsync();
     if (productIdentifier === undefined) {
@@ -348,6 +349,14 @@ export default class SubscriptionScreen extends React.PureComponent {
               },
             };
             await userRef.set(data, { merge: true });
+            // Appsflyer event tracking - Start Free Trial
+            const eventName = 'af_start_trial';
+            const eventValues = {
+              af_price: productPrice,
+              af_currency: productCurrencyCode,
+            };
+            appsFlyer.trackEvent(eventName, eventValues, () => {
+            });
             userRef.get()
               .then(async (doc) => {
                 this.setState({ loading: false });
@@ -407,7 +416,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                     title={productTitleMap[index]}
                     price={product.priceString}
                     currencyCode={product.currencyCode}
-                    onPress={() => this.purchaseProduct(product.identifier)}
+                    onPress={() => this.purchaseProduct(product.identifier, product.price, product.currencyCode)}
                     term={subscriptionPeriodMap[product.identifier]}
                   />
                 ))
