@@ -1,6 +1,16 @@
 import React from 'react';
 import Sentry from 'sentry-expo';
-import { Alert, NetInfo, View, SafeAreaView, StyleSheet, StatusBar, Linking } from 'react-native';
+import {
+  Alert,
+  NetInfo,
+  View,
+  SafeAreaView,
+  StyleSheet,
+  StatusBar,
+  Linking,
+  AppState,
+  Platform,
+} from 'react-native';
 import OneSignal from 'react-native-onesignal';
 import appsFlyer from 'react-native-appsflyer';
 import { NavigationActions } from 'react-navigation';
@@ -21,20 +31,6 @@ function navigate(routeName, params) {
   }));
 }
 
-appsFlyer.initSdk(
-  {
-    devKey: appsFlyerDevKey,
-    isDebug: false,
-    appId,
-  },
-  (result) => {
-    console.log(result);
-  },
-  (error) => {
-    console.error(error);
-  },
-);
-
 Sentry.config('https://ad25f20f55644584bd7ef1ffd7dfe1f1@sentry.io/1342308').install();
 
 export default class App extends React.PureComponent {
@@ -49,17 +45,42 @@ export default class App extends React.PureComponent {
     );
     OneSignal.setLocationShared(false);
     OneSignal.configure(); // triggers the ids event
+    appsFlyer.initSdk({
+      devKey: appsFlyerDevKey,
+      isDebug: false,
+      appId,
+      // (result) => {
+      //   console.log(result);
+      // },
+      // (error) => {
+      //   console.error(error);
+      // },
+    });
     this.state = {
+      appState: AppState.currentState,
     };
   }
   componentDidMount = () => {
     NetInfo.addEventListener('connectionChange', this.handleConnectivityChange);
     Linking.addEventListener('url', this.handleOpenURL);
+    AppState.addEventListener('change', this.handleAppStateChange);
   }
   componentWillUnmount = () => {
     NetInfo.removeEventListener('connectionChange', this.handleConnectivityChange);
     Linking.removeEventListener('url', this.handleOpenURL);
+    AppState.removeEventListener('change', this.handleAppStateChange);
   }
+  handleAppStateChange = (nextAppState) => {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      if (Platform.OS === 'ios') {
+        appsFlyer.trackAppLaunch();
+      }
+    }
+    this.setState({ appState: nextAppState });
+  };
   handleOpenURL = (event) => {
     if (event.url === 'fitazfk://special-offer') {
       navigate('SpecialOffer');
