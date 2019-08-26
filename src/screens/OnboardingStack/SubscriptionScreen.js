@@ -355,8 +355,7 @@ export default class SubscriptionScreen extends React.PureComponent {
               af_price: productPrice,
               af_currency: productCurrencyCode,
             };
-            appsFlyer.trackEvent(eventName, eventValues, () => {
-            });
+            appsFlyer.trackEvent(eventName, eventValues);
             userRef.get()
               .then(async (doc) => {
                 this.setState({ loading: false });
