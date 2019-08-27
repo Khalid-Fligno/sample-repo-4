@@ -19,6 +19,7 @@ import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-
 import * as Haptics from 'expo-haptics';
 import * as Facebook from 'expo-facebook';
 import firebase from 'firebase';
+import appsFlyer from 'react-native-appsflyer';
 import { db, auth } from '../../../config/firebase';
 import {
   compare,
@@ -53,6 +54,7 @@ export default class LoginScreen extends React.PureComponent {
       });
       if (type === 'success') {
         this.setState({ loading: true });
+        appsFlyer.trackEvent('af_login');
         await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
         const authResponse = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
@@ -140,6 +142,7 @@ export default class LoginScreen extends React.PureComponent {
       if (authResponse) {
         const { uid } = authResponse.user;
         await AsyncStorage.setItem('uid', uid);
+        appsFlyer.trackEvent('af_login');
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
@@ -181,6 +184,7 @@ export default class LoginScreen extends React.PureComponent {
                         },
                       };
                       await userRef.set(data, { merge: true });
+                      appsFlyer.trackEvent('af_login');
                       this.setState({ loading: false });
                       this.props.navigation.navigate('App');
                     } else {
