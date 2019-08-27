@@ -15,7 +15,6 @@ import OneSignal from 'react-native-onesignal';
 import appsFlyer from 'react-native-appsflyer';
 import { NavigationActions } from 'react-navigation';
 import SwitchNavigator from './config/router/index';
-import { appsFlyerDevKey, appId } from './config/appsFlyer';
 import colors from './src/styles/colors';
 
 let navigator;
@@ -45,17 +44,6 @@ export default class App extends React.PureComponent {
     );
     OneSignal.setLocationShared(false);
     OneSignal.configure(); // triggers the ids event
-    appsFlyer.initSdk({
-      devKey: appsFlyerDevKey,
-      isDebug: false,
-      appId,
-      // (result) => {
-      //   console.log(result);
-      // },
-      // (error) => {
-      //   console.error(error);
-      // },
-    });
     this.state = {
       appState: AppState.currentState,
     };
