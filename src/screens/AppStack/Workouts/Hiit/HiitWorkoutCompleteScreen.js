@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, AsyncStorage, Alert, Dimensions } from 'react-n
 import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';
 import { PieChart } from 'react-native-svg-charts';
+import appsFlyer from 'react-native-appsflyer';
 import Loader from '../../../../components/Shared/Loader';
 import Icon from '../../../../components/Shared/Icon';
 import CustomButton from '../../../../components/Shared/CustomButton';
@@ -41,6 +42,7 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
   }
   completeHiitWorkout = async () => {
     this.setState({ loading: true });
+    appsFlyer.trackEvent('complete_workout');
     const uid = await AsyncStorage.getItem('uid');
     const userRef = db.collection('users').doc(uid);
     return db.runTransaction((transaction) => {
