@@ -23,9 +23,9 @@ export const compareProducts = (a, b) => {
   const purchaseB = b.price;
   let comparison = 0;
   if (purchaseA > purchaseB) {
-    comparison = 1;
-  } else if (purchaseA < purchaseB) {
     comparison = -1;
+  } else if (purchaseA < purchaseB) {
+    comparison = 1;
   }
   return comparison;
 };
