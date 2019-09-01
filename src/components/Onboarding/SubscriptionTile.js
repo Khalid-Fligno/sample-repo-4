@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from '../../components/Shared/Icon';
+import SavingsBadge from './SavingsBadge';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
@@ -15,35 +16,37 @@ export default class SubscriptionTile extends React.PureComponent {
     const {
       title,
       price,
+      priceNumber,
       onPress,
       primary,
       term,
+      comparisonPrice,
     } = this.props;
     return (
       <TouchableOpacity
         onPress={onPress}
         style={primary ? styles.subscriptionTilePrimary : styles.subscriptionTile}
       >
-        <View style={primary ? styles.tileHeaderBarPrimary : styles.tileHeaderBar}>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={styles.subscriptionTileHeader}
-          >
-            {title} {primary && '- SAVE 40%'}
-          </Text>
-        </View>
         <View style={styles.subscriptionTileContainer}>
-          <View style={styles.blankSubscriptionTileColumn} />
           <View style={styles.textContainer}>
-            <Text style={primary ? styles.subscriptionPriceTextPrimary : styles.subscriptionPriceText}>
-              {price}
-            </Text>
-            <Text style={primary ? styles.subscriptionTermTextPrimary : styles.subscriptionTermText}>
-              {term}
-            </Text>
-            <Text style={primary ? styles.subscriptionPriceSubtextPrimary : styles.subscriptionPriceSubtext}>
-              after 7 day FREE trial
+            <View style={styles.subscriptionTitleRow}>
+              <Text style={styles.subscriptionTitleText}>
+                {title}<Text style={styles.yearlySubTitle}>{!primary && `${price} / ${term}`}</Text>
+              </Text>
+              {!primary && <SavingsBadge text="SAVE 40%" />}
+            </View>
+            {
+              comparisonPrice && (
+                <Text style={styles.comparisonPrice}>{comparisonPrice}</Text>
+              )
+            }
+            <Text>
+              <Text style={styles.subscriptionPriceText}>
+                {primary ? price : `$${(priceNumber / 12).toFixed(2)}`}{' / month '}
+              </Text>
+              <Text style={styles.subText}>
+                {primary ? 'after 7-day FREE trial' : 'billed annually'}
+              </Text>
             </Text>
           </View>
           <View style={styles.iconSubscriptionTileColumn}>
@@ -51,8 +54,8 @@ export default class SubscriptionTile extends React.PureComponent {
               primary && (
                 <Icon
                   name="chevron-right"
-                  size={22}
-                  color={colors.coral.standard}
+                  size={12}
+                  color={colors.white}
                 />
               )
             }
@@ -60,7 +63,7 @@ export default class SubscriptionTile extends React.PureComponent {
               !primary && (
                 <Icon
                   name="chevron-right"
-                  size={22}
+                  size={12}
                   color={colors.white}
                 />
               )
@@ -78,112 +81,84 @@ SubscriptionTile.propTypes = {
   term: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   primary: PropTypes.bool,
+  comparisonPrice: PropTypes.string,
+  priceNumber: PropTypes.number.isRequired,
 };
 
 SubscriptionTile.defaultProps = {
   primary: false,
+  comparisonPrice: undefined,
 };
 
 const styles = StyleSheet.create({
   subscriptionTile: {
-    flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: colors.transparentWhiteLightest,
-    marginLeft: 5,
-    marginRight: 5,
-    marginBottom: 10,
-    paddingTop: 0,
-    borderWidth: 3,
-    borderColor: colors.black,
-    borderRadius: 4,
+    backgroundColor: colors.transparentBlackLighter,
+    margin: 10,
+    padding: 15,
+    paddingTop: 25,
+    paddingBottom: 25,
+    borderWidth: 1,
+    borderColor: colors.white,
+    borderRadius: 2,
     shadowColor: colors.black,
-    shadowOpacity: 0.8,
     shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
     shadowRadius: 3,
   },
   subscriptionTilePrimary: {
-    flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: colors.transparentWhiteLightest,
-    marginLeft: 5,
-    marginRight: 5,
-    paddingTop: 0,
-    borderWidth: 3,
+    backgroundColor: colors.coral.standard,
+    margin: 10,
+    padding: 15,
+    paddingTop: 25,
+    paddingBottom: 25,
     borderColor: colors.coral.standard,
-    borderRadius: 4,
-    shadowColor: colors.charcoal.darkest,
-    shadowOpacity: 0.8,
+    borderRadius: 2,
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
     shadowRadius: 3,
   },
-  tileHeaderBar: {
-    backgroundColor: colors.black,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tileHeaderBarPrimary: {
-    backgroundColor: colors.coral.dark,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  subscriptionTileHeader: {
-    fontFamily: fonts.bold,
-    fontSize: 13,
-    color: colors.white,
-    marginTop: 5,
-    marginBottom: 3,
-  },
   subscriptionTileContainer: {
-    flex: 1,
     flexDirection: 'row',
-  },
-  blankSubscriptionTileColumn: {
-    width: 30,
+    justifyContent: 'space-between',
   },
   iconSubscriptionTileColumn: {
-    width: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },
   textContainer: {
-    alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
   },
+  subscriptionTitleRow: {
+    flexDirection: 'row',
+  },
+  subscriptionTitleText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    marginBottom: 2,
+  },
+  yearlySubTitle: {
+    fontFamily: fonts.standard,
+  },
+  comparisonPrice: {
+    textDecorationLine: 'line-through',
+    textDecorationStyle: 'solid',
+    fontFamily: fonts.standard,
+    fontSize: 12,
+    color: colors.grey.light,
+  },
   subscriptionPriceText: {
-    fontFamily: fonts.ultraItalic,
-    fontSize: 17,
-    color: colors.white,
-    marginBottom: 3,
-  },
-  subscriptionPriceTextPrimary: {
-    fontFamily: fonts.ultraItalic,
-    fontSize: 17,
-    color: colors.white,
-    marginBottom: 3,
-  },
-  subscriptionTermText: {
     fontFamily: fonts.bold,
-    fontSize: 11,
+    fontSize: 12,
     color: colors.white,
-    marginBottom: 5,
   },
-  subscriptionTermTextPrimary: {
-    fontFamily: fonts.bold,
-    fontSize: 11,
-    color: colors.white,
-    marginBottom: 5,
-  },
-  subscriptionPriceSubtext: {
+  subText: {
     fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.white,
-  },
-  subscriptionPriceSubtextPrimary: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
+    fontSize: 12,
     color: colors.white,
   },
 });

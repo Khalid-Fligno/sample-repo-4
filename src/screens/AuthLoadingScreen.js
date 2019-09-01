@@ -51,6 +51,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/images/app-onboarding-carousel-4.jpg'),
       require('../../assets/images/app-onboarding-carousel-5.jpg'),
       require('../../assets/images/signup-screen-background.jpg'),
+      require('../../assets/images/subscription-screen-background.jpg'),
       require('../../assets/images/special-offer-screen-background.jpg'),
       require('../../assets/images/homeScreenTiles/home-screen-blog.jpg'),
       require('../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg'),
