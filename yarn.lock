@@ -4581,6 +4581,13 @@ expo-constants@~6.0.0:
   dependencies:
     ua-parser-js "^0.7.19"
 
+expo-contacts@~6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/expo-contacts/-/expo-contacts-6.0.0.tgz#6db388806c6c4d77e0a39fc0277b4535454fdde4"
+  integrity sha512-DhPno7HKBa+r3sAhtyyCaUY9w4baqOsLUFYFZ7kRvB49qHOVAqJ1uioy+Ut3YWMHrFAgdmNyqcutzNwfK8up/w==
+  dependencies:
+    uuid-js "^0.7.5"
+
 expo-facebook@~6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/expo-facebook/-/expo-facebook-6.0.0.tgz#2a5f27089df6eb145922ccab8c7b2fd58c4d5eab"
@@ -4639,10 +4646,22 @@ expo-location@~6.0.0:
   dependencies:
     invariant "^2.2.4"
 
+expo-mail-composer@~6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/expo-mail-composer/-/expo-mail-composer-6.0.0.tgz#cb79499772818f23a00cdb2db8b4f7a75a26ef07"
+  integrity sha512-UHacya/0iR9KBIxOD6OszZTqxRu4Qir6Gmr+Z1UCeF5dXcbd6BCC0TPbwrshGVXuF7IjwGYATEtZ1JK5CQ3kbg==
+  dependencies:
+    query-string "^6.2.0"
+
 expo-permissions@~6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-6.0.0.tgz#2943f1aa98de833b88cea73cf03d18d08957cb68"
   integrity sha512-O+RdyfGiq7i+5Vi9fE38DgKn436lNWiqhnS5/Z7CC00bmKahhjVMNDbZvNn/nrdRGyaPneJk1Co1s1sexSnv0A==
+
+expo-sms@~6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/expo-sms/-/expo-sms-6.0.0.tgz#9f2c9553b1dda273568f4c7835e491a484c82d69"
+  integrity sha512-JSqO1PWEjQ/Stts5FKza1d8BsVJS5ykjTHGEFVOglBP1X/hZa2yCoboUDhOFq2wjAO2M2n8i7VzsxW+5uMVRMg==
 
 expo-sqlite@~6.0.0:
   version "6.0.0"
@@ -6983,6 +7002,11 @@ lodash.clone@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.clone/-/lodash.clone-4.5.0.tgz#195870450f5a13192478df4bc3d23d2dea1907b6"
   integrity sha1-GVhwRQ9aExkkeN9Lw9I9LeoZB7Y=
 
+lodash.groupby@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.groupby/-/lodash.groupby-4.6.0.tgz#0b08a1dcf68397c397855c3239783832df7403d1"
+  integrity sha1-Cwih3PaDl8OXhVwyOXg4Mt90A9E=
+
 lodash.isempty@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.isempty/-/lodash.isempty-4.4.0.tgz#6f86cbedd8be4ec987be9aaf33c9684db1b31e7e"
@@ -8695,6 +8719,15 @@ query-string@^6.1.0:
     decode-uri-component "^0.2.0"
     strict-uri-encode "^2.0.0"
 
+query-string@^6.2.0:
+  version "6.8.3"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-6.8.3.tgz#fd9fb7ffb068b79062b43383685611ee47777d4b"
+  integrity sha512-llcxWccnyaWlODe7A9hRjkvdCKamEKTh+wH8ITdTc3OhchaqUZteiSCX/2ablWHVrkVIe04dntnaZJ7BdyW0lQ==
+  dependencies:
+    decode-uri-component "^0.2.0"
+    split-on-first "^1.0.0"
+    strict-uri-encode "^2.0.0"
+
 querystring@0.2.0, querystring@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
@@ -10182,6 +10215,11 @@ spdx-license-ids@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.0.tgz#7a7cd28470cc6d3a1cfe6d66886f6bc430d3ac87"
   integrity sha512-2+EPwgbnmOIl8HjGBXXMd9NAu02vLjOO1nWw4kmeRDFyHn+M/ETfHxQUK0oXg8ctgVnl9t3rosNVsZ1jG61nDA==
+
+split-on-first@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/split-on-first/-/split-on-first-1.1.0.tgz#f610afeee3b12bce1d0c30425e76398b78249a5f"
+  integrity sha512-43ZssAJaMusuKWL8sKUBQXHWOpq8d6CfN/u1p4gUzfJkM05C8rxTmYrkIPTXapZpORA6LkkzcUulJ8FqA7Uudw==
 
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"
