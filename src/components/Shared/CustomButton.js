@@ -187,12 +187,12 @@ const styles = StyleSheet.create({
   },
   green: {
     ...common.button.solid,
-    backgroundColor: colors.green.standard,
+    backgroundColor: colors.green.forest,
     shadowColor: colors.grey.dark,
   },
   greenDisabled: {
-    backgroundColor: colors.green.standard,
-    opacity: 0.5,
+    backgroundColor: colors.grey.standard,
+    opacity: 1,
   },
   greenOutline: {
     ...common.button.outline,
