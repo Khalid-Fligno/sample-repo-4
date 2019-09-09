@@ -90,8 +90,14 @@ export default class Onboarding1Screen extends React.PureComponent {
   toggleDobModal = () => {
     this.setState((prevState) => ({ dobModalVisible: !prevState.dobModalVisible }));
   }
+  closeDobModal = () => {
+    this.setState({ dobModalVisible: false });
+  }
   toggleUomModal = () => {
     this.setState((prevState) => ({ uomModalVisible: !prevState.uomModalVisible }));
+  }
+  closeUomModal = () => {
+    this.setState({ uomModalVisible: false });
   }
   render() {
     const {
@@ -129,7 +135,7 @@ export default class Onboarding1Screen extends React.PureComponent {
               </TouchableOpacity>
               <Modal
                 isVisible={dobModalVisible}
-                onBackdropPress={this.toggleDobModal}
+                onBackdropPress={this.closeDobModal}
                 animationIn="fadeIn"
                 animationInTiming={600}
                 animationOut="fadeOut"
@@ -172,7 +178,7 @@ export default class Onboarding1Screen extends React.PureComponent {
               </TouchableOpacity>
               <Modal
                 isVisible={uomModalVisible}
-                onBackdropPress={this.toggleUomModal}
+                onBackdropPress={this.closeUomModal}
                 animationIn="fadeIn"
                 animationInTiming={600}
                 animationOut="fadeOut"
