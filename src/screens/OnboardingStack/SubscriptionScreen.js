@@ -378,6 +378,80 @@ export default class SubscriptionScreen extends React.PureComponent {
       });
     });
   }
+  purchaseDiscountedProduct = async (productIdentifier, productPrice, productCurrencyCode) => {
+    this.setState({ loading: true });
+    Haptics.selectionAsync();
+    if (productIdentifier === undefined) {
+      Alert.alert('No subscription selected');
+      return;
+    }
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    InAppUtils.canMakePayments((canMakePayments) => {
+      if (!canMakePayments) {
+        this.setState({ loading: false });
+        Alert.alert('Not Allowed', 'This device is not allowed to make purchases. Please check restrictions on device');
+        return;
+      }
+      InAppUtils.loadProducts(discountedIdentifiers, (loadError) => {
+        if (loadError) {
+          this.setState({ loading: false });
+          Alert.alert('Unable to connect to the App Store', 'Please try again later');
+        }
+        InAppUtils.purchaseProduct(productIdentifier, async (error, response) => {
+          if (error) {
+            this.setState({ loading: false });
+            Alert.alert('Purchase cancelled');
+            return;
+          }
+          if (response && response.productIdentifier) {
+            const validationData = await this.validate(response.transactionReceipt);
+            if (validationData === undefined) {
+              this.setState({ loading: false });
+              Alert.alert('Receipt validation error');
+              return;
+            }
+            const isValid = validationData.latest_receipt_info.expires_date > Date.now();
+            if (isValid === true) {
+              const uid = await AsyncStorage.getItem('uid');
+              const userRef = db.collection('users').doc(uid);
+              const data = {
+                subscriptionInfo: {
+                  expiry: validationData.latest_receipt_info.expires_date,
+                  originalTransactionId: validationData.latest_receipt_info.original_transaction_id,
+                  originalPurchaseDate: validationData.latest_receipt_info.original_purchase_date_ms,
+                  productId: validationData.latest_receipt_info.product_id,
+                  receipt: response.transactionReceipt,
+                },
+              };
+              await userRef.set(data, { merge: true });
+              // Appsflyer event tracking - Start Free Trial
+              const eventName = 'af_start_trial';
+              const eventValues = {
+                af_price: productPrice,
+                af_currency: productCurrencyCode,
+              };
+              appsFlyer.trackEvent(eventName, eventValues);
+              userRef.get()
+                .then(async (doc) => {
+                  this.setState({ loading: false });
+                  if (await doc.data().onboarded) {
+                    this.props.navigation.navigate('App');
+                  } else {
+                    this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+                  }
+                });
+            } else if (isValid === false) {
+              this.setState({ loading: false });
+              Alert.alert('Purchase Unsuccessful');
+            } else {
+              this.setState({ loading: false });
+              Alert.alert('Something went wrong', `${isValid.message}`);
+            }
+          }
+        });
+      });
+    });
+  }
   validate = async (receiptData) => {
     const validationData = await validateReceiptProduction(receiptData).catch(async () => {
       const validationDataSandbox = await validateReceiptSandbox(receiptData);
@@ -447,7 +521,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                       price={product.priceString}
                       priceNumber={product.price}
                       currencyCode={product.currencyCode}
-                      onPress={() => this.purchaseProduct(product.identifier, product.price, product.currencyCode)}
+                      onPress={() => this.purchaseDiscountedProduct(product.identifier, product.price, product.currencyCode)}
                       term={subscriptionPeriodMap[product.identifier]}
                       comparisonPrice={
                         products && product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' ?
