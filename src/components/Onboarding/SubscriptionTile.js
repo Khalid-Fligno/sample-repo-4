@@ -6,12 +6,6 @@ import SavingsBadge from './SavingsBadge';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
-const tileHeaderInfoMap = {
-  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly': '- SAVE 40%',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount': '- DISCOUNTED',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted': '- DISCOUNTED',
-};
-
 export default class SubscriptionTile extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -26,7 +20,6 @@ export default class SubscriptionTile extends React.PureComponent {
       onPress,
       primary,
       term,
-      identifier,
       comparisonPrice,
     } = this.props;
     return (
@@ -88,7 +81,6 @@ SubscriptionTile.propTypes = {
   term: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   primary: PropTypes.bool,
-  identifier: PropTypes.string.isRequired,
   comparisonPrice: PropTypes.string,
   priceNumber: PropTypes.number.isRequired,
 };
