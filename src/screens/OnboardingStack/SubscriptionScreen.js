@@ -4,7 +4,6 @@ import {
   ScrollView,
   Text,
   StyleSheet,
-  SafeAreaView,
   Dimensions,
   NativeModules,
   Alert,
@@ -13,6 +12,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import appsFlyer from 'react-native-appsflyer';
 import { auth, db } from '../../../config/firebase';
 import {
   // foundationIdentifiers,
@@ -25,11 +25,12 @@ import {
 } from '../../../config/apple';
 import SubscriptionTile from '../../components/Onboarding/SubscriptionTile';
 import NativeLoader from '../../components/Shared/NativeLoader';
+import Icon from '../../components/Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
 const { InAppUtils } = NativeModules;
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 // export const compareLatest = (a, b) => {
 //   const purchaseA = a.purchase_date_ms;
@@ -42,19 +43,18 @@ const { width } = Dimensions.get('window');
 //   }
 //   return comparison;
 // };
-
 const productTitleMap = {
-  0: 'MONTHLY',
-  1: 'YEARLY',
+  0: 'YEARLY - ',
+  1: '7 DAY FREE TRIAL',
 };
 
 const subscriptionPeriodMap = {
-  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount': 'monthly',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted': 'yearly',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation': 'monthly',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation': 'yearly',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly': 'monthly',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly': 'yearly',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount': 'month',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted': 'year',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation': 'month',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation': 'year',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly': 'month',
+  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly': 'year',
 };
 
 export default class SubscriptionScreen extends React.PureComponent {
@@ -63,6 +63,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     this.state = {
       loading: false,
       products: undefined,
+      discountedProducts: undefined,
       specialOffer: props.navigation.getParam('specialOffer', undefined),
     };
   }
@@ -71,6 +72,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     this.props.navigation.setParams({ handleLogout: this.logout });
     if (this.state.specialOffer) {
       await this.loadDiscountedProducts();
+      await this.loadProducts();
     } else {
       await this.loadProducts();
     }
@@ -244,7 +246,7 @@ export default class SubscriptionScreen extends React.PureComponent {
         // Alert.alert('Unable to connect to the App Store', 'Please try again later');
       } else {
         const sortedProducts = products.slice().sort(compareProducts);
-        this.setState({ products: sortedProducts, loading: false });
+        this.setState({ discountedProducts: sortedProducts, loading: false });
       }
     });
   }
@@ -304,11 +306,11 @@ export default class SubscriptionScreen extends React.PureComponent {
         );
       } else {
         const sortedProducts = products.slice().sort(compareProducts);
-        this.setState({ products: sortedProducts, loading: false });
+        this.setState({ discountedProducts: sortedProducts, loading: false });
       }
     });
   }
-  purchaseProduct = async (productIdentifier) => {
+  purchaseProduct = async (productIdentifier, productPrice, productCurrencyCode) => {
     this.setState({ loading: true });
     Haptics.selectionAsync();
     if (productIdentifier === undefined) {
@@ -349,6 +351,13 @@ export default class SubscriptionScreen extends React.PureComponent {
               },
             };
             await userRef.set(data, { merge: true });
+            // Appsflyer event tracking - Start Free Trial
+            const eventName = 'af_start_trial';
+            const eventValues = {
+              af_price: productPrice,
+              af_currency: productCurrencyCode,
+            };
+            appsFlyer.trackEvent(eventName, eventValues);
             userRef.get()
               .then(async (doc) => {
                 this.setState({ loading: false });
@@ -383,41 +392,80 @@ export default class SubscriptionScreen extends React.PureComponent {
     const {
       loading,
       products,
+      discountedProducts,
+      specialOffer,
     } = this.state;
     return (
-      <SafeAreaView style={styles.container}>
-        <ImageBackground
-          source={require('../../../assets/images/signup-screen-background.jpg')}
-          style={styles.flexContainer}
+      <View style={styles.container}>
+        <ScrollView
+          bounces={false}
+          showsVerticalScrollIndicator={false}
         >
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>
-              START YOUR FREE TRIAL
-            </Text>
-            <Text style={styles.headerText2}>
-              today!
-            </Text>
-          </View>
-          <View style={styles.contentContainer}>
-            <View style={styles.subscriptionTileRow}>
-              {
-                products && products.map((product, index) => (
-                  <SubscriptionTile
-                    key={product.identifier}
-                    primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted'}
-                    title={productTitleMap[index]}
-                    price={product.priceString}
-                    currencyCode={product.currencyCode}
-                    onPress={() => this.purchaseProduct(product.identifier)}
-                    term={subscriptionPeriodMap[product.identifier]}
-                    identifier={product.identifier}
-                  />
-                ))
-              }
+          <ImageBackground
+            source={require('../../../assets/images/subscription-screen-background.jpg')}
+            style={styles.imageBackgroundContainer}
+          >
+            <View style={styles.headerContainer}>
+              <Text style={styles.smallheaderText}>
+                {"YOU'RE ON YOUR WAY TO"}
+              </Text>
+              <Text style={styles.smallheaderText}>
+                GETTING SHREDDED!
+              </Text>
+              <Text style={styles.headerTextLine1}>
+                <Text style={styles.headerTextCursive}>
+                  {'start  '}
+                </Text>
+                YOUR 7-DAY
+              </Text>
+              <Text style={styles.headerTextLine2}>
+                FREE TRIAL TODAY!
+              </Text>
             </View>
-          </View>
-          <View style={styles.disclaimerTextContainer}>
-            <ScrollView contentContainerStyle={styles.disclaimerScrollContainer}>
+            <View style={styles.contentContainer}>
+              <View style={styles.subscriptionTileRow}>
+                {
+                  !specialOffer && products && products.map((product, index) => (
+                    <SubscriptionTile
+                      key={product.identifier}
+                      primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount'}
+                      title={productTitleMap[index]}
+                      price={product.priceString}
+                      priceNumber={product.price}
+                      currencyCode={product.currencyCode}
+                      onPress={() => this.purchaseProduct(product.identifier, product.price, product.currencyCode)}
+                      term={subscriptionPeriodMap[product.identifier]}
+                    />
+                  ))
+                }
+                {
+                  specialOffer && discountedProducts && products && discountedProducts.map((product, index) => (
+                    <SubscriptionTile
+                      key={product.identifier}
+                      primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount'}
+                      title={productTitleMap[index]}
+                      price={product.priceString}
+                      priceNumber={product.price}
+                      currencyCode={product.currencyCode}
+                      onPress={() => this.purchaseProduct(product.identifier, product.price, product.currencyCode)}
+                      term={subscriptionPeriodMap[product.identifier]}
+                      comparisonPrice={
+                        products && product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' ?
+                          `$${(products[0].price / 12).toFixed(2)}` :
+                          products[1].priceString
+                      }
+                    />
+                  ))
+                }
+              </View>
+            </View>
+            <Icon
+              name="chevron-up"
+              size={8}
+              color={colors.white}
+              style={styles.chevronUp}
+            />
+            <View style={styles.disclaimerTextContainer}>
               <Text style={styles.disclaimerText}>
                 <Text style={styles.subscriptionTermsTitle}>Subscription Terms: </Text>
                 {'By continuing, you accept our '}
@@ -440,15 +488,15 @@ export default class SubscriptionScreen extends React.PureComponent {
                 Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
                 Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
               </Text>
-            </ScrollView>
-          </View>
-        </ImageBackground>
+            </View>
+          </ImageBackground>
+        </ScrollView>
         {
           loading && (
             <NativeLoader />
           )
         }
-      </SafeAreaView>
+      </View>
     );
   }
 }
@@ -459,52 +507,55 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
     alignItems: 'center',
   },
-  flexContainer: {
-    flex: 1,
+  imageBackgroundContainer: {
+    height: (height > 800) ? height * 0.96 : height * 1.02,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.offWhite,
   },
   headerContainer: {
-    padding: 10,
-    paddingBottom: 0,
-    shadowColor: colors.black,
-    shadowOpacity: 1,
-    shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 3,
+    padding: 20,
   },
-  headerText: {
-    fontFamily: fonts.ultraItalic,
-    fontSize: 22,
-    color: colors.white,
+  smallheaderText: {
+    fontFamily: fonts.bold,
+    fontSize: 8,
+    color: colors.black,
     textAlign: 'center',
-    marginTop: 4,
   },
-  headerText2: {
+  headerTextCursive: {
     fontFamily: fonts.tuesdayNight,
     fontSize: 30,
-    color: colors.white,
+    color: colors.black,
     textAlign: 'center',
-    marginTop: -10,
+  },
+  headerTextLine1: {
+    fontFamily: fonts.ultraItalic,
+    fontSize: 22,
+    color: colors.coral.standard,
+    textAlign: 'center',
+  },
+  headerTextLine2: {
+    fontFamily: fonts.ultraItalic,
+    fontSize: 22,
+    color: colors.coral.standard,
+    textAlign: 'center',
+    marginTop: -20,
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     width,
   },
   subscriptionTileRow: {
-    flex: 1,
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  chevronUp: {
+    alignSelf: 'center',
   },
   disclaimerTextContainer: {
-    backgroundColor: colors.transparentBlackLightest,
-    borderRadius: 3,
-    margin: 10,
-    maxHeight: 110,
-  },
-  disclaimerScrollContainer: {
-    padding: 10,
+    width,
+    padding: 20,
+    paddingTop: 10,
   },
   link: {
     color: colors.blue.standard,

@@ -1,8 +1,20 @@
 import React from 'react';
 import Sentry from 'sentry-expo';
-import { Alert, NetInfo, View, SafeAreaView, StyleSheet, StatusBar, Linking } from 'react-native';
+import {
+  Alert,
+  NetInfo,
+  View,
+  SafeAreaView,
+  StyleSheet,
+  StatusBar,
+  Linking,
+  AppState,
+  Platform,
+} from 'react-native';
 import OneSignal from 'react-native-onesignal';
+import appsFlyer from 'react-native-appsflyer';
 import { NavigationActions } from 'react-navigation';
+import { appsFlyerDevKey, appId } from './config/appsFlyer';
 import SwitchNavigator from './config/router/index';
 import colors from './src/styles/colors';
 
@@ -33,17 +45,36 @@ export default class App extends React.PureComponent {
     );
     OneSignal.setLocationShared(false);
     OneSignal.configure(); // triggers the ids event
+    appsFlyer.initSdk({
+      devKey: appsFlyerDevKey,
+      isDebug: false,
+      appId,
+    });
     this.state = {
+      appState: AppState.currentState,
     };
   }
   componentDidMount = () => {
     NetInfo.addEventListener('connectionChange', this.handleConnectivityChange);
     Linking.addEventListener('url', this.handleOpenURL);
+    AppState.addEventListener('change', this.handleAppStateChange);
   }
   componentWillUnmount = () => {
     NetInfo.removeEventListener('connectionChange', this.handleConnectivityChange);
     Linking.removeEventListener('url', this.handleOpenURL);
+    AppState.removeEventListener('change', this.handleAppStateChange);
   }
+  handleAppStateChange = (nextAppState) => {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      if (Platform.OS === 'ios') {
+        appsFlyer.trackAppLaunch();
+      }
+    }
+    this.setState({ appState: nextAppState });
+  };
   handleOpenURL = (event) => {
     if (event.url === 'fitazfk://special-offer') {
       navigate('SpecialOffer');

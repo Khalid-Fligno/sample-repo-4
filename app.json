@@ -2,8 +2,8 @@
   "expo": {
     "name": "FitazFK",
     "slug": "fitazfk-app",
-    "version": "1.5.0",
-    "sdkVersion": "33.0.0",
+    "version": "1.8.0",
+    "sdkVersion": "34.0.0",
     "orientation": "portrait",
     "icon": "./assets/icons/fitazfk-app-icon-gradient-dark.png",
     "splash": {

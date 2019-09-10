@@ -187,7 +187,8 @@ class ProgressHomeScreen extends React.PureComponent {
           <View style={styles.dataRowContainer}>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {initialProgressInfo ? initialProgressInfo.weight : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'kg'}{initialProgressInfo && unitsOfMeasurement === 'imperial' && 'lbs'}
+                {initialProgressInfo ? initialProgressInfo.weight : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'kg'}
+                {initialProgressInfo && unitsOfMeasurement === 'imperial' && 'lbs'}
               </Text>
             </View>
             <View style={styles.fieldContainer}>
@@ -205,14 +206,16 @@ class ProgressHomeScreen extends React.PureComponent {
             </View>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {currentProgressInfo ? currentProgressInfo.weight : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'kg'}{currentProgressInfo && unitsOfMeasurement === 'imperial' && 'lbs'}
+                {currentProgressInfo ? currentProgressInfo.weight : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'kg'}
+                {currentProgressInfo && unitsOfMeasurement === 'imperial' && 'lbs'}
               </Text>
             </View>
           </View>
           <View style={styles.dataRowContainer}>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {initialProgressInfo ? initialProgressInfo.waist : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{initialProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
+                {initialProgressInfo ? initialProgressInfo.waist : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}
+                {initialProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
               </Text>
             </View>
             <View style={styles.fieldContainer}>
@@ -230,14 +233,16 @@ class ProgressHomeScreen extends React.PureComponent {
             </View>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {currentProgressInfo ? currentProgressInfo.waist : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{currentProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
+                {currentProgressInfo ? currentProgressInfo.waist : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}
+                {currentProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
               </Text>
             </View>
           </View>
           <View style={styles.dataRowContainer}>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {initialProgressInfo ? initialProgressInfo.hip : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{initialProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
+                {initialProgressInfo ? initialProgressInfo.hip : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}
+                {initialProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
               </Text>
             </View>
             <View style={styles.fieldContainer}>
@@ -255,7 +260,8 @@ class ProgressHomeScreen extends React.PureComponent {
             </View>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {currentProgressInfo ? currentProgressInfo.hip : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}{currentProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
+                {currentProgressInfo ? currentProgressInfo.hip : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}
+                {currentProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
               </Text>
             </View>
           </View>

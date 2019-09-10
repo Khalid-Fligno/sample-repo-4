@@ -6,6 +6,9 @@
 # firebase
 /config/firebase.js
 
+# firebase
+/config/appsFlyer.js
+
 # segment
 /config/segment.js
 

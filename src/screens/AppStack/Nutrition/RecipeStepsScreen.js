@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
-import KeepAwake from 'expo-keep-awake';
 import Carousel from 'react-native-snap-carousel';
 import Image from 'react-native-image-progress';
 import { DotIndicator } from 'react-native-indicators';
+import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
 import Icon from '../../../components/Shared/Icon';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
@@ -17,6 +17,12 @@ export default class RecipeStepsScreen extends React.PureComponent {
       steps: this.props.navigation.getParam('recipe', null).steps,
       stepsImages: this.props.navigation.getParam('recipe', null).stepsImages,
     };
+  }
+  componentDidMount = () => {
+    activateKeepAwake();
+  }
+  componentWillUnmount = () => {
+    deactivateKeepAwake();
   }
   renderItem = ({ item, index }) => {
     const { steps } = this.state;
@@ -109,7 +115,6 @@ export default class RecipeStepsScreen extends React.PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <KeepAwake />
         <Carousel
           ref={(c) => this.carousel = c}
           data={this.state.steps}

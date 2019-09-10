@@ -8,8 +8,10 @@ import {
   Text,
   Dimensions,
 } from 'react-native';
+import { Button } from 'react-native-elements';
 import * as Haptics from 'expo-haptics';
 import * as Localization from 'expo-localization';
+import * as FileSystem from 'expo-file-system';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
 import NewsFeedTile from '../../../components/Home/NewsFeedTile';
@@ -105,6 +107,15 @@ export default class HomeScreen extends React.PureComponent {
   openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Linking.openURL(url);
+  }
+  goToBurpeeTest = async () => {
+    this.setState({ loading: true });
+    await FileSystem.downloadAsync(
+      'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2FBURPEES.mp4?alt=media&token=688885cb-2d70-4fc6-82a9-abc4e95daf89',
+      `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
+    );
+    this.setState({ loading: false });
+    this.props.navigation.navigate('Burpee1');
   }
   render() {
     const {
@@ -206,6 +217,36 @@ export default class HomeScreen extends React.PureComponent {
               }
             </View>
           </View>
+          {
+            profile && profile.initialBurpeeTestCompleted === undefined && (
+              <View style={styles.workoutProgressContainer}>
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.bodyText}>
+                    REMINDER
+                  </Text>
+                </View>
+                <View style={styles.reminderContentContainer}>
+                  <Icon
+                    name="stopwatch"
+                    size={32}
+                    color={colors.charcoal.dark}
+                    style={styles.reminderIcon}
+                  />
+                  <View style={styles.reminderTextContainer}>
+                    <Text style={styles.reminderText}>
+                      Complete a burpee test to assess your current fitness level.  The results from this test will determine the intensity of your workouts!
+                    </Text>
+                  </View>
+                </View>
+                <Button
+                  title="START BURPEE TEST"
+                  buttonStyle={styles.button}
+                  textStyle={styles.buttonText}
+                  onPress={this.goToBurpeeTest}
+                />
+              </View>
+            )
+          }
           <NewsFeedTile
             image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
             title="SHOP APPAREL"
@@ -277,12 +318,17 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     alignItems: 'center',
-    backgroundColor: colors.charcoal.dark,
+    backgroundColor: colors.charcoal.darkest,
     width: width - 20,
     borderTopLeftRadius: 2,
     borderTopRightRadius: 2,
     padding: 8,
     paddingBottom: 5,
+  },
+  bodyText: {
+    fontFamily: fonts.standard,
+    fontSize: 12,
+    color: colors.white,
   },
   recommendedWorkoutContainer: {
     flexDirection: 'row',
@@ -299,9 +345,40 @@ const styles = StyleSheet.create({
     color: colors.charcoal.standard,
     marginTop: 12,
   },
-  bodyText: {
+  reminderContentContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  reminderIcon: {
+    margin: 5,
+    marginRight: 8,
+  },
+  reminderTextContainer: {
+    flex: 1,
+  },
+  reminderText: {
     fontFamily: fonts.standard,
     fontSize: 12,
-    color: colors.white,
+    color: colors.black,
+    margin: 4,
+    marginTop: 12,
+    marginBottom: 12,
+  },
+  button: {
+    backgroundColor: colors.charcoal.darkest,
+    shadowColor: colors.grey.dark,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 40,
+    width: width - 40,
+    borderRadius: 4,
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 2,
+  },
+  buttonText: {
+    fontFamily: fonts.bold,
+    fontSize: 12,
+    marginTop: 3,
   },
 });

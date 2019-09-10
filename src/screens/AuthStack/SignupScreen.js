@@ -20,6 +20,7 @@ import * as Localization from 'expo-localization';
 import * as Haptics from 'expo-haptics';
 import * as Facebook from 'expo-facebook';
 import firebase from 'firebase';
+import appsFlyer from 'react-native-appsflyer';
 import { db, auth } from '../../../config/firebase';
 import NativeLoader from '../../components/Shared/NativeLoader';
 import Icon from '../../components/Shared/Icon';
@@ -78,7 +79,8 @@ export default class SignupScreen extends React.PureComponent {
             });
           }
         });
-        // this.setState({ loading: false });
+        this.setState({ loading: false });
+        appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Facebook' });
         auth.currentUser.sendEmailVerification().then(() => {
           Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
           this.props.navigation.navigate('Subscription', { name: profile.first_name, specialOffer: this.state.specialOffer });
@@ -127,7 +129,8 @@ export default class SignupScreen extends React.PureComponent {
           });
         }
       });
-      // this.setState({ loading: false });
+      this.setState({ loading: false });
+      appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Email' });
       this.props.navigation.navigate('Subscription', { name: firstName, specialOffer: this.state.specialOffer });
       auth.currentUser.sendEmailVerification().then(() => {
         Alert.alert('Please verify email', 'An email verification link has been sent to your email address');

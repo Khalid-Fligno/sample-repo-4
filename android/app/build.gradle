@@ -99,6 +99,7 @@ apply from: 'expo.gradle'
 
 
 dependencies {
+    implementation project(':react-native-appsflyer')
     implementation project(':react-native-onesignal')
     compile project(':react-native-video')
     compile project(':react-native-fast-image')

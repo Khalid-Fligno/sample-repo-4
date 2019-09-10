@@ -127,6 +127,7 @@ export default class Progress6Screen extends React.PureComponent {
     try {
       await userRef.set({
         fitnessLevel,
+        initialBurpeeTestCompleted: true,
       }, { merge: true });
       this.setState({ loading: false });
       if (isInitial) {
