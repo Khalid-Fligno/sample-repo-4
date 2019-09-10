@@ -41,6 +41,7 @@ export default class SignupScreen extends React.PureComponent {
       password: '',
       error: null,
       loading: false,
+      specialOffer: props.navigation.getParam('specialOffer', undefined),
     };
   }
   signupWithFacebook = async () => {
@@ -82,7 +83,7 @@ export default class SignupScreen extends React.PureComponent {
         appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Facebook' });
         auth.currentUser.sendEmailVerification().then(() => {
           Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
-          this.props.navigation.navigate('Subscription', { name: profile.first_name });
+          this.props.navigation.navigate('Subscription', { name: profile.first_name, specialOffer: this.state.specialOffer });
         });
       } else {
         this.setState({ loading: false });
@@ -130,7 +131,7 @@ export default class SignupScreen extends React.PureComponent {
       });
       this.setState({ loading: false });
       appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Email' });
-      this.props.navigation.navigate('Subscription', { name: firstName });
+      this.props.navigation.navigate('Subscription', { name: firstName, specialOffer: this.state.specialOffer });
       auth.currentUser.sendEmailVerification().then(() => {
         Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
       });

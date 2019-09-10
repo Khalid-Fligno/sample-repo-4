@@ -44,6 +44,7 @@ export default class LoginScreen extends React.PureComponent {
       password: '',
       error: null,
       loading: false,
+      specialOffer: props.navigation.getParam('specialOffer', undefined),
     };
   }
   loginWithFacebook = async () => {
@@ -69,8 +70,8 @@ export default class LoginScreen extends React.PureComponent {
             const { subscriptionInfo } = await doc.data();
             if (subscriptionInfo === undefined) {
               // NO PURCHASE INFORMATION SAVED
-              this.setState({ loading: false });
-              this.props.navigation.navigate('Subscription');
+              // this.setState({ loading: false });
+              this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
             } else if (subscriptionInfo.expiry < Date.now()) {
               // EXPIRED
               InAppUtils.restorePurchases(async (error, response) => {
@@ -79,15 +80,15 @@ export default class LoginScreen extends React.PureComponent {
                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
                 } else {
                   if (response.length === 0) {
-                    this.setState({ loading: false });
-                    this.props.navigation.navigate('Subscription');
+                    // this.setState({ loading: false });
+                    this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
                     return;
                   }
                   const sortedPurchases = response.slice().sort(compare);
                   try {
                     const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
                     if (validationData === undefined) {
-                      this.setState({ loading: false });
+                      // this.setState({ loading: false });
                       Alert.alert('Receipt validation error');
                       return;
                     }
@@ -104,16 +105,16 @@ export default class LoginScreen extends React.PureComponent {
                       this.setState({ loading: false });
                       this.props.navigation.navigate('App');
                     } else {
-                      this.setState({ loading: false });
+                      // this.setState({ loading: false });
                       Alert.alert('Something went wrong');
-                      this.props.navigation.navigate('Subscription');
+                      this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
                       return;
                     }
                   } catch (err) {
                     // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
-                    this.setState({ loading: false });
+                    // this.setState({ loading: false });
                     Alert.alert('Subscription has been cancelled');
-                    this.props.navigation.navigate('Subscription');
+                    this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
                   }
                 }
               });
@@ -153,7 +154,7 @@ export default class LoginScreen extends React.PureComponent {
             if (subscriptionInfo === undefined) {
               // NO PURCHASE INFORMATION SAVED
               this.setState({ loading: false });
-              this.props.navigation.navigate('Subscription');
+              this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
             } else if (subscriptionInfo.expiry < Date.now()) {
               // EXPIRED
               InAppUtils.restorePurchases(async (error, response) => {
@@ -163,7 +164,7 @@ export default class LoginScreen extends React.PureComponent {
                 } else {
                   if (response.length === 0) {
                     this.setState({ loading: false });
-                    this.props.navigation.navigate('Subscription');
+                    this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
                     return;
                   }
                   const sortedPurchases = response.slice().sort(compare);
@@ -190,14 +191,14 @@ export default class LoginScreen extends React.PureComponent {
                     } else {
                       this.setState({ loading: false });
                       Alert.alert('Something went wrong');
-                      this.props.navigation.navigate('Subscription');
+                      this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
                       return;
                     }
                   } catch (err) {
                     // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
                     this.setState({ loading: false });
                     Alert.alert('Subscription has been cancelled');
-                    this.props.navigation.navigate('Subscription');
+                    this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
                   }
                 }
               });

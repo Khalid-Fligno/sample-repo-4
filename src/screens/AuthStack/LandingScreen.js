@@ -11,9 +11,11 @@ export default class LandingScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      specialOffer: props.navigation.getParam('specialOffer', undefined),
     };
   }
   render() {
+    const { specialOffer } = this.state;
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
         <View style={styles.container}>
@@ -72,7 +74,7 @@ export default class LandingScreen extends React.PureComponent {
           <View style={styles.absoluteButtonContainer}>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Signup')}
+                onPress={() => this.props.navigation.navigate('Signup', { specialOffer })}
                 activeOpacity={0.6}
                 style={styles.signupButton}
               >
@@ -81,7 +83,7 @@ export default class LandingScreen extends React.PureComponent {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Login')}
+                onPress={() => this.props.navigation.navigate('Login', { specialOffer })}
                 activeOpacity={0.6}
                 style={styles.loginButton}
               >
