@@ -29,6 +29,10 @@ PODS:
   - EXConstants (6.0.0):
     - UMConstantsInterface
     - UMCore
+  - EXContacts (6.0.0):
+    - UMCore
+    - UMFileSystemInterface
+    - UMPermissionsInterface
   - EXFacebook (6.0.0):
     - FBSDKCoreKit (~> 4.0)
     - FBSDKLoginKit (~> 4.0)
@@ -59,6 +63,9 @@ PODS:
     - UMCore
     - UMPermissionsInterface
     - UMTaskManagerInterface
+  - EXMailComposer (6.0.0):
+    - UMCore
+    - UMFileSystemInterface
   - EXPermissions (6.0.0):
     - UMCore
     - UMPermissionsInterface
@@ -88,6 +95,9 @@ PODS:
     - UMPermissionsInterface
     - UMReactNativeAdapter
     - UMSensorsInterface
+  - EXSMS (6.0.0):
+    - UMCore
+    - UMPermissionsInterface
   - EXSQLite (6.0.0):
     - UMCore
     - UMFileSystemInterface
@@ -245,6 +255,7 @@ DEPENDENCIES:
   - EXAppLoaderProvider (from `../node_modules/expo-app-loader-provider/ios`)
   - EXAV (from `../node_modules/expo-av/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
+  - EXContacts (from `../node_modules/expo-contacts/ios`)
   - EXFacebook (from `../node_modules/expo-facebook/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
@@ -255,8 +266,10 @@ DEPENDENCIES:
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - EXLocalization (from `../node_modules/expo-localization/ios`)
   - EXLocation (from `../node_modules/expo-location/ios`)
+  - EXMailComposer (from `../node_modules/expo-mail-composer/ios`)
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
   - ExpoKit/Core (from `http://github.com/expo/expo.git`, tag `ios/2.12.0`)
+  - EXSMS (from `../node_modules/expo-sms/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
   - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
@@ -333,6 +346,9 @@ EXTERNAL SOURCES:
   EXConstants:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-constants/ios"
+  EXContacts:
+    :path: !ruby/object:Pathname
+    path: "../node_modules/expo-contacts/ios"
   EXFacebook:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-facebook/ios"
@@ -363,12 +379,18 @@ EXTERNAL SOURCES:
   EXLocation:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-location/ios"
+  EXMailComposer:
+    :path: !ruby/object:Pathname
+    path: "../node_modules/expo-mail-composer/ios"
   EXPermissions:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-permissions/ios"
   ExpoKit:
     :git: http://github.com/expo/expo.git
     :tag: ios/2.12.0
+  EXSMS:
+    :path: !ruby/object:Pathname
+    path: "../node_modules/expo-sms/ios"
   EXSQLite:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-sqlite/ios"
@@ -451,6 +473,7 @@ SPEC CHECKSUMS:
   EXAppLoaderProvider: 7a8185228d8ba9e689a0e2d6d957fe9bdd49c8a0
   EXAV: 7228890721d1d74779bc3154fb678a44249b1c71
   EXConstants: 5d81e84ca71b9a552529889cc798b4a04e9e22b3
+  EXContacts: fc25ebc07706984813a997400d88c00d2959401e
   EXFacebook: b71969e92a4d76632ee743d26e88c61b4d9a3e45
   EXFileSystem: 091907902fcec9f9182b656fdead41a82f30986a
   EXFont: c862449210fc86aa11d24a202cb22c71a0d39609
@@ -461,8 +484,10 @@ SPEC CHECKSUMS:
   EXLinearGradient: 40781b77e58f844c8dc4ad310dc9755b4d3792a7
   EXLocalization: 1abab86f9e7f09c96ca19ea695606f81230fedcf
   EXLocation: 4eb76115832f08b1e78003b335c210e18fa60424
+  EXMailComposer: 801ebd0bfd0c6e743a69102168b35b00efa67277
   EXPermissions: 99e52dc3e5f8e55153f1958004f6df2a30a1f2f5
   ExpoKit: 2ea6908bcbf5e705ca6c37370718c07c9677ef15
+  EXSMS: cb30013923b89b795840634ba486a79f29eee368
   EXSQLite: 8dab6a5ab1b78be7925073d6071eb22095d4dda6
   EXWebBrowser: def838b95aa9d396f9ce71ace4e614ee16e7ee30
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
