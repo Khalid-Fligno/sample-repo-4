@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
   listItemContainerGreen: {
     paddingTop: 15,
     paddingBottom: 15,
-    borderBottomColor: colors.grey.light,
+    borderBottomWidth: 0,
     backgroundColor: colors.green.superLight,
   },
   listItemContainerBottom: {
