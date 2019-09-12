@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   green: {
     ...common.button.solid,
     backgroundColor: colors.green.forest,
-    shadowColor: colors.grey.dark,
+    shadowColor: colors.black,
   },
   greenDisabled: {
     backgroundColor: colors.grey.standard,
