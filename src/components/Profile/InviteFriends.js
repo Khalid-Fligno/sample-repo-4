@@ -15,6 +15,7 @@ import * as Permissions from 'expo-permissions';
 import * as MailComposer from 'expo-mail-composer';
 import * as SMS from 'expo-sms';
 import * as Contacts from 'expo-contacts';
+import * as Haptics from 'expo-haptics';
 import groupBy from 'lodash.groupby';
 import ContactRow from './ContactRow';
 import Loader from '../../components/Shared/Loader';
@@ -54,7 +55,6 @@ function useContacts() {
         });
       }
     };
-
     fetchContacts();
   }, []);
   return contacts;
@@ -104,6 +104,7 @@ export default function InviteFriends({ recordInvites }) {
   }, [contacts.data]);
 
   const onInvitePress = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     let didShare = false;
     let inviteCount = 0;
     const appStoreLink = 'https://apps.apple.com/au/app/fitazfk-fitness-nutrition/id1438373600';
@@ -143,7 +144,7 @@ export default function InviteFriends({ recordInvites }) {
       }
     }
     if (didShare) {
-      Alert.alert('Thanks for sharing!');
+      Alert.alert('', 'Thanks for sharing!');
       recordInvites(inviteCount);
     }
   };
@@ -179,6 +180,7 @@ export default function InviteFriends({ recordInvites }) {
           renderItem={({ item }) => {
             const selectedIndex = selectedContacts.findIndex((i) => i.id === item.id);
             const onPress = () => {
+              Haptics.selectionAsync();
               const newContacts = [...selectedContacts];
               if (selectedIndex >= 0) {
                 newContacts.splice(selectedIndex, 1);
