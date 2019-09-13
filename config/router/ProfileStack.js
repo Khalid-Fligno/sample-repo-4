@@ -16,7 +16,7 @@ import Header from '../../src/components/Shared/Header';
 const findProfileHeaderTitle = {
   ProfileHome: 'ACCOUNT',
   Profile: 'PROFILE',
-  InviteFriends: 'INVITE FRIENDS',
+  InviteFriends: 'INVITE',
   Settings: 'SETTINGS',
 };
 
