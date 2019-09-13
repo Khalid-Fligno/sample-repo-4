@@ -21,22 +21,22 @@ function FreeGiftSection({
             <TouchableOpacity
               onPress={() => {
                 Clipboard.setString(promoCode);
-                Alert.alert('Promo code copied!');
+                Alert.alert('', 'Promo code copied!');
               }}
               style={styles.copyButton}
             >
               <Text style={styles.promoCodeText}>{promoCode}</Text>
-              <Icon name="copy" size={15} color={colors.grey.standard} />
+              <Icon name="copy" size={15} color={colors.white} />
             </TouchableOpacity>
           ) : (
             <Icon
               name="padlock"
               size={20}
-              color={colors.black}
+              color={colors.white}
             />
           )
       }
-      <Text style={{ fontFamily: fonts.standardNarrow }}>{isUnlocked ? giftName : `Invite ${minimumInvites} friends to unlock this gift`}</Text>
+      <Text style={styles.giftName}>{isUnlocked ? giftName : `Invite ${minimumInvites} friends to unlock this gift`}</Text>
     </View>
   );
 }
@@ -44,30 +44,30 @@ function FreeGiftSection({
 const styles = StyleSheet.create({
   containerLocked: {
     width: width - 20,
-    height: 80,
+    height: 90,
     marginTop: 5,
     marginBottom: 5,
     padding: 15,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.white,
-    borderColor: colors.black,
-    borderWidth: 3,
-    borderRadius: 3,
-    opacity: 0.2,
+    backgroundColor: colors.transparentBlackLight,
+    borderColor: colors.white,
+    borderWidth: 4,
+    borderRadius: 4,
+    opacity: 0.3,
   },
   containerUnlocked: {
     width: width - 20,
-    height: 80,
+    height: 90,
     marginTop: 5,
     marginBottom: 5,
     padding: 15,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.white,
-    borderColor: colors.black,
-    borderWidth: 3,
-    borderRadius: 3,
+    backgroundColor: colors.transparentBlackLight,
+    borderColor: colors.green.forest,
+    borderWidth: 4,
+    borderRadius: 4,
   },
   copyButton: {
     flexDirection: 'row',
@@ -75,8 +75,13 @@ const styles = StyleSheet.create({
   promoCodeText: {
     fontFamily: fonts.bold,
     fontSize: 18,
-    color: colors.black,
+    color: colors.white,
     marginRight: 5,
+  },
+  giftName: {
+    fontFamily: fonts.standardNarrow,
+    fontSize: 16,
+    color: colors.white,
   },
 });
 
