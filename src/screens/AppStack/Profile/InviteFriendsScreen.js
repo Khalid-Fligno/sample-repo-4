@@ -7,7 +7,9 @@ import {
   Text,
   AsyncStorage,
   Dimensions,
+  ImageBackground,
 } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import Loader from '../../../components/Shared/Loader';
 import CustomButton from '../../../components/Shared/CustomButton';
 import { db } from '../../../../config/firebase';
@@ -46,6 +48,7 @@ export default class InviteFriendsScreen extends React.PureComponent {
       });
   }
   switchView = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     this.setState({ contactsView: true });
   }
   recordInvites = async (numberOfInvites) => {
@@ -67,8 +70,13 @@ export default class InviteFriendsScreen extends React.PureComponent {
     }
     return (
       <SafeAreaView style={styles.safeContainer}>
-        <View style={styles.rewardsContainer}>
+        <ImageBackground
+          source={require('../../../../assets/images/special-offer-screen-background.jpg')}
+          style={styles.rewardsContainer}
+        >
           <ScrollView contentContainerStyle={styles.scrollView}>
+            <Text style={styles.headingText}>INVITE FRIENDS AND</Text>
+            <Text style={styles.headingText}>EARN FREE GIFTS!</Text>
             <Text style={styles.friendsInvitedNumber}>{(friendsInvited && friendsInvited) || 0}</Text>
             <Text style={styles.friendsInvitedText}>FRIENDS INVITED</Text>
             <FreeGiftSection
@@ -89,6 +97,9 @@ export default class InviteFriendsScreen extends React.PureComponent {
               giftName="FitazFK Tank"
               promoCode="INVITETANK-30389159"
             />
+            <Text style={styles.disclaimerText}>
+              For use at www.fitazfk.com.  Postage not included.  Offer available for a limited time only.
+            </Text>
           </ScrollView>
           <View style={styles.buttonContainer}>
             <CustomButton
@@ -97,7 +108,7 @@ export default class InviteFriendsScreen extends React.PureComponent {
               green
             />
           </View>
-        </View>
+        </ImageBackground>
         <Loader
           loading={loading}
           color={colors.charcoal.standard}
@@ -115,19 +126,36 @@ const styles = StyleSheet.create({
   scrollView: {
     alignItems: 'center',
     paddingTop: 20,
+    paddingBottom: 80,
   },
   rewardsContainer: {
     flex: 1,
-    backgroundColor: colors.grey.light,
     alignItems: 'center',
   },
+  headingText: {
+    fontFamily: fonts.ultraItalic,
+    fontSize: 18,
+    color: colors.white,
+    // marginBottom: 10,
+  },
   friendsInvitedNumber: {
-    fontFamily: fonts.bold,
-    fontSize: 42,
+    fontFamily: fonts.ultraItalic,
+    color: colors.white,
+    fontSize: 48,
+    marginTop: 10,
+    marginBottom: 10,
   },
   friendsInvitedText: {
     fontFamily: fonts.standardNarrow,
-    marginBottom: 10,
+    fontSize: 14,
+    color: colors.white,
+    marginBottom: 20,
+  },
+  disclaimerText: {
+    fontFamily: fonts.standardNarrow,
+    fontSize: 12,
+    color: colors.white,
+    margin: 10,
   },
   buttonContainer: {
     position: 'absolute',
