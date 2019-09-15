@@ -39,6 +39,8 @@ const colors = {
     standard: 'rgb(21, 160, 140)', // #15A08C
     light: 'rgb(28, 202, 176)', // #1CCAB0
     dark: 'rgb(18, 135, 118)', // #128776
+    forest: 'rgb(0, 128, 0)', // #008000
+    superLight: 'rgb(230, 255, 230)', // #e6ffe6
   },
   blue: {
     standard: 'rgb(122, 155, 224)', // #7A9BE0

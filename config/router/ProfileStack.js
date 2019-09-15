@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import ProfileHomeScreen from '../../src/screens/AppStack/Profile/ProfileHomeScreen';
 import ProfileScreen from '../../src/screens/AppStack/Profile/ProfileScreen';
+import InviteFriendsScreen from '../../src/screens/AppStack/Profile/InviteFriendsScreen';
 import HelpAndSupportScreen from '../../src/screens/AppStack/Profile/HelpAndSupportScreen';
 import PrivacyPolicyScreen from '../../src/screens/AppStack/Profile/PrivacyPolicyScreen';
 import TermsOfServiceScreen from '../../src/screens/AppStack/Profile/TermsOfServiceScreen';
@@ -15,12 +16,14 @@ import Header from '../../src/components/Shared/Header';
 const findProfileHeaderTitle = {
   ProfileHome: 'ACCOUNT',
   Profile: 'PROFILE',
+  InviteFriends: 'INVITE',
   Settings: 'SETTINGS',
 };
 
 const backButtonMap = {
   ProfileHome: true,
   Profile: true,
+  InviteFriends: true,
   HelpAndSupport: true,
   PrivacyPolicy: true,
   TermsOfService: true,
@@ -37,6 +40,7 @@ const ProfileStack = createStackNavigator(
   {
     ProfileHome: ProfileHomeScreen,
     Profile: ProfileScreen,
+    InviteFriends: InviteFriendsScreen,
     HelpAndSupport: HelpAndSupportScreen,
     PrivacyPolicy: PrivacyPolicyScreen,
     TermsOfService: TermsOfServiceScreen,

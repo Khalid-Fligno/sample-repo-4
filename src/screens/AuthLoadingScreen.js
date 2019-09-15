@@ -127,8 +127,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
   }
   // Include payments
   cachingComplete = async () => {
-    // await Audio.setIsEnabledAsync(true);
-    // await timerSound.loadAsync(require('../../assets/sounds/ding.mp3'));
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         unsubscribe();

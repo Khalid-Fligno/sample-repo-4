@@ -250,6 +250,16 @@ export default class ProfileHomeScreen extends React.PureComponent {
               />
             </List>
             <List containerStyle={styles.listContainer}>
+              <ListItem
+                activeOpacity={0.5}
+                key="InviteFriends"
+                title="Free Gifts!"
+                containerStyle={styles.listItemContainerGreen}
+                titleStyle={styles.listItemTitleStyleGreen}
+                onPress={() => this.props.navigation.navigate('InviteFriends')}
+              />
+            </List>
+            <List containerStyle={styles.listContainer}>
               {
                 list.map((l) => (
                   <ListItem
@@ -339,6 +349,12 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.grey.light,
     backgroundColor: colors.white,
   },
+  listItemContainerGreen: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    borderBottomWidth: 0,
+    backgroundColor: colors.green.superLight,
+  },
   listItemContainerBottom: {
     paddingTop: 15,
     paddingBottom: 15,
@@ -349,6 +365,12 @@ const styles = StyleSheet.create({
   listItemTitleStyle: {
     fontFamily: fonts.bold,
     color: colors.charcoal.standard,
+    marginTop: 5,
+    fontSize: 14,
+  },
+  listItemTitleStyleGreen: {
+    fontFamily: fonts.bold,
+    color: colors.green.forest,
     marginTop: 5,
     fontSize: 14,
   },
