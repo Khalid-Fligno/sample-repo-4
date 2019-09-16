@@ -98,7 +98,7 @@ export default class InviteFriendsScreen extends React.PureComponent {
               promoCode="INVITE-TANK-QH9JP"
             />
             <Text style={styles.disclaimerText}>
-              For use at www.fitazfk.com.  Postage not included.  Offer available for a limited time only.
+              For use at www.fitazfk.com.  Postage not included for physical items.  Offer available for a limited time only.
             </Text>
           </ScrollView>
           <View style={styles.buttonContainer}>
