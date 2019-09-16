@@ -82,20 +82,20 @@ export default class InviteFriendsScreen extends React.PureComponent {
             <FreeGiftSection
               isUnlocked={friendsInvited && friendsInvited >= 10}
               minimumInvites={10}
-              giftName="FitazFK Cookbook"
-              promoCode="INVITECB-30389159"
+              giftName="Weekend Guide"
+              promoCode="INVITE-WKEND-V4174"
             />
             <FreeGiftSection
               isUnlocked={friendsInvited && friendsInvited >= 20}
               minimumInvites={20}
               giftName="FitazFK Booty Bands"
-              promoCode="INVITEBB-30389159"
+              promoCode="INVITE-BOOTY-QE5MG"
             />
             <FreeGiftSection
               isUnlocked={friendsInvited && friendsInvited >= 30}
               minimumInvites={30}
               giftName="FitazFK Tank"
-              promoCode="INVITETANK-30389159"
+              promoCode="INVITE-TANK-QH9JP"
             />
             <Text style={styles.disclaimerText}>
               For use at www.fitazfk.com.  Postage not included.  Offer available for a limited time only.
