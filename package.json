@@ -1,6 +1,6 @@
 {
   "name": "fitazfk",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "private": true,
   "devDependencies": {
     "babel-eslint": "^8.2.3",
