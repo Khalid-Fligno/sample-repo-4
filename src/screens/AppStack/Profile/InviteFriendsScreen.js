@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.ultraItalic,
     fontSize: 18,
     color: colors.white,
-    // marginBottom: 10,
   },
   friendsInvitedNumber: {
     fontFamily: fonts.ultraItalic,
