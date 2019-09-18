@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, AsyncStorage, Alert, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, AsyncStorage, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';
 import { PieChart } from 'react-native-svg-charts';
@@ -34,11 +34,10 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
     };
   }
   componentDidMount = () => {
-    try {
-      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-hiit-1.mp4`, { idempotent: true });
-    } catch (err) {
-      Alert.alert('Filesystem delete error', `${err}`);
-    }
+    this.manageVideoCache();
+  }
+  manageVideoCache = () => {
+    return FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-hiit-1.mp4`, { idempotent: true });
   }
   completeHiitWorkout = async () => {
     this.setState({ loading: true });
