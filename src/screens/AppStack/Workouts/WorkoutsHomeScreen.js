@@ -88,7 +88,6 @@ class WorkoutsHomeScreen extends React.PureComponent {
       loading: false,
       selectedWorkoutTypeIndex: 0,
       selectedWorkoutLocationIndex: 0,
-      // selectedHiitWorkoutIndex: 0,
       selectedResistanceFocusIndex: 0,
       selectedHiitStyleIndex: 0,
       helperModalVisible: false,
