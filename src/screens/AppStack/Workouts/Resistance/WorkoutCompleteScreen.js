@@ -20,10 +20,6 @@ import colors from '../../../../styles/colors';
 
 const { width } = Dimensions.get('window');
 
-// const updateCycleTargets = (obj, resistanceCategoryId, newTally) => {
-//   return Object.assign({}, obj, { [resistanceCategoryId]: newTally });
-// };
-
 const updateWeeklyTargets = (obj, field, newTally) => {
   return Object.assign({}, obj, { [field]: newTally });
 };
@@ -42,14 +38,10 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
-      // exerciseList: props.navigation.getParam('exerciseList', null),
     };
   }
   componentDidMount = async () => {
-    this.manageVideoCache();
-    if (Rate.rate !== undefined) {
-      Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
-    }
+    await this.completeWorkout();
   }
   manageVideoCache = async () => {
     const exerciseVideos = [
@@ -60,26 +52,29 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
       `${FileSystem.cacheDirectory}exercise-5.mp4`,
       `${FileSystem.cacheDirectory}exercise-6.mp4`,
     ];
-    Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
-      FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
+    await Promise.all(exerciseVideos.map((exerciseVideoURL) => {
+      return FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
     }));
   }
   completeWorkout = async () => {
     this.setState({ loading: true });
+    await this.manageVideoCache();
+    if (Rate.rate !== undefined) {
+      Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
+    }
     appsFlyer.trackEvent('complete_workout');
     const uid = await AsyncStorage.getItem('uid');
     const userRef = db.collection('users').doc(uid);
-    this.updateWeekly(userRef);
+    await this.updateWeekly(userRef);
     this.setState({ loading: false });
-    this.props.navigation.navigate('WorkoutsHome');
   }
   updateWeekly = (userRef) => {
     return db.runTransaction((transaction) => {
-      return transaction.get(userRef).then((userDoc) => {
+      return transaction.get(userRef).then(async (userDoc) => {
         const newResistanceWeeklyComplete = userDoc.data().weeklyTargets.resistanceWeeklyComplete + 1;
         const oldWeeklyTargets = userDoc.data().weeklyTargets;
         const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'resistanceWeeklyComplete', newResistanceWeeklyComplete);
-        transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
+        await transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
       });
     });
   }
@@ -124,7 +119,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
           <View style={styles.buttonContainer}>
             <CustomButton
               title="COMPLETE"
-              onPress={() => this.completeWorkout()}
+              onPress={() => this.props.navigation.navigate('WorkoutsHome')}
               primary
             />
           </View>
