@@ -40,13 +40,25 @@ export default class HiitCircuitWorkoutCompleteScreen extends React.PureComponen
       loading: false,
     };
   }
-  componentDidMount = async () => {
+  componentDidMount = () => {
     this.manageVideoCache();
-    if (Rate.rate !== undefined) {
-      Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
+    this.showRatePopup();
+  }
+  showRatePopup = async () => {
+    const lastRatingRequest = await AsyncStorage.getItem('lastRatingRequest');
+    if (lastRatingRequest === null) {
+      if (Rate.rate !== undefined) {
+        Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
+      }
+      AsyncStorage.setItem('lastRatingRequest', Date.now());
+    } else if (Date.now() - lastRatingRequest > 10368000000) {
+      if (Rate.rate !== undefined) {
+        Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
+      }
+      AsyncStorage.setItem('lastRatingRequest', Date.now());
     }
   }
-  manageVideoCache = async () => {
+  manageVideoCache = () => {
     const exerciseVideos = [
       `${FileSystem.cacheDirectory}exercise-hiit-circuit-1.mp4`,
       `${FileSystem.cacheDirectory}exercise-hiit-circuit-2.mp4`,
@@ -55,8 +67,8 @@ export default class HiitCircuitWorkoutCompleteScreen extends React.PureComponen
       `${FileSystem.cacheDirectory}exercise-hiit-circuit-5.mp4`,
       `${FileSystem.cacheDirectory}exercise-hiit-circuit-6.mp4`,
     ];
-    Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
-      FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
+    Promise.all(exerciseVideos.map((exerciseVideoURL) => {
+      return FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
     }));
   }
   completeHiitWorkout = async () => {
