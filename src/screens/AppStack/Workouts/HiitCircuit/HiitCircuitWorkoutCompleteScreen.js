@@ -159,8 +159,8 @@ const styles = StyleSheet.create({
     paddingTop: 25,
   },
   headerText: {
-    fontFamily: fonts.bold,
-    fontSize: 48,
+    fontFamily: fonts.ultraItalic,
+    fontSize: 44,
     color: colors.coral.standard,
     textAlign: 'center',
   },
