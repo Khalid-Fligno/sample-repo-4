@@ -6,6 +6,7 @@ import {
   AsyncStorage,
   Dimensions,
 } from 'react-native';
+import { ListItem } from 'react-native-elements';
 import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';
 import { PieChart } from 'react-native-svg-charts';
@@ -80,6 +81,16 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     this.setState({ loading: false });
     this.props.navigation.navigate('WorkoutsHome');
   }
+  completeWorkoutAndInvite = async () => {
+    this.setState({ loading: true });
+    appsFlyer.trackEvent('complete_workout');
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    this.updateWeekly(userRef);
+    this.setState({ loading: false });
+    this.props.navigation.navigate('WorkoutsHome');
+    this.props.navigation.navigate('InviteFriends');
+  }
   updateWeekly = (userRef) => {
     return db.runTransaction((transaction) => {
       return transaction.get(userRef).then((userDoc) => {
@@ -129,6 +140,22 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
             {tickIcon}
           </View>
           <View style={styles.buttonContainer}>
+            <ListItem
+              activeOpacity={0.5}
+              key="InviteFriends"
+              title="Earn Free Gifts!"
+              containerStyle={styles.listItemContainerGreen}
+              titleStyle={styles.listItemTitleStyleGreen}
+              onPress={() => this.completeWorkoutAndInvite()}
+              leftIcon={
+                <Icon
+                  name="present"
+                  size={20}
+                  color={colors.green.forest}
+                  style={styles.giftIcon}
+                />
+              }
+            />
             <CustomButton
               title="COMPLETE"
               onPress={() => this.completeWorkout()}
@@ -162,8 +189,8 @@ const styles = StyleSheet.create({
     paddingTop: 25,
   },
   headerText: {
-    fontFamily: fonts.bold,
-    fontSize: 48,
+    fontFamily: fonts.ultraItalic,
+    fontSize: 44,
     color: colors.coral.standard,
     textAlign: 'center',
   },
@@ -191,5 +218,22 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     padding: 10,
+  },
+  listItemContainerGreen: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    borderBottomWidth: 0,
+    backgroundColor: colors.green.superLight,
+    marginBottom: 10,
+  },
+  listItemTitleStyleGreen: {
+    fontFamily: fonts.bold,
+    color: colors.green.forest,
+    marginTop: 5,
+    fontSize: 14,
+  },
+  giftIcon: {
+    marginLeft: 8,
+    marginRight: 8,
   },
 });
