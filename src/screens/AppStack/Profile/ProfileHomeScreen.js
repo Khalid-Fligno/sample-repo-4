@@ -19,6 +19,7 @@ import { List, ListItem } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
 import { auth, db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
+import Icon from '../../../components/Shared/Icon';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -257,6 +258,14 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 containerStyle={styles.listItemContainerGreen}
                 titleStyle={styles.listItemTitleStyleGreen}
                 onPress={() => this.props.navigation.navigate('InviteFriends')}
+                leftIcon={
+                  <Icon
+                    name="present"
+                    size={20}
+                    color={colors.green.forest}
+                    style={styles.giftIcon}
+                  />
+                }
               />
             </List>
             <List containerStyle={styles.listContainer}>
@@ -354,6 +363,10 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     borderBottomWidth: 0,
     backgroundColor: colors.green.superLight,
+  },
+  giftIcon: {
+    marginLeft: 8,
+    marginRight: 8,
   },
   listItemContainerBottom: {
     paddingTop: 15,
