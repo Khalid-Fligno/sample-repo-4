@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';
 import { PieChart } from 'react-native-svg-charts';
 import appsFlyer from 'react-native-appsflyer';
+import Rate from 'react-native-rate';
 import Loader from '../../../../components/Shared/Loader';
 import Icon from '../../../../components/Shared/Icon';
 import CustomButton from '../../../../components/Shared/CustomButton';
@@ -36,6 +37,24 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
   }
   componentDidMount = () => {
     this.manageVideoCache();
+    this.showRatePopup();
+  }
+  showRatePopup = async () => {
+    const lastRatingRequest = await AsyncStorage.getItem('lastRatingRequest');
+    if (lastRatingRequest === null) {
+      Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false }, (success) => {
+        if (success) {
+          AsyncStorage.setItem('lastRatingRequest', Date.now());
+        }
+      });
+    }
+    if (lastRatingRequest !== null && (Date.now() - lastRatingRequest) > 10368000000) {
+      Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false }, (success) => {
+        if (success) {
+          AsyncStorage.setItem('lastRatingRequest', Date.now());
+        }
+      });
+    }
   }
   manageVideoCache = () => {
     return FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-hiit-1.mp4`, { idempotent: true });
