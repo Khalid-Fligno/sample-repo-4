@@ -48,15 +48,18 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
   showRatePopup = async () => {
     const lastRatingRequest = await AsyncStorage.getItem('lastRatingRequest');
     if (lastRatingRequest === null) {
-      if (Rate.rate !== undefined) {
-        Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
-      }
-      AsyncStorage.setItem('lastRatingRequest', Date.now());
-    } else if (Date.now() - lastRatingRequest > 10368000000) {
-      if (Rate.rate !== undefined) {
-        Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
-      }
-      AsyncStorage.setItem('lastRatingRequest', Date.now());
+      Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false }, (success) => {
+        if (success) {
+          AsyncStorage.setItem('lastRatingRequest', Date.now());
+        }
+      });
+    }
+    if (lastRatingRequest !== null && (Date.now() - lastRatingRequest) > 10368000000) {
+      Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false }, (success) => {
+        if (success) {
+          AsyncStorage.setItem('lastRatingRequest', Date.now());
+        }
+      });
     }
   }
   manageVideoCache = async () => {
