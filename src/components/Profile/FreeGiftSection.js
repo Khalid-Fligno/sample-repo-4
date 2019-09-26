@@ -1,6 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text, Dimensions, Clipboard, TouchableOpacity, Alert } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  Clipboard,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import Icon from '../Shared/Icon';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
@@ -25,8 +33,14 @@ function FreeGiftSection({
               }}
               style={styles.copyButton}
             >
-              <Text style={styles.promoCodeText}>{promoCode}</Text>
-              <Icon name="copy" size={15} color={colors.white} />
+              <Text style={styles.promoCodeText}>
+                {promoCode}
+              </Text>
+              <Icon
+                name="copy"
+                size={15}
+                color={colors.white}
+              />
             </TouchableOpacity>
           ) : (
             <Icon
@@ -36,7 +50,9 @@ function FreeGiftSection({
             />
           )
       }
-      <Text style={styles.giftName}>{isUnlocked ? giftName : `Invite ${minimumInvites} friends to unlock this gift`}</Text>
+      <Text style={styles.giftName}>
+        {isUnlocked ? giftName : `Invite ${minimumInvites} friends to unlock this gift`}
+      </Text>
     </View>
   );
 }
