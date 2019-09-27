@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, Image, StatusBar, StyleSheet, TouchableOpacity, Text, Dimensions } from 'react-native';
+import {
+  View,
+  Image,
+  StatusBar,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Dimensions,
+} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import PropTypes from 'prop-types';
 import ProfileButton from '../Shared/ProfileButton';
