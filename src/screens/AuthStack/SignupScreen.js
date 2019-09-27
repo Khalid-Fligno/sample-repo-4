@@ -109,7 +109,7 @@ export default class SignupScreen extends React.PureComponent {
     try {
       const response = await firebase.auth().createUserWithEmailAndPassword(email, password);
       await response.user.updateProfile({ displayName: `${firstName} ${lastName}` });
-      const { country } = Localization;
+      const { region } = Localization;
       const { uid } = response.user;
       const data = {
         id: uid,
@@ -117,7 +117,7 @@ export default class SignupScreen extends React.PureComponent {
         lastName,
         email,
         onboarded: false,
-        country,
+        country: region,
         signUpDate: new Date(),
       };
       await AsyncStorage.setItem('uid', uid);
