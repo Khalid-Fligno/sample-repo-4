@@ -9140,9 +9140,9 @@ react-native-image-progress@^1.1.1:
   dependencies:
     prop-types "^15.5.10"
 
-"react-native-in-app-utils@https://github.com/chirag04/react-native-in-app-utils/tarball/master":
-  version "6.0.1"
-  resolved "https://github.com/chirag04/react-native-in-app-utils/tarball/master#d958b699cf354961df557a81d238ff7b64d240dc"
+"react-native-in-app-utils@https://github.com/FitazFK/react-native-in-app-utils/archive/master.tar.gz":
+  version "6.0.2"
+  resolved "https://github.com/FitazFK/react-native-in-app-utils/archive/master.tar.gz#e5422b7eeac3ce4c19b1ed722cfddf36841283bd"
 
 react-native-indicators@^0.13.0:
   version "0.13.0"

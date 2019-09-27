@@ -62,7 +62,7 @@
     "react-native-fast-image": "^5.1.1",
     "react-native-gesture-handler": "~1.3.0",
     "react-native-image-progress": "^1.1.1",
-    "react-native-in-app-utils": "https://github.com/chirag04/react-native-in-app-utils/tarball/master",
+    "react-native-in-app-utils": "https://github.com/FitazFK/react-native-in-app-utils/archive/master.tar.gz",
     "react-native-indicators": "^0.13.0",
     "react-native-loading-spinner-overlay": "^1.0.1",
     "react-native-modal": "^6.1.0",
