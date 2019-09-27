@@ -59,6 +59,7 @@ export default class SignupScreen extends React.PureComponent {
         this.setState({ loading: true });
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
         const { user, additionalUserInfo } = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
+        const { region } = Localization;
         const { profile } = additionalUserInfo;
         const data = {
           id: user.uid,
@@ -66,6 +67,7 @@ export default class SignupScreen extends React.PureComponent {
           firstName: profile.first_name,
           lastName: profile.last_name,
           onboarded: false,
+          country: region || 'unavailable',
           signUpDate: new Date(),
           fitnessLevel: 1,
         };
@@ -117,8 +119,9 @@ export default class SignupScreen extends React.PureComponent {
         lastName,
         email,
         onboarded: false,
-        country: region,
+        country: region || 'unavailable',
         signUpDate: new Date(),
+        fitnessLevel: 1,
       };
       await AsyncStorage.setItem('uid', uid);
       await db.collection('users').doc(uid).set(data, (error) => {
