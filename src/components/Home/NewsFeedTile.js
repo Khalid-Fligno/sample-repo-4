@@ -42,7 +42,7 @@ export default class NewsFeedTile extends React.PureComponent {
     };
     return (
       <TouchableOpacity
-        delayPressIn={50}
+        delayPressIn={60}
         onPress={onPress}
         style={styles.cardContainer}
         onPressIn={this.handlePressIn}

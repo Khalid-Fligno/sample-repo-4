@@ -96,7 +96,7 @@ export default class DoubleNewsFeedTile extends React.PureComponent {
           </Animated.View>
         </TouchableOpacity>
         <TouchableOpacity
-          delayPressIn={50}
+          delayPressIn={60}
           onPress={onPressRight}
           style={styles.cardContainer}
           onPressIn={this.handlePressInRight}

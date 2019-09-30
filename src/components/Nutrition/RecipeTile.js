@@ -50,7 +50,7 @@ export default class RecipeTile extends React.PureComponent {
       <TouchableOpacity
         onPress={onPress}
         style={styles.cardContainer}
-        delayPressIn={50}
+        delayPressIn={60}
         onPressIn={this.handlePressIn}
         onPressOut={this.handlePressOut}
       >
