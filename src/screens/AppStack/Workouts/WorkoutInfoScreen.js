@@ -96,8 +96,8 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     await calendarRef.set(data);
     this.setState({ addingToCalendar: false });
     Alert.alert(
-      'Added to calendar!',
       '',
+      'Added to calendar!',
       [
         { text: 'OK', onPress: this.hideCalendarModal, style: 'cancel' },
       ],

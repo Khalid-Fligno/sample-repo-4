@@ -56,7 +56,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
               }
             }).catch(() => {
               this.setState({ loading: false });
-              Alert.alert('Image download error');
+              Alert.alert('', 'Image download error');
             });
         }));
         // OLD CODE - DOWNLOADING ALL IMAGES EVERY TIME
