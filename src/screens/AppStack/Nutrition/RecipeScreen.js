@@ -75,8 +75,8 @@ export default class RecipeScreen extends React.PureComponent {
     await calendarRef.set(data, { merge: true });
     this.setState({ addingToCalendar: false });
     Alert.alert(
-      'Added to calendar!',
       '',
+      'Added to calendar!',
       [
         { text: 'OK', onPress: () => this.hideModal(), style: 'cancel' },
       ],
@@ -197,6 +197,26 @@ export default class RecipeScreen extends React.PureComponent {
                         style={[
                           styles.calendarMealButtonText,
                           calendarMeal === 'snack' && styles.calendarMealButtonTextActive,
+                        ]}
+                      >
+                        Snack
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                }
+                {
+                  recipe.snack && (
+                    <TouchableOpacity
+                      onPress={() => this.setState({ calendarMeal: 'snack2' })}
+                      style={[
+                        styles.calendarMealButton,
+                        calendarMeal === 'snack2' && styles.calendarMealButtonActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.calendarMealButtonText,
+                          calendarMeal === 'snack2' && styles.calendarMealButtonTextActive,
                         ]}
                       >
                         Snack

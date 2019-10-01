@@ -47,6 +47,7 @@ class CalendarHomeScreen extends React.PureComponent {
       lunch: undefined,
       dinner: undefined,
       snack: undefined,
+      snack2: undefined,
       loading: false,
       isSwiping: false,
       helperModalVisible: false,
@@ -79,6 +80,7 @@ class CalendarHomeScreen extends React.PureComponent {
             lunch: await doc.data().lunch,
             dinner: await doc.data().dinner,
             snack: await doc.data().snack,
+            snack2: await doc.data().snack2,
             loading: false,
             dayOfWeek: selectedDate.format('d'),
           });
@@ -117,6 +119,7 @@ class CalendarHomeScreen extends React.PureComponent {
             lunch: await doc.data().lunch,
             dinner: await doc.data().dinner,
             snack: await doc.data().snack,
+            snack2: await doc.data().snack2,
             loading: false,
             dayOfWeek: date.format('d'),
           });
@@ -127,6 +130,7 @@ class CalendarHomeScreen extends React.PureComponent {
             lunch: undefined,
             dinner: undefined,
             snack: undefined,
+            snack2: undefined,
             loading: false,
             dayOfWeek: date.format('d'),
           });
@@ -176,7 +180,7 @@ class CalendarHomeScreen extends React.PureComponent {
       })
       .catch(() => {
         this.setState({ loading: false });
-        Alert.alert('Workout unavailable');
+        Alert.alert('', 'Workout unavailable');
       });
   }
   loadHiitExercises = async (workoutId) => {
@@ -236,7 +240,7 @@ class CalendarHomeScreen extends React.PureComponent {
       })
       .catch(() => {
         this.setState({ loading: false });
-        Alert.alert('Workout unavailable');
+        Alert.alert('', 'Workout unavailable');
       });
   }
   // addToCalendarApp = async (workout) => {
@@ -276,6 +280,7 @@ class CalendarHomeScreen extends React.PureComponent {
       lunch,
       dinner,
       snack,
+      snack2,
       helperModalVisible,
       dayOfWeek,
     } = this.state;
@@ -468,7 +473,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   title={dinner.title.toUpperCase()}
                   subtitle={dinner.subtitle}
                   onPress={() => this.props.navigation.push('Recipe', { recipe: dinner })}
-                  containerStyle={styles.listItemContainer}
+                  containerStyle={styles.listItemContainerBottom}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
@@ -480,7 +485,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 title="DINNER"
                 subtitle="Press here to see available recipes"
                 onPress={() => this.props.navigation.navigate('NutritionHome')}
-                containerStyle={styles.listItemContainer}
+                containerStyle={styles.listItemContainerBottom}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
                 subtitleStyle={styles.blankListItemSubtitle}
@@ -488,6 +493,8 @@ class CalendarHomeScreen extends React.PureComponent {
               />
             )
           }
+        </List>
+        <List containerStyle={styles.listContainerBottom}>
           {
             snack ? (
               <Swipeable
@@ -501,6 +508,39 @@ class CalendarHomeScreen extends React.PureComponent {
                   title={snack.title.toUpperCase()}
                   subtitle={snack.subtitle}
                   onPress={() => this.props.navigation.push('Recipe', { recipe: snack })}
+                  containerStyle={styles.listItemContainer}
+                  chevronColor={colors.charcoal.standard}
+                  titleStyle={styles.recipeListItemTitle}
+                  subtitleStyle={styles.recipeListItemSubtitle}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
+                />
+              </Swipeable>
+            ) : (
+              <ListItem
+                title="SNACK"
+                subtitle="Press here to see available recipes"
+                onPress={() => this.props.navigation.navigate('NutritionHome')}
+                containerStyle={styles.listItemContainer}
+                chevronColor={colors.charcoal.standard}
+                titleStyle={styles.blankListItemTitle}
+                subtitleStyle={styles.blankListItemSubtitle}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
+              />
+            )
+          }
+          {
+            snack2 ? (
+              <Swipeable
+                rightButtons={deleteButton('snack2')}
+                rightButtonWidth={75}
+                rightContainerStyle={styles.deleteButtonContainer}
+                onSwipeStart={() => this.setState({ isSwiping: true })}
+                onSwipeRelease={() => this.setState({ isSwiping: false })}
+              >
+                <ListItem
+                  title={snack2.title.toUpperCase()}
+                  subtitle={snack2.subtitle}
+                  onPress={() => this.props.navigation.push('Recipe', { recipe: snack2 })}
                   containerStyle={styles.listItemContainerBottom}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
@@ -631,6 +671,16 @@ const styles = StyleSheet.create({
   listContainer: {
     width,
     marginTop: 0,
+    borderTopWidth: 0,
+    borderTopColor: colors.grey.light,
+    shadowColor: colors.grey.standard,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+  },
+  listContainerBottom: {
+    width,
+    marginTop: 20,
     borderTopWidth: 0,
     borderTopColor: colors.grey.light,
     shadowColor: colors.grey.standard,
