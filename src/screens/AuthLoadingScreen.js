@@ -239,11 +239,14 @@ export default class AuthLoadingScreen extends React.PureComponent {
   //   });
   // }
   validate = async (receiptData) => {
-    const validationData = await validateReceiptProduction(receiptData).catch(async () => {
-      const validationDataSandbox = await validateReceiptSandbox(receiptData);
-      return validationDataSandbox;
+    const validationData = await validateReceiptProduction(receiptData).catch(async (error) => {
+      if (error.redirect) {
+        const validationDataSandbox = await validateReceiptSandbox(receiptData);
+        return validationDataSandbox;
+      }
+      return undefined;
     });
-    if (validationData !== undefined) {
+    if (validationData) {
       return validationData;
     }
     return undefined;
