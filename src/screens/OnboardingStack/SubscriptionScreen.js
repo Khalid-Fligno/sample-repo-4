@@ -505,10 +505,7 @@ export default class SubscriptionScreen extends React.PureComponent {
       }
       return undefined;
     });
-    if (validationData) {
-      return validationData;
-    }
-    return undefined;
+    return validationData;
   }
   render() {
     const {
