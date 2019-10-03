@@ -99,9 +99,6 @@ export default class SubscriptionScreen extends React.PureComponent {
         Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
         return;
       } else if (response.length === 0) {
-        // this.setState({ loading: false });
-        // Alert.alert('No Purchases to restore');
-        // return;
         InAppUtils.receiptData(async (error2, receiptData) => {
           if (error2) {
             this.setState({ loading: false });
@@ -115,7 +112,6 @@ export default class SubscriptionScreen extends React.PureComponent {
             }
             const sortedReceipts = validationData.latest_receipt_info.slice().sort(compare);
             const latestReceipt = sortedReceipts[0];
-            // if (latestReceipt.product_id === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation') {
             const uid = await AsyncStorage.getItem('uid');
             const userRef = db.collection('users').doc(uid);
             const data = {
@@ -139,7 +135,6 @@ export default class SubscriptionScreen extends React.PureComponent {
                   this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
                 }
               });
-            // }
           }
         });
         return;
@@ -257,7 +252,6 @@ export default class SubscriptionScreen extends React.PureComponent {
           ],
           { cancelable: false },
         );
-        // Alert.alert('Unable to connect to the App Store', 'Please try again later');
       } else {
         const sortedProducts = products.slice().sort(compareProducts);
         this.setState({ products: sortedProducts, loading: false });
@@ -288,7 +282,6 @@ export default class SubscriptionScreen extends React.PureComponent {
           ],
           { cancelable: false },
         );
-        // Alert.alert('Unable to connect to the App Store', 'Please try again later');
       } else {
         const sortedProducts = products.slice().sort(compareProducts);
         this.setState({ discountedProducts: sortedProducts, loading: false });
@@ -304,7 +297,6 @@ export default class SubscriptionScreen extends React.PureComponent {
       } else if (products.length !== 2) {
         // IAP products not retrieved (App Store server down, etc.)
         this.setState({ loading: false });
-        // Alert.alert('Unable to connect to the App Store', 'Please try again later');
         Alert.alert(
           'Unable to connect to the App Store',
           'Please try again later',
@@ -334,7 +326,6 @@ export default class SubscriptionScreen extends React.PureComponent {
       } else if (products.length !== 2) {
         // IAP products not retrieved (App Store server down, etc.)
         this.setState({ loading: false });
-        // Alert.alert('Unable to connect to the App Store', 'Please try again later');
         Alert.alert(
           'Unable to connect to the App Store',
           'Please try again later',
