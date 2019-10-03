@@ -37,7 +37,7 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
   }
   componentDidMount = () => {
     this.manageVideoCache();
-    this.showRatePopup();
+    // this.showRatePopup();
   }
   showRatePopup = async () => {
     const lastRatingRequest = await AsyncStorage.getItem('lastRatingRequest');
