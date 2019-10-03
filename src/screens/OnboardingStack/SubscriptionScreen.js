@@ -22,6 +22,7 @@ import {
   validateReceiptProduction,
   validateReceiptSandbox,
   compare,
+  // compareInApp,
 } from '../../../config/apple';
 import SubscriptionTile from '../../components/Onboarding/SubscriptionTile';
 import NativeLoader from '../../components/Shared/NativeLoader';
@@ -96,70 +97,29 @@ export default class SubscriptionScreen extends React.PureComponent {
       if (error) {
         this.setState({ loading: false });
         Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
-      } else {
-        if (response.length === 0) {
-          // this.setState({ loading: false });
-          // Alert.alert('No Purchases to restore');
-          // return;
-          InAppUtils.receiptData(async (error2, receiptData) => {
-            if (error2) {
-              this.setState({ loading: false });
-              Alert.alert('itunes Error', 'Receipt not found.');
-            } else {
-              const validationData = await this.validate(receiptData);
-              if (validationData.latest_receipt_info === undefined) {
-                this.setState({ loading: false });
-                Alert.alert('No Purchases to restore');
-                return;
-              }
-              const sortedReceipts = validationData.latest_receipt_info.slice().sort(compare);
-              const latestReceipt = sortedReceipts[0];
-              // if (latestReceipt.product_id === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation') {
-              const uid = await AsyncStorage.getItem('uid');
-              const userRef = db.collection('users').doc(uid);
-              const data = {
-                subscriptionInfo: {
-                  expiry: latestReceipt.expires_date_ms,
-                  originalTransactionId: latestReceipt.original_transaction_id,
-                  originalPurchaseDate: latestReceipt.original_purchase_date_ms,
-                  productId: latestReceipt.product_id,
-                },
-              };
-              await userRef.set(data, { merge: true });
-              userRef.get()
-                .then(async (doc) => {
-                  if (await doc.data().onboarded) {
-                    this.setState({ loading: false });
-                    Alert.alert('Restore Successful', 'Successfully restored your purchase.');
-                    this.props.navigation.navigate('App');
-                  } else {
-                    this.setState({ loading: false });
-                    Alert.alert('Restore Successful', 'Successfully restored your purchase.');
-                    this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-                  }
-                });
-              // }
-            }
-          });
-        }
-        const sortedPurchases = response.slice().sort(compare);
-        try {
-          const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
-          if (validationData === undefined) {
+        return;
+      } else if (response.length === 0) {
+        InAppUtils.receiptData(async (error2, receiptData) => {
+          if (error2) {
             this.setState({ loading: false });
-            Alert.alert('Receipt Validation Error');
-            return;
-          }
-          if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
+            Alert.alert('itunes Error', 'Receipt not found.');
+          } else {
+            const validationData = await this.validate(receiptData);
+            if (validationData.latest_receipt_info === undefined) {
+              this.setState({ loading: false });
+              Alert.alert('No Purchases to restore');
+              return;
+            }
+            const sortedReceipts = validationData.latest_receipt_info.slice().sort(compare);
+            const latestReceipt = sortedReceipts[0];
             const uid = await AsyncStorage.getItem('uid');
             const userRef = db.collection('users').doc(uid);
             const data = {
               subscriptionInfo: {
-                receipt: sortedPurchases[0].transactionReceipt,
-                expiry: validationData.latest_receipt_info.expires_date,
-                originalTransactionId: validationData.latest_receipt_info.original_transaction_id,
-                originalPurchaseDate: validationData.latest_receipt_info.original_purchase_date_ms,
-                productId: validationData.latest_receipt_info.product_id,
+                expiry: latestReceipt.expires_date_ms,
+                originalTransactionId: latestReceipt.original_transaction_id,
+                originalPurchaseDate: latestReceipt.original_purchase_date_ms,
+                productId: latestReceipt.product_id,
               },
             };
             await userRef.set(data, { merge: true });
@@ -167,25 +127,105 @@ export default class SubscriptionScreen extends React.PureComponent {
               .then(async (doc) => {
                 if (await doc.data().onboarded) {
                   this.setState({ loading: false });
-                  Alert.alert('Success', 'Successfully restored your purchase.');
+                  Alert.alert('Restore Successful', 'Successfully restored your purchase.');
                   this.props.navigation.navigate('App');
                 } else {
                   this.setState({ loading: false });
-                  Alert.alert('Success', 'Successfully restored your purchase.');
+                  Alert.alert('Restore Successful', 'Successfully restored your purchase.');
                   this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
                 }
               });
-          } else if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date < Date.now()) {
-            this.setState({ loading: false });
-            Alert.alert('Expired', 'Your most recent subscription has expired');
-          } else {
-            this.setState({ loading: false });
-            Alert.alert('No purchase information available');
           }
-        } catch (err) {
+        });
+        return;
+      }
+      const sortedPurchases = response.slice().sort(compare);
+      try {
+        const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
+        if (validationData === undefined) {
           this.setState({ loading: false });
-          Alert.alert('No current subscriptions to restore');
+          Alert.alert('Receipt Validation Error');
+          return;
         }
+
+        // Start grand unified logic
+
+        //     const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
+        //     if (sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now()) {
+        //       const uid = await AsyncStorage.getItem('uid');
+        //       const userRef = db.collection('users').doc(uid);
+        //       const data = {
+        //         subscriptionInfo: {
+        //           receipt: sortedPurchases[0].transactionReceipt,
+        //           expiry: sortedInApp[0].expires_date_ms,
+        //           originalTransactionId: sortedInApp[0].original_transaction_id,
+        //           originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
+        //           productId: sortedInApp[0].product_id,
+        //         },
+        //       };
+        //       await userRef.set(data, { merge: true });
+        //       userRef.get()
+        //         .then(async (doc) => {
+        //           if (await doc.data().onboarded) {
+        //             this.setState({ loading: false });
+        //             Alert.alert('Success', 'Successfully restored your purchase.');
+        //             this.props.navigation.navigate('App');
+        //           } else {
+        //             this.setState({ loading: false });
+        //             Alert.alert('Success', 'Successfully restored your purchase.');
+        //             this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+        //           }
+        //         });
+        //     } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
+        //       this.setState({ loading: false });
+        //       Alert.alert('Expired', 'Your most recent subscription has expired');
+        //     } else {
+        //       this.setState({ loading: false });
+        //       Alert.alert('No purchase information available');
+        //     }
+        //   } catch (err) {
+        //     this.setState({ loading: false });
+        //     Alert.alert('No current subscriptions to restore');
+        //   }
+        // });
+
+        // End grand unified logic
+
+        if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
+          const uid = await AsyncStorage.getItem('uid');
+          const userRef = db.collection('users').doc(uid);
+          const data = {
+            subscriptionInfo: {
+              receipt: sortedPurchases[0].transactionReceipt,
+              expiry: validationData.latest_receipt_info.expires_date,
+              originalTransactionId: validationData.latest_receipt_info.original_transaction_id,
+              originalPurchaseDate: validationData.latest_receipt_info.original_purchase_date_ms,
+              productId: validationData.latest_receipt_info.product_id,
+            },
+          };
+          await userRef.set(data, { merge: true });
+          userRef.get()
+            .then(async (doc) => {
+              if (await doc.data().onboarded) {
+                this.setState({ loading: false });
+                Alert.alert('Success', 'Successfully restored your purchase.');
+                this.props.navigation.navigate('App');
+              } else {
+                this.setState({ loading: false });
+                Alert.alert('Success', 'Successfully restored your purchase.');
+                this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+              }
+            });
+        } else if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date < Date.now()) {
+          this.setState({ loading: false });
+          Alert.alert('Expired', 'Your most recent subscription has expired');
+        } else {
+          this.setState({ loading: false });
+          Alert.alert('No purchase information available');
+        }
+      } catch (err) {
+        this.setState({ loading: false });
+        Alert.alert('No current subscriptions to restore');
       }
     });
   }
@@ -212,7 +252,6 @@ export default class SubscriptionScreen extends React.PureComponent {
           ],
           { cancelable: false },
         );
-        // Alert.alert('Unable to connect to the App Store', 'Please try again later');
       } else {
         const sortedProducts = products.slice().sort(compareProducts);
         this.setState({ products: sortedProducts, loading: false });
@@ -243,7 +282,6 @@ export default class SubscriptionScreen extends React.PureComponent {
           ],
           { cancelable: false },
         );
-        // Alert.alert('Unable to connect to the App Store', 'Please try again later');
       } else {
         const sortedProducts = products.slice().sort(compareProducts);
         this.setState({ discountedProducts: sortedProducts, loading: false });
@@ -259,7 +297,6 @@ export default class SubscriptionScreen extends React.PureComponent {
       } else if (products.length !== 2) {
         // IAP products not retrieved (App Store server down, etc.)
         this.setState({ loading: false });
-        // Alert.alert('Unable to connect to the App Store', 'Please try again later');
         Alert.alert(
           'Unable to connect to the App Store',
           'Please try again later',
@@ -289,7 +326,6 @@ export default class SubscriptionScreen extends React.PureComponent {
       } else if (products.length !== 2) {
         // IAP products not retrieved (App Store server down, etc.)
         this.setState({ loading: false });
-        // Alert.alert('Unable to connect to the App Store', 'Please try again later');
         Alert.alert(
           'Unable to connect to the App Store',
           'Please try again later',
@@ -453,14 +489,14 @@ export default class SubscriptionScreen extends React.PureComponent {
     });
   }
   validate = async (receiptData) => {
-    const validationData = await validateReceiptProduction(receiptData).catch(async () => {
-      const validationDataSandbox = await validateReceiptSandbox(receiptData);
-      return validationDataSandbox;
+    const validationData = await validateReceiptProduction(receiptData).catch(async (error) => {
+      if (error.redirect) {
+        const validationDataSandbox = await validateReceiptSandbox(receiptData);
+        return validationDataSandbox;
+      }
+      return undefined;
     });
-    if (validationData) {
-      return validationData;
-    }
-    return undefined;
+    return validationData;
   }
   render() {
     const {
