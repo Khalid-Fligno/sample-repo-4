@@ -246,10 +246,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
       }
       return undefined;
     });
-    if (validationData) {
-      return validationData;
-    }
-    return undefined;
+    return validationData;
   }
   render() {
     return (
