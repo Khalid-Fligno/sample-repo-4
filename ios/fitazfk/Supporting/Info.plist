@@ -82,6 +82,10 @@
 	<string>FitazFK needs permission to access your photos for uploading progress photos or a profile photo</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>Allow FitazFK to access your reminders</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>icomoon.ttf</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
