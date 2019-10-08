@@ -8,9 +8,9 @@ PODS:
   - AppAuth/ExternalUserAgent (1.2.0)
   - AppsFlyerFramework (4.8.12)
   - boost-for-react-native (1.63.0)
-  - Branch (0.28.1):
-    - Branch/Core (= 0.28.1)
-  - Branch/Core (0.28.1)
+  - Branch (0.29.0):
+    - Branch/Core (= 0.29.0)
+  - Branch/Core (0.29.0)
   - CocoaLumberjack (3.5.3):
     - CocoaLumberjack/Core (= 3.5.3)
   - CocoaLumberjack/Core (3.5.3)
@@ -225,6 +225,8 @@ PODS:
     - React/RCTBlob
   - RNRate (1.0.1):
     - React
+  - RNVectorIcons (6.6.0):
+    - React
   - SDWebImage/Core (4.4.7)
   - SDWebImage/GIF (4.4.7):
     - FLAnimatedImage (~> 1.0)
@@ -289,6 +291,7 @@ DEPENDENCIES:
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - RNRate (from `../node_modules/react-native-rate/ios`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - UMBarCodeScannerInterface (from `../node_modules/expo/node_modules/unimodules-barcode-scanner-interface/ios`)
   - UMCameraInterface (from `../node_modules/expo/node_modules/unimodules-camera-interface/ios`)
   - UMConstantsInterface (from `../node_modules/expo/node_modules/unimodules-constants-interface/ios`)
@@ -409,6 +412,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-video"
   RNRate:
     :path: "../node_modules/react-native-rate/ios"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   UMBarCodeScannerInterface:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo/node_modules/unimodules-barcode-scanner-interface/ios"
@@ -459,7 +464,7 @@ SPEC CHECKSUMS:
   AppAuth: bce82c76043657c99d91e7882e8a9e1a93650cd4
   AppsFlyerFramework: 726f063384d8dc763d7b423e48cbc8cbe10989ab
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
-  Branch: edf6cab0cecb437d6a6abba3a25d0a0fa6f277ec
+  Branch: 6e7421e1f3c0adebdf80008a40a74969b2603cf8
   CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
   Crashlytics: 2dfd686bcb918dc10ee0e76f7f853fe42c7bd552
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
@@ -505,6 +510,7 @@ SPEC CHECKSUMS:
   react-native-onesignal: 83c370c7381345d010f253c9f77b4e22f5cb388f
   react-native-video: aed899073f5572418696ba6af3f31e4d371fd2f1
   RNRate: 29be49c24b314c4e8ec09d848c3965f61cb0be47
+  RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   SDWebImage: c10d14a8883ebd89664f02a422006f66a85c0c5d
   UMBarCodeScannerInterface: d5a6fdc98ed6241225b0a8432a7f4e2b397668bc
   UMCameraInterface: 68870a3197fee85bd5afca5609ba4a5b7257d19d
@@ -520,6 +526,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 1e70fe58b872355f0ecb44fb81bb1a16484047f0
   yoga: 92b2102c3d373d1a790db4ab761d2b0ffc634f64
 
-PODFILE CHECKSUM: 9cc2d1035fa3c3634cbf27a51f715aa0b4add00e
+PODFILE CHECKSUM: 394095c8f738449a6127aaf7a83d2feb21b70175
 
 COCOAPODS: 1.7.2

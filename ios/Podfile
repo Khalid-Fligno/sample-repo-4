@@ -54,9 +54,11 @@ target 'fitazfk' do
     :path => "../node_modules/react-native-onesignal/react-native-onesignal.podspec",
     :inhibit_warnings => true
 
-  use_unimodules!
-
   pod 'react-native-appsflyer', :path => '../node_modules/react-native-appsflyer'
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+  use_unimodules!
 
   post_install do |installer|
     installer.pods_project.main_group.tab_width = '2';
