@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';
 import Video from 'react-native-video';
 import FadeInView from 'react-native-fade-in-view';
+import appsFlyer from 'react-native-appsflyer';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import WorkoutProgress from '../../../../components/Workouts/WorkoutProgress';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
@@ -61,6 +62,7 @@ export default class Exercise6Screen extends React.PureComponent {
     let setCount = this.props.navigation.getParam('setCount', 0);
     setCount += 1;
     if (setCount === 3) {
+      appsFlyer.trackEvent('resistance_workout_complete');
       this.props.navigation.replace('WorkoutComplete', {
         exerciseList,
         reps,
@@ -148,6 +150,7 @@ export default class Exercise6Screen extends React.PureComponent {
         {
           text: 'Skip',
           onPress: () => {
+            appsFlyer.trackEvent('resistance_workout_complete');
             this.props.navigation.replace('WorkoutComplete', {
               exerciseList,
               reps,
