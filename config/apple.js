@@ -20,17 +20,17 @@ export const compare = (a, b) => {
 
 // Grand unified receipt
 
-// export const compareInApp = (a, b) => {
-//   const purchaseA = a.expires_date_ms;
-//   const purchaseB = b.expires_date_ms;
-//   let comparison = 0;
-//   if (purchaseA > purchaseB) {
-//     comparison = -1;
-//   } else if (purchaseA < purchaseB) {
-//     comparison = 1;
-//   }
-//   return comparison;
-// };
+export const compareInApp = (a, b) => {
+  const purchaseA = a.expires_date_ms;
+  const purchaseB = b.expires_date_ms;
+  let comparison = 0;
+  if (purchaseA > purchaseB) {
+    comparison = -1;
+  } else if (purchaseA < purchaseB) {
+    comparison = 1;
+  }
+  return comparison;
+};
 
 export const compareProducts = (a, b) => {
   const purchaseA = a.price;
