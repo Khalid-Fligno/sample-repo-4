@@ -48,7 +48,7 @@ target 'fitazfk' do
 
   pod 'react-native-video', :path => '../node_modules/react-native-video'
 
-  pod 'RNRate', :path => '../node_modules/react-native-rate/ios'
+  pod 'RNRate', :path => '../node_modules/react-native-rate'
 
   pod 'react-native-onesignal',
     :path => "../node_modules/react-native-onesignal/react-native-onesignal.podspec",
