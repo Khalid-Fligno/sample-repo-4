@@ -223,7 +223,7 @@ PODS:
   - React/RCTWebSocket (0.59.8):
     - React/Core
     - React/RCTBlob
-  - RNRate (1.0.1):
+  - RNRate (1.1.10):
     - React
   - RNVectorIcons (6.6.0):
     - React
@@ -290,7 +290,7 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
-  - RNRate (from `../node_modules/react-native-rate/ios`)
+  - RNRate (from `../node_modules/react-native-rate`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - UMBarCodeScannerInterface (from `../node_modules/expo/node_modules/unimodules-barcode-scanner-interface/ios`)
   - UMCameraInterface (from `../node_modules/expo/node_modules/unimodules-camera-interface/ios`)
@@ -307,7 +307,7 @@ DEPENDENCIES:
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Amplitude-iOS
     - Analytics
     - AppAuth
@@ -411,7 +411,7 @@ EXTERNAL SOURCES:
   react-native-video:
     :path: "../node_modules/react-native-video"
   RNRate:
-    :path: "../node_modules/react-native-rate/ios"
+    :path: "../node_modules/react-native-rate"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   UMBarCodeScannerInterface:
@@ -509,7 +509,7 @@ SPEC CHECKSUMS:
   react-native-in-app-utils: 07ea1df4bb6e8cbb27337d42a65ffe4cf7a35e97
   react-native-onesignal: 83c370c7381345d010f253c9f77b4e22f5cb388f
   react-native-video: aed899073f5572418696ba6af3f31e4d371fd2f1
-  RNRate: 29be49c24b314c4e8ec09d848c3965f61cb0be47
+  RNRate: 832f7e4da1b043bda1a138e20afdb75c42a530e9
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   SDWebImage: c10d14a8883ebd89664f02a422006f66a85c0c5d
   UMBarCodeScannerInterface: d5a6fdc98ed6241225b0a8432a7f4e2b397668bc
@@ -526,6 +526,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 1e70fe58b872355f0ecb44fb81bb1a16484047f0
   yoga: 92b2102c3d373d1a790db4ab761d2b0ffc634f64
 
-PODFILE CHECKSUM: 394095c8f738449a6127aaf7a83d2feb21b70175
+PODFILE CHECKSUM: 5154522e5939bf49ccce5e519fd17a3512d086e0
 
-COCOAPODS: 1.7.2
+COCOAPODS: 1.8.3

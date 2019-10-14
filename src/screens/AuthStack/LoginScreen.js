@@ -23,6 +23,7 @@ import appsFlyer from 'react-native-appsflyer';
 import { db, auth } from '../../../config/firebase';
 import {
   compare,
+  compareInApp,
   validateReceiptProduction,
   validateReceiptSandbox,
 } from '../../../config/apple';
@@ -80,7 +81,6 @@ export default class LoginScreen extends React.PureComponent {
                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
                 } else {
                   if (response.length === 0) {
-                    // this.setState({ loading: false });
                     this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
                     return;
                   }
@@ -88,11 +88,11 @@ export default class LoginScreen extends React.PureComponent {
                   try {
                     const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
                     if (validationData === undefined) {
-                      // this.setState({ loading: false });
                       Alert.alert('Receipt validation error');
                       return;
                     }
-                    if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
+                    const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
+                    if (sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now()) {
                       // Alert.alert('Your subscription has been auto-renewed');
                       const userRef = db.collection('users').doc(uid);
                       const data = {
@@ -104,16 +104,16 @@ export default class LoginScreen extends React.PureComponent {
                       await userRef.set(data, { merge: true });
                       this.setState({ loading: false });
                       this.props.navigation.navigate('App');
+                    } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
+                      Alert.alert('Expired', 'Your most recent subscription has expired');
+                      this.props.navigation.navigate('Subscription');
                     } else {
-                      // this.setState({ loading: false });
                       Alert.alert('Something went wrong');
                       this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
                       return;
                     }
                   } catch (err) {
-                    // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
-                    // this.setState({ loading: false });
-                    Alert.alert('Subscription has been cancelled');
+                    Alert.alert('Error', 'Could not retrieve subscription information');
                     this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
                   }
                 }
@@ -175,19 +175,24 @@ export default class LoginScreen extends React.PureComponent {
                       Alert.alert('Receipt validation error');
                       return;
                     }
-                    if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
+                    const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
+                    if (sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now()) {
                       // Alert.alert('Your subscription has been auto-renewed');
                       const userRef = db.collection('users').doc(uid);
                       const data = {
                         subscriptionInfo: {
                           receipt: sortedPurchases[0].transactionReceipt,
-                          expiry: validationData.latest_receipt_info.expires_date,
+                          expiry: sortedInApp[0].expires_date_ms,
                         },
                       };
                       await userRef.set(data, { merge: true });
                       appsFlyer.trackEvent('af_login');
                       this.setState({ loading: false });
                       this.props.navigation.navigate('App');
+                    } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
+                      Alert.alert('Expired', 'Your most recent subscription has expired');
+                      this.props.navigation.navigate('Subscription');
+                      return;
                     } else {
                       this.setState({ loading: false });
                       Alert.alert('Something went wrong');
@@ -195,9 +200,8 @@ export default class LoginScreen extends React.PureComponent {
                       return;
                     }
                   } catch (err) {
-                    // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
                     this.setState({ loading: false });
-                    Alert.alert('Subscription has been cancelled');
+                    Alert.alert('Error', 'Could not retrieve subscription information');
                     this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
                   }
                 }
