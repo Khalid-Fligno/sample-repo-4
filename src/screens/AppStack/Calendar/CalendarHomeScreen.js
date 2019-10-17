@@ -300,7 +300,7 @@ class CalendarHomeScreen extends React.PureComponent {
         location = 'home';
       } else if (workout.gym) {
         location = 'gym';
-      } else if (workout.park) {
+      } else if (workout.outdoors) {
         location = 'park';
       }
       return `workouts-${location}`;
