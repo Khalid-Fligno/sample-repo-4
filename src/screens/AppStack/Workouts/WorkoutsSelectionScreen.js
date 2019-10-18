@@ -61,7 +61,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     this.unsubscribe = await db.collection('workouts')
       .where(focus, '==', true)
       .where(location, '==', true)
-      .where('workoutRotation', '==', 2)
+      .where('workoutRotation', '==', 1)
       .onSnapshot(async (querySnapshot) => {
         const workouts = [];
         await querySnapshot.forEach(async (doc) => {
