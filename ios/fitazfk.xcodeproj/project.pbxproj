@@ -195,10 +195,9 @@
 			};
 			buildConfigurationList = B563863C1DB9693800A0598C /* Build configuration list for PBXProject "fitazfk" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
