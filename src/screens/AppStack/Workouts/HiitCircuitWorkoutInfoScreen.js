@@ -356,7 +356,7 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => this.openApp('spotify:')}
+                  onPress={() => this.openApp('spotify:open')}
                   disabled={!spotifyAvailable}
                   style={[
                     styles.spotifyIcon,
