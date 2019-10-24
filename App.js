@@ -13,6 +13,7 @@ import {
 import OneSignal from 'react-native-onesignal';
 import appsFlyer from 'react-native-appsflyer';
 import { NavigationActions } from 'react-navigation';
+import { Audio } from 'expo-av';
 import * as Sentry from 'sentry-expo';
 import { appsFlyerDevKey, appId } from './config/appsFlyer';
 import SwitchNavigator from './config/router/index';
@@ -68,7 +69,7 @@ export default class App extends React.PureComponent {
     Linking.removeEventListener('url', this.handleOpenURL);
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
-  handleAppStateChange = (nextAppState) => {
+  handleAppStateChange = async (nextAppState) => {
     if (
       this.state.appState.match(/inactive|background/) &&
       nextAppState === 'active'
@@ -76,6 +77,7 @@ export default class App extends React.PureComponent {
       if (Platform.OS === 'ios') {
         appsFlyer.trackAppLaunch();
       }
+      await Audio.setIsEnabledAsync(true);
     }
     this.setState({ appState: nextAppState });
   };
