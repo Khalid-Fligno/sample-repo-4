@@ -62,8 +62,11 @@ class CalendarHomeScreen extends React.PureComponent {
   }
   componentWillUnmount() {
     this.unsubscribeFromEntries();
-    this.unsubscribeFromEntries2();
-    this.unsubscribeFromUsers();
+    if (this.unsubscribeFromEntries2) {
+      this.unsubscribeFromEntries2();
+    }
+    // this.unsubscribeFromEntries2();
+    // this.unsubscribeFromUsers();
   }
   fetchCalendarEntries = async () => {
     this.setState({ loading: true });
@@ -139,17 +142,6 @@ class CalendarHomeScreen extends React.PureComponent {
   }
   loadExercises = async (workoutId) => {
     this.setState({ loading: true });
-    // const user = auth.currentUser;
-    // let reps;
-    // if (user) {
-    //   this.unsubscribeFromUsers = db.collection('users')
-    //     .doc(user.uid)
-    //     .onSnapshot(async (doc) => {
-    //       if (doc.exists) {
-    //         reps = findReps(await doc.data().fitnessLevel);
-    //       }
-    //     });
-    // }
     db.collection('workouts').doc(workoutId)
       .get()
       .then(async (doc) => {
@@ -243,26 +235,6 @@ class CalendarHomeScreen extends React.PureComponent {
         Alert.alert('', 'Workout unavailable');
       });
   }
-  // addToCalendarApp = async (workout) => {
-  //   const { status } = await Permissions.askAsync(Permissions.CALENDAR);
-  //   if (status !== 'granted') {
-  //     Alert.alert('No Permission for Calendar');
-  //     return;
-  //   }
-  //   const y = new Date(this.calendarStrip.current.getSelectedDate()).getFullYear();
-  //   const mth = new Date(this.calendarStrip.current.getSelectedDate()).getMonth();
-  //   const d = new Date(this.calendarStrip.current.getSelectedDate()).getDate();
-  //   const h = 12;
-  //   const m = 30;
-  //   const s = 0;
-  //   Calendar.createEventAsync(Calendar.DEFAULT, {
-  //     title: 'FitazFK Workout',
-  //     startDate: new Date(y, mth, d, h, m, s),
-  //     endDate: new Date(y, mth, d, h, m + 18, s),
-  //     notes: `${workout.name}`,
-  //     alarms: [{ absoluteDate: new Date(y, mth, d, h, m - 15, s) }],
-  //   });
-  // }
   deleteCalendarEntry = async (fieldToDelete) => {
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
