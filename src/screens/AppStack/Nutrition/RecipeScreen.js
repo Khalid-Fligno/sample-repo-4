@@ -43,13 +43,15 @@ export default class RecipeScreen extends React.PureComponent {
   componentDidMount = async () => {
     this.setState({ loading: true });
     const { recipe } = this.state;
-    this.props.navigation.setParams({
-      handleStart: () => this.props.navigation.navigate('RecipeSteps', { recipe }),
-    });
+    // this.props.navigation.setParams({ handleStart: this.props.navigation.navigate('RecipeSteps', { recipe }) });
+    this.props.navigation.setParams({ handleStart: () => this.handleStart(recipe) });
     this.setState({ loading: false });
   }
   setDate = (newDate) => {
     this.setState({ chosenDate: newDate });
+  }
+  handleStart = (recipe) => {
+    this.props.navigation.navigate('RecipeSteps', { recipe });
   }
   showModal = () => {
     this.setState({ modalVisible: true });

@@ -33,19 +33,27 @@ export default class Header extends React.PureComponent {
   }
   handleLogout = () => {
     const { navigation } = this.props;
-    navigation.state.params.handleLogout();
+    if (navigation.state.params.handleLogout) {
+      navigation.state.params.handleLogout();
+    }
   }
   handleHelper = () => {
     const { navigation } = this.props;
-    navigation.state.params.toggleHelperModal();
+    if (navigation.state.params.toggleHelperModal) {
+      navigation.state.params.toggleHelperModal();
+    }
   }
   handleSkip = () => {
     const { navigation } = this.props;
-    navigation.state.params.handleSkip();
+    if (navigation.state.params.handleSkip) {
+      navigation.state.params.handleSkip();
+    }
   }
   handleCancel = () => {
     const { navigation } = this.props;
-    navigation.state.params.handleCancel();
+    if (navigation.state.params.handleCancel) {
+      navigation.state.params.handleCancel();
+    }
   }
   handleProfileButton = () => {
     const { navigation } = this.props;
@@ -53,11 +61,15 @@ export default class Header extends React.PureComponent {
   }
   handleRestore = () => {
     const { navigation } = this.props;
-    navigation.state.params.handleRestore();
+    if (navigation.state.params.handleRestore) {
+      navigation.state.params.handleRestore();
+    }
   }
   handleStart = () => {
     const { navigation } = this.props;
-    navigation.state.params.handleStart();
+    if (navigation.state.params.handleStart) {
+      navigation.state.params.handleStart();
+    }
   }
   render() {
     const {
