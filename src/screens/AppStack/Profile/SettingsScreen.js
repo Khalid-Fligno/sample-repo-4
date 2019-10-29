@@ -69,6 +69,21 @@ export default class SettingsScreen extends React.PureComponent {
       Alert.alert(error);
     });
   }
+  resetProgressAlert = () => {
+    Alert.alert(
+      'Are you sure?',
+      'This will clear your progress photos and measurements',
+      [
+        {
+          text: 'Cancel', style: 'cancel',
+        },
+        {
+          text: 'Reset', onPress: () => this.resetInitialProgress(),
+        },
+      ],
+      { cancelable: false },
+    );
+  }
   resetInitialProgress = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
@@ -115,7 +130,7 @@ export default class SettingsScreen extends React.PureComponent {
                     titleStyle={styles.listItemTitle}
                     disabled={profile && !profile.initialProgressInfo}
                     containerStyle={styles.listItemContainer}
-                    onPress={() => this.resetInitialProgress()}
+                    onPress={() => this.resetProgressAlert()}
                   />
                 )
               }
