@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import ProgressHomeScreen from '../../src/screens/AppStack/Progress/ProgressHomeScreen';
 import Header from '../../src/components/Shared/Header';
 
@@ -9,7 +9,7 @@ const ProgressStack = createStackNavigator(
   },
   {
     initialRouteName: 'ProgressHome',
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
         return (

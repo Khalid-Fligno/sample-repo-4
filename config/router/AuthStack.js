@@ -1,4 +1,4 @@
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import LandingScreen from '../../src/screens/AuthStack/LandingScreen';
 import LoginScreen from '../../src/screens/AuthStack/LoginScreen';
 import SignupScreen from '../../src/screens/AuthStack/SignupScreen';
@@ -18,7 +18,7 @@ const AuthStack = createStackNavigator(
   {
     initialRouteName: 'Landing',
     mode: 'modal',
-    navigationOptions: {
+    defaultNavigationOptions: {
       header: null,
     },
   },

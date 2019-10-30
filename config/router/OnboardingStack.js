@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import SubscriptionScreen from '../../src/screens/OnboardingStack/SubscriptionScreen';
 import Onboarding1Screen from '../../src/screens/OnboardingStack/Onboarding1Screen';
 import Progress1Screen from '../../src/screens/OnboardingStack/Progress1Screen';
@@ -30,7 +30,7 @@ const OnboardingStack = createStackNavigator(
         return fade(props);
       },
     }),
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
         return (

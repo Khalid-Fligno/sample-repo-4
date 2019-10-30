@@ -1,4 +1,4 @@
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import CountdownScreen from '../../src/screens/AppStack/Workouts/Resistance/CountdownScreen';
 import Exercise1Screen from '../../src/screens/AppStack/Workouts/Resistance/Exercise1Screen';
 import Exercise2Screen from '../../src/screens/AppStack/Workouts/Resistance/Exercise2Screen';
@@ -29,7 +29,7 @@ const ExerciseStack = createStackNavigator(
         return fade(props);
       },
     }),
-    navigationOptions: {
+    defaultNavigationOptions: {
       header: null,
     },
   },

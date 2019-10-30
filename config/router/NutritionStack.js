@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import NutritionHomeScreen from '../../src/screens/AppStack/Nutrition/NutritionHomeScreen';
 import RecipeSelectionScreen from '../../src/screens/AppStack/Nutrition/RecipeSelectionScreen';
 import RecipeScreen from '../../src/screens/AppStack/Nutrition/RecipeScreen';
@@ -29,7 +29,7 @@ const NutritionStack = createStackNavigator(
         return fade(props);
       },
     }),
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
         return (

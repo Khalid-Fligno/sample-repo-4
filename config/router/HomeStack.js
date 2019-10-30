@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import HomeScreen from '../../src/screens/AppStack/Home/HomeScreen';
 import BlogScreen from '../../src/screens/AppStack/Home/BlogScreen';
 import Header from '../../src/components/Shared/Header';
@@ -11,7 +11,7 @@ const HomeStack = createStackNavigator(
   },
   {
     initialRouteName: 'HomeHome',
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
         return (

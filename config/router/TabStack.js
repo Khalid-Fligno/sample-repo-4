@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBottomTabNavigator } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 import HomeStack from './HomeStack';
 import NutritionStack from './NutritionStack';
 import WorkoutsStack from './WorkoutsStack';
@@ -20,7 +20,7 @@ const TabStack = createBottomTabNavigator(
   },
   {
     initialRouteName: 'Home',
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
         const activeState = tabColorMap[routeName];

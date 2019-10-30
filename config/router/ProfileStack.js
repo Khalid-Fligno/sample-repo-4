@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import ProfileHomeScreen from '../../src/screens/AppStack/Profile/ProfileHomeScreen';
 import ProfileScreen from '../../src/screens/AppStack/Profile/ProfileScreen';
 import InviteFriendsScreen from '../../src/screens/AppStack/Profile/InviteFriendsScreen';
@@ -52,7 +52,7 @@ const ProfileStack = createStackNavigator(
   },
   {
     initialRouteName: 'ProfileHome',
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
         return (

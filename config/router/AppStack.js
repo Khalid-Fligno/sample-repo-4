@@ -1,4 +1,4 @@
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import TabStack from './TabStack';
 import ExerciseStack from './ExerciseStack';
 import HiitExerciseStack from './HiitExerciseStack';
@@ -22,7 +22,7 @@ const AppStack = createStackNavigator(
         return fade(props);
       },
     }),
-    navigationOptions: {
+    defaultNavigationOptions: {
       header: null,
     },
   },

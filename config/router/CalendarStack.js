@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import CalendarHomeScreen from '../../src/screens/AppStack/Calendar/CalendarHomeScreen';
 import Header from '../../src/components/Shared/Header';
 
@@ -9,7 +9,7 @@ const CalendarStack = createStackNavigator(
   },
   {
     initialRouteName: 'CalendarHome',
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         return (
           <Header

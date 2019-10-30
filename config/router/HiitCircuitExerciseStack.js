@@ -1,4 +1,4 @@
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import HiitCircuitCountdownScreen from '../../src/screens/AppStack/Workouts/HiitCircuit/HiitCircuitCountdownScreen';
 import HiitCircuitExercise1Screen from '../../src/screens/AppStack/Workouts/HiitCircuit/HiitCircuitExercise1Screen';
 import HiitCircuitExercise2Screen from '../../src/screens/AppStack/Workouts/HiitCircuit/HiitCircuitExercise2Screen';
@@ -41,7 +41,7 @@ const HiitCircuitExerciseStack = createStackNavigator(
         return fade(props);
       },
     }),
-    navigationOptions: {
+    defaultNavigationOptions: {
       header: null,
     },
   },

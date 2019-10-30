@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import WorkoutsHomeScreen from '../../src/screens/AppStack/Workouts/WorkoutsHomeScreen';
 import WorkoutsSelectionScreen from '../../src/screens/AppStack/Workouts/WorkoutsSelectionScreen';
 import HiitWorkoutsSelectionScreen from '../../src/screens/AppStack/Workouts/HiitWorkoutsSelectionScreen';
@@ -50,7 +50,7 @@ const WorkoutsStack = createStackNavigator(
         return fade(sceneProps);
       },
     }),
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
         return (
