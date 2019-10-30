@@ -15,7 +15,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
-import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
+import { Button, Divider, Input } from 'react-native-elements';
 import * as Localization from 'expo-localization';
 import * as Haptics from 'expo-haptics';
 import * as Facebook from 'expo-facebook';
@@ -193,7 +193,7 @@ export default class SignupScreen extends React.PureComponent {
                 get started
               </Text>
               <KeyboardAvoidingView keyboardVerticalOffset={40} behavior="position" enabled>
-                <FormInput
+                <Input
                   placeholder="First Name"
                   placeholderTextColor={colors.transparentWhiteLight}
                   value={firstName}
@@ -201,11 +201,12 @@ export default class SignupScreen extends React.PureComponent {
                   autoCorrect={false}
                   onChangeText={(text) => this.setState({ firstName: text })}
                   onSubmitEditing={() => this.lastNameInput.focus()}
-                  containerStyle={styles.inputContainer}
+                  containerStyle={styles.inputComponentContainer}
+                  inputContainerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   clearButtonMode="while-editing"
                 />
-                <FormInput
+                <Input
                   placeholder="Last Name"
                   placeholderTextColor={colors.transparentWhiteLight}
                   value={lastName}
@@ -216,11 +217,12 @@ export default class SignupScreen extends React.PureComponent {
                     this.lastNameInput = input;
                   }}
                   onSubmitEditing={() => this.emailInput.focus()}
-                  containerStyle={styles.inputContainer}
+                  containerStyle={styles.inputComponentContainer}
+                  inputContainerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   clearButtonMode="while-editing"
                 />
-                <FormInput
+                <Input
                   placeholder="Email"
                   placeholderTextColor={colors.transparentWhiteLight}
                   value={email}
@@ -233,11 +235,13 @@ export default class SignupScreen extends React.PureComponent {
                     this.emailInput = input;
                   }}
                   onSubmitEditing={() => this.passwordInput.focus()}
-                  containerStyle={styles.inputContainer}
+                  containerStyle={styles.inputComponentContainer}
+                  inputContainerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   clearButtonMode="while-editing"
                 />
-                <FormInput
+                <Input
+                  errorMessage={error && error}
                   placeholder="Password"
                   placeholderTextColor={colors.transparentWhiteLight}
                   value={password}
@@ -250,26 +254,18 @@ export default class SignupScreen extends React.PureComponent {
                     this.passwordInput = input;
                   }}
                   onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
-                  containerStyle={styles.inputContainer}
+                  containerStyle={styles.inputComponentContainer}
+                  inputContainerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   clearButtonMode="while-editing"
                 />
               </KeyboardAvoidingView>
-              {
-                error && (
-                  <View>
-                    <FormValidationMessage>
-                      {error}
-                    </FormValidationMessage>
-                  </View>
-                )
-              }
               <Button
                 title="SIGN ME UP"
                 onPress={() => this.signup(firstName, lastName, email, password)}
-                containerViewStyle={styles.signupButtonContainer}
+                containerStyle={styles.signupButtonContainer}
                 buttonStyle={styles.signupButton}
-                textStyle={styles.signupButtonText}
+                titleStyle={styles.signupButtonText}
               />
               <Divider style={styles.divider} />
               <View style={styles.dividerOverlay}>
@@ -342,11 +338,18 @@ const styles = StyleSheet.create({
     color: colors.white,
     marginTop: -10,
   },
+  inputComponentContainer: {
+    width: width - 30,
+    alignItems: 'center',
+  },
   inputContainer: {
+    width: width - 30,
+    alignItems: 'center',
     marginTop: 5,
     marginBottom: 5,
     borderBottomWidth: 0,
     backgroundColor: colors.transparentWhiteLight,
+    borderRadius: 4,
   },
   input: {
     width: width - 30,

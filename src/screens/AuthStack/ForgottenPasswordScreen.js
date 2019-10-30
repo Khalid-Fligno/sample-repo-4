@@ -8,8 +8,9 @@ import {
   SafeAreaView,
   Alert,
   Text,
+  ImageBackground,
 } from 'react-native';
-import { FormInput } from 'react-native-elements';
+import { Input } from 'react-native-elements';
 import { DotIndicator } from 'react-native-indicators';
 import { auth } from '../../../config/firebase';
 import Icon from '../../components/Shared/Icon';
@@ -58,48 +59,55 @@ export default class ForgottenPasswordScreen extends React.PureComponent {
       <SafeAreaView style={styles.safeAreaContainer}>
         <StatusBar barStyle="light-content" />
         <View style={styles.container}>
-          <View style={styles.closeIconContainer}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}
-              style={styles.closeIconButton}
-            >
-              <Icon
-                name="cross"
-                color={colors.charcoal.standard}
-                size={22}
-              />
-            </TouchableOpacity>
-          </View>
-          <FormInput
-            placeholder="Email"
-            value={email}
-            returnKeyType="next"
-            keyboardType="email-address"
-            autoCorrect={false}
-            autoCapitalize="none"
-            onChangeText={(text) => this.setState({ email: text })}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            clearButtonMode="while-editing"
-          />
-          <TouchableOpacity
-            onPress={() => this.sendPasswordResetEmail(email)}
-            style={styles.loginButton}
+          <ImageBackground
+            source={require('../../../assets/images/signup-screen-background.jpg')}
+            style={styles.imageBackground}
           >
-            {
-              loading ? (
-                <DotIndicator
+            <View style={styles.closeIconContainer}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.goBack()}
+                style={styles.closeIconButton}
+              >
+                <Icon
+                  name="cross"
                   color={colors.white}
-                  count={3}
-                  size={6}
+                  size={22}
                 />
-              ) : (
-                <Text style={styles.loginButtonText}>
-                  SEND PASSWORD RESET EMAIL
-                </Text>
-              )
-            }
-          </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
+            <Input
+              placeholder="Email"
+              placeholderTextColor={colors.transparentWhiteLight}
+              value={email}
+              returnKeyType="next"
+              keyboardType="email-address"
+              autoCorrect={false}
+              autoCapitalize="none"
+              onChangeText={(text) => this.setState({ email: text })}
+              containerStyle={styles.inputComponentContainer}
+              inputContainerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+              clearButtonMode="while-editing"
+            />
+            <TouchableOpacity
+              onPress={() => this.sendPasswordResetEmail(email)}
+              style={styles.loginButton}
+            >
+              {
+                loading ? (
+                  <DotIndicator
+                    color={colors.white}
+                    count={3}
+                    size={6}
+                  />
+                ) : (
+                  <Text style={styles.loginButtonText}>
+                    SEND PASSWORD RESET EMAIL
+                  </Text>
+                )
+              }
+            </TouchableOpacity>
+          </ImageBackground>
         </View>
       </SafeAreaView>
     );
@@ -117,6 +125,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.offWhite,
     alignItems: 'center',
   },
+  imageBackground: {
+    flex: 1,
+    width: undefined,
+    height: undefined,
+    alignItems: 'center',
+  },
   closeIconContainer: {
     alignItems: 'flex-end',
     width,
@@ -130,20 +144,27 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 1,
   },
+  inputComponentContainer: {
+    width: width - 30,
+    alignItems: 'center',
+  },
   inputContainer: {
+    width: width - 30,
+    alignItems: 'center',
     marginTop: 5,
     marginBottom: 5,
     borderBottomWidth: 0,
+    backgroundColor: colors.transparentWhiteLight,
+    borderRadius: 4,
   },
   input: {
     width: width - 30,
     padding: 12,
     fontFamily: fonts.bold,
     fontSize: 14,
-    backgroundColor: colors.white,
-    color: colors.charcoal.standard,
+    color: colors.white,
     borderWidth: 1,
-    borderColor: colors.grey.standard,
+    borderColor: colors.grey.light,
     borderRadius: 4,
   },
   loginButton: {

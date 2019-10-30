@@ -15,7 +15,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
-import { Button, Divider, FormInput, FormValidationMessage } from 'react-native-elements';
+import { Button, Divider, Input } from 'react-native-elements';
 import * as Haptics from 'expo-haptics';
 import * as Facebook from 'expo-facebook';
 import firebase from 'firebase';
@@ -273,7 +273,7 @@ export default class LoginScreen extends React.PureComponent {
                   />
                 </TouchableOpacity>
               </View>
-              <FormInput
+              <Input
                 placeholder="Email"
                 placeholderTextColor={colors.transparentWhiteLight}
                 value={email}
@@ -283,11 +283,13 @@ export default class LoginScreen extends React.PureComponent {
                 autoCapitalize="none"
                 onChangeText={(text) => this.setState({ email: text })}
                 onSubmitEditing={() => this.passwordInput.focus()}
-                containerStyle={styles.inputContainer}
+                containerStyle={styles.inputComponentContainer}
+                inputContainerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 clearButtonMode="while-editing"
               />
-              <FormInput
+              <Input
+                errorMessage={error && error}
                 placeholder="Password"
                 placeholderTextColor={colors.transparentWhiteLight}
                 value={password}
@@ -300,25 +302,17 @@ export default class LoginScreen extends React.PureComponent {
                   this.passwordInput = input;
                 }}
                 onSubmitEditing={() => this.login(email, password)}
-                containerStyle={styles.inputContainer}
+                containerStyle={styles.inputComponentContainer}
+                inputContainerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 clearButtonMode="while-editing"
               />
-              {
-                error && (
-                  <View>
-                    <FormValidationMessage>
-                      {error}
-                    </FormValidationMessage>
-                  </View>
-                )
-              }
               <Button
                 title="LOG IN"
                 onPress={() => this.login(email, password)}
-                containerViewStyle={styles.loginButtonContainer}
+                containerStyle={styles.loginButtonContainer}
                 buttonStyle={styles.loginButton}
-                textStyle={styles.loginButtonText}
+                titleStyle={styles.loginButtonText}
                 fontFamily={fonts.bold}
               />
               <Divider style={styles.divider} />
@@ -388,11 +382,18 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 1,
   },
+  inputComponentContainer: {
+    width: width - 30,
+    alignItems: 'center',
+  },
   inputContainer: {
+    width: width - 30,
+    alignItems: 'center',
     marginTop: 5,
     marginBottom: 5,
     borderBottomWidth: 0,
     backgroundColor: colors.transparentWhiteLight,
+    borderRadius: 4,
   },
   input: {
     width: width - 30,
