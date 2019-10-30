@@ -15,7 +15,7 @@ import {
 import * as Permissions from 'expo-permissions';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
-import { List, ListItem } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
 import { auth, db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
@@ -232,9 +232,8 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 {profile && profile.firstName} {profile && profile.lastName}
               </Text>
             </View>
-            <List containerStyle={styles.listContainer}>
+            <View style={styles.listContainer}>
               <ListItem
-                activeOpacity={0.5}
                 key="Profile"
                 title="Profile"
                 containerStyle={styles.listItemContainer}
@@ -242,17 +241,15 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 onPress={() => this.props.navigation.navigate('Profile')}
               />
               <ListItem
-                activeOpacity={0.5}
                 key="Settings"
                 title="Settings"
                 containerStyle={styles.listItemContainerBottom}
                 titleStyle={styles.listItemTitleStyle}
                 onPress={() => this.props.navigation.navigate('Settings')}
               />
-            </List>
-            <List containerStyle={styles.listContainer}>
+            </View>
+            <View style={styles.listContainer}>
               <ListItem
-                activeOpacity={0.5}
                 key="InviteFriends"
                 title="Free Gifts!"
                 containerStyle={styles.listItemContainerGreen}
@@ -267,12 +264,11 @@ export default class ProfileHomeScreen extends React.PureComponent {
                   />
                 }
               />
-            </List>
-            <List containerStyle={styles.listContainer}>
+            </View>
+            <View style={styles.listContainer}>
               {
                 list.map((l) => (
                   <ListItem
-                    activeOpacity={0.5}
                     key={l.title}
                     title={l.title}
                     containerStyle={styles.listItemContainer}
@@ -282,13 +278,12 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 ))
               }
               <ListItem
-                activeOpacity={0.5}
                 title="Log Out"
                 containerStyle={styles.listItemContainerBottom}
                 titleStyle={styles.listItemTitleStyle}
                 onPress={() => this.logOutAlert()}
               />
-            </List>
+            </View>
           </ScrollView>
           <Loader
             loading={loading}
@@ -351,11 +346,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
+    backgroundColor: colors.white,
   },
   listItemContainer: {
     paddingTop: 15,
     paddingBottom: 15,
     borderBottomColor: colors.grey.light,
+    borderBottomWidth: 1,
     backgroundColor: colors.white,
   },
   listItemContainerGreen: {
@@ -372,7 +369,6 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
     borderBottomWidth: 0,
-    borderBottomColor: colors.grey.light,
     backgroundColor: colors.white,
   },
   listItemTitleStyle: {

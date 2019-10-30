@@ -10,7 +10,7 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import { List, ListItem } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 import * as FileSystem from 'expo-file-system';
 import CalendarStrip from 'react-native-calendar-strip';
 import Swipeable from 'react-native-swipeable';
@@ -296,7 +296,7 @@ class CalendarHomeScreen extends React.PureComponent {
         <Text style={styles.headerText}>
           WORKOUT
         </Text>
-        <List containerStyle={styles.listContainer}>
+        <View style={styles.listContainer}>
           {
             workout ? (
               <Swipeable
@@ -361,11 +361,11 @@ class CalendarHomeScreen extends React.PureComponent {
               />
           )
         }
-        </List>
+        </View>
         <Text style={styles.headerText}>
           MEALS
         </Text>
-        <List containerStyle={styles.listContainer}>
+        <View style={styles.listContainer}>
           {
             breakfast ? (
               <Swipeable
@@ -465,8 +465,8 @@ class CalendarHomeScreen extends React.PureComponent {
               />
             )
           }
-        </List>
-        <List containerStyle={styles.listContainerBottom}>
+        </View>
+        <View style={styles.listContainerBottom}>
           {
             snack ? (
               <Swipeable
@@ -533,7 +533,7 @@ class CalendarHomeScreen extends React.PureComponent {
               />
             )
           }
-        </List>
+        </View>
       </ScrollView>
     );
     return (

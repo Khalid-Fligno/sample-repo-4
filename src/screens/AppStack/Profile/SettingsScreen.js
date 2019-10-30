@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, View, AsyncStorage, ScrollView, Dimensions, Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system';
-import { List, ListItem } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 import firebase from 'firebase';
 import { db, auth } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
@@ -110,7 +110,7 @@ export default class SettingsScreen extends React.PureComponent {
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
           <ScrollView contentContainerStyle={styles.scrollView}>
-            <List containerStyle={styles.listContainer}>
+            <View style={styles.listContainer}>
               {
                 // Only show password change if an email/password account is present
                 isPasswordAccount && (
@@ -137,10 +137,10 @@ export default class SettingsScreen extends React.PureComponent {
               <ListItem
                 title="Re-take burpee test"
                 titleStyle={styles.listItemTitle}
-                containerStyle={styles.listItemContainer}
+                containerStyle={styles.listItemContainerBottom}
                 onPress={() => this.retakeBurpeeTest()}
               />
-            </List>
+            </View>
           </ScrollView>
           <Loader
             loading={loading}
@@ -175,6 +175,13 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
     borderBottomColor: colors.grey.light,
+    borderBottomWidth: 1,
+    backgroundColor: colors.white,
+  },
+  listItemContainerBottom: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    borderBottomWidth: 0,
     backgroundColor: colors.white,
   },
   listItemTitle: {

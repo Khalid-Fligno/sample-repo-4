@@ -132,7 +132,6 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
           </View>
           <View style={styles.buttonContainer}>
             <ListItem
-              activeOpacity={0.5}
               key="InviteFriends"
               title="Earn Free Gifts!"
               containerStyle={styles.listItemContainerGreen}

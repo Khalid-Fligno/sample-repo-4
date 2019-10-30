@@ -11,7 +11,7 @@ import {
   // Text,
 } from 'react-native';
 import * as Localization from 'expo-localization';
-import { List, ListItem } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 // import Modal from 'react-native-modal';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
@@ -100,7 +100,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
       <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
           <ScrollView contentContainerStyle={styles.scrollView}>
-            <List containerStyle={styles.listContainer}>
+            <View style={styles.listContainer}>
               <ListItem
                 title="Name"
                 titleStyle={styles.listItemTitleStyle}
@@ -112,7 +112,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
               <ListItem
                 title="Age"
                 titleStyle={styles.listItemTitleStyle}
-                subtitle={profile && moment().diff(profile.dob, 'years')}
+                subtitle={profile && `${moment().diff(profile.dob, 'years')}`}
                 subtitleStyle={styles.listItemSubtitleStyle}
                 containerStyle={styles.listItemContainer}
                 hideChevron
@@ -151,7 +151,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 onPress={() => this.toggleHiitModal()}
                 rightIcon={<Icon name="edit-outline" size={20} color={colors.grey.dark} />}
               /> */}
-            </List>
+            </View>
             {/* <Modal
               isVisible={resistanceModalVisible}
               onBackdropPress={() => this.toggleResistanceModal()}
@@ -272,10 +272,9 @@ const styles = StyleSheet.create({
   listItemContainer: {
     borderBottomColor: colors.grey.light,
     backgroundColor: colors.white,
+    borderBottomWidth: 1,
   },
   listItemContainerBottom: {
-    borderBottomWidth: 0,
-    borderBottomColor: colors.grey.light,
     backgroundColor: colors.white,
   },
   listItemTitleStyle: {
