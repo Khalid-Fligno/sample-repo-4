@@ -35,7 +35,7 @@ const CustomButton = ({
       green && outline && styles.greenOutline,
       blue && styles.blue,
     ]}
-    textStyle={[
+    titleStyle={[
       styles.whiteText,
       outline && styles.defaultOutlineText,
       primary && styles.whiteText,

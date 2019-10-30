@@ -50,7 +50,7 @@ export default class SpecialOfferScreen extends React.PureComponent {
               onPress={this.continue}
               activeOpacity={0.7}
               buttonStyle={styles.button}
-              textStyle={styles.buttonText}
+              titleStyle={styles.buttonText}
             />
             <Text style={styles.bodyBold}>
               OFFER VALID FOR 24 HOURS ONLY!

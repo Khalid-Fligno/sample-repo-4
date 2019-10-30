@@ -159,7 +159,7 @@ export default function InviteFriends({ recordInvites }) {
           <Button
             title="OPEN SETTINGS"
             buttonStyle={styles.settingsButton}
-            textStyle={styles.settingsButtonTitle}
+            titleStyle={styles.settingsButtonTitle}
             onPress={() => Linking.openURL('app-settings:')}
           />
         </View>
@@ -275,5 +275,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.white,
     marginTop: 3,
+    marginLeft: 10,
+    marginRight: 10,
   },
 });

@@ -241,7 +241,7 @@ export default class HomeScreen extends React.PureComponent {
                 <Button
                   title="START BURPEE TEST"
                   buttonStyle={styles.button}
-                  textStyle={styles.buttonText}
+                  titleStyle={styles.buttonText}
                   onPress={this.goToBurpeeTest}
                 />
               </View>
