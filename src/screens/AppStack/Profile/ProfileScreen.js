@@ -6,16 +6,11 @@ import {
   AsyncStorage,
   ScrollView,
   Dimensions,
-  // Picker,
-  // TouchableOpacity,
-  // Text,
 } from 'react-native';
 import * as Localization from 'expo-localization';
 import { ListItem } from 'react-native-elements';
-// import Modal from 'react-native-modal';
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
-// import { weeklySessionsPickerOptions } from '../../../utils';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -30,11 +25,6 @@ export default class ProfileHomeScreen extends React.PureComponent {
       profile: undefined,
       loading: false,
       timezone: undefined,
-      // resistanceModalVisible: false,
-      // resistanceWeeklyTarget: undefined,
-      // hiitModalVisible: false,
-      // hiitWeeklyTarget: undefined,
-      // buttonDisabled: false,
     };
   }
   componentDidMount = async () => {
@@ -49,23 +39,6 @@ export default class ProfileHomeScreen extends React.PureComponent {
   toggleHiitModal = () => {
     this.setState((prevState) => ({ hiitModalVisible: !prevState.hiitModalVisible }));
   }
-  // updateWeeklyTarget = async (workoutType, newValue) => {
-  //   this.setState({ buttonDisabled: true });
-  //   const uid = await AsyncStorage.getItem('uid');
-  //   const userRef = db.collection('users').doc(uid);
-  //   let data;
-  //   if (workoutType === 'resistance') {
-  //     data = { resistanceWeeklyTarget: newValue };
-  //     userRef.set(data, { merge: true });
-  //     this.setState({ buttonDisabled: false });
-  //     this.toggleResistanceModal();
-  //   } else {
-  //     data = { hiitWeeklyTarget: newValue };
-  //     userRef.set(data, { merge: true });
-  //     this.setState({ buttonDisabled: false });
-  //     this.toggleHiitModal();
-  //   }
-  // }
   fetchProfile = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
@@ -77,8 +50,6 @@ export default class ProfileHomeScreen extends React.PureComponent {
             profile: await doc.data(),
             timezone,
             loading: false,
-            // resistanceWeeklyTarget: await doc.data().resistanceWeeklyTarget,
-            // hiitWeeklyTarget: await doc.data().hiitWeeklyTarget,
           });
         } else {
           this.setState({ loading: false });
@@ -90,11 +61,6 @@ export default class ProfileHomeScreen extends React.PureComponent {
       profile,
       timezone,
       loading,
-      // resistanceModalVisible,
-      // resistanceWeeklyTarget,
-      // hiitModalVisible,
-      // hiitWeeklyTarget,
-      // buttonDisabled,
     } = this.state;
     return (
       <SafeAreaView style={styles.safeContainer}>
@@ -133,107 +99,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 containerStyle={styles.listItemContainerBottom}
                 hideChevron
               />
-              {/* <ListItem
-                title="Weekly Resistance Goal"
-                titleStyle={styles.listItemTitleStyle}
-                subtitle={profile && `${profile.resistanceWeeklyTarget} sessions`}
-                subtitleStyle={styles.listItemSubtitleStyle}
-                containerStyle={styles.listItemContainer}
-                onPress={() => this.toggleResistanceModal()}
-                rightIcon={<Icon name="edit-outline" size={20} color={colors.grey.dark} />}
-              />
-              <ListItem
-                title="Weekly HIIT Goal"
-                titleStyle={styles.listItemTitleStyle}
-                subtitle={profile && `${profile.hiitWeeklyTarget} sessions`}
-                subtitleStyle={styles.listItemSubtitleStyle}
-                containerStyle={styles.listItemContainer}
-                onPress={() => this.toggleHiitModal()}
-                rightIcon={<Icon name="edit-outline" size={20} color={colors.grey.dark} />}
-              /> */}
             </View>
-            {/* <Modal
-              isVisible={resistanceModalVisible}
-              onBackdropPress={() => this.toggleResistanceModal()}
-              animationIn="fadeIn"
-              animationInTiming={600}
-              animationOut="fadeOut"
-              animationOutTiming={600}
-            >
-              <View style={styles.modalContainer}>
-                <Picker
-                  selectedValue={resistanceWeeklyTarget}
-                  onValueChange={(value) => this.setState({ resistanceWeeklyTarget: value })}
-                >
-                  {weeklySessionsPickerOptions.map((i) => (
-                    <Picker.Item
-                      key={i.value}
-                      label={i.label}
-                      value={i.value}
-                    />
-                  ))}
-                </Picker>
-                <TouchableOpacity
-                  onPress={() => this.updateWeeklyTarget('resistance', resistanceWeeklyTarget)}
-                  disabled={buttonDisabled}
-                  style={styles.modalButton}
-                >
-                  <Text style={styles.modalButtonText}>
-                    UPDATE
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => this.toggleResistanceModal()}
-                  disabled={buttonDisabled}
-                  style={styles.modalCancelButton}
-                >
-                  <Text style={styles.modalButtonText}>
-                    CANCEL
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </Modal>
-            <Modal
-              isVisible={hiitModalVisible}
-              onBackdropPress={() => this.toggleHiitModal()}
-              animationIn="fadeIn"
-              animationInTiming={600}
-              animationOut="fadeOut"
-              animationOutTiming={600}
-            >
-              <View style={styles.modalContainer}>
-                <Picker
-                  selectedValue={hiitWeeklyTarget}
-                  onValueChange={(value) => this.setState({ hiitWeeklyTarget: value })}
-                >
-                  {weeklySessionsPickerOptions.map((i) => (
-                    <Picker.Item
-                      key={i.value}
-                      label={i.label}
-                      value={i.value}
-                    />
-                  ))}
-                </Picker>
-                <TouchableOpacity
-                  onPress={() => this.updateWeeklyTarget('hiit', hiitWeeklyTarget)}
-                  disabled={buttonDisabled}
-                  style={styles.modalButton}
-                >
-                  <Text style={styles.modalButtonText}>
-                    UPDATE
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => this.toggleHiitModal()}
-                  disabled={buttonDisabled}
-                  style={styles.modalCancelButton}
-                >
-                  <Text style={styles.modalButtonText}>
-                    CANCEL
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </Modal> */}
             <Loader
               loading={loading}
               color={colors.charcoal.standard}
@@ -288,29 +154,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
   },
-  // modalContainer: {
-  //   backgroundColor: colors.white,
-  //   borderRadius: 4,
-  //   overflow: 'hidden',
-  // },
-  // modalCancelButton: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: colors.charcoal.light,
-  //   height: 50,
-  //   width: '100%',
-  // },
-  // modalButton: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: colors.charcoal.standard,
-  //   height: 50,
-  //   width: '100%',
-  // },
-  // modalButtonText: {
-  //   fontFamily: fonts.bold,
-  //   fontSize: 14,
-  //   color: colors.white,
-  //   marginTop: 3,
-  // },
 });
