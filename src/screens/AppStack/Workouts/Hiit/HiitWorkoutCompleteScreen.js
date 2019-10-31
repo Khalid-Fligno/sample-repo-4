@@ -130,7 +130,7 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
             {completePieChart}
             {tickIcon}
           </View>
-          <View style={styles.buttonContainer}>
+          <View>
             <ListItem
               key="InviteFriends"
               title="Earn Free Gifts!"
@@ -145,12 +145,15 @@ export default class HiitWorkoutCompleteScreen extends React.PureComponent {
                   style={styles.giftIcon}
                 />
               }
+              rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
             />
-            <CustomButton
-              title="COMPLETE"
-              onPress={() => this.completeHiitWorkout()}
-              primary
-            />
+            <View style={styles.buttonContainer}>
+              <CustomButton
+                title="COMPLETE"
+                onPress={() => this.completeHiitWorkout()}
+                primary
+              />
+            </View>
           </View>
           <Loader
             color={colors.coral.standard}
@@ -215,7 +218,6 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     borderBottomWidth: 0,
     backgroundColor: colors.green.superLight,
-    marginBottom: 10,
   },
   listItemTitleStyleGreen: {
     fontFamily: fonts.bold,
