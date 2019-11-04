@@ -118,6 +118,7 @@ export default class SettingsScreen extends React.PureComponent {
                     title="Change Password"
                     titleStyle={styles.listItemTitle}
                     containerStyle={styles.listItemContainer}
+                    rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                     onPress={() => this.changePasswordAlert()}
                   />
                 )
@@ -130,6 +131,7 @@ export default class SettingsScreen extends React.PureComponent {
                     titleStyle={styles.listItemTitle}
                     disabled={profile && !profile.initialProgressInfo}
                     containerStyle={styles.listItemContainer}
+                    rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                     onPress={() => this.resetProgressAlert()}
                   />
                 )
@@ -138,6 +140,7 @@ export default class SettingsScreen extends React.PureComponent {
                 title="Re-take burpee test"
                 titleStyle={styles.listItemTitle}
                 containerStyle={styles.listItemContainerBottom}
+                rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                 onPress={() => this.retakeBurpeeTest()}
               />
             </View>
@@ -169,7 +172,10 @@ const styles = StyleSheet.create({
   listContainer: {
     width,
     marginBottom: 20,
-    borderColor: colors.grey.light,
+    shadowColor: colors.grey.standard,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
   },
   listItemContainer: {
     paddingTop: 15,
