@@ -665,6 +665,7 @@ const styles = StyleSheet.create({
     height: 65,
     justifyContent: 'center',
     backgroundColor: colors.white,
+    borderBottomWidth: 1,
     borderBottomColor: colors.grey.light,
   },
   listItemContainerBottom: {
