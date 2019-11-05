@@ -238,6 +238,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 title="Profile"
                 containerStyle={styles.listItemContainer}
                 titleStyle={styles.listItemTitleStyle}
+                rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                 onPress={() => this.props.navigation.navigate('Profile')}
               />
               <ListItem
@@ -245,6 +246,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 title="Settings"
                 containerStyle={styles.listItemContainerBottom}
                 titleStyle={styles.listItemTitleStyle}
+                rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                 onPress={() => this.props.navigation.navigate('Settings')}
               />
             </View>
@@ -260,9 +262,9 @@ export default class ProfileHomeScreen extends React.PureComponent {
                     name="present"
                     size={20}
                     color={colors.green.forest}
-                    style={styles.giftIcon}
                   />
                 }
+                rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
               />
             </View>
             <View style={styles.listContainer}>
@@ -273,6 +275,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                     title={l.title}
                     containerStyle={styles.listItemContainer}
                     titleStyle={styles.listItemTitleStyle}
+                    rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                     onPress={() => this.props.navigation.navigate(l.route)}
                   />
                 ))
@@ -281,6 +284,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 title="Log Out"
                 containerStyle={styles.listItemContainerBottom}
                 titleStyle={styles.listItemTitleStyle}
+                rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                 onPress={() => this.logOutAlert()}
               />
             </View>
@@ -360,10 +364,6 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     borderBottomWidth: 0,
     backgroundColor: colors.green.superLight,
-  },
-  giftIcon: {
-    marginLeft: 8,
-    marginRight: 8,
   },
   listItemContainerBottom: {
     paddingTop: 15,
