@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Text,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import PropTypes from 'prop-types';
@@ -98,9 +99,7 @@ export default class Header extends React.PureComponent {
           navigation.state.routeName === 'ProfileHome' && styles.defaultHeaderShadow,
         ]}
       >
-        <StatusBar
-          barStyle="light-content"
-        />
+        <StatusBar barStyle="light-content" />
         <View
           style={[
             styles.defaultHeader,
@@ -152,14 +151,10 @@ export default class Header extends React.PureComponent {
           }
           {
             !withBackButton && !withHelpButton && !withLogoutButton && (
-              <View
-                style={styles.headerContentContainerLeft}
-              />
+              <View style={styles.headerContentContainerLeft} />
             )
           }
-          <View
-            style={styles.headerContentContainer}
-          >
+          <View style={styles.headerContentContainer}>
             {
               headerTitleParams ? (
                 <Text style={styles.headerTitleText}>
@@ -210,7 +205,7 @@ export default class Header extends React.PureComponent {
             )
           }
           {
-            withStartButton && (
+            withStartButton && navigation.state.params.handleStart && (
               <TouchableOpacity
                 style={styles.headerContentContainerRight}
                 onPress={this.handleStart}
@@ -227,6 +222,16 @@ export default class Header extends React.PureComponent {
             )
           }
           {
+            withStartButton && !navigation.state.params.handleStart && (
+              <View style={styles.headerContentContainerRightLoading}>
+                <ActivityIndicator
+                  color={colors.white}
+                  style={styles.activityIndicator}
+                />
+              </View>
+            )
+          }
+          {
             withProfileButton && (
               <TouchableOpacity
                 style={styles.headerContentContainerRight}
@@ -238,9 +243,7 @@ export default class Header extends React.PureComponent {
           }
           {
             !withStartButton && !withSkipButton && !withCancelButton && !withProfileButton && !withRestoreButton && (
-              <View
-                style={styles.headerContentContainerRight}
-              />
+              <View style={styles.headerContentContainerRight} />
             )
           }
         </View>
@@ -347,6 +350,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
+  },
+  headerContentContainerRightLoading: {
+    flex: 1,
+    height: 50,
+    paddingRight: 10,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  activityIndicator: {
+    marginRight: 10,
   },
   headerTitleText: {
     fontFamily: fonts.bold,
