@@ -43,7 +43,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
   }
   componentDidMount = async () => {
     this.manageVideoCache();
-    this.showRatePopup();
+    // this.showRatePopup();
   }
   showRatePopup = async () => {
     const lastRatingRequest = await AsyncStorage.getItem('lastRatingRequest');
