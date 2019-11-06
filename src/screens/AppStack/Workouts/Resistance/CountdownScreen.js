@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, AppState, Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system';
+import { Audio } from 'expo-av';
 import { SafeAreaView } from 'react-navigation';
 import CountdownTimer from '../../../../components/Workouts/CountdownTimer';
+import CountdownPauseModal from '../../../../components/Workouts/CountdownPauseModal';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
 
@@ -14,10 +16,70 @@ export default class CountdownScreen extends React.PureComponent {
       reps: this.props.navigation.getParam('reps', null),
       resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
       countdownDuration: 5,
+      timerStart: false,
+      pauseModalVisible: false,
+      appState: AppState.currentState,
     };
   }
   componentDidMount() {
+    this.startTimer();
     this.checkVideoCache();
+    AppState.addEventListener('change', this.handleAppStateChange);
+  }
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+  handleAppStateChange = async (nextAppState) => {
+    const { appState } = this.state;
+    if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+      this.handlePause();
+      await Audio.setIsEnabledAsync(true);
+    }
+    this.setState({ appState: nextAppState });
+  }
+  startTimer = () => {
+    this.setState({ timerStart: true });
+  }
+  handlePause = () => {
+    this.setState({
+      timerStart: false,
+      pauseModalVisible: true,
+    });
+  }
+  handleUnpause = () => {
+    this.setState({
+      timerStart: true,
+      pauseModalVisible: false,
+    });
+  }
+  handleQuitWorkout = () => {
+    this.setState({ pauseModalVisible: false });
+    this.props.navigation.navigate('Workouts');
+    const exerciseVideos = [
+      `${FileSystem.cacheDirectory}exercise-1.mp4`,
+      `${FileSystem.cacheDirectory}exercise-2.mp4`,
+      `${FileSystem.cacheDirectory}exercise-3.mp4`,
+      `${FileSystem.cacheDirectory}exercise-4.mp4`,
+      `${FileSystem.cacheDirectory}exercise-5.mp4`,
+      `${FileSystem.cacheDirectory}exercise-6.mp4`,
+    ];
+    Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
+      FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
+    }));
+  }
+  quitWorkout = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to quit this workout?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: this.handleQuitWorkout,
+        },
+      ],
+      { cancelable: false },
+    );
   }
   checkVideoCache = async () => {
     const { exerciseList } = this.state;
@@ -44,17 +106,25 @@ export default class CountdownScreen extends React.PureComponent {
       countdownDuration,
       reps,
       resistanceCategoryId,
+      timerStart,
+      pauseModalVisible,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.countdownContainer}>
           <CountdownTimer
             totalDuration={countdownDuration}
+            start={timerStart}
             handleFinish={() => this.finishCountdown(exerciseList, reps, resistanceCategoryId)}
           />
           <Text style={styles.countdownText}>
             GET READY!
           </Text>
+          <CountdownPauseModal
+            isVisible={pauseModalVisible}
+            handleQuit={this.quitWorkout}
+            handleUnpause={this.handleUnpause}
+          />
         </View>
       </SafeAreaView>
     );
