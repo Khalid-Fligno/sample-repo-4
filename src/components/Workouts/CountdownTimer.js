@@ -10,14 +10,33 @@ export default class CountdownTimer extends React.PureComponent {
     super(props);
     this.state = {
       remainingTime: (props.totalDuration * 1000) + 990,
+      start: undefined,
     };
   }
-  componentDidMount() {
-    this.start();
+  static getDerivedStateFromProps(props, state) {
+    if (props.start !== state.start) {
+      return { start: props.start };
+    }
+    return null;
+  }
+  componentDidMount = async () => {
+    this.setState({ start: true });
+  }
+  componentDidUpdate(props, prevState) {
+    if (prevState.start !== this.state.start) {
+      this.onPropsChange();
+    }
   }
   componentWillUnmount() {
     clearInterval(this.interval);
     this.interval = null;
+  }
+  onPropsChange = () => {
+    if (this.state.start) {
+      this.start();
+    } else {
+      this.stop();
+    }
   }
   start = async () => {
     const { handleFinish } = this.props;
