@@ -65,7 +65,7 @@
     "react-native-in-app-utils": "6.0.2",
     "react-native-indicators": "^0.13.0",
     "react-native-loading-spinner-overlay": "^1.0.1",
-    "react-native-modal": "^6.1.0",
+    "react-native-modal": "^11.5.2",
     "react-native-onesignal": "^3.2.14",
     "react-native-parallax-scroll-view": "^0.21.3",
     "react-native-rate": "^1.1.10",
