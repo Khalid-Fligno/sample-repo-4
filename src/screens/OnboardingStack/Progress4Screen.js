@@ -4,7 +4,11 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
+  AppState,
+  Alert,
 } from 'react-native';
+import * as FileSystem from 'expo-file-system';
+import CountdownPauseModal from '../../components/Workouts/CountdownPauseModal';
 import CountdownTimer from '../../components/Workouts/CountdownTimer';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -14,7 +18,58 @@ export default class Progress4Screen extends React.PureComponent {
     super(props);
     this.state = {
       countdownDuration: 5,
+      timerStart: false,
+      pauseModalVisible: false,
+      appState: AppState.currentState,
     };
+  }
+  componentDidMount() {
+    this.startTimer();
+    AppState.addEventListener('change', this.handleAppStateChange);
+  }
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+  handleAppStateChange = async (nextAppState) => {
+    const { appState } = this.state;
+    if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+      this.handlePause();
+    }
+    this.setState({ appState: nextAppState });
+  }
+  startTimer = () => {
+    this.setState({ timerStart: true });
+  }
+  handlePause = () => {
+    this.setState({
+      timerStart: false,
+      pauseModalVisible: true,
+    });
+  }
+  handleUnpause = () => {
+    this.setState({
+      timerStart: true,
+      pauseModalVisible: false,
+    });
+  }
+  handleQuitWorkout = () => {
+    this.setState({ pauseModalVisible: false });
+    this.props.navigation.navigate('App');
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, { idempotent: true });
+  }
+  quitWorkout = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to quit this workout?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: this.handleQuitWorkout,
+        },
+      ],
+      { cancelable: false },
+    );
   }
   finishCountdown = () => {
     const {
@@ -35,6 +90,8 @@ export default class Progress4Screen extends React.PureComponent {
   render() {
     const {
       countdownDuration,
+      timerStart,
+      pauseModalVisible,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -42,12 +99,18 @@ export default class Progress4Screen extends React.PureComponent {
           <View style={styles.contentContainer}>
             <CountdownTimer
               totalDuration={countdownDuration}
+              start={timerStart}
               handleFinish={() => this.finishCountdown()}
             />
             <Text style={styles.countdownText}>
               GET READY!
             </Text>
           </View>
+          <CountdownPauseModal
+            isVisible={pauseModalVisible}
+            handleQuit={this.quitWorkout}
+            handleUnpause={this.handleUnpause}
+          />
         </View>
       </SafeAreaView>
     );
