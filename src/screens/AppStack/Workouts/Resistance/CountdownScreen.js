@@ -94,7 +94,7 @@ export default class CountdownScreen extends React.PureComponent {
     }
   }
   finishCountdown = (exerciseList, reps, resistanceCategoryId) => {
-    this.props.navigation.navigate('Exercise1', {
+    this.props.navigation.replace('Exercise1', {
       exerciseList,
       reps,
       resistanceCategoryId,
