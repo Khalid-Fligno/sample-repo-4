@@ -93,7 +93,7 @@ export default class HiitCircuitCountdownScreen extends React.PureComponent {
     }
   }
   finishCountdown = (exerciseList, fitnessLevel) => {
-    this.props.navigation.navigate('HiitCircuitExercise1', {
+    this.props.navigation.replace('HiitCircuitExercise1', {
       exerciseList,
       fitnessLevel,
     });
