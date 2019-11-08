@@ -27,8 +27,8 @@ export default class Progress4Screen extends React.PureComponent {
     this.startTimer();
     AppState.addEventListener('change', this.handleAppStateChange);
   }
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this.handleAppStateChange);
+  componentWillUnmount = async () => {
+    await AppState.removeEventListener('change', this.handleAppStateChange);
   }
   handleAppStateChange = async (nextAppState) => {
     const { appState } = this.state;
@@ -72,7 +72,7 @@ export default class Progress4Screen extends React.PureComponent {
     );
   }
   finishCountdown = () => {
-    this.props.navigation.navigate('Burpee3');
+    this.props.navigation.replace('Burpee3');
   }
   render() {
     const {
