@@ -77,14 +77,15 @@ export default class Progress5Screen extends React.PureComponent {
     });
   }
   handleQuitWorkout = () => {
-    this.setState({ pauseModalVisible: false });
-    this.props.navigation.navigate('Home');
+    this.setState({ pauseModalVisible: false }, () => {
+      this.props.navigation.navigate('Home');
+    });
     FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, { idempotent: true });
   }
   quitWorkout = () => {
     Alert.alert(
       'Stop burpee test?',
-      'Stop means you will lose any information you have already entered',
+      'Stopping means you will lose any information you have already entered',
       [
         { text: 'Cancel', style: 'cancel' },
         {
