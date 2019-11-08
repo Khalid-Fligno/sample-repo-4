@@ -6,10 +6,12 @@ import {
   SafeAreaView,
   Alert,
   Dimensions,
+  AppState,
 } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import Video from 'react-native-video';
 import FadeInView from 'react-native-fade-in-view';
+import CountdownPauseModal from '../../components/Workouts/CountdownPauseModal';
 import WorkoutTimer from '../../components/Workouts/WorkoutTimer';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -37,14 +39,61 @@ export default class Progress5Screen extends React.PureComponent {
     this.state = {
       timerStart: false,
       totalDuration: 60,
+      appState: AppState.currentState,
+      videoPaused: false,
+      pauseModalVisible: false,
     };
   }
   componentDidMount() {
-    this.props.navigation.setParams({ handleSkip: this.handleSkip });
+    this.props.navigation.setParams({ handleSkip: this.handlePause });
     this.startTimer();
+    AppState.addEventListener('change', this.handleAppStateChange);
+  }
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+  handleAppStateChange = async (nextAppState) => {
+    const { appState } = this.state;
+    if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+      this.handlePause();
+    }
+    this.setState({ appState: nextAppState });
   }
   startTimer = () => {
     this.setState({ timerStart: true });
+  }
+  handlePause = () => {
+    this.setState({
+      videoPaused: true,
+      timerStart: false,
+      pauseModalVisible: true,
+    });
+  }
+  handleUnpause = () => {
+    this.setState({
+      videoPaused: false,
+      timerStart: true,
+      pauseModalVisible: false,
+    });
+  }
+  handleQuitWorkout = () => {
+    this.setState({ pauseModalVisible: false });
+    this.props.navigation.navigate('Home');
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, { idempotent: true });
+  }
+  quitWorkout = () => {
+    Alert.alert(
+      'Stop burpee test?',
+      'Stop means you will lose any information you have already entered',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: this.handleQuitWorkout,
+        },
+      ],
+      { cancelable: false },
+    );
   }
   handleFinish = () => {
     this.setState({ timerStart: false });
@@ -63,31 +112,12 @@ export default class Progress5Screen extends React.PureComponent {
       isInitial,
     });
   }
-  handleSkip = () => {
-    this.setState({ timerStart: false });
-    const { isInitial } = this.props.navigation.state.params;
-    const message = isInitial ? 'You will need to do this before your first workout' : 'Skipping means you will lose any information you have already entered';
-    Alert.alert(
-      'Warning',
-      `${message}`,
-      [
-        {
-          text: 'Cancel', style: 'cancel', onPress: () => this.cancelSkip(),
-        },
-        {
-          text: 'Ok, got it!', onPress: () => this.props.navigation.navigate('App'),
-        },
-      ],
-      { cancelable: false },
-    );
-  }
-  cancelSkip = () => {
-    this.setState({ timerStart: true });
-  }
   render() {
     const {
       timerStart,
       totalDuration,
+      pauseModalVisible,
+      videoPaused,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -101,6 +131,7 @@ export default class Progress5Screen extends React.PureComponent {
               resizeMode="contain"
               repeat
               muted
+              paused={videoPaused}
               style={{ width, height: width }}
             />
             <WorkoutTimer
@@ -119,6 +150,11 @@ export default class Progress5Screen extends React.PureComponent {
             </Text>
           </View>
           <Text style={styles.bottomText}>REMEMBER TO COUNT YOUR BURPEES!</Text>
+          <CountdownPauseModal
+            isVisible={pauseModalVisible}
+            handleQuit={this.quitWorkout}
+            handleUnpause={this.handleUnpause}
+          />
         </FadeInView>
       </SafeAreaView>
     );
