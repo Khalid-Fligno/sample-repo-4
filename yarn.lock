@@ -9257,10 +9257,10 @@ react-native-scripts@1.14.0:
     rimraf "^2.6.1"
     xdl "48.1.4"
 
-react-native-snap-carousel@^3.7.0:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/react-native-snap-carousel/-/react-native-snap-carousel-3.7.0.tgz#7d2794339c661d3e1f8ec4786b6335ae7cb23262"
-  integrity sha512-M3kXyipPNVF3aDQrqiyMBluIC92zbUo7kmo0OgjRohGa/jGLYPAIEIy49Vg40Y9/618+00I4THOrhvIyViLL2g==
+react-native-snap-carousel@^3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/react-native-snap-carousel/-/react-native-snap-carousel-3.8.4.tgz#4c749c6a714d46ed82de527233850cb5da41bc62"
+  integrity sha512-KMxLl75Tyf12DzeTCtV7xU0KuPZQQs/2+2iM90cgxcm3lrg4+hLXff5/61ynasBkzzJ5v4bTRq5CEy/qGUJVQw==
   dependencies:
     prop-types "^15.6.1"
     react-addons-shallow-compare "15.6.2"
