@@ -6,57 +6,47 @@ import Icon from '../../components/Shared/Icon';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 
-export default class CountdownPauseModal extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-  render() {
-    const {
-      isVisible,
-      handleQuit,
-      handleUnpause,
-    } = this.props;
-    return (
-      <Modal
-        isVisible={isVisible}
-        animationIn="fadeIn"
-        animationInTiming={800}
-        animationOut="fadeOut"
-        animationOutTiming={800}
-      >
-        <View>
-          <View style={styles.pauseIconContainer}>
-            <Icon
-              name="pause"
-              size={100}
-              color={colors.white}
-            />
-          </View>
-          <View style={styles.pauseModalContainer}>
-            <TouchableOpacity
-              onPress={handleQuit}
-              style={styles.modalButtonQuit}
-            >
-              <Text style={styles.modalButtonTextDark}>
-                QUIT WORKOUT
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleUnpause}
-              style={styles.modalButtonContinue}
-            >
-              <Text style={styles.modalButtonText}>
-                CONTINUE
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    );
-  }
-}
+const CountdownPauseModal = ({
+  isVisible,
+  handleQuit,
+  handleUnpause,
+}) => (
+  <Modal
+    isVisible={isVisible}
+    animationIn="fadeIn"
+    animationInTiming={800}
+    animationOut="fadeOut"
+    animationOutTiming={800}
+  >
+    <View>
+      <View style={styles.pauseIconContainer}>
+        <Icon
+          name="pause"
+          size={100}
+          color={colors.white}
+        />
+      </View>
+      <View style={styles.pauseModalContainer}>
+        <TouchableOpacity
+          onPress={handleQuit}
+          style={styles.modalButtonQuit}
+        >
+          <Text style={styles.modalButtonTextDark}>
+            QUIT WORKOUT
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={handleUnpause}
+          style={styles.modalButtonContinue}
+        >
+          <Text style={styles.modalButtonText}>
+            CONTINUE
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </Modal>
+);
 
 CountdownPauseModal.propTypes = {
   isVisible: PropTypes.bool.isRequired,
@@ -104,3 +94,5 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
+
+export default CountdownPauseModal;
