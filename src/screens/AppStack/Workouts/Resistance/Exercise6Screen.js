@@ -7,12 +7,14 @@ import {
   StatusBar,
   Alert,
   AppState,
+  AsyncStorage,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';
 import Video from 'react-native-video';
 import FadeInView from 'react-native-fade-in-view';
 import appsFlyer from 'react-native-appsflyer';
+import { db } from '../../../../../config/firebase';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import WorkoutProgress from '../../../../components/Workouts/WorkoutProgress';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
@@ -23,6 +25,10 @@ import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
+
+const updateWeeklyTargets = (obj, field, newTally) => {
+  return Object.assign({}, obj, { [field]: newTally });
+};
 
 export default class Exercise6Screen extends React.PureComponent {
   constructor(props) {
@@ -47,6 +53,18 @@ export default class Exercise6Screen extends React.PureComponent {
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
+  updateWeekly = async () => {
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    return db.runTransaction((transaction) => {
+      return transaction.get(userRef).then((userDoc) => {
+        const newResistanceWeeklyComplete = userDoc.data().weeklyTargets.resistanceWeeklyComplete + 1;
+        const oldWeeklyTargets = userDoc.data().weeklyTargets;
+        const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'resistanceWeeklyComplete', newResistanceWeeklyComplete);
+        transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
+      });
+    });
+  }
   handleAppStateChange = (nextAppState) => {
     const { appState } = this.state;
     if (appState === 'active' && nextAppState.match(/inactive|background/)) {
@@ -63,6 +81,7 @@ export default class Exercise6Screen extends React.PureComponent {
     setCount += 1;
     if (setCount === 3) {
       appsFlyer.trackEvent('resistance_workout_complete');
+      this.updateWeekly();
       this.props.navigation.replace('WorkoutComplete', {
         exerciseList,
         reps,
@@ -151,6 +170,7 @@ export default class Exercise6Screen extends React.PureComponent {
           text: 'Skip',
           onPress: () => {
             appsFlyer.trackEvent('resistance_workout_complete');
+            this.updateWeekly();
             this.props.navigation.replace('WorkoutComplete', {
               exerciseList,
               reps,
