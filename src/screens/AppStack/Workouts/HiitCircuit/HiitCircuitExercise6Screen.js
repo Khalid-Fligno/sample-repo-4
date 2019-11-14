@@ -7,11 +7,14 @@ import {
   StatusBar,
   Alert,
   AppState,
+  AsyncStorage,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';
 import Video from 'react-native-video';
 import FadeInView from 'react-native-fade-in-view';
+import appsFlyer from 'react-native-appsflyer';
+import { db } from '../../../../../config/firebase';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import HiitCircuitWorkoutProgress from '../../../../components/Workouts/HiitCircuitWorkoutProgress';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
@@ -22,6 +25,10 @@ import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
+
+const updateWeeklyTargets = (obj, field, newTally) => {
+  return Object.assign({}, obj, { [field]: newTally });
+};
 
 const workIntervalMap = {
   1: 30,
@@ -50,6 +57,18 @@ export default class HiitCircuitExercise6Screen extends React.PureComponent {
   }
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+  updateWeekly = async () => {
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    return db.runTransaction((transaction) => {
+      return transaction.get(userRef).then((userDoc) => {
+        const newHiitWeeklyComplete = userDoc.data().weeklyTargets.hiitWeeklyComplete + 1;
+        const oldWeeklyTargets = userDoc.data().weeklyTargets;
+        const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'hiitWeeklyComplete', newHiitWeeklyComplete);
+        transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
+      });
+    });
   }
   handleAppStateChange = (nextAppState) => {
     const { appState } = this.state;
@@ -144,6 +163,8 @@ export default class HiitCircuitExercise6Screen extends React.PureComponent {
           onPress: () => {
             const setCount = this.props.navigation.getParam('setCount', 1) + 1;
             if (setCount === 4) {
+              appsFlyer.trackEvent('complete_hiit_circuit_workout');
+              this.updateWeekly();
               this.props.navigation.replace('HiitCircuitWorkoutComplete', {
                 exerciseList,
                 fitnessLevel,
