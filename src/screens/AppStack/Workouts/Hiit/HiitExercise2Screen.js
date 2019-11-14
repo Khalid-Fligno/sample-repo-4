@@ -1,9 +1,20 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar, Alert, AppState } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  StatusBar,
+  Alert,
+  AppState,
+  AsyncStorage,
+} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';
 import FadeInView from 'react-native-fade-in-view';
 import FastImage from 'react-native-fast-image';
+import appsFlyer from 'react-native-appsflyer';
+import { db } from '../../../../../config/firebase';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
@@ -13,6 +24,9 @@ import fonts from '../../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
+const updateWeeklyTargets = (obj, field, newTally) => {
+  return Object.assign({}, obj, { [field]: newTally });
+};
 const restIntervalMap = {
   1: 80,
   2: 60,
@@ -38,6 +52,18 @@ export default class HiitExercise2Screen extends React.PureComponent {
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
+  updateWeekly = async () => {
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    return db.runTransaction((transaction) => {
+      return transaction.get(userRef).then((userDoc) => {
+        const newHiitWeeklyComplete = userDoc.data().weeklyTargets.hiitWeeklyComplete + 1;
+        const oldWeeklyTargets = userDoc.data().weeklyTargets;
+        const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'hiitWeeklyComplete', newHiitWeeklyComplete);
+        transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
+      });
+    });
+  }
   handleAppStateChange = (nextAppState) => {
     const { appState } = this.state;
     if (appState === 'active' && nextAppState.match(/inactive|background/)) {
@@ -53,6 +79,8 @@ export default class HiitExercise2Screen extends React.PureComponent {
     let roundCount = this.props.navigation.getParam('roundCount', 0);
     roundCount += 1;
     if (roundCount === 8) {
+      appsFlyer.trackEvent('complete_hiit_workout');
+      this.updateWeekly();
       this.props.navigation.replace('HiitWorkoutComplete', {
         exerciseList,
         fitnessLevel,
