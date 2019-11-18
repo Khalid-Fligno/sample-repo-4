@@ -7,11 +7,14 @@ import {
   StatusBar,
   Alert,
   AppState,
+  AsyncStorage,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';
 import FastImage from 'react-native-fast-image';
 import FadeInView from 'react-native-fade-in-view';
+import appsFlyer from 'react-native-appsflyer';
+import { db } from '../../../../../config/firebase';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import HiitCircuitWorkoutProgress from '../../../../components/Workouts/HiitCircuitWorkoutProgress';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
@@ -23,6 +26,9 @@ import fonts from '../../../../styles/fonts';
 
 const { width } = Dimensions.get('window');
 
+const updateWeeklyTargets = (obj, field, newTally) => {
+  return Object.assign({}, obj, { [field]: newTally });
+};
 const restIntervalMap = {
   1: 30,
   2: 20,
@@ -49,6 +55,18 @@ export default class HiitCircuitRest6Screen extends React.PureComponent {
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
+  updateWeekly = async () => {
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    return db.runTransaction((transaction) => {
+      return transaction.get(userRef).then((userDoc) => {
+        const newHiitWeeklyComplete = userDoc.data().weeklyTargets.hiitWeeklyComplete + 1;
+        const oldWeeklyTargets = userDoc.data().weeklyTargets;
+        const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'hiitWeeklyComplete', newHiitWeeklyComplete);
+        transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
+      });
+    });
+  }
   handleAppStateChange = (nextAppState) => {
     const { appState } = this.state;
     if (appState === 'active' && nextAppState.match(/inactive|background/)) {
@@ -63,6 +81,8 @@ export default class HiitCircuitRest6Screen extends React.PureComponent {
     this.setState({ timerStart: false });
     const setCount = this.props.navigation.getParam('setCount', 1) + 1;
     if (setCount === 4) {
+      appsFlyer.trackEvent('complete_hiit_circuit_workout');
+      this.updateWeekly();
       this.props.navigation.replace('HiitCircuitWorkoutComplete', {
         exerciseList,
         fitnessLevel,
