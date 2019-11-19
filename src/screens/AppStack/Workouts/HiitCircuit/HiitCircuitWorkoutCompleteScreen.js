@@ -11,19 +11,13 @@ import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';
 import { PieChart } from 'react-native-svg-charts';
 import Rate from 'react-native-rate';
-import appsFlyer from 'react-native-appsflyer';
 import Loader from '../../../../components/Shared/Loader';
 import Icon from '../../../../components/Shared/Icon';
 import CustomButton from '../../../../components/Shared/CustomButton';
-import { db } from '../../../../../config/firebase';
 import fonts from '../../../../styles/fonts';
 import colors from '../../../../styles/colors';
 
 const { width } = Dimensions.get('window');
-
-const updateWeeklyTargets = (obj, field, newTally) => {
-  return Object.assign({}, obj, { [field]: newTally });
-};
 
 const pieDataComplete = [100, 0]
   .map((value, index) => ({
@@ -76,37 +70,11 @@ export default class HiitCircuitWorkoutCompleteScreen extends React.PureComponen
     }));
   }
   completeHiitCircuitWorkout = async () => {
-    this.setState({ loading: true });
-    appsFlyer.trackEvent('complete_workout');
-    const uid = await AsyncStorage.getItem('uid');
-    const userRef = db.collection('users').doc(uid);
-    return db.runTransaction((transaction) => {
-      return transaction.get(userRef).then((userDoc) => {
-        const newHiitWeeklyComplete = userDoc.data().weeklyTargets.hiitWeeklyComplete + 1;
-        const oldWeeklyTargets = userDoc.data().weeklyTargets;
-        const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'hiitWeeklyComplete', newHiitWeeklyComplete);
-        transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
-        this.setState({ loading: false });
-        this.props.navigation.navigate('WorkoutsHome');
-      });
-    });
+    this.props.navigation.navigate('WorkoutsHome');
   }
   completeHiitCircuitWorkoutAndInvite = async () => {
-    this.setState({ loading: true });
-    appsFlyer.trackEvent('complete_workout');
-    const uid = await AsyncStorage.getItem('uid');
-    const userRef = db.collection('users').doc(uid);
-    return db.runTransaction((transaction) => {
-      return transaction.get(userRef).then((userDoc) => {
-        const newHiitWeeklyComplete = userDoc.data().weeklyTargets.hiitWeeklyComplete + 1;
-        const oldWeeklyTargets = userDoc.data().weeklyTargets;
-        const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'hiitWeeklyComplete', newHiitWeeklyComplete);
-        transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
-        this.setState({ loading: false });
-        this.props.navigation.navigate('WorkoutsHome');
-        this.props.navigation.navigate('InviteFriends');
-      });
-    });
+    this.props.navigation.navigate('WorkoutsHome');
+    this.props.navigation.navigate('InviteFriends');
   }
   render() {
     const { loading } = this.state;
