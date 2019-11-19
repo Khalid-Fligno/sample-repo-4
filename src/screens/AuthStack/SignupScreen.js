@@ -124,20 +124,21 @@ export default class SignupScreen extends React.PureComponent {
         fitnessLevel: 1,
       };
       await AsyncStorage.setItem('uid', uid);
-      await db.collection('users').doc(uid).set(data, (error) => {
-        if (error) {
+      db.collection('users').doc(uid).set(data)
+        .then(() => {
+          this.setState({ loading: false });
+          appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Email' });
+          this.props.navigation.navigate('Subscription', { name: firstName, specialOffer: this.state.specialOffer });
+          auth.currentUser.sendEmailVerification().then(() => {
+            Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
+          });
+        })
+        .catch(() => {
           response.user.delete().then(() => {
             this.setState({ loading: false });
             Alert.alert('Sign up could not be completed', 'Please try again');
           });
-        }
-      });
-      this.setState({ loading: false });
-      appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Email' });
-      this.props.navigation.navigate('Subscription', { name: firstName, specialOffer: this.state.specialOffer });
-      auth.currentUser.sendEmailVerification().then(() => {
-        Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
-      });
+        });
     } catch (err) {
       const errorCode = err.code;
       this.setState({ error: errors.createUser[errorCode], loading: false });
