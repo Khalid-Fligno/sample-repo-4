@@ -9163,10 +9163,10 @@ react-native-in-app-utils@6.0.2:
   resolved "https://registry.yarnpkg.com/react-native-in-app-utils/-/react-native-in-app-utils-6.0.2.tgz#b44498c7cce772fe1cebb00af082ff7bf4000a55"
   integrity sha512-hAQFhzl/qN1PwZJVAcE1+LR0baQrcDGzjGRIIgkSJuytjYo3iO9L4qxKqewsLlMwKRfxr2BfORWlPTp6djmJJA==
 
-react-native-indicators@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/react-native-indicators/-/react-native-indicators-0.13.0.tgz#001824bba194b1ca6e654d903beaf0168d4e6ac8"
-  integrity sha1-ABgku6GUscpuZU2QO+rwFo1Oasg=
+react-native-indicators@^0.17.0:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/react-native-indicators/-/react-native-indicators-0.17.0.tgz#92f95efaf5fb53be576dfe4e1980a25655a93f55"
+  integrity sha512-s23em477GHGxWeGczWrixScAZD6tQU4mx1fttlrwhEGKOxhBgp55Kh3RoD9Wj4yna4e5W35xQNoPqoJAT6QW5A==
   dependencies:
     prop-types "^15.5.10"
 
