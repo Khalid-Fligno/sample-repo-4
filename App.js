@@ -49,7 +49,6 @@ export default class App extends React.PureComponent {
       },
     );
     OneSignal.setLocationShared(false);
-    OneSignal.configure(); // triggers the ids event
     appsFlyer.initSdk({
       devKey: appsFlyerDevKey,
       isDebug: false,
