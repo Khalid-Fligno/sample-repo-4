@@ -46,7 +46,7 @@
     "expo-permissions": "~7.0.0",
     "expo-sms": "~7.0.0",
     "expokit": "32.0.6",
-    "firebase": "^5.9.2",
+    "firebase": "^7.5.2",
     "iap-receipt-validator": "^1.0.6",
     "lodash.groupby": "^4.6.0",
     "lodash.sortby": "^4.7.0",
