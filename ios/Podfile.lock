@@ -149,23 +149,33 @@ PODS:
   - GTMSessionFetcher/Full (1.2.2):
     - GTMSessionFetcher/Core (= 1.2.2)
   - JKBigInteger2 (0.0.5)
+  - libwebp (1.0.3):
+    - libwebp/demux (= 1.0.3)
+    - libwebp/mux (= 1.0.3)
+    - libwebp/webp (= 1.0.3)
+  - libwebp/demux (1.0.3):
+    - libwebp/webp
+  - libwebp/mux (1.0.3):
+    - libwebp/demux
+  - libwebp/webp (1.0.3)
   - lottie-ios (2.5.3)
-  - OneSignal (2.10.0)
+  - OneSignal (2.12.2)
   - React (0.59.8):
     - React/Core (= 0.59.8)
   - react-native-appsflyer (1.4.4):
     - AppsFlyerFramework (~> 4.8.12)
     - React
-  - react-native-fast-image (5.1.1):
+  - react-native-fast-image (5.3.0):
     - FLAnimatedImage
     - React
     - SDWebImage/Core
     - SDWebImage/GIF
+    - SDWebImage/WebP
   - react-native-in-app-utils (6.0.2):
     - React
-  - react-native-onesignal (3.2.14):
-    - OneSignal (= 2.10.0)
-    - React
+  - react-native-onesignal (3.6.0):
+    - OneSignal (= 2.12.2)
+    - React (< 1.0.0, >= 0.13.0)
   - react-native-video (4.4.2):
     - React
     - react-native-video/Video (= 4.4.2)
@@ -230,6 +240,9 @@ PODS:
   - SDWebImage/Core (4.4.7)
   - SDWebImage/GIF (4.4.7):
     - FLAnimatedImage (~> 1.0)
+    - SDWebImage/Core
+  - SDWebImage/WebP (4.4.7):
+    - libwebp (< 2.0, >= 0.5)
     - SDWebImage/Core
   - UMBarCodeScannerInterface (4.0.0)
   - UMCameraInterface (4.0.0)
@@ -327,6 +340,7 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - JKBigInteger2
+    - libwebp
     - lottie-ios
     - OneSignal
     - SDWebImage
@@ -501,13 +515,14 @@ SPEC CHECKSUMS:
   GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
   GTMSessionFetcher: 61bb0f61a4cb560030f1222021178008a5727a23
   JKBigInteger2: e91672035c42328c48b7dd015b66812ddf40ca9b
+  libwebp: 057912d6d0abfb6357d8bb05c0ea470301f5d61e
   lottie-ios: a50d5c0160425cd4b01b852bb9578963e6d92d31
-  OneSignal: 0f5ff711d9f25da54885e4ab06ef0abc221a46ef
+  OneSignal: b2c1511c6b5db2d3b0ce1859f574dcf190dde5f3
   React: 841af16feb8e7936838a626bfa1b8faaa07d9e6c
   react-native-appsflyer: 612fc77cbe1f4cb390eb8b6c5f99b0ed9aa33127
-  react-native-fast-image: 47487b71169aea34868e7b38bf870b6b3f2157c5
+  react-native-fast-image: 56efe6ea964cff19fd9bb1cc28e79b432c4b58e4
   react-native-in-app-utils: 07ea1df4bb6e8cbb27337d42a65ffe4cf7a35e97
-  react-native-onesignal: 83c370c7381345d010f253c9f77b4e22f5cb388f
+  react-native-onesignal: 39d79554037ec5842a810efe1bb0343e332c757d
   react-native-video: aed899073f5572418696ba6af3f31e4d371fd2f1
   RNRate: 832f7e4da1b043bda1a138e20afdb75c42a530e9
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
