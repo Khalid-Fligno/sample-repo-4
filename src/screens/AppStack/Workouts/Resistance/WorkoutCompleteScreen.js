@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  AsyncStorage,
   Dimensions,
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
@@ -37,24 +36,10 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
   }
   componentDidMount = async () => {
     this.manageVideoCache();
-    // this.showRatePopup();
+    this.showRatePopup();
   }
   showRatePopup = async () => {
-    const lastRatingRequest = await AsyncStorage.getItem('lastRatingRequest');
-    if (lastRatingRequest === null) {
-      Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false }, (success) => {
-        if (success) {
-          AsyncStorage.setItem('lastRatingRequest', Date.now());
-        }
-      });
-    }
-    if (lastRatingRequest !== null && (Date.now() - lastRatingRequest) > 10368000000) {
-      Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false }, (success) => {
-        if (success) {
-          AsyncStorage.setItem('lastRatingRequest', Date.now());
-        }
-      });
-    }
+    Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
   }
   manageVideoCache = async () => {
     const exerciseVideos = [
