@@ -58,7 +58,7 @@ export default class SignupScreen extends React.PureComponent {
       if (type === 'success') {
         this.setState({ loading: true });
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        const { user, additionalUserInfo } = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
+        const { user, additionalUserInfo } = await firebase.auth().signInWithCredential(credential);
         const { region } = Localization;
         const { profile } = additionalUserInfo;
         const data = {
