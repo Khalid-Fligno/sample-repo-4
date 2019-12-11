@@ -59,7 +59,7 @@ export default class LoginScreen extends React.PureComponent {
         appsFlyer.trackEvent('af_login');
         await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        const authResponse = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
+        const authResponse = await firebase.auth().signInWithCredential(credential);
         const { uid } = authResponse.user;
         await AsyncStorage.setItem('uid', uid);
         db.collection('users').doc(uid)
