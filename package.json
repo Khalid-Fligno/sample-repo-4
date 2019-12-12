@@ -1,6 +1,6 @@
 {
   "name": "fitazfk",
-  "version": "1.15.0",
+  "version": "1.16.0",
   "private": true,
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.7.4",
