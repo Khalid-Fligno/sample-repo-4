@@ -67,7 +67,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>FitazFK uses the camera to take and upload progress or a profile photo</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Allow FitazFK to access your contacts</string>
+	<string>FitazFK needs permission to use your contacts to display a list that you can invite from</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Allow FitazFK to use your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
