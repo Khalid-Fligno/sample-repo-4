@@ -25,6 +25,9 @@ EXBuildConstants.plist.bak
 /node_modules
 /ios/Pods/
 
+# testing
+coverage
+
 # misc
 .env.local
 .env.development.local
