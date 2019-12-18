@@ -31,9 +31,11 @@ const cacheFonts = (fonts) => {
   });
 };
 
-const cacheSound = async (sound) => {
+const cacheSound = async (sounds) => {
   await Audio.setIsEnabledAsync(true);
-  return timerSound.loadAsync(sound);
+  return sounds.map((sound) => {
+    return timerSound.loadAsync(sound);
+  });
 };
 
 export default class AuthLoadingScreen extends React.PureComponent {
@@ -123,7 +125,9 @@ export default class AuthLoadingScreen extends React.PureComponent {
         icomoon: require('../../assets/fonts/icomoon.ttf'),
       },
     ]);
-    const soundAsset = cacheSound(require('../../assets/sounds/ding.mp3'));
+    const soundAsset = cacheSound([
+      require('../../assets/sounds/ding.mp3'),
+    ]);
     await Promise.all([...imageAssets, ...fontAssets, soundAsset]);
   }
   // GRAND UNIFIED
