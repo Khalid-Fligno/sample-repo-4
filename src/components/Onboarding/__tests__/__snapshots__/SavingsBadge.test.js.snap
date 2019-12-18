@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`New Recipe Badge renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "rgb(238, 48, 66)",
+      "borderRadius": 2,
+      "marginBottom": 6,
+      "marginLeft": 8,
+      "padding": 3,
+      "paddingBottom": 0,
+    }
+  }
+>
+  <Text
+    style={
+      Object {
+        "color": "rgb(255, 255, 255)",
+        "fontFamily": "GothamBold",
+        "fontSize": 8,
+      }
+    }
+  >
+    Test
+  </Text>
+</View>
+`;
