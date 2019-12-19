@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Free Gift Section renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "rgba(0, 0, 0, 0.5 )",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderRadius": 4,
+      "borderWidth": 4,
+      "height": 90,
+      "justifyContent": "space-between",
+      "marginBottom": 5,
+      "marginTop": 5,
+      "opacity": 0.3,
+      "padding": 15,
+      "width": 730,
+    }
+  }
+>
+  <Text />
+  <Text
+    style={
+      Object {
+        "color": "rgb(255, 255, 255)",
+        "fontFamily": "GothamNarrowBook",
+        "fontSize": 16,
+      }
+    }
+  >
+    Invite 1 friends to unlock this gift
+  </Text>
+</View>
+`;
