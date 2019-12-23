@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Countdown Timer renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderRadius": 5,
+      "justifyContent": "center",
+      "paddingBottom": 0,
+      "paddingLeft": 5,
+      "paddingRight": 5,
+      "paddingTop": 5,
+    }
+  }
+>
+  <Text
+    style={
+      Object {
+        "color": "rgb(38, 38, 40)",
+        "fontFamily": "GothamBold",
+        "fontSize": 84,
+      }
+    }
+  >
+    1
+  </Text>
+</View>
+`;
