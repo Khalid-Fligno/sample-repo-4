@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Workout Timer renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "rgb(0, 0, 0)",
+      "justifyContent": "center",
+      "paddingTop": 25,
+      "width": 750,
+    }
+  }
+>
+  <Text
+    style={
+      Object {
+        "color": "rgb(238, 48, 66)",
+        "fontFamily": "GothamBold",
+        "fontSize": 80,
+      }
+    }
+  >
+    00:01
+  </Text>
+</View>
+`;
