@@ -1,0 +1,217 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Hiit Circuit Workout Progress renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "flexDirection": "row",
+      "height": 48,
+      "paddingLeft": 5,
+      "paddingRight": 5,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flex": 1,
+        "justifyContent": "center",
+        "paddingLeft": 5,
+        "paddingRight": 5,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "height": 48,
+          "width": 48,
+        }
+      }
+    >
+      <View
+        onLayout={[Function]}
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "height": 0,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "marginTop": -36,
+          }
+        }
+      >
+        <Text
+          style={
+            Object {
+              "color": "rgb(35, 36, 44)",
+              "fontFamily": "GothamBold",
+              "fontSize": 24,
+            }
+          }
+        >
+          1
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flex": 1,
+        "justifyContent": "center",
+        "paddingLeft": 5,
+        "paddingRight": 5,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "height": 48,
+          "width": 48,
+        }
+      }
+    >
+      <View
+        onLayout={[Function]}
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flex": 1,
+        "justifyContent": "center",
+        "paddingLeft": 5,
+        "paddingRight": 5,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "height": 48,
+          "width": 48,
+        }
+      }
+    >
+      <View
+        onLayout={[Function]}
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flex": 1,
+        "justifyContent": "center",
+        "paddingLeft": 5,
+        "paddingRight": 5,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "height": 48,
+          "width": 48,
+        }
+      }
+    >
+      <View
+        onLayout={[Function]}
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flex": 1,
+        "justifyContent": "center",
+        "paddingLeft": 5,
+        "paddingRight": 5,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "height": 48,
+          "width": 48,
+        }
+      }
+    >
+      <View
+        onLayout={[Function]}
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flex": 1,
+        "justifyContent": "center",
+        "paddingLeft": 5,
+        "paddingRight": 5,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "height": 48,
+          "width": 48,
+        }
+      }
+    >
+      <View
+        onLayout={[Function]}
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+  </View>
+</View>
+`;
