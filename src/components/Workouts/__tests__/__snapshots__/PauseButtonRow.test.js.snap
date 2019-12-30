@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pause Button Row renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "rgb(234, 234, 235)",
+      "flexDirection": "row",
+      "justifyContent": "space-between",
+      "padding": 5,
+      "width": 750,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "height": 40,
+        "width": 117.5,
+      }
+    }
+  >
+    <View
+      accessible={true}
+      isTVSelectable={true}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "borderColor": "rgb(238, 48, 66)",
+          "borderRadius": 4,
+          "borderWidth": 2,
+          "flexDirection": "row",
+          "height": 40,
+          "justifyContent": "center",
+          "opacity": 1,
+          "paddingLeft": 15,
+          "paddingRight": 15,
+          "shadowColor": "rgb(65, 64, 66)",
+          "shadowOffset": Object {
+            "height": 2,
+            "width": 0,
+          },
+          "shadowOpacity": 0.3,
+          "shadowRadius": 2,
+          "width": 117.5,
+        }
+      }
+    >
+      <Text />
+      <Text
+        style={
+          Object {
+            "color": "rgb(238, 48, 66)",
+            "fontFamily": "GothamBold",
+            "fontSize": 14,
+            "marginLeft": 5,
+            "marginRight": 5,
+            "marginTop": 4,
+          }
+        }
+      >
+        PAUSE
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "justifyContent": "center",
+        "padding": 5,
+        "paddingTop": 8,
+        "width": 632.5,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontFamily": "GothamBook",
+          "fontSize": 10,
+        }
+      }
+    >
+      NEXT EXERCISE:
+    </Text>
+    <Text
+      ellipsizeMode="tail"
+      numberOfLines={1}
+      style={
+        Object {
+          "fontFamily": "GothamBold",
+          "fontSize": 12,
+          "marginRight": 5,
+        }
+      }
+    >
+      TEST
+    </Text>
+  </View>
+</View>
+`;
