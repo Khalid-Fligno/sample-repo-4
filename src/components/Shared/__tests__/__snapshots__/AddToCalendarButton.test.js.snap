@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Contact Row renders correctly 1`] = `
+<View
+  accessible={true}
+  isTVSelectable={true}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(65, 64, 66)",
+      "borderRadius": 4,
+      "borderWidth": 2,
+      "flexDirection": "row",
+      "justifyContent": "flex-start",
+      "opacity": 1,
+      "padding": 3,
+      "shadowColor": "rgb(65, 64, 66)",
+      "shadowOffset": Object {
+        "height": 2,
+        "width": 0,
+      },
+      "shadowOpacity": 0.2,
+      "shadowRadius": 2,
+      "width": 140,
+    }
+  }
+>
+  <Text />
+  <Text
+    style={
+      Object {
+        "color": "rgb(65, 64, 66)",
+        "fontFamily": "GothamBook",
+        "fontSize": 12,
+        "marginLeft": 5,
+        "marginRight": 5,
+        "marginTop": 4,
+      }
+    }
+  >
+    Add to calendar
+  </Text>
+</View>
+`;
