@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Custom Button renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "borderRadius": 3,
+    }
+  }
+>
+  <View
+    accessible={true}
+    isTVSelectable={true}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "rgb(20, 20, 20)",
+          "borderColor": "#2089dc",
+          "borderRadius": 4,
+          "borderWidth": 0,
+          "flexDirection": "row",
+          "height": 45,
+          "justifyContent": "center",
+          "padding": 8,
+          "shadowColor": "rgb(38, 38, 40)",
+          "shadowOffset": Object {
+            "height": 2,
+            "width": 0,
+          },
+          "shadowOpacity": 0.8,
+          "shadowRadius": 2,
+          "width": 730,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "rgb(255, 255, 255)",
+            "fontFamily": "GothamBold",
+            "fontSize": 14,
+            "marginTop": 3,
+            "paddingBottom": 1,
+            "paddingTop": 2,
+            "textAlign": "center",
+          }
+        }
+      >
+        Test
+      </Text>
+    </View>
+  </View>
+</View>
+`;
