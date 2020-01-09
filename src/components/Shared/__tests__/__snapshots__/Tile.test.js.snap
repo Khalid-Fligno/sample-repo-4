@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tile renders correctly 1`] = `
+<View
+  accessible={true}
+  isTVSelectable={true}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "flex": 0.25,
+      "margin": 5,
+      "opacity": 1,
+      "paddingLeft": 10,
+      "paddingRight": 10,
+      "shadowColor": "rgb(38, 38, 40)",
+      "shadowOffset": Object {
+        "height": 2,
+        "width": 0,
+      },
+      "shadowOpacity": 0.5,
+      "shadowRadius": 4,
+      "width": 750,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+        "transform": Array [
+          Object {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  >
+    <View
+      accessibilityIgnoresInvertColors={true}
+      style={
+        Object {
+          "alignItems": "center",
+          "borderRadius": 2,
+          "flex": 1,
+          "justifyContent": "center",
+          "overflow": "hidden",
+        }
+      }
+    >
+      <Image
+        source={1}
+        style={
+          Array [
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+            Object {
+              "height": undefined,
+              "width": undefined,
+            },
+            undefined,
+          ]
+        }
+      />
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "rgba(0, 0, 0, 0.5 )",
+            "flex": 1,
+            "justifyContent": "center",
+            "width": "100%",
+          }
+        }
+      >
+        <Text
+          style={
+            Object {
+              "color": "rgb(255, 255, 255)",
+              "fontFamily": "GothamBold",
+              "fontSize": 24,
+              "shadowColor": "rgb(0, 0, 0)",
+              "shadowOffset": Object {
+                "height": 0,
+                "width": 0,
+              },
+              "shadowOpacity": 1,
+              "shadowRadius": 5,
+              "textAlign": "center",
+            }
+          }
+        >
+          TEST
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
