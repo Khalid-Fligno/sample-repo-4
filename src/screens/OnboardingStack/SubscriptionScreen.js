@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import appsFlyer from 'react-native-appsflyer';
+import * as Sentry from 'sentry-expo';
 import { auth, db } from '../../../config/firebase';
 import {
   // foundationIdentifiers,
@@ -96,6 +97,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     this.setState({ loading: true });
     InAppUtils.restorePurchases(async (error, response) => {
       if (error) {
+        Sentry.captureException(error);
         this.setState({ loading: false });
         Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
         return;
