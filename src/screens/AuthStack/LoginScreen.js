@@ -18,6 +18,7 @@ import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, Input } from 'react-native-elements';
 import * as Haptics from 'expo-haptics';
 import * as Facebook from 'expo-facebook';
+import * as Sentry from 'sentry-expo';
 import firebase from 'firebase';
 import appsFlyer from 'react-native-appsflyer';
 import { db, auth } from '../../../config/firebase';
@@ -77,6 +78,7 @@ export default class LoginScreen extends React.PureComponent {
               // EXPIRED
               InAppUtils.restorePurchases(async (error, response) => {
                 if (error) {
+                  Sentry.captureException(error);
                   this.setState({ loading: false });
                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
                 } else {
@@ -159,6 +161,7 @@ export default class LoginScreen extends React.PureComponent {
               // EXPIRED
               InAppUtils.restorePurchases(async (error, response) => {
                 if (error) {
+                  Sentry.captureException(error);
                   this.setState({ loading: false });
                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
                 } else {
