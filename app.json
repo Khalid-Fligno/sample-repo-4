@@ -3,7 +3,7 @@
     "name": "FitazFK",
     "slug": "fitazfk-app",
     "version": "1.16.0",
-    "sdkVersion": "35.0.0",
+    "sdkVersion": "36.0.0",
     "orientation": "portrait",
     "icon": "./assets/icons/fitazfk-app-icon-gradient-dark.png",
     "splash": {
@@ -38,6 +38,10 @@
           }
         }
       ]
-    }
+    },
+    "platforms": [
+      "android",
+      "ios"
+    ]
   }
 }
