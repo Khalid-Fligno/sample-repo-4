@@ -13,7 +13,7 @@ import {
 import { ListItem } from 'react-native-elements';
 import * as FileSystem from 'expo-file-system';
 import CalendarStrip from 'react-native-calendar-strip';
-import Swipeable from 'react-native-swipeable';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 import firebase from 'firebase';
 import ReactTimeout from 'react-timeout';
 import { db } from '../../../../config/firebase';
@@ -65,8 +65,6 @@ class CalendarHomeScreen extends React.PureComponent {
     if (this.unsubscribeFromEntries2) {
       this.unsubscribeFromEntries2();
     }
-    // this.unsubscribeFromEntries2();
-    // this.unsubscribeFromUsers();
   }
   fetchCalendarEntries = async () => {
     this.setState({ loading: true });
@@ -244,6 +242,18 @@ class CalendarHomeScreen extends React.PureComponent {
         [fieldToDelete]: firebase.firestore.FieldValue.delete(),
       });
   }
+  renderRightActions = (fieldToDelete) => {
+    return (
+      <TouchableOpacity
+        onPress={() => this.deleteCalendarEntry(fieldToDelete)}
+        style={styles.deleteButton}
+      >
+        <Text style={styles.deleteButtonText}>
+          Delete
+        </Text>
+      </TouchableOpacity>
+    );
+  }
   render() {
     const {
       loading,
@@ -256,16 +266,7 @@ class CalendarHomeScreen extends React.PureComponent {
       helperModalVisible,
       dayOfWeek,
     } = this.state;
-    const deleteButton = (fieldToDelete) => [
-      <TouchableOpacity
-        onPress={() => this.deleteCalendarEntry(fieldToDelete)}
-        style={styles.deleteButton}
-      >
-        <Text style={styles.deleteButtonText}>
-          Delete
-        </Text>
-      </TouchableOpacity>,
-    ];
+
     const findLocationIcon = () => {
       let location;
       if (workout.home) {
@@ -300,11 +301,10 @@ class CalendarHomeScreen extends React.PureComponent {
           {
             workout ? (
               <Swipeable
-                rightButtons={deleteButton('workout')}
-                rightButtonWidth={75}
-                rightContainerStyle={styles.deleteButtonContainer}
-                onSwipeStart={() => this.setState({ isSwiping: true })}
-                onSwipeRelease={() => this.setState({ isSwiping: false })}
+                renderRightActions={() => this.renderRightActions('workout')}
+                overshootRight={false}
+                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                onSwipeableClose={() => this.setState({ isSwiping: false })}
               >
                 <ListItem
                   title={workout.displayName}
@@ -369,11 +369,10 @@ class CalendarHomeScreen extends React.PureComponent {
           {
             breakfast ? (
               <Swipeable
-                rightButtons={deleteButton('breakfast')}
-                rightButtonWidth={75}
-                rightContainerStyle={styles.deleteButtonContainer}
-                onSwipeStart={() => this.setState({ isSwiping: true })}
-                onSwipeRelease={() => this.setState({ isSwiping: false })}
+                renderRightActions={() => this.renderRightActions('breakfast')}
+                overshootRight={false}
+                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                onSwipeableClose={() => this.setState({ isSwiping: false })}
               >
                 <ListItem
                   title={breakfast.title.toUpperCase()}
@@ -402,11 +401,10 @@ class CalendarHomeScreen extends React.PureComponent {
           {
             lunch ? (
               <Swipeable
-                rightButtons={deleteButton('lunch')}
-                rightButtonWidth={75}
-                rightContainerStyle={styles.deleteButtonContainer}
-                onSwipeStart={() => this.setState({ isSwiping: true })}
-                onSwipeRelease={() => this.setState({ isSwiping: false })}
+                renderRightActions={() => this.renderRightActions('lunch')}
+                overshootRight={false}
+                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                onSwipeableClose={() => this.setState({ isSwiping: false })}
               >
                 <ListItem
                   title={lunch.title.toUpperCase()}
@@ -435,11 +433,10 @@ class CalendarHomeScreen extends React.PureComponent {
           {
             dinner ? (
               <Swipeable
-                rightButtons={deleteButton('dinner')}
-                rightButtonWidth={75}
-                rightContainerStyle={styles.deleteButtonContainer}
-                onSwipeStart={() => this.setState({ isSwiping: true })}
-                onSwipeRelease={() => this.setState({ isSwiping: false })}
+                renderRightActions={() => this.renderRightActions('dinner')}
+                overshootRight={false}
+                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                onSwipeableClose={() => this.setState({ isSwiping: false })}
               >
                 <ListItem
                   title={dinner.title.toUpperCase()}
@@ -470,11 +467,10 @@ class CalendarHomeScreen extends React.PureComponent {
           {
             snack ? (
               <Swipeable
-                rightButtons={deleteButton('snack')}
-                rightButtonWidth={75}
-                rightContainerStyle={styles.deleteButtonContainer}
-                onSwipeStart={() => this.setState({ isSwiping: true })}
-                onSwipeRelease={() => this.setState({ isSwiping: false })}
+                renderRightActions={() => this.renderRightActions('snack')}
+                overshootRight={false}
+                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                onSwipeableClose={() => this.setState({ isSwiping: false })}
               >
                 <ListItem
                   title={snack.title.toUpperCase()}
@@ -503,11 +499,10 @@ class CalendarHomeScreen extends React.PureComponent {
           {
             snack2 ? (
               <Swipeable
-                rightButtons={deleteButton('snack2')}
-                rightButtonWidth={75}
-                rightContainerStyle={styles.deleteButtonContainer}
-                onSwipeStart={() => this.setState({ isSwiping: true })}
-                onSwipeRelease={() => this.setState({ isSwiping: false })}
+                renderRightActions={() => this.renderRightActions('snack2')}
+                overshootRight={false}
+                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                onSwipeableClose={() => this.setState({ isSwiping: false })}
               >
                 <ListItem
                   title={snack2.title.toUpperCase()}
@@ -715,11 +710,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.charcoal.standard,
   },
-  deleteButtonContainer: {
-    backgroundColor: colors.coral.standard,
-  },
   deleteButton: {
-    width: 75,
+    width: 80,
     height: 65,
     alignItems: 'center',
     justifyContent: 'center',
