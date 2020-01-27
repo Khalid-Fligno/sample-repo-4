@@ -6,13 +6,13 @@ import {
   Dimensions,
   ScrollView,
   AsyncStorage,
-  DatePickerIOS,
   TouchableOpacity,
   Alert,
   Image,
   Linking,
 } from 'react-native';
 import * as FileSystem from 'expo-file-system';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Video from 'react-native-video';
 import Modal from 'react-native-modal';
 import Carousel from 'react-native-carousel';
@@ -262,9 +262,9 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
             animationOutTiming={600}
           >
             <View style={styles.modalContainer}>
-              <DatePickerIOS
+              <DateTimePicker
                 mode="date"
-                date={chosenDate}
+                value={chosenDate}
                 onDateChange={this.setDate}
                 minimumDate={new Date()}
               />

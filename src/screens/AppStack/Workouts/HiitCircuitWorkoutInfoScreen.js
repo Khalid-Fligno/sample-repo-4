@@ -4,9 +4,7 @@ import {
   View,
   Text,
   Dimensions,
-  ScrollView,
   AsyncStorage,
-  DatePickerIOS,
   TouchableOpacity,
   Alert,
   Image,
@@ -14,6 +12,7 @@ import {
   FlatList,
 } from 'react-native';
 import * as FileSystem from 'expo-file-system';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Video from 'react-native-video';
 import Modal from 'react-native-modal';
 import Carousel from 'react-native-carousel';
@@ -231,104 +230,105 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
     } = this.state;
     return (
       <View style={styles.container}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollView}
+        <Modal
+          isVisible={calendarModalVisible}
+          onBackdropPress={this.hideCalendarModal}
+          animationIn="fadeIn"
+          animationInTiming={600}
+          animationOut="fadeOut"
+          animationOutTiming={600}
         >
-          <Modal
-            isVisible={calendarModalVisible}
-            onBackdropPress={this.hideCalendarModal}
-            animationIn="fadeIn"
-            animationInTiming={600}
-            animationOut="fadeOut"
-            animationOutTiming={600}
-          >
-            <View style={styles.modalContainer}>
-              <DatePickerIOS
-                mode="date"
-                date={chosenDate}
-                onDateChange={this.setDate}
-                minimumDate={new Date()}
+          <View style={styles.modalContainer}>
+            <DateTimePicker
+              mode="date"
+              value={chosenDate}
+              onDateChange={this.setDate}
+              minimumDate={new Date()}
+            />
+            <TouchableOpacity
+              onPress={() => this.addWorkoutToCalendar(chosenDate)}
+              style={styles.modalButton}
+            >
+              {
+                addingToCalendar ? (
+                  <DotIndicator
+                    color={colors.white}
+                    count={3}
+                    size={6}
+                  />
+                ) : (
+                  <Text style={styles.modalButtonText}>
+                    ADD TO CALENDAR
+                  </Text>
+                )
+              }
+            </TouchableOpacity>
+          </View>
+        </Modal>
+        {
+          workout && (
+            <View style={styles.flatListContainer}>
+              <FlatList
+                data={workout.exercises}
+                keyExtractor={this.keyExtractor}
+                renderItem={this.renderItem}
+                ListHeaderComponent={(
+                  <View style={styles.workoutInfoContainer}>
+                    <View style={styles.workoutNameContainer}>
+                      <Text style={styles.workoutName}>
+                        {workout && workout.displayName.toUpperCase()}
+                      </Text>
+                      <AddToCalendarButton onPress={this.showCalendarModal} />
+                    </View>
+                    <View style={styles.workoutIconsRow}>
+                      <View style={styles.workoutIconContainer}>
+                        <Icon
+                          name="workouts-hiit"
+                          size={36}
+                          color={colors.charcoal.standard}
+                          style={styles.hiitIcon}
+                        />
+                        <Text style={styles.workoutInfoFieldData}>
+                          HIIT CIRCUIT
+                        </Text>
+                      </View>
+                      <View style={styles.workoutIconContainer}>
+                        <Icon
+                          name="workouts-time"
+                          size={40}
+                          color={colors.charcoal.standard}
+                        />
+                        <Text style={styles.workoutInfoFieldData}>
+                          18 mins
+                        </Text>
+                      </View>
+                      <View style={styles.workoutIconContainer}>
+                        <Icon
+                          name="workouts-reps"
+                          size={40}
+                          color={colors.charcoal.standard}
+                        />
+                        <Text style={styles.workoutInfoFieldData}>
+                          3 rounds
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.workoutPreviewHeaderContainer} >
+                      <Text style={styles.workoutPreviewHeaderText}>
+                        WORKOUT PREVIEW
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                ListFooterComponent={(
+                  <Text style={styles.workoutPreviewFooterText}>
+                    3 TIMES THROUGH
+                  </Text>
+                )}
               />
-              <TouchableOpacity
-                onPress={() => this.addWorkoutToCalendar(chosenDate)}
-                style={styles.modalButton}
-              >
-                {
-                  addingToCalendar ? (
-                    <DotIndicator
-                      color={colors.white}
-                      count={3}
-                      size={6}
-                    />
-                  ) : (
-                    <Text style={styles.modalButtonText}>
-                      ADD TO CALENDAR
-                    </Text>
-                  )
-                }
-              </TouchableOpacity>
             </View>
-          </Modal>
-          <View style={styles.workoutInfoContainer}>
-            <View style={styles.workoutNameContainer}>
-              <Text style={styles.workoutName}>
-                {workout && workout.displayName.toUpperCase()}
-              </Text>
-              <AddToCalendarButton onPress={this.showCalendarModal} />
-            </View>
-            <View style={styles.workoutIconsRow}>
-              <View style={styles.workoutIconContainer}>
-                <Icon
-                  name="workouts-hiit"
-                  size={36}
-                  color={colors.charcoal.standard}
-                  style={styles.hiitIcon}
-                />
-                <Text style={styles.workoutInfoFieldData}>
-                  HIIT CIRCUIT
-                </Text>
-              </View>
-              <View style={styles.workoutIconContainer}>
-                <Icon
-                  name="workouts-time"
-                  size={40}
-                  color={colors.charcoal.standard}
-                />
-                <Text style={styles.workoutInfoFieldData}>
-                  18 mins
-                </Text>
-              </View>
-              <View style={styles.workoutIconContainer}>
-                <Icon
-                  name="workouts-reps"
-                  size={40}
-                  color={colors.charcoal.standard}
-                />
-                <Text style={styles.workoutInfoFieldData}>
-                  3 rounds
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View style={styles.workoutPreviewContainer}>
-            <Text style={styles.workoutPreviewHeaderText}>
-              WORKOUT PREVIEW
-            </Text>
-            {
-              workout && (
-                <FlatList
-                  data={workout.exercises}
-                  keyExtractor={this.keyExtractor}
-                  renderItem={this.renderItem}
-                />
-              )
-            }
-            <Text style={styles.workoutPreviewFooterText}>
-              3 TIMES THROUGH
-            </Text>
-          </View>
-        </ScrollView>
+          )
+        }
         <Modal
           isVisible={musicModalVisible}
           animationIn="fadeIn"
@@ -405,10 +405,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
   },
-  scrollView: {
-    alignItems: 'center',
-    paddingTop: 7.5,
-  },
   modalContainer: {
     backgroundColor: colors.white,
     borderRadius: 4,
@@ -470,11 +466,15 @@ const styles = StyleSheet.create({
     color: colors.charcoal.standard,
     marginTop: 8,
   },
-  workoutPreviewContainer: {
+  flatListContainer: {
     width,
     backgroundColor: colors.grey.light,
-    paddingTop: 13,
-    paddingBottom: 15,
+    paddingBottom: 12,
+  },
+  workoutPreviewHeaderContainer: {
+    width,
+    backgroundColor: colors.grey.light,
+    paddingTop: 12,
   },
   workoutPreviewHeaderText: {
     textAlign: 'center',

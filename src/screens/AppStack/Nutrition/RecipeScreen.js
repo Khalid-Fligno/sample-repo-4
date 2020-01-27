@@ -5,10 +5,10 @@ import {
   Text,
   Dimensions,
   AsyncStorage,
-  DatePickerIOS,
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import * as FileSystem from 'expo-file-system';
 import Modal from 'react-native-modal';
 import { Divider } from 'react-native-elements';
@@ -119,9 +119,9 @@ export default class RecipeScreen extends React.PureComponent {
             onBackdropPress={this.hideModal}
           >
             <View style={styles.modalContainer}>
-              <DatePickerIOS
+              <DateTimePicker
                 mode="date"
-                date={chosenDate}
+                value={chosenDate}
                 onDateChange={this.setDate}
                 minimumDate={new Date()}
               />

@@ -5,7 +5,6 @@ import {
   StyleSheet,
   SafeAreaView,
   AsyncStorage,
-  DatePickerIOS,
   Picker,
   TouchableOpacity,
   Dimensions,
@@ -13,6 +12,7 @@ import {
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as Localization from 'expo-localization';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Modal from 'react-native-modal';
 import CustomButton from '../../components/Shared/CustomButton';
 import Loader from '../../components/Shared/Loader';
@@ -142,9 +142,9 @@ export default class Onboarding1Screen extends React.PureComponent {
                 animationOutTiming={600}
               >
                 <View style={styles.modalContainer}>
-                  <DatePickerIOS
+                  <DateTimePicker
                     mode="date"
-                    date={chosenDate}
+                    value={chosenDate}
                     onDateChange={this.setDate}
                     minimumDate={new Date(1940, 0, 1)}
                     maximumDate={new Date(2008, 0, 1)}
