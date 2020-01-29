@@ -10,6 +10,7 @@ import expolib_v1.okhttp3.OkHttpClient;
 
 // Needed for `react-native link`
 // import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.appsflyer.reactnative.RNAppsFlyerPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.brentvatne.react.ReactVideoPackage;
@@ -30,6 +31,7 @@ public class MainApplication extends ExpoApplication {
 
         // Needed for `react-native link`
         // new MainReactPackage(),
+            new AsyncStoragePackage(),
             new RNAppsFlyerPackage(),
             new ReactNativeOneSignalPackage(),
             new ReactVideoPackage(),
