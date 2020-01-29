@@ -7,10 +7,10 @@ import {
   Dimensions,
   NativeModules,
   Alert,
-  AsyncStorage,
   Linking,
   ImageBackground,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
 import appsFlyer from 'react-native-appsflyer';
 import * as Sentry from 'sentry-expo';

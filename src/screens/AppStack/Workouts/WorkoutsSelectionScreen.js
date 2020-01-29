@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, AsyncStorage, Alert } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as FileSystem from 'expo-file-system';
 // import moment from 'moment';
 import sortBy from 'lodash.sortby';
@@ -42,17 +43,14 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     this.state = {
       workouts: [],
       loading: false,
-      // cycleTargets: undefined,
       location: props.navigation.getParam('workoutLocation', null),
     };
   }
   componentDidMount = async () => {
     await this.fetchWorkouts();
-    // await this.fetchTargetInfo();
   }
   componentWillUnmount = async () => {
     await this.unsubscribe();
-    // await this.unsubscribe2();
   }
   fetchWorkouts = async () => {
     this.setState({ loading: true });
@@ -70,35 +68,6 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
         this.setState({ workouts, loading: false });
       });
   }
-  // fetchTargetInfo = async () => {
-  //   const uid = await AsyncStorage.getItem('uid', null);
-  //   const userRef = db.collection('users').doc(uid);
-  //   this.unsubscribe2 = userRef.onSnapshot(async (doc) => {
-  //     this.setState({
-  //       cycleTargets: await doc.data().cycleTargets,
-  //     });
-  // if (await doc.data().cycleTargets.cycleStartDate < moment().startOf('week').subtract(11, 'weeks').format('YYYY-MM-DD')) {
-  //   const data = {
-  //     cycleTargets: {
-  //       1: 0,
-  //       2: 0,
-  //       3: 0,
-  //       4: 0,
-  //       5: 0,
-  //       6: 0,
-  //       7: 0,
-  //       8: 0,
-  //       9: 0,
-  //       10: 0,
-  //       11: 0,
-  //       12: 0,
-  //       cycleStartDate: moment().startOf('week').format('YYYY-MM-DD'),
-  //     },
-  //   };
-  //   await userRef.set(data, { merge: true });
-  // }
-  // });
-  // }
   loadExercises = async (workout) => {
     this.setState({ loading: true });
     const fitnessLevel = await AsyncStorage.getItem('fitnessLevel');
@@ -133,7 +102,6 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     const {
       workouts,
       loading,
-      // cycleTargets,
       location,
     } = this.state;
     const locationImages = images[location];
@@ -144,7 +112,6 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
         image={locationImages[index]}
         onPress={() => this.loadExercises(workout)}
         disabled={workout.disabled}
-        // cycleTargets={cycleTargets}
       />
     ));
 

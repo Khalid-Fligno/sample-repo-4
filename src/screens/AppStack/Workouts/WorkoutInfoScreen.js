@@ -4,13 +4,13 @@ import {
   View,
   Text,
   Dimensions,
-  AsyncStorage,
   TouchableOpacity,
   Alert,
   Linking,
   Image,
   FlatList,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as FileSystem from 'expo-file-system';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Video from 'react-native-video';

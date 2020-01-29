@@ -7,8 +7,8 @@ import {
   StatusBar,
   Alert,
   AppState,
-  AsyncStorage,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';
 import FastImage from 'react-native-fast-image';

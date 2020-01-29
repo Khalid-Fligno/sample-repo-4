@@ -8,12 +8,12 @@ import {
   StatusBar,
   TouchableOpacity,
   SafeAreaView,
-  AsyncStorage,
   Alert,
   NativeModules,
   Keyboard,
   ImageBackground,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, Input } from 'react-native-elements';
 import * as Haptics from 'expo-haptics';
@@ -69,7 +69,7 @@ export default class LoginScreen extends React.PureComponent {
             if (await doc.data().fitnessLevel !== undefined) {
               await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
             }
-            const { subscriptionInfo } = await doc.data();
+            const { subscriptionInfo = undefined } = await doc.data();
             if (subscriptionInfo === undefined) {
               // NO PURCHASE INFORMATION SAVED
               // this.setState({ loading: false });
@@ -152,7 +152,7 @@ export default class LoginScreen extends React.PureComponent {
             if (await doc.data().fitnessLevel !== undefined) {
               await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
             }
-            const { subscriptionInfo } = await doc.data();
+            const { subscriptionInfo = undefined } = await doc.data();
             if (subscriptionInfo === undefined) {
               // NO PURCHASE INFORMATION SAVED
               this.setState({ loading: false });

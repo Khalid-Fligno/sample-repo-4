@@ -8,12 +8,12 @@ import {
   StatusBar,
   ScrollView,
   SafeAreaView,
-  AsyncStorage,
   Alert,
   Keyboard,
   ImageBackground,
   KeyboardAvoidingView,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, Input } from 'react-native-elements';
 import * as Localization from 'expo-localization';

@@ -2,8 +2,8 @@ import React from 'react';
 import {
   Alert,
   NativeModules,
-  AsyncStorage,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { AppLoading } from 'expo';
 import { Audio } from 'expo-av';
 import * as Font from 'expo-font';
@@ -33,8 +33,11 @@ const cacheFonts = (fonts) => {
 
 const cacheSound = async (sounds) => {
   await Audio.setIsEnabledAsync(true);
-  return sounds.map((sound) => {
-    return timerSound.loadAsync(sound);
+  return sounds.map(async (sound) => {
+    const status = await timerSound.getStatusAsync();
+    if (status.isLoaded === false) {
+      timerSound.loadAsync(sound);
+    }
   });
 };
 
@@ -145,7 +148,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
               } else {
                 await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
               }
-              const { subscriptionInfo, onboarded } = await doc.data();
+              const { subscriptionInfo = undefined, onboarded = false } = await doc.data();
               if (subscriptionInfo === undefined) {
                 // NO PURCHASE INFORMATION SAVED
                 this.props.navigation.navigate('Subscription');

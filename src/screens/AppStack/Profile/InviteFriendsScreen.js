@@ -5,10 +5,10 @@ import {
   ScrollView,
   View,
   Text,
-  AsyncStorage,
   Dimensions,
   ImageBackground,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
 import Loader from '../../../components/Shared/Loader';
 import CustomButton from '../../../components/Shared/CustomButton';

@@ -3,9 +3,9 @@ import {
   StyleSheet,
   View,
   Text,
-  AsyncStorage,
   Dimensions,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { ListItem } from 'react-native-elements';
 import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';

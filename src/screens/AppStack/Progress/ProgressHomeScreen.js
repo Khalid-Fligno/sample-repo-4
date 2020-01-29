@@ -6,9 +6,9 @@ import {
   Text,
   ScrollView,
   Dimensions,
-  AsyncStorage,
   TouchableOpacity,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import ReactTimeout from 'react-timeout';

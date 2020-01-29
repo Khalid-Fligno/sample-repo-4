@@ -4,12 +4,12 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  AsyncStorage,
   Dimensions,
   Text,
   Alert,
   TouchableOpacity,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { ListItem } from 'react-native-elements';
 import * as FileSystem from 'expo-file-system';
 import CalendarStrip from 'react-native-calendar-strip';

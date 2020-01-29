@@ -4,12 +4,12 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-  AsyncStorage,
   Picker,
   TouchableOpacity,
   Dimensions,
   Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
 import * as Localization from 'expo-localization';
 import DateTimePicker from '@react-native-community/datetimepicker';

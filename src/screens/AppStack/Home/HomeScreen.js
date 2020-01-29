@@ -4,10 +4,10 @@ import {
   View,
   Linking,
   ScrollView,
-  AsyncStorage,
   Text,
   Dimensions,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { Button } from 'react-native-elements';
 import * as Haptics from 'expo-haptics';
 import * as Localization from 'expo-localization';
