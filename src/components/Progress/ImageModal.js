@@ -34,7 +34,7 @@ export default class ImageModal extends React.PureComponent {
         animationIn="fadeIn"
         animationInTiming={400}
         animationOut="fadeOut"
-        animationOutTiming={400}
+        animationOutTiming={600}
       >
         <View style={styles.imageModalContainer}>
           <View style={styles.imageModalImageContainer}>
