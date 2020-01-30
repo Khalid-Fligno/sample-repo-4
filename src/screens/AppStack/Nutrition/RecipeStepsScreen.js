@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import Image from 'react-native-image-progress';
 import { DotIndicator } from 'react-native-indicators';
 import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
-import Icon from '../../../components/Shared/Icon';
+// import Icon from '../../../components/Shared/Icon';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
@@ -24,15 +24,22 @@ export default class RecipeStepsScreen extends React.PureComponent {
   componentWillUnmount = () => {
     deactivateKeepAwake();
   }
+  // showPrevious = () => {
+  //   this.carousel.snapToPrev();
+  // }
+  // showNext = (index) => {
+  //   this.carousel.snapToItem(index + 1);
+  // }
   renderItem = ({ item, index }) => {
     const { steps } = this.state;
     return (
       <View style={styles.carouselCard}>
         <View style={styles.carouselHeaderContainer}>
           <View style={styles.carouselHeaderContentContainer}>
-            {
+            <View style={styles.carouselHeaderButton} />
+            {/* {
               index === 0 ? (
-                <TouchableOpacity
+                <View
                   onPress={() => this.props.navigation.goBack()}
                   style={styles.carouselHeaderButton}
                 >
@@ -41,10 +48,10 @@ export default class RecipeStepsScreen extends React.PureComponent {
                     size={16}
                     color={colors.violet.standard}
                   />
-                </TouchableOpacity>
+                </View>
               ) : (
-                <TouchableOpacity
-                  onPress={() => this.carousel.snapToPrev()}
+                <View
+                  onPress={this.showPrevious}
                   style={styles.carouselHeaderButton}
                 >
                   <Icon
@@ -52,13 +59,14 @@ export default class RecipeStepsScreen extends React.PureComponent {
                     size={20}
                     color={colors.violet.standard}
                   />
-                </TouchableOpacity>
+                </View>
               )
-            }
+            } */}
             <Text style={styles.carouselHeaderText}>
               STEP {index + 1} OF {steps.length}
             </Text>
-            {
+            <View style={styles.carouselHeaderButton} />
+            {/* {
               index + 1 === steps.length ? (
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}
@@ -72,7 +80,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
-                  onPress={() => this.carousel.snapToNext()}
+                  // onPress={() => this.showNext(index)}
                   style={styles.carouselHeaderButton}
                 >
                   <Icon
@@ -82,7 +90,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
                   />
                 </TouchableOpacity>
               )
-            }
+            } */}
           </View>
         </View>
         <View style={styles.carouselContentContainer}>
@@ -113,11 +121,12 @@ export default class RecipeStepsScreen extends React.PureComponent {
     );
   }
   render() {
+    const { steps } = this.state;
     return (
       <View style={styles.container}>
         <Carousel
           ref={(c) => this.carousel = c}
-          data={this.state.steps}
+          data={steps}
           renderItem={this.renderItem}
           sliderWidth={width}
           itemWidth={width - 50}
