@@ -21,6 +21,7 @@ const TabStack = createBottomTabNavigator(
   {
     initialRouteName: 'Home',
     defaultNavigationOptions: ({ navigation }) => ({
+      header: null,
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
         const activeState = tabColorMap[routeName];

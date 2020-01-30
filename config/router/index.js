@@ -13,6 +13,9 @@ const SwitchNavigator = createSwitchNavigator(
   },
   {
     initialRouteName: 'AuthLoading',
+    defaultNavigationOptions: {
+      header: null,
+    },
   },
 );
 
