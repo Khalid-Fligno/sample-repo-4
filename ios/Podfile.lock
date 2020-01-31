@@ -321,10 +321,10 @@ PODS:
   - react-native-onesignal (3.6.0):
     - OneSignal (= 2.12.2)
     - React (< 1.0.0, >= 0.13.0)
-  - react-native-video (4.4.2):
+  - react-native-video (5.0.2):
     - React
-    - react-native-video/Video (= 4.4.2)
-  - react-native-video/Video (4.4.2):
+    - react-native-video/Video (= 5.0.2)
+  - react-native-video/Video (5.0.2):
     - React
   - React-RCTActionSheet (0.61.4):
     - React-Core/RCTActionSheetHeaders (= 0.61.4)
@@ -708,7 +708,7 @@ SPEC CHECKSUMS:
   react-native-fast-image: 56efe6ea964cff19fd9bb1cc28e79b432c4b58e4
   react-native-in-app-utils: 07ea1df4bb6e8cbb27337d42a65ffe4cf7a35e97
   react-native-onesignal: 39d79554037ec5842a810efe1bb0343e332c757d
-  react-native-video: aed899073f5572418696ba6af3f31e4d371fd2f1
+  react-native-video: d01ed7ff1e38fa7dcc6c15c94cf505e661b7bfd0
   React-RCTActionSheet: 7369b7c85f99b6299491333affd9f01f5a130c22
   React-RCTAnimation: d07be15b2bd1d06d89417eb0343f98ffd2b099a7
   React-RCTBlob: 8e0b23d95c9baa98f6b0e127e07666aaafd96c34
