@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, StatusBar, Alert, AppState } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+import { StyleSheet, SafeAreaView, View, Text, Dimensions, StatusBar, Alert, AppState } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import Video from 'react-native-video';
 import FadeInView from 'react-native-fade-in-view';

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   View,
+  SafeAreaView,
   Image,
   StatusBar,
   StyleSheet,
@@ -9,7 +10,6 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
 import PropTypes from 'prop-types';
 import ProfileButton from '../Shared/ProfileButton';
 import Icon from '../Shared/Icon';

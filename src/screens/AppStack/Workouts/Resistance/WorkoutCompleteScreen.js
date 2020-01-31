@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   StyleSheet,
+  SafeAreaView,
   View,
   Text,
   Dimensions,
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import { SafeAreaView } from 'react-navigation';
 import * as FileSystem from 'expo-file-system';
 import { PieChart } from 'react-native-svg-charts';
 import Rate from 'react-native-rate';

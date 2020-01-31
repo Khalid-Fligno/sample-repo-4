@@ -110,107 +110,109 @@ export default class WorkoutInfoScreen extends React.PureComponent {
   }
   keyExtractor = (exercise) => exercise.id;
   renderItem = ({ item: exercise, index }) => (
-    <Carousel
-      key={exercise.id}
-      width={width}
-      inactiveIndicatorColor={colors.coral.standard}
-      indicatorColor={colors.coral.standard}
-      indicatorOffset={-2}
-      indicatorSize={13}
-      inactiveIndicatorText="○"
-      indicatorText="●"
-      animate={false}
-    >
-      <View
+    <View style={styles.carouselContainer}>
+      <Carousel
         key={exercise.id}
-        style={styles.exerciseTile}
+        width={width}
+        inactiveIndicatorColor={colors.coral.standard}
+        indicatorColor={colors.coral.standard}
+        indicatorOffset={-5}
+        indicatorSize={13}
+        inactiveIndicatorText="○"
+        indicatorText="●"
+        animate={false}
       >
-        <View style={styles.exerciseTileHeaderBar}>
-          <View>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.exerciseTileHeaderTextLeft}
-            >
-              {index + 1}. {exercise.name}
-            </Text>
-          </View>
-          <View>
-            <Text style={styles.exerciseTileHeaderBarRight}>
-              x{this.state.reps}
-            </Text>
-          </View>
-        </View>
-        <Video
-          ref={(ref) => this.videoRef = ref}
-          source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
-          playWhenInactive
-          resizeMode="contain"
-          repeat
-          muted
-          selectedAudioTrack={{
-            type: 'disabled',
-          }}
-          style={{ width: width - 30, height: width - 30 }}
-        />
-      </View>
-      <View style={styles.exerciseDescriptionContainer}>
-        <View style={styles.exerciseTileHeaderBar}>
-          <View>
-            <Text style={styles.exerciseTileHeaderTextLeft}>
-              ADDITIONAL INFORMATION
-            </Text>
-          </View>
-        </View>
-        <View style={styles.exerciseDescriptionTextContainer}>
-          {
-            exercise.recommendedResistance && (
-              <Text style={styles.exerciseDescriptionHeader}>Recommended resistance:</Text>
-            )
-          }
-          {
-            exercise.recommendedResistance && (
-              <Text style={styles.exerciseDescriptionText}>{exercise.recommendedResistance}</Text>
-            )
-          }
-          {
-            exercise.coachingTip && (
-              <Text style={styles.exerciseDescriptionHeader}>Coaching tip:</Text>
-            )
-          }
-          {
-            exercise.coachingTip && exercise.coachingTip.map((tip) => (
+        <View
+          key={exercise.id}
+          style={styles.exerciseTile}
+        >
+          <View style={styles.exerciseTileHeaderBar}>
+            <View>
               <Text
-                key={tip}
-                style={styles.exerciseDescriptionText}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.exerciseTileHeaderTextLeft}
               >
-                {`• ${tip}`}
+                {index + 1}. {exercise.name}
               </Text>
-            ))
-          }
-          {
-            exercise.scaledVersion && (
-              <Text style={styles.exerciseDescriptionHeader}>Scaled version:</Text>
-            )
-          }
-          {
-            exercise.scaledVersion && (
-              <Text style={styles.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
-            )
-          }
-          {
-            exercise.otherInfo && exercise.otherInfo.map((text) => (
-              <Text
-                key={text}
-                style={styles.exerciseDescriptionHeader}
-              >
-                {text}
+            </View>
+            <View>
+              <Text style={styles.exerciseTileHeaderBarRight}>
+                x{this.state.reps}
               </Text>
-            ))
-          }
+            </View>
+          </View>
+          <Video
+            ref={(ref) => this.videoRef = ref}
+            source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
+            playWhenInactive
+            resizeMode="contain"
+            repeat
+            muted
+            selectedAudioTrack={{
+              type: 'disabled',
+            }}
+            style={{ width: width - 30, height: width - 30 }}
+          />
         </View>
-      </View>
-    </Carousel>
+        <View style={styles.exerciseDescriptionContainer}>
+          <View style={styles.exerciseTileHeaderBar}>
+            <View>
+              <Text style={styles.exerciseTileHeaderTextLeft}>
+                ADDITIONAL INFORMATION
+              </Text>
+            </View>
+          </View>
+          <View style={styles.exerciseDescriptionTextContainer}>
+            {
+              exercise.recommendedResistance && (
+                <Text style={styles.exerciseDescriptionHeader}>Recommended resistance:</Text>
+              )
+            }
+            {
+              exercise.recommendedResistance && (
+                <Text style={styles.exerciseDescriptionText}>{exercise.recommendedResistance}</Text>
+              )
+            }
+            {
+              exercise.coachingTip && (
+                <Text style={styles.exerciseDescriptionHeader}>Coaching tip:</Text>
+              )
+            }
+            {
+              exercise.coachingTip && exercise.coachingTip.map((tip) => (
+                <Text
+                  key={tip}
+                  style={styles.exerciseDescriptionText}
+                >
+                  {`• ${tip}`}
+                </Text>
+              ))
+            }
+            {
+              exercise.scaledVersion && (
+                <Text style={styles.exerciseDescriptionHeader}>Scaled version:</Text>
+              )
+            }
+            {
+              exercise.scaledVersion && (
+                <Text style={styles.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
+              )
+            }
+            {
+              exercise.otherInfo && exercise.otherInfo.map((text) => (
+                <Text
+                  key={text}
+                  style={styles.exerciseDescriptionHeader}
+                >
+                  {text}
+                </Text>
+              ))
+            }
+          </View>
+        </View>
+      </Carousel>
+    </View>
   );
   render() {
     const {
@@ -490,7 +492,6 @@ const styles = StyleSheet.create({
   flatListContainer: {
     width,
     backgroundColor: colors.grey.light,
-    paddingBottom: 12,
   },
   workoutPreviewHeaderContainer: {
     width,
@@ -502,6 +503,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.dark,
+  },
+  carouselContainer: {
+    paddingBottom: 8,
   },
   exerciseTile: {
     width: width - 30,

@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, AppState, Alert } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Text, AppState, Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import { Audio } from 'expo-av';
-import { SafeAreaView } from 'react-navigation';
 import CountdownTimer from '../../../../components/Workouts/CountdownTimer';
 import CountdownPauseModal from '../../../../components/Workouts/CountdownPauseModal';
 import colors from '../../../../styles/colors';

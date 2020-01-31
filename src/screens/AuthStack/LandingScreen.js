@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity, StatusBar, ImageBackground } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, StatusBar, ImageBackground } from 'react-native';
 import Carousel from 'react-native-carousel';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
