@@ -1,15 +1,14 @@
 import React from 'react';
 import {
   Alert,
-  NetInfo,
   View,
-  SafeAreaView,
   StyleSheet,
   StatusBar,
   Linking,
   AppState,
   Platform,
 } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 import OneSignal from 'react-native-onesignal';
 import appsFlyer from 'react-native-appsflyer';
 import { NavigationActions } from 'react-navigation';
@@ -38,6 +37,8 @@ Sentry.init({
   debug: false,
 });
 
+// Facebook.initializeAsync({ appId: '1825444707513470' });
+
 export default class App extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -59,12 +60,14 @@ export default class App extends React.PureComponent {
     };
   }
   componentDidMount = () => {
-    NetInfo.addEventListener('connectionChange', this.handleConnectivityChange);
+    this.unsubscribe = NetInfo.addEventListener((state) => {
+      this.handleConnectivityChange(state);
+    });
     Linking.addEventListener('url', this.handleOpenURL);
     AppState.addEventListener('change', this.handleAppStateChange);
   }
   componentWillUnmount = () => {
-    NetInfo.removeEventListener('connectionChange', this.handleConnectivityChange);
+    this.unsubscribe();
     Linking.removeEventListener('url', this.handleOpenURL);
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
@@ -85,19 +88,15 @@ export default class App extends React.PureComponent {
       navigate('SpecialOffer');
     }
   }
-  handleConnectivityChange = (connectionInfo) => {
-    if (connectionInfo.type === 'none') {
+  handleConnectivityChange = (netInfoState) => {
+    if (netInfoState.isInternetReachable === false) {
       Alert.alert('No internet connection', 'You will need a healthy internet connection to use this app');
-    } else if (connectionInfo.type === 'unknown') {
-      Alert.alert('Bad internet connection', 'You will need a healthy internet connection to use this app');
     }
   }
   render() {
     return (
       <View style={styles.appContainer}>
-        <SafeAreaView>
-          <StatusBar barStyle="light-content" />
-        </SafeAreaView>
+        <StatusBar barStyle="light-content" />
         <SwitchNavigator
           ref={(navigatorRef) => setTopLevelNavigator(navigatorRef)}
         />
