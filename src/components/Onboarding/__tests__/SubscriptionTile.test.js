@@ -2,7 +2,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import SubscriptionTile from '../SubscriptionTile';
 
-describe('New Recipe Badge', () => {
+describe('Subscription Tile', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<SubscriptionTile
       title="Test"
