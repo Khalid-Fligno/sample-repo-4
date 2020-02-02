@@ -47,7 +47,7 @@ const { width, height } = Dimensions.get('window');
 // };
 const productTitleMap = {
   0: 'YEARLY - ',
-  1: '7 DAY FREE TRIAL',
+  1: 'MONTHLY - ',
 };
 
 const subscriptionPeriodMap = {

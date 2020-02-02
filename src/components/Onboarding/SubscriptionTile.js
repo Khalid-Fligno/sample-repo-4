@@ -31,7 +31,7 @@ export default class SubscriptionTile extends React.PureComponent {
           <View style={styles.textContainer}>
             <View style={styles.subscriptionTitleRow}>
               <Text style={styles.subscriptionTitleText}>
-                {title}<Text style={styles.yearlySubTitle}>{!primary && `${price} / ${term}`}</Text>
+                {title}{price}<Text style={styles.yearlySubTitle}>{` / ${term}` }</Text>
               </Text>
               {!primary && <SavingsBadge text="SAVE 40%" />}
             </View>
@@ -42,10 +42,10 @@ export default class SubscriptionTile extends React.PureComponent {
             }
             <Text>
               <Text style={styles.subscriptionPriceText}>
-                {primary ? price : `$${(priceNumber / 12).toFixed(2)}`}{' / month '}
+                {!primary && `$${(priceNumber / 12).toFixed(2)}`}{!primary && ' / month '}
               </Text>
               <Text style={styles.subText}>
-                {primary ? 'after 7-day FREE trial' : 'billed annually'}
+                {primary ? 'AFTER 7 DAY FREE TRIAL' : 'billed annually'}
               </Text>
             </Text>
           </View>
