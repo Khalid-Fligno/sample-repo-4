@@ -139,6 +139,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
       if (user) {
         unsubscribe();
         const { uid } = user;
+        await AsyncStorage.setItem('uid', uid);
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
