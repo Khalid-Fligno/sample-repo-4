@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`New Recipe Badge renders correctly 1`] = `
+exports[`Subscription Tile renders correctly 1`] = `
 <View
   accessible={true}
   focusable={true}
@@ -68,6 +68,7 @@ exports[`New Recipe Badge renders correctly 1`] = `
           }
         >
           Test
+          Test
           <Text
             style={
               Object {
@@ -75,7 +76,7 @@ exports[`New Recipe Badge renders correctly 1`] = `
               }
             }
           >
-            Test / Test
+             / Test
           </Text>
         </Text>
         <View
