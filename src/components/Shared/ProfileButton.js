@@ -15,13 +15,17 @@ export default class ProfileButton extends React.PureComponent {
   }
   componentDidMount = async () => {
     const uid = await AsyncStorage.getItem('uid');
-    this.unsubscribe = await db.collection('users').doc(uid)
-      .onSnapshot(async (doc) => {
-        this.setState({ avatar: await doc.data().avatar || undefined });
-      });
+    if (uid) {
+      this.unsubscribe = await db.collection('users').doc(uid)
+        .onSnapshot(async (doc) => {
+          this.setState({ avatar: await doc.data().avatar || undefined });
+        });
+    }
   }
   componentWillUnmount = () => {
-    this.unsubscribe();
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   }
   render() {
     const { avatar } = this.state;
