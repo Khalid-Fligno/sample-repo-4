@@ -53,12 +53,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   facebookIcon: {
-    width: 32,
-    height: 32,
+    width: 28,
+    height: 28,
     marginRight: 10,
   },
   buttonText: {
-    marginTop: 4,
+    marginTop: 6,
     fontFamily: fonts.bold,
     fontSize: 15,
     color: colors.white,
