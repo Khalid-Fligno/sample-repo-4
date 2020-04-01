@@ -8,6 +8,8 @@ PODS:
   - Crashlytics (3.13.4):
     - Fabric (~> 1.10.2)
   - DoubleConversion (1.1.6)
+  - EXAppleAuthentication (2.0.0):
+    - UMCore
   - EXAppLoaderProvider (8.0.0)
   - EXAV (8.0.0):
     - UMCore
@@ -19,6 +21,8 @@ PODS:
     - UMCore
     - UMFileSystemInterface
     - UMPermissionsInterface
+  - EXCrypto (8.0.0):
+    - UMCore
   - EXErrorRecovery (1.0.0):
     - UMCore
   - EXFacebook (8.0.0):
@@ -393,10 +397,12 @@ PODS:
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - EXAppleAuthentication (from `../node_modules/expo-apple-authentication/ios`)
   - EXAppLoaderProvider (from `../node_modules/expo-app-loader-provider/ios`)
   - EXAV (from `../node_modules/expo-av/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXContacts (from `../node_modules/expo-contacts/ios`)
+  - EXCrypto (from `../node_modules/expo-crypto/ios`)
   - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
   - EXFacebook (from `../node_modules/expo-facebook/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
@@ -484,6 +490,9 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  EXAppleAuthentication:
+    :path: !ruby/object:Pathname
+    path: "../node_modules/expo-apple-authentication/ios"
   EXAppLoaderProvider:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-app-loader-provider/ios"
@@ -496,6 +505,9 @@ EXTERNAL SOURCES:
   EXContacts:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-contacts/ios"
+  EXCrypto:
+    :path: !ruby/object:Pathname
+    path: "../node_modules/expo-crypto/ios"
   EXErrorRecovery:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-error-recovery/ios"
@@ -660,10 +672,12 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
   Crashlytics: 2dfd686bcb918dc10ee0e76f7f853fe42c7bd552
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
+  EXAppleAuthentication: 7d20ab4397f595d22c2fe61ca6abfca16a346a72
   EXAppLoaderProvider: ebdb6bc2632c1ccadbe49f5e4104d8d690969c49
   EXAV: 39a3b794d690e91404774cabfc563182d4f84ac3
   EXConstants: 4051b16c17ef3defa03c541d42811dc92b249146
   EXContacts: 95e26905d2b552cc588ca63936fa5543880d9c27
+  EXCrypto: e3e85e9f48e37cf9018ed162c86b101f8a34e2c7
   EXErrorRecovery: d36db99ec6a3808f313f01b0890eb443796dd1c2
   EXFacebook: c10f77ea97b3003c29b4f0a49942acc1ba8330b5
   EXFileSystem: 6e0d9bb6cc4ea404dbb8f583c1a8a2dcdf4b83b6

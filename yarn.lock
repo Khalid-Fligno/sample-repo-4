@@ -5471,6 +5471,11 @@ expo-app-loader-provider@~8.0.0:
   resolved "https://registry.yarnpkg.com/expo-app-loader-provider/-/expo-app-loader-provider-8.0.0.tgz#c18ef20a24153f5a0dbb297106ef0bcb5de57180"
   integrity sha512-uMEdstZdm14JW8jfWXBWItIjGPNBH7cLj2pNu5e0pYF21W4j759rGL17NTNWit4UdLZg/zJB/HHRidVwEINfxA==
 
+expo-apple-authentication@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/expo-apple-authentication/-/expo-apple-authentication-2.0.0.tgz#ac4fc06619990ffc388312cf34883c861384c004"
+  integrity sha512-vzFNzsVrv4eYuXV5PG0rKmNdwFvk7bVQH/DzsZ98vD9wuBRY9vBgAnF1TyKG/foY01dlCH1zb+3lhAyp2nAg/Q==
+
 expo-asset@~8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/expo-asset/-/expo-asset-8.0.0.tgz#400c7cf8693711ddc87da02d20a7d47bd517afeb"
@@ -5508,6 +5513,11 @@ expo-contacts@~8.0.0:
   integrity sha512-hkXbzwEhAJGUDPwa6se93jLXWrDlmSwPCB1ytCDZ7VdOQElP1OM5XQXDOVKVNsF9dtGxr66GpGzW73amtpUV2g==
   dependencies:
     uuid-js "^0.7.5"
+
+expo-crypto@~8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/expo-crypto/-/expo-crypto-8.0.0.tgz#2aeab604cfced71e4be25cd7daf01cc8c5b3dace"
+  integrity sha512-4oOJDp+3IFvLoTp5PQCeJEBtdBxqYTb9pXAtPwF9KKQCtTuWFM/OG9GQ9lmaWY+oJU8wE3WK8Oplmlf5F8tTrg==
 
 expo-error-recovery@~1.0.0:
   version "1.0.0"
