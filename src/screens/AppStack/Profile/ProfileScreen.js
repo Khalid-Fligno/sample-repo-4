@@ -5,6 +5,8 @@ import {
   View,
   ScrollView,
   Dimensions,
+  Clipboard,
+  Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Localization from 'expo-localization';
@@ -90,6 +92,12 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 subtitleStyle={styles.listItemSubtitleStyle}
                 containerStyle={styles.listItemContainer}
                 hideChevron
+                onPress={() => {
+                  if (profile && profile.email) {
+                    Clipboard.setString(profile.email);
+                    Alert.alert('', 'Email address copied to clipboard');
+                  }
+                }}
               />
               <ListItem
                 title="Timezone"
