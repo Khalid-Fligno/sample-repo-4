@@ -21,6 +21,8 @@ import * as Facebook from 'expo-facebook';
 import * as Sentry from 'sentry-expo';
 import firebase from 'firebase';
 import appsFlyer from 'react-native-appsflyer';
+import * as Crypto from 'expo-crypto';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { db, auth } from '../../../config/firebase';
 import {
   compare,
@@ -30,6 +32,7 @@ import {
 } from '../../../config/apple';
 import NativeLoader from '../../components/Shared/NativeLoader';
 import Icon from '../../components/Shared/Icon';
+import AppleButton from '../../components/Auth/AppleButton';
 import FacebookButton from '../../components/Auth/FacebookButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -37,6 +40,17 @@ import errors from '../../utils/errors';
 
 const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get('window');
+
+const getRandomString = (length) => {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i += 1) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
+
 
 export default class LoginScreen extends React.PureComponent {
   constructor(props) {
@@ -48,6 +62,125 @@ export default class LoginScreen extends React.PureComponent {
       loading: false,
       specialOffer: props.navigation.getParam('specialOffer', undefined),
     };
+  }
+  onSignInWithApple = async () => {
+    const nonce = getRandomString(32);
+    let nonceSHA256 = '';
+    try {
+      nonceSHA256 = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        nonce,
+      );
+    } catch (e) {
+      Alert.alert('Sign up could not be completed', 'Please try again.');
+    }
+    this.setState({ loading: true });
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+        nonce: nonceSHA256,
+      });
+      // Signed in to Apple
+      if (credential.user) {
+        this.signInWithApple({ identityToken: credential.identityToken, nonce, fullName: credential.fullName });
+      }
+    } catch (e) {
+      this.setState({ loading: false });
+      if (e.code === 'ERR_CANCELED') {
+        Alert.alert('Login cancelled');
+      } else {
+        Alert.alert('Something went wrong');
+      }
+    }
+  };
+  signInWithApple = async ({ identityToken, nonce }) => {
+    const provider = new firebase.auth.OAuthProvider('apple.com');
+    const credential = provider.credential({
+      idToken: identityToken,
+      rawNonce: nonce,
+    });
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    firebase.auth().signInWithCredential(credential)
+      // Signed in to Firebase Auth
+      .then(async (appleuser) => {
+        const { uid } = appleuser.user;
+        appsFlyer.trackEvent('af_login');
+        await AsyncStorage.setItem('uid', uid);
+        db.collection('users').doc(uid)
+          .get()
+          .then(async (doc) => {
+            if (await doc.data().fitnessLevel !== undefined) {
+              await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+            }
+            const { subscriptionInfo = undefined } = await doc.data();
+            if (subscriptionInfo === undefined) {
+              // NO PURCHASE INFORMATION SAVED
+              // this.setState({ loading: false });
+              this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
+            } else if (subscriptionInfo.expiry < Date.now()) {
+              // EXPIRED
+              InAppUtils.restorePurchases(async (error, response) => {
+                if (error) {
+                  Sentry.captureException(error);
+                  this.setState({ loading: false });
+                  Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
+                } else {
+                  if (response.length === 0) {
+                    this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
+                    return;
+                  }
+                  const sortedPurchases = response.slice().sort(compare);
+                  try {
+                    const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
+                    if (validationData === undefined) {
+                      Alert.alert('Receipt validation error');
+                      return;
+                    }
+                    const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
+                    if (sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now()) {
+                      // Alert.alert('Your subscription has been auto-renewed');
+                      const userRef = db.collection('users').doc(uid);
+                      const data = {
+                        subscriptionInfo: {
+                          receipt: sortedPurchases[0].transactionReceipt,
+                          expiry: validationData.latest_receipt_info.expires_date,
+                        },
+                      };
+                      await userRef.set(data, { merge: true });
+                      this.setState({ loading: false });
+                      this.props.navigation.navigate('App');
+                    } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
+                      Alert.alert('Expired', 'Your most recent subscription has expired');
+                      this.props.navigation.navigate('Subscription');
+                    } else {
+                      Alert.alert('Something went wrong');
+                      this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
+                      return;
+                    }
+                  } catch (err) {
+                    Alert.alert('Error', 'Could not retrieve subscription information');
+                    this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
+                  }
+                }
+              });
+            } else {
+              // RECEIPT STILL VALID
+              this.setState({ loading: false });
+              if (await !doc.data().onboarded) {
+                this.props.navigation.navigate('Onboarding1');
+                return;
+              }
+              this.props.navigation.navigate('App');
+            }
+          });
+      })
+      .catch(() => {
+        this.setState({ loading: false });
+        Alert.alert('Login could not be completed', 'Please try again or contact support.');
+      });
   }
   loginWithFacebook = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -327,6 +460,10 @@ export default class LoginScreen extends React.PureComponent {
               <FacebookButton
                 title="LOG IN WITH FACEBOOK"
                 onPress={this.loginWithFacebook}
+              />
+              <AppleButton
+                title="LOG IN WITH APPLE"
+                onPress={this.onSignInWithApple}
               />
               <Text
                 onPress={this.navigateToForgottenPassword}

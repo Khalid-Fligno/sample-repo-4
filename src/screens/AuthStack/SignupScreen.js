@@ -21,15 +21,28 @@ import * as Haptics from 'expo-haptics';
 import * as Facebook from 'expo-facebook';
 import firebase from 'firebase';
 import appsFlyer from 'react-native-appsflyer';
+import * as Crypto from 'expo-crypto';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { db, auth } from '../../../config/firebase';
 import NativeLoader from '../../components/Shared/NativeLoader';
 import Icon from '../../components/Shared/Icon';
 import FacebookButton from '../../components/Auth/FacebookButton';
+import AppleButton from '../../components/Auth/AppleButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import errors from '../../utils/errors';
 
 const { width } = Dimensions.get('window');
+
+const getRandomString = (length) => {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i += 1) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
 
 export default class SignupScreen extends React.PureComponent {
   constructor(props) {
@@ -43,6 +56,81 @@ export default class SignupScreen extends React.PureComponent {
       loading: false,
       specialOffer: props.navigation.getParam('specialOffer', undefined),
     };
+  }
+  onSignInWithApple = async () => {
+    const nonce = getRandomString(32);
+    let nonceSHA256 = '';
+    try {
+      nonceSHA256 = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        nonce,
+      );
+    } catch (e) {
+      Alert.alert('Sign up could not be completed', 'Please try again.');
+    }
+    this.setState({ loading: true });
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+        nonce: nonceSHA256,
+      });
+      // Signed in to Apple
+      if (credential.user) {
+        this.signInWithApple({ identityToken: credential.identityToken, nonce, fullName: credential.fullName });
+      }
+    } catch (e) {
+      this.setState({ loading: false });
+      if (e.code === 'ERR_CANCELED') {
+        Alert.alert('Sign up cancelled');
+      } else {
+        Alert.alert('Something went wrong');
+      }
+    }
+  };
+  signInWithApple = async ({ identityToken, nonce, fullName }) => {
+    const provider = new firebase.auth.OAuthProvider('apple.com');
+    const credential = provider.credential({
+      idToken: identityToken,
+      rawNonce: nonce,
+    });
+    firebase.auth().signInWithCredential(credential)
+      // Signed in to Firebase Auth
+      .then(async (appleuser) => {
+        const { uid, email } = appleuser.user;
+        const { givenName, familyName } = fullName;
+        const { region } = Localization;
+        const data = {
+          id: uid,
+          firstName: givenName,
+          lastName: familyName,
+          email,
+          onboarded: false,
+          country: region || 'unavailable',
+          signUpDate: new Date(),
+          fitnessLevel: 1,
+        };
+        await AsyncStorage.setItem('uid', uid);
+        db.collection('users').doc(uid).set(data)
+          .then(() => {
+            this.setState({ loading: false });
+            appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Apple' });
+            this.props.navigation.navigate('Subscription', { name: givenName, specialOffer: this.state.specialOffer });
+            auth.currentUser.sendEmailVerification().then(() => {
+              Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
+            });
+          })
+          .catch(() => {
+            this.setState({ loading: false });
+            Alert.alert('Sign up could not be completed', 'Please try again or contact support.');
+          });
+      })
+      .catch(() => {
+        this.setState({ loading: false });
+        Alert.alert('Sign up could not be completed', 'Please try again or contact support.');
+      });
   }
   signupWithFacebook = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -262,7 +350,7 @@ export default class SignupScreen extends React.PureComponent {
                 />
               </KeyboardAvoidingView>
               <Button
-                title="SIGN ME UP"
+                title="CREATE NEW ACCOUNT"
                 onPress={() => this.signup(firstName, lastName, email, password)}
                 containerStyle={styles.signupButtonContainer}
                 buttonStyle={styles.signupButton}
@@ -275,8 +363,12 @@ export default class SignupScreen extends React.PureComponent {
                 </Text>
               </View>
               <FacebookButton
-                title="SIGN UP WITH FACEBOOK"
+                title="NEW ACCOUNT WITH FACEBOOK"
                 onPress={this.signupWithFacebook}
+              />
+              <AppleButton
+                title="NEW ACCOUNT WITH APPLE"
+                onPress={this.onSignInWithApple}
               />
               <Text
                 onPress={this.navigateToLogin}
@@ -363,7 +455,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   signupButtonContainer: {
-    marginTop: 7,
+    marginTop: 6,
     marginBottom: 7,
     shadowColor: colors.charcoal.dark,
     shadowOpacity: 0.5,
@@ -377,7 +469,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   signupButtonText: {
-    marginTop: 4,
+    marginTop: 6,
     fontFamily: fonts.bold,
     fontSize: 15,
   },
