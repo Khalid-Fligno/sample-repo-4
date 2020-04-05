@@ -49,6 +49,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/icons/fitazfk-icon-outline-white.png'),
       require('../../assets/icons/fitazfk-logo-outline-white.png'),
       require('../../assets/icons/apple-music-icon.png'),
+      require('../../assets/icons/apple-icon-black.png'),
       require('../../assets/icons/spotify-icon.png'),
       require('../../assets/icons/facebook-icon-white.png'),
       require('../../assets/images/app-onboarding-carousel-1.jpg'),
