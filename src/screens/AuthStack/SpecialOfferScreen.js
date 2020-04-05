@@ -40,10 +40,10 @@ export default class SpecialOfferScreen extends React.PureComponent {
               FK YEAH!
             </Text>
             <Text style={styles.heading}>
-              HIT THE BUTTON BELOW TO SCORE YOUR EXCLUSIVE
+              HIT THE BUTTON BELOW TO SCORE YOUR
             </Text>
             <Text style={styles.headingLarge}>
-              20% OFF!*
+              1 MONTH FREE{'\n'}+{'\n'}20% OFF!*
             </Text>
             <Button
               title="REDEEM OFFER NOW"
@@ -52,9 +52,9 @@ export default class SpecialOfferScreen extends React.PureComponent {
               buttonStyle={styles.button}
               titleStyle={styles.buttonText}
             />
-            <Text style={styles.bodyBold}>
+            {/* <Text style={styles.bodyBold}>
               OFFER VALID FOR 24 HOURS ONLY!
-            </Text>
+            </Text> */}
           </View>
           <Text style={styles.disclaimer}>
             *Based on Australian App store prices.  Discount may be higher or lower based on your local App Store territory pricing tiers.
@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     fontSize: 36,
     color: colors.white,
     marginBottom: 20,
+    textAlign: 'center',
   },
   heading: {
     fontFamily: fonts.standard,
@@ -94,13 +95,13 @@ const styles = StyleSheet.create({
     padding: 15,
     paddingBottom: 0,
   },
-  bodyBold: {
-    fontFamily: fonts.bold,
-    fontSize: 18,
-    color: colors.white,
-    textAlign: 'center',
-    padding: 30,
-  },
+  // bodyBold: {
+  //   fontFamily: fonts.bold,
+  //   fontSize: 18,
+  //   color: colors.white,
+  //   textAlign: 'center',
+  //   padding: 30,
+  // },
   button: {
     justifyContent: 'center',
     alignItems: 'center',

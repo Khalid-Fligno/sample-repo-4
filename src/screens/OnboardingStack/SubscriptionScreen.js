@@ -598,7 +598,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                 <Text style={styles.headerTextCursive}>
                   {'start  '}
                 </Text>
-                YOUR 7-DAY
+                YOUR {specialOffer ? '1 MONTH' : '7 DAY'}
               </Text>
               <Text style={styles.headerTextLine2}>
                 FREE TRIAL TODAY!
@@ -636,6 +636,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                           `$${(products[0].price / 12).toFixed(2)}` :
                           products[1].priceString
                       }
+                      isDiscounted={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount'}
                     />
                   ))
                 }

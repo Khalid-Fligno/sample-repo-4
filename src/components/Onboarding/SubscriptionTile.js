@@ -21,6 +21,7 @@ export default class SubscriptionTile extends React.PureComponent {
       primary,
       term,
       comparisonPrice,
+      isDiscounted,
     } = this.props;
     return (
       <TouchableOpacity
@@ -45,7 +46,7 @@ export default class SubscriptionTile extends React.PureComponent {
                 {!primary && `$${(priceNumber / 12).toFixed(2)}`}{!primary && ' / month '}
               </Text>
               <Text style={styles.subText}>
-                {primary ? 'AFTER 7 DAY FREE TRIAL' : 'billed annually'}
+                {primary ? `AFTER ${isDiscounted ? '1 MONTH' : '7 DAY'} FREE TRIAL` : 'billed annually'}
               </Text>
             </Text>
           </View>
@@ -83,11 +84,13 @@ SubscriptionTile.propTypes = {
   primary: PropTypes.bool,
   comparisonPrice: PropTypes.string,
   priceNumber: PropTypes.number.isRequired,
+  isDiscounted: PropTypes.bool,
 };
 
 SubscriptionTile.defaultProps = {
   primary: false,
   comparisonPrice: undefined,
+  isDiscounted: false,
 };
 
 const styles = StyleSheet.create({
