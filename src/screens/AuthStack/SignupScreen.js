@@ -86,7 +86,7 @@ export default class SignupScreen extends React.PureComponent {
       if (e.code === 'ERR_CANCELED') {
         Alert.alert('Sign up cancelled');
       } else {
-        Alert.alert('Something went wrong');
+        Alert.alert('Could not sign in with Apple', 'Please sign up with your email address.');
       }
     }
   };
@@ -124,12 +124,12 @@ export default class SignupScreen extends React.PureComponent {
           })
           .catch(() => {
             this.setState({ loading: false });
-            Alert.alert('Sign up could not be completed', 'Please try again or contact support.');
+            Alert.alert('Could not create your account', 'Please try again or contact support.');
           });
       })
       .catch(() => {
         this.setState({ loading: false });
-        Alert.alert('Sign up could not be completed', 'Please try again or contact support.');
+        Alert.alert('Could not authenticate with Apple', 'Please try again or contact support.');
       });
   }
   signupWithFacebook = async () => {
