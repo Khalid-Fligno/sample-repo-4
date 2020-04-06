@@ -47,8 +47,9 @@ export default class RecipeScreen extends React.PureComponent {
     this.props.navigation.setParams({ handleStart: () => this.handleStart(recipe) });
     this.setState({ loading: false });
   }
-  setDate = (newDate) => {
-    this.setState({ chosenDate: newDate });
+  setDate = async (event, selectedDate) => {
+    const currentDate = selectedDate;
+    this.setState({ chosenDate: currentDate });
   }
   handleStart = (recipe) => {
     this.props.navigation.navigate('RecipeSteps', { recipe });
@@ -122,7 +123,7 @@ export default class RecipeScreen extends React.PureComponent {
               <DateTimePicker
                 mode="date"
                 value={chosenDate}
-                onDateChange={this.setDate}
+                onChange={this.setDate}
                 minimumDate={new Date()}
               />
               <View style={styles.calendarMealButtonContainer}>

@@ -50,8 +50,9 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     });
     this.checkMusicAppAvailability();
   }
-  setDate = (newDate) => {
-    this.setState({ chosenDate: newDate });
+  setDate = async (event, selectedDate) => {
+    const currentDate = selectedDate;
+    this.setState({ chosenDate: currentDate });
   }
   checkMusicAppAvailability = async () => {
     this.setState({
@@ -263,7 +264,7 @@ export default class WorkoutInfoScreen extends React.PureComponent {
             <DateTimePicker
               mode="date"
               value={chosenDate}
-              onDateChange={this.setDate}
+              onChange={this.setDate}
               minimumDate={new Date()}
             />
             <TouchableOpacity

@@ -42,8 +42,9 @@ export default class Onboarding1Screen extends React.PureComponent {
     const timezone = await Localization.timezone;
     this.setState({ timezone });
   }
-  setDate = async (newDate) => {
-    this.setState({ chosenDate: newDate });
+  setDate = async (event, selectedDate) => {
+    const currentDate = selectedDate;
+    this.setState({ chosenDate: currentDate });
   }
   handleSubmit = async (chosenDate, chosenUom) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -145,7 +146,7 @@ export default class Onboarding1Screen extends React.PureComponent {
                   <DateTimePicker
                     mode="date"
                     value={chosenDate}
-                    onDateChange={this.setDate}
+                    onChange={this.setDate}
                     minimumDate={new Date(1940, 0, 1)}
                     maximumDate={new Date(2008, 0, 1)}
                     itemStyle={{
