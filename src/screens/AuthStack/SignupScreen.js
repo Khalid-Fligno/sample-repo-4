@@ -27,7 +27,6 @@ import { db, auth } from '../../../config/firebase';
 import NativeLoader from '../../components/Shared/NativeLoader';
 import Icon from '../../components/Shared/Icon';
 import FacebookButton from '../../components/Auth/FacebookButton';
-import AppleButton from '../../components/Auth/AppleButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import errors from '../../utils/errors';
@@ -55,7 +54,12 @@ export default class SignupScreen extends React.PureComponent {
       error: null,
       loading: false,
       specialOffer: props.navigation.getParam('specialOffer', undefined),
+      appleSignInAvailable: undefined,
     };
+  }
+  componentDidMount = async () => {
+    const appleSignInAvailable = await AppleAuthentication.isAvailableAsync();
+    this.setState({ appleSignInAvailable });
   }
   onSignInWithApple = async () => {
     const nonce = getRandomString(32);
@@ -250,11 +254,13 @@ export default class SignupScreen extends React.PureComponent {
       password,
       error,
       loading,
+      appleSignInAvailable,
     } = this.state;
     return (
       <SafeAreaView style={styles.safeAreaContainer} >
-        <StatusBar barStyle="light-content" />
         <View style={styles.container}>
+          <StatusBar barStyle="light-content" />
+
           <ImageBackground
             source={require('../../../assets/images/signup-screen-background.jpg')}
             style={styles.imageBackground}
@@ -366,10 +372,17 @@ export default class SignupScreen extends React.PureComponent {
                 title="NEW ACCOUNT WITH FACEBOOK"
                 onPress={this.signupWithFacebook}
               />
-              <AppleButton
-                title="NEW ACCOUNT WITH APPLE"
-                onPress={this.onSignInWithApple}
-              />
+              {
+                appleSignInAvailable && (
+                  <AppleAuthentication.AppleAuthenticationButton
+                    onPress={this.onSignInWithApple}
+                    buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
+                    buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
+                    cornerRadius={4}
+                    style={styles.appleButton}
+                  />
+                )
+              }
               <Text
                 onPress={this.navigateToLogin}
                 style={styles.navigateToLogin}
@@ -405,7 +418,6 @@ const styles = StyleSheet.create({
     height: undefined,
   },
   scrollView: {
-    // flex: 1,
     alignItems: 'center',
   },
   closeIconContainer: {
@@ -472,6 +484,11 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontFamily: fonts.bold,
     fontSize: 15,
+  },
+  appleButton: {
+    height: 45,
+    width: width - 30,
+    marginTop: 8,
   },
   divider: {
     backgroundColor: colors.transparent,

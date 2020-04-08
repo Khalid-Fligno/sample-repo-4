@@ -32,7 +32,6 @@ import {
 } from '../../../config/apple';
 import NativeLoader from '../../components/Shared/NativeLoader';
 import Icon from '../../components/Shared/Icon';
-import AppleButton from '../../components/Auth/AppleButton';
 import FacebookButton from '../../components/Auth/FacebookButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -61,7 +60,12 @@ export default class LoginScreen extends React.PureComponent {
       error: null,
       loading: false,
       specialOffer: props.navigation.getParam('specialOffer', undefined),
+      appleSignInAvailable: undefined,
     };
+  }
+  componentDidMount = async () => {
+    const appleSignInAvailable = await AppleAuthentication.isAvailableAsync();
+    this.setState({ appleSignInAvailable });
   }
   onSignInWithApple = async () => {
     const nonce = getRandomString(32);
@@ -387,6 +391,7 @@ export default class LoginScreen extends React.PureComponent {
       password,
       error,
       loading,
+      appleSignInAvailable,
     } = this.state;
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
@@ -444,7 +449,7 @@ export default class LoginScreen extends React.PureComponent {
                 clearButtonMode="while-editing"
               />
               <Button
-                title="LOG IN"
+                title="SIGN IN"
                 onPress={() => this.login(email, password)}
                 containerStyle={styles.loginButtonContainer}
                 buttonStyle={styles.loginButton}
@@ -458,13 +463,20 @@ export default class LoginScreen extends React.PureComponent {
                 </Text>
               </View>
               <FacebookButton
-                title="LOG IN WITH FACEBOOK"
+                title="SIGN IN WITH FACEBOOK"
                 onPress={this.loginWithFacebook}
               />
-              <AppleButton
-                title="LOG IN WITH APPLE"
-                onPress={this.onSignInWithApple}
-              />
+              {
+                appleSignInAvailable && (
+                  <AppleAuthentication.AppleAuthenticationButton
+                    onPress={this.onSignInWithApple}
+                    buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+                    buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
+                    cornerRadius={4}
+                    style={styles.appleButton}
+                  />
+                )
+              }
               <Text
                 onPress={this.navigateToForgottenPassword}
                 style={styles.navigateToForgottenPasswordButton}
@@ -506,7 +518,6 @@ const styles = StyleSheet.create({
     height: undefined,
   },
   scrollView: {
-    flex: 1,
     alignItems: 'center',
   },
   closeIconContainer: {
@@ -563,6 +574,11 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontFamily: fonts.bold,
     fontSize: 15,
+  },
+  appleButton: {
+    height: 45,
+    width: width - 30,
+    marginTop: 8,
   },
   divider: {
     backgroundColor: colors.transparent,
