@@ -666,7 +666,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                   Terms and Conditions
                 </Text>
                 .
-                You also agree that an ongoing subscription to the FitazFK App (FitazFK Fitness & Nutrition) will be applied to your iTunes account at the end of your 7-day free trial.
+                You also agree that an ongoing subscription to the FitazFK App (FitazFK Fitness & Nutrition) will be applied to your iTunes account at the end of your {specialOffer ? '1 month' : '7 day'} free trial.
                 Subscriptions will automatically renew and your account charged unless auto-renew is turned off at least 24-hours before the end of the current period.
                 Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
                 Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
