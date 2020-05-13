@@ -17,7 +17,7 @@ const AuthStack = createStackNavigator(
   },
   {
     initialRouteName: 'Landing',
-    mode: 'modal',
+    // mode: 'modal',
     defaultNavigationOptions: {
       header: null,
     },

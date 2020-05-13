@@ -15,7 +15,7 @@ public class AppConstants {
   public static String INITIAL_URL = "exp://exp.host/@fitazfk/fitazfk-app";
   public static final boolean IS_DETACHED = true;
   public static final String SHELL_APP_SCHEME = "fitazfk";
-  public static final String RELEASE_CHANNEL = "prod-v1.17";
+  public static final String RELEASE_CHANNEL = "prod-v1.18";
   public static boolean SHOW_LOADING_VIEW_IN_SHELL_APP = false;
   public static boolean ARE_REMOTE_UPDATES_ENABLED = true;
   public static final List<Constants.EmbeddedResponse> EMBEDDED_RESPONSES;
@@ -191,11 +191,18 @@ public class AppConstants {
         
         
         
-        // ADD EMBEDDED RESPONSES HERE
-        // START EMBEDDED RESPONSES
-        embeddedResponses.add(new Constants.EmbeddedResponse("https://exp.host/@fitazfk/fitazfk-app", "assets://shell-app-manifest.json", "application/json"));
-        embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40fitazfk%2Ffitazfk-app%2F1.17.0%2F25f3f22f9792c3189620155328613d75-36.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
-        // END EMBEDDED RESPONSES
+        
+      
+      
+      
+      
+      
+      
+      // ADD EMBEDDED RESPONSES HERE
+      // START EMBEDDED RESPONSES
+      embeddedResponses.add(new Constants.EmbeddedResponse("https://exp.host/@fitazfk/fitazfk-app", "assets://shell-app-manifest.json", "application/json"));
+      embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40fitazfk%2Ffitazfk-app%2F1.18.0%2F38ca843b5c53ccd2097ad72be0dfccfe-36.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
+      // END EMBEDDED RESPONSES
     EMBEDDED_RESPONSES = embeddedResponses;
   }
 
