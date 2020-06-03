@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 import * as FileSystem from 'expo-file-system';
 import sortBy from 'lodash.sortby';
 import { db } from '../../../../config/firebase';

@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 import * as Localization from 'expo-localization';
 import { ListItem } from 'react-native-elements';
 import Modal from 'react-native-modal';

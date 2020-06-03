@@ -10,9 +10,9 @@ import {
   Linking,
   ImageBackground,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
-import appsFlyer from 'react-native-appsflyer';
+// import appsFlyer from 'react-native-appsflyer';
 import * as Sentry from 'sentry-expo';
 import { auth, db } from '../../../config/firebase';
 import {
@@ -85,7 +85,7 @@ export default class SubscriptionScreen extends React.PureComponent {
   }
   logout = () => {
     try {
-      AsyncStorage.removeItem('uid');
+      // AsyncStorage.removeItem('uid');
       auth.signOut();
       this.props.navigation.navigate('Auth');
     } catch (err) {
@@ -116,29 +116,29 @@ export default class SubscriptionScreen extends React.PureComponent {
             const sortedReceipts = validationData.latest_receipt_info.slice().sort(compare);
             const latestReceipt = sortedReceipts[0];
             if (latestReceipt && latestReceipt.expires_date_ms > Date.now()) {
-              const uid = await AsyncStorage.getItem('uid');
-              const userRef = db.collection('users').doc(uid);
-              const data = {
-                subscriptionInfo: {
-                  expiry: latestReceipt.expires_date_ms,
-                  originalTransactionId: latestReceipt.original_transaction_id,
-                  originalPurchaseDate: latestReceipt.original_purchase_date_ms,
-                  productId: latestReceipt.product_id,
-                },
-              };
-              await userRef.set(data, { merge: true });
-              userRef.get()
-                .then(async (doc) => {
-                  if (await doc.data().onboarded) {
-                    this.setState({ loading: false });
-                    Alert.alert('Restore Successful', 'Successfully restored your purchase.');
-                    this.props.navigation.navigate('App');
-                  } else {
-                    this.setState({ loading: false });
-                    Alert.alert('Restore Successful', 'Successfully restored your purchase.');
-                    this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-                  }
-                });
+              // const uid = await AsyncStorage.getItem('uid');
+              // const userRef = db.collection('users').doc(uid);
+              // const data = {
+              //   subscriptionInfo: {
+              //     expiry: latestReceipt.expires_date_ms,
+              //     originalTransactionId: latestReceipt.original_transaction_id,
+              //     originalPurchaseDate: latestReceipt.original_purchase_date_ms,
+              //     productId: latestReceipt.product_id,
+              //   },
+              // };
+              // await userRef.set(data, { merge: true });
+              // userRef.get()
+              //   .then(async (doc) => {
+              //     if (await doc.data().onboarded) {
+              //       this.setState({ loading: false });
+              //       Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+              //       this.props.navigation.navigate('App');
+              //     } else {
+              //       this.setState({ loading: false });
+              //       Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+              //       this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+              //     }
+              //   });
             } else if (latestReceipt && latestReceipt.expires_date_ms < Date.now()) {
               this.setState({ loading: false });
               Alert.alert('Expired', 'Your most recent subscription has expired');
@@ -160,30 +160,30 @@ export default class SubscriptionScreen extends React.PureComponent {
         }
         const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
         if (sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now()) {
-          const uid = await AsyncStorage.getItem('uid');
-          const userRef = db.collection('users').doc(uid);
-          const data = {
-            subscriptionInfo: {
-              receipt: sortedPurchases[0].transactionReceipt,
-              expiry: sortedInApp[0].expires_date_ms,
-              originalTransactionId: sortedInApp[0].original_transaction_id,
-              originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
-              productId: sortedInApp[0].product_id,
-            },
-          };
-          await userRef.set(data, { merge: true });
-          userRef.get()
-            .then(async (doc) => {
-              if (await doc.data().onboarded) {
-                this.setState({ loading: false });
-                Alert.alert('Success', 'Successfully restored your purchase.');
-                this.props.navigation.navigate('App');
-              } else {
-                this.setState({ loading: false });
-                Alert.alert('Success', 'Successfully restored your purchase.');
-                this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-              }
-            });
+          // const uid = await AsyncStorage.getItem('uid');
+          // const userRef = db.collection('users').doc(uid);
+          // const data = {
+          //   subscriptionInfo: {
+          //     receipt: sortedPurchases[0].transactionReceipt,
+          //     expiry: sortedInApp[0].expires_date_ms,
+          //     originalTransactionId: sortedInApp[0].original_transaction_id,
+          //     originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
+          //     productId: sortedInApp[0].product_id,
+          //   },
+          // };
+          // await userRef.set(data, { merge: true });
+          // userRef.get()
+          //   .then(async (doc) => {
+          //     if (await doc.data().onboarded) {
+          //       this.setState({ loading: false });
+          //       Alert.alert('Success', 'Successfully restored your purchase.');
+          //       this.props.navigation.navigate('App');
+          //     } else {
+          //       this.setState({ loading: false });
+          //       Alert.alert('Success', 'Successfully restored your purchase.');
+          //       this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+          //     }
+          //   });
         } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
           this.setState({ loading: false });
           Alert.alert('Expired', 'Your most recent subscription has expired');
@@ -446,18 +446,18 @@ export default class SubscriptionScreen extends React.PureComponent {
           const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
           const isValid = sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now();
           if (isValid === true) {
-            const uid = await AsyncStorage.getItem('uid');
-            const userRef = db.collection('users').doc(uid);
-            const data = {
-              subscriptionInfo: {
-                receipt: response.transactionReceipt,
-                expiry: sortedInApp[0].expires_date_ms,
-                originalTransactionId: sortedInApp[0].original_transaction_id,
-                originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
-                productId: sortedInApp[0].product_id,
-              },
-            };
-            await userRef.set(data, { merge: true });
+            // const uid = await AsyncStorage.getItem('uid');
+            // const userRef = db.collection('users').doc(uid);
+            // const data = {
+            //   subscriptionInfo: {
+            //     receipt: response.transactionReceipt,
+            //     expiry: sortedInApp[0].expires_date_ms,
+            //     originalTransactionId: sortedInApp[0].original_transaction_id,
+            //     originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
+            //     productId: sortedInApp[0].product_id,
+            //   },
+            // };
+            // await userRef.set(data, { merge: true });
             // Appsflyer event tracking - Start Free Trial
             const eventName = 'af_start_trial';
             const eventValues = {
@@ -465,15 +465,15 @@ export default class SubscriptionScreen extends React.PureComponent {
               af_currency: productCurrencyCode,
             };
             appsFlyer.trackEvent(eventName, eventValues);
-            userRef.get()
-              .then(async (doc) => {
-                this.setState({ loading: false });
-                if (await doc.data().onboarded) {
-                  this.props.navigation.navigate('App');
-                } else {
-                  this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-                }
-              });
+            // userRef.get()
+            //   .then(async (doc) => {
+            //     this.setState({ loading: false });
+            //     if (await doc.data().onboarded) {
+            //       this.props.navigation.navigate('App');
+            //     } else {
+            //       this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+            //     }
+            //   });
           } else if (isValid === false) {
             this.setState({ loading: false });
             Alert.alert('Purchase Unsuccessful');
@@ -520,18 +520,18 @@ export default class SubscriptionScreen extends React.PureComponent {
             const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
             const isValid = sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now();
             if (isValid === true) {
-              const uid = await AsyncStorage.getItem('uid');
-              const userRef = db.collection('users').doc(uid);
-              const data = {
-                subscriptionInfo: {
-                  receipt: response.transactionReceipt,
-                  expiry: sortedInApp[0].expires_date_ms,
-                  originalTransactionId: sortedInApp[0].original_transaction_id,
-                  originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
-                  productId: sortedInApp[0].product_id,
-                },
-              };
-              await userRef.set(data, { merge: true });
+              // const uid = await AsyncStorage.getItem('uid');
+              // const userRef = db.collection('users').doc(uid);
+              // const data = {
+              //   subscriptionInfo: {
+              //     receipt: response.transactionReceipt,
+              //     expiry: sortedInApp[0].expires_date_ms,
+              //     originalTransactionId: sortedInApp[0].original_transaction_id,
+              //     originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
+              //     productId: sortedInApp[0].product_id,
+              //   },
+              // };
+              // await userRef.set(data, { merge: true });
               // Appsflyer event tracking - Start Free Trial
               const eventName = 'af_start_trial';
               const eventValues = {
@@ -539,15 +539,15 @@ export default class SubscriptionScreen extends React.PureComponent {
                 af_currency: productCurrencyCode,
               };
               appsFlyer.trackEvent(eventName, eventValues);
-              userRef.get()
-                .then(async (doc) => {
-                  this.setState({ loading: false });
-                  if (await doc.data().onboarded) {
-                    this.props.navigation.navigate('App');
-                  } else {
-                    this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-                  }
-                });
+              // userRef.get()
+              //   .then(async (doc) => {
+              //     this.setState({ loading: false });
+              //     if (await doc.data().onboarded) {
+              //       this.props.navigation.navigate('App');
+              //     } else {
+              //       this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+              //     }
+              //   });
             } else if (isValid === false) {
               this.setState({ loading: false });
               Alert.alert('Purchase Unsuccessful');

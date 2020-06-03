@@ -9,7 +9,7 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 import { ListItem } from 'react-native-elements';
 import * as FileSystem from 'expo-file-system';
 import CalendarStrip from 'react-native-calendar-strip';
@@ -68,7 +68,7 @@ class CalendarHomeScreen extends React.PureComponent {
   }
   fetchCalendarEntries = async () => {
     this.setState({ loading: true });
-    const uid = await AsyncStorage.getItem('uid');
+    // const uid = await AsyncStorage.getItem('uid');
     const selectedDate = this.calendarStrip.current.getSelectedDate();
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
     this.unsubscribeFromEntries = await db.collection('users').doc(uid)
@@ -94,11 +94,11 @@ class CalendarHomeScreen extends React.PureComponent {
       });
   }
   showHelperOnFirstOpen = async () => {
-    const helperShownOnFirstOpen = await AsyncStorage.getItem('calendarHelperShownOnFirstOpen');
-    if (helperShownOnFirstOpen === null) {
-      this.props.setTimeout(() => this.setState({ helperModalVisible: true }), 1200);
-      AsyncStorage.setItem('calendarHelperShownOnFirstOpen', 'true');
-    }
+    // const helperShownOnFirstOpen = await AsyncStorage.getItem('calendarHelperShownOnFirstOpen');
+    // if (helperShownOnFirstOpen === null) {
+    //   this.props.setTimeout(() => this.setState({ helperModalVisible: true }), 1200);
+    //   AsyncStorage.setItem('calendarHelperShownOnFirstOpen', 'true');
+    // }
   }
   showHelperModal = () => {
     this.setState({ helperModalVisible: true });
@@ -108,35 +108,35 @@ class CalendarHomeScreen extends React.PureComponent {
   }
   handleDateSelected = async (date) => {
     this.setState({ loading: true });
-    const uid = await AsyncStorage.getItem('uid');
-    const stringDate = date.format('YYYY-MM-DD').toString();
-    this.unsubscribeFromEntries2 = await db.collection('users').doc(uid)
-      .collection('calendarEntries').doc(stringDate)
-      .onSnapshot(async (doc) => {
-        if (doc.exists) {
-          this.setState({
-            workout: await doc.data().workout,
-            breakfast: await doc.data().breakfast,
-            lunch: await doc.data().lunch,
-            dinner: await doc.data().dinner,
-            snack: await doc.data().snack,
-            snack2: await doc.data().snack2,
-            loading: false,
-            dayOfWeek: date.format('d'),
-          });
-        } else {
-          this.setState({
-            workout: undefined,
-            breakfast: undefined,
-            lunch: undefined,
-            dinner: undefined,
-            snack: undefined,
-            snack2: undefined,
-            loading: false,
-            dayOfWeek: date.format('d'),
-          });
-        }
-      });
+    // const uid = await AsyncStorage.getItem('uid');
+    // const stringDate = date.format('YYYY-MM-DD').toString();
+    // this.unsubscribeFromEntries2 = await db.collection('users').doc(uid)
+    //   .collection('calendarEntries').doc(stringDate)
+    //   .onSnapshot(async (doc) => {
+    //     if (doc.exists) {
+    //       this.setState({
+    //         workout: await doc.data().workout,
+    //         breakfast: await doc.data().breakfast,
+    //         lunch: await doc.data().lunch,
+    //         dinner: await doc.data().dinner,
+    //         snack: await doc.data().snack,
+    //         snack2: await doc.data().snack2,
+    //         loading: false,
+    //         dayOfWeek: date.format('d'),
+    //       });
+    //     } else {
+    //       this.setState({
+    //         workout: undefined,
+    //         breakfast: undefined,
+    //         lunch: undefined,
+    //         dinner: undefined,
+    //         snack: undefined,
+    //         snack2: undefined,
+    //         loading: false,
+    //         dayOfWeek: date.format('d'),
+    //       });
+    //     }
+    //   });
   }
   loadExercises = async (workoutId) => {
     this.setState({ loading: true });
@@ -180,7 +180,7 @@ class CalendarHomeScreen extends React.PureComponent {
       .then(async (doc) => {
         const workout = await doc.data();
         const { exercises } = workout;
-        const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
+        // const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
         if (workout.interval) {
           const exerciseVideos = [
             `${FileSystem.cacheDirectory}exercise-1.mp4`,
@@ -204,7 +204,7 @@ class CalendarHomeScreen extends React.PureComponent {
             `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
           );
           this.setState({ loading: false });
-          this.props.navigation.navigate('HiitWorkoutInfo', { workout, fitnessLevel });
+          // this.props.navigation.navigate('HiitWorkoutInfo', { workout, fitnessLevel });
         } else {
           const exerciseVideos = [
             `${FileSystem.cacheDirectory}exercise-1.mp4`,

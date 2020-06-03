@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import OneSignal from 'react-native-onesignal';
-import appsFlyer from 'react-native-appsflyer';
+// import appsFlyer from 'react-native-appsflyer';
 import { NavigationActions } from 'react-navigation';
 import { Audio } from 'expo-av';
 import * as Sentry from 'sentry-expo';
@@ -50,11 +50,11 @@ export default class App extends React.PureComponent {
       },
     );
     OneSignal.setLocationShared(false);
-    appsFlyer.initSdk({
-      devKey: appsFlyerDevKey,
-      isDebug: false,
-      appId,
-    });
+    // appsFlyer.initSdk({
+    //   devKey: appsFlyerDevKey,
+    //   isDebug: false,
+    //   appId,
+    // });
     this.state = {
       appState: AppState.currentState,
     };
@@ -77,7 +77,7 @@ export default class App extends React.PureComponent {
       nextAppState === 'active'
     ) {
       if (Platform.OS === 'ios') {
-        appsFlyer.trackAppLaunch();
+        // appsFlyer.trackAppLaunch();
       }
       await Audio.setIsEnabledAsync(true);
     }

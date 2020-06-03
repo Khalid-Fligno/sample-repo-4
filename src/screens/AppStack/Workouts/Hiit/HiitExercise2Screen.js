@@ -9,11 +9,11 @@ import {
   Alert,
   AppState,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 import * as FileSystem from 'expo-file-system';
 import FadeInView from 'react-native-fade-in-view';
 import FastImage from 'react-native-fast-image';
-import appsFlyer from 'react-native-appsflyer';
+// import appsFlyer from 'react-native-appsflyer';
 import { db } from '../../../../../config/firebase';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
@@ -53,16 +53,16 @@ export default class HiitExercise2Screen extends React.PureComponent {
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
   updateWeekly = async () => {
-    const uid = await AsyncStorage.getItem('uid');
-    const userRef = db.collection('users').doc(uid);
-    return db.runTransaction((transaction) => {
-      return transaction.get(userRef).then((userDoc) => {
-        const newHiitWeeklyComplete = userDoc.data().weeklyTargets.hiitWeeklyComplete + 1;
-        const oldWeeklyTargets = userDoc.data().weeklyTargets;
-        const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'hiitWeeklyComplete', newHiitWeeklyComplete);
-        transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
-      });
-    });
+    // const uid = await AsyncStorage.getItem('uid');
+    // const userRef = db.collection('users').doc(uid);
+    // return db.runTransaction((transaction) => {
+    //   return transaction.get(userRef).then((userDoc) => {
+    //     const newHiitWeeklyComplete = userDoc.data().weeklyTargets.hiitWeeklyComplete + 1;
+    //     const oldWeeklyTargets = userDoc.data().weeklyTargets;
+    //     const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, 'hiitWeeklyComplete', newHiitWeeklyComplete);
+    //     transaction.update(userRef, { weeklyTargets: newWeeklyTargets });
+    //   });
+    // });
   }
   handleAppStateChange = (nextAppState) => {
     const { appState } = this.state;
@@ -79,7 +79,7 @@ export default class HiitExercise2Screen extends React.PureComponent {
     let roundCount = this.props.navigation.getParam('roundCount', 0);
     roundCount += 1;
     if (roundCount === 8) {
-      appsFlyer.trackEvent('complete_hiit_workout');
+      // appsFlyer.trackEvent('complete_hiit_workout');
       this.updateWeekly();
       this.props.navigation.replace('HiitWorkoutComplete', {
         exerciseList,

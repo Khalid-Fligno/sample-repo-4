@@ -13,14 +13,14 @@ import {
   Keyboard,
   ImageBackground,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, Input } from 'react-native-elements';
 import * as Haptics from 'expo-haptics';
 import * as Facebook from 'expo-facebook';
 import * as Sentry from 'sentry-expo';
 import firebase from 'firebase';
-import appsFlyer from 'react-native-appsflyer';
+// import appsFlyer from 'react-native-appsflyer';
 import * as Crypto from 'expo-crypto';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { db, auth } from '../../../config/firebase';

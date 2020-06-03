@@ -3,7 +3,7 @@ import {
   Alert,
   NativeModules,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 import { AppLoading } from 'expo';
 import { Audio } from 'expo-av';
 import * as Font from 'expo-font';
@@ -140,15 +140,15 @@ export default class AuthLoadingScreen extends React.PureComponent {
       if (user) {
         unsubscribe();
         const { uid } = user;
-        await AsyncStorage.setItem('uid', uid);
+        // await AsyncStorage.setItem('uid', uid);
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
             if (doc.exists) {
               if (await !doc.data().fitnessLevel) {
-                await AsyncStorage.setItem('fitnessLevel', '1');
+                // await AsyncStorage.setItem('fitnessLevel', '1');
               } else {
-                await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+                // await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
               }
               const { subscriptionInfo = undefined, onboarded = false } = await doc.data();
               if (subscriptionInfo === undefined) {
@@ -159,7 +159,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
                 InAppUtils.restorePurchases(async (error, response) => {
                   if (error) {
                     Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
-                    AsyncStorage.removeItem('uid');
+                    // AsyncStorage.removeItem('uid');
                     auth.signOut();
                     this.props.navigation.navigate('Auth');
                   } else {

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as FileSystem from 'expo-file-system';
 import Modal from 'react-native-modal';
@@ -70,8 +70,8 @@ export default class RecipeScreen extends React.PureComponent {
     this.setState({ addingToCalendar: true });
     const formattedDate = moment(date).format('YYYY-MM-DD');
     const { recipe, calendarMeal } = this.state;
-    const uid = await AsyncStorage.getItem('uid');
-    const calendarRef = db.collection('users').doc(uid).collection('calendarEntries').doc(formattedDate);
+    // const uid = await AsyncStorage.getItem('uid');
+    // const calendarRef = db.collection('users').doc(uid).collection('calendarEntries').doc(formattedDate);
     const data = {
       [calendarMeal]: recipe,
     };
