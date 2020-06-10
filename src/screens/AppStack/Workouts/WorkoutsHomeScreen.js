@@ -7,7 +7,7 @@ import {
   Dimensions,
   ImageBackground,
 } from 'react-native';
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
 import Carousel from 'react-native-snap-carousel';
 import FadeInView from 'react-native-fade-in-view';

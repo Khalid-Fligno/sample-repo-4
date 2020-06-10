@@ -13,14 +13,14 @@ import {
   Keyboard,
   ImageBackground,
 } from 'react-native';
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, Input } from 'react-native-elements';
 import * as Haptics from 'expo-haptics';
 import * as Facebook from 'expo-facebook';
-import * as Sentry from 'sentry-expo';
+// import * as Sentry from 'sentry-expo';
 import firebase from 'firebase';
-// import appsFlyer from 'react-native-appsflyer';
+import appsFlyer from 'react-native-appsflyer';
 import * as Crypto from 'expo-crypto';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { db, auth } from '../../../config/firebase';
@@ -128,7 +128,7 @@ export default class LoginScreen extends React.PureComponent {
               // EXPIRED
               InAppUtils.restorePurchases(async (error, response) => {
                 if (error) {
-                  Sentry.captureException(error);
+                  // Sentry.captureException(error);
                   this.setState({ loading: false });
                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
                 } else {
@@ -215,7 +215,7 @@ export default class LoginScreen extends React.PureComponent {
               // EXPIRED
               InAppUtils.restorePurchases(async (error, response) => {
                 if (error) {
-                  Sentry.captureException(error);
+                  // Sentry.captureException(error);
                   this.setState({ loading: false });
                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
                 } else {
@@ -298,7 +298,7 @@ export default class LoginScreen extends React.PureComponent {
               // EXPIRED
               InAppUtils.restorePurchases(async (error, response) => {
                 if (error) {
-                  Sentry.captureException(error);
+                  // Sentry.captureException(error);
                   this.setState({ loading: false });
                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
                 } else {
@@ -394,108 +394,109 @@ export default class LoginScreen extends React.PureComponent {
       appleSignInAvailable,
     } = this.state;
     return (
-      <SafeAreaView style={styles.safeAreaContainer}>
-        <StatusBar barStyle="light-content" />
-        <View style={styles.container}>
-          <ImageBackground
-            source={require('../../../assets/images/signup-screen-background.jpg')}
-            style={styles.imageBackground}
-          >
-            <ScrollView contentContainerStyle={styles.scrollView}>
-              <View style={styles.closeIconContainer}>
-                <TouchableOpacity
-                  onPress={() => this.props.navigation.goBack()}
-                  style={styles.closeIconButton}
+      <React.Fragment>
+        <SafeAreaView style={styles.safeAreaContainer}>
+          <StatusBar barStyle="light-content" />
+          <View style={styles.container}>
+            <ImageBackground
+              source={require('../../../assets/images/signup-screen-background.jpg')}
+              style={styles.imageBackground}
+            >
+              <ScrollView contentContainerStyle={styles.scrollView}>
+                <View style={styles.closeIconContainer}>
+                  <TouchableOpacity
+                    onPress={() => this.props.navigation.goBack()}
+                    style={styles.closeIconButton}
+                  >
+                    <Icon
+                      name="cross"
+                      color={colors.white}
+                      size={22}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <Input
+                  placeholder="Email"
+                  placeholderTextColor={colors.transparentWhiteLight}
+                  value={email}
+                  returnKeyType="next"
+                  keyboardType="email-address"
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  onChangeText={(text) => this.setState({ email: text })}
+                  onSubmitEditing={() => this.passwordInput.focus()}
+                  containerStyle={styles.inputComponentContainer}
+                  inputContainerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  clearButtonMode="while-editing"
+                />
+                <Input
+                  errorMessage={error && error}
+                  placeholder="Password"
+                  placeholderTextColor={colors.transparentWhiteLight}
+                  value={password}
+                  returnKeyType="go"
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  onChangeText={(text) => this.setState({ password: text })}
+                  secureTextEntry
+                  ref={(input) => {
+                    this.passwordInput = input;
+                  }}
+                  onSubmitEditing={() => this.login(email, password)}
+                  containerStyle={styles.inputComponentContainer}
+                  inputContainerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  clearButtonMode="while-editing"
+                />
+                <Button
+                  title="SIGN IN"
+                  onPress={() => this.login(email, password)}
+                  containerStyle={styles.loginButtonContainer}
+                  buttonStyle={styles.loginButton}
+                  titleStyle={styles.loginButtonText}
+                  fontFamily={fonts.bold}
+                />
+                <Divider style={styles.divider} />
+                <View style={styles.dividerOverlay} >
+                  <Text style={styles.dividerOverlayText}>
+                    OR
+                  </Text>
+                </View>
+                <FacebookButton
+                  title="SIGN IN WITH FACEBOOK"
+                  onPress={this.loginWithFacebook}
+                />
+                {
+                  appleSignInAvailable && (
+                    <AppleAuthentication.AppleAuthenticationButton
+                      onPress={this.onSignInWithApple}
+                      buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+                      buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
+                      cornerRadius={4}
+                      style={styles.appleButton}
+                    />
+                  )
+                }
+                <Text
+                  onPress={this.navigateToForgottenPassword}
+                  style={styles.navigateToForgottenPasswordButton}
                 >
-                  <Icon
-                    name="cross"
-                    color={colors.white}
-                    size={22}
-                  />
-                </TouchableOpacity>
-              </View>
-              <Input
-                placeholder="Email"
-                placeholderTextColor={colors.transparentWhiteLight}
-                value={email}
-                returnKeyType="next"
-                keyboardType="email-address"
-                autoCorrect={false}
-                autoCapitalize="none"
-                onChangeText={(text) => this.setState({ email: text })}
-                onSubmitEditing={() => this.passwordInput.focus()}
-                containerStyle={styles.inputComponentContainer}
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                clearButtonMode="while-editing"
-              />
-              <Input
-                errorMessage={error && error}
-                placeholder="Password"
-                placeholderTextColor={colors.transparentWhiteLight}
-                value={password}
-                returnKeyType="go"
-                autoCorrect={false}
-                autoCapitalize="none"
-                onChangeText={(text) => this.setState({ password: text })}
-                secureTextEntry
-                ref={(input) => {
-                  this.passwordInput = input;
-                }}
-                onSubmitEditing={() => this.login(email, password)}
-                containerStyle={styles.inputComponentContainer}
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                clearButtonMode="while-editing"
-              />
-              <Button
-                title="SIGN IN"
-                onPress={() => this.login(email, password)}
-                containerStyle={styles.loginButtonContainer}
-                buttonStyle={styles.loginButton}
-                titleStyle={styles.loginButtonText}
-                fontFamily={fonts.bold}
-              />
-              <Divider style={styles.divider} />
-              <View style={styles.dividerOverlay} >
-                <Text style={styles.dividerOverlayText}>
-                  OR
+                  {'Forgotten your password?'}
                 </Text>
-              </View>
-              <FacebookButton
-                title="SIGN IN WITH FACEBOOK"
-                onPress={this.loginWithFacebook}
-              />
-              {
-                appleSignInAvailable && (
-                  <AppleAuthentication.AppleAuthenticationButton
-                    onPress={this.onSignInWithApple}
-                    buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-                    buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
-                    cornerRadius={4}
-                    style={styles.appleButton}
-                  />
-                )
-              }
-              <Text
-                onPress={this.navigateToForgottenPassword}
-                style={styles.navigateToForgottenPasswordButton}
-              >
-                {'Forgotten your password?'}
-              </Text>
-              <Text
-                onPress={this.navigateToSignup}
-                style={styles.navigateToSignupButton}
-              >
-                {"Don't have an account? Sign up here"}
-              </Text>
-              {
-                loading && <NativeLoader />
-              }
-            </ScrollView>
-          </ImageBackground>
-        </View>
-      </SafeAreaView>
+                <Text
+                  onPress={this.navigateToSignup}
+                  style={styles.navigateToSignupButton}
+                >
+                  {"Don't have an account? Sign up here"}
+                </Text>
+
+              </ScrollView>
+            </ImageBackground>
+          </View>
+        </SafeAreaView>
+        {loading && <NativeLoader />}
+      </React.Fragment>
     );
   }
 }

@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Picker,
 } from 'react-native';
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
 import Modal from 'react-native-modal';
 import moment from 'moment';

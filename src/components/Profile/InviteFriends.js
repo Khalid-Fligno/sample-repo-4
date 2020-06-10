@@ -17,7 +17,7 @@ import * as SMS from 'expo-sms';
 import * as Contacts from 'expo-contacts';
 import * as Haptics from 'expo-haptics';
 import groupBy from 'lodash.groupby';
-// import appsFlyer from 'react-native-appsflyer';
+import appsFlyer from 'react-native-appsflyer';
 import ContactRow from './ContactRow';
 import Loader from '../../components/Shared/Loader';
 import CustomButton from '../../components/Shared/CustomButton';
@@ -147,7 +147,7 @@ export default function InviteFriends({ recordInvites }) {
     if (didShare) {
       Alert.alert('', 'Thanks for sharing!');
       recordInvites(inviteCount);
-      // appsFlyer.trackEvent('invite_friends', { invite_count: inviteCount });
+      appsFlyer.trackEvent('invite_friends', { invite_count: inviteCount });
     }
   };
 

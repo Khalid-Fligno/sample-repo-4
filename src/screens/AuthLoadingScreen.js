@@ -1,13 +1,17 @@
 import React from 'react';
 import {
   Alert,
+  Dimensions,
+  ImageBackground,
   NativeModules,
+  StyleSheet,
+  View,
 } from 'react-native';
-// import AsyncStorage from '@react-native-community/async-storage';
-import { AppLoading } from 'expo';
+import AsyncStorage from '@react-native-community/async-storage';
 import { Audio } from 'expo-av';
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
+import * as SplashScreen from 'expo-splash-screen';
 import {
   validateReceiptProduction,
   validateReceiptSandbox,
@@ -18,6 +22,7 @@ import { auth, db } from '../../config/firebase';
 import { timerSound } from '../../config/audio';
 
 const { InAppUtils } = NativeModules;
+const { width } = Dimensions.get('window');
 
 const cacheImages = (images) => {
   return images.map((image) => {
@@ -42,6 +47,18 @@ const cacheSound = async (sounds) => {
 };
 
 export default class AuthLoadingScreen extends React.PureComponent {
+  state = {
+    appIsReady: false,
+  };
+  async componentDidMount() {
+    // Prevent native splash screen from autohiding
+    try {
+      await SplashScreen.preventAutoHideAsync();
+    } catch (e) {
+      console.warn(e);
+    }
+    await this.loadAssetsAsync();
+  }
   loadAssetsAsync = async () => {
     const imageAssets = cacheImages([
       require('../../assets/icons/fitazfk-app-icon-gradient-dark.png'),
@@ -133,37 +150,44 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/sounds/ding.mp3'),
     ]);
     await Promise.all([...imageAssets, ...fontAssets, soundAsset]);
+    await this.cachingComplete();
+    // this.setState({ appIsReady: true }, async () => {
+    //   await SplashScreen.hideAsync();
+    // });
   }
-  // GRAND UNIFIED
+  // GRAND UNIFIED()
   cachingComplete = async () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         unsubscribe();
         const { uid } = user;
-        // await AsyncStorage.setItem('uid', uid);
+        await AsyncStorage.setItem('uid', uid);
         db.collection('users').doc(uid)
           .get()
           .then(async (doc) => {
             if (doc.exists) {
               if (await !doc.data().fitnessLevel) {
-                // await AsyncStorage.setItem('fitnessLevel', '1');
+                await AsyncStorage.setItem('fitnessLevel', '1');
               } else {
-                // await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
+                await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
               }
               const { subscriptionInfo = undefined, onboarded = false } = await doc.data();
               if (subscriptionInfo === undefined) {
                 // NO PURCHASE INFORMATION SAVED
+                await SplashScreen.hideAsync();
                 this.props.navigation.navigate('Subscription');
               } else if (subscriptionInfo.expiry < Date.now()) {
                 // EXPIRED
                 InAppUtils.restorePurchases(async (error, response) => {
                   if (error) {
                     Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
-                    // AsyncStorage.removeItem('uid');
+                    AsyncStorage.removeItem('uid');
                     auth.signOut();
+                    await SplashScreen.hideAsync();
                     this.props.navigation.navigate('Auth');
                   } else {
                     if (response.length === 0) {
+                      await SplashScreen.hideAsync();
                       this.props.navigation.navigate('Subscription');
                       return;
                     }
@@ -186,19 +210,24 @@ export default class AuthLoadingScreen extends React.PureComponent {
                         };
                         await userRef.set(data, { merge: true });
                         if (onboarded) {
+                          await SplashScreen.hideAsync();
                           this.props.navigation.navigate('App');
                         } else {
+                          await SplashScreen.hideAsync();
                           this.props.navigation.navigate('Onboarding1');
                         }
                       } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
                         Alert.alert('Expired', 'Your most recent subscription has expired');
+                        await SplashScreen.hideAsync();
                         this.props.navigation.navigate('Subscription');
                       } else {
                         Alert.alert('Something went wrong');
+                        await SplashScreen.hideAsync();
                         this.props.navigation.navigate('Subscription');
                       }
                     } catch (err) {
                       Alert.alert('Error', 'Could not retrieve subscription information');
+                      await SplashScreen.hideAsync();
                       this.props.navigation.navigate('Subscription');
                     }
                   }
@@ -206,18 +235,22 @@ export default class AuthLoadingScreen extends React.PureComponent {
               } else if (subscriptionInfo.expiry > Date.now()) {
                 // RECEIPT STILL VALID
                 if (onboarded) {
+                  await SplashScreen.hideAsync();
                   this.props.navigation.navigate('App');
                 } else {
+                  await SplashScreen.hideAsync();
                   this.props.navigation.navigate('Onboarding1');
                 }
               }
             } else {
               Alert.alert('Account data could not be found');
+              await SplashScreen.hideAsync();
               this.props.navigation.navigate('Auth');
             }
           });
       } else {
         unsubscribe();
+        await SplashScreen.hideAsync();
         this.props.navigation.navigate('Auth');
       }
     });
@@ -316,11 +349,28 @@ export default class AuthLoadingScreen extends React.PureComponent {
     return validationData;
   }
   render() {
+    if (!this.state.appIsReady) {
+      return null;
+    }
     return (
-      <AppLoading
-        startAsync={this.loadAssetsAsync}
-        onFinish={() => this.cachingComplete()}
-      />
+      <View style={styles.container}>
+        <ImageBackground
+          source={require('../../assets/icons/fitazfk-splash-dark-logo.png')}
+          style={styles.background}
+        />
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width,
+  },
+  background: {
+    flex: 1,
+    width: undefined,
+    height: undefined,
+  },
+});

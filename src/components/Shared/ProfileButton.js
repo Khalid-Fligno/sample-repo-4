@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import FastImage from 'react-native-fast-image';
 import Icon from '../Shared/Icon';
 import { db } from '../../../config/firebase';
@@ -14,13 +14,13 @@ export default class ProfileButton extends React.PureComponent {
     };
   }
   componentDidMount = async () => {
-    // const uid = await AsyncStorage.getItem('uid');
-    // if (uid) {
-    //   this.unsubscribe = await db.collection('users').doc(uid)
-    //     .onSnapshot(async (doc) => {
-    //       this.setState({ avatar: await doc.data().avatar || undefined });
-    //     });
-    // }
+    const uid = await AsyncStorage.getItem('uid');
+    if (uid) {
+      this.unsubscribe = await db.collection('users').doc(uid)
+        .onSnapshot(async (doc) => {
+          this.setState({ avatar: await doc.data().avatar || undefined });
+        });
+    }
   }
   componentWillUnmount = () => {
     if (this.unsubscribe) {

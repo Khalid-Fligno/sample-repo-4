@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Picker,
 } from 'react-native';
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
 import Modal from 'react-native-modal';
 import { db } from '../../../../config/firebase';
@@ -52,21 +52,21 @@ export default class Progress6Screen extends React.PureComponent {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     const { burpeeCount } = this.state;
-    // const uid = await AsyncStorage.getItem('uid');
-    // const userRef = db.collection('users').doc(uid);
-    // const fitnessLevel = findFitnessLevel(burpeeCount);
-    // AsyncStorage.setItem('fitnessLevel', fitnessLevel.toString());
-    // try {
-    //   await userRef.set({
-    //     fitnessLevel,
-    //     initialBurpeeTestCompleted: true,
-    //   }, { merge: true });
-    //   this.setState({ loading: false });
-    //   this.props.navigation.navigate('Home');
-    // } catch (err) {
-    //   Alert.alert('Database write error', `${err}`);
-    //   this.setState({ loading: false });
-    // }
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    const fitnessLevel = findFitnessLevel(burpeeCount);
+    AsyncStorage.setItem('fitnessLevel', fitnessLevel.toString());
+    try {
+      await userRef.set({
+        fitnessLevel,
+        initialBurpeeTestCompleted: true,
+      }, { merge: true });
+      this.setState({ loading: false });
+      this.props.navigation.navigate('Home');
+    } catch (err) {
+      Alert.alert('Database write error', `${err}`);
+      this.setState({ loading: false });
+    }
   }
   toggleBurpeeModal = () => {
     this.setState((prevState) => ({ burpeeModalVisible: !prevState.burpeeModalVisible }));

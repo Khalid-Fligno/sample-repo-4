@@ -8,7 +8,7 @@ import {
   Dimensions,
   ImageBackground,
 } from 'react-native';
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
 import Loader from '../../../components/Shared/Loader';
 import CustomButton from '../../../components/Shared/CustomButton';
@@ -37,27 +37,27 @@ export default class InviteFriendsScreen extends React.PureComponent {
   }
   fetchProfile = async () => {
     this.setState({ loading: true });
-    // const uid = await AsyncStorage.getItem('uid');
-    // this.unsubscribe = await db.collection('users').doc(uid)
-    //   .onSnapshot(async (doc) => {
-    //     if (doc.exists) {
-    //       this.setState({ friendsInvited: await doc.data().friendsInvited || undefined, loading: false });
-    //     } else {
-    //       this.setState({ loading: false });
-    //     }
-    //   });
+    const uid = await AsyncStorage.getItem('uid');
+    this.unsubscribe = await db.collection('users').doc(uid)
+      .onSnapshot(async (doc) => {
+        if (doc.exists) {
+          this.setState({ friendsInvited: await doc.data().friendsInvited || undefined, loading: false });
+        } else {
+          this.setState({ loading: false });
+        }
+      });
   }
   switchView = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     this.setState({ contactsView: true });
   }
   recordInvites = async (numberOfInvites) => {
-    // const uid = await AsyncStorage.getItem('uid');
+    const uid = await AsyncStorage.getItem('uid');
     const { friendsInvited } = this.state;
     const friendsInvitedNew = numberOfInvites + (friendsInvited || 0);
-    // const userRef = db.collection('users').doc(uid);
-    // await userRef.set({ friendsInvited: friendsInvitedNew }, { merge: true });
-    // this.setState({ contactsView: false });
+    const userRef = db.collection('users').doc(uid);
+    await userRef.set({ friendsInvited: friendsInvitedNew }, { merge: true });
+    this.setState({ contactsView: false });
   }
   render() {
     const { friendsInvited, contactsView, loading } = this.state;

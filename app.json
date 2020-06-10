@@ -14,7 +14,8 @@
       "buildNumber": "1",
       "publishBundlePath": "ios/fitazfk/Supporting/shell-app.bundle",
       "publishManifestPath": "ios/fitazfk/Supporting/shell-app-manifest.json",
-      "usesAppleSignIn": true
+      "usesAppleSignIn": true,
+      "icon": "./assets/icons/fitazfk-app-icon-gradient-dark.png"
     },
     "android": {
       "package": "com.fitazfk.fitazfkapp",
@@ -22,21 +23,10 @@
       "publishManifestPath": "android/app/src/main/assets/shell-app-manifest.json"
     },
     "scheme": "fitazfk",
-    "hooks": {
-      "postPublish": [
-        {
-          "file": "sentry-expo/upload-sourcemaps",
-          "config": {
-            "organization": "fitaz-health-pty-ltd",
-            "project": "fitazfk-app",
-            "authToken": "371bd1ce93d84a44bf0b9e9690dba7c6d38f16ffc54c4c3e8c00d36565d76d7d"
-          }
-        }
-      ]
-    },
     "platforms": [
       "android",
       "ios"
-    ]
+    ],
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }

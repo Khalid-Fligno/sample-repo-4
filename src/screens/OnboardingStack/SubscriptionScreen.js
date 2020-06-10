@@ -10,10 +10,10 @@ import {
   Linking,
   ImageBackground,
 } from 'react-native';
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
-// import appsFlyer from 'react-native-appsflyer';
-import * as Sentry from 'sentry-expo';
+import appsFlyer from 'react-native-appsflyer';
+// import * as Sentry from 'sentry-expo';
 import { auth, db } from '../../../config/firebase';
 import {
   // foundationIdentifiers,
@@ -85,7 +85,7 @@ export default class SubscriptionScreen extends React.PureComponent {
   }
   logout = () => {
     try {
-      // AsyncStorage.removeItem('uid');
+      AsyncStorage.removeItem('uid');
       auth.signOut();
       this.props.navigation.navigate('Auth');
     } catch (err) {
@@ -97,7 +97,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     this.setState({ loading: true });
     InAppUtils.restorePurchases(async (error, response) => {
       if (error) {
-        Sentry.captureException(error);
+        // Sentry.captureException(error);
         this.setState({ loading: false });
         Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
         return;
@@ -116,29 +116,29 @@ export default class SubscriptionScreen extends React.PureComponent {
             const sortedReceipts = validationData.latest_receipt_info.slice().sort(compare);
             const latestReceipt = sortedReceipts[0];
             if (latestReceipt && latestReceipt.expires_date_ms > Date.now()) {
-              // const uid = await AsyncStorage.getItem('uid');
-              // const userRef = db.collection('users').doc(uid);
-              // const data = {
-              //   subscriptionInfo: {
-              //     expiry: latestReceipt.expires_date_ms,
-              //     originalTransactionId: latestReceipt.original_transaction_id,
-              //     originalPurchaseDate: latestReceipt.original_purchase_date_ms,
-              //     productId: latestReceipt.product_id,
-              //   },
-              // };
-              // await userRef.set(data, { merge: true });
-              // userRef.get()
-              //   .then(async (doc) => {
-              //     if (await doc.data().onboarded) {
-              //       this.setState({ loading: false });
-              //       Alert.alert('Restore Successful', 'Successfully restored your purchase.');
-              //       this.props.navigation.navigate('App');
-              //     } else {
-              //       this.setState({ loading: false });
-              //       Alert.alert('Restore Successful', 'Successfully restored your purchase.');
-              //       this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-              //     }
-              //   });
+              const uid = await AsyncStorage.getItem('uid');
+              const userRef = db.collection('users').doc(uid);
+              const data = {
+                subscriptionInfo: {
+                  expiry: latestReceipt.expires_date_ms,
+                  originalTransactionId: latestReceipt.original_transaction_id,
+                  originalPurchaseDate: latestReceipt.original_purchase_date_ms,
+                  productId: latestReceipt.product_id,
+                },
+              };
+              await userRef.set(data, { merge: true });
+              userRef.get()
+                .then(async (doc) => {
+                  if (await doc.data().onboarded) {
+                    this.setState({ loading: false });
+                    Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+                    this.props.navigation.navigate('App');
+                  } else {
+                    this.setState({ loading: false });
+                    Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+                    this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+                  }
+                });
             } else if (latestReceipt && latestReceipt.expires_date_ms < Date.now()) {
               this.setState({ loading: false });
               Alert.alert('Expired', 'Your most recent subscription has expired');
@@ -160,30 +160,30 @@ export default class SubscriptionScreen extends React.PureComponent {
         }
         const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
         if (sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now()) {
-          // const uid = await AsyncStorage.getItem('uid');
-          // const userRef = db.collection('users').doc(uid);
-          // const data = {
-          //   subscriptionInfo: {
-          //     receipt: sortedPurchases[0].transactionReceipt,
-          //     expiry: sortedInApp[0].expires_date_ms,
-          //     originalTransactionId: sortedInApp[0].original_transaction_id,
-          //     originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
-          //     productId: sortedInApp[0].product_id,
-          //   },
-          // };
-          // await userRef.set(data, { merge: true });
-          // userRef.get()
-          //   .then(async (doc) => {
-          //     if (await doc.data().onboarded) {
-          //       this.setState({ loading: false });
-          //       Alert.alert('Success', 'Successfully restored your purchase.');
-          //       this.props.navigation.navigate('App');
-          //     } else {
-          //       this.setState({ loading: false });
-          //       Alert.alert('Success', 'Successfully restored your purchase.');
-          //       this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-          //     }
-          //   });
+          const uid = await AsyncStorage.getItem('uid');
+          const userRef = db.collection('users').doc(uid);
+          const data = {
+            subscriptionInfo: {
+              receipt: sortedPurchases[0].transactionReceipt,
+              expiry: sortedInApp[0].expires_date_ms,
+              originalTransactionId: sortedInApp[0].original_transaction_id,
+              originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
+              productId: sortedInApp[0].product_id,
+            },
+          };
+          await userRef.set(data, { merge: true });
+          userRef.get()
+            .then(async (doc) => {
+              if (await doc.data().onboarded) {
+                this.setState({ loading: false });
+                Alert.alert('Success', 'Successfully restored your purchase.');
+                this.props.navigation.navigate('App');
+              } else {
+                this.setState({ loading: false });
+                Alert.alert('Success', 'Successfully restored your purchase.');
+                this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+              }
+            });
         } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
           this.setState({ loading: false });
           Alert.alert('Expired', 'Your most recent subscription has expired');
@@ -197,108 +197,108 @@ export default class SubscriptionScreen extends React.PureComponent {
       }
     });
   }
-  // restore = async () => {
-  //   this.setState({ loading: true });
-  //   InAppUtils.restorePurchases(async (error, response) => {
-  //     if (error) {
-  //       this.setState({ loading: false });
-  //       Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
-  //       return;
-  //     } else if (response.length === 0) {
-  //       InAppUtils.receiptData(async (error2, receiptData) => {
-  //         if (error2) {
-  //           this.setState({ loading: false });
-  //           Alert.alert('itunes Error', 'Receipt not found.');
-  //         } else {
-  //           const validationData = await this.validate(receiptData);
-  //           if (validationData.latest_receipt_info === undefined) {
-  //             this.setState({ loading: false });
-  //             Alert.alert('No Purchases to restore');
-  //             return;
-  //           }
-  //           const sortedReceipts = validationData.latest_receipt_info.slice().sort(compare);
-  //           const latestReceipt = sortedReceipts[0];
-  //           if (latestReceipt && latestReceipt.expires_date_ms > Date.now()) {
-  //             const uid = await AsyncStorage.getItem('uid');
-  //             const userRef = db.collection('users').doc(uid);
-  //             const data = {
-  //               subscriptionInfo: {
-  //                 expiry: latestReceipt.expires_date_ms,
-  //                 originalTransactionId: latestReceipt.original_transaction_id,
-  //                 originalPurchaseDate: latestReceipt.original_purchase_date_ms,
-  //                 productId: latestReceipt.product_id,
-  //               },
-  //             };
-  //             await userRef.set(data, { merge: true });
-  //             userRef.get()
-  //               .then(async (doc) => {
-  //                 if (await doc.data().onboarded) {
-  //                   this.setState({ loading: false });
-  //                   Alert.alert('Restore Successful', 'Successfully restored your purchase.');
-  //                   this.props.navigation.navigate('App');
-  //                 } else {
-  //                   this.setState({ loading: false });
-  //                   Alert.alert('Restore Successful', 'Successfully restored your purchase.');
-  //                   this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-  //                 }
-  //               });
-  //           } else if (latestReceipt && latestReceipt.expires_date_ms < Date.now()) {
-  //             this.setState({ loading: false });
-  //             Alert.alert('Expired', 'Your most recent subscription has expired');
-  //           } else {
-  //             this.setState({ loading: false });
-  //             Alert.alert('No purchase information available');
-  //           }
-  //         }
-  //       });
-  //       return;
-  //     }
-  //     const sortedPurchases = response.slice().sort(compare);
-  //     try {
-  //       const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
-  //       if (validationData === undefined) {
-  //         this.setState({ loading: false });
-  //         Alert.alert('Receipt Validation Error');
-  //         return;
-  //       }
-  //       if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
-  //         const uid = await AsyncStorage.getItem('uid');
-  //         const userRef = db.collection('users').doc(uid);
-  //         const data = {
-  //           subscriptionInfo: {
-  //             receipt: sortedPurchases[0].transactionReceipt,
-  //             expiry: validationData.latest_receipt_info.expires_date,
-  //             originalTransactionId: validationData.latest_receipt_info.original_transaction_id,
-  //             originalPurchaseDate: validationData.latest_receipt_info.original_purchase_date_ms,
-  //             productId: validationData.latest_receipt_info.product_id,
-  //           },
-  //         };
-  //         await userRef.set(data, { merge: true });
-  //         userRef.get()
-  //           .then(async (doc) => {
-  //             if (await doc.data().onboarded) {
-  //               this.setState({ loading: false });
-  //               Alert.alert('Success', 'Successfully restored your purchase.');
-  //               this.props.navigation.navigate('App');
-  //             } else {
-  //               this.setState({ loading: false });
-  //               Alert.alert('Success', 'Successfully restored your purchase.');
-  //               this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-  //             }
-  //           });
-  //       } else if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date < Date.now()) {
-  //         this.setState({ loading: false });
-  //         Alert.alert('Expired', 'Your most recent subscription has expired');
-  //       } else {
-  //         this.setState({ loading: false });
-  //         Alert.alert('No purchase information available');
-  //       }
-  //     } catch (err) {
-  //       this.setState({ loading: false });
-  //       Alert.alert('No current subscriptions to restore');
-  //     }
-  //   });
-  // }
+  restore = async () => {
+    this.setState({ loading: true });
+    InAppUtils.restorePurchases(async (error, response) => {
+      if (error) {
+        this.setState({ loading: false });
+        Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
+        return;
+      } else if (response.length === 0) {
+        InAppUtils.receiptData(async (error2, receiptData) => {
+          if (error2) {
+            this.setState({ loading: false });
+            Alert.alert('itunes Error', 'Receipt not found.');
+          } else {
+            const validationData = await this.validate(receiptData);
+            if (validationData.latest_receipt_info === undefined) {
+              this.setState({ loading: false });
+              Alert.alert('No Purchases to restore');
+              return;
+            }
+            const sortedReceipts = validationData.latest_receipt_info.slice().sort(compare);
+            const latestReceipt = sortedReceipts[0];
+            if (latestReceipt && latestReceipt.expires_date_ms > Date.now()) {
+              const uid = await AsyncStorage.getItem('uid');
+              const userRef = db.collection('users').doc(uid);
+              const data = {
+                subscriptionInfo: {
+                  expiry: latestReceipt.expires_date_ms,
+                  originalTransactionId: latestReceipt.original_transaction_id,
+                  originalPurchaseDate: latestReceipt.original_purchase_date_ms,
+                  productId: latestReceipt.product_id,
+                },
+              };
+              await userRef.set(data, { merge: true });
+              userRef.get()
+                .then(async (doc) => {
+                  if (await doc.data().onboarded) {
+                    this.setState({ loading: false });
+                    Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+                    this.props.navigation.navigate('App');
+                  } else {
+                    this.setState({ loading: false });
+                    Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+                    this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+                  }
+                });
+            } else if (latestReceipt && latestReceipt.expires_date_ms < Date.now()) {
+              this.setState({ loading: false });
+              Alert.alert('Expired', 'Your most recent subscription has expired');
+            } else {
+              this.setState({ loading: false });
+              Alert.alert('No purchase information available');
+            }
+          }
+        });
+        return;
+      }
+      const sortedPurchases = response.slice().sort(compare);
+      try {
+        const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
+        if (validationData === undefined) {
+          this.setState({ loading: false });
+          Alert.alert('Receipt Validation Error');
+          return;
+        }
+        if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
+          const uid = await AsyncStorage.getItem('uid');
+          const userRef = db.collection('users').doc(uid);
+          const data = {
+            subscriptionInfo: {
+              receipt: sortedPurchases[0].transactionReceipt,
+              expiry: validationData.latest_receipt_info.expires_date,
+              originalTransactionId: validationData.latest_receipt_info.original_transaction_id,
+              originalPurchaseDate: validationData.latest_receipt_info.original_purchase_date_ms,
+              productId: validationData.latest_receipt_info.product_id,
+            },
+          };
+          await userRef.set(data, { merge: true });
+          userRef.get()
+            .then(async (doc) => {
+              if (await doc.data().onboarded) {
+                this.setState({ loading: false });
+                Alert.alert('Success', 'Successfully restored your purchase.');
+                this.props.navigation.navigate('App');
+              } else {
+                this.setState({ loading: false });
+                Alert.alert('Success', 'Successfully restored your purchase.');
+                this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+              }
+            });
+        } else if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date < Date.now()) {
+          this.setState({ loading: false });
+          Alert.alert('Expired', 'Your most recent subscription has expired');
+        } else {
+          this.setState({ loading: false });
+          Alert.alert('No purchase information available');
+        }
+      } catch (err) {
+        this.setState({ loading: false });
+        Alert.alert('No current subscriptions to restore');
+      }
+    });
+  }
   loadProducts = async () => {
     this.setState({ loading: true });
     await InAppUtils.loadProducts(identifiers, (error, products) => {
@@ -446,18 +446,18 @@ export default class SubscriptionScreen extends React.PureComponent {
           const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
           const isValid = sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now();
           if (isValid === true) {
-            // const uid = await AsyncStorage.getItem('uid');
-            // const userRef = db.collection('users').doc(uid);
-            // const data = {
-            //   subscriptionInfo: {
-            //     receipt: response.transactionReceipt,
-            //     expiry: sortedInApp[0].expires_date_ms,
-            //     originalTransactionId: sortedInApp[0].original_transaction_id,
-            //     originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
-            //     productId: sortedInApp[0].product_id,
-            //   },
-            // };
-            // await userRef.set(data, { merge: true });
+            const uid = await AsyncStorage.getItem('uid');
+            const userRef = db.collection('users').doc(uid);
+            const data = {
+              subscriptionInfo: {
+                receipt: response.transactionReceipt,
+                expiry: sortedInApp[0].expires_date_ms,
+                originalTransactionId: sortedInApp[0].original_transaction_id,
+                originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
+                productId: sortedInApp[0].product_id,
+              },
+            };
+            await userRef.set(data, { merge: true });
             // Appsflyer event tracking - Start Free Trial
             const eventName = 'af_start_trial';
             const eventValues = {
@@ -465,15 +465,15 @@ export default class SubscriptionScreen extends React.PureComponent {
               af_currency: productCurrencyCode,
             };
             appsFlyer.trackEvent(eventName, eventValues);
-            // userRef.get()
-            //   .then(async (doc) => {
-            //     this.setState({ loading: false });
-            //     if (await doc.data().onboarded) {
-            //       this.props.navigation.navigate('App');
-            //     } else {
-            //       this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-            //     }
-            //   });
+            userRef.get()
+              .then(async (doc) => {
+                this.setState({ loading: false });
+                if (await doc.data().onboarded) {
+                  this.props.navigation.navigate('App');
+                } else {
+                  this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+                }
+              });
           } else if (isValid === false) {
             this.setState({ loading: false });
             Alert.alert('Purchase Unsuccessful');
@@ -520,18 +520,18 @@ export default class SubscriptionScreen extends React.PureComponent {
             const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
             const isValid = sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now();
             if (isValid === true) {
-              // const uid = await AsyncStorage.getItem('uid');
-              // const userRef = db.collection('users').doc(uid);
-              // const data = {
-              //   subscriptionInfo: {
-              //     receipt: response.transactionReceipt,
-              //     expiry: sortedInApp[0].expires_date_ms,
-              //     originalTransactionId: sortedInApp[0].original_transaction_id,
-              //     originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
-              //     productId: sortedInApp[0].product_id,
-              //   },
-              // };
-              // await userRef.set(data, { merge: true });
+              const uid = await AsyncStorage.getItem('uid');
+              const userRef = db.collection('users').doc(uid);
+              const data = {
+                subscriptionInfo: {
+                  receipt: response.transactionReceipt,
+                  expiry: sortedInApp[0].expires_date_ms,
+                  originalTransactionId: sortedInApp[0].original_transaction_id,
+                  originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
+                  productId: sortedInApp[0].product_id,
+                },
+              };
+              await userRef.set(data, { merge: true });
               // Appsflyer event tracking - Start Free Trial
               const eventName = 'af_start_trial';
               const eventValues = {
@@ -539,15 +539,15 @@ export default class SubscriptionScreen extends React.PureComponent {
                 af_currency: productCurrencyCode,
               };
               appsFlyer.trackEvent(eventName, eventValues);
-              // userRef.get()
-              //   .then(async (doc) => {
-              //     this.setState({ loading: false });
-              //     if (await doc.data().onboarded) {
-              //       this.props.navigation.navigate('App');
-              //     } else {
-              //       this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-              //     }
-              //   });
+              userRef.get()
+                .then(async (doc) => {
+                  this.setState({ loading: false });
+                  if (await doc.data().onboarded) {
+                    this.props.navigation.navigate('App');
+                  } else {
+                    this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+                  }
+                });
             } else if (isValid === false) {
               this.setState({ loading: false });
               Alert.alert('Purchase Unsuccessful');
@@ -578,108 +578,110 @@ export default class SubscriptionScreen extends React.PureComponent {
       specialOffer,
     } = this.state;
     return (
-      <View style={styles.container}>
-        <ScrollView
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-        >
-          <ImageBackground
-            source={require('../../../assets/images/subscription-screen-background.jpg')}
-            style={styles.imageBackgroundContainer}
+      <React.Fragment>
+        <View style={styles.container}>
+          <ScrollView
+            bounces={false}
+            showsVerticalScrollIndicator={false}
           >
-            <View style={styles.headerContainer}>
-              <Text style={styles.smallheaderText}>
-                {"YOU'RE ON YOUR WAY TO"}
-              </Text>
-              <Text style={styles.smallheaderText}>
-                GETTING SHREDDED!
-              </Text>
-              <Text style={styles.headerTextLine1}>
-                <Text style={styles.headerTextCursive}>
-                  {'start  '}
+            <ImageBackground
+              source={require('../../../assets/images/subscription-screen-background.jpg')}
+              style={styles.imageBackgroundContainer}
+            >
+              <View style={styles.headerContainer}>
+                <Text style={styles.smallheaderText}>
+                  {"YOU'RE ON YOUR WAY TO"}
                 </Text>
-                YOUR {specialOffer ? '1 MONTH' : '7 DAY'}
-              </Text>
-              <Text style={styles.headerTextLine2}>
-                FREE TRIAL TODAY!
-              </Text>
-            </View>
-            <View style={styles.contentContainer}>
-              <View style={styles.subscriptionTileRow}>
-                {
-                  !specialOffer && products && products.map((product, index) => (
-                    <SubscriptionTile
-                      key={product.identifier}
-                      primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount'}
-                      title={productTitleMap[index]}
-                      price={product.priceString}
-                      priceNumber={product.price}
-                      currencyCode={product.currencyCode}
-                      onPress={() => this.purchaseProduct(product.identifier, product.price, product.currencyCode)}
-                      term={subscriptionPeriodMap[product.identifier]}
-                    />
-                  ))
-                }
-                {
-                  specialOffer && discountedProducts && products && discountedProducts.map((product, index) => (
-                    <SubscriptionTile
-                      key={product.identifier}
-                      primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount'}
-                      title={productTitleMap[index]}
-                      price={product.priceString}
-                      priceNumber={product.price}
-                      currencyCode={product.currencyCode}
-                      onPress={() => this.purchaseDiscountedProduct(product.identifier, product.price, product.currencyCode)}
-                      term={subscriptionPeriodMap[product.identifier]}
-                      comparisonPrice={
-                        products && product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' ?
-                          `$${(products[0].price / 12).toFixed(2)}` :
-                          products[1].priceString
-                      }
-                      isDiscounted={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount'}
-                    />
-                  ))
-                }
+                <Text style={styles.smallheaderText}>
+                  GETTING SHREDDED!
+                </Text>
+                <Text style={styles.headerTextLine1}>
+                  <Text style={styles.headerTextCursive}>
+                    {'start  '}
+                  </Text>
+                  YOUR {specialOffer ? '1 MONTH' : '7 DAY'}
+                </Text>
+                <Text style={styles.headerTextLine2}>
+                  FREE TRIAL TODAY!
+                </Text>
               </View>
-            </View>
-            <Icon
-              name="chevron-up"
-              size={8}
-              color={colors.white}
-              style={styles.chevronUp}
-            />
-            <View style={styles.disclaimerTextContainer}>
-              <Text style={styles.disclaimerText}>
-                <Text style={styles.subscriptionTermsTitle}>Subscription Terms: </Text>
-                {'By continuing, you accept our '}
-                <Text
-                  onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-privacy-policy')}
-                  style={styles.link}
-                >
-                  Privacy Policy
+              <View style={styles.contentContainer}>
+                <View style={styles.subscriptionTileRow}>
+                  {
+                    !specialOffer && products && products.map((product, index) => (
+                      <SubscriptionTile
+                        key={product.identifier}
+                        primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount'}
+                        title={productTitleMap[index]}
+                        price={product.priceString}
+                        priceNumber={product.price}
+                        currencyCode={product.currencyCode}
+                        onPress={() => this.purchaseProduct(product.identifier, product.price, product.currencyCode)}
+                        term={subscriptionPeriodMap[product.identifier]}
+                      />
+                    ))
+                  }
+                  {
+                    specialOffer && discountedProducts && products && discountedProducts.map((product, index) => (
+                      <SubscriptionTile
+                        key={product.identifier}
+                        primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount'}
+                        title={productTitleMap[index]}
+                        price={product.priceString}
+                        priceNumber={product.price}
+                        currencyCode={product.currencyCode}
+                        onPress={() => this.purchaseDiscountedProduct(product.identifier, product.price, product.currencyCode)}
+                        term={subscriptionPeriodMap[product.identifier]}
+                        comparisonPrice={
+                          products && product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' ?
+                            `$${(products[0].price / 12).toFixed(2)}` :
+                            products[1].priceString
+                        }
+                        isDiscounted={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount'}
+                      />
+                    ))
+                  }
+                </View>
+              </View>
+              <Icon
+                name="chevron-up"
+                size={8}
+                color={colors.white}
+                style={styles.chevronUp}
+              />
+              <View style={styles.disclaimerTextContainer}>
+                <Text style={styles.disclaimerText}>
+                  <Text style={styles.subscriptionTermsTitle}>Subscription Terms: </Text>
+                  {'By continuing, you accept our '}
+                  <Text
+                    onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-privacy-policy')}
+                    style={styles.link}
+                  >
+                    Privacy Policy
+                  </Text>
+                  {' and '}
+                  <Text
+                    onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-terms-conditions')}
+                    style={styles.link}
+                  >
+                    Terms and Conditions
+                  </Text>
+                  .
+                  You also agree that an ongoing subscription to the FitazFK App (FitazFK Fitness & Nutrition) will be applied to your iTunes account at the end of your {specialOffer ? '1 month' : '7 day'} free trial.
+                  Subscriptions will automatically renew and your account charged unless auto-renew is turned off at least 24-hours before the end of the current period.
+                  Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
+                  Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
                 </Text>
-                {' and '}
-                <Text
-                  onPress={() => this.openLink('https://fitazfk.com/pages/fitazfk-app-terms-conditions')}
-                  style={styles.link}
-                >
-                  Terms and Conditions
-                </Text>
-                .
-                You also agree that an ongoing subscription to the FitazFK App (FitazFK Fitness & Nutrition) will be applied to your iTunes account at the end of your {specialOffer ? '1 month' : '7 day'} free trial.
-                Subscriptions will automatically renew and your account charged unless auto-renew is turned off at least 24-hours before the end of the current period.
-                Subscriptions may be managed by the user and auto-renewal may be turned off by going to the users Account Settings after purchase.
-                Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
-              </Text>
-            </View>
-          </ImageBackground>
-        </ScrollView>
+              </View>
+            </ImageBackground>
+          </ScrollView>
+        </View>
         {
           loading && (
             <NativeLoader />
           )
         }
-      </View>
+      </React.Fragment>
     );
   }
 }

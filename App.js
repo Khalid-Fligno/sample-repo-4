@@ -8,12 +8,13 @@ import {
   AppState,
   Platform,
 } from 'react-native';
+// import * as Facebook from 'expo-facebook';
 import NetInfo from '@react-native-community/netinfo';
 import OneSignal from 'react-native-onesignal';
-// import appsFlyer from 'react-native-appsflyer';
+import appsFlyer from 'react-native-appsflyer';
 import { NavigationActions } from 'react-navigation';
 import { Audio } from 'expo-av';
-import * as Sentry from 'sentry-expo';
+// import * as Sentry from 'sentry-expo';
 import { appsFlyerDevKey, appId } from './config/appsFlyer';
 import SwitchNavigator from './config/router/index';
 import colors from './src/styles/colors';
@@ -31,11 +32,11 @@ function navigate(routeName, params) {
   }));
 }
 
-Sentry.init({
-  dsn: 'https://ad25f20f55644584bd7ef1ffd7dfe1f1@sentry.io/1342308',
-  enableInExpoDevelopment: false,
-  debug: false,
-});
+// Sentry.init({
+//   dsn: 'https://ad25f20f55644584bd7ef1ffd7dfe1f1@sentry.io/1342308',
+//   enableInExpoDevelopment: false,
+//   debug: false,
+// });
 
 // Facebook.initializeAsync({ appId: '1825444707513470' });
 
@@ -50,11 +51,11 @@ export default class App extends React.PureComponent {
       },
     );
     OneSignal.setLocationShared(false);
-    // appsFlyer.initSdk({
-    //   devKey: appsFlyerDevKey,
-    //   isDebug: false,
-    //   appId,
-    // });
+    appsFlyer.initSdk({
+      devKey: appsFlyerDevKey,
+      isDebug: false,
+      appId,
+    });
     this.state = {
       appState: AppState.currentState,
     };
@@ -77,7 +78,7 @@ export default class App extends React.PureComponent {
       nextAppState === 'active'
     ) {
       if (Platform.OS === 'ios') {
-        // appsFlyer.trackAppLaunch();
+        appsFlyer.trackAppLaunch();
       }
       await Audio.setIsEnabledAsync(true);
     }

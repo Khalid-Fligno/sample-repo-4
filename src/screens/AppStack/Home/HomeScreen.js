@@ -7,7 +7,7 @@ import {
   Text,
   Dimensions,
 } from 'react-native';
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import { Button } from 'react-native-elements';
 import * as Haptics from 'expo-haptics';
 import * as Localization from 'expo-localization';
@@ -77,32 +77,32 @@ export default class HomeScreen extends React.PureComponent {
     this.setState({ dayOfWeek });
   }
   switchWelcomeHeader = async () => {
-    // const switchWelcomeHeader = await AsyncStorage.getItem('switchWelcomeHeader');
-    // if (switchWelcomeHeader === null) {
-    //   this.setState({ switchWelcomeHeader: false });
-    //   AsyncStorage.setItem('switchWelcomeHeader', 'true');
-    // }
+    const switchWelcomeHeader = await AsyncStorage.getItem('switchWelcomeHeader');
+    if (switchWelcomeHeader === null) {
+      this.setState({ switchWelcomeHeader: false });
+      AsyncStorage.setItem('switchWelcomeHeader', 'true');
+    }
   }
   fetchProfile = async () => {
     this.setState({ loading: true });
-    // const uid = await AsyncStorage.getItem('uid');
-    // const userRef = db.collection('users').doc(uid);
-    // this.unsubscribe = userRef.onSnapshot(async (doc) => {
-    //   this.setState({
-    //     profile: await doc.data(),
-    //     loading: false,
-    //   });
-    //   if (await doc.data().weeklyTargets.currentWeekStartDate !== moment().startOf('week').format('YYYY-MM-DD')) {
-    //     const data = {
-    //       weeklyTargets: {
-    //         resistanceWeeklyComplete: 0,
-    //         hiitWeeklyComplete: 0,
-    //         currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
-    //       },
-    //     };
-    //     await userRef.set(data, { merge: true });
-    //   }
-    // });
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    this.unsubscribe = userRef.onSnapshot(async (doc) => {
+      this.setState({
+        profile: await doc.data(),
+        loading: false,
+      });
+      if (await doc.data().weeklyTargets.currentWeekStartDate !== moment().startOf('week').format('YYYY-MM-DD')) {
+        const data = {
+          weeklyTargets: {
+            resistanceWeeklyComplete: 0,
+            hiitWeeklyComplete: 0,
+            currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
+          },
+        };
+        await userRef.set(data, { merge: true });
+      }
+    });
   }
   openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);

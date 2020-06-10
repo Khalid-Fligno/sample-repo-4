@@ -5,6 +5,7 @@ import SignupScreen from '../../src/screens/AuthStack/SignupScreen';
 import EmailVerificationScreen from '../../src/screens/AuthStack/EmailVerificationScreen';
 import ForgottenPasswordScreen from '../../src/screens/AuthStack/ForgottenPasswordScreen';
 import SpecialOfferScreen from '../../src/screens/AuthStack/SpecialOfferScreen';
+import { fadeSpec, fade } from './utils';
 
 const AuthStack = createStackNavigator(
   {
@@ -17,7 +18,12 @@ const AuthStack = createStackNavigator(
   },
   {
     initialRouteName: 'Landing',
-    // mode: 'modal',
+    transitionConfig: () => ({
+      transitionSpec: fadeSpec,
+      screenInterpolator: (props) => {
+        return fade(props);
+      },
+    }),
     defaultNavigationOptions: {
       header: null,
     },

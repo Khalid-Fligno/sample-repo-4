@@ -13,14 +13,14 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
 } from 'react-native';
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Button, Divider, Input } from 'react-native-elements';
 import * as Localization from 'expo-localization';
 import * as Haptics from 'expo-haptics';
 import * as Facebook from 'expo-facebook';
 import firebase from 'firebase';
-// import appsFlyer from 'react-native-appsflyer';
+import appsFlyer from 'react-native-appsflyer';
 import * as Crypto from 'expo-crypto';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { db, auth } from '../../../config/firebase';
@@ -257,145 +257,145 @@ export default class SignupScreen extends React.PureComponent {
       appleSignInAvailable,
     } = this.state;
     return (
-      <SafeAreaView style={styles.safeAreaContainer} >
-        <View style={styles.container}>
-          <StatusBar barStyle="light-content" />
+      <React.Fragment>
+        <SafeAreaView style={styles.safeAreaContainer} >
+          <View style={styles.container}>
+            <StatusBar barStyle="light-content" />
 
-          <ImageBackground
-            source={require('../../../assets/images/signup-screen-background.jpg')}
-            style={styles.imageBackground}
-          >
-            <ScrollView contentContainerStyle={styles.scrollView}>
-              <View style={styles.closeIconContainer}>
-                <TouchableOpacity
-                  onPress={() => this.props.navigation.goBack()}
-                  style={styles.closeIconButton}
-                >
-                  <Icon
-                    name="cross"
-                    color={colors.white}
-                    size={22}
-                  />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.headerText1}>
-                CREATE YOUR
-              </Text>
-              <Text style={styles.headerText1}>
-                ACCOUNT TO
-              </Text>
-              <Text style={styles.headerText2}>
-                get started
-              </Text>
-              <KeyboardAvoidingView keyboardVerticalOffset={40} behavior="position" enabled>
-                <Input
-                  placeholder="First Name"
-                  placeholderTextColor={colors.transparentWhiteLight}
-                  value={firstName}
-                  returnKeyType="next"
-                  autoCorrect={false}
-                  onChangeText={(text) => this.setState({ firstName: text })}
-                  onSubmitEditing={() => this.lastNameInput.focus()}
-                  containerStyle={styles.inputComponentContainer}
-                  inputContainerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  clearButtonMode="while-editing"
-                />
-                <Input
-                  placeholder="Last Name"
-                  placeholderTextColor={colors.transparentWhiteLight}
-                  value={lastName}
-                  returnKeyType="next"
-                  autoCorrect={false}
-                  onChangeText={(text) => this.setState({ lastName: text })}
-                  ref={(input) => {
-                    this.lastNameInput = input;
-                  }}
-                  onSubmitEditing={() => this.emailInput.focus()}
-                  containerStyle={styles.inputComponentContainer}
-                  inputContainerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  clearButtonMode="while-editing"
-                />
-                <Input
-                  placeholder="Email"
-                  placeholderTextColor={colors.transparentWhiteLight}
-                  value={email}
-                  returnKeyType="next"
-                  keyboardType="email-address"
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  onChangeText={(text) => this.setState({ email: text })}
-                  ref={(input) => {
-                    this.emailInput = input;
-                  }}
-                  onSubmitEditing={() => this.passwordInput.focus()}
-                  containerStyle={styles.inputComponentContainer}
-                  inputContainerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  clearButtonMode="while-editing"
-                />
-                <Input
-                  errorMessage={error && error}
-                  placeholder="Password"
-                  placeholderTextColor={colors.transparentWhiteLight}
-                  value={password}
-                  returnKeyType="go"
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  onChangeText={(text) => this.setState({ password: text })}
-                  secureTextEntry
-                  ref={(input) => {
-                    this.passwordInput = input;
-                  }}
-                  onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
-                  containerStyle={styles.inputComponentContainer}
-                  inputContainerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  clearButtonMode="while-editing"
-                />
-              </KeyboardAvoidingView>
-              <Button
-                title="CREATE NEW ACCOUNT"
-                onPress={() => this.signup(firstName, lastName, email, password)}
-                containerStyle={styles.signupButtonContainer}
-                buttonStyle={styles.signupButton}
-                titleStyle={styles.signupButtonText}
-              />
-              <Divider style={styles.divider} />
-              <View style={styles.dividerOverlay}>
-                <Text style={styles.dividerOverlayText}>
-                  OR
+            <ImageBackground
+              source={require('../../../assets/images/signup-screen-background.jpg')}
+              style={styles.imageBackground}
+            >
+              <ScrollView contentContainerStyle={styles.scrollView}>
+                <View style={styles.closeIconContainer}>
+                  <TouchableOpacity
+                    onPress={() => this.props.navigation.goBack()}
+                    style={styles.closeIconButton}
+                  >
+                    <Icon
+                      name="cross"
+                      color={colors.white}
+                      size={22}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.headerText1}>
+                  CREATE YOUR
                 </Text>
-              </View>
-              <FacebookButton
-                title="NEW ACCOUNT WITH FACEBOOK"
-                onPress={this.signupWithFacebook}
-              />
-              {
-                appleSignInAvailable && (
-                  <AppleAuthentication.AppleAuthenticationButton
-                    onPress={this.onSignInWithApple}
-                    buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
-                    buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
-                    cornerRadius={4}
-                    style={styles.appleButton}
+                <Text style={styles.headerText1}>
+                  ACCOUNT TO
+                </Text>
+                <Text style={styles.headerText2}>
+                  get started
+                </Text>
+                <KeyboardAvoidingView keyboardVerticalOffset={40} behavior="position" enabled>
+                  <Input
+                    placeholder="First Name"
+                    placeholderTextColor={colors.transparentWhiteLight}
+                    value={firstName}
+                    returnKeyType="next"
+                    autoCorrect={false}
+                    onChangeText={(text) => this.setState({ firstName: text })}
+                    onSubmitEditing={() => this.lastNameInput.focus()}
+                    containerStyle={styles.inputComponentContainer}
+                    inputContainerStyle={styles.inputContainer}
+                    inputStyle={styles.input}
+                    clearButtonMode="while-editing"
                   />
-                )
-              }
-              <Text
-                onPress={this.navigateToLogin}
-                style={styles.navigateToLogin}
-              >
-                Already have an account? Log in here
-              </Text>
-              {
-                loading && <NativeLoader />
-              }
-            </ScrollView>
-          </ImageBackground>
-        </View>
-      </SafeAreaView>
+                  <Input
+                    placeholder="Last Name"
+                    placeholderTextColor={colors.transparentWhiteLight}
+                    value={lastName}
+                    returnKeyType="next"
+                    autoCorrect={false}
+                    onChangeText={(text) => this.setState({ lastName: text })}
+                    ref={(input) => {
+                      this.lastNameInput = input;
+                    }}
+                    onSubmitEditing={() => this.emailInput.focus()}
+                    containerStyle={styles.inputComponentContainer}
+                    inputContainerStyle={styles.inputContainer}
+                    inputStyle={styles.input}
+                    clearButtonMode="while-editing"
+                  />
+                  <Input
+                    placeholder="Email"
+                    placeholderTextColor={colors.transparentWhiteLight}
+                    value={email}
+                    returnKeyType="next"
+                    keyboardType="email-address"
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    onChangeText={(text) => this.setState({ email: text })}
+                    ref={(input) => {
+                      this.emailInput = input;
+                    }}
+                    onSubmitEditing={() => this.passwordInput.focus()}
+                    containerStyle={styles.inputComponentContainer}
+                    inputContainerStyle={styles.inputContainer}
+                    inputStyle={styles.input}
+                    clearButtonMode="while-editing"
+                  />
+                  <Input
+                    errorMessage={error && error}
+                    placeholder="Password"
+                    placeholderTextColor={colors.transparentWhiteLight}
+                    value={password}
+                    returnKeyType="go"
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    onChangeText={(text) => this.setState({ password: text })}
+                    secureTextEntry
+                    ref={(input) => {
+                      this.passwordInput = input;
+                    }}
+                    onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
+                    containerStyle={styles.inputComponentContainer}
+                    inputContainerStyle={styles.inputContainer}
+                    inputStyle={styles.input}
+                    clearButtonMode="while-editing"
+                  />
+                </KeyboardAvoidingView>
+                <Button
+                  title="CREATE NEW ACCOUNT"
+                  onPress={() => this.signup(firstName, lastName, email, password)}
+                  containerStyle={styles.signupButtonContainer}
+                  buttonStyle={styles.signupButton}
+                  titleStyle={styles.signupButtonText}
+                />
+                <Divider style={styles.divider} />
+                <View style={styles.dividerOverlay}>
+                  <Text style={styles.dividerOverlayText}>
+                    OR
+                  </Text>
+                </View>
+                <FacebookButton
+                  title="NEW ACCOUNT WITH FACEBOOK"
+                  onPress={this.signupWithFacebook}
+                />
+                {
+                  appleSignInAvailable && (
+                    <AppleAuthentication.AppleAuthenticationButton
+                      onPress={this.onSignInWithApple}
+                      buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
+                      buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
+                      cornerRadius={4}
+                      style={styles.appleButton}
+                    />
+                  )
+                }
+                <Text
+                  onPress={this.navigateToLogin}
+                  style={styles.navigateToLogin}
+                >
+                  Already have an account? Log in here
+                </Text>
+              </ScrollView>
+            </ImageBackground>
+          </View>
+        </SafeAreaView>
+        {loading && <NativeLoader />}
+      </React.Fragment>
     );
   }
 }

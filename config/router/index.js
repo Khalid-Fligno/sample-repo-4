@@ -3,6 +3,7 @@ import AuthLoadingScreen from '../../src/screens/AuthLoadingScreen';
 import AuthStack from './AuthStack';
 import AppStack from './AppStack';
 import OnboardingStack from './OnboardingStack';
+import { fadeSpec, fade } from './utils';
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -13,6 +14,12 @@ const SwitchNavigator = createSwitchNavigator(
   },
   {
     initialRouteName: 'AuthLoading',
+    transitionConfig: () => ({
+      transitionSpec: fadeSpec,
+      screenInterpolator: (props) => {
+        return fade(props);
+      },
+    }),
     defaultNavigationOptions: {
       header: null,
     },
