@@ -15,6 +15,7 @@
 #import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
 
 #import <AVFoundation/AVFoundation.h>
+#import "RNSplashScreen.h"
 
 @interface AppDelegate ()
 
@@ -44,6 +45,8 @@
   [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
+
+  [RNSplashScreen show];
 
   return YES;
 }

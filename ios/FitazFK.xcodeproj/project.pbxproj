@@ -14,6 +14,9 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3DE4DAD41476765101945408 /* libPods-FitazFK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D43FF9D506E70904424FA7E9 /* libPods-FitazFK.a */; };
 		99EC63CFB4B549BBAF093D10 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3ABB89D1E68496EB7D95742 /* SplashScreen.storyboard */; };
+		9E13B4732493D63000473ED1 /* shell-app.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9E13B4712493D62F00473ED1 /* shell-app.bundle */; };
+		9E13B4742493D63000473ED1 /* shell-app-manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E13B4722493D62F00473ED1 /* shell-app-manifest.json */; };
+		9E4B6C4B249248F7002092B2 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E4B6C4A249248F7002092B2 /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +32,9 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B47C5AFCB8BDE514B7D1AC6 /* Pods-FitazFK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FitazFK.debug.xcconfig"; path = "Target Support Files/Pods-FitazFK/Pods-FitazFK.debug.xcconfig"; sourceTree = "<group>"; };
 		8AC623DBF3A3E2CB072F81F2 /* Pods-FitazFK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FitazFK.release.xcconfig"; path = "Target Support Files/Pods-FitazFK/Pods-FitazFK.release.xcconfig"; sourceTree = "<group>"; };
+		9E13B4712493D62F00473ED1 /* shell-app.bundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "shell-app.bundle"; path = "FitazFK/Supporting/shell-app.bundle"; sourceTree = "<group>"; };
+		9E13B4722493D62F00473ED1 /* shell-app-manifest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "shell-app-manifest.json"; path = "FitazFK/Supporting/shell-app-manifest.json"; sourceTree = "<group>"; };
+		9E4B6C4A249248F7002092B2 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		D43FF9D506E70904424FA7E9 /* libPods-FitazFK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FitazFK.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3ABB89D1E68496EB7D95742 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = FitazFK/SplashScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -41,6 +47,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DE4DAD41476765101945408 /* libPods-FitazFK.a in Frameworks */,
+				9E4B6C4B249248F7002092B2 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,10 +73,13 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9E4B6C4A249248F7002092B2 /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				D43FF9D506E70904424FA7E9 /* libPods-FitazFK.a */,
+				9E13B4722493D62F00473ED1 /* shell-app-manifest.json */,
+				9E13B4712493D62F00473ED1 /* shell-app.bundle */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -174,6 +184,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E13B4732493D63000473ED1 /* shell-app.bundle in Resources */,
+				9E13B4742493D63000473ED1 /* shell-app-manifest.json in Resources */,
 				0731D3B824204D62009CAE85 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
@@ -196,7 +208,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n../node_modules/expo-updates/scripts/create-manifest-ios.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n../node_modules/expo-updates/scripts/create-manifest-ios.sh\n";
 		};
 		81616B509BFF3EAAA3B3A537 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -322,11 +334,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FitazFK/fitazfkapp.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 8;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 2RJMZUB4PS;
 				INFOPLIST_FILE = FitazFK/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.19.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -334,6 +347,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.fitazfk.fitazfkapp;
 				PRODUCT_NAME = fitazfkapp;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -344,10 +358,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FitazFK/fitazfkapp.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 2RJMZUB4PS;
 				INFOPLIST_FILE = FitazFK/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.19.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -355,6 +370,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.fitazfk.fitazfkapp;
 				PRODUCT_NAME = fitazfkapp;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

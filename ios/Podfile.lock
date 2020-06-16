@@ -63,8 +63,6 @@ PODS:
   - EXSMS (8.1.0):
     - UMCore
     - UMPermissionsInterface
-  - EXSplashScreen (0.2.3):
-    - UMCore
   - EXSQLite (8.1.0):
     - UMCore
     - UMFileSystemInterface
@@ -286,11 +284,13 @@ PODS:
     - SDWebImage/WebP
   - react-native-in-app-utils (6.0.2):
     - React
-  - react-native-netinfo (5.5.1):
+  - react-native-netinfo (5.9.2):
     - React
   - react-native-onesignal (3.6.3):
     - OneSignal (= 2.12.5)
     - React (< 1.0.0, >= 0.13.0)
+  - react-native-splash-screen (3.2.0):
+    - React
   - react-native-video (5.0.2):
     - React
     - react-native-video/Video (= 5.0.2)
@@ -395,7 +395,6 @@ DEPENDENCIES:
   - EXMailComposer (from `../node_modules/expo-mail-composer/ios`)
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
   - EXSMS (from `../node_modules/expo-sms/ios`)
-  - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
   - EXUpdates (from `../node_modules/expo-updates/ios`)
   - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
@@ -419,6 +418,7 @@ DEPENDENCIES:
   - react-native-in-app-utils (from `../node_modules/react-native-in-app-utils`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
+  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-video (from `../node_modules/react-native-video`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -508,8 +508,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-permissions/ios"
   EXSMS:
     :path: "../node_modules/expo-sms/ios"
-  EXSplashScreen:
-    :path: "../node_modules/expo-splash-screen/ios"
   EXSQLite:
     :path: "../node_modules/expo-sqlite/ios"
   EXUpdates:
@@ -552,6 +550,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-onesignal:
     :path: "../node_modules/react-native-onesignal"
+  react-native-splash-screen:
+    :path: "../node_modules/react-native-splash-screen"
   react-native-video:
     :path: "../node_modules/react-native-video"
   React-RCTActionSheet:
@@ -643,7 +643,6 @@ SPEC CHECKSUMS:
   EXMailComposer: 8efe254989ceace18681b98c049c6c0209d4ae56
   EXPermissions: 24b97f734ce9172d245a5be38ad9ccfcb6135964
   EXSMS: f58e5d194cc931ab503780d1063f2c40232af582
-  EXSplashScreen: 6568daa178c8e17f2197d29cea858f0e0b61b695
   EXSQLite: 877ad6c8eb169353a2f94d5ad26510ffadd46a1f
   EXUpdates: db34a484d109fc11fc6f48bb42c2cabf5a2eafc8
   EXWebBrowser: 5902f99ac5ac551e5c82ff46f13a337b323aa9ea
@@ -668,8 +667,9 @@ SPEC CHECKSUMS:
   react-native-appsflyer: c8c80322f4cd5543e41dd0f2ed353d116f68ae9c
   react-native-fast-image: 56efe6ea964cff19fd9bb1cc28e79b432c4b58e4
   react-native-in-app-utils: 07ea1df4bb6e8cbb27337d42a65ffe4cf7a35e97
-  react-native-netinfo: 3bf235d94cc291cf0673ad9fd9eaae82f84ed8a9
+  react-native-netinfo: cb74e17062b2af5a16a4b137f32495f241df1a8e
   react-native-onesignal: e7a02478df2f616df31c3f1e495a2441cbe7a0bf
+  react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-video: d01ed7ff1e38fa7dcc6c15c94cf505e661b7bfd0
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360

@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Audio } from 'expo-av';
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
-import * as SplashScreen from 'expo-splash-screen';
+import SplashScreen from 'react-native-splash-screen';
 import {
   validateReceiptProduction,
   validateReceiptSandbox,
@@ -47,16 +47,7 @@ const cacheSound = async (sounds) => {
 };
 
 export default class AuthLoadingScreen extends React.PureComponent {
-  state = {
-    appIsReady: false,
-  };
-  async componentDidMount() {
-    // Prevent native splash screen from autohiding
-    try {
-      await SplashScreen.preventAutoHideAsync();
-    } catch (e) {
-      console.warn(e);
-    }
+  componentDidMount = async () => {
     await this.loadAssetsAsync();
   }
   loadAssetsAsync = async () => {
@@ -150,10 +141,8 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require('../../assets/sounds/ding.mp3'),
     ]);
     await Promise.all([...imageAssets, ...fontAssets, soundAsset]);
+    SplashScreen.hide();
     await this.cachingComplete();
-    // this.setState({ appIsReady: true }, async () => {
-    //   await SplashScreen.hideAsync();
-    // });
   }
   // GRAND UNIFIED()
   cachingComplete = async () => {
@@ -174,7 +163,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
               const { subscriptionInfo = undefined, onboarded = false } = await doc.data();
               if (subscriptionInfo === undefined) {
                 // NO PURCHASE INFORMATION SAVED
-                await SplashScreen.hideAsync();
                 this.props.navigation.navigate('Subscription');
               } else if (subscriptionInfo.expiry < Date.now()) {
                 // EXPIRED
@@ -183,11 +171,9 @@ export default class AuthLoadingScreen extends React.PureComponent {
                     Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
                     AsyncStorage.removeItem('uid');
                     auth.signOut();
-                    await SplashScreen.hideAsync();
                     this.props.navigation.navigate('Auth');
                   } else {
                     if (response.length === 0) {
-                      await SplashScreen.hideAsync();
                       this.props.navigation.navigate('Subscription');
                       return;
                     }
@@ -210,24 +196,19 @@ export default class AuthLoadingScreen extends React.PureComponent {
                         };
                         await userRef.set(data, { merge: true });
                         if (onboarded) {
-                          await SplashScreen.hideAsync();
                           this.props.navigation.navigate('App');
                         } else {
-                          await SplashScreen.hideAsync();
                           this.props.navigation.navigate('Onboarding1');
                         }
                       } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
                         Alert.alert('Expired', 'Your most recent subscription has expired');
-                        await SplashScreen.hideAsync();
                         this.props.navigation.navigate('Subscription');
                       } else {
                         Alert.alert('Something went wrong');
-                        await SplashScreen.hideAsync();
                         this.props.navigation.navigate('Subscription');
                       }
                     } catch (err) {
                       Alert.alert('Error', 'Could not retrieve subscription information');
-                      await SplashScreen.hideAsync();
                       this.props.navigation.navigate('Subscription');
                     }
                   }
@@ -235,22 +216,18 @@ export default class AuthLoadingScreen extends React.PureComponent {
               } else if (subscriptionInfo.expiry > Date.now()) {
                 // RECEIPT STILL VALID
                 if (onboarded) {
-                  await SplashScreen.hideAsync();
                   this.props.navigation.navigate('App');
                 } else {
-                  await SplashScreen.hideAsync();
                   this.props.navigation.navigate('Onboarding1');
                 }
               }
             } else {
               Alert.alert('Account data could not be found');
-              await SplashScreen.hideAsync();
               this.props.navigation.navigate('Auth');
             }
           });
       } else {
         unsubscribe();
-        await SplashScreen.hideAsync();
         this.props.navigation.navigate('Auth');
       }
     });
@@ -349,9 +326,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
     return validationData;
   }
   render() {
-    if (!this.state.appIsReady) {
-      return null;
-    }
     return (
       <View style={styles.container}>
         <ImageBackground

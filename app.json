@@ -2,31 +2,24 @@
   "expo": {
     "name": "FitazFK",
     "slug": "fitazfk-app",
-    "version": "1.18.0",
-    "orientation": "portrait",
-    "icon": "./assets/icons/fitazfk-app-icon-gradient-dark.png",
-    "splash": {
-      "image": "./assets/icons/fitazfk-splash-dark-logo.png",
-      "backgroundColor": "#000000"
-    },
+    "privacy": "unlisted",
+    "sdkVersion": "37.0.0",
+    "version": "1.19.0",
     "ios": {
       "bundleIdentifier": "com.fitazfk.fitazfkapp",
       "buildNumber": "1",
-      "publishBundlePath": "ios/fitazfk/Supporting/shell-app.bundle",
-      "publishManifestPath": "ios/fitazfk/Supporting/shell-app-manifest.json",
-      "usesAppleSignIn": true,
-      "icon": "./assets/icons/fitazfk-app-icon-gradient-dark.png"
+      "usesAppleSignIn": true
     },
     "android": {
-      "package": "com.fitazfk.fitazfkapp",
-      "publishBundlePath": "android/app/src/main/assets/shell-app.bundle",
-      "publishManifestPath": "android/app/src/main/assets/shell-app-manifest.json"
+      "package": "com.fitazfk.fitazfkapp"
     },
     "scheme": "fitazfk",
     "platforms": [
       "android",
       "ios"
     ],
-    "entryPoint": "node_modules/expo/AppEntry.js"
+    "assetBundlePatterns": [
+      "**/*"
+    ]
   }
 }
