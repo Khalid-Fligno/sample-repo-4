@@ -53,10 +53,19 @@ const subscriptionPeriodMap = {
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly': 'year',
 };
 
+const andriodSubscriptionPeriodMap = {
+  'com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly.discount': 'month',
+  'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.discounted': 'year',
+  'com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly.foundation': 'month',
+  'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.foundation': 'year',
+  'com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly': 'month',
+  'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly': 'year',
+};
+
 const itemSkus = Platform.select({
-  android: [subscriptionPeriodMap],
+  android: [andriodSubscriptionPeriodMap],
 });
-const itemSubs = Platform.select({ android: ['com.fitazfk.fitazfkapp.sub']});
+const itemSubs = Platform.select({ android: ['com.fitazfkapp.fitazfkapp.sub']});
 let purchaseUpdateSubscription;
 let purchaseErrorSubscription;
 const { InAppUtils } = NativeModules;
@@ -330,7 +339,7 @@ export default class SubscriptionScreen extends React.PureComponent {
 
   loadProductAND= async () => {
     try {
-      await RNIap.prepare();
+      //await RNIap.prepare();
       await RNIap.getProducts(itemSkus).then(product=>{
       Alert.alert("products");
       if(products === undefined){
