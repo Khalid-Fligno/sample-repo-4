@@ -86,6 +86,7 @@
     "react-native-fade-in-view": "^1.0.5",
     "react-native-fast-image": "5.3.0",
     "react-native-gesture-handler": "~1.6.0",
+    "react-native-iap": "^4.5.0",
     "react-native-image-progress": "^1.1.1",
     "react-native-in-app-utils": "^6.0.2",
     "react-native-indicators": "^0.17.0",

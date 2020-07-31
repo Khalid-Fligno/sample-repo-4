@@ -11,7 +11,8 @@
       "usesAppleSignIn": true
     },
     "android": {
-      "package": "com.fitazfk.fitazfkapp"
+      "package": "com.fitazfk.fitazfkapp",
+      "versionCode":"1.1"
     },
     "scheme": "fitazfk",
     "platforms": [

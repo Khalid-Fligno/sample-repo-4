@@ -45,4 +45,6 @@ target 'FitazFK' do
   use_native_modules!
   pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
 
+  pod 'RNIap', :path => '../node_modules/react-native-iap'
+
 end

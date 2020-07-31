@@ -9,6 +9,7 @@ import {
   Alert,
   Linking,
   ImageBackground,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
@@ -30,21 +31,14 @@ import NativeLoader from '../../components/Shared/NativeLoader';
 import Icon from '../../components/Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
-
-const { InAppUtils } = NativeModules;
-const { width, height } = Dimensions.get('window');
-
-// export const compareLatest = (a, b) => {
-//   const purchaseA = a.purchase_date_ms;
-//   const purchaseB = b.purchase_date_ms;
-//   let comparison = 0;
-//   if (purchaseA > purchaseB) {
-//     comparison = -1;
-//   } else if (purchaseA < purchaseB) {
-//     comparison = 1;
-//   }
-//   return comparison;
-// };
+import RNIap, {
+  Product,
+  ProductPurchase,
+  PurchaseError,
+  acknowledgePurchaseAndroid,
+  purchaseErrorListener,
+  purchaseUpdatedListener,
+} from 'react-native-iap';
 const productTitleMap = {
   0: 'YEARLY - ',
   1: 'MONTHLY - ',
@@ -59,6 +53,27 @@ const subscriptionPeriodMap = {
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly': 'year',
 };
 
+const itemSkus = Platform.select({
+  android: [subscriptionPeriodMap],
+});
+const itemSubs = Platform.select({ android: ['com.fitazfk.fitazfkapp.sub']});
+let purchaseUpdateSubscription;
+let purchaseErrorSubscription;
+const { InAppUtils } = NativeModules;
+const { width, height } = Dimensions.get('window');
+
+// export const compareLatest = (a, b) => {
+//   const purchaseA = a.purchase_date_ms;
+//   const purchaseB = b.purchase_date_ms;
+//   let comparison = 0;
+//   if (purchaseA > purchaseB) {
+//     comparison = -1;
+//   } else if (purchaseA < purchaseB) {
+//     comparison = 1;
+//   }
+//   return comparison;
+// };
+
 export default class SubscriptionScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -70,6 +85,9 @@ export default class SubscriptionScreen extends React.PureComponent {
     };
   }
   componentDidMount = async () => {
+    if (Platform.OS === 'android') {
+      alert("componentDidMount Platform.android")
+    }
     this.props.navigation.setParams({ handleRestore: this.restore });
     this.props.navigation.setParams({ handleLogout: this.logout });
     if (this.state.specialOffer) {
@@ -300,8 +318,52 @@ export default class SubscriptionScreen extends React.PureComponent {
     });
   }
   loadProducts = async () => {
-    this.setState({ loading: true });
-    await InAppUtils.loadProducts(identifiers, (error, products) => {
+    this.setState({ loading: true });        
+    if (Platform.OS === 'ios') {
+      this.loadProductIOS();
+    }
+    else if (Platform.OS === 'android') {
+      alert("Platform.android")
+      try {
+        await RNIap.getProducts(itemSkus).then(product=>{
+        Alert.alert(products);
+        if(products === undefined){
+          this.setState({ loading: false });
+          Alert.alert('Unable to connect to the App Store', 'Please try again later');
+          return;
+        }
+        else {
+          const sortedProducts = products.slice().sort(compareProducts);
+          this.setState({ products: sortedProducts, loading: false });
+        }
+
+        }).catch(err=> {Alert.alert(err); console.log(err)});
+        
+        // else if(products.length !==2){
+        //   Alert.alert(
+        //     'Unable to connect to the App Store',
+        //     'Please try again later',
+        //     [
+        //       {
+        //         text: 'Cancel', style: 'cancel',
+        //       },
+        //       {
+        //         text: 'Try Again',
+        //         onPress: () => this.retryLoadProducts(),
+        //       },
+        //     ],
+        //     { cancelable: false },
+        //   );
+        // }
+       
+      } catch(err) {
+        console.warn(err); // standardized err.code and err.message available
+      }
+    }
+  }
+
+  loadProductIOS = async () => {
+    await InAppUtils.loadProducts(identifiers, (error, products) => {      
       if (error) {
         this.setState({ loading: false });
         Alert.alert('Unable to connect to the App Store', 'Please try again later');
