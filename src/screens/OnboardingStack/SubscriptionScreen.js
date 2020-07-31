@@ -324,41 +324,29 @@ export default class SubscriptionScreen extends React.PureComponent {
     }
     else if (Platform.OS === 'android') {
       alert("Platform.android")
-      try {
-        await RNIap.getProducts(itemSkus).then(product=>{
-        Alert.alert(products);
-        if(products === undefined){
-          this.setState({ loading: false });
-          Alert.alert('Unable to connect to the App Store', 'Please try again later');
-          return;
-        }
-        else {
-          const sortedProducts = products.slice().sort(compareProducts);
-          this.setState({ products: sortedProducts, loading: false });
-        }
+      this.loadProductAND();
+    }
+  }
 
-        }).catch(err=> {Alert.alert(err); console.log(err)});
-        
-        // else if(products.length !==2){
-        //   Alert.alert(
-        //     'Unable to connect to the App Store',
-        //     'Please try again later',
-        //     [
-        //       {
-        //         text: 'Cancel', style: 'cancel',
-        //       },
-        //       {
-        //         text: 'Try Again',
-        //         onPress: () => this.retryLoadProducts(),
-        //       },
-        //     ],
-        //     { cancelable: false },
-        //   );
-        // }
-       
-      } catch(err) {
-        console.warn(err); // standardized err.code and err.message available
+  loadProductAND= async () => {
+    try {
+      await RNIap.prepare();
+      await RNIap.getProducts(itemSkus).then(product=>{
+      Alert.alert("products");
+      if(products === undefined){
+        this.setState({ loading: false });
+        Alert.alert('Unable to connect to the App Store', 'Please try again later');
+        return;
       }
+      else {
+        const sortedProducts = products.slice().sort(compareProducts);
+        this.setState({ products: sortedProducts, loading: false });
+      }
+
+      }).catch(err=> {alert("error"); console.log(err)});        
+     
+    } catch(err) {
+      console.warn(err); // standardized err.code and err.message available
     }
   }
 
