@@ -340,7 +340,7 @@ export default class SubscriptionScreen extends React.PureComponent {
   loadProductAND= async () => {
     try {
       //await RNIap.prepare();
-      await RNIap.getProducts(itemSkus).then(product=>{
+      await RNIap.getSubscriptions(itemSkus).then(product=>{
       Alert.alert("products");
       if(products === undefined){
         this.setState({ loading: false });
