@@ -104,3 +104,6 @@ buck-out/
 # Expo
 .expo/*
 web-build/
+/.vs/slnx.sqlite-journal
+/.vs/slnx.sqlite
+/.vs
