@@ -192,7 +192,7 @@ export default class SubscriptionScreen extends React.PureComponent {
       }
     });
   }
-  restorePurchaseCommone(response) {
+  restorePurchaseCommone = async (response) =>  {
     const sortedPurchases = response.slice().sort(compare);
     try {
       const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
