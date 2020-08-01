@@ -20,7 +20,14 @@ import {
 } from '../../config/apple';
 import { auth, db } from '../../config/firebase';
 import { timerSound } from '../../config/audio';
-
+import RNIap, {
+  Product,
+  ProductPurchase,
+  PurchaseError,
+  acknowledgePurchaseAndroid,
+  purchaseErrorListener,
+  purchaseUpdatedListener,
+} from 'react-native-iap';
 const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get('window');
 
@@ -166,53 +173,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
                 this.props.navigation.navigate('Subscription');
               } else if (subscriptionInfo.expiry < Date.now()) {
                 // EXPIRED
-                InAppUtils.restorePurchases(async (error, response) => {
-                  if (error) {
-                    Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
-                    AsyncStorage.removeItem('uid');
-                    auth.signOut();
-                    this.props.navigation.navigate('Auth');
-                  } else {
-                    if (response.length === 0) {
-                      this.props.navigation.navigate('Subscription');
-                      return;
-                    }
-                    const sortedPurchases = response.slice().sort(compare);
-                    try {
-                      const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
-                      if (validationData === undefined) {
-                        Alert.alert('Receipt validation error');
-                        return;
-                      }
-                      const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
-                      if (sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now()) {
-                        // Alert.alert('Your subscription has been auto-renewed');
-                        const userRef = db.collection('users').doc(uid);
-                        const data = {
-                          subscriptionInfo: {
-                            receipt: sortedPurchases[0].transactionReceipt,
-                            expiry: sortedInApp[0].expires_date_ms,
-                          },
-                        };
-                        await userRef.set(data, { merge: true });
-                        if (onboarded) {
-                          this.props.navigation.navigate('App');
-                        } else {
-                          this.props.navigation.navigate('Onboarding1');
-                        }
-                      } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
-                        Alert.alert('Expired', 'Your most recent subscription has expired');
-                        this.props.navigation.navigate('Subscription');
-                      } else {
-                        Alert.alert('Something went wrong');
-                        this.props.navigation.navigate('Subscription');
-                      }
-                    } catch (err) {
-                      Alert.alert('Error', 'Could not retrieve subscription information');
-                      this.props.navigation.navigate('Subscription');
-                    }
-                  }
-                });
+                await this.storePurchase();
               } else if (subscriptionInfo.expiry > Date.now()) {
                 // RECEIPT STILL VALID
                 if (onboarded) {
@@ -229,6 +190,116 @@ export default class AuthLoadingScreen extends React.PureComponent {
       } else {
         unsubscribe();
         this.props.navigation.navigate('Auth');
+      }
+    });
+  }
+
+  storePurchase =async () => {
+    if (Platform.OS === 'ios') {
+      await this.restorePurchaseIOS();
+    }
+    else if (Platform.OS === 'android') {
+      alert("Platform.android")
+      await  this.restorePurchaseAND();
+    }
+  }
+
+  restorePurchaseAND = async () => {
+    RNIap.getAvailablePurchases(async (error, response) => {
+      if (error) {
+        Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
+        AsyncStorage.removeItem('uid');
+        auth.signOut();
+        this.props.navigation.navigate('Auth');
+      } else {
+        if (response.length === 0) {
+          this.props.navigation.navigate('Subscription');
+          return;
+        }
+        const sortedPurchases = response.slice().sort(compare);
+        try {
+          const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
+          if (validationData === undefined) {
+            Alert.alert('Receipt validation error');
+            return;
+          }
+          const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
+          if (sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now()) {
+            // Alert.alert('Your subscription has been auto-renewed');
+            const userRef = db.collection('users').doc(uid);
+            const data = {
+              subscriptionInfo: {
+                receipt: sortedPurchases[0].transactionReceipt,
+                expiry: sortedInApp[0].expires_date_ms,
+              },
+            };
+            await userRef.set(data, { merge: true });
+            if (onboarded) {
+              this.props.navigation.navigate('App');
+            } else {
+              this.props.navigation.navigate('Onboarding1');
+            }
+          } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
+            Alert.alert('Expired', 'Your most recent subscription has expired');
+            this.props.navigation.navigate('Subscription');
+          } else {
+            Alert.alert('Something went wrong');
+            this.props.navigation.navigate('Subscription');
+          }
+        } catch (err) {
+          Alert.alert('Error', 'Could not retrieve subscription information');
+          this.props.navigation.navigate('Subscription');
+        }
+      }
+    });
+  }
+
+  restorePurchaseIOS = async () => {
+    InAppUtils.restorePurchases(async (error, response) => {
+      if (error) {
+        Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
+        AsyncStorage.removeItem('uid');
+        auth.signOut();
+        this.props.navigation.navigate('Auth');
+      } else {
+        if (response.length === 0) {
+          this.props.navigation.navigate('Subscription');
+          return;
+        }
+        const sortedPurchases = response.slice().sort(compare);
+        try {
+          const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
+          if (validationData === undefined) {
+            Alert.alert('Receipt validation error');
+            return;
+          }
+          const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
+          if (sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now()) {
+            // Alert.alert('Your subscription has been auto-renewed');
+            const userRef = db.collection('users').doc(uid);
+            const data = {
+              subscriptionInfo: {
+                receipt: sortedPurchases[0].transactionReceipt,
+                expiry: sortedInApp[0].expires_date_ms,
+              },
+            };
+            await userRef.set(data, { merge: true });
+            if (onboarded) {
+              this.props.navigation.navigate('App');
+            } else {
+              this.props.navigation.navigate('Onboarding1');
+            }
+          } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
+            Alert.alert('Expired', 'Your most recent subscription has expired');
+            this.props.navigation.navigate('Subscription');
+          } else {
+            Alert.alert('Something went wrong');
+            this.props.navigation.navigate('Subscription');
+          }
+        } catch (err) {
+          Alert.alert('Error', 'Could not retrieve subscription information');
+          this.props.navigation.navigate('Subscription');
+        }
       }
     });
   }
