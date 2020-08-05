@@ -391,7 +391,7 @@ export default class SubscriptionScreen extends React.PureComponent {
             //await RNIap.prepare();
             console.log('getting subscriptions');
             console.log(itemSkus);
-            await RNIap.getSubscriptions(itemSkus).then(products => {
+            RNIap.getSubscriptions(itemSkus).then(products => {
                 console.log(products);
                 if (products.length !== 2) {
                     // IAP products not retrieved (App Store server down, etc.)
@@ -536,7 +536,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     retryLoadProductsAND = async () => {
         console.log("retryLoadProductsAND")
         this.setState({ loading: true });
-        await RNIap.getSubscriptions(itemSkus).then(products => {
+        RNIap.getSubscriptions(itemSkus).then(products => {
             if (products.length !== 2) {
                 // IAP products not retrieved (App Store server down, etc.)
                 this.setState({ loading: false });
@@ -677,16 +677,11 @@ export default class SubscriptionScreen extends React.PureComponent {
 
     purchaseProductIdentifierAND = async (productIdentifier, productPrice, productCurrencyCode) => {
         
-        RNIap.requestPurchase(productIdentifier, async (error, response) => {
-            if (error) {
-                this.setState({ loading: false });
-                Alert.alert('Purchase cancelled');
-                return;
-            }
+        RNIap.requestPurchase(productIdentifier).then(async (response) => {
             console.log('Bizminds');
             console.log(response);
-            if (response && response.productIdentifier) {
-                const validationData = await this.validate(response.transactionReceipt);
+            if (response && response.productIdentifier) {                
+                const validationData =  this.validate(response.transactionReceipt);
                 if (validationData === undefined) {
                     this.setState({ loading: false });
                     Alert.alert('Receipt validation error');
@@ -731,7 +726,12 @@ export default class SubscriptionScreen extends React.PureComponent {
                     Alert.alert('Something went wrong', `${isValid.message}`);
                 }
             }
-        });
+        }).catch(error=>{            
+            if (error) {
+            this.setState({ loading: false });
+            Alert.alert('Purchase cancelled');
+            return;
+        }});
     }
 
     purchaseProductIdentifierIOS = async (productIdentifier, productPrice, productCurrencyCode) => {
