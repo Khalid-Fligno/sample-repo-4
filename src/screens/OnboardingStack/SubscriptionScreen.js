@@ -99,9 +99,7 @@ export default class SubscriptionScreen extends React.PureComponent {
         };
     }
     componentDidMount = async () => {
-        if (Platform.OS === 'android') {
-            alert("componentDidMount Platform.android")
-        }
+        
         await RNIap.initConnection();
         this.props.navigation.setParams({ handleRestore: this.restore });
         this.props.navigation.setParams({ handleLogout: this.logout });
@@ -133,8 +131,8 @@ export default class SubscriptionScreen extends React.PureComponent {
                 identifier: product.productId,
                 primary: product.productId,
                 priceString: product.localizedPrice,
-                price: product.price,
-                currencyCode: product.currencyCode
+                price: Number(product.price),
+                currencyCode: product.currency
             }
         });
         console.log(convertedProds);
@@ -470,7 +468,7 @@ export default class SubscriptionScreen extends React.PureComponent {
 
     }
     loadDiscountedProductsAND = async () => {
-        await RNIap.getSubscriptions(discountedItemSku).then(products => {
+        RNIap.getSubscriptions(discountedItemSku).then(products => {
             if (products.length !== 2) {
                 // IAP products not retrieved (App Store server down, etc.)
                 this.setState({ loading: false });
@@ -605,7 +603,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     }
     retryLoadDiscountedProductsAND = async () => {
         this.setState({ loading: true });
-        await RNIap.getSubscriptions(discountedItemSku).then(products => {
+        RNIap.getSubscriptions(discountedItemSku).then(products => {
             if (products.length !== 2) {
                 // IAP products not retrieved (App Store server down, etc.)
                 this.setState({ loading: false });
@@ -627,7 +625,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                 const sortedProducts = this.convertToProduct(products.slice().sort(compareProducts));
                 this.setState({ discountedProducts: sortedProducts, loading: false });
             }
-        }).then(error => {
+        }).catch(error => {
             this.setState({ loading: false });
             Alert.alert('Unable to connect to the App Store', 'Please try again later');
         });
@@ -673,73 +671,66 @@ export default class SubscriptionScreen extends React.PureComponent {
             await this.purchaseProductIdentifierIOS(productIdentifier, productPrice, productCurrencyCode);
         }
         else if (Platform.OS === 'android') {
-            alert("Platform.android")
-            this.retryLoadDiscountedProductsAND(productIdentifier, productPrice, productCurrencyCode);
+            this.purchaseProductIdentifierAND(productIdentifier, productPrice, productCurrencyCode);
         }
     }
 
     purchaseProductIdentifierAND = async (productIdentifier, productPrice, productCurrencyCode) => {
-        RNIap.initConnection((canMakePayments) => {
-            if (!canMakePayments) {
+        
+        RNIap.requestPurchase(productIdentifier, async (error, response) => {
+            if (error) {
                 this.setState({ loading: false });
-                Alert.alert('Not Allowed', 'This device is not allowed to make purchases. Please check restrictions on device');
+                Alert.alert('Purchase cancelled');
                 return;
             }
-            RNIap.requestPurchase(productIdentifier, async (error, response) => {
-                if (error) {
+            console.log('Bizminds');
+            console.log(response);
+            if (response && response.productIdentifier) {
+                const validationData = await this.validate(response.transactionReceipt);
+                if (validationData === undefined) {
                     this.setState({ loading: false });
-                    Alert.alert('Purchase cancelled');
+                    Alert.alert('Receipt validation error');
                     return;
                 }
-                console.log('Bizminds');
-                console.log(response);
-                if (response && response.productIdentifier) {
-                    const validationData = await this.validate(response.transactionReceipt);
-                    if (validationData === undefined) {
-                        this.setState({ loading: false });
-                        Alert.alert('Receipt validation error');
-                        return;
-                    }
-                    const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
-                    const isValid = sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now();
-                    if (isValid === true) {
-                        const uid = await AsyncStorage.getItem('uid');
-                        const userRef = db.collection('users').doc(uid);
-                        const data = {
-                            subscriptionInfo: {
-                                receipt: response.transactionReceipt,
-                                expiry: sortedInApp[0].expires_date_ms,
-                                originalTransactionId: sortedInApp[0].original_transaction_id,
-                                originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
-                                productId: sortedInApp[0].product_id,
-                            },
-                        };
-                        await userRef.set(data, { merge: true });
-                        // Appsflyer event tracking - Start Free Trial
-                        const eventName = 'af_start_trial';
-                        const eventValues = {
-                            af_price: productPrice,
-                            af_currency: productCurrencyCode,
-                        };
-                        appsFlyer.trackEvent(eventName, eventValues);
-                        userRef.get()
-                            .then(async (doc) => {
-                                this.setState({ loading: false });
-                                if (await doc.data().onboarded) {
-                                    this.props.navigation.navigate('App');
-                                } else {
-                                    this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
-                                }
-                            });
-                    } else if (isValid === false) {
-                        this.setState({ loading: false });
-                        Alert.alert('Purchase Unsuccessful');
-                    } else {
-                        this.setState({ loading: false });
-                        Alert.alert('Something went wrong', `${isValid.message}`);
-                    }
+                const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
+                const isValid = sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now();
+                if (isValid === true) {
+                    const uid = await AsyncStorage.getItem('uid');
+                    const userRef = db.collection('users').doc(uid);
+                    const data = {
+                        subscriptionInfo: {
+                            receipt: response.transactionReceipt,
+                            expiry: sortedInApp[0].expires_date_ms,
+                            originalTransactionId: sortedInApp[0].original_transaction_id,
+                            originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
+                            productId: sortedInApp[0].product_id,
+                        },
+                    };
+                    await userRef.set(data, { merge: true });
+                    // Appsflyer event tracking - Start Free Trial
+                    const eventName = 'af_start_trial';
+                    const eventValues = {
+                        af_price: productPrice,
+                        af_currency: productCurrencyCode,
+                    };
+                    appsFlyer.trackEvent(eventName, eventValues);
+                    userRef.get()
+                        .then(async (doc) => {
+                            this.setState({ loading: false });
+                            if (await doc.data().onboarded) {
+                                this.props.navigation.navigate('App');
+                            } else {
+                                this.props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+                            }
+                        });
+                } else if (isValid === false) {
+                    this.setState({ loading: false });
+                    Alert.alert('Purchase Unsuccessful');
+                } else {
+                    this.setState({ loading: false });
+                    Alert.alert('Something went wrong', `${isValid.message}`);
                 }
-            });
+            }
         });
     }
 
@@ -818,12 +809,12 @@ export default class SubscriptionScreen extends React.PureComponent {
             await this.purchaseDiscountedProductIdentifierIOS(productIdentifier, productPrice, productCurrencyCode);
         }
         else if (Platform.OS === 'android') {
-            alert("Platform.android")
             await this.purchaseDiscountedProductIdentifierAND(productIdentifier, productPrice, productCurrencyCode);
         }
 
     }
     purchaseDiscountedProductIdentifierAND = async (productIdentifier, productPrice, productCurrencyCode) => {
+        
         RNIap.initConnection((canMakePayments) => {
             if (!canMakePayments) {
                 this.setState({ loading: false });
