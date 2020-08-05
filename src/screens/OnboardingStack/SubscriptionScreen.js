@@ -56,6 +56,7 @@ const subscriptionPeriodMap = {
 const andriodSubscriptionPeriodMap = {
     'subtest.fullaccess.monthly.discount': 'month',
     'com.fitazfk.fitazfkapp.subtest.fullaccess.monthly.discount': 'month',
+    'com.fitazfk.fitazfkapp.com.fitazfk.fitazfkapp.subtest.fullaccess.monthly.discount': 'month',
     'com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly.discount': 'month',
     'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.discounted': 'year',
     'com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly.foundation': 'month',
@@ -65,7 +66,7 @@ const andriodSubscriptionPeriodMap = {
 };
 
 const itemSkus = Platform.select({
-    android: [Object.keys(andriodSubscriptionPeriodMap)],
+    android: Object.keys(andriodSubscriptionPeriodMap),
 });
 const itemSubs = Platform.select({ android: ['com.fitazfkapp.fitazfkapp.sub'] });
 let purchaseUpdateSubscription;
@@ -129,7 +130,6 @@ export default class SubscriptionScreen extends React.PureComponent {
             this.restoreIOS();
         }
         else if (Platform.OS === 'android') {
-            alert("Platform.android")
             await this.restoreAND();
         }
     }
@@ -367,7 +367,6 @@ export default class SubscriptionScreen extends React.PureComponent {
             this.loadProductIOS();
         }
         else if (Platform.OS === 'android') {
-            alert("Platform.android")
             this.loadProductAND();
         }
     }
@@ -375,7 +374,8 @@ export default class SubscriptionScreen extends React.PureComponent {
     loadProductAND = async () => {
         try {
             //await RNIap.prepare();
-            console.log('getting subscriptions')
+            console.log('getting subscriptions');
+            console.log(itemSkus);
             await RNIap.getSubscriptions(itemSkus).then(products => {
                 console.log("received following Subscriptions");
                 console.log(products);
@@ -383,8 +383,8 @@ export default class SubscriptionScreen extends React.PureComponent {
                     // IAP products not retrieved (App Store server down, etc.)
                     this.setState({ loading: false });
                     Alert.alert(
-                        'loadProductAND', products.length,
-                        'Unable to connect to the App Store',
+                        'loadProduct ', products.length,
+                        'Unable to connect to the Play Store',
                         'Please try again later',
                         [
                             {
@@ -459,7 +459,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                 // IAP products not retrieved (App Store server down, etc.)
                 this.setState({ loading: false });
                 Alert.alert(
-                    'Unable to connect to the App Store',
+                    'Unable to connect to the Play Store',
                     'Please try again later',
                     [
                         {
@@ -478,7 +478,7 @@ export default class SubscriptionScreen extends React.PureComponent {
             }
         }).catch(error => {
             this.setState({ loading: false });
-            Alert.alert('Unable to connect to the App Store', 'Please try again later');
+            Alert.alert('Unable to connect to the Play Store', 'Please try again later');
         });
     }
     loadDiscountedProductsIOS = async () => {
@@ -526,7 +526,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                 // IAP products not retrieved (App Store server down, etc.)
                 this.setState({ loading: false });
                 Alert.alert(
-                    'Unable to connect to the App Store',
+                    'Unable to connect to the Play Store',
                     'Please try again later',
                     [
                         {
@@ -545,7 +545,7 @@ export default class SubscriptionScreen extends React.PureComponent {
             }
         }).catch(error => {
             this.setState({ loading: false });
-            Alert.alert('Unable to connect to the App Store', 'Please try again later');
+            Alert.alert('Unable to connect to the Play Store', 'Please try again later');
         });
     }
     retryLoadProductsIOS = () => {
