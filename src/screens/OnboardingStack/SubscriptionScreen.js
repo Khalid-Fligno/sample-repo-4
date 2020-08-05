@@ -26,6 +26,7 @@ import {
     compare,
     compareInApp,
 } from '../../../config/apple';
+import { androidIdentifiers, androidDiscountedIdentifiers } from '../../../config/android';
 import SubscriptionTile from '../../components/Onboarding/SubscriptionTile';
 import NativeLoader from '../../components/Shared/NativeLoader';
 import Icon from '../../components/Shared/Icon';
@@ -54,9 +55,6 @@ const subscriptionPeriodMap = {
 };
 
 const andriodSubscriptionPeriodMap = {
-    'subtest.fullaccess.monthly.discount': 'month',
-    'com.fitazfk.fitazfkapp.subtest.fullaccess.monthly.discount': 'month',
-    'com.fitazfk.fitazfkapp.com.fitazfk.fitazfkapp.subtest.fullaccess.monthly.discount': 'month',
     'com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly.discount': 'month',
     'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.discounted': 'year',
     'com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly.foundation': 'month',
@@ -66,11 +64,9 @@ const andriodSubscriptionPeriodMap = {
 };
 
 const itemSkus = Platform.select({
-    android: Object.keys(andriodSubscriptionPeriodMap),
+    android: androidIdentifiers,
 });
-const itemSubs = Platform.select({ android: ['com.fitazfkapp.fitazfkapp.sub'] });
-let purchaseUpdateSubscription;
-let purchaseErrorSubscription;
+const discountedItemSku = Platform.select({ android: androidDiscountedIdentifiers });
 const { InAppUtils } = NativeModules;
 const { width, height } = Dimensions.get('window');
 
@@ -399,6 +395,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                     );
                 } else {
                     const sortedProducts = products.slice().sort(compareProducts);
+                    sortedProducts = this.convertToProducts(sortedProducts);
                     this.setState({ products: sortedProducts, loading: false });
                 }
 
@@ -412,7 +409,6 @@ export default class SubscriptionScreen extends React.PureComponent {
             console.warn(err); // standardized err.code and err.message available
         }
     }
-
     loadProductIOS = async () => {
         await InAppUtils.loadProducts(identifiers, (error, products) => {
             if (error) {
@@ -454,7 +450,7 @@ export default class SubscriptionScreen extends React.PureComponent {
 
     }
     loadDiscountedProductsAND = async () => {
-        await RNIap.getSubscriptions(discountedIdentifiers).then(products => {
+        await RNIap.getSubscriptions(discountedItemSku).then(products => {
             if (products.length !== 2) {
                 // IAP products not retrieved (App Store server down, etc.)
                 this.setState({ loading: false });

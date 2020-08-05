@@ -1,11 +1,3 @@
-import iapReceiptValidator from 'iap-receipt-validator';
-
-const password = '4c613681bae44a4a956e11e6411d86fd'; // Shared Secret from iTunes connect
-
-export const validateReceiptSandbox = iapReceiptValidator(password, false);
-
-export const validateReceiptProduction = iapReceiptValidator(password, true);
-
 export const compare = (a, b) => {
   const purchaseA = a.transactionDate;
   const purchaseB = b.transactionDate;
@@ -45,9 +37,9 @@ export const compareProducts = (a, b) => {
 };
 
 
-export const identifiers = [
-  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly',
+export const androidIdentifiers = [
+  'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly',
+  'com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly',
 ];
 
 // export const foundationIdentifiers = [
@@ -55,7 +47,7 @@ export const identifiers = [
 //   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation',
 // ];
 
-export const discountedIdentifiers = [
-  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount',
+export const androidDiscountedIdentifiers = [
+  'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.discounted',
+  'com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly.discount',
 ];
