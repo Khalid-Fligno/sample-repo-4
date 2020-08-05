@@ -1,4 +1,7 @@
-export const compare = (a, b) => {
+import { Platform } from 'react-native';
+const publickKeyTokenAndroid = '4c613681bae44a4a956e11e6411d86fd'; // Shared Secret from iTunes connect
+
+export const compareAND = (a, b) => {
   const purchaseA = a.transactionDate;
   const purchaseB = b.transactionDate;
   let comparison = 0;
@@ -12,7 +15,7 @@ export const compare = (a, b) => {
 
 // Grand unified receipt
 
-export const compareInApp = (a, b) => {
+export const compareInAppAND = (a, b) => {
   const purchaseA = a.expires_date_ms;
   const purchaseB = b.expires_date_ms;
   let comparison = 0;
@@ -24,7 +27,7 @@ export const compareInApp = (a, b) => {
   return comparison;
 };
 
-export const compareProducts = (a, b) => {
+export const compareProductsAND = (a, b) => {
   const purchaseA = a.price;
   const purchaseB = b.price;
   let comparison = 0;
@@ -51,3 +54,9 @@ export const androidDiscountedIdentifiers = [
   'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.discounted',
   'com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly.discount',
 ];
+
+export const andriodPlatform = () =>{
+  return Platform.OS === 'android';
+}
+
+
