@@ -26,6 +26,15 @@ import {
     compare,
     compareInApp,
 } from '../../../config/apple';
+import {
+    discountedIdentifiersAND,
+    identifiersAND,
+    compareProductsAND,
+    validateReceiptProductionAND,
+    validateReceiptSandboxAND,
+    compareAND,
+    compareInAppAND,
+} from '../../../config/andriod';
 import SubscriptionTile from '../../components/Onboarding/SubscriptionTile';
 import NativeLoader from '../../components/Shared/NativeLoader';
 import Icon from '../../components/Shared/Icon';
@@ -377,13 +386,13 @@ export default class SubscriptionScreen extends React.PureComponent {
             console.log('getting subscriptions');
             console.log(itemSkus);
             await RNIap.getSubscriptions(itemSkus).then(products => {
-                console.log("received following Subscriptions");
+                console.log("receiving loadProductAND Subscriptions");
                 console.log(products);
+                console.log("received loadProductAND Subscriptions");
                 if (products.length !== 2) {
                     // IAP products not retrieved (App Store server down, etc.)
                     this.setState({ loading: false });
-                    Alert.alert(
-                        'loadProduct ', products.length,
+                    Alert.alert(                       
                         'Unable to connect to the Play Store',
                         'Please try again later',
                         [
@@ -399,16 +408,23 @@ export default class SubscriptionScreen extends React.PureComponent {
                     );
                 } else {
                     const sortedProducts = products.slice().sort(compareProducts);
+                    console.log('sortedProducts');
+                    console.log('---------------------------------------------------------------------------------------');
+                    console.log(sortedProducts);
                     this.setState({ products: sortedProducts, loading: false });
                 }
 
             }).catch(error => {
+                console.log('loadProduct error');
+                console.log(error);
                 this.setState({ loading: false });
                 Alert.alert("loadProductAND error");
                 Alert.alert('loadProductAND error', 'Unable to connect to the App Store', 'Please try again later');
             });
 
         } catch (err) {
+            console.log('loadProduct error on try catch');
+            console.log(err);
             console.warn(err); // standardized err.code and err.message available
         }
     }
@@ -474,6 +490,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                 );
             } else {
                 const sortedProducts = products.slice().sort(compareProducts);
+                console.log(sortedProducts);
                 this.setState({ discountedProducts: sortedProducts, loading: false });
             }
         }).catch(error => {
@@ -504,7 +521,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                     { cancelable: false },
                 );
             } else {
-                const sortedProducts = products.slice().sort(compareProducts);
+                const sortedProducts = products.slice().sort(compareProducts);                
                 this.setState({ discountedProducts: sortedProducts, loading: false });
             }
         });
@@ -520,8 +537,9 @@ export default class SubscriptionScreen extends React.PureComponent {
         }
     }
     retryLoadProductsAND = async () => {
+        console.log("retryLoadProductsAND")
         this.setState({ loading: true });
-        await RNIap.getSubscriptions(identifiers).then(products => {
+        await RNIap.getSubscriptions(identifiersAND).then(products => {
             if (products.length !== 2) {
                 // IAP products not retrieved (App Store server down, etc.)
                 this.setState({ loading: false });
@@ -540,7 +558,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                     { cancelable: false },
                 );
             } else {
-                const sortedProducts = products.slice().sort(compareProducts);
+                const sortedProducts = products.slice().sort(compareProducts);                
                 this.setState({ products: sortedProducts, loading: false });
             }
         }).catch(error => {
@@ -811,7 +829,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                 Alert.alert('Not Allowed', 'This device is not allowed to make purchases. Please check restrictions on device');
                 return;
             }
-            RNIap.getProducts(discountedIdentifiers, (loadError) => {
+            RNIap.getProducts(discountedIdentifiersAND, (loadError) => {
                 if (loadError) {
                     this.setState({ loading: false });
                     Alert.alert('Unable to connect to the App Store', 'Please try again later');
