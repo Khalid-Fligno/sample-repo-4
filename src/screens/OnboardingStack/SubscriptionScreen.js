@@ -34,6 +34,7 @@ import {
     validateReceiptSandboxAND,
     compareAND,
     compareInAppAND,
+    andriodPlatform
 } from '../../../config/andriod';
 import SubscriptionTile from '../../components/Onboarding/SubscriptionTile';
 import NativeLoader from '../../components/Shared/NativeLoader';
@@ -48,6 +49,7 @@ import RNIap, {
     purchaseErrorListener,
     purchaseUpdatedListener,
 } from 'react-native-iap';
+import IProduct from '../../utils/ISubscription';
 const productTitleMap = {
     0: 'YEARLY - ',
     1: 'MONTHLY - ',
@@ -62,6 +64,10 @@ const subscriptionPeriodMap = {
     'com.fitazfk.fitazfkapp.sub.fullaccess.yearly': 'year',
 };
 
+const andriodSubscriptionTitleMap = {
+    0: 'year',
+    1: 'month',
+};
 const andriodSubscriptionPeriodMap = {
     'subtest.fullaccess.monthly.discount': 'month',
     'com.fitazfk.fitazfkapp.subtest.fullaccess.monthly.discount': 'month',
@@ -131,6 +137,17 @@ export default class SubscriptionScreen extends React.PureComponent {
         } catch (err) {
             Alert.alert('Error logging out');
         }
+    }
+    convertToProduct  = (products) => {
+        return products.map((product) = (
+            {
+                identifier: product.productId,
+                primary: product.productId,
+                priceString: product.localizedPrice,
+                price: product.price,
+                currencyCode: product.currencyCode
+            }
+        ));
     }
     // GRAND UNIFIED
     restore = async () => {
@@ -386,9 +403,6 @@ export default class SubscriptionScreen extends React.PureComponent {
             console.log('getting subscriptions');
             console.log(itemSkus);
             await RNIap.getSubscriptions(itemSkus).then(products => {
-                console.log("receiving loadProductAND Subscriptions");
-                console.log(products);
-                console.log("received loadProductAND Subscriptions");
                 if (products.length !== 2) {
                     // IAP products not retrieved (App Store server down, etc.)
                     this.setState({ loading: false });
@@ -408,15 +422,13 @@ export default class SubscriptionScreen extends React.PureComponent {
                     );
                 } else {
                     const sortedProducts = products.slice().sort(compareProducts);
-                    console.log('sortedProducts');
-                    console.log('---------------------------------------------------------------------------------------');
-                    console.log(sortedProducts);
+                    sortedProducts = this.convertProductTOISubscription(sortedProducts);
+                    console.log(sortedProducts) ;
+                    console.log("finish loadProductAND")                   
                     this.setState({ products: sortedProducts, loading: false });
                 }
 
             }).catch(error => {
-                console.log('loadProduct error');
-                console.log(error);
                 this.setState({ loading: false });
                 Alert.alert("loadProductAND error");
                 Alert.alert('loadProductAND error', 'Unable to connect to the App Store', 'Please try again later');
@@ -490,7 +502,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                 );
             } else {
                 const sortedProducts = products.slice().sort(compareProducts);
-                console.log(sortedProducts);
+                sortedProducts = convertProductTOISubscription(sortedProducts);
                 this.setState({ discountedProducts: sortedProducts, loading: false });
             }
         }).catch(error => {
@@ -558,7 +570,8 @@ export default class SubscriptionScreen extends React.PureComponent {
                     { cancelable: false },
                 );
             } else {
-                const sortedProducts = products.slice().sort(compareProducts);                
+                const sortedProducts = products.slice().sort(compareProducts);  
+                sortedProducts = convertProductTOISubscription(sortedProducts);              
                 this.setState({ products: sortedProducts, loading: false });
             }
         }).catch(error => {
@@ -626,6 +639,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                 );
             } else {
                 const sortedProducts = products.slice().sort(compareProducts);
+                sortedProducts = convertProductTOISubscription(sortedProducts); 
                 this.setState({ discountedProducts: sortedProducts, loading: false });
             }
         }).then(error => {
@@ -993,30 +1007,30 @@ export default class SubscriptionScreen extends React.PureComponent {
                                 </Text>
                                 <Text style={styles.smallheaderText}>
                                     GETTING SHREDDED!
-                </Text>
+                                </Text>
                                 <Text style={styles.headerTextLine1}>
                                     <Text style={styles.headerTextCursive}>
                                         {'start  '}
                                     </Text>
-                  YOUR {specialOffer ? '1 MONTH' : '7 DAY'}
+                                YOUR {specialOffer ? '1 MONTH' : '7 DAY'}
                                 </Text>
                                 <Text style={styles.headerTextLine2}>
                                     FREE TRIAL TODAY!
-                </Text>
+                                </Text>
                             </View>
                             <View style={styles.contentContainer}>
-                                <View style={styles.subscriptionTileRow}>
+                            <View style={styles.subscriptionTileRow}>
                                     {
                                         !specialOffer && products && products.map((product, index) => (
                                             <SubscriptionTile
                                                 key={product.identifier}
-                                                primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount'}
+                                                primary = {product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
                                                 title={productTitleMap[index]}
                                                 price={product.priceString}
                                                 priceNumber={product.price}
                                                 currencyCode={product.currencyCode}
                                                 onPress={() => this.purchaseProduct(product.identifier, product.price, product.currencyCode)}
-                                                term={subscriptionPeriodMap[product.identifier]}
+                                                term={Platform.OS === 'android'? andriodSubscriptionTitleMap[index] :subscriptionPeriodMap[product.identifier]}
                                             />
                                         ))
                                     }
@@ -1024,13 +1038,13 @@ export default class SubscriptionScreen extends React.PureComponent {
                                         specialOffer && discountedProducts && products && discountedProducts.map((product, index) => (
                                             <SubscriptionTile
                                                 key={product.identifier}
-                                                primary={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount'}
+                                                primary = {product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
                                                 title={productTitleMap[index]}
                                                 price={product.priceString}
                                                 priceNumber={product.price}
                                                 currencyCode={product.currencyCode}
                                                 onPress={() => this.purchaseDiscountedProduct(product.identifier, product.price, product.currencyCode)}
-                                                term={subscriptionPeriodMap[product.identifier]}
+                                                term={Platform.OS === 'android'? andriodSubscriptionTitleMap[index] :subscriptionPeriodMap[product.identifier]}
                                                 comparisonPrice={
                                                     products && product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' ?
                                                         `$${(products[0].price / 12).toFixed(2)}` :

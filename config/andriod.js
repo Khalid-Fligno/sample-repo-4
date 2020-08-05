@@ -1,5 +1,5 @@
 import iapReceiptValidator from 'iap-receipt-validator';
-
+import { Platform } from 'react-native';
 const password = '4c613681bae44a4a956e11e6411d86fd'; // Shared Secret from iTunes connect
 
 export const validateReceiptSandboxAND = iapReceiptValidator(password, false);
@@ -59,3 +59,9 @@ export const discountedIdentifiersAND = [
   'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.discounted',
   'com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly.discount',
 ];
+
+export const andriodPlatform = () =>{
+  return Platform.OS === 'android';
+}
+
+
