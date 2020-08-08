@@ -17,7 +17,6 @@ app.get('/', (req, res) => {
         if(err){
             return res.status(404).send("get access token failed");
         }
-
         return res.status(200).send(token);
     })
 });

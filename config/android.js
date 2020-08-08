@@ -1,7 +1,105 @@
-import { Platform } from 'react-native';
-const publickKeyTokenAndroid = '4c613681bae44a4a956e11e6411d86fd'; // Shared Secret from iTunes connect
+import { Platform, Alert } from 'react-native';
+import RNIap, {
+    Product,
+    ProductPurchase,
+    PurchaseError,
+    acknowledgePurchaseAndroid,
+    purchaseErrorListener,
+    purchaseUpdatedListener,
+} from 'react-native-iap';
+import { db } from './firebase';
+import AsyncStorage from '@react-native-community/async-storage';
 
-export const compareAND = (a, b) => {
+const androidTokenUrl = 'http://3.8.209.87:8000/'; // this is installed on Personal server (Proj-Man) Server, this is required to generate secured token, we will need to move this on some other server with domain pointing
+
+export const getAndroidToken = async () => {
+    const res = await fetch(androidTokenUrl);
+    
+    const body = await res.text();
+    return body;
+}
+
+export const getAndroidSubscriptionDetails = (packageName, subscriptionId, purchaseToken, accessToken) => {
+    const verifyUrl = `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${packageName}/purchases/subscriptions/${subscriptionId}/tokens/${purchaseToken}?access_token=${accessToken}`;
+    return async (receipt) => {
+        
+        const options = {
+            method: 'GET'
+        };
+
+        const res = await fetch(verifyUrl, options);
+        const body = await res.json();
+
+        return body;
+    };
+}
+
+export const replaceTestAndroidProduct = (productId) => { return productId.replace('com.fitazfkapp.fitazfkapp', 'com.fitazfk.fitazfkapp') }
+
+export const restoreAndroidPurchases = async (props) =>{
+    try {
+        let purchases = await RNIap.getAvailablePurchases();
+        if (purchases.length === 0) {
+            props.navigation.navigate('Subscription');
+            return false;
+        }
+        purchases = purchases.length > 1 ? sortByTransactionDate(purchases) : purchases;
+        const activeSubscription = purchases[0];
+        if (activeSubscription.purchaseStateAndroid !== 1) {
+            Alert.alert('Play Connect', 'Transaction is not completed.');
+            return false;
+        }
+        
+        try {
+            const androidData = JSON.parse(activeSubscription.transactionReceipt);
+            const access_token = await getAndroidToken();
+            const getPurchases = await getAndroidSubscriptionDetails(androidData.packageName, activeSubscription.productId, activeSubscription.purchaseToken, access_token);
+            const purchaseDetails = await getPurchases();
+            const expiryTime = Number(purchaseDetails.expiryTimeMillis);
+            if (expiryTime > Date.now()) {
+
+                // Alert.alert('Your subscription has been auto-renewed');
+                const uid = await AsyncStorage.getItem('uid');
+                const userRef = db.collection('users').doc(uid);
+                const data = {
+                    subscriptionInfo: {
+                        receipt: activeSubscription.transactionReceipt,
+                        expiry: expiryTime,
+                    },
+                };
+                await userRef.set(data, { merge: true });
+                userRef.get()
+                    .then(async (doc) => {
+                        if (await doc.data().onboarded) {
+                            Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+                            props.navigation.navigate('App');
+                        } else {
+                            Alert.alert('Restore Successful', 'Successfully restored your purchase.');
+                            props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+                        }
+                    });
+
+                return true;
+            } else if (expiryTime < Date.now()) {
+                Alert.alert('Expired', 'Your most recent subscription has expired');
+                props.navigation.navigate('Subscription');
+            } else {
+                Alert.alert('Something went wrong');
+                props.navigation.navigate('Subscription');
+            }
+        }            
+        catch (err) {
+            Alert.alert('Error', 'Could not retrieve subscription information');
+            props.navigation.navigate('Subscription');
+            return false;
+        }
+    } catch (err) {
+        Alert.alert(err.message);
+    }
+    return false;
+}
+
+export const sortByTransactionDate = (a, b) => {
   const purchaseA = a.transactionDate;
   const purchaseB = b.transactionDate;
   let comparison = 0;

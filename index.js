@@ -1,5 +1,5 @@
 import { registerRootComponent } from 'expo';
-
+console.disableYellowBox = true;
 import App from './App';
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);

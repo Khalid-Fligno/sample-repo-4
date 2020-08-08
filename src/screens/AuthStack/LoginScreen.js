@@ -30,6 +30,9 @@ import {
   validateReceiptProduction,
   validateReceiptSandbox,
 } from '../../../config/apple';
+import {
+    restoreAndroidPurchases
+} from '../../../config/android';
 import NativeLoader from '../../components/Shared/NativeLoader';
 import Icon from '../../components/Shared/Icon';
 import FacebookButton from '../../components/Auth/FacebookButton';
@@ -239,62 +242,14 @@ export default class LoginScreen extends React.PureComponent {
 
   storePurchase = async () => {
     if (Platform.OS === 'ios') {
-      await this.storePurchaseIOS();
+      await this.iOSStorePurchases();
     }
     else if (Platform.OS === 'android') {
-      alert("Platform.android")
-      await  this.storePurchaseAND();
+        await restoreAndroidPurchases(this.props);
     }
   }
 
-  storePurchaseAND = async () => {
-    InAppUtils.restorePurchases(async (error, response) => {
-      if (error) {
-        // Sentry.captureException(error);
-        this.setState({ loading: false });
-        Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
-      } else {
-        if (response.length === 0) {
-          this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
-          return;
-        }
-        const sortedPurchases = response.slice().sort(compare);
-        try {
-          const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
-          if (validationData === undefined) {
-            Alert.alert('Receipt validation error');
-            return;
-          }
-          const sortedInApp = validationData.receipt.in_app.slice().sort(compareInApp);
-          if (sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now()) {
-            // Alert.alert('Your subscription has been auto-renewed');
-            const userRef = db.collection('users').doc(uid);
-            const data = {
-              subscriptionInfo: {
-                receipt: sortedPurchases[0].transactionReceipt,
-                expiry: validationData.latest_receipt_info.expires_date,
-              },
-            };
-            await userRef.set(data, { merge: true });
-            this.setState({ loading: false });
-            this.props.navigation.navigate('App');
-          } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
-            Alert.alert('Expired', 'Your most recent subscription has expired');
-            this.props.navigation.navigate('Subscription');
-          } else {
-            Alert.alert('Something went wrong');
-            this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
-            return;
-          }
-        } catch (err) {
-          Alert.alert('Error', 'Could not retrieve subscription information');
-          this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
-        }
-      }
-    });
-  }
-
-  storePurchaseIOS = async () => {
+  iOSStorePurchases = async () => {
     InAppUtils.restorePurchases(async (error, response) => {
       if (error) {
         // Sentry.captureException(error);
