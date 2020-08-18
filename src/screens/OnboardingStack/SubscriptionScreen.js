@@ -824,11 +824,11 @@ export default class SubscriptionScreen extends React.PureComponent {
                                                 onPress={() => this.purchaseDiscountedProduct(product.identifier, product.price, product.currencyCode)}
                                                 term={Platform.OS === 'android'? andriodSubscriptionTitleMap[index] :subscriptionPeriodMap[product.identifier]}
                                                 comparisonPrice={
-                                                    products && product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' ?
+                                                    products && (product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' || product.identifier === 'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.discounted') ?
                                                         `$${(products[0].price / 12).toFixed(2)}` :
                                                         products[1].priceString
                                                 }
-                                                isDiscounted={product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' || product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount'}
+                                                isDiscounted={product.identifier.indexOf('fitazfkapp.sub.fullaccess.yearly.discounted') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
                                             />
                                         ))
                                     }
@@ -914,7 +914,7 @@ const styles = StyleSheet.create({
         fontSize: 22,
         color: colors.coral.standard,
         textAlign: 'center',
-        marginTop: -20,
+        marginTop: Platform.OS === 'android' ? 0 : -20,
     },
     contentContainer: {
         flex: 1,
