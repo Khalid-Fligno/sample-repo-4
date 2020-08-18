@@ -43,7 +43,7 @@ export const restoreAndroidPurchases = async (props) =>{
             props.navigation.navigate('Subscription');
             return false;
         }
-        purchases = purchases.length > 1 ? sortByTransactionDate(purchases) : purchases;
+        purchases = purchases.length > 1 ? purchases.slice().sort(sortByTransactionDate) : purchases;
         const activeSubscription = purchases[0];
         if (activeSubscription.purchaseStateAndroid !== 1) {
             Alert.alert('Play Connect', 'Transaction is not completed.');
@@ -52,6 +52,7 @@ export const restoreAndroidPurchases = async (props) =>{
         
         try {
             const androidData = JSON.parse(activeSubscription.transactionReceipt);
+            
             const access_token = await getAndroidToken();
             const getPurchases = await getAndroidSubscriptionDetails(androidData.packageName, activeSubscription.productId, activeSubscription.purchaseToken, access_token);
             const purchaseDetails = await getPurchases();
@@ -70,12 +71,11 @@ export const restoreAndroidPurchases = async (props) =>{
                 await userRef.set(data, { merge: true });
                 userRef.get()
                     .then(async (doc) => {
+                        Alert.alert('Restore Successful', 'Successfully restored your purchase.');
                         if (await doc.data().onboarded) {
-                            Alert.alert('Restore Successful', 'Successfully restored your purchase.');
                             props.navigation.navigate('App');
                         } else {
-                            Alert.alert('Restore Successful', 'Successfully restored your purchase.');
-                            props.navigation.navigate('Onboarding1', { name: this.props.navigation.getParam('name', null) });
+                            props.navigation.navigate('Onboarding1', { name: props.navigation.getParam('name', null) });
                         }
                     });
 
