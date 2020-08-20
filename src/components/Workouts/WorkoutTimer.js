@@ -78,8 +78,18 @@ export default class WorkoutTimer extends React.PureComponent {
       if (remaining <= 1000) {
         this.setState({ remainingTime: 0 });
         this.stop();
-        await timerSound.setPositionAsync(0);
-        await timerSound.playAsync();
+        if (Platform.OS === 'ios') {
+          await timerSound.setPositionAsync(0);
+          await timerSound.playAsync();
+        }
+        else {
+          try {
+            await timerSound.playFromPositionAsync(0);
+          }
+          catch (ex) {
+
+          }
+        }
         handleFinish();
         return;
       }

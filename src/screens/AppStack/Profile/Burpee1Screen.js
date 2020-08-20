@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Dimensions,
   Alert,
+  Platform,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as FileSystem from 'expo-file-system';
@@ -16,7 +17,7 @@ import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default class Progress3Screen extends React.PureComponent {
   constructor(props) {
@@ -61,7 +62,7 @@ export default class Progress3Screen extends React.PureComponent {
             </Text>
           </View>
           <View style={styles.contentContainer}>
-            <View style={{ height: width }}>
+            <View style={styles.carouselContainer}>
               <Carousel
                 width={width}
                 inactiveIndicatorColor={colors.coral.standard}
@@ -233,5 +234,14 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     justifyContent: 'flex-end',
     padding: 10,
+  },
+  carouselContainer: {
+    
+    ...Platform.select({
+      android: {
+        height: width,
+        width: width,
+      }
+    })
   },
 });

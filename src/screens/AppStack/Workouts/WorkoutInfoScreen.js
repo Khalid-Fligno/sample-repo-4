@@ -507,6 +507,12 @@ const styles = StyleSheet.create({
   },
   carouselContainer: {
     paddingBottom: 8,
+    ...Platform.select({
+      android: {
+        height: width + 40,
+        width: width,
+      }
+    })
   },
   exerciseTile: {
     width: width - 30,

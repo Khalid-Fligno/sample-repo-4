@@ -9,6 +9,8 @@ import {
   Alert,
   TouchableOpacity,
   Dimensions,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import { Linking } from 'expo';
 import * as Haptics from 'expo-haptics';
@@ -21,8 +23,10 @@ import Icon from '../../components/Shared/Icon';
 import CustomButton from '../../components/Shared/CustomButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import ActionSheet from 'react-native-actionsheet';
 
 const { width } = Dimensions.get('window');
+const actionSheetOptions = ['Cancel', 'Take photo', 'Upload from Camera Roll'];
 
 export default class Progress2Screen extends React.PureComponent {
   constructor(props) {
@@ -30,6 +34,7 @@ export default class Progress2Screen extends React.PureComponent {
     this.state = {
       hasCameraPermission: null,
       hasCameraRollPermission: null,
+      hasExternalStorageDevicePermission: null,
       image: null,
       uploading: false,
       error: null,
@@ -94,29 +99,56 @@ export default class Progress2Screen extends React.PureComponent {
       { cancelable: false },
     );
   }
-  chooseUploadType = () => {
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options: ['Cancel', 'Take photo', 'Upload from Camera Roll'],
-        cancelButtonIndex: 0,
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 1) {
-          if (!this.state.hasCameraPermission) {
-            this.appSettingsPrompt();
-            return;
-          }
-          this.takePhoto();
-        } else if (buttonIndex === 2) {
-          if (!this.state.hasCameraRollPermission) {
-            this.appSettingsPrompt();
-            return;
-          }
-          this.pickImage();
+    chooseUploadType = () => {
+        if (Platform.OS === 'android') {
+            this.requestAndroidPermissions();
+            this.showActionSheet();
+            
         }
-      },
-    );
-  }
+        else {
+
+            this.getCameraPermission();
+            this.getCameraRollPermission();
+            ActionSheetIOS.showActionSheetWithOptions(
+                {
+                    options: actionSheetOptions,
+                    cancelButtonIndex: 0,
+                },
+                async (buttonIndex) => {
+                    this.uploadTypeAction(buttonIndex);
+                },
+            );
+        }
+    }
+
+    async requestAndroidPermissions() {
+        try {
+            await this.getCameraPermission();
+            await this.getCameraRollPermission();
+        }
+        catch (err) {
+            //Handle this error
+            return false;
+        }
+    }
+    showActionSheet = () => {
+        this.ActionSheet.show()
+    }
+    uploadTypeAction = (buttonIndex) => {
+        if (buttonIndex === 1) {
+            if (!this.state.hasCameraPermission || !this.state.hasCameraRollPermission) {
+                this.appSettingsPrompt();
+                return;
+            }
+            this.takePhoto();
+        } else if (buttonIndex === 2) {
+            if (!this.state.hasCameraRollPermission) {
+                this.appSettingsPrompt();
+                return;
+            }
+            this.pickImage();
+        }
+    }
   takePhoto = async () => {
     const result = await ImagePicker.launchCameraAsync();
     if (!result.cancelled) {
@@ -132,6 +164,7 @@ export default class Progress2Screen extends React.PureComponent {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
+      console.log(result);
     const originXValue = result.width > result.height ? 130 : 0;
     if (!result.cancelled) {
       try {
@@ -225,7 +258,14 @@ export default class Progress2Screen extends React.PureComponent {
                 </TouchableOpacity>
               )
             }
+            <ActionSheet
+                ref={o => this.ActionSheet = o}
+                options={actionSheetOptions}
+                cancelButtonIndex={0}
+                onPress={(index) => this.uploadTypeAction(index)}
+            />
           </View>
+
           <View style={styles.buttonContainer}>
             {
               error && <Text style={styles.errorText}>{error}</Text>

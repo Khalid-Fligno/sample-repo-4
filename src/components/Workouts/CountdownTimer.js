@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Alert, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import { timerSound } from '../../../config/audio';
 import fonts from '../../styles/fonts';
@@ -46,8 +46,18 @@ export default class CountdownTimer extends React.PureComponent {
       if (remaining <= 1000) {
         this.setState({ remainingTime: 0 });
         this.stop();
-        await timerSound.setPositionAsync(0);
-        await timerSound.playAsync();
+        if (Platform.OS === 'ios') {
+          await timerSound.setPositionAsync(0);
+          await timerSound.playAsync();
+        }
+        else {
+          try {
+            await timerSound.playFromPositionAsync(0);
+          }
+          catch (ex) {
+
+          }
+        }
         handleFinish();
         return;
       }

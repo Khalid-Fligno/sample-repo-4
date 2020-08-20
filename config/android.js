@@ -66,6 +66,7 @@ export const restoreAndroidPurchases = async (props) =>{
                     subscriptionInfo: {
                         receipt: activeSubscription.transactionReceipt,
                         expiry: expiryTime,
+                        platform: Platform.OS,
                     },
                 };
                 await userRef.set(data, { merge: true });

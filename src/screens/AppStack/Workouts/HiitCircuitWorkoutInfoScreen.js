@@ -26,7 +26,7 @@ import fonts from '../../../styles/fonts';
 
 const moment = require('moment');
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const workIntervalMap = {
   1: 30,
@@ -494,6 +494,12 @@ const styles = StyleSheet.create({
   },
   carouselContainer: {
     paddingBottom: 8,
+    ...Platform.select({
+      android: {
+        height: width + 40,
+        width: width,
+      }
+    })
   },
   exerciseTile: {
     width: width - 30,

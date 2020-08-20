@@ -10,6 +10,8 @@ import {
   ActionSheetIOS,
   TouchableOpacity,
   Linking,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Permissions from 'expo-permissions';
@@ -22,6 +24,7 @@ import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+import ActionSheet from 'react-native-actionsheet';
 
 const { width } = Dimensions.get('window');
 
@@ -46,6 +49,8 @@ const list = [
   { title: 'Terms and Conditions', route: 'TermsOfService' },
 ];
 
+const actionSheetOptions = ['Cancel', 'Take photo', 'Upload from Camera Roll'];
+
 export default class ProfileHomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -54,6 +59,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
       loading: false,
       hasCameraPermission: undefined,
       hasCameraRollPermission: undefined,
+      hasExternalStorageDevicePermission: undefined,
       avatar: undefined,
     };
   }
@@ -67,9 +73,14 @@ export default class ProfileHomeScreen extends React.PureComponent {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
   }
-  getCameraRollPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    this.setState({ hasCameraRollPermission: status === 'granted' });
+    getCameraRollPermission = async () => {
+        try {
+            const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+            this.setState({ hasCameraRollPermission: status === 'granted' });
+        }
+        catch (ex) {
+
+        }
   }
   fetchProfile = async () => {
     this.setState({ loading: true });
@@ -108,35 +119,62 @@ export default class ProfileHomeScreen extends React.PureComponent {
     }
   };
   chooseUploadType = () => {
-    this.getCameraPermission();
-    this.getCameraRollPermission();
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options: ['Cancel', 'Take photo', 'Upload from Camera Roll'],
-        cancelButtonIndex: 0,
-      },
-      async (buttonIndex) => {
-        if (buttonIndex === 1) {
-          if (!this.state.hasCameraPermission || !this.state.hasCameraRollPermission) {
-            this.appSettingsPrompt();
-            return;
-          }
-          this.takePhoto();
-        } else if (buttonIndex === 2) {
-          if (!this.state.hasCameraRollPermission) {
-            this.appSettingsPrompt();
-            return;
-          }
-          this.pickImage();
+      if (Platform.OS === 'android') {
+          //this.getCameraPermission();
+          //this.getCameraRollPermission();
+          this.requestAndroidPermissions();
+          this.showActionSheet();
+          
+      }
+      else {
+
+          this.getCameraPermission();
+          this.getCameraRollPermission();
+          ActionSheetIOS.showActionSheetWithOptions(
+              {
+                  options: actionSheetOptions,
+                  cancelButtonIndex: 0,
+              },
+              async (buttonIndex) => {
+                  this.uploadTypeAction(buttonIndex);
+              },
+          );
+      }
+    }
+    async requestAndroidPermissions() {
+        try {
+            await this.getCameraPermission();
+            await this.getCameraRollPermission();
         }
-      },
-    );
-  }
+        catch (err) {
+            //Handle this error
+            return false;
+        }
+    }
+    showActionSheet = () => {
+        this.ActionSheet.show()
+    }
+    uploadTypeAction = (buttonIndex) => {
+        if (buttonIndex === 1) {
+            if (!this.state.hasCameraPermission || !this.state.hasCameraRollPermission) {
+                this.appSettingsPrompt();
+                return;
+            }
+            this.takePhoto();
+        } else if (buttonIndex === 2) {
+            if (!this.state.hasCameraRollPermission) {
+                this.appSettingsPrompt();
+                return;
+            }
+            this.pickImage();
+        }
+    }
   pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
+      allowsEditing: Platform.OS === 'ios',
     });
+    Alert.alert('Result', `${result.cancelled}`)
     if (!result.cancelled) {
       try {
         const manipResult = await ImageManipulator.manipulateAsync(
@@ -222,6 +260,12 @@ export default class ProfileHomeScreen extends React.PureComponent {
                   />
                 </TouchableOpacity>
               </View>
+              <ActionSheet
+                ref={o => this.ActionSheet = o}
+                options={actionSheetOptions}
+                cancelButtonIndex={0}
+                onPress={(index) => this.uploadTypeAction(index)}
+              />
             </View>
             <View style={styles.nameTextContainer}>
               <Text

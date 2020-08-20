@@ -23,6 +23,7 @@ export default class HiitCircuitCountdownScreen extends React.PureComponent {
     this.startTimer();
     this.checkVideoCache();
     AppState.addEventListener('change', this.handleAppStateChange);
+    console.log('Directory', FileSystem.cacheDirectory);
   }
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange);

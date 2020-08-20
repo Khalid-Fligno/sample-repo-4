@@ -9,6 +9,7 @@ import {
   Alert,
   Image,
   Linking,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as FileSystem from 'expo-file-system';
@@ -26,7 +27,7 @@ import fonts from '../../../styles/fonts';
 
 const moment = require('moment');
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const workIntervalMap = {
   1: 40,
@@ -334,7 +335,9 @@ export default class HiitWorkoutInfoScreen extends React.PureComponent {
             <Text style={styles.workoutPreviewHeaderText}>
               WORKOUT PREVIEW
             </Text>
-            {exerciseDisplay}
+            <View style={styles.carouselContainer }>
+              {exerciseDisplay}
+            </View>
           </View>
         </ScrollView>
         <Modal
@@ -500,6 +503,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderColor: colors.coral.standard,
     overflow: 'hidden',
+
   },
   exerciseTileHeaderBar: {
     flexDirection: 'row',
@@ -620,4 +624,12 @@ const styles = StyleSheet.create({
     color: colors.white,
     marginTop: 3,
   },
+  carouselContainer: {
+    width: width,
+    ...Platform.select({
+      android: {
+        height: (width + 30) * 2
+      }
+    })
+  }
 });

@@ -46,7 +46,6 @@ import RNIap, {
     purchaseErrorListener,
     purchaseUpdatedListener,
 } from 'react-native-iap';
-import IProduct from '../../utils/ISubscription';
 const productTitleMap = {
     0: 'YEARLY - ',
     1: 'MONTHLY - ',
@@ -227,6 +226,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                             originalTransactionId: latestReceipt.original_transaction_id,
                             originalPurchaseDate: latestReceipt.original_purchase_date_ms,
                             productId: latestReceipt.product_id,
+                            platform: Platform.OS,
                         },
                     };
                     await userRef.set(data, { merge: true });
@@ -272,6 +272,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                         originalTransactionId: sortedInApp[0].original_transaction_id,
                         originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
                         productId: sortedInApp[0].product_id,
+                        platform: Platform.OS,
                     },
                 };
                 await userRef.set(data, { merge: true });
@@ -576,6 +577,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                                 originalTransactionId: sortedInApp[0].original_transaction_id,
                                 originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
                                 productId: sortedInApp[0].product_id,
+                                platform: Platform.OS,
                             },
                         };
                         await userRef.set(data, { merge: true });
@@ -661,6 +663,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                                     originalTransactionId: sortedInApp[0].original_transaction_id,
                                     originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
                                     productId: sortedInApp[0].product_id,
+                                    platform: Platform.OS,
                                 },
                             };
                             await userRef.set(data, { merge: true });
@@ -723,6 +726,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                     originalTransactionId: purchase.transactionId,
                     originalPurchaseDate: Number(androidData.purchaseTime),
                     productId: replaceTestAndroidProduct(purchase.productId),
+                    platform: Platform.OS,
                 },
             };
             await userRef.set(data, { merge: true });

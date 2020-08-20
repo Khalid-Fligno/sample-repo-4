@@ -19,9 +19,12 @@ import {
   compareInApp,
 } from '../../config/apple';
 import {
-    restoreAndroidPurchases,
-    replaceTestAndroidProduct
-} from '../../config/android'
+  restoreAndroidPurchases,
+  replaceTestAndroidProduct
+} from '../../config/android';
+import {
+  RestoreSubscriptions
+} from '../utils/subscription';
 import { auth, db } from '../../config/firebase';
 import { timerSound } from '../../config/audio';
 import RNIap, {
@@ -178,7 +181,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
                 this.props.navigation.navigate('Subscription');
               } else if (subscriptionInfo.expiry < Date.now()) {
                 // EXPIRED
-                await this.storePurchase();
+                await this.storePurchase(subscriptionInfo, onboarded);
               } else if (subscriptionInfo.expiry > Date.now()) {
                 // RECEIPT STILL VALID
                 if (onboarded) {
@@ -199,16 +202,24 @@ export default class AuthLoadingScreen extends React.PureComponent {
     });
   }
 
-  storePurchase =async () => {
-    if (Platform.OS === 'ios') {
-      await this.restorePurchaseIOS();
+  storePurchase = async (subscriptionInfo, onboarded) => {
+    //const restoreSubscriptions = new RestoreSubscriptions(props);
+    //if (!subscriptionInfo.platform) {
+    //  subscriptionInfo.platform = 'ios';
+    //}
+    //if (Platform.OS !== subscriptionInfo.platform) {
+    //  const subscriptionInfo = await restoreSubscriptions.restore();
+    //}
+    //else
+      if (Platform.OS === 'ios') {
+      await this.restorePurchaseIOS(onboarded);
     }
     else if (Platform.OS === 'android') {
       await restoreAndroidPurchases(this.props);
     }
   }
 
-  restorePurchaseIOS = async () => {
+  restorePurchaseIOS = async (onboarded) => {
     InAppUtils.restorePurchases(async (error, response) => {
       if (error) {
         Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
@@ -216,6 +227,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
         auth.signOut();
         this.props.navigation.navigate('Auth');
       } else {
+        const uid = await AsyncStorage.getItem('uid');
         if (response.length === 0) {
           this.props.navigation.navigate('Subscription');
           return;
@@ -235,6 +247,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
               subscriptionInfo: {
                 receipt: sortedPurchases[0].transactionReceipt,
                 expiry: sortedInApp[0].expires_date_ms,
+                platform: Platform.OS,
               },
             };
             await userRef.set(data, { merge: true });

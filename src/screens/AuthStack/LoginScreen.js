@@ -33,6 +33,9 @@ import {
 import {
     restoreAndroidPurchases
 } from '../../../config/android';
+import {
+  RestoreSubscriptions
+} from '../../utils/subscription';
 import NativeLoader from '../../components/Shared/NativeLoader';
 import Icon from '../../components/Shared/Icon';
 import FacebookButton from '../../components/Auth/FacebookButton';
@@ -240,16 +243,24 @@ export default class LoginScreen extends React.PureComponent {
     }
   }
 
-  storePurchase = async () => {
-    if (Platform.OS === 'ios') {
-      await this.iOSStorePurchases();
+  storePurchase = async (subscriptionInfo, onboarded) => {
+    //const restoreSubscriptions = new RestoreSubscriptions(props);
+    //if (!subscriptionInfo.platform) {
+    //  subscriptionInfo.platform = 'ios';
+    //}
+    //if (Platform.OS !== subscriptionInfo.platform) {
+    //  const subscriptionInfo = await restoreSubscriptions.restore();
+    //}
+    //else
+      if (Platform.OS === 'ios') {
+      await this.iOSStorePurchases(onboarded);
     }
     else if (Platform.OS === 'android') {
         await restoreAndroidPurchases(this.props);
     }
   }
 
-  iOSStorePurchases = async () => {
+  iOSStorePurchases = async (onboarded) => {
     InAppUtils.restorePurchases(async (error, response) => {
       if (error) {
         // Sentry.captureException(error);
@@ -279,6 +290,10 @@ export default class LoginScreen extends React.PureComponent {
             };
             await userRef.set(data, { merge: true });
             this.setState({ loading: false });
+            if (onboarded) {
+              this.props.navigation.navigate('Onboarding1');
+              return;
+            }
             this.props.navigation.navigate('App');
           } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
             Alert.alert('Expired', 'Your most recent subscription has expired');
@@ -304,7 +319,8 @@ export default class LoginScreen extends React.PureComponent {
       await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       const authResponse = await auth.signInWithEmailAndPassword(email, password);
       if (authResponse) {
-        const { uid } = authResponse.user;
+        const { uid } = authResponse.user; 
+          console.log("UserId", uid);
         await AsyncStorage.setItem('uid', uid);
         appsFlyer.trackEvent('af_login');
         db.collection('users').doc(uid)
@@ -313,14 +329,14 @@ export default class LoginScreen extends React.PureComponent {
             if (await doc.data().fitnessLevel !== undefined) {
               await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
             }
-            const { subscriptionInfo = undefined } = await doc.data();
+            const { subscriptionInfo = undefined, onboarded = false  } = await doc.data();
             if (subscriptionInfo === undefined) {
               // NO PURCHASE INFORMATION SAVED
               this.setState({ loading: false });
               this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
             } else if (subscriptionInfo.expiry < Date.now()) {
               // EXPIRED
-              await this.storePurchase();
+              await this.storePurchase(subscriptionInfo, onboarded);
             } else {
               // RECEIPT STILL VALID
               this.setState({ loading: false });
