@@ -174,7 +174,6 @@ export default class ProfileHomeScreen extends React.PureComponent {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: Platform.OS === 'ios',
     });
-    Alert.alert('Result', `${result.cancelled}`)
     if (!result.cancelled) {
       try {
         const manipResult = await ImageManipulator.manipulateAsync(
