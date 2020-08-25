@@ -244,18 +244,18 @@ export default class LoginScreen extends React.PureComponent {
   }
 
   storePurchase = async (subscriptionInfo, onboarded) => {
-    //const restoreSubscriptions = new RestoreSubscriptions(props);
-    //if (!subscriptionInfo.platform) {
-    //  subscriptionInfo.platform = 'ios';
-    //}
-    //if (Platform.OS !== subscriptionInfo.platform) {
-    //  const subscriptionInfo = await restoreSubscriptions.restore();
-    //}
-    //else
-      if (Platform.OS === 'ios') {
+    const restoreSubscriptions = new RestoreSubscriptions(this.props);
+    if (!subscriptionInfo.platform) {
+      subscriptionInfo.platform = 'ios';
+    }
+    if (Platform.OS !== subscriptionInfo.platform) {
+      await restoreSubscriptions.restore(subscriptionInfo, onboarded);
+    }
+    else if (Platform.OS === 'ios') {
       await this.iOSStorePurchases(onboarded);
     }
     else if (Platform.OS === 'android') {
+        //await restoreSubscriptions.restore(subscriptionInfo, onboarded);
         await restoreAndroidPurchases(this.props);
     }
   }

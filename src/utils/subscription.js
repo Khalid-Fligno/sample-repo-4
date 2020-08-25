@@ -1,14 +1,16 @@
 import {
   Platform,
+  Alert
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { auth, db } from '../../config/firebase';
-const subscriptionServiceUrl = 'http://localhost:8100/';
+const subscriptionServiceUrl = 'http://3.8.209.87:8100/subscriptions/';
 export class RestoreSubscriptions {
   constructor(props) {
     this.props = props;
   }
   restore = async (subscriptionInfo, onboarded) => {
+
     const newSubscriptionInfoReq = await fetch(subscriptionServiceUrl, {
       method: 'POST',
       headers: {
