@@ -1,8 +1,8 @@
-const { SubscriptionDetails, SubscriptionNotFoundError, SubscriptionExpiredError, UnknownError, UnableToRetriveSubscriptionError } = require('./models.js');
+const { SubscriptionDetails, SubscriptionNotFoundError, SubscriptionExpiredError, UnknownError, UnableToRetriveSubscriptionError, dynamicSort } = require('./models.js');
 const productionHost = 'buy.itunes.apple.com';
 const sandboxHost = 'sandbox.itunes.apple.com';
 const password = '4c613681bae44a4a956e11e6411d86fd'; // Shared Secret from iTunes connect
-const sandboxTesting = false;
+
 const statusCodes = {
   [0]: { message: 'Active', valid: true, error: false },
   [21000]: { message: 'App store could not read', valid: false, error: true },
@@ -19,11 +19,11 @@ const statusCodes = {
   [21008]: { message: 'Production receipt sent to Sandbox environment', valid: false, error: true },
 };
 
-const receiptRequest = (password, production = true) => {
+const receiptRequest = (receipt, password, production = true) => {
   const endpoint = production ? productionHost : sandboxHost;
   const verifyUrl = `https://${endpoint}/verifyReceipt`;
-
-  return async (receipt) => {
+  console.log(verifyUrl);
+  return async () => {
     const payload = {
       'receipt-data': receipt,
       password,
@@ -36,17 +36,22 @@ const receiptRequest = (password, production = true) => {
         'Content-Type': 'application/json',
       },
     };
-
     const res = await fetch(verifyUrl, options);
     const body = await res.json();
+    
 
     return body;
   };
 }
-exports.getAppleSubscriptions = async (receipt) => {
+exports.getAppleSubscriptions = async (existingSubscriptionInfo) => {
   const subscription = new SubscriptionDetails();
-  const request = await receiptRequest(password, sandboxTesting);
-  const receiptInfo = await request();
+  const request = await receiptRequest(existingSubscriptionInfo.receipt, password, true);
+  let receiptInfo = await request();
+  if(receiptInfo.status === 21007){
+    console.log('snadbox request')
+    const sandboxRequest = await receiptRequest(existingSubscriptionInfo.receipt, password, false);
+    receiptInfo = await sandboxRequest();
+  }
   if (receiptInfo.status !== 0 ) {
     switch (receiptInfo.status) {
       case 21000:
@@ -56,8 +61,10 @@ exports.getAppleSubscriptions = async (receipt) => {
       case 21007:
       case 21008:
         subscription.error = new UnableToRetriveSubscriptionError();
+        break;
       case 21004:
         subscription.error = new SubscriptionNotFoundError();
+        break;
       case 21006:
         //expired
         subscription.error = new SubscriptionExpiredError();
@@ -79,6 +86,7 @@ exports.getAppleSubscriptions = async (receipt) => {
     subscription.platform = 'ios';
     return subscription;
   } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
+    console.log(sortedInApp[0]);
     //Expired if not prcessed by switch case
     subscription.error = new SubscriptionExpiredError();
     return subscription;

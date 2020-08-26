@@ -320,7 +320,6 @@ export default class LoginScreen extends React.PureComponent {
       const authResponse = await auth.signInWithEmailAndPassword(email, password);
       if (authResponse) {
         const { uid } = authResponse.user; 
-          console.log("UserId", uid);
         await AsyncStorage.setItem('uid', uid);
         appsFlyer.trackEvent('af_login');
         db.collection('users').doc(uid)

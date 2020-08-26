@@ -380,12 +380,8 @@ export default class SubscriptionScreen extends React.PureComponent {
     await InAppUtils.loadProducts(identifiers, (error, products) => {
       if (error) {
         this.setState({ loading: false });
-        console.log(error);
         Alert.alert('Unable to connect to the App Store', 'Please try again later');
       } else if (products.length !== 2) {
-        Alert.alert("product length is not two", 'Products');
-        Alert.alert("total products received are ", products.length.toString() );
-        console.log(products);
         // IAP products not retrieved (App Store server down, etc.)
         this.setState({ loading: false });
         Alert.alert(
@@ -757,7 +753,6 @@ export default class SubscriptionScreen extends React.PureComponent {
           platform: Platform.OS,
         },
       };
-      console.log(data.subscriptionInfo);
       await userRef.set(data, { merge: true });
       // Appsflyer event tracking - Start Free Trial
       const eventName = 'af_start_trial';
