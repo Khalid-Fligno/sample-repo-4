@@ -22,7 +22,6 @@ const statusCodes = {
 const receiptRequest = (receipt, password, production = true) => {
   const endpoint = production ? productionHost : sandboxHost;
   const verifyUrl = `https://${endpoint}/verifyReceipt`;
-  console.log(verifyUrl);
   return async () => {
     const payload = {
       'receipt-data': receipt,
@@ -48,7 +47,6 @@ exports.getAppleSubscriptions = async (existingSubscriptionInfo) => {
   const request = await receiptRequest(existingSubscriptionInfo.receipt, password, true);
   let receiptInfo = await request();
   if(receiptInfo.status === 21007){
-    console.log('snadbox request')
     const sandboxRequest = await receiptRequest(existingSubscriptionInfo.receipt, password, false);
     receiptInfo = await sandboxRequest();
   }
@@ -86,7 +84,6 @@ exports.getAppleSubscriptions = async (existingSubscriptionInfo) => {
     subscription.platform = 'ios';
     return subscription;
   } else if (sortedInApp[0] && sortedInApp[0].expires_date_ms < Date.now()) {
-    console.log(sortedInApp[0]);
     //Expired if not prcessed by switch case
     subscription.error = new SubscriptionExpiredError();
     return subscription;

@@ -10,7 +10,7 @@ import RNIap, {
 import { db } from './firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const androidTokenUrl = 'http://3.8.209.87:8000/'; // this is installed on Personal server (Proj-Man) Server, this is required to generate secured token,  will need to move this on some other server with domain pointing
+const androidTokenUrl = 'http://3.8.209.87:8100/android/token/'; // this is installed on Personal server (Proj-Man) Server, this is required to generate secured token,  will need to move this on some other server with domain pointing
 
 export const getAndroidToken = async () => {
     const res = await fetch(androidTokenUrl);

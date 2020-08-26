@@ -8,7 +8,14 @@ const JWTClient = new google.auth.JWT(
   account.private_key,
   ["https://www.googleapis.com/auth/androidpublisher"]
 );
-
+exports.getAndroidToken = (req, res) => {
+  JWTClient.getAccessToken((err,token)=>{
+      if(err){
+          return res.status(404).send("get access token failed");
+      }
+      return res.status(200).send(token);
+  })
+}
 const getAndroidSubscriptionDetails = (packageName, subscriptionId, purchaseToken, accessToken) => {
   const verifyUrl = `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${packageName}/purchases/subscriptions/${subscriptionId}/tokens/${purchaseToken}?access_token=${accessToken}`;
   return async (receipt) => {
