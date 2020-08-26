@@ -202,6 +202,7 @@ export default class SubscriptionScreen extends React.PureComponent {
           }
           if (Platform.OS !== subscriptionInfo.platform) {
             await restoreSubscriptions.restore(subscriptionInfo, onboarded);
+            this.setState({ loading: false });
           }
           else if (Platform.OS === 'ios') {
             this.restoreiOSPurchases();
