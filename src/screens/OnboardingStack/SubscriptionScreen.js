@@ -197,24 +197,27 @@ export default class SubscriptionScreen extends React.PureComponent {
           }
           const { subscriptionInfo = undefined, onboarded = false } = await doc.data();
           const restoreSubscriptions = new RestoreSubscriptions(this.props);
+          
           if (!subscriptionInfo.platform) {
             subscriptionInfo.platform = 'ios';
           }
-          if (Platform.OS !== subscriptionInfo.platform) {
+          try{
             await restoreSubscriptions.restore(subscriptionInfo, onboarded);
-            this.setState({ loading: false });
           }
-          else if (Platform.OS === 'ios') {
-            this.restoreiOSPurchases();
-          }
-          else if (Platform.OS === 'android') {
-            await this.restoreAndroidPurchases();
+          catch(ex){
+            if (Platform.OS === 'ios') {
+              await this.restoreiOSPurchases(onboarded);
+            }
+            else if (Platform.OS === 'android') {
+                //await restoreSubscriptions.restore(subscriptionInfo, onboarded);
+                await restoreAndroidPurchases(this.props);
+            }
           }
         }
       });
     
   }
-  restoreiOSPurchases = async () => {
+  restoreiOSPurchases = async (onboarded) => {
     await InAppUtils.restorePurchases(async (error, response) => {
       if (error) {
         // Sentry.captureException(error);

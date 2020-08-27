@@ -207,16 +207,28 @@ export default class AuthLoadingScreen extends React.PureComponent {
     if (!subscriptionInfo.platform) {
       subscriptionInfo.platform = 'ios';
     }
-    if (Platform.OS !== subscriptionInfo.platform) {
+    try{
       await restoreSubscriptions.restore(subscriptionInfo, onboarded);
     }
-    else if (Platform.OS === 'ios') {
-      await this.restorePurchaseIOS(onboarded);
+    catch(ex){
+      if (Platform.OS === 'ios') {
+        await this.restorePurchaseIOS(onboarded);
+      }
+      else if (Platform.OS === 'android') {
+          //await restoreSubscriptions.restore(subscriptionInfo, onboarded);
+          await restoreAndroidPurchases(this.props);
+      }
     }
-    else if (Platform.OS === 'android') {
-      //  await restoreSubscriptions.restore(subscriptionInfo, onboarded);
-      await restoreAndroidPurchases(this.props);
-    }
+    // if (Platform.OS !== subscriptionInfo.platform) {
+    //   await restoreSubscriptions.restore(subscriptionInfo, onboarded);
+    // }
+    // else if (Platform.OS === 'ios') {
+    //   await this.restorePurchaseIOS(onboarded);
+    // }
+    // else if (Platform.OS === 'android') {
+    //   //  await restoreSubscriptions.restore(subscriptionInfo, onboarded);
+    //   await restoreAndroidPurchases(this.props);
+    // }
   }
 
   restorePurchaseIOS = async (onboarded) => {
