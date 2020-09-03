@@ -25,6 +25,7 @@ const headerContainer = {
   alignItems: 'center',
   height: 50,
   borderBottomWidth: 0,
+  backgroundColor:colors.white
 };
 
 export default class Header extends React.PureComponent {
@@ -162,7 +163,7 @@ export default class Header extends React.PureComponent {
                 </Text>
               ) : (
                 <Image
-                  source={require('../../../assets/icons/fitazfk-icon-outline-white.png')}
+                  source={require('../../../assets/icons/fitazfk2-logo.svg')}
                   style={styles.fitazfkIcon}
                 />
               )
@@ -309,25 +310,25 @@ const styles = StyleSheet.create({
   },
   defaultHeader: {
     ...headerContainer,
-    backgroundColor: colors.charcoal.darkest,
+    backgroundColor: colors.white,
   },
   nutritionHeader: {
     ...headerContainer,
-    backgroundColor: colors.violet.standard,
+    //backgroundColor: colors.violet.standard,
   },
   workoutsHeader: {
     ...headerContainer,
-    backgroundColor: colors.coral.standard,
+    //backgroundColor: colors.coral.standard,
   },
   calendarHeader: {
     ...headerContainer,
-    backgroundColor: colors.green.standard,
+    //backgroundColor: colors.green.standard,
     borderBottomWidth: 1,
     borderBottomColor: colors.green.dark,
   },
   progressHeader: {
     ...headerContainer,
-    backgroundColor: colors.blue.standard,
+    //backgroundColor: colors.blue.standard,
   },
   headerContentContainer: {
     flexGrow: 1,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet,Text } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import FastImage from 'react-native-fast-image';
 import Icon from '../Shared/Icon';
@@ -10,7 +10,7 @@ export default class ProfileButton extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      avatar: undefined,
+      initials: undefined,
     };
   }
   componentDidMount = async () => {
@@ -18,7 +18,10 @@ export default class ProfileButton extends React.PureComponent {
     if (uid) {
       this.unsubscribe = await db.collection('users').doc(uid)
         .onSnapshot(async (doc) => {
-          this.setState({ avatar: await doc.data().avatar || undefined });
+          const profile= await doc.data();                    
+          let initials=profile.firstName &&  profile.firstName.length > 0 ? profile.firstName.substring(0, 1).toUpperCase() :'' ;
+          initials += profile.lastName &&  profile.lastName.length > 0 ? profile.lastName.substring(0, 1).toUpperCase() :'';
+          this.setState({ initials: initials || undefined });
         });
     }
   }
@@ -28,17 +31,18 @@ export default class ProfileButton extends React.PureComponent {
     }
   }
   render() {
-    const { avatar } = this.state;
+    const { initials } = this.state;
     return (
       <View>
         {
-          avatar !== undefined ? (
+          initials !== undefined ? (
             <View style={styles.avatarOutline}>
-              <View style={styles.avatarBackdrop}>
-                <FastImage
-                  style={styles.image}
-                  source={{ uri: avatar }}
-                />
+              <View style={styles.tagCircle}
+                key={initials}
+              >
+                <Text style={styles.tagText}>
+                  {initials}
+                </Text>
               </View>
             </View>
           ) : (
@@ -56,18 +60,31 @@ export default class ProfileButton extends React.PureComponent {
 
 const styles = StyleSheet.create({
   avatarOutline: {
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
+  },
+  avatarBackdrop: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: colors.white,
-  },
-  avatarBackdrop: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
     backgroundColor: colors.grey.standard,
+  },
+  tagCircle: {
+    height: 28,
+    width: 28,
+    marginRight: 5,
+    borderWidth: 2.5,
+    borderColor: colors.red.standard,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:colors.red.standard,
+  },  
+  tagText: {
+    fontFamily: fonts.bold,
+    fontSize: 12,
+    color: colors.violet.standard,
+    marginTop: 4,
   },
   image: {
     width: 32,

@@ -28,6 +28,10 @@ export const tabColorMap = {
   Workouts: colors.coral.standard,
   Calendar: colors.green.standard,
   Progress: colors.blue.standard,
+  // FEED: colors.charcoal.standard,
+  // SUBSCRIPTION: colors.violet.standard,
+  // CALENDER: colors.green.standard,
+  // PROGRESS: colors.blue.standard,
 };
 
 export const workoutsBackButtonMap = {

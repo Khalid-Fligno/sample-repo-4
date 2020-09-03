@@ -1,6 +1,8 @@
 import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import HomeStack from './HomeStack';
+import FeedStack from './FeedStack';
+import SubscriptionStack from './SubscriptionStack';
 import NutritionStack from './NutritionStack';
 import WorkoutsStack from './WorkoutsStack';
 import CalendarStack from './CalendarStack';
@@ -17,6 +19,10 @@ const TabStack = createBottomTabNavigator(
     Workouts: WorkoutsStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
+    // Feed: FeedStack,
+    // SUBSCRIPTION: SubscriptionStack,
+    // CALCENDER: CalendarStack,
+    // PROGRESS: ProgressStack,
   },
   {
     initialRouteName: 'Home',
@@ -43,7 +49,25 @@ const TabStack = createBottomTabNavigator(
               color={focused ? activeState : inactiveState}
             />
           );
-        } else if (routeName === 'Workouts') {
+        } 
+        // else if (routeName === 'FEED') {
+        //   icon = (
+        //     <Icon
+        //       name={focused ? 'feed-solid' : 'feed-outline'}
+        //       size={24}
+        //       color={focused ? activeState : inactiveState}
+        //     />
+        //   );
+        // } else if (routeName === 'Subscription') {
+        //   icon = (
+        //     <Icon
+        //       name={focused ? 'subscription-solid' : 'subscription-outline'}
+        //       size={24}
+        //       color={focused ? activeState : inactiveState}
+        //     />
+        //   );
+        // } 
+        else if (routeName === 'Workouts') {
           icon = (
             <Icon
               name={focused ? 'workouts-solid' : 'workouts-outline'}

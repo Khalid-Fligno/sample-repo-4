@@ -51,6 +51,9 @@ const colors = {
   yellow: {
     standard: 'rgb(242, 199, 26)', // #F1D519
   },
+  red:{
+    standard:'rgb(255,0,0)'
+  },
   facebookBlue: 'rgb(59,89,152)', // #3B5998
 };
 
