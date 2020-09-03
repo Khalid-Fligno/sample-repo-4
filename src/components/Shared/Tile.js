@@ -22,6 +22,7 @@ export default class Tile extends React.PureComponent {
   handlePressIn = () => {
     Animated.spring(this.animatedValue, {
       toValue: 0.92,
+      useNativeDriver: true 
     }).start();
   }
   handlePressOut = () => {
@@ -29,6 +30,7 @@ export default class Tile extends React.PureComponent {
       toValue: 1,
       friction: 3,
       tension: 40,
+      useNativeDriver: true 
     }).start();
   }
   render() {
@@ -57,12 +59,17 @@ export default class Tile extends React.PureComponent {
             style={styles.image}
           >
             <View style={styles.opacityLayer}>
-              <Text style={styles.title}>
+              {/* <Text style={styles.title}>
                 {title1.toUpperCase()}
-              </Text>
+              </Text> */}
             </View>
           </ImageBackground>
         </Animated.View>
+        <View>
+          <Text style={styles.title}>
+            {title1}
+          </Text>
+        </View>
       </TouchableOpacity>
     );
   }
@@ -83,13 +90,15 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 0.25,
     margin: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft:20,
+    paddingRight:20,
+    marginTop:0,
     width,
     shadowColor: colors.charcoal.standard,
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
+    height:200
   },
   flexContainer: {
     flex: 1,
@@ -106,15 +115,16 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.transparentBlackLight,
+    backgroundColor: colors.transparentBlackLightest,
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 24,
-    color: colors.white,
-    textAlign: 'center',
+    fontSize: 20,
+    color: colors.black,
     shadowColor: colors.black,
     shadowOpacity: 1,
+    marginTop:10,
+    marginBottom:10,
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 5,
   },

@@ -15,7 +15,7 @@ import ProfileButton from '../Shared/ProfileButton';
 import Icon from '../Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
-
+import Svg, { SvgUri } from 'react-native-svg';
 const { width } = Dimensions.get('window');
 
 const headerContainer = {
@@ -162,10 +162,11 @@ export default class Header extends React.PureComponent {
                   {headerTitleParams}
                 </Text>
               ) : (
-                <Image
-                  source={require('../../../assets/icons/fitazfk2-logo.svg')}
-                  style={styles.fitazfkIcon}
-                />
+                    <Image
+                      source={require('../../../assets/icons/fitazfk2-logo.png')}
+                      style={styles.fitazfkIcon}
+                    />
+              
               )
             }
           </View>
@@ -370,7 +371,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   fitazfkIcon: {
-    width: 30,
-    height: 30,
+    width: 120,
+    height: 50,
   },
 });
