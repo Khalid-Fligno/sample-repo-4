@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 12,
     color: colors.violet.standard,
-    marginTop: 4,
+   // marginTop: 4,
   },
   image: {
     width: 32,

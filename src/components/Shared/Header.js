@@ -124,7 +124,7 @@ export default class Header extends React.PureComponent {
                 <Icon
                   name="chevron-left"
                   size={20}
-                  color={colors.black}
+                  color={colors.red.standard}
                 />
               </TouchableOpacity>
             )
@@ -138,7 +138,7 @@ export default class Header extends React.PureComponent {
                 <Icon
                   name="question-speech-bubble"
                   size={30}
-                  color={colors.white}
+                  color={colors.red.standard}
                 />
               </TouchableOpacity>
             )
@@ -223,7 +223,7 @@ export default class Header extends React.PureComponent {
                 <Icon
                   name="chevron-right"
                   size={20}
-                  color={colors.white}
+                  color={colors.red.standard}
                 />
               </TouchableOpacity>
             )
@@ -232,7 +232,7 @@ export default class Header extends React.PureComponent {
             withStartButton && !navigation.state.params.handleStart && (
               <View style={styles.headerContentContainerRightLoading}>
                 <ActivityIndicator
-                  color={colors.white}
+                  color={colors.red.standard}
                   style={styles.activityIndicator}
                 />
               </View>
