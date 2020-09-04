@@ -29,6 +29,10 @@ const headerContainer = {
 };
 
 export default class Header extends React.PureComponent {
+  componentDidMount(){
+    StatusBar.setTranslucent(false);
+    StatusBar.setBackgroundColor("#FFF");
+}
   handleBack = () => {
     const { navigation } = this.props;
     navigation.pop();
@@ -87,6 +91,7 @@ export default class Header extends React.PureComponent {
       headerTitleParams,
       withLogoutButton,
     } = this.props;
+    
     return (
       <SafeAreaView
         style={[
@@ -119,7 +124,7 @@ export default class Header extends React.PureComponent {
                 <Icon
                   name="chevron-left"
                   size={20}
-                  color={colors.white}
+                  color={colors.black}
                 />
               </TouchableOpacity>
             )
@@ -312,6 +317,7 @@ const styles = StyleSheet.create({
   defaultHeader: {
     ...headerContainer,
     backgroundColor: colors.white,
+    marginTop: Platform.OS === 'android' ? StatusBar.currentHeight+1 : 0
   },
   nutritionHeader: {
     ...headerContainer,
@@ -367,7 +373,7 @@ const styles = StyleSheet.create({
   headerTitleText: {
     fontFamily: fonts.bold,
     fontSize: 16,
-    color: colors.white,
+    color: colors.black,
     marginTop: 5,
   },
   fitazfkIcon: {
