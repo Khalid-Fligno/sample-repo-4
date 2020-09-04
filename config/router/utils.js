@@ -35,7 +35,7 @@ export const tabColorMap = {
 };
 
 export const workoutsBackButtonMap = {
-  WorkoutsHome: false,
+  WorkoutsHome: true,
   WorkoutsLocation: true,
   WorkoutsSelection: true,
   HiitWorkoutsSelection: true,
@@ -51,7 +51,7 @@ export const workoutsStartButtonMap = {
 };
 
 export const nutritionBackButtonMap = {
-  NutritionHome: false,
+  NutritionHome: true,
   RecipeSelection: true,
   Recipe: true,
   RecipeSteps: true,
