@@ -74,6 +74,65 @@ const globalStyle = StyleSheet.create({
         marginTop: 2,
       },
 //*********** END***************/ 
+
+//*************Component**************** */
+modalContainer: {
+  backgroundColor: colors.white,
+  borderRadius: 4,
+  overflow: 'hidden',
+},
+modalButton: {
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: colors.coral.standard,
+  height: 50,
+  width: '100%',
+  marginBottom: 0,
+},
+modalButtonText: {
+  fontFamily: fonts.bold,
+  fontSize: 14,
+  color: colors.white,
+  marginTop: 3,
+},
+opacityLayer: {
+  flex: 1,
+  width: '100%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: colors.transparentBlackLight,
+},
+carouselsContainer: {
+  flex: 1,
+  paddingTop: 4,
+  paddingBottom: 5,
+},
+flexContainer: {
+  flex: 1,
+  alignItems: 'center',
+},
+flex: {
+  flex: 1,
+},
+carouselTitleContainer: {
+  width: width * 0.8,
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+},
+carouselTitle: {
+  fontFamily: fonts.bold,
+  fontSize: 12,
+  color: colors.grey.dark,
+  marginTop: 3,
+},
+chevron: {
+  alignSelf: 'center',
+},
+buttonContainer: {
+  paddingBottom: 10,
+},
+
+//*************END********************* */
         
 }) 
 

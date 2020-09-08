@@ -10,7 +10,10 @@ import Loader from '../../../components/Shared/Loader';
 import WorkoutTile from '../../../components/Workouts/WorkoutTile';
 import colors from '../../../styles/colors';
 import globalStyle from '../../../styles/globalStyles';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 86aeefdae6edb82ca139e702ed8edd4324a41641
 const homeSplitImages = [
   require('../../../../assets/images/splitImages/NINA-1.jpg'),
   require('../../../../assets/images/splitImages/NINA-2.jpg'),
@@ -117,7 +120,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     ));
 
     return (
-      <View style={globalStyle.container}>
+      <View style={[globalStyle.container,{paddingHorizontal:0}]}>
         {workoutList}
         <Loader
           loading={loading}
@@ -128,13 +131,3 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 5,
-    paddingBottom: 5,
-  },
-});
