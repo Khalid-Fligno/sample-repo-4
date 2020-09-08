@@ -52,8 +52,8 @@ export const workoutsStartButtonMap = {
 
 export const nutritionBackButtonMap = {
   NutritionHome: true,
-  RecipeSelection: true,
-  Recipe: true,
+  RecipeSelection: false,
+  Recipe: false,
   RecipeSteps: true,
 };
 

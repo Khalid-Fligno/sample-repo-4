@@ -36,10 +36,11 @@ const NutritionStack = createStackNavigator(
           <Header
             navigation={navigation}
             withBackButton={nutritionBackButtonMap[routeName]}
-            withStartButton={routeName === 'Recipe'}
-            withProfileButton={routeName === 'NutritionHome'}
+            // withStartButton={(routeName === 'Recipe')}
+            withProfileButton={true}
             stack="nutrition"
-            headerTitleParams={routeName === 'RecipeSelection' ? mealNameMap[navigation.getParam('meal', null)] : findNutritionHeaderTitle(routeName)}
+            // headerTitleParams={routeName === 'RecipeSelection' ? mealNameMap[navigation.getParam('meal', null)] : findNutritionHeaderTitle(routeName)}
+            // headerTitleParams={routeName === 'RecipeSelection' }
           />
         );
       },

@@ -20,7 +20,7 @@ import HelperModal from '../../../components/Shared/HelperModal';
 import { db } from '../../../../config/firebase';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
-
+import Tile from '../../../components/Shared/Tile';
 const { width } = Dimensions.get('window');
 
 const workoutTypes = [
@@ -227,6 +227,11 @@ class WorkoutsHomeScreen extends React.PureComponent {
     } = this.state;
     return (
       <View style={styles.container}>
+         {/* <Tile
+              title1="Breakfast"
+              image={require('../../../../assets/images/nutrition-breakfast.jpg')}
+              onPress={() => navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
+            /> */}
         <View style={styles.carouselsContainer}>
           <View style={styles.flexContainer}>
             <View style={styles.carouselTitleContainer}>
@@ -242,6 +247,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
               itemWidth={width * 0.8}
               onSnapToItem={(slideIndex) => this.onSnapToItemTopCarousel('selectedWorkoutTypeIndex', slideIndex)}
             />
+           
           </View>
           <View style={styles.flexContainer}>
             <View style={styles.carouselTitleContainer}>

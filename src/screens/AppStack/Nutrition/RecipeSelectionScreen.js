@@ -5,6 +5,7 @@ import {
   Dimensions,
   Alert,
   FlatList,
+  Text,
 } from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 import * as FileSystem from 'expo-file-system';
@@ -15,6 +16,11 @@ import RecipeTileSkeleton from '../../../components/Nutrition/RecipeTileSkeleton
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import Icon from '../../../components/Shared/Icon';
+import globalStyle from '../../../styles/globalStyles';
+import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
+import CustomButtonGroup from '../../../components/Shared/CustomButtonGroup';
 
 const { width } = Dimensions.get('window');
 
@@ -84,7 +90,14 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       newBadge={item.newBadge}
     />
   );
+
+  handleBack = () => {
+    const { navigation } = this.props;
+    navigation.pop();
+  }
+
   render() {
+    const meal = this.props.navigation.getParam('meal', null);
     const { recipes, loading, filterIndex } = this.state;
     const filterButtons = ['All', 'Vegetarian', 'Vegan', 'Gluten-Free'];
     const recipeList = sortBy(recipes, 'newBadge')
@@ -106,7 +119,19 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       </View>
     );
     return (
-      <View style={styles.container}>
+      <View style={globalStyle.container}>
+          <BigHeadingWithBackButton isBackButton = {true} 
+            bigTitleText = {meal} 
+            onPress={this.handleBack} 
+            backButtonText="Back to nutrition" 
+            isBigTitle={true}
+            isBackButton ={true}
+          />
+          <CustomButtonGroup  
+            onPress={this.updateFilter}
+            selectedIndex={filterIndex}
+            buttons={filterButtons}
+          />
         {
           loading ? skeleton : (
             <FlatList
@@ -114,22 +139,11 @@ export default class RecipeSelectionScreen extends React.PureComponent {
               data={recipeList}
               keyExtractor={this.keyExtractor}
               renderItem={this.renderItem}
+              showsVerticalScrollIndicator={false}
             />
           )
         }
-        <View style={styles.absoluteFilterButtonsContainer}>
-          <ButtonGroup
-            onPress={this.updateFilter}
-            selectedIndex={filterIndex}
-            buttons={filterButtons}
-            containerStyle={styles.filterButtonsContainer}
-            buttonStyle={styles.filterButton}
-            textStyle={styles.filterButtonText}
-            selectedButtonStyle={styles.filterButtonSelected}
-            selectedTextStyle={styles.filterButtonTextSelected}
-            innerBorderStyle={{ color: colors.violet.standard }}
-          />
-        </View>
+       
         <Loader
           loading={loading}
           color={colors.violet.standard}
@@ -140,50 +154,11 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.offWhite,
-    alignItems: 'center',
-  },
   scrollView: {
-    paddingTop: 35,
     paddingBottom: 15,
   },
-  absoluteFilterButtonsContainer: {
-    position: 'absolute',
-    top: 5,
-    left: 10,
-    width: width - 20,
-    shadowColor: colors.grey.dark,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.7,
-    shadowRadius: 2,
-  },
-  filterButtonsContainer: {
-    height: 30,
-    borderColor: colors.violet.standard,
-  },
-  filterButton: {
-    backgroundColor: colors.white,
-    borderColor: colors.violet.standard,
-  },
-  filterButtonText: {
-    fontFamily: fonts.standard,
-    fontSize: 11,
-    color: colors.violet.standard,
-    marginTop: 2,
-  },
-  filterButtonSelected: {
-    backgroundColor: colors.violet.standard,
-    borderColor: colors.violet.standard,
-  },
-  filterButtonTextSelected: {
-    fontFamily: fonts.standard,
-    fontSize: 11,
-    color: colors.white,
-    marginTop: 2,
-  },
   recipeTileSkeletonContainer: {
-    paddingTop: 35,
+    // paddingTop: 35,
   },
+
 });

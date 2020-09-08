@@ -7,6 +7,7 @@ import {
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 export default class ProgressBar extends React.PureComponent {
   constructor(props) {
@@ -20,7 +21,7 @@ export default class ProgressBar extends React.PureComponent {
     } = this.props;
     return (
       <View style={styles.container}>
-        <Text style={styles.progressBarLabel}>
+        {/* <Text style={styles.progressBarLabel}>
           {`${progressBarType} `}
           {completedWorkouts}/{progressBarType === 'Resistance' ? 3 : 2}
         </Text>
@@ -36,7 +37,28 @@ export default class ProgressBar extends React.PureComponent {
               progressBarType === 'HIIT' && completedWorkouts >= 2 && styles.progressBarFull,
             ]}
           />
-        </View>
+          
+        </View> */}
+        <AnimatedCircularProgress
+                  size={130}
+                  width={5}
+                  fill={(completedWorkouts/(progressBarType === 'Resistance' ? 3 : 2))*100}
+                  tintColor={colors.coral.standard}
+                  onAnimationComplete={() => console.log('onAnimationComplete')}
+                  backgroundColor="lightgray" >
+                     {
+                        (fill) => (
+                          <View>
+                            <Text style={styles.progressBarLabel}>
+                                <Text style={{fontSize:50,fontWeight:'100',fontFamily:'none',color:'#4c4d52'}}>{completedWorkouts}</Text>/{progressBarType === 'Resistance' ? 3 : 2}
+                            </Text>
+                            <Text>
+                             {`${progressBarType} `}
+                            </Text>
+                         </View>
+                        )
+                      }
+         </AnimatedCircularProgress>         
       </View>
     );
   }
@@ -55,10 +77,11 @@ const styles = StyleSheet.create({
   },
   progressBarLabel: {
     fontFamily: fonts.bold,
-    fontSize: 12,
-    color: colors.grey.dark,
-    marginTop: 3,
-    marginBottom: 3,
+    fontSize: 15,
+    color: colors.grey.medium,
+    textAlign:'center',
+    marginLeft:11,
+    marginBottom:0
   },
   progressBarOuter: {
     width: '100%',
