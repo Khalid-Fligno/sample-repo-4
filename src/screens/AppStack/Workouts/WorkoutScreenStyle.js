@@ -84,6 +84,21 @@ const WorkoutScreenStyle = StyleSheet.create({
       width,
       backgroundColor: colors.grey.light,
     },
+    hiitIcon: {
+      margin: 2,
+    },
+    workoutInfoFieldData: {
+      fontFamily: fonts.bold,
+      fontSize: 12,
+      color: colors.charcoal.standard,
+      marginTop: 8,
+    },
+    workoutPreviewContainer: {
+      width,
+      backgroundColor: colors.grey.light,
+      paddingTop: 13,
+      paddingBottom: 15,
+    },
     workoutPreviewHeaderContainer: {
       width,
       backgroundColor: colors.grey.light,
