@@ -7,9 +7,9 @@ import fonts from '../../styles/fonts'
 export default function Tag(props){
     return(
         <View
-        style={styles.tagCircle}
-        key={props.tag}
-      >
+          style={styles.tagCircle}
+          key={props.tag}
+        >
         <Text style={styles.tagText}>
           {props.tag}
         </Text>
