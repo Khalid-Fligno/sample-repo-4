@@ -17,6 +17,17 @@ import { Audio } from 'expo-av';
 import { appsFlyerDevKey, appId } from './config/appsFlyer';
 import SwitchNavigator from './config/router/index';
 import colors from './src/styles/colors';
+import { YellowBox } from 'react-native';
+import _ from 'lodash';
+
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+  if (message.indexOf('Setting a timer') <= -1) {
+    _console.warn(message);
+  }
+};
+
 
 let navigator;
 
@@ -95,7 +106,7 @@ export default class App extends React.PureComponent {
   render() {
     return (
       <View style={styles.appContainer}>
-        <StatusBar barStyle="light-content" />
+        <StatusBar barStyle="light-content"  />
         <SwitchNavigator
           ref={(navigatorRef) => setTopLevelNavigator(navigatorRef)}
         />
@@ -103,6 +114,7 @@ export default class App extends React.PureComponent {
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   appContainer: {

@@ -25,7 +25,9 @@ const headerContainer = {
   alignItems: 'center',
   height: 50,
   borderBottomWidth: 0,
-  backgroundColor:colors.white
+  backgroundColor:colors.white,
+  borderBottomWidth:1,
+  borderBottomColor:colors.grey.light
 };
 
 export default class Header extends React.PureComponent {
@@ -124,7 +126,7 @@ export default class Header extends React.PureComponent {
                 <Icon
                   name="chevron-left"
                   size={20}
-                  color={colors.black}
+                  color={colors.coral.standard}
                 />
               </TouchableOpacity>
             )
@@ -138,7 +140,7 @@ export default class Header extends React.PureComponent {
                 <Icon
                   name="question-speech-bubble"
                   size={30}
-                  color={colors.white}
+                  color={colors.coral.standard}
                 />
               </TouchableOpacity>
             )
@@ -223,7 +225,7 @@ export default class Header extends React.PureComponent {
                 <Icon
                   name="chevron-right"
                   size={20}
-                  color={colors.white}
+                  color={colors.black}
                 />
               </TouchableOpacity>
             )
@@ -310,13 +312,13 @@ const styles = StyleSheet.create({
   skipButton: {
     fontFamily: fonts.standard,
     fontSize: 16,
-    color: colors.white,
+    color: colors.black,
     marginTop: 5,
     marginRight: 4,
   },
   defaultHeader: {
     ...headerContainer,
-    backgroundColor: colors.white,
+    backgroundColor: colors.headerBackground,
     marginTop: Platform.OS === 'android' ? StatusBar.currentHeight+1 : 0
   },
   nutritionHeader: {

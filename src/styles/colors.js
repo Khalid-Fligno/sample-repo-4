@@ -54,7 +54,10 @@ const colors = {
   red:{
     standard:'rgb(255,0,0)'
   },
-  facebookBlue: 'rgb(59,89,152)', // #3B5998
+  facebookBlue: 'rgb(59,89,152)', // #3B5998,
+  
+  headerBackground:'rgb(255, 255, 255)',
+  containerBackground:'rgb(250, 250, 250)'
 };
 
 export default colors;

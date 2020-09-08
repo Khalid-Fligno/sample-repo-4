@@ -21,6 +21,7 @@ import Icon from '../../../components/Shared/Icon';
 import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 
 const moment = require('moment');
 
@@ -86,6 +87,10 @@ export default class RecipeScreen extends React.PureComponent {
       { cancelable: false },
     );
   }
+  handleBack = () => {
+    const { navigation } = this.props;
+    navigation.pop();
+  }
   render() {
     const {
       recipe,
@@ -99,18 +104,29 @@ export default class RecipeScreen extends React.PureComponent {
     } = this.state;
     return (
       <View style={styles.container}>
+       
         <ParallaxScrollView
           outputScaleValue={2}
           backgroundScrollSpeed={2}
           contentBackgroundColor={colors.white}
           parallaxHeaderHeight={width}
           renderBackground={() => (
-            <Image
-              source={{ uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
-              width={width}
-            />
+            <View style={{backgroundColor:colors.offWhite}}>
+              <View style={{marginBottom:-25,marginHorizontal:20}}>
+                <BigHeadingWithBackButton isBackButton = {true} 
+                  onPress={this.handleBack} 
+                  backButtonText="Back to breakfasts" 
+                  isBigTitle ={false}
+                  />
+                </View>
+              <Image
+                source={{ uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
+                width={width}
+              />
+            </View>
           )}
         >
+          
           <Modal
             isVisible={modalVisible}
             animationIn="fadeIn"
@@ -356,7 +372,7 @@ export default class RecipeScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.containerBackground,
     alignItems: 'center',
     justifyContent: 'center',
   },

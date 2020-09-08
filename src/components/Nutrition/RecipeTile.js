@@ -24,6 +24,7 @@ export default class RecipeTile extends React.PureComponent {
   handlePressIn = () => {
     Animated.spring(this.animatedValue, {
       toValue: 0.92,
+      useNativeDriver:true
     }).start();
   }
   handlePressOut = () => {
@@ -31,6 +32,7 @@ export default class RecipeTile extends React.PureComponent {
       toValue: 1,
       friction: 3,
       tension: 40,
+      useNativeDriver:true
     }).start();
   }
   render() {
@@ -61,47 +63,50 @@ export default class RecipeTile extends React.PureComponent {
             image={{ uri: image }}
             containerStyle={styles.card}
           >
-            <View style={styles.titleRow}>
-              <Text style={styles.title}>
-                {title}
-              </Text>
-              {newBadge && <NewRecipeBadge />}
-            </View>
-            <Text style={styles.subTitle}>
-              {subTitle}
-            </Text>
-            <View
-              style={styles.recipeInfoContainer}
-            >
-              <View style={styles.recipeInfoSection}>
-                {
-                  tags && tags.map((tag) => (
-                    <View
-                      style={styles.tagCircle}
-                      key={tag}
-                    >
-                      <Text style={styles.tagText}>
-                        {tag}
-                      </Text>
-                    </View>
-                  ))
-                }
+            <View style={{flexDirection:'row' ,justifyContent:'space-between'}}>
+              <View style={styles.titleRow}>
+                <Text style={styles.title}>
+                  {title} { newBadge && <NewRecipeBadge />}
+                </Text>
+                
               </View>
-              <View style={styles.recipeInfoSection}>
-                {
-                  time && (
-                    <View style={styles.recipeInfoSection}>
-                      <Icon
-                        name="timer"
-                        size={25}
-                        color={colors.violet.standard}
-                      />
-                      <Text style={styles.timerText}>
-                        {time}
-                      </Text>
-                    </View>
-                  )
-                }
+              {/* <Text style={styles.subTitle}>
+                {subTitle}
+              </Text> */}
+              <View
+                style={styles.recipeInfoContainer}
+              >
+                <View style={styles.recipeInfoSection}>
+                  {
+                    tags && tags.map((tag) => (
+                      <View
+                        style={styles.tagCircle}
+                        key={tag}
+                      >
+                        <Text style={styles.tagText}>
+                          {tag}
+                        </Text>
+                      </View>
+                    ))
+                  }
+                </View>
+                <View style={styles.recipeInfoSection}>
+                  {
+                    time && (
+                      <View style={styles.timerContainer}>
+                         <Text style={styles.timerText}>
+                          {time}
+                        </Text>
+                        <Icon
+                          name="timer"
+                          size={22}
+                          color={colors.black}
+                        />
+                       
+                      </View>
+                    )
+                  }
+                </View>
               </View>
             </View>
           </Card>
@@ -129,7 +134,6 @@ RecipeTile.defaultProps = {
 const styles = StyleSheet.create({
   cardContainer: {
     margin: 0,
-    width,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: colors.charcoal.standard,
@@ -141,7 +145,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
-    width: width - 20,
+    width: width - 40,
     borderRadius: 3,
     overflow: 'hidden',
     borderWidth: 0,
@@ -149,10 +153,12 @@ const styles = StyleSheet.create({
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    maxWidth:'60%'
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 16,
+    fontSize: 14,
+    lineHeight:18
   },
   subTitle: {
     fontFamily: fonts.standardItalic,
@@ -160,34 +166,42 @@ const styles = StyleSheet.create({
   },
   recipeInfoContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 3,
+    // justifyContent: 'space-between',
   },
   recipeInfoSection: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   tagCircle: {
-    height: 28,
-    width: 28,
+    height: 22,
+    width: 22,
     marginRight: 5,
-    borderWidth: 2.5,
-    borderColor: colors.violet.standard,
+    borderWidth: 0,
+    // borderColor: colors.violet.standard,
     borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor:colors.coral.standard,
+    alignSelf:'baseline'
   },
   tagText: {
     fontFamily: fonts.bold,
-    fontSize: 12,
-    color: colors.violet.standard,
-    marginTop: 4,
+    fontSize: 9,
+    color: colors.white,
+    // marginTop: 4,
   },
   timerText: {
     fontFamily: fonts.standard,
     fontSize: 12,
-    color: colors.violet.standard,
-    marginTop: 6,
+    color: colors.grey.dark,
     marginLeft: 4,
+    alignSelf:'center',
+    marginRight:5
+
   },
+  timerContainer : {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf:'baseline',
+  }
 });

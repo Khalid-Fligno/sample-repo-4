@@ -21,8 +21,8 @@ export default class RecipeTileSkeleton extends React.PureComponent {
           containerStyle={styles.card}
         >
           <View style={styles.skeletonTextContainer}>
-            <View style={styles.skeletonTitle} />
-            <View style={styles.skeletonSubtitle} />
+            {/* <View style={styles.skeletonTitle} /> */}
+            {/* <View style={styles.skeletonSubtitle} /> */}
             <View style={styles.skeletonTags} />
           </View>
         </Card>
@@ -34,7 +34,6 @@ export default class RecipeTileSkeleton extends React.PureComponent {
 const styles = StyleSheet.create({
   cardContainer: {
     margin: 0,
-    width,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: colors.charcoal.standard,
@@ -43,13 +42,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   card: {
-    width: width - 20,
+    width: width - 40,
     borderRadius: 3,
     overflow: 'hidden',
     borderWidth: 0,
   },
   skeletonTextContainer: {
-    height: 65,
     backgroundColor: colors.white,
   },
   skeletonTitle: {
@@ -68,7 +66,6 @@ const styles = StyleSheet.create({
   },
   skeletonTags: {
     height: 28,
-    width: width - 40,
     backgroundColor: colors.grey.light,
     borderRadius: 2,
   },

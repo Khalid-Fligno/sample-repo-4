@@ -13,7 +13,7 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
-
+var tileHeight = 200;
 export default class Tile extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -39,7 +39,10 @@ export default class Tile extends React.PureComponent {
       title1,
       image,
       disabled,
+      showTitle,
+      height
     } = this.props;
+    tileHeight = height
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
@@ -66,9 +69,9 @@ export default class Tile extends React.PureComponent {
           </ImageBackground>
         </Animated.View>
         <View>
-          <Text style={styles.title}>
+         { showTitle && (<Text style={styles.title}>
             {title1}
-          </Text>
+          </Text>)}
         </View>
       </TouchableOpacity>
     );
@@ -90,15 +93,13 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 0.25,
     margin: 5,
-    paddingLeft:20,
-    paddingRight:20,
     marginTop:0,
     width,
     shadowColor: colors.charcoal.standard,
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
-    height:200
+    height:tileHeight
   },
   flexContainer: {
     flex: 1,
