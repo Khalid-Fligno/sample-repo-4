@@ -24,7 +24,7 @@ import { findReps } from '../../../utils';
 import { findFocus, findLocation } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
-
+import globalStyle from '../../../styles/globalStyles';
 const { width } = Dimensions.get('window');
 
 const recommendedWorkoutMap = {
@@ -532,7 +532,7 @@ class CalendarHomeScreen extends React.PureComponent {
       </ScrollView>
     );
     return (
-      <View style={styles.container}>
+      <View style={[styles.container,{paddingHorizontal:0}]}>
         <View style={styles.calendarStripContainer}>
           <CalendarStrip
             ref={this.calendarStrip}
@@ -541,11 +541,11 @@ class CalendarHomeScreen extends React.PureComponent {
             daySelectionAnimation={{
               type: 'background',
               duration: 400,
-              highlightColor: colors.green.standard,
+              highlightColor: colors.white,
             }}
             style={styles.calendarStrip}
             calendarHeaderStyle={styles.calendarStripHeader}
-            calendarColor={colors.green.dark}
+            calendarColor={colors.red.light}
             dateNumberStyle={{
               fontFamily: fonts.bold,
               color: colors.white,
@@ -588,11 +588,11 @@ class CalendarHomeScreen extends React.PureComponent {
             Once you have scheduled these, you can go directly to your workout or recipe from this screen.
           "
           bodyText3={'How to add a workout or recipe:\n- Select a recipe/workout\n- On the recipe/workout screen, press ‘Add to Calendar’\n- Select the day you would like to schedule this for'}
-          color="green"
+          color="red"
         />
         <Loader
           loading={loading}
-          color={colors.green.standard}
+          color={colors.red.standard}
         />
       </View>
     );

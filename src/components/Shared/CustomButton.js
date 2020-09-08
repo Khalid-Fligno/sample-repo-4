@@ -15,6 +15,7 @@ const CustomButton = ({
   secondary,
   green,
   blue,
+  red,
   outline,
   loading,
   round
@@ -35,6 +36,7 @@ const CustomButton = ({
       green && styles.green,
       green && outline && styles.greenOutline,
       blue && styles.blue,
+      red && styles.red,
     ]}
     titleStyle={[
       styles.whiteText,
@@ -228,6 +230,12 @@ const styles = StyleSheet.create({
     ...common.button.solid,
     backgroundColor: colors.blue.dark,
     shadowColor: colors.grey.dark,
+
+  },
+  red: {
+    ...common.button.solid,
+    backgroundColor: colors.red.light,
+    shadowColor: colors.red.light,
 
   },
 });

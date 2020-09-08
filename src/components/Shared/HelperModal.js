@@ -61,6 +61,7 @@ export default class HelperModal extends React.PureComponent {
                 color === 'violet' && styles.modalButtonViolet,
                 color === 'blue' && styles.modalButtonBlue,
                 color === 'green' && styles.modalButtonGreen,
+                color === 'red' && styles.modalButtonRed,
               ]}
             >
               <Text style={styles.modalButtonText}>
@@ -155,6 +156,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.green.standard,
+    height: 50,
+    width: '100%',
+  },
+  modalButtonRed: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.red.standard,
     height: 50,
     width: '100%',
   },
