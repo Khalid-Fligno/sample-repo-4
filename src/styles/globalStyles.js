@@ -4,11 +4,12 @@ import { StyleSheet, Dimensions } from 'react-native'
 import colors from './colors';
 
 const { width } = Dimensions.get('window');
+export const containerPadding = 20
 const globalStyle = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.containerBackground,
-        paddingHorizontal:20,
+        paddingHorizontal:containerPadding,
     },
 
   //Big Heading Back Button

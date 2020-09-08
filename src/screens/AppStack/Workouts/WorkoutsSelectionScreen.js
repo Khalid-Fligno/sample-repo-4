@@ -9,6 +9,7 @@ import { findReps } from '../../../utils/index';
 import Loader from '../../../components/Shared/Loader';
 import WorkoutTile from '../../../components/Workouts/WorkoutTile';
 import colors from '../../../styles/colors';
+import globalStyle from '../../../styles/globalStyles';
 
 const homeSplitImages = [
   require('../../../../assets/images/splitImages/NINA-1.jpg'),
@@ -116,7 +117,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     ));
 
     return (
-      <View style={styles.container}>
+      <View style={globalStyle.container}>
         {workoutList}
         <Loader
           loading={loading}

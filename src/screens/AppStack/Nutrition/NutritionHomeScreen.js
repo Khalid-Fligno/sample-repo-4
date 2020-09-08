@@ -30,6 +30,7 @@ export default function NutritionHomeScreen({ navigation }) {
           image={require('../../../../assets/images/nutrition-breakfast.jpg')}
           onPress={() => navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
           showTitle = {true}
+          overlayTitle = {false}
           height={200}
         />
       
@@ -38,6 +39,7 @@ export default function NutritionHomeScreen({ navigation }) {
           image={require('../../../../assets/images/nutrition-lunch.jpg')}
           onPress={() => navigation.navigate('RecipeSelection', { meal: 'lunch' })}
           showTitle = {true}
+          overlayTitle = {false}
           height={200}
         />
         <Tile
@@ -45,6 +47,7 @@ export default function NutritionHomeScreen({ navigation }) {
           image={require('../../../../assets/images/nutrition-dinner.jpg')}
           onPress={() => navigation.navigate('RecipeSelection', { meal: 'dinner' })}
           showTitle = {true}
+          overlayTitle = {false}
           height={200}
         />
         <Tile
@@ -52,6 +55,7 @@ export default function NutritionHomeScreen({ navigation }) {
           image={require('../../../../assets/images/nutrition-snack.jpg')}
           onPress={() => navigation.navigate('RecipeSelection', { meal: 'snack' })}
           showTitle = {true}
+          overlayTitle = {false}
           height={200}
         />
        </View>

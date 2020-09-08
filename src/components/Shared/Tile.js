@@ -40,6 +40,7 @@ export default class Tile extends React.PureComponent {
       image,
       disabled,
       showTitle,
+      overlayTitle,
       height
     } = this.props;
     tileHeight = height
@@ -61,11 +62,13 @@ export default class Tile extends React.PureComponent {
             source={image}
             style={styles.image}
           >
-            <View style={styles.opacityLayer}>
-              {/* <Text style={styles.title}>
-                {title1.toUpperCase()}
-              </Text> */}
-            </View>
+            {
+              overlayTitle && (<View style={styles.opacityLayer}>
+                <Text style={styles.title}>
+                 {title1.toUpperCase()}
+                </Text>
+              </View>)
+            } 
           </ImageBackground>
         </Animated.View>
         <View>

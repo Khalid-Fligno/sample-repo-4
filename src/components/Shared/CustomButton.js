@@ -17,6 +17,7 @@ const CustomButton = ({
   blue,
   outline,
   loading,
+  round
 }) => (
   <Button
     title={title}
@@ -30,7 +31,7 @@ const CustomButton = ({
       primary && styles.primary,
       primary && outline && styles.primaryOutline,
       secondary && styles.secondary,
-      secondary && outline && styles.secondaryOutline,
+      round && styles.orangeRound,
       green && styles.green,
       green && outline && styles.greenOutline,
       blue && styles.blue,
@@ -58,13 +59,13 @@ const CustomButton = ({
     ]}
   />
 );
-
 CustomButton.propTypes = {
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   primary: PropTypes.bool,
   secondary: PropTypes.bool,
   outline: PropTypes.bool,
+  round: PropTypes.bool,
   disabled: PropTypes.bool,
   green: PropTypes.bool,
   blue: PropTypes.bool,
@@ -75,6 +76,7 @@ CustomButton.defaultProps = {
   primary: false,
   secondary: false,
   outline: false,
+  round: false,
   disabled: false,
   green: false,
   blue: false,
@@ -92,6 +94,17 @@ const common = {
       shadowOpacity: 0.8,
       shadowOffset: { width: 0, height: 2 },
       shadowRadius: 2,
+    },
+    round: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 45,
+      width:"100%",
+      borderRadius: 50,
+      shadowOpacity: 0.8,
+      shadowOffset: { width: 0, height: 2 },
+      shadowRadius: 2,
+      padding:30
     },
     outline: {
       justifyContent: 'center',
@@ -167,6 +180,11 @@ const styles = StyleSheet.create({
   secondary: {
     ...common.button.solid,
     backgroundColor: colors.violet.standard,
+    shadowColor: colors.grey.dark,
+  },
+  orangeRound: {
+    ...common.button.round,
+    backgroundColor:colors.coral.standard,
     shadowColor: colors.grey.dark,
   },
   secondaryDisabled: {
