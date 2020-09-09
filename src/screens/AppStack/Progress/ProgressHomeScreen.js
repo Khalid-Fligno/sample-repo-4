@@ -307,22 +307,40 @@ class ProgressHomeScreen extends React.PureComponent {
                 WEEKLY WORKOUT PROGRESS
               </Text>
             </View>
-            {
-              profile && (
-                <ProgressBar
-                  progressBarType="Resistance"
-                  completedWorkouts={profile.weeklyTargets.resistanceWeeklyComplete}
-                />
-              )
-            }
-            {
-              profile && (
-                <ProgressBar
-                  progressBarType="HIIT"
-                  completedWorkouts={profile.weeklyTargets.hiitWeeklyComplete}
-                />
-              )
-            }
+            <View style={{flexDirection:'row',justifyContent:"space-between",width:"100%"}}>
+                    {
+                      profile && (
+                        <View>
+                          <ProgressBar
+                            progressBarType="Resistance"
+                            completedWorkouts={profile.weeklyTargets.resistanceWeeklyComplete}
+                          />
+                        </View>
+                      )
+                    }
+                    {
+                      profile && (
+                        <View>
+                          <ProgressBar
+                            progressBarType="HIIT"
+                            completedWorkouts={profile.weeklyTargets.hiitWeeklyComplete}
+                          />
+                        </View>
+                      )
+                    }
+                </View>
+                <View style={{width:'100%',flexDirection:"row",justifyContent:"center",marginTop:-30}}>
+                    {
+                          profile && (
+                            <View>
+                              <ProgressBar
+                                progressBarType="HIIT"
+                                completedWorkouts={profile.weeklyTargets.hiitWeeklyComplete}
+                              />
+                            </View>
+                          )
+                        }
+                </View>
           </View>
         </ScrollView>
         <HelperModal

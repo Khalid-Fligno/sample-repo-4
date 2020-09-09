@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import WorkoutsHomeScreen from '../../src/screens/AppStack/Workouts/WorkoutsHomeScreen';
+import WorkoutsHomeScreen2 from '../../src/screens/AppStack/Workouts/WorkoutsHomeScreen2';
 import WorkoutsSelectionScreen from '../../src/screens/AppStack/Workouts/WorkoutsSelectionScreen';
 import HiitWorkoutsSelectionScreen from '../../src/screens/AppStack/Workouts/HiitWorkoutsSelectionScreen';
 import WorkoutInfoScreen from '../../src/screens/AppStack/Workouts/WorkoutInfoScreen';
@@ -17,7 +18,8 @@ import {
 
 const WorkoutsStack = createStackNavigator(
   {
-    WorkoutsHome: WorkoutsHomeScreen,
+    //WorkoutsHome: WorkoutsHomeScreen,
+    WorkoutsHome: WorkoutsHomeScreen2,
     WorkoutsSelection: WorkoutsSelectionScreen,
     HiitWorkoutsSelection: HiitWorkoutsSelectionScreen,
     WorkoutInfo: WorkoutInfoScreen,
