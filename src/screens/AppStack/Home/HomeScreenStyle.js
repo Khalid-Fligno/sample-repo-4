@@ -44,10 +44,13 @@ const HomeScreenStyle = StyleSheet.create({
       paddingLeft:0
     },
     bodyText: {
-      fontFamily: fonts.standard,
+      fontFamily: fonts.bold,
       fontSize: 12,
-      color: colors.gray,
-      fontWeight:'500'
+      color: colors.transparentBlackDark,
+      fontWeight:'500',
+      paddingVertical:20,
+      textAlign:"center",
+      width:'100%'
     },
     recommendedWorkoutContainer: {
       flexDirection: 'row',
@@ -104,7 +107,8 @@ const HomeScreenStyle = StyleSheet.create({
     roundButtonContainer: {
       flex: 1,
       flexDirection: 'row',
-      justifyContent: 'space-between'
+      height:60,
+   
     },
    
   });
