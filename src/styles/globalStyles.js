@@ -11,7 +11,14 @@ const globalStyle = StyleSheet.create({
         backgroundColor: colors.containerBackground,
         paddingHorizontal:containerPadding,
     },
-
+    safeContainer: {
+      flex: 1,
+      backgroundColor: colors.containerBackground,
+    },
+    scrollView: {
+      paddingTop: 15,
+      alignItems: 'center',
+    },
   //Big Heading Back Button
       bigHeadingTitleContainer:{
           height:70,

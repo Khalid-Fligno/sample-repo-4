@@ -20,7 +20,8 @@ import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
-
+import globalStyle from '../../../styles/globalStyles';
+import ProfileStyles from './ProfileStyles';
 const moment = require('moment-timezone');
 
 const { width } = Dimensions.get('window');
@@ -91,33 +92,33 @@ export default class ProfileHomeScreen extends React.PureComponent {
       chosenDate,
     } = this.state;
     return (
-      <SafeAreaView style={styles.safeContainer}>
-        <View style={styles.container}>
-          <ScrollView contentContainerStyle={styles.scrollView}>
-            <View style={styles.listContainer}>
+      <SafeAreaView style={globalStyle.safeContainer}>
+        <View style={[globalStyle.container,{paddingHorizontal:0}]}>
+          <ScrollView contentContainerStyle={globalStyle.scrollView}>
+            <View style={ProfileStyles.listContainer}>
               <ListItem
                 title="Name"
-                titleStyle={styles.listItemTitleStyle}
+                titleStyle={ProfileStyles.listItemTitleStyle}
                 subtitle={`${profile && profile.firstName} ${profile && profile.lastName}`}
-                subtitleStyle={styles.listItemSubtitleStyle}
-                containerStyle={styles.listItemContainer}
+                subtitleStyle={ProfileStyles.listItemSubtitleStyle}
+                containerStyle={ProfileStyles.listItemContainer}
                 hideChevron
               />
               <ListItem
                 title="DOB"
-                titleStyle={styles.listItemTitleStyle}
+                titleStyle={ProfileStyles.listItemTitleStyle}
                 subtitle={profile && profile.dob}
-                subtitleStyle={styles.listItemSubtitleStyle}
-                containerStyle={styles.listItemContainer}
+                subtitleStyle={ProfileStyles.listItemSubtitleStyle}
+                containerStyle={ProfileStyles.listItemContainer}
                 hideChevron
                 onPress={this.toggleDobModal}
               />
               <ListItem
                 title="Email"
-                titleStyle={styles.listItemTitleStyle}
+                titleStyle={ProfileStyles.listItemTitleStyle}
                 subtitle={profile && profile.email}
-                subtitleStyle={styles.listItemSubtitleStyle}
-                containerStyle={styles.listItemContainer}
+                subtitleStyle={ProfileStyles.listItemSubtitleStyle}
+                containerStyle={ProfileStyles.listItemContainer}
                 hideChevron
                 onPress={() => {
                   if (profile && profile.email) {
@@ -128,10 +129,10 @@ export default class ProfileHomeScreen extends React.PureComponent {
               />
               <ListItem
                 title="Timezone"
-                titleStyle={styles.listItemTitleStyle}
+                titleStyle={ProfileStyles.listItemTitleStyle}
                 subtitle={timezone}
-                subtitleStyle={styles.listItemSubtitleStyle}
-                containerStyle={styles.listItemContainerBottom}
+                subtitleStyle={ProfileStyles.listItemSubtitleStyle}
+                containerStyle={ProfileStyles.listItemContainerBottom}
                 hideChevron
               />
             </View>
@@ -149,7 +150,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
           animationOut="fadeOut"
           animationOutTiming={600}
         >
-          <View style={styles.modalContainer}>
+          <View style={globalStyle.modalContainer}>
             <DateTimePicker
               mode="date"
               value={chosenDate}
@@ -163,9 +164,9 @@ export default class ProfileHomeScreen extends React.PureComponent {
             <TouchableOpacity
               title="DONE"
               onPress={this.saveNewDob}
-              style={styles.modalButton}
+              style={globalStyle.modalButton}
             >
-              <Text style={styles.modalButtonText}>
+              <Text style={globalStyle.modalButtonText}>
                 DONE
               </Text>
             </TouchableOpacity>
@@ -176,63 +177,3 @@ export default class ProfileHomeScreen extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
-  safeContainer: {
-    flex: 1,
-    backgroundColor: colors.black,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: colors.offWhite,
-    alignItems: 'center',
-  },
-  scrollView: {
-    paddingTop: 15,
-    alignItems: 'center',
-  },
-  listContainer: {
-    width,
-    marginBottom: 20,
-    shadowColor: colors.grey.standard,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-  },
-  listItemContainer: {
-    borderBottomColor: colors.grey.light,
-    backgroundColor: colors.white,
-    borderBottomWidth: 1,
-  },
-  listItemContainerBottom: {
-    backgroundColor: colors.white,
-  },
-  listItemTitleStyle: {
-    fontFamily: fonts.bold,
-    color: colors.grey.standard,
-    fontSize: 14,
-  },
-  listItemSubtitleStyle: {
-    fontFamily: fonts.bold,
-    color: colors.charcoal.standard,
-    fontSize: 14,
-    marginTop: 5,
-  },
-  modalContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.coral.standard,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
-});

@@ -8,6 +8,8 @@ import { db, auth } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+import globalStyle from '../../../styles/globalStyles';
+import ProfileStyles from './ProfileStyles';
 
 const { width } = Dimensions.get('window');
 
@@ -108,17 +110,17 @@ export default class SettingsScreen extends React.PureComponent {
   render() {
     const { isPasswordAccount, profile, loading } = this.state;
     return (
-      <SafeAreaView style={styles.safeContainer}>
-        <View style={styles.container}>
-          <ScrollView contentContainerStyle={styles.scrollView}>
-            <View style={styles.listContainer}>
+      <SafeAreaView style={globalStyle.safeContainer}>
+        <View style={[globalStyle.container,{paddingHorizontal:0}]}>
+          <ScrollView contentContainerStyle={globalStyle.scrollView}>
+            <View style={ProfileStyles.listContainer}>
               {
                 // Only show password change if an email/password account is present
                 isPasswordAccount && (
                   <ListItem
                     title="Change Password"
-                    titleStyle={styles.listItemTitle}
-                    containerStyle={styles.listItemContainer}
+                    titleStyle={ProfileStyles.listItemTitle}
+                    containerStyle={ProfileStyles.listItemContainer}
                     rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                     onPress={() => this.changePasswordAlert()}
                   />
@@ -129,9 +131,9 @@ export default class SettingsScreen extends React.PureComponent {
                 profile && (
                   <ListItem
                     title="Reset initial progress info"
-                    titleStyle={styles.listItemTitle}
+                    titleStyle={ProfileStyles.listItemTitle}
                     disabled={profile && !profile.initialProgressInfo}
-                    containerStyle={styles.listItemContainer}
+                    containerStyle={ProfileStyles.listItemContainer}
                     rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                     onPress={() => this.resetProgressAlert()}
                   />
@@ -139,8 +141,8 @@ export default class SettingsScreen extends React.PureComponent {
               }
               <ListItem
                 title="Re-take burpee test"
-                titleStyle={styles.listItemTitle}
-                containerStyle={styles.listItemContainerBottom}
+                titleStyle={ProfileStyles.listItemTitle}
+                containerStyle={ProfileStyles.listItemContainerBottom}
                 rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                 onPress={() => this.retakeBurpeeTest()}
               />
@@ -156,45 +158,3 @@ export default class SettingsScreen extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
-  safeContainer: {
-    flex: 1,
-    backgroundColor: colors.black,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: colors.offWhite,
-    alignItems: 'center',
-  },
-  scrollView: {
-    paddingTop: 15,
-    alignItems: 'center',
-  },
-  listContainer: {
-    width,
-    marginBottom: 20,
-    shadowColor: colors.grey.standard,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-  },
-  listItemContainer: {
-    paddingTop: 15,
-    paddingBottom: 15,
-    borderBottomColor: colors.grey.light,
-    borderBottomWidth: 1,
-    backgroundColor: colors.white,
-  },
-  listItemContainerBottom: {
-    paddingTop: 15,
-    paddingBottom: 15,
-    borderBottomWidth: 0,
-    backgroundColor: colors.white,
-  },
-  listItemTitle: {
-    fontFamily: fonts.bold,
-    color: colors.charcoal.standard,
-    marginTop: 5,
-    fontSize: 14,
-  },
-});
