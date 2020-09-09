@@ -81,7 +81,7 @@ const globalStyle = StyleSheet.create({
       },
 //*********** END***************/ 
 
-//*************Component**************** */
+//*************Component model**************** */
 modalContainer: {
   backgroundColor: colors.white,
   borderRadius: 4,
@@ -139,7 +139,80 @@ buttonContainer: {
 },
 
 //*************END********************* */
-        
+/**************Start****************** */     
+defaultHeaderShadow: {
+  backgroundColor: colors.black,
+  shadowColor: colors.charcoal.dark,
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.5,
+  shadowRadius: 2,
+},
+noShadow: {
+  backgroundColor: colors.black,
+  shadowOffset: { width: 0, height: 0 },
+  shadowOpacity: 0,
+  shadowRadius: 0,
+  borderBottomWidth: 0,
+},
+logoutButton: {
+  fontFamily: fonts.standard,
+  fontSize: 16,
+  color: colors.white,
+  marginTop: 5,
+  marginLeft: 4,
+},
+skipButton: {
+  fontFamily: fonts.standard,
+  fontSize: 16,
+  color: colors.black,
+  marginTop: 5,
+  marginRight: 4,
+},
+
+headerContentContainer: {
+  flexGrow: 1,
+  height: 50,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+headerContentContainerLeft: {
+  flex: 1,
+  height: 50,
+  paddingLeft: 10,
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+},
+headerContentContainerRight: {
+  flex: 1,
+  height: 50,
+  paddingRight: 10,
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+},
+headerContentContainerRightLoading: {
+  flex: 1,
+  height: 50,
+  paddingRight: 10,
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+},
+activityIndicator: {
+  marginRight: 10,
+},
+headerTitleText: {
+  fontFamily: fonts.bold,
+  fontSize: 16,
+  color: colors.black,
+  marginTop: 5,
+},
+fitazfkIcon: {
+  width: 120,
+  height: 50,
+},
+/**************END******************** */   
 }) 
 
 export default globalStyle

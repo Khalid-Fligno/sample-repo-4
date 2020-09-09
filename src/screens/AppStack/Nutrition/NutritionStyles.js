@@ -38,7 +38,7 @@ const NutritionStyles = StyleSheet.create({
     modalButton: {
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: colors.violet.standard,
+      backgroundColor: colors.black,
       height: 50,
       width: '100%',
       marginBottom: 0,
@@ -70,19 +70,19 @@ const NutritionStyles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       borderWidth: 2,
-      borderColor: colors.violet.standard,
+      borderColor: colors.red.standard,
       borderRadius: 4,
     },
     calendarMealButtonActive: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: colors.violet.standard,
+      backgroundColor: colors.red.standard,
     },
     calendarMealButtonText: {
       fontFamily: fonts.standard,
       fontSize: 14,
-      color: colors.violet.standard,
+      color: colors.red.standard,
     },
     calendarMealButtonTextActive: {
       fontFamily: fonts.standard,
@@ -140,6 +140,77 @@ const NutritionStyles = StyleSheet.create({
     },
 
     //****************End************* */
+    /*************Start******************* */
+    carouselCard: {
+      flex: 1,
+      marginTop: 12,
+      marginBottom: 12,
+      borderRadius: 5,
+      backgroundColor: colors.white,
+      shadowColor: colors.red.dark,
+      shadowOpacity: 0.4,
+      shadowOffset: { width: 0, height: 5 },
+      shadowRadius: 5,
+      borderWidth: 1,
+      borderColor: colors.red.dark,
+    },
+    carouselHeaderContainer: {
+      backgroundColor: colors.white,
+      borderRadius: 5,
+    },
+    carouselHeaderContentContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      borderBottomWidth: 1,
+      borderBottomColor: colors.red.dark,
+      borderTopLeftRadius: 5,
+      borderTopRightRadius: 5,
+    },
+    carouselHeaderText: {
+      fontFamily: fonts.bold,
+      fontSize: 16,
+      color: colors.red.standard,
+      marginTop: 3,
+    },
+    carouselHeaderButton: {
+      width: 45,
+      height: 45,
+      justifyContent: 'center',
+      alignItems: 'center',
+      shadowColor: colors.red.dark,
+      shadowOpacity: 0.4,
+      shadowOffset: { width: 0, height: 1 },
+      shadowRadius: 1,
+    },
+    carouselContentContainer: {
+      flex: 1,
+      backgroundColor: colors.offWhite,
+      borderBottomLeftRadius: 5,
+      borderBottomRightRadius: 5,
+    },
+    carouselBottomContainer: {
+      paddingTop: 10,
+      paddingRight: 10,
+      paddingBottom: 10,
+      paddingLeft: 10,
+    },
+    carouselTextContainer: {
+      backgroundColor: colors.red.standard,
+      borderRadius: 20,
+      borderBottomRightRadius: 4,
+      paddingTop: 10,
+      paddingRight: 10,
+      paddingBottom: 10,
+      paddingLeft: 12,
+    },
+    carouselText: {
+      fontFamily: fonts.medium,
+      fontSize: 14,
+      fontWeight: 'bold',
+      color: colors.white,
+    },
+    /*************End*********************** */
   });
   
   export default NutritionStyles

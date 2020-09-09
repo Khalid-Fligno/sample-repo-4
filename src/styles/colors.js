@@ -53,7 +53,8 @@ const colors = {
   },
   red:{
     standard:'rgb(255,0,0)',
-    light:'rgb(255,204,203)'
+    light:'rgb(255,204,203)',
+    dark:'rgb(139,0,0)'
   },
   facebookBlue: 'rgb(59,89,152)', // #3B5998,
   
