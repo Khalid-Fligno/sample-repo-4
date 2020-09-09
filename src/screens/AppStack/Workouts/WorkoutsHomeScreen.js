@@ -25,6 +25,11 @@ const { width } = Dimensions.get('window');
 import globalStyle from '../../../styles/globalStyles';
 import WorkoutScreenStyle from './WorkoutScreenStyle';
 
+const workout=[
+  {displayName:'Workout Focus',image: require('../../../../assets/images/workouts-resistance.jpg')},
+  {displayName:'Equipment',image: require('../../../../assets/images/workouts-resistance.jpg')},
+  {displayName:'Mascle Group',image: require('../../../../assets/images/workouts-resistance.jpg')}
+]
 const workoutTypes = [
   { displayName: 'RESISTANCE', resistance: true, image: require('../../../../assets/images/workouts-resistance.jpg') },
   { displayName: 'HIIT', hiit: true, image: require('../../../../assets/images/workouts-hiit.jpg') },
