@@ -11,10 +11,11 @@ import {
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import CustomBtn from '../Shared/CustomBtn';
 
 const { width } = Dimensions.get('window');
 
-export default class NewsFeedTile extends React.PureComponent {
+export default class WorkOutCard extends React.PureComponent {
   constructor(props) {
     super(props);
     this.animatedValue = new Animated.Value(1);
@@ -38,6 +39,8 @@ export default class NewsFeedTile extends React.PureComponent {
       onPress,
       title,
       image,
+      recommendedWorkout,
+      cardCustomStyle
     } = this.props;
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
@@ -69,7 +72,7 @@ export default class NewsFeedTile extends React.PureComponent {
       // </TouchableOpacity>
      
        
-          <View   style={[styles.cardContainer,{ height: (width ) / 2.2}]}>
+          <View   style={[styles.cardContainer,cardCustomStyle]}>
            <ImageBackground
              source={image}
              style={styles.image}
@@ -80,6 +83,19 @@ export default class NewsFeedTile extends React.PureComponent {
                    {title.toUpperCase()}
                  </Text>
                </View>
+               <View style={styles.innerViewContainer}>
+                    {recommendedWorkout.map(res=>(
+                      <Text key={res} style={{color:colors.coral.standard,fontFamily:fonts.bold}}> {res}</Text>)
+                    )}
+               </View>
+               <View style={{paddingLeft:30,paddingTop:12}}>
+                <CustomBtn 
+                    Title ="View full calender"
+                    customBtnStyle ={{width:"50%",padding:3,borderRadius:50,backgroundColor:colors.coral.standard}}
+                    customBtnTitleStyle = {{marginTop:0,fontSize:13,fontFamily:fonts.boldNarrow}}
+                    onPress = {onPress}
+                />
+               </View> 
              </View>
            </ImageBackground>
            </View>
@@ -87,10 +103,12 @@ export default class NewsFeedTile extends React.PureComponent {
   }
 }
 
-NewsFeedTile.propTypes = {
+WorkOutCard.propTypes = {
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   image: PropTypes.number.isRequired,
+  recommendedWorkout: PropTypes.array,
+  cardCustomStyle: PropTypes.object
 };
 
 const styles = StyleSheet.create({
@@ -111,26 +129,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    paddingTop:10
   },
   opacityLayer: {
     flex: 1,
     width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.transparentBlackLight,
+    justifyContent: 'flex-start',
+    backgroundColor:colors.transparentBlackLightest
   },
   titleContainer: {
     maxWidth: width / 1.8,
+    paddingTop:10,
+    paddingLeft:30
   },
   title: {
-    fontFamily: fonts.bold,
-    fontSize: 16,
-    color: colors.white,
-    textAlign: 'center',
+    fontFamily: fonts.boldNarrow,
+    fontSize: 28,
+    color: colors.offWhite,
+    textAlign:'left',
     shadowColor: colors.black,
     shadowOpacity: 1,
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 5,
+  },
+  innerViewContainer: {
+    maxWidth: width / 1.8,
+    paddingTop:12,
+    paddingLeft:30,
+    paddingTop:5,flexDirection:'row'
   },
 });

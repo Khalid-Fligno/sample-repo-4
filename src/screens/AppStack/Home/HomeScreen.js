@@ -27,6 +27,7 @@ import globalStyle from '../../../styles/globalStyles';
 import RoundButton from '../../../components/Home/RoundButton';
 import HomeScreenStyle from './HomeScreenStyle';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
+import WorkOutCard from '../../../components/Home/WorkoutCard';
 
 const workoutTypeMap = {
   1: 'Resistance',
@@ -123,7 +124,6 @@ export default class HomeScreen extends React.PureComponent {
     this.props.navigation.navigate('Burpee1');
   }
   render() {
-    
     const {
       loading,
       profile,
@@ -143,6 +143,14 @@ export default class HomeScreen extends React.PureComponent {
     };
 
     const bigHeadeingTitle = (switchWelcomeHeader ? 'Hi' : 'Hi').toString()+' ' + (profile ? profile.firstName:'').toString()
+   
+    let recommendedWorkout =[];
+
+    (dayOfWeek > 0 && dayOfWeek < 6) ? recommendedWorkout.push(workoutTypeMap[dayOfWeek]): recommendedWorkout.push(' Rest Day') 
+    if(dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) 
+      recommendedWorkout.push(resistanceFocusMap[dayOfWeek])
+      
+    console.log(recommendedWorkout)
     return (
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -160,7 +168,6 @@ export default class HomeScreen extends React.PureComponent {
                isBackButton = {false}
                isBigTitle = {true}
                />
-
               {/* <Text style={HomeScreenStyle.welcomeHeaderText}>
                 {switchWelcomeHeader ? 'Welcome back' : 'Hi'}{profile && `, ${profile.firstName}`}
               </Text> */}
@@ -169,8 +176,17 @@ export default class HomeScreen extends React.PureComponent {
               </Text> */}
 
               <View style={HomeScreenStyle.roundButtonContainer}>
-                <RoundButton title="NUTRITION" customBtnStyle={{borderRightWidth:0}} leftIcon="fitazfk2-workout.png" rightIcon="chevron-right"/>
-                <RoundButton title="WORKOUT" leftIcon="fitazfk2-workout.png" rightIcon="chevron-right"/>
+                <RoundButton title="NUTRITION" 
+                 customBtnStyle={{borderRightWidth:0}}
+                 leftIcon="fitazfk2-workout.png" 
+                 rightIcon="chevron-right"
+                 onPress={()=>this.props.navigation.navigate('Nutrition')}
+                 />
+                <RoundButton title="WORKOUT"
+                 leftIcon="fitazfk2-workout.png" 
+                 rightIcon="chevron-right"
+                 onPress={()=>this.props.navigation.navigate('Workouts')}
+                 />
               </View>
               {/* <View style={HomeScreenStyle.workoutProgressContainer}>
                 <View style={HomeScreenStyle.sectionHeader}>
@@ -219,7 +235,7 @@ export default class HomeScreen extends React.PureComponent {
                         }
                 </View>
               </View>
-              <View style={HomeScreenStyle.workoutProgressContainer}>
+              {/* <View style={HomeScreenStyle.workoutProgressContainer}>
                 <View style={HomeScreenStyle.sectionHeader}>
                   <Text style={HomeScreenStyle.bodyText}>
                     TODAYS RECOMMENDED WORKOUT
@@ -266,7 +282,7 @@ export default class HomeScreen extends React.PureComponent {
                     )
                   }
                 </View>
-              </View>
+              </View> */}
               {
                 profile && profile.initialBurpeeTestCompleted === undefined && (
                   <View style={HomeScreenStyle.workoutProgressContainer}>
@@ -297,7 +313,14 @@ export default class HomeScreen extends React.PureComponent {
                   </View>
                 )
               }
-              {/* <NewsFeedTile
+               <WorkOutCard
+                image={require('../../../../assets/images/homeScreenTiles/todayWorkoutImage2.jpeg')}
+                title="TODAY'S WORKOUT"
+                recommendedWorkout ={recommendedWorkout}
+                onPress={() => this.props.navigation.navigate('Calendar')}
+                cardCustomStyle ={{marginTop:20}} 
+              />
+             {/*  <NewsFeedTile
                 image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
                 title="SHOP APPAREL"
                 onPress={() => this.openLink('https://fitazfk.com/collections/wear-fitazfk-apparel')}

@@ -36,12 +36,12 @@ const HomeScreenStyle = StyleSheet.create({
     },
     sectionHeader: {
       alignItems: 'flex-start',
-      width: width - 20,
-      borderTopLeftRadius: 2,
-      borderTopRightRadius: 2,
-      padding: 8,
-      paddingBottom: 5,
-      paddingLeft:0
+      // width: width - 20,
+      // borderTopLeftRadius: 2,
+      // borderTopRightRadius: 2,
+      // padding: 8,
+      // paddingBottom: 5,
+      // paddingLeft:0
     },
     bodyText: {
       fontFamily: fonts.bold,

@@ -15,8 +15,7 @@ const globalStyle = StyleSheet.create({
   //Big Heading Back Button
       bigHeadingTitleContainer:{
           height:70,
-          width:'100%',
-          marginVertical:10
+          marginVertical:10,
       },
       bigHeadingTitleText:{
           fontSize:35,

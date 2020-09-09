@@ -41,7 +41,8 @@ export default class Tile extends React.PureComponent {
       disabled,
       showTitle,
       overlayTitle,
-      height
+      height,
+      customContainerStyle
     } = this.props;
     tileHeight = height
     const animatedStyle = {
@@ -51,7 +52,7 @@ export default class Tile extends React.PureComponent {
       <TouchableOpacity
         disabled={disabled}
         onPress={onPress}
-        style={styles.cardContainer}
+        style={[styles.cardContainer,customContainerStyle]}
         onPressIn={this.handlePressIn}
         onPressOut={this.handlePressOut}
       >
@@ -86,6 +87,8 @@ Tile.propTypes = {
   title1: PropTypes.string.isRequired,
   image: PropTypes.number.isRequired,
   disabled: PropTypes.bool,
+  height: PropTypes.number,
+  customContainerStyle: PropTypes.bool
 };
 
 Tile.defaultProps = {

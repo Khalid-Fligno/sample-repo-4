@@ -18,6 +18,7 @@ export default function RoundButton(props){
         <View style={styles.Container} >
             <TouchableOpacity
             style={[styles.btnContainer,props.customBtnStyle]}
+            onPress={props.onPress}
             >
             <View style={styles.roundButtonInnerContainer}>
                 {/* <Image

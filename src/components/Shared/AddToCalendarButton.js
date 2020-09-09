@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import Icon from '../../components/Shared/Icon';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class AddToCalendarButton extends React.PureComponent {
   constructor(props) {
@@ -17,11 +18,12 @@ export default class AddToCalendarButton extends React.PureComponent {
       <TouchableOpacity
         onPress={onPress}
         style={styles.addToCalendarButton}
+        activeOpacity={0.8}
       >
         <Icon
           name="add-to-calendar"
           size={22}
-          color={colors.charcoal.standard}
+          color={colors.coral.standard}
         />
         <Text style={styles.addToCalendarButtonText}>
           Add to calendar
@@ -40,22 +42,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: 140,
-    backgroundColor: colors.white,
     padding: 3,
     borderWidth: 2,
-    borderColor: colors.charcoal.light,
-    borderRadius: 4,
+    backgroundColor:colors.containerBackground,
+    borderColor: colors.grey.standard,
+    borderRadius: 50,
     shadowColor: colors.charcoal.light,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
+    padding:5,
+    paddingLeft:15,
+    paddingRight:10,
+    elevation:5
   },
   addToCalendarButtonText: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.bold,
     fontSize: 12,
-    color: colors.charcoal.light,
-    marginTop: 4,
+    color: colors.coral.standard,
     marginLeft: 5,
     marginRight: 5,
   },

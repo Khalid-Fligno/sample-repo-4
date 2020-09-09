@@ -22,7 +22,7 @@ import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton'
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
-import { containerPadding } from '../../../styles/globalStyles';
+import globalStyle, { containerPadding } from '../../../styles/globalStyles';
 import NutritionStyles from './NutritionStyles';
 import Tag from '../../../components/Nutrition/Tag';
 import CustomButton from '../../../components/Shared/CustomButton';
@@ -117,12 +117,15 @@ export default class RecipeScreen extends React.PureComponent {
           parallaxHeaderHeight={width}
           renderBackground={() => (
             <View style={{backgroundColor:colors.offWhite}}>
-              <View style={{marginBottom:-25,marginHorizontal:containerPadding}}>
+              <View style={{marginBottom:-25,marginHorizontal:containerPadding,flexDirection:'row',justifyContent:'space-between'}}>
                 <BigHeadingWithBackButton isBackButton = {true} 
                   onPress={this.handleBack} 
                   backButtonText="Back to breakfasts" 
                   isBigTitle ={false}
                   />
+                    <View style={[globalStyle.addToCalendarButtonContainer,{paddingVertical:15}]}>
+                      <AddToCalendarButton onPress={() => this.showModal()} />
+                    </View>
                 </View>
               <Image
                 source={{ uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
@@ -132,7 +135,7 @@ export default class RecipeScreen extends React.PureComponent {
           )}
         >
           
-          {/* <Modal
+          <Modal
             isVisible={modalVisible}
             animationIn="fadeIn"
             animationInTiming={600}
@@ -269,7 +272,7 @@ export default class RecipeScreen extends React.PureComponent {
                 }
               </TouchableOpacity>
             </View>
-          </Modal> */}
+          </Modal>
           <View style={{paddingHorizontal:containerPadding}}>
             <View style={NutritionStyles.infoBar}>
               {
