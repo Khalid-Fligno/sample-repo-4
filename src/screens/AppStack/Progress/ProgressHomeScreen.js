@@ -332,17 +332,17 @@ class ProgressHomeScreen extends React.PureComponent {
           bodyText="By tracking your progress, you can stay accountable and motivated throughout your fitness journey."
           bodyText2="Your ‘before’ photo and measurements will stay on the left of screen.  When it comes time to check-in, your ‘after’ photo and measurement will be uploaded on the right."
           bodyText3="When you want to update your ‘after’ photo, press the update button at the bottom of screen. You can reset your ‘before’ photo in Profile => Settings."
-          color="blue"
+          color="red"
         />
         <ImageModal
           imageModalVisible={imageModalVisible}
           toggleImageModal={() => this.toggleImageModal()}
-          color="blue"
+          color="red"
           imageSource={{ uri: imageModalSource }}
         />
         <Loader
           loading={loading}
-          color={colors.blue.standard}
+          color={colors.red.standard}
         />
       </View>
     );
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imagePlaceholderButton: {
-    backgroundColor: colors.blue.standard,
+    backgroundColor: colors.red.light,
     width: '70%',
     padding: 10,
     borderRadius: 2,
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   disabledImagePlaceHolderButton: {
-    backgroundColor: colors.blue.standard,
+    backgroundColor: colors.red.light,
     width: '70%',
     padding: 10,
     borderRadius: 2,
@@ -444,7 +444,7 @@ const styles = StyleSheet.create({
   fieldContainer: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: colors.blue.standard,
+    backgroundColor: colors.red.light,
   },
   fieldText: {
     fontFamily: fonts.standard,
@@ -489,14 +489,14 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     backgroundColor: colors.white,
     borderRadius: 2,
-    shadowColor: colors.grey.standard,
+    shadowColor: colors.red.light,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
   },
   sectionHeader: {
     alignItems: 'center',
-    backgroundColor: colors.blue.standard,
+    backgroundColor: colors.red.light,
     width: width - 20,
     borderTopLeftRadius: 2,
     borderTopRightRadius: 2,
