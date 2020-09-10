@@ -42,7 +42,9 @@ export default class Tile extends React.PureComponent {
       showTitle,
       overlayTitle,
       height,
-      customContainerStyle
+      customContainerStyle,
+      showTitleStyle,
+      overlayTitleStyle
     } = this.props;
     tileHeight = height
     const animatedStyle = {
@@ -65,7 +67,7 @@ export default class Tile extends React.PureComponent {
           >
             {
               overlayTitle && (<View style={styles.opacityLayer}>
-                <Text style={styles.title}>
+                <Text style={[styles.title,overlayTitleStyle]}>
                  {title1.toUpperCase()}
                 </Text>
               </View>)
@@ -73,7 +75,7 @@ export default class Tile extends React.PureComponent {
           </ImageBackground>
         </Animated.View>
         <View>
-         { showTitle && (<Text style={styles.title}>
+         { showTitle && (<Text style={[styles.title,showTitleStyle]}>
             {title1}
           </Text>)}
         </View>
@@ -88,7 +90,9 @@ Tile.propTypes = {
   image: PropTypes.number.isRequired,
   disabled: PropTypes.bool,
   height: PropTypes.number,
-  customContainerStyle: PropTypes.bool
+  customContainerStyle: PropTypes.object,
+  showTitleStyle:PropTypes.object,
+  overlayTitleStyle:PropTypes.object
 };
 
 Tile.defaultProps = {
@@ -134,5 +138,7 @@ const styles = StyleSheet.create({
     marginBottom:10,
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 5,
+    width:'100%',
+    textAlign:'center'
   },
 });

@@ -29,10 +29,9 @@ export default function NutritionHomeScreen({ navigation }) {
           title1="Breakfast"
           image={require('../../../../assets/images/nutrition-breakfast.jpg')}
           onPress={() => navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
-          showTitle = {false}
-          overlayTitle = {true}
+          showTitle = {true}
+          overlayTitle = {false}
           height={200}
-          customContainerStyle ={{height:180}}
         />
       
         <Tile
