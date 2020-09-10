@@ -16,6 +16,7 @@ import Icon from '../Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import Svg, { SvgUri } from 'react-native-svg';
+import globalStyle from '../../styles/globalStyles';
 const { width } = Dimensions.get('window');
 
 const headerContainer = {
@@ -97,14 +98,14 @@ export default class Header extends React.PureComponent {
     return (
       <SafeAreaView
         style={[
-          styles.noShadow,
-          stack === 'home' && styles.defaultHeaderShadow,
-          stack === 'progress' && styles.defaultHeaderShadow,
-          navigation.state.routeName === 'RecipeSelection' && styles.defaultHeaderShadow,
-          navigation.state.routeName === 'Recipe' && styles.defaultHeaderShadow,
-          navigation.state.routeName === 'WorkoutInfo' && styles.defaultHeaderShadow,
-          navigation.state.routeName === 'HiitWorkoutInfo' && styles.defaultHeaderShadow,
-          navigation.state.routeName === 'ProfileHome' && styles.defaultHeaderShadow,
+          globalStyle.noShadow,
+          stack === 'home' && globalStyle.defaultHeaderShadow,
+          stack === 'progress' && globalStyle.defaultHeaderShadow,
+          navigation.state.routeName === 'RecipeSelection' && globalStyle.defaultHeaderShadow,
+          navigation.state.routeName === 'Recipe' && globalStyle.defaultHeaderShadow,
+          navigation.state.routeName === 'WorkoutInfo' && globalStyle.defaultHeaderShadow,
+          navigation.state.routeName === 'HiitWorkoutInfo' && globalStyle.defaultHeaderShadow,
+          navigation.state.routeName === 'ProfileHome' && globalStyle.defaultHeaderShadow,
         ]}
       >
         <StatusBar barStyle="light-content" />
@@ -120,7 +121,7 @@ export default class Header extends React.PureComponent {
           {
             withBackButton && (
               <TouchableOpacity
-                style={styles.headerContentContainerLeft}
+                style={globalStyle.headerContentContainerLeft}
                 onPress={this.handleBack}
               >
                 <Icon
@@ -134,7 +135,7 @@ export default class Header extends React.PureComponent {
           {
             withHelpButton && (
               <TouchableOpacity
-                style={styles.headerContentContainerLeft}
+                style={globalStyle.headerContentContainerLeft}
                 onPress={this.handleHelper}
               >
                 <Icon
@@ -148,10 +149,10 @@ export default class Header extends React.PureComponent {
           {
             withLogoutButton && (
               <TouchableOpacity
-                style={styles.headerContentContainerLeft}
+                style={globalStyle.headerContentContainerLeft}
                 onPress={this.handleLogout}
               >
-                <Text style={styles.logoutButton}>
+                <Text style={globalStyle.logoutButton}>
                   Logout
                 </Text>
               </TouchableOpacity>
@@ -159,19 +160,19 @@ export default class Header extends React.PureComponent {
           }
           {
             !withBackButton && !withHelpButton && !withLogoutButton && (
-              <View style={styles.headerContentContainerLeft} />
+              <View style={globalStyle.headerContentContainerLeft} />
             )
           }
-          <View style={styles.headerContentContainer}>
+          <View style={globalStyle.headerContentContainer}>
             {
               headerTitleParams ? (
-                <Text style={styles.headerTitleText}>
+                <Text style={globalStyle.headerTitleText}>
                   {headerTitleParams}
                 </Text>
               ) : (
                     <Image
                       source={require('../../../assets/icons/fitazfk2-logo.png')}
-                      style={styles.fitazfkIcon}
+                      style={globalStyle.fitazfkIcon}
                     />
               
               )
@@ -180,10 +181,10 @@ export default class Header extends React.PureComponent {
           {
             withSkipButton && (
               <TouchableOpacity
-                style={styles.headerContentContainerRight}
+                style={globalStyle.headerContentContainerRight}
                 onPress={this.handleSkip}
               >
-                <Text style={styles.skipButton}>
+                <Text style={globalStyle.skipButton}>
                   Skip
                 </Text>
               </TouchableOpacity>
@@ -192,10 +193,10 @@ export default class Header extends React.PureComponent {
           {
             withCancelButton && (
               <TouchableOpacity
-                style={styles.headerContentContainerRight}
+                style={globalStyle.headerContentContainerRight}
                 onPress={this.handleCancel}
               >
-                <Text style={styles.skipButton}>
+                <Text style={globalStyle.skipButton}>
                   Cancel
                 </Text>
               </TouchableOpacity>
@@ -204,10 +205,10 @@ export default class Header extends React.PureComponent {
           {
             withRestoreButton && (
               <TouchableOpacity
-                style={styles.headerContentContainerRight}
+                style={globalStyle.headerContentContainerRight}
                 onPress={this.handleRestore}
               >
-                <Text style={styles.skipButton}>
+                <Text style={globalStyle.skipButton}>
                   Restore
                 </Text>
               </TouchableOpacity>
@@ -216,10 +217,10 @@ export default class Header extends React.PureComponent {
           {
             withStartButton && navigation.state.params.handleStart && (
               <TouchableOpacity
-                style={styles.headerContentContainerRight}
+                style={globalStyle.headerContentContainerRight}
                 onPress={this.handleStart}
               >
-                <Text style={styles.skipButton}>
+                <Text style={globalStyle.skipButton}>
                   Start
                 </Text>
                 <Icon
@@ -232,10 +233,10 @@ export default class Header extends React.PureComponent {
           }
           {
             withStartButton && !navigation.state.params.handleStart && (
-              <View style={styles.headerContentContainerRightLoading}>
+              <View style={globalStyle.headerContentContainerRightLoading}>
                 <ActivityIndicator
                   color={colors.red.standard}
-                  style={styles.activityIndicator}
+                  style={globalStyle.activityIndicator}
                 />
               </View>
             )
@@ -243,7 +244,7 @@ export default class Header extends React.PureComponent {
           {
             withProfileButton && (
               <TouchableOpacity
-                style={styles.headerContentContainerRight}
+                style={globalStyle.headerContentContainerRight}
                 onPress={this.handleProfileButton}
               >
                 <ProfileButton />
@@ -252,7 +253,7 @@ export default class Header extends React.PureComponent {
           }
           {
             !withStartButton && !withSkipButton && !withCancelButton && !withProfileButton && !withRestoreButton && (
-              <View style={styles.headerContentContainerRight} />
+              <View style={globalStyle.headerContentContainerRight} />
             )
           }
         </View>
@@ -287,35 +288,7 @@ Header.defaultProps = {
   headerTitleParams: null,
 };
 
-const styles = StyleSheet.create({
-  defaultHeaderShadow: {
-    backgroundColor: colors.black,
-    shadowColor: colors.charcoal.dark,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-  },
-  noShadow: {
-    backgroundColor: colors.black,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0,
-    shadowRadius: 0,
-    borderBottomWidth: 0,
-  },
-  logoutButton: {
-    fontFamily: fonts.standard,
-    fontSize: 16,
-    color: colors.white,
-    marginTop: 5,
-    marginLeft: 4,
-  },
-  skipButton: {
-    fontFamily: fonts.standard,
-    fontSize: 16,
-    color: colors.black,
-    marginTop: 5,
-    marginRight: 4,
-  },
+const styles = StyleSheet.create({  
   defaultHeader: {
     ...headerContainer,
     backgroundColor: colors.headerBackground,
@@ -323,63 +296,17 @@ const styles = StyleSheet.create({
   },
   nutritionHeader: {
     ...headerContainer,
-    //backgroundColor: colors.violet.standard,
   },
   workoutsHeader: {
     ...headerContainer,
-    //backgroundColor: colors.coral.standard,
   },
   calendarHeader: {
     ...headerContainer,
-    //backgroundColor: colors.green.standard,
     borderBottomWidth: 1,
-    borderBottomColor: colors.green.dark,
+    borderBottomColor: colors.red.light,
   },
   progressHeader: {
     ...headerContainer,
-    //backgroundColor: colors.blue.standard,
   },
-  headerContentContainer: {
-    flexGrow: 1,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerContentContainerLeft: {
-    flex: 1,
-    height: 50,
-    paddingLeft: 10,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  headerContentContainerRight: {
-    flex: 1,
-    height: 50,
-    paddingRight: 10,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  headerContentContainerRightLoading: {
-    flex: 1,
-    height: 50,
-    paddingRight: 10,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  activityIndicator: {
-    marginRight: 10,
-  },
-  headerTitleText: {
-    fontFamily: fonts.bold,
-    fontSize: 16,
-    color: colors.black,
-    marginTop: 5,
-  },
-  fitazfkIcon: {
-    width: 120,
-    height: 50,
-  },
+  
 });
