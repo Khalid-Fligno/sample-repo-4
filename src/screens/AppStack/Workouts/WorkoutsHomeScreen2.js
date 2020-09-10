@@ -29,11 +29,6 @@ import { SafeAreaView } from 'react-navigation';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 
 
-const workouts=[
-  {displayName:'Workout Focus',subTitles:false ,image: require('../../../../assets/images/workouts-resistance.jpg')},
-  {displayName:'Equipment',subTitles:false,image: require('../../../../assets/images/workouts-resistance.jpg')},
-  {displayName:'Mascle Group',subTitles:false,image: require('../../../../assets/images/workouts-resistance.jpg')}
-]
 
 const workoutTypeMap = [
   'Strength',
@@ -54,7 +49,12 @@ const muscleGroupMap = [
   'Lower Body',
   'Core' 
 ];
-
+const workouts=[
+  {displayName:'Workout Focus',subTitle:workoutTypeMap,image: require('../../../../assets/images/workouts-resistance.jpg')},
+  {displayName:'Equipment',subTitle:equipmentMap,image: require('../../../../assets/images/workouts-resistance.jpg')},
+  {displayName:'Mascle Group',subTitle:muscleGroupMap,image: require('../../../../assets/images/workouts-resistance.jpg')}
+]
+const toggleSubtitle=workouts.map(()=> false)
 class WorkoutsHomeScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -69,6 +69,7 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
       hiitWeeklyTarget: 2,
       resistanceWeeklyComplete: undefined,
       hiitWeeklyComplete: undefined,
+      toggleList:toggleSubtitle
     };
   }
   componentDidMount = () => {
@@ -169,12 +170,19 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
   //     </View>
   //   );
   // }
+
+  toggleSubtitleList(index){
+    this.state.toggleList[index] = ! this.state.toggleList[index]
+    this.forceUpdate()
+  }
   render() {
     const {
       loading,
       selectedWorkoutTypeIndex,
       helperModalVisible,
+      toggleList
     } = this.state;
+    console.log(toggleSubtitle)
     return (
         <ScrollView showsVerticalScrollIndicator={false} style={globalStyle.container}>
           <SafeAreaView>
@@ -184,17 +192,33 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
               <Text style={{color:'gray'}}>Choose your workout</Text>
             </View>
             {
-              workouts.map(work=>{ 
-              return <Tile
-                title1={work.displayName}
-                image={work.image}
-                onPress={() => console.log("hi")}
-                showTitle = {false}
-                overlayTitle = {true}
-                height={150}
-                key={work}
-              />           
-              })
+              workouts.map((work,index)=>(
+                <>
+                  <Tile
+                    title1={work.displayName}
+                    image={work.image}
+                    onPress={() => this.toggleSubtitleList(index)}
+                    showTitle = {false}
+                    overlayTitle = {true}
+                    overlayTitleStyle ={
+                      { color:colors.offWhite,
+                        textAlign:'left',
+                        paddingLeft:50,
+                        textTransform:'capitalize',
+                        fontSize:25
+                      }}
+                    key={work.displayName}
+                    customContainerStyle={{height:170,marginBottom:15}}
+                  />    
+                { toggleList[index] && <View style={{marginBottom:20,paddingLeft:5}}>
+                       {work.subTitle.map(data=>(
+                           <Text style={{fontFamily:fonts.bold,fontSize:15,lineHeight:30,color:colors.grey.dark}}>{data}</Text>
+                       ))
+                      } 
+                  </View>
+                }   
+                </>  
+                ))
               
             }
             
