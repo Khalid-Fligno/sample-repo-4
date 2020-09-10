@@ -19,6 +19,7 @@ const globalStyle = StyleSheet.create({
       paddingTop: 15,
       alignItems: 'center',
     },
+
   //Big Heading Back Button
       bigHeadingTitleContainer:{
           height:70,
