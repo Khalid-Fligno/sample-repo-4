@@ -57,19 +57,19 @@ const TabStack = createBottomTabNavigator(
         if (routeName === 'Feed') {
           icon = (
             <Image
-            source={require('../../assets/icons/fitazfk2-feed.png')}
-            fadeDuration={0}
-            style={{width:31, height: 22}}
-          />
+              source={require('../../assets/icons/fitazfk2-feed.png')}
+              fadeDuration={0}
+              style={{width:31, height: 22}}
+            />
           );
         }
         else if (routeName === 'Subscription') {
           icon = (
             <Image
-            source={require('../../assets/icons/fitazfk2-subscription.png')}
-            fadeDuration={0}
-            style={{width:22, height: 22}}
-          />
+              source={require('../../assets/icons/fitazfk2-subscription.png')}
+              fadeDuration={0}
+              style={{width:22, height: 22}}
+            />
           );
         } 
         // else if (routeName === 'Workouts') {
@@ -112,7 +112,7 @@ const TabStack = createBottomTabNavigator(
       },
     }),
     tabBarOptions: {
-      activeTintColor: colors.charcoal.standard,
+      activeTintColor: colors.themeColor.color,
       inactiveTintColor: colors.charcoal.standard,
       style: {
         // shadowColor: colors.charcoal.standard,
@@ -120,14 +120,15 @@ const TabStack = createBottomTabNavigator(
         // shadowOpacity: 0.3,
         // shadowRadius: 2,
         // borderTopWidth: 0,
-        height:55,
+        height:60,
         borderTopWidth: 1,
         borderTopColor: colors.grey.light,
         backgroundColor: colors.themeColor.footerBackgroundColor,
       },
       labelStyle: {
         fontFamily: fonts.bold,
-        textTransform:"uppercase"
+        textTransform:"uppercase",
+        paddingBottom:4
       },
     },
   },

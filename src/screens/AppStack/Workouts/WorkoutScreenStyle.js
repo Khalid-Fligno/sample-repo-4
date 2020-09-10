@@ -279,6 +279,19 @@ const WorkoutScreenStyle = StyleSheet.create({
       marginTop: 3,
       marginBottom: 3,
     },
+   
      /**********workout Info***************/
+
+
+//*************Workout Home Screen **************** */
+    subTitleText:{
+      fontFamily:fonts.bold,
+      fontSize:15,
+      lineHeight:40,
+      color:colors.grey.dark
+    }
+//*************Workout Home Screen **************** */
+
+      
   });
   export default  WorkoutScreenStyle

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { any } from 'prop-types';
 import {
   StyleSheet,
   View,
@@ -24,7 +24,7 @@ import Tile from '../../../components/Shared/Tile';
 const { width } = Dimensions.get('window');
 import globalStyle from '../../../styles/globalStyles';
 import WorkoutScreenStyle from './WorkoutScreenStyle';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-navigation';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 
@@ -49,12 +49,12 @@ const muscleGroupMap = [
   'Lower Body',
   'Core' 
 ];
-const workouts=[
-  {displayName:'Workout Focus',subTitle:workoutTypeMap,image: require('../../../../assets/images/workouts-resistance.jpg')},
-  {displayName:'Equipment',subTitle:equipmentMap,image: require('../../../../assets/images/workouts-resistance.jpg')},
-  {displayName:'Mascle Group',subTitle:muscleGroupMap,image: require('../../../../assets/images/workouts-resistance.jpg')}
+const workoutMainCategory=[
+  {displayName:'Workout Focus',subCategory:workoutTypeMap,image: require('../../../../assets/images/workouts-resistance.jpg')},
+  {displayName:'Equipment',subCategory:equipmentMap,image: require('../../../../assets/images/workouts-resistance.jpg')},
+  {displayName:'Mascle Group',subCategory:muscleGroupMap,image: require('../../../../assets/images/workouts-resistance.jpg')}
 ]
-const toggleSubtitle=workouts.map(()=> false)
+const toggleSubtitle = workoutMainCategory.map(()=> false)
 class WorkoutsHomeScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -80,18 +80,18 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
   componentWillUnmount = () => {
     this.unsubscribeFromTargets();
   }
-  onSnapToItemTopCarousel = (field, slideIndex) => {
-    Haptics.selectionAsync();
-    this.setState({
-      selectedWorkoutTypeIndex: slideIndex,
-      selectedHiitStyleIndex: 0,
-      selectedResistanceFocusIndex: 0,
-    });
-  }
-  onSnapToItem = (field, slideIndex) => {
-    Haptics.selectionAsync();
-    this.setState({ [field]: slideIndex });
-  }
+  // onSnapToItemTopCarousel = (field, slideIndex) => {
+  //   Haptics.selectionAsync();
+  //   this.setState({
+  //     selectedWorkoutTypeIndex: slideIndex,
+  //     selectedHiitStyleIndex: 0,
+  //     selectedResistanceFocusIndex: 0,
+  //   });
+  // }
+  // onSnapToItem = (field, slideIndex) => {
+  //   Haptics.selectionAsync();
+  //   this.setState({ [field]: slideIndex });
+  // }
   showHelperOnFirstOpen = async () => {
     const helperShownOnFirstOpen = await AsyncStorage.getItem('workoutHelperShownOnFirstOpen');
     if (helperShownOnFirstOpen === null) {
@@ -125,31 +125,31 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
   hideHelperModal = () => {
     this.setState({ helperModalVisible: false });
   }
-  handleWorkoutSelected = (selectedWorkoutLocationIndex, selectedResistanceFocusIndex) => {
-    const workoutLocation = workoutLocationMap[selectedWorkoutLocationIndex];
-    const workoutFocus = workoutFocusMap[selectedResistanceFocusIndex];
-    this.props.navigation.navigate('WorkoutsSelection', {
-      workoutFocus,
-      workoutLocation,
-    });
-  }
-  handleHiitWorkoutSelected = (selectedWorkoutLocationIndex, selectedHiitStyleIndex) => {
-    const workoutLocation = workoutLocationMap[selectedWorkoutLocationIndex];
-    const hiitWorkoutStyle = hiitWorkoutStyleMap[selectedHiitStyleIndex];
-    this.props.navigation.navigate('HiitWorkoutsSelection', {
-      hiitWorkoutStyle,
-      workoutLocation,
-    });
-  }
-  goToWorkouts = (selectedWorkoutTypeIndex) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    const { selectedWorkoutLocationIndex, selectedResistanceFocusIndex, selectedHiitStyleIndex } = this.state;
-    if (selectedWorkoutTypeIndex === 0) {
-      this.handleWorkoutSelected(selectedWorkoutLocationIndex, selectedResistanceFocusIndex);
-    } else {
-      this.handleHiitWorkoutSelected(selectedWorkoutLocationIndex, selectedHiitStyleIndex);
-    }
-  }
+  // handleWorkoutSelected = (selectedWorkoutLocationIndex, selectedResistanceFocusIndex) => {
+  //   const workoutLocation = workoutLocationMap[selectedWorkoutLocationIndex];
+  //   const workoutFocus = workoutFocusMap[selectedResistanceFocusIndex];
+  //   this.props.navigation.navigate('WorkoutsSelection', {
+  //     workoutFocus,
+  //     workoutLocation,
+  //   });
+  // }
+  // handleHiitWorkoutSelected = (selectedWorkoutLocationIndex, selectedHiitStyleIndex) => {
+  //   const workoutLocation = workoutLocationMap[selectedWorkoutLocationIndex];
+  //   const hiitWorkoutStyle = hiitWorkoutStyleMap[selectedHiitStyleIndex];
+  //   this.props.navigation.navigate('HiitWorkoutsSelection', {
+  //     hiitWorkoutStyle,
+  //     workoutLocation,
+  //   });
+  // }
+  // goToWorkouts = (selectedWorkoutTypeIndex) => {
+  //   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  //   const { selectedWorkoutLocationIndex, selectedResistanceFocusIndex, selectedHiitStyleIndex } = this.state;
+  //   if (selectedWorkoutTypeIndex === 0) {
+  //     this.handleWorkoutSelected(selectedWorkoutLocationIndex, selectedResistanceFocusIndex);
+  //   } else {
+  //     this.handleHiitWorkoutSelected(selectedWorkoutLocationIndex, selectedHiitStyleIndex);
+  //   }
+  // }
 
   // renderItem = (subItems ) => {
   //   const {
@@ -171,10 +171,32 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
   //   );
   // }
 
+// ******************************* new code *************************************
+scrollView = any
+
   toggleSubtitleList(index){
-    this.state.toggleList[index] = ! this.state.toggleList[index]
-    this.forceUpdate()
+    const list= this.state.toggleList.map((item , i)=>{
+      if(index === i){
+         return !item
+      }
+      else{
+        return false
+      }
+    })
+    this.state.toggleList = list
+    this.forceUpdate();
+    // console.log(index)
   }
+
+  handleClick(mainIndex,subIndex){
+    
+    this.props.navigation.navigate('WorkoutsSelection', {
+      selectedMainCategoryIndex : mainIndex,
+      selectedSubCategoryIndex : subIndex
+    });
+  }
+
+
   render() {
     const {
       loading,
@@ -182,9 +204,15 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
       helperModalVisible,
       toggleList
     } = this.state;
-    console.log(toggleSubtitle)
+    console.log(toggleList)
+    var _scrollToBottomY
     return (
-        <ScrollView showsVerticalScrollIndicator={false} style={globalStyle.container}>
+        <ScrollView 
+                showsVerticalScrollIndicator={false} 
+                style={globalStyle.container}  
+                ref={ref => {this.scrollView = ref}}
+                onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}
+        >
           <SafeAreaView>
             <View>
             <BigHeadingWithBackButton  bigTitleText = "Workouts" isBackButton ={false} isBigTitle = {true} />
@@ -192,8 +220,8 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
               <Text style={{color:'gray'}}>Choose your workout</Text>
             </View>
             {
-              workouts.map((work,index)=>(
-                <>
+              workoutMainCategory.map((work,index)=>(
+                <View  key={index}>
                   <Tile
                     title1={work.displayName}
                     image={work.image}
@@ -207,17 +235,21 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
                         textTransform:'capitalize',
                         fontSize:25
                       }}
-                    key={work.displayName}
+                   
                     customContainerStyle={{height:170,marginBottom:15}}
                   />    
                 { toggleList[index] && <View style={{marginBottom:20,paddingLeft:5}}>
-                       {work.subTitle.map(data=>(
-                           <Text style={{fontFamily:fonts.bold,fontSize:15,lineHeight:30,color:colors.grey.dark}}>{data}</Text>
+                       {work.subCategory.map((data,i)=>(
+                           <TouchableOpacity key={i}
+                              onPress={()=>this.handleClick(index,i)}
+                           >
+                              <Text  style={WorkoutScreenStyle.subTitleText}>{data}</Text>
+                           </TouchableOpacity> 
                        ))
                       } 
                   </View>
                 }   
-                </>  
+                </View>  
                 ))
               
             }
@@ -225,13 +257,13 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
             </View>
           </SafeAreaView>
         
-        <View style={globalStyle.buttonContainer}>
+        {/* <View style={globalStyle.buttonContainer}>
           <CustomButton
             title="SHOW WORKOUTS"
             onPress={() => this.goToWorkouts(selectedWorkoutTypeIndex)}
             primary
           />
-        </View>
+        </View> */}
         <HelperModal
           helperModalVisible={helperModalVisible}
           hideHelperModal={this.hideHelperModal}

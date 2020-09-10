@@ -139,6 +139,5 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 5,
     width:'100%',
-    textAlign:'center'
   },
 });
