@@ -345,7 +345,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   containerStyle={styles.listItemContainerBottom}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.workoutListItemTitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.coral.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -382,7 +382,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.red.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -414,7 +414,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.red.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -446,7 +446,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.red.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -480,7 +480,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.red.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -512,7 +512,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.red.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -545,7 +545,7 @@ class CalendarHomeScreen extends React.PureComponent {
             }}
             style={styles.calendarStrip}
             calendarHeaderStyle={styles.calendarStripHeader}
-            calendarColor={colors.red.light}
+            calendarColor={colors.themeColor.lightColor}
             dateNumberStyle={{
               fontFamily: fonts.bold,
               color: colors.white,
@@ -685,7 +685,7 @@ const styles = StyleSheet.create({
   workoutListItemTitle: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.coral.standard,
+    color: colors.themeColor.color,
     marginBottom: 5,
   },
   workoutSubtitleContainer: {
@@ -702,7 +702,7 @@ const styles = StyleSheet.create({
   recipeListItemTitle: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.red.standard,
+    color: colors.themeColor.color,
     marginBottom: 5,
   },
   recipeListItemSubtitle: {
@@ -715,7 +715,7 @@ const styles = StyleSheet.create({
     height: 65,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.coral.standard,
+    backgroundColor: colors.themeColor.color,
   },
   deleteButtonText: {
     fontFamily: fonts.bold,

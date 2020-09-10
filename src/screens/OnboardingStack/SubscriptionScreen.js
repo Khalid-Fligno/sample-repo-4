@@ -938,13 +938,13 @@ const styles = StyleSheet.create({
   headerTextLine1: {
     fontFamily: fonts.ultraItalic,
     fontSize: 22,
-    color: colors.coral.standard,
+    color: colors.themeColor.color,
     textAlign: 'center',
   },
   headerTextLine2: {
     fontFamily: fonts.ultraItalic,
     fontSize: 22,
-    color: colors.coral.standard,
+    color: colors.themeColor.color,
     textAlign: 'center',
     marginTop: Platform.OS === 'android' ? 0 : -20,
   },

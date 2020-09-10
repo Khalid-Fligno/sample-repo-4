@@ -127,7 +127,7 @@ export default class Header extends React.PureComponent {
                 <Icon
                   name="chevron-left"
                   size={20}
-                  color={colors.coral.standard}
+                  color={colors.themeColor.color}
                 />
               </TouchableOpacity>
             )
@@ -141,7 +141,7 @@ export default class Header extends React.PureComponent {
                 <Icon
                   name="question-speech-bubble"
                   size={30}
-                  color={colors.coral.standard}
+                  color={colors.themeColor.color}
                 />
               </TouchableOpacity>
             )
@@ -235,7 +235,7 @@ export default class Header extends React.PureComponent {
             withStartButton && !navigation.state.params.handleStart && (
               <View style={globalStyle.headerContentContainerRightLoading}>
                 <ActivityIndicator
-                  color={colors.red.standard}
+                  color={colors.themeColor.color}
                   style={globalStyle.activityIndicator}
                 />
               </View>
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   calendarHeader: {
     ...headerContainer,
     borderBottomWidth: 1,
-    borderBottomColor: colors.red.light,
+    borderBottomColor: colors.themeColor.lightColor,
   },
   progressHeader: {
     ...headerContainer,

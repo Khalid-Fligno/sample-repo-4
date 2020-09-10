@@ -129,7 +129,7 @@ const WorkoutScreenStyle = StyleSheet.create({
       marginRight: 10,
       fontFamily: fonts.bold,
       fontSize: 20,
-      color: colors.coral.standard,
+      color: colors.themeColor.color,
     },
     workoutIconsRow: {
       width,
@@ -199,7 +199,7 @@ const WorkoutScreenStyle = StyleSheet.create({
     musicModalContinueButton: {
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: colors.coral.standard,
+      backgroundColor: colors.themeColor.color,
       height: 50,
       width: '100%',
     },
@@ -229,7 +229,7 @@ const WorkoutScreenStyle = StyleSheet.create({
       marginRight: 15,
       borderWidth: 2,
       borderRadius: 4,
-      borderColor: colors.coral.standard,
+      borderColor: colors.themeColor.color,
       overflow: 'hidden',
     },
     exerciseTileHeaderBar: {
@@ -238,7 +238,7 @@ const WorkoutScreenStyle = StyleSheet.create({
       justifyContent: 'space-between',
       padding: 8,
       paddingBottom: 5,
-      backgroundColor: colors.coral.standard,
+      backgroundColor: colors.themeColor.color,
     },
     exerciseTileHeaderTextLeft: {
       width: width - 72,
@@ -260,7 +260,7 @@ const WorkoutScreenStyle = StyleSheet.create({
       marginRight: 15,
       borderWidth: 2,
       borderRadius: 4,
-      borderColor: colors.coral.standard,
+      borderColor: colors.themeColor.color,
       backgroundColor: colors.white,
       overflow: 'hidden',
     },

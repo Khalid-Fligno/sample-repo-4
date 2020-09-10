@@ -68,7 +68,7 @@ const ProfileStyles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
     borderBottomWidth: 0,
-    backgroundColor: colors.red.light,
+    backgroundColor: colors.themeColor.lightColor,
   },
  
   listItemTitleStyleGreen: {

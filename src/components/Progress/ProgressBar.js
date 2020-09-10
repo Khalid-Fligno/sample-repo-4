@@ -43,7 +43,7 @@ export default class ProgressBar extends React.PureComponent {
                   size={150}
                   width={5}
                   fill={(completedWorkouts/(progressBarType === 'Resistance' ? 3 : 2))*100}
-                  tintColor={colors.coral.standard}
+                  tintColor={colors.themeColor.color}
                   onAnimationComplete={() => console.log('onAnimationComplete')}
                   backgroundColor="lightgray" >
                      {
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   progressBarEmpty: {
     width: '4%',
     height: 8,
-    backgroundColor: colors.coral.standard,
+    backgroundColor: colors.themeColor.color,
     borderRadius: 5,
   },
   resistance1: {

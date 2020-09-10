@@ -8,12 +8,12 @@ export const containerPadding = 20
 const globalStyle = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.containerBackground,
+        backgroundColor: colors.themeColor.backgroundColor,
         paddingHorizontal:containerPadding,
     },
     safeContainer: {
       flex: 1,
-      backgroundColor: colors.containerBackground,
+      backgroundColor: colors.themeColor.backgroundColor,
     },
     scrollView: {
       paddingTop: 15,
@@ -32,7 +32,7 @@ const globalStyle = StyleSheet.create({
       bigHeadingWithBackButtonText : {
           fontSize:15,
           fontWeight:'bold',
-          color:colors.coral.standard,
+          color:colors.themeColor.color,
           marginLeft:10,
       },
   //**********END ************* */
@@ -72,7 +72,7 @@ const globalStyle = StyleSheet.create({
       filterButtonSelected: {
         backgroundColor: colors.containerBackground,
         borderBottomWidth:2,
-        borderColor: colors.coral.standard,
+        borderColor: colors.themeColor.color,
       },
       filterButtonTextSelected: {
         fontFamily: fonts.standard,
@@ -91,7 +91,7 @@ modalContainer: {
 modalButton: {
   justifyContent: 'center',
   alignItems: 'center',
-  backgroundColor: colors.coral.standard,
+  backgroundColor: colors.themeColor.color,
   height: 50,
   width: '100%',
   marginBottom: 0,

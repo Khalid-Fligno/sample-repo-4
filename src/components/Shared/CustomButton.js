@@ -234,8 +234,8 @@ const styles = StyleSheet.create({
   },
   red: {
     ...common.button.solid,
-    backgroundColor: colors.red.light,
-    shadowColor: colors.red.light,
+    backgroundColor: colors.themeColor.color,
+    shadowColor: colors.themeColor.color,
 
   },
 });
