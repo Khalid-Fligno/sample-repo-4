@@ -123,7 +123,7 @@ const TabStack = createBottomTabNavigator(
         height:55,
         borderTopWidth: 1,
         borderTopColor: colors.grey.light,
-        backgroundColor: colors.white,
+        backgroundColor: colors.themeColor.footerBackgroundColor,
       },
       labelStyle: {
         fontFamily: fonts.bold,

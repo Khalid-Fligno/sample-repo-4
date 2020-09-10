@@ -291,7 +291,7 @@ Header.defaultProps = {
 const styles = StyleSheet.create({  
   defaultHeader: {
     ...headerContainer,
-    backgroundColor: colors.headerBackground,
+    backgroundColor: colors.themeColor.headerBackgroundColor,
     marginTop: Platform.OS === 'android' ? StatusBar.currentHeight+1 : 0
   },
   nutritionHeader: {
