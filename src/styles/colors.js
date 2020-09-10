@@ -61,10 +61,12 @@ const colors = {
   headerBackground:'rgb(255, 255, 255)',
   containerBackground:'rgb(250, 250, 250)',
   themeColor:{
-    backgroundColor:'rgb(179, 95, 165)',
+    backgroundColor:'rgb(250, 250, 250)',
     borderColor:'rgb(238, 48, 66)',
     fontColor:'rgb(238, 48, 66)',
     color:'rgb(238, 48, 66)',
+    footerBackgroundColor:'rgb(255, 255, 255)',
+    headerBackgroundColor:'rgb(255, 255, 255)',
   },
 };
 
