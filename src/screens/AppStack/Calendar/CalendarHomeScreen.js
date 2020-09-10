@@ -357,7 +357,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
                 subtitleStyle={styles.blankListItemSubtitle}
-                rightIcon={<Icon name="add-circle" size={18} color={colors.themeColor.lightColor} />}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
               />
           )
         }
@@ -685,7 +685,7 @@ const styles = StyleSheet.create({
   workoutListItemTitle: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.coral.standard,
+    color: colors.themeColor.color,
     marginBottom: 5,
   },
   workoutSubtitleContainer: {
@@ -702,7 +702,7 @@ const styles = StyleSheet.create({
   recipeListItemTitle: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.red.standard,
+    color: colors.themeColor.color,
     marginBottom: 5,
   },
   recipeListItemSubtitle: {
@@ -715,7 +715,7 @@ const styles = StyleSheet.create({
     height: 65,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.coral.standard,
+    backgroundColor: colors.themeColor.color,
   },
   deleteButtonText: {
     fontFamily: fonts.bold,

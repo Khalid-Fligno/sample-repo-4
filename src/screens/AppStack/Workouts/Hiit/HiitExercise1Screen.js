@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   currentExerciseNameText: {
     fontFamily: fonts.boldNarrow,
     fontSize: 18,
-    color: colors.coral.standard,
+    color: colors.themeColor.color,
     marginLeft: 15,
   },
   currentExerciseRepsTextContainer: {

@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imagePlaceholderButton: {
-    backgroundColor: colors.red.light,
+    backgroundColor: colors.themeColor.lightColor,
     width: '70%',
     padding: 10,
     borderRadius: 2,
@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   disabledImagePlaceHolderButton: {
-    backgroundColor: colors.red.light,
+    backgroundColor: colors.themeColor.lightColor,
     width: '70%',
     padding: 10,
     borderRadius: 2,
@@ -462,7 +462,7 @@ const styles = StyleSheet.create({
   fieldContainer: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: colors.themeColor.color,
+    backgroundColor: colors.themeColor.lightColor,
   },
   fieldText: {
     fontFamily: fonts.standard,

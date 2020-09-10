@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   modalButtonContinue: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.coral.standard,
+    backgroundColor: colors.themeColor.color,
     height: 50,
     width: '100%',
     marginBottom: 0,

@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   calendarHeader: {
     ...headerContainer,
     borderBottomWidth: 1,
-    borderBottomColor: colors.red.light,
+    borderBottomColor: colors.themeColor.lightColor,
   },
   progressHeader: {
     ...headerContainer,

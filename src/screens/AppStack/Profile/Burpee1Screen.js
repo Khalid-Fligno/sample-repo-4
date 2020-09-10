@@ -66,7 +66,7 @@ export default class Progress3Screen extends React.PureComponent {
               <Carousel
                 width={width}
                 inactiveIndicatorColor={colors.themeColor.color}
-                indicatorColor={colors.coral.standard}
+                indicatorColor={colors.themeColor.color}
                 indicatorOffset={12}
                 indicatorSize={13}
                 inactiveIndicatorText="○"

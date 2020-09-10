@@ -105,7 +105,7 @@ export default class InviteFriendsScreen extends React.PureComponent {
             <CustomButton
               title="SELECT CONTACTS"
               onPress={this.switchView}
-              green
+              red
             />
           </View>
         </ImageBackground>
