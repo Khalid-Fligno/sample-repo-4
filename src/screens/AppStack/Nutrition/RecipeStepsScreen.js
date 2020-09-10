@@ -100,7 +100,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
               source={{ uri: this.state.stepsImages[index] }}
               indicator={DotIndicator}
               indicatorProps={{
-                color: colors.red.standard,
+                color: colors.themeColor.color,
                 count: 3,
                 size: 8,
               }}

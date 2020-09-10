@@ -345,7 +345,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   containerStyle={styles.listItemContainerBottom}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.workoutListItemTitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.coral.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -357,7 +357,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 chevronColor={colors.charcoal.standard}
                 titleStyle={styles.blankListItemTitle}
                 subtitleStyle={styles.blankListItemSubtitle}
-                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
+                rightIcon={<Icon name="add-circle" size={18} color={colors.themeColor.lightColor} />}
               />
           )
         }
@@ -382,7 +382,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.red.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -414,7 +414,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.red.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -446,7 +446,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.red.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -480,7 +480,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.red.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -512,7 +512,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.red.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -545,7 +545,7 @@ class CalendarHomeScreen extends React.PureComponent {
             }}
             style={styles.calendarStrip}
             calendarHeaderStyle={styles.calendarStripHeader}
-            calendarColor={colors.red.light}
+            calendarColor={colors.themeColor.lightColor}
             dateNumberStyle={{
               fontFamily: fonts.bold,
               color: colors.white,

@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   modalButtonCoral: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.coral.standard,
+    backgroundColor: colors.themeColor.color,
     height: 50,
     width: '100%',
   },

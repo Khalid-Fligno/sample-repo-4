@@ -65,7 +65,7 @@ export default class Progress3Screen extends React.PureComponent {
             <View style={styles.carouselContainer}>
               <Carousel
                 width={width}
-                inactiveIndicatorColor={colors.coral.standard}
+                inactiveIndicatorColor={colors.themeColor.color}
                 indicatorColor={colors.coral.standard}
                 indicatorOffset={12}
                 indicatorSize={13}
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     marginRight: 40,
     borderWidth: 2,
     borderRadius: 4,
-    borderColor: colors.coral.standard,
+    borderColor: colors.themeColor.color,
     overflow: 'hidden',
   },
   exerciseTileHeaderBar: {
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 8,
     paddingBottom: 5,
-    backgroundColor: colors.coral.standard,
+    backgroundColor: colors.themeColor.color,
   },
   exerciseTileHeaderTextLeft: {
     fontFamily: fonts.standardNarrow,
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     marginRight: 40,
     borderWidth: 2,
     borderRadius: 4,
-    borderColor: colors.coral.standard,
+    borderColor: colors.themeColor.color,
     backgroundColor: colors.white,
     overflow: 'hidden',
   },

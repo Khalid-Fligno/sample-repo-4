@@ -18,7 +18,7 @@ export default function BigHeadingWithBackButton(props){
                     <Icon
                         name="chevron-left"
                         size={15}
-                        color={colors.coral.standard}
+                        color={colors.themeColor.color}
                     />
                     <Text style={globalStyle.bigHeadingWithBackButtonText}>
                         {props.backButtonText}

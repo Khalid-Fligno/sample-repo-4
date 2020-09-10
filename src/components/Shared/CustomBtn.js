@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 const CustomBtn = (props)=>{
    const customBtnStyle = {
         flexDirection:"row",
-        backgroundColor:colors.coral.standard,
+        backgroundColor:colors.themeColor.color,
         padding:18,
         justifyContent:'center',
     }

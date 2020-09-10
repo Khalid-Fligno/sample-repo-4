@@ -462,7 +462,7 @@ const styles = StyleSheet.create({
   fieldContainer: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: colors.red.light,
+    backgroundColor: colors.themeColor.color,
   },
   fieldText: {
     fontFamily: fonts.standard,
@@ -507,14 +507,14 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     backgroundColor: colors.white,
     borderRadius: 2,
-    shadowColor: colors.red.light,
+    shadowColor: colors.themeColor.lightColor,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
   },
   sectionHeader: {
     alignItems: 'center',
-    backgroundColor: colors.red.light,
+    backgroundColor: colors.themeColor.lightColor,
     width: width - 20,
     borderTopLeftRadius: 2,
     borderTopRightRadius: 2,
