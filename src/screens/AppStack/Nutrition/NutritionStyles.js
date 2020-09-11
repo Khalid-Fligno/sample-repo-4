@@ -9,7 +9,7 @@ const NutritionStyles = StyleSheet.create({
 
     container: {
       flex: 1,
-      backgroundColor: colors.themeColor.backgroundColor,
+      backgroundColor: colors.themeColor.themeBackgroundColor,
       alignItems: 'center',
       justifyContent: 'center',
     },

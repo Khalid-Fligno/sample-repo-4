@@ -8,12 +8,12 @@ export const containerPadding = 20
 const globalStyle = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.themeColor.backgroundColor,
+        backgroundColor: colors.themeColor.themeBackgroundColor,
         paddingHorizontal:containerPadding,
     },
     safeContainer: {
       flex: 1,
-      backgroundColor: colors.themeColor.backgroundColor,
+      backgroundColor: colors.themeColor.themeBackgroundColor,
     },
     scrollView: {
       paddingTop: 15,

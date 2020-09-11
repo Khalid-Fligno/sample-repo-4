@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 3,
     borderWidth: 2,
-    backgroundColor:colors.themeColor.backgroundColor,
+    backgroundColor:colors.themeColor.themeBackgroundColor,
     borderColor: colors.grey.standard,
     borderRadius: 50,
     shadowColor: colors.charcoal.light,
