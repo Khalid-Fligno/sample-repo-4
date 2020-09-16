@@ -53,7 +53,7 @@ export default class CountdownScreen extends React.PureComponent {
   }
   handleQuitWorkout = () => {
     this.setState({ pauseModalVisible: false });
-    this.props.navigation.navigate('Workouts');
+    this.props.navigation.navigate('WorkoutsSelection');
     const exerciseVideos = [
       `${FileSystem.cacheDirectory}exercise-1.mp4`,
       `${FileSystem.cacheDirectory}exercise-2.mp4`,

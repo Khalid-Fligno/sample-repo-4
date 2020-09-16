@@ -241,11 +241,11 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     };
     const findFocusIcon = () => {
       let focus;
-      if (workout.filters.indexOf('fullBody') > -1) {
+      if (workout.fullBody) {
         focus = 'full';
-      } else if (workout.filters.indexOf('upperBody')) {
+      } else if (workout.upperBody) {
         focus = 'upper';
-      } else if (workout.filters.indexOf('lowerBody')) {
+      } else if (workout.lowerBody) {
         focus = 'lower';
       }
       return `workouts-${focus}`;

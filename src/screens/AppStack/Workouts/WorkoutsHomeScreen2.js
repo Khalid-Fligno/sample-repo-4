@@ -29,32 +29,7 @@ import { SafeAreaView } from 'react-navigation';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 
 
-
-const workoutTypeMap = [
-  'Strength',
-  'Circuit',
-  'Interval',
-];
-
-const equipmentMap = [
-   'Full EquipmentMap',
-   'Fitazfk EquipmentMap',
-   'Minimum EquipmentMap',
-   'No EquipmentMap'
-];
-
-const muscleGroupMap = [
-  'Full Body',
-  'Upper Body',
-  'Lower Body',
-  'Core' 
-];
-const workoutMainCategory=[
-  {displayName:'Workout Focus',subCategory:workoutTypeMap,image: require('../../../../assets/images/workouts-resistance.jpg')},
-  {displayName:'Equipment',subCategory:equipmentMap,image: require('../../../../assets/images/workouts-resistance.jpg')},
-  {displayName:'Mascle Group',subCategory:muscleGroupMap,image: require('../../../../assets/images/workouts-resistance.jpg')}
-]
-const toggleSubtitle = workoutMainCategory.map(()=> false)
+let toggleSubtitle = [];
 class WorkoutsHomeScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -127,6 +102,7 @@ fetchCategories = async () =>{
     const workoutCategories = [];
     await querySnapshot.forEach(async (doc) => {
       await workoutCategories.push(await doc.data());
+      await toggleSubtitle.push(false)
     });
     this.setState({ workoutCategories, loading: false });
   });
@@ -148,9 +124,10 @@ fetchCategories = async () =>{
 
   handleClick(mainIndex,subIndex){
     Haptics.selectionAsync();
+    console.log(this.state.workoutCategories[mainIndex])
     this.props.navigation.navigate('WorkoutsSelection', {
-      selectedMainCategory : workoutMainCategory[mainIndex].displayName,
-      selectedSubCategory : workoutMainCategory[mainIndex].subCategory[subIndex]
+      selectedMainCategory : this.state.workoutCategories[mainIndex],
+      selectedSubCategory : this.state.workoutCategories[mainIndex].subCategories[subIndex]
     });
   }
 
@@ -184,7 +161,7 @@ fetchCategories = async () =>{
                   <View  key={index}>
                     <Tile
                       title1={work.displayName}
-                      image={work.imageUrl}
+                      image={0}
                       imageUrl={work.imageUrl}
                       onPress={() => this.toggleSubtitleList(index)}
                       showTitle = {false}

@@ -82,6 +82,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   componentDidMount = async () => {
     this.selectedMainCategory = this.props.navigation.getParam('selectedMainCategory', null);
     this.selectedSubCategory = this.props.navigation.getParam('selectedSubCategory', null);
+    console.log(this.selectedMainCategory)
     await this.fetchWorkouts();
   }
   componentWillUnmount = async () => {
@@ -89,13 +90,9 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   }
   fetchWorkouts = async () => {
     this.setState({ loading: true });
-    const focus = this.props.navigation.getParam('workoutFocus', null);
-    const location = this.props.navigation.getParam('workoutLocation', null);
     this.unsubscribe = await db.collection('newWorkouts')
-      // .where(focus, '==', true)
-      // .where(location, '==', true)
-      // .where(this.selectedSubCategory !== 'Strength'?this.selectedSubCategory.toLowerCase():'resistance','==',true)
-      // .where('workoutRotation', '==', 2)
+      .where("filters", "array-contains",this.selectedSubCategory.name)
+     
       .onSnapshot(async (querySnapshot) => {
         const workouts = [];
         await querySnapshot.forEach(async (doc) => {
@@ -123,14 +120,17 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
         FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
       }))
       await Promise.all(exercises.map(async (exercise, index) => {
+        // const videoUrl = exercise.videoUrls.filter(res=>res.model === 'sharnia')
+        if(exercise.videoUrls[0].url)
         await FileSystem.downloadAsync(
-          exercise.videoUrl,
+          // videoUrl[0].url,
+          exercise.videoUrls[0].url,
           `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
         );
       }))
       this.setState({ loading: false });
       // this.props.navigation.navigate('WorkoutInfo', { workout, reps: findReps(fitnessLevel) }); //for new workout its difficulty level
-      this.props.navigation.navigate('WorkoutInfo', { workout, reps: workout.repBased[fitnessLevel-1] }); //for new workout its difficulty level
+      this.props.navigation.navigate('WorkoutInfo', { workout, reps: workout.difficultyLevel[fitnessLevel-1] }); //for new workout its difficulty level
     } catch (err) {
       this.setState({ loading: false });
       Alert.alert('Could not download exercise videos', 'Please check your internet connection');
@@ -139,13 +139,6 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
 
 
 //************************New Code*********************** */
-// componentDidMount = async () => {
-//   this.selectedMainCategory = this.props.navigation.getParam('selectedMainCategory', null);
-//   this.selectedSubCategory = this.props.navigation.getParam('selectedSubCategory', null);
-//   console.log(this.selectedMainCategory,this.selectedSubCategory)
-//   this.setState({ loading: false });
-// }
-
 
   updateFilter = (filterIndex) => {
     console.log(filterIndex)
@@ -174,23 +167,16 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       location,
       filterIndex
     } = this.state;
-    const filterButtons = ['All', 'Full Body', 'Upper Body', 'Core'];
-    const filter = ['all','fullBody','upperBody','lowerBody'] 
-    console.log(workouts)
-    const workoutList = workouts.filter(res=> {
-                               return filter[filterIndex] === 'all' ?true:res.filters.indexOf(filter[filterIndex]) > -1
-                            })
+    if(!loading){
+            this.filterButtons = this.selectedMainCategory.filters.map((res)=>res.displayName);
+            this.filterButtons.unshift('All')
+            this.filter = this.selectedMainCategory.filters.map((res)=>res.name);
+            this.filter.unshift('all')
+            this.workoutList = workouts.filter(res=> {
+                                  return this.filter[filterIndex] === 'all' ?true:res.filters.indexOf(this.filter[filterIndex]) > -1
+                                })
+    }
 
-    // const locationImages = images[location];
-    // const workoutList = sortBy(workouts, 'sortOrder').map((workout, index) => (
-    //   <WorkoutTile
-    //     key={workout.id}
-    //     title1={workout.displayName}
-    //     image={locationImages[index]}
-    //     onPress={() => this.loadExercises(workout)}
-    //     disabled={workout.disabled}
-    //   />
-    // ));
     
     console.log(workouts)
     return (
@@ -198,7 +184,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
        {!loading &&
             <>
                 <BigHeadingWithBackButton isBackButton = {true} 
-                      bigTitleText = {this.selectedSubCategory} 
+                      bigTitleText = {this.selectedSubCategory.displayName} 
                       onPress={this.handleBack} 
                       backButtonText="Back to workouts" 
                       isBigTitle={true}
@@ -207,7 +193,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
                 <CustomButtonGroup  
                 onPress={this.updateFilter}
                 selectedIndex={filterIndex}
-                buttons={filterButtons}
+                buttons={this.filterButtons}
                 />
             </>   
           } 
@@ -216,7 +202,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
           !loading && (
             <FlatList
               // contentContainerStyle={styles.scrollView}
-              data={workoutList}
+              data={this.workoutList}
               keyExtractor={this.keyExtractor}
               renderItem={this.renderItem}
               showsVerticalScrollIndicator={false}
@@ -233,3 +219,18 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
 }
 
 
+ // .where(focus, '==', true)
+      // .where(location, '==', true)
+      // .where(this.selectedSubCategory !== 'Strength'?this.selectedSubCategory.toLowerCase():'resistance','==',true)
+      // .where('workoutRotation', '==', 2)
+
+   // const locationImages = images[location];
+    // const workoutList = sortBy(workouts, 'sortOrder').map((workout, index) => (
+    //   <WorkoutTile
+    //     key={workout.id}
+    //     title1={workout.displayName}
+    //     image={locationImages[index]}
+    //     onPress={() => this.loadExercises(workout)}
+    //     disabled={workout.disabled}
+    //   />
+    // ));

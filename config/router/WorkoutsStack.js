@@ -16,6 +16,7 @@ import {
   fade,
   findWorkoutsSelectionTitle,
 } from './utils';
+import WorkoutInfoScreen2 from '../../src/screens/AppStack/Workouts/WorkoutInfoScreen2';
 
 const WorkoutsStack = createStackNavigator(
   {
@@ -24,7 +25,8 @@ const WorkoutsStack = createStackNavigator(
     // WorkoutsSelection: WorkoutsSelectionScreen,
     WorkoutsSelection: WorkoutsSelectionScreen2,
     HiitWorkoutsSelection: HiitWorkoutsSelectionScreen,
-    WorkoutInfo: WorkoutInfoScreen,
+    // WorkoutInfo: WorkoutInfoScreen,
+    WorkoutInfo: WorkoutInfoScreen2,
     HiitWorkoutInfo: HiitWorkoutInfoScreen,
     HiitCircuitWorkoutInfo: HiitCircuitWorkoutInfoScreen,
   },
