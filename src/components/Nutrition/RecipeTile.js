@@ -79,8 +79,8 @@ export default class RecipeTile extends React.PureComponent {
               >
                 <View style={styles.recipeInfoSection}>
                   {
-                    tags && tags.map((tag) => (
-                     <Tag tag = {tag}/>
+                    tags && tags.map((tag,index) => (
+                     <Tag tag = {tag} key={index}/>
                     ))
                   }
                 </View>
