@@ -68,137 +68,83 @@ const workoutMainCategory=[
   {displayName:'Mascle Group',subCategory:muscleGroupMap,image: require('../../../../assets/images/workouts-resistance.jpg')}
 ]
 
-const workouts = [
-  {
-    title:'Better butt 2.0',
-    description:'Intermediate - basic equipment - endurence',
-    url:require('../../../../assets/images/workouts-home-abt.jpg'),
-    time:25,
-    type:'full body'
-  },
-  {
-    title:'Better butt 3.0',
-    description:'Intermediate - basic equipment - endurence',
-    url:require('../../../../assets/images/workouts-hiit-skipping.jpg'),
-    time:24,
-    type:'upper body'
-  },
-  {
-    title:'Better butt 4.0',
-    description:'Intermediate - basic equipment - endurence',
-    url:require('../../../../assets/images/workouts-gym-upper.jpg'),
-    time:25,
-    type:'core'
-  },
-  {
-    title:'Better butt 5.0',
-    description:'Intermediate - basic equipment - endurence',
-    url:require('../../../../assets/images/workouts-outdoors-upper.jpg'),
-    time:25,
-    type:'full body '
-  },
-  {
-    title:'Better butt 2.0',
-    description:'Intermediate - basic equipment - endurence',
-    url:require('../../../../assets/images/workouts-home-abt.jpg'),
-    time:25,
-    type:'full body'
-  },
-  {
-    title:'Better butt 3.0',
-    description:'Intermediate - basic equipment - endurence',
-    url:require('../../../../assets/images/workouts-hiit-skipping.jpg'),
-    time:24,
-    type:'upper body'
-  },
-  {
-    title:'Better butt 4.0',
-    description:'Intermediate - basic equipment - endurence',
-    url:require('../../../../assets/images/workouts-gym-upper.jpg'),
-    time:25,
-    type:'core'
-  },
-  {
-    title:'Better butt 5.0',
-    description:'Intermediate - basic equipment - endurence',
-    url:require('../../../../assets/images/workouts-outdoors-upper.jpg'),
-    time:25,
-    type:'full body '
-  }
-  
-]
 
 export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      workouts: workouts,
+      workouts: [],
       loading: true,
       filterIndex: 0,
       location: props.navigation.getParam('workoutLocation', null),
     };
   }
-  // componentDidMount = async () => {
-  //   await this.fetchWorkouts();
-  // }
-  // componentWillUnmount = async () => {
-  //   // await this.unsubscribe();
-  // }
-  // fetchWorkouts = async () => {
-  //   this.setState({ loading: true });
-  //   const focus = this.props.navigation.getParam('workoutFocus', null);
-  //   const location = this.props.navigation.getParam('workoutLocation', null);
-  //   this.unsubscribe = await db.collection('workouts')
-  //     .where(focus, '==', true)
-  //     .where(location, '==', true)
-  //     .where('workoutRotation', '==', 2)
-  //     .onSnapshot(async (querySnapshot) => {
-  //       const workouts = [];
-  //       await querySnapshot.forEach(async (doc) => {
-  //         await workouts.push(await doc.data());
-  //       });
-  //       this.setState({ workouts, loading: false });
-  //     });
-  // }
-  // loadExercises = async (workout) => {
-  //   this.setState({ loading: true });
-  //   const fitnessLevel = await AsyncStorage.getItem('fitnessLevel');
-  //   const { exercises } = workout;
-  //   try {
-  //     const exerciseVideos = [
-  //       `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
-  //       `${FileSystem.cacheDirectory}exercise-hiit-circuit-1.mp4`,
-  //       `${FileSystem.cacheDirectory}exercise-hiit-circuit-2.mp4`,
-  //       `${FileSystem.cacheDirectory}exercise-hiit-circuit-3.mp4`,
-  //       `${FileSystem.cacheDirectory}exercise-hiit-circuit-4.mp4`,
-  //       `${FileSystem.cacheDirectory}exercise-hiit-circuit-5.mp4`,
-  //       `${FileSystem.cacheDirectory}exercise-hiit-circuit-6.mp4`,
-  //     ];
-  //     Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
-  //       FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
-  //     }));
-  //     await Promise.all(exercises.map(async (exercise, index) => {
-  //       await FileSystem.downloadAsync(
-  //         exercise.videoURL,
-  //         `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-  //       );
-  //     }));
-  //     this.setState({ loading: false });
-  //     this.props.navigation.navigate('WorkoutInfo', { workout, reps: findReps(fitnessLevel) });
-  //   } catch (err) {
-  //     this.setState({ loading: false });
-  //     Alert.alert('Could not download exercise videos', 'Please check your internet connection');
-  //   }
-  // }
+  componentDidMount = async () => {
+    this.selectedMainCategory = this.props.navigation.getParam('selectedMainCategory', null);
+    this.selectedSubCategory = this.props.navigation.getParam('selectedSubCategory', null);
+    await this.fetchWorkouts();
+  }
+  componentWillUnmount = async () => {
+    await this.unsubscribe();
+  }
+  fetchWorkouts = async () => {
+    this.setState({ loading: true });
+    const focus = this.props.navigation.getParam('workoutFocus', null);
+    const location = this.props.navigation.getParam('workoutLocation', null);
+    this.unsubscribe = await db.collection('newWorkouts')
+      // .where(focus, '==', true)
+      // .where(location, '==', true)
+      // .where(this.selectedSubCategory !== 'Strength'?this.selectedSubCategory.toLowerCase():'resistance','==',true)
+      // .where('workoutRotation', '==', 2)
+      .onSnapshot(async (querySnapshot) => {
+        const workouts = [];
+        await querySnapshot.forEach(async (doc) => {
+          await workouts.push(await doc.data());
+        });
+        this.setState({ workouts, loading: false });
+      });
+  }
+  loadExercises = async (workout) => {
+    this.setState({ loading: true });
+    const fitnessLevel = await AsyncStorage.getItem('fitnessLevel');
+    const { exercises } = workout;
+    console.log(exercises)
+    try {
+      const exerciseVideos = [
+        // `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
+        `${FileSystem.cacheDirectory}exercise-1.mp4`,
+        `${FileSystem.cacheDirectory}exercise-2.mp4`,
+        `${FileSystem.cacheDirectory}exercise-3.mp4`,
+        `${FileSystem.cacheDirectory}exercise-4.mp4`,
+        `${FileSystem.cacheDirectory}exercise-5.mp4`,
+        `${FileSystem.cacheDirectory}exercise-6.mp4`,
+      ];
+      Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
+        FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
+      }))
+      await Promise.all(exercises.map(async (exercise, index) => {
+        await FileSystem.downloadAsync(
+          exercise.videoUrl,
+          `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+        );
+      }))
+      this.setState({ loading: false });
+      // this.props.navigation.navigate('WorkoutInfo', { workout, reps: findReps(fitnessLevel) }); //for new workout its difficulty level
+      this.props.navigation.navigate('WorkoutInfo', { workout, reps: workout.repBased[fitnessLevel-1] }); //for new workout its difficulty level
+    } catch (err) {
+      this.setState({ loading: false });
+      Alert.alert('Could not download exercise videos', 'Please check your internet connection');
+    }
+  }
 
 
 //************************New Code*********************** */
-componentDidMount = async () => {
-  this.selectedMainCategoryIndex = this.props.navigation.getParam('selectedMainCategoryIndex', null);
-  this.selectedSubCategoryIndex = this.props.navigation.getParam('selectedSubCategoryIndex', null);
-  console.log(this.workoutIndex,this.subTitleIndex)
-  this.setState({ loading: false });
-}
+// componentDidMount = async () => {
+//   this.selectedMainCategory = this.props.navigation.getParam('selectedMainCategory', null);
+//   this.selectedSubCategory = this.props.navigation.getParam('selectedSubCategory', null);
+//   console.log(this.selectedMainCategory,this.selectedSubCategory)
+//   this.setState({ loading: false });
+// }
 
 
   updateFilter = (filterIndex) => {
@@ -208,7 +154,13 @@ componentDidMount = async () => {
 
   keyExtractor = (item, index) => index.toString()
   renderItem = ({ item }) => (
-       <WorkoutListItem item={item}  />
+       <WorkoutListItem 
+          url={ require('../../../../assets/images/workouts-resistance.jpg')} 
+          description = {item.displayName}
+          title = {item.displayName}
+          timeInterval = {25}
+          onPress ={() => this.loadExercises(item)}
+       />
   )
 
   handleBack =()=>{
@@ -223,13 +175,10 @@ componentDidMount = async () => {
       filterIndex
     } = this.state;
     const filterButtons = ['All', 'Full Body', 'Upper Body', 'Core'];
-     
+    const filter = ['all','fullBody','upperBody','lowerBody'] 
+    console.log(workouts)
     const workoutList = workouts.filter(res=> {
-                              console.log(res.type)
-                              if(res.type  === filterButtons[filterIndex].toLowerCase()){
-                                  return res
-                              }
-                              return res
+                               return filter[filterIndex] === 'all' ?true:res.filters.indexOf(filter[filterIndex]) > -1
                             })
 
     // const locationImages = images[location];
@@ -243,21 +192,26 @@ componentDidMount = async () => {
     //   />
     // ));
     
-    console.log(filterButtons[filterIndex].toLowerCase(),workoutList)
+    console.log(workouts)
     return (
       <View style={globalStyle.container}>
-       {!loading && <BigHeadingWithBackButton isBackButton = {true} 
-            bigTitleText = {workoutMainCategory[this.selectedMainCategoryIndex]['subCategory'][this.selectedSubCategoryIndex]} 
-            onPress={this.handleBack} 
-            backButtonText="Back to workouts" 
-            isBigTitle={true}
-            isBackButton ={true}
-          />} 
-          <CustomButtonGroup  
-            onPress={this.updateFilter}
-            selectedIndex={filterIndex}
-            buttons={filterButtons}
-          />
+       {!loading &&
+            <>
+                <BigHeadingWithBackButton isBackButton = {true} 
+                      bigTitleText = {this.selectedSubCategory} 
+                      onPress={this.handleBack} 
+                      backButtonText="Back to workouts" 
+                      isBigTitle={true}
+                      isBackButton ={true}
+                />
+                <CustomButtonGroup  
+                onPress={this.updateFilter}
+                selectedIndex={filterIndex}
+                buttons={filterButtons}
+                />
+            </>   
+          } 
+         
            {
           !loading && (
             <FlatList

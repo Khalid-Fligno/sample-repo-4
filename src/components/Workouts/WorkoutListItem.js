@@ -4,8 +4,10 @@ import { ImageBackground, Text,View, StyleSheet } from 'react-native';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import PropTypes from 'prop-types';
+import { propTypes } from 'react-native-carousel';
 
-const WorkoutListItem =({item ,onPress})=>(
+const WorkoutListItem =({timeInterval,description,title,url ,onPress})=>(
   <TouchableOpacity
         onPress={onPress}
         activeOpacity={0.4}
@@ -14,7 +16,7 @@ const WorkoutListItem =({item ,onPress})=>(
       <View style={styles.imageContainer}>
         <ImageBackground
             style={styles.image}
-            source={item.url}
+            source={url}
             imageStyle={{borderRadius:3}}
         >
           <View style={styles.opacityLayer}>
@@ -23,8 +25,8 @@ const WorkoutListItem =({item ,onPress})=>(
       </View>
      
       <View style={styles.textContainer}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.description}</Text>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.description}>{description}</Text>
         <View style={styles.timeContainer}> 
           <Icon
             name="timer"
@@ -32,13 +34,22 @@ const WorkoutListItem =({item ,onPress})=>(
             color={colors.charcoal.standard}
           />
           <Text style={styles.time}>   
-            {item.time}m
+            {timeInterval}m
           </Text> 
         </View>  
       </View>
      </View>
   </TouchableOpacity>
    )
+
+
+   WorkoutListItem.propTypes ={
+    timeInterval:PropTypes.number,
+    description:PropTypes.string,
+    title:PropTypes.string,
+    url:PropTypes.number ,
+    onPress:PropTypes.func
+   }
 
 const styles= StyleSheet.create({
     ItemContainer:{
@@ -69,7 +80,7 @@ const styles= StyleSheet.create({
     title:{
       color:colors.charcoal.standard,
       fontFamily:fonts.bold,
-      fontSize:18
+      fontSize:15
     },
     description:{
       color:colors.grey.dark,

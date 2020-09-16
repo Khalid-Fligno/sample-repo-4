@@ -56,6 +56,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     this.setState({ loading: true });
     const focus = this.props.navigation.getParam('workoutFocus', null);
     const location = this.props.navigation.getParam('workoutLocation', null);
+    console.log(focus,location)
     this.unsubscribe = await db.collection('workouts')
       .where(focus, '==', true)
       .where(location, '==', true)

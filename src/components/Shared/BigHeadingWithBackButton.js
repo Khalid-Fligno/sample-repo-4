@@ -27,7 +27,7 @@ export default function BigHeadingWithBackButton(props){
             )}
             
             {props.isBigTitle && (
-                 <Text style={globalStyle.bigHeadingTitleText}>
+                 <Text style={[globalStyle.bigHeadingTitleText,props.bigTitleStyle?props.bigTitleStyle:{}]}>
                  {(props.bigTitleText.charAt(0).toUpperCase() + props.bigTitleText.slice(1))}
                  </Text>
             )}
@@ -35,4 +35,5 @@ export default function BigHeadingWithBackButton(props){
         </View>
     )
 }
+
 

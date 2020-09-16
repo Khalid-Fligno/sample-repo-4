@@ -228,7 +228,6 @@ export default class WorkoutInfoScreen extends React.PureComponent {
       appleMusicAvailable,
       spotifyAvailable,
     } = this.state;
-
     const findLocationIcon = () => {
       let location;
       if (workout.home) {
@@ -242,11 +241,11 @@ export default class WorkoutInfoScreen extends React.PureComponent {
     };
     const findFocusIcon = () => {
       let focus;
-      if (workout.fullBody) {
+      if (workout.filters.indexOf('fullBody') > -1) {
         focus = 'full';
-      } else if (workout.upperBody) {
+      } else if (workout.filters.indexOf('upperBody')) {
         focus = 'upper';
-      } else if (workout.lowerBody) {
+      } else if (workout.filters.indexOf('lowerBody')) {
         focus = 'lower';
       }
       return `workouts-${focus}`;

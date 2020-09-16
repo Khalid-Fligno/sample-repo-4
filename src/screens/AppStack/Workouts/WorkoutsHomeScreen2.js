@@ -60,38 +60,27 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
-      selectedWorkoutTypeIndex: 0,
-      selectedWorkoutLocationIndex: 0,
-      selectedResistanceFocusIndex: 0,
-      selectedHiitStyleIndex: 0,
       helperModalVisible: false,
       resistanceWeeklyTarget: 3,
       hiitWeeklyTarget: 2,
       resistanceWeeklyComplete: undefined,
       hiitWeeklyComplete: undefined,
-      toggleList:toggleSubtitle
+      toggleList:toggleSubtitle,
+      workoutCategories:[]
     };
   }
   componentDidMount = () => {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     this.fetchWeeklyTargetInfo();
     this.showHelperOnFirstOpen();
+    this.fetchCategories();
   }
-  componentWillUnmount = () => {
+
+  componentWillUnmount = async () => {
     this.unsubscribeFromTargets();
+    await this.unsubscribe();
   }
-  // onSnapToItemTopCarousel = (field, slideIndex) => {
-  //   Haptics.selectionAsync();
-  //   this.setState({
-  //     selectedWorkoutTypeIndex: slideIndex,
-  //     selectedHiitStyleIndex: 0,
-  //     selectedResistanceFocusIndex: 0,
-  //   });
-  // }
-  // onSnapToItem = (field, slideIndex) => {
-  //   Haptics.selectionAsync();
-  //   this.setState({ [field]: slideIndex });
-  // }
+
   showHelperOnFirstOpen = async () => {
     const helperShownOnFirstOpen = await AsyncStorage.getItem('workoutHelperShownOnFirstOpen');
     if (helperShownOnFirstOpen === null) {
@@ -125,54 +114,23 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
   hideHelperModal = () => {
     this.setState({ helperModalVisible: false });
   }
-  // handleWorkoutSelected = (selectedWorkoutLocationIndex, selectedResistanceFocusIndex) => {
-  //   const workoutLocation = workoutLocationMap[selectedWorkoutLocationIndex];
-  //   const workoutFocus = workoutFocusMap[selectedResistanceFocusIndex];
-  //   this.props.navigation.navigate('WorkoutsSelection', {
-  //     workoutFocus,
-  //     workoutLocation,
-  //   });
-  // }
-  // handleHiitWorkoutSelected = (selectedWorkoutLocationIndex, selectedHiitStyleIndex) => {
-  //   const workoutLocation = workoutLocationMap[selectedWorkoutLocationIndex];
-  //   const hiitWorkoutStyle = hiitWorkoutStyleMap[selectedHiitStyleIndex];
-  //   this.props.navigation.navigate('HiitWorkoutsSelection', {
-  //     hiitWorkoutStyle,
-  //     workoutLocation,
-  //   });
-  // }
-  // goToWorkouts = (selectedWorkoutTypeIndex) => {
-  //   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  //   const { selectedWorkoutLocationIndex, selectedResistanceFocusIndex, selectedHiitStyleIndex } = this.state;
-  //   if (selectedWorkoutTypeIndex === 0) {
-  //     this.handleWorkoutSelected(selectedWorkoutLocationIndex, selectedResistanceFocusIndex);
-  //   } else {
-  //     this.handleHiitWorkoutSelected(selectedWorkoutLocationIndex, selectedHiitStyleIndex);
-  //   }
-  // }
 
-  // renderItem = (subItems ) => {
-  //   const {
-  //     resistanceWeeklyTarget,
-  //     hiitWeeklyTarget,
-  //     resistanceWeeklyComplete,
-  //     hiitWeeklyComplete,
-  //   } = this.state;
-  //   return (
-  //     <View style={WorkoutScreenStyle.slide}>
-  //         <View style={globalStyle.opacityLayer}>
-  //         for (let i = 0; i < subItems.length; i++) {
-  //                    <Text>
-  //                       {{subItems[i]}}
-  //                     </Text>
-  //                   }   
-  //         </View>
-  //     </View>
-  //   );
-  // }
 
 // ******************************* new code *************************************
 scrollView = any
+
+fetchCategories = async () =>{
+  this.setState({ loading: true });
+  this.unsubscribe = await db.collection('workoutCategories')
+  .orderBy("name", "desc")
+  .onSnapshot(async (querySnapshot) => {
+    const workoutCategories = [];
+    await querySnapshot.forEach(async (doc) => {
+      await workoutCategories.push(await doc.data());
+    });
+    this.setState({ workoutCategories, loading: false });
+  });
+}
 
   toggleSubtitleList(index){
     const list= this.state.toggleList.map((item , i)=>{
@@ -189,10 +147,10 @@ scrollView = any
   }
 
   handleClick(mainIndex,subIndex){
-    
+    Haptics.selectionAsync();
     this.props.navigation.navigate('WorkoutsSelection', {
-      selectedMainCategoryIndex : mainIndex,
-      selectedSubCategoryIndex : subIndex
+      selectedMainCategory : workoutMainCategory[mainIndex].displayName,
+      selectedSubCategory : workoutMainCategory[mainIndex].subCategory[subIndex]
     });
   }
 
@@ -200,11 +158,11 @@ scrollView = any
   render() {
     const {
       loading,
-      selectedWorkoutTypeIndex,
       helperModalVisible,
-      toggleList
+      toggleList,
+      workoutCategories
     } = this.state;
-    console.log(toggleList)
+    console.log(workoutCategories)
     var _scrollToBottomY
     return (
         <ScrollView 
@@ -213,66 +171,64 @@ scrollView = any
                 ref={ref => {this.scrollView = ref}}
                 onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}
         >
-          <SafeAreaView>
-            <View>
-            <BigHeadingWithBackButton  bigTitleText = "Workouts" isBackButton ={false} isBigTitle = {true} />
-            <View style={{width:'100%',marginBottom:30}}>
-              <Text style={{color:'gray'}}>Choose your workout</Text>
-            </View>
-            {
-              workoutMainCategory.map((work,index)=>(
-                <View  key={index}>
-                  <Tile
-                    title1={work.displayName}
-                    image={work.image}
-                    onPress={() => this.toggleSubtitleList(index)}
-                    showTitle = {false}
-                    overlayTitle = {true}
-                    overlayTitleStyle ={
-                      { color:colors.offWhite,
-                        textAlign:'left',
-                        paddingLeft:50,
-                        textTransform:'capitalize',
-                        fontSize:25
-                      }}
-                   
-                    customContainerStyle={{height:170,marginBottom:15}}
-                  />    
-                { toggleList[index] && <View style={{marginBottom:20,paddingLeft:5}}>
-                       {work.subCategory.map((data,i)=>(
-                           <TouchableOpacity key={i}
-                              onPress={()=>this.handleClick(index,i)}
-                           >
-                              <Text  style={WorkoutScreenStyle.subTitleText}>{data}</Text>
-                           </TouchableOpacity> 
-                       ))
-                      } 
-                  </View>
-                }   
-                </View>  
-                ))
+          {
+           !loading && <>
+            <SafeAreaView>
+              <View>
+              <BigHeadingWithBackButton  bigTitleText = "Workouts" isBackButton ={false} isBigTitle = {true} />
+              <View style={{width:'100%',marginBottom:30}}>
+                <Text style={{color:'gray'}}>Choose your workout</Text>
+              </View>
+              {
+                workoutCategories.map((work,index)=>(
+                  <View  key={index}>
+                    <Tile
+                      title1={work.displayName}
+                      image={work.imageUrl}
+                      imageUrl={work.imageUrl}
+                      onPress={() => this.toggleSubtitleList(index)}
+                      showTitle = {false}
+                      overlayTitle = {true}
+                      overlayTitleStyle ={
+                        { color:colors.offWhite,
+                          textAlign:'left',
+                          paddingLeft:50,
+                          textTransform:'capitalize',
+                          fontSize:25
+                        }}
+                    
+                      customContainerStyle={{height:170,marginBottom:15}}
+                    />    
+                  { toggleList[index] && <View style={{marginBottom:20,paddingLeft:5}}>
+                        {work.subCategories.map((data,i)=>(
+                            <TouchableOpacity key={i}
+                                onPress={()=>this.handleClick(index,i)}
+                            >
+                                <Text  style={WorkoutScreenStyle.subTitleText}>{data.displayName}</Text>
+                            </TouchableOpacity> 
+                        ))
+                        } 
+                    </View>
+                  }   
+                  </View>  
+                  ))
+                
+              }
               
-            }
-            
-            </View>
-          </SafeAreaView>
-        
-        {/* <View style={globalStyle.buttonContainer}>
-          <CustomButton
-            title="SHOW WORKOUTS"
-            onPress={() => this.goToWorkouts(selectedWorkoutTypeIndex)}
-            primary
+              </View>
+            </SafeAreaView>
+          
+          <HelperModal
+            helperModalVisible={helperModalVisible}
+            hideHelperModal={this.hideHelperModal}
+            headingText="Workouts"
+            bodyText="What would you like to train today?"
+            bodyText2="Select your workout type, followed by the location that you would like to train at.  Finally, select what you would like to focus on today."
+            bodyText3="Once you are happy with your selections, press the ‘Show workouts’ button to continue."
+            color="coral"
           />
-        </View> */}
-        <HelperModal
-          helperModalVisible={helperModalVisible}
-          hideHelperModal={this.hideHelperModal}
-          headingText="Workouts"
-          bodyText="What would you like to train today?"
-          bodyText2="Select your workout type, followed by the location that you would like to train at.  Finally, select what you would like to focus on today."
-          bodyText3="Once you are happy with your selections, press the ‘Show workouts’ button to continue."
-          color="coral"
-        />
+          </>
+          }
         <Loader
           color={colors.coral.standard}
           loading={loading}

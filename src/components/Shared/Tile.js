@@ -44,7 +44,8 @@ export default class Tile extends React.PureComponent {
       height,
       customContainerStyle,
       showTitleStyle,
-      overlayTitleStyle
+      overlayTitleStyle,
+      imageUrl
     } = this.props;
     tileHeight = height
     const animatedStyle = {
@@ -62,7 +63,7 @@ export default class Tile extends React.PureComponent {
           style={[styles.flexContainer, animatedStyle]}
         >
           <ImageBackground
-            source={image}
+            source={imageUrl?{uri:imageUrl}:image}
             style={styles.image}
           >
             {
@@ -92,7 +93,8 @@ Tile.propTypes = {
   height: PropTypes.number,
   customContainerStyle: PropTypes.object,
   showTitleStyle:PropTypes.object,
-  overlayTitleStyle:PropTypes.object
+  overlayTitleStyle:PropTypes.object,
+  imageUrl:PropTypes.string
 };
 
 Tile.defaultProps = {
@@ -139,5 +141,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 5,
     width:'100%',
+    textTransform:'capitalize'
   },
 });
