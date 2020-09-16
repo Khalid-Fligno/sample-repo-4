@@ -74,11 +74,11 @@ const styles = StyleSheet.create({
     width: 30,
     marginRight: 5,
     borderWidth: 2.5,
-    borderColor: colors.red.standard,
+    borderColor: colors.themeColor.color,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:colors.red.standard,
+    backgroundColor:colors.themeColor.color,
   },  
   tagText: {
     fontFamily: fonts.bold,

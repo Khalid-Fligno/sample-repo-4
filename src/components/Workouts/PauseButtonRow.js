@@ -25,7 +25,7 @@ export default class PauseButtonRow extends React.PureComponent {
             <Icon
               name="pause"
               size={15}
-              color={colors.coral.standard}
+              color={colors.themeColor.color}
             />
             <Text style={styles.pauseButtonText}>
               PAUSE
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 2,
-    borderColor: colors.coral.standard,
+    borderColor: colors.themeColor.color,
     borderRadius: 4,
     shadowColor: colors.charcoal.light,
     shadowOpacity: 0.3,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   pauseButtonText: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.coral.standard,
+    color: colors.themeColor.color,
     marginTop: 4,
     marginLeft: 5,
     marginRight: 5,

@@ -11,13 +11,14 @@ const CalendarStack = createStackNavigator(
     initialRouteName: 'CalendarHome',
     defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
+        const { routeName } = navigation.state;
         return (
           <Header
             navigation={navigation}
             stack="calendar"
-            withProfileButton
-            withHelpButton
-            withBackButton
+            withProfileButton={routeName === 'CalendarHome'}
+            withHelpButton={routeName === 'CalendarHome'}
+            withBackButton={routeName === 'Home'} 
           />
         );
       },

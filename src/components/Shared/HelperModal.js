@@ -57,10 +57,7 @@ export default class HelperModal extends React.PureComponent {
               onPress={hideHelperModal}
               style={[
                 styles.modalButton,
-                color === 'coral' && styles.modalButtonCoral,
-                color === 'violet' && styles.modalButtonViolet,
-                color === 'blue' && styles.modalButtonBlue,
-                color === 'green' && styles.modalButtonGreen,
+                styles.modalThemeButton
               ]}
             >
               <Text style={styles.modalButtonText}>
@@ -133,28 +130,15 @@ const styles = StyleSheet.create({
   modalButtonCoral: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.coral.standard,
+    backgroundColor: colors.themeColor.color,
     height: 50,
     width: '100%',
   },
-  modalButtonViolet: {
+  
+  modalThemeButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.violet.standard,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonBlue: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.blue.standard,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonGreen: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.green.standard,
+    backgroundColor: colors.themeColor.color,
     height: 50,
     width: '100%',
   },

@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: fonts.ultraItalic,
     fontSize: 44,
-    color: colors.coral.standard,
+    color: colors.themeColor.color,
     textAlign: 'center',
   },
   bodyText: {

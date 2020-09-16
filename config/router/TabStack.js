@@ -11,21 +11,24 @@ import Icon from '../../src/components/Shared/Icon';
 import colors from '../../src/styles/colors';
 import fonts from '../../src/styles/fonts';
 import { tabColorMap } from './utils';
+import { Image } from 'react-native';
 
 const TabStack = createBottomTabNavigator(
   {
-    Home: HomeStack,
-    Nutrition: NutritionStack,
-    Workouts: WorkoutsStack,
+    // Home: HomeStack,
+    // Nutrition: NutritionStack,
+    // Workouts: WorkoutsStack,
+    // Calendar: CalendarStack,
+    // Progress: ProgressStack,
+    
+
+    Feed: FeedStack,
+    Subscription: SubscriptionStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
-    // Feed: FeedStack,
-    // SUBSCRIPTION: SubscriptionStack,
-    // CALCENDER: CalendarStack,
-    // PROGRESS: ProgressStack,
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Feed',
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
       tabBarIcon: ({ focused }) => {
@@ -33,70 +36,83 @@ const TabStack = createBottomTabNavigator(
         const activeState = tabColorMap[routeName];
         const inactiveState = colors.charcoal.standard;
         let icon;
-        if (routeName === 'Home') {
-          icon = (
-            <Icon
-              name={focused ? 'home-solid' : 'home-outline'}
-              size={24}
-              color={focused ? activeState : inactiveState}
-            />
-          );
-        } else if (routeName === 'Nutrition') {
-          icon = (
-            <Icon
-              name={focused ? 'nutrition-solid' : 'nutrition-outline'}
-              size={24}
-              color={focused ? activeState : inactiveState}
-            />
-          );
-        } 
-        // else if (routeName === 'FEED') {
+        // if (routeName === 'Home') {
         //   icon = (
         //     <Icon
-        //       name={focused ? 'feed-solid' : 'feed-outline'}
-        //       size={24}
-        //       color={focused ? activeState : inactiveState}
-        //     />
-        //   );
-        // } else if (routeName === 'Subscription') {
-        //   icon = (
-        //     <Icon
-        //       name={focused ? 'subscription-solid' : 'subscription-outline'}
+        //       name={focused ? 'home-solid' : 'home-outline'}
         //       size={24}
         //       color={focused ? activeState : inactiveState}
         //     />
         //   );
         // } 
-        else if (routeName === 'Workouts') {
+        // else if (routeName === 'Nutrition') {
+        //   icon = (
+        //     <Icon
+        //       name={focused ? 'nutrition-solid' : 'nutrition-outline'}
+        //       size={24}
+        //       color={focused ? activeState : inactiveState}
+        //     />
+        //   );
+        // } 
+        if (routeName === 'Feed') {
           icon = (
-            <Icon
-              name={focused ? 'workouts-solid' : 'workouts-outline'}
-              size={24}
-              color={focused ? activeState : inactiveState}
+            <Image
+              source={require('../../assets/icons/fitazfk2-feed.png')}
+              fadeDuration={0}
+              style={{width:31, height: 22}}
             />
           );
-        } else if (routeName === 'Calendar') {
+        }
+        else if (routeName === 'Subscription') {
           icon = (
-            <Icon
-              name={focused ? 'calendar-solid' : 'calendar-outline'}
-              size={24}
-              color={focused ? activeState : inactiveState}
+            <Image
+              source={require('../../assets/icons/fitazfk2-subscription.png')}
+              fadeDuration={0}
+              style={{width:22, height: 22}}
             />
+          );
+        } 
+        // else if (routeName === 'Workouts') {
+        //   icon = (
+        //     <Icon
+        //       name={focused ? 'workouts-solid' : 'workouts-outline'}
+        //       size={24}
+        //       color={focused ? activeState : inactiveState}
+        //     />
+        //   );
+        // }
+         else if (routeName === 'Calendar') {
+          icon = (
+              <Image
+               source={require('../../assets/icons/fitazfk2-calendar.png')}
+               fadeDuration={0}
+               style={{width:22, height: 22}}
+              />
+            // <Icon
+            //   name={focused ? 'calendar-solid' : 'calendar-outline'}
+            //   size={24}
+            //   color={focused ? activeState : inactiveState}
+            // />
           );
         } else if (routeName === 'Progress') {
           icon = (
-            <Icon
-              name={focused ? 'star-solid' : 'star-outline'}
-              size={24}
-              color={focused ? activeState : inactiveState}
-            />
+              <Image
+              source={require('../../assets/icons/fitazfk2-progress.png')}
+                fadeDuration={0}
+              style={{width:22, height: 22}}
+              />
+            // <Icon
+            //   name={focused ? 'star-solid' : 'star-outline'}
+            //   size={24}
+            //   color={focused ? activeState : inactiveState}
+            // />
           );
         }
         return icon;
       },
     }),
     tabBarOptions: {
-      activeTintColor: colors.charcoal.standard,
+      activeTintColor: colors.themeColor.color,
       inactiveTintColor: colors.charcoal.standard,
       style: {
         // shadowColor: colors.charcoal.standard,
@@ -104,12 +120,15 @@ const TabStack = createBottomTabNavigator(
         // shadowOpacity: 0.3,
         // shadowRadius: 2,
         // borderTopWidth: 0,
+        height:60,
         borderTopWidth: 1,
         borderTopColor: colors.grey.light,
-        backgroundColor: colors.white,
+        backgroundColor: colors.themeColor.footerBackgroundColor,
       },
       labelStyle: {
-        fontFamily: fonts.standard,
+        fontFamily: fonts.bold,
+        textTransform:"uppercase",
+        paddingBottom:4
       },
     },
   },

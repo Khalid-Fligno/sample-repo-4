@@ -24,7 +24,7 @@ import { findReps } from '../../../utils';
 import { findFocus, findLocation } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
-
+import globalStyle from '../../../styles/globalStyles';
 const { width } = Dimensions.get('window');
 
 const recommendedWorkoutMap = {
@@ -345,7 +345,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   containerStyle={styles.listItemContainerBottom}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.workoutListItemTitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.coral.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -382,7 +382,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -414,7 +414,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -446,7 +446,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -480,7 +480,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -512,7 +512,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}
                   subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.violet.standard} />}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
               </Swipeable>
             ) : (
@@ -532,7 +532,7 @@ class CalendarHomeScreen extends React.PureComponent {
       </ScrollView>
     );
     return (
-      <View style={styles.container}>
+      <View style={[globalStyle.container,{paddingHorizontal:0}]}>
         <View style={styles.calendarStripContainer}>
           <CalendarStrip
             ref={this.calendarStrip}
@@ -541,11 +541,11 @@ class CalendarHomeScreen extends React.PureComponent {
             daySelectionAnimation={{
               type: 'background',
               duration: 400,
-              highlightColor: colors.green.standard,
+              highlightColor: colors.white,
             }}
             style={styles.calendarStrip}
             calendarHeaderStyle={styles.calendarStripHeader}
-            calendarColor={colors.green.dark}
+            calendarColor={colors.themeColor.lightColor}
             dateNumberStyle={{
               fontFamily: fonts.bold,
               color: colors.white,
@@ -588,11 +588,11 @@ class CalendarHomeScreen extends React.PureComponent {
             Once you have scheduled these, you can go directly to your workout or recipe from this screen.
           "
           bodyText3={'How to add a workout or recipe:\n- Select a recipe/workout\n- On the recipe/workout screen, press ‘Add to Calendar’\n- Select the day you would like to schedule this for'}
-          color="green"
+          color="red"
         />
         <Loader
           loading={loading}
-          color={colors.green.standard}
+          color={colors.red.standard}
         />
       </View>
     );
@@ -611,7 +611,7 @@ const styles = StyleSheet.create({
   calendarStripContainer: {
     shadowColor: colors.grey.dark,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.7,
+    shadowOpacity: 0.2,
     shadowRadius: 2,
   },
   calendarStrip: {
@@ -685,7 +685,7 @@ const styles = StyleSheet.create({
   workoutListItemTitle: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.coral.standard,
+    color: colors.themeColor.color,
     marginBottom: 5,
   },
   workoutSubtitleContainer: {
@@ -702,7 +702,7 @@ const styles = StyleSheet.create({
   recipeListItemTitle: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.violet.standard,
+    color: colors.themeColor.color,
     marginBottom: 5,
   },
   recipeListItemSubtitle: {
@@ -715,7 +715,7 @@ const styles = StyleSheet.create({
     height: 65,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.coral.standard,
+    backgroundColor: colors.themeColor.color,
   },
   deleteButtonText: {
     fontFamily: fonts.bold,

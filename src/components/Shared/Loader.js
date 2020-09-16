@@ -4,8 +4,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { DotIndicator } from 'react-native-indicators';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
-import fonts from '../../styles/fonts';
-
+import fonts from '../../styles/fonts'; 
 const Loader = ({
   loading,
   color,
@@ -24,7 +23,7 @@ const Loader = ({
           <View style={styles.contentContainer}>
             <View style={styles.dotIndicatorContainer}>
               <DotIndicator
-                color={color}
+                color={colors.themeColor.color}
                 count={3}
                 size={10}
               />

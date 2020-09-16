@@ -13,6 +13,7 @@ import NewRecipeBadge from './NewRecipeBadge';
 import Icon from '../../components/Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import Tag from './Tag';
 
 const { width } = Dimensions.get('window');
 
@@ -79,14 +80,7 @@ export default class RecipeTile extends React.PureComponent {
                 <View style={styles.recipeInfoSection}>
                   {
                     tags && tags.map((tag) => (
-                      <View
-                        style={styles.tagCircle}
-                        key={tag}
-                      >
-                        <Text style={styles.tagText}>
-                          {tag}
-                        </Text>
-                      </View>
+                     <Tag tag = {tag}/>
                     ))
                   }
                 </View>
@@ -181,7 +175,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:colors.coral.standard,
+    backgroundColor:colors.themeColor.color,
     alignSelf:'baseline'
   },
   tagText: {

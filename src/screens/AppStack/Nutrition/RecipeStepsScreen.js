@@ -7,7 +7,8 @@ import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
 // import Icon from '../../../components/Shared/Icon';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
-
+import globalStyle from '../../../styles/globalStyles';
+import NutritionStyles from './NutritionStyles';
 const { width } = Dimensions.get('window');
 
 export default class RecipeStepsScreen extends React.PureComponent {
@@ -33,10 +34,10 @@ export default class RecipeStepsScreen extends React.PureComponent {
   renderItem = ({ item, index }) => {
     const { steps } = this.state;
     return (
-      <View style={styles.carouselCard}>
-        <View style={styles.carouselHeaderContainer}>
-          <View style={styles.carouselHeaderContentContainer}>
-            <View style={styles.carouselHeaderButton} />
+      <View style={NutritionStyles.carouselCard}>
+        <View style={NutritionStyles.carouselHeaderContainer}>
+          <View style={NutritionStyles.carouselHeaderContentContainer}>
+            <View style={NutritionStyles.carouselHeaderButton} />
             {/* {
               index === 0 ? (
                 <View
@@ -62,10 +63,10 @@ export default class RecipeStepsScreen extends React.PureComponent {
                 </View>
               )
             } */}
-            <Text style={styles.carouselHeaderText}>
+            <Text style={NutritionStyles.carouselHeaderText}>
               STEP {index + 1} OF {steps.length}
             </Text>
-            <View style={styles.carouselHeaderButton} />
+            <View style={NutritionStyles.carouselHeaderButton} />
             {/* {
               index + 1 === steps.length ? (
                 <TouchableOpacity
@@ -93,13 +94,13 @@ export default class RecipeStepsScreen extends React.PureComponent {
             } */}
           </View>
         </View>
-        <View style={styles.carouselContentContainer}>
+        <View style={NutritionStyles.carouselContentContainer}>
           <ScrollView>
             <Image
               source={{ uri: this.state.stepsImages[index] }}
               indicator={DotIndicator}
               indicatorProps={{
-                color: colors.violet.standard,
+                color: colors.themeColor.color,
                 count: 3,
                 size: 8,
               }}
@@ -108,9 +109,9 @@ export default class RecipeStepsScreen extends React.PureComponent {
                 height: width - 52,
               }}
             />
-            <View style={styles.carouselBottomContainer}>
-              <View style={styles.carouselTextContainer}>
-                <Text style={styles.carouselText}>
+            <View style={NutritionStyles.carouselBottomContainer}>
+              <View style={NutritionStyles.carouselTextContainer}>
+                <Text style={NutritionStyles.carouselText}>
                   {item}
                 </Text>
               </View>
@@ -123,7 +124,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
   render() {
     const { steps } = this.state;
     return (
-      <View style={styles.container}>
+      <View style={[globalStyle.container,{paddingHorizontal:0,alignItems: 'center'}]}>
         <Carousel
           ref={(c) => this.carousel = c}
           data={steps}
@@ -136,79 +137,3 @@ export default class RecipeStepsScreen extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.offWhite,
-    alignItems: 'center',
-  },
-  carouselCard: {
-    flex: 1,
-    marginTop: 12,
-    marginBottom: 12,
-    borderRadius: 5,
-    backgroundColor: colors.white,
-    shadowColor: colors.violet.dark,
-    shadowOpacity: 0.4,
-    shadowOffset: { width: 0, height: 5 },
-    shadowRadius: 5,
-    borderWidth: 1,
-    borderColor: colors.violet.dark,
-  },
-  carouselHeaderContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 5,
-  },
-  carouselHeaderContentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.violet.dark,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-  },
-  carouselHeaderText: {
-    fontFamily: fonts.bold,
-    fontSize: 16,
-    color: colors.violet.standard,
-    marginTop: 3,
-  },
-  carouselHeaderButton: {
-    width: 45,
-    height: 45,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: colors.violet.dark,
-    shadowOpacity: 0.4,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 1,
-  },
-  carouselContentContainer: {
-    flex: 1,
-    backgroundColor: colors.offWhite,
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
-  },
-  carouselBottomContainer: {
-    paddingTop: 10,
-    paddingRight: 10,
-    paddingBottom: 10,
-    paddingLeft: 10,
-  },
-  carouselTextContainer: {
-    backgroundColor: colors.violet.standard,
-    borderRadius: 20,
-    borderBottomRightRadius: 4,
-    paddingTop: 10,
-    paddingRight: 10,
-    paddingBottom: 10,
-    paddingLeft: 12,
-  },
-  carouselText: {
-    fontFamily: fonts.medium,
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: colors.white,
-  },
-});

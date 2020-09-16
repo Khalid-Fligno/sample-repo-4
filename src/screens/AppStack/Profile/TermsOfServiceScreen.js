@@ -4,7 +4,8 @@ import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
-
+import globalStyle from '../../../styles/globalStyles';
+import ProfileStyles from './ProfileStyles';
 const { width } = Dimensions.get('window');
 
 export default class TermsOfServiceScreen extends React.PureComponent {
@@ -44,19 +45,19 @@ export default class TermsOfServiceScreen extends React.PureComponent {
         key={paragraph.id}
         onPress={() => paragraph.url && this.openLink(paragraph.url)}
         style={[
-          styles.paragraph,
-          paragraph.heading && styles.paragraphHeading,
-          paragraph.url && styles.link,
+          ProfileStyles.paragraph,
+          paragraph.heading && ProfileStyles.paragraphHeading,
+          paragraph.url && ProfileStyles.link,
         ]}
       >
         {paragraph.value}
       </Text>
     ));
     return (
-      <SafeAreaView style={styles.safeContainer}>
-        <View style={styles.container}>
-          <ScrollView contentContainerStyle={styles.scrollView}>
-            <Text style={styles.header}>
+      <SafeAreaView style={globalStyle.safeContainer}>
+        <View style={[globalStyle.container,{paddingHorizontal:0,alignItems: 'center',}]}>
+          <ScrollView contentContainerStyle={[ProfileStyles.scrollView,]}>
+            <Text style={ProfileStyles.header}>
               Terms and Conditions
             </Text>
             {textDisplay}
@@ -71,45 +72,3 @@ export default class TermsOfServiceScreen extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
-  safeContainer: {
-    flex: 1,
-    backgroundColor: colors.black,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-  },
-  scrollView: {
-    width,
-    padding: 15,
-  },
-  header: {
-    fontFamily: fonts.bold,
-    fontSize: 24,
-    marginBottom: 10,
-  },
-  paragraphHeading: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.charcoal.dark,
-    marginTop: 5,
-    marginBottom: 8,
-  },
-  paragraph: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.standard,
-    marginBottom: 8,
-  },
-  link: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.blue.vivid,
-    marginBottom: 8,
-    textDecorationStyle: 'solid',
-    textDecorationColor: colors.blue.vivid,
-    textDecorationLine: 'underline',
-  },
-});

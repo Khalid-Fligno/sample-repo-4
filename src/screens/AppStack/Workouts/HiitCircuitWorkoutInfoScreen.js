@@ -23,6 +23,8 @@ import Icon from '../../../components/Shared/Icon';
 import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+import globalStyle from '../../../styles/globalStyles';
+import WorkoutScreenStyle from './WorkoutScreenStyle';
 
 const moment = require('moment');
 
@@ -160,35 +162,35 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
             style={{ width: width - 30, height: width - 30 }}
           />
         </View>
-        <View style={styles.exerciseDescriptionContainer}>
-          <View style={styles.exerciseTileHeaderBar}>
+        <View style={WorkoutScreenStyle.exerciseDescriptionContainer}>
+          <View style={WorkoutScreenStyle.exerciseTileHeaderBar}>
             <View>
-              <Text style={styles.exerciseTileHeaderTextLeft}>
+              <Text style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}>
                 ADDITIONAL INFORMATION
               </Text>
             </View>
           </View>
-          <View style={styles.exerciseDescriptionTextContainer}>
+          <View style={WorkoutScreenStyle.exerciseDescriptionTextContainer}>
             {
               exercise.recommendedResistance && (
-                <Text style={styles.exerciseDescriptionHeader}>Recommended resistance:</Text>
+                <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Recommended resistance:</Text>
               )
             }
             {
               exercise.recommendedResistance && (
-                <Text style={styles.exerciseDescriptionText}>{exercise.recommendedResistance}</Text>
+                <Text style={WorkoutScreenStyle.exerciseDescriptionText}>{exercise.recommendedResistance}</Text>
               )
             }
             {
               exercise.coachingTip && (
-                <Text style={styles.exerciseDescriptionHeader}>Coaching tip:</Text>
+                <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Coaching tip:</Text>
               )
             }
             {
               exercise.coachingTip && exercise.coachingTip.map((tip) => (
                 <Text
                   key={tip}
-                  style={styles.exerciseDescriptionText}
+                  style={WorkoutScreenStyle.exerciseDescriptionText}
                 >
                   {`• ${tip}`}
                 </Text>
@@ -196,19 +198,19 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
             }
             {
               exercise.scaledVersion && (
-                <Text style={styles.exerciseDescriptionHeader}>Scaled version:</Text>
+                <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Scaled version:</Text>
               )
             }
             {
               exercise.scaledVersion && (
-                <Text style={styles.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
+                <Text style={WorkoutScreenStyle.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
               )
             }
             {
               exercise.otherInfo && exercise.otherInfo.map((text) => (
                 <Text
                   key={text}
-                  style={styles.exerciseDescriptionHeader}
+                  style={WorkoutScreenStyle.exerciseDescriptionHeader}
                 >
                   {text}
                 </Text>
@@ -232,7 +234,7 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
       spotifyAvailable,
     } = this.state;
     return (
-      <View style={styles.container}>
+      <View style={[globalStyle.container,{paddingHorizontal:0}]}>
         <Modal
           isVisible={calendarModalVisible}
           onBackdropPress={this.hideCalendarModal}
@@ -241,7 +243,7 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
           animationOut="fadeOut"
           animationOutTiming={600}
         >
-          <View style={styles.modalContainer}>
+          <View style={globalStyle.modalContainer}>
             <DateTimePicker
               mode="date"
               value={chosenDate}
@@ -250,7 +252,7 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
             />
             <TouchableOpacity
               onPress={() => this.addWorkoutToCalendar(chosenDate)}
-              style={styles.modalButton}
+              style={globalStyle.modalButton}
             >
               {
                 addingToCalendar ? (
@@ -260,7 +262,7 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
                     size={6}
                   />
                 ) : (
-                  <Text style={styles.modalButtonText}>
+                  <Text style={globalStyle.modalButtonText}>
                     ADD TO CALENDAR
                   </Text>
                 )
@@ -270,61 +272,61 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
         </Modal>
         {
           workout && (
-            <View style={styles.flatListContainer}>
+            <View style={[WorkoutScreenStyle.flatListContainer,{paddingBottom:12}]}>
               <FlatList
                 data={workout.exercises}
                 keyExtractor={this.keyExtractor}
                 renderItem={this.renderItem}
                 ListHeaderComponent={(
-                  <View style={styles.workoutInfoContainer}>
-                    <View style={styles.workoutNameContainer}>
-                      <Text style={styles.workoutName}>
+                  <View style={WorkoutScreenStyle.workoutInfoContainer}>
+                    <View style={WorkoutScreenStyle.workoutNameContainer}>
+                      <Text style={WorkoutScreenStyle.workoutName}>
                         {workout && workout.displayName.toUpperCase()}
                       </Text>
                       <AddToCalendarButton onPress={this.showCalendarModal} />
                     </View>
-                    <View style={styles.workoutIconsRow}>
-                      <View style={styles.workoutIconContainer}>
+                    <View style={WorkoutScreenStyle.workoutIconsRow}>
+                      <View style={WorkoutScreenStyle.workoutIconContainer}>
                         <Icon
                           name="workouts-hiit"
                           size={36}
                           color={colors.charcoal.standard}
-                          style={styles.hiitIcon}
+                          style={WorkoutScreenStyle.hiitIcon}
                         />
-                        <Text style={styles.workoutInfoFieldData}>
+                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
                           HIIT CIRCUIT
                         </Text>
                       </View>
-                      <View style={styles.workoutIconContainer}>
+                      <View style={WorkoutScreenStyle.workoutIconContainer}>
                         <Icon
                           name="workouts-time"
                           size={40}
                           color={colors.charcoal.standard}
                         />
-                        <Text style={styles.workoutInfoFieldData}>
+                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
                           18 mins
                         </Text>
                       </View>
-                      <View style={styles.workoutIconContainer}>
+                      <View style={WorkoutScreenStyle.workoutIconContainer}>
                         <Icon
                           name="workouts-reps"
                           size={40}
                           color={colors.charcoal.standard}
                         />
-                        <Text style={styles.workoutInfoFieldData}>
+                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
                           3 rounds
                         </Text>
                       </View>
                     </View>
-                    <View style={styles.workoutPreviewHeaderContainer} >
-                      <Text style={styles.workoutPreviewHeaderText}>
-                        WORKOUT PREVIEW
+                    <View style={WorkoutScreenStyle.workoutPreviewHeaderContainer} >
+                      <Text style={WorkoutScreenStyle.workoutPreviewHeaderText}>
+                        WORKOUT PREVIEW 
                       </Text>
                     </View>
                   </View>
                 )}
                 ListFooterComponent={(
-                  <Text style={styles.workoutPreviewFooterText}>
+                  <Text style={WorkoutScreenStyle.workoutPreviewFooterText}>
                     3 TIMES THROUGH
                   </Text>
                 )}
@@ -339,54 +341,54 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
           animationOut="fadeOut"
           animationOutTiming={800}
         >
-          <View style={styles.musicModalContainer}>
-            <View style={styles.musicModalTextContainer}>
-              <Text style={styles.musicModalHeaderText}>
+          <View style={WorkoutScreenStyle.musicModalContainer}>
+            <View style={WorkoutScreenStyle.musicModalTextContainer}>
+              <Text style={WorkoutScreenStyle.musicModalHeaderText}>
                 Choose your music
               </Text>
-              <View style={styles.musicIconContainer}>
+              <View style={WorkoutScreenStyle.musicIconContainer}>
                 <TouchableOpacity
                   style={[
-                    styles.appleMusicIcon,
-                    !appleMusicAvailable && styles.appleMusicDisabled,
+                    WorkoutScreenStyle.appleMusicIcon,
+                    !appleMusicAvailable && WorkoutScreenStyle.appleMusicDisabled,
                   ]}
                   disabled={!appleMusicAvailable}
                   onPress={() => this.openApp('music:')}
                 >
                   <Image
                     source={require('../../../../assets/icons/apple-music-icon.png')}
-                    style={styles.musicIconImage}
+                    style={WorkoutScreenStyle.musicIconImage}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => this.openApp('spotify:open')}
                   disabled={!spotifyAvailable}
                   style={[
-                    styles.spotifyIcon,
-                    !spotifyAvailable && styles.spotifyDisabled,
+                    WorkoutScreenStyle.spotifyIcon,
+                    !spotifyAvailable && WorkoutScreenStyle.spotifyDisabled,
                   ]}
                 >
                   <Image
                     source={require('../../../../assets/icons/spotify-icon.png')}
-                    style={styles.musicIconImage}
+                    style={WorkoutScreenStyle.musicIconImage}
                   />
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={styles.musicModalButtonContainer}>
+            <View style={WorkoutScreenStyle.musicModalButtonContainer}>
               <TouchableOpacity
                 onPress={() => this.toggleMusicModal()}
-                style={styles.musicModalCancelButton}
+                style={WorkoutScreenStyle.musicModalCancelButton}
               >
-                <Text style={styles.musicModalButtonText}>
+                <Text style={WorkoutScreenStyle.musicModalButtonText}>
                   BACK
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => this.handleHiitWorkoutStart(workout, fitnessLevel)}
-                style={styles.musicModalContinueButton}
+                style={WorkoutScreenStyle.musicModalContinueButton}
               >
-                <Text style={styles.musicModalButtonText}>
+                <Text style={WorkoutScreenStyle.musicModalButtonText}>
                   CONTINUE
                 </Text>
               </TouchableOpacity>
@@ -403,95 +405,6 @@ export default class HiitCircuitWorkoutInfoScreen extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-  },
-  modalContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.coral.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
-  workoutInfoContainer: {
-    backgroundColor: colors.white,
-  },
-  workoutNameContainer: {
-    width,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 10,
-    paddingLeft: 15,
-    paddingBottom: 10,
-    paddingRight: 15,
-  },
-  workoutName: {
-    marginTop: 6,
-    marginRight: 10,
-    fontFamily: fonts.bold,
-    fontSize: 20,
-    color: colors.coral.standard,
-  },
-  workoutIconsRow: {
-    width,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: 10,
-    paddingBottom: 15,
-  },
-  workoutIconContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  hiitIcon: {
-    margin: 2,
-  },
-  workoutInfoFieldData: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
-    color: colors.charcoal.standard,
-    marginTop: 8,
-  },
-  flatListContainer: {
-    width,
-    backgroundColor: colors.grey.light,
-    paddingBottom: 12,
-  },
-  workoutPreviewHeaderContainer: {
-    width,
-    backgroundColor: colors.grey.light,
-    paddingTop: 12,
-  },
-  workoutPreviewHeaderText: {
-    textAlign: 'center',
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.dark,
-  },
-  workoutPreviewFooterText: {
-    textAlign: 'center',
-    fontFamily: fonts.bold,
-    fontSize: 24,
-    color: colors.black,
-    marginTop: 15,
-  },
   carouselContainer: {
     paddingBottom: 8,
     ...Platform.select({
@@ -528,107 +441,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.standardNarrow,
     fontSize: 15,
     color: colors.white,
-  },
-  exerciseDescriptionContainer: {
-    width: width - 30,
-    marginTop: 7.5,
-    marginBottom: 20,
-    marginLeft: 15,
-    marginRight: 15,
-    borderWidth: 2,
-    borderRadius: 4,
-    borderColor: colors.coral.standard,
-    backgroundColor: colors.white,
-    overflow: 'hidden',
-  },
-  exerciseDescriptionTextContainer: {
-    padding: 15,
-  },
-  exerciseDescriptionHeader: {
-    fontFamily: fonts.bold,
-    fontSize: 13,
-    color: colors.charcoal.standard,
-  },
-  exerciseDescriptionText: {
-    fontFamily: fonts.standard,
-    fontSize: 13,
-    color: colors.charcoal.standard,
-    marginTop: 3,
-    marginBottom: 3,
-  },
-  musicModalContainer: {
-    flexShrink: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  musicModalHeaderText: {
-    fontFamily: fonts.bold,
-    fontSize: 28,
-    color: colors.charcoal.light,
-    marginBottom: 10,
-  },
-  musicModalTextContainer: {
-    width: '100%',
-    backgroundColor: colors.white,
-    justifyContent: 'space-between',
-    padding: 15,
-  },
-  musicIconContainer: {
-    flexDirection: 'row',
-    padding: 10,
-    backgroundColor: colors.grey.light,
-    borderRadius: 4,
-  },
-  appleMusicIcon: {
-    marginRight: 10,
-    shadowColor: colors.grey.dark,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.6,
-    shadowRadius: 3,
-  },
-  spotifyIcon: {
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.6,
-    shadowRadius: 3,
-  },
-  appleMusicDisabled: {
-    marginRight: 10,
-    opacity: 0.1,
-    shadowOpacity: 0,
-  },
-  spotifyDisabled: {
-    opacity: 0.1,
-    shadowOpacity: 0,
-  },
-  musicIconImage: {
-    height: 60,
-    width: 60,
-  },
-  musicModalButtonContainer: {
-    backgroundColor: colors.white,
-    width: '100%',
-  },
-  musicModalCancelButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.charcoal.standard,
-    height: 50,
-    width: '100%',
-  },
-  musicModalContinueButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.coral.standard,
-    height: 50,
-    width: '100%',
-  },
-  musicModalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
   },
 });

@@ -22,6 +22,11 @@ import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton'
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
+import globalStyle, { containerPadding } from '../../../styles/globalStyles';
+import NutritionStyles from './NutritionStyles';
+import Tag from '../../../components/Nutrition/Tag';
+import CustomButton from '../../../components/Shared/CustomButton';
+import CustomBtn from '../../../components/Shared/CustomBtn';
 
 const moment = require('moment');
 
@@ -103,7 +108,7 @@ export default class RecipeScreen extends React.PureComponent {
       addingToCalendar,
     } = this.state;
     return (
-      <View style={styles.container}>
+      <View style={NutritionStyles.container}>
        
         <ParallaxScrollView
           outputScaleValue={2}
@@ -112,12 +117,15 @@ export default class RecipeScreen extends React.PureComponent {
           parallaxHeaderHeight={width}
           renderBackground={() => (
             <View style={{backgroundColor:colors.offWhite}}>
-              <View style={{marginBottom:-25,marginHorizontal:20}}>
+              <View style={{marginBottom:-25,marginHorizontal:containerPadding,flexDirection:'row',justifyContent:'space-between'}}>
                 <BigHeadingWithBackButton isBackButton = {true} 
                   onPress={this.handleBack} 
                   backButtonText="Back to breakfasts" 
                   isBigTitle ={false}
                   />
+                    <View style={[globalStyle.addToCalendarButtonContainer,{paddingVertical:15}]}>
+                      <AddToCalendarButton onPress={() => this.showModal()} />
+                    </View>
                 </View>
               <Image
                 source={{ uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
@@ -135,27 +143,27 @@ export default class RecipeScreen extends React.PureComponent {
             animationOutTiming={600}
             onBackdropPress={this.hideModal}
           >
-            <View style={styles.modalContainer}>
+            <View style={NutritionStyles.modalContainer}>
               <DateTimePicker
                 mode="date"
                 value={chosenDate}
                 onChange={this.setDate}
                 minimumDate={new Date()}
               />
-              <View style={styles.calendarMealButtonContainer}>
+              <View style={NutritionStyles.calendarMealButtonContainer}>
                 {
                   recipe.breakfast && (
                     <TouchableOpacity
                       onPress={() => this.setState({ calendarMeal: 'breakfast' })}
                       style={[
-                        styles.calendarMealButton,
-                        calendarMeal === 'breakfast' && styles.calendarMealButtonActive,
+                        NutritionStyles.calendarMealButton,
+                        calendarMeal === 'breakfast' && NutritionStyles.calendarMealButtonActive,
                       ]}
                     >
                       <Text
                         style={[
-                          styles.calendarMealButtonText,
-                          calendarMeal === 'breakfast' && styles.calendarMealButtonTextActive,
+                          NutritionStyles.calendarMealButtonText,
+                          calendarMeal === 'breakfast' && NutritionStyles.calendarMealButtonTextActive,
                         ]}
                       >
                         Breakfast
@@ -168,14 +176,14 @@ export default class RecipeScreen extends React.PureComponent {
                     <TouchableOpacity
                       onPress={() => this.setState({ calendarMeal: 'lunch' })}
                       style={[
-                        styles.calendarMealButton,
-                        calendarMeal === 'lunch' && styles.calendarMealButtonActive,
+                        NutritionStyles.calendarMealButton,
+                        calendarMeal === 'lunch' && NutritionStyles.calendarMealButtonActive,
                       ]}
                     >
                       <Text
                         style={[
-                          styles.calendarMealButtonText,
-                          calendarMeal === 'lunch' && styles.calendarMealButtonTextActive,
+                          NutritionStyles.calendarMealButtonText,
+                          calendarMeal === 'lunch' && NutritionStyles.calendarMealButtonTextActive,
                         ]}
                       >
                       Lunch
@@ -188,14 +196,14 @@ export default class RecipeScreen extends React.PureComponent {
                     <TouchableOpacity
                       onPress={() => this.setState({ calendarMeal: 'dinner' })}
                       style={[
-                        styles.calendarMealButton,
-                        calendarMeal === 'dinner' && styles.calendarMealButtonActive,
+                        NutritionStyles.calendarMealButton,
+                        calendarMeal === 'dinner' && NutritionStyles.calendarMealButtonActive,
                       ]}
                     >
                       <Text
                         style={[
-                          styles.calendarMealButtonText,
-                          calendarMeal === 'dinner' && styles.calendarMealButtonTextActive,
+                          NutritionStyles.calendarMealButtonText,
+                          calendarMeal === 'dinner' && NutritionStyles.calendarMealButtonTextActive,
                         ]}
                       >
                         Dinner
@@ -208,14 +216,14 @@ export default class RecipeScreen extends React.PureComponent {
                     <TouchableOpacity
                       onPress={() => this.setState({ calendarMeal: 'snack' })}
                       style={[
-                        styles.calendarMealButton,
-                        calendarMeal === 'snack' && styles.calendarMealButtonActive,
+                        NutritionStyles.calendarMealButton,
+                        calendarMeal === 'snack' && NutritionStyles.calendarMealButtonActive,
                       ]}
                     >
                       <Text
                         style={[
-                          styles.calendarMealButtonText,
-                          calendarMeal === 'snack' && styles.calendarMealButtonTextActive,
+                          NutritionStyles.calendarMealButtonText,
+                          calendarMeal === 'snack' && NutritionStyles.calendarMealButtonTextActive,
                         ]}
                       >
                         Snack
@@ -228,14 +236,14 @@ export default class RecipeScreen extends React.PureComponent {
                     <TouchableOpacity
                       onPress={() => this.setState({ calendarMeal: 'snack2' })}
                       style={[
-                        styles.calendarMealButton,
-                        calendarMeal === 'snack2' && styles.calendarMealButtonActive,
+                        NutritionStyles.calendarMealButton,
+                        calendarMeal === 'snack2' && NutritionStyles.calendarMealButtonActive,
                       ]}
                     >
                       <Text
                         style={[
-                          styles.calendarMealButtonText,
-                          calendarMeal === 'snack2' && styles.calendarMealButtonTextActive,
+                          NutritionStyles.calendarMealButtonText,
+                          calendarMeal === 'snack2' && NutritionStyles.calendarMealButtonTextActive,
                         ]}
                       >
                         Snack
@@ -246,7 +254,7 @@ export default class RecipeScreen extends React.PureComponent {
               </View>
               <TouchableOpacity
                 onPress={() => this.addRecipeToCalendar(chosenDate)}
-                style={[styles.modalButton, !calendarMeal && styles.disabledModalButton]}
+                style={[NutritionStyles.modalButton, !calendarMeal && NutritionStyles.disabledModalButton]}
                 disabled={!calendarMeal}
               >
                 {
@@ -257,7 +265,7 @@ export default class RecipeScreen extends React.PureComponent {
                       size={6}
                     />
                   ) : (
-                    <Text style={styles.modalButtonText}>
+                    <Text style={NutritionStyles.modalButtonText}>
                       ADD TO CALENDAR
                     </Text>
                   )
@@ -265,100 +273,123 @@ export default class RecipeScreen extends React.PureComponent {
               </TouchableOpacity>
             </View>
           </Modal>
-          <View style={styles.recipeInfoContainer}>
-            <Text style={styles.recipeTitle}>
-              {recipe.title}
-            </Text>
-            <Text style={styles.recipeSubTitle}>
-              {recipe.subtitle}
-            </Text>
-            <View style={styles.addToCalendarButtonContainer}>
-              <AddToCalendarButton onPress={() => this.showModal()} />
-            </View>
-            <Divider style={styles.divider} />
-            <View style={styles.infoBar}>
+          <View style={{paddingHorizontal:containerPadding}}>
+            <View style={NutritionStyles.infoBar}>
               {
                 recipe.tags.length > 0 && (
-                  <View style={styles.infoFieldContainer}>
+                  <View style={NutritionStyles.infoFieldContainer}>
                     {
                       recipe.tags.length > 0 && recipe.tags.map((tag) => (
-                        <View
-                          style={styles.tagCircle}
-                          key={tag}
-                        >
-                          <Text style={styles.tagText}>
-                            {tag}
-                          </Text>
-                        </View>
+                        <Tag tag = {tag} />
                       ))
                     }
                   </View>
                 )
               }
+              <View style={[NutritionStyles.infoFieldContainer,{ marginLeft:10}]}>
+                <Icon
+                  name="timer"
+                  size={24}
+                  color={colors.black}
+                />
+                <Text style={NutritionStyles.infoText}>
+                  {recipe.time}
+                </Text>
+              </View>
               {
                 recipe.portions && (
-                  <View style={styles.infoFieldContainer}>
-                    <Icon
+                  <View style={[NutritionStyles.infoFieldContainer,{ marginLeft:10}]}>
+                    {/* <Icon
                       name="portions"
                       size={20}
-                      color={colors.violet.standard}
-                    />
-                    <Text style={styles.portionsText}>
+                      color={colors.black}
+                    /> */}
+                    <Text style={NutritionStyles.infoText}>
                       {recipe.portions}
                     </Text>
                   </View>
                 )
               }
-              <View style={styles.infoFieldContainer}>
-                <Icon
-                  name="timer"
-                  size={24}
-                  color={colors.violet.standard}
-                />
-                <Text style={styles.timeText}>
-                  {recipe.time}
-                </Text>
-              </View>
+              
             </View>
-            <Divider style={styles.divider} />
-            <Text style={styles.recipeSummaryText}>
+            <Divider style={NutritionStyles.divider} />
+            <View style={NutritionStyles.recipeInfoContainer}>
+            <Text style={NutritionStyles.recipeTitle}>
+              {recipe.title}
+            </Text>
+            {/* <Text style={NutritionStyles.recipeSubTitle}>
+              {recipe.subtitle}
+            </Text> */}
+            {/* <View style={styles.addToCalendarButtonContainer}>
+              <AddToCalendarButton onPress={() => this.showModal()} />
+            </View> */}
+            {/* <Divider style={NutritionStyles.divider} /> */}
+            
+            <Text style={[NutritionStyles.recipeSummaryText,{lineHeight:20}]}>
               {recipe.summary}
             </Text>
-            <View style={styles.ingredientsContainer}>
-              <Text style={styles.ingredientsHeading} >
+            <View style={NutritionStyles.ingredientsContainer}>
+              <Text style={[NutritionStyles.ingredientsHeading]} >
                 Ingredients
               </Text>
               {
                 ingredients.map((ingredient) => {
                   return (
-                    <Text
-                      key={ingredient}
-                      style={styles.ingredientsText}
-                    >
-                      • {ingredient}
-                    </Text>
+                    <View style={{flexDirection:"row"}}>
+                      <Text  style={NutritionStyles.ingredientsText}> • </Text>
+                      <Text
+                       key={ingredient}
+                       style={NutritionStyles.ingredientsText}
+                      >
+                        {ingredient}
+                      </Text>
+                    </View>
+                    
                   );
                 })
               }
             </View>
-            <View style={styles.ingredientsContainer}>
-              <Text style={styles.ingredientsHeading} >
+            <View style={NutritionStyles.ingredientsContainer}>
+              <Text style={NutritionStyles.ingredientsHeading} >
                 Utensils
               </Text>
               {
                 utensils.map((utensil) => {
                   return (
+                    <View style={{flexDirection:"row"}}>
+                    <Text  style={NutritionStyles.ingredientsText}> • </Text>
                     <Text
-                      key={utensil}
-                      style={styles.ingredientsText}
+                     key={utensil}
+                     style={NutritionStyles.ingredientsText}
                     >
-                      • {utensil}
+                      {utensil}
                     </Text>
+                  </View>
+                    // <Text
+                    //   key={utensil}
+                    //   style={NutritionStyles.ingredientsText}
+                    // >
+                    //   • {utensil}
+                    // </Text>
                   );
                 })
               }
             </View>
+            <View style={{marginTop:20,marginBottom:8}}>
+              <CustomBtn 
+                 customBtnStyle={{borderRadius:50}} 
+                 customBtnTitleStyle={{}}
+                 Title="Get Started"
+                 onPress={()=>this.handleStart(recipe)}
+              />
+            </View>
+            <BigHeadingWithBackButton isBackButton = {true} 
+                  onPress={this.handleBack} 
+                  backButtonText="Back to breakfasts" 
+                  isBigTitle ={false}
+            />
           </View>
+          </View>  
         </ParallaxScrollView>
         <Loader
           loading={loading}
@@ -369,158 +400,3 @@ export default class RecipeScreen extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.containerBackground,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  recipeInfoContainer: {
-    padding: 15,
-  },
-  recipeTitle: {
-    fontFamily: fonts.bold,
-    fontSize: 24,
-    color: colors.charcoal.standard,
-  },
-  recipeSubTitle: {
-    fontFamily: fonts.standardItalic,
-    fontSize: 16,
-    color: colors.charcoal.standard,
-    marginBottom: 8,
-  },
-  addToCalendarButtonContainer: {
-    marginBottom: 10,
-  },
-  modalContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.violet.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  disabledModalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.grey.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
-  calendarMealButtonContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    padding: 4,
-  },
-  calendarMealButton: {
-    flex: 1,
-    margin: 5,
-    paddingTop: 8,
-    paddingBottom: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: colors.violet.standard,
-    borderRadius: 4,
-  },
-  calendarMealButtonActive: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.violet.standard,
-  },
-  calendarMealButtonText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.violet.standard,
-  },
-  calendarMealButtonTextActive: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.white,
-  },
-  divider: {
-    backgroundColor: colors.grey.light,
-  },
-  infoBar: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: width - 30,
-  },
-  infoFieldContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 5,
-  },
-  timeText: {
-    fontFamily: fonts.standard,
-    color: colors.violet.standard,
-    marginTop: 4,
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  tagCircle: {
-    height: 24,
-    width: 24,
-    marginRight: 10,
-    borderWidth: 2.5,
-    borderColor: colors.violet.standard,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tagText: {
-    fontFamily: fonts.bold,
-    fontSize: 11,
-    color: colors.violet.standard,
-    marginTop: 4,
-  },
-  portionsText: {
-    fontFamily: fonts.standard,
-    color: colors.violet.standard,
-    marginTop: 4,
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  recipeSummaryText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.standard,
-    marginTop: 15,
-  },
-  ingredientsContainer: {
-    padding: 15,
-    borderWidth: 1,
-    borderColor: colors.grey.light,
-    borderRadius: 10,
-    marginTop: 15,
-  },
-  ingredientsHeading: {
-    fontFamily: fonts.bold,
-    fontSize: 18,
-    color: colors.charcoal.standard,
-    marginBottom: 5,
-  },
-  ingredientsText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.standard,
-    marginTop: 3,
-    marginBottom: 3,
-  },
-});

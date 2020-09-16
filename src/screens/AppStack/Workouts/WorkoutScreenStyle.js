@@ -84,6 +84,21 @@ const WorkoutScreenStyle = StyleSheet.create({
       width,
       backgroundColor: colors.grey.light,
     },
+    hiitIcon: {
+      margin: 2,
+    },
+    workoutInfoFieldData: {
+      fontFamily: fonts.bold,
+      fontSize: 12,
+      color: colors.charcoal.standard,
+      marginTop: 8,
+    },
+    workoutPreviewContainer: {
+      width,
+      backgroundColor: colors.grey.light,
+      paddingTop: 13,
+      paddingBottom: 15,
+    },
     workoutPreviewHeaderContainer: {
       width,
       backgroundColor: colors.grey.light,
@@ -114,7 +129,7 @@ const WorkoutScreenStyle = StyleSheet.create({
       marginRight: 10,
       fontFamily: fonts.bold,
       fontSize: 20,
-      color: colors.coral.standard,
+      color: colors.themeColor.color,
     },
     workoutIconsRow: {
       width,
@@ -184,7 +199,7 @@ const WorkoutScreenStyle = StyleSheet.create({
     musicModalContinueButton: {
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: colors.coral.standard,
+      backgroundColor: colors.themeColor.color,
       height: 50,
       width: '100%',
     },
@@ -214,7 +229,7 @@ const WorkoutScreenStyle = StyleSheet.create({
       marginRight: 15,
       borderWidth: 2,
       borderRadius: 4,
-      borderColor: colors.coral.standard,
+      borderColor: colors.themeColor.color,
       overflow: 'hidden',
     },
     exerciseTileHeaderBar: {
@@ -223,7 +238,7 @@ const WorkoutScreenStyle = StyleSheet.create({
       justifyContent: 'space-between',
       padding: 8,
       paddingBottom: 5,
-      backgroundColor: colors.coral.standard,
+      backgroundColor: colors.themeColor.color,
     },
     exerciseTileHeaderTextLeft: {
       width: width - 72,
@@ -245,7 +260,7 @@ const WorkoutScreenStyle = StyleSheet.create({
       marginRight: 15,
       borderWidth: 2,
       borderRadius: 4,
-      borderColor: colors.coral.standard,
+      borderColor: colors.themeColor.color,
       backgroundColor: colors.white,
       overflow: 'hidden',
     },
@@ -264,6 +279,19 @@ const WorkoutScreenStyle = StyleSheet.create({
       marginTop: 3,
       marginBottom: 3,
     },
+   
      /**********workout Info***************/
+
+
+//*************Workout Home Screen **************** */
+    subTitleText:{
+      fontFamily:fonts.bold,
+      fontSize:15,
+      lineHeight:40,
+      color:colors.grey.dark
+    }
+//*************Workout Home Screen **************** */
+
+      
   });
   export default  WorkoutScreenStyle

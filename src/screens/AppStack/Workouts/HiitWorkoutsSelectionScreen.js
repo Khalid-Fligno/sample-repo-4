@@ -51,6 +51,7 @@ export default class HiitWorkoutsSelectionScreen extends React.PureComponent {
     this.setState({ loading: true });
     const style = this.props.navigation.getParam('hiitWorkoutStyle', null);
     const location = this.props.navigation.getParam('workoutLocation', null);
+    console.log(style,location)
     this.unsubscribe = await db.collection('workouts')
       .where(style, '==', true)
       .where(location, '==', true)

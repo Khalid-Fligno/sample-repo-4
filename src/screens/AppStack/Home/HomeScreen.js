@@ -27,6 +27,7 @@ import globalStyle from '../../../styles/globalStyles';
 import RoundButton from '../../../components/Home/RoundButton';
 import HomeScreenStyle from './HomeScreenStyle';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
+import WorkOutCard from '../../../components/Home/WorkoutCard';
 
 const workoutTypeMap = {
   1: 'Resistance',
@@ -129,6 +130,7 @@ export default class HomeScreen extends React.PureComponent {
       switchWelcomeHeader,
       dayOfWeek,
     } = this.state;
+    console.log(profile)
     const personalisedMessage = () => {
       const { resistanceWeeklyComplete, hiitWeeklyComplete } = profile.weeklyTargets;
       const totalWeeklyWorkoutsCompleted = resistanceWeeklyComplete + hiitWeeklyComplete;
@@ -141,13 +143,21 @@ export default class HomeScreen extends React.PureComponent {
     };
 
     const bigHeadeingTitle = (switchWelcomeHeader ? 'Hi' : 'Hi').toString()+' ' + (profile ? profile.firstName:'').toString()
+   
+    let recommendedWorkout =[];
+
+    (dayOfWeek > 0 && dayOfWeek < 6) ? recommendedWorkout.push(workoutTypeMap[dayOfWeek]): recommendedWorkout.push(' Rest Day') 
+    if(dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) 
+      recommendedWorkout.push(resistanceFocusMap[dayOfWeek])
+      
+    console.log(recommendedWorkout)
     return (
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={HomeScreenStyle.scrollView}
+          style={[globalStyle.container]}
         >
-          <View style={globalStyle.container}>
-
+          <View>
               {/* <View style={globalStyle.bigHeadingTitleContainer}>
                 <Text style={globalStyle.bigHeadingTitleText}>
                 {switchWelcomeHeader ? 'Hi' : 'Hi'}{profile && ` ${profile.firstName}`}
@@ -158,7 +168,6 @@ export default class HomeScreen extends React.PureComponent {
                isBackButton = {false}
                isBigTitle = {true}
                />
-
               {/* <Text style={HomeScreenStyle.welcomeHeaderText}>
                 {switchWelcomeHeader ? 'Welcome back' : 'Hi'}{profile && `, ${profile.firstName}`}
               </Text> */}
@@ -167,33 +176,66 @@ export default class HomeScreen extends React.PureComponent {
               </Text> */}
 
               <View style={HomeScreenStyle.roundButtonContainer}>
-                <RoundButton title="NUTRITION" leftIcon="fitazfk2-workout.png" rightIcon="chevron-right"/>
-                <RoundButton title="WORKOUT" leftIcon="fitazfk2-workout.png" rightIcon="chevron-right"/>
+                <RoundButton title="NUTRITION" 
+                 customBtnStyle={{borderRightWidth:0}}
+                 leftIcon="fitazfk2-workout.png" 
+                 rightIcon="chevron-right"
+                 onPress={()=>this.props.navigation.navigate('Nutrition')}
+                 />
+                <RoundButton title="WORKOUT"
+                 leftIcon="fitazfk2-workout.png" 
+                 rightIcon="chevron-right"
+                 onPress={()=>this.props.navigation.navigate('Workouts')}
+                 />
               </View>
-              <View style={HomeScreenStyle.workoutProgressContainer}>
+              {/* <View style={HomeScreenStyle.workoutProgressContainer}>
                 <View style={HomeScreenStyle.sectionHeader}>
                   <Text style={HomeScreenStyle.bodyText}>
                     Weekly workout progress
                   </Text>
+                </View> */}
+              <View>
+                <View style={HomeScreenStyle.sectionHeader}>
+                  <Text style={[HomeScreenStyle.bodyText]}>
+                    Weekly workout progress
+                  </Text>
                 </View>
-                {
-                  profile && (
-                    <ProgressBar
-                      progressBarType="Resistance"
-                      completedWorkouts={profile.weeklyTargets.resistanceWeeklyComplete}
-                    />
-                  )
-                }
-                {
-                  profile && (
-                    <ProgressBar
-                      progressBarType="HIIT"
-                      completedWorkouts={profile.weeklyTargets.hiitWeeklyComplete}
-                    />
-                  )
-                }
+                <View style={{flexDirection:'row',justifyContent:"space-between",width:"100%"}}>
+                    {
+                      profile && (
+                        <View>
+                          <ProgressBar
+                            progressBarType="Resistance"
+                            completedWorkouts={profile.weeklyTargets.resistanceWeeklyComplete}
+                          />
+                        </View>
+                      )
+                    }
+                    {
+                      profile && (
+                        <View>
+                          <ProgressBar
+                            progressBarType="HIIT"
+                            completedWorkouts={profile.weeklyTargets.hiitWeeklyComplete}
+                          />
+                        </View>
+                      )
+                    }
+                </View>
+                <View style={{width:'100%',flexDirection:"row",justifyContent:"center",marginTop:-30}}>
+                    {
+                          profile && (
+                            <View>
+                              <ProgressBar
+                                progressBarType="HIIT"
+                                completedWorkouts={profile.weeklyTargets.hiitWeeklyComplete}
+                              />
+                            </View>
+                          )
+                        }
+                </View>
               </View>
-              <View style={HomeScreenStyle.workoutProgressContainer}>
+              {/* <View style={HomeScreenStyle.workoutProgressContainer}>
                 <View style={HomeScreenStyle.sectionHeader}>
                   <Text style={HomeScreenStyle.bodyText}>
                     TODAYS RECOMMENDED WORKOUT
@@ -240,7 +282,7 @@ export default class HomeScreen extends React.PureComponent {
                     )
                   }
                 </View>
-              </View>
+              </View> */}
               {
                 profile && profile.initialBurpeeTestCompleted === undefined && (
                   <View style={HomeScreenStyle.workoutProgressContainer}>
@@ -271,7 +313,14 @@ export default class HomeScreen extends React.PureComponent {
                   </View>
                 )
               }
-              <NewsFeedTile
+               <WorkOutCard
+                image={require('../../../../assets/images/homeScreenTiles/todayWorkoutImage2.jpeg')}
+                title="TODAY'S WORKOUT"
+                recommendedWorkout ={recommendedWorkout}
+                onPress={() => this.props.navigation.navigate('Calendar')}
+                cardCustomStyle ={{marginTop:20}} 
+              />
+             {/*  <NewsFeedTile
                 image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
                 title="SHOP APPAREL"
                 onPress={() => this.openLink('https://fitazfk.com/collections/wear-fitazfk-apparel')}
@@ -293,12 +342,13 @@ export default class HomeScreen extends React.PureComponent {
                 image={require('../../../../assets/images/fitazfk-army.jpg')}
                 title="JOIN THE FITAZFK ARMY"
                 onPress={() => this.openLink('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
+              /> */}
+              <Loader
+                loading={loading}
+                color={colors.charcoal.standard}
               />
           </View>
-          <Loader
-          loading={loading}
-          color={colors.charcoal.standard}
-          />
+          
         </ScrollView>
 
        

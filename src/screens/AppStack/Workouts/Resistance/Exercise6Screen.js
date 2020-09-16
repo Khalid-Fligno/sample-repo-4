@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
   currentExerciseNameText: {
     fontFamily: fonts.boldNarrow,
     fontSize: 18,
-    color: colors.coral.standard,
+    color: colors.themeColor.color,
   },
   currentExerciseRepsTextContainer: {
     width: 30,

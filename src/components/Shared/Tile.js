@@ -40,7 +40,12 @@ export default class Tile extends React.PureComponent {
       image,
       disabled,
       showTitle,
-      height
+      overlayTitle,
+      height,
+      customContainerStyle,
+      showTitleStyle,
+      overlayTitleStyle,
+      imageUrl
     } = this.props;
     tileHeight = height
     const animatedStyle = {
@@ -50,7 +55,7 @@ export default class Tile extends React.PureComponent {
       <TouchableOpacity
         disabled={disabled}
         onPress={onPress}
-        style={styles.cardContainer}
+        style={[styles.cardContainer,customContainerStyle]}
         onPressIn={this.handlePressIn}
         onPressOut={this.handlePressOut}
       >
@@ -58,18 +63,20 @@ export default class Tile extends React.PureComponent {
           style={[styles.flexContainer, animatedStyle]}
         >
           <ImageBackground
-            source={image}
+            source={imageUrl?{uri:imageUrl}:image}
             style={styles.image}
           >
-            <View style={styles.opacityLayer}>
-              {/* <Text style={styles.title}>
-                {title1.toUpperCase()}
-              </Text> */}
-            </View>
+            {
+              overlayTitle && (<View style={styles.opacityLayer}>
+                <Text style={[styles.title,overlayTitleStyle]}>
+                 {title1.toUpperCase()}
+                </Text>
+              </View>)
+            } 
           </ImageBackground>
         </Animated.View>
         <View>
-         { showTitle && (<Text style={styles.title}>
+         { showTitle && (<Text style={[styles.title,showTitleStyle]}>
             {title1}
           </Text>)}
         </View>
@@ -83,6 +90,11 @@ Tile.propTypes = {
   title1: PropTypes.string.isRequired,
   image: PropTypes.number.isRequired,
   disabled: PropTypes.bool,
+  height: PropTypes.number,
+  customContainerStyle: PropTypes.object,
+  showTitleStyle:PropTypes.object,
+  overlayTitleStyle:PropTypes.object,
+  imageUrl:PropTypes.string
 };
 
 Tile.defaultProps = {
@@ -128,5 +140,7 @@ const styles = StyleSheet.create({
     marginBottom:10,
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 5,
+    width:'100%',
+    textTransform:'capitalize'
   },
 });

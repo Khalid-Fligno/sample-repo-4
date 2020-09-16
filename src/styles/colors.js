@@ -52,12 +52,24 @@ const colors = {
     standard: 'rgb(242, 199, 26)', // #F1D519
   },
   red:{
-    standard:'rgb(255,0,0)'
+    standard:'rgb(255,0,0)',
+    light:'rgb(255,204,203)',
+    dark:'rgb(139,0,0)'
   },
   facebookBlue: 'rgb(59,89,152)', // #3B5998,
   
   headerBackground:'rgb(255, 255, 255)',
-  containerBackground:'rgb(250, 250, 250)'
+  containerBackground:'rgb(250, 250, 250)',
+  themeColor:{
+    themeBackgroundColor:'rgb(250, 250, 250)',
+    borderColor:'rgb(238, 48, 66)',
+    fontColor:'rgb(238, 48, 66)',
+    color:'rgb(238, 48, 66)',
+    darkColor:'rgb(139,0,0)',
+    lightColor:'rgb(255,204,203)',
+    footerBackgroundColor:'rgb(255, 255, 255)',
+    headerBackgroundColor:'rgb(255, 255, 255)',
+  },
 };
 
 export default colors;
