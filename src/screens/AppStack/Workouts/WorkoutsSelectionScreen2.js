@@ -17,56 +17,6 @@ import { ListItem, Avatar } from 'react-native-elements';
 import fonts from '../../../styles/fonts';
 import Icon from '../../../components/Shared/Icon';
 import WorkoutListItem from '../../../components/Workouts/WorkoutListItem';
-// const homeSplitImages = [
-//   require('../../../../assets/images/splitImages/NINA-1.jpg'),
-//   require('../../../../assets/images/splitImages/NINA-2.jpg'),
-//   require('../../../../assets/images/splitImages/NINA-3.jpg'),
-//   require('../../../../assets/images/splitImages/NINA-4.jpg'),
-// ];
-
-// const gymSplitImages = [
-//   require('../../../../assets/images/splitImages/SHARNIE-1.jpg'),
-//   require('../../../../assets/images/splitImages/SHARNIE-2.jpg'),
-//   require('../../../../assets/images/splitImages/SHARNIE-3.jpg'),
-//   require('../../../../assets/images/splitImages/SHARNIE-4.jpg'),
-// ];
-
-// const outdoorsSplitImages = [
-//   require('../../../../assets/images/splitImages/ELLE-1.jpg'),
-//   require('../../../../assets/images/splitImages/ELLE-2.jpg'),
-//   require('../../../../assets/images/splitImages/ELLE-3.jpg'),
-//   require('../../../../assets/images/splitImages/ELLE-4.jpg'),
-// ];
-
-// const images = {
-//   gym: gymSplitImages,
-//   home: homeSplitImages,
-//   outdoors: outdoorsSplitImages,
-// };
-const workoutTypeMap = [
-  'Strength',
-  'Circuit',
-  'Interval',
-];
-
-const equipmentMap = [
-   'Full EquipmentMap',
-   'Fitazfk EquipmentMap',
-   'Minimum EquipmentMap',
-   'No EquipmentMap'
-];
-
-const muscleGroupMap = [
-  'Full Body',
-  'Upper Body',
-  'Lower Body',
-  'Core' 
-];
-const workoutMainCategory=[
-  {displayName:'Workout Focus',subCategory:workoutTypeMap,image: require('../../../../assets/images/workouts-resistance.jpg')},
-  {displayName:'Equipment',subCategory:equipmentMap,image: require('../../../../assets/images/workouts-resistance.jpg')},
-  {displayName:'Mascle Group',subCategory:muscleGroupMap,image: require('../../../../assets/images/workouts-resistance.jpg')}
-]
 
 
 export default class WorkoutsSelectionScreen2 extends React.PureComponent {
@@ -82,7 +32,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   componentDidMount = async () => {
     this.selectedMainCategory = this.props.navigation.getParam('selectedMainCategory', null);
     this.selectedSubCategory = this.props.navigation.getParam('selectedSubCategory', null);
-    console.log(this.selectedMainCategory)
+    console.log(this.selectedMainCategory,this.selectedSubCategory.name)
     await this.fetchWorkouts();
   }
   componentWillUnmount = async () => {
@@ -121,12 +71,13 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       }))
       await Promise.all(exercises.map(async (exercise, index) => {
         // const videoUrl = exercise.videoUrls.filter(res=>res.model === 'sharnia')
-        if(exercise.videoUrls[0].url)
+        console.log(exercise.videoUrls[0].url)
+        if(exercise.videoUrls[0].url !== "")
         await FileSystem.downloadAsync(
           // videoUrl[0].url,
           exercise.videoUrls[0].url,
           `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-        );
+        ).catch(err=>console.log(err))
       }))
       this.setState({ loading: false });
       // this.props.navigation.navigate('WorkoutInfo', { workout, reps: findReps(fitnessLevel) }); //for new workout its difficulty level

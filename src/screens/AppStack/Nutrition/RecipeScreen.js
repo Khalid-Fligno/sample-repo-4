@@ -279,8 +279,8 @@ export default class RecipeScreen extends React.PureComponent {
                 recipe.tags.length > 0 && (
                   <View style={NutritionStyles.infoFieldContainer}>
                     {
-                      recipe.tags.length > 0 && recipe.tags.map((tag) => (
-                        <Tag tag = {tag} />
+                      recipe.tags.length > 0 && recipe.tags.map((tag,index) => (
+                        <Tag tag = {tag} key={index} />
                       ))
                     }
                   </View>
@@ -333,9 +333,9 @@ export default class RecipeScreen extends React.PureComponent {
                 Ingredients
               </Text>
               {
-                ingredients.map((ingredient) => {
+                ingredients.map((ingredient,index) => {
                   return (
-                    <View style={{flexDirection:"row"}}>
+                    <View style={{flexDirection:"row"}} key={index}>
                       <Text  style={NutritionStyles.ingredientsText}> • </Text>
                       <Text
                        key={ingredient}
@@ -354,9 +354,9 @@ export default class RecipeScreen extends React.PureComponent {
                 Utensils
               </Text>
               {
-                utensils.map((utensil) => {
+                utensils.map((utensil,index) => {
                   return (
-                    <View style={{flexDirection:"row"}}>
+                    <View style={{flexDirection:"row"}} key={index}>
                     <Text  style={NutritionStyles.ingredientsText}> • </Text>
                     <Text
                      key={utensil}
