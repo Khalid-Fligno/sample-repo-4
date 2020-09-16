@@ -15,7 +15,7 @@ import RecipeTile from '../../../components/Nutrition/RecipeTile';
 import RecipeTileSkeleton from '../../../components/Nutrition/RecipeTileSkeleton';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
+// import fonts from '../../../styles/fonts';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from '../../../components/Shared/Icon';
 import globalStyle from '../../../styles/globalStyles';

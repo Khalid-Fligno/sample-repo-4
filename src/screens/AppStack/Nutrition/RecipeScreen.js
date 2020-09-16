@@ -20,7 +20,7 @@ import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
 import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
+// import fonts from '../../../styles/fonts';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 import globalStyle, { containerPadding } from '../../../styles/globalStyles';
 import NutritionStyles from './NutritionStyles';

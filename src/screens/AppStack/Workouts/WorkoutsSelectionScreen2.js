@@ -14,8 +14,8 @@ import { any } from 'prop-types';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 import CustomButtonGroup from '../../../components/Shared/CustomButtonGroup';
 import { ListItem, Avatar } from 'react-native-elements';
-import fonts from '../../../styles/fonts';
-import Icon from '../../../components/Shared/Icon';
+// import fonts from '../../../styles/fonts';
+// import Icon from '../../../components/Shared/Icon';
 import WorkoutListItem from '../../../components/Workouts/WorkoutListItem';
 
 
@@ -36,7 +36,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
     await this.fetchWorkouts();
   }
   componentWillUnmount = async () => {
-    await this.unsubscribe();
+    this.unsubscribe();
   }
   fetchWorkouts = async () => {
     this.setState({ loading: true });

@@ -19,7 +19,7 @@ import Loader from '../../../components/Shared/Loader';
 import HelperModal from '../../../components/Shared/HelperModal';
 import { db } from '../../../../config/firebase';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
+// import fonts from '../../../styles/fonts';
 import Tile from '../../../components/Shared/Tile';
 const { width } = Dimensions.get('window');
 import globalStyle from '../../../styles/globalStyles';
@@ -53,7 +53,7 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
 
   componentWillUnmount = async () => {
     this.unsubscribeFromTargets();
-    await this.unsubscribe();
+    this.unsubscribe();
   }
 
   showHelperOnFirstOpen = async () => {

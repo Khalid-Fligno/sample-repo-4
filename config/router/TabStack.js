@@ -9,9 +9,9 @@ import CalendarStack from './CalendarStack';
 import ProgressStack from './ProgressStack';
 import Icon from '../../src/components/Shared/Icon';
 import colors from '../../src/styles/colors';
-import fonts from '../../src/styles/fonts';
 import { tabColorMap } from './utils';
 import { Image } from 'react-native';
+import fonts from '../../src/styles/fonts';
 
 const TabStack = createBottomTabNavigator(
   {

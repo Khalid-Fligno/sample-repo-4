@@ -23,7 +23,7 @@ import Icon from '../../../components/Shared/Icon';
 import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
 import { findFocus, findLocation } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
+// import fonts from '../../../styles/fonts';
 import globalStyle from '../../../styles/globalStyles';
 import WorkoutScreenStyle from './WorkoutScreenStyle';
 const moment = require('moment');

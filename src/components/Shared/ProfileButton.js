@@ -5,6 +5,7 @@ import FastImage from 'react-native-fast-image';
 import Icon from '../Shared/Icon';
 import { db } from '../../../config/firebase';
 import colors from '../../styles/colors';
+import fonts from '../../styles/fonts';
 
 export default class ProfileButton extends React.PureComponent {
   constructor(props) {

@@ -3,7 +3,7 @@ import { StyleSheet, SafeAreaView, View, Text, ScrollView, Dimensions, Alert } f
 import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
+// import fonts from '../../../styles/fonts';
 import globalStyle from '../../../styles/globalStyles';
 import ProfileStyles from './ProfileStyles';
 const { width } = Dimensions.get('window');

@@ -1,9 +1,7 @@
-'use strict';
 import React from 'react'
 import { StyleSheet, Dimensions } from 'react-native'
 import colors from './colors';
-import fonts from './fonts';
-
+import fonts from './fonts'
 const { width } = Dimensions.get('window');
 export const containerPadding = 20
 const globalStyle = StyleSheet.create({

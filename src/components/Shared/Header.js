@@ -14,8 +14,6 @@ import PropTypes from 'prop-types';
 import ProfileButton from '../Shared/ProfileButton';
 import Icon from '../Shared/Icon';
 import colors from '../../styles/colors';
-import fonts from '../../styles/fonts';
-import Svg, { SvgUri } from 'react-native-svg';
 import globalStyle from '../../styles/globalStyles';
 const { width } = Dimensions.get('window');
 

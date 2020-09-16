@@ -7,7 +7,7 @@ import firebase from 'firebase';
 import { db, auth } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
+// import fonts from '../../../styles/fonts';
 import globalStyle from '../../../styles/globalStyles';
 import ProfileStyles from './ProfileStyles';
 

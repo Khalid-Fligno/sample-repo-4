@@ -6,7 +6,7 @@ import { DotIndicator } from 'react-native-indicators';
 import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
 // import Icon from '../../../components/Shared/Icon';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
+// import fonts from '../../../styles/fonts';
 import globalStyle from '../../../styles/globalStyles';
 import NutritionStyles from './NutritionStyles';
 const { width } = Dimensions.get('window');
