@@ -36,7 +36,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
     await this.fetchWorkouts();
   }
   componentWillUnmount = async () => {
-    this.unsubscribe();
+    await this.unsubscribe();
   }
   fetchWorkouts = async () => {
     this.setState({ loading: true });
@@ -81,7 +81,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       }))
       this.setState({ loading: false });
       // this.props.navigation.navigate('WorkoutInfo', { workout, reps: findReps(fitnessLevel) }); //for new workout its difficulty level
-      this.props.navigation.navigate('WorkoutInfo', { workout, reps: workout.difficultyLevel[fitnessLevel-1] }); //for new workout its difficulty level
+      this.props.navigation.navigate('WorkoutInfo', { workout, reps: workout.difficultyLevel[fitnessLevel-1].toString() }); //for new workout its difficulty level
     } catch (err) {
       this.setState({ loading: false });
       Alert.alert('Could not download exercise videos', 'Please check your internet connection');

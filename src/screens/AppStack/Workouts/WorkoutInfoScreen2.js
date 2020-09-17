@@ -108,7 +108,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
   handleWorkoutStart = () => {
     const { workout, reps } = this.state;
     this.setState({ musicModalVisible: false });
-    this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
+    // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
+    this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.id });
   }
   keyExtractor = (exercise) => exercise.id;
   renderItem = ({ item: exercise, index }) => (
@@ -182,9 +183,9 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
               )
             }
             {
-              exercise.coachingTip && exercise.coachingTip.map((tip) => (
+              exercise.coachingTip && exercise.coachingTip.map((tip,index) => (
                 <Text
-                  key={tip}
+                  key={index}
                   style={WorkoutScreenStyle.exerciseDescriptionText}
                 >
                   {`• ${tip}`}
@@ -202,9 +203,9 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
               )
             }
             {
-              exercise.otherInfo && exercise.otherInfo.map((text) => (
+              exercise.otherInfo && exercise.otherInfo.map((text,index) => (
                 <Text
-                  key={text}
+                  key={index}
                   style={WorkoutScreenStyle.exerciseDescriptionHeader}
                 >
                   {text}
@@ -247,6 +248,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
         focus = 'upper';
       } else if (workout.filters.indexOf('lowerBody') > -1) {
         focus = 'lower';
+      } else {
+        
       }
       return `workouts-${focus}`;
     };
@@ -334,7 +337,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                           {reps * 18} Reps
                         </Text>
                       </View>
-                      <View style={WorkoutScreenStyle.workoutIconContainer}>
+                      {/* <View style={WorkoutScreenStyle.workoutIconContainer}>
                         <Icon
                           name={workout && findLocationIcon()}
                           size={40}
@@ -343,7 +346,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
                           {workout && findLocation(workout)}
                         </Text>
-                      </View>
+                      </View> */}
                       <View style={WorkoutScreenStyle.workoutIconContainer}>
                         <Icon
                           name={workout && findFocusIcon()}

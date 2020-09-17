@@ -247,9 +247,9 @@ const WorkoutScreenStyle = StyleSheet.create({
       color: colors.white,
     },
     exerciseTileHeaderBarRight: {
-      width: 22,
+      width: 30,
       fontFamily: fonts.standardNarrow,
-      fontSize: 14,
+      fontSize: 13,
       color: colors.white,
     },
     exerciseDescriptionContainer: {

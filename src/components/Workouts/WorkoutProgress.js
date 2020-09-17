@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     marginTop: -36,
   },
   currentSetTextContainer: {
-    marginTop: -36,
+    marginTop: -42,
   },
   currentSetText: {
     fontFamily: fonts.bold,
