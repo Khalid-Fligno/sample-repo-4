@@ -123,7 +123,7 @@ export default class RecipeScreen extends React.PureComponent {
                   backButtonText="Back to breakfasts" 
                   isBigTitle ={false}
                   />
-                    <View style={[globalStyle.addToCalendarButtonContainer,{paddingVertical:15}]}>
+                    <View style={[NutritionStyles.addToCalendarButtonContainer,{paddingVertical:15}]}>
                       <AddToCalendarButton onPress={() => this.showModal()} />
                     </View>
                 </View>
@@ -149,6 +149,9 @@ export default class RecipeScreen extends React.PureComponent {
                 value={chosenDate}
                 onChange={this.setDate}
                 minimumDate={new Date()}
+                textColor="red"
+                backgroundColor='red'
+                style={NutritionStyles.Picker}
               />
               <View style={NutritionStyles.calendarMealButtonContainer}>
                 {
