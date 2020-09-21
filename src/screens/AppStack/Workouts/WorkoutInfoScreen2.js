@@ -134,10 +134,13 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
     this.setState({ musicModalVisible: false });
     // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
     this.props.navigation.navigate('Countdown', {
-      exerciseList: workout.exercises,
+      workout: workout,
       reps,
       resistanceCategoryId: workout.id,
-      workoutSubCategory:this.state.workoutSubCategory });
+      workoutSubCategory:this.state.workoutSubCategory,
+      fitnessLevel:this.state.fitnessLevel 
+    
+    });
   }
   keyExtractor = (exercise) => exercise.id;
   renderItem = ({ item: exercise, index }) => (
@@ -180,14 +183,14 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
               {
                 this.state.workoutSubCategory.name === 'interval' && (
                    <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                      {workIntervalMap[this.state.fitnessLevel]}s on/{restIntervalMap[this.state.fitnessLevel]}s off
+                      {this.state.workout.workIntervalMap[this.state.fitnessLevel-1]}s on/{this.state.workout.restIntervalMap[this.state.fitnessLevel-1]}s off
                   </Text>
                 )
               }
                {
                 this.state.workoutSubCategory.name === 'circuit' && (
                    <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                      {workCircuitMap[this.state.fitnessLevel]}s on/{restCircuitMap[this.state.fitnessLevel]}s off
+                      {this.state.workout.workIntervalMap[this.state.fitnessLevel-1]}s on/{this.state.workout.restIntervalMap[this.state.fitnessLevel-1]}s off
                   </Text>
                 )
               }
@@ -278,6 +281,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       spotifyAvailable,
       workoutSubCategory
     } = this.state;
+
     const findLocationIcon = () => {
       let location;
       if (workout.home) {
@@ -401,8 +405,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                         />
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
                        { 
-                         workoutSubCategory && (workoutSubCategory.name === 'strength' && workout.workoutReps === 0)
-                          ?(`${reps * 18} Reps`):(`${workout.workoutReps} rounds`)
+                         workoutSubCategory && (workoutSubCategory.name === 'strength')
+                          ?(`${reps * workout.workoutTime} Reps`):(`${workout.workoutReps} rounds`)
                        
                       }
                         </Text>

@@ -11,7 +11,8 @@ export default class CountdownScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      exerciseList: this.props.navigation.getParam('exerciseList', null),
+      exerciseList: this.props.navigation.getParam('workout', null)['exercises'],
+      workout: this.props.navigation.getParam('workout', null),
       reps: this.props.navigation.getParam('reps', null),
       resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
       workoutSubCategory : this.props.navigation.getParam('workoutSubCategory', null),
@@ -94,23 +95,24 @@ export default class CountdownScreen2 extends React.PureComponent {
       }));
     }
   }
-  finishCountdown = (exerciseList, reps, resistanceCategoryId) => {
+  finishCountdown = (workout, reps, resistanceCategoryId) => {
     this.props.navigation.replace('Exercise', {
-      exerciseList,
+      workout,
       reps,
       resistanceCategoryId,
       currentExerciseIndex:0,
-      workoutSubCategory:this.state.workoutSubCategory
+      workoutSubCategory:this.state.workoutSubCategory,
+      fitnessLevel:this.state.fitnessLevel
     });
   }
   render() {
     const {
-      exerciseList,
       countdownDuration,
       reps,
       resistanceCategoryId,
       timerStart,
       pauseModalVisible,
+      workout
     } = this.state;
     console.log(this.state.workoutSubCategory)
     return (
@@ -119,7 +121,7 @@ export default class CountdownScreen2 extends React.PureComponent {
           <CountdownTimer
             totalDuration={countdownDuration}
             start={timerStart}
-            handleFinish={() => this.finishCountdown(exerciseList, reps, resistanceCategoryId)}
+            handleFinish={() => this.finishCountdown(workout, reps, resistanceCategoryId)}
           />
           <Text style={styles.countdownText}>
             GET READY!

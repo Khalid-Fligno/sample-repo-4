@@ -23,6 +23,9 @@ import fonts from '../../../../styles/fonts';
 import appsFlyer from 'react-native-appsflyer';
 import { db } from '../../../../../config/firebase';
 import AsyncStorage from '@react-native-community/async-storage';
+import HiitCircuitWorkoutProgress from '../../../../components/Workouts/HiitCircuitWorkoutProgress';
+import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
+import FastImage from 'react-native-fast-image';
 
 const { width } = Dimensions.get('window');
 
@@ -30,24 +33,41 @@ const updateWeeklyTargets = (obj, field, newTally) => {
   return Object.assign({}, obj, { [field]: newTally });
 };
 
+
+
 export default class ExercisesScreen extends React.PureComponent {
   constructor(props) {
     super(props);
+    const workout = props.navigation.getParam('workout', null)
     const currentExerciseIndex =  props.navigation.getParam('currentExerciseIndex', null);
-    const currentExercise = props.navigation.getParam('exerciseList', null)[currentExerciseIndex];
-    this.state = {
-      exerciseList: props.navigation.getParam('exerciseList', null),
-      currentExercise:currentExercise ,
-      reps: props.navigation.getParam('reps', null),
-      resistanceCategoryId: props.navigation.getParam('resistanceCategoryId', null),
-      workoutSubCategory : this.props.navigation.getParam('workoutSubCategory', null),
-      currentExerciseIndex:currentExerciseIndex,
-      timerStart: false,
-      totalDuration: 60,
-      pauseModalVisible: false,
-      videoPaused: false,
-      exerciseInfoModalVisible: false,
-      appState: AppState.currentState,
+    const currentExercise = workout['exercises'][currentExerciseIndex];
+    const workoutSubCategory = props.navigation.getParam('workoutSubCategory', null);
+    const fitnessLevel =props.navigation.getParam('fitnessLevel', null);
+    const rest = props.navigation.getParam('rest', false);
+    let totalDuration = 0
+    if(rest){
+      totalDuration = workout.restIntervalMap[fitnessLevel-1] 
+    }else{
+       totalDuration = workout.workIntervalMap[fitnessLevel-1] 
+    }
+    
+
+      this.state = {
+          workout: workout,
+          exerciseList: workout['exercises'],
+          currentExercise:currentExercise ,
+          reps: props.navigation.getParam('reps', null),
+          resistanceCategoryId: props.navigation.getParam('resistanceCategoryId', null),
+          fitnessLevel:fitnessLevel,
+          workoutSubCategory : workoutSubCategory,
+          currentExerciseIndex:currentExerciseIndex,  // Start from 0
+          timerStart: false,
+          totalDuration:10 ,
+          pauseModalVisible: false,
+          videoPaused: false,
+          exerciseInfoModalVisible: false,
+          appState: AppState.currentState,
+          rest:rest 
     };
   }
   componentDidMount() {
@@ -84,43 +104,122 @@ export default class ExercisesScreen extends React.PureComponent {
     this.setState({ timerStart: true });
   }
 
-  handleFinish = async (exerciseList, reps, resistanceCategoryId,currentExerciseIndex) => {
+  handleFinish = async (reps, resistanceCategoryId,currentExerciseIndex) => {
     this.setState({ timerStart: false });
-    let setCount = this.props.navigation.getParam('setCount', 0);
-    setCount += 1;
+    
+    
 
-
-    if (setCount === 3 && currentExerciseIndex === this.state.exerciseList.length - 1) {
-      console.log("update weekly targets")
-      this.updateWeekly();
-      appsFlyer.trackEvent('resistance_workout_complete');
-      this.props.navigation.replace('WorkoutComplete', {
-        exerciseList,
-        reps,
-        resistanceCategoryId,
-        workoutSubCategory:this.state.workoutSubCategory
-      });
+    if(this.state.workoutSubCategory.name === 'strength'){
+      let setCount = this.props.navigation.getParam('setCount', 0); //Start from 0
+      setCount += 1;
+      if (setCount === this.state.workout.workoutReps && currentExerciseIndex === this.state.exerciseList.length - 1) {
+        console.log("update weekly targets")
+        this.updateWeekly();
+        appsFlyer.trackEvent('resistance_workout_complete');
+        this.props.navigation.replace('WorkoutComplete', {
+          workout:this.state.workout,
+          reps,
+          resistanceCategoryId,
+          workoutSubCategory:this.state.workoutSubCategory,
+          fitnessLevel:this.state.fitnessLevel
+        });
+      }
+      else if (setCount === this.state.workout.workoutReps) {
+        console.log("Go to next  exercise")
+        this.props.navigation.replace('Exercise', {
+          workout:this.state.workout,
+          setCount:0,
+          reps,
+          resistanceCategoryId,
+          currentExerciseIndex:currentExerciseIndex + 1,
+          workoutSubCategory:this.state.workoutSubCategory,
+          fitnessLevel:this.state.fitnessLevel
+        });
+      } 
+      else {
+        console.log("Incresase count")
+        this.props.navigation.replace('Exercise', {
+          workout:this.state.workout,
+          reps,
+          setCount,
+          resistanceCategoryId,
+          currentExerciseIndex:currentExerciseIndex ,
+          workoutSubCategory:this.state.workoutSubCategory,
+          fitnessLevel:this.state.fitnessLevel
+        });
+      }
+    }else if(this.state.workoutSubCategory.name === 'circuit'){
+      let setCount = this.props.navigation.getParam('setCount', 1); // start from 1
+      if((currentExerciseIndex === this.state.exerciseList.length - 1) && setCount === this.state.workout.workoutReps){
+        console.log("finished")
+      }
+      else if(currentExerciseIndex === this.state.exerciseList.length - 1 ){
+        setCount += 1;
+        this.props.navigation.replace('Exercise', {
+          workout:this.state.workout,
+          reps,
+          setCount,
+          resistanceCategoryId,
+          currentExerciseIndex:0,
+          workoutSubCategory:this.state.workoutSubCategory,
+          fitnessLevel:this.state.fitnessLevel
+        });
+      }else{
+        this.props.navigation.replace('Exercise', {
+          workout:this.state.workout,
+          reps,
+          setCount,
+          resistanceCategoryId,
+          currentExerciseIndex:currentExerciseIndex +1 ,
+          workoutSubCategory:this.state.workoutSubCategory,
+          fitnessLevel:this.state.fitnessLevel
+        });
+      }
+    
+    }else if(this.state.workoutSubCategory.name === 'interval'){
+      let setCount = this.props.navigation.getParam('setCount', 1); //start from 1
+      if(setCount === this.state.workout.workoutReps){
+        console.log("Finished")
+      }else{
+        this.props.navigation.replace('Exercise', {
+          workout:this.state.workout,
+          reps,
+          setCount:setCount + 1,
+          resistanceCategoryId,
+          currentExerciseIndex:currentExerciseIndex,
+          workoutSubCategory:this.state.workoutSubCategory,
+          fitnessLevel:this.state.fitnessLevel
+        });
+      }
     }
-    else if (setCount === 3) {
-      console.log("Go to next  exercise")
+    
+  }
+
+  restControl =(reps, resistanceCategoryId,currentExerciseIndex) =>{
+    console.log("rest call")
+    if(this.state.workoutSubCategory.name === 'strength'){
+      this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
+    }else if(this.state.workoutSubCategory.name === 'circuit'){
       this.props.navigation.replace('Exercise', {
-        exerciseList,
-        setCount:0,
+        workout:this.state.workout,
         reps,
-        resistanceCategoryId,
-        currentExerciseIndex:currentExerciseIndex + 1,
-        workoutSubCategory:this.state.workoutSubCategory
+        setCount: this.props.navigation.getParam('setCount', 1),
+        resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
+        currentExerciseIndex:currentExerciseIndex,
+        workoutSubCategory:this.state.workoutSubCategory,
+        fitnessLevel:this.state.fitnessLevel,
+        rest:true
       });
-    } 
-    else {
-      console.log("Incresase count")
+    }else if(this.state.workoutSubCategory.name === 'interval'){
       this.props.navigation.replace('Exercise', {
-        exerciseList,
+        workout:this.state.workout,
         reps,
-        setCount,
-        resistanceCategoryId,
-        currentExerciseIndex:currentExerciseIndex ,
-        workoutSubCategory:this.state.workoutSubCategory
+        setCount: this.props.navigation.getParam('setCount', 1),
+        resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
+        currentExerciseIndex:currentExerciseIndex,
+        workoutSubCategory:this.state.workoutSubCategory,
+        fitnessLevel:this.state.fitnessLevel,
+        rest:true
       });
     }
   }
@@ -193,12 +292,13 @@ export default class ExercisesScreen extends React.PureComponent {
           text: 'OK',
           onPress: () => {
             this.props.navigation.replace('Exercise', {
-              exerciseList,
+              workout:this.state.workout,
               reps,
               setCount: this.props.navigation.getParam('setCount', 0),
               resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
               currentExerciseIndex:currentExerciseIndex,
-              workoutSubCategory:this.state.workoutSubCategory
+              workoutSubCategory:this.state.workoutSubCategory,
+              fitnessLevel:this.state.fitnessLevel
             });
           },
         },
@@ -223,18 +323,20 @@ export default class ExercisesScreen extends React.PureComponent {
               this.updateWeekly();
                 appsFlyer.trackEvent('resistance_workout_complete');
                 this.props.navigation.replace('WorkoutComplete', {
-                  exerciseList,
+                  workout:this.state.workout,
                   reps,
                   resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
-                  workoutSubCategory:this.state.workoutSubCategory
+                  workoutSubCategory:this.state.workoutSubCategory,
+                  fitnessLevel:this.state.fitnessLevel
                 });
             }else{
               this.props.navigation.replace('Exercise', {
-                exerciseList,
+                workout:this.state.workout,
                 reps,
                 resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
                 currentExerciseIndex: currentExerciseIndex + 1,
-                workoutSubCategory:this.state.workoutSubCategory
+                workoutSubCategory:this.state.workoutSubCategory,
+                fitnessLevel:this.state.fitnessLevel
               });
             }
            
@@ -274,8 +376,13 @@ export default class ExercisesScreen extends React.PureComponent {
       resistanceCategoryId,
       videoPaused,
       exerciseInfoModalVisible,
+      workoutSubCategory,
+      fitnessLevel,
+      rest,
+      workout
     } = this.state;
-    console.log(this.state.workoutSubCategory)
+    console.log(rest,workoutSubCategory)
+    console.log(fitnessLevel,totalDuration,this.props.navigation.getParam('setCount', 1))
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -284,20 +391,36 @@ export default class ExercisesScreen extends React.PureComponent {
           style={styles.flexContainer}
         >
           <View>
-            <Video
-              ref={(ref) => this.videoRef = ref}
-              source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4` || exerciseList[0].videoURL }}
-              resizeMode="contain"
-              repeat
-              muted
-              paused={videoPaused}
-              style={{ width, height: width }}
-            />
+            {
+              !rest && (<Video
+                  ref={(ref) => this.videoRef = ref}
+                  source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4` || exerciseList[0].videoURL }}
+                  resizeMode="contain"
+                  repeat
+                  muted
+                  paused={videoPaused}
+                  style={{ width, height: width }}
+              />)
+               
+            }
+           
+            {
+             rest && <FastImage
+                source={require('../../../../../assets/images/hiit-rest-placeholder.jpg')}
+                style={{ width, height: width }}
+              />
+            }
+             
             <ExerciseInfoButton onPress={this.showExerciseInfoModal} />
             <WorkoutTimer
               totalDuration={totalDuration}
               start={timerStart}
-              handleFinish={() => this.handleFinish(exerciseList, reps, resistanceCategoryId,currentExerciseIndex)}
+              handleFinish={() =>{
+                if(!rest)
+                  this.restControl( reps, resistanceCategoryId,currentExerciseIndex)
+                else  
+                  this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
+              } }
             />
           </View>
           <View style={styles.currentExerciseTextContainer}>
@@ -307,31 +430,70 @@ export default class ExercisesScreen extends React.PureComponent {
                 ellipsizeMode="tail"
                 style={styles.currentExerciseNameText}
               >
-                {currentExercise.name.toUpperCase()}
+                {rest?'Rest': currentExercise.name.toUpperCase()}
               </Text>
             </View>
             <View style={styles.currentExerciseRepsTextContainer}>
-              <Text style={styles.currentExerciseRepsText}>
-                x{reps}
-              </Text>
+              {workoutSubCategory.name === 'strength' &&(
+                 <Text style={styles.currentExerciseRepsText}>
+                    x{reps}
+                 </Text> 
+              )
+              }
+               {workoutSubCategory.name !== 'strength' &&(
+                 <Text style={styles.currentExerciseRepsText}>
+                    {totalDuration} sec
+                 </Text> 
+              )
+              }
             </View>
           </View>
-          <WorkoutProgress
-            currentExercise={currentExerciseIndex + 1}
-            currentSet={this.props.navigation.getParam('setCount', 0) + 1}
-            exerciseList={exerciseList}
-          />
-           {/* <HiitCircuitWorkoutProgress
-            currentExercise={1}
-            currentSet={this.props.navigation.getParam('setCount', 1)}
-          /> */}
-            {/* <HiitWorkoutProgress
-            currentRound={this.props.navigation.getParam('roundCount', 0) + 1}
-            currentSet={1}
-          /> */}
+          {
+              workoutSubCategory.name === 'strength' && ( <WorkoutProgress
+                  currentExercise={currentExerciseIndex + 1}
+                  currentSet={this.props.navigation.getParam('setCount', 0) + 1}
+                  exerciseList={exerciseList}
+                />)
+          }
+         
+          {
+            workoutSubCategory.name === 'circuit' && (<HiitCircuitWorkoutProgress
+                currentExercise={currentExerciseIndex + 1}
+                currentSet={this.props.navigation.getParam('setCount', 1)}
+                exerciseList={exerciseList}
+              />)  
+          }
+          
+          {
+            workoutSubCategory.name === 'interval' &&  (<HiitWorkoutProgress
+                currentRound={this.props.navigation.getParam('setCount', 0) + 1}
+                currentSet={1}
+              />)
+          }
+          {/* {
+            (this.props.navigation.getParam('setCount', 1) === workout.workoutReps &&
+            currentExerciseIndex + 1 === exerciseList.length -1) &&
+            (
+              <PauseButtonRow
+                handlePause={this.handlePause}
+                nextExerciseName="NEARLY DONE!"
+                lastExercise
+              />
+            )
+            
+            (this.props.navigation.getParam('setCount', 1) < workout.workoutReps &&
+            currentExerciseIndex + 1 < exerciseList.length -1) &&
+            (
+              <PauseButtonRow
+                handlePause={this.handlePause}
+                nextExerciseName={exerciseList[currentExerciseIndex + 1].name}
+              />
+            )
+          } */}
+             
           <PauseButtonRow
             handlePause={this.handlePause}
-            nextExerciseName={exerciseList[1].name}
+            nextExerciseName={exerciseList[currentExerciseIndex].name}
           />
           <WorkoutPauseModal
             isVisible={pauseModalVisible}
@@ -377,7 +539,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   currentExerciseNameTextContainer: {
-    width: width - 50,
+    // width: width - 50,
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
@@ -387,7 +549,7 @@ const styles = StyleSheet.create({
     color: colors.themeColor.color,
   },
   currentExerciseRepsTextContainer: {
-    width: 30,
+    // width: 30,
     alignItems: 'flex-end',
     justifyContent: 'center',
   },

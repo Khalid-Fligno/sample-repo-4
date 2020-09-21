@@ -75,10 +75,11 @@ class HiitCircuitWorkoutProgress extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+
     };
   }
   render() {
-    const { currentExercise, currentSet } = this.props;
+    const { currentExercise, currentSet ,exerciseList } = this.props;
     const completePieChart = (
       <PieChart
         style={styles.pieChart}
@@ -142,7 +143,7 @@ class HiitCircuitWorkoutProgress extends React.PureComponent {
     );
     return (
       <View style={styles.container}>
-        <View style={styles.exercise}>
+        {/* <View style={styles.exercise}>
           {currentSet === 1 && currentExercise === 1 && currentPieChart(1)}
           {currentSet === 1 && currentExercise === 1 && currentSetText(1)}
           {currentSet === 1 && currentExercise > 1 && nonCurrentPieChart(1)}
@@ -260,7 +261,32 @@ class HiitCircuitWorkoutProgress extends React.PureComponent {
           {currentSet === 3 && currentExercise < 6 && nonCurrentSetText(2)}
           {currentSet === 3 && currentExercise === 6 && currentPieChart(3)}
           {currentSet === 3 && currentExercise === 6 && currentSetText(3)}
-        </View>
+        </View> */}
+        {
+          exerciseList.map((res,index)=>(
+              <View style={styles.exercise} key={index}>
+                  {currentSet === 1 && currentExercise < index+1 && incompletePieChart}
+                  {currentSet === 1 && currentExercise === index+1 && currentPieChart(1)}
+                  {currentSet === 1 && currentExercise === index+1 && currentSetText(1)}
+                  {currentSet === 1 && currentExercise > index+1 && nonCurrentPieChart(1)}
+                  {currentSet === 1 && currentExercise > index+1 && nonCurrentSetText(1)}
+
+                  {currentSet === 2 && currentExercise < index+1 && nonCurrentPieChart(1)}
+                  {currentSet === 2 && currentExercise < index+1 && nonCurrentSetText(1)}
+                  {currentSet === 2 && currentExercise === index+1 && currentPieChart(2)}
+                  {currentSet === 2 && currentExercise === index+1 && currentSetText(2)}
+                  {currentSet === 2 && currentExercise > index+1 && nonCurrentPieChart(2)}
+                  {currentSet === 2 && currentExercise > index+1 && nonCurrentSetText(2)}
+
+                  {currentSet === 3 && currentExercise < index+1 && nonCurrentPieChart(2)}
+                  {currentSet === 3 && currentExercise < index+1 && nonCurrentSetText(2)}
+                  {currentSet === 3 && currentExercise === index+1 && currentPieChart(3)}
+                  {currentSet === 3 && currentExercise === index+1 && currentSetText(3)}
+                  {currentSet === 3 && currentExercise > index+1 && completePieChart}
+                  {currentSet === 3 && currentExercise > index+1 && tickIcon}
+              </View>
+          ))
+        }
       </View>
     );
   }
