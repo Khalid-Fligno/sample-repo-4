@@ -384,10 +384,10 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                         )
                       } 
                       <View style={WorkoutScreenStyle.workoutIconContainer}>
-                        <Icon
-                          name="workouts-time"
-                          size={40}
-                          color={colors.charcoal.standard}
+                      <Image
+                      source={require('../../../../assets/icons/time.png')}
+                        fadeDuration={0}
+                        style={{width:32, height: 32}}
                         />
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
                           {workout.workoutTime} Mins

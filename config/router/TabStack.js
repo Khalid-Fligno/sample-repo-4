@@ -15,20 +15,20 @@ import fonts from '../../src/styles/fonts';
 
 const TabStack = createBottomTabNavigator(
   {
-    // Home: HomeStack,
+     Home: HomeStack,
     // Nutrition: NutritionStack,
     // Workouts: WorkoutsStack,
     // Calendar: CalendarStack,
     // Progress: ProgressStack,
     
 
-    Feed: FeedStack,
+    //Feed: FeedStack,
     Subscription: SubscriptionStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
   },
   {
-    initialRouteName: 'Feed',
+    initialRouteName: 'Home',
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
       tabBarIcon: ({ focused }) => {
@@ -36,15 +36,15 @@ const TabStack = createBottomTabNavigator(
         const activeState = tabColorMap[routeName];
         const inactiveState = colors.charcoal.standard;
         let icon;
-        // if (routeName === 'Home') {
-        //   icon = (
-        //     <Icon
-        //       name={focused ? 'home-solid' : 'home-outline'}
-        //       size={24}
-        //       color={focused ? activeState : inactiveState}
-        //     />
-        //   );
-        // } 
+        if (routeName === 'Home') {
+          icon = (
+            <Image
+              source={require('../../assets/icons/fitazfk2-feed.png')}
+              fadeDuration={0}
+              style={{width:31, height: 22}}
+            />
+          );
+        } 
         // else if (routeName === 'Nutrition') {
         //   icon = (
         //     <Icon
@@ -54,15 +54,15 @@ const TabStack = createBottomTabNavigator(
         //     />
         //   );
         // } 
-        if (routeName === 'Feed') {
-          icon = (
-            <Image
-              source={require('../../assets/icons/fitazfk2-feed.png')}
-              fadeDuration={0}
-              style={{width:31, height: 22}}
-            />
-          );
-        }
+        // if (routeName === 'Feed') {
+        //   icon = (
+        //     <Image
+        //       source={require('../../assets/icons/fitazfk2-feed.png')}
+        //       fadeDuration={0}
+        //       style={{width:31, height: 22}}
+        //     />
+        //   );
+        // }
         else if (routeName === 'Subscription') {
           icon = (
             <Image

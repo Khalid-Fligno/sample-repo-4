@@ -1,6 +1,6 @@
 import React from 'react'
 import Icon from '../Shared/Icon';
-import { ImageBackground, Text,View, StyleSheet } from 'react-native';
+import { ImageBackground, Text,View, StyleSheet,Image } from 'react-native';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -28,11 +28,11 @@ const WorkoutListItem =({timeInterval,description,title,url ,onPress})=>(
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>{description}</Text>
         <View style={styles.timeContainer}> 
-          <Icon
-            name="timer"
-            size={22}
-            color={colors.charcoal.standard}
-          />
+        <Image
+                  source={require('../../../assets/icons/time.png')}
+                  fadeDuration={0}
+                  style={{width:32, height: 32}}
+                />
           <Text style={styles.time}>   
             {timeInterval}m
           </Text> 
