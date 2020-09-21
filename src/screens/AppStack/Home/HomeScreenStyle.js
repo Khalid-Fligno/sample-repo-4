@@ -1,6 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 import fonts from "../../../styles/fonts";
 import colors from "../../../styles/colors";
+import globalStyle from "../../../styles/globalStyles";
 const { width } = Dimensions.get('window');
 const HomeScreenStyle = StyleSheet.create({
     scrollView: {
@@ -46,7 +47,7 @@ const HomeScreenStyle = StyleSheet.create({
     bodyText: {
       fontFamily: fonts.bold,
       fontSize: 12,
-      color: colors.transparentBlackDark,
+      color: colors.grey.dark,
       fontWeight:'500',
       paddingVertical:20,
       textAlign:"center",
@@ -108,7 +109,6 @@ const HomeScreenStyle = StyleSheet.create({
       flex: 1,
       flexDirection: 'row',
       height:60,
-   
     },
    
   });

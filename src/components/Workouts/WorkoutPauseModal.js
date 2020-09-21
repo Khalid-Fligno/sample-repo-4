@@ -14,6 +14,7 @@ const WorkoutPauseModal = ({
   handleUnpause,
   exerciseList,
   fitnessLevel,
+  currentExerciseIndex,
   reps,
 }) => (
   <Modal
@@ -41,7 +42,7 @@ const WorkoutPauseModal = ({
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => handleRestart(exerciseList, fitnessLevel || reps)}
+          onPress={() => handleRestart(exerciseList, fitnessLevel || reps,currentExerciseIndex)}
           style={styles.modalButtonRestart}
         >
           <Text style={styles.modalButtonText}>
@@ -51,7 +52,7 @@ const WorkoutPauseModal = ({
         {
           handleSkip && (
             <TouchableOpacity
-              onPress={() => handleSkip(exerciseList, fitnessLevel || reps)}
+              onPress={() => handleSkip(exerciseList, fitnessLevel || reps,currentExerciseIndex)}
               style={styles.modalButtonSkip}
             >
               <Text style={styles.modalButtonText}>

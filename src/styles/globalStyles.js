@@ -26,7 +26,7 @@ const globalStyle = StyleSheet.create({
       },
       bigHeadingTitleText:{
           fontSize:35,
-          fontWeight:'bold'
+          fontFamily:fonts.boldNarrow
       },
       bigHeadingWithBackButtonText : {
           fontSize:15,
@@ -47,14 +47,14 @@ const globalStyle = StyleSheet.create({
     },
     filterButtonsContainer: {
         height: 40,
-        backgroundColor:colors.containerBackground,
+        backgroundColor:colors.themeColor.themeBackgroundColor,
         borderWidth:0,
         borderRadius:0,
         marginLeft:0,
         marginRight:0
       },
       filterButton: {
-        backgroundColor: colors.containerBackground,
+        backgroundColor:colors.themeColor.themeBackgroundColor,
         borderColor: colors.violet.standard,
         borderBottomWidth:2,
         borderColor: colors.grey.light,
@@ -69,7 +69,7 @@ const globalStyle = StyleSheet.create({
         fontWeight:'bold'
       },
       filterButtonSelected: {
-        backgroundColor: colors.containerBackground,
+        backgroundColor: colors.themeColor.themeBackgroundColor,
         borderBottomWidth:2,
         borderColor: colors.themeColor.color,
       },

@@ -57,31 +57,39 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
     const { exercises } = workout;
     console.log(exercises)
     try {
-      const exerciseVideos = [
-        // `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
-        `${FileSystem.cacheDirectory}exercise-1.mp4`,
-        `${FileSystem.cacheDirectory}exercise-2.mp4`,
-        `${FileSystem.cacheDirectory}exercise-3.mp4`,
-        `${FileSystem.cacheDirectory}exercise-4.mp4`,
-        `${FileSystem.cacheDirectory}exercise-5.mp4`,
-        `${FileSystem.cacheDirectory}exercise-6.mp4`,
-      ];
-      Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
-        FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
-      }))
+      FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
+        // console.log(res)
+          Promise.all(res.map(async (item,index) => {
+              if (item.includes("exercise-")) {
+                console.log(`${FileSystem.cacheDirectory}${item}`)
+                FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
+                  // console.log("deleted...",item)
+                })
+              }
+          }))
+      })
+  
       await Promise.all(exercises.map(async (exercise, index) => {
         // const videoUrl = exercise.videoUrls.filter(res=>res.model === 'sharnia')
-        console.log(exercise.videoUrls[0].url)
-        if(exercise.videoUrls[0].url !== "")
-        await FileSystem.downloadAsync(
-          // videoUrl[0].url,
-          exercise.videoUrls[0].url,
-          `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-        ).catch(err=>console.log(err))
+        // console.log(exercise.videoUrls[0].url)
+        if(exercise.videoUrls[0].url !== ""){
+            await FileSystem.downloadAsync(
+              exercise.videoUrls[0].url,
+              `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+            ).then(()=>{
+              // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+            })
+            .catch(err=>console.log(err))
+        }
       }))
       this.setState({ loading: false });
       // this.props.navigation.navigate('WorkoutInfo', { workout, reps: findReps(fitnessLevel) }); //for new workout its difficulty level
-      this.props.navigation.navigate('WorkoutInfo', { workout, reps: workout.difficultyLevel[fitnessLevel-1].toString() }); //for new workout its difficulty level
+      this.props.navigation.navigate('WorkoutInfo', {
+         workout, 
+         reps: workout.difficultyLevel[fitnessLevel-1].toString(),
+         workoutSubCategory:this.selectedSubCategory,
+         fitnessLevel
+        }); //for new workout its difficulty level
     } catch (err) {
       this.setState({ loading: false });
       Alert.alert('Could not download exercise videos', 'Please check your internet connection');
@@ -169,19 +177,3 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   }
 }
 
-
- // .where(focus, '==', true)
-      // .where(location, '==', true)
-      // .where(this.selectedSubCategory !== 'Strength'?this.selectedSubCategory.toLowerCase():'resistance','==',true)
-      // .where('workoutRotation', '==', 2)
-
-   // const locationImages = images[location];
-    // const workoutList = sortBy(workouts, 'sortOrder').map((workout, index) => (
-    //   <WorkoutTile
-    //     key={workout.id}
-    //     title1={workout.displayName}
-    //     image={locationImages[index]}
-    //     onPress={() => this.loadExercises(workout)}
-    //     disabled={workout.disabled}
-    //   />
-    // ));

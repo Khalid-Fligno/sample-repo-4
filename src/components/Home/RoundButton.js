@@ -1,12 +1,12 @@
 import React from 'react'
-import { View, Image, StyleSheet, Text } from 'react-native'
+import { View, Image, StyleSheet, Text, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Icon from '../../components/Shared/Icon'
 import colors from '../../styles/colors'
 import fonts from '../../styles/fonts'
 
 
-
+const { width } = Dimensions.get('window');
 export default function RoundButton(props){
     let leftIconUrl =''
     if(props.title === 'NUTRITION'){
@@ -44,7 +44,7 @@ export default function RoundButton(props){
 
 const styles = StyleSheet.create({
     Container: {
-        width: '50%',
+        width: (width - 40)/2,
         height: 50,
       
     },

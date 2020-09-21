@@ -29,7 +29,29 @@ import WorkoutScreenStyle from './WorkoutScreenStyle';
 const moment = require('moment');
 
 const { width } = Dimensions.get('window');
+const workIntervalMap = {
+  1: 40,
+  2: 60,
+  3: 80,
+};
 
+const restIntervalMap = {
+  1: 80,
+  2: 60,
+  3: 40,
+};
+
+const workCircuitMap = {
+  1: 30,
+  2: 40,
+  3: 50,
+};
+
+const restCircuitMap = {
+  1: 30,
+  2: 20,
+  3: 10,
+};
 export default class WorkoutInfoScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -37,6 +59,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       loading: false,
       workout: this.props.navigation.getParam('workout', null),
       reps: this.props.navigation.getParam('reps', null),
+      workoutSubCategory:this.props.navigation.getParam('workoutSubCategory'),
+      fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
       chosenDate: new Date(),
       calendarModalVisible: false,
       addingToCalendar: false,
@@ -109,7 +133,11 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
     const { workout, reps } = this.state;
     this.setState({ musicModalVisible: false });
     // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
-    this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.id });
+    this.props.navigation.navigate('Countdown', {
+      exerciseList: workout.exercises,
+      reps,
+      resistanceCategoryId: workout.id,
+      workoutSubCategory:this.state.workoutSubCategory });
   }
   keyExtractor = (exercise) => exercise.id;
   renderItem = ({ item: exercise, index }) => (
@@ -140,9 +168,29 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
               </Text>
             </View>
             <View>
-              <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                x{this.state.reps}
-              </Text>
+              
+              {
+                this.state.workoutSubCategory.name === 'strength'&& (
+                  <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                    x{this.state.reps}
+                  </Text>
+                )
+              }
+              
+              {
+                this.state.workoutSubCategory.name === 'interval' && (
+                   <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      {workIntervalMap[this.state.fitnessLevel]}s on/{restIntervalMap[this.state.fitnessLevel]}s off
+                  </Text>
+                )
+              }
+               {
+                this.state.workoutSubCategory.name === 'circuit' && (
+                   <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      {workCircuitMap[this.state.fitnessLevel]}s on/{restCircuitMap[this.state.fitnessLevel]}s off
+                  </Text>
+                )
+              }
             </View>
           </View>
           <Video
@@ -228,6 +276,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       musicModalVisible,
       appleMusicAvailable,
       spotifyAvailable,
+      workoutSubCategory
     } = this.state;
     const findLocationIcon = () => {
       let location;
@@ -316,7 +365,24 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                       </Text>
                       <AddToCalendarButton onPress={() => this.showCalendarModal()} />
                     </View>
+                    
                     <View style={WorkoutScreenStyle.workoutIconsRow}>
+                      {
+                        workoutSubCategory.name !== 'strength' && 
+                        (
+                          <View style={WorkoutScreenStyle.workoutIconContainer}>
+                              <Icon
+                                name="workouts-hiit"
+                                size={36}
+                                color={colors.charcoal.standard}
+                                style={WorkoutScreenStyle.hiitIcon}
+                              />
+                              <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                                HIIT {workoutSubCategory.displayName}
+                              </Text>
+                            </View>
+                        )
+                      } 
                       <View style={WorkoutScreenStyle.workoutIconContainer}>
                         <Icon
                           name="workouts-time"
@@ -324,7 +390,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                           color={colors.charcoal.standard}
                         />
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                          18 Mins
+                          {workout.workoutTime} Mins
                         </Text>
                       </View>
                       <View style={WorkoutScreenStyle.workoutIconContainer}>
@@ -334,7 +400,11 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                           color={colors.charcoal.standard}
                         />
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                          {reps * 18} Reps
+                       { 
+                         workoutSubCategory && (workoutSubCategory.name === 'strength' && workout.workoutReps === 0)
+                          ?(`${reps * 18} Reps`):(`${workout.workoutReps} rounds`)
+                       
+                      }
                         </Text>
                       </View>
                       {/* <View style={WorkoutScreenStyle.workoutIconContainer}>
@@ -347,16 +417,22 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                           {workout && findLocation(workout)}
                         </Text>
                       </View> */}
-                      <View style={WorkoutScreenStyle.workoutIconContainer}>
-                        <Icon
-                          name={workout && findFocusIcon()}
-                          size={40}
-                          color={colors.charcoal.standard}
-                        />
-                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                          {workout && findFocus(workout)}
-                        </Text>
-                      </View>
+                      {
+                           workoutSubCategory.name === 'strength' &&
+                           ( 
+                              <View style={WorkoutScreenStyle.workoutIconContainer}>
+                                <Icon
+                                  name={workout && findFocusIcon()}
+                                  size={40}
+                                  color={colors.charcoal.standard}
+                                />
+                                <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                                  {workout && findFocus(workout)}
+                                </Text>
+                            </View>
+                           )
+                      }
+                     
                     </View>
                     <View style={WorkoutScreenStyle.workoutPreviewHeaderContainer} >
                       <Text style={WorkoutScreenStyle.workoutPreviewHeaderText}>

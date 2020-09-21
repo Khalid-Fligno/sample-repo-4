@@ -4,10 +4,9 @@ import { View, Text } from 'react-native'
 import Icon from '../../components/Shared/Icon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import colors from '../../styles/colors';
+import PropTypes from 'prop-types';
 
-
-
-export default function BigHeadingWithBackButton(props){
+ function BigHeadingWithBackButton(props){
     return(
         <View style={globalStyle.bigHeadingTitleContainer}>
             {props.isBackButton && (
@@ -36,4 +35,12 @@ export default function BigHeadingWithBackButton(props){
     )
 }
 
-
+BigHeadingWithBackButton.propTypes = {
+    bigTitleStyle:PropTypes.object,
+    customBtnTitleStyle:PropTypes.object,
+    bigTitleText:PropTypes.string,
+    backButtonText:PropTypes.string,
+    isBigTitle:PropTypes.bool.isRequired,
+    isBackButton:PropTypes.bool.isRequired
+  };
+  export default BigHeadingWithBackButton

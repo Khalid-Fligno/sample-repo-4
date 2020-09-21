@@ -140,13 +140,15 @@ fetchCategories = async () =>{
       workoutCategories
     } = this.state;
     console.log(workoutCategories)
-    var _scrollToBottomY
     return (
         <ScrollView 
                 showsVerticalScrollIndicator={false} 
                 style={globalStyle.container}  
                 ref={ref => {this.scrollView = ref}}
-                onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}
+                onContentSizeChange={() =>  {
+                  if(!this.state.toggleList[0])
+                  this.scrollView.scrollToEnd({animated: true})
+                }}
         >
           {
            !loading && <>

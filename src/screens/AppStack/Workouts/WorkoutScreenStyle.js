@@ -241,13 +241,13 @@ const WorkoutScreenStyle = StyleSheet.create({
       backgroundColor: colors.themeColor.color,
     },
     exerciseTileHeaderTextLeft: {
-      width: width - 72,
+      // width: width - 72,
       fontFamily: fonts.standardNarrow,
       fontSize: 14,
       color: colors.white,
     },
     exerciseTileHeaderBarRight: {
-      width: 30,
+      // width: 30,
       fontFamily: fonts.standardNarrow,
       fontSize: 13,
       color: colors.white,
