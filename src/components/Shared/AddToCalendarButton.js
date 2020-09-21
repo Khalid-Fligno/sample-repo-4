@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
     padding:5,
     paddingLeft:15,
     paddingRight:10,
-    elevation:5
   },
   addToCalendarButtonText: {
     fontFamily: fonts.bold,

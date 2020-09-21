@@ -112,7 +112,7 @@ export default class Exercise6Screen extends React.PureComponent {
   }
   handleQuitWorkout = async () => {
     this.setState({ pauseModalVisible: false });
-    this.props.navigation.navigate('Workouts');
+    this.props.navigation.navigate('WorkoutsSelection');
     const exerciseVideos = [
       `${FileSystem.cacheDirectory}exercise-1.mp4`,
       `${FileSystem.cacheDirectory}exercise-2.mp4`,
@@ -316,6 +316,6 @@ const styles = StyleSheet.create({
   },
   currentExerciseRepsText: {
     fontFamily: fonts.boldNarrow,
-    fontSize: 18,
+    fontSize: 12,
   },
 });

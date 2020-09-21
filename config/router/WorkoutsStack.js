@@ -66,6 +66,7 @@ const WorkoutsStack = createStackNavigator(
             withStartButton={workoutsStartButtonMap[routeName]}
             withProfileButton={routeName === 'WorkoutsHome' ||routeName === 'WorkoutsSelection'}
             withHelpButton={routeName === 'WorkoutsHome'}
+            withBackButton={routeName === 'WorkoutInfo'}
             stack="workouts"
             // headerTitleParams={
             //   findWorkoutsSelectionTitle(routeName, navigation.getParam('workoutLocation', null), navigation.getParam('workoutFocus', null), navigation.getParam('hiitWorkoutStyle', null))

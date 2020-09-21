@@ -53,7 +53,7 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
 
   componentWillUnmount = async () => {
     this.unsubscribeFromTargets();
-    this.unsubscribe();
+    this.unsubscribeCategories();
   }
 
   showHelperOnFirstOpen = async () => {
@@ -96,7 +96,7 @@ scrollView = any
 
 fetchCategories = async () =>{
   this.setState({ loading: true });
-  this.unsubscribe = await db.collection('workoutCategories')
+  this.unsubscribeCategories = await db.collection('workoutCategories')
   .orderBy("name", "desc")
   .onSnapshot(async (querySnapshot) => {
     const workoutCategories = [];

@@ -91,7 +91,6 @@ export default class Exercise1Screen extends React.PureComponent {
   }
   handleQuitWorkout = async () => {
     this.setState({ pauseModalVisible: false });
-    this.props.navigation.navigate('Workouts');
     const exerciseVideos = [
       `${FileSystem.cacheDirectory}exercise-1.mp4`,
       `${FileSystem.cacheDirectory}exercise-2.mp4`,
@@ -103,6 +102,7 @@ export default class Exercise1Screen extends React.PureComponent {
     Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
       FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
     }));
+      this.props.navigation.navigate('WorkoutsSelection');
   }
   quitWorkout = () => {
     Alert.alert(
@@ -185,6 +185,7 @@ export default class Exercise1Screen extends React.PureComponent {
       videoPaused,
       exerciseInfoModalVisible,
     } = this.state;
+   
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -292,6 +293,6 @@ const styles = StyleSheet.create({
   },
   currentExerciseRepsText: {
     fontFamily: fonts.boldNarrow,
-    fontSize: 18,
+    fontSize: 12,
   },
 });
