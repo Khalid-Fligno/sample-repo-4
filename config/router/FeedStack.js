@@ -8,7 +8,7 @@ import HomeStack from './HomeStack';
 
 const FeedStack = createStackNavigator(
   {
-    Feed: HomeScreen,
+    Dashboard: HomeScreen,
     Home: HomeStack,
     Nutrition: NutritionStack,
     Workouts: WorkoutsStack
@@ -18,12 +18,12 @@ const FeedStack = createStackNavigator(
     defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
-        if(routeName === 'Feed')
+        if(routeName === 'Dashboard')
         return (
           <Header
-            stack="Feed"
+            stack="Dashboard"
             navigation={navigation}
-            withProfileButton={routeName === 'Feed'}
+            withProfileButton={routeName === 'Dashboard'}
           />
         );
       },

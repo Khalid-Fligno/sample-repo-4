@@ -63,7 +63,7 @@ export default class ExercisesScreen extends React.PureComponent {
           workoutSubCategory : workoutSubCategory,
           currentExerciseIndex:currentExerciseIndex,  // Start from 0
           timerStart: false,
-          totalDuration:10 ,
+          totalDuration:totalDuration ,
           pauseModalVisible: false,
           videoPaused: false,
           exerciseInfoModalVisible: false,
@@ -387,8 +387,9 @@ goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,rest=false)
       rest,
       workout
     } = this.state;
-    console.log(rest,workoutSubCategory)
-    console.log(fitnessLevel,totalDuration,this.props.navigation.getParam('setCount', 1))
+    const setCount = this.props.navigation.getParam('setCount', 1)
+    // console.log(rest,exerciseList[currentExerciseIndex],exerciseList)
+    console.log(fitnessLevel,totalDuration,setCount)
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -457,7 +458,7 @@ goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,rest=false)
           {
               workout.filters.includes('strength') && ( <WorkoutProgress
                   currentExercise={currentExerciseIndex + 1}
-                  currentSet={this.props.navigation.getParam('setCount', 1)}
+                  currentSet={setCount}
                   exerciseList={exerciseList}
                 />)
           }
@@ -465,43 +466,43 @@ goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,rest=false)
           {
             workout.filters.includes('circuit')&& (<HiitCircuitWorkoutProgress
                 currentExercise={currentExerciseIndex + 1}
-                currentSet={this.props.navigation.getParam('setCount', 1)}
+                currentSet={setCount}
                 exerciseList={exerciseList}
               />)  
           }
           
           {
             workout.filters.includes('interval') &&  (<HiitWorkoutProgress
-                currentRound={this.props.navigation.getParam('setCount', 1)}
-                // currentSet={1}
+                currentRound={setCount}
+                currentSet={1}
+                rounds={workout.workoutReps}
                 rest
-              />)
+              />
+              )
           }
-          {/* {
-            (this.props.navigation.getParam('setCount', 1) === workout.workoutReps &&
-            currentExerciseIndex + 1 === exerciseList.length -1) &&
+          {
+            (workout.filters.includes('interval') ) &&
             (
               <PauseButtonRow
                 handlePause={this.handlePause}
-                nextExerciseName="NEARLY DONE!"
-                lastExercise
+                nextExerciseName={exerciseList[currentExerciseIndex].name}
               />
             )
+          }
+          {
+            (!workout.filters.includes('interval') ) && <PauseButtonRow
+              handlePause={this.handlePause}
+              nextExerciseName={exerciseList[currentExerciseIndex + 1]?exerciseList[currentExerciseIndex + 1].name:'NEARLY DONE!'}
+              lastExercise={exerciseList[currentExerciseIndex + 1]?false:true}
+            />
+          }
+          
             
-            (this.props.navigation.getParam('setCount', 1) < workout.workoutReps &&
-            currentExerciseIndex + 1 < exerciseList.length -1) &&
-            (
-              <PauseButtonRow
-                handlePause={this.handlePause}
-                nextExerciseName={exerciseList[currentExerciseIndex + 1].name}
-              />
-            )
-          } */}
-             
-          <PauseButtonRow
+            
+          {/* <PauseButtonRow
             handlePause={this.handlePause}
             nextExerciseName={exerciseList[currentExerciseIndex].name}
-          />
+          /> */}
           <WorkoutPauseModal
             isVisible={pauseModalVisible}
             handleQuit={this.quitWorkout}

@@ -130,7 +130,7 @@ export default class HomeScreen extends React.PureComponent {
       switchWelcomeHeader,
       dayOfWeek,
     } = this.state;
-    console.log(profile)
+    // console.log(profile)
     const personalisedMessage = () => {
       const { resistanceWeeklyComplete, hiitWeeklyComplete } = profile.weeklyTargets;
       const totalWeeklyWorkoutsCompleted = resistanceWeeklyComplete + hiitWeeklyComplete;
@@ -206,7 +206,7 @@ export default class HomeScreen extends React.PureComponent {
                         <View>
                           <ProgressBar
                             progressBarType="Strength"
-                            completedWorkouts={profile.weeklyTargets.strength =0}
+                            completedWorkouts={profile.weeklyTargets.strength }
                           />
                         </View>
                       )
@@ -216,7 +216,7 @@ export default class HomeScreen extends React.PureComponent {
                         <View>
                           <ProgressBar
                             progressBarType="Circuit"
-                            completedWorkouts={profile.weeklyTargets.circuit =0}
+                            completedWorkouts={profile.weeklyTargets.circuit }
                           />
                         </View>
                       )
@@ -228,7 +228,7 @@ export default class HomeScreen extends React.PureComponent {
                             <View>
                               <ProgressBar
                                 progressBarType="Interval"
-                                completedWorkouts={profile.weeklyTargets.interval =0}
+                                completedWorkouts={profile.weeklyTargets.interval}
                               />
                             </View>
                           )
