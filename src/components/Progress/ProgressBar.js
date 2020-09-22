@@ -128,7 +128,8 @@ const styles = StyleSheet.create({
     fontFamily:fonts.standardNarrow,
     fontWeight:'bold',
     color:colors.transparentBlackMid,
-    letterSpacing:0.7
+    letterSpacing:0.7,
+    paddingTop:5,
   },
   progressCircleNumber:{
     fontSize:70,

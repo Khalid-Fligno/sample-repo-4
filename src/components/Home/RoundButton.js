@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Image, StyleSheet, Text, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Icon from '../../components/Shared/Icon'
 import colors from '../../styles/colors'
 import fonts from '../../styles/fonts'
-
+import { NavigationContainer } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 export default function RoundButton(props){
+    //let [backgroundColor, setbackgroundColor] = useState(colors.grey.medium);
+    let [borderColor, setBorderColor] = useState(colors.grey.medium);
+    const press = (e) => setBorderColor(color => borderColor=colors.themeColor.color);
+
     let leftIconUrl =''
     if(props.title === 'NUTRITION'){
         leftIconUrl = require('../../../assets/icons/'+'fitazfk2-nutrition.png')
@@ -17,8 +21,12 @@ export default function RoundButton(props){
     return(
         <View style={styles.Container} >
             <TouchableOpacity
-            style={[styles.btnContainer,props.customBtnStyle]}
+            style={[styles.btnContainer,props.customBtnStyle,{borderColor:borderColor|| colors.gray.color}]}
             onPress={props.onPress}
+            // onPress={(e)=> { 
+            //     press(e);
+            //     props.onPress();
+            // }}
             >
             <View style={styles.roundButtonInnerContainer}>
                 {/* <Image

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
   Animated,
+  Image,
 } from 'react-native';
 import { Card } from 'react-native-elements';
 import PropTypes from 'prop-types';
@@ -91,10 +92,10 @@ export default class RecipeTile extends React.PureComponent {
                          <Text style={styles.timerText}>
                           {time}
                         </Text>
-                        <Icon
-                          name="timer"
-                          size={22}
-                          color={colors.black}
+                        <Image
+                        source={require('../../../assets/icons/time.png')}
+                        fadeDuration={0}
+                        style={{width:32, height: 32}}
                         />
                        
                       </View>

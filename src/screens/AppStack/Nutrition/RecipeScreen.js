@@ -290,10 +290,10 @@ export default class RecipeScreen extends React.PureComponent {
                 )
               }
               <View style={[NutritionStyles.infoFieldContainer,{ marginLeft:10}]}>
-                <Icon
-                  name="timer"
-                  size={24}
-                  color={colors.black}
+                <Image
+                  source={require('../../../../assets/icons/timer.png')}
+                  fadeDuration={0}
+                  style={{width:2, height: 2}}
                 />
                 <Text style={NutritionStyles.infoText}>
                   {recipe.time}
