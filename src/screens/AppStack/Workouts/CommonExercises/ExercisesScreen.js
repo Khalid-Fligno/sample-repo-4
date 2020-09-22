@@ -26,6 +26,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import HiitCircuitWorkoutProgress from '../../../../components/Workouts/HiitCircuitWorkoutProgress';
 import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
 import FastImage from 'react-native-fast-image';
+import iconSet from '@expo/vector-icons/build/Fontisto';
 
 const { width } = Dimensions.get('window');
 
@@ -79,17 +80,27 @@ export default class ExercisesScreen extends React.PureComponent {
   }
 
   async updateWeekly(){
-
-    // const uid = await AsyncStorage.getItem('uid');
-    // const userRef = db.collection('users').doc(uid);
-    // return db.runTransaction((transaction) => {
-    //   return transaction.get(userRef).then((userDoc) => {
-    //     const newWeeklyComplete = userDoc.data().weeklyTargets[this.state.workoutSubCategory.name] + 1;
-    //     const oldWeeklyTargets = userDoc.data().weeklyTargets;
-    //     const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, this.state.workoutSubCategory.name, newWeeklyComplete);
-    //     transaction.update(userRef, { weeklyTargets: newWeeklyTargets })
-    //   });
-    // });
+    let workoutName = 'none'
+    if(this.state.workout.filters.includes('circuit')){
+        workoutName = 'circuit'
+    }else if(this.state.workout.filters.includes('interval')){
+      workoutName = 'interval'
+    }else if(this.state.workout.filters.includes('strength')){
+      workoutName = 'strength'
+    }
+    if(workoutName === 'none'){
+      return null
+    }
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid);
+    return db.runTransaction((transaction) => {
+      return transaction.get(userRef).then((userDoc) => {
+        const newWeeklyComplete = userDoc.data().weeklyTargets[workoutName] + 1;
+        const oldWeeklyTargets = userDoc.data().weeklyTargets;
+        const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, workoutName, newWeeklyComplete);
+        transaction.update(userRef, { weeklyTargets: newWeeklyTargets })
+      });
+    });
   }
   
   handleAppStateChange = (nextAppState) => {
@@ -104,123 +115,118 @@ export default class ExercisesScreen extends React.PureComponent {
     this.setState({ timerStart: true });
   }
 
+checkFinished(currentExerciseIndex,setCount){
+  return  (currentExerciseIndex === this.state.exerciseList.length - 1) && setCount === this.state.workout.workoutReps
+}
+
   handleFinish = async (reps, resistanceCategoryId,currentExerciseIndex) => {
     this.setState({ timerStart: false });
-    
-    
 
-    if(this.state.workoutSubCategory.name === 'strength'){
-      let setCount = this.props.navigation.getParam('setCount', 0); //Start from 0
-      setCount += 1;
-      if (setCount === this.state.workout.workoutReps && currentExerciseIndex === this.state.exerciseList.length - 1) {
+    if(this.state.workout.filters.includes('strength')){
+      let setCount = this.props.navigation.getParam('setCount', 1); //Start from 0
+      if (this.checkFinished(currentExerciseIndex,setCount)) {
         console.log("update weekly targets")
-        this.updateWeekly();
-        appsFlyer.trackEvent('resistance_workout_complete');
-        this.props.navigation.replace('WorkoutComplete', {
-          workout:this.state.workout,
-          reps,
-          resistanceCategoryId,
-          workoutSubCategory:this.state.workoutSubCategory,
-          fitnessLevel:this.state.fitnessLevel
-        });
+        // this.updateWeekly();
+        // appsFlyer.trackEvent('resistance_workout_complete');
+        this.workoutComplete(reps, resistanceCategoryId);
       }
       else if (setCount === this.state.workout.workoutReps) {
         console.log("Go to next  exercise")
-        this.props.navigation.replace('Exercise', {
-          workout:this.state.workout,
-          setCount:0,
-          reps,
-          resistanceCategoryId,
-          currentExerciseIndex:currentExerciseIndex + 1,
-          workoutSubCategory:this.state.workoutSubCategory,
-          fitnessLevel:this.state.fitnessLevel
-        });
+        this.goToExercise(1,reps,resistanceCategoryId,currentExerciseIndex + 1,)
       } 
       else {
         console.log("Incresase count")
-        this.props.navigation.replace('Exercise', {
-          workout:this.state.workout,
-          reps,
-          setCount,
-          resistanceCategoryId,
-          currentExerciseIndex:currentExerciseIndex ,
-          workoutSubCategory:this.state.workoutSubCategory,
-          fitnessLevel:this.state.fitnessLevel
-        });
+        this.goToExercise(setCount + 1,reps,resistanceCategoryId,currentExerciseIndex)
       }
-    }else if(this.state.workoutSubCategory.name === 'circuit'){
+    }else if(this.state.workout.filters.includes('circuit')){
       let setCount = this.props.navigation.getParam('setCount', 1); // start from 1
-      if((currentExerciseIndex === this.state.exerciseList.length - 1) && setCount === this.state.workout.workoutReps){
-        console.log("finished")
+      if(this.checkFinished(currentExerciseIndex,setCount)){
+        console.log("finished");
+        // this.updateWeekly();
+        // appsFlyer.trackEvent('complete_hiit_circuit_workout');
+        
+        this.workoutComplete(reps, resistanceCategoryId);
       }
       else if(currentExerciseIndex === this.state.exerciseList.length - 1 ){
-        setCount += 1;
-        this.props.navigation.replace('Exercise', {
-          workout:this.state.workout,
-          reps,
-          setCount,
-          resistanceCategoryId,
-          currentExerciseIndex:0,
-          workoutSubCategory:this.state.workoutSubCategory,
-          fitnessLevel:this.state.fitnessLevel
-        });
+        console.log("Increase Count")
+        setCount += 1;  //increase count when 1st,2nd... round finished
+        this.goToExercise(setCount,reps,resistanceCategoryId,0)
       }else{
-        this.props.navigation.replace('Exercise', {
-          workout:this.state.workout,
-          reps,
-          setCount,
-          resistanceCategoryId,
-          currentExerciseIndex:currentExerciseIndex +1 ,
-          workoutSubCategory:this.state.workoutSubCategory,
-          fitnessLevel:this.state.fitnessLevel
-        });
+        console.log("Go to next Exercise") //go to next exercise if round not finished
+        this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex +1 )
       }
     
-    }else if(this.state.workoutSubCategory.name === 'interval'){
+    }else if(this.state.workout.filters.includes('interval')){
       let setCount = this.props.navigation.getParam('setCount', 1); //start from 1
       if(setCount === this.state.workout.workoutReps){
-        console.log("Finished")
+        console.log("Finished") //finished when all rounds are finished
+        // this.updateWeekly();
+        // appsFlyer.trackEvent('complete_hiit_workout');
+        this.workoutComplete(reps, resistanceCategoryId);
       }else{
-        this.props.navigation.replace('Exercise', {
-          workout:this.state.workout,
-          reps,
-          setCount:setCount + 1,
-          resistanceCategoryId,
-          currentExerciseIndex:currentExerciseIndex,
-          workoutSubCategory:this.state.workoutSubCategory,
-          fitnessLevel:this.state.fitnessLevel
-        });
+        console.log("Go to next round")
+        this.goToExercise(setCount + 1,reps,resistanceCategoryId,currentExerciseIndex)
       }
     }
     
   }
 
+workoutComplete(reps, resistanceCategoryId){
+  this.props.navigation.replace('WorkoutComplete', {
+    workout:this.state.workout,
+    reps,
+    resistanceCategoryId,
+    workoutSubCategory:this.state.workoutSubCategory,
+    fitnessLevel:this.state.fitnessLevel
+  });
+}   
+
+goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,rest=false){
+  this.props.navigation.replace('Exercise', {
+    workout:this.state.workout,
+    setCount,
+    reps,
+    resistanceCategoryId,
+    currentExerciseIndex,
+    workoutSubCategory:this.state.workoutSubCategory,
+    fitnessLevel:this.state.fitnessLevel,
+    rest
+  });
+}
+
+
+
+
   restControl =(reps, resistanceCategoryId,currentExerciseIndex) =>{
+    const setCount = this.props.navigation.getParam('setCount', 1)
     console.log("rest call")
-    if(this.state.workoutSubCategory.name === 'strength'){
+    if(this.state.workout.filters.includes('strength')){
       this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
-    }else if(this.state.workoutSubCategory.name === 'circuit'){
-      this.props.navigation.replace('Exercise', {
-        workout:this.state.workout,
-        reps,
-        setCount: this.props.navigation.getParam('setCount', 1),
-        resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
-        currentExerciseIndex:currentExerciseIndex,
-        workoutSubCategory:this.state.workoutSubCategory,
-        fitnessLevel:this.state.fitnessLevel,
-        rest:true
-      });
-    }else if(this.state.workoutSubCategory.name === 'interval'){
-      this.props.navigation.replace('Exercise', {
-        workout:this.state.workout,
-        reps,
-        setCount: this.props.navigation.getParam('setCount', 1),
-        resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
-        currentExerciseIndex:currentExerciseIndex,
-        workoutSubCategory:this.state.workoutSubCategory,
-        fitnessLevel:this.state.fitnessLevel,
-        rest:true
-      });
+    }else if(this.state.workout.filters.includes('circuit')){
+      this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,true);
+
+      // this.props.navigation.replace('Exercise', {
+      //   workout:this.state.workout,
+      //   reps,
+      //   setCount: this.props.navigation.getParam('setCount', 1),
+      //   resistanceCategoryId,
+      //   currentExerciseIndex:currentExerciseIndex,
+      //   workoutSubCategory:this.state.workoutSubCategory,
+      //   fitnessLevel:this.state.fitnessLevel,
+      //   rest:true
+      // });
+    }else if(this.state.workout.filters.includes('interval')){
+      this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,true);
+      // this.props.navigation.replace('Exercise', {
+      //   workout:this.state.workout,
+      //   reps,
+      //   setCount: this.props.navigation.getParam('setCount', 1),
+      //   resistanceCategoryId,
+      //   currentExerciseIndex:currentExerciseIndex,
+      //   workoutSubCategory:this.state.workoutSubCategory,
+      //   fitnessLevel:this.state.fitnessLevel,
+      //   rest:true
+      // });
     }
   }
 
@@ -434,13 +440,13 @@ export default class ExercisesScreen extends React.PureComponent {
               </Text>
             </View>
             <View style={styles.currentExerciseRepsTextContainer}>
-              {workoutSubCategory.name === 'strength' &&(
+              {workout.filters.includes('strength') &&(
                  <Text style={styles.currentExerciseRepsText}>
                     x{reps}
                  </Text> 
               )
               }
-               {workoutSubCategory.name !== 'strength' &&(
+               {!workout.filters.includes('strength') &&(
                  <Text style={styles.currentExerciseRepsText}>
                     {totalDuration} sec
                  </Text> 
@@ -449,15 +455,15 @@ export default class ExercisesScreen extends React.PureComponent {
             </View>
           </View>
           {
-              workoutSubCategory.name === 'strength' && ( <WorkoutProgress
+              workout.filters.includes('strength') && ( <WorkoutProgress
                   currentExercise={currentExerciseIndex + 1}
-                  currentSet={this.props.navigation.getParam('setCount', 0) + 1}
+                  currentSet={this.props.navigation.getParam('setCount', 1)}
                   exerciseList={exerciseList}
                 />)
           }
          
           {
-            workoutSubCategory.name === 'circuit' && (<HiitCircuitWorkoutProgress
+            workout.filters.includes('circuit')&& (<HiitCircuitWorkoutProgress
                 currentExercise={currentExerciseIndex + 1}
                 currentSet={this.props.navigation.getParam('setCount', 1)}
                 exerciseList={exerciseList}
@@ -465,9 +471,10 @@ export default class ExercisesScreen extends React.PureComponent {
           }
           
           {
-            workoutSubCategory.name === 'interval' &&  (<HiitWorkoutProgress
-                currentRound={this.props.navigation.getParam('setCount', 0) + 1}
-                currentSet={1}
+            workout.filters.includes('interval') &&  (<HiitWorkoutProgress
+                currentRound={this.props.navigation.getParam('setCount', 1)}
+                // currentSet={1}
+                rest
               />)
           }
           {/* {

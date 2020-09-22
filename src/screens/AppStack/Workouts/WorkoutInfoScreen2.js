@@ -173,7 +173,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             <View>
               
               {
-                this.state.workoutSubCategory.name === 'strength'&& (
+                this.state.workout.filters.includes('strength')&& (
                   <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
                     x{this.state.reps}
                   </Text>
@@ -181,14 +181,14 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
               }
               
               {
-                this.state.workoutSubCategory.name === 'interval' && (
+                this.state.workout.filters.includes('interval') && (
                    <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
                       {this.state.workout.workIntervalMap[this.state.fitnessLevel-1]}s on/{this.state.workout.restIntervalMap[this.state.fitnessLevel-1]}s off
                   </Text>
                 )
               }
                {
-                this.state.workoutSubCategory.name === 'circuit' && (
+                this.state.workout.filters.includes('circuit') && (
                    <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
                       {this.state.workout.workIntervalMap[this.state.fitnessLevel-1]}s on/{this.state.workout.restIntervalMap[this.state.fitnessLevel-1]}s off
                   </Text>
@@ -372,7 +372,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                     
                     <View style={WorkoutScreenStyle.workoutIconsRow}>
                       {
-                        workoutSubCategory.name !== 'strength' && 
+                        !this.state.workout.filters.includes('strength') && 
                         (
                           <View style={WorkoutScreenStyle.workoutIconContainer}>
                               <Icon
@@ -405,7 +405,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                         />
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
                        { 
-                         workoutSubCategory && (workoutSubCategory.name === 'strength')
+                         this.state.workout.filters.includes('strength')
                           ?(`${reps * workout.workoutTime} Reps`):(`${workout.workoutReps} rounds`)
                        
                       }
@@ -422,7 +422,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                         </Text>
                       </View> */}
                       {
-                           workoutSubCategory.name === 'strength' &&
+                           this.state.workout.filters.includes('strength') &&
                            ( 
                               <View style={WorkoutScreenStyle.workoutIconContainer}>
                                 <Icon

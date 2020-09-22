@@ -51,9 +51,9 @@ export default class ExerciseInfoModal extends React.PureComponent {
                 )
               }
               {
-                exercise.coachingTip && exercise.coachingTip.map((tip) => (
+                exercise.coachingTip && exercise.coachingTip.map((tip,index) => (
                   <Text
-                    key={tip}
+                    key={index}
                     style={styles.exerciseDescriptionText}
                   >
                     {`• ${tip}`}
@@ -71,9 +71,9 @@ export default class ExerciseInfoModal extends React.PureComponent {
                 )
               }
               {
-                exercise.otherInfo && exercise.otherInfo.map((text) => (
+                exercise.otherInfo && exercise.otherInfo.map((text,index) => (
                   <Text
-                    key={text}
+                    key={index}
                     style={styles.exerciseDescriptionHeader}
                   >
                     {text}

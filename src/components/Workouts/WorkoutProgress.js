@@ -56,7 +56,7 @@ class WorkoutProgress extends React.PureComponent {
   }
   render() {
     const { currentExercise, currentSet ,exerciseList} = this.props;
-    console.log(exerciseList)
+    console.log(currentExercise, currentSet)
     const completePieChart = (
       <PieChart
         style={styles.pieChart}
@@ -159,6 +159,7 @@ class WorkoutProgress extends React.PureComponent {
 WorkoutProgress.propTypes = {
   currentExercise: PropTypes.number.isRequired,
   currentSet: PropTypes.number.isRequired,
+  exerciseList: PropTypes.array.isRequired,
 };
 
 const styles = StyleSheet.create({
