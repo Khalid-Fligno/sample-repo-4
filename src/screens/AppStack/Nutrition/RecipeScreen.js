@@ -27,6 +27,7 @@ import NutritionStyles from './NutritionStyles';
 import Tag from '../../../components/Nutrition/Tag';
 import CustomButton from '../../../components/Shared/CustomButton';
 import CustomBtn from '../../../components/Shared/CustomBtn';
+import TimeSvg from '../../../../assets/icons/time';
 
 const moment = require('moment');
 
@@ -290,11 +291,7 @@ export default class RecipeScreen extends React.PureComponent {
                 )
               }
               <View style={[NutritionStyles.infoFieldContainer,{ marginLeft:10}]}>
-                <Image
-                  source={require('../../../../assets/icons/timer.png')}
-                  fadeDuration={0}
-                  style={{width:2, height: 2}}
-                />
+                <TimeSvg width="22" height="22" />
                 <Text style={NutritionStyles.infoText}>
                   {recipe.time}
                 </Text>

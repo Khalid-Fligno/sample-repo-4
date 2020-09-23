@@ -15,6 +15,7 @@ import Icon from '../../components/Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import Tag from './Tag';
+import TimeSvg from '../../../assets/icons/time';
 
 const { width } = Dimensions.get('window');
 
@@ -88,16 +89,12 @@ export default class RecipeTile extends React.PureComponent {
                 <View style={styles.recipeInfoSection}>
                   {
                     time && (
+                      
                       <View style={styles.timerContainer}>
                          <Text style={styles.timerText}>
                           {time}
                         </Text>
-                        <Image
-                        source={require('../../../assets/icons/time.png')}
-                        fadeDuration={0}
-                        style={{width:32, height: 32}}
-                        />
-                       
+                        <TimeSvg width="22" height="22" />
                       </View>
                     )
                   }
