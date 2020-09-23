@@ -5,10 +5,11 @@ import fonts from '../../styles/fonts'
 
 
 export default function Tag(props){
+  console.log(props.tag)
     return(
-        <View
+    
+      <View
           style={styles.tagCircle}
-          key={props.tag}
         >
         <Text style={styles.tagText}>
           {props.tag}
@@ -28,7 +29,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor:colors.themeColor.color,
-        alignSelf:'baseline'
       },
       tagText: {
         fontFamily: fonts.bold,

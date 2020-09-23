@@ -51,6 +51,7 @@ export default class RecipeTile extends React.PureComponent {
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
+    
     return (
       <TouchableOpacity
         onPress={onPress}
@@ -73,9 +74,7 @@ export default class RecipeTile extends React.PureComponent {
                 </Text>
                 
               </View>
-              {/* <Text style={styles.subTitle}>
-                {subTitle}
-              </Text> */}
+              
               <View
                 style={styles.recipeInfoContainer}
               >
@@ -128,16 +127,16 @@ const styles = StyleSheet.create({
     margin: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    // shadowColor: colors.charcoal.standard,
+    // shadowOpacity: 0.5,
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowRadius: 4,
   },
   flexContainer: {
     flex: 1,
   },
   card: {
-    width: width - 40,
+    width: width - 50,
     borderRadius: 3,
     overflow: 'hidden',
     borderWidth: 0,
@@ -164,24 +163,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  tagCircle: {
-    height: 22,
-    width: 22,
-    marginRight: 5,
-    borderWidth: 0,
-    // borderColor: colors.violet.standard,
-    borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor:colors.themeColor.color,
-    alignSelf:'baseline'
-  },
-  tagText: {
-    fontFamily: fonts.bold,
-    fontSize: 9,
-    color: colors.white,
-    // marginTop: 4,
-  },
+ 
+ 
   timerText: {
     fontFamily: fonts.standard,
     fontSize: 12,
@@ -194,6 +177,5 @@ const styles = StyleSheet.create({
   timerContainer : {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf:'baseline',
   }
 });

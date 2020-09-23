@@ -38,10 +38,10 @@ const globalStyle = StyleSheet.create({
 //Custom Filter Button Style Section
     absoluteFilterButtonsContainer: {
       width: width - 40,
-      shadowColor: colors.grey.dark,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.7,
-      shadowRadius: 2,
+      // shadowColor: colors.grey.dark,
+      // shadowOffset: { width: 0, height: 2 },
+      // shadowOpacity: 0.7,
+      // shadowRadius: 2,
       marginTop:10,
       padding:0
     },

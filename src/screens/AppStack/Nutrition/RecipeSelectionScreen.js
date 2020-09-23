@@ -119,7 +119,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       </View>
     );
     return (
-      <View style={globalStyle.container}>
+       <View style={globalStyle.container}>
           <BigHeadingWithBackButton isBackButton = {true} 
             bigTitleText = {meal} 
             onPress={this.handleBack} 
