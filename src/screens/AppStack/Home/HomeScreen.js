@@ -168,6 +168,8 @@ export default class HomeScreen extends React.PureComponent {
                bigTitleText = {bigHeadeingTitle} 
                isBackButton = {false}
                isBigTitle = {true}
+               customContainerStyle={{marginVertical:22}}
+
                />
               {/* <Text style={HomeScreenStyle.welcomeHeaderText}>
                 {switchWelcomeHeader ? 'Welcome back' : 'Hi'}{profile && `, ${profile.firstName}`}

@@ -8,15 +8,15 @@ import PropTypes from 'prop-types';
 
  function BigHeadingWithBackButton(props){
     return(
-        <View style={globalStyle.bigHeadingTitleContainer}>
+        <View style={[globalStyle.bigHeadingTitleContainer,props.customContainerStyle]}>
             {props.isBackButton && (
                 <TouchableOpacity
-                    style={{flexDirection:"row",alignItems:'center',marginTop:10}}
+                    style={{flexDirection:"row",alignItems:'center',marginBottom:8}}
                     onPress={props.onPress}
                 >
                     <Icon
                         name="chevron-left"
-                        size={15}
+                        size={10}
                         color={colors.themeColor.color}
                     />
                     <Text style={globalStyle.bigHeadingWithBackButtonText}>
@@ -41,6 +41,7 @@ BigHeadingWithBackButton.propTypes = {
     bigTitleText:PropTypes.string,
     backButtonText:PropTypes.string,
     isBigTitle:PropTypes.bool.isRequired,
-    isBackButton:PropTypes.bool.isRequired
+    isBackButton:PropTypes.bool.isRequired,
+    customContainerStyle:PropTypes.object
   };
   export default BigHeadingWithBackButton

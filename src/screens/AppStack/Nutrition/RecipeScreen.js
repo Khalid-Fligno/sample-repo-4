@@ -116,7 +116,7 @@ export default class RecipeScreen extends React.PureComponent {
           backgroundScrollSpeed={2}
           contentBackgroundColor={colors.white}
           parallaxHeaderHeight={width}
-          renderBackground={() => (
+          renderForeground={() => (
             <View style={{backgroundColor:colors.offWhite}}>
               <View style={{marginBottom:-25,marginHorizontal:containerPadding,flexDirection:'row',justifyContent:'space-between'}}>
                 <BigHeadingWithBackButton isBackButton = {true} 
@@ -134,6 +134,7 @@ export default class RecipeScreen extends React.PureComponent {
               />
             </View>
           )}
+         
         >
           
           <Modal

@@ -126,6 +126,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             backButtonText="Back to nutrition" 
             isBigTitle={true}
             isBackButton ={true}
+            customContainerStyle={{marginTop:10,marginBottom:30}}
           />
           <CustomButtonGroup  
             onPress={this.updateFilter}

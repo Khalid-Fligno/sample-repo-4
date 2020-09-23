@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-navigation';
 import globalStyle from '../../../styles/globalStyles';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
+import fonts from '../../../styles/fonts';
 
 const NutritionList = [
   {
@@ -41,8 +42,8 @@ export default function NutritionHomeScreen({ navigation }) {
            isBackButton ={false}
            isBigTitle = {true}
            />
-        <View style={{width:'100%',marginBottom:30}}>
-          <Text style={{color:'gray'}}>Choose your mealtime</Text>
+        <View style={{width:'100%',marginBottom:25,marginTop:10}}>
+          <Text style={{color:'gray',fontFamily:fonts.standard}}>Choose your mealtime</Text>
         </View>
 
         {
@@ -54,35 +55,13 @@ export default function NutritionHomeScreen({ navigation }) {
             onPress={() => navigation.navigate('RecipeSelection', { meal: data.title })}
             showTitle = {true}
             overlayTitle = {false}
-            height={200}
+            customContainerStyle={{height:170}}
+            showTitleStyle={{marginTop:15}}
           />
           ))
          
         }
-        {/* <Tile
-          title1="Lunch"
-          image={require('../../../../assets/images/nutrition-lunch.jpg')}
-          onPress={() => navigation.navigate('RecipeSelection', { meal: 'lunch' })}
-          showTitle = {true}
-          overlayTitle = {false}
-          height={200}
-        />
-        <Tile
-          title1="Dinner"
-          image={require('../../../../assets/images/nutrition-dinner.jpg')}
-          onPress={() => navigation.navigate('RecipeSelection', { meal: 'dinner' })}
-          showTitle = {true}
-          overlayTitle = {false}
-          height={200}
-        />
-        <Tile
-          title1="Snack"
-          image={require('../../../../assets/images/nutrition-snack.jpg')}
-          onPress={() => navigation.navigate('RecipeSelection', { meal: 'snack' })}
-          showTitle = {true}
-          overlayTitle = {false}
-          height={200}
-        /> */}
+       
        </View>
       </SafeAreaView>
     </ScrollView> 

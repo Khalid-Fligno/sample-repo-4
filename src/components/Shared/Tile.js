@@ -47,7 +47,6 @@ export default class Tile extends React.PureComponent {
       overlayTitleStyle,
       imageUrl
     } = this.props;
-    tileHeight = height
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
@@ -107,10 +106,10 @@ const styles = StyleSheet.create({
     margin: 5,
     marginTop:0,
     // width,
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    // shadowColor: colors.charcoal.standard,
+    // shadowOpacity: 0.5,
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowRadius: 4,
     height:tileHeight
   },
   flexContainer: {
