@@ -55,7 +55,12 @@ class WorkoutProgress extends React.PureComponent {
     };
   }
   render() {
-    const { currentExercise, currentSet ,exerciseList} = this.props;
+    const { currentExercise, currentSet ,exerciseList,workoutReps} = this.props;
+    let dataValue= 100/workoutReps;
+    let dataSet=[]
+    for(i=0;i<workoutReps;i++){
+        dataSet.push(dataValue);
+    }
     console.log(currentExercise, currentSet)
     const completePieChart = (
       <PieChart
@@ -78,10 +83,18 @@ class WorkoutProgress extends React.PureComponent {
     const currentPieChart = (set) => (
       <PieChart
         style={styles.pieChart}
-        data={pieDataMap[set]}
+        data={
+          dataSet.map((value, index) => ({
+            value,
+            svg: {
+              fill: index < currentSet ? colors.coral.standard : colors.grey.light  ,
+            },
+            key: `pie-${index}`,
+          }))
+        }
         innerRadius="80%"
-        startAngle={Math.PI * 2}
-        endAngle={0}
+        startAngle={0}
+        endAngle={Math.PI * 2}
       />
     );
     const currentSetText = (text) => (

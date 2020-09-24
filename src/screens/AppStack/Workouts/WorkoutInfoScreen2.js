@@ -280,9 +280,11 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       musicModalVisible,
       appleMusicAvailable,
       spotifyAvailable,
-      workoutSubCategory
+      workoutSubCategory,
+      fitnessLevel
     } = this.state;
-
+console.log((workout.workIntervalMap[fitnessLevel]*workout.exercises.length*workout.workoutReps)/60)
+console.log(fitnessLevel,workout.workIntervalMap[fitnessLevel-1],workout.exercises.length,workout.workoutReps,60)
     const findLocationIcon = () => {
       let location;
       if (workout.home) {
@@ -391,7 +393,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                       <View style={WorkoutScreenStyle.workoutIconContainer}>
                         <TimeSvg width="40" height="40" />
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                          {workout.workoutTime} Mins
+                          {((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60} Mins
                         </Text>
                       </View>
                       <View style={WorkoutScreenStyle.workoutIconContainer}>

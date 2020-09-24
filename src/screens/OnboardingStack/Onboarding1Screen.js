@@ -62,6 +62,9 @@ export default class Onboarding1Screen extends React.PureComponent {
           currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
           resistanceWeeklyComplete: 0,
           hiitWeeklyComplete: 0,
+          strength:0,
+          circuit:0,
+          interval:0
         },
         // cycleTargets: {
         //   1: 0,

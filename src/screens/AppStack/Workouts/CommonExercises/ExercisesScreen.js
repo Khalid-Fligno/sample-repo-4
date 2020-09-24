@@ -63,7 +63,7 @@ export default class ExercisesScreen extends React.PureComponent {
           workoutSubCategory : workoutSubCategory,
           currentExerciseIndex:currentExerciseIndex,  // Start from 0
           timerStart: false,
-          totalDuration:totalDuration ,
+          totalDuration:10 ,
           pauseModalVisible: false,
           videoPaused: false,
           exerciseInfoModalVisible: false,
@@ -460,6 +460,7 @@ goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,rest=false)
                   currentExercise={currentExerciseIndex + 1}
                   currentSet={setCount}
                   exerciseList={exerciseList}
+                  workoutReps={workout.workoutReps}
                 />)
           }
          

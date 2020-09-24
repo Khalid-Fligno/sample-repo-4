@@ -18,7 +18,7 @@ import { ListItem, Avatar } from 'react-native-elements';
 // import Icon from '../../../components/Shared/Icon';
 import WorkoutListItem from '../../../components/Workouts/WorkoutListItem';
 
-
+let fitnessLevel = 1
 export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -53,7 +53,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   }
   loadExercises = async (workout) => {
     this.setState({ loading: true });
-    const fitnessLevel = await AsyncStorage.getItem('fitnessLevel');
+     fitnessLevel = await AsyncStorage.getItem('fitnessLevel');
     const { exercises } = workout;
     console.log(exercises)
     try {
@@ -110,7 +110,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
           url={ require('../../../../assets/images/workouts-resistance.jpg')} 
           description = {item.displayName}
           title = {item.displayName}
-          timeInterval = {25}
+          timeInterval = {((item.workIntervalMap[fitnessLevel-1]+item.restIntervalMap[fitnessLevel-1])*item.exercises.length*item.workoutReps)/60}
           onPress ={() => this.loadExercises(item)}
        />
   )
