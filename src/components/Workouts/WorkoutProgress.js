@@ -5,7 +5,7 @@ import { PieChart } from 'react-native-svg-charts';
 import Icon from '../Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
-
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 const pieDataIncomplete = [0, 100]
   .map((value, index) => ({
     value,
@@ -15,23 +15,23 @@ const pieDataIncomplete = [0, 100]
     key: `pie-${index}`,
   }));
 
-const pieDataSet1 = [33, 67]
-  .map((value, index) => ({
-    value,
-    svg: {
-      fill: index === 0 ? colors.coral.standard : colors.grey.light,
-    },
-    key: `pie-${index}`,
-  }));
+// const pieDataSet1 = [33, 67]
+//   .map((value, index) => ({
+//     value,
+//     svg: {
+//       fill: index === 0 ? colors.coral.standard : colors.grey.light,
+//     },
+//     key: `pie-${index}`,
+//   }));
 
-const pieDataSet2 = [33, 34, 33]
-  .map((value, index) => ({
-    value,
-    svg: {
-      fill: index === 1 ? colors.grey.light : colors.coral.standard,
-    },
-    key: `pie-${index}`,
-  }));
+// const pieDataSet2 = [33, 34, 33]
+//   .map((value, index) => ({
+//     value,
+//     svg: {
+//       fill: index === 1 ? colors.grey.light : colors.coral.standard,
+//     },
+//     key: `pie-${index}`,
+//   }));
 
 const pieDataComplete = [100, 0]
   .map((value, index) => ({
@@ -42,11 +42,11 @@ const pieDataComplete = [100, 0]
     key: `pie-${index}`,
   }));
 
-const pieDataMap = {
-  1: pieDataIncomplete,
-  2: pieDataSet1,
-  3: pieDataSet2,
-};
+// const pieDataMap = {
+//   1: pieDataIncomplete,
+//   2: pieDataSet1,
+//   3: pieDataSet2,
+// };
 
 class WorkoutProgress extends React.PureComponent {
   constructor(props) {
@@ -155,12 +155,52 @@ class WorkoutProgress extends React.PureComponent {
         {
           exerciseList.map((res,index)=>(
               <View style={styles.exercise} key={index}>
-                {currentExercise > index+1 && completePieChart}
+                {/* {currentExercise > index+1 && completePieChart}
                 {currentExercise > index+1 && tickIcon}
                 {currentExercise === index+1 && currentPieChart(currentSet)}
                 {currentExercise === index+1 && currentSetText(currentSet)}
-                {currentExercise < index+1 && incompletePieChart}
+                {currentExercise < index+1 && incompletePieChart} */}
+
+             <AnimatedCircularProgress
+                    size={45}
+                    width={5}
+                    fill={
+                      
+                      currentExercise === index+1 ?(currentSet/(workoutReps))*100:
+                      currentExercise > index + 1?100:0
+                    }
+                    tintColor={colors.coral.darkest}
+                    onAnimationComplete={() => console.log('onAnimationComplete')}
+                    backgroundColor="lightgray" >
+                      {
+                          (fill) => (
+                            <View>
+                              <Text >
+                                {
+                                  currentExercise === index+1 &&(
+                                    <Text style={styles.currentSetText}>{currentSet}</Text>
+                                  )
+                                }
+                                {
+                                   currentExercise > index+1 && (
+                                    ( <Icon
+                                      name="tick-heavy"
+                                      color={colors.charcoal.dark}
+                                      size={22}
+                                    />)
+                                   )
+                                }
+                                
+                                 
+                              </Text>
+                            
+                          </View>
+                          )
+                        }
+            </AnimatedCircularProgress> 
               </View>
+
+              
           ))
         }
         
@@ -218,7 +258,7 @@ const styles = StyleSheet.create({
     marginTop: -36,
   },
   currentSetTextContainer: {
-    marginTop: -42,
+    marginTop: -37,
   },
   currentSetText: {
     fontFamily: fonts.bold,

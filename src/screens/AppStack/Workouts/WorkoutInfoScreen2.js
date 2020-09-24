@@ -30,29 +30,7 @@ import TimeSvg from '../../../../assets/icons/time';
 const moment = require('moment');
 
 const { width } = Dimensions.get('window');
-const workIntervalMap = {
-  1: 40,
-  2: 60,
-  3: 80,
-};
 
-const restIntervalMap = {
-  1: 80,
-  2: 60,
-  3: 40,
-};
-
-const workCircuitMap = {
-  1: 30,
-  2: 40,
-  3: 50,
-};
-
-const restCircuitMap = {
-  1: 30,
-  2: 20,
-  3: 10,
-};
 export default class WorkoutInfoScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -283,8 +261,9 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       workoutSubCategory,
       fitnessLevel
     } = this.state;
-console.log((workout.workIntervalMap[fitnessLevel]*workout.exercises.length*workout.workoutReps)/60)
-console.log(fitnessLevel,workout.workIntervalMap[fitnessLevel-1],workout.exercises.length,workout.workoutReps,60)
+
+    const workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
+
     const findLocationIcon = () => {
       let location;
       if (workout.home) {
@@ -393,7 +372,7 @@ console.log(fitnessLevel,workout.workIntervalMap[fitnessLevel-1],workout.exercis
                       <View style={WorkoutScreenStyle.workoutIconContainer}>
                         <TimeSvg width="40" height="40" />
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                          {((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60} Mins
+                          {workoutTime} Mins
                         </Text>
                       </View>
                       <View style={WorkoutScreenStyle.workoutIconContainer}>
@@ -405,7 +384,7 @@ console.log(fitnessLevel,workout.workIntervalMap[fitnessLevel-1],workout.exercis
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
                        { 
                          this.state.workout.filters.includes('strength')
-                          ?(`${reps * workout.workoutTime} Reps`):(`${workout.workoutReps} rounds`)
+                          ?(`${reps * workoutTime} Reps`):(`${workout.workoutReps} rounds`)
                        
                       }
                         </Text>
