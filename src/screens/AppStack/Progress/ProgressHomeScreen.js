@@ -312,8 +312,8 @@ class ProgressHomeScreen extends React.PureComponent {
                       profile && (
                         <View>
                           <ProgressBar
-                            progressBarType="Resistance"
-                            completedWorkouts={profile.weeklyTargets.resistanceWeeklyComplete}
+                            progressBarType="Strength"
+                            completedWorkouts={profile.weeklyTargets.strength }
                           />
                         </View>
                       )
@@ -322,8 +322,8 @@ class ProgressHomeScreen extends React.PureComponent {
                       profile && (
                         <View>
                           <ProgressBar
-                            progressBarType="HIIT"
-                            completedWorkouts={profile.weeklyTargets.hiitWeeklyComplete}
+                            progressBarType="Circuit"
+                            completedWorkouts={profile.weeklyTargets.circuit }
                           />
                         </View>
                       )
@@ -334,8 +334,8 @@ class ProgressHomeScreen extends React.PureComponent {
                           profile && (
                             <View>
                               <ProgressBar
-                                progressBarType="HIIT"
-                                completedWorkouts={profile.weeklyTargets.hiitWeeklyComplete}
+                                progressBarType="Interval"
+                                completedWorkouts={profile.weeklyTargets.interval}
                               />
                             </View>
                           )
