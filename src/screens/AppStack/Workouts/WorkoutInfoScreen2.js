@@ -26,6 +26,7 @@ import colors from '../../../styles/colors';
 // import fonts from '../../../styles/fonts';
 import globalStyle from '../../../styles/globalStyles';
 import WorkoutScreenStyle from './WorkoutScreenStyle';
+import TimeSvg from '../../../../assets/icons/time';
 const moment = require('moment');
 
 const { width } = Dimensions.get('window');
@@ -388,11 +389,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                         )
                       } 
                       <View style={WorkoutScreenStyle.workoutIconContainer}>
-                      <Image
-                      source={require('../../../../assets/icons/time.png')}
-                        fadeDuration={0}
-                        style={{width:32, height: 32}}
-                        />
+                        <TimeSvg width="40" height="40" />
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
                           {workout.workoutTime} Mins
                         </Text>

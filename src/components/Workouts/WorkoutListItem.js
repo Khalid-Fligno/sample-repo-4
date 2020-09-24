@@ -6,6 +6,7 @@ import colors from '../../styles/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 import { propTypes } from 'react-native-carousel';
+import TimeSvg from '../../../assets/icons/time';
 
 const WorkoutListItem =({timeInterval,description,title,url ,onPress})=>(
   <TouchableOpacity
@@ -28,11 +29,7 @@ const WorkoutListItem =({timeInterval,description,title,url ,onPress})=>(
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>{description}</Text>
         <View style={styles.timeContainer}> 
-        <Image
-                  source={require('../../../assets/icons/time.png')}
-                  fadeDuration={0}
-                  style={{width:32, height: 32}}
-                />
+        <TimeSvg width="22" height="22" />
           <Text style={styles.time}>   
             {timeInterval}m
           </Text> 

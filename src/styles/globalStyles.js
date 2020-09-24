@@ -9,6 +9,7 @@ const globalStyle = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.themeColor.themeBackgroundColor,
         paddingHorizontal:containerPadding,
+        
     },
     safeContainer: {
       flex: 1,
@@ -21,15 +22,18 @@ const globalStyle = StyleSheet.create({
 
   //Big Heading Back Button
       bigHeadingTitleContainer:{
-          height:70,
-          marginVertical:10,
+          height:50,
+          marginVertical:18,
+          // backgroundColor:"green",
+          paddingTop:10
       },
       bigHeadingTitleText:{
           fontSize:35,
-          fontFamily:fonts.boldNarrow
+          fontFamily:fonts.boldNarrow,
+          color:colors.black
       },
       bigHeadingWithBackButtonText : {
-          fontSize:15,
+          fontSize:12,
           fontWeight:'bold',
           color:colors.themeColor.color,
           marginLeft:10,
@@ -38,10 +42,10 @@ const globalStyle = StyleSheet.create({
 //Custom Filter Button Style Section
     absoluteFilterButtonsContainer: {
       width: width - 40,
-      shadowColor: colors.grey.dark,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.7,
-      shadowRadius: 2,
+      // shadowColor: colors.grey.dark,
+      // shadowOffset: { width: 0, height: 2 },
+      // shadowOpacity: 0.7,
+      // shadowRadius: 2,
       marginTop:10,
       padding:0
     },

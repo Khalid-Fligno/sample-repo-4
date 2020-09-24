@@ -28,6 +28,7 @@ import RoundButton from '../../../components/Home/RoundButton';
 import HomeScreenStyle from './HomeScreenStyle';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 import WorkOutCard from '../../../components/Home/WorkoutCard';
+import TimeSvg from '../../../../assets/icons/time';
 
 const workoutTypeMap = {
   1: 'Resistance',
@@ -167,6 +168,8 @@ export default class HomeScreen extends React.PureComponent {
                bigTitleText = {bigHeadeingTitle} 
                isBackButton = {false}
                isBigTitle = {true}
+               customContainerStyle={{marginVertical:22}}
+
                />
               {/* <Text style={HomeScreenStyle.welcomeHeaderText}>
                 {switchWelcomeHeader ? 'Welcome back' : 'Hi'}{profile && `, ${profile.firstName}`}
@@ -347,6 +350,7 @@ export default class HomeScreen extends React.PureComponent {
                 loading={loading}
                 color={colors.charcoal.standard}
               />
+
           </View>
           
         </ScrollView>

@@ -148,6 +148,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
                       backButtonText="Back to workouts" 
                       isBigTitle={true}
                       isBackButton ={true}
+                      customContainerStyle={{marginTop:10,marginBottom:30}}
                 />
                 <CustomButtonGroup  
                 onPress={this.updateFilter}

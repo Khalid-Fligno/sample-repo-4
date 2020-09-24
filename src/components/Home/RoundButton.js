@@ -53,7 +53,7 @@ export default function RoundButton(props){
 const styles = StyleSheet.create({
     Container: {
         width: (width - 40)/2,
-        height: 50,
+        // height: 50,
       
     },
     btnContainer:{

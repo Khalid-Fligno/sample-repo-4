@@ -27,6 +27,7 @@ import NutritionStyles from './NutritionStyles';
 import Tag from '../../../components/Nutrition/Tag';
 import CustomButton from '../../../components/Shared/CustomButton';
 import CustomBtn from '../../../components/Shared/CustomBtn';
+import TimeSvg from '../../../../assets/icons/time';
 
 const moment = require('moment');
 
@@ -115,7 +116,7 @@ export default class RecipeScreen extends React.PureComponent {
           backgroundScrollSpeed={2}
           contentBackgroundColor={colors.white}
           parallaxHeaderHeight={width}
-          renderBackground={() => (
+          renderForeground={() => (
             <View style={{backgroundColor:colors.offWhite}}>
               <View style={{marginBottom:-25,marginHorizontal:containerPadding,flexDirection:'row',justifyContent:'space-between'}}>
                 <BigHeadingWithBackButton isBackButton = {true} 
@@ -133,6 +134,7 @@ export default class RecipeScreen extends React.PureComponent {
               />
             </View>
           )}
+         
         >
           
           <Modal
@@ -290,11 +292,7 @@ export default class RecipeScreen extends React.PureComponent {
                 )
               }
               <View style={[NutritionStyles.infoFieldContainer,{ marginLeft:10}]}>
-                <Image
-                  source={require('../../../../assets/icons/timer.png')}
-                  fadeDuration={0}
-                  style={{width:2, height: 2}}
-                />
+                <TimeSvg width="22" height="22" />
                 <Text style={NutritionStyles.infoText}>
                   {recipe.time}
                 </Text>

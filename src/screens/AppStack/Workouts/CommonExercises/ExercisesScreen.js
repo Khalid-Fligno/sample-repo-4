@@ -389,7 +389,7 @@ goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,rest=false)
     } = this.state;
     const setCount = this.props.navigation.getParam('setCount', 1)
     // console.log(rest,exerciseList[currentExerciseIndex],exerciseList)
-    console.log(fitnessLevel,totalDuration,setCount)
+    // console.log(fitnessLevel,totalDuration,setCount)
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
