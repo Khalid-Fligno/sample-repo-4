@@ -57,7 +57,7 @@ class WorkoutProgressBar extends React.PureComponent {
       
     }
     let getCircuitFill = (index)=>{
-        for(i=1;i<=rounds;i++){
+        for(let i=1;i<=rounds;i++){
             if(currentSet === i){
                 if(currentExercise < index+1 && i === 1){
                     return 0
