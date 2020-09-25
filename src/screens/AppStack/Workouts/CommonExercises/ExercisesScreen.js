@@ -132,8 +132,8 @@ export default class ExercisesScreen extends React.PureComponent {
     if(this.state.workout.filters.includes('strength')){
       if (this.checkFinished(currentExerciseIndex,setCount)) {
         console.log("update weekly targets")
-        // this.updateWeekly();
-        // appsFlyer.trackEvent('resistance_workout_complete');
+        this.updateWeekly();
+        appsFlyer.trackEvent('resistance_workout_complete');
         this.workoutComplete(reps, resistanceCategoryId);
       }
       else if (setCount === this.state.workout.workoutReps) {
@@ -147,8 +147,8 @@ export default class ExercisesScreen extends React.PureComponent {
     }else if(this.state.workout.filters.includes('circuit')){
       if(this.checkFinished(currentExerciseIndex,setCount)){
         // console.log("finished");
-        // this.updateWeekly();
-        // appsFlyer.trackEvent('complete_hiit_circuit_workout');
+        this.updateWeekly();
+        appsFlyer.trackEvent('complete_hiit_circuit_workout');
         
         this.workoutComplete(reps, resistanceCategoryId);
       }
@@ -165,8 +165,8 @@ export default class ExercisesScreen extends React.PureComponent {
        
       if(this.checkFinished(currentExerciseIndex,setCount)){
         // console.log("Finished") //finished when all rounds are finished
-        // this.updateWeekly();
-        // appsFlyer.trackEvent('complete_hiit_workout');
+        this.updateWeekly();
+        appsFlyer.trackEvent('complete_hiit_workout');
         this.workoutComplete(reps, resistanceCategoryId);
       }else{
         // console.log("Go to next round")
@@ -293,7 +293,7 @@ export default class ExercisesScreen extends React.PureComponent {
             
             if(this.checkFinished(currentExerciseIndex,setCount)){
               console.log("update weekly target")
-              // this.updateWeekly();
+              this.updateWeekly();
                 appsFlyer.trackEvent('resistance_workout_complete');
                 this.workoutComplete(reps,null)
                
