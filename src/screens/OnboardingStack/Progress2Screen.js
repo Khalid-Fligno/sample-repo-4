@@ -42,17 +42,34 @@ export default class Progress2Screen extends React.PureComponent {
   }
   componentDidMount = () => {
     this.props.navigation.setParams({ handleSkip: this.handleSkip });
+    if (Platform.OS === 'android') {
+      this.requestAndroidPermissions();
+    
+    }else{
     this.getCameraPermission();
     this.getCameraRollPermission();
+    }
   }
   getCameraPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
+    console.log("getCameraPermission");
   }
   getCameraRollPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     this.setState({ hasCameraRollPermission: status === 'granted' });
+    console.log("getCameraRollPermission");
   }
+  async requestAndroidPermissions() {
+    try {
+        await this.getCameraPermission();
+        await this.getCameraRollPermission();
+    }
+    catch (err) {
+        //Handle this error
+        return false;
+    }
+}
   handleSkip = () => {
     if (this.props.navigation.getParam('isInitial', false)) {
       Alert.alert(
