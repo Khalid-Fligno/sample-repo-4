@@ -66,7 +66,7 @@ export default class ExercisesScreen extends React.PureComponent {
           workoutSubCategory : workoutSubCategory,
           currentExerciseIndex:currentExerciseIndex,  // Start from 0
           timerStart: false,
-          totalDuration:10,
+          totalDuration:totalDuration,
           pauseModalVisible: false,
           videoPaused: false,
           exerciseInfoModalVisible: false,
