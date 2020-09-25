@@ -8,21 +8,38 @@ import { NavigationContainer } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 export default function RoundButton(props){
-    //let [backgroundColor, setbackgroundColor] = useState(colors.grey.medium);
-    let [borderColor, setBorderColor] = useState(colors.grey.medium);
-    const press = (e) => setBorderColor(color => borderColor=colors.themeColor.color);
-
+    const [BorderColor, setBorderColor] = useState({
+        borderColor:colors.grey.medium
+   });
     let leftIconUrl =''
     if(props.title === 'NUTRITION'){
         leftIconUrl = require('../../../assets/icons/'+'fitazfk2-nutrition.png')
     }else if(props.title === 'WORKOUT'){
         leftIconUrl = require('../../../assets/icons/'+'fitazfk2-workout.png')
     }
+   
+    let onPressIn =()=>{
+        console.log("lskdfklsd");
+
+        setBorderColor({
+            borderColor:colors.coral.dark
+        })
+    }
+    let onPressOut =()=>{
+        console.log("lskdfklsd");
+
+        setBorderColor({
+            borderColor:colors.grey.medium
+        })
+    }
     return(
         <View style={styles.Container} >
             <TouchableOpacity
-            style={[styles.btnContainer,props.customBtnStyle,{borderColor:borderColor|| colors.gray.color}]}
+            style={[styles.btnContainer,props.customBtnStyle,BorderColor]}
             onPress={props.onPress}
+            onPressIn={onPressIn}
+            onPressOut={onPressOut}
+            activeOpacity={1}
             // onPress={(e)=> { 
             //     press(e);
             //     props.onPress();
@@ -70,7 +87,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.36,
         shadowRadius: 6.68,
-
         elevation: 8,
     },
     roundButtonInnerContainer: {

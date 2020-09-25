@@ -180,7 +180,7 @@ export default class HomeScreen extends React.PureComponent {
 
               <View style={HomeScreenStyle.roundButtonContainer}>
                 <RoundButton title="NUTRITION" 
-                 customBtnStyle={{borderRightWidth:0}}
+                //  customBtnStyle={{borderRightWidth:0}}
                  leftIcon="fitazfk2-workout.png" 
                  rightIcon="chevron-right"
                  onPress={()=>this.props.navigation.navigate('Nutrition')}
