@@ -5,7 +5,7 @@ import { PieChart } from 'react-native-svg-charts';
 import Icon from '../Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
+
 const pieDataIncomplete = [0, 100]
   .map((value, index) => ({
     value,
@@ -155,52 +155,12 @@ class WorkoutProgress extends React.PureComponent {
         {
           exerciseList.map((res,index)=>(
               <View style={styles.exercise} key={index}>
-                {/* {currentExercise > index+1 && completePieChart}
+                {currentExercise > index+1 && completePieChart}
                 {currentExercise > index+1 && tickIcon}
                 {currentExercise === index+1 && currentPieChart(currentSet)}
                 {currentExercise === index+1 && currentSetText(currentSet)}
-                {currentExercise < index+1 && incompletePieChart} */}
-
-             <AnimatedCircularProgress
-                    size={45}
-                    width={5}
-                    fill={
-                      
-                      currentExercise === index+1 ?(currentSet/(workoutReps))*100:
-                      currentExercise > index + 1?100:0
-                    }
-                    tintColor={colors.coral.darkest}
-                    onAnimationComplete={() => console.log('onAnimationComplete')}
-                    backgroundColor="lightgray" >
-                      {
-                          (fill) => (
-                            <View>
-                              <Text >
-                                {
-                                  currentExercise === index+1 &&(
-                                    <Text style={styles.currentSetText}>{currentSet}</Text>
-                                  )
-                                }
-                                {
-                                   currentExercise > index+1 && (
-                                    ( <Icon
-                                      name="tick-heavy"
-                                      color={colors.charcoal.dark}
-                                      size={22}
-                                    />)
-                                   )
-                                }
-                                
-                                 
-                              </Text>
-                            
-                          </View>
-                          )
-                        }
-            </AnimatedCircularProgress> 
+                {currentExercise < index+1 && incompletePieChart}
               </View>
-
-              
           ))
         }
         

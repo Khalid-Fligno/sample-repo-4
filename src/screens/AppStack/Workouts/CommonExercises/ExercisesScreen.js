@@ -66,7 +66,7 @@ export default class ExercisesScreen extends React.PureComponent {
           workoutSubCategory : workoutSubCategory,
           currentExerciseIndex:currentExerciseIndex,  // Start from 0
           timerStart: false,
-          totalDuration:totalDuration,
+          totalDuration:10,
           pauseModalVisible: false,
           videoPaused: false,
           exerciseInfoModalVisible: false,
@@ -361,6 +361,17 @@ export default class ExercisesScreen extends React.PureComponent {
     const setCount = this.props.navigation.getParam('setCount', 1)
     // console.log(rest,exerciseList[currentExerciseIndex],exerciseList)
     // console.log(fitnessLevel,totalDuration,setCount)
+
+
+  let getProgressType = 'strength';
+    if(workout.filters.includes('interval')){
+      getProgressType = 'interval'
+    }
+    else if(workout.filters.includes('circuit')){
+      getProgressType = 'circuit'
+    }
+  
+
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -426,32 +437,19 @@ export default class ExercisesScreen extends React.PureComponent {
               }
             </View>
           </View>
-          {
-              workout.filters.includes('strength') && ( <WorkoutProgressBar
-                  currentExercise={currentExerciseIndex + 1}
-                  currentSet={setCount}
-                  exerciseList={exerciseList}
-                  workoutReps={workout.workoutReps}
-                />)
-          }
-         
-          {
-            workout.filters.includes('circuit')&& (<HiitCircuitWorkoutProgress
-                currentExercise={currentExerciseIndex + 1}
-                currentSet={setCount}
-                exerciseList={exerciseList}
-              />)  
-          }
           
-          {
-            workout.filters.includes('interval') &&  (<HiitWorkoutProgress
-                currentRound={setCount}
-                currentSet={1}
-                rounds={workout.workoutReps}
-                rest
-              />
-              )
-          }
+          <WorkoutProgressBar
+              currentExercise={currentExerciseIndex + 1}
+              currentSet={setCount}
+              exerciseList={exerciseList}
+              workoutReps={workout.workoutReps}
+              rounds={workout.workoutReps}
+              progressType={getProgressType}
+              rest={rest}
+              currentRound={setCount}
+            />
+      
+       
           {
             (workout.filters.includes('interval') ) &&
             (
