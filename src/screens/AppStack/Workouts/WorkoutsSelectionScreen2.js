@@ -16,6 +16,7 @@ import CustomButtonGroup from '../../../components/Shared/CustomButtonGroup';
 import { ListItem, Avatar } from 'react-native-elements';
 // import fonts from '../../../styles/fonts';
 // import Icon from '../../../components/Shared/Icon';
+import WorkoutScreenStyle from './WorkoutScreenStyle';
 import WorkoutListItem from '../../../components/Workouts/WorkoutListItem';
 
 let fitnessLevel = 1
@@ -160,6 +161,9 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
          
            {
           !loading && (
+            <View>
+            <Text style={WorkoutScreenStyle.description}> {this.workoutList.length ===0 ? 'No':this.workoutList.length } workouts
+            </Text>          
             <FlatList
               // contentContainerStyle={styles.scrollView}
               data={this.workoutList}
@@ -167,6 +171,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
               renderItem={this.renderItem}
               showsVerticalScrollIndicator={false}
             />
+            </View>
           )
         }
         <Loader

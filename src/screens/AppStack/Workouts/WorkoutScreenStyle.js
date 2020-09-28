@@ -289,7 +289,12 @@ const WorkoutScreenStyle = StyleSheet.create({
       fontSize:15,
       lineHeight:40,
       color:colors.grey.dark
-    }
+    },
+    description:{
+      color:colors.grey.dark,
+       fontFamily:fonts.standard,
+       marginVertical:8,
+    },
 //*************Workout Home Screen **************** */
 
       
