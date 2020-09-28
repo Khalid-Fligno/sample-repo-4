@@ -21,7 +21,7 @@ import HelperModal from '../../../components/Shared/HelperModal';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
 import { findReps } from '../../../utils';
-import { findFocus, findLocation } from '../../../utils/workouts';
+import { findFocus, findLocation, findFocusIcon, findWorkoutType } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 import globalStyle from '../../../styles/globalStyles';
@@ -55,17 +55,20 @@ class CalendarHomeScreen extends React.PureComponent {
     };
     this.calendarStrip = React.createRef();
   }
+
   componentDidMount = async () => {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     await this.fetchCalendarEntries();
     this.showHelperOnFirstOpen();
   }
+
   componentWillUnmount() {
     this.unsubscribeFromEntries();
     if (this.unsubscribeFromEntries2) {
       this.unsubscribeFromEntries2();
     }
   }
+
   fetchCalendarEntries = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
@@ -93,6 +96,7 @@ class CalendarHomeScreen extends React.PureComponent {
         }
       });
   }
+  
   showHelperOnFirstOpen = async () => {
     const helperShownOnFirstOpen = await AsyncStorage.getItem('calendarHelperShownOnFirstOpen');
     if (helperShownOnFirstOpen === null) {
@@ -100,12 +104,15 @@ class CalendarHomeScreen extends React.PureComponent {
       AsyncStorage.setItem('calendarHelperShownOnFirstOpen', 'true');
     }
   }
+
   showHelperModal = () => {
     this.setState({ helperModalVisible: true });
   }
+
   hideHelperModal = () => {
     this.setState({ helperModalVisible: false });
   }
+
   handleDateSelected = async (date) => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
@@ -138,101 +145,64 @@ class CalendarHomeScreen extends React.PureComponent {
         }
       });
   }
+
   loadExercises = async (workoutId) => {
     this.setState({ loading: true });
-    db.collection('workouts').doc(workoutId)
+    console.log(workoutId)
+    db.collection('newWorkouts').doc(workoutId)
       .get()
       .then(async (doc) => {
-        const exerciseVideos = [
-          `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
-          `${FileSystem.cacheDirectory}exercise-hiit-circuit-1.mp4`,
-          `${FileSystem.cacheDirectory}exercise-hiit-circuit-2.mp4`,
-          `${FileSystem.cacheDirectory}exercise-hiit-circuit-3.mp4`,
-          `${FileSystem.cacheDirectory}exercise-hiit-circuit-4.mp4`,
-          `${FileSystem.cacheDirectory}exercise-hiit-circuit-5.mp4`,
-          `${FileSystem.cacheDirectory}exercise-hiit-circuit-6.mp4`,
-        ];
-        Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
-          FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
-        }));
-        const workout = await doc.data();
-        const { exercises } = workout;
-        await Promise.all(exercises.map(async (exercise, index) => {
-          await FileSystem.downloadAsync(
-            exercise.videoURL,
-            `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-          );
-        }));
-        const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
-        const reps = findReps(fitnessLevel);
-        this.setState({ loading: false });
-        this.props.navigation.navigate('WorkoutInfo', { workout, reps });
-      })
-      .catch(() => {
-        this.setState({ loading: false });
-        Alert.alert('', 'Workout unavailable');
-      });
-  }
-  loadHiitExercises = async (workoutId) => {
-    this.setState({ loading: true });
-    db.collection('workouts').doc(workoutId)
-      .get()
-      .then(async (doc) => {
-        const workout = await doc.data();
-        const { exercises } = workout;
-        const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
-        if (workout.interval) {
-          const exerciseVideos = [
-            `${FileSystem.cacheDirectory}exercise-1.mp4`,
-            `${FileSystem.cacheDirectory}exercise-2.mp4`,
-            `${FileSystem.cacheDirectory}exercise-3.mp4`,
-            `${FileSystem.cacheDirectory}exercise-4.mp4`,
-            `${FileSystem.cacheDirectory}exercise-5.mp4`,
-            `${FileSystem.cacheDirectory}exercise-6.mp4`,
-            `${FileSystem.cacheDirectory}exercise-hiit-circuit-1.mp4`,
-            `${FileSystem.cacheDirectory}exercise-hiit-circuit-2.mp4`,
-            `${FileSystem.cacheDirectory}exercise-hiit-circuit-3.mp4`,
-            `${FileSystem.cacheDirectory}exercise-hiit-circuit-4.mp4`,
-            `${FileSystem.cacheDirectory}exercise-hiit-circuit-5.mp4`,
-            `${FileSystem.cacheDirectory}exercise-hiit-circuit-6.mp4`,
-          ];
-          Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
-            FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
-          }));
-          await FileSystem.downloadAsync(
-            exercises[0].videoURL,
-            `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
-          );
-          this.setState({ loading: false });
-          this.props.navigation.navigate('HiitWorkoutInfo', { workout, fitnessLevel });
-        } else {
-          const exerciseVideos = [
-            `${FileSystem.cacheDirectory}exercise-1.mp4`,
-            `${FileSystem.cacheDirectory}exercise-2.mp4`,
-            `${FileSystem.cacheDirectory}exercise-3.mp4`,
-            `${FileSystem.cacheDirectory}exercise-4.mp4`,
-            `${FileSystem.cacheDirectory}exercise-5.mp4`,
-            `${FileSystem.cacheDirectory}exercise-6.mp4`,
-            `${FileSystem.cacheDirectory}exercise-hiit-1.mp4`,
-          ];
-          Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
-            FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
-          }));
-          await Promise.all(exercises.map(async (exercise, index) => {
-            await FileSystem.downloadAsync(
-              exercise.videoURL,
-              `${FileSystem.cacheDirectory}exercise-hiit-circuit-${index + 1}.mp4`,
+        try{
+            FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
+              // console.log(res)
+                Promise.all(res.map(async (item,index) => {
+                    if (item.includes("exercise-")) {
+                      console.log(`${FileSystem.cacheDirectory}${item}`)
+                      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
+                        // console.log("deleted...",item)
+                      })
+                    }
+                }))
+            })
+
+            const workout = await doc.data();
+            const { exercises } = workout;
+            await Promise.all(exercises.map(async (exercise, index) => {
+              // const videoUrl = exercise.videoUrls.filter(res=>res.model === 'sharnia')
+              // console.log(exercise.videoUrls[0].url)
+              if(exercise.videoUrls[0].url !== ""){
+                  await FileSystem.downloadAsync(
+                    exercise.videoUrls[0].url,
+                    `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+                  ).then(()=>{
+                    // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+                  })
+                  .catch(err=>console.log(err))
+              }
+            }))
+
+            const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
+            this.setState({ loading: false });
+            this.props.navigation.navigate('WorkoutInfo', 
+            {
+              workout, 
+              reps: workout.difficultyLevel[fitnessLevel-1].toString(),
+              workoutSubCategory:workout.workoutSubCategory,
+              fitnessLevel,
+              extraProps:{fromCalender:true}
+            }
             );
-          }));
-          this.setState({ loading: false });
-          this.props.navigation.navigate('HiitCircuitWorkoutInfo', { workout, fitnessLevel });
         }
+        catch(err){
+          console.log(err)
+          this.setState({ loading: false });
+          Alert.alert('Something went wrong','Please check workout load section')
+        }
+        
       })
-      .catch(() => {
-        this.setState({ loading: false });
-        Alert.alert('', 'Workout unavailable');
-      });
+     
   }
+  
   deleteCalendarEntry = async (fieldToDelete) => {
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
@@ -267,28 +237,55 @@ class CalendarHomeScreen extends React.PureComponent {
       dayOfWeek,
     } = this.state;
 
-    const findLocationIcon = () => {
-      let location;
-      if (workout.home) {
-        location = 'home';
-      } else if (workout.gym) {
-        location = 'gym';
-      } else if (workout.outdoors) {
-        location = 'park';
-      }
-      return `workouts-${location}`;
-    };
-    const findFocusIcon = () => {
-      let focus;
-      if (workout.fullBody) {
-        focus = 'full';
-      } else if (workout.upperBody) {
-        focus = 'upper';
-      } else if (workout.lowerBody) {
-        focus = 'lower';
-      }
-      return `workouts-${focus}`;
-    };
+    // const findLocationIcon = () => {
+    //   let location;
+    //   if (workout.home) {
+    //     location = 'home';
+    //   } else if (workout.gym) {
+    //     location = 'gym';
+    //   } else if (workout.outdoors) {
+    //     location = 'park';
+    //   }
+    //   return `workouts-${location}`;
+    // };
+
+
+    const mealSwipable = (name,data)=>{
+      return (
+        <Swipeable
+                renderRightActions={() => this.renderRightActions(name)}
+                overshootRight={false}
+                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                onSwipeableClose={() => this.setState({ isSwiping: false })}
+              >
+                <ListItem
+                  title={data.title.toUpperCase()}
+                  subtitle={data.subtitle}
+                  onPress={() => this.props.navigation.push('Recipe', { recipe: data })}
+                  containerStyle={styles.listItemContainer}
+                  chevronColor={colors.charcoal.standard}
+                  titleStyle={styles.recipeListItemTitle}
+                  subtitleStyle={styles.recipeListItemSubtitle}
+                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
+                />
+        </Swipeable>
+      )
+    }
+    const mealListItem = (name)=>{
+      return (
+        <ListItem
+        title={name.toUpperCase()}
+        subtitle="Press here to see available recipes"
+        onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: name.toLowerCase() })}
+        containerStyle={styles.listItemContainer}
+        chevronColor={colors.charcoal.standard}
+        titleStyle={styles.blankListItemTitle}
+        subtitleStyle={styles.blankListItemSubtitle}
+        rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
+      />
+      )
+    }
+    
     const dayDisplay = (
       <ScrollView
         contentContainerStyle={styles.dayDisplayContainer}
@@ -309,18 +306,18 @@ class CalendarHomeScreen extends React.PureComponent {
                 <ListItem
                   title={workout.displayName}
                   subtitle={
-                    workout.resistance ? (
+                    workout.filters.includes('strength') ? (
                       <View style={styles.workoutSubtitleContainer}>
-                        <Icon
+                        {/* <Icon
                           name={findLocationIcon()}
                           size={20}
                           color={colors.charcoal.standard}
-                        />
-                        <Text style={styles.workoutSubtitleText}>
+                        /> */}
+                        {/* <Text style={styles.workoutSubtitleText}>
                           {findLocation(workout)}
-                        </Text>
+                        </Text> */}
                         <Icon
-                          name={findFocusIcon()}
+                          name={findFocusIcon(workout)}
                           size={20}
                           color={colors.charcoal.standard}
                         />
@@ -336,12 +333,13 @@ class CalendarHomeScreen extends React.PureComponent {
                           color={colors.charcoal.standard}
                         />
                         <Text style={styles.workoutSubtitleText}>
-                          HIIT
+                          HIIT {findWorkoutType(workout)}
                         </Text>
                       </View>
                     )
                   }
-                  onPress={workout.resistance ? () => this.loadExercises(workout.id) : () => this.loadHiitExercises(workout.id)}
+                  // onPress={workout.resistance ? () => this.loadExercises(workout.id) : () => this.loadHiitExercises(workout.id)}
+                  onPress={ () => this.loadExercises(workout.id) }
                   containerStyle={styles.listItemContainerBottom}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.workoutListItemTitle}
@@ -367,166 +365,21 @@ class CalendarHomeScreen extends React.PureComponent {
         </Text>
         <View style={styles.listContainer}>
           {
-            breakfast ? (
-              <Swipeable
-                renderRightActions={() => this.renderRightActions('breakfast')}
-                overshootRight={false}
-                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
-                onSwipeableClose={() => this.setState({ isSwiping: false })}
-              >
-                <ListItem
-                  title={breakfast.title.toUpperCase()}
-                  subtitle={breakfast.subtitle}
-                  onPress={() => this.props.navigation.push('Recipe', { recipe: breakfast })}
-                  containerStyle={styles.listItemContainer}
-                  chevronColor={colors.charcoal.standard}
-                  titleStyle={styles.recipeListItemTitle}
-                  subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
-                />
-              </Swipeable>
-            ) : (
-              <ListItem
-                title="BREAKFAST"
-                subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.navigate('NutritionHome')}
-                containerStyle={styles.listItemContainer}
-                chevronColor={colors.charcoal.standard}
-                titleStyle={styles.blankListItemTitle}
-                subtitleStyle={styles.blankListItemSubtitle}
-                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
-              />
-            )
+            breakfast ?mealSwipable('breakfast',breakfast):mealListItem("BREAKFAST")
           }
           {
-            lunch ? (
-              <Swipeable
-                renderRightActions={() => this.renderRightActions('lunch')}
-                overshootRight={false}
-                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
-                onSwipeableClose={() => this.setState({ isSwiping: false })}
-              >
-                <ListItem
-                  title={lunch.title.toUpperCase()}
-                  subtitle={lunch.subtitle}
-                  onPress={() => this.props.navigation.push('Recipe', { recipe: lunch })}
-                  containerStyle={styles.listItemContainer}
-                  chevronColor={colors.charcoal.standard}
-                  titleStyle={styles.recipeListItemTitle}
-                  subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
-                />
-              </Swipeable>
-            ) : (
-              <ListItem
-                title="LUNCH"
-                subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.navigate('NutritionHome')}
-                containerStyle={styles.listItemContainer}
-                chevronColor={colors.charcoal.standard}
-                titleStyle={styles.blankListItemTitle}
-                subtitleStyle={styles.blankListItemSubtitle}
-                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
-              />
-            )
+            lunch ? mealSwipable('lunch',lunch) :  mealListItem('lunch')
           }
           {
-            dinner ? (
-              <Swipeable
-                renderRightActions={() => this.renderRightActions('dinner')}
-                overshootRight={false}
-                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
-                onSwipeableClose={() => this.setState({ isSwiping: false })}
-              >
-                <ListItem
-                  title={dinner.title.toUpperCase()}
-                  subtitle={dinner.subtitle}
-                  onPress={() => this.props.navigation.push('Recipe', { recipe: dinner })}
-                  containerStyle={styles.listItemContainerBottom}
-                  chevronColor={colors.charcoal.standard}
-                  titleStyle={styles.recipeListItemTitle}
-                  subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
-                />
-              </Swipeable>
-            ) : (
-              <ListItem
-                title="DINNER"
-                subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.navigate('NutritionHome')}
-                containerStyle={styles.listItemContainerBottom}
-                chevronColor={colors.charcoal.standard}
-                titleStyle={styles.blankListItemTitle}
-                subtitleStyle={styles.blankListItemSubtitle}
-                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
-              />
-            )
+            dinner ?mealSwipable('dinner',dinner) :  mealListItem('dinner')
           }
         </View>
         <View style={styles.listContainerBottom}>
           {
-            snack ? (
-              <Swipeable
-                renderRightActions={() => this.renderRightActions('snack')}
-                overshootRight={false}
-                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
-                onSwipeableClose={() => this.setState({ isSwiping: false })}
-              >
-                <ListItem
-                  title={snack.title.toUpperCase()}
-                  subtitle={snack.subtitle}
-                  onPress={() => this.props.navigation.push('Recipe', { recipe: snack })}
-                  containerStyle={styles.listItemContainer}
-                  chevronColor={colors.charcoal.standard}
-                  titleStyle={styles.recipeListItemTitle}
-                  subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
-                />
-              </Swipeable>
-            ) : (
-              <ListItem
-                title="SNACK"
-                subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.navigate('NutritionHome')}
-                containerStyle={styles.listItemContainer}
-                chevronColor={colors.charcoal.standard}
-                titleStyle={styles.blankListItemTitle}
-                subtitleStyle={styles.blankListItemSubtitle}
-                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
-              />
-            )
+            snack ? mealSwipable('snack',snack) :  mealListItem('snack')
           }
           {
-            snack2 ? (
-              <Swipeable
-                renderRightActions={() => this.renderRightActions('snack2')}
-                overshootRight={false}
-                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
-                onSwipeableClose={() => this.setState({ isSwiping: false })}
-              >
-                <ListItem
-                  title={snack2.title.toUpperCase()}
-                  subtitle={snack2.subtitle}
-                  onPress={() => this.props.navigation.push('Recipe', { recipe: snack2 })}
-                  containerStyle={styles.listItemContainerBottom}
-                  chevronColor={colors.charcoal.standard}
-                  titleStyle={styles.recipeListItemTitle}
-                  subtitleStyle={styles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
-                />
-              </Swipeable>
-            ) : (
-              <ListItem
-                title="SNACK"
-                subtitle="Press here to see available recipes"
-                onPress={() => this.props.navigation.navigate('NutritionHome')}
-                containerStyle={styles.listItemContainerBottom}
-                chevronColor={colors.charcoal.standard}
-                titleStyle={styles.blankListItemTitle}
-                subtitleStyle={styles.blankListItemSubtitle}
-                rightIcon={<Icon name="add-circle" size={18} color={colors.grey.medium} />}
-              />
-            )
+            snack2 ?  mealSwipable('snack',snack2) :  mealListItem('snack')
           }
         </View>
       </ScrollView>
@@ -690,7 +543,7 @@ const styles = StyleSheet.create({
   },
   workoutSubtitleContainer: {
     flexDirection: 'row',
-    marginLeft: 8,
+    // marginLeft: 8,
   },
   workoutSubtitleText: {
     fontFamily: fonts.standard,

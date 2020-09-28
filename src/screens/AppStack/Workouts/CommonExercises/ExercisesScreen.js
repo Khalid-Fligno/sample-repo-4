@@ -30,6 +30,7 @@ import iconSet from '@expo/vector-icons/build/Fontisto';
 import { set } from 'react-native-reanimated';
 import { consumeAllItemsAndroid } from 'react-native-iap';
 import WorkoutProgressBar from '../../../../components/Workouts/WorkoutProgressBar';
+import { findWorkoutType } from '../../../../utils/workouts';
 
 const { width } = Dimensions.get('window');
 
@@ -62,6 +63,7 @@ export default class ExercisesScreen extends React.PureComponent {
           currentExercise:currentExercise ,
           reps: props.navigation.getParam('reps', null),
           resistanceCategoryId: props.navigation.getParam('resistanceCategoryId', null),
+          extraProps: props.navigation.getParam('extraProps', {}),
           fitnessLevel:fitnessLevel,
           workoutSubCategory : workoutSubCategory,
           currentExerciseIndex:currentExerciseIndex,  // Start from 0
@@ -187,15 +189,17 @@ export default class ExercisesScreen extends React.PureComponent {
   }   
 
   goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,rest=false){
+   let {workoutSubCategory,fitnessLevel,fromCalender} = this.state
     this.props.navigation.replace('Exercise', {
       workout:this.state.workout,
       setCount,
       reps,
       resistanceCategoryId,
       currentExerciseIndex,
-      workoutSubCategory:this.state.workoutSubCategory,
-      fitnessLevel:this.state.fitnessLevel,
-      rest
+      workoutSubCategory,
+      fitnessLevel,
+      rest,
+      fromCalender
     });
   }
 
@@ -243,7 +247,13 @@ export default class ExercisesScreen extends React.PureComponent {
             }
         }))
     })
-      this.props.navigation.navigate('WorkoutsSelection');
+    console.log(this.state.extraProps)
+      if(this.state.extraProps['fromCalender']){
+        this.props.navigation.navigate('WorkoutsHome');
+      }else{
+        this.props.navigation.navigate('WorkoutsSelection');
+      }
+      
   }
 
   quitWorkout = () => {
@@ -363,15 +373,8 @@ export default class ExercisesScreen extends React.PureComponent {
     // console.log(fitnessLevel,totalDuration,setCount)
 
 
-  let getProgressType = 'strength';
-    if(workout.filters.includes('interval')){
-      getProgressType = 'interval'
-    }
-    else if(workout.filters.includes('circuit')){
-      getProgressType = 'circuit'
-    }
+  let getProgressType = findWorkoutType(workout)
   
-
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />

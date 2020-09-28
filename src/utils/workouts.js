@@ -31,3 +31,29 @@ export const findLocation = (workoutObject) => {
   }
   return null;
 };
+
+export const findFocusIcon = (workout) => {
+  let focus;
+  if (workout.filters.indexOf('fullBody') > -1) {
+    focus = 'full';
+  } else if (workout.filters.indexOf('upperBody') > -1) {
+    focus = 'upper';
+  } else if (workout.filters.indexOf('lowerBody') > -1) {
+    focus = 'lower';
+  } else {
+    
+  }
+  return `workouts-${focus}`;
+};
+
+
+export const findWorkoutType = (workout) => {
+  let type = 'strength';
+  if(workout.filters.includes('interval')){
+    type = 'interval'
+  }
+  else if(workout.filters.includes('circuit')){
+    type = 'circuit'
+  }
+  return type;
+};

@@ -323,7 +323,7 @@ export default class HomeScreen extends React.PureComponent {
                 onPress={() => this.props.navigation.navigate('Calendar')}
                 cardCustomStyle ={{marginTop:20}} 
               />
-             {/*  <NewsFeedTile
+              <NewsFeedTile
                 image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
                 title="SHOP APPAREL"
                 onPress={() => this.openLink('https://fitazfk.com/collections/wear-fitazfk-apparel')}
@@ -345,7 +345,7 @@ export default class HomeScreen extends React.PureComponent {
                 image={require('../../../../assets/images/fitazfk-army.jpg')}
                 title="JOIN THE FITAZFK ARMY"
                 onPress={() => this.openLink('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
-              /> */}
+              />
               <Loader
                 loading={loading}
                 color={colors.charcoal.standard}

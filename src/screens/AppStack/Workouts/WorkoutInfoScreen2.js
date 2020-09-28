@@ -21,7 +21,7 @@ import { db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
 import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
-import { findFocus, findLocation } from '../../../utils/workouts';
+import { findFocus, findLocation, findFocusIcon, findWorkoutType } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
 // import fonts from '../../../styles/fonts';
 import globalStyle from '../../../styles/globalStyles';
@@ -40,6 +40,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       reps: this.props.navigation.getParam('reps', null),
       workoutSubCategory:this.props.navigation.getParam('workoutSubCategory'),
       fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
+      extraProps: this.props.navigation.getParam('extraProps', {}),
       chosenDate: new Date(),
       calendarModalVisible: false,
       addingToCalendar: false,
@@ -48,25 +49,30 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       spotifyAvailable: undefined,
     };
   }
+
   componentDidMount = async () => {
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
     });
     this.checkMusicAppAvailability();
   }
+
   setDate = async (event, selectedDate) => {
     const currentDate = selectedDate;
     this.setState({ chosenDate: currentDate });
   }
+
   checkMusicAppAvailability = async () => {
     this.setState({
       appleMusicAvailable: await Linking.canOpenURL('music:'),
       spotifyAvailable: await Linking.canOpenURL('spotify:'),
     });
   }
+
   handleStart = () => {
     this.toggleMusicModal();
   }
+
   openApp = (url) => {
     Linking.canOpenURL(url).then((supported) => {
       if (supported) {
@@ -76,26 +82,31 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       }
     }).catch((err) => Alert.alert('An error occurred', err));
   }
+
   toggleMusicModal = () => {
     this.setState((prevState) => ({ musicModalVisible: !prevState.musicModalVisible }));
   }
+
   showCalendarModal = () => {
     this.setState({ calendarModalVisible: true });
   }
+
   hideCalendarModal = () => {
     this.setState({ calendarModalVisible: false });
   }
+
   addWorkoutToCalendar = async (date) => {
     if (this.state.addingToCalendar) {
       return;
     }
     this.setState({ addingToCalendar: true });
     const formattedDate = moment(date).format('YYYY-MM-DD');
-    const { workout } = this.state;
+    const {workoutSubCategory } = this.state;
     const uid = await AsyncStorage.getItem('uid');
     const calendarRef = db.collection('users').doc(uid).collection('calendarEntries').doc(formattedDate);
+    let workout = Object.assign({},this.state.workout,{workoutSubCategory})
     const data = {
-      workout,
+      workout
     };
     await calendarRef.set(data);
     this.setState({ addingToCalendar: false });
@@ -108,8 +119,9 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       { cancelable: false },
     );
   }
+
   handleWorkoutStart = () => {
-    const { workout, reps } = this.state;
+    const { workout, reps ,extraProps } = this.state;
     this.setState({ musicModalVisible: false });
     // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
     this.props.navigation.navigate('Countdown', {
@@ -117,11 +129,13 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       reps,
       resistanceCategoryId: workout.id,
       workoutSubCategory:this.state.workoutSubCategory,
-      fitnessLevel:this.state.fitnessLevel 
-    
+      fitnessLevel:this.state.fitnessLevel, 
+      extraProps
     });
   }
+
   keyExtractor = (exercise) => exercise.id;
+
   renderItem = ({ item: exercise, index }) => (
     <View style={WorkoutScreenStyle.carouselContainer}>
       <Carousel
@@ -247,6 +261,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       </Carousel>
     </View>
   );
+
   render() {
     const {
       loading,
@@ -262,43 +277,10 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       fitnessLevel
     } = this.state;
 
+
     const workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
 
-    const findLocationIcon = () => {
-      let location;
-      if (workout.home) {
-        location = 'home';
-      } else if (workout.gym) {
-        location = 'gym';
-      } else if (workout.outdoors) {
-        location = 'park';
-      }
-      return `workouts-${location}`;
-    };
-    const findFocusIcon = () => {
-      let focus;
-      if (workout.filters.indexOf('fullBody') > -1) {
-        focus = 'full';
-      } else if (workout.filters.indexOf('upperBody') > -1) {
-        focus = 'upper';
-      } else if (workout.filters.indexOf('lowerBody') > -1) {
-        focus = 'lower';
-      } else {
-        
-      }
-      return `workouts-${focus}`;
-    };
-    // const findFocusIcon = () => {
-    //   let focus;
-    //   if (workout.fullBody) {
-    //     focus = 'full';
-    //   } else if (workout.upperBody) {
-    //     focus = 'upper';
-    //   } else if (workout.lowerBody) {
-    //     focus = 'lower';
-    //   }
-    //   return `workouts-${focus}`;
-    // };
+ 
     return (
       <View style={[globalStyle.container,{paddingHorizontal:0}]}>
         <Modal
@@ -364,7 +346,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                                 style={WorkoutScreenStyle.hiitIcon}
                               />
                               <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                                HIIT {workoutSubCategory.displayName}
+                                HIIT {findWorkoutType(workout)}
                               </Text>
                             </View>
                         )
@@ -404,7 +386,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                            ( 
                               <View style={WorkoutScreenStyle.workoutIconContainer}>
                                 <Icon
-                                  name={workout && findFocusIcon()}
+                                  name={workout && findFocusIcon(workout)}
                                   size={40}
                                   color={colors.charcoal.standard}
                                 />

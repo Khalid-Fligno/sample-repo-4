@@ -17,6 +17,7 @@ export default class CountdownScreen2 extends React.PureComponent {
       resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
       workoutSubCategory : this.props.navigation.getParam('workoutSubCategory', null),
       fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
+      extraProps: this.props.navigation.getParam('extraProps', {}),
       countdownDuration: 5,
       timerStart: false,
       pauseModalVisible: false,
@@ -96,13 +97,15 @@ export default class CountdownScreen2 extends React.PureComponent {
     }
   }
   finishCountdown = (workout, reps, resistanceCategoryId) => {
+    let {workoutSubCategory,fitnessLevel,extraProps} = this.state
     this.props.navigation.replace('Exercise', {
       workout,
       reps,
       resistanceCategoryId,
       currentExerciseIndex:0,
-      workoutSubCategory:this.state.workoutSubCategory,
-      fitnessLevel:this.state.fitnessLevel
+      workoutSubCategory,
+      fitnessLevel,
+      extraProps
     });
   }
   render() {
@@ -114,7 +117,7 @@ export default class CountdownScreen2 extends React.PureComponent {
       pauseModalVisible,
       workout
     } = this.state;
-    console.log(this.state.workoutSubCategory)
+    console.log(this.state.extraProps)
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.countdownContainer}>

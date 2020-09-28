@@ -43,46 +43,32 @@ export default class NewsFeedTile extends React.PureComponent {
       transform: [{ scale: this.animatedValue }],
     };
     return (
-      // <TouchableOpacity
-      //   delayPressIn={60}
-      //   onPress={onPress}
-      //   style={styles.cardContainer}
-      //   onPressIn={this.handlePressIn}
-      //   onPressOut={this.handlePressOut}
-      // >
-      //   <Animated.View
-      //     style={[styles.flexContainer, animatedStyle]}
-      //   >
-      //     <ImageBackground
-      //       source={image}
-      //       style={styles.image}
-      //     >
-      //       <View style={styles.opacityLayer}>
-      //         <View style={styles.titleContainer}>
-      //           <Text style={styles.title}>
-      //             {title.toUpperCase()}
-      //           </Text>
-      //         </View>
-      //       </View>
-      //     </ImageBackground>
-      //   </Animated.View>
-      // </TouchableOpacity>
+      <TouchableOpacity
+        delayPressIn={60}
+        onPress={onPress}
+        style={styles.cardContainer}
+        onPressIn={this.handlePressIn}
+        onPressOut={this.handlePressOut}
+      >
+        <Animated.View
+          style={[styles.flexContainer, animatedStyle]}
+        >
+          <ImageBackground
+            source={image}
+            style={styles.image}
+          >
+            <View style={styles.opacityLayer}>
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>
+                  {title.toUpperCase()}
+                </Text>
+              </View>
+            </View>
+          </ImageBackground>
+        </Animated.View>
+      </TouchableOpacity>
      
-       
-          <View   style={[styles.cardContainer,{ height: (width ) / 2.2}]}>
-           <ImageBackground
-             source={image}
-             style={styles.image}
-           >
-             <View style={styles.opacityLayer}>
-               <View style={styles.titleContainer}>
-                 <Text style={styles.title}>
-                   {title.toUpperCase()}
-                 </Text>
-               </View>
-             </View>
-           </ImageBackground>
-           </View>
+      
     );
   }
 }
@@ -111,7 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    paddingTop:10
+    // paddingTop:10
   },
   opacityLayer: {
     flex: 1,
