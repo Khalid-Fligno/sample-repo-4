@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
         <View style={[globalStyle.bigHeadingTitleContainer,props.customContainerStyle]}>
             {props.isBackButton && (
                 <TouchableOpacity
-                    style={{flexDirection:"row",alignItems:'center',marginBottom:8}}
+                    style={[{flexDirection:"row",alignItems:'center',marginBottom:8},props.backButtonStyle]}
                     onPress={props.onPress}
                 >
                     <Icon
@@ -42,6 +42,7 @@ BigHeadingWithBackButton.propTypes = {
     backButtonText:PropTypes.string,
     isBigTitle:PropTypes.bool.isRequired,
     isBackButton:PropTypes.bool.isRequired,
-    customContainerStyle:PropTypes.object
+    customContainerStyle:PropTypes.object,
+    backButtonStyle:PropTypes.object
   };
   export default BigHeadingWithBackButton

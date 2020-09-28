@@ -25,7 +25,7 @@ const globalStyle = StyleSheet.create({
           height:50,
           marginVertical:18,
           // backgroundColor:"green",
-          paddingTop:10
+          paddingTop:10,
       },
       bigHeadingTitleText:{
           fontSize:35,

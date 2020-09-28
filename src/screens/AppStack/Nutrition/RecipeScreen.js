@@ -28,6 +28,7 @@ import Tag from '../../../components/Nutrition/Tag';
 import CustomButton from '../../../components/Shared/CustomButton';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import TimeSvg from '../../../../assets/icons/time';
+import fonts from '../../../styles/fonts';
 
 const moment = require('moment');
 
@@ -118,13 +119,19 @@ export default class RecipeScreen extends React.PureComponent {
           parallaxHeaderHeight={width}
           renderForeground={() => (
             <View style={{backgroundColor:colors.offWhite}}>
-              <View style={{marginBottom:-25,marginHorizontal:containerPadding,flexDirection:'row',justifyContent:'space-between'}}>
+              <View style={{marginHorizontal:containerPadding,
+                flexDirection:'row',
+                justifyContent:'space-between',
+                alignItems:'center',
+                height:60,
+                }}>
                 <BigHeadingWithBackButton isBackButton = {true} 
                   onPress={this.handleBack} 
                   backButtonText="Back to breakfasts" 
                   isBigTitle ={false}
+                  backButtonStyle={{marginTop:8}}
                   />
-                    <View style={[NutritionStyles.addToCalendarButtonContainer,{paddingVertical:15}]}>
+                    <View >
                       <AddToCalendarButton onPress={() => this.showModal()} />
                     </View>
                 </View>
@@ -379,8 +386,9 @@ export default class RecipeScreen extends React.PureComponent {
             <View style={{marginTop:20,marginBottom:8}}>
               <CustomBtn 
                  customBtnStyle={{borderRadius:50}} 
-                 customBtnTitleStyle={{}}
-                 Title="Get Started"
+                 customBtnTitleStyle={{ }}
+                 Title="Get started"
+                 outline ={true}
                  onPress={()=>this.handleStart(recipe)}
               />
             </View>

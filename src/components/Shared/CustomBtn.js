@@ -9,22 +9,34 @@ const CustomBtn = (props)=>{
    const customBtnStyle = {
         flexDirection:"row",
         backgroundColor:colors.themeColor.color,
-        padding:18,
+        padding:17,
         justifyContent:'center',
+        
     }
     const customBtnTitleStyle ={
-        fontFamily: fonts.bold,
+        // fontFamily: fonts.bold,
         fontSize: 14,
-        marginTop: 3,
-        color:colors.white
+        // marginTop: 3,
+        color:colors.white,
+        letterSpacing:0.5
+    }
+    const outlineBtnStyle ={
+        backgroundColor:colors.themeColor.themeBackgroundColor,
+        borderColor:colors.themeColor.color,
+        borderWidth:2
+    }
+    const outlineBtnTitleStyle ={
+        color:colors.themeColor.color,
+        fontSize:19,
+        fontWeight:'500',
     }
     return(
         <TouchableOpacity
-           style={[customBtnStyle,props.style,props.customBtnStyle]}
+           style={[customBtnStyle,props.style,props.customBtnStyle,props.outline?outlineBtnStyle:{}]}
            activeOpacity={0.5}
            onPress={props.onPress}
         >
-            <Text style={[customBtnTitleStyle,props.customBtnTitleStyle]}>{props.Title}</Text>
+            <Text style={[customBtnTitleStyle,props.customBtnTitleStyle,props.outline?outlineBtnTitleStyle:{}]}>{props.Title}</Text>
         </TouchableOpacity>
     )
 }
@@ -32,7 +44,8 @@ const CustomBtn = (props)=>{
 CustomBtn.propTypes = {
     customBtnStyle:PropTypes.object,
     customBtnTitleStyle:PropTypes.object,
-    Title:PropTypes.string
+    Title:PropTypes.string,
+    outline:PropTypes.bool
   };
 
 export default CustomBtn

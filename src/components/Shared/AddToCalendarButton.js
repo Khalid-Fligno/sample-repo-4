@@ -5,6 +5,7 @@ import Icon from '../../components/Shared/Icon';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import CalenderSvg from '../../../assets/icons/calender';
 
 export default class AddToCalendarButton extends React.PureComponent {
   constructor(props) {
@@ -20,11 +21,12 @@ export default class AddToCalendarButton extends React.PureComponent {
         style={styles.addToCalendarButton}
         activeOpacity={0.8}
       >
-        <Icon
+        {/* <Icon
           name="add-to-calendar"
           size={22}
           color={colors.themeColor.color}
-        />
+        /> */}
+        <CalenderSvg />
         <Text style={styles.addToCalendarButtonText}>
           Add to calendar
         </Text>
@@ -56,10 +58,12 @@ const styles = StyleSheet.create({
     paddingRight:10,
   },
   addToCalendarButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
+    // fontFamily: fonts.standard,
+    letterSpacing:0.5,
+    fontSize: 14,
     color: colors.themeColor.color,
-    marginLeft: 5,
+    marginLeft: 8,
     marginRight: 5,
+    fontWeight:'600'
   },
 });

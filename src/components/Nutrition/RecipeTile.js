@@ -67,8 +67,8 @@ export default class RecipeTile extends React.PureComponent {
             image={{ uri: image }}
             containerStyle={styles.card}
           >
-            <View style={{flexDirection:'row' ,justifyContent:'space-between'}}>
-              <View style={styles.titleRow}>
+            <View style={{flexDirection:'row' ,justifyContent:'space-between',marginHorizontal:-10}}>
+              <View style={[styles.titleRow]}>
                 <Text style={styles.title}>
                   {title} { newBadge && <NewRecipeBadge />}
                 </Text>

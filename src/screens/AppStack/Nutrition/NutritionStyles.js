@@ -28,7 +28,7 @@ const NutritionStyles = StyleSheet.create({
       marginBottom: 8,
     },
     addToCalendarButtonContainer: {
-      marginBottom: 10,
+      // marginBottom: 10,
     },
     modalContainer: {
       backgroundColor: colors.white,
