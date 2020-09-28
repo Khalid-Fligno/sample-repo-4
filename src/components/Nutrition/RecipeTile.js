@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     overflow: 'hidden',
     borderWidth: 0,
+    elevation:0,
   },
   titleRow: {
     flexDirection: 'row',
