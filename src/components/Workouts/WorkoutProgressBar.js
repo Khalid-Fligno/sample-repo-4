@@ -33,7 +33,7 @@ class WorkoutProgressBar extends React.PureComponent {
         array = new Array(rounds).fill(undefined).map((val,idx) => idx);
     }
     
-    console.log(currentExercise, currentSet)
+    // console.log(currentExercise, currentSet)
  
     let getStrengthFill = (index)=>{
         if(currentExercise === index+1 ){

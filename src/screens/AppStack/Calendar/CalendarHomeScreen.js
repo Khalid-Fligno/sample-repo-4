@@ -261,7 +261,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 <ListItem
                   title={data.title.toUpperCase()}
                   subtitle={data.subtitle}
-                  onPress={() => this.props.navigation.push('Recipe', { recipe: data })}
+                  onPress={() => this.props.navigation.navigate('Recipe', { recipe: data })}
                   containerStyle={styles.listItemContainer}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={styles.recipeListItemTitle}

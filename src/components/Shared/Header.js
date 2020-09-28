@@ -9,6 +9,7 @@ import {
   Text,
   Dimensions,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import ProfileButton from '../Shared/ProfileButton';
@@ -31,8 +32,11 @@ const headerContainer = {
 
 export default class Header extends React.PureComponent {
   componentDidMount(){
-    StatusBar.setTranslucent(false);
-    StatusBar.setBackgroundColor("#FFF");
+    if(Platform.OS === 'android'){
+      StatusBar.setTranslucent(false);
+      StatusBar.setBackgroundColor("#FFF");
+    }
+  
 }
   handleBack = () => {
     const { navigation } = this.props;
@@ -97,23 +101,23 @@ export default class Header extends React.PureComponent {
       <SafeAreaView
         style={[
           globalStyle.noShadow,
-          stack === 'home' && globalStyle.defaultHeaderShadow,
-          stack === 'progress' && globalStyle.defaultHeaderShadow,
-          navigation.state.routeName === 'RecipeSelection' && globalStyle.defaultHeaderShadow,
-          navigation.state.routeName === 'Recipe' && globalStyle.defaultHeaderShadow,
-          navigation.state.routeName === 'WorkoutInfo' && globalStyle.defaultHeaderShadow,
-          navigation.state.routeName === 'HiitWorkoutInfo' && globalStyle.defaultHeaderShadow,
-          navigation.state.routeName === 'ProfileHome' && globalStyle.defaultHeaderShadow,
+          // stack === 'home' && globalStyle.defaultHeaderShadow,
+          // stack === 'progress' && globalStyle.defaultHeaderShadow,
+          // navigation.state.routeName === 'RecipeSelection' && globalStyle.defaultHeaderShadow,
+          // navigation.state.routeName === 'Recipe' && globalStyle.defaultHeaderShadow,
+          // navigation.state.routeName === 'WorkoutInfo' && globalStyle.defaultHeaderShadow,
+          // navigation.state.routeName === 'HiitWorkoutInfo' && globalStyle.defaultHeaderShadow,
+          // navigation.state.routeName === 'ProfileHome' && globalStyle.defaultHeaderShadow,
         ]}
       >
         <StatusBar barStyle="light-content" />
         <View
           style={[
             styles.defaultHeader,
-            stack === 'nutrition' && styles.nutritionHeader,
-            stack === 'workouts' && styles.workoutsHeader,
-            stack === 'calendar' && styles.calendarHeader,
-            stack === 'progress' && styles.progressHeader,
+            // stack === 'nutrition' && styles.nutritionHeader,
+            // stack === 'workouts' && styles.workoutsHeader,
+            // stack === 'calendar' && styles.calendarHeader,
+            // stack === 'progress' && styles.progressHeader,
           ]}
         >
           {
@@ -292,19 +296,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors.themeColor.headerBackgroundColor,
     marginTop: Platform.OS === 'android' ? StatusBar.currentHeight+1 : 0
   },
-  nutritionHeader: {
-    ...headerContainer,
-  },
-  workoutsHeader: {
-    ...headerContainer,
-  },
-  calendarHeader: {
-    ...headerContainer,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.themeColor.lightColor,
-  },
-  progressHeader: {
-    ...headerContainer,
-  },
+  // nutritionHeader: {
+  //   ...headerContainer,
+  // },
+  // workoutsHeader: {
+  //   ...headerContainer,
+  // },
+  // calendarHeader: {
+  //   ...headerContainer,
+  //   borderBottomWidth: 1,
+  //   borderBottomColor: colors.themeColor.lightColor,
+  // },
+  // progressHeader: {
+  //   ...headerContainer,
+  // },
   
 });

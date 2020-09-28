@@ -36,24 +36,7 @@ const TabStack = createBottomTabNavigator(
         const activeState = tabColorMap[routeName];
         const inactiveState = colors.charcoal.standard;
         let icon;
-        // if (routeName === 'Home') {
-        //   icon = (
-        //     <Image
-        //       source={require('../../assets/icons/fitazfk2-feed.png')}
-        //       fadeDuration={0}
-        //       style={{width:31, height: 22}}
-        //     />
-        //   );
-        // } 
-        // else if (routeName === 'Nutrition') {
-        //   icon = (
-        //     <Icon
-        //       name={focused ? 'nutrition-solid' : 'nutrition-outline'}
-        //       size={24}
-        //       color={focused ? activeState : inactiveState}
-        //     />
-        //   );
-        // } 
+     
         if (routeName === 'Dashboard') {
           icon = (
             <Image
@@ -72,15 +55,7 @@ const TabStack = createBottomTabNavigator(
             />
           );
         } 
-        // else if (routeName === 'Workouts') {
-        //   icon = (
-        //     <Icon
-        //       name={focused ? 'workouts-solid' : 'workouts-outline'}
-        //       size={24}
-        //       color={focused ? activeState : inactiveState}
-        //     />
-        //   );
-        // }
+   
          else if (routeName === 'Calendar') {
           icon = (
               <Image
@@ -88,11 +63,7 @@ const TabStack = createBottomTabNavigator(
                fadeDuration={0}
                style={{width:22, height: 22}}
               />
-            // <Icon
-            //   name={focused ? 'calendar-solid' : 'calendar-outline'}
-            //   size={24}
-            //   color={focused ? activeState : inactiveState}
-            // />
+          
           );
         } else if (routeName === 'Progress') {
           icon = (
@@ -101,11 +72,7 @@ const TabStack = createBottomTabNavigator(
                 fadeDuration={0}
               style={{width:22, height: 22}}
               />
-            // <Icon
-            //   name={focused ? 'star-solid' : 'star-outline'}
-            //   size={24}
-            //   color={focused ? activeState : inactiveState}
-            // />
+        
           );
         }
         return icon;
