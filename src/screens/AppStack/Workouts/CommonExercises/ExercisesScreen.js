@@ -23,8 +23,6 @@ import fonts from '../../../../styles/fonts';
 import appsFlyer from 'react-native-appsflyer';
 import { db } from '../../../../../config/firebase';
 import AsyncStorage from '@react-native-community/async-storage';
-import HiitCircuitWorkoutProgress from '../../../../components/Workouts/HiitCircuitWorkoutProgress';
-import HiitWorkoutProgress from '../../../../components/Workouts/HiitWorkoutProgress';
 import FastImage from 'react-native-fast-image';
 import iconSet from '@expo/vector-icons/build/Fontisto';
 import { set } from 'react-native-reanimated';

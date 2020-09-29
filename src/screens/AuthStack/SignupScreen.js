@@ -30,6 +30,10 @@ import FacebookButton from '../../components/Auth/FacebookButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import errors from '../../utils/errors';
+import { containerPadding } from '../../styles/globalStyles';
+import BigHeadingWithBackButton from '../../components/Shared/BigHeadingWithBackButton';
+import InputBox from '../../components/Shared/inputBox';
+import CustomBtn from '../../components/Shared/CustomBtn';
 
 const { width } = Dimensions.get('window');
 
@@ -262,10 +266,10 @@ export default class SignupScreen extends React.PureComponent {
           <View style={styles.container}>
             <StatusBar barStyle="light-content" />
 
-            <ImageBackground
+            {/* <ImageBackground
               source={require('../../../assets/images/signup-screen-background.jpg')}
               style={styles.imageBackground}
-            >
+            > */}
               <ScrollView contentContainerStyle={styles.scrollView}>
                 <View style={styles.closeIconContainer}>
                   <TouchableOpacity
@@ -274,12 +278,12 @@ export default class SignupScreen extends React.PureComponent {
                   >
                     <Icon
                       name="cross"
-                      color={colors.white}
+                      color={colors.themeColor.color}
                       size={22}
                     />
                   </TouchableOpacity>
                 </View>
-                <Text style={styles.headerText1}>
+                {/* <Text style={styles.headerText1}>
                   CREATE YOUR
                 </Text>
                 <Text style={styles.headerText1}>
@@ -287,91 +291,63 @@ export default class SignupScreen extends React.PureComponent {
                 </Text>
                 <Text style={styles.headerText2}>
                   get started
-                </Text>
-                <KeyboardAvoidingView keyboardVerticalOffset={40} behavior="position" enabled>
-                  <Input
-                    placeholder="First Name"
-                    placeholderTextColor={colors.transparentWhiteLight}
-                    value={firstName}
-                    returnKeyType="next"
-                    autoCorrect={false}
-                    onChangeText={(text) => this.setState({ firstName: text })}
-                    onSubmitEditing={() => this.lastNameInput.focus()}
-                    containerStyle={styles.inputComponentContainer}
-                    inputContainerStyle={styles.inputContainer}
-                    inputStyle={styles.input}
-                    clearButtonMode="while-editing"
-                  />
-                  <Input
-                    placeholder="Last Name"
-                    placeholderTextColor={colors.transparentWhiteLight}
-                    value={lastName}
-                    returnKeyType="next"
-                    autoCorrect={false}
-                    onChangeText={(text) => this.setState({ lastName: text })}
-                    ref={(input) => {
-                      this.lastNameInput = input;
-                    }}
-                    onSubmitEditing={() => this.emailInput.focus()}
-                    containerStyle={styles.inputComponentContainer}
-                    inputContainerStyle={styles.inputContainer}
-                    inputStyle={styles.input}
-                    clearButtonMode="while-editing"
-                  />
-                  <Input
-                    placeholder="Email"
-                    placeholderTextColor={colors.transparentWhiteLight}
-                    value={email}
-                    returnKeyType="next"
-                    keyboardType="email-address"
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    onChangeText={(text) => this.setState({ email: text })}
-                    ref={(input) => {
-                      this.emailInput = input;
-                    }}
-                    onSubmitEditing={() => this.passwordInput.focus()}
-                    containerStyle={styles.inputComponentContainer}
-                    inputContainerStyle={styles.inputContainer}
-                    inputStyle={styles.input}
-                    clearButtonMode="while-editing"
-                  />
-                  <Input
-                    errorMessage={error && error}
-                    placeholder="Password"
-                    placeholderTextColor={colors.transparentWhiteLight}
-                    value={password}
-                    returnKeyType="go"
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    onChangeText={(text) => this.setState({ password: text })}
-                    secureTextEntry
-                    ref={(input) => {
-                      this.passwordInput = input;
-                    }}
-                    onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
-                    containerStyle={styles.inputComponentContainer}
-                    inputContainerStyle={styles.inputContainer}
-                    inputStyle={styles.input}
-                    clearButtonMode="while-editing"
-                  />
-                </KeyboardAvoidingView>
-                <Button
-                  title="CREATE NEW ACCOUNT"
-                  onPress={() => this.signup(firstName, lastName, email, password)}
-                  containerStyle={styles.signupButtonContainer}
-                  buttonStyle={styles.signupButton}
-                  titleStyle={styles.signupButtonText}
+                </Text> */}
+                 <BigHeadingWithBackButton 
+                  isBackButton={false}
+                  bigTitleText="Create account"
+                  isBigTitle={true}
+                  bigTitleStyle={{width:width-containerPadding*2}}
                 />
-                <Divider style={styles.divider} />
+                <KeyboardAvoidingView keyboardVerticalOffset={40} behavior="position" enabled>
+                <InputBox 
+                   placeholder="First Name"
+                   value={firstName}
+                   onChangeText={(text) => this.setState({ firstName: text })}
+                />
+                 <InputBox 
+                   placeholder="Last Name"
+                   value={lastName}
+                   onChangeText={(text) => this.setState({ lastName: text })}
+                />
+                 <InputBox 
+                   placeholder="Email"
+                   value={email}
+                   keyboardType="email-address"
+                   onChangeText={(text) =>{this.setState({ email: text })}}
+                  //  onSubmitEditing={() => {this.passwordInput.focus()}}
+                />
+                 <InputBox 
+                   errorMessage={error && error}
+                   placeholder="Password"
+                   value={password}
+                   onChangeText={(text) => this.setState({ password: text })}
+                   onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
+                   secureTextEntry
+                   returnKeyType="go"
+                />
+                 
+                </KeyboardAvoidingView>
+                <CustomBtn 
+                  customBtnStyle={{borderRadius:50,width:width -containerPadding*2,marginTop:20 }}
+                  Title="Create new account"
+                  customBtnTitleStyle={{fontWeight:'500',fontSize:18,letterSpacing:0.7}}
+                  onPress={() => this.signup(firstName, lastName, email, password)}
+                />
+              
                 <View style={styles.dividerOverlay}>
                   <Text style={styles.dividerOverlayText}>
                     OR
                   </Text>
                 </View>
-                <FacebookButton
-                  title="NEW ACCOUNT WITH FACEBOOK"
-                  onPress={this.signupWithFacebook}
+             
+                <CustomBtn 
+                      customBtnStyle={{borderRadius:50,width:width -containerPadding*2,borderColor:colors.grey.standard,padding:15}}
+                      outline={true}
+                      Title="Create account with Facebook"
+                      customBtnTitleStyle={{fontWeight:'500',fontSize:18,letterSpacing:0.7,color:colors.transparentBlackDark}}
+                      onPress={this.signupWithFacebook}
+                      leftIcon={true}
+                      leftIconUrl={require('../../../assets/icons/facebook.png')}
                 />
                 {
                   appleSignInAvailable && (
@@ -388,10 +364,10 @@ export default class SignupScreen extends React.PureComponent {
                   onPress={this.navigateToLogin}
                   style={styles.navigateToLogin}
                 >
-                  Already have an account? Log in here
+                 I already have an account? Sign in 
                 </Text>
               </ScrollView>
-            </ImageBackground>
+            {/* </ImageBackground> */}
           </View>
         </SafeAreaView>
         {loading && <NativeLoader />}
@@ -407,16 +383,16 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.transparent,
+    backgroundColor: colors.themeColor.themeBackgroundColor,
     justifyContent: 'center',
     alignItems: 'center',
     width,
   },
-  imageBackground: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
-  },
+  // imageBackground: {
+  //   flex: 1,
+  //   width: undefined,
+  //   height: undefined,
+  // },
   scrollView: {
     alignItems: 'center',
   },
@@ -425,101 +401,47 @@ const styles = StyleSheet.create({
     width,
   },
   closeIconButton: {
-    padding: 15,
+    padding: containerPadding,
     paddingBottom: 0,
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 1,
   },
-  headerText1: {
-    fontFamily: fonts.ultraItalic,
-    fontSize: 20,
-    color: colors.white,
-  },
-  headerText2: {
-    fontFamily: fonts.tuesdayNight,
-    fontSize: 28,
-    color: colors.white,
-    marginTop: -10,
-  },
-  inputComponentContainer: {
-    width: width - 30,
-    alignItems: 'center',
-  },
-  inputContainer: {
-    width: width - 30,
-    alignItems: 'center',
-    marginTop: 5,
-    marginBottom: 5,
-    borderBottomWidth: 0,
-    backgroundColor: colors.transparentWhiteLight,
-    borderRadius: 4,
-  },
-  input: {
-    width: width - 30,
-    padding: 12,
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    borderWidth: 1,
-    borderColor: colors.grey.light,
-    borderRadius: 4,
-  },
-  signupButtonContainer: {
-    marginTop: 6,
-    marginBottom: 7,
-    shadowColor: colors.charcoal.dark,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 2,
-  },
-  signupButton: {
-    backgroundColor: colors.coral.standard,
-    height: 45,
-    width: width - 30,
-    borderRadius: 4,
-  },
-  signupButtonText: {
-    marginTop: 6,
-    fontFamily: fonts.bold,
-    fontSize: 15,
-  },
+  // headerText1: {
+  //   fontFamily: fonts.ultraItalic,
+  //   fontSize: 20,
+  //   color: colors.themeColor.color,
+  // },
+  // headerText2: {
+  //   fontFamily: fonts.tuesdayNight,
+  //   fontSize: 28,
+  //   color: colors.themeColor.color,
+  //   marginTop: -10,
+  // },
+ 
   appleButton: {
-    height: 45,
-    width: width - 30,
+    width: width - containerPadding*2,
     marginTop: 8,
+    borderWidth:2,
+    borderColor:colors.grey.standard,
+    borderRadius:27,
+    padding:25,
   },
-  divider: {
-    backgroundColor: colors.transparent,
-    width: width - 30,
-    marginTop: 15,
-    marginBottom: 15,
-  },
+
   dividerOverlay: {
-    height: 26,
-    marginTop: -30,
-    paddingTop: 8,
-    paddingLeft: 20,
-    paddingRight: 20,
+    marginVertical:20,
     backgroundColor: colors.transparent,
   },
   dividerOverlayText: {
     fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.grey.medium,
+    fontSize: 18,
+    color: colors.grey.standard,
   },
   navigateToLogin: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    width: width - 30,
-    marginTop: 10,
-    paddingTop: 15,
-    paddingBottom: 15,
-    textAlign: 'center',
-    color: colors.grey.light,
-    textDecorationStyle: 'solid',
-    textDecorationColor: colors.grey.light,
-    textDecorationLine: 'underline',
+    //  fontWeight:'700',
+    fontFamily:fonts.bold,
+     letterSpacing:0.5,
+     fontSize: 16,
+     marginTop: 30,
+     textAlign: 'center',
+     color: colors.themeColor.color,
+   
   },
 });

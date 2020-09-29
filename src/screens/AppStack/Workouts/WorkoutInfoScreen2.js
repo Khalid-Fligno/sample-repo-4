@@ -27,6 +27,9 @@ import colors from '../../../styles/colors';
 import globalStyle from '../../../styles/globalStyles';
 import WorkoutScreenStyle from './WorkoutScreenStyle';
 import TimeSvg from '../../../../assets/icons/time';
+import CustomBtn from '../../../components/Shared/CustomBtn';
+import fonts from '../../../styles/fonts';
+import NutritionStyles from '../Nutrition/NutritionStyles';
 const moment = require('moment');
 
 const { width } = Dimensions.get('window');
@@ -218,7 +221,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             }
             {
               exercise.recommendedResistance && (
-                <Text style={WorkoutScreenStyle.exerciseDescriptionText}>{exercise.recommendedResistance}</Text>
+                <Text style={WorkoutScreenStyle.exerciseDescriptionText}> {exercise.recommendedResistance}</Text>
               )
             }
             {
@@ -228,12 +231,20 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             }
             {
               exercise.coachingTip && exercise.coachingTip.map((tip,index) => (
-                <Text
-                  key={index}
-                  style={WorkoutScreenStyle.exerciseDescriptionText}
-                >
-                  {`• ${tip}`}
-                </Text>
+                // <Text
+                //   key={index}
+                //   style={WorkoutScreenStyle.exerciseDescriptionText}
+                // >
+                //   {`• ${tip}`}
+                // </Text>
+                <View style={{flexDirection:"row"}} key={index}>
+                  <Text  style={NutritionStyles.ingredientsText}> • </Text>
+                  <Text
+                    style={NutritionStyles.ingredientsText}
+                  >
+                    {tip}
+                  </Text>
+                </View>
               ))
             }
             {
@@ -422,6 +433,13 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
               <Text style={WorkoutScreenStyle.musicModalHeaderText}>
                 Choose your music
               </Text>
+              <View
+                  style={{
+                    borderBottomColor: colors.themeColor.themeBorderColor,
+                    borderBottomWidth: colors.themeColor.themeBorderWidth,
+                    marginHorizontal:-20
+                  }}
+                />
               <View style={WorkoutScreenStyle.musicIconContainer}>
                 <TouchableOpacity
                   style={[
@@ -452,7 +470,24 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
               </View>
             </View>
             <View style={WorkoutScreenStyle.musicModalButtonContainer}>
-              <TouchableOpacity
+            <CustomBtn
+                 customBtnStyle={{borderRadius:50,borderColor:colors.grey.standard}} 
+                 customBtnTitleStyle={{color:colors.transparentBlackDark,fontSize:14,fontFamily:fonts.bold}}
+                 Title="BACK"
+                 isLeftIcon={true}
+                 leftIconName="chevron-left"
+                 leftIconColor={colors.transparentBlackDark}
+                 outline ={true}
+                 onPress={this.toggleMusicModal}
+              />
+              <CustomBtn
+                 customBtnStyle={{borderRadius:50,marginTop:10}} 
+                 customBtnTitleStyle={{fontSize:14,fontFamily:fonts.bold}}
+                 Title="CONTINUE"
+                 outline ={true}
+                 onPress={this.handleWorkoutStart}
+              />
+              {/* <TouchableOpacity
                 onPress={this.toggleMusicModal}
                 style={WorkoutScreenStyle.musicModalCancelButton}
               >
@@ -467,7 +502,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                 <Text style={WorkoutScreenStyle.musicModalButtonText}>
                   CONTINUE
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </Modal>

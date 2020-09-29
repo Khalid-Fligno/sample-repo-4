@@ -30,7 +30,8 @@ const globalStyle = StyleSheet.create({
       bigHeadingTitleText:{
           fontSize:35,
           fontFamily:fonts.boldNarrow,
-          color:colors.black
+          color:colors.black,
+          letterSpacing:0.5
       },
       bigHeadingWithBackButtonText : {
           fontSize:12,

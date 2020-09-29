@@ -148,31 +148,38 @@ const WorkoutScreenStyle = StyleSheet.create({
       fontSize: 12,
       color: colors.charcoal.standard,
       marginTop: 8,
-    },musicModalContainer: {
+    },
+    musicModalContainer: {
       flexShrink: 1,
       alignItems: 'center',
       justifyContent: 'space-between',
       borderRadius: 4,
       overflow: 'hidden',
+      borderWidth:colors.themeColor.themeBorderWidth,
+      borderColor:colors.themeColor.themeBorderColor
     },
     musicModalHeaderText: {
       fontFamily: fonts.bold,
-      fontSize: 28,
+      fontSize: 15,
       color: colors.charcoal.light,
       marginBottom: 10,
+      textTransform:'uppercase',
     },
     musicModalTextContainer: {
       width: '100%',
       backgroundColor: colors.white,
       justifyContent: 'space-between',
       padding: 15,
+    
     },
     musicIconContainer: {
       flexDirection: 'row',
       padding: 10,
       backgroundColor: colors.grey.light,
       borderRadius: 4,
-    },  appleMusicDisabled: {
+      marginTop:10
+    }, 
+    appleMusicDisabled: {
       marginRight: 10,
       opacity: 0.1,
       shadowOpacity: 0,
@@ -188,6 +195,8 @@ const WorkoutScreenStyle = StyleSheet.create({
     musicModalButtonContainer: {
       backgroundColor: colors.white,
       width: '100%',
+      paddingHorizontal:10,
+      paddingBottom:25
     },
     musicModalCancelButton: {
       justifyContent: 'center',
@@ -208,7 +217,8 @@ const WorkoutScreenStyle = StyleSheet.create({
       fontSize: 14,
       color: colors.white,
       marginTop: 3,
-    },  appleMusicIcon: {
+    }, 
+     appleMusicIcon: {
       marginRight: 10,
       shadowColor: colors.grey.dark,
       shadowOffset: { width: 0, height: 2 },
@@ -227,30 +237,32 @@ const WorkoutScreenStyle = StyleSheet.create({
       marginBottom: 20,
       marginLeft: 15,
       marginRight: 15,
-      borderWidth: 2,
+      borderWidth: colors.themeColor.themeBorderWidth,
       borderRadius: 4,
-      borderColor: colors.themeColor.color,
+      borderColor: colors.themeColor.themeBorderColor,
       overflow: 'hidden',
     },
     exerciseTileHeaderBar: {
       width: width - 34,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      padding: 8,
-      paddingBottom: 5,
-      backgroundColor: colors.themeColor.color,
+      padding: 10,
+      // paddingBottom: 5,
+      backgroundColor: colors.themeColor.themeBackgroundColor,
+      borderBottomWidth:colors.themeColor.themeBorderWidth,
+      borderBottomColor:colors.themeColor.themeBorderColor
     },
     exerciseTileHeaderTextLeft: {
       // width: width - 72,
-      fontFamily: fonts.standardNarrow,
+      fontFamily: fonts.boldNarrow,
       fontSize: 14,
-      color: colors.white,
+      color: colors.transparentBlackDark,
     },
     exerciseTileHeaderBarRight: {
       // width: 30,
       fontFamily: fonts.standardNarrow,
       fontSize: 13,
-      color: colors.white,
+      color: colors.transparentBlackDark,
     },
     exerciseDescriptionContainer: {
       width: width - 30,
@@ -260,7 +272,7 @@ const WorkoutScreenStyle = StyleSheet.create({
       marginRight: 15,
       borderWidth: 2,
       borderRadius: 4,
-      borderColor: colors.themeColor.color,
+      borderColor: colors.grey.dark,
       backgroundColor: colors.white,
       overflow: 'hidden',
     },
@@ -276,8 +288,7 @@ const WorkoutScreenStyle = StyleSheet.create({
       fontFamily: fonts.standard,
       fontSize: 13,
       color: colors.charcoal.standard,
-      marginTop: 3,
-      marginBottom: 3,
+      marginVertical:10
     },
    
      /**********workout Info***************/

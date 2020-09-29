@@ -50,9 +50,12 @@ import RNIap, {
   purchaseErrorListener,
   purchaseUpdatedListener,
 } from 'react-native-iap';
+import CustomBtn from '../../components/Shared/CustomBtn';
+import globalStyle, { containerPadding } from '../../styles/globalStyles';
+import InputBox from '../../components/Shared/inputBox';
+import BigHeadingWithBackButton from '../../components/Shared/BigHeadingWithBackButton';
 const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get('window');
-
 const getRandomString = (length) => {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -63,7 +66,7 @@ const getRandomString = (length) => {
   return result;
 };
 
-
+let isFocused = false
 export default class LoginScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -390,10 +393,10 @@ export default class LoginScreen extends React.PureComponent {
         <SafeAreaView style={styles.safeAreaContainer}>
           <StatusBar barStyle="light-content" />
           <View style={styles.container}>
-            <ImageBackground
+            {/* <ImageBackground
               source={require('../../../assets/images/signup-screen-background.jpg')}
               style={styles.imageBackground}
-            >
+            > */}
               <ScrollView contentContainerStyle={styles.scrollView}>
                 <View style={styles.closeIconContainer}>
                   <TouchableOpacity
@@ -402,35 +405,60 @@ export default class LoginScreen extends React.PureComponent {
                   >
                     <Icon
                       name="cross"
-                      color={colors.white}
+                      color={colors.themeColor.color}
                       size={22}
                     />
                   </TouchableOpacity>
                 </View>
-                <Input
-                  placeholder="Email"
-                  placeholderTextColor={colors.transparentWhiteLight}
+                <BigHeadingWithBackButton 
+                  isBackButton={false}
+                  bigTitleText="Sign in"
+                  isBigTitle={true}
+                  bigTitleStyle={{width:width-containerPadding*2}}
+                />
+                <InputBox 
+                   placeholder="Email address"
+                   value={email}
+                   keyboardType="email-address"
+                   onChangeText={(text) =>{this.setState({ email: text })}}
+                  //  onSubmitEditing={() => {this.passwordInput.focus()}}
+                />
+                <InputBox 
+                   errorMessage={error && error}
+                   placeholder="Password"
+                   value={password}
+                   onChangeText={(text) =>{this.setState({ password: text })}}
+                   onSubmitEditing={() => this.login(email, password)}
+                   secureTextEntry
+                   returnKeyType="go"
+                  //  ref={(input) => this.passwordInput = input}
+                />
+                {/* <Input
+                  placeholder="Email address"
+                  placeholderTextColor={colors.grey}
                   value={email}
                   returnKeyType="next"
                   keyboardType="email-address"
                   autoCorrect={false}
                   autoCapitalize="none"
-                  onChangeText={(text) => this.setState({ email: text })}
+                  onChangeText={(text) =>{this.setState({ email: text })}}
                   onSubmitEditing={() => this.passwordInput.focus()}
                   containerStyle={styles.inputComponentContainer}
                   inputContainerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
+                  // inputStyle={styles.input}
                   clearButtonMode="while-editing"
-                />
-                <Input
+                  onFocus={()=>isFocused=true}
+                /> */}
+               
+                {/* <Input
                   errorMessage={error && error}
                   placeholder="Password"
-                  placeholderTextColor={colors.transparentWhiteLight}
+                  placeholderTextColor={colors.grey}
                   value={password}
                   returnKeyType="go"
                   autoCorrect={false}
                   autoCapitalize="none"
-                  onChangeText={(text) => this.setState({ password: text })}
+                  onChangeText={(text) =>this.setState({ password: text })}
                   secureTextEntry
                   ref={(input) => {
                     this.passwordInput = input;
@@ -438,26 +466,40 @@ export default class LoginScreen extends React.PureComponent {
                   onSubmitEditing={() => this.login(email, password)}
                   containerStyle={styles.inputComponentContainer}
                   inputContainerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
+                  // inputStyle={styles.input}
                   clearButtonMode="while-editing"
+                /> */}
+                <CustomBtn 
+                  customBtnStyle={{borderRadius:50,width:width -containerPadding*2,marginTop:20 }}
+                  Title="Sign in"
+                  onPress={() => this.login(email, password)}
                 />
-                <Button
+                {/* <Button
                   title="SIGN IN"
                   onPress={() => this.login(email, password)}
                   containerStyle={styles.loginButtonContainer}
                   buttonStyle={styles.loginButton}
                   titleStyle={styles.loginButtonText}
                   fontFamily={fonts.bold}
-                />
-                <Divider style={styles.divider} />
+                /> */}
+                {/* <Divider style={styles.divider} /> */}
                 <View style={styles.dividerOverlay} >
                   <Text style={styles.dividerOverlayText}>
                     OR
                   </Text>
                 </View>
-                <FacebookButton
+                {/* <FacebookButton
                   title="SIGN IN WITH FACEBOOK"
                   onPress={this.loginWithFacebook}
+                /> */}
+                  <CustomBtn 
+                      customBtnStyle={{borderRadius:50,width:width -containerPadding*2,borderColor:colors.grey.standard}}
+                      outline={true}
+                      Title="Sign in with Facebook"
+                      customBtnTitleStyle={{color:colors.transparentBlackDark}}
+                      onPress={this.loginWithFacebook}
+                      leftIcon={true}
+                      leftIconUrl={require('../../../assets/icons/facebook.png')}
                 />
                 {
                   appleSignInAvailable && (
@@ -465,8 +507,9 @@ export default class LoginScreen extends React.PureComponent {
                       onPress={this.onSignInWithApple}
                       buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
                       buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
-                      cornerRadius={4}
+                      cornerRadius={50}
                       style={styles.appleButton}
+                      
                     />
                   )
                 }
@@ -478,13 +521,13 @@ export default class LoginScreen extends React.PureComponent {
                 </Text>
                 <Text
                   onPress={this.navigateToSignup}
-                  style={styles.navigateToSignupButton}
+                  style={[styles.navigateToForgottenPasswordButton,{marginTop:20}]}
                 >
-                  {"Don't have an account? Sign up here"}
+                  {"Don't have an account? Sign up"}
                 </Text>
 
               </ScrollView>
-            </ImageBackground>
+            {/* </ImageBackground> */}
           </View>
         </SafeAreaView>
         {loading && <NativeLoader />}
@@ -500,10 +543,11 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.transparent,
+    backgroundColor: colors.themeColor.themeBackgroundColor,
     justifyContent: 'center',
     alignItems: 'center',
-    width,
+    // width,
+    // paddingHorizontal:20
   },
   imageBackground: {
     flex: 1,
@@ -518,103 +562,51 @@ const styles = StyleSheet.create({
     width,
   },
   closeIconButton: {
-    padding: 15,
-    paddingLeft: 20,
-    paddingBottom: 20,
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 1,
+    padding: containerPadding,
+    paddingBottom:0,
+    // paddingLeft: 20,
+    // paddingBottom: 20,
+    // shadowColor: colors.charcoal.standard,
+    // shadowOpacity: 0.5,
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowRadius: 1,
   },
-  inputComponentContainer: {
-    width: width - 30,
-    alignItems: 'center',
-  },
-  inputContainer: {
-    width: width - 30,
-    alignItems: 'center',
-    marginTop: 5,
-    marginBottom: 5,
-    borderBottomWidth: 0,
-    backgroundColor: colors.transparentWhiteLight,
-    borderRadius: 4,
-  },
-  input: {
-    width: width - 30,
-    padding: 12,
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    borderWidth: 1,
-    borderColor: colors.grey.light,
-    borderRadius: 4,
-  },
-  loginButtonContainer: {
-    marginTop: 7,
-    marginBottom: 7,
-    shadowColor: colors.charcoal.dark,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
-  },
-  loginButton: {
-    backgroundColor: colors.coral.standard,
-    height: 45,
-    width: width - 30,
-    borderRadius: 4,
-  },
-  loginButtonText: {
-    marginTop: 4,
-    fontFamily: fonts.bold,
-    fontSize: 15,
-  },
+  
   appleButton: {
-    height: 45,
-    width: width - 30,
+    // height: 45,
+    width: width - containerPadding*2,
     marginTop: 8,
+    borderWidth:2,
+    borderColor:colors.grey.standard,
+    borderRadius:30,
+    padding:27,
   },
-  divider: {
-    backgroundColor: colors.transparent,
-    width: width - 30,
-    marginTop: 15,
-    marginBottom: 15,
-  },
+  // divider: {
+  //   backgroundColor: colors.transparent,
+  //   width: width - 30,
+  //   marginTop: 15,
+  //   marginBottom: 15,
+  // },
   dividerOverlay: {
-    height: 26,
-    marginTop: -30,
-    paddingTop: 8,
-    paddingLeft: 20,
-    paddingRight: 20,
+    marginVertical:20,
     backgroundColor: colors.transparent,
   },
   dividerOverlayText: {
     fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.grey.medium,
+    fontSize: 18,
+    color: colors.grey.standard,
   },
   navigateToForgottenPasswordButton: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    width: width - 30,
-    marginTop: 10,
-    paddingTop: 15,
-    paddingBottom: 15,
+    // fontWeight:'700',
+    fontFamily:fonts.bold,
+    letterSpacing:0.5,
+    fontSize: 16,
+    marginTop: 50,
     textAlign: 'center',
-    color: colors.grey.light,
-    textDecorationStyle: 'solid',
-    textDecorationColor: colors.grey.light,
-    textDecorationLine: 'underline',
+    color: colors.themeColor.color,
+    // textDecorationStyle: 'solid',
+    // textDecorationColor: colors.themeColor.color,
+    // textDecorationLine: 'underline',
   },
-  navigateToSignupButton: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    width: width - 30,
-    paddingTop: 15,
-    paddingBottom: 15,
-    textAlign: 'center',
-    color: colors.grey.light,
-    textDecorationStyle: 'solid',
-    textDecorationColor: colors.grey.light,
-    textDecorationLine: 'underline',
-  },
+
 });
