@@ -310,7 +310,7 @@ export default class SignupScreen extends React.PureComponent {
                    onChangeText={(text) => this.setState({ lastName: text })}
                 />
                  <InputBox 
-                   placeholder="Email"
+                   placeholder="Email address"
                    value={email}
                    keyboardType="email-address"
                    onChangeText={(text) =>{this.setState({ email: text })}}
