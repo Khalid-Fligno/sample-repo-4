@@ -16,6 +16,9 @@ import { auth } from '../../../config/firebase';
 import Icon from '../../components/Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import InputBox from '../../components/Shared/inputBox';
+import CustomBtn from '../../components/Shared/CustomBtn';
+import { containerPadding } from '../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 
@@ -59,10 +62,6 @@ export default class ForgottenPasswordScreen extends React.PureComponent {
       <SafeAreaView style={styles.safeAreaContainer}>
         <StatusBar barStyle="light-content" />
         <View style={styles.container}>
-          <ImageBackground
-            source={require('../../../assets/images/signup-screen-background.jpg')}
-            style={styles.imageBackground}
-          >
             <View style={styles.closeIconContainer}>
               <TouchableOpacity
                 onPress={() => this.props.navigation.goBack()}
@@ -70,12 +69,18 @@ export default class ForgottenPasswordScreen extends React.PureComponent {
               >
                 <Icon
                   name="cross"
-                  color={colors.white}
+                  color={colors.themeColor.color}
                   size={22}
                 />
               </TouchableOpacity>
             </View>
-            <Input
+            <InputBox 
+              placeholder="Email address"
+              value={email}
+              keyboardType="email-address"
+              onChangeText={(text) => this.setState({ email: text })}
+            />
+            {/* <Input
               placeholder="Email"
               placeholderTextColor={colors.transparentWhiteLight}
               value={email}
@@ -88,8 +93,15 @@ export default class ForgottenPasswordScreen extends React.PureComponent {
               inputContainerStyle={styles.inputContainer}
               inputStyle={styles.input}
               clearButtonMode="while-editing"
-            />
-            <TouchableOpacity
+            /> */}
+            <CustomBtn 
+                customBtnStyle={{borderRadius:50,width:width -containerPadding*2,marginTop:20 }}
+                Title="SEND PASSWORD RESET EMAIL"
+                onPress={() => this.sendPasswordResetEmail(email)}
+                customBtnTitleStyle={{fontSize:14,fontFamily:fonts.bold}}
+                loading={loading}
+              />
+            {/* <TouchableOpacity
               onPress={() => this.sendPasswordResetEmail(email)}
               style={styles.loginButton}
             >
@@ -106,8 +118,7 @@ export default class ForgottenPasswordScreen extends React.PureComponent {
                   </Text>
                 )
               }
-            </TouchableOpacity>
-          </ImageBackground>
+            </TouchableOpacity> */}
         </View>
       </SafeAreaView>
     );
@@ -139,10 +150,10 @@ const styles = StyleSheet.create({
     padding: 15,
     paddingLeft: 20,
     paddingBottom: 20,
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 1,
+    // shadowColor: colors.charcoal.standard,
+    // shadowOpacity: 0.5,
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowRadius: 1,
   },
   inputComponentContainer: {
     width: width - 30,

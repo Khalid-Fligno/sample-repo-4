@@ -6,6 +6,7 @@ import fonts from '../../styles/fonts'
 import PropTypes from 'prop-types';
 import { propTypes } from 'react-native-carousel'
 import Icon from './Icon'
+import { DotIndicator } from 'react-native-indicators'
 
 const CustomBtn = (props)=>{
    const customBtnStyle = {
@@ -60,7 +61,21 @@ const CustomBtn = (props)=>{
                 />
                 )
             }
-            <Text style={[customBtnTitleStyle,props.outline?outlineBtnTitleStyle:{},props.customBtnTitleStyle]}>{props.Title}</Text>
+            {
+                props.loading ? (
+                <DotIndicator
+                    color={colors.white}
+                    count={3}
+                    size={6}
+                />
+                ) : (
+                    <Text style={[customBtnTitleStyle,props.outline?outlineBtnTitleStyle:{},props.customBtnTitleStyle]}>
+                        {props.Title}
+                    </Text>
+                )
+            }
+           
+            {/* <Text style={[customBtnTitleStyle,props.outline?outlineBtnTitleStyle:{},props.customBtnTitleStyle]}>{props.Title}</Text> */}
         </TouchableOpacity>
     )
 }
@@ -74,7 +89,8 @@ CustomBtn.propTypes = {
     leftIconUrl:PropTypes.any,
     isLeftIcon:PropTypes.bool,
     leftIconName:PropTypes.any,
-    leftIconColor:PropTypes.any
+    leftIconColor:PropTypes.any,
+    loading:PropTypes.bool
   };
 
 export default CustomBtn
