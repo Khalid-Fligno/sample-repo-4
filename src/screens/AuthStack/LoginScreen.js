@@ -433,42 +433,8 @@ export default class LoginScreen extends React.PureComponent {
                    returnKeyType="go"
                   //  ref={(input) => this.passwordInput = input}
                 />
-                {/* <Input
-                  placeholder="Email address"
-                  placeholderTextColor={colors.grey}
-                  value={email}
-                  returnKeyType="next"
-                  keyboardType="email-address"
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  onChangeText={(text) =>{this.setState({ email: text })}}
-                  onSubmitEditing={() => this.passwordInput.focus()}
-                  containerStyle={styles.inputComponentContainer}
-                  inputContainerStyle={styles.inputContainer}
-                  // inputStyle={styles.input}
-                  clearButtonMode="while-editing"
-                  onFocus={()=>isFocused=true}
-                /> */}
                
-                {/* <Input
-                  errorMessage={error && error}
-                  placeholder="Password"
-                  placeholderTextColor={colors.grey}
-                  value={password}
-                  returnKeyType="go"
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  onChangeText={(text) =>this.setState({ password: text })}
-                  secureTextEntry
-                  ref={(input) => {
-                    this.passwordInput = input;
-                  }}
-                  onSubmitEditing={() => this.login(email, password)}
-                  containerStyle={styles.inputComponentContainer}
-                  inputContainerStyle={styles.inputContainer}
-                  // inputStyle={styles.input}
-                  clearButtonMode="while-editing"
-                /> */}
+            
                 <CustomBtn 
                   customBtnStyle={{borderRadius:50,width:width -containerPadding*2,marginTop:20 }}
                   Title="Sign in"
