@@ -41,6 +41,8 @@ class WorkoutProgressBar extends React.PureComponent {
         }else if(currentExercise > index + 1){
             return(100)
         }
+
+        return 0
     }
     let getInervalFill = (index)=>{
         console.log(currentRound)
@@ -54,6 +56,8 @@ class WorkoutProgressBar extends React.PureComponent {
             
             return(50)    
         }
+
+        return 0
       
     }
     let getCircuitFill = (index)=>{
@@ -68,6 +72,8 @@ class WorkoutProgressBar extends React.PureComponent {
                 }else if(currentExercise < index+1 && i !== 1){
                     return ((currentSet-1)/rounds)*100
                 }
+
+                return 0
             }    
         }
      
@@ -83,7 +89,7 @@ class WorkoutProgressBar extends React.PureComponent {
         }
         
        
-       return ''
+       return 0
     }
 
     let getStrengthInnerText = (index)=>{
