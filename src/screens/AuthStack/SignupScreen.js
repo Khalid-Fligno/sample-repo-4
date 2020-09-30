@@ -330,7 +330,7 @@ export default class SignupScreen extends React.PureComponent {
                 <CustomBtn 
                   customBtnStyle={{borderRadius:50,width:width -containerPadding*2,marginTop:20 }}
                   Title="Create new account"
-                  customBtnTitleStyle={{fontWeight:'500',fontSize:18,letterSpacing:0.7}}
+                  customBtnTitleStyle={{fontWeight:'500',letterSpacing:0.7}}
                   onPress={() => this.signup(firstName, lastName, email, password)}
                 />
               
@@ -344,7 +344,7 @@ export default class SignupScreen extends React.PureComponent {
                       customBtnStyle={{borderRadius:50,width:width -containerPadding*2,borderColor:colors.grey.standard,padding:15}}
                       outline={true}
                       Title="Create account with Facebook"
-                      customBtnTitleStyle={{fontWeight:'500',fontSize:18,letterSpacing:0.7,color:colors.transparentBlackDark}}
+                      customBtnTitleStyle={{fontWeight:'500',letterSpacing:0.7,color:colors.transparentBlackDark}}
                       onPress={this.signupWithFacebook}
                       leftIcon={true}
                       leftIconUrl={require('../../../assets/icons/facebook.png')}

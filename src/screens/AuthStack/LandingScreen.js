@@ -76,7 +76,6 @@ export default class LandingScreen extends React.PureComponent {
               <CustomBtn 
                  customBtnStyle={{borderRadius:50}}
                  Title='Start free trial'
-                 customBtnTitleStyle={{fontWeight:'bold',fontSize:15,letterSpacing:0.7}}
                  onPress={() => this.props.navigation.navigate('Signup', { specialOffer })}
               />
               {/* <TouchableOpacity

@@ -17,7 +17,7 @@ const CustomBtn = (props)=>{
     }
     const customBtnTitleStyle ={
         fontWeight:'500',
-        fontSize:18,
+        fontSize:17,
         letterSpacing:0.7,
         // marginTop: 3,
         color:colors.white,
@@ -30,7 +30,7 @@ const CustomBtn = (props)=>{
     }
     const outlineBtnTitleStyle ={
         color:colors.themeColor.color,
-        fontSize:19,
+        fontSize:17,
         fontWeight:'500',
     }
     return(

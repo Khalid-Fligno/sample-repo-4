@@ -9,6 +9,7 @@ import {
   Linking,
   Image,
   FlatList,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as FileSystem from 'expo-file-system';
@@ -146,8 +147,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
         width={width}
         inactiveIndicatorColor={colors.coral.standard}
         indicatorColor={colors.coral.standard}
-        indicatorOffset={-5}
-        indicatorSize={13}
+        indicatorOffset={ Platform.OS === 'ios'? -3:-10}
+        indicatorSize={10}
         inactiveIndicatorText="○"
         indicatorText="●"
         animate={false}
