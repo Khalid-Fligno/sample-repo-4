@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { TouchableOpacity } from 'react-native'
 import { Text,Image } from 'react-native'
 import colors from '../../styles/colors'
 import fonts from '../../styles/fonts'

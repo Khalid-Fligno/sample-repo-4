@@ -156,7 +156,8 @@ const WorkoutScreenStyle = StyleSheet.create({
       borderRadius: 4,
       overflow: 'hidden',
       borderWidth:colors.themeColor.themeBorderWidth,
-      borderColor:colors.themeColor.themeBorderColor
+      borderColor:colors.themeColor.themeBorderColor,
+      backgroundColor:colors.themeColor.themeBackgroundColor
     },
     musicModalHeaderText: {
       fontFamily: fonts.bold,
