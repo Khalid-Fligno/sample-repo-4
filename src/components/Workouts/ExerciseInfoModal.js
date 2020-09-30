@@ -79,7 +79,7 @@ export default class ExerciseInfoModal extends React.PureComponent {
               }
               {
                 exercise.scaledVersion && (
-                  <Text style={styles.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
+                  <Text style={WorkoutScreenStyle.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
                 )
               }
               {
@@ -141,55 +141,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     width: '100%',
   },
-  // exerciseTileHeaderBar: {
-  //   width: '100%',
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-between',
-  //   padding: 8,
-  //   paddingBottom: 5,
-  //   backgroundColor: colors.white,
-  // },
-  // exerciseTileHeaderTextLeft: {
-  //   fontFamily: fonts.boldNarrow,
-  //   fontSize: 14,
-  //   color: colors.black,
-  // },
-  // exerciseDescriptionContainer: {
-  //   width: '100%',
-  //   marginLeft: 15,
-  //   marginRight: 15,
-  //   borderWidth: 2,
-  //   borderTopLeftRadius: 4,
-  //   borderTopRightRadius: 4,
-  //   borderColor: colors.coral.standard,
-  //   overflow: 'hidden',
-  // },
-  // exerciseDescriptionTextContainer: {
-  //   padding: 15,
-  // },
-  exerciseDescriptionHeader: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-  },
-  exerciseDescriptionText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 5,
-    marginBottom: 5,
-  },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.coral.standard,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
+
 });

@@ -5,6 +5,18 @@ import Modal from 'react-native-modal';
 import Icon from '../../components/Shared/Icon';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
+import CustomBtn from '../Shared/CustomBtn';
+
+const customBtnStyle ={
+  borderRadius:50,
+  marginTop:10,
+  backgroundColor:colors.white,
+  padding:20
+ }
+ const customBtnTitleStyle ={
+   fontSize:14,
+   fontFamily:fonts.bold,
+   color:colors.transparentBlackDark}
 
 const CountdownPauseModal = ({
   isVisible,
@@ -27,22 +39,35 @@ const CountdownPauseModal = ({
         />
       </View>
       <View style={styles.pauseModalContainer}>
-        <TouchableOpacity
+          <CustomBtn
+            customBtnStyle={customBtnStyle}
+            customBtnTitleStyle={customBtnTitleStyle}
+            Title="QUIT WORKOUT"
+            onPress={handleQuit}
+          />
+          <CustomBtn 
+            customBtnStyle={customBtnStyle}
+            outline={true}
+            customBtnTitleStyle={{fontSize:14,fontFamily:fonts.bold}}
+            Title="CONTINUE"
+            onPress={handleUnpause}
+        />
+        {/* <TouchableOpacity
           onPress={handleQuit}
           style={styles.modalButtonQuit}
         >
           <Text style={styles.modalButtonTextDark}>
             QUIT WORKOUT
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableOpacity> */}
+        {/* <TouchableOpacity
           onPress={handleUnpause}
           style={styles.modalButtonContinue}
         >
           <Text style={styles.modalButtonText}>
             CONTINUE
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   </Modal>
@@ -56,7 +81,7 @@ CountdownPauseModal.propTypes = {
 
 const styles = StyleSheet.create({
   pauseModalContainer: {
-    backgroundColor: colors.white,
+    // backgroundColor: colors.white,
     borderRadius: 4,
     overflow: 'hidden',
   },

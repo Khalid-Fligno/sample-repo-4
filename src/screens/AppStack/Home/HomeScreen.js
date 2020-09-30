@@ -29,6 +29,8 @@ import HomeScreenStyle from './HomeScreenStyle';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 import WorkOutCard from '../../../components/Home/WorkoutCard';
 import TimeSvg from '../../../../assets/icons/time';
+import CustomBtn from '../../../components/Shared/CustomBtn';
+import fonts from '../../../styles/fonts';
 
 const workoutTypeMap = {
   1: 'Resistance',
@@ -301,18 +303,25 @@ export default class HomeScreen extends React.PureComponent {
                         color={colors.charcoal.dark}
                         style={HomeScreenStyle.reminderIcon}
                       />
+                      {/* <TimeSvg /> */}
                       <View style={HomeScreenStyle.reminderTextContainer}>
                         <Text style={HomeScreenStyle.reminderText}>
                           Complete a burpee test to assess your current fitness level.  The results from this test will determine the intensity of your workouts!
                         </Text>
                       </View>
                     </View>
-                    <Button
+                    <CustomBtn 
+                      Title="START BURPEE TEST"
+                      customBtnStyle={{borderRadius:50,backgroundColor:colors.charcoal.darkest,width:'100%'}}
+                      customBtnTitleStyle={{fontSize:12,fontFamily:fonts.bold}}
+                      onPress={this.goToBurpeeTest}
+                    />
+                    {/* <Button
                       title="START BURPEE TEST"
                       buttonStyle={HomeScreenStyle.button}
                       titleStyle={HomeScreenStyle.buttonText}
                       onPress={this.goToBurpeeTest}
-                    />
+                    /> */}
                   </View>
                 )
               }
