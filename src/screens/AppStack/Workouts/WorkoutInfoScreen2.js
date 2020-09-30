@@ -62,8 +62,10 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
   }
 
   setDate = async (event, selectedDate) => {
+    if(selectedDate){
     const currentDate = selectedDate;
     this.setState({ chosenDate: currentDate });
+    }
   }
 
   checkMusicAppAvailability = async () => {

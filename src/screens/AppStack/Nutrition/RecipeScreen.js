@@ -56,8 +56,10 @@ export default class RecipeScreen extends React.PureComponent {
     this.setState({ loading: false });
   }
   setDate = async (event, selectedDate) => {
+    if(selectedDate){
     const currentDate = selectedDate;
     this.setState({ chosenDate: currentDate });
+    }
   }
   handleStart = (recipe) => {
     this.props.navigation.navigate('RecipeSteps', { recipe });
