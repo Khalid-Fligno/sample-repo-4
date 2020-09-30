@@ -9,7 +9,7 @@ import CustomBtn from '../Shared/CustomBtn';
 
 const customBtnStyle ={
   borderRadius:50,
-  marginTop:20,
+  marginTop:10,
   backgroundColor:colors.white,
   padding:20
  }
@@ -57,22 +57,7 @@ const WorkoutPauseModal = ({
             Title="RESTART THIS SET"
             onPress={() => handleRestart(exerciseList, fitnessLevel || reps,currentExerciseIndex)}
           />
-        {/* <TouchableOpacity
-          onPress={handleQuit}
-          style={styles.modalButtonQuit}
-        >
-          <Text style={styles.modalButtonTextDark}>
-            QUIT WORKOUT
-          </Text>
-        </TouchableOpacity> */}
-        {/* <TouchableOpacity
-          onPress={() => handleRestart(exerciseList, fitnessLevel || reps,currentExerciseIndex)}
-          style={styles.modalButtonRestart}
-        >
-          <Text style={styles.modalButtonText}>
-            RESTART THIS SET
-          </Text>
-        </TouchableOpacity> */}
+   
         {
           handleSkip && (
             <CustomBtn 
@@ -81,14 +66,6 @@ const WorkoutPauseModal = ({
               Title="SKIP THIS EXERCISE"
               onPress={() => handleSkip(exerciseList, fitnessLevel || reps,currentExerciseIndex)}
             />
-            // <TouchableOpacity
-            //   onPress={() => handleSkip(exerciseList, fitnessLevel || reps,currentExerciseIndex)}
-            //   style={styles.modalButtonSkip}
-            // >
-            //   <Text style={styles.modalButtonText}>
-            //     SKIP THIS EXERCISE
-            //   </Text>
-            // </TouchableOpacity>
           )
         }
         <CustomBtn 
@@ -98,14 +75,6 @@ const WorkoutPauseModal = ({
             Title="CONTINUE"
             onPress={handleUnpause}
         />
-        {/* <TouchableOpacity
-          onPress={handleUnpause}
-          style={styles.modalButtonContinue}
-        >
-          <Text style={styles.modalButtonText}>
-            CONTINUE
-          </Text>
-        </TouchableOpacity> */}
       </View>
     </View>
   </Modal>

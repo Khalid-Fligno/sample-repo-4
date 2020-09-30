@@ -244,7 +244,7 @@ const WorkoutScreenStyle = StyleSheet.create({
       overflow: 'hidden',
     },
     exerciseTileHeaderBar: {
-      width: width - 34,
+      width:'100%',
       flexDirection: 'row',
       justifyContent: 'space-between',
       padding: 10,
@@ -261,9 +261,10 @@ const WorkoutScreenStyle = StyleSheet.create({
     },
     exerciseTileHeaderBarRight: {
       // width: 30,
-      fontFamily: fonts.standardNarrow,
+      fontFamily: fonts.boldNarrow,
       fontSize: 13,
-      color: colors.transparentBlackDark,
+      color: colors.themeColor.themeBorderColor,
+      letterSpacing:0.5
     },
     exerciseDescriptionContainer: {
       width: width - 30,

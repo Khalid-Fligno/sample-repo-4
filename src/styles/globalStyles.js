@@ -162,7 +162,7 @@ noShadow: {
 logoutButton: {
   fontFamily: fonts.standard,
   fontSize: 16,
-  color: colors.white,
+  color: colors.black,
   marginTop: 5,
   marginLeft: 4,
 },

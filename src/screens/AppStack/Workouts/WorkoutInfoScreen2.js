@@ -172,7 +172,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
               {
                 this.state.workout.filters.includes('strength')&& (
                   <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                    x{this.state.reps}
+                  X{this.state.reps}
                   </Text>
                 )
               }

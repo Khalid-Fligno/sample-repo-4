@@ -29,10 +29,10 @@ export default class ExerciseInfoModal extends React.PureComponent {
         animationOutTiming={400}
       >
         {/* <View style={styles.helperModalContainer}> */}
-          <View style={[styles.helperModalContainer]}>
+          <View style={styles.helperModalContainer}>
             <View style={WorkoutScreenStyle.exerciseTileHeaderBar}>
               <View>
-                <Text style={[WorkoutScreenStyle.exerciseTileHeaderTextLeft,{marginLeft:10}]}>
+                <Text style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}>
                   {exercise.name}
                 </Text>
               </View>
@@ -61,7 +61,7 @@ export default class ExerciseInfoModal extends React.PureComponent {
                   // >
                   //   {`• ${tip}`}
                   // </Text>
-                  <View style={{flexDirection:"row",marginEnd:10}} key={index}>
+                  <View style={{flexDirection:"row",marginEnd:10,}} key={index}>
                     <Text  style={NutritionStyles.ingredientsText}> • </Text>
                       <Text
                         style={NutritionStyles.ingredientsText}
@@ -104,7 +104,7 @@ export default class ExerciseInfoModal extends React.PureComponent {
                 </Text>
               </TouchableOpacity> */}
                 <CustomBtn
-                  customBtnStyle={{borderRadius:50,marginBottom:20}} 
+                  customBtnStyle={{borderRadius:50,marginBottom:20,marginHorizontal:8}} 
                   customBtnTitleStyle={{fontSize:14,fontFamily:fonts.bold}}
                   Title="CONTINUE"
                   outline ={true}
@@ -128,14 +128,14 @@ ExerciseInfoModal.propTypes = {
 const styles = StyleSheet.create({
   helperModalContainer: {
     flexShrink: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    justifyContent: 'flex-start',
     borderRadius: 8,
     overflow: 'hidden',
     borderWidth:colors.themeColor.themeBorderWidth,
     borderColor:colors.themeColor.themeBorderColor,
     backgroundColor:colors.themeColor.themeBackgroundColor,
-    paddingHorizontal:5
+    // paddingHorizontal:5
   },
   helperModalButtonContainer: {
     backgroundColor: colors.white,
