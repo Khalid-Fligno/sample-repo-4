@@ -4,7 +4,7 @@ import Carousel from 'react-native-carousel';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 import CustomBtn from '../../components/Shared/CustomBtn';
-import globalStyle from '../../styles/globalStyles';
+import globalStyle, { containerPadding } from '../../styles/globalStyles';
 const { width, height } = Dimensions.get('window');
 
 export default class LandingScreen extends React.PureComponent {
@@ -54,14 +54,14 @@ export default class LandingScreen extends React.PureComponent {
                 <View style={styles.opacityOverlayTransparent} />
               </ImageBackground>
             </View>
-            <View style={styles.carouselCardContainer}>
+            {/* <View style={styles.carouselCardContainer}>
               <ImageBackground
                 source={require('../../../assets/images/OnBoardindImg/OB_4.jpg')}
                 style={styles.carouselImageBackground}
               >
                 <View style={styles.opacityOverlayTransparent} />
               </ImageBackground>
-            </View>
+            </View> */}
             <View style={styles.carouselCardContainer}>
               <ImageBackground
                 source={require('../../../assets/images/OnBoardindImg/OB_5.jpg')}
@@ -74,7 +74,7 @@ export default class LandingScreen extends React.PureComponent {
           <View style={styles.absoluteButtonContainer}>
             <View style={styles.buttonContainer}>
               <CustomBtn 
-                 customBtnStyle={{borderRadius:50}}
+                 customBtnStyle={{borderRadius:50,padding:14}}
                  Title='Start free trial'
                  onPress={() => this.props.navigation.navigate('Signup', { specialOffer })}
               />
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: undefined,
     height: undefined,
-    marginBottom:105
+    marginBottom:width/4
   },
   opacityOverlayLight: {
     width,
@@ -148,29 +148,29 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width,
     backgroundColor: colors.transparent,
-    padding: 10,
-    paddingHorizontal:30
+    padding: 12,
+    paddingHorizontal:containerPadding
   },
-  signupButton: {
-    width: width - 20,
-    height: 45,
-    marginTop: 5,
-    marginBottom: 5,
-    backgroundColor: colors.coral.standard,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: colors.charcoal.dark,
-    borderRadius: 2,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 2,
-  },
-  signupButtonText: {
-    marginTop: 4,
-    color: colors.white,
-    fontFamily: fonts.bold,
-    fontSize: 14,
-  },
+  // signupButton: {
+  //   width: width - 20,
+  //   height: 45,
+  //   marginTop: 5,
+  //   marginBottom: 5,
+  //   backgroundColor: colors.coral.standard,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   shadowColor: colors.charcoal.dark,
+  //   borderRadius: 2,
+  //   shadowOpacity: 0.5,
+  //   shadowOffset: { width: 0, height: 2 },
+  //   shadowRadius: 2,
+  // },
+  // signupButtonText: {
+  //   marginTop: 4,
+  //   color: colors.white,
+  //   fontFamily: fonts.bold,
+  //   fontSize: 14,
+  // },
   loginButton: {
     // width: width - 20,
     // height: 45,
