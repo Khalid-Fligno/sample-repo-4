@@ -18,6 +18,8 @@ import CustomButton from '../../../components/Shared/CustomButton';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+import CustomBtn from '../../../components/Shared/CustomBtn';
+import { containerPadding } from '../../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 
@@ -122,25 +124,26 @@ export default class Progress6Screen extends React.PureComponent {
                       />
                     ))}
                   </Picker>
-                  <TouchableOpacity
-                    title="DONE"
+                  <CustomBtn 
+                    Title="DONE"
+                    titleCapitalise={true}
+                    outline={true}
+                    customBtnStyle={{borderRadius:50,margin:10,marginTop:0}}
                     onPress={this.toggleBurpeeModal}
-                    style={styles.modalButton}
-                  >
-                    <Text style={styles.modalButtonText}>
-                      DONE
-                    </Text>
-                  </TouchableOpacity>
+                  />
+              
                 </View>
               </Modal>
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <CustomButton
-              title="NEXT"
-              onPress={this.handleSubmit}
-              primary
-            />
+              <CustomBtn
+                  Title="NEXT"
+                  titleCapitalise={true}
+                  customBtnStyle={{borderRadius:50}}
+                  onPress={this.handleSubmit}
+              />
+      
           </View>
           <Loader
             loading={loading}
@@ -168,6 +171,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width,
     padding: 10,
+    paddingHorizontal:containerPadding
   },
   headerText: {
     fontFamily: fonts.bold,
@@ -191,7 +195,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   inputButton: {
-    width: width - 20,
+    width: width - containerPadding*2,
     padding: 15,
     paddingBottom: 12,
     backgroundColor: colors.white,
@@ -209,19 +213,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     overflow: 'hidden',
   },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.coral.standard,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
+
   contentContainer: {
     flex: 1,
     alignItems: 'center',
@@ -231,5 +223,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: 10,
+    paddingHorizontal:containerPadding,
+    width:'100%'
   },
 });

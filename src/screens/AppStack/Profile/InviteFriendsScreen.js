@@ -17,6 +17,8 @@ import InviteFriends from '../../../components/Profile/InviteFriends';
 import FreeGiftSection from '../../../components/Profile/FreeGiftSection';
 import fonts from '../../../styles/fonts';
 import colors from '../../../styles/colors';
+import CustomBtn from '../../../components/Shared/CustomBtn';
+import { containerPadding } from '../../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 
@@ -102,11 +104,17 @@ export default class InviteFriendsScreen extends React.PureComponent {
             </Text>
           </ScrollView>
           <View style={styles.buttonContainer}>
-            <CustomButton
+            <CustomBtn 
+              Title="SELECT CONTACTS"
+              titleCapitalise={true}
+              onPress={this.switchView}
+              customBtnStyle={{borderRadius:50,width:width-containerPadding*2}}
+            />
+            {/* <CustomButton
               title="SELECT CONTACTS"
               onPress={this.switchView}
               red
-            />
+            /> */}
           </View>
         </ImageBackground>
         <Loader
@@ -127,6 +135,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 20,
     paddingBottom: 80,
+    paddingHorizontal:containerPadding
   },
   rewardsContainer: {
     flex: 1,
@@ -155,6 +164,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.white,
     margin: 10,
+    marginHorizontal:0
   },
   buttonContainer: {
     position: 'absolute',

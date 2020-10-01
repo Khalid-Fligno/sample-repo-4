@@ -19,6 +19,8 @@ import CustomButton from '../../components/Shared/CustomButton';
 import Loader from '../../components/Shared/Loader';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import CustomBtn from '../../components/Shared/CustomBtn';
+import { containerPadding } from '../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 
@@ -194,7 +196,14 @@ export default class Progress6Screen extends React.PureComponent {
                       />
                     ))}
                   </Picker>
-                  <TouchableOpacity
+                  <CustomBtn 
+                    Title="DONE"
+                    titleCapitalise={true}
+                    outline={true}
+                    customBtnStyle={{borderRadius:50,margin:10,marginTop:0}}
+                    onPress={this.toggleBurpeeModal}
+                  />
+                  {/* <TouchableOpacity
                     title="DONE"
                     onPress={this.toggleBurpeeModal}
                     style={styles.modalButton}
@@ -202,17 +211,23 @@ export default class Progress6Screen extends React.PureComponent {
                     <Text style={styles.modalButtonText}>
                       DONE
                     </Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               </Modal>
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <CustomButton
+            <CustomBtn
+              Title="NEXT"
+              titleCapitalise={true}
+              customBtnStyle={{borderRadius:50}}
+              onPress={this.handleSubmit}
+            />
+            {/* <CustomButton
               title="NEXT"
               onPress={this.handleSubmit}
               primary
-            />
+            /> */}
           </View>
           <Loader
             loading={loading}
@@ -240,6 +255,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width,
     padding: 10,
+    paddingHorizontal:containerPadding
   },
   headerText: {
     fontFamily: fonts.bold,
@@ -263,7 +279,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   inputButton: {
-    width: width - 20,
+    width: width - containerPadding*2,
     padding: 15,
     paddingBottom: 12,
     backgroundColor: colors.white,
@@ -303,5 +319,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: 10,
+    paddingHorizontal:containerPadding,
+    width:'100%'
   },
 });
