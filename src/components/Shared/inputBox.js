@@ -6,6 +6,7 @@ import colors from '../../styles/colors'
 import fonts from '../../styles/fonts'
 import PropTypes from 'prop-types';
 import { Input } from 'react-native-elements'
+import { containerPadding } from '../../styles/globalStyles'
 const { width } = Dimensions.get('window');
 const InputBox = (props)=>{
   let [isFocused,setFocused] = useState(false)
@@ -38,11 +39,11 @@ const InputBox = (props)=>{
   const styles = StyleSheet.create({
 
     inputComponentContainer: {
-      width: width - 30,
+      width: width - containerPadding*2,
       alignItems: 'center',
     },
     inputContainer: {
-      // width: width - 30,
+      width: width - containerPadding*2,
       alignItems: 'center',
       marginTop: 5,
       marginBottom: 5,
@@ -52,7 +53,7 @@ const InputBox = (props)=>{
       borderBottomColor: colors.grey.light
     },
     inputContainer1: {
-        // width: width - 30,
+        width: width - containerPadding*2,
         alignItems: 'center',
         marginTop: 5,
         marginBottom: 5,
@@ -62,7 +63,7 @@ const InputBox = (props)=>{
         borderBottomColor:colors.themeColor.color
       },
     input: {
-      width: width - 30,
+      width: width - containerPadding*2,
       padding: 12,
       fontFamily: fonts.bold,
       fontSize: 14,

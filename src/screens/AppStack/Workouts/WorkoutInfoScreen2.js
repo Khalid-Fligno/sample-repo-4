@@ -473,7 +473,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             <View style={WorkoutScreenStyle.musicModalButtonContainer}>
             <CustomBtn
                  customBtnStyle={{borderRadius:50,borderColor:colors.grey.standard}} 
-                 customBtnTitleStyle={{color:colors.transparentBlackDark,fontSize:14,fontFamily:fonts.bold}}
+                 customBtnTitleStyle={{color:colors.transparentBlackDark}}
+                 titleCapitalise={true}
                  Title="BACK"
                  isLeftIcon={true}
                  leftIconName="chevron-left"
@@ -483,7 +484,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
               />
               <CustomBtn
                  customBtnStyle={{borderRadius:50,marginTop:10}} 
-                 customBtnTitleStyle={{fontSize:14,fontFamily:fonts.bold}}
+                 titleCapitalise={true}
                  Title="CONTINUE"
                  outline ={true}
                  onPress={this.handleWorkoutStart}

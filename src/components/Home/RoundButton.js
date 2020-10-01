@@ -5,6 +5,7 @@ import Icon from '../../components/Shared/Icon'
 import colors from '../../styles/colors'
 import fonts from '../../styles/fonts'
 import { NavigationContainer } from '@react-navigation/native';
+import { containerPadding } from '../../styles/globalStyles'
 
 const { width } = Dimensions.get('window');
 export default function RoundButton(props){
@@ -69,7 +70,7 @@ export default function RoundButton(props){
 
 const styles = StyleSheet.create({
     Container: {
-        width: (width - 40)/2,
+        width: (width - containerPadding*2)/2,
         // height: 50,
       
     },

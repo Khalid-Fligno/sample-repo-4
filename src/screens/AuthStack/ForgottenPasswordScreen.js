@@ -19,6 +19,7 @@ import fonts from '../../styles/fonts';
 import InputBox from '../../components/Shared/inputBox';
 import CustomBtn from '../../components/Shared/CustomBtn';
 import { containerPadding } from '../../styles/globalStyles';
+import authScreenStyle from './authScreenStyle';
 
 const { width } = Dimensions.get('window');
 
@@ -59,13 +60,13 @@ export default class ForgottenPasswordScreen extends React.PureComponent {
       loading,
     } = this.state;
     return (
-      <SafeAreaView style={styles.safeAreaContainer}>
+      <SafeAreaView style={authScreenStyle.safeAreaContainer}>
         <StatusBar barStyle="light-content" />
-        <View style={styles.container}>
-            <View style={styles.closeIconContainer}>
+        <View style={[authScreenStyle.container,{justifyContent:'flex-start'}]}>
+            <View style={authScreenStyle.closeIconContainer}>
               <TouchableOpacity
                 onPress={() => this.props.navigation.goBack()}
-                style={styles.closeIconButton}
+                style={authScreenStyle.closeIconButton}
               >
                 <Icon
                   name="cross"
@@ -74,51 +75,25 @@ export default class ForgottenPasswordScreen extends React.PureComponent {
                 />
               </TouchableOpacity>
             </View>
-            <InputBox 
-              placeholder="Email address"
-              value={email}
-              keyboardType="email-address"
-              onChangeText={(text) => this.setState({ email: text })}
-            />
-            {/* <Input
-              placeholder="Email"
-              placeholderTextColor={colors.transparentWhiteLight}
-              value={email}
-              returnKeyType="next"
-              keyboardType="email-address"
-              autoCorrect={false}
-              autoCapitalize="none"
-              onChangeText={(text) => this.setState({ email: text })}
-              containerStyle={styles.inputComponentContainer}
-              inputContainerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              clearButtonMode="while-editing"
-            /> */}
-            <CustomBtn 
-                customBtnStyle={{borderRadius:50,width:width -containerPadding*2,marginTop:20 }}
-                Title="SEND PASSWORD RESET EMAIL"
-                onPress={() => this.sendPasswordResetEmail(email)}
-                customBtnTitleStyle={{fontSize:14,fontFamily:fonts.bold}}
-                loading={loading}
+            <View style={{marginTop:30}}>
+              <InputBox 
+                placeholder="Email address"
+                value={email}
+                keyboardType="email-address"
+                onChangeText={(text) => this.setState({ email: text })}
               />
-            {/* <TouchableOpacity
-              onPress={() => this.sendPasswordResetEmail(email)}
-              style={styles.loginButton}
-            >
-              {
-                loading ? (
-                  <DotIndicator
-                    color={colors.white}
-                    count={3}
-                    size={6}
-                  />
-                ) : (
-                  <Text style={styles.loginButtonText}>
-                    SEND PASSWORD RESET EMAIL
-                  </Text>
-                )
-              }
-            </TouchableOpacity> */}
+          
+              <CustomBtn 
+                  customBtnStyle={{borderRadius:50,marginTop:20 }}
+                  Title="SEND PASSWORD RESET EMAIL"
+                  onPress={() => this.sendPasswordResetEmail(email)}
+                  // customBtnTitleStyle={{fontSize:14,fontFamily:fonts.bold}}
+                  titleCapitalise={true}
+                  loading={loading}
+              />
+            </View>
+         
+      
         </View>
       </SafeAreaView>
     );
@@ -126,20 +101,10 @@ export default class ForgottenPasswordScreen extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
-  safeAreaContainer: {
-    flex: 1,
-    backgroundColor: colors.black,
-    borderTopColor: colors.black,
-  },
+
   container: {
     flex: 1,
     backgroundColor: colors.offWhite,
-    alignItems: 'center',
-  },
-  imageBackground: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
     alignItems: 'center',
   },
   closeIconContainer: {
@@ -155,47 +120,5 @@ const styles = StyleSheet.create({
     // shadowOffset: { width: 0, height: 2 },
     // shadowRadius: 1,
   },
-  inputComponentContainer: {
-    width: width - 30,
-    alignItems: 'center',
-  },
-  inputContainer: {
-    width: width - 30,
-    alignItems: 'center',
-    marginTop: 5,
-    marginBottom: 5,
-    borderBottomWidth: 0,
-    backgroundColor: colors.transparentWhiteLight,
-    borderRadius: 4,
-  },
-  input: {
-    width: width - 30,
-    padding: 12,
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    borderWidth: 1,
-    borderColor: colors.grey.light,
-    borderRadius: 4,
-  },
-  loginButton: {
-    backgroundColor: colors.coral.standard,
-    height: 50,
-    width: width - 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 4,
-    marginTop: 7,
-    marginBottom: 7,
-    shadowColor: colors.charcoal.dark,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
-  },
-  loginButtonText: {
-    marginTop: 4,
-    fontFamily: fonts.bold,
-    fontSize: 15,
-    color: colors.white,
-  },
+  
 });

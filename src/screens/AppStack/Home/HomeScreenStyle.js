@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 import fonts from "../../../styles/fonts";
 import colors from "../../../styles/colors";
-import globalStyle from "../../../styles/globalStyles";
+import globalStyle, { containerPadding } from "../../../styles/globalStyles";
 const { width } = Dimensions.get('window');
 const HomeScreenStyle = StyleSheet.create({
     scrollView: {
@@ -23,17 +23,19 @@ const HomeScreenStyle = StyleSheet.create({
     },
     workoutProgressContainer: {
       alignItems: 'center',
-      width: width - 20,
-      margin: 5,
+      // width: width,
+      // margin: 5,
       // paddingLeft: 10,
-      paddingRight: 10,
-      paddingBottom: 10,
+      // paddingRight: 10,
+      // paddingBottom: 10,
+      // paddingHorizontal:containerPadding,
       borderRadius: 2,
       shadowColor: colors.grey.standard,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.3,
       shadowRadius: 3,
-      marginTop:20
+      marginTop:20,
+      // backgroundColor:'green'
     },
     sectionHeader: {
       alignItems: 'flex-start',

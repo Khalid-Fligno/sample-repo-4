@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { containerPadding } from '../../styles/globalStyles';
 const { width } = Dimensions.get('window');
 export default class ProgressBar extends React.PureComponent {
   constructor(props) {

@@ -19,6 +19,7 @@ import fonts from '../../../styles/fonts';
 import WorkoutScreenStyle from '../Workouts/WorkoutScreenStyle';
 import NutritionStyles from '../Nutrition/NutritionStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
+import { containerPadding } from '../../../styles/globalStyles';
 
 const { width, height } = Dimensions.get('window');
 
@@ -139,7 +140,7 @@ export default class Progress3Screen extends React.PureComponent {
               Title="READY!"
               onPress={this.handleNext}
               outline={true}
-              customBtnStyle={{borderRadius:50,width:width-20}} 
+              customBtnStyle={{borderRadius:50}} 
               customBtnTitleStyle={{fontSize:14,fontFamily:fonts.bold}}     
             />
             {/* <CustomButton
@@ -173,6 +174,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     width,
     padding: 10,
+    paddingHorizontal:containerPadding
   },
   headerText: {
     fontFamily: fonts.bold,
@@ -203,24 +205,7 @@ const styles = StyleSheet.create({
     borderColor: colors.themeColor.themeBorderColor,
     overflow: 'hidden',
   },
-  // exerciseTileHeaderBar: {
-  //   height: 35,
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-between',
-  //   padding: 8,
-  //   paddingBottom: 5,
-  //   backgroundColor: colors.themeColor.themeBackgroundColor,
-  // },
-  // exerciseTileHeaderTextLeft: {
-  //   fontFamily: fonts.boldNarrow,
-  //   fontSize: 14,
-  //   color: colors.transparentBlackDark,
-  // },
-  // exerciseTileHeaderBarRight: {
-  //   fontFamily: fonts.standardNarrow,
-  //   fontSize: 14,
-  //   color: colors.transparentBlackDark,
-  // },
+
   exerciseDescriptionContainer: {
     width: width - 80,
     height: width - 45,
@@ -234,28 +219,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     overflow: 'hidden',
   },
-  // exerciseDescriptionTextContainer: {
-  //   padding: 15,
-  // },
-  // exerciseDescriptionHeader: {
-  //   fontFamily: fonts.bold,
-  //   fontSize: 14,
-  //   color: colors.charcoal.darkest,
-  // },
-  // exerciseDescriptionText: {
-  //   fontFamily: fonts.standard,
-  //   fontSize: 14,
-  //   color: colors.charcoal.darkest,
-  //   marginTop: 5,
-  //   marginBottom: 5,
-  // },
+
   buttonContainer: {
     flexShrink: 1,
     justifyContent: 'flex-end',
     padding: 10,
+    width:'100%',
+    paddingHorizontal:containerPadding
   },
   carouselContainer: {
-    
+    // width:width
     ...Platform.select({
       android: {
         height: width,

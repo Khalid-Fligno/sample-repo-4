@@ -34,6 +34,7 @@ import { containerPadding } from '../../styles/globalStyles';
 import BigHeadingWithBackButton from '../../components/Shared/BigHeadingWithBackButton';
 import InputBox from '../../components/Shared/inputBox';
 import CustomBtn from '../../components/Shared/CustomBtn';
+import authScreenStyle from './authScreenStyle';
 
 const { width } = Dimensions.get('window');
 
@@ -262,19 +263,19 @@ export default class SignupScreen extends React.PureComponent {
     } = this.state;
     return (
       <React.Fragment>
-        <SafeAreaView style={styles.safeAreaContainer} >
-          <View style={styles.container}>
+        <SafeAreaView style={authScreenStyle.safeAreaContainer} >
+          <View style={authScreenStyle.container}>
             <StatusBar barStyle="light-content" />
 
             {/* <ImageBackground
               source={require('../../../assets/images/signup-screen-background.jpg')}
               style={styles.imageBackground}
             > */}
-              <ScrollView contentContainerStyle={styles.scrollView}>
-                <View style={styles.closeIconContainer}>
+              <ScrollView contentContainerStyle={authScreenStyle.scrollView}>
+                <View style={authScreenStyle.closeIconContainer}>
                   <TouchableOpacity
                     onPress={() => this.props.navigation.goBack()}
-                    style={styles.closeIconButton}
+                    style={authScreenStyle.closeIconButton}
                   >
                     <Icon
                       name="cross"
@@ -292,11 +293,13 @@ export default class SignupScreen extends React.PureComponent {
                 <Text style={styles.headerText2}>
                   get started
                 </Text> */}
+
+                <View >
                  <BigHeadingWithBackButton 
                   isBackButton={false}
                   bigTitleText="Create account"
                   isBigTitle={true}
-                  bigTitleStyle={{width:width-containerPadding*2}}
+                  // bigTitleStyle={{width:width-containerPadding*2}}
                 />
                 <KeyboardAvoidingView keyboardVerticalOffset={40} behavior="position" enabled>
                 <InputBox 
@@ -314,7 +317,6 @@ export default class SignupScreen extends React.PureComponent {
                    value={email}
                    keyboardType="email-address"
                    onChangeText={(text) =>{this.setState({ email: text })}}
-                  //  onSubmitEditing={() => {this.passwordInput.focus()}}
                 />
                  <InputBox 
                    errorMessage={error && error}
@@ -328,20 +330,20 @@ export default class SignupScreen extends React.PureComponent {
                  
                 </KeyboardAvoidingView>
                 <CustomBtn 
-                  customBtnStyle={{borderRadius:50,width:width -containerPadding*2,marginTop:20 }}
+                  customBtnStyle={{borderRadius:50,marginTop:20 }}
                   Title="Create new account"
                   customBtnTitleStyle={{fontWeight:'500',letterSpacing:0.7}}
                   onPress={() => this.signup(firstName, lastName, email, password)}
                 />
               
-                <View style={styles.dividerOverlay}>
-                  <Text style={styles.dividerOverlayText}>
+                <View style={authScreenStyle.dividerOverlay}>
+                  <Text style={authScreenStyle.dividerOverlayText}>
                     OR
                   </Text>
                 </View>
              
                 <CustomBtn 
-                      customBtnStyle={{borderRadius:50,width:width -containerPadding*2,borderColor:colors.grey.standard,padding:15}}
+                      customBtnStyle={{borderRadius:50,borderColor:colors.grey.standard}}
                       outline={true}
                       Title="Create account with Facebook"
                       customBtnTitleStyle={{fontWeight:'500',letterSpacing:0.7,color:colors.transparentBlackDark}}
@@ -356,16 +358,18 @@ export default class SignupScreen extends React.PureComponent {
                       buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
                       buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
                       cornerRadius={4}
-                      style={styles.appleButton}
+                      style={authScreenStyle.appleButton}
                     />
                   )
                 }
-                <Text
+                  <Text
                   onPress={this.navigateToLogin}
-                  style={styles.navigateToLogin}
-                >
-                 I already have an account? Sign in 
-                </Text>
+                  style={authScreenStyle.navigateToButton}
+                  >
+                  I already have an account? Sign in 
+                  </Text>
+              </View>  
+              
               </ScrollView>
             {/* </ImageBackground> */}
           </View>
@@ -376,72 +380,3 @@ export default class SignupScreen extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
-  safeAreaContainer: {
-    flex: 1,
-    backgroundColor: colors.black,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: colors.themeColor.themeBackgroundColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width,
-  },
-  // imageBackground: {
-  //   flex: 1,
-  //   width: undefined,
-  //   height: undefined,
-  // },
-  scrollView: {
-    alignItems: 'center',
-  },
-  closeIconContainer: {
-    alignItems: 'flex-end',
-    width,
-  },
-  closeIconButton: {
-    padding: containerPadding,
-    paddingBottom: 0,
-  },
-  // headerText1: {
-  //   fontFamily: fonts.ultraItalic,
-  //   fontSize: 20,
-  //   color: colors.themeColor.color,
-  // },
-  // headerText2: {
-  //   fontFamily: fonts.tuesdayNight,
-  //   fontSize: 28,
-  //   color: colors.themeColor.color,
-  //   marginTop: -10,
-  // },
- 
-  appleButton: {
-    width: width - containerPadding*2,
-    marginTop: 8,
-    borderWidth:2,
-    borderColor:colors.grey.standard,
-    borderRadius:27,
-    padding:25,
-  },
-
-  dividerOverlay: {
-    marginVertical:20,
-    backgroundColor: colors.transparent,
-  },
-  dividerOverlayText: {
-    fontFamily: fonts.bold,
-    fontSize: 18,
-    color: colors.grey.standard,
-  },
-  navigateToLogin: {
-    //  fontWeight:'700',
-    fontFamily:fonts.bold,
-     letterSpacing:0.5,
-     fontSize: 16,
-     marginTop: 30,
-     textAlign: 'center',
-     color: colors.themeColor.color,
-   
-  },
-});

@@ -105,7 +105,7 @@ export default class ExerciseInfoModal extends React.PureComponent {
               </TouchableOpacity> */}
                 <CustomBtn
                   customBtnStyle={{borderRadius:50,marginBottom:20,marginHorizontal:8}} 
-                  customBtnTitleStyle={{fontSize:14,fontFamily:fonts.bold}}
+                  titleCapitalise={true}
                   Title="CONTINUE"
                   outline ={true}
                   onPress={hideExerciseInfoModal}

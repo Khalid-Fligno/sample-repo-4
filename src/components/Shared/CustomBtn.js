@@ -34,9 +34,19 @@ const CustomBtn = (props)=>{
         fontSize:17,
         fontWeight:'500',
     }
+
+    const titleCapitaliseStyle={
+        fontSize:14,
+        fontFamily:fonts.bold
+    }
     return(
         <TouchableOpacity
-           style={[customBtnStyle,props.style,props.outline?outlineBtnStyle:{},props.customBtnStyle]}
+           style={[
+               customBtnStyle,
+               props.style,props.outline?outlineBtnStyle:{},
+               props.customBtnStyle
+            
+            ]}
            activeOpacity={0.5}
            onPress={props.onPress}
         >
@@ -69,7 +79,12 @@ const CustomBtn = (props)=>{
                     size={6}
                 />
                 ) : (
-                    <Text style={[customBtnTitleStyle,props.outline?outlineBtnTitleStyle:{},props.customBtnTitleStyle]}>
+                    <Text style={[
+                        customBtnTitleStyle,
+                        props.outline?outlineBtnTitleStyle:{},
+                        props.titleCapitalise?titleCapitaliseStyle:{},
+                        props.customBtnTitleStyle
+                    ]}>
                         {props.Title}
                     </Text>
                 )
@@ -90,7 +105,8 @@ CustomBtn.propTypes = {
     isLeftIcon:PropTypes.bool,
     leftIconName:PropTypes.any,
     leftIconColor:PropTypes.any,
-    loading:PropTypes.bool
+    loading:PropTypes.bool,
+    titleCapitalise:PropTypes.bool
   };
 
 export default CustomBtn

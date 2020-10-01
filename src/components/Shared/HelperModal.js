@@ -4,6 +4,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Modal from 'react-native-modal';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
+import CustomBtn from './CustomBtn';
 
 export default class HelperModal extends React.PureComponent {
   constructor(props) {
@@ -53,7 +54,14 @@ export default class HelperModal extends React.PureComponent {
             }
           </View>
           <View style={styles.helperModalButtonContainer}>
-            <TouchableOpacity
+            <CustomBtn 
+              onPress={hideHelperModal}
+              outline={true}
+              titleCapitalise={true}
+              Title='OK, GOT IT!'
+              customBtnStyle={{borderRadius:50,margin:10}}
+            />
+            {/* <TouchableOpacity
               onPress={hideHelperModal}
               style={[
                 styles.modalButton,
@@ -63,7 +71,7 @@ export default class HelperModal extends React.PureComponent {
               <Text style={styles.modalButtonText}>
                 OK, GOT IT!
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </Modal>

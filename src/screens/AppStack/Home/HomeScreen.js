@@ -23,7 +23,7 @@ import Icon from '../../../components/Shared/Icon';
 // import fonts from '../../../styles/fonts';
 import colors from '../../../styles/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import globalStyle from '../../../styles/globalStyles';
+import globalStyle, { containerPadding } from '../../../styles/globalStyles';
 import RoundButton from '../../../components/Home/RoundButton';
 import HomeScreenStyle from './HomeScreenStyle';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
@@ -31,7 +31,7 @@ import WorkOutCard from '../../../components/Home/WorkoutCard';
 import TimeSvg from '../../../../assets/icons/time';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
-
+const { width } = Dimensions.get('window');
 const workoutTypeMap = {
   1: 'Resistance',
   2: 'HIIT',
@@ -310,12 +310,15 @@ export default class HomeScreen extends React.PureComponent {
                         </Text>
                       </View>
                     </View>
-                    <CustomBtn 
-                      Title="START BURPEE TEST"
-                      customBtnStyle={{borderRadius:50,backgroundColor:colors.charcoal.darkest,width:'100%'}}
-                      customBtnTitleStyle={{fontSize:12,fontFamily:fonts.bold}}
-                      onPress={this.goToBurpeeTest}
-                    />
+                    <View style={{width:'100%'}}> 
+                      <CustomBtn 
+                        Title="START BURPEE TEST"
+                        customBtnStyle={{borderRadius:50,backgroundColor:colors.charcoal.darkest}}
+                        titleCapitalise={true}
+                        onPress={this.goToBurpeeTest}
+                      />
+                    </View>
+                
                     {/* <Button
                       title="START BURPEE TEST"
                       buttonStyle={HomeScreenStyle.button}

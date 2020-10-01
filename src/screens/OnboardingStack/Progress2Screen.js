@@ -24,6 +24,8 @@ import CustomButton from '../../components/Shared/CustomButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import ActionSheet from 'react-native-actionsheet';
+import CustomBtn from '../../components/Shared/CustomBtn';
+import { containerPadding } from '../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 const actionSheetOptions = ['Cancel', 'Take photo', 'Upload from Camera Roll'];
@@ -287,11 +289,17 @@ export default class Progress2Screen extends React.PureComponent {
             {
               error && <Text style={styles.errorText}>{error}</Text>
             }
-            <CustomButton
+             <CustomBtn
+                Title="NEXT"
+                titleCapitalise={true}
+                customBtnStyle={{borderRadius:50}}
+                onPress={() => this.handleImagePicked(image)}
+              />
+            {/* <CustomButton
               title="NEXT"
               onPress={() => this.handleImagePicked(image)}
               primary
-            />
+            /> */}
           </View>
           <Loader
             loading={uploading}
@@ -318,6 +326,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width,
     padding: 10,
+    paddingHorizontal:containerPadding
   },
   headerText: {
     fontFamily: fonts.bold,
@@ -374,6 +383,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: 10,
+    paddingHorizontal:containerPadding,
+    width:'100%'
   },
   errorText: {
     fontFamily: fonts.standard,

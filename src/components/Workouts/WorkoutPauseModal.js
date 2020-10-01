@@ -14,9 +14,8 @@ const customBtnStyle ={
   padding:20
  }
  const customBtnTitleStyle ={
-   fontSize:14,
-   fontFamily:fonts.bold,
-   color:colors.transparentBlackDark}
+   color:colors.transparentBlackDark
+  }
 
 const WorkoutPauseModal = ({
   isVisible,
@@ -48,12 +47,14 @@ const WorkoutPauseModal = ({
           <CustomBtn 
             customBtnStyle={customBtnStyle}
             customBtnTitleStyle={customBtnTitleStyle}
+            titleCapitalise={true}
             Title="QUIT WORKOUT"
             onPress={handleQuit}
           />
            <CustomBtn 
             customBtnStyle={customBtnStyle}
             customBtnTitleStyle={customBtnTitleStyle}
+            titleCapitalise={true}
             Title="RESTART THIS SET"
             onPress={() => handleRestart(exerciseList, fitnessLevel || reps,currentExerciseIndex)}
           />
@@ -63,6 +64,7 @@ const WorkoutPauseModal = ({
             <CustomBtn 
             customBtnStyle={customBtnStyle}
             customBtnTitleStyle={customBtnTitleStyle}
+            titleCapitalise={true}
               Title="SKIP THIS EXERCISE"
               onPress={() => handleSkip(exerciseList, fitnessLevel || reps,currentExerciseIndex)}
             />
@@ -71,7 +73,7 @@ const WorkoutPauseModal = ({
         <CustomBtn 
             customBtnStyle={customBtnStyle}
             outline={true}
-            customBtnTitleStyle={{fontSize:14,fontFamily:fonts.bold}}
+            titleCapitalise={true}
             Title="CONTINUE"
             onPress={handleUnpause}
         />
