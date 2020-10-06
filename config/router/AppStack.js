@@ -5,6 +5,7 @@ import HiitExerciseStack from './HiitExerciseStack';
 import HiitCircuitExerciseStack from './HiitCircuitExerciseStack';
 import ProfileStack from './ProfileStack';
 import { fadeSpec, fade } from './utils';
+import ChallengeStack from './ChallengeStack';
 
 const AppStack = createStackNavigator(
   {
@@ -13,6 +14,7 @@ const AppStack = createStackNavigator(
     Exercise: { screen: ExerciseStack },
     HiitExercise: { screen: HiitExerciseStack },
     HiitCircuitExercise: { screen: HiitCircuitExerciseStack },
+    challengeOnBoarding:{screen:ChallengeStack}
   },
   {
     initialRouteName: 'Tabs',
@@ -22,9 +24,11 @@ const AppStack = createStackNavigator(
         return fade(props);
       },
     }),
-    defaultNavigationOptions: {
+    defaultNavigationOptions:({ navigation })=>( {
+      gesturesEnabled:navigation.state.routeName === 'challengeOnBoarding'?false:true,
       header: null,
-    },
+    }
+    )
   },
 );
 

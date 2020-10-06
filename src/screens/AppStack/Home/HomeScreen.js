@@ -104,10 +104,23 @@ export default class HomeScreen extends React.PureComponent {
           weeklyTargets: {
             resistanceWeeklyComplete: 0,
             hiitWeeklyComplete: 0,
+            strength:0,
+            interval:0,
+            circuit:0,
             currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
           },
         };
         await userRef.set(data, { merge: true });
+      }
+      if(doc.data().weeklyTargets['strength'] === undefined){
+        // if Weekly targets not available
+        const data = {
+          weeklyTargets: {
+            strength:0,
+            circuit:0,
+            interval:0
+          }}
+          await userRef.set(data, { merge: true });
       }
     });
   }
@@ -240,54 +253,7 @@ export default class HomeScreen extends React.PureComponent {
                         }
                 </View>
               </View>
-              {/* <View style={HomeScreenStyle.workoutProgressContainer}>
-                <View style={HomeScreenStyle.sectionHeader}>
-                  <Text style={HomeScreenStyle.bodyText}>
-                    TODAYS RECOMMENDED WORKOUT
-                  </Text>
-                </View>
-                <View style={HomeScreenStyle.recommendedWorkoutContainer}>
-                  {
-                    (dayOfWeek > 0 && dayOfWeek < 6) ? (
-                      <View style={HomeScreenStyle.recommendedWorkoutSection}>
-                        <Icon
-                          name={workoutIconMap[dayOfWeek]}
-                          size={28}
-                          color={colors.charcoal.light}
-                        />
-                        <Text style={HomeScreenStyle.recommendedWorkoutText}>
-                          {workoutTypeMap[dayOfWeek]}
-                        </Text>
-                      </View>
-                    ) : (
-                      <View style={HomeScreenStyle.recommendedWorkoutSection}>
-                        <Icon
-                          name="calendar-tick"
-                          size={28}
-                          color={colors.charcoal.light}
-                        />
-                        <Text style={HomeScreenStyle.recommendedWorkoutText}>
-                          Rest Day
-                        </Text>
-                      </View>
-                    )
-                  }
-                  {
-                    (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) && (
-                      <View style={HomeScreenStyle.recommendedWorkoutSection}>
-                        <Icon
-                          name={resistanceFocusIconMap[dayOfWeek]}
-                          size={28}
-                          color={colors.charcoal.standard}
-                        />
-                        <Text style={HomeScreenStyle.recommendedWorkoutText}>
-                          {resistanceFocusMap[dayOfWeek]}
-                        </Text>
-                      </View>
-                    )
-                  }
-                </View>
-              </View> */}
+              
               {
                 profile && profile.initialBurpeeTestCompleted === undefined && (
                   <View style={HomeScreenStyle.workoutProgressContainer}>

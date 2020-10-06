@@ -187,16 +187,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
               } else if (subscriptionInfo.expiry > Date.now()) {
                 // RECEIPT STILL VALID
                 if (onboarded) {
-                  if(doc.data().weeklyTargets['strength'] === undefined){
-                    // if Weekly targets not available
-                    const data = {
-                      weeklyTargets: {
-                        strength:0,
-                        circuit:0,
-                        interval:0
-                      }}
-                      await userRef.set(data, { merge: true });
-                  }
                   this.props.navigation.navigate('App');
                 } else {
                   this.props.navigation.navigate('Onboarding1');

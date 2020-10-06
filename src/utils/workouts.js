@@ -1,9 +1,9 @@
 export const findFocus = (workoutObject) => {
-  if (workoutObject.filters.indexOf("upperBody") > -1) {
+  if (workoutObject.filters && workoutObject.filters.indexOf("upperBody") > -1) {
     return 'Upper';
-  } else if (workoutObject.filters.indexOf("lowerBody") > -1) {
+  } else if (workoutObject.filters && workoutObject.filters.indexOf("lowerBody") > -1) {
     return 'A, B & T';
-  } else if (workoutObject.filters.indexOf("fullBody") > -1) {
+  } else if (workoutObject.filters && workoutObject.filters.indexOf("fullBody") > -1) {
     return 'Full';
   }
   return null;
@@ -34,11 +34,11 @@ export const findLocation = (workoutObject) => {
 
 export const findFocusIcon = (workout) => {
   let focus;
-  if (workout.filters.indexOf('fullBody') > -1) {
+  if (workout.filters && workout.filters.indexOf('fullBody') > -1) {
     focus = 'full';
-  } else if (workout.filters.indexOf('upperBody') > -1) {
+  } else if (workout.filters && workout.filters.indexOf('upperBody') > -1) {
     focus = 'upper';
-  } else if (workout.filters.indexOf('lowerBody') > -1) {
+  } else if (workout.filters && workout.filters.indexOf('lowerBody') > -1) {
     focus = 'lower';
   } else {
     
@@ -49,10 +49,10 @@ export const findFocusIcon = (workout) => {
 
 export const findWorkoutType = (workout) => {
   let type = 'strength';
-  if(workout.filters.includes('interval')){
+  if( workout.filters && workout.filters.includes('interval')){
     type = 'interval'
   }
-  else if(workout.filters.includes('circuit')){
+  else if(workout.filters && workout.filters.includes('circuit')){
     type = 'circuit'
   }
   return type;

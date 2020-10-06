@@ -12,7 +12,7 @@ import CompleteBoarding from '../../src/screens/Challenges/Onboardings/CompleteB
 
 const ChallengeStack = createStackNavigator(
   {
-    ChallengeSubscription: ChallengeSubscriptionScreen,
+    // ChallengeSubscription: ChallengeSubscriptionScreen,
     ChallengeOnBoarding1:OnBoarding1,
     ChallengeOnBoarding2:OnBoarding2,
     ChallengeOnBoarding3:OnBoarding3,
@@ -23,16 +23,18 @@ const ChallengeStack = createStackNavigator(
     
   },
   {
-    initialRouteName: 'ChallengeSubscription',
+    initialRouteName: 'ChallengeOnBoarding1',
+  
     defaultNavigationOptions: ({ navigation }) => ({
+      gesturesEnabled:false,
       header: () => {
         const { routeName } = navigation.state;
         return (
           <Header
             stack="Subscription"
             navigation={navigation}
-            withProfileButton={routeName === 'ChallengeSubscription'}
-            withBackButton={routeName !== 'ChallengeSubscription'}
+            // withProfileButton={routeName === 'ChallengeSubscription'}
+            withBackButton={routeName === 'ChallengeOnBoarding1'}
           />
         );
       },

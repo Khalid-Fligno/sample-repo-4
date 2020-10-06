@@ -41,6 +41,7 @@ const CustomBtn = (props)=>{
     }
     return(
         <TouchableOpacity
+           disabled={props.disabled}
            style={[
                customBtnStyle,
                props.style,props.outline?outlineBtnStyle:{},
@@ -106,7 +107,8 @@ CustomBtn.propTypes = {
     leftIconName:PropTypes.any,
     leftIconColor:PropTypes.any,
     loading:PropTypes.bool,
-    titleCapitalise:PropTypes.bool
+    titleCapitalise:PropTypes.bool,
+    disabled:PropTypes.bool
   };
 
 export default CustomBtn

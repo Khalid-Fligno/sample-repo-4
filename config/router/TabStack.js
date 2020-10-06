@@ -13,6 +13,7 @@ import { tabColorMap } from './utils';
 import { Image } from 'react-native';
 import fonts from '../../src/styles/fonts';
 import ChallengeStack from './ChallengeStack';
+import ChallengeSubscriptionScreen from '../../src/screens/Challenges/subscription';
 
 const TabStack = createBottomTabNavigator(
   {
