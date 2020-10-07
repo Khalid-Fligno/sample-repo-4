@@ -31,7 +31,8 @@ const globalStyle = StyleSheet.create({
           fontSize:35,
           fontFamily:fonts.boldNarrow,
           color:colors.black,
-          letterSpacing:0.5
+          letterSpacing:0.5,
+          textTransform:'capitalize'
       },
       bigHeadingWithBackButtonText : {
           fontSize:12,

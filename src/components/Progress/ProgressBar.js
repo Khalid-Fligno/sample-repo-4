@@ -43,7 +43,7 @@ export default class ProgressBar extends React.PureComponent {
         <AnimatedCircularProgress
                   size={(width)/2.6}
                   width={4}
-                  fill={(completedWorkouts/(progressBarType === 'Strength' ? 3 : 2))*100}
+                  fill={(completedWorkouts/(progressBarType === 'Strength' ? 5 : 5))*100}
                   tintColor={colors.coral.darkest}
                   onAnimationComplete={() => console.log('onAnimationComplete')}
                   backgroundColor="lightgray" >
@@ -51,7 +51,7 @@ export default class ProgressBar extends React.PureComponent {
                         (fill) => (
                           <View>
                             <Text style={styles.progressBarLabel}>
-                                <Text style={styles.progressCircleNumber}>{completedWorkouts}</Text>/{progressBarType === 'Strength' ? 3 : 2}
+                                <Text style={styles.progressCircleNumber}>{completedWorkouts}</Text>/{progressBarType === 'Strength' ? 5 : 5}
                             </Text>
                             <Text style={styles.progressCircleText}>
                              {`${progressBarType} `}
