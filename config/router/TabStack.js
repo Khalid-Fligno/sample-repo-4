@@ -25,7 +25,7 @@ const TabStack = createBottomTabNavigator(
     
 
     Dashboard: FeedStack,
-    Subscription: SubscriptionStack,
+    Lifestyle: SubscriptionStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
   },
@@ -48,7 +48,7 @@ const TabStack = createBottomTabNavigator(
             />
           );
         }
-        else if (routeName === 'Subscription') {
+        else if (routeName === 'Lifestyle') {
           icon = (
             <Image
               source={require('../../assets/icons/fitazfk2-subscription.png')}
