@@ -144,7 +144,7 @@ buttonContainer: {
   paddingBottom: 10,
 },
 
-//*************END********************* */
+//*************Component model END********************* */
 /**************Start****************** */     
 defaultHeaderShadow: {
   backgroundColor: colors.black,

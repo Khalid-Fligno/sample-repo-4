@@ -35,7 +35,7 @@ const WorkoutPauseModal = ({
     animationOut="fadeOut"
     animationOutTiming={800}
   >
-    <View style={{flex:0.7,justifyContent:'flex-end'}}>
+    <View style={{flex:1,justifyContent:'center'}}>
       <View style={styles.pauseIconContainer}>
         <Icon
           name="pause"
@@ -110,50 +110,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingBottom: 30,
   },
-  // modalButtonQuit: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: colors.grey.standard,
-  //   height: 50,
-  //   width: '100%',
-  //   marginBottom: 0,
-  // },
-  // modalButtonRestart: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: colors.charcoal.standard,
-  //   height: 50,
-  //   width: '100%',
-  //   marginBottom: 0,
-  // },
-  // modalButtonSkip: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: colors.charcoal.darkest,
-  //   height: 50,
-  //   width: '100%',
-  //   marginBottom: 0,
-  // },
-  // modalButtonContinue: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: colors.themeColor.color,
-  //   height: 50,
-  //   width: '100%',
-  //   marginBottom: 0,
-  // },
-  // modalButtonText: {
-  //   fontFamily: fonts.bold,
-  //   fontSize: 14,
-  //   color: colors.white,
-  //   marginTop: 4,
-  // },
-  // modalButtonTextDark: {
-  //   fontFamily: fonts.bold,
-  //   fontSize: 14,
-  //   color: colors.black,
-  //   marginTop: 4,
-  // },
+
 });
 
 export default WorkoutPauseModal;

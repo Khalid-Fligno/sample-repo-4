@@ -1,10 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import HomeStack from './HomeStack';
-import FeedStack from './FeedStack';
 import SubscriptionStack from './SubscriptionStack';
-import NutritionStack from './NutritionStack';
-import WorkoutsStack from './WorkoutsStack';
 import CalendarStack from './CalendarStack';
 import ProgressStack from './ProgressStack';
 import Icon from '../../src/components/Shared/Icon';
@@ -12,22 +8,18 @@ import colors from '../../src/styles/colors';
 import { tabColorMap } from './utils';
 import { Image } from 'react-native';
 import fonts from '../../src/styles/fonts';
-import ChallengeStack from './ChallengeStack';
-import ChallengeSubscriptionScreen from '../../src/screens/Challenges/subscription';
+import DashboardStack from './DashboardStack';
+import LifestyleStack from './LifestyleStack';
 
 const TabStack = createBottomTabNavigator(
   {
-    //  Home: HomeStack,
-    // Nutrition: NutritionStack,
-    // Workouts: WorkoutsStack,
-    // Calendar: CalendarStack,
-    // Progress: ProgressStack,
-    
 
-    Dashboard: FeedStack,
-    Lifestyle: SubscriptionStack,
+    Dashboard: DashboardStack,
+    // Subscription: SubscriptionStack,
+    Lifestyle:LifestyleStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
+    
   },
   {
     initialRouteName: 'Dashboard',
@@ -48,7 +40,7 @@ const TabStack = createBottomTabNavigator(
             />
           );
         }
-        else if (routeName === 'Lifestyle') {
+        else if (routeName === 'Subscription' || routeName === 'Lifestyle' ) {
           icon = (
             <Image
               source={require('../../assets/icons/fitazfk2-subscription.png')}

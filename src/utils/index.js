@@ -87,6 +87,18 @@ const populateHipOptionsImperial = () => {
 };
 populateHipOptionsImperial();
 
+export const hipOptionsFt = [
+];
+const populateHipOptionsFt = () => {
+  for (let i = 1.1; i <= 10.10; i += 0.1) {
+    hipOptionsFt.push({
+      value: Number( i.toFixed(1)),
+      label: `${i.toFixed(1)}`,
+    });
+  }
+};
+populateHipOptionsFt();
+
 export const burpeeOptions = [
   { value: 0, label: '0' },
 ];

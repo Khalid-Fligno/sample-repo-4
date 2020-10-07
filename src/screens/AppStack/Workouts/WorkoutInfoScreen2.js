@@ -174,7 +174,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
               {
                 this.state.workout.filters.includes('strength')&& (
                   <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                  X{this.state.reps}
+                    {this.state.workout['workoutReps']} x {this.state.reps}
                   </Text>
                 )
               }
@@ -491,22 +491,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                  outline ={true}
                  onPress={this.handleWorkoutStart}
               />
-              {/* <TouchableOpacity
-                onPress={this.toggleMusicModal}
-                style={WorkoutScreenStyle.musicModalCancelButton}
-              >
-                <Text style={WorkoutScreenStyle.musicModalButtonText}>
-                  BACK
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={this.handleWorkoutStart}
-                style={WorkoutScreenStyle.musicModalContinueButton}
-              >
-                <Text style={WorkoutScreenStyle.musicModalButtonText}>
-                  CONTINUE
-                </Text>
-              </TouchableOpacity> */}
+             
             </View>
           </View>
         </Modal>

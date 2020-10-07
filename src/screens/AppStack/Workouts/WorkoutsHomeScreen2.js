@@ -146,8 +146,8 @@ fetchCategories = async () =>{
                 style={globalStyle.container}  
                 ref={ref => {this.scrollView = ref}}
                 onContentSizeChange={() =>  {
-                  if(!this.state.toggleList[0])
-                  this.scrollView.scrollToEnd({animated: true})
+                  if(this.state.toggleList[1] || this.state.toggleList[2] || this.state.toggleList[3])
+                      this.scrollView.scrollToEnd({animated: true})
                 }}
         >
           {

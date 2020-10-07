@@ -7,8 +7,8 @@ import ChallengeSubscriptionScreen from '../../src/screens/Challenges/subscripti
 
 const SubscriptionStack = createStackNavigator(
   {
-    // Subscription: ChallengeSubscriptionScreen,
-    Subscription: HomeScreen,
+    Subscription: ChallengeSubscriptionScreen,
+    // Subscription: HomeScreen,
   },
   {
     initialRouteName: 'Subscription',

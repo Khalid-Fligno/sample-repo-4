@@ -66,12 +66,12 @@ export default class ExercisesScreen extends React.PureComponent {
           workoutSubCategory : workoutSubCategory,
           currentExerciseIndex:currentExerciseIndex,  // Start from 0
           timerStart: false,
-          totalDuration:totalDuration,
+          totalDuration:10,
           pauseModalVisible: false,
           videoPaused: false,
           exerciseInfoModalVisible: false,
           appState: AppState.currentState,
-          rest:rest 
+          rest:rest,
     };
   }
   componentDidMount() {
@@ -364,14 +364,18 @@ export default class ExercisesScreen extends React.PureComponent {
       workoutSubCategory,
       fitnessLevel,
       rest,
-      workout
+      workout,
     } = this.state;
     const setCount = this.props.navigation.getParam('setCount', 1)
     // console.log(rest,exerciseList[currentExerciseIndex],exerciseList)
     // console.log(fitnessLevel,totalDuration,setCount)
 
-
-  let getProgressType = findWorkoutType(workout)
+  let getProgressType = findWorkoutType(workout);
+  let handleSkip = false;
+    if(!workout.filters.includes('interval') && setCount === workout.workoutReps){
+       handleSkip = true
+    }
+    
   
     return (
       <SafeAreaView style={styles.container}>
@@ -426,7 +430,7 @@ export default class ExercisesScreen extends React.PureComponent {
             <View style={styles.currentExerciseRepsTextContainer}>
               {workout.filters.includes('strength') &&(
                  <Text style={styles.currentExerciseRepsText}>
-                    x{reps}
+                   {workout.workoutReps} x {reps}
                  </Text> 
               )
               }
@@ -478,7 +482,7 @@ export default class ExercisesScreen extends React.PureComponent {
             isVisible={pauseModalVisible}
             handleQuit={this.quitWorkout}
             handleRestart={this.restartWorkout}
-            handleSkip={workout.filters.includes('interval')?null:this.skipExercise}
+            handleSkip={handleSkip?this.skipExercise:null}
             handleUnpause={this.handleUnpause}
             exerciseList={exerciseList}
             reps={reps}

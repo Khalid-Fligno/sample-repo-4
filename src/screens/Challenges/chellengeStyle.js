@@ -1,6 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
+import { containerPadding } from "../../styles/globalStyles";
 const { width } = Dimensions.get('window');
 const ChallengeStyle = StyleSheet.create({
     Title:{
@@ -40,12 +41,17 @@ const ChallengeStyle = StyleSheet.create({
       },
       checkBoxConteiner:{
           backgroundColor:'transparent',
-          borderWidth:0
+          borderWidth:0,
+          padding:0,
+          marginLeft:0,
+          marginRight:0,
         },
     checkBox:{
         justifyContent:'space-between',
         flexDirection:'row',
-        alignItems:'flex-end',
+        alignItems:'center',
         },
+
+   
   });
   export default  ChallengeStyle

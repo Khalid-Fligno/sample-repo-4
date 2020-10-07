@@ -18,7 +18,7 @@ export default class CountdownScreen2 extends React.PureComponent {
       workoutSubCategory : this.props.navigation.getParam('workoutSubCategory', null),
       fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
       extraProps: this.props.navigation.getParam('extraProps', {}),
-      countdownDuration: 5,
+      countdownDuration: 3,
       timerStart: false,
       pauseModalVisible: false,
       appState: AppState.currentState,
