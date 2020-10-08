@@ -21,7 +21,7 @@ const ChallengeStyle = StyleSheet.create({
       },
    
       btnContainer:{
-        flex:1,
+        //flex:1,
         justifyContent:'space-between',
         flexDirection:'row',
         alignItems:'flex-end'

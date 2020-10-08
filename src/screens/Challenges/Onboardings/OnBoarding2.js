@@ -5,6 +5,7 @@ import globalStyle from '../../../styles/globalStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import { TouchableOpacity } from 'react-native';
 import colors from '../../../styles/colors';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default class OnBoarding2 extends Component {
   constructor(props) {
@@ -116,11 +117,13 @@ export default class OnBoarding2 extends Component {
     // console.log(challengeData)
     return (
       <SafeAreaView style={ChallengeStyle.container}>
+        
           <View style={[globalStyle.container,{paddingVertical:15}]}>
+            <ScrollView>
             <View>
               <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Dietry Preferences</Text>
             </View>
-          
+            
             <View style={globalStyle.selectBoxContainer}>
                 { 
                     dietryPreferences.map((item,i)=>{
@@ -138,7 +141,7 @@ export default class OnBoarding2 extends Component {
                   })
                 }
             </View>
-
+            </ScrollView>
             <View style={ChallengeStyle.btnContainer}>
               <CustomBtn 
                   Title="Previous"
