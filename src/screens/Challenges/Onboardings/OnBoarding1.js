@@ -133,7 +133,7 @@ export default class OnBoarding1 extends Component {
 
               
             </ScrollView>
-            <View style={{flex:1,justifyContent:'flex-end'}}>
+            <View>
                   <CustomBtn 
                     Title="Next"
                     outline={true}
@@ -141,7 +141,7 @@ export default class OnBoarding1 extends Component {
                     onPress={()=>this.goToNextScreen()}
                     disabled={btnDisabled}
                   />
-                </View>
+            </View>
           </View>
         </SafeAreaView> 
       
