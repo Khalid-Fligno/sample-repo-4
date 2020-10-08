@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, Text, SafeAreaView,ScrollView,TouchableOpacity, } from 'react-native';
 import { number } from 'prop-types';
 import ChallengeStyle from '../chellengeStyle';
 import globalStyle from '../../../styles/globalStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 
+const levelOfFiness=["Begineer","Intermediate","Advanced"];
 export default class OnBoarding6 extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      fitnessLevel:2,
+      loading:false
     };
   }
-
+  
   onFocusFunction = () => {
     const data = this.props.navigation.getParam('data', {});
-    this.setState({challengeData:data['challengeData']})
+    this.setState({challengeData:data['challengeData']});
   }
   
   // add a focus listener onDidMount
@@ -30,29 +33,55 @@ export default class OnBoarding6 extends Component {
   }
 
   goToScreen(type){
-    
-    if(type === 'next'){
-   
+    if(type === 'next'){   
+      // next challenges button
     }else{
       this.props.navigation.navigate('ChallengeOnBoarding5',{
         data:{
                challengeData:this.state.challengeData
              }
       })
-    }
-     
+    }     
   }
   
   render() {
+    let {fitnessLevel,loading} = this.state
     return (
       <SafeAreaView style={ChallengeStyle.container}>
           <View style={[globalStyle.container,{paddingVertical:15}]}>
+          <ScrollView>
             <View>
-              <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Dietry Preferences</Text>
+              <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Fitness Level</Text>
             </View>
-          
-          
-
+            <View style={{marginTop:8}}>
+              <View style={{justifyContent:'center'}}> 
+                <Text style={{marginVertical:10,fontFamily:fonts.standard,fontSize:15}}>What is your current level of fitness?</Text>
+              </View>
+            </View>               
+                  <TouchableOpacity 
+                        activeOpacity={0.8}
+                        style={[globalStyle.selectBox,fitnessLevel === 1 ?globalStyle.selectedBox:{},{width:'100%'}]}
+                        onPress={()=>this.setState({fitnessLevel:1})}      
+                  >
+                    <Text style={globalStyle.selectBoxText}> Beginner </Text>
+                  </TouchableOpacity>   
+                  <TouchableOpacity 
+                        activeOpacity={0.8}
+                        style={[globalStyle.selectBox,fitnessLevel === 2 ?globalStyle.selectedBox:{},{width:'100%'}]}
+                        onPress={()=>this.setState({fitnessLevel:2})}      
+     
+                  >
+                    <Text style={globalStyle.selectBoxText}> Intermediate </Text>
+                  </TouchableOpacity>   
+                  <TouchableOpacity 
+                        activeOpacity={0.8}
+                        style={[globalStyle.selectBox,fitnessLevel === 3 ?globalStyle.selectedBox:{},{width:'100%'}]}
+                        onPress={()=>this.setState({fitnessLevel:3})}      
+     
+                  >
+                    <Text style={globalStyle.selectBoxText}> Advanced </Text>
+                  </TouchableOpacity>   
+            </ScrollView>
             <View style={ChallengeStyle.btnContainer}>
                   <CustomBtn 
                       Title="Previous"
