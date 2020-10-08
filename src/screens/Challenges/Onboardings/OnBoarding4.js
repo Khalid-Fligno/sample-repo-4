@@ -113,6 +113,7 @@ export default class OnBoarding4 extends Component {
   componentWillUnmount () {
     this.focusListener.remove()
   }
+  
   saveImage = async (uri) => {
     try {
       const uid = await AsyncStorage.getItem('uid');
@@ -133,6 +134,7 @@ export default class OnBoarding4 extends Component {
       Alert.alert('Image save error');
     }
   };
+
   async goToScreen(type){ 
     let {challengeData , image,imgUrl} = this.state 
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -148,13 +150,13 @@ export default class OnBoarding4 extends Component {
         if(type === 'next'){
           this.props.navigation.navigate('ChallengeOnBoarding5',{
             data:{
-                   challengeData:this.state.challengeData
+                   challengeData:updatedChallengedata
                  }
           })
         }else{
           this.props.navigation.navigate('ChallengeOnBoarding3',{
             data:{
-                   challengeData:this.state.challengeData
+                   challengeData:updatedChallengedata
                  }
           })
         }

@@ -11,33 +11,6 @@ import { any } from 'prop-types';
 import Loader from '../../components/Shared/Loader';
 import ChallengeStyle from './chellengeStyle';
 import createUserChallengeData from '../../components/Challenges/UserChallengeData';
-const mylist = [
-  {
-    name: '28 Days Challenge',
-    subtitle: 'Vice President',
-    status:true
-  },
-  {
-    name: 'Lose a KG',
-    subtitle: 'Vice Chairman',
-    status:false
-  },
-]
-const newlist = [
-  {
-    name: 'New Year Challenge',
-  },
-  {
-    name: 'Beach Body',
-  },
-  {
-    name: 'New Year Challenge',
-  },
-  {
-    name: 'Beach Body',
-  },
-
-]
 
 
 
@@ -145,7 +118,7 @@ class ChallengeSubscriptionScreen extends Component {
       let  btnTitle = ''
       let btnDisabled = false
       const findIndex = this.state.userChallengesList.findIndex((res)=> res.status === 'Active')
-      
+      console.log(findIndex)
       if(findIndex === -1 && item.status === 'Completed'){
         btnTitle = 'Restart';
       }
@@ -157,7 +130,10 @@ class ChallengeSubscriptionScreen extends Component {
         btnTitle='Active';
         btnDisabled = true
       } 
-      else if(item.status === 'InActive'){
+      else if( findIndex !== -1 &&  item.status === 'InActive'){
+        btnTitle='Start';
+        btnDisabled = true
+      } else if( findIndex === -1 &&  item.status === 'InActive'){
         btnTitle='Start';
         btnDisabled = false
       } 
