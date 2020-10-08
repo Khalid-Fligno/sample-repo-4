@@ -245,9 +245,13 @@ fitazfkIcon: {
   },
   selectedBox:{
     backgroundColor:colors.red.light
-  }
+  },
 /************** /Select Box ************** */
-
+fitnessLevelBoxContainer:{
+  flex:1,
+    //flexWrap:'wrap',
+  justifyContent:'center'
+},
 
 }) 
 

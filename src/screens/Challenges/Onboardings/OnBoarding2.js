@@ -53,8 +53,7 @@ export default class OnBoarding2 extends Component {
         dietryPreferences,
         btnDisabled:false
       });
-    }
-  
+    }  
   }
   
   // add a focus listener onDidMount
@@ -68,24 +67,19 @@ export default class OnBoarding2 extends Component {
   componentWillUnmount () {
     this.focusListener.remove()
   }
-
-
-  
   goToScreen(type){
     let {
           dietryPreferences,
           challengeData,
         } = this.state
 
-    const selectedPreferences = dietryPreferences.filter((item)=> item.selected)
-    const tags = selectedPreferences.map((item)=> item.tag)
-
+    const selectedPreferences = dietryPreferences.filter((item)=> item.selected);
+    const tags = selectedPreferences.map((item)=> item.tag);
     const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
       dietryPreferences:tags
-    })
-
-    let updatedChallengedata = Object.assign({},challengeData,{onBoardingInfo})
-    console.log(updatedChallengedata,"<><><screen2") 
+    });
+    let updatedChallengedata = Object.assign({},challengeData,{onBoardingInfo});
+    console.log(updatedChallengedata,"<><><screen2"); 
     if(type === 'next'){
       this.props.navigation.navigate('ChallengeOnBoarding3',{
         data:{
@@ -98,11 +92,8 @@ export default class OnBoarding2 extends Component {
                challengeData:updatedChallengedata
              }
       })
-    }
-     
-  }
-
- 
+    }     
+  } 
   push_pop_preferences(i){
     let data = this.state.dietryPreferences;
     data[i].selected = !data[i].selected
@@ -116,18 +107,15 @@ export default class OnBoarding2 extends Component {
         } = this.state
     // console.log(challengeData)
     return (
-      <SafeAreaView style={ChallengeStyle.container}>
-        
+      <SafeAreaView style={ChallengeStyle.container}>        
           <View style={[globalStyle.container,{paddingVertical:15}]}>
             <ScrollView>
             <View>
               <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Dietry Preferences</Text>
-            </View>
-            
+            </View>            
             <View style={globalStyle.selectBoxContainer}>
                 { 
                     dietryPreferences.map((item,i)=>{
-
                       return (
                                 <TouchableOpacity 
                                       key={i}
