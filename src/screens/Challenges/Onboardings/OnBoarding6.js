@@ -4,6 +4,7 @@ import { number } from 'prop-types';
 import ChallengeStyle from '../chellengeStyle';
 import globalStyle from '../../../styles/globalStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
+import fonts from '../../../styles/fonts';
 
 const levelOfFiness=["Begineer","Intermediate","Advanced"];
 export default class OnBoarding6 extends Component {
