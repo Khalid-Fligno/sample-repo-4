@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, Text, SafeAreaView,InputBox } from 'react-native';
 import { number } from 'prop-types';
 import ChallengeStyle from '../chellengeStyle';
 import globalStyle from '../../../styles/globalStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
+import { TextInput } from 'react-native-gesture-handler';
 
 export default class OnBoarding5 extends Component {
   constructor(props) {
@@ -51,8 +52,27 @@ export default class OnBoarding5 extends Component {
       <SafeAreaView style={ChallengeStyle.container}>
           <View style={[globalStyle.container,{paddingVertical:15}]}>
             <View>
-              <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Dietry Preferences</Text>
+              <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Burpee Test</Text>
             </View>
+            <View style={{marginTop:8}}>
+              <View style={{justifyContent:'center'}}> 
+                <Text style={{marginVertical:10,fontFamily:fonts.standard,fontSize:15}}>How many burpee can you do in 60 seconds?</Text>
+              </View>
+            </View>            
+            <View style={{marginTop:20,height:180,backgroundColor:'black'}}>
+              <Text>
+                {/* stop watch code */}
+              </Text>
+            </View>
+            <View style={{flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between', marginTop:15}}>
+              <View >
+                <View><Text>Total Burpee</Text></View>
+                <View style={ChallengeStyle.inputButton}>
+                  <TextInput Title="Total Burpee" keyboardType="number" />
+                </View>
+              </View>
+            </View>
+
           
           
 

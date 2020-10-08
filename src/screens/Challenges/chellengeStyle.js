@@ -51,7 +51,21 @@ const ChallengeStyle = StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
         },
-
+    inputButton:{
+          width:width/2,
+          padding: 15,
+          paddingBottom: 12,
+          backgroundColor: colors.white,
+          borderWidth: colors.themeColor.themeBorderWidth,
+          borderColor: colors.themeColor.themeBorderColor,
+          borderRadius: 2,
+          marginLeft:20
+        },
+    inputSelectionText: {
+          fontFamily: fonts.bold,
+          fontSize: 14,
+          color: colors.charcoal.dark,
+        },
    
   });
   export default  ChallengeStyle
