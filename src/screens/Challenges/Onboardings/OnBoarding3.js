@@ -23,6 +23,7 @@ import {
 } from '../../../utils/index';
 import PickerModal from '../../../components/Challenges/PickerModal';
 import InputBox2 from '../../../components/Challenges/InputBox2';
+import { ScrollView } from 'react-native-gesture-handler';
 export default class OnBoarding3 extends Component {
   constructor(props) {
     super(props);
@@ -105,6 +106,7 @@ export default class OnBoarding3 extends Component {
         data:{
                challengeData:updatedChallengedata
              }
+
       })
     }else{
       this.props.navigation.navigate('ChallengeOnBoarding2',{
@@ -156,6 +158,7 @@ export default class OnBoarding3 extends Component {
           waist
         } = this.state;
     return (
+      <ScrollView>
           <SafeAreaView style={ChallengeStyle.container}>
             <View style={[globalStyle.container,{paddingVertical:15}]}>
               <View>
@@ -266,6 +269,7 @@ export default class OnBoarding3 extends Component {
                   </View>
             </View>
           </SafeAreaView> 
+      </ScrollView>
     );
   }
 }

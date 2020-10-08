@@ -87,11 +87,12 @@ export default class OnBoarding1 extends Component {
     } = this.state
     // console.log(challengeData)
     return (
+      <ScrollView>
      <SafeAreaView style={ChallengeStyle.container}>
       <View style={[globalStyle.container,{paddingVertical:15}]}>
         <View>
           <Text style={ChallengeStyle.onBoardingTitle}>What do you want to achieve?</Text>
-    <Text style={ChallengeStyle.onBoardingTitle}>{challengeData.name}</Text>
+          <Text style={ChallengeStyle.onBoardingTitle}>{challengeData.name}</Text>
         </View>
       
         <SliderComponent
@@ -141,6 +142,7 @@ export default class OnBoarding1 extends Component {
         </View>
       </View>
       </SafeAreaView> 
+      </ScrollView>
     );
   }
 }
