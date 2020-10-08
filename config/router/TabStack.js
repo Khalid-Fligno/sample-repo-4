@@ -15,8 +15,8 @@ const TabStack = createBottomTabNavigator(
   {
 
     Dashboard: DashboardStack,
-    // Subscription: SubscriptionStack,
-    Lifestyle:LifestyleStack,
+    Subscription: SubscriptionStack,
+    // Lifestyle:LifestyleStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
     
