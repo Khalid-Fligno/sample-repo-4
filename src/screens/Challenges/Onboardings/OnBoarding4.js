@@ -137,34 +137,41 @@ export default class OnBoarding4 extends Component {
     let {challengeData , image,imgUrl} = this.state 
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     console.log(imgUrl)
-    // this.setState({ uploading: true });
-    // try {
-    //   if (url !== null) {
-    //     const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
-    //       beforePhotoUrl:url
-    //     })
-    //     console.log(challengeData)
-    //     let updatedChallengedata = Object.assign({},challengeData,{onBoardingInfo})
-        
-    //     if(type === 'next'){
-    //       this.props.navigation.navigate('ChallengeOnBoarding5',{
-    //         data:{
-    //                challengeData:this.state.challengeData
-    //              }
-    //       })
-    //     }else{
-    //       this.props.navigation.navigate('ChallengeOnBoarding3',{
-    //         data:{
-    //                challengeData:this.state.challengeData
-    //              }
-    //       })
-    //     }
-    //   } else {
-    //     this.setState({ error: 'Please select an image to continue', uploading: false });
-    //   }
-    // } catch (err) {
-    //   this.setState({ error: 'Problem uploading image, please try again', uploading: false });
-    // }  
+    try {
+      if (imgUrl !== null) {
+        const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
+          beforePhotoUrl:imgUrl
+        })
+        console.log(challengeData)
+        let updatedChallengedata = Object.assign({},challengeData,{onBoardingInfo})
+        console.log(updatedChallengedata)
+        if(type === 'next'){
+          this.props.navigation.navigate('ChallengeOnBoarding5',{
+            data:{
+                   challengeData:this.state.challengeData
+                 }
+          })
+        }else{
+          this.props.navigation.navigate('ChallengeOnBoarding3',{
+            data:{
+                   challengeData:this.state.challengeData
+                 }
+          })
+        }
+      }else if(type === 'previous'){
+        this.props.navigation.navigate('ChallengeOnBoarding3',{
+          data:{
+                 challengeData:challengeData
+               }
+        })
+      } 
+      else {
+        this.setState({ error: 'Please select an image to continue', uploading: false });
+      }
+    } catch (err) {
+      console.log(err)
+      this.setState({ error: 'Problem uploading image, please try again', uploading: false });
+    }  
   
      
   }
@@ -344,11 +351,11 @@ handleImagePicked = async (pickerResult) => {
                 onPress={(index) => this.uploadTypeAction(index)}
             />
             </View>
-
-            <View style={ChallengeStyle.btnContainer}>
                 {
                   error && <Text style={styles.errorText}>{error}</Text>
                 }
+            <View style={ChallengeStyle.btnContainer}>
+               
                   <CustomBtn 
                       Title="Previous"
                       outline={true}
