@@ -3,7 +3,7 @@ import { View,
         Text, 
         SafeAreaView,
         TouchableOpacity,
-        Picker
+        Picker,
       } from 'react-native';
 import { number, any } from 'prop-types';
 import ChallengeStyle from '../chellengeStyle';
@@ -158,13 +158,15 @@ export default class OnBoarding3 extends Component {
           waist
         } = this.state;
     return (
-      <ScrollView>
+     
           <SafeAreaView style={ChallengeStyle.container}>
             <View style={[globalStyle.container,{paddingVertical:15}]}>
+            <ScrollView>
               <View>
                 <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Measurments</Text>
               </View>
-            <View style={ChallengeStyle.checkBox}>
+               <View style={ChallengeStyle.checkBox}>
+              
                 <CheckBox
                   center
                   title='CM-KG'
@@ -195,8 +197,8 @@ export default class OnBoarding3 extends Component {
                   }
                   containerStyle={ChallengeStyle.checkBoxConteiner}
                 />
-            </View>
-
+               
+              </View>
               <InputBox2 
                   onPress={() => this.showModal('height')}
                   title="Height"
@@ -238,7 +240,7 @@ export default class OnBoarding3 extends Component {
                   value={hip}
 
               />
-              
+              </ScrollView>  
               <PickerModal 
                 metric = {CM_KG}
                 imerial = {FT_LB}
@@ -269,7 +271,7 @@ export default class OnBoarding3 extends Component {
                   </View>
             </View>
           </SafeAreaView> 
-      </ScrollView>
+     
     );
   }
 }

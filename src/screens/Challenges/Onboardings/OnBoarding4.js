@@ -8,6 +8,7 @@ import { View,
   Image,
   Alert, 
   Platform,
+  ActionSheetIOS,
   PermissionsAndroid,} from 'react-native';
 import ActionSheet from 'react-native-actionsheet';
 import { Linking } from 'expo';
@@ -24,19 +25,44 @@ import globalStyle, { containerPadding } from '../../../styles/globalStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
 import colors from '../../../styles/colors';
+import AsyncStorage from '@react-native-community/async-storage';
 const { width } = Dimensions.get('window');
 const actionSheetOptions = ['Cancel', 'Take photo', 'Upload from Camera Roll'];
+
+
+const uriToBlob = (url) => {
+  return new Promise((resolve, reject) => {
+    try{
+      const xhr = new XMLHttpRequest();
+      xhr.onerror = reject;
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          resolve(xhr.response);
+        }
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob'; // convert type
+      xhr.send();
+    }catch(err){
+      console.log(err)
+    }
+  
+  });
+};
+
 
 export default class OnBoarding4 extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      challengeData:{},
       hasCameraPermission: null,
       hasCameraRollPermission: null,
       hasExternalStorageDevicePermission: null,
       image: null,
       uploading: false,
       error: null,
+      imgUrl:null
     };
   }
   
@@ -59,16 +85,19 @@ export default class OnBoarding4 extends Component {
     this.getCameraRollPermission();
     }
   }
+
   getCameraPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
     console.log("getCameraPermission");
   }
+
   getCameraRollPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     this.setState({ hasCameraRollPermission: status === 'granted' });
     console.log("getCameraRollPermission");
   }
+
   async requestAndroidPermissions() {
     try {
         await this.getCameraPermission();
@@ -84,21 +113,59 @@ export default class OnBoarding4 extends Component {
   componentWillUnmount () {
     this.focusListener.remove()
   }
-
-  goToScreen(type){    
-    if(type === 'next'){
-      this.props.navigation.navigate('ChallengeOnBoarding5',{
-        data:{
-               challengeData:this.state.challengeData
-             }
-      })
-    }else{
-      this.props.navigation.navigate('ChallengeOnBoarding3',{
-        data:{
-               challengeData:this.state.challengeData
-             }
-      })
+  saveImage = async (uri) => {
+    try {
+      const uid = await AsyncStorage.getItem('uid');
+      const firebase = require('firebase');
+      const blob = await uriToBlob(uri);
+      const storageRef = firebase.storage().ref();
+      const userPhotosStorageRef = storageRef.child('user-photos');
+      const userStorageRef = userPhotosStorageRef.child(uid);
+      const avatarStorageRef = userStorageRef.child('beforeChallengePhoto.jpeg');
+      const metadata = {
+        contentType: 'image/jpeg',
+        cacheControl: 'public',
+      };
+      const snapshot = await avatarStorageRef.put(blob, metadata);
+      const url = await snapshot.ref.getDownloadURL();
+      this.setState({ imgUrl: url });
+    } catch (err) {
+      Alert.alert('Image save error');
     }
+  };
+  async goToScreen(type){ 
+    let {challengeData , image,imgUrl} = this.state 
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    console.log(imgUrl)
+    // this.setState({ uploading: true });
+    // try {
+    //   if (url !== null) {
+    //     const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
+    //       beforePhotoUrl:url
+    //     })
+    //     console.log(challengeData)
+    //     let updatedChallengedata = Object.assign({},challengeData,{onBoardingInfo})
+        
+    //     if(type === 'next'){
+    //       this.props.navigation.navigate('ChallengeOnBoarding5',{
+    //         data:{
+    //                challengeData:this.state.challengeData
+    //              }
+    //       })
+    //     }else{
+    //       this.props.navigation.navigate('ChallengeOnBoarding3',{
+    //         data:{
+    //                challengeData:this.state.challengeData
+    //              }
+    //       })
+    //     }
+    //   } else {
+    //     this.setState({ error: 'Please select an image to continue', uploading: false });
+    //   }
+    // } catch (err) {
+    //   this.setState({ error: 'Problem uploading image, please try again', uploading: false });
+    // }  
+  
      
   }
   chooseUploadType = () => {
@@ -131,9 +198,11 @@ async requestAndroidPermissions() {
         return false;
     }
 }
+
 showActionSheet = () => {
     this.ActionSheet.show()
 }
+
 appSettingsPrompt = () => {
   Alert.alert(
     'FitazFK needs permissions to do this',
@@ -149,6 +218,7 @@ appSettingsPrompt = () => {
     { cancelable: false },
   );
 }
+
 uploadTypeAction = (buttonIndex) => {
     if (buttonIndex === 1) {
         if (!this.state.hasCameraPermission || !this.state.hasCameraRollPermission) {
@@ -164,69 +234,70 @@ uploadTypeAction = (buttonIndex) => {
         this.pickImage();
     }
 }
+
 takePhoto = async () => {
 const result = await ImagePicker.launchCameraAsync();
-if (!result.cancelled) {
-  const manipResult = await ImageManipulator.manipulateAsync(
-    result.uri,
-    [{ resize: { width: 600, height: 800 } }],
-    { format: 'jpeg', compress: 0.7 },
-  );
-  this.setState({ image: manipResult });
-}
-};
-pickImage = async () => {
-const result = await ImagePicker.launchImageLibraryAsync({
-  mediaTypes: ImagePicker.MediaTypeOptions.Images,
-});
-  console.log(result);
-const originXValue = result.width > result.height ? 130 : 0;
-if (!result.cancelled) {
-  try {
+  if (!result.cancelled) {
     const manipResult = await ImageManipulator.manipulateAsync(
       result.uri,
-      [{ resize: { height: 800 } }, {
-        crop: {
-          originX: originXValue, originY: 0, width: 600, height: 800,
-        },
-      }],
+      [{ resize: { width: 600, height: 800 } }],
       { format: 'jpeg', compress: 0.7 },
     );
     this.setState({ image: manipResult });
-  } catch (err) {
-    this.setState({ error: 'There was a problem with that image, please try a different one' });
+    await this.saveImage(manipResult.uri);
   }
-}
 };
-handleImagePicked = async (pickerResult) => {
-Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-this.setState({ uploading: true });
-try {
-  if (this.state.image !== null) {
-    const {
-      weight,
-      waist,
-      hip,
-      isInitial,
-    } = this.props.navigation.state.params;
-    await FileSystem.downloadAsync(
-      'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2FBURPEES.mp4?alt=media&token=688885cb-2d70-4fc6-82a9-abc4e95daf89',
-      `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
-    );
-    this.setState({ uploading: false });
-    this.props.navigation.navigate('Progress3', {
-      image: pickerResult,
-      weight,
-      waist,
-      hip,
-      isInitial,
+
+pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
-  } else {
-    this.setState({ error: 'Please select an image to continue', uploading: false });
+    // console.log(result);
+    const originXValue = result.width > result.height ? 130 : 0;
+    if (!result.cancelled) {
+      try {
+        const manipResult = await ImageManipulator.manipulateAsync(
+          result.uri,
+          [{ resize: { height: 800 } }, {
+            crop: {
+              originX: originXValue, originY: 0, width: 600, height: 800,
+            },
+          }],
+          { format: 'jpeg', compress: 0.7 },
+        );
+        this.setState({ image: manipResult });
+        await this.saveImage(manipResult.uri);
+      } catch (err) {
+        this.setState({ error: 'There was a problem with that image, please try a different one' });
+      }
+    }
+};
+
+handleImagePicked = async (pickerResult) => {
+  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  this.setState({ uploading: true });
+  try {
+    if (this.state.image !== null) {
+      const {
+        weight,
+        waist,
+        hip,
+        isInitial,
+      } = this.props.navigation.state.params;
+      this.setState({ uploading: false });
+      this.props.navigation.navigate('Progress3', {
+        image: pickerResult,
+        weight,
+        waist,
+        hip,
+        isInitial,
+      });
+    } else {
+      this.setState({ error: 'Please select an image to continue', uploading: false });
+    }
+  } catch (err) {
+    this.setState({ error: 'Problem uploading image, please try again', uploading: false });
   }
-} catch (err) {
-  this.setState({ error: 'Problem uploading image, please try again', uploading: false });
-}
 };
   render() {
     const { image, uploading, error } = this.state;
@@ -275,6 +346,9 @@ try {
             </View>
 
             <View style={ChallengeStyle.btnContainer}>
+                {
+                  error && <Text style={styles.errorText}>{error}</Text>
+                }
                   <CustomBtn 
                       Title="Previous"
                       outline={true}

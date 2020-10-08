@@ -20,6 +20,8 @@ import { db } from '../../../config/firebase';
 import { uomMap } from '../../utils/index';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import CustomBtn from '../../components/Shared/CustomBtn';
+import globalStyle, { containerPadding } from '../../styles/globalStyles';
 
 const moment = require('moment-timezone');
 
@@ -57,7 +59,7 @@ export default class Onboarding1Screen extends React.PureComponent {
       const data = {
         dob,
         unitsOfMeasurement: chosenUom,
-        onboarded: true,
+        // onboarded: true,
         weeklyTargets: {
           currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
           resistanceWeeklyComplete: 0,
@@ -85,7 +87,7 @@ export default class Onboarding1Screen extends React.PureComponent {
       };
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
-      this.props.navigation.navigate('Progress1', { isInitial: true });
+      this.props.navigation.navigate('Onboarding2', { isInitial: true });
     } catch (err) {
       Alert.alert('Database write error', `${err}`);
       this.setState({ loading: false });
@@ -145,7 +147,7 @@ export default class Onboarding1Screen extends React.PureComponent {
                 animationOut="fadeOut"
                 animationOutTiming={600}
               >
-                <View style={styles.modalContainer}>
+                <View style={globalStyle.modalContainer}>
                   <DateTimePicker
                     mode="date"
                     value={chosenDate}
@@ -159,9 +161,9 @@ export default class Onboarding1Screen extends React.PureComponent {
                   <TouchableOpacity
                     title="DONE"
                     onPress={this.toggleDobModal}
-                    style={styles.modalButton}
+                    style={globalStyle.modalButton}
                   >
-                    <Text style={styles.modalButtonText}>
+                    <Text style={globalStyle.modalButtonText}>
                       DONE
                     </Text>
                   </TouchableOpacity>
@@ -188,7 +190,7 @@ export default class Onboarding1Screen extends React.PureComponent {
                 animationOut="fadeOut"
                 animationOutTiming={600}
               >
-                <View style={styles.modalContainer}>
+                <View style={globalStyle.modalContainer}>
                   <Picker
                     selectedValue={chosenUom}
                     onValueChange={(value) => this.setState({ chosenUom: value })}
@@ -199,9 +201,9 @@ export default class Onboarding1Screen extends React.PureComponent {
                   <TouchableOpacity
                     title="DONE"
                     onPress={this.toggleUomModal}
-                    style={styles.modalButton}
+                    style={globalStyle.modalButton}
                   >
-                    <Text style={styles.modalButtonText}>
+                    <Text style={globalStyle.modalButtonText}>
                       DONE
                     </Text>
                   </TouchableOpacity>
@@ -210,11 +212,17 @@ export default class Onboarding1Screen extends React.PureComponent {
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <CustomButton
+            <CustomBtn 
+              Title="Next"
+              outline={true}
+              customBtnStyle={{borderRadius:50,padding:15}}
+              onPress={() => this.handleSubmit(chosenDate, chosenUom)}
+            />
+            {/* <CustomButton
               title="NEXT"
               onPress={() => this.handleSubmit(chosenDate, chosenUom)}
               primary
-            />
+            /> */}
           </View>
           <Loader
             loading={loading}
@@ -237,39 +245,26 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: colors.offWhite,
+    
   },
-  modalContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.themeColor.color,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
+
+
+
   textContainer: {
     flex: 1,
     width,
     padding: 10,
+    paddingHorizontal:containerPadding
   },
   headerText: {
     fontFamily: fonts.bold,
-    fontSize: 24,
+    fontSize: 25,
     color: colors.charcoal.light,
-    marginBottom: 5,
+    marginBottom: 7,
   },
   bodyText: {
     fontFamily: fonts.standard,
-    fontSize: 14,
+    fontSize: 15,
     color: colors.charcoal.light,
   },
   contentContainer: {
@@ -287,7 +282,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   inputButton: {
-    width: width - 20,
+    width: width - containerPadding*2,
     padding: 15,
     paddingBottom: 12,
     backgroundColor: colors.white,
@@ -304,5 +299,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: 10,
+    width:width - containerPadding*2
   },
 });

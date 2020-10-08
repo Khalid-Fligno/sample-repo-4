@@ -12,7 +12,7 @@ function CalenderSvg(props) {
       viewBox="0 0 99.4 100"
       xmlSpace="preserve"
       {...props}
-      fill={colors.themeColor.fontColor}
+      // fill={colors.themeColor.fontColor}
     >
       <Path
         className="prefix__st0"

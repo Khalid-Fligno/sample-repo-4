@@ -14,7 +14,7 @@ const AppStack = createStackNavigator(
     Exercise: { screen: ExerciseStack },
     HiitExercise: { screen: HiitExerciseStack },
     HiitCircuitExercise: { screen: HiitCircuitExerciseStack },
-    challengeOnBoarding:{screen:ChallengeStack}
+    ChallengeOnBoarding: { screen:ChallengeStack }
   },
   {
     initialRouteName: 'Tabs',
@@ -25,7 +25,7 @@ const AppStack = createStackNavigator(
       },
     }),
     defaultNavigationOptions:({ navigation })=>( {
-      gesturesEnabled:navigation.state.routeName === 'challengeOnBoarding'?false:true,
+      gesturesEnabled:navigation.state.routeName === 'ChallengeOnBoarding'?false:true,
       header: null,
     }
     )
