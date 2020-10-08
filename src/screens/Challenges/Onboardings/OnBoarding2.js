@@ -121,26 +121,25 @@ export default class OnBoarding2 extends Component {
               <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Dietry Preferences</Text>
             </View>
           
-            <View style={{flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}}>
+            <View style={globalStyle.selectBoxContainer}>
                 { 
                     dietryPreferences.map((item,i)=>{
-                        let selectedBox ={backgroundColor:colors.red.light}
 
                       return (
                                 <TouchableOpacity 
                                       key={i}
                                       activeOpacity={0.8}
-                                      style={[ChallengeStyle.selectBox,item.selected?selectedBox:{}]}
+                                      style={[globalStyle.selectBox,item.selected?globalStyle.selectedBox:{}]}
                                       onPress={()=>this.push_pop_preferences(i)}      
                                 >
-                                  <Text style={ChallengeStyle.selectBoxText}> {item.name} </Text>
+                                  <Text style={globalStyle.selectBoxText}> {item.name} </Text>
                                 </TouchableOpacity>
                               )
                   })
                 }
             </View>
 
-            <View style={{flex:1,justifyContent:'space-between',flexDirection:'row',alignItems:'flex-end'}}>
+            <View style={ChallengeStyle.btnContainer}>
               <CustomBtn 
                   Title="Previous"
                   outline={true}

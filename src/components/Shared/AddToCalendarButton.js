@@ -26,7 +26,9 @@ export default class AddToCalendarButton extends React.PureComponent {
           size={22}
           color={colors.themeColor.color}
         /> */}
-        <CalenderSvg />
+        <CalenderSvg 
+          fill={colors.themeColor.color}
+        />
         <Text style={styles.addToCalendarButtonText}>
           Add to calendar
         </Text>

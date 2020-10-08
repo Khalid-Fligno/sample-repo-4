@@ -4,7 +4,6 @@ import ChallengeStyle from '../chellengeStyle';
 import globalStyle from '../../../styles/globalStyles';
 import SliderComponent from '../../../components/Challenges/slider';
 import CustomBtn from '../../../components/Shared/CustomBtn';
-import ChallengeStack from '../../../../config/router/ChallengeStack';
 
 export default class OnBoarding1 extends Component {
   constructor(props) {
@@ -87,62 +86,65 @@ export default class OnBoarding1 extends Component {
     } = this.state
     // console.log(challengeData)
     return (
-      <ScrollView>
-     <SafeAreaView style={ChallengeStyle.container}>
-      <View style={[globalStyle.container,{paddingVertical:15}]}>
-        <View>
-          <Text style={ChallengeStyle.onBoardingTitle}>What do you want to achieve?</Text>
-          <Text style={ChallengeStyle.onBoardingTitle}>{challengeData.name}</Text>
-        </View>
       
-        <SliderComponent
-          title="Weight Loss" 
-          value={weightLoss}
-          minimumValue={1}
-          maximumValue={10}
-          onValueChange={(value) => this.setState({ weightLoss:Math.round(value) })}
-        />
-        <SliderComponent
-          title="Increase Energy" 
-          value={increaseEnergy}
-          minimumValue={1}
-          maximumValue={10}
-          onValueChange={(value) => this.setState({ increaseEnergy:Math.round(value) })}
-        />
-        <SliderComponent
-          title="Tone Up" 
-          value={toneUp}
-          minimumValue={1}
-          maximumValue={10}
-          onValueChange={(value) => this.setState({ toneUp:Math.round(value) })}
-        />
-        <SliderComponent
-          title="Mental Health" 
-          value={mentalHealth}
-          minimumValue={1}
-          maximumValue={10}
-          onValueChange={(value) => this.setState({ mentalHealth:Math.round(value) })}
-        />
-        <SliderComponent
-          title="Increase Fitness" 
-          value={increaseFitness}
-          minimumValue={1}
-          maximumValue={10}
-          onValueChange={(value) => this.setState({ increaseFitness:Math.round(value) })}
-        />
+        <SafeAreaView style={ChallengeStyle.container}>
+          <View style={[globalStyle.container,{paddingVertical:15}]}>
+            <ScrollView>
+                <View>
+                  <Text style={ChallengeStyle.onBoardingTitle}>What do you want to achieve?</Text>
+                  <Text style={ChallengeStyle.onBoardingTitle}>{challengeData.name}</Text>
+                </View>
+              
+                <SliderComponent
+                  title="Weight Loss" 
+                  value={weightLoss}
+                  minimumValue={1}
+                  maximumValue={10}
+                  onValueChange={(value) => this.setState({ weightLoss:Math.round(value) })}
+                />
+                <SliderComponent
+                  title="Increase Energy" 
+                  value={increaseEnergy}
+                  minimumValue={1}
+                  maximumValue={10}
+                  onValueChange={(value) => this.setState({ increaseEnergy:Math.round(value) })}
+                />
+                <SliderComponent
+                  title="Tone Up" 
+                  value={toneUp}
+                  minimumValue={1}
+                  maximumValue={10}
+                  onValueChange={(value) => this.setState({ toneUp:Math.round(value) })}
+                />
+                <SliderComponent
+                  title="Mental Health" 
+                  value={mentalHealth}
+                  minimumValue={1}
+                  maximumValue={10}
+                  onValueChange={(value) => this.setState({ mentalHealth:Math.round(value) })}
+                />
+                <SliderComponent
+                  title="Increase Fitness" 
+                  value={increaseFitness}
+                  minimumValue={1}
+                  maximumValue={10}
+                  onValueChange={(value) => this.setState({ increaseFitness:Math.round(value) })}
+                />
 
-        <View style={{flex:1,justifyContent:'flex-end'}}>
-          <CustomBtn 
-            Title="Next"
-            outline={true}
-            customBtnStyle={{borderRadius:50,padding:15}}
-            onPress={()=>this.goToNextScreen()}
-            disabled={btnDisabled}
-          />
-        </View>
-      </View>
-      </SafeAreaView> 
-      </ScrollView>
+              
+            </ScrollView>
+            <View style={{flex:1,justifyContent:'flex-end'}}>
+                  <CustomBtn 
+                    Title="Next"
+                    outline={true}
+                    customBtnStyle={{borderRadius:50,padding:15}}
+                    onPress={()=>this.goToNextScreen()}
+                    disabled={btnDisabled}
+                  />
+                </View>
+          </View>
+        </SafeAreaView> 
+      
     );
   }
 }

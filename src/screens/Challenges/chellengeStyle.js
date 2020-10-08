@@ -19,20 +19,7 @@ const ChallengeStyle = StyleSheet.create({
         backgroundColor: colors.black,
         justifyContent: 'space-between',
       },
-      selectBox:{
-        height:50,
-        width:'48%',
-        borderWidth:colors.themeColor.themeBorderWidth,
-        borderColor:colors.themeColor.themeBorderColor,
-        marginTop:20,
-        alignItems:'center',
-        flexDirection:"column",
-        justifyContent:'center',
-
-      },
-      selectBoxText:{
-        fontFamily:fonts.standard
-      },
+   
       btnContainer:{
         flex:1,
         justifyContent:'space-between',

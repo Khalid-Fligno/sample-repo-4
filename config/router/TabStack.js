@@ -10,62 +10,75 @@ import { Image } from 'react-native';
 import fonts from '../../src/styles/fonts';
 import DashboardStack from './DashboardStack';
 import LifestyleStack from './LifestyleStack';
+import FeedSvg from '../../assets/icons/Feed';
+import CalenderSvg from '../../assets/icons/calender';
+import SubSVG from '../../assets/icons/subscriptionSVG';
+import ProgressSvg from '../../assets/icons/progress';
 
 const TabStack = createBottomTabNavigator(
   {
 
-    Dashboard: DashboardStack,
-    Subscription: SubscriptionStack,
-    // Lifestyle:LifestyleStack,
+    Home: DashboardStack,
+    Feed:LifestyleStack,
+    LifeStyle: SubscriptionStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
     
   },
   {
-    initialRouteName: 'Dashboard',
+    initialRouteName: 'Home',
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
-        const activeState = tabColorMap[routeName];
-        const inactiveState = colors.charcoal.standard;
+        const activeState = colors.themeColor.color;
+        const inactiveState = colors.themeColor.color;
+        // const inactiveState = colors.charcoal.standard;
         let icon;
-     
-        if (routeName === 'Dashboard') {
+        if (routeName === 'Home') {
           icon = (
-            <Image
-              source={require('../../assets/icons/fitazfk2-feed.png')}
-              fadeDuration={0}
-              style={{width:31, height: 22}}
+            <Icon
+              name={ 'home-outline'}
+              size={22}
+              color={focused ? activeState : inactiveState}
+            />
+          );
+        } 
+        if ( routeName === 'Feed') {
+          icon = (
+            <FeedSvg 
+                width = {22}
+                height = {22}
+                fill ={focused ? activeState : inactiveState}
             />
           );
         }
-        else if (routeName === 'Subscription' || routeName === 'Lifestyle' ) {
+        else if (routeName === 'LifeStyle' ) {
           icon = (
-            <Image
-              source={require('../../assets/icons/fitazfk2-subscription.png')}
-              fadeDuration={0}
-              style={{width:22, height: 22}}
+            <SubSVG 
+                width = {22}
+                height = {22}
+                fill ={focused ? activeState : inactiveState}
             />
           );
         } 
    
          else if (routeName === 'Calendar') {
           icon = (
-              <Image
-               source={require('../../assets/icons/fitazfk2-calendar.png')}
-               fadeDuration={0}
-               style={{width:22, height: 22}}
+              <CalenderSvg 
+                  width = {22}
+                  height = {22}
+                  fill ={focused ? activeState : inactiveState} 
               />
           
           );
         } else if (routeName === 'Progress') {
           icon = (
-              <Image
-              source={require('../../assets/icons/fitazfk2-progress.png')}
-                fadeDuration={0}
-              style={{width:22, height: 22}}
-              />
+              <ProgressSvg
+                  width = {22}
+                  height = {22}
+                  fill ={focused ? activeState : inactiveState} 
+               />
         
           );
         }
@@ -89,8 +102,9 @@ const TabStack = createBottomTabNavigator(
       labelStyle: {
         fontFamily: fonts.bold,
         textTransform:"uppercase",
-        paddingBottom:4
+        paddingBottom:4,
       },
+      
     },
   },
 );

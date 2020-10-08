@@ -219,6 +219,36 @@ fitazfkIcon: {
   height: 50,
 },
 /**************END******************** */   
+
+
+
+
+/**************Select Box ************** */
+  selectBoxContainer:{
+    flexDirection:'row',
+    flexWrap:'wrap',
+    justifyContent:'space-between'
+  },
+  selectBox:{
+    height:50,
+    width:'48%',
+    borderWidth:colors.themeColor.themeBorderWidth,
+    borderColor:colors.themeColor.themeBorderColor,
+    marginTop:20,
+    alignItems:'center',
+    flexDirection:"column",
+    justifyContent:'center',
+
+  },
+  selectBoxText:{
+    fontFamily:fonts.standard
+  },
+  selectedBox:{
+    backgroundColor:colors.red.light
+  }
+/************** /Select Box ************** */
+
+
 }) 
 
 export default globalStyle
