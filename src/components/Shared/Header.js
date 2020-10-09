@@ -181,7 +181,7 @@ export default class Header extends React.PureComponent {
             )
           }
           {
-            !withBackButton && !withHelpButton && !withLogoutButton && (
+            !withHomeButton &&!withBackButton && !withHelpButton && !withLogoutButton && (
               <View style={globalStyle.headerContentContainerLeft} />
             )
           }
