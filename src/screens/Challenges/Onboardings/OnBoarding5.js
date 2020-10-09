@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, SafeAreaView,InputBox, Dimensions, Platform } from 'react-native';
+import { View, Text, SafeAreaView,InputBox, Dimensions, Platform,Picker } from 'react-native';
 import { number } from 'prop-types';
 import ChallengeStyle from '../chellengeStyle';
 import globalStyle, { containerPadding } from '../../../styles/globalStyles';
@@ -10,6 +10,9 @@ import { Video } from 'expo-av';
 import WorkoutTimer from '../../../components/Workouts/WorkoutTimer';
 import colors from '../../../styles/colors';
 import { timerSound } from '../../../../config/audio';
+import InputBox2 from '../../../components/Challenges/InputBox2';
+import Modal from 'react-native-modal';
+import { burpeeOptions, findFitnessLevel } from '../../../utils';
 const { width } = Dimensions.get('window');
 
 
@@ -17,6 +20,9 @@ export default class OnBoarding5 extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      burpeeCount:0,
+      burpeeModalVisible:false,
+      showInputBox:false,
       timerStart:false,
       totalDuration:60,
       challengeData:{}
@@ -90,14 +96,15 @@ export default class OnBoarding5 extends Component {
 
 
   handleFinish(){
-    this.setState({
-      // videoPaused: true,
-      totalDuration:60 ,
-    });
+
+    this.setState({showInputBox:true})
     console.log("<><><>Finished")
   }
+  toggleBurpeeModal = () => {
+    this.setState((prevState) => ({ burpeeModalVisible: !prevState.burpeeModalVisible }));
+  }
   render() {
-    let {timerStart,totalDuration,challengeData} = this.state
+    let {timerStart,totalDuration,challengeData,burpeeCount,burpeeModalVisible,showInputBox} = this.state
     if(!challengeData.onBoardingInfo){
       this.onFocusFunction()
     }
@@ -142,9 +149,46 @@ export default class OnBoarding5 extends Component {
                   />
             </View>
             </View>
-          
-          
+            {   showInputBox &&
 
+            <InputBox2
+             onPress={this.toggleBurpeeModal}
+                  title="Total Burpee"
+                  extension={''}
+                  value={burpeeCount}
+              />
+            }
+            {/* model to select a count */}
+            <Modal
+                isVisible={burpeeModalVisible}
+                onBackdropPress={this.toggleBurpeeModal}
+                animationIn="fadeIn"
+                animationInTiming={600}
+                animationOut="fadeOut"
+                animationOutTiming={600}
+              >
+                <View style={globalStyle.modalContainer}>
+                  <Picker
+                    selectedValue={burpeeCount}
+                    onValueChange={(value) => this.setState({ burpeeCount: value })}
+                  >
+                    {burpeeOptions.map((i) => (
+                      <Picker.Item
+                        key={i.value}
+                        label={i.label}
+                        value={i.value}
+                      />
+                    ))}
+                  </Picker>
+                  <CustomBtn 
+                    Title="DONE"
+                    titleCapitalise={true}
+                    outline={true}
+                    customBtnStyle={{borderRadius:50,margin:10,marginTop:0}}
+                    onPress={this.toggleBurpeeModal}
+                  />
+                </View>
+              </Modal>
             <View style={[ChallengeStyle.btnContainer,{flex:1}]}>
                   <CustomBtn 
                       Title="Previous"
