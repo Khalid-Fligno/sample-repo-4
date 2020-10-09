@@ -17,7 +17,7 @@ const LifestyleStack = createStackNavigator(
             stack="home"
             navigation={navigation}
             withProfileButton={routeName === 'Lifestyle'}
-            // withBackButton={routeName === 'HomeBlog'}
+            withHomeButton={true}
           />
         );
       },

@@ -20,7 +20,7 @@ const SubscriptionStack = createStackNavigator(
             stack="Subscription"
             navigation={navigation}
             withProfileButton={routeName === 'Subscription'}
-            withBackButton={routeName === 'SubscriptionBlog'}
+            withBackButton={true}
           />
         );
       },

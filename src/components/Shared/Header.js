@@ -42,6 +42,11 @@ export default class Header extends React.PureComponent {
     const { navigation } = this.props;
     navigation.pop();
   }
+  goToHome = () => {
+    console.log("<><><<>><><")
+    const { navigation } = this.props;
+    navigation.navigate('Home')
+  }
   handleLogout = () => {
     const { navigation } = this.props;
     if (navigation.state.params.handleLogout) {
@@ -87,6 +92,7 @@ export default class Header extends React.PureComponent {
       stack,
       navigation,
       withBackButton,
+      withHomeButton,
       withHelpButton,
       withSkipButton,
       withCancelButton,
@@ -125,6 +131,20 @@ export default class Header extends React.PureComponent {
               <TouchableOpacity
                 style={globalStyle.headerContentContainerLeft}
                 onPress={this.handleBack}
+              >
+                <Icon
+                  name="chevron-left"
+                  size={20}
+                  color={colors.themeColor.color}
+                />
+              </TouchableOpacity>
+            )
+          }
+          {
+            withHomeButton && (
+              <TouchableOpacity
+                style={globalStyle.headerContentContainerLeft}
+                onPress={this.goToHome}
               >
                 <Icon
                   name="chevron-left"
@@ -266,6 +286,7 @@ export default class Header extends React.PureComponent {
 
 Header.propTypes = {
   withBackButton: PropTypes.bool,
+  withHomeButton: PropTypes.bool,
   withLogoutButton: PropTypes.bool,
   withHelpButton: PropTypes.bool,
   withSkipButton: PropTypes.bool,
@@ -279,6 +300,7 @@ Header.propTypes = {
 
 Header.defaultProps = {
   withBackButton: false,
+  withHomeButton: false,
   withLogoutButton: false,
   withHelpButton: false,
   withSkipButton: false,

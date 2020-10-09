@@ -77,7 +77,7 @@ export default class LifeStyleScreen extends React.PureComponent {
           contentContainerStyle={HomeScreenStyle.scrollView}
           style={[globalStyle.container]}
         >
-          <View>
+          <View style={{marginBottom:20}}>
            
               <NewsFeedTile
                 image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
