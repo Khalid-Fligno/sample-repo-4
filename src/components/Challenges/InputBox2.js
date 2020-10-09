@@ -8,7 +8,7 @@ const { width } = Dimensions.get('window');
 const InputBox2 = (props)=> {
   
     return (
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer,props.customContainerStyle]}>
             <Text style={styles.inputFieldTitle}>
                 {props.title}
             </Text>
@@ -30,7 +30,8 @@ InputBox2.propTypes={
     title:PropTypes.string,
     onPress:PropTypes.func,
     value:PropTypes.number,
-    extension:PropTypes.string
+    extension:PropTypes.string,
+    customContainerStyle:PropTypes.object
 }
 
 export default InputBox2

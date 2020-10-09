@@ -6,6 +6,10 @@ import globalStyle from '../../../styles/globalStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
 import createUserChallengeData from '../../../components/Challenges/UserChallengeData';
+import colors from '../../../styles/colors';
+import Loader from '../../../components/Shared/Loader';
+import { db } from '../../../../config/firebase';
+import AsyncStorage from '@react-native-community/async-storage';
 const levelOfFiness=["Begineer","Intermediate","Advanced"];
 export default class OnBoarding6 extends Component {
   constructor(props) {
@@ -14,7 +18,8 @@ export default class OnBoarding6 extends Component {
       fitnessLevel:2,
       loading:false,
       challengeData:null,
-      btnDisabled:true
+      btnDisabled:true,
+      loading:false,
     };
   }
   
@@ -45,11 +50,12 @@ export default class OnBoarding6 extends Component {
       fitnessLevel
     })
     let updatedChallengedata = Object.assign({},challengeData,{
-      onBoardingInfo
+      onBoardingInfo,
+      status:'Active'
     })
     if(type === 'next'){   
       data = createUserChallengeData(updatedChallengedata)
-      console.log(data)
+      this.saveOnBoardingInfo(data)
     }else{
       this.props.navigation.navigate('ChallengeOnBoarding5',{
         data:{
@@ -57,6 +63,19 @@ export default class OnBoarding6 extends Component {
              }
       })
     }     
+  }
+
+async  saveOnBoardingInfo(data){
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
+    userRef.set(data,{merge:true}).then((res)=>{
+      this.setState({loading:false})
+      this.props.navigation.navigate('App');
+    }).catch((err)=>{
+      console.log(err)
+    })
+    console.log( data)
   }
   
   render() {
@@ -66,7 +85,7 @@ export default class OnBoarding6 extends Component {
       challengeData,
       btnDisabled
     } = this.state
-    
+
     console.log(fitnessLevel)
     return (
       <SafeAreaView style={ChallengeStyle.container}>
@@ -120,6 +139,10 @@ export default class OnBoarding6 extends Component {
                     disabled={btnDisabled}
                   />
                 </View>
+                <Loader
+                  loading={loading}
+                  color={colors.themeColor.color}
+                />
           </View>
       </SafeAreaView> 
     );

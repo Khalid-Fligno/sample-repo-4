@@ -70,7 +70,7 @@ export default class OnBoarding4 extends Component {
   onFocusFunction = () => {
     const data = this.props.navigation.getParam('data', {});
     const image = data['challengeData'].image?data['challengeData'].image:null
-    const imgUrl = data['challengeData']['onBoardingInfo']['imgUrl']?data['challengeData']['onBoardingInfo']['imgUrl']:null
+    const imgUrl = data['challengeData']['onBoardingInfo']['beforePhotoUrl']?data['challengeData']['onBoardingInfo']['beforePhotoUrl']:null
     this.setState({
       challengeData:data['challengeData'],
       image,

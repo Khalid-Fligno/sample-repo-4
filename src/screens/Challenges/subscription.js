@@ -80,11 +80,11 @@ class ChallengeSubscriptionScreen extends Component {
   }
  
  addChallengeToUser(index){
-  
   let {userData , challengesList} = this.state
     const userRef = db.collection('users').doc(userData.id).collection('challenges');
     const data = createUserChallengeData(challengesList[index])
-    userRef.add(data).then((res)=>{
+    console.log( data.id)
+    userRef.doc(data.id).set(data).then((res)=>{
       this.props.navigation.navigate('ChallengeOnBoarding1',{
         data:{
           challengeData:data
@@ -93,7 +93,7 @@ class ChallengeSubscriptionScreen extends Component {
     }).catch((err)=>{
       console.log(err)
     })
-    console.log( data)
+   
  }
 
 

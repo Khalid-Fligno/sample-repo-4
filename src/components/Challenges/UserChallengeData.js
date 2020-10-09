@@ -25,7 +25,8 @@ export default createUserChallengeData =(data)=>{
       "workouts":[],
       "onBoardingInfo":data.onBoardingInfo?data.onBoardingInfo:{},
       "currentProgressInfo":{},
-      "createdOn":data.createdOn?data.createdOn:moment(new Date()).format('YYYY-MM-DD')
+      "createdOn":data.createdOn?data.createdOn:moment(new Date()).format('YYYY-MM-DD'),
+      "numberOfDays":data.numberOfDays,
     }
     return challenge
   }
