@@ -309,10 +309,10 @@ export default class ExercisesScreen extends React.PureComponent {
               let {workout} = this.state
               console.log(currentExerciseIndex,setCount)
               if(workout.filters.includes('strength')){
-                if(currentExerciseIndex < workout.exercises.length-2)
+                if(currentExerciseIndex < workout.exercises.length-1)
                     this.goToExercise(1,reps,null,currentExerciseIndex + 1,false)
                 else{
-                  this.goToExercise(workout.workoutReps,reps,null,currentExerciseIndex + 1,false)
+                  this.goToExercise(workout.workoutReps,reps,null,currentExerciseIndex,false)
                 }
 
               }else if(workout.filters.includes('circuit')){
@@ -372,10 +372,16 @@ export default class ExercisesScreen extends React.PureComponent {
 
   let getProgressType = findWorkoutType(workout);
   let handleSkip = false;
-    if(!workout.filters.includes('interval') && setCount === workout.workoutReps){
+    if(!workout.filters.includes('interval')){
        handleSkip = true
     }
-    
+
+  let showNextExercise = false  
+    if(workout.filters.includes('strength') && setCount === workout.workoutReps){
+      showNextExercise = true
+    }else if(rest){
+      showNextExercise = true
+    }
   
     return (
       <SafeAreaView style={styles.container}>
@@ -461,6 +467,7 @@ export default class ExercisesScreen extends React.PureComponent {
               <PauseButtonRow
                 handlePause={this.handlePause}
                 nextExerciseName={exerciseList[currentExerciseIndex].name}
+                showNextExercise = {showNextExercise}
               />
             )
           }
@@ -469,6 +476,7 @@ export default class ExercisesScreen extends React.PureComponent {
               handlePause={this.handlePause}
               nextExerciseName={exerciseList[currentExerciseIndex + 1]?exerciseList[currentExerciseIndex + 1].name:'NEARLY DONE!'}
               lastExercise={exerciseList[currentExerciseIndex + 1]?false:true}
+              showNextExercise = {showNextExercise}
             />
           }
           

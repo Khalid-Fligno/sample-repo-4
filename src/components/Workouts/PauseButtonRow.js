@@ -14,7 +14,13 @@ export default class PauseButtonRow extends React.PureComponent {
     };
   }
   render() {
-    const { nextExerciseName, handlePause, lastExercise } = this.props;
+    const { 
+      nextExerciseName, 
+      handlePause, 
+      lastExercise,
+      showNextExercise 
+    } = this.props;
+    console.log(showNextExercise,"<><><>")
     return (
       <View style={styles.pauseButtonRow}>
         <View style={styles.pauseButtonContainer}>
@@ -32,16 +38,21 @@ export default class PauseButtonRow extends React.PureComponent {
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.nextExerciseContainer}>
-          <Text style={styles.nextExercise}>{!lastExercise ? 'NEXT EXERCISE:' : 'LAST EXERCISE'}</Text>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={styles.nextExerciseName}
-          >
-            {nextExerciseName.toUpperCase()}
-          </Text>
-        </View>
+          {
+            showNextExercise && 
+            (
+              <View style={styles.nextExerciseContainer}>
+                <Text style={styles.nextExercise}>{!lastExercise ? 'NEXT EXERCISE:' : 'LAST EXERCISE'}</Text>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={styles.nextExerciseName}
+                >
+                  {nextExerciseName.toUpperCase()}
+                </Text>
+              </View>
+            )
+        }  
       </View>
     );
   }
@@ -51,10 +62,12 @@ PauseButtonRow.propTypes = {
   nextExerciseName: PropTypes.string.isRequired,
   handlePause: PropTypes.func.isRequired,
   lastExercise: PropTypes.bool,
+  showNextExercise:PropTypes.bool.isRequired
 };
 
 PauseButtonRow.defaultProps = {
   lastExercise: false,
+  showNextExercise: false,
 };
 
 const styles = StyleSheet.create({
