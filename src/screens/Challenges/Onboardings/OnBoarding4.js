@@ -62,14 +62,22 @@ export default class OnBoarding4 extends Component {
       image: null,
       uploading: false,
       error: null,
-      imgUrl:null
+      imgUrl:null,
+      btnDisabled:true,
     };
   }
   
   onFocusFunction = () => {
     const data = this.props.navigation.getParam('data', {});
-    console.log(data)
-    this.setState({challengeData:data['challengeData']})
+    const image = data['challengeData'].image?data['challengeData'].image:null
+    const imgUrl = data['challengeData']['onBoardingInfo']['imgUrl']?data['challengeData']['onBoardingInfo']['imgUrl']:null
+    this.setState({
+      challengeData:data['challengeData'],
+      image,
+      imgUrl,
+      btnDisabled:false,
+    })
+   
   }
   
   // add a focus listener onDidMount
@@ -144,8 +152,10 @@ export default class OnBoarding4 extends Component {
         const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
           beforePhotoUrl:imgUrl
         })
-        console.log(challengeData)
-        let updatedChallengedata = Object.assign({},challengeData,{onBoardingInfo})
+        let updatedChallengedata = Object.assign({},challengeData,{
+          onBoardingInfo,
+          image:image
+        })
         console.log(updatedChallengedata)
         if(type === 'next'){
           this.props.navigation.navigate('ChallengeOnBoarding5',{
@@ -282,34 +292,9 @@ pickImage = async () => {
     }
 };
 
-handleImagePicked = async (pickerResult) => {
-  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  this.setState({ uploading: true });
-  try {
-    if (this.state.image !== null) {
-      const {
-        weight,
-        waist,
-        hip,
-        isInitial,
-      } = this.props.navigation.state.params;
-      this.setState({ uploading: false });
-      this.props.navigation.navigate('Progress3', {
-        image: pickerResult,
-        weight,
-        waist,
-        hip,
-        isInitial,
-      });
-    } else {
-      this.setState({ error: 'Please select an image to continue', uploading: false });
-    }
-  } catch (err) {
-    this.setState({ error: 'Problem uploading image, please try again', uploading: false });
-  }
-};
+
   render() {
-    const { image, uploading, error } = this.state;
+    const { image, uploading, error ,btnDisabled} = this.state;
     return (
       <SafeAreaView style={ChallengeStyle.container}>
           <View style={[globalStyle.container,{paddingVertical:15}]}>
@@ -363,12 +348,14 @@ handleImagePicked = async (pickerResult) => {
                       outline={true}
                       customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
                       onPress={()=>this.goToScreen('previous')}
+                      disabled={btnDisabled}
                   />    
                   <CustomBtn 
                     Title="Next"
                     outline={true}
                     customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
                     onPress={()=>this.goToScreen('next')}
+                    disabled={btnDisabled}
                   />
                 </View>
           <Loader

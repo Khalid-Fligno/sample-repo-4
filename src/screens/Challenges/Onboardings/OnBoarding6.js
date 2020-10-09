@@ -5,20 +5,25 @@ import ChallengeStyle from '../chellengeStyle';
 import globalStyle from '../../../styles/globalStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
-
+import createUserChallengeData from '../../../components/Challenges/UserChallengeData';
 const levelOfFiness=["Begineer","Intermediate","Advanced"];
 export default class OnBoarding6 extends Component {
   constructor(props) {
     super(props);
     this.state = {
       fitnessLevel:2,
-      loading:false
+      loading:false,
+      challengeData:null,
+      btnDisabled:true
     };
   }
   
   onFocusFunction = () => {
     const data = this.props.navigation.getParam('data', {});
-    this.setState({challengeData:data['challengeData']});
+    this.setState({
+      challengeData:data['challengeData'],
+      btnDisabled:false
+    });
   }
   
   // add a focus listener onDidMount
@@ -34,19 +39,35 @@ export default class OnBoarding6 extends Component {
   }
 
   goToScreen(type){
+    let {challengeData,fitnessLevel} = this.state
+
+    const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
+      fitnessLevel
+    })
+    let updatedChallengedata = Object.assign({},challengeData,{
+      onBoardingInfo
+    })
     if(type === 'next'){   
-      // next challenges button
+      data = createUserChallengeData(updatedChallengedata)
+      console.log(data)
     }else{
       this.props.navigation.navigate('ChallengeOnBoarding5',{
         data:{
-               challengeData:this.state.challengeData
+               challengeData:this.state.challengeData,
              }
       })
     }     
   }
   
   render() {
-    let {fitnessLevel,loading} = this.state
+    let {
+      fitnessLevel,
+      loading,
+      challengeData,
+      btnDisabled
+    } = this.state
+    
+    console.log(fitnessLevel)
     return (
       <SafeAreaView style={ChallengeStyle.container}>
           <View style={[globalStyle.container,{paddingVertical:15}]}>
@@ -89,12 +110,14 @@ export default class OnBoarding6 extends Component {
                       outline={true}
                       customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
                       onPress={()=>this.goToScreen('previous')}
+                      disabled={btnDisabled}
                   />    
                   <CustomBtn 
                     Title="Next"
                     outline={true}
                     customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
                     onPress={()=>this.goToScreen('next')}
+                    disabled={btnDisabled}
                   />
                 </View>
           </View>

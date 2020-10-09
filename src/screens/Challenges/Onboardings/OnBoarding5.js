@@ -19,13 +19,17 @@ export default class OnBoarding5 extends Component {
     this.state = {
       timerStart:false,
       totalDuration:60,
-      challengeData:{}
+      challengeData:{},
+      btnDisabled:true
     };
   }
 
   onFocusFunction = () => {
     const data = this.props.navigation.getParam('data', {});
-    this.setState({challengeData:data['challengeData']})
+    this.setState({
+         challengeData:data['challengeData'],
+         btnDisabled:false
+       })
     console.log(data['challengeData'],"<><><><><")
   }
   
@@ -42,17 +46,24 @@ export default class OnBoarding5 extends Component {
   }
 
   goToScreen(type){
-    
+    let {challengeData} = this.state
+
+    // const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
+    //   burpeeCount
+    // })
+    // let updatedChallengedata = Object.assign({},challengeData,{
+    //   onBoardingInfo
+    // })
     if(type === 'next'){
       this.props.navigation.navigate('ChallengeOnBoarding6',{
         data:{
-               challengeData:this.state.challengeData
+               challengeData:challengeData
              }
       })
     }else{
       this.props.navigation.navigate('ChallengeOnBoarding4',{
         data:{
-               challengeData:this.state.challengeData
+               challengeData:challengeData
              }
       })
     }
@@ -97,7 +108,7 @@ export default class OnBoarding5 extends Component {
     console.log("<><><>Finished")
   }
   render() {
-    let {timerStart,totalDuration,challengeData} = this.state
+    let {timerStart,totalDuration,challengeData,btnDisabled} = this.state
     if(!challengeData.onBoardingInfo){
       this.onFocusFunction()
     }
@@ -151,12 +162,14 @@ export default class OnBoarding5 extends Component {
                       outline={true}
                       customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
                       onPress={()=>this.goToScreen('previous')}
+                      disabled={btnDisabled}
                   />    
                   <CustomBtn 
-                    Title="Next"
+                    Title="Skip"
                     outline={true}
                     customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
                     onPress={()=>this.goToScreen('next')}
+                    disabled={btnDisabled}
                   />
             </View>
           </View>

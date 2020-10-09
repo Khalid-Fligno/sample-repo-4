@@ -259,14 +259,14 @@ export default class OnBoarding3 extends Component {
                         outline={true}
                         customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
                         onPress={()=>this.goToScreen('previous')}
-                        // disabled={btnDisabled}
+                        disabled={btnDisabled}
                     />    
                     <CustomBtn 
                       Title="Next"
                       outline={true}
                       customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
                       onPress={()=>this.goToScreen('next')}
-                      // disabled={btnDisabled}
+                      disabled={btnDisabled}
                     />
                   </View>
             </View>

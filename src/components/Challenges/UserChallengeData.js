@@ -8,7 +8,9 @@ export default createUserChallengeData =(data)=>{
           "name":res.name,
           "displayName":res.displayName,
           "startDate":moment(new Date(), 'YYYY-MM-DD').add(res.startDay-1,'days').format('YYYY-MM-DD'),
-          "endDate":moment(new Date(), 'YYYY-MM-DD').add(res.endDay-1,'days').format('YYYY-MM-DD')
+          "endDate":moment(new Date(), 'YYYY-MM-DD').add(res.endDay-1,'days').format('YYYY-MM-DD'),
+          "startDay":res.startDay,
+          "endDay":res.endDay
         }
       )
     })
@@ -21,8 +23,9 @@ export default createUserChallengeData =(data)=>{
       "status":"InActive",
       "phases":phases,
       "workouts":[],
-      "onBoardingInfo":{},
-      "currentProgressInfo":{}
+      "onBoardingInfo":data.onBoardingInfo?data.onBoardingInfo:{},
+      "currentProgressInfo":{},
+      "createdOn":data.createdOn?data.createdOn:moment(new Date()).format('YYYY-MM-DD')
     }
     return challenge
   }
