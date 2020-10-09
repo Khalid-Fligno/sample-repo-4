@@ -1,12 +1,12 @@
 import React from 'react';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createBottomTabNavigator, BottomTabBar } from 'react-navigation-tabs';
 import SubscriptionStack from './SubscriptionStack';
 import CalendarStack from './CalendarStack';
 import ProgressStack from './ProgressStack';
 import Icon from '../../src/components/Shared/Icon';
 import colors from '../../src/styles/colors';
 import { tabColorMap } from './utils';
-import { Image } from 'react-native';
+import { Image, Text ,TouchableWithoutFeedback, StyleSheet, Dimensions, View} from 'react-native';
 import fonts from '../../src/styles/fonts';
 import DashboardStack from './DashboardStack';
 import LifestyleStack from './LifestyleStack';
@@ -14,6 +14,45 @@ import FeedSvg from '../../assets/icons/Feed';
 import CalenderSvg from '../../assets/icons/calender';
 import SubSVG from '../../assets/icons/subscriptionSVG';
 import ProgressSvg from '../../assets/icons/progress';
+var { height } = Dimensions.get("window")
+
+const HiddenView = () => <View style={{ display: 'none' }} />
+const TouchableWithoutFeedbackWrapper = ({
+  onPress,
+  onLongPress,
+  testID,
+  accessibilityLabel,
+  ...props
+}) => {
+  return (
+      <TouchableWithoutFeedback
+          onPress={onPress}
+          onLongPress={onLongPress}
+          testID={testID}
+          hitSlop={{
+              left: 15,
+              right: 15,
+              top: 5,
+              bottom: 5,
+          }}
+          accessibilityLabel={accessibilityLabel}
+      >
+          <View {...props} />
+      </TouchableWithoutFeedback>
+  )
+}
+const TabBarComponent = props => {
+  return <BottomTabBar
+      {...props}
+      style={styles.bottomBarStyle}
+      getButtonComponent={({ route }) => {
+          if (route.key === "Home" )
+              return HiddenView
+          else return TouchableWithoutFeedbackWrapper
+      }}
+  />
+}
+
 
 const TabStack = createBottomTabNavigator(
   {
@@ -27,6 +66,7 @@ const TabStack = createBottomTabNavigator(
   },
   {
     initialRouteName: 'Home',
+    tabBarComponent: (props) => (<TabBarComponent  {...props} />), //remember to import it,
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
       tabBarIcon: ({ focused }) => {
@@ -110,3 +150,11 @@ const TabStack = createBottomTabNavigator(
 );
 
 export default TabStack;
+
+
+const styles = StyleSheet.create({
+  bottomBarStyle: {
+      // height: (height * 10.625) / 100   //your header height (10.625 is the %)
+      height: (height * 6.625) / 100   //your header height (10.625 is the %)
+  }
+})
