@@ -43,7 +43,7 @@ const globalStyle = StyleSheet.create({
   //**********END ************* */
 //Custom Filter Button Style Section
     absoluteFilterButtonsContainer: {
-      width: width - 40,
+      // width: width - 40,
       // shadowColor: colors.grey.dark,
       // shadowOffset: { width: 0, height: 2 },
       // shadowOpacity: 0.7,

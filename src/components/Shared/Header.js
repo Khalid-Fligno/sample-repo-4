@@ -43,7 +43,6 @@ export default class Header extends React.PureComponent {
     navigation.pop();
   }
   goToHome = () => {
-    console.log("<><><<>><><")
     const { navigation } = this.props;
     navigation.navigate('Home')
   }

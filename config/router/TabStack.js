@@ -14,50 +14,13 @@ import FeedSvg from '../../assets/icons/Feed';
 import CalenderSvg from '../../assets/icons/calender';
 import SubSVG from '../../assets/icons/subscriptionSVG';
 import ProgressSvg from '../../assets/icons/progress';
-var { height } = Dimensions.get("window")
-
-const HiddenView = () => <View style={{ display: 'none' }} />
-const TouchableWithoutFeedbackWrapper = ({
-  onPress,
-  onLongPress,
-  testID,
-  accessibilityLabel,
-  ...props
-}) => {
-  return (
-      <TouchableWithoutFeedback
-          onPress={onPress}
-          onLongPress={onLongPress}
-          testID={testID}
-          hitSlop={{
-              left: 15,
-              right: 15,
-              top: 5,
-              bottom: 5,
-          }}
-          accessibilityLabel={accessibilityLabel}
-      >
-          <View {...props} />
-      </TouchableWithoutFeedback>
-  )
-}
-const TabBarComponent = props => {
-  return <BottomTabBar
-      {...props}
-      style={styles.bottomBarStyle}
-      getButtonComponent={({ route }) => {
-          if (route.key === "Home" )
-              return HiddenView
-          else return TouchableWithoutFeedbackWrapper
-      }}
-  />
-}
+import TabBarComponent from '../../src/components/Shared/TabBarComponent';
 
 
 const TabStack = createBottomTabNavigator(
   {
 
-    Home: DashboardStack,
+    Dashboard: DashboardStack,
     Feed:LifestyleStack,
     LifeStyle: SubscriptionStack,
     Calendar: CalendarStack,
@@ -65,7 +28,7 @@ const TabStack = createBottomTabNavigator(
     
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Dashboard',
     tabBarComponent: (props) => (<TabBarComponent  {...props} />), //remember to import it,
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
@@ -152,9 +115,3 @@ const TabStack = createBottomTabNavigator(
 export default TabStack;
 
 
-const styles = StyleSheet.create({
-  bottomBarStyle: {
-      // height: (height * 10.625) / 100   //your header height (10.625 is the %)
-      height: (height * 6.625) / 100   //your header height (10.625 is the %)
-  }
-})
