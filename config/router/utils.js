@@ -38,16 +38,11 @@ export const workoutsBackButtonMap = {
   WorkoutsHome: true,
   WorkoutsLocation: true,
   WorkoutsSelection: false,
-  HiitWorkoutsSelection: true,
   WorkoutInfo: true,
-  HiitWorkoutInfo: true,
-  HiitCircuitWorkoutInfo: true,
 };
 
 export const workoutsStartButtonMap = {
   WorkoutInfo: true,
-  HiitWorkoutInfo: true,
-  HiitCircuitWorkoutInfo: true,
 };
 
 export const nutritionBackButtonMap = {

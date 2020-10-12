@@ -247,11 +247,30 @@ fitazfkIcon: {
     backgroundColor:colors.red.light
   },
 /************** /Select Box ************** */
-fitnessLevelBoxContainer:{
-  flex:1,
-    //flexWrap:'wrap',
-  justifyContent:'center'
+
+/***************FItness level box */
+FT_ImageContainer:{
+  width:width-containerPadding*2,
+  height:110,
+  marginTop:20
 },
+FT_InnerContainer:{
+  flex:1,
+  flexDirection:'row',
+  alignItems:'center'
+},
+FT_Title:{
+  fontSize:20,
+  fontWeight:fonts.fontWeight,
+  color:colors.offWhite,
+  letterSpacing:fonts.letterSpacing,
+  marginStart:15
+}
+
+/***************FItness level box */
+
+
+
 
 }) 
 

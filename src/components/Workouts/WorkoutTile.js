@@ -11,6 +11,7 @@ import {
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import globalStyle from '../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 
@@ -56,7 +57,7 @@ export default class WorkoutTile extends React.PureComponent {
             source={image}
             style={styles.image}
           >
-            <View style={styles.opacityLayer}>
+            <View style={globalStyle.opacityLayer}>
               <Text style={styles.title}>
                 {title1.toUpperCase()}
               </Text>
@@ -102,13 +103,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     overflow: 'hidden',
   },
-  opacityLayer: {
-    flex: 1,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.transparentBlackLight,
-  },
+
   title: {
     fontFamily: fonts.bold,
     fontSize: 24,
