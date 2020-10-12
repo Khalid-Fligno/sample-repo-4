@@ -38,7 +38,7 @@ const globalStyle = StyleSheet.create({
           fontSize:12,
           fontWeight:'bold',
           color:colors.themeColor.color,
-          marginLeft:10,
+          marginLeft:5,
       },
   //**********END ************* */
 //Custom Filter Button Style Section
