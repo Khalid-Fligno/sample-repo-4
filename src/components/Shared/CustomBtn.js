@@ -66,7 +66,7 @@ const CustomBtn = (props)=>{
                 props.isLeftIcon && (
                     <Icon
                     name={props.leftIconName}
-                    size={10}
+                    size={props.leftIconSize}
                     color={props.leftIconColor}
                     style={{alignSelf:'center',marginRight:5}}
                 />
@@ -108,7 +108,12 @@ CustomBtn.propTypes = {
     leftIconColor:PropTypes.any,
     loading:PropTypes.bool,
     titleCapitalise:PropTypes.bool,
-    disabled:PropTypes.bool
+    disabled:PropTypes.bool,
+    leftIconSize:PropTypes.number
   };
+
+  CustomBtn.defaultProps ={
+    leftIconSize:10
+  }
 
 export default CustomBtn

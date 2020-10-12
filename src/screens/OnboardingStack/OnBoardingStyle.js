@@ -13,6 +13,11 @@ const onboardingStyle = StyleSheet.create({
         backgroundColor: colors.black,
         justifyContent: 'space-between',
       },
-   
+   IntensityTitleText:{
+    fontSize: 12,
+    color: '#d4d8db',
+    fontWeight:fonts.fontWeight,
+    letterSpacing:fonts.letterSpacing
+   }
   });
   export default  onboardingStyle

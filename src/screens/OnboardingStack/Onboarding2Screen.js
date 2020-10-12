@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Alert, ImageBackground, Dimensions } from 'react-native';
 import CustomButton from '../../components/Shared/CustomButton';
-import globalStyle from '../../styles/globalStyles';
+import globalStyle, { containerPadding } from '../../styles/globalStyles';
 import ChallengeStyle from '../Challenges/chellengeStyle';
 import colors from '../../styles/colors';
 import CustomBtn from '../../components/Shared/CustomBtn';
@@ -10,6 +10,13 @@ import Loader from '../../components/Shared/Loader';
 import * as Haptics from 'expo-haptics';
 import AsyncStorage from '@react-native-community/async-storage';
 import { db } from '../../../config/firebase';
+import RoundTick from '../../../assets/icons/RoundTick';
+import FitnessLevelCard from '../../components/Onboarding/FitnessLevelCard';
+import BigHeadingWithBackButton from '../../components/Shared/BigHeadingWithBackButton';
+import fonts from '../../styles/fonts';
+
+const { width } = Dimensions.get('window');
+
 class Onboarding2Screen extends Component {
   constructor(props) {
     super(props);
@@ -40,41 +47,53 @@ class Onboarding2Screen extends Component {
     let {fitnessLevel,loading} = this.state
     return (
             <SafeAreaView style={onboardingStyle.container}>
-              <View style={[globalStyle.container,{paddingVertical:15}]}>
-                <View>
-                  <Text style={[onboardingStyle.onBoardingTitle,{textAlign:'center'}]}>Fitness Level</Text>
-                </View>
-                 
-                  <TouchableOpacity 
-                        activeOpacity={0.8}
-                        style={[globalStyle.selectBox,fitnessLevel === 1 ?globalStyle.selectedBox:{},{width:'100%'}]}
-                        onPress={()=>this.setState({fitnessLevel:1})}      
-                  >
-                    <Text style={globalStyle.selectBoxText}> Beginner </Text>
-                  </TouchableOpacity>   
-                  <TouchableOpacity 
-                        activeOpacity={0.8}
-                        style={[globalStyle.selectBox,fitnessLevel === 2 ?globalStyle.selectedBox:{},{width:'100%'}]}
-                        onPress={()=>this.setState({fitnessLevel:2})}      
-     
-                  >
-                    <Text style={globalStyle.selectBoxText}> Intermediate </Text>
-                  </TouchableOpacity>   
-                  <TouchableOpacity 
-                        activeOpacity={0.8}
-                        style={[globalStyle.selectBox,fitnessLevel === 3 ?globalStyle.selectedBox:{},{width:'100%'}]}
-                        onPress={()=>this.setState({fitnessLevel:3})}      
-     
-                  >
-                    <Text style={globalStyle.selectBoxText}> Advanced </Text>
-                  </TouchableOpacity>   
+              <View style={[globalStyle.container]}>
+                  <BigHeadingWithBackButton
+                    bigTitleText = "Intensity"
+                    isBackButton = {false}
+                    isBigTitle = {true}
+                    customContainerStyle={{marginTop:15,marginBottom:0}}
 
-                <View style={{flex:1,justifyContent:'flex-end'}}>
+                  />
+                    <Text style={[onboardingStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
+                        Select your intensity level below.  
+                    </Text>
+                    <Text style={[onboardingStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
+                        Beginner: train once a week,  
+                    </Text>
+                    <Text style={[onboardingStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
+                         Intermediate: train 2 to 3 times a week, 
+                     </Text>
+                     <Text style={[onboardingStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
+                         Expert: train 4+ times a week
+                     </Text>
+                 
+                  <FitnessLevelCard
+                    source ={require('../../../assets/images/OnBoardindImg/FL_1.png')}
+                    onPress ={()=>this.setState({fitnessLevel:1})}  
+                    title = "Beginner"
+                    showTick = {fitnessLevel === 1}
+                 />
+                  <FitnessLevelCard
+                    source ={require('../../../assets/images/OnBoardindImg/FL_2.png')}
+                    onPress ={()=>this.setState({fitnessLevel:2})}  
+                    title = "Intermediate"
+                    showTick = {fitnessLevel === 2}
+                 />
+                 <FitnessLevelCard
+                    source ={require('../../../assets/images/OnBoardindImg/FL_3.png')}
+                    onPress ={()=>this.setState({fitnessLevel:3})}  
+                    title = "Expert"
+                    showTick = {fitnessLevel === 3}
+                 />
+
+
+                <View style={{flex:0.5,justifyContent:'flex-end'}}>
                   <CustomBtn 
-                      Title="Save"
-                      outline={true}
+                      Title="Continue"
                       customBtnStyle={{borderRadius:50,padding:15}}
                       onPress={()=>this.handleSubmit()}
+                      customBtnTitleStyle={{letterSpacing:fonts.letterSpacing}}
                   />    
                 </View>
                 <Loader
