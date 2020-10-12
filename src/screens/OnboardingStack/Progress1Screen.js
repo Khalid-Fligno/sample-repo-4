@@ -28,7 +28,7 @@ import {
 import { db } from '../../../config/firebase';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
-import { containerPadding } from '../../styles/globalStyles';
+import globalStyle, { containerPadding } from '../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 
@@ -167,7 +167,7 @@ export default class Progress1Screen extends React.PureComponent {
                   animationOut="fadeOut"
                   animationOutTiming={600}
                 >
-                  <View style={styles.modalContainer}>
+                  <View style={globalStyle.modalContainer}>
                     <Picker
                       selectedValue={weight}
                       onValueChange={(value) => this.setState({ weight: value })}
@@ -195,9 +195,9 @@ export default class Progress1Screen extends React.PureComponent {
                     <TouchableOpacity
                       title="DONE"
                       onPress={() => this.hideModal('weightModalVisible')}
-                      style={styles.modalButton}
+                      style={globalStyle.modalButton}
                     >
-                      <Text style={styles.modalButtonText}>
+                      <Text style={globalStyle.modalButtonText}>
                         DONE
                       </Text>
                     </TouchableOpacity>
@@ -224,7 +224,7 @@ export default class Progress1Screen extends React.PureComponent {
                   animationOut="fadeOut"
                   animationOutTiming={600}
                 >
-                  <View style={styles.modalContainer}>
+                  <View style={globalStyle.modalContainer}>
                     <Picker
                       selectedValue={waist}
                       onValueChange={(value) => this.setState({ waist: value })}
@@ -252,9 +252,9 @@ export default class Progress1Screen extends React.PureComponent {
                     <TouchableOpacity
                       title="DONE"
                       onPress={() => this.hideModal('waistModalVisible')}
-                      style={styles.modalButton}
+                      style={globalStyle.modalButton}
                     >
-                      <Text style={styles.modalButtonText}>
+                      <Text style={globalStyle.modalButtonText}>
                         DONE
                       </Text>
                     </TouchableOpacity>
@@ -281,7 +281,7 @@ export default class Progress1Screen extends React.PureComponent {
                   animationOut="fadeOut"
                   animationOutTiming={600}
                 >
-                  <View style={styles.modalContainer}>
+                  <View style={globalStyle.modalContainer}>
                     <Picker
                       selectedValue={hip}
                       onValueChange={(value) => this.setState({ hip: value })}
@@ -309,9 +309,9 @@ export default class Progress1Screen extends React.PureComponent {
                     <TouchableOpacity
                       title="DONE"
                       onPress={() => this.hideModal('hipModalVisible')}
-                      style={styles.modalButton}
+                      style={globalStyle.modalButton}
                     >
-                      <Text style={styles.modalButtonText}>
+                      <Text style={globalStyle.modalButtonText}>
                         DONE
                       </Text>
                     </TouchableOpacity>
@@ -382,25 +382,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.charcoal.light,
   },
-  modalContainer: {
-    justifyContent: 'space-between',
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.themeColor.color,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
+ 
   contentContainer: {
     flexGrow: 1,
     justifyContent: 'center',

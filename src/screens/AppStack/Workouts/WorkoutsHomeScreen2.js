@@ -146,8 +146,8 @@ fetchCategories = async () =>{
                 style={globalStyle.container}  
                 ref={ref => {this.scrollView = ref}}
                 onContentSizeChange={() =>  {
-                  if(!this.state.toggleList[0])
-                  this.scrollView.scrollToEnd({animated: true})
+                  if(this.state.toggleList[1] || this.state.toggleList[2] || this.state.toggleList[3])
+                      this.scrollView.scrollToEnd({animated: true})
                 }}
         >
           {
@@ -168,15 +168,9 @@ fetchCategories = async () =>{
                       onPress={() => this.toggleSubtitleList(index)}
                       showTitle = {false}
                       overlayTitle = {true}
-                      overlayTitleStyle ={
-                        { color:colors.offWhite,
-                          textAlign:'left',
-                          paddingLeft:50,
-                          textTransform:'capitalize',
-                          fontSize:25
-                        }}
-                    
-                      customContainerStyle={{height:170,marginBottom:15}}
+                      overlayTitleStyle ={WorkoutScreenStyle.overlayTitleStyle}
+                      customContainerStyle={{height:width/2.5,marginBottom:15}}
+                      // customContainerStyle={{height:170,marginBottom:15}}
                     />    
                   { toggleList[index] && <View style={{marginBottom:20,paddingLeft:5}}>
                         {work.subCategories.map((data,i)=>(

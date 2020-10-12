@@ -196,7 +196,7 @@ class CalendarHomeScreen extends React.PureComponent {
         catch(err){
           console.log(err)
           this.setState({ loading: false });
-          Alert.alert('Something went wrong','Please check workout load section')
+          Alert.alert('Something went wrong','Workout Not Available')
         }
         
       })
@@ -306,7 +306,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 <ListItem
                   title={workout.displayName}
                   subtitle={
-                    workout.filters.includes('strength') ? (
+                    workout.filters && workout.filters.includes('strength') ? (
                       <View style={styles.workoutSubtitleContainer}>
                         {/* <Icon
                           name={findLocationIcon()}
@@ -333,7 +333,7 @@ class CalendarHomeScreen extends React.PureComponent {
                           color={colors.charcoal.standard}
                         />
                         <Text style={styles.workoutSubtitleText}>
-                          HIIT {findWorkoutType(workout)}
+                          {findWorkoutType(workout)}
                         </Text>
                       </View>
                     )
@@ -551,6 +551,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginLeft: 5,
     marginRight: 15,
+    textTransform:'capitalize'
   },
   recipeListItemTitle: {
     fontFamily: fonts.bold,

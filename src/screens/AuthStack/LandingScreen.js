@@ -93,7 +93,7 @@ export default class LandingScreen extends React.PureComponent {
                 style={styles.loginButton}
               >
                 <Text style={styles.loginButtonText}>
-                  i already have an account
+                  I already have an account
                 </Text>
               </TouchableOpacity>
             </View>
@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: undefined,
     height: undefined,
-    marginBottom:width/4
   },
   opacityOverlayLight: {
     width,
@@ -144,6 +143,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'absolute',
     bottom: 0,
+    backgroundColor:colors.themeColor.themeBackgroundColor
   },
   buttonContainer: {
     width,

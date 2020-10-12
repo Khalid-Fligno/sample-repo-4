@@ -71,7 +71,7 @@ export default class ExercisesScreen extends React.PureComponent {
           videoPaused: false,
           exerciseInfoModalVisible: false,
           appState: AppState.currentState,
-          rest:rest 
+          rest:rest,
     };
   }
   componentDidMount() {
@@ -309,10 +309,10 @@ export default class ExercisesScreen extends React.PureComponent {
               let {workout} = this.state
               console.log(currentExerciseIndex,setCount)
               if(workout.filters.includes('strength')){
-                if(currentExerciseIndex < workout.exercises.length-2)
+                if(currentExerciseIndex < workout.exercises.length-1)
                     this.goToExercise(1,reps,null,currentExerciseIndex + 1,false)
                 else{
-                  this.goToExercise(workout.workoutReps,reps,null,currentExerciseIndex + 1,false)
+                  this.goToExercise(workout.workoutReps,reps,null,currentExerciseIndex,false)
                 }
 
               }else if(workout.filters.includes('circuit')){
@@ -364,14 +364,24 @@ export default class ExercisesScreen extends React.PureComponent {
       workoutSubCategory,
       fitnessLevel,
       rest,
-      workout
+      workout,
     } = this.state;
     const setCount = this.props.navigation.getParam('setCount', 1)
     // console.log(rest,exerciseList[currentExerciseIndex],exerciseList)
     // console.log(fitnessLevel,totalDuration,setCount)
 
+  let getProgressType = findWorkoutType(workout);
+  let handleSkip = false;
+    if(!workout.filters.includes('interval')){
+       handleSkip = true
+    }
 
-  let getProgressType = findWorkoutType(workout)
+  let showNextExercise = false  
+    if(workout.filters.includes('strength') && setCount === workout.workoutReps){
+      showNextExercise = true
+    }else if(rest){
+      showNextExercise = true
+    }
   
     return (
       <SafeAreaView style={styles.container}>
@@ -426,7 +436,7 @@ export default class ExercisesScreen extends React.PureComponent {
             <View style={styles.currentExerciseRepsTextContainer}>
               {workout.filters.includes('strength') &&(
                  <Text style={styles.currentExerciseRepsText}>
-                    x{reps}
+                   {workout.workoutReps} x {reps}
                  </Text> 
               )
               }
@@ -457,6 +467,7 @@ export default class ExercisesScreen extends React.PureComponent {
               <PauseButtonRow
                 handlePause={this.handlePause}
                 nextExerciseName={exerciseList[currentExerciseIndex].name}
+                showNextExercise = {showNextExercise}
               />
             )
           }
@@ -465,6 +476,7 @@ export default class ExercisesScreen extends React.PureComponent {
               handlePause={this.handlePause}
               nextExerciseName={exerciseList[currentExerciseIndex + 1]?exerciseList[currentExerciseIndex + 1].name:'NEARLY DONE!'}
               lastExercise={exerciseList[currentExerciseIndex + 1]?false:true}
+              showNextExercise = {showNextExercise}
             />
           }
           
@@ -478,7 +490,7 @@ export default class ExercisesScreen extends React.PureComponent {
             isVisible={pauseModalVisible}
             handleQuit={this.quitWorkout}
             handleRestart={this.restartWorkout}
-            handleSkip={workout.filters.includes('interval')?null:this.skipExercise}
+            handleSkip={handleSkip?this.skipExercise:null}
             handleUnpause={this.handleUnpause}
             exerciseList={exerciseList}
             reps={reps}

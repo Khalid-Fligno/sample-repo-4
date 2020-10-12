@@ -505,7 +505,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 10,
-    backgroundColor: colors.white,
+    backgroundColor:'transparent',
     borderRadius: 2,
     shadowColor: colors.themeColor.lightColor,
     shadowOffset: { width: 0, height: 2 },
@@ -514,7 +514,7 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     alignItems: 'center',
-    backgroundColor: colors.themeColor.lightColor,
+    // backgroundColor: colors.themeColor.lightColor,
     width: width - 20,
     borderTopLeftRadius: 2,
     borderTopRightRadius: 2,
@@ -522,9 +522,13 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   bodyText: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.bold,
     fontSize: 12,
-    color: colors.white,
+    color: colors.grey.dark,
+    fontWeight:'500',
+    paddingVertical:20,
+    textAlign:"center",
+    width:'100%'
   },
 });
 

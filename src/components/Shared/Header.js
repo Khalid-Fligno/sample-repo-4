@@ -42,6 +42,10 @@ export default class Header extends React.PureComponent {
     const { navigation } = this.props;
     navigation.pop();
   }
+  goToHome = () => {
+    const { navigation } = this.props;
+    navigation.navigate('Home')
+  }
   handleLogout = () => {
     const { navigation } = this.props;
     if (navigation.state.params.handleLogout) {
@@ -87,6 +91,7 @@ export default class Header extends React.PureComponent {
       stack,
       navigation,
       withBackButton,
+      withHomeButton,
       withHelpButton,
       withSkipButton,
       withCancelButton,
@@ -135,6 +140,20 @@ export default class Header extends React.PureComponent {
             )
           }
           {
+            withHomeButton && (
+              <TouchableOpacity
+                style={globalStyle.headerContentContainerLeft}
+                onPress={this.goToHome}
+              >
+                <Icon
+                  name="chevron-left"
+                  size={20}
+                  color={colors.themeColor.color}
+                />
+              </TouchableOpacity>
+            )
+          }
+          {
             withHelpButton && (
               <TouchableOpacity
                 style={globalStyle.headerContentContainerLeft}
@@ -161,7 +180,7 @@ export default class Header extends React.PureComponent {
             )
           }
           {
-            !withBackButton && !withHelpButton && !withLogoutButton && (
+            !withHomeButton &&!withBackButton && !withHelpButton && !withLogoutButton && (
               <View style={globalStyle.headerContentContainerLeft} />
             )
           }
@@ -266,6 +285,7 @@ export default class Header extends React.PureComponent {
 
 Header.propTypes = {
   withBackButton: PropTypes.bool,
+  withHomeButton: PropTypes.bool,
   withLogoutButton: PropTypes.bool,
   withHelpButton: PropTypes.bool,
   withSkipButton: PropTypes.bool,
@@ -279,6 +299,7 @@ Header.propTypes = {
 
 Header.defaultProps = {
   withBackButton: false,
+  withHomeButton: false,
   withLogoutButton: false,
   withHelpButton: false,
   withSkipButton: false,

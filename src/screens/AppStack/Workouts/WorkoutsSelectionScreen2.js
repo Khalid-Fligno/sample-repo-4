@@ -18,7 +18,6 @@ import { ListItem, Avatar } from 'react-native-elements';
 // import Icon from '../../../components/Shared/Icon';
 import WorkoutScreenStyle from './WorkoutScreenStyle';
 import WorkoutListItem from '../../../components/Workouts/WorkoutListItem';
-
 let fitnessLevel = 1
 export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   constructor(props) {
@@ -170,6 +169,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
               keyExtractor={this.keyExtractor}
               renderItem={this.renderItem}
               showsVerticalScrollIndicator={false}
+              style={{height:'100%',marginStart:2}}
             />
             </View>
           )

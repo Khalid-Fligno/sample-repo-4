@@ -37,7 +37,7 @@ export const tabColorMap = {
 export const workoutsBackButtonMap = {
   WorkoutsHome: true,
   WorkoutsLocation: true,
-  WorkoutsSelection: true,
+  WorkoutsSelection: false,
   HiitWorkoutsSelection: true,
   WorkoutInfo: true,
   HiitWorkoutInfo: true,

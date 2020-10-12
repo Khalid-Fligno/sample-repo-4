@@ -31,18 +31,19 @@ const globalStyle = StyleSheet.create({
           fontSize:35,
           fontFamily:fonts.boldNarrow,
           color:colors.black,
-          letterSpacing:0.5
+          letterSpacing:0.5,
+          textTransform:'capitalize'
       },
       bigHeadingWithBackButtonText : {
           fontSize:12,
           fontWeight:'bold',
           color:colors.themeColor.color,
-          marginLeft:10,
+          marginLeft:5,
       },
   //**********END ************* */
 //Custom Filter Button Style Section
     absoluteFilterButtonsContainer: {
-      width: width - 40,
+      // width: width - 40,
       // shadowColor: colors.grey.dark,
       // shadowOffset: { width: 0, height: 2 },
       // shadowOpacity: 0.7,
@@ -143,7 +144,7 @@ buttonContainer: {
   paddingBottom: 10,
 },
 
-//*************END********************* */
+//*************Component model END********************* */
 /**************Start****************** */     
 defaultHeaderShadow: {
   backgroundColor: colors.black,
@@ -218,6 +219,40 @@ fitazfkIcon: {
   height: 50,
 },
 /**************END******************** */   
+
+
+
+
+/**************Select Box ************** */
+  selectBoxContainer:{
+    flexDirection:'row',
+    flexWrap:'wrap',
+    justifyContent:'space-between'
+  },
+  selectBox:{
+    height:50,
+    width:'48%',
+    borderWidth:colors.themeColor.themeBorderWidth,
+    borderColor:colors.themeColor.themeBorderColor,
+    marginTop:20,
+    alignItems:'center',
+    flexDirection:"column",
+    justifyContent:'center',
+
+  },
+  selectBoxText:{
+    fontFamily:fonts.standard
+  },
+  selectedBox:{
+    backgroundColor:colors.red.light
+  },
+/************** /Select Box ************** */
+fitnessLevelBoxContainer:{
+  flex:1,
+    //flexWrap:'wrap',
+  justifyContent:'center'
+},
+
 }) 
 
 export default globalStyle

@@ -1,22 +1,22 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import CalendarHomeScreen from '../../src/screens/AppStack/Calendar/CalendarHomeScreen';
 import Header from '../../src/components/Shared/Header';
+import LifeStyleScreen from '../../src/screens/AppStack/Home/LifeStyleScreen';
 
-const CalendarStack = createStackNavigator(
+const LifestyleStack = createStackNavigator(
   {
-    CalendarHome: CalendarHomeScreen,
+    Lifestyle:LifeStyleScreen
   },
   {
-    initialRouteName: 'CalendarHome',
+    initialRouteName: 'Lifestyle',
     defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
         return (
           <Header
+            stack="home"
             navigation={navigation}
-            stack="calendar"
-            withProfileButton={routeName === 'CalendarHome'}
+            withProfileButton={routeName === 'Lifestyle'}
             withHomeButton={true}
           />
         );
@@ -25,4 +25,4 @@ const CalendarStack = createStackNavigator(
   },
 );
 
-export default CalendarStack;
+export default LifestyleStack;

@@ -6,9 +6,8 @@ import NutritionStack from './NutritionStack';
 import WorkoutsStack from './WorkoutsStack';
 import HomeStack from './HomeStack';
 
-const FeedStack = createStackNavigator(
+const DashboardStack = createStackNavigator(
   {
-    Dashboard: HomeScreen,
     Home: HomeStack,
     Nutrition: NutritionStack,
     Workouts: WorkoutsStack
@@ -31,4 +30,4 @@ const FeedStack = createStackNavigator(
   },
 );
 
-export default FeedStack;
+export default DashboardStack;

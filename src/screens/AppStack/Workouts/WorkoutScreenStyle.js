@@ -308,6 +308,14 @@ const WorkoutScreenStyle = StyleSheet.create({
        fontFamily:fonts.standard,
        marginVertical:8,
     },
+    overlayTitleStyle: { 
+      color:colors.offWhite,
+      textAlign:'left',
+      paddingLeft:50,
+      textTransform:'capitalize',
+      fontSize:25
+    }
+
 //*************Workout Home Screen **************** */
 
       

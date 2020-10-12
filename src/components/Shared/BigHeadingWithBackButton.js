@@ -27,7 +27,7 @@ import PropTypes from 'prop-types';
             
             {props.isBigTitle && (
                  <Text style={[globalStyle.bigHeadingTitleText,props.bigTitleStyle?props.bigTitleStyle:{}]}>
-                 {(props.bigTitleText.charAt(0).toUpperCase() + props.bigTitleText.slice(1))}
+                 {props.bigTitleText}
                  </Text>
             )}
            

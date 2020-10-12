@@ -1,77 +1,87 @@
 import React from 'react';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
-import HomeStack from './HomeStack';
-import FeedStack from './FeedStack';
+import { createBottomTabNavigator, BottomTabBar } from 'react-navigation-tabs';
 import SubscriptionStack from './SubscriptionStack';
-import NutritionStack from './NutritionStack';
-import WorkoutsStack from './WorkoutsStack';
 import CalendarStack from './CalendarStack';
 import ProgressStack from './ProgressStack';
 import Icon from '../../src/components/Shared/Icon';
 import colors from '../../src/styles/colors';
 import { tabColorMap } from './utils';
-import { Image } from 'react-native';
+import { Image, Text ,TouchableWithoutFeedback, StyleSheet, Dimensions, View} from 'react-native';
 import fonts from '../../src/styles/fonts';
+import DashboardStack from './DashboardStack';
+import LifestyleStack from './LifestyleStack';
+import FeedSvg from '../../assets/icons/Feed';
+import CalenderSvg from '../../assets/icons/calender';
+import SubSVG from '../../assets/icons/subscriptionSVG';
+import ProgressSvg from '../../assets/icons/progress';
+import TabBarComponent from '../../src/components/Shared/TabBarComponent';
+
 
 const TabStack = createBottomTabNavigator(
   {
-    //  Home: HomeStack,
-    // Nutrition: NutritionStack,
-    // Workouts: WorkoutsStack,
-    // Calendar: CalendarStack,
-    // Progress: ProgressStack,
-    
 
-    Dashboard: FeedStack,
-    Subscription: SubscriptionStack,
+    Dashboard: DashboardStack,
+    Feed:LifestyleStack,
+    LifeStyle: SubscriptionStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
+    
   },
   {
     initialRouteName: 'Dashboard',
+    tabBarComponent: (props) => (<TabBarComponent  {...props} />), //remember to import it,
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
-        const activeState = tabColorMap[routeName];
-        const inactiveState = colors.charcoal.standard;
+        const activeState = colors.themeColor.color;
+        const inactiveState = colors.themeColor.color;
+        // const inactiveState = colors.charcoal.standard;
         let icon;
-     
-        if (routeName === 'Dashboard') {
+        if (routeName === 'Home') {
           icon = (
-            <Image
-              source={require('../../assets/icons/fitazfk2-feed.png')}
-              fadeDuration={0}
-              style={{width:31, height: 22}}
+            <Icon
+              name={ 'home-outline'}
+              size={22}
+              color={focused ? activeState : inactiveState}
+            />
+          );
+        } 
+        if ( routeName === 'Feed') {
+          icon = (
+            <FeedSvg 
+                width = {22}
+                height = {22}
+                fill ={focused ? activeState : inactiveState}
             />
           );
         }
-        else if (routeName === 'Subscription') {
+        else if (routeName === 'LifeStyle' ) {
           icon = (
-            <Image
-              source={require('../../assets/icons/fitazfk2-subscription.png')}
-              fadeDuration={0}
-              style={{width:22, height: 22}}
+            <SubSVG 
+                width = {22}
+                height = {22}
+                fill ={focused ? activeState : inactiveState}
             />
           );
         } 
    
          else if (routeName === 'Calendar') {
           icon = (
-              <Image
-               source={require('../../assets/icons/fitazfk2-calendar.png')}
-               fadeDuration={0}
-               style={{width:22, height: 22}}
+              <CalenderSvg 
+                  width = {22}
+                  height = {22}
+                  fill ={focused ? activeState : inactiveState} 
               />
           
           );
         } else if (routeName === 'Progress') {
           icon = (
-              <Image
-              source={require('../../assets/icons/fitazfk2-progress.png')}
-                fadeDuration={0}
-              style={{width:22, height: 22}}
-              />
+              <ProgressSvg
+                  width = {22}
+                  height = {22}
+                  fill ={focused ? activeState : inactiveState} 
+               />
         
           );
         }
@@ -95,10 +105,13 @@ const TabStack = createBottomTabNavigator(
       labelStyle: {
         fontFamily: fonts.bold,
         textTransform:"uppercase",
-        paddingBottom:4
+        paddingBottom:4,
       },
+      
     },
   },
 );
 
 export default TabStack;
+
+
