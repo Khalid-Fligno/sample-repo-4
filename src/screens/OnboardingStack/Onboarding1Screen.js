@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
   bodyText: {
     // fontFamily: fonts.boldNarrow,
     fontSize: 13,
-    color: '#d4d8db',
+    color: '#eaeced',
     width:'65%',
     fontWeight:fonts.fontWeight,
     letterSpacing:fonts.letterSpacing

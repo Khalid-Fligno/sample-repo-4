@@ -90,7 +90,7 @@ class Onboarding2Screen extends Component {
 
                 <View style={{flex:0.5,justifyContent:'flex-end'}}>
                   <CustomBtn 
-                      Title="Save"
+                      Title="Continue"
                       customBtnStyle={{borderRadius:50,padding:15}}
                       onPress={()=>this.handleSubmit()}
                       customBtnTitleStyle={{letterSpacing:fonts.letterSpacing}}
