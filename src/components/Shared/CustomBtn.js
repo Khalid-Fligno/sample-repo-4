@@ -17,7 +17,7 @@ const CustomBtn = (props)=>{
         
     }
     const customBtnTitleStyle ={
-        fontWeight:'500',
+        fontFamily:fonts.GothamMedium,
         fontSize:17,
         letterSpacing:0.7,
         // marginTop: 3,
@@ -55,8 +55,8 @@ const CustomBtn = (props)=>{
                 props.leftIcon && (
                     <Image
                         source={props.leftIconUrl}
-                        style={{width: 22,
-                            height: 22,
+                        style={{width: 20,
+                            height: 20,
                             marginRight: 10,
                         }}
                     />

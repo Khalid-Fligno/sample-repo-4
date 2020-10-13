@@ -22,10 +22,13 @@ class Onboarding2Screen extends Component {
     super(props);
     this.state = {
       fitnessLevel:2,
-      loading:false
+      loading:false,
+      name: props.navigation.getParam('name', null),
+      specialOffer: props.navigation.getParam('specialOffer', undefined)
     };
   }
   handleSubmit = async () => {
+    const {name ,specialOffer } = this.state
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     try {
@@ -37,7 +40,11 @@ class Onboarding2Screen extends Component {
       };
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
-      this.props.navigation.navigate('App', { isInitial: true });
+      // this.props.navigation.navigate('App', { isInitial: true });
+      this.props.navigation.navigate('Subscription', { 
+          name,
+          specialOffer,
+      });
     } catch (err) {
       Alert.alert('Database write error', `${err}`);
       this.setState({ loading: false });

@@ -27,6 +27,7 @@ export default createUserChallengeData =(data)=>{
       "currentProgressInfo":{},
       "createdOn":data.createdOn?data.createdOn:moment(new Date()).format('YYYY-MM-DD'),
       "numberOfDays":data.numberOfDays,
+      "imageUrl":data.imageUrl
     }
     return challenge
   }

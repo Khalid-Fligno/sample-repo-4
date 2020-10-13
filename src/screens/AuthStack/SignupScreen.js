@@ -126,7 +126,8 @@ export default class SignupScreen extends React.PureComponent {
           .then(() => {
             this.setState({ loading: false });
             appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Apple' });
-            this.props.navigation.navigate('Subscription', { name: givenName, specialOffer: this.state.specialOffer });
+            // this.props.navigation.navigate('Subscription', { name: givenName, specialOffer: this.state.specialOffer });
+            this.props.navigation.navigate('Onboarding1', { name: givenName, specialOffer: this.state.specialOffer });
             auth.currentUser.sendEmailVerification().then(() => {
               Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
             });
@@ -182,7 +183,8 @@ export default class SignupScreen extends React.PureComponent {
         appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Facebook' });
         auth.currentUser.sendEmailVerification().then(() => {
           Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
-          this.props.navigation.navigate('Subscription', { name: profile.first_name, specialOffer: this.state.specialOffer });
+          // this.props.navigation.navigate('Subscription', { name: profile.first_name, specialOffer: this.state.specialOffer });
+          this.props.navigation.navigate('Onboarding1', { name: first_name, specialOffer: this.state.specialOffer });
         });
       } else {
         this.setState({ loading: false });
@@ -225,7 +227,8 @@ export default class SignupScreen extends React.PureComponent {
         .then(() => {
           this.setState({ loading: false });
           appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Email' });
-          this.props.navigation.navigate('Subscription', { name: firstName, specialOffer: this.state.specialOffer });
+          // this.props.navigation.navigate('Subscription', { name: firstName, specialOffer: this.state.specialOffer });
+          this.props.navigation.navigate('Onboarding1', { name: firstName, specialOffer: this.state.specialOffer });
           auth.currentUser.sendEmailVerification().then(() => {
             Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
           });
@@ -364,7 +367,7 @@ export default class SignupScreen extends React.PureComponent {
                 }
                   <Text
                   onPress={this.navigateToLogin}
-                  style={authScreenStyle.navigateToButton}
+                  style={[authScreenStyle.navigateToButton,{paddingBottom:20}]}
                   >
                   I already have an account? Sign in 
                   </Text>

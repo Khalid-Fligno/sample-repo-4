@@ -49,9 +49,12 @@ import RNIap, {
   purchaseErrorListener,
   purchaseUpdatedListener,
 } from 'react-native-iap';
+import CustomBtn from '../../components/Shared/CustomBtn';
+import { containerPadding } from '../../styles/globalStyles';
+
 const productTitleMap = {
-  0: 'YEARLY - ',
-  1: 'MONTHLY - ',
+  0: 'Yearly ',
+  1: 'Monthly ',
 };
 
 const subscriptionPeriodMap = {
@@ -106,6 +109,7 @@ export default class SubscriptionScreen extends React.PureComponent {
       products: undefined,
       discountedProducts: undefined,
       specialOffer: props.navigation.getParam('specialOffer', undefined),
+      selectedIndex:0
     };
   }
   componentDidMount = async () => {
@@ -793,13 +797,38 @@ export default class SubscriptionScreen extends React.PureComponent {
     });
     return validationData;
   }
+
+  handleClick(){
+    const {
+      loading,
+      products,
+      discountedProducts,
+      specialOffer,
+      selectedIndex
+    } = this.state;
+    
+
+    if(!specialOffer && products){
+      console.log(products[selectedIndex].identifier, products[selectedIndex].price, products[selectedIndex].currencyCode)
+      this.purchaseProduct(products[selectedIndex].identifier, products[selectedIndex].price, products[selectedIndex].currencyCode)
+    }
+    else if(specialOffer && discountedProducts && products){
+      this.purchaseDiscountedProduct(products[selectedIndex].identifier, products[selectedIndex].price, products[selectedIndex].currencyCode)
+    }
+    else {
+      Alert.alert("Something went please try again...")
+    }
+  }
+
   render() {
     const {
       loading,
       products,
       discountedProducts,
       specialOffer,
+      selectedIndex
     } = this.state;
+    console.log(products)
     return (
       <React.Fragment>
         <View style={styles.container}>
@@ -808,16 +837,16 @@ export default class SubscriptionScreen extends React.PureComponent {
             showsVerticalScrollIndicator={false}
           >
             <ImageBackground
-              source={require('../../../assets/images/subscription-screen-background.jpg')}
+              source={require('../../../assets/images/OnBoardindImg/subscriptionBG.png')}
               style={styles.imageBackgroundContainer}
             >
-              <View style={styles.headerContainer}>
+              {/* <View style={styles.headerContainer}>
                 <Text style={styles.smallheaderText}>
                   {"YOU'RE ON YOUR WAY TO"}
                 </Text>
                 <Text style={styles.smallheaderText}>
                   GETTING SHREDDED!
-                                </Text>
+                </Text>
                 <Text style={styles.headerTextLine1}>
                   <Text style={styles.headerTextCursive}>
                     {'start  '}
@@ -826,11 +855,32 @@ export default class SubscriptionScreen extends React.PureComponent {
                 </Text>
                 <Text style={styles.headerTextLine2}>
                   FREE TRIAL TODAY!
-                                </Text>
+                </Text>
+              </View> */}
+               <View style={styles.headerContainer}>
+                  <Text style={styles.headerText}>
+                    {'START YOUR'}
+                  </Text>
+          
+                <Text style={styles.headerText2}>
+                {specialOffer ? '1 MONTH' : '7 DAY'} FREE TRIAL 
+                </Text>
               </View>
+
+              </ImageBackground>  
               <View style={styles.contentContainer}>
+                <Text style={{fontFamily: fonts.GothamMedium,
+                      fontSize: 12,
+                      color: colors.grey.dark,
+                      textAlign:'center',
+                      marginTop:20,
+                      marginBottom:10
+                      }}>
+                        Choose your payment option
+                </Text>
                 <View style={styles.subscriptionTileRow}>
-                  {
+
+                {
                     !specialOffer && products && products.map((product, index) => (
                       <SubscriptionTile
                         key={product.identifier}
@@ -839,11 +889,15 @@ export default class SubscriptionScreen extends React.PureComponent {
                         price={product.priceString}
                         priceNumber={product.price}
                         currencyCode={product.currencyCode}
-                        onPress={() => this.purchaseProduct(product.identifier, product.price, product.currencyCode)}
+                        currencySymbol={product.currencySymbol}
+                        // onPress={() => this.purchaseProduct(product.identifier, product.price, product.currencyCode)}
+                        onPress={() => this.setState({selectedIndex:index})}
+                        selected = {selectedIndex === index}
                         term={Platform.OS === 'android' ? andriodSubscriptionTitleMap[index] : subscriptionPeriodMap[product.identifier]}
                       />
                     ))
                   }
+
                   {
                     specialOffer && discountedProducts && products && discountedProducts.map((product, index) => (
                       <SubscriptionTile
@@ -853,23 +907,37 @@ export default class SubscriptionScreen extends React.PureComponent {
                         price={product.priceString}
                         priceNumber={product.price}
                         currencyCode={product.currencyCode}
-                        onPress={() => this.purchaseDiscountedProduct(product.identifier, product.price, product.currencyCode)}
+                        currencySymbol={product.currencySymbol}
+                        // onPress={() => this.purchaseDiscountedProduct(product.identifier, product.price, product.currencyCode)}
+                        onPress={() => this.setState({selectedIndex:index})}
                         term={Platform.OS === 'android' ? andriodSubscriptionTitleMap[index] : subscriptionPeriodMap[product.identifier]}
                         comparisonPrice={
                           products && (product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' || product.identifier === 'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.discounted') ?
-                            `$${(products[0].price / 12).toFixed(2)}` :
+                            `${product.currencySymbol} ${(products[0].price / 12).toFixed(2)}` :
                             products[1].priceString
                         }
                         isDiscounted={product.identifier.indexOf('fitazfkapp.sub.fullaccess.yearly.discounted') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
                       />
                     ))
                   }
+
                 </View>
               </View>
+            <View>
+              <CustomBtn 
+                customBtnStyle={{
+                        marginHorizontal:containerPadding,
+                        borderRadius:50,
+                        marginTop:20,
+                        marginBottom:10
+                      }}
+                Title="Start your free trial"
+                onPress={()=> this.handleClick()}
+              />
               <Icon
                 name="chevron-up"
                 size={8}
-                color={colors.white}
+                color={colors.charcoal.dark}
                 style={styles.chevronUp}
               />
               <View style={styles.disclaimerTextContainer}>
@@ -896,7 +964,9 @@ export default class SubscriptionScreen extends React.PureComponent {
                   Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.
                 </Text>
               </View>
-            </ImageBackground>
+            </View>
+        
+            
           </ScrollView>
         </View>
         {
@@ -912,16 +982,22 @@ export default class SubscriptionScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.black,
+    backgroundColor: colors.themeColor.themeBackgroundColor,
     alignItems: 'center',
   },
   imageBackgroundContainer: {
-    height: (height > 800) ? height * 0.96 : height * 1.02,
+    // height: (height > 800) ? height * 0.96 : height * 1.02,
+    height:width/2,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   headerContainer: {
-    padding: 20,
+    flex: 1,
+    width: '100%',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
+    paddingBottom:15,
+    paddingLeft:25
   },
   smallheaderText: {
     fontFamily: fonts.bold,
@@ -929,25 +1005,38 @@ const styles = StyleSheet.create({
     color: colors.black,
     textAlign: 'center',
   },
-  headerTextCursive: {
-    fontFamily: fonts.tuesdayNight,
+  // headerTextCursive: {
+  //   fontFamily: fonts.tuesdayNight,
+  //   fontSize: 30,
+  //   color: colors.black,
+  //   textAlign: 'center',
+  // },
+  headerText: {
+    fontFamily: fonts.bold,
     fontSize: 30,
-    color: colors.black,
+    color: colors.offWhite,
     textAlign: 'center',
   },
-  headerTextLine1: {
-    fontFamily: fonts.ultraItalic,
-    fontSize: 22,
-    color: colors.themeColor.color,
-    textAlign: 'center',
+  headerText2:{
+    fontSize:30,
+    marginTop:0,
+    fontWeight:'700',
+    fontStyle:'italic',
+    color:colors.themeColor.color
   },
-  headerTextLine2: {
-    fontFamily: fonts.ultraItalic,
-    fontSize: 22,
-    color: colors.themeColor.color,
-    textAlign: 'center',
-    marginTop: Platform.OS === 'android' ? 0 : -20,
-  },
+  // headerTextLine1: {
+  //   fontFamily: fonts.ultraItalic,
+  //   fontSize: 22,
+  //   color: colors.themeColor.color,
+  //   textAlign: 'center',
+  // },
+  // headerTextLine2: {
+  //   fontFamily: fonts.ultraItalic,
+  //   fontSize: 22,
+  //   color: colors.themeColor.color,
+  //   textAlign: 'center',
+  //   marginTop: Platform.OS === 'android' ? 0 : -20,
+  // },
   contentContainer: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -973,11 +1062,11 @@ const styles = StyleSheet.create({
   subscriptionTermsTitle: {
     fontFamily: fonts.bold,
     fontSize: 8,
-    color: colors.white,
+    color: colors.black,
   },
   disclaimerText: {
     fontFamily: fonts.standard,
     fontSize: 8,
-    color: colors.white,
+    color: colors.black,
   },
 });

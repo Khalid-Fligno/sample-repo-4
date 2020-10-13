@@ -40,6 +40,7 @@ export default class Onboarding1Screen extends React.PureComponent {
       uomModalVisible: false,
       timezone: null,
       name: props.navigation.getParam('name', null),
+      specialOffer: props.navigation.getParam('specialOffer', undefined)
     };
   }
   componentDidMount = async () => {
@@ -51,6 +52,7 @@ export default class Onboarding1Screen extends React.PureComponent {
     this.setState({ chosenDate: currentDate?currentDate:new Date(1990, 0, 1) });
   }
   handleSubmit = async (chosenDate, chosenUom) => {
+    const {name ,specialOffer } = this.state
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     try {
@@ -74,8 +76,13 @@ export default class Onboarding1Screen extends React.PureComponent {
       };
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
-      this.props.navigation.navigate('Onboarding2', { isInitial: true });
+      this.props.navigation.navigate('Onboarding2', { 
+        name,
+        specialOffer
+      });
+         
     } catch (err) {
+      console.log(err)
       Alert.alert('Database write error', `${err}`);
       this.setState({ loading: false });
     }
@@ -101,6 +108,7 @@ export default class Onboarding1Screen extends React.PureComponent {
       uomModalVisible,
       timezone,
       name,
+      specialOffer
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -111,7 +119,8 @@ export default class Onboarding1Screen extends React.PureComponent {
           >
           <View style={[globalStyle.opacityLayer,{alignItems:'flex-start',paddingStart:20,backgroundColor:'none'}]}>
             <Text style={styles.headerText}>
-              Welcome{name !== null && `, ${name}`}
+              {/* Welcome{name !== null && `, ${name}`} */}
+              Welcome
             </Text>
             <Text style={styles.bodyText}>
               It’s time to start your FitazFK journey! Just a few questions before we can start.
@@ -271,6 +280,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: colors.offWhite,
     marginBottom: 7,
+    textTransform:'capitalize'
   },
   bodyText: {
     // fontFamily: fonts.boldNarrow,

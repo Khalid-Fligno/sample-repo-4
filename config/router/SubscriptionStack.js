@@ -7,19 +7,19 @@ import ChallengeSubscriptionScreen from '../../src/screens/Challenges/subscripti
 
 const SubscriptionStack = createStackNavigator(
   {
-    Subscription: ChallengeSubscriptionScreen,
+    ChallengeSubscription: ChallengeSubscriptionScreen,
     // Subscription: HomeScreen,
   },
   {
-    initialRouteName: 'Subscription',
+    initialRouteName: 'ChallengeSubscription',
     defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
         return (
           <Header
-            stack="Subscription"
+            stack="ChallengeSubscription"
             navigation={navigation}
-            withProfileButton={routeName === 'Subscription'}
+            withProfileButton={routeName === 'ChallengeSubscription'}
             withHomeButton={true}
           />
         );

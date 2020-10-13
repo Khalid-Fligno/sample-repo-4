@@ -148,6 +148,22 @@ export default class AuthLoadingScreen extends React.PureComponent {
         TuesdayNight: require('../../assets/fonts/tuesday-night.otf'),
       },
       {
+        GothamLight: require('../../assets/fonts/Gotham-Light.otf'),
+      },
+      {
+        GothamThin: require('../../assets/fonts/Gotham-Thin.otf'),
+      },
+      {
+        GothamThinItalic: require('../../assets/fonts/Gotham-ThinItalic.otf'),
+      },
+      {
+        GothamBookItalic: require('../../assets/fonts/Gotham-BookItalic.otf'),
+      },
+      {
+        GothamMedium: require('../../assets/fonts/Gotham-Medium.otf'),
+      },
+      
+      {
         icomoon: require('../../assets/fonts/icomoon.ttf'),
       },
     ]);

@@ -22,7 +22,7 @@ const TabStack = createBottomTabNavigator(
 
     Dashboard: DashboardStack,
     Feed:LifestyleStack,
-    LifeStyle: SubscriptionStack,
+    Subscription: SubscriptionStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
     
@@ -56,7 +56,7 @@ const TabStack = createBottomTabNavigator(
             />
           );
         }
-        else if (routeName === 'LifeStyle' ) {
+        else if (routeName === 'Subscription' ) {
           icon = (
             <SubSVG 
                 width = {22}
