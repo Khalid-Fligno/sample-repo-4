@@ -39,6 +39,7 @@ const ChallengeStyle = StyleSheet.create({
         justifyContent:'space-between',
         flexDirection:'row',
         alignItems:'center',
+        marginBottom:15,
         },
     inputButton:{
           width:width/2,
@@ -55,6 +56,12 @@ const ChallengeStyle = StyleSheet.create({
           fontSize: 14,
           color: colors.charcoal.dark,
         },
+        IntensityTitleText:{
+          fontSize: 12,
+          color: '#d4d8db',
+          fontWeight:fonts.fontWeight,
+          letterSpacing:fonts.letterSpacing
+         }
    
   });
   export default  ChallengeStyle

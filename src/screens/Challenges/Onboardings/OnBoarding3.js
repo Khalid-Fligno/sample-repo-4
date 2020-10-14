@@ -10,6 +10,8 @@ import ChallengeStyle from '../chellengeStyle';
 import globalStyle from '../../../styles/globalStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import { CheckBox } from 'react-native-elements';
+import colors from '../../../styles/colors';
+import fonts from '../../../styles/fonts';
 import authScreenStyle from '../../AuthStack/authScreenStyle';
 import Modal from 'react-native-modal';
 import {
@@ -40,7 +42,8 @@ export default class OnBoarding3 extends Component {
       FT_LB:false,
       ModalVisible: false,
       pickerDataList:[],
-      inputType:any
+      inputType:any,
+      chosenUom: 'metric'
     };
   }
   onFocusFunction = () => {
@@ -155,7 +158,8 @@ export default class OnBoarding3 extends Component {
           goalWeight,
           hip,
           height,
-          waist
+          waist,
+          chosenUom,
         } = this.state;
     return (
      
@@ -167,37 +171,47 @@ export default class OnBoarding3 extends Component {
               </View>
                <View style={ChallengeStyle.checkBox}>
               
-                <CheckBox
-                  center
-                  title='CM-KG'
-                  checkedIcon='dot-circle-o'
-                  uncheckedIcon='circle-o'
-                  checked={CM_KG}
-                  onPress={() =>
-                    {this.setState({FT_LB: !FT_LB,CM_KG:!CM_KG})} 
-                  }
-                  containerStyle={ChallengeStyle.checkBoxConteiner}
-                  wrapperStyle={{
-                    alignContent:'flex-start'
+                <CustomBtn
+                  Title="Metric"
+                  outline={true}
+                  customBtnStyle={{
+                    borderRadius:50,
+                    padding:5,
+                    width:'46%',
+                    borderColor:chosenUom === 'metric'?colors.themeColor.color:colors.grey.standard
                   }}
+                  onPress={() => this.setState({chosenUom:'metric'})}
+                  customBtnTitleStyle={{
+                    fontSize:15,
+                    marginLeft:5,
+                    color:chosenUom === 'metric'?colors.themeColor.color:colors.grey.dark
+                  }}
+                  leftIconColor={colors.themeColor.color}
+                  leftIconSize={15}
+                  isLeftIcon={chosenUom === 'metric'?true:false}
+                  leftIconName="tick"
                 />
-                <View style={authScreenStyle.dividerOverlay} >
-                    <Text style={authScreenStyle.dividerOverlayText}>
-                      OR
-                    </Text>
-                </View>
-                <CheckBox
-                  center
-                  title='FT-LB'
-                  checkedIcon='dot-circle-o'
-                  uncheckedIcon='circle-o'
-                  checked={FT_LB}
-                  onPress={() =>
-                    {this.setState({FT_LB: !FT_LB,CM_KG:!CM_KG})} 
-                  }
-                  containerStyle={ChallengeStyle.checkBoxConteiner}
-                />
-               
+
+                <CustomBtn 
+                  Title="Imperial"
+                  outline={true}
+                  customBtnStyle={{
+                                    borderRadius:50,
+                                    padding:5,
+                                    width:'46%',
+                                    borderColor:chosenUom === 'imperial'?colors.themeColor.color:colors.grey.standard
+                                  }}
+                  onPress={() => this.setState({chosenUom:'imperial'})}
+                  customBtnTitleStyle={{
+                    fontSize:15,
+                    marginLeft:5,
+                    color:chosenUom === 'imperial'?colors.themeColor.color:colors.grey.dark
+                  }}
+                  leftIconColor={colors.themeColor.color}
+                  leftIconSize={15}
+                  isLeftIcon={chosenUom === 'imperial'?true:false}
+                  leftIconName="tick"
+                />               
               </View>
               <InputBox2 
                   onPress={() => this.showModal('height')}
