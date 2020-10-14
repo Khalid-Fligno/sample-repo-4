@@ -10,6 +10,8 @@ import colors from '../../../styles/colors';
 import Loader from '../../../components/Shared/Loader';
 import { db } from '../../../../config/firebase';
 import AsyncStorage from '@react-native-community/async-storage';
+import FitnessLevelCard from '../../../components/Onboarding/FitnessLevelCard';
+import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 const levelOfFiness=["Begineer","Intermediate","Advanced"];
 export default class OnBoarding6 extends Component {
   constructor(props) {
@@ -91,39 +93,53 @@ async  saveOnBoardingInfo(data){
       <SafeAreaView style={ChallengeStyle.container}>
           <View style={[globalStyle.container,{paddingVertical:15}]}>
           <ScrollView>
-            <View>
+            {/* <View>
               <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Fitness Level</Text>
             </View>
             <View style={{marginTop:8}}>
               <View style={{justifyContent:'center'}}> 
                 <Text style={{marginVertical:10,fontFamily:fonts.standard,fontSize:15}}>What is your current level of fitness?</Text>
               </View>
-            </View>               
-                  <TouchableOpacity 
-                        activeOpacity={0.8}
-                        style={[globalStyle.selectBox,fitnessLevel === 1 ?globalStyle.selectedBox:{},{width:'100%'}]}
-                        onPress={()=>this.setState({fitnessLevel:1})}      
-                  >
-                    <Text style={globalStyle.selectBoxText}> Beginner </Text>
-                  </TouchableOpacity>   
-                  <TouchableOpacity 
-                        activeOpacity={0.8}
-                        style={[globalStyle.selectBox,fitnessLevel === 2 ?globalStyle.selectedBox:{},{width:'100%'}]}
-                        onPress={()=>this.setState({fitnessLevel:2})}      
-     
-                  >
-                    <Text style={globalStyle.selectBoxText}> Intermediate </Text>
-                  </TouchableOpacity>   
-                  <TouchableOpacity 
-                        activeOpacity={0.8}
-                        style={[globalStyle.selectBox,fitnessLevel === 3 ?globalStyle.selectedBox:{},{width:'100%'}]}
-                        onPress={()=>this.setState({fitnessLevel:3})}      
-     
-                  >
-                    <Text style={globalStyle.selectBoxText}> Advanced </Text>
-                  </TouchableOpacity>   
-            </ScrollView>
-            <View style={ChallengeStyle.btnContainer}>
+            </View>*/}
+            <BigHeadingWithBackButton
+                    bigTitleText = "Intensity"
+                    isBackButton = {false}
+                    isBigTitle = {true}
+                    customContainerStyle={{marginTop:15,marginBottom:0}}
+                  />
+                    <Text style={[ChallengeStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
+                        Select your intensity level below.  
+                    </Text>
+                    <Text style={[ChallengeStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
+                        Beginner: train once a week,  
+                    </Text>
+                    <Text style={[ChallengeStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
+                         Intermediate: train 2 to 3 times a week, 
+                     </Text>
+                     <Text style={[ChallengeStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
+                         Expert: train 4+ times a week
+                     </Text>
+                 
+                  <FitnessLevelCard
+                    source ={require('../../../../assets/images/OnBoardindImg/FL_1.png')}
+                    onPress ={()=>this.setState({fitnessLevel:1})}  
+                    title = "Beginner"
+                    showTick = {fitnessLevel === 1}
+                 />
+                  <FitnessLevelCard
+                    source ={require('../../../../assets/images/OnBoardindImg/FL_2.png')}
+                    onPress ={()=>this.setState({fitnessLevel:2})}  
+                    title = "Intermediate"
+                    showTick = {fitnessLevel === 2}
+                 />
+                 <FitnessLevelCard
+                    source ={require('../../../../assets/images/OnBoardindImg/FL_3.png')}
+                    onPress ={()=>this.setState({fitnessLevel:3})}  
+                    title = "Expert"
+                    showTick = {fitnessLevel === 3}
+
+                 />
+                 <View style={[ChallengeStyle.btnContainer,{marginTop:15}]}>
                   <CustomBtn 
                       Title="Previous"
                       outline={true}
@@ -139,11 +155,14 @@ async  saveOnBoardingInfo(data){
                     disabled={btnDisabled}
                   />
                 </View>
+                </ScrollView>
                 <Loader
                   loading={loading}
                   color={colors.themeColor.color}
                 />
           </View>
+            
+
       </SafeAreaView> 
     );
   }
