@@ -299,7 +299,7 @@ pickImage = async () => {
       <SafeAreaView style={ChallengeStyle.container}>
           <View style={[globalStyle.container,{paddingVertical:15}]}>
             <View>
-              <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Capture Yourself</Text>
+              <Text style={[ChallengeStyle.onBoardingTitle]}>Capture Yourself</Text>
             </View>
           
             <View style={styles.contentContainer}>
@@ -338,26 +338,35 @@ pickImage = async () => {
                 onPress={(index) => this.uploadTypeAction(index)}
             />
             </View>
+              
+              <View style={[{flex:1,justifyContent:'flex-end'}]}>
                 {
                   error && <Text style={styles.errorText}>{error}</Text>
                 }
-            <View style={ChallengeStyle.btnContainer}>
-               
-                  <CustomBtn 
-                      Title="Previous"
-                      outline={true}
-                      customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
-                      onPress={()=>this.goToScreen('previous')}
-                      disabled={btnDisabled}
-                  />    
-                  <CustomBtn 
-                    Title="Next"
-                    outline={true}
-                    customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
-                    onPress={()=>this.goToScreen('next')}
+                <CustomBtn 
+                  Title="Next"
+                  customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}
+                  onPress={()=>this.goToScreen('next')}
+                  disabled={btnDisabled}
+                  isRightIcon={true}
+                  rightIconName="chevron-right"
+                  rightIconColor={colors.white}
+                  rightIconSize={13}
+                  customBtnTitleStyle={{marginRight:10}}
+                />
+                <CustomBtn 
+                    Title="Back"
+                    customBtnStyle={{borderRadius:50,padding:15,width:"100%",marginTop:5,marginBottom:-10,backgroundColor:'transparent'}}
+                    onPress={()=>this.goToScreen('previous')}
                     disabled={btnDisabled}
-                  />
-                </View>
+                    customBtnTitleStyle={{color:colors.black}}
+                    isLeftIcon={true}
+                    leftIconName="chevron-left"
+                    leftIconColor={colors.black}
+                    leftIconSize={13}
+                />    
+             
+              </View>
           <Loader
             loading={uploading}
             color={colors.coral.standard}

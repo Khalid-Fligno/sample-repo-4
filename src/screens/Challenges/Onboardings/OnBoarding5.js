@@ -134,7 +134,7 @@ export default class OnBoarding5 extends Component {
       <SafeAreaView style={ChallengeStyle.container}>
           <View style={[globalStyle.container,{paddingVertical:15}]}>
             <View>
-              <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Burpee Test</Text>
+              <Text style={[ChallengeStyle.onBoardingTitle]}>Burpee Test</Text>
             </View>
             <View style={{marginTop:8}}>
               <View style={{justifyContent:'center'}}> 
@@ -158,7 +158,7 @@ export default class OnBoarding5 extends Component {
                   width:width-containerPadding*2
                 }}
               />
-              <View style={[ChallengeStyle.btnContainer,{paddingHorizontal:10,marginVertical:30}]}>
+              <View style={[ChallengeStyle.btnContainer,{paddingHorizontal:10,marginVertical:30,flexDirection:'row'}]}>
                   <CustomBtn 
                       Title="Reset"
                       customBtnStyle={{borderRadius:7,padding:15,width:"49%",backgroundColor:colors.charcoal.dark}}
@@ -192,22 +192,31 @@ export default class OnBoarding5 extends Component {
                 inputType = 'number'
               />
           
-            <View style={[ChallengeStyle.btnContainer,{flex:1}]}>
-                  <CustomBtn 
-                      Title="Previous"
-                      outline={true}
-                      customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
-                      onPress={()=>this.goToScreen('previous')}
-                      disabled={btnDisabled}
-                  />    
-                  <CustomBtn 
-                    Title="Skip"
-                    outline={true}
-                    customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
-                    onPress={()=>this.goToScreen('next')}
+              <View style={[{flex:1,justifyContent:'flex-end'}]}>
+                <CustomBtn 
+                  Title="Next"
+                  customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}
+                  onPress={()=>this.goToScreen('next')}
+                  disabled={btnDisabled}
+                  isRightIcon={true}
+                  rightIconName="chevron-right"
+                  rightIconColor={colors.white}
+                  rightIconSize={13}
+                  customBtnTitleStyle={{marginRight:10}}
+                />
+                <CustomBtn 
+                    Title="Back"
+                    customBtnStyle={{borderRadius:50,padding:15,width:"100%",marginTop:5,marginBottom:-10,backgroundColor:'transparent'}}
+                    onPress={()=>this.goToScreen('previous')}
                     disabled={btnDisabled}
-                  />
-            </View>
+                    customBtnTitleStyle={{color:colors.black}}
+                    isLeftIcon={true}
+                    leftIconName="chevron-left"
+                    leftIconColor={colors.black}
+                    leftIconSize={13}
+                />    
+             
+              </View>
           </View>
       </SafeAreaView> 
     );

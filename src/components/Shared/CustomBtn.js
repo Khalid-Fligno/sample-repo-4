@@ -22,7 +22,8 @@ const CustomBtn = (props)=>{
         letterSpacing:0.7,
         // marginTop: 3,
         color:colors.white,
-        letterSpacing:0.5
+        letterSpacing:0.5,
+        textAlign:'center'
     }
     const outlineBtnStyle ={
         backgroundColor:colors.themeColor.themeBackgroundColor,
@@ -90,6 +91,16 @@ const CustomBtn = (props)=>{
                     </Text>
                 )
             }
+              {
+                props.isRightIcon && (
+                    <Icon
+                    name={props.rightIconName}
+                    size={props.rightIconSize}
+                    color={props.rightIconColor}
+                    style={{alignSelf:'center',marginLeft:5}}
+                />
+                )
+            }
            
             {/* <Text style={[customBtnTitleStyle,props.outline?outlineBtnTitleStyle:{},props.customBtnTitleStyle]}>{props.Title}</Text> */}
         </TouchableOpacity>
@@ -106,6 +117,9 @@ CustomBtn.propTypes = {
     isLeftIcon:PropTypes.bool,
     leftIconName:PropTypes.any,
     leftIconColor:PropTypes.any,
+    isRightIcon:PropTypes.bool,
+    rightIconName:PropTypes.any,
+    rightIconColor:PropTypes.any,
     loading:PropTypes.bool,
     titleCapitalise:PropTypes.bool,
     disabled:PropTypes.bool,

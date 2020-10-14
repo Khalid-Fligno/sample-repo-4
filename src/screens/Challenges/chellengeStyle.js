@@ -13,8 +13,9 @@ const ChallengeStyle = StyleSheet.create({
     },
     onBoardingTitle:{
         fontFamily:fonts.bold,
-        fontSize:20,
-        color:colors.transparentBlackDark
+        fontSize:30,
+        color:colors.black,
+        marginTop:10
     },
     container: {
         flex: 1,
@@ -25,8 +26,8 @@ const ChallengeStyle = StyleSheet.create({
       btnContainer:{
         //flex:1,
         justifyContent:'space-between',
-        flexDirection:'row',
-        alignItems:'flex-end'
+        flexDirection:'column',
+        alignItems:'flex-end',
       },
       checkBoxConteiner:{
           backgroundColor:'transparent',
@@ -39,7 +40,7 @@ const ChallengeStyle = StyleSheet.create({
         justifyContent:'space-between',
         flexDirection:'row',
         alignItems:'center',
-        marginBottom:15,
+        marginVertical:20
         },
     inputButton:{
           width:width/2,

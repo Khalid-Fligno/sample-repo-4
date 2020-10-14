@@ -105,7 +105,8 @@ class ChallengeSubscriptionScreen extends Component {
         numberOfDays={item.numberOfDays}
         key={index}
         btnTitle = "Buy"
-        onPress={()=>this.onBoarding(item)}
+        onPress={()=>this.addChallengeToUser(index)}
+        disabled = {false}
     />
       
   )
@@ -141,13 +142,15 @@ class ChallengeSubscriptionScreen extends Component {
               numberOfDays={item.numberOfDays}
               key={index}
               btnTitle = {btnTitle}
-              onPress={()=>this.onBoarding(item)}
+              disabled = {btnDisabled}
+              onPress={()=>this.onBoarding(item,btnTitle)}
+              
           />
        
       )
   }
 
-  onBoarding(challengeData){
+  onBoarding(challengeData,btnTitle){
     this.props.navigation.navigate('ChallengeOnBoarding1',{
       data:{
         challengeData

@@ -4,6 +4,7 @@ import ChallengeStyle from '../chellengeStyle';
 import globalStyle from '../../../styles/globalStyles';
 import SliderComponent from '../../../components/Challenges/slider';
 import CustomBtn from '../../../components/Shared/CustomBtn';
+import fonts from '../../../styles/fonts';
 
 export default class OnBoarding1 extends Component {
   constructor(props) {
@@ -21,11 +22,11 @@ export default class OnBoarding1 extends Component {
   }
 
   onFocusFunction = () => {
-    const data = this.props.navigation.getParam('data', {});
-    const toAchieve = data['challengeData']['onBoardingInfo']['toAchieve'];
-    console.log(data['challengeData'])
+    const challengeData = this.props.navigation.getParam('data', {})['challengeData'];
+    const toAchieve = challengeData['onBoardingInfo']?challengeData['onBoardingInfo']['toAchieve']:[];
+    console.log(challengeData)
     this.setState({
-        challengeData:data['challengeData'],
+        challengeData:challengeData,
         weightLoss:toAchieve?toAchieve.weightLoss:1,
         increaseEnergy:toAchieve?toAchieve.increaseEnergy:1,
         toneUp:toAchieve?toAchieve.toneUp:1,
@@ -88,11 +89,27 @@ export default class OnBoarding1 extends Component {
     return (
       
         <SafeAreaView style={ChallengeStyle.container}>
-          <View style={[globalStyle.container,{paddingVertical:15}]}>
-            <ScrollView>
+          <View style={globalStyle.container}>
+            <ScrollView 
+                contentContainerStyle={{
+                  flexGrow: 1, 
+                  flexDirection: 'column', 
+                  justifyContent: 'space-between',
+                  paddingVertical:15
+                }}
+                bounces={false}
+                showsVerticalScrollIndicator={false}
+            >
                 <View>
                   <Text style={ChallengeStyle.onBoardingTitle}>What do you want to achieve?</Text>
-                  <Text style={ChallengeStyle.onBoardingTitle}>{challengeData.name}</Text>
+                  <Text style={[ChallengeStyle.onBoardingTitle,
+                    {fontSize:15,
+                    fontFamily:fonts.GothamMedium,
+                    marginTop:20,
+                    marginBottom:20
+                    }]}>
+                      {challengeData.name}
+                  </Text>
                 </View>
               
                 <SliderComponent
@@ -131,17 +148,16 @@ export default class OnBoarding1 extends Component {
                   onValueChange={(value) => this.setState({ increaseFitness:Math.round(value) })}
                 />
 
-              
+                <View style={{flex:1,justifyContent:'flex-end'}}>
+                      <CustomBtn 
+                        Title="Continue"
+                        customBtnStyle={{borderRadius:50,padding:15,width:'100%'}}
+                        onPress={()=>this.goToNextScreen()}
+                        disabled={btnDisabled}
+                      />
+                </View>
             </ScrollView>
-            <View>
-                  <CustomBtn 
-                    Title="Next"
-                    outline={true}
-                    customBtnStyle={{borderRadius:50,padding:15}}
-                    onPress={()=>this.goToNextScreen()}
-                    disabled={btnDisabled}
-                  />
-            </View>
+  
           </View>
         </SafeAreaView> 
       

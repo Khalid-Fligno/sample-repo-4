@@ -30,11 +30,11 @@ const { width } = Dimensions.get('window');
 const recommendedWorkoutMap = {
   undefined: '',
   0: 'Press here to see available workouts',
-  1: 'Recommended - Resistance / Full Body',
-  2: 'Recommended - HIIT',
-  3: 'Recommended - Resistance / Upper Body',
-  4: 'Recommended - HIIT',
-  5: 'Recommended - Resistance / ABT',
+  1: 'Recommended - Strength / Full Body',
+  2: 'Recommended - Circuit',
+  3: 'Recommended - Strength / Upper Body',
+  4: 'Recommended - Interval',
+  5: 'Recommended - Strength / ABT',
   6: 'Press here to see available workouts',
 };
 
@@ -52,6 +52,7 @@ class CalendarHomeScreen extends React.PureComponent {
       isSwiping: false,
       helperModalVisible: false,
       dayOfWeek: undefined,
+      challengeData:undefined
     };
     this.calendarStrip = React.createRef();
   }
@@ -59,6 +60,7 @@ class CalendarHomeScreen extends React.PureComponent {
   componentDidMount = async () => {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     await this.fetchCalendarEntries();
+    await this.fetchChallengedata();
     this.showHelperOnFirstOpen();
   }
 
@@ -67,6 +69,8 @@ class CalendarHomeScreen extends React.PureComponent {
     if (this.unsubscribeFromEntries2) {
       this.unsubscribeFromEntries2();
     }
+    if(this.unsubscribeUserChallenges)
+      this.unsubscribeUserChallenges()
   }
 
   fetchCalendarEntries = async () => {
@@ -95,6 +99,29 @@ class CalendarHomeScreen extends React.PureComponent {
           });
         }
       });
+    
+  }
+
+
+ fetchChallengedata = async () =>{
+      // ToDo : for challenges
+    try{  
+      const uid = await AsyncStorage.getItem('uid');
+      this.unsubscribeUserChallenges = await db.collection('users').doc(uid).collection('challenges')
+      .where("status", "==" , "Active")
+      .onSnapshot(async (querySnapshot) => {
+        const challengeData = [];
+        await querySnapshot.forEach(async (doc) => {
+          await challengeData.push(await doc.data());
+        });
+        this.setState({ challengeData});
+      });
+    }
+    catch(err){
+      console.log(err)
+      Alert.alert('Fetch challenge error!')
+    }  
+    //-------**--------  
   }
   
   showHelperOnFirstOpen = async () => {
@@ -235,8 +262,9 @@ class CalendarHomeScreen extends React.PureComponent {
       snack2,
       helperModalVisible,
       dayOfWeek,
+      challengeData
     } = this.state;
-
+    console.log(challengeData)
     // const findLocationIcon = () => {
     //   let location;
     //   if (workout.home) {

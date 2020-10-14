@@ -32,33 +32,33 @@ import TimeSvg from '../../../../assets/icons/time';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
 const { width } = Dimensions.get('window');
-const workoutTypeMap = {
-  1: 'Resistance',
-  2: 'HIIT',
-  3: 'Resistance',
-  4: 'HIIT',
-  5: 'Resistance',
-};
+// const workoutTypeMap = {
+//   1: 'Resistance',
+//   2: 'HIIT',
+//   3: 'Resistance',
+//   4: 'HIIT',
+//   5: 'Resistance',
+// };
 
-const workoutIconMap = {
-  1: 'dumbbell',
-  2: 'workouts-hiit',
-  3: 'dumbbell',
-  4: 'workouts-hiit',
-  5: 'dumbbell',
-};
+// const workoutIconMap = {
+//   1: 'dumbbell',
+//   2: 'workouts-hiit',
+//   3: 'dumbbell',
+//   4: 'workouts-hiit',
+//   5: 'dumbbell',
+// };
 
-const resistanceFocusMap = {
-  1: 'Full Body',
-  3: 'Upper Body',
-  5: 'Abs, Butt & Thighs',
-};
+// const resistanceFocusMap = {
+//   1: 'Full Body',
+//   3: 'Upper Body',
+//   5: 'Abs, Butt & Thighs',
+// };
 
-const resistanceFocusIconMap = {
-  1: 'workouts-full',
-  3: 'workouts-upper',
-  5: 'workouts-lower',
-};
+// const resistanceFocusIconMap = {
+//   1: 'workouts-full',
+//   3: 'workouts-upper',
+//   5: 'workouts-lower',
+// };
 
 export default class HomeScreen extends React.PureComponent {
   constructor(props) {
@@ -160,13 +160,12 @@ export default class HomeScreen extends React.PureComponent {
 
     const bigHeadeingTitle = (switchWelcomeHeader ? 'Hi' : 'Hi').toString()+' ' + (profile ? profile.firstName:'').toString()
    
-    let recommendedWorkout =[];
+    // let recommendedWorkout =[];
 
-    (dayOfWeek > 0 && dayOfWeek < 6) ? recommendedWorkout.push(workoutTypeMap[dayOfWeek]): recommendedWorkout.push(' Rest Day') 
-    if(dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) 
-      recommendedWorkout.push(resistanceFocusMap[dayOfWeek])
+    // (dayOfWeek > 0 && dayOfWeek < 6) ? recommendedWorkout.push(workoutTypeMap[dayOfWeek]): recommendedWorkout.push(' Rest Day') 
+    // if(dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) 
+    //   recommendedWorkout.push(resistanceFocusMap[dayOfWeek])
       
-    console.log(recommendedWorkout)
     return (
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -206,12 +205,7 @@ export default class HomeScreen extends React.PureComponent {
                  onPress={()=>this.props.navigation.navigate('Workouts')}
                  />
               </View>
-              {/* <View style={HomeScreenStyle.workoutProgressContainer}>
-                <View style={HomeScreenStyle.sectionHeader}>
-                  <Text style={HomeScreenStyle.bodyText}>
-                    Weekly workout progress
-                  </Text>
-                </View> */}
+           
               <View>
                 <View style={HomeScreenStyle.sectionHeader}>
                   <Text style={[HomeScreenStyle.bodyText]}>
@@ -284,46 +278,17 @@ export default class HomeScreen extends React.PureComponent {
                         onPress={this.goToBurpeeTest}
                       />
                     </View>
-                
-                    {/* <Button
-                      title="START BURPEE TEST"
-                      buttonStyle={HomeScreenStyle.button}
-                      titleStyle={HomeScreenStyle.buttonText}
-                      onPress={this.goToBurpeeTest}
-                    /> */}
                   </View>
                 )
               }
-               <WorkOutCard
+               {/* <WorkOutCard
                 image={require('../../../../assets/images/homeScreenTiles/todayWorkoutImage2.jpeg')}
                 title="TODAY'S WORKOUT"
                 recommendedWorkout ={recommendedWorkout}
                 onPress={() => this.props.navigation.navigate('Calendar')}
                 cardCustomStyle ={{marginTop:20}} 
-              />
-              {/* <NewsFeedTile
-                image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
-                title="SHOP APPAREL"
-                onPress={() => this.openLink('https://fitazfk.com/collections/wear-fitazfk-apparel')}
-              />
-              <DoubleNewsFeedTile
-                imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-blog.jpg')}
-                imageRight={require('../../../../assets/images/hiit-rest-placeholder.jpg')}
-                titleLeft1="BLOG"
-                titleRight1="FAQ"
-                onPressLeft={() => this.props.navigation.navigate('HomeBlog')}
-                onPressRight={() => this.openLink('https://fitazfk.zendesk.com/hc/en-us')}
-              />
-              <NewsFeedTile
-                image={require('../../../../assets/images/shop-bundles.jpg')}
-                title="SHOP EQUIPMENT"
-                onPress={() => this.openLink('https://fitazfk.com/collections/equipment')}
-              />
-              <NewsFeedTile
-                image={require('../../../../assets/images/fitazfk-army.jpg')}
-                title="JOIN THE FITAZFK ARMY"
-                onPress={() => this.openLink('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
               /> */}
+             
               <Loader
                 loading={loading}
                 color={colors.charcoal.standard}

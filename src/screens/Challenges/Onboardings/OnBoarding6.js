@@ -27,9 +27,11 @@ export default class OnBoarding6 extends Component {
   
   onFocusFunction = () => {
     const data = this.props.navigation.getParam('data', {});
+    const fitnessLevel = data['challengeData']['onBoardingInfo']['fitnessLevel']
     this.setState({
       challengeData:data['challengeData'],
-      btnDisabled:false
+      btnDisabled:false,
+      fitnessLevel:fitnessLevel?fitnessLevel:2
     });
   }
   
@@ -61,7 +63,7 @@ export default class OnBoarding6 extends Component {
     }else{
       this.props.navigation.navigate('ChallengeOnBoarding5',{
         data:{
-               challengeData:this.state.challengeData,
+               challengeData:updatedChallengedata,
              }
       })
     }     
@@ -73,7 +75,7 @@ async  saveOnBoardingInfo(data){
     const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
     userRef.set(data,{merge:true}).then((res)=>{
       this.setState({loading:false})
-      this.props.navigation.navigate('App');
+      this.props.navigation.navigate('Home');
     }).catch((err)=>{
       console.log(err)
     })
@@ -88,11 +90,20 @@ async  saveOnBoardingInfo(data){
       btnDisabled
     } = this.state
 
-    console.log(fitnessLevel)
+    console.log(challengeData)
     return (
       <SafeAreaView style={ChallengeStyle.container}>
-          <View style={[globalStyle.container,{paddingVertical:15}]}>
-          <ScrollView>
+          <View style={globalStyle.container}>
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1, 
+              flexDirection: 'column', 
+              justifyContent: 'space-between',
+              paddingVertical:15
+            }}
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+          >
             {/* <View>
               <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Fitness Level</Text>
             </View>
@@ -105,7 +116,7 @@ async  saveOnBoardingInfo(data){
                     bigTitleText = "Intensity"
                     isBackButton = {false}
                     isBigTitle = {true}
-                    customContainerStyle={{marginTop:15,marginBottom:0}}
+                    customContainerStyle={{marginTop:0,marginBottom:0}}
                   />
                     <Text style={[ChallengeStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
                         Select your intensity level below.  
@@ -139,22 +150,31 @@ async  saveOnBoardingInfo(data){
                     showTick = {fitnessLevel === 3}
 
                  />
-                 <View style={[ChallengeStyle.btnContainer,{marginTop:15}]}>
-                  <CustomBtn 
-                      Title="Previous"
-                      outline={true}
-                      customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
-                      onPress={()=>this.goToScreen('previous')}
-                      disabled={btnDisabled}
-                  />    
-                  <CustomBtn 
-                    Title="Next"
-                    outline={true}
-                    customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
-                    onPress={()=>this.goToScreen('next')}
-                    disabled={btnDisabled}
-                  />
-                </View>
+                  <View style={[{flex:1,justifyContent:'flex-end',marginTop:20}]}>
+                      <CustomBtn 
+                        Title="Next"
+                        customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}
+                        onPress={()=>this.goToScreen('next')}
+                        disabled={btnDisabled}
+                        isRightIcon={true}
+                        rightIconName="chevron-right"
+                        rightIconColor={colors.white}
+                        rightIconSize={13}
+                        customBtnTitleStyle={{marginRight:10}}
+                      />
+                      <CustomBtn 
+                          Title="Back"
+                          customBtnStyle={{borderRadius:50,padding:15,width:"100%",marginTop:5,marginBottom:-10,backgroundColor:'transparent'}}
+                          onPress={()=>this.goToScreen('previous')}
+                          disabled={btnDisabled}
+                          customBtnTitleStyle={{color:colors.black}}
+                          isLeftIcon={true}
+                          leftIconName="chevron-left"
+                          leftIconColor={colors.black}
+                          leftIconSize={13}
+                      />    
+                  
+                    </View>
                 </ScrollView>
                 <Loader
                   loading={loading}

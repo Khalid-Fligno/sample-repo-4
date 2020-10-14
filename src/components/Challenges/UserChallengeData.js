@@ -20,7 +20,7 @@ export default createUserChallengeData =(data)=>{
       "id":data.id,
       "startDate":moment(new Date()).format('YYYY-MM-DD'), 
       "endDate":moment(new Date(), 'YYYY-MM-DD').add(data.numberOfDays-1,'days').format('YYYY-MM-DD'),
-      "status":"InActive",
+      "status":data.status?data.status:"InActive",
       "phases":phases,
       "workouts":[],
       "onBoardingInfo":data.onBoardingInfo?data.onBoardingInfo:{},

@@ -21,7 +21,7 @@ const PickerModal = (props) => {
         labelExtention = metric?'kg':'lbs'
     
     if((inputType === 'waist' || inputType === 'hip' || inputType === "height" ))
-        labelExtention = metric?'cm':'ft'
+        labelExtention = metric?'cm':'inches'
 
     return (
         <Modal

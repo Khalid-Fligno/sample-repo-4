@@ -33,15 +33,32 @@ import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
 const { width } = Dimensions.get('window');
 
+
+const workoutTypeMap = {
+  1: 'Strength',
+  2: 'Circuit',
+  3: 'Strength',
+  4: 'Interval',
+  5: 'Strength',
+};
+
+const resistanceFocusMap = {
+  1: 'Full Body',
+  3: 'Upper Body',
+  5: 'Abs, Butt & Thighs',
+};
+
 export default class LifeStyleScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
+      dayOfWeek: undefined,
     //   profile: undefined,
     };
   }
   componentDidMount = () => {
+    this.setDayOfWeek();
     // this.fetchProfile();
   }
   componentWillUnmount = () => {
@@ -60,6 +77,13 @@ export default class LifeStyleScreen extends React.PureComponent {
 //       });
 //     });
 //   }
+
+  setDayOfWeek = async () => {
+    const timezone = await Localization.timezone;
+    const dayOfWeek = momentTimezone.tz(timezone).day();
+    this.setState({ dayOfWeek });
+  }
+
   openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Linking.openURL(url);
@@ -68,8 +92,13 @@ export default class LifeStyleScreen extends React.PureComponent {
   render() {
     const {
       loading,
+      dayOfWeek
     } = this.state;
-   
+    let recommendedWorkout =[];
+
+    (dayOfWeek > 0 && dayOfWeek < 6) ? recommendedWorkout.push(workoutTypeMap[dayOfWeek]): recommendedWorkout.push(' Rest Day') 
+    if(dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) 
+      recommendedWorkout.push(resistanceFocusMap[dayOfWeek])
  
     return (
         <ScrollView
@@ -79,6 +108,13 @@ export default class LifeStyleScreen extends React.PureComponent {
         >
           <View style={{marginBottom:20}}>
            
+              <WorkOutCard
+                image={require('../../../../assets/images/homeScreenTiles/todayWorkoutImage2.jpeg')}
+                title="TODAY'S WORKOUT"
+                recommendedWorkout ={recommendedWorkout}
+                onPress={() => this.props.navigation.navigate('Calendar')}
+                cardCustomStyle ={{marginTop:20}} 
+              />
               <NewsFeedTile
                 image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
                 title="SHOP APPAREL"

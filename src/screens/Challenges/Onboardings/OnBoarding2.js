@@ -6,6 +6,8 @@ import CustomBtn from '../../../components/Shared/CustomBtn';
 import { TouchableOpacity } from 'react-native';
 import colors from '../../../styles/colors';
 import { ScrollView } from 'react-native-gesture-handler';
+import Icon from '../../../components/Shared/Icon';
+import TickSvg from '../../../../assets/icons/TickSvg';
 
 export default class OnBoarding2 extends Component {
   constructor(props) {
@@ -103,15 +105,29 @@ export default class OnBoarding2 extends Component {
   render() {
     let {
           btnDisabled,
-          dietryPreferences
+          dietryPreferences,
+          challengeData
         } = this.state
     // console.log(challengeData)
+    if(!challengeData['onBoardingInfo']){
+      this.onFocusFunction()
+    }
+   
     return (
       <SafeAreaView style={ChallengeStyle.container}>        
-          <View style={[globalStyle.container,{paddingVertical:15}]}>
-            <ScrollView>
+          <View style={globalStyle.container}>
+            <ScrollView
+              contentContainerStyle={{
+                flexGrow: 1, 
+                flexDirection: 'column', 
+                justifyContent: 'space-between',
+                paddingVertical:15
+              }}
+             bounces={false}
+             showsVerticalScrollIndicator={false}
+            >
             <View>
-              <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Dietry Preferences</Text>
+              <Text style={[ChallengeStyle.onBoardingTitle]}>Dietry Preferences</Text>
             </View>            
             <View style={globalStyle.selectBoxContainer}>
                 { 
@@ -123,29 +139,50 @@ export default class OnBoarding2 extends Component {
                                       style={[globalStyle.selectBox,item.selected?globalStyle.selectedBox:{}]}
                                       onPress={()=>this.push_pop_preferences(i)}      
                                 >
-                                  <Text style={globalStyle.selectBoxText}> {item.name} </Text>
+                                      {
+                                        item.selected &&
+                                        <View style={{marginRight:10}}>
+                                          <TickSvg />
+                                        </View>
+                                        
+                                        }
+                                  <Text style={[globalStyle.selectBoxText,
+                                               {color:item.selected?colors.themeColor.color:colors.grey.dark
+                                              }]}>
+                                     {item.name} 
+                                  </Text>
                                 </TouchableOpacity>
                               )
                   })
                 }
             </View>
+              <View style={ChallengeStyle.btnContainer}>
+                <CustomBtn 
+                    Title="Next"
+                    customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}
+                    onPress={()=>this.goToScreen('next')}
+                    disabled={btnDisabled}
+                    isRightIcon={true}
+                    rightIconName="chevron-right"
+                    rightIconColor={colors.white}
+                    rightIconSize={13}
+                    customBtnTitleStyle={{marginRight:10}}
+                  />
+                  <CustomBtn 
+                      Title="Back"
+                      customBtnStyle={{borderRadius:50,padding:15,width:"100%",marginTop:5,marginBottom:-10,backgroundColor:'transparent'}}
+                      onPress={()=>this.goToScreen('previous')}
+                      disabled={btnDisabled}
+                      customBtnTitleStyle={{color:colors.black}}
+                      isLeftIcon={true}
+                      leftIconName="chevron-left"
+                      leftIconColor={colors.black}
+                      leftIconSize={13}
+                  />    
+              
+              </View>
             </ScrollView>
-            <View style={ChallengeStyle.btnContainer}>
-              <CustomBtn 
-                  Title="Previous"
-                  outline={true}
-                  customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
-                  onPress={()=>this.goToScreen('previous')}
-                  disabled={btnDisabled}
-              />    
-              <CustomBtn 
-                Title="Next"
-                outline={true}
-                customBtnStyle={{borderRadius:50,padding:15,width:"49%"}}
-                onPress={()=>this.goToScreen('next')}
-                disabled={btnDisabled}
-              />
-            </View>
+          
           </View>
       </SafeAreaView> 
     )  

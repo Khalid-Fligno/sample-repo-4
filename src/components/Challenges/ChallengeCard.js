@@ -14,7 +14,7 @@ class ChallengeCard extends Component {
   }
 
   render() {
-      const  {numberOfDays ,outline,btnTitle,onPress,imageUrl} = this.props
+      const  {numberOfDays ,outline,btnTitle,onPress,imageUrl,disabled} = this.props
     return (
         <ImageBackground
             source ={{uri:imageUrl}}
@@ -43,6 +43,7 @@ class ChallengeCard extends Component {
                                     }}
                     customBtnTitleStyle={{color:colors.offWhite,fontSize:14}}
                     onPress={onPress}
+                    disabled = {disabled}
                  />
               </View>  
                 
@@ -58,7 +59,8 @@ ChallengeCard.propTypes = {
     outline:PropTypes.bool,
     btnTitle:PropTypes.any,
     onPress:PropTypes.func,
-    imageUrl:PropTypes.any
+    imageUrl:PropTypes.any,
+    disabled:PropTypes.bool
   };
 
 

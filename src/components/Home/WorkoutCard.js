@@ -46,32 +46,6 @@ export default class WorkOutCard extends React.PureComponent {
       transform: [{ scale: this.animatedValue }],
     };
     return (
-      // <TouchableOpacity
-      //   delayPressIn={60}
-      //   onPress={onPress}
-      //   style={styles.cardContainer}
-      //   onPressIn={this.handlePressIn}
-      //   onPressOut={this.handlePressOut}
-      // >
-      //   <Animated.View
-      //     style={[styles.flexContainer, animatedStyle]}
-      //   >
-      //     <ImageBackground
-      //       source={image}
-      //       style={styles.image}
-      //     >
-      //       <View style={styles.opacityLayer}>
-      //         <View style={styles.titleContainer}>
-      //           <Text style={styles.title}>
-      //             {title.toUpperCase()}
-      //           </Text>
-      //         </View>
-      //       </View>
-      //     </ImageBackground>
-      //   </Animated.View>
-      // </TouchableOpacity>
-     
-       
           <View   style={[styles.cardContainer,cardCustomStyle]}>
            <ImageBackground
              source={image}
@@ -85,7 +59,7 @@ export default class WorkOutCard extends React.PureComponent {
                </View>
                <View style={styles.innerViewContainer}>
                     {recommendedWorkout.map(res=>(
-                      <Text key={res} style={{color:colors.coral.standard,fontFamily:fonts.bold}}> {res}</Text>)
+                      <Text key={res} style={styles.recTextLabel}> {res}</Text>)
                     )}
                </View>
                <View style={{paddingLeft:30,paddingTop:12}}>
@@ -98,7 +72,7 @@ export default class WorkOutCard extends React.PureComponent {
                </View> 
              </View>
            </ImageBackground>
-           </View>
+          </View>
     );
   }
 }
@@ -155,6 +129,11 @@ const styles = StyleSheet.create({
     maxWidth: width / 1.8,
     paddingTop:12,
     paddingLeft:30,
-    paddingTop:5,flexDirection:'row'
+    paddingTop:5,flexDirection:'row',
+    
   },
+  recTextLabel:{
+    color:colors.themeColor.color,
+    fontFamily:fonts.bold
+  }
 });

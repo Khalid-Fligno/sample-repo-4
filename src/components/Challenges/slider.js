@@ -6,19 +6,36 @@ import colors from '../../styles/colors';
 
 const SliderComponent = (props) => (
   <View style={{marginTop:10}}>
-    <Text style={{marginVertical:10,fontFamily:fonts.standard,fontSize:15}}>{props.title}</Text>
+    <Text style={{
+        marginVertical:5,
+        fontFamily:fonts.GothamMedium,
+        fontSize:12,
+        color:colors.grey.dark
+        }}>
+      {props.title}
+      </Text>
     <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}> 
-      <Text style={{fontFamily:fonts.boldNarrow,color:colors.transparentBlackDark}}>1</Text>
+      <Text style={{fontFamily:fonts.boldNarrow,color:colors.grey.dark}}>1</Text>
         <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center',marginHorizontal:10 }}>
           <Slider
             value={props.value}
             onValueChange={props.onValueChange}
             minimumValue={props.minimumValue}
             maximumValue={props.maximumValue}
-            trackStyle={{height:7,borderRadius:5}}
+            trackStyle={{height:5,borderRadius:5}}
+            minimumTrackTintColor={colors.themeColor.color}
+            maximumTrackTintColor={colors.grey.medium}
+            thumbStyle={{
+              height:30, 
+              width:30,
+              borderRadius:50,
+              backgroundColor:colors.themeColor.themeBackgroundColor,
+              borderWidth:3,
+              borderColor:colors.themeColor.color
+            }}
           />
         </View>
-        <Text style={{fontFamily:fonts.boldNarrow,color:colors.transparentBlackDark}}> 10</Text>
+        <Text style={{fontFamily:fonts.boldNarrow,color:colors.grey.dark}}> 10</Text>
     </View>
   </View>
 );

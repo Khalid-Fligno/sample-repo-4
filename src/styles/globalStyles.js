@@ -225,26 +225,28 @@ fitazfkIcon: {
 
 /**************Select Box ************** */
   selectBoxContainer:{
-    flexDirection:'row',
-    flexWrap:'wrap',
-    justifyContent:'space-between'
+    flex:1,
+    alignItems:'center',
+    marginTop:30
   },
   selectBox:{
     height:50,
-    width:'48%',
+    width:'75%',
     borderWidth:colors.themeColor.themeBorderWidth,
     borderColor:colors.themeColor.themeBorderColor,
     marginTop:20,
     alignItems:'center',
-    flexDirection:"column",
+    flexDirection:"row",
     justifyContent:'center',
-
+    borderRadius:50
   },
   selectBoxText:{
-    fontFamily:fonts.standard
+    fontFamily:fonts.GothamMedium,
+    fontSize:15
+
   },
   selectedBox:{
-    backgroundColor:colors.red.light
+    borderColor:colors.themeColor.color
   },
 /************** /Select Box ************** */
 
