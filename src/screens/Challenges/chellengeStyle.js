@@ -5,9 +5,11 @@ import { containerPadding } from "../../styles/globalStyles";
 const { width } = Dimensions.get('window');
 const ChallengeStyle = StyleSheet.create({
     Title:{
-        padding:20,
-        fontSize:25,
-        paddingLeft:10
+        padding:25,
+        fontSize:23,
+        paddingLeft:0,
+        fontFamily:fonts.GothamMedium,
+        paddingBottom:5
     },
     onBoardingTitle:{
         fontFamily:fonts.bold,

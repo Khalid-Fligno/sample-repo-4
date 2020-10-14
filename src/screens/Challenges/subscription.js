@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text ,ScrollView,FlatList, Alert} from 'react-native';
 import { ListItem, Button,  } from 'react-native-elements'
 import colors from '../../styles/colors';
-import globalStyle from '../../styles/globalStyles';
+import globalStyle, { containerPadding } from '../../styles/globalStyles';
 import { db } from '../../../config/firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
@@ -11,6 +11,7 @@ import { any } from 'prop-types';
 import Loader from '../../components/Shared/Loader';
 import ChallengeStyle from './chellengeStyle';
 import createUserChallengeData from '../../components/Challenges/UserChallengeData';
+import ChallengeCard from '../../components/Challenges/ChallengeCard';
 
 
 
@@ -98,21 +99,15 @@ class ChallengeSubscriptionScreen extends Component {
 
 
   renderItem = ({ item ,index}) => (
-        <ListItem
-            key={index}
-            title={item.name}
-            bottomDivider
-            rightElement={
-                <Button
-                    title="Buy"
-                    type="solid"
-                    // onPress={()=>console.log('hello')}
-                    buttonStyle={{width:150,}}
-                    titleStyle={{fontSize:15}}
-                    onPress={()=>this.addChallengeToUser(index)}
-                    />
-             }
-        />
+    <ChallengeCard 
+        outline={false}
+        imageUrl={item.imageUrl}
+        numberOfDays={item.numberOfDays}
+        key={index}
+        btnTitle = "Buy"
+        onPress={()=>this.onBoarding(item)}
+    />
+      
   )
   renderItem1 = ({item,index}) =>{
       let  btnTitle = ''
@@ -139,24 +134,16 @@ class ChallengeSubscriptionScreen extends Component {
       } 
     
         return (
-        <ListItem
-                  key={index}
-                  title={item.name}
-                  bottomDivider
-                  rightElement={
-                    <Button
-                        title={btnTitle}
-                        type="solid"
-                        onPress={()=>this.onBoarding(item)}
-                        // loading={true}
-                        buttonStyle={{width:150,}}
-                        titleStyle={{fontSize:15}}
-                        disabled={(btnDisabled)?true:false}
-                        // disabledStyle={{backgroundColor:colors.green.dark}}
-                        // disabledTitleStyle={{color:colors.white}}
-                        />
-                  }
-                />
+
+          <ChallengeCard 
+              outline={true}
+              imageUrl={item.imageUrl}
+              numberOfDays={item.numberOfDays}
+              key={index}
+              btnTitle = {btnTitle}
+              onPress={()=>this.onBoarding(item)}
+          />
+       
       )
   }
 
@@ -172,30 +159,23 @@ class ChallengeSubscriptionScreen extends Component {
   render() {
     const {challengesList,userChallengesList,loading} = this.state
     return (
-      <ScrollView style={{flex:1}}>
+      <ScrollView style={{flex:1,paddingHorizontal:containerPadding}} bounces={false}>
+         
        { 
           !loading &&  
           <View>
             {
                userChallengesList.map((item,index)=>(this.renderItem1({item,index})))
             }
-              
-              {/* <FlatList
-                keyExtractor={(item,index)=>index.toString()}
-                data={userChallengesList}
-                renderItem={this.renderItem1}
-              /> */}
-              {challengesList.length > 0 && <Text style={ChallengeStyle.Title}>Take a new challenge</Text>}
-              {
-                challengesList.map((item,index)=>(this.renderItem({item,index})))
-              }
-              {/* <FlatList
-                keyExtractor={(item,index)=>index.toString()}
-                data={challengesList}
-                renderItem={this.renderItem}
-              /> */}
           
-            </View>
+            {
+              challengesList.length > 0 && <Text style={ChallengeStyle.Title}>Take a new challenge</Text>
+            }
+            {
+              challengesList.map((item,index)=>(this.renderItem({item,index})))
+            }
+          
+          </View>
             
        }  
        {

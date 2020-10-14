@@ -828,7 +828,6 @@ export default class SubscriptionScreen extends React.PureComponent {
       specialOffer,
       selectedIndex
     } = this.state;
-    console.log(products)
     return (
       <React.Fragment>
         <View style={styles.container}>
