@@ -51,6 +51,6 @@ export default TabBarComponent
 const styles = StyleSheet.create({
     bottomBarStyle: {
         // height: (height * 10.625) / 100   //your header height (10.625 is the %)
-        height: (width) / 7   //your header height (10.625 is the %)
+        height: (width) / 7,   //your header height (10.625 is the %)
     }
   })

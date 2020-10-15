@@ -21,16 +21,16 @@ import ChallengeSvg from '../../assets/icons/challengeSvg';
 const TabStack = createBottomTabNavigator(
   {
 
-    Dashboard: DashboardStack,
+    // Dashboard: DashboardStack,
     Feed:LifestyleStack,
-    Subscription: SubscriptionStack,
+    Lifestyle: DashboardStack,
     Challenges: SubscriptionStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
     
   },
   {
-    initialRouteName: 'Dashboard',
+    initialRouteName: 'Lifestyle',
     tabBarComponent: (props) => (<TabBarComponent  {...props} />), //remember to import it,
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
@@ -58,7 +58,7 @@ const TabStack = createBottomTabNavigator(
             />
           );
         }
-        else if (routeName === 'Subscription' ) {
+        else if (routeName === 'Lifestyle' ) {
           icon = (
             <SubSVG 
                 width = {22}
@@ -117,7 +117,7 @@ const TabStack = createBottomTabNavigator(
         fontFamily: fonts.GothamMedium,
         textTransform:"uppercase",
         paddingBottom:4,
-        fontSize:9
+        fontSize:10
       },
       
     },

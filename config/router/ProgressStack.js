@@ -17,7 +17,7 @@ const ProgressStack = createStackNavigator(
             navigation={navigation}
             stack="progress"
             withProfileButton={routeName === 'ProgressHome'}
-            withHomeButton={true}
+            // withHomeButton={true}
           />
         );
       },

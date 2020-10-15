@@ -20,7 +20,7 @@ const SubscriptionStack = createStackNavigator(
             stack="ChallengeSubscription"
             navigation={navigation}
             withProfileButton={routeName === 'ChallengeSubscription'}
-            withHomeButton={true}
+            // withHomeButton={true}
           />
         );
       },

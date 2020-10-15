@@ -17,7 +17,7 @@ const CalendarStack = createStackNavigator(
             navigation={navigation}
             stack="calendar"
             withProfileButton={routeName === 'CalendarHome'}
-            withHomeButton={true}
+            // withHomeButton={true}
           />
         );
       },

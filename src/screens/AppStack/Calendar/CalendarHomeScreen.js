@@ -24,8 +24,9 @@ import { findReps } from '../../../utils';
 import { findFocus, findLocation, findFocusIcon, findWorkoutType } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
-import globalStyle from '../../../styles/globalStyles';
+import globalStyle, { containerPadding } from '../../../styles/globalStyles';
 const { width } = Dimensions.get('window');
+import { Slider } from 'react-native-elements';
 
 const recommendedWorkoutMap = {
   undefined: '',
@@ -240,6 +241,7 @@ fetchActiveChallengeUserData = async () =>{
         this.fetchActiveChallengeData(list[0])
       }else{
         this.setState({ 
+          activeChallengeUserData:undefined,
           loading:false
         });
       }
@@ -277,7 +279,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
 
 getCurrentPhase(){
   const {activeChallengeUserData,activeChallengeData} = this.state
-  if(activeChallengeUserData){
+  if(activeChallengeUserData && activeChallengeData){
     // console.log(activeChallengeUserData.phases)
     const data  = activeChallengeUserData.phases;
     data.forEach(el => {
@@ -299,7 +301,15 @@ getCurrentPhase(){
       let selectedTime = new Date(stringDate).getTime()
       return resTime <= selectedTime
     })
+
+   //TODO calculate current challenge day
+    let startDate = new Date(activeChallengeUserData.startDate).getDate();
+    let currentDate = new Date().getDate();
+    console.log(startDate ,currentDate)
+     this.currentChallengeDay = ( currentDate - startDate) +1
  
+  }else{
+    Alert.alert('Something went wrong please try again')
   }
   
 }
@@ -333,8 +343,10 @@ getCurrentPhase(){
     //   }
     //   return `workouts-${location}`;
     // };
-   
-    this.getCurrentPhase()
+    if(activeChallengeData && activeChallengeUserData){
+      this.getCurrentPhase()
+    }
+    
     const mealSwipable = (name,data,index)=>{
       return (
         <Swipeable
@@ -377,16 +389,48 @@ getCurrentPhase(){
     const ChallengeProgressCard = () =>{
       
       return(
-        <View>
-          <Text>
+        <View style={{marginTop:10,flexDirection:'column',alignItems:'center'}}>
+          <Text style={{fontSize:15,fontFamily:fonts.bold,color:colors.charcoal.light}}>
            {activeChallengeData.displayName}
          </Text>
-          <Text >
-           {this.phase.name} 
-         </Text>
-         <Text >
-         {this.phaseData.workouts.length} out of {this.totalChallengeWorkoutsCompleted.length} workouts completed.
-         </Text>
+         <View style={{marginVertical:10,
+          borderWidth:colors.themeColor.themeBorderWidth,
+          borderColor:colors.themeColor.themeBorderColor,
+          width:width -containerPadding*2,
+          paddingHorizontal:10,
+          paddingVertical:5,
+          justifyContent:'space-around',
+          height:100
+          }}>
+            <Text style={{
+              fontFamily:fonts.bold,
+              color:colors.charcoal.light
+              }}>
+              {/* {this.phase.displayName} */}
+               Day {this.currentChallengeDay} of {activeChallengeUserData.numberOfDays}
+            </Text>
+            <Text style={{
+              fontFamily:fonts.bold,
+              color:colors.charcoal.light}}>
+            {this.phaseData.workouts.length} out of {this.totalChallengeWorkoutsCompleted.length} workouts completed.
+            </Text>
+              <Slider
+                style={{marginTop:-10}}
+                maximumTrackTintColor ={colors.grey.light}
+                minimumTrackTintColor ={colors.grey.light}
+                trackStyle={{height:10,borderRadius:10}}
+                thumbStyle={{
+                  backgroundColor:colors.green.light,
+                  width:25,
+                  height:25,
+                  borderRadius:20,
+                }}
+                value={this.totalChallengeWorkoutsCompleted.length}
+                maximumValue = {this.phaseData.workouts.length}
+                onValueChange={(value) => this.setState({ value })}
+              />
+         </View>
+        
         </View> 
       )
     }
