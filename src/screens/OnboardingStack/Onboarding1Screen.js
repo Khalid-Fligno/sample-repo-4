@@ -168,6 +168,7 @@ export default class Onboarding1Screen extends React.PureComponent {
                       fontFamily: fonts.standard,
                     }}
                   />
+                    { Platform.OS==='ios' &&
                   <TouchableOpacity
                     title="DONE"
                     onPress={this.toggleDobModal}
@@ -177,7 +178,7 @@ export default class Onboarding1Screen extends React.PureComponent {
                       DONE
                     </Text>
                   </TouchableOpacity>
-                  
+                  }
                 </View>
               </Modal>
             </View>
