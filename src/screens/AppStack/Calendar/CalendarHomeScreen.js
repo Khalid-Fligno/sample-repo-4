@@ -38,6 +38,13 @@ const recommendedWorkoutMap = {
   6: 'Press here to see available workouts',
 };
 
+const recipeCategories = [
+  "breakfast",
+  "lunch",
+  "dinner",
+  "snack"
+]
+
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -52,7 +59,9 @@ class CalendarHomeScreen extends React.PureComponent {
       isSwiping: false,
       helperModalVisible: false,
       dayOfWeek: undefined,
-      challengeData:undefined
+      activeChallengeUserData:undefined,
+      meals:undefined,
+      activeChallengeData:undefined
     };
     this.calendarStrip = React.createRef();
   }
@@ -60,70 +69,31 @@ class CalendarHomeScreen extends React.PureComponent {
   componentDidMount = async () => {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     await this.fetchCalendarEntries();
-    await this.fetchChallengedata();
+    await this.fetchActiveChallengeUserData();
     this.showHelperOnFirstOpen();
   }
 
   componentWillUnmount() {
-    this.unsubscribeFromEntries();
     if (this.unsubscribeFromEntries2) {
       this.unsubscribeFromEntries2();
     }
-    if(this.unsubscribeUserChallenges)
-      this.unsubscribeUserChallenges()
+    if(this.unsubscribeFACUD)
+      this.unsubscribeFACUD()
+    if(this.unsubscribeFACD)
+      this.unsubscribeFACD()  
   }
 
   fetchCalendarEntries = async () => {
-    this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     const selectedDate = this.calendarStrip.current.getSelectedDate();
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
-    this.unsubscribeFromEntries = await db.collection('users').doc(uid)
-      .collection('calendarEntries').doc(stringDate)
-      .onSnapshot(async (doc) => {
-        if (doc.exists) {
-          this.setState({
-            workout: await doc.data().workout,
-            breakfast: await doc.data().breakfast,
-            lunch: await doc.data().lunch,
-            dinner: await doc.data().dinner,
-            snack: await doc.data().snack,
-            snack2: await doc.data().snack2,
-            loading: false,
-            dayOfWeek: selectedDate.format('d'),
-          });
-        } else {
-          this.setState({
-            loading: false,
-            dayOfWeek: selectedDate.format('d'),
-          });
-        }
-      });
+    //Todo :call the function to get the data of current date
+    this.handleDateSelected(selectedDate)
     
   }
 
 
- fetchChallengedata = async () =>{
-      // ToDo : for challenges
-    try{  
-      const uid = await AsyncStorage.getItem('uid');
-      this.unsubscribeUserChallenges = await db.collection('users').doc(uid).collection('challenges')
-      .where("status", "==" , "Active")
-      .onSnapshot(async (querySnapshot) => {
-        const challengeData = [];
-        await querySnapshot.forEach(async (doc) => {
-          await challengeData.push(await doc.data());
-        });
-        this.setState({ challengeData});
-      });
-    }
-    catch(err){
-      console.log(err)
-      Alert.alert('Fetch challenge error!')
-    }  
-    //-------**--------  
-  }
-  
+
   showHelperOnFirstOpen = async () => {
     const helperShownOnFirstOpen = await AsyncStorage.getItem('calendarHelperShownOnFirstOpen');
     if (helperShownOnFirstOpen === null) {
@@ -157,6 +127,7 @@ class CalendarHomeScreen extends React.PureComponent {
             snack2: await doc.data().snack2,
             loading: false,
             dayOfWeek: date.format('d'),
+            meals:await doc.data()
           });
         } else {
           this.setState({
@@ -168,6 +139,7 @@ class CalendarHomeScreen extends React.PureComponent {
             snack2: undefined,
             loading: false,
             dayOfWeek: date.format('d'),
+            meals:undefined
           });
         }
       });
@@ -175,18 +147,15 @@ class CalendarHomeScreen extends React.PureComponent {
 
   loadExercises = async (workoutId) => {
     this.setState({ loading: true });
-    console.log(workoutId)
     db.collection('newWorkouts').doc(workoutId)
       .get()
       .then(async (doc) => {
         try{
             FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
-              // console.log(res)
                 Promise.all(res.map(async (item,index) => {
                     if (item.includes("exercise-")) {
                       console.log(`${FileSystem.cacheDirectory}${item}`)
                       FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
-                        // console.log("deleted...",item)
                       })
                     }
                 }))
@@ -239,6 +208,7 @@ class CalendarHomeScreen extends React.PureComponent {
         [fieldToDelete]: firebase.firestore.FieldValue.delete(),
       });
   }
+
   renderRightActions = (fieldToDelete) => {
     return (
       <TouchableOpacity
@@ -251,6 +221,86 @@ class CalendarHomeScreen extends React.PureComponent {
       </TouchableOpacity>
     );
   }
+
+ 
+// ToDo : for challenges
+fetchActiveChallengeUserData = async () =>{
+      
+  try{  
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem('uid');
+    this.unsubscribeFACUD = await db.collection('users').doc(uid).collection('challenges')
+    .where("status", "==" , "Active")
+    .onSnapshot(async (querySnapshot) => {
+      const list = [];
+      await querySnapshot.forEach(async (doc) => {
+          await list.push(await doc.data());
+      });
+      this.fetchActiveChallengeData(list[0])
+    });
+  }
+  catch(err){
+    this.setState({ loading: false });
+    console.log(err)
+    Alert.alert('Fetch active challenge user data error!')
+  }  
+
+}
+
+fetchActiveChallengeData = async (activeChallengeUserData) =>{
+  try{
+    console.log("<<<<<")
+    this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
+    .onSnapshot(async (doc) => {
+        if(doc.exists){
+          this.setState({ 
+            activeChallengeUserData,
+            activeChallengeData:doc.data() ,
+            loading:false
+          });
+        }
+     
+    });
+  }catch(err){
+    this.setState({ loading: false });
+    console.log(err);
+    Alert.alert('Fetch active challenge data error!')
+  }
+
+}
+
+getCurrentPhase(){
+  const {activeChallengeUserData,activeChallengeData} = this.state
+  if(activeChallengeUserData){
+    // console.log(activeChallengeUserData.phases)
+    const data  = activeChallengeUserData.phases;
+    data.forEach(el => {
+        let currentTime = new Date().getTime();
+        let startTime = new Date(el.startDate).getTime()
+        let endTime = new Date(el.endDate).getTime()
+        if(currentTime >= startTime && currentTime <=endTime){
+          this.phase = el
+        }
+    });
+    //TODO :fetch the current phasr data from Challenges collection
+    this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
+    const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
+    console.log(stringDate)
+   
+   //TODO :calculate the workout completed till selected date
+    this.totalChallengeWorkoutsCompleted = activeChallengeUserData.workouts.filter((res)=>{
+      let resTime = new Date(res.date).getTime();
+      let selectedTime = new Date(stringDate).getTime()
+      return resTime <= selectedTime
+    })
+ 
+  }
+  
+}
+
+ //-------**--------  
+
+
   render() {
     const {
       loading,
@@ -260,11 +310,12 @@ class CalendarHomeScreen extends React.PureComponent {
       dinner,
       snack,
       snack2,
+      meals,
       helperModalVisible,
       dayOfWeek,
-      challengeData
+      activeChallengeUserData,
+      activeChallengeData
     } = this.state;
-    console.log(challengeData)
     // const findLocationIcon = () => {
     //   let location;
     //   if (workout.home) {
@@ -276,15 +327,16 @@ class CalendarHomeScreen extends React.PureComponent {
     //   }
     //   return `workouts-${location}`;
     // };
-
-
-    const mealSwipable = (name,data)=>{
+   
+    this.getCurrentPhase()
+    const mealSwipable = (name,data,index)=>{
       return (
         <Swipeable
                 renderRightActions={() => this.renderRightActions(name)}
                 overshootRight={false}
                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                 onSwipeableClose={() => this.setState({ isSwiping: false })}
+                key={index}
               >
                 <ListItem
                   title={data.title.toUpperCase()}
@@ -299,9 +351,10 @@ class CalendarHomeScreen extends React.PureComponent {
         </Swipeable>
       )
     }
-    const mealListItem = (name)=>{
+    const mealListItem = (name,index)=>{
       return (
         <ListItem
+        key={index}
         title={name.toUpperCase()}
         subtitle="Press here to see available recipes"
         onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: name.toLowerCase() })}
@@ -314,11 +367,31 @@ class CalendarHomeScreen extends React.PureComponent {
       )
     }
     
+  
+    const ChallengeProgressCard = () =>{
+      
+      return(
+        <View>
+          <Text>
+           {activeChallengeData.displayName}
+         </Text>
+          <Text >
+           {this.phase.name} 
+         </Text>
+         <Text >
+         {this.phaseData.workouts.length} out of {this.totalChallengeWorkoutsCompleted.length} workouts completed.
+         </Text>
+        </View> 
+      )
+    }
     const dayDisplay = (
       <ScrollView
         contentContainerStyle={styles.dayDisplayContainer}
         scrollEnabled={!this.state.isSwiping}
       >
+        {
+          this.phaseData && ChallengeProgressCard()
+        }
         <Text style={styles.headerText}>
           WORKOUT
         </Text>
@@ -393,6 +466,16 @@ class CalendarHomeScreen extends React.PureComponent {
         </Text>
         <View style={styles.listContainer}>
           {
+            recipeCategories.map((res,index)=>{
+              const {meals} = this.state
+              if(meals && meals[res])
+                  return mealSwipable(res,meals[res],index)
+              else 
+                  return mealListItem(res.toLocaleUpperCase(),index)
+            
+          })
+          }
+          {/* {
             breakfast ?mealSwipable('breakfast',breakfast):mealListItem("BREAKFAST")
           }
           {
@@ -400,18 +483,17 @@ class CalendarHomeScreen extends React.PureComponent {
           }
           {
             dinner ?mealSwipable('dinner',dinner) :  mealListItem('dinner')
-          }
+          } */}
         </View>
         <View style={styles.listContainerBottom}>
           {
-            snack ? mealSwipable('snack',snack) :  mealListItem('snack')
-          }
-          {
-            snack2 ?  mealSwipable('snack',snack2) :  mealListItem('snack')
-          }
+           meals && meals['snack2'] ?  mealSwipable('snack',snack2) :  mealListItem('snack')
+          } 
         </View>
       </ScrollView>
     );
+
+
     return (
       <View style={[globalStyle.container,{paddingHorizontal:0}]}>
         <View style={styles.calendarStripContainer}>
@@ -458,6 +540,7 @@ class CalendarHomeScreen extends React.PureComponent {
             rightSelector={<Icon name="chevron-right" size={20} color={colors.charcoal.standard} />}
           />
         </View>
+       
         {dayDisplay}
         <HelperModal
           helperModalVisible={helperModalVisible}
