@@ -9,6 +9,7 @@ import {
   Dimensions,
   Alert,
   ImageBackground,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
@@ -166,7 +167,8 @@ export default class Onboarding1Screen extends React.PureComponent {
                     itemStyle={{
                       fontFamily: fonts.standard,
                     }}
-                  />
+                  />(
+                    { Platform.OS==='ios' &&
                   <TouchableOpacity
                     title="DONE"
                     onPress={this.toggleDobModal}
@@ -176,6 +178,7 @@ export default class Onboarding1Screen extends React.PureComponent {
                       DONE
                     </Text>
                   </TouchableOpacity>
+                  })
                 </View>
               </Modal>
             </View>

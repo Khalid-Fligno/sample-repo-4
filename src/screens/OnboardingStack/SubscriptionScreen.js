@@ -113,11 +113,10 @@ export default class SubscriptionScreen extends React.PureComponent {
     };
   }
   componentDidMount = async () => {
-
-    await RNIap.initConnection();
-    this.androidSubscriptions();
     this.props.navigation.setParams({ handleRestore: this.restore });
     this.props.navigation.setParams({ handleLogout: this.logout });
+    await RNIap.initConnection();
+    this.androidSubscriptions();
     if (this.state.specialOffer) {
       await this.loadDiscountedProducts();
       await this.loadProducts();
