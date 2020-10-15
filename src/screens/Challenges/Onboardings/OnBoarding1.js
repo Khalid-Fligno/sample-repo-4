@@ -106,9 +106,10 @@ export default class OnBoarding1 extends Component {
                     {fontSize:15,
                     fontFamily:fonts.GothamMedium,
                     marginTop:20,
-                    marginBottom:20
+                    marginBottom:20,
+                    textTransform:'lowercase'
                     }]}>
-                      {challengeData.name}
+                      {challengeData.displayName}
                   </Text>
                 </View>
               

@@ -15,7 +15,7 @@ const SliderComponent = (props) => (
       {props.title}
       </Text>
     <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}> 
-      <Text style={{fontFamily:fonts.boldNarrow,color:colors.grey.dark}}>1</Text>
+      <Text style={{fontFamily:fonts.boldNarrow,color:colors.grey.dark}}>0</Text>
         <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center',marginHorizontal:10 }}>
           <Slider
             value={props.value}

@@ -206,7 +206,7 @@ export default class OnBoarding5 extends Component {
                   error && <Text style={ChallengeStyle.errorText}>{error}</Text>
                 }
                 <CustomBtn 
-                  Title="Next"
+                  Title="Skip"
                   customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}
                   onPress={()=>this.goToScreen('next')}
                   disabled={btnDisabled}
@@ -221,7 +221,7 @@ export default class OnBoarding5 extends Component {
                     customBtnStyle={{borderRadius:50,padding:15,width:"100%",marginTop:5,marginBottom:-10,backgroundColor:'transparent'}}
                     onPress={()=>this.goToScreen('previous')}
                     disabled={btnDisabled}
-                    customBtnTitleStyle={{color:colors.black}}
+                    customBtnTitleStyle={{color:colors.black,marginRight:40}}
                     isLeftIcon={true}
                     leftIconName="chevron-left"
                     leftIconColor={colors.black}
