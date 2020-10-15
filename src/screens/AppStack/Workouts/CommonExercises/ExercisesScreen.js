@@ -66,7 +66,7 @@ export default class ExercisesScreen extends React.PureComponent {
           workoutSubCategory : workoutSubCategory,
           currentExerciseIndex:currentExerciseIndex,  // Start from 0
           timerStart: false,
-          totalDuration:10,
+          totalDuration:totalDuration,
           pauseModalVisible: false,
           videoPaused: false,
           exerciseInfoModalVisible: false,
@@ -94,14 +94,19 @@ export default class ExercisesScreen extends React.PureComponent {
     if(workoutName === 'none'){
       return null
     }
+    console.log("here....")
     const uid = await AsyncStorage.getItem('uid');
     const userRef = db.collection('users').doc(uid);
     return db.runTransaction((transaction) => {
       return transaction.get(userRef).then((userDoc) => {
         const newWeeklyComplete = userDoc.data().weeklyTargets[workoutName] + 1;
+        const workoutCount = userDoc.data().totalWorkoutCompleted + 1;
         const oldWeeklyTargets = userDoc.data().weeklyTargets;
         const newWeeklyTargets = updateWeeklyTargets(oldWeeklyTargets, workoutName, newWeeklyComplete);
-        transaction.update(userRef, { weeklyTargets: newWeeklyTargets })
+        transaction.update(userRef, { 
+          weeklyTargets: newWeeklyTargets,
+          totalWorkoutCompleted:workoutCount
+         })
       });
     });
   }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Alert, ImageBackground, Dimensions } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView,TouchableOpacity, Alert, ImageBackground, Dimensions } from 'react-native';
 import CustomButton from '../../components/Shared/CustomButton';
 import globalStyle, { containerPadding } from '../../styles/globalStyles';
 import ChallengeStyle from '../Challenges/chellengeStyle';
@@ -55,6 +55,17 @@ class Onboarding2Screen extends Component {
     return (
             <SafeAreaView style={onboardingStyle.container}>
               <View style={[globalStyle.container]}>
+
+              <ScrollView
+                contentContainerStyle={{
+                  flexGrow: 1, 
+                  flexDirection: 'column', 
+                  justifyContent: 'space-between',
+                  paddingVertical:15
+                }}
+                bounces={false}
+                showsVerticalScrollIndicator={false}
+              >  
                   <BigHeadingWithBackButton
                     bigTitleText = "Intensity"
                     isBackButton = {false}
@@ -95,7 +106,7 @@ class Onboarding2Screen extends Component {
                  />
 
 
-                <View style={{flex:0.5,justifyContent:'flex-end'}}>
+                <View style={{flex:0.5,justifyContent:'flex-end',marginTop:20}}>
                   <CustomBtn 
                       Title="Continue"
                       customBtnStyle={{borderRadius:50,padding:15}}
@@ -103,6 +114,7 @@ class Onboarding2Screen extends Component {
                       customBtnTitleStyle={{letterSpacing:fonts.letterSpacing}}
                   />    
                 </View>
+              </ScrollView>  
                 <Loader
                     loading={loading}
                     color={colors.coral.standard}

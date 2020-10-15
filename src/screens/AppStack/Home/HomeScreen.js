@@ -119,7 +119,9 @@ export default class HomeScreen extends React.PureComponent {
             strength:0,
             circuit:0,
             interval:0
-          }}
+          },
+          totalWorkoutCompleted:0
+        }
           await userRef.set(data, { merge: true });
       }
     });
