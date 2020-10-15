@@ -23,7 +23,7 @@ export default class OnBoarding2 extends Component {
     const data = this.props.navigation.getParam('data', {});
     let dietryPreferences=[
       {
-        name:'Vegitarian',
+        name:'Vegetarian',
         tag:'V',
         selected:false
       },
