@@ -64,14 +64,19 @@ export default class OnBoarding5 extends Component {
   }
 
   goToScreen(type){
-    let {challengeData,burpeeCount} = this.state
-
+    let {challengeData,burpeeCount,timerStart,totalDuration} = this.state
+    if(timerStart && totalDuration ==60)
+    {
+      this.setState({ error: 'your timer is in progress! please do burpee test ' });
+      return;
+    }
     const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
       burpeeCount
     })
     let updatedChallengedata = Object.assign({},challengeData,{
       onBoardingInfo
     })
+
     if(type === 'next'){
       this.props.navigation.navigate('ChallengeOnBoarding6',{
         data:{
@@ -119,14 +124,18 @@ export default class OnBoarding5 extends Component {
 
 
   handleFinish(){
-    this.setState((prevState) => ({ burpeeModalVisible: !prevState.burpeeModalVisible ,showInputBox:true}));
-    console.log("<><><>Finished")
+    this.setState((prevState) => ({ 
+      burpeeModalVisible: !prevState.burpeeModalVisible ,
+      showInputBox:true,
+      timerStart:false,
+      error:''
+    }));
   }
   toggleBurpeeModal = () => {
     this.setState((prevState) => ({ burpeeModalVisible: !prevState.burpeeModalVisible }));
   }
   render() {
-    let {timerStart,totalDuration,challengeData,burpeeCount,burpeeModalVisible,showInputBox,btnDisabled} = this.state
+    let {timerStart,totalDuration,challengeData,burpeeCount,burpeeModalVisible,showInputBox,btnDisabled,error} = this.state
     if(!challengeData.onBoardingInfo){
       this.onFocusFunction()
     }
@@ -193,6 +202,9 @@ export default class OnBoarding5 extends Component {
               />
           
               <View style={[{flex:1,justifyContent:'flex-end'}]}>
+                {
+                  error && <Text style={ChallengeStyle.errorText}>{error}</Text>
+                }
                 <CustomBtn 
                   Title="Next"
                   customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}

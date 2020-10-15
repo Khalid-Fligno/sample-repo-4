@@ -62,7 +62,15 @@ const ChallengeStyle = StyleSheet.create({
           color: '#d4d8db',
           fontWeight:fonts.fontWeight,
           letterSpacing:fonts.letterSpacing
-         }
+         },
+         errorText: {
+          fontFamily: fonts.standard,
+          fontSize: 12,
+          color: colors.themeColor.color,
+          textAlign: 'center',
+          margin: 10,
+          marginVertical:10,
+        },
    
   });
   export default  ChallengeStyle
