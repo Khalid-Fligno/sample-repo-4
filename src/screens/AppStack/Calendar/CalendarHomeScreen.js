@@ -425,6 +425,7 @@ getCurrentPhase(){
                   height:25,
                   borderRadius:20,
                 }}
+                disabled={true}
                 value={this.totalChallengeWorkoutsCompleted.length}
                 maximumValue = {this.phaseData.workouts.length}
                 onValueChange={(value) => this.setState({ value })}
