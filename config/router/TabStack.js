@@ -15,6 +15,7 @@ import CalenderSvg from '../../assets/icons/calender';
 import SubSVG from '../../assets/icons/subscriptionSVG';
 import ProgressSvg from '../../assets/icons/progress';
 import TabBarComponent from '../../src/components/Shared/TabBarComponent';
+import ChallengeSvg from '../../assets/icons/challengeSvg';
 
 
 const TabStack = createBottomTabNavigator(
@@ -23,6 +24,7 @@ const TabStack = createBottomTabNavigator(
     Dashboard: DashboardStack,
     Feed:LifestyleStack,
     Subscription: SubscriptionStack,
+    Challenges: SubscriptionStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
     
@@ -59,6 +61,15 @@ const TabStack = createBottomTabNavigator(
         else if (routeName === 'Subscription' ) {
           icon = (
             <SubSVG 
+                width = {22}
+                height = {22}
+                fill ={focused ? activeState : inactiveState}
+            />
+          );
+        } 
+        else if (routeName === 'Challenges' ) {
+          icon = (
+            <ChallengeSvg 
                 width = {22}
                 height = {22}
                 fill ={focused ? activeState : inactiveState}
@@ -103,9 +114,10 @@ const TabStack = createBottomTabNavigator(
         backgroundColor: colors.themeColor.footerBackgroundColor,
       },
       labelStyle: {
-        fontFamily: fonts.bold,
+        fontFamily: fonts.GothamMedium,
         textTransform:"uppercase",
         paddingBottom:4,
+        fontSize:9
       },
       
     },

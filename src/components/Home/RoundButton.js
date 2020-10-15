@@ -13,11 +13,7 @@ export default function RoundButton(props){
         borderColor:colors.grey.medium
    });
     let leftIconUrl =''
-    if(props.title === 'NUTRITION'){
-        leftIconUrl = require('../../../assets/icons/'+'fitazfk2-nutrition.png')
-    }else if(props.title === 'WORKOUT'){
-        leftIconUrl = require('../../../assets/icons/'+'fitazfk2-workout.png')
-    }
+
    
     let onPressIn =()=>{
         console.log("lskdfklsd");
