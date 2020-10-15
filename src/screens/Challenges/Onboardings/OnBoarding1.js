@@ -148,7 +148,7 @@ export default class OnBoarding1 extends Component {
                   onValueChange={(value) => this.setState({ increaseFitness:Math.round(value) })}
                 />
 
-                <View style={{flex:1,justifyContent:'flex-end'}}>
+                <View style={{flex:1,justifyContent:'flex-end',marginTop:20}}>
                       <CustomBtn 
                         Title="Continue"
                         customBtnStyle={{borderRadius:50,padding:15,width:'100%'}}

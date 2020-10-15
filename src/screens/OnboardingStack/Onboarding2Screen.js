@@ -61,7 +61,8 @@ class Onboarding2Screen extends Component {
                   flexGrow: 1, 
                   flexDirection: 'column', 
                   justifyContent: 'space-between',
-                  paddingVertical:15
+                  paddingTop:0,
+                  paddingBottom:15
                 }}
                 bounces={false}
                 showsVerticalScrollIndicator={false}

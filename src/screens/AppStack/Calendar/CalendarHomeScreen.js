@@ -236,7 +236,13 @@ fetchActiveChallengeUserData = async () =>{
       await querySnapshot.forEach(async (doc) => {
           await list.push(await doc.data());
       });
-      this.fetchActiveChallengeData(list[0])
+      if(list[0]){
+        this.fetchActiveChallengeData(list[0])
+      }else{
+        this.setState({ 
+          loading:false
+        });
+      }
     });
   }
   catch(err){
