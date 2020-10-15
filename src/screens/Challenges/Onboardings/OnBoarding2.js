@@ -173,7 +173,7 @@ export default class OnBoarding2 extends Component {
                       customBtnStyle={{borderRadius:50,padding:15,width:"100%",marginTop:5,marginBottom:-10,backgroundColor:'transparent'}}
                       onPress={()=>this.goToScreen('previous')}
                       disabled={btnDisabled}
-                      customBtnTitleStyle={{color:colors.black}}
+                      customBtnTitleStyle={{color:colors.black,marginRight:40}}
                       isLeftIcon={true}
                       leftIconName="chevron-left"
                       leftIconColor={colors.black}
