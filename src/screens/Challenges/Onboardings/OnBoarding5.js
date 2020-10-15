@@ -27,7 +27,8 @@ export default class OnBoarding5 extends Component {
       timerStart:false,
       totalDuration:60,
       challengeData:{},
-      btnDisabled:true
+      btnDisabled:true,
+      error:''
     };
   }
 
@@ -203,7 +204,7 @@ export default class OnBoarding5 extends Component {
           
               <View style={[{flex:1,justifyContent:'flex-end'}]}>
                 {
-                  error && <Text style={ChallengeStyle.errorText}>{error}</Text>
+                  <Text style={ChallengeStyle.errorText}>{error}</Text>
                 }
                 <CustomBtn 
                   Title="Skip"
