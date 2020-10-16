@@ -363,6 +363,8 @@ getCurrentPhase(){
                 key={index}
               >
                 <ListItem
+                  activeOpacity ={0.5}
+                  underlayColor="none"
                   title={data.title.toUpperCase()}
                   subtitle={data.subtitle}
                   onPress={() => this.props.navigation.navigate('Recipe', { recipe: data })}
@@ -378,15 +380,18 @@ getCurrentPhase(){
     const mealListItem = (name,index)=>{
       return (
         <ListItem
-        key={index}
-        title={name}
-        subtitle="Press here to see available recipes"
-        onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: name.toLowerCase() })}
-        containerStyle={calendarStyles.listItemContainer}
-        chevronColor={colors.charcoal.standard}
-        titleStyle={calendarStyles.blankListItemTitle}
-        subtitleStyle={calendarStyles.blankListItemSubtitle}
-        rightIcon={<PlusCircleSvg height={30} width={30} fill={colors.themeColor.color} />}
+          activeOpacity ={0.5}
+          underlayColor="none"
+          touchSoundDisabled={false}
+          key={index}
+          title={name}
+          subtitle="Press here to see available recipes"
+          onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: name.toLowerCase() })}
+          containerStyle={calendarStyles.listItemContainer}
+          chevronColor={colors.charcoal.standard}
+          titleStyle={calendarStyles.blankListItemTitle}
+          subtitleStyle={calendarStyles.blankListItemSubtitle}
+          rightIcon={<PlusCircleSvg height={30} width={30} fill={colors.themeColor.color} />}
       />
       )
     }
@@ -417,43 +422,18 @@ getCurrentPhase(){
                         minimumTrackTintColor={colors.themeColor.color}
                         maximumTrackTintColor={colors.grey.medium}
                         thumbStyle={{
-                          display:'none',
                           height:20, 
                           width:20,
                           borderRadius:50,
-                          backgroundColor:colors.themeColor.color,
-                          borderWidth:3,
-                          borderColor:colors.themeColor.color
+                          backgroundColor:"transparent",
                         }}
+                        disabled={true}
                       />
                     </View>
                     <Text style={calendarStyles.sliderSideText}>{this.phaseData.workouts.length}</Text>
                 </View>
                   
-              {/* <ProgressBar 
-                  title="Workouts Complete"
-                  // completed={this.totalChallengeWorkoutsCompleted.length}
-                  completed={4}
-                  total = {this.phaseData.workouts.length}
-                  total = {10}
-                  customTitleStyle={{
-                    marginHorizontal:20,
-                    // marginBottom:hp('-1.2%'),
-                    marginTop:hp('0.7%'),
-                    fontFamily:fonts.GothamMedium,
-                    color:colors.charcoal.light,
-                    fontSize:wp('2.4%')
-                  }}
-                  size={wp('34%')}
-                  customProgressNumberStyle={{
-                    fontSize:wp('16%'),
-                    fontFamily:fonts.GothamLight,
-                    color:colors.charcoal.dark
-                  }}
-                  customProgessTotalStyle={{
-                    fontSize:wp('3.5%')
-                  }}
-              /> */}
+              
            </View>
            <View style={calendarStyles.phaseContainer}>
               <CustomBtn 
@@ -496,6 +476,8 @@ getCurrentPhase(){
                 onSwipeableClose={() => this.setState({ isSwiping: false })}
               >
                 <ListItem
+                  activeOpacity ={0.5}
+                  underlayColor="none"
                   title={workout.displayName}
                   subtitle={
                     workout.filters && workout.filters.includes('strength') ? (
@@ -541,6 +523,8 @@ getCurrentPhase(){
               </Swipeable>
             ) : (
               <ListItem
+                activeOpacity ={0.5}
+                underlayColor="none"
                 title="WORKOUT"
                 subtitle={recommendedWorkoutMap[dayOfWeek]}
                 onPress={() => this.props.navigation.navigate('WorkoutsHome')}
@@ -654,3 +638,29 @@ CalendarHomeScreen.propTypes = {
 };
 
 export default ReactTimeout(CalendarHomeScreen);
+
+
+{/* <ProgressBar 
+                  title="Workouts Complete"
+                  // completed={this.totalChallengeWorkoutsCompleted.length}
+                  completed={4}
+                  total = {this.phaseData.workouts.length}
+                  total = {10}
+                  customTitleStyle={{
+                    marginHorizontal:20,
+                    // marginBottom:hp('-1.2%'),
+                    marginTop:hp('0.7%'),
+                    fontFamily:fonts.GothamMedium,
+                    color:colors.charcoal.light,
+                    fontSize:wp('2.4%')
+                  }}
+                  size={wp('34%')}
+                  customProgressNumberStyle={{
+                    fontSize:wp('16%'),
+                    fontFamily:fonts.GothamLight,
+                    color:colors.charcoal.dark
+                  }}
+                  customProgessTotalStyle={{
+                    fontSize:wp('3.5%')
+                  }}
+              /> */}

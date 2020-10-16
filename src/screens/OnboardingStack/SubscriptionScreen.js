@@ -911,7 +911,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                         term={Platform.OS === 'android' ? andriodSubscriptionTitleMap[index] : subscriptionPeriodMap[product.identifier]}
                         comparisonPrice={
                           products && (product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' || product.identifier === 'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.discounted') ?
-                            `${product.currencySymbol} ${(products[0].price / 12).toFixed(2)}` :
+                            `${products[0].price[0]} ${(products[0].price / 12).toFixed(2)}` :
                             products[1].priceString
                         }
                         isDiscounted={product.identifier.indexOf('fitazfkapp.sub.fullaccess.yearly.discounted') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}

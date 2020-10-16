@@ -47,7 +47,7 @@ export default class SubscriptionTile extends React.PureComponent {
               
              
               <Text style={[styles.priceTitle,{ color:selected?colors.themeColor.color:colors.grey.dark}]}>
-              {!primary?`${currencySymbol}${(priceNumber / 12).toFixed(2)}`:price}<Text style={styles.yearlySubTitle}>{` / month` }</Text></Text> 
+              {!primary?`${price[0]}${(priceNumber / 12).toFixed(2)}`:price}<Text style={styles.yearlySubTitle}>{` / month` }</Text></Text> 
             </View>
             {
               comparisonPrice && (
