@@ -25,7 +25,7 @@ export default class OnBoarding5 extends Component {
       burpeeModalVisible:false,
       showInputBox:false,
       timerStart:false,
-      totalDuration:10,
+      totalDuration:60,
       challengeData:{},
       btnDisabled:true,
       counterButtonDisable:false,
@@ -229,18 +229,25 @@ export default class OnBoarding5 extends Component {
 
             {
               burpeeCount >0 &&  burpeeCount <= 10 && 
-              <Text style={ChallengeStyle.filtnesslevelTitle}>Beginner</Text>
+              <View style={{flexDirection:"row",justifyContent:"space-around"}}>
+                <Text style={ChallengeStyle.filtnesslevelTitle}>Fitness Level </Text>
+                <Text style={ChallengeStyle.filtnesslevelTitle}>Beginner</Text>
+              </View>
             
             }
             {
               burpeeCount >10 && burpeeCount <= 15  && 
-              <Text style={ChallengeStyle.filtnesslevelTitle}>Intermediate</Text>
-             
+              <View style={{flexDirection:"row",justifyContent:"space-around"}}>
+                <Text style={ChallengeStyle.filtnesslevelTitle}>Fitness Level </Text>
+                <Text style={ChallengeStyle.filtnesslevelTitle}>Intermediate</Text>
+              </View>
             }
             {
               burpeeCount >15   && 
-              <Text style={ChallengeStyle.filtnesslevelTitle}>Expert</Text>
-
+              <View style={{flexDirection:"row",justifyContent:"space-around"}}>
+                <Text style={ChallengeStyle.filtnesslevelTitle}>Fitness Level </Text>
+                <Text style={ChallengeStyle.filtnesslevelTitle}>Expert</Text>
+              </View>
             }
             <PickerModal 
                 dataMapList = {burpeeOptions}

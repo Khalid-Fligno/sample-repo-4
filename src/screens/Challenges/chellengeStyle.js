@@ -76,10 +76,7 @@ const ChallengeStyle = StyleSheet.create({
           fontFamily: fonts.bold,
           fontSize: 14,
           color: colors.charcoal.light,
-          marginBottom: 5,
-          alignItems:'center',
-          textAlign:'center',
-          marginBottom:15.
+          marginBottom: 10,
         },
   });
   export default  ChallengeStyle
