@@ -22,6 +22,7 @@ import ImageModal from '../../../components/Progress/ImageModal';
 import { diff } from '../../../utils/index';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+import { widthPercentageToDP as wp ,heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const { width } = Dimensions.get('window');
 
@@ -312,8 +313,10 @@ class ProgressHomeScreen extends React.PureComponent {
                       profile && (
                         <View>
                           <ProgressBar
-                            progressBarType="Strength"
-                            completedWorkouts={profile.weeklyTargets.strength }
+                            title="Strength"
+                            completed={profile.weeklyTargets.strength }
+                            total = {5}
+                            size ={wp('38%')}
                           />
                         </View>
                       )
@@ -322,8 +325,10 @@ class ProgressHomeScreen extends React.PureComponent {
                       profile && (
                         <View>
                           <ProgressBar
-                            progressBarType="Circuit"
-                            completedWorkouts={profile.weeklyTargets.circuit }
+                            title="Circuit"
+                            completed={profile.weeklyTargets.circuit }
+                            total = {5}
+                            size ={wp('38%')}
                           />
                         </View>
                       )
@@ -334,8 +339,10 @@ class ProgressHomeScreen extends React.PureComponent {
                           profile && (
                             <View>
                               <ProgressBar
-                                progressBarType="Interval"
-                                completedWorkouts={profile.weeklyTargets.interval}
+                                title="Interval"
+                                completed={profile.weeklyTargets.interval}
+                                total = {5}
+                                size ={wp('38%')}
                               />
                             </View>
                           )

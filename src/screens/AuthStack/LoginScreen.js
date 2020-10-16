@@ -55,6 +55,10 @@ import globalStyle, { containerPadding } from '../../styles/globalStyles';
 import InputBox from '../../components/Shared/inputBox';
 import BigHeadingWithBackButton from '../../components/Shared/BigHeadingWithBackButton';
 import authScreenStyle from './authScreenStyle';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
+
+
 const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get('window');
 const getRandomString = (length) => {
@@ -475,7 +479,7 @@ export default class LoginScreen extends React.PureComponent {
                         onPress={this.onSignInWithApple}
                         buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
                         buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
-                        cornerRadius={50}
+                        cornerRadius={hp('3.5%')}
                         style={authScreenStyle.appleButton}
                         
                       />

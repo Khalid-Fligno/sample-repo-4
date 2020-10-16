@@ -2,6 +2,7 @@ import colors from "../../styles/colors";
 import { Dimensions, StyleSheet } from "react-native";
 import fonts from "../../styles/fonts";
 import { containerPadding } from "../../styles/globalStyles";
+import { heightPercentageToDP as hp , widthPercentageToDP as wp } from "react-native-responsive-screen";
 const { width } = Dimensions.get('window');
 
 const authScreenStyle = StyleSheet.create({
@@ -46,8 +47,8 @@ const authScreenStyle = StyleSheet.create({
       marginTop: 8,
       borderWidth:2,
       borderColor:colors.grey.standard,
-      borderRadius:27,
-      padding:24,
+      borderRadius:hp('3.5%'),
+      padding:hp('3%'),
     },
     dividerOverlay: {
       marginVertical:20,

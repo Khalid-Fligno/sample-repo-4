@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { propTypes } from 'react-native-carousel'
 import Icon from './Icon'
 import { DotIndicator } from 'react-native-indicators'
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
+import { heightPercentageToDP as hp ,widthPercentageToDP as wp } from 'react-native-responsive-screen'
 
 const CustomBtn = (props)=>{
    const customBtnStyle = {
@@ -57,9 +57,9 @@ const CustomBtn = (props)=>{
                 props.leftIcon && (
                     <Image
                         source={props.leftIconUrl}
-                        style={{width: 20,
-                            height: 20,
-                            marginRight: 10,
+                        style={{width: hp('2%'),
+                            height: hp('2%'),
+                            marginRight: wp('2%'),
                         }}
                     />
                 )

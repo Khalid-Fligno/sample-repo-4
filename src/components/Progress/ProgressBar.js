@@ -18,8 +18,13 @@ export default class ProgressBar extends React.PureComponent {
   }
   render() {
     const {
-      progressBarType,
-      completedWorkouts,
+      title,
+      completed,
+      total,
+      customTitleStyle,
+      size,
+      customProgressNumberStyle,
+      customProgessTotalStyle
     } = this.props;
     return (
       <View style={styles.container}>
@@ -42,24 +47,27 @@ export default class ProgressBar extends React.PureComponent {
           
         </View> */}
         <AnimatedCircularProgress
-                  size={wp('39%')}
+                  size={size}
                   width={4}
-                  fill={(completedWorkouts/(progressBarType === 'Strength' ? 5 : 5))*100}
-                  tintColor={colors.coral.darkest}
+                  fill={(completed/total)*100}
+                  tintColor={colors.themeColor.color}
                   onAnimationComplete={() => console.log('onAnimationComplete')}
-                  backgroundColor="lightgray" >
+                  backgroundColor="lightgray" 
+                  rotation={0}
+        >
                      {
                         (fill) => (
                           <View>
-                            <Text style={styles.progressBarLabel}>
-                                <Text style={styles.progressCircleNumber}>{completedWorkouts}</Text>/{progressBarType === 'Strength' ? 5 : 5}
+                            <Text style={[styles.progressBarLabel,customProgessTotalStyle]}>
+                                <Text style={[styles.progressCircleNumber,customProgressNumberStyle]}>{completed}</Text>/{total}
                             </Text>
-                            <Text style={styles.progressCircleText}>
-                             {`${progressBarType} `}
+                            <Text style={[styles.progressCircleText,customTitleStyle]}>
+                             {`${title} `}
                             </Text>
                          </View>
                         )
                       }
+                      
          </AnimatedCircularProgress>         
       </View>
     );
@@ -67,8 +75,14 @@ export default class ProgressBar extends React.PureComponent {
 }
 
 ProgressBar.propTypes = {
-  progressBarType: PropTypes.oneOf(['Strength', 'Circuit','Interval']).isRequired,
-  completedWorkouts: PropTypes.number.isRequired,
+  // progressBarType: PropTypes.oneOf(['Strength', 'Circuit','Interval']).isRequired,
+  title: PropTypes.any.isRequired,
+  completed: PropTypes.number.isRequired,
+  totalWorkouts:PropTypes.number.isRequired,
+  customTitleStyle:PropTypes.object,
+  size:PropTypes.any,
+  customProgressNumberStyle:PropTypes.object,
+  customProgessTotalStyle:PropTypes.object,
 };
 
 const styles = StyleSheet.create({
@@ -80,10 +94,10 @@ const styles = StyleSheet.create({
   progressBarLabel: {
     fontFamily: fonts.standardNarrow,
     fontSize: hp('2%'),
-    color: colors.grey.medium,
+    color: colors.grey.dark,
     textAlign:'center',
     marginLeft:11,
-    marginTop:-25,
+    marginTop:-20,
     marginBottom:-5,
   },
 

@@ -31,7 +31,7 @@ import WorkOutCard from '../../../components/Home/WorkoutCard';
 import TimeSvg from '../../../../assets/icons/time';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp ,widthPercentageToDP as wp} from 'react-native-responsive-screen';
 const { width } = Dimensions.get('window');
 // const workoutTypeMap = {
 //   1: 'Resistance',
@@ -220,8 +220,10 @@ export default class HomeScreen extends React.PureComponent {
                       profile && (
                         <View>
                           <ProgressBar
-                            progressBarType="Strength"
-                            completedWorkouts={profile.weeklyTargets.strength }
+                            title="Strength"
+                            completed={profile.weeklyTargets.strength }
+                            total = { 5}
+                            size ={wp('38%')}
                           />
                         </View>
                       )
@@ -230,8 +232,10 @@ export default class HomeScreen extends React.PureComponent {
                       profile && (
                         <View>
                           <ProgressBar
-                            progressBarType="Circuit"
-                            completedWorkouts={profile.weeklyTargets.circuit }
+                            title="Circuit"
+                            completed={profile.weeklyTargets.circuit }
+                            total = { 5}
+                            size ={wp('38%')}
                           />
                         </View>
                       )
@@ -242,8 +246,10 @@ export default class HomeScreen extends React.PureComponent {
                           profile && (
                             <View>
                               <ProgressBar
-                                progressBarType="Interval"
-                                completedWorkouts={profile.weeklyTargets.interval}
+                                title="Interval"
+                                completed={profile.weeklyTargets.interval}
+                                total = { 5}
+                                size ={wp('38%')}
                               />
                             </View>
                           )

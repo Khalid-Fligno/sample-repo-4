@@ -14,6 +14,11 @@ import InputBox2 from '../../../components/Challenges/InputBox2';
 import Modal from 'react-native-modal';
 import { burpeeOptions, findFitnessLevel } from '../../../utils';
 import PickerModal from '../../../components/Challenges/PickerModal';
+import { db } from '../../../../config/firebase';
+import AsyncStorage from '@react-native-community/async-storage';
+import createUserChallengeData from '../../../components/Challenges/UserChallengeData';
+import Loader from '../../../components/Shared/Loader';
+
 const { width } = Dimensions.get('window');
 
 
@@ -28,7 +33,8 @@ export default class OnBoarding5 extends Component {
       totalDuration:60,
       challengeData:{},
       btnDisabled:true,
-      error:''
+      error:'',
+      loading:false
     };
   }
 
@@ -71,12 +77,23 @@ export default class OnBoarding5 extends Component {
       this.setState({ error: 'your timer is in progress! please do burpee test ' });
       return;
     }
-    const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
-      burpeeCount
-    })
-    let updatedChallengedata = Object.assign({},challengeData,{
-      onBoardingInfo
-    })
+    //TODO: find fitness level if cmplt burpee test otherwise it will one
+    let fitnessLevel=2;
+      if(burpeeCount >0 && burpeeCount<=10 )
+          fitnessLevel=1;
+      else if(burpeeCount >10 && burpeeCount<=15 )
+          fitnessLevel=2;
+      else if(burpeeCount > 15)
+        fitnessLevel=3;
+
+      //TODO: add burpee count and fitness level in on Boarding info  
+      const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
+        burpeeCount,
+        fitnessLevel
+      })
+      let updatedChallengedata = Object.assign({},challengeData,{
+        onBoardingInfo
+      })    
 
     if(type === 'next'){
       this.props.navigation.navigate('ChallengeOnBoarding6',{
@@ -85,22 +102,9 @@ export default class OnBoarding5 extends Component {
              }
       })
     }else if(type === 'submit'){
-      let fitnessLevel=2;
-      if(burpeeCount >0 && burpeeCount<=10 )
-          fitnessLevel=1;
-      else if(burpeeCount >10 && burpeeCount<=15 )
-          fitnessLevel=2;
-      else if(burpeeCount > 15)
-        fitnessLevel=3;
-      const onBoardingInfo = Object.assign({},updatedChallengedata,{
-        fitnessLevel
-      })
-      let updatedChallengedataWithFitLevel = Object.assign({},challengeData,{
-        onBoardingInfo,
-        status:'Active'
-      })
-      console.log("updatedChallengedataWithFitLevel",updatedChallengedataWithFitLevel);
-      const data = createUserChallengeData(updatedChallengedataWithFitLevel);
+
+      const data = createUserChallengeData(updatedChallengedata);
+      console.log("updatedChallengedataWithFitLevel",data);
       this.saveOnBoardingInfo(data)
     }
     else{
@@ -124,6 +128,7 @@ export default class OnBoarding5 extends Component {
     })
     console.log( data)
   }
+
   resetTimer = () => {
     this.props.navigation.replace('ChallengeOnBoarding5',{
       data:{
@@ -167,7 +172,18 @@ export default class OnBoarding5 extends Component {
     this.setState((prevState) => ({ burpeeModalVisible: !prevState.burpeeModalVisible }));
   }
   render() {
-    let {timerStart,totalDuration,challengeData,burpeeCount,burpeeModalVisible,showInputBox,btnDisabled,error} = this.state
+    let {
+      timerStart,
+      totalDuration,
+      challengeData,
+      burpeeCount,
+      burpeeModalVisible,
+      showInputBox,
+      btnDisabled,
+      error,
+      loading
+    } = this.state
+
     if(!challengeData.onBoardingInfo){
       this.onFocusFunction()
     }
@@ -283,6 +299,10 @@ export default class OnBoarding5 extends Component {
                 />    
              
               </View>
+              <Loader
+                  loading={loading}
+                  color={colors.themeColor.color}
+                />
           </View>
       </SafeAreaView> 
     );
