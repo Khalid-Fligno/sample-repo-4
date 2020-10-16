@@ -84,7 +84,26 @@ export default class OnBoarding5 extends Component {
                challengeData:updatedChallengedata
              }
       })
-    }else{
+    }else if(type === 'submit'){
+      let fitnessLevel=2;
+      if(burpeeCount >0 && burpeeCount<=10 )
+          fitnessLevel=1;
+      else if(burpeeCount >10 && burpeeCount<=15 )
+          fitnessLevel=2;
+      else if(burpeeCount > 15)
+        fitnessLevel=3;
+      const onBoardingInfo = Object.assign({},updatedChallengedata,{
+        fitnessLevel
+      })
+      let updatedChallengedataWithFitLevel = Object.assign({},challengeData,{
+        onBoardingInfo,
+        status:'Active'
+      })
+      console.log("updatedChallengedataWithFitLevel",updatedChallengedataWithFitLevel);
+      const data = createUserChallengeData(updatedChallengedataWithFitLevel);
+      this.saveOnBoardingInfo(data)
+    }
+    else{
       this.props.navigation.navigate('ChallengeOnBoarding4',{
         data:{
                challengeData:updatedChallengedata
@@ -92,6 +111,18 @@ export default class OnBoarding5 extends Component {
       })
     }
      
+  }
+  async  saveOnBoardingInfo(data){
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
+    userRef.set(data,{merge:true}).then((res)=>{
+      this.setState({loading:false})
+      this.props.navigation.navigate('Home');
+    }).catch((err)=>{
+      console.log(err)
+    })
+    console.log( data)
   }
   resetTimer = () => {
     this.props.navigation.replace('ChallengeOnBoarding5',{
@@ -191,7 +222,16 @@ export default class OnBoarding5 extends Component {
                   customContainerStyle={{marginTop:20}}
               />
             }
-            {/* model to select a count */}
+
+            { 
+              burpeeCount >0 && burpeeCount <= 10  && <Text> Beginner</Text>               
+            }
+            {
+              burpeeCount >10 && burpeeCount <= 15  && <Text> intermediate </Text>              
+            }
+            {
+              burpeeCount >15   && <Text> advanced</Text>
+            }
             <PickerModal 
                 dataMapList = {burpeeOptions}
                 onValueChange={(value) => this.setState({ burpeeCount: value })}
@@ -206,7 +246,7 @@ export default class OnBoarding5 extends Component {
                 {
                   <Text style={ChallengeStyle.errorText}>{error}</Text>
                 }
-                <CustomBtn 
+                { burpeeCount <= 0 ? <CustomBtn 
                   Title="Skip"
                   customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}
                   onPress={()=>this.goToScreen('next')}
@@ -216,7 +256,20 @@ export default class OnBoarding5 extends Component {
                   rightIconColor={colors.white}
                   rightIconSize={13}
                   customBtnTitleStyle={{marginRight:10}}
+                />:
+                <CustomBtn 
+                  Title="Continue"
+                  customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}
+                  onPress={()=>this.goToScreen('submit')}
+                  disabled={btnDisabled}
+                  isRightIcon={true}
+                  rightIconName="chevron-right"
+                  rightIconColor={colors.white}
+                  rightIconSize={13}
+                  customBtnTitleStyle={{marginRight:10}}
                 />
+                
+                }
                 <CustomBtn 
                     Title="Back"
                     customBtnStyle={{borderRadius:50,padding:15,width:"100%",marginTop:5,marginBottom:-10,backgroundColor:'transparent'}}
