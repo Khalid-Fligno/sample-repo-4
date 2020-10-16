@@ -13,7 +13,6 @@ import * as FileSystem from 'expo-file-system';
 import Video from 'react-native-video';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
-import WorkoutProgress from '../../../../components/Workouts/WorkoutProgress';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
 import ExerciseInfoModal from '../../../../components/Workouts/ExerciseInfoModal';
 import ExerciseInfoButton from '../../../../components/Workouts/ExerciseInfoButton';

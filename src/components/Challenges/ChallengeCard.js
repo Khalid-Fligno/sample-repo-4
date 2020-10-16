@@ -6,6 +6,7 @@ import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 import CustomBtn from '../Shared/CustomBtn';
 import PropTypes from 'prop-types';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 class ChallengeCard extends Component {
   constructor(props) {
     super(props);
@@ -39,7 +40,7 @@ class ChallengeCard extends Component {
                                       backgroundColor:!outline?colors.themeColor.color:'transparent',
                                       borderRadius:50,
                                       width:'85%',
-                                      marginTop:15,
+                                      marginTop:hp('1.8%'),
                                     }}
                     customBtnTitleStyle={{color:colors.offWhite,fontSize:14}}
                     onPress={onPress}
