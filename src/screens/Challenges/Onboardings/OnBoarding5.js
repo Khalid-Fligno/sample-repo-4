@@ -30,7 +30,7 @@ export default class OnBoarding5 extends Component {
       burpeeModalVisible:false,
       showInputBox:false,
       timerStart:false,
-      totalDuration:10,
+      totalDuration:60,
       challengeData:{},
       btnDisabled:true,
       counterButtonDisable:false,
