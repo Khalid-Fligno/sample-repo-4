@@ -410,9 +410,9 @@ getCurrentPhase(){
                   <Text style={calendarStyles.sliderSideText}>0</Text>
                     <View style={calendarStyles.slider}>
                       <Slider
-                        value={1}
+                        value={this.totalChallengeWorkoutsCompleted.length}
                         minimumValue={0}
-                        maximumValue={10}
+                        maximumValue={this.phaseData.workouts.length}
                         trackStyle={{height:5,borderRadius:5}}
                         minimumTrackTintColor={colors.themeColor.color}
                         maximumTrackTintColor={colors.grey.medium}
@@ -427,7 +427,7 @@ getCurrentPhase(){
                         }}
                       />
                     </View>
-                    <Text style={calendarStyles.sliderSideText}> 10</Text>
+                    <Text style={calendarStyles.sliderSideText}>{this.phaseData.workouts.length}</Text>
                 </View>
                   
               {/* <ProgressBar 
