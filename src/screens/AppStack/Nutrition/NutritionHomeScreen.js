@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-navigation';
 import globalStyle from '../../../styles/globalStyles';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 import fonts from '../../../styles/fonts';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
 
 const NutritionList = [
   {
@@ -42,8 +43,8 @@ export default function NutritionHomeScreen({ navigation }) {
            isBackButton ={false}
            isBigTitle = {true}
            />
-        <View style={{width:'100%',marginBottom:25,marginTop:10}}>
-          <Text style={{color:'gray',fontFamily:fonts.standard}}>Choose your mealtime</Text>
+        <View style={{width:'100%',marginBottom:hp('2.5%'),marginTop:hp('0.5%')}}>
+          <Text style={{color:'gray',fontFamily:fonts.standard,fontSize:wp('3%')}}>Choose your mealtime</Text>
         </View>
 
         {

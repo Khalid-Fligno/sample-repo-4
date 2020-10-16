@@ -16,6 +16,7 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import Tag from './Tag';
 import TimeSvg from '../../../assets/icons/time';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const { width } = Dimensions.get('window');
 
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 14,
+    fontSize: hp('1.6%'),
     lineHeight:18
   },
   subTitle: {

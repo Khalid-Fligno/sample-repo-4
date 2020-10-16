@@ -31,6 +31,7 @@ import WorkOutCard from '../../../components/Home/WorkoutCard';
 import TimeSvg from '../../../../assets/icons/time';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 const { width } = Dimensions.get('window');
 // const workoutTypeMap = {
 //   1: 'Resistance',
@@ -184,7 +185,7 @@ export default class HomeScreen extends React.PureComponent {
                bigTitleText = {bigHeadeingTitle} 
                isBackButton = {false}
                isBigTitle = {true}
-               customContainerStyle={{marginVertical:22}}
+               customContainerStyle={{marginVertical:hp('2%')}}
 
                />
               {/* <Text style={HomeScreenStyle.welcomeHeaderText}>

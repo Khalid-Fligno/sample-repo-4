@@ -5,7 +5,7 @@ import BlogScreen from '../../src/screens/AppStack/Home/BlogScreen';
 import Header from '../../src/components/Shared/Header';
 import ChallengeSubscriptionScreen from '../../src/screens/Challenges/subscription';
 
-const SubscriptionStack = createStackNavigator(
+const ChallengeSubscriptionStack = createStackNavigator(
   {
     ChallengeSubscription: ChallengeSubscriptionScreen,
     // Subscription: HomeScreen,
@@ -28,4 +28,4 @@ const SubscriptionStack = createStackNavigator(
   },
 );
 
-export default SubscriptionStack;
+export default ChallengeSubscriptionStack;

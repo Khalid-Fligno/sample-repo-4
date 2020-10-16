@@ -1,14 +1,14 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import Header from '../../src/components/Shared/Header';
-import LifeStyleScreen from '../../src/screens/AppStack/Home/LifeStyleScreen';
+import FeedScreen from '../../src/screens/AppStack/Home/FeedScreen';
 
-const LifestyleStack = createStackNavigator(
+const FeedStack = createStackNavigator(
   {
-    Lifestyle:LifeStyleScreen
+    FeedScreen:FeedScreen
   },
   {
-    initialRouteName: 'Lifestyle',
+    initialRouteName: 'FeedScreen',
     defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
@@ -16,7 +16,7 @@ const LifestyleStack = createStackNavigator(
           <Header
             stack="home"
             navigation={navigation}
-            withProfileButton={routeName === 'Lifestyle'}
+            withProfileButton={routeName === 'FeedScreen'}
             // withHomeButton={true}
           />
         );
@@ -25,4 +25,4 @@ const LifestyleStack = createStackNavigator(
   },
 );
 
-export default LifestyleStack;
+export default FeedStack;

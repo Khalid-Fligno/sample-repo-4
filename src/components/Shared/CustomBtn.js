@@ -7,18 +7,19 @@ import PropTypes from 'prop-types';
 import { propTypes } from 'react-native-carousel'
 import Icon from './Icon'
 import { DotIndicator } from 'react-native-indicators'
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
 const CustomBtn = (props)=>{
    const customBtnStyle = {
         flexDirection:"row",
         backgroundColor:colors.themeColor.color,
-        padding:17,
+        padding:hp('2%'),
         justifyContent:'center',
         
     }
     const customBtnTitleStyle ={
         fontFamily:fonts.GothamMedium,
-        fontSize:17,
+        fontSize:hp('1.8%'),
         letterSpacing:0.7,
         // marginTop: 3,
         color:colors.white,
@@ -32,12 +33,12 @@ const CustomBtn = (props)=>{
     }
     const outlineBtnTitleStyle ={
         color:colors.themeColor.color,
-        fontSize:17,
+        fontSize:hp('1.8%'),
         fontWeight:'500',
     }
 
     const titleCapitaliseStyle={
-        fontSize:14,
+        fontSize:hp('1.5%'),
         fontFamily:fonts.bold
     }
     return(

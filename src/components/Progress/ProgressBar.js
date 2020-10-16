@@ -9,6 +9,7 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { containerPadding } from '../../styles/globalStyles';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 const { width } = Dimensions.get('window');
 export default class ProgressBar extends React.PureComponent {
   constructor(props) {
@@ -41,7 +42,7 @@ export default class ProgressBar extends React.PureComponent {
           
         </View> */}
         <AnimatedCircularProgress
-                  size={(width)/2.6}
+                  size={wp('39%')}
                   width={4}
                   fill={(completedWorkouts/(progressBarType === 'Strength' ? 5 : 5))*100}
                   tintColor={colors.coral.darkest}
@@ -78,63 +79,25 @@ const styles = StyleSheet.create({
   },
   progressBarLabel: {
     fontFamily: fonts.standardNarrow,
-    fontSize: 15,
+    fontSize: hp('2%'),
     color: colors.grey.medium,
     textAlign:'center',
     marginLeft:11,
     marginTop:-25,
     marginBottom:-5,
   },
-  // progressBarOuter: {
-  //   width: '100%',
-  //   height: 8,
-  //   borderColor: colors.offWhite,
-  //   borderRadius: 5,
-  //   backgroundColor: colors.grey.light,
-  // },
-  // progressBarEmpty: {
-  //   width: '4%',
-  //   height: 8,
-  //   backgroundColor: colors.themeColor.color,
-  //   borderRadius: 5,
-  // },
-  // resistance1: {
-  //   width: '33%',
-  //   height: 8,
-  //   backgroundColor: colors.yellow.standard,
-  //   borderRadius: 4,
-  // },
-  // resistance2: {
-  //   width: '66%',
-  //   height: 8,
-  //   backgroundColor: colors.yellow.standard,
-  //   borderRadius: 5,
-  // },
-  // hiit1: {
-  //   width: '50%',
-  //   height: 8,
-  //   backgroundColor: colors.yellow.standard,
-  //   borderRadius: 5,
-  // },
-  // progressBarFull: {
-  //   width: '100%',
-  //   height: 8,
-  //   backgroundColor: colors.green.standard,
-  //   borderRadius: 5,
-  // },
+
   progressCircleText:{
     textAlign:"center",
     textTransform:'uppercase',
-    fontSize:10,
+    fontSize:wp('2.5%'),
     fontFamily:fonts.standardNarrow,
-    fontWeight:'bold',
     color:colors.transparentBlackMid,
     letterSpacing:0.7,
     paddingTop:5,
   },
   progressCircleNumber:{
-    fontSize:70,
-    fontWeight:'100',
+    fontSize:wp('19%'),
     fontFamily:fonts.standardNarrow,
     color:'#4c4d52',
     fontVariant: ['lining-nums']}

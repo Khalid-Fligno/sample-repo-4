@@ -10,9 +10,8 @@ import OnBoarding5 from '../../src/screens/Challenges/Onboardings/OnBoarding5';
 import OnBoarding6 from '../../src/screens/Challenges/Onboardings/OnBoarding6';
 import CompleteBoarding from '../../src/screens/Challenges/Onboardings/CompleteBoarding';
 
-const ChallengeStack = createStackNavigator(
+const ChallengeOnboardingStack = createStackNavigator(
   {
-    // ChallengeSubscription: ChallengeSubscriptionScreen,
     ChallengeOnBoarding1:OnBoarding1,
     ChallengeOnBoarding2:OnBoarding2,
     ChallengeOnBoarding3:OnBoarding3,
@@ -42,4 +41,4 @@ const ChallengeStack = createStackNavigator(
   },
 );
 
-export default ChallengeStack;
+export default ChallengeOnboardingStack;

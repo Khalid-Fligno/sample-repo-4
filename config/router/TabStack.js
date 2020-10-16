@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator, BottomTabBar } from 'react-navigation-tabs';
-import SubscriptionStack from './SubscriptionStack';
+import ChallengeSubscriptionStack from './ChallengeSubscriptionStack';
 import CalendarStack from './CalendarStack';
 import ProgressStack from './ProgressStack';
 import Icon from '../../src/components/Shared/Icon';
@@ -9,25 +9,22 @@ import { tabColorMap } from './utils';
 import { Image, Text ,TouchableWithoutFeedback, StyleSheet, Dimensions, View} from 'react-native';
 import fonts from '../../src/styles/fonts';
 import DashboardStack from './DashboardStack';
-import LifestyleStack from './LifestyleStack';
+import FeedStack from './FeedStack';
 import FeedSvg from '../../assets/icons/Feed';
 import CalenderSvg from '../../assets/icons/calender';
 import SubSVG from '../../assets/icons/subscriptionSVG';
 import ProgressSvg from '../../assets/icons/progress';
 import TabBarComponent from '../../src/components/Shared/TabBarComponent';
 import ChallengeSvg from '../../assets/icons/challengeSvg';
-
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const TabStack = createBottomTabNavigator(
   {
-
-    // Dashboard: DashboardStack,
-    Feed:LifestyleStack,
+    Feed:FeedStack,
     Lifestyle: DashboardStack,
-    Challenges: SubscriptionStack,
+    Challenges: ChallengeSubscriptionStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
-    
   },
   {
     initialRouteName: 'Lifestyle',
@@ -44,7 +41,7 @@ const TabStack = createBottomTabNavigator(
           icon = (
             <Icon
               name={ 'home-outline'}
-              size={22}
+              size={hp('2.5%')}
               color={focused ? activeState : inactiveState}
             />
           );
@@ -52,8 +49,8 @@ const TabStack = createBottomTabNavigator(
         if ( routeName === 'Feed') {
           icon = (
             <FeedSvg 
-                width = {22}
-                height = {22}
+                width = {hp('3%')}
+                height = {hp('3%')}
                 fill ={focused ? activeState : inactiveState}
             />
           );
@@ -61,8 +58,8 @@ const TabStack = createBottomTabNavigator(
         else if (routeName === 'Lifestyle' ) {
           icon = (
             <SubSVG 
-                width = {22}
-                height = {22}
+                width = {hp('2.5%')}
+                height = {hp('2.5%')}
                 fill ={focused ? activeState : inactiveState}
             />
           );
@@ -70,8 +67,8 @@ const TabStack = createBottomTabNavigator(
         else if (routeName === 'Challenges' ) {
           icon = (
             <ChallengeSvg 
-                width = {22}
-                height = {22}
+                width = {hp('2.5%')}
+                height = {hp('2.5%')}
                 fill ={focused ? activeState : inactiveState}
             />
           );
@@ -80,8 +77,8 @@ const TabStack = createBottomTabNavigator(
          else if (routeName === 'Calendar') {
           icon = (
               <CalenderSvg 
-                  width = {22}
-                  height = {22}
+                  width = {hp('2.5%')}
+                  height = {hp('2.5%')}
                   fill ={focused ? activeState : inactiveState} 
               />
           
@@ -89,8 +86,8 @@ const TabStack = createBottomTabNavigator(
         } else if (routeName === 'Progress') {
           icon = (
               <ProgressSvg
-                  width = {22}
-                  height = {22}
+                  width = {hp('2.5%')}
+                  height = {hp('2.5%')}
                   fill ={focused ? activeState : inactiveState} 
                />
         
@@ -117,7 +114,7 @@ const TabStack = createBottomTabNavigator(
         fontFamily: fonts.GothamMedium,
         textTransform:"uppercase",
         paddingBottom:4,
-        fontSize:10
+        fontSize:hp('1.1%')
       },
       
     },

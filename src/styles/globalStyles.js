@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, Dimensions } from 'react-native'
 import colors from './colors';
 import fonts from './fonts'
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 const { width } = Dimensions.get('window');
 export const containerPadding = 20
 const globalStyle = StyleSheet.create({
@@ -23,12 +24,13 @@ const globalStyle = StyleSheet.create({
   //Big Heading Back Button
       bigHeadingTitleContainer:{
           height:50,
-          marginVertical:18,
+          marginVertical:hp('2%'),
           // backgroundColor:"green",
           paddingTop:10,
       },
       bigHeadingTitleText:{
-          fontSize:35,
+          // fontSize:35,
+          fontSize:hp('4%'),
           fontFamily:fonts.boldNarrow,
           color:colors.black,
           letterSpacing:0.5,
@@ -69,7 +71,7 @@ const globalStyle = StyleSheet.create({
       },
       filterButtonText: {
         fontFamily: fonts.standard,
-        fontSize: 11,
+        fontSize: wp('2.5%'),
         color: colors.grey.standard,
         marginTop: 2,
         fontWeight:'bold'

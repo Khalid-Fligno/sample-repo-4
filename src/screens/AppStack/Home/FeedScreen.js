@@ -48,7 +48,7 @@ const resistanceFocusMap = {
   5: 'Abs, Butt & Thighs',
 };
 
-export default class LifeStyleScreen extends React.PureComponent {
+export default class FeedScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {

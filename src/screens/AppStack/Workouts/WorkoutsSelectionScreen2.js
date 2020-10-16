@@ -18,6 +18,7 @@ import { ListItem, Avatar } from 'react-native-elements';
 // import Icon from '../../../components/Shared/Icon';
 import WorkoutScreenStyle from './WorkoutScreenStyle';
 import WorkoutListItem from '../../../components/Workouts/WorkoutListItem';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 let fitnessLevel = 1
 export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   constructor(props) {
@@ -148,7 +149,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
                       backButtonText="Back to workouts" 
                       isBigTitle={true}
                       isBackButton ={true}
-                      customContainerStyle={{marginTop:10,marginBottom:30}}
+                      customContainerStyle={{marginTop:10,marginBottom:hp('2.5%')}}
                 />
                 <CustomButtonGroup  
                 onPress={this.updateFilter}

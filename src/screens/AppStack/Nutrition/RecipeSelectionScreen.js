@@ -21,6 +21,7 @@ import Icon from '../../../components/Shared/Icon';
 import globalStyle from '../../../styles/globalStyles';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 import CustomButtonGroup from '../../../components/Shared/CustomButtonGroup';
+import { heightPercentageToDP as hp ,widthPercentageToDP as wp} from 'react-native-responsive-screen';
 
 const { width } = Dimensions.get('window');
 
@@ -126,7 +127,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             backButtonText="Back to nutrition" 
             isBigTitle={true}
             isBackButton ={true}
-            customContainerStyle={{marginTop:10,marginBottom:30}}
+            customContainerStyle={{marginTop:10,marginBottom:hp('2.5%')}}
           />
           <CustomButtonGroup  
             onPress={this.updateFilter}
