@@ -181,6 +181,7 @@ export default class ExercisesScreen extends React.PureComponent {
   }
 
   workoutComplete(reps, resistanceCategoryId){
+    console.log(">>>>>")
     this.props.navigation.replace('WorkoutComplete', {
       workout:this.state.workout,
       reps,
