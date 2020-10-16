@@ -25,11 +25,12 @@ export default class OnBoarding5 extends Component {
       burpeeModalVisible:false,
       showInputBox:false,
       timerStart:false,
-      totalDuration:60,
+      totalDuration:10,
       challengeData:{},
       btnDisabled:true,
       counterButtonDisable:false,
       error:'',
+      fitnessLevel:'',
     };
   }
 
@@ -42,7 +43,8 @@ export default class OnBoarding5 extends Component {
         btnDisabled:false,
         showInputBox:true,
         counterButtonDisable:false,
-        burpeeCount
+        burpeeCount,
+        fitnessLevel
       })
     }else{
       this.setState({
@@ -170,7 +172,8 @@ export default class OnBoarding5 extends Component {
     this.setState((prevState) => ({ burpeeModalVisible: !prevState.burpeeModalVisible }));
   }
   render() {
-    let {timerStart,totalDuration,challengeData,burpeeCount,burpeeModalVisible,showInputBox,btnDisabled,error,counterButtonDisable} = this.state
+    let {timerStart,totalDuration,challengeData,burpeeCount,burpeeModalVisible,showInputBox,btnDisabled,error,counterButtonDisable,fitnessLevel} = this.state;
+    
     if(!challengeData.onBoardingInfo){
       this.onFocusFunction()
     }
@@ -222,36 +225,23 @@ export default class OnBoarding5 extends Component {
              onPress={this.toggleBurpeeModal}
                   title="Total Burpee"
                   extension={''}
-                  value={burpeeCount}
+                  value={burpeeCount>0? `${burpeeCount} (${fitnessLevel})`:''}
                   customContainerStyle={{marginTop:20}}
               />
             }
-
-            {
-              burpeeCount >0 &&  burpeeCount <= 10 && 
-              <View style={{flexDirection:"row",justifyContent:"space-around"}}>
-                <Text style={ChallengeStyle.filtnesslevelTitle}>Fitness Level </Text>
-                <Text style={ChallengeStyle.filtnesslevelTitle}>Beginner</Text>
-              </View>
-            
-            }
-            {
-              burpeeCount >10 && burpeeCount <= 15  && 
-              <View style={{flexDirection:"row",justifyContent:"space-around"}}>
-                <Text style={ChallengeStyle.filtnesslevelTitle}>Fitness Level </Text>
-                <Text style={ChallengeStyle.filtnesslevelTitle}>Intermediate</Text>
-              </View>
-            }
-            {
-              burpeeCount >15   && 
-              <View style={{flexDirection:"row",justifyContent:"space-around"}}>
-                <Text style={ChallengeStyle.filtnesslevelTitle}>Fitness Level </Text>
-                <Text style={ChallengeStyle.filtnesslevelTitle}>Expert</Text>
-              </View>
-            }
+                        
             <PickerModal 
                 dataMapList = {burpeeOptions}
-                onValueChange={(value) => this.setState({ burpeeCount: value })}
+                onValueChange={(value) => {
+                  let fitnesslevel='';
+                  if(value >0 &&  value <= 10 )
+                    fitnesslevel="Beginner";
+                  else if(value >10 && value <= 15)
+                    fitnesslevel="Intermediate";
+                  else if(value >15)
+                    fitnesslevel="Expert";
+                  this.setState({ burpeeCount: value,fitnessLevel:fitnesslevel })
+                }}
                 isVisible = {burpeeModalVisible}
                 onBackdropPress = {() => this.hideModal()}
                 selectedValue={burpeeCount}
