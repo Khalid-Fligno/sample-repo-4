@@ -78,7 +78,7 @@ ProgressBar.propTypes = {
   // progressBarType: PropTypes.oneOf(['Strength', 'Circuit','Interval']).isRequired,
   title: PropTypes.any.isRequired,
   completed: PropTypes.number.isRequired,
-  totalWorkouts:PropTypes.number.isRequired,
+  total:PropTypes.number.isRequired,
   customTitleStyle:PropTypes.object,
   size:PropTypes.any,
   customProgressNumberStyle:PropTypes.object,

@@ -11,7 +11,7 @@ import {
   ColorPropType,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { ListItem } from 'react-native-elements';
+import { ListItem, Slider } from 'react-native-elements';
 import * as FileSystem from 'expo-file-system';
 import CalendarStrip from 'react-native-calendar-strip';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -398,12 +398,39 @@ getCurrentPhase(){
         <View style={calendarStyles.ChallengeProgressCardContainer }>
           <Text style={calendarStyles.challengeLabel}
           >
-           {activeChallengeData.displayName}
+           {activeChallengeData.displayName}{'  '} 
+           <Text style={{fontFamily:fonts.standardNarrow}}>
+               {this.totalChallengeWorkoutsCompleted.length}/{this.phaseData.workouts.length}
+           </Text>
          </Text>
 
          <View style={calendarStyles.challengeProgressContainer}>
            <View style={calendarStyles.progressCircleContainer}>
-              <ProgressBar 
+              <View style={calendarStyles.sliderContainer}> 
+                  <Text style={calendarStyles.sliderSideText}>0</Text>
+                    <View style={calendarStyles.slider}>
+                      <Slider
+                        value={1}
+                        minimumValue={0}
+                        maximumValue={10}
+                        trackStyle={{height:5,borderRadius:5}}
+                        minimumTrackTintColor={colors.themeColor.color}
+                        maximumTrackTintColor={colors.grey.medium}
+                        thumbStyle={{
+                          display:'none',
+                          height:20, 
+                          width:20,
+                          borderRadius:50,
+                          backgroundColor:colors.themeColor.color,
+                          borderWidth:3,
+                          borderColor:colors.themeColor.color
+                        }}
+                      />
+                    </View>
+                    <Text style={calendarStyles.sliderSideText}> 10</Text>
+                </View>
+                  
+              {/* <ProgressBar 
                   title="Workouts Complete"
                   // completed={this.totalChallengeWorkoutsCompleted.length}
                   completed={4}
@@ -426,13 +453,13 @@ getCurrentPhase(){
                   customProgessTotalStyle={{
                     fontSize:wp('3.5%')
                   }}
-              />
+              /> */}
            </View>
            <View style={calendarStyles.phaseContainer}>
               <CustomBtn 
                 Title={this.phase.displayName}
                 outline={true}
-                customBtnStyle={{padding:wp('1.5%'),width:'75%',borderRadius:30}}
+                customBtnStyle={{padding:wp('1.5%'),width:'75%',borderRadius:30,width:'35%'}}
                 isRightIcon={true}
                 rightIconName="chevron-right"
                 rightIconColor={colors.themeColor.color}

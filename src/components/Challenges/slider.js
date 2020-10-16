@@ -6,7 +6,7 @@ import colors from '../../styles/colors';
 
 const SliderComponent = (props) => (
   <View style={{marginTop:10}}>
-    <View style={{flexDirection:"row"}}>
+    <View style={{flexDirection:"row",alignItems:'center'}}>
     <Text style={{
         marginVertical:5,
         fontFamily:fonts.GothamMedium,

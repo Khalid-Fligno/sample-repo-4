@@ -35,7 +35,7 @@ export default class OnBoarding5 extends Component {
       btnDisabled:true,
       counterButtonDisable:false,
       error:'',
-      fitnessLevel:'',
+      loading:false
     };
   }
 
@@ -48,8 +48,7 @@ export default class OnBoarding5 extends Component {
         btnDisabled:false,
         showInputBox:true,
         counterButtonDisable:false,
-        burpeeCount,
-        fitnessLevel
+        burpeeCount
       })
     }else{
       this.setState({
@@ -92,10 +91,11 @@ export default class OnBoarding5 extends Component {
       //TODO: add burpee count and fitness level in on Boarding info  
       const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
         burpeeCount,
-        fitnessLevel
+        fitnessLevel,
       })
       let updatedChallengedata = Object.assign({},challengeData,{
-        onBoardingInfo
+        onBoardingInfo,
+        status:'Active'
       })    
 
     if(type === 'next'){
@@ -176,11 +176,30 @@ export default class OnBoarding5 extends Component {
     this.setState((prevState) => ({ burpeeModalVisible: !prevState.burpeeModalVisible }));
   }
   render() {
-    let {timerStart,totalDuration,challengeData,burpeeCount,burpeeModalVisible,showInputBox,btnDisabled,error,counterButtonDisable,fitnessLevel} = this.state;
+    let {
+      timerStart,
+      totalDuration,
+      challengeData,
+      burpeeCount,
+      burpeeModalVisible,
+      showInputBox,
+      btnDisabled,
+      error,
+      counterButtonDisable,
+      loading
+    } = this.state;
     
     if(!challengeData.onBoardingInfo){
       this.onFocusFunction()
     }
+    let fitnessLevel='';
+    if(burpeeCount >0 &&  burpeeCount <= 10 )
+      fitnessLevel="Beginner";
+    else if(burpeeCount >10 && burpeeCount <= 15)
+      fitnessLevel="Intermediate";
+    else if(burpeeCount >15)
+      fitnessLevel="Expert";
+
     return (
       <SafeAreaView style={ChallengeStyle.container}>
           <View style={[globalStyle.container,{paddingVertical:15}]}>
@@ -236,16 +255,7 @@ export default class OnBoarding5 extends Component {
                         
             <PickerModal 
                 dataMapList = {burpeeOptions}
-                onValueChange={(value) => {
-                  let fitnesslevel='';
-                  if(value >0 &&  value <= 10 )
-                    fitnesslevel="Beginner";
-                  else if(value >10 && value <= 15)
-                    fitnesslevel="Intermediate";
-                  else if(value >15)
-                    fitnesslevel="Expert";
-                  this.setState({ burpeeCount: value,fitnessLevel:fitnesslevel })
-                }}
+                onValueChange={(value) => {this.setState({ burpeeCount: value})}}
                 isVisible = {burpeeModalVisible}
                 onBackdropPress = {() => this.hideModal()}
                 selectedValue={burpeeCount}
