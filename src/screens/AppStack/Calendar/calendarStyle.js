@@ -140,25 +140,44 @@ const calendarStyles = StyleSheet.create({
         marginVertical:hp('2%')
       },
       challengeProgressContainer:{
-        flexDirection:'row',
+        flexDirection:'column',
+        width:'100%',
+        marginTop:-20
+      },
+    //   progressCircleContainer:{
+    //     width:'50%',
+    //     borderRightWidth:2,
+    //     borderRightColor:colors.grey.light,
+    //     paddingLeft:wp('3.5%')
+    //   },
+      progressCircleContainer:{
         width:'100%',
       },
-      progressCircleContainer:{
-        width:'50%',
-        borderRightWidth:2,
-        borderRightColor:colors.grey.light,
-        paddingLeft:wp('3.5%')
-      },
      phaseContainer:{
-       width:'50%',
-       paddingLeft:wp('6%')
+       width:'100%',
       },
       phaseBodyText:{
-        marginTop:hp('2%'),
+        marginTop:hp('1.3%'),
         fontSize:hp('1.4%'),
         color:"#8d8d8d",
         fontFamily:fonts.GothamMedium
-      }
+      },
+      sliderContainer:{
+        flexDirection:'row',
+        alignItems:'center',
+        justifyContent:'space-between'
+    },
+    sliderSideText:{
+        fontFamily:fonts.GothamMedium,
+        color:colors.grey.dark,
+        fontSize:13
+   },
+   slider:{
+    flex: 1, 
+    alignItems: 'stretch', 
+    justifyContent: 'center',
+    marginHorizontal:10 
+    }
 });
 
 export default calendarStyles
