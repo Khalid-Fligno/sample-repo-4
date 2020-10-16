@@ -142,20 +142,28 @@ class ChallengeSubscriptionScreen extends Component {
               numberOfDays={item.numberOfDays}
               key={index}
               btnTitle = {btnTitle}
-              disabled = {btnDisabled}
-              onPress={()=>this.onBoarding(item,btnTitle)}
+              onPress={()=>this.onBoarding(item,btnTitle,btnDisabled)}
               
           />
        
       )
   }
 
-  onBoarding(challengeData,btnTitle){
-    this.props.navigation.navigate('ChallengeOnBoarding1',{
-      data:{
-        challengeData
+  onBoarding(challengeData,btnTitle,btnDisabled){
+    if(btnDisabled){
+      if(btnTitle === 'Active')
+        this.props.navigation.navigate('Calendar')
+      else{
+        Alert.alert('Sorry,you cant start new challenge','you have already one active challege')
       }
-    })
+    }else{
+      this.props.navigation.navigate('ChallengeOnBoarding1',{
+        data:{
+          challengeData
+        }
+      })
+    } 
+   
   }
 
   
