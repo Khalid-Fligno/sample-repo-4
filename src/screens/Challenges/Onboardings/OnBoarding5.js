@@ -4,7 +4,7 @@ import { number } from 'prop-types';
 import ChallengeStyle from '../chellengeStyle';
 import globalStyle, { containerPadding } from '../../../styles/globalStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
-import { TextInput } from 'react-native-gesture-handler';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import fonts from '../../../styles/fonts';
 import { Video } from 'expo-av';
 import WorkoutTimer from '../../../components/Workouts/WorkoutTimer';
@@ -25,10 +25,11 @@ export default class OnBoarding5 extends Component {
       burpeeModalVisible:false,
       showInputBox:false,
       timerStart:false,
-      totalDuration:60,
+      totalDuration:10,
       challengeData:{},
       btnDisabled:true,
-      error:''
+      counterButtonDisable:false,
+      error:'',
     };
   }
 
@@ -40,6 +41,7 @@ export default class OnBoarding5 extends Component {
         challengeData:data['challengeData'],
         btnDisabled:false,
         showInputBox:true,
+        counterButtonDisable:false,
         burpeeCount
       })
     }else{
@@ -151,6 +153,7 @@ export default class OnBoarding5 extends Component {
     this.setState({
       // videoPaused: true,
       timerStart:true ,
+      counterButtonDisable:true,
     });
   }
 
@@ -167,7 +170,7 @@ export default class OnBoarding5 extends Component {
     this.setState((prevState) => ({ burpeeModalVisible: !prevState.burpeeModalVisible }));
   }
   render() {
-    let {timerStart,totalDuration,challengeData,burpeeCount,burpeeModalVisible,showInputBox,btnDisabled,error} = this.state
+    let {timerStart,totalDuration,challengeData,burpeeCount,burpeeModalVisible,showInputBox,btnDisabled,error,counterButtonDisable} = this.state
     if(!challengeData.onBoardingInfo){
       this.onFocusFunction()
     }
@@ -209,6 +212,7 @@ export default class OnBoarding5 extends Component {
                     Title="Start"
                     customBtnStyle={{borderRadius:7,padding:15,width:"49%",backgroundColor:colors.charcoal.dark}}
                     onPress={()=>this.startTimer()}
+                    disabled={counterButtonDisable}
                   />
             </View>
             </View>
@@ -223,14 +227,20 @@ export default class OnBoarding5 extends Component {
               />
             }
 
-            { 
-              burpeeCount >0 && burpeeCount <= 10  && <Text> Beginner</Text>               
+            {
+              burpeeCount >0 &&  burpeeCount <= 10 && 
+              <Text style={ChallengeStyle.filtnesslevelTitle}>Beginner</Text>
+            
             }
             {
-              burpeeCount >10 && burpeeCount <= 15  && <Text> intermediate </Text>              
+              burpeeCount >10 && burpeeCount <= 15  && 
+              <Text style={ChallengeStyle.filtnesslevelTitle}>Intermediate</Text>
+             
             }
             {
-              burpeeCount >15   && <Text> advanced</Text>
+              burpeeCount >15   && 
+              <Text style={ChallengeStyle.filtnesslevelTitle}>Expert</Text>
+
             }
             <PickerModal 
                 dataMapList = {burpeeOptions}
