@@ -29,7 +29,7 @@ const InputBox2 = (props)=> {
 InputBox2.propTypes={
     title:PropTypes.string,
     onPress:PropTypes.func,
-    value:PropTypes.string,
+    value:PropTypes.number,
     extension:PropTypes.string,
     customContainerStyle:PropTypes.object
 }

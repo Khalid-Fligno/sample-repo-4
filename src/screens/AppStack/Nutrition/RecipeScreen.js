@@ -41,6 +41,7 @@ export default class RecipeScreen extends React.PureComponent {
       recipe: this.props.navigation.getParam('recipe', null),
       ingredients: this.props.navigation.getParam('recipe', null).ingredients,
       utensils: this.props.navigation.getParam('recipe', null).utensils,
+      mealTitle: this.props.navigation.getParam('mealTitle', null),
       loading: false,
       chosenDate: new Date(),
       modalVisible: false,
@@ -110,7 +111,9 @@ export default class RecipeScreen extends React.PureComponent {
       modalVisible,
       calendarMeal,
       addingToCalendar,
+      mealTitle
     } = this.state;
+
     return (
       <View style={NutritionStyles.container}>
        
@@ -129,7 +132,7 @@ export default class RecipeScreen extends React.PureComponent {
                 }}>
                 <BigHeadingWithBackButton isBackButton = {true} 
                   onPress={this.handleBack} 
-                  backButtonText="Back to breakfasts" 
+                  backButtonText={`Back to ${mealTitle}`} 
                   isBigTitle ={false}
                   backButtonStyle={{marginTop:8}}
                   />
@@ -395,7 +398,7 @@ export default class RecipeScreen extends React.PureComponent {
             </View>
             <BigHeadingWithBackButton isBackButton = {true} 
                   onPress={this.handleBack} 
-                  backButtonText="Back to breakfasts" 
+                  backButtonText={`Back to ${mealTitle}`} 
                   isBigTitle ={false}
             />
           </View>

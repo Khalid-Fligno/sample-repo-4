@@ -14,5 +14,4 @@ app.get('/', (req, res) => {
 app.get('/android/token/', getAndroidToken);
 
 app.post('/subscriptions/', jsonParser, getSubscriptions);
-
 app.listen(8100);

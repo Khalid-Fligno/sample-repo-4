@@ -12,6 +12,7 @@ import { db } from '../../../../config/firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import FitnessLevelCard from '../../../components/Onboarding/FitnessLevelCard';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
+import storeProgressInfo from '../../../components/Challenges/storeProgressInfo';
 const levelOfFiness=["Begineer","Intermediate","Advanced"];
 export default class OnBoarding6 extends Component {
   constructor(props) {
@@ -59,6 +60,14 @@ export default class OnBoarding6 extends Component {
     })
     if(type === 'next'){   
       data = createUserChallengeData(updatedChallengedata)
+      const progressData = {
+        photoURL: onBoardingInfo.beforePhotoUrl,
+        weight: onBoardingInfo.measurements.weight,
+        waist: onBoardingInfo.measurements.waist,
+        hip: onBoardingInfo.measurements.hip,
+        burpeeCount:onBoardingInfo.burpeeCount,
+      }
+      storeProgressInfo(progressData)
       this.saveOnBoardingInfo(data)
     }else{
       this.props.navigation.navigate('ChallengeOnBoarding5',{
@@ -79,7 +88,6 @@ async  saveOnBoardingInfo(data){
     }).catch((err)=>{
       console.log(err)
     })
-    console.log( data)
   }
   
   render() {
@@ -90,7 +98,7 @@ async  saveOnBoardingInfo(data){
       btnDisabled
     } = this.state
 
-    console.log(challengeData)
+    // console.log(challengeData)
     return (
       <SafeAreaView style={ChallengeStyle.container}>
           <View style={globalStyle.container}>

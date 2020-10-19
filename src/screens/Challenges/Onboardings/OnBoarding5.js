@@ -18,6 +18,7 @@ import { db } from '../../../../config/firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import createUserChallengeData from '../../../components/Challenges/UserChallengeData';
 import Loader from '../../../components/Shared/Loader';
+import storeProgressInfo from '../../../components/Challenges/storeProgressInfo';
 
 const { width } = Dimensions.get('window');
 
@@ -105,9 +106,16 @@ export default class OnBoarding5 extends Component {
              }
       })
     }else if(type === 'submit'){
-
       const data = createUserChallengeData(updatedChallengedata);
       console.log("updatedChallengedataWithFitLevel",data);
+      const progressData = {
+        photoURL: onBoardingInfo.beforePhotoUrl,
+        weight: onBoardingInfo.measurements.weight,
+        waist: onBoardingInfo.measurements.waist,
+        hip: onBoardingInfo.measurements.hip,
+        burpeeCount:onBoardingInfo.burpeeCount,
+      }
+      storeProgressInfo(progressData)
       this.saveOnBoardingInfo(data)
     }
     else{
@@ -248,7 +256,8 @@ export default class OnBoarding5 extends Component {
              onPress={this.toggleBurpeeModal}
                   title="Total Burpee"
                   extension={''}
-                  value={burpeeCount>0? `${burpeeCount} (${fitnessLevel})`:''}
+                  value={burpeeCount}
+                  extension={burpeeCount>0? `(${fitnessLevel})`:''}
                   customContainerStyle={{marginTop:20}}
               />
             }

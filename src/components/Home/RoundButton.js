@@ -16,15 +16,12 @@ export default function RoundButton(props){
 
    
     let onPressIn =()=>{
-        console.log("lskdfklsd");
 
         setBorderColor({
             borderColor:colors.coral.dark
         })
     }
     let onPressOut =()=>{
-        console.log("lskdfklsd");
-
         setBorderColor({
             borderColor:colors.grey.medium
         })
