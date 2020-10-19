@@ -34,6 +34,8 @@ const moment = require('moment');
 
 const { width } = Dimensions.get('window');
 
+const NutritionList = [ "breakfast","lunch","dinner","snack"]
+
 export default class RecipeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -41,7 +43,6 @@ export default class RecipeScreen extends React.PureComponent {
       recipe: this.props.navigation.getParam('recipe', null),
       ingredients: this.props.navigation.getParam('recipe', null).ingredients,
       utensils: this.props.navigation.getParam('recipe', null).utensils,
-      mealTitle: this.props.navigation.getParam('mealTitle', null),
       loading: false,
       chosenDate: new Date(),
       modalVisible: false,
@@ -101,6 +102,11 @@ export default class RecipeScreen extends React.PureComponent {
     const { navigation } = this.props;
     navigation.pop();
   }
+
+  getBackTitle(){
+    return NutritionList.filter((res)=>this.state.recipe[res])[0]
+  }
+
   render() {
     const {
       recipe,
@@ -111,7 +117,6 @@ export default class RecipeScreen extends React.PureComponent {
       modalVisible,
       calendarMeal,
       addingToCalendar,
-      mealTitle
     } = this.state;
 
     return (
@@ -132,7 +137,7 @@ export default class RecipeScreen extends React.PureComponent {
                 }}>
                 <BigHeadingWithBackButton isBackButton = {true} 
                   onPress={this.handleBack} 
-                  backButtonText={`Back to ${mealTitle}`} 
+                  backButtonText={`Back to ${this.getBackTitle()}`} 
                   isBigTitle ={false}
                   backButtonStyle={{marginTop:8}}
                   />
@@ -398,7 +403,7 @@ export default class RecipeScreen extends React.PureComponent {
             </View>
             <BigHeadingWithBackButton isBackButton = {true} 
                   onPress={this.handleBack} 
-                  backButtonText={`Back to ${mealTitle}`} 
+                  backButtonText={`Back to ${this.getBackTitle()}`} 
                   isBigTitle ={false}
             />
           </View>

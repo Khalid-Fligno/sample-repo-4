@@ -32,6 +32,12 @@ import ProgressBar from '../../../components/Progress/ProgressBar';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import calendarStyles from './calendarStyle';
 import PlusCircleSvg from '../../../../assets/icons/PlusCircleSvg';
+import { 
+  getCurrentPhase, 
+  getTotalChallengeWorkoutsCompleted, 
+  getCurrentChallengeDay, 
+  getTodayRecommendedMeal 
+} from '../../../utils/challenges';
 
 const recommendedWorkoutMap = {
   undefined: '',
@@ -283,43 +289,39 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
 
 }
 
-getCurrentPhase(){
+getCurrentPhaseInfo(){
   const {activeChallengeUserData,activeChallengeData} = this.state
   if(activeChallengeUserData && activeChallengeData){
-    // console.log(activeChallengeUserData.phases)
     const data  = activeChallengeUserData.phases;
-    data.forEach(el => {
-        let currentTime = new Date().getTime();
-        let startTime = new Date(el.startDate).getTime()
-        let endTime = new Date(el.endDate).getTime()
-        if(currentTime >= startTime && currentTime <=endTime){
-          this.phase = el
-        }
-    });
-    //TODO :fetch the current phasr data from Challenges collection
+
+    //TODO :getCurrent phase data
+    this.phase = getCurrentPhase(activeChallengeUserData.phases)
+
+    //TODO :fetch the current phase data from Challenges collection
     this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
-    console.log(stringDate)
    
    //TODO :calculate the workout completed till selected date
-    this.totalChallengeWorkoutsCompleted = activeChallengeUserData.workouts.filter((res)=>{
-      let resTime = new Date(res.date).getTime();
-      let selectedTime = new Date(stringDate).getTime()
-      return resTime <= selectedTime
-    })
+    this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,stringDate)
 
    //TODO calculate current challenge day
-    let startDate = new Date(activeChallengeUserData.startDate).getDate();
-    let currentDate = new Date().getDate();
-    console.log(startDate ,currentDate)
-     this.currentChallengeDay = ( currentDate - startDate) +1
- 
+    this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
+  
+   //TODO getToday one recommended meal randomly  
+    this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData)
   }else{
     Alert.alert('Something went wrong please try again')
   }
-  
 }
 
+async fetchRecipe(id){
+  this.setState({loading:true})
+  let recipeData =  await (await db.collection('recipes').doc(id).get()).data();
+  if(recipeData){
+    this.setState({loading:false})
+    this.props.navigation.navigate('Recipe', { recipe: recipeData })
+  }
+}
  //-------**--------  
 
 
@@ -350,7 +352,7 @@ getCurrentPhase(){
     //   return `workouts-${location}`;
     // };
     if(activeChallengeData && activeChallengeUserData){
-      this.getCurrentPhase()
+      this.getCurrentPhaseInfo()
     }
     
     const mealSwipable = (name,data,index)=>{
@@ -541,6 +543,21 @@ getCurrentPhase(){
           Meals
         </Text>
         <View style={calendarStyles.listContainer}>
+          {
+            this.todayRecommendedMeal &&
+              <ListItem
+                activeOpacity ={0.5}
+                underlayColor="none"
+                title={this.todayRecommendedMeal.displayName}
+                subtitle={this.todayRecommendedMeal.subTitle}
+                onPress={() => this.fetchRecipe(this.todayRecommendedMeal.id)}
+                containerStyle={calendarStyles.listItemContainer}
+                chevronColor={colors.charcoal.standard}
+                titleStyle={calendarStyles.recipeListItemTitle}
+                subtitleStyle={calendarStyles.recipeListItemSubtitle}
+                rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
+              />
+          }
           {
             recipeCategories.map((res,index)=>{
               const {meals} = this.state
