@@ -60,7 +60,7 @@ exports.createShopifyWebhooks = (req, res) => {
               'x-recharge-access-token':RECHARGE_API_KEY,
             },
             body: JSON.stringify({
-                "address": `${hostUrl} ${}`,
+                "address": `${hostUrl} `,
                 "topic": "subscription/created"
             })
           });
