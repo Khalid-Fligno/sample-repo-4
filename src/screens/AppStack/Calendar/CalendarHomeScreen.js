@@ -397,6 +397,25 @@ async fetchRecipe(id){
       />
       )
     }
+    const rcMealListItem = (res,index) =>{
+      return (
+            <ListItem
+              key = {index}
+              activeOpacity ={0.5}
+              underlayColor="none"
+              title={`${res.displayName}`}
+              rightTitle = {res.mealType}
+              subtitle={res.subTitle}
+              onPress={() => this.fetchRecipe(res.id)}
+              containerStyle={calendarStyles.listItemContainer}
+              chevronColor={colors.charcoal.standard}
+              titleStyle={calendarStyles.recipeListItemTitle}
+              rightTitleStyle={[calendarStyles.recipeListItemSubtitle,{textTransform:'capitalize'}]}
+              subtitleStyle={calendarStyles.recipeListItemSubtitle}
+              rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
+            />
+      )
+    }
     
   
     const ChallengeProgressCard = () =>{
@@ -547,23 +566,7 @@ async fetchRecipe(id){
             this.todayRecommendedMeal && this.todayRecommendedMeal.length >0 &&
             this.todayRecommendedMeal.map((res,index)=>{
               if(res)
-              return (
-                <ListItem
-                  key = {index}
-                  activeOpacity ={0.5}
-                  underlayColor="none"
-                  title={`${res.displayName}`}
-                  rightTitle = {res.mealType}
-                  subtitle={res.subTitle}
-                  onPress={() => this.fetchRecipe(res.id)}
-                  containerStyle={calendarStyles.listItemContainer}
-                  chevronColor={colors.charcoal.standard}
-                  titleStyle={calendarStyles.recipeListItemTitle}
-                  rightTitleStyle={[calendarStyles.recipeListItemSubtitle,{textTransform:'capitalize'}]}
-                  subtitleStyle={calendarStyles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
-                />
-                )
+              return rcMealListItem(res,index)
             
             })
               
