@@ -41,13 +41,16 @@ export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
     const lunch = phaseMeals.filter((res)=>res.mealType === 'lunch')
     const dinner = phaseMeals.filter((res)=>res.dinner === 'dinner')
     const snack = phaseMeals.filter((res)=>res.mealType === 'snack')
-    console.log("???",breakfast,lunch,dinner,snack)
+    const morningSnack = getRandomNumber(snack.length-1) >=0?Object.assign({},snack[getRandomNumber(snack.length-1)],{mealType:'Morning Snack'}):undefined
+    const afternoonSnack = getRandomNumber(snack.length-1) >=0?Object.assign({},snack[getRandomNumber(snack.length-1)],{mealType:'Afternoon Snack'}):undefined
+   console.log(morningSnack,afternoonSnack,snack.length,getRandomNumber(snack.length-1))
     const recommendedMeal = [
-        breakfast[getRandomNumber(breakfast.length)],
-        lunch[getRandomNumber(lunch.length)],
-        dinner[getRandomNumber(dinner.length)],
-        snack[getRandomNumber(snack.length)],
-        snack[getRandomNumber(snack.length)]
+        breakfast[getRandomNumber(breakfast.length-1)],
+        lunch[getRandomNumber(lunch.length-1)],
+        dinner[getRandomNumber(dinner.length-1)],
+        morningSnack,
+        afternoonSnack
     ]
+    console.log(recommendedMeal)
     return recommendedMeal
 }

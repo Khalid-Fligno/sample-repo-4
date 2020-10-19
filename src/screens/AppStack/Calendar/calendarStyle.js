@@ -109,6 +109,7 @@ const calendarStyles = StyleSheet.create({
         fontSize: 14,
         color: colors.themeColor.color,
         marginBottom: 5,
+        textTransform:'capitalize'
       },
       recipeListItemSubtitle: {
         fontFamily: fonts.standard,

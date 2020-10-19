@@ -309,7 +309,6 @@ getCurrentPhaseInfo(){
   
    //TODO getToday one recommended meal randomly  
     this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData)
-    console.log(this.todayRecommendedMeal)
   }else{
     Alert.alert('Something went wrong please try again')
   }
@@ -553,12 +552,14 @@ async fetchRecipe(id){
                   key = {index}
                   activeOpacity ={0.5}
                   underlayColor="none"
-                  title={res.displayName}
+                  title={`${res.displayName}`}
+                  rightTitle = {res.mealType}
                   subtitle={res.subTitle}
                   onPress={() => this.fetchRecipe(res.id)}
                   containerStyle={calendarStyles.listItemContainer}
                   chevronColor={colors.charcoal.standard}
                   titleStyle={calendarStyles.recipeListItemTitle}
+                  rightTitleStyle={[calendarStyles.recipeListItemSubtitle,{textTransform:'capitalize'}]}
                   subtitleStyle={calendarStyles.recipeListItemSubtitle}
                   rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
                 />
