@@ -1,4 +1,4 @@
-const hostUrl='https://5f4ee9b20b34.ngrok.io';
+const hostUrl='https://797423777430.ngrok.io';
 const { auth, db } = require('./firebase');
 const webhookUrl='https://api.rechargeapps.com/webhooks';
 const productUrl='https://api.rechargeapps.com/products';
@@ -72,11 +72,11 @@ exports.createShopifyWebhooks = async (req, res)  => {
 }
 
 //Webhook- update user collection in firebase
-exports.shopifyChargeCreated = (req, res) =>{
+exports.shopifyChargeCreated = async(req, res) =>{
 
     console.log("shopifyChargeCreated is called");
     // get user by email from firebase
-    const user =getUser(res.email);
+    const user =await getUser(res.email);
     // 1. if user not exist, create that user
     if(user === null){
         const newUser={
@@ -102,8 +102,8 @@ exports.shopifyChargeCreated = (req, res) =>{
         challengeProductName="FitazFK 8 Week Challenge";
     }
     // get workout challange details by passing product_title
-    const challenge=getChallengeDetails(challengeProductName);
-    const userInfo=getUser(res.email);
+    const challenge= await getChallengeDetails(challengeProductName);
+    const userInfo=await getUser(res.email);
     if(challenge !=null){
         const userChallenge=createNewChallenge(challenge)
         updateChallengesAgainstUser(userChallenge,userInfo.id);
@@ -123,12 +123,12 @@ exports.shopifyChargeUpdated = (req, res) =>{
 exports.shopifyChargeDeleted = async(req, res) =>{
 
     // get user by email from firebase
-    const user =getUser(res.email);
+    const user =await getUser(res.email);
     // 2. if user exist update that user
     if(user !== null){
      // get product from line item collection
     const challengeProductName=res.line_items[0].properties[0].name;
-    const challenge=getChallengeDetails(challengeProductName);
+    const challenge= await getChallengeDetails(challengeProductName);
     //remove user challenges from collection
     
     await db.collection('users').doc(user.uid).collection('challenges').doc(challenge.id).set(data, (error) => {
@@ -174,9 +174,10 @@ exports.getShopifyProductsAndUpdate= async(req, res) => {
         const shopifyProducts = await resProducts.json();
         // get shopify product and update to the existing firebase collection
         console.log("shopifyProducts",shopifyProducts);
-        if(shopifyProducts != null && shopifyProducts.length > 0){
-            shopifyProducts.forEach(prod =>{
-                const challengeDetails=getChallengeDetails(prod.title);
+        if(shopifyProducts != null){
+            shopifyProducts.products.forEach(async (prod) =>{
+                const challengeDetails= await getChallengeDetails(prod.title);
+                console.log("outer challengeDetails",challengeDetails);
                 if(challengeDetails!=null ){
                     challengeDetails.shopifyProductId=prod.shopify_product_id;
                     challengeDetails.createdAt= prod.created_at;
@@ -220,9 +221,11 @@ exports.getAllWebHooks = async(req, res) => {
     console.log('registeredWebHooks',registeredWebHooks.webhooks);
     return registeredWebHooks;
 }
-const getUser = (emailId) => {
-    const userRef = db.collection('users').where("email","==",emailId);
-    return userRef.get();
+const getUser = async(emailId) => {
+    const userRef = await db.collection('users').where("email","==",emailId).get();
+    if (userRef.size > 0) {
+      return userRef.docs[0].data();
+  }   
 }
 
 const updateUser = (userInfo) => {
@@ -230,15 +233,20 @@ const updateUser = (userInfo) => {
     userRef.set(data, { merge: true });
 }
 
-const getChallengeDetails = (challengeName) => {
-    return db.collection('challenges').where("name","==",challengeName).get();
+const getChallengeDetails = async(challengeName) => {
+    let challengeDetail;
+    const snapshot =await db.collection('challenges').where("name","==",challengeName)
+     .get();
+     if (snapshot.size > 0) {
+      return snapshot.docs[0].data();
+  }   
 }
 
 const updateChallengesAgainstUser = (challengeData,userId)=>{
     const challenge = db.collection('users').doc(userId).collection('challenges').doc(challengeData.id);
     challenge.set(challengeData,{merge:true})
 }
-const updateChallenges = (challengeData,userId)=>{
+const updateChallenges = (challengeData)=>{
     const challenge = db.collection('challenges').doc(challengeData.id);
     challenge.set(challengeData,{merge:true})
 }
