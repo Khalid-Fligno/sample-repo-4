@@ -25,6 +25,7 @@ exports.createShopifyWebhooks = async (req, res)  => {
         {'name':  'charge/created', 'webhook_url': '/shopify/charge/created'},
         {'name':  'charge/updated', 'webhook_url': '/shopify/charge/updated'},
         {'name':  'charge/deleted', 'webhook_url': '/shopify/charge/deleted'},
+        {'name':  'charge/paid', 'webhook_url': '/shopify/charge/paid'},
     ];
     //life time call only once to create necessary webhooks
     //1. Get list of webhooks
@@ -109,6 +110,10 @@ exports.shopifyChargeCreated = (req, res) =>{
     }
     
 }
+//webhook 
+exports.shopifyChargesPaid = (req,res) =>{
+  shopifyChargeCreated(req,res);
+}
 //Webhook  
 exports.shopifyChargeUpdated = (req, res) =>{
       //same as shopifyChargeCreated
@@ -168,11 +173,11 @@ exports.getShopifyProductsAndUpdate= async(req, res) => {
         const resProducts = await fetch(productUrl, options);      
         const shopifyProducts = await resProducts.json();
         // get shopify product and update to the existing firebase collection
-        console.log("shopifyProducts0",shopifyProducts);
+        console.log("shopifyProducts",shopifyProducts);
         if(shopifyProducts != null && shopifyProducts.length > 0){
             shopifyProducts.forEach(prod =>{
                 const challengeDetails=getChallengeDetails(prod.title);
-                if(challengeDetails!=null && challengeDetails.length >0){
+                if(challengeDetails!=null ){
                     challengeDetails.shopifyProductId=prod.shopify_product_id;
                     challengeDetails.createdAt= prod.created_at;
                     challengeDetails.productId= prod.product_id;
