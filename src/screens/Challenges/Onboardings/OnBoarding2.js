@@ -81,7 +81,6 @@ export default class OnBoarding2 extends Component {
       dietryPreferences:tags
     });
     let updatedChallengedata = Object.assign({},challengeData,{onBoardingInfo});
-    console.log(updatedChallengedata,"<><><screen2"); 
     if(type === 'next'){
       this.props.navigation.navigate('ChallengeOnBoarding3',{
         data:{
@@ -127,7 +126,7 @@ export default class OnBoarding2 extends Component {
              showsVerticalScrollIndicator={false}
             >
             <View>
-              <Text style={[ChallengeStyle.onBoardingTitle]}>Dietry Preferences</Text>
+              <Text style={[ChallengeStyle.onBoardingTitle]}>Dietary preferences</Text>
             </View>            
             <View style={globalStyle.selectBoxContainer}>
                 { 
