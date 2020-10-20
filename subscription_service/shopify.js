@@ -1,10 +1,11 @@
-const hostUrl='https://797423777430.ngrok.io';
+const hostUrl='https://277695dd9371.ngrok.io';
 const { auth, db } = require('./firebase');
 const webhookUrl='https://api.rechargeapps.com/webhooks';
 const productUrl='https://api.rechargeapps.com/products';
 const chargesUrl='https://api.rechargeapps.com/charges';
+const subscriptionUrl='https://api.rechargeapps.com/subscriptions';
 const RECHARGE_API_KEY='defda21cce4018658e95ff12e4f494696b3c2bc2682ce0cc9025e892';
-
+let moment = require('moment');
 const getRegisteredWebHooks = () => {
     return async (webHooks) => {
       const options = {
@@ -24,8 +25,12 @@ exports.createShopifyWebhooks = async (req, res)  => {
     const topics = [
         {'name':  'charge/created', 'webhook_url': '/shopify/charge/created'},
         {'name':  'charge/updated', 'webhook_url': '/shopify/charge/updated'},
-        {'name':  'charge/deleted', 'webhook_url': '/shopify/charge/deleted'},
+        {'name':  'charge/failed', 'webhook_url': '/shopify/charge/failed'},
         {'name':  'charge/paid', 'webhook_url': '/shopify/charge/paid'},
+        {'name':  'subscription/created', 'webhook_url': '/shopify/subscription/created'},
+        {'name':  'subscription/updated', 'webhook_url': '/shopify/subscription/updated'},
+        {'name':  'subscription/activated', 'webhook_url': '/shopify/subscription/activated'},
+        {'name':  'subscription/deleted', 'webhook_url': '/shopify/subscription/deleted'},
     ];
     //life time call only once to create necessary webhooks
     //1. Get list of webhooks
@@ -70,77 +75,91 @@ exports.createShopifyWebhooks = async (req, res)  => {
     res.status(200).send("Shopify Webhook sucessfully created");
 
 }
-
+const createWebhookUrl= async (req,res)=>{
+      // get user by email from firebase
+      const user =await getUser(req.email);
+      console.log("get user",user);
+      // 1. if user not exist, create that user
+      if(user=== undefined ){
+          const newUser={
+              email:req.email,
+              challenge:true, 
+              onboarded: false,
+              country:'unavailable',
+              signUpDate: moment(new Date(), 'YYYY-MM-DD'),
+              fitnessLevel: 1,           
+          };
+          // get the challage from line_items =>properties
+          console.log("newUser",newUser);
+          updateUser(newUser); 
+  
+      }
+      // 2. if user exist update that user
+      if(user!== undefined && user !== null){
+           user.chargeId=req.id;
+           console.log("existing user",user);
+           updateUserById(user);
+      }
+      // get product from line item collection
+      const challengeProductName=req.productName;
+      if(challengeProductName ==null){
+          challengeProductName="FitazFK 8 Week Challenge";
+      }
+      console.log("challengeProductName",challengeProductName);
+      // get workout challange details by passing product_title
+      const challenge= await getChallengeDetails(challengeProductName);
+      console.log("challenge",challenge);
+      const userInfo=await getUser(req.email);
+      console.log("userInfo",userInfo);
+      if(challenge !=null){
+        
+          const userChallenge=createNewChallenge(challenge)
+          updateChallengesAgainstUser(userChallenge,userInfo.id);
+          console.log("updateChallengesAgainstUser");
+      }
+}
+const deleteWebhookUrl = async(req,res) => {
+      // get user by email from firebase
+      console.log("delete Webhook request",req);
+      const user =await getUser(req.email);
+      console.log("user",user);
+      // 2. if user exist update that user
+      if(user !== null){
+       // get product from line item collection
+      const challengeProductName=req.productName;
+      const challenge= await getChallengeDetails(challengeProductName);
+      console.log("challenge",challenge);
+      //remove user challenges from collection      
+      await db.collection('users').doc('uid').collection('challenges').doc(challenge.id).delete().then(res=>{
+        console.log("challenges are deleted from user",res);
+      });
+    }
+}
 //Webhook- update user collection in firebase
 exports.shopifyChargeCreated = async(req, res) =>{
 
     console.log("shopifyChargeCreated is called");
-    // get user by email from firebase
-    const user =await getUser(res.email);
-    // 1. if user not exist, create that user
-    if(user === null){
-        const newUser={
-            firstName:res.first_name,
-            lastName:res.last_name,
-            email:res.email,
-            chargeId:res.id,
-            challenge:true,            
-        }
-        // get the challage from line_items =>properties
-        updateUser(newUser);       
-    }
-    // 2. if user exist update that user
-    if(user !== null){
-        const user={
-            chargeId:res.id,
-        }
-        updateUser(newUser);
-    }
-    // get product from line item collection
-    const challengeProductName=res.line_items[0].properties[0].name;
-    if(challengeProductName ==null){
-        challengeProductName="FitazFK 8 Week Challenge";
-    }
-    // get workout challange details by passing product_title
-    const challenge= await getChallengeDetails(challengeProductName);
-    const userInfo=await getUser(res.email);
-    if(challenge !=null){
-        const userChallenge=createNewChallenge(challenge)
-        updateChallengesAgainstUser(userChallenge,userInfo.id);
-    }
-    
+    const request=req.body.charge;
+    request.productName=req.body.charge.line_items[0].properties[0].name;
+    await createWebhookUrl(request,res);    
 }
 //webhook 
-exports.shopifyChargesPaid = (req,res) =>{
-  shopifyChargeCreated(req,res);
+exports.shopifyChargesPaid = async(req,res) =>{
+  const request=req.body.charge;
+  request.productName=req.body.charge.line_items[0].properties[0].name;
+  await createWebhookUrl(request,res);   
 }
 //Webhook  
-exports.shopifyChargeUpdated = (req, res) =>{
-      //same as shopifyChargeCreated
-      shopifyChargeCreated(req,res);
+exports.shopifyChargeUpdated = async(req, res) =>{
+  const request=req.body.charge;
+  request.productName=req.body.charge.line_items[0].properties[0].name;
+  await createWebhookUrl(request,res);   
 }
 //Webhook 
-exports.shopifyChargeDeleted = async(req, res) =>{
-
-    // get user by email from firebase
-    const user =await getUser(res.email);
-    // 2. if user exist update that user
-    if(user !== null){
-     // get product from line item collection
-    const challengeProductName=res.line_items[0].properties[0].name;
-    const challenge= await getChallengeDetails(challengeProductName);
-    //remove user challenges from collection
-    
-    await db.collection('users').doc(user.uid).collection('challenges').doc(challenge.id).set(data, (error) => {
-        if (error) {
-          user.delete().then(() => {
-            this.setState({ loading: false });
-            Alert.alert('Sign up could not be completed', 'Please try again');
-          });
-        }
-      });
-    }
-
+exports.shopifyChargeFailed = async(req, res) =>{
+  const request=req.body.charge;
+  request.productName=req.body.charge.line_items[0].properties[0].name;
+  await deleteWebhookUrl(request,res);
 }
 
 // Wil lget a list of products from shopify account to be displayed on App
@@ -191,7 +210,6 @@ exports.getShopifyProductsAndUpdate= async(req, res) => {
 
 //Will get a user's subscription details from firebase DB
 exports.getShopifyCharges = async(req, res) => {
-    //
     const options = {
         method: 'GET',
         headers: {
@@ -200,7 +218,7 @@ exports.getShopifyCharges = async(req, res) => {
             'x-recharge-access-token' : RECHARGE_API_KEY
           },
         };
-      const resCharges = await fetch(chargesUrl, options);      
+      const resCharges = await fetch(`${chargesUrl}?date_min=${req.params.date_min}&date_max=${req.params.date_max}`, options);      
       const shopifyCharges = await resCharges.json();
       console.log("shopifyCharges",shopifyCharges);
       return shopifyCharges;  
@@ -229,8 +247,18 @@ const getUser = async(emailId) => {
 }
 
 const updateUser = (userInfo) => {
-    const userRef = db.collection('users');
-    userRef.set(data, { merge: true });
+  console.log("update user",userInfo);
+    const userRef = db.collection('users').doc('uid');
+    userRef.set(userInfo).then((state) => {
+      console.log("new user added",state);
+    })
+    .catch((error) => {
+      console.log("new user added error",error);
+    });;
+}
+const updateUserById = (userInfo) => {
+  const userRef = db.collection('users').doc('uid');
+  userRef.set(userInfo, { merge: true });
 }
 
 const getChallengeDetails = async(challengeName) => {
@@ -243,7 +271,7 @@ const getChallengeDetails = async(challengeName) => {
 }
 
 const updateChallengesAgainstUser = (challengeData,userId)=>{
-    const challenge = db.collection('users').doc(userId).collection('challenges').doc(challengeData.id);
+    const challenge = db.collection('users').doc('uid').collection('challenges').doc(challengeData.id);
     challenge.set(challengeData,{merge:true})
 }
 const updateChallenges = (challengeData)=>{
@@ -278,4 +306,56 @@ const createNewChallenge=(data)=>{
       }
       return challenge
 }
+//---------------------------subscription---------------------
+exports.createShopifySubscription= async(req, res) => {    
+  const options = {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'x-recharge-access-token' : RECHARGE_API_KEY
+      },
+      body:req.body
+    };
+  const resSubscription = await fetch(subscriptionUrl, options);      
+  const subscription = await resSubscription.json();
+  //return body;
+console.log('subscription',subscription);
+return subscription;
+}
 
+exports.updateShopifySubscription= async(req, res) => {    
+  const options = {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'x-recharge-access-token' : RECHARGE_API_KEY
+      },
+      body:req.body
+    };
+  const updateSubscription = await fetch(`${subscriptionUrl}/${req.params.id}`, options);      
+  const subscription = await updateSubscription.json();
+  //return body;
+console.log('subscription',subscription);
+return subscription;
+}
+
+exports.createShopifySubscriptionWebhook = async(req, res) =>{    
+  const request = req.body.subscription;    
+  request.productName=req.body.subscription.product_title
+    await createWebhookUrl(request,res); 
+}
+exports.updateShopifySubscriptionWebhook = async(req, res) =>{    
+  const request = req.body.subscription;    
+  request.productName=req.body.subscription.product_title
+    await createWebhookUrl(request,res); 
+}
+exports.activatedShopifySubscriptionWebhook = async(req, res) =>{    
+  const request = req.body.subscription;    
+  request.productName=req.body.subscription.product_title
+    await createWebhookUrl(request,res); 
+}
+exports.deleteShopifySubscriptionWebhook = async(req, res) =>{    
+  const request = req.body.subscription;    
+  request.productName=req.body.subscription.product_title
+    await deleteWebhookUrl(request,res); 
+}
