@@ -32,23 +32,47 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       recipes: [],
       loading: false,
       filterIndex: 0,
+      meal:null
     };
   }
+
+  onFocusFunction = async () =>{
+    const {meal} = this.state
+    const newMeal = this.props.navigation.getParam('meal', null);
+    if(meal && meal !== newMeal || !meal){
+      this.setState({meal:newMeal})
+      await this.fetchRecipes();
+    }
+      
+  }
+
   componentDidMount = async () => {
-    await this.fetchRecipes();
+    this.setState({ loading: true });
+    this.focusListener = this.props.navigation.addListener('didFocus', async () => {
+        this.onFocusFunction()
+    })
   }
   componentWillUnmount = async () => {
+    this.focusListener.remove()
+      if(this.unsubscribe)
     await this.unsubscribe();
   }
   fetchRecipes = async () => {
     this.setState({ loading: true });
     const meal = this.props.navigation.getParam('meal', null);
+    const challengeMealsFilterList = this.props.navigation.getParam('challengeMealsFilterList', null);
     this.unsubscribe = await db.collection('recipes')
       .where(meal, '==', true)
       .onSnapshot(async (querySnapshot) => {
         const recipes = [];
         await querySnapshot.forEach(async (doc) => {
-          await recipes.push(await doc.data());
+          if(challengeMealsFilterList && challengeMealsFilterList.length >0){
+              if(challengeMealsFilterList.includes(doc.data().id))
+                await recipes.push(await doc.data());
+          }else{
+            await recipes.push(await doc.data());
+          }
+         
         });
 
         await Promise.all(recipes.map(async (recipe) => {
@@ -82,7 +106,11 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   keyExtractor = (item) => item.id;
   renderItem = ({ item }) => (
     <RecipeTile
-      onPress={() => this.props.navigation.push('Recipe', {recipe: item})}
+      onPress={() => this.props.navigation.push('Recipe', 
+      {
+        recipe: item,
+        backTitle : this.props.navigation.getParam('meal', null)
+      })}
       image={`${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage}
       title={item.title}
       tags={item.tags}

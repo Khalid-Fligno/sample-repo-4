@@ -9,7 +9,7 @@ import {
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 var { height,width } = Dimensions.get("window")
-
+let navigation = null
 const HiddenView = () => <View style={{ display: 'none' }} />
 const TouchableWithoutFeedbackWrapper = ({
   onPress,
@@ -18,9 +18,16 @@ const TouchableWithoutFeedbackWrapper = ({
   accessibilityLabel,
   ...props
 }) => {
+     const routeKey = accessibilityLabel.split(',')[0]
+    const onPress1 = () =>{
+        if(routeKey === 'Lifestyle')
+          navigation.navigate('Home') 
+        else  
+         navigation.navigate(routeKey) 
+    }
   return (
       <TouchableWithoutFeedback
-          onPress={onPress}
+          onPress={()=>onPress1()}
           onLongPress={onLongPress}
           testID={testID}
           hitSlop={{
@@ -36,6 +43,7 @@ const TouchableWithoutFeedbackWrapper = ({
   )
 }
 const TabBarComponent = props => {
+    navigation = props.navigation
   return <BottomTabBar
       {...props}
       style={styles.bottomBarStyle}

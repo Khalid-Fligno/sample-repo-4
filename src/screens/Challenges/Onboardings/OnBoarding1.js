@@ -114,35 +114,35 @@ export default class OnBoarding1 extends Component {
                 </View>
               
                 <SliderComponent
-                  title="Weight Loss" 
+                  title="Weight loss" 
                   value={weightLoss}
                   minimumValue={1}
                   maximumValue={10}
                   onValueChange={(value) => this.setState({ weightLoss:Math.round(value) })}
                 />
                 <SliderComponent
-                  title="Increase Energy" 
+                  title="Increase energy" 
                   value={increaseEnergy}
                   minimumValue={1}
                   maximumValue={10}
                   onValueChange={(value) => this.setState({ increaseEnergy:Math.round(value) })}
                 />
                 <SliderComponent
-                  title="Tone Up" 
+                  title="Tone up" 
                   value={toneUp}
                   minimumValue={1}
                   maximumValue={10}
                   onValueChange={(value) => this.setState({ toneUp:Math.round(value) })}
                 />
                 <SliderComponent
-                  title="Mental Health" 
+                  title="Mental health" 
                   value={mentalHealth}
                   minimumValue={1}
                   maximumValue={10}
                   onValueChange={(value) => this.setState({ mentalHealth:Math.round(value) })}
                 />
                 <SliderComponent
-                  title="Increase Fitness" 
+                  title="Increase fitness" 
                   value={increaseFitness}
                   minimumValue={1}
                   maximumValue={10}
