@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const hostUrl='https://5f4ee9b20b34.ngrok.io';
 const { auth, db } = require('./firebase');
 const webhookUrl='https://api.rechargeapps.com/webhooks';
@@ -15,12 +16,34 @@ const getRegisteredWebHooks = () => {
           },
         };
       const res = await fetch(webhookUrl, options);      
+=======
+const hostUrl='http://b8e649638365.ngrok.io';
+const { auth, db } = require('./firebase');
+const webhookUrl='https://api.rechargeapps.com/webhooks';
+const RECHARGE_API_KEY='defda21cce4018658e95ff12e4f494696b3c2bc2682ce0cc9025e892';
+
+const getRegisteredWebHooks = (webhooks) => {
+    const verifyUrl = webhookUrl;
+    return async (hook) => {
+      const options = {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        };
+      const res = await fetch(verifyUrl, options);
+>>>>>>> 071fff7e44588093c23228e99dce9f16aabec9c4
       const body = await res.json();
       return body;
     };
   }
   
+<<<<<<< HEAD
 exports.createShopifyWebhooks = async (req, res)  => {
+=======
+exports.createShopifyWebhooks = (req, res) => {
+>>>>>>> 071fff7e44588093c23228e99dce9f16aabec9c4
     const topics = [
         {'name':  'charge/created', 'webhook_url': '/shopify/charge/created'},
         {'name':  'charge/updated', 'webhook_url': '/shopify/charge/updated'},
@@ -28,6 +51,7 @@ exports.createShopifyWebhooks = async (req, res)  => {
     ];
     //life time call only once to create necessary webhooks
     //1. Get list of webhooks
+<<<<<<< HEAD
     const options = {
         method: 'GET',
         headers: {
@@ -55,10 +79,42 @@ exports.createShopifyWebhooks = async (req, res)  => {
         const newChargeReq = await fetch(webhookUrl, {
             method: 'POST',
             headers: {
+=======
+    //const registeredWebHooks = await(getRegisteredWebHooks);
+    const webhooks = [
+        {
+            "address": "https://request.in/foo",
+            "id": 19451,
+            "topic": "charge/created"
+        },
+        {
+            "address": "https://request.in/foo",
+            "id": 19453,
+            "topic": "charge/created"
+        }
+    ];
+    //unRegister web hooks
+    let unRegisteredWeekHook=[];
+    topics.forEach(topic => {
+     const index= webhooks.findIndex(res => res.topic === topic.name)
+     if(index === -1){
+        unRegisteredWeekHook.push(topic);
+     }
+        
+    });
+
+    //2. if you didn't find related webhook create that
+    unRegisteredWeekHook.forEach(unreg =>{ 
+        const newSubscriptionInfoReq = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+>>>>>>> 071fff7e44588093c23228e99dce9f16aabec9c4
               'Content-Type': 'application/json',
               'x-recharge-access-token':RECHARGE_API_KEY,
             },
             body: JSON.stringify({
+<<<<<<< HEAD
                 "address": `${hostUrl}${unreg.webhook_url}`,
                 "topic": `${unreg.name}`
             })
@@ -67,13 +123,42 @@ exports.createShopifyWebhooks = async (req, res)  => {
           console.log("new Charge Info ",newChargeInfo);
     });
     res.status(200).send("Shopify Webhook sucessfully created");
+=======
+                "address": `${hostUrl} `,
+                "topic": "subscription/created"
+            })
+          });
+          const newSubscriptionInfo = await newSubscriptionInfoReq.json();
+          if (newSubscriptionInfo.error && newSubscriptionInfo.error.errorCode) {
+            this.handleError(newSubscriptionInfo.error);
+            return null;
+          }        
+    });
+
+}
+
+const getUser = (emailId) => {
+    const userRef = db.collection('users').where("email","==",emailId);
+    return userRef.get();
+}
+
+const updateUser = (userInfo) => {
+    
+}
+
+const getChallangeDetails = (challangeName) => {
+    return db.collection('challenges').where("name","==",challangeName).get();
+>>>>>>> 071fff7e44588093c23228e99dce9f16aabec9c4
 
 }
 
 //Webhook- update user collection in firebase
 exports.shopifyChargeCreated = (req, res) =>{
+<<<<<<< HEAD
 
     console.log("shopifyChargeCreated is called");
+=======
+>>>>>>> 071fff7e44588093c23228e99dce9f16aabec9c4
     // get user by email from firebase
     const user =getUser(res.email);
     // 1. if user not exist, create that user

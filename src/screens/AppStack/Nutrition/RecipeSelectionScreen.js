@@ -82,7 +82,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   keyExtractor = (item) => item.id;
   renderItem = ({ item }) => (
     <RecipeTile
-      onPress={() => this.props.navigation.push('Recipe', { recipe: item })}
+      onPress={() => this.props.navigation.push('Recipe', {recipe: item})}
       image={`${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage}
       title={item.title}
       tags={item.tags}

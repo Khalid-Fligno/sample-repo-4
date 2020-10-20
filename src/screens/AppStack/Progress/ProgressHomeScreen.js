@@ -38,15 +38,28 @@ class ProgressHomeScreen extends React.PureComponent {
       helperModalVisible: false,
       imageModalVisible: false,
       imageModalSource: undefined,
+      activeChallengeUserData:undefined,
+      activeChallengeData:undefined,
+      totalInterval:undefined,
+      totalCircuit:undefined,
+      totalStrength:undefined,
+      totalIntervalCompleted:undefined,
+      totalCircuitCompleted:undefined,
+      totalStrengthCompleted:undefined,
     };
   }
   componentDidMount() {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     this.fetchProgressInfo();
     this.showHelperOnFirstOpen();
+    this.fetchActiveChallengeUserData();
   }
   componentWillUnmount() {
     this.unsubscribe();
+    if(this.unsubscribeFACUD)
+    this.unsubscribeFACUD()
+    if(this.unsubscribeFACD)
+      this.unsubscribeFACD()  
   }
   showHelperOnFirstOpen = async () => {
     const helperShownOnFirstOpen = await AsyncStorage.getItem('progressHelperShownOnFirstOpen');
@@ -75,7 +88,7 @@ class ProgressHomeScreen extends React.PureComponent {
       this.setState({
         profile: await doc.data(),
         initialProgressInfo: await doc.data().initialProgressInfo,
-        currentProgressInfo: await doc.data().currentProgressInfo,
+        currentProgressInfo: await doc.data().currentProgressInfo.weight?await doc.data().currentProgressInfo:null,
         unitsOfMeasurement: await doc.data().unitsOfMeasurement,
         loading: false,
       });
@@ -91,6 +104,83 @@ class ProgressHomeScreen extends React.PureComponent {
       }
     });
   }
+
+  // ToDo : for challenges
+  fetchActiveChallengeUserData = async () =>{
+    try{  
+      this.setState({ loading: true });
+      const uid = await AsyncStorage.getItem('uid');
+      this.unsubscribeFACUD = await db.collection('users').doc(uid).collection('challenges')
+      .where("status", "==" , "Active")
+      .onSnapshot(async (querySnapshot) => {
+        const list = [];
+        await querySnapshot.forEach(async (doc) => {
+            await list.push(await doc.data());
+        });
+        if(list[0]){
+          this.fetchActiveChallengeData(list[0])
+        }else{
+          this.setState({ 
+            activeChallengeUserData:undefined,
+            loading:false
+          });
+        }
+      });
+    }
+    catch(err){
+      this.setState({ loading: false });
+      console.log(err)
+      Alert.alert('Fetch active challenge user data error!')
+    }  
+
+  }
+
+  fetchActiveChallengeData = async (activeChallengeUserData) =>{
+    try{
+      this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
+      .onSnapshot(async (doc) => {
+          if(doc.exists){
+            const activeChallengeData = doc.data()
+            //TODO calculate total interval circuit strength completed user during challenge
+            const totalWorkouts =[] 
+            activeChallengeData.phases.forEach(phase => {
+              phase.workouts.forEach(workout =>{
+                totalWorkouts.push(workout)
+              })
+            });
+            
+            const totalInterval = totalWorkouts.filter((res)=>res.target === 'interval')
+            const totalCircuit = totalWorkouts.filter((res)=>res.target === 'circuit')
+            const totalStrength = totalWorkouts.filter((res)=>res.target === 'strength')
+      
+            const totalIntervalCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'interval')
+            const totalCircuitCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'circuit')
+            const totalStrengthCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'strength')
+            
+            
+            this.setState({ 
+              activeChallengeUserData,
+              activeChallengeData,
+              totalInterval,
+              totalCircuit,
+              totalStrength,
+              totalIntervalCompleted,
+              totalCircuitCompleted,
+              totalStrengthCompleted,
+              loading:false
+            });
+          }
+      
+      });
+    }catch(err){
+      this.setState({ loading: false });
+      console.log(err);
+      Alert.alert('Fetch active challenge data error!')
+    }
+
+  }
+ //-------**--------  
+
   render() {
     const {
       loading,
@@ -101,11 +191,46 @@ class ProgressHomeScreen extends React.PureComponent {
       helperModalVisible,
       imageModalVisible,
       imageModalSource,
+      activeChallengeData,
+      activeChallengeUserData,
+      totalInterval,
+      totalCircuit,
+      totalStrength,
+      totalIntervalCompleted,
+      totalCircuitCompleted,
+      totalStrengthCompleted,
     } = this.state;
+
+    let totalI = 0;
+    let totalC = 0;
+    let totalS = 0;
+    let countI = 0;
+    let countC = 0;
+    let countS = 0;
+
+    if(activeChallengeData !== undefined){
+      totalI = totalInterval.length;
+      totalC = totalCircuit.length;
+      totalS = totalStrength.length;
+
+      countI = totalIntervalCompleted.length;
+      countC = totalCircuitCompleted.length;
+      countS = totalStrengthCompleted.length;
+    }else if(profile !== undefined){
+      totalI = 5;
+      totalC = 5;
+      totalS = 5;
+
+      countI = profile.weeklyTargets.interval;
+      countC = profile.weeklyTargets.circuit;
+      countS = profile.weeklyTargets.strength;
+    }
+
     const weightDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.weight, currentProgressInfo.weight);
     const hipDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.hip, currentProgressInfo.hip);
     const waistDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.waist, currentProgressInfo.waist);
     const burpeesDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.burpeeCount, currentProgressInfo.burpeeCount);
+    
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.contentContainer}>
@@ -305,7 +430,7 @@ class ProgressHomeScreen extends React.PureComponent {
           <View style={styles.workoutProgressContainer}>
             <View style={styles.sectionHeader}>
               <Text style={styles.bodyText}>
-                WEEKLY WORKOUT PROGRESS
+              {activeChallengeData?'Active challenge progress' :'Weekly workout progress'}
               </Text>
             </View>
             <View style={{flexDirection:'row',justifyContent:"space-between",width:"100%"}}>
@@ -314,8 +439,8 @@ class ProgressHomeScreen extends React.PureComponent {
                         <View>
                           <ProgressBar
                             title="Strength"
-                            completed={profile.weeklyTargets.strength }
-                            total = {5}
+                            completed={countS}
+                            total = {totalS}
                             size ={wp('38%')}
                           />
                         </View>
@@ -326,8 +451,8 @@ class ProgressHomeScreen extends React.PureComponent {
                         <View>
                           <ProgressBar
                             title="Circuit"
-                            completed={profile.weeklyTargets.circuit }
-                            total = {5}
+                            completed={countC}
+                            total = {totalC}
                             size ={wp('38%')}
                           />
                         </View>
@@ -340,8 +465,8 @@ class ProgressHomeScreen extends React.PureComponent {
                             <View>
                               <ProgressBar
                                 title="Interval"
-                                completed={profile.weeklyTargets.interval}
-                                total = {5}
+                                completed={countI}
+                                total = {countI}
                                 size ={wp('38%')}
                               />
                             </View>

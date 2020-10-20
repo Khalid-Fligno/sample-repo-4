@@ -69,15 +69,28 @@ export default class HomeScreen extends React.PureComponent {
       profile: undefined,
       switchWelcomeHeader: true,
       dayOfWeek: undefined,
+      activeChallengeUserData:undefined,
+      activeChallengeData:undefined,
+      totalInterval:undefined,
+      totalCircuit:undefined,
+      totalStrength:undefined,
+      totalIntervalCompleted:undefined,
+      totalCircuitCompleted:undefined,
+      totalStrengthCompleted:undefined,
     };
   }
   componentDidMount = () => {
     this.fetchProfile();
     this.switchWelcomeHeader();
     this.setDayOfWeek();
+    this.fetchActiveChallengeUserData();
   }
   componentWillUnmount = () => {
     this.unsubscribe();
+    if(this.unsubscribeFACUD)
+    this.unsubscribeFACUD()
+    if(this.unsubscribeFACD)
+      this.unsubscribeFACD()  
   }
   setDayOfWeek = async () => {
     const timezone = await Localization.timezone;
@@ -98,7 +111,6 @@ export default class HomeScreen extends React.PureComponent {
     this.unsubscribe = userRef.onSnapshot(async (doc) => {
       this.setState({
         profile: await doc.data(),
-        loading: false,
       });
       if (await doc.data().weeklyTargets.currentWeekStartDate !== moment().startOf('week').format('YYYY-MM-DD')) {
         const data = {
@@ -142,14 +154,129 @@ export default class HomeScreen extends React.PureComponent {
     this.setState({ loading: false });
     this.props.navigation.navigate('Burpee1');
   }
+
+  // ToDo : for challenges
+fetchActiveChallengeUserData = async () =>{
+  try{  
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem('uid');
+    this.unsubscribeFACUD = await db.collection('users').doc(uid).collection('challenges')
+    .where("status", "==" , "Active")
+    .onSnapshot(async (querySnapshot) => {
+      const list = [];
+      await querySnapshot.forEach(async (doc) => {
+          await list.push(await doc.data());
+      });
+      //TODO:get Active challenge end time
+      const activeChallengeEndTime = list[0]?new Date(list[0].endDate).getTime():null;
+      const currentTime = new Date().getTime()
+
+      if(list[0] && currentTime <= activeChallengeEndTime){ //TODO:check challenge is active and not completed
+           this.fetchActiveChallengeData(list[0])
+      }else{
+        if( activeChallengeEndTime && currentTime >= activeChallengeEndTime){  //TODO check challenge is Completed or not
+          console.log("Challenge Completed....")
+        }
+        this.setState({ 
+          activeChallengeUserData:undefined,
+          loading:false
+        });
+      }
+    });
+  }
+  catch(err){
+    this.setState({ loading: false });
+    console.log(err)
+    Alert.alert('Fetch active challenge user data error!')
+  }  
+}
+
+fetchActiveChallengeData = async (activeChallengeUserData) =>{
+  try{
+    this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
+    .onSnapshot(async (doc) => {
+        if(doc.exists){
+          const activeChallengeData = doc.data()
+          //TODO calculate total interval circuit strength completed user during challenge
+          const totalWorkouts =[] 
+          activeChallengeData.phases.forEach(phase => {
+            phase.workouts.forEach(workout =>{
+              totalWorkouts.push(workout)
+            })
+          });
+          
+          const totalInterval = totalWorkouts.filter((res)=>res.target === 'interval')
+          const totalCircuit = totalWorkouts.filter((res)=>res.target === 'circuit')
+          const totalStrength = totalWorkouts.filter((res)=>res.target === 'strength')
+    
+          const totalIntervalCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'interval')
+          const totalCircuitCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'circuit')
+          const totalStrengthCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'strength')
+          
+          
+          this.setState({ 
+            activeChallengeUserData,
+            activeChallengeData,
+            totalInterval,
+            totalCircuit,
+            totalStrength,
+            totalIntervalCompleted,
+            totalCircuitCompleted,
+            totalStrengthCompleted,
+            loading:false
+          });
+        }
+     
+    });
+  }catch(err){
+    this.setState({ loading: false });
+    console.log(err);
+    Alert.alert('Fetch active challenge data error!')
+  }
+
+}
+ //-------**--------  
+
   render() {
     const {
       loading,
       profile,
       switchWelcomeHeader,
       dayOfWeek,
+      activeChallengeData,
+      activeChallengeUserData,
+      totalInterval,
+      totalCircuit,
+      totalStrength,
+      totalIntervalCompleted,
+      totalCircuitCompleted,
+      totalStrengthCompleted,
     } = this.state;
-    // console.log(profile)
+    let totalI = 0;
+    let totalC = 0;
+    let totalS = 0;
+    let countI = 0;
+    let countC = 0;
+    let countS = 0;
+    if(activeChallengeData !== undefined){
+      totalI = totalInterval.length;
+      totalC = totalCircuit.length;
+      totalS = totalStrength.length;
+
+      countI = totalIntervalCompleted.length;
+      countC = totalCircuitCompleted.length;
+      countS = totalStrengthCompleted.length;
+    }else if(profile !== undefined){
+      totalI = 5;
+      totalC = 5;
+      totalS = 5;
+
+      countI = profile.weeklyTargets.interval;
+      countC = profile.weeklyTargets.circuit;
+      countS = profile.weeklyTargets.strength;
+    }
+    
+
     const personalisedMessage = () => {
       const { resistanceWeeklyComplete, hiitWeeklyComplete } = profile.weeklyTargets;
       const totalWeeklyWorkoutsCompleted = resistanceWeeklyComplete + hiitWeeklyComplete;
@@ -209,53 +336,57 @@ export default class HomeScreen extends React.PureComponent {
                  />
               </View>
            
-              <View>
-                <View style={HomeScreenStyle.sectionHeader}>
-                  <Text style={[HomeScreenStyle.bodyText]}>
-                    Weekly workout progress
-                  </Text>
-                </View>
-                <View style={{flexDirection:'row',justifyContent:"space-between",width:"100%"}}>
-                    {
-                      profile && (
-                        <View>
-                          <ProgressBar
-                            title="Strength"
-                            completed={profile.weeklyTargets.strength }
-                            total = { 5}
-                            size ={wp('38%')}
-                          />
-                        </View>
-                      )
-                    }
-                    {
-                      profile && (
-                        <View>
-                          <ProgressBar
-                            title="Circuit"
-                            completed={profile.weeklyTargets.circuit }
-                            total = { 5}
-                            size ={wp('38%')}
-                          />
-                        </View>
-                      )
-                    }
-                </View>
-                <View style={{width:'100%',flexDirection:"row",justifyContent:"center",marginTop:-30}}>
-                    {
+              {
+                !loading &&
+                  <View>
+                    <View style={HomeScreenStyle.sectionHeader}>
+                      <Text style={[HomeScreenStyle.bodyText]}>
+                        {activeChallengeData?'Active challenge progress' :'Weekly workout progress'}
+                      </Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:"space-between",width:"100%"}}>
+                        {
                           profile && (
                             <View>
                               <ProgressBar
-                                title="Interval"
-                                completed={profile.weeklyTargets.interval}
-                                total = { 5}
+                                title="Strength"
+                                completed={countS}
+                                total = {totalS}
                                 size ={wp('38%')}
                               />
                             </View>
                           )
                         }
-                </View>
-              </View>
+                        {
+                          profile && (
+                            <View>
+                              <ProgressBar
+                                title="Circuit"
+                                completed={countC}
+                                total = {totalC}
+                                size ={wp('38%')}
+                              />
+                            </View>
+                          )
+                        }
+                    </View>
+                    <View style={{width:'100%',flexDirection:"row",justifyContent:"center",marginTop:-30}}>
+                        {
+                              profile && (
+                                <View>
+                                  <ProgressBar
+                                    title="Interval"
+                                    completed={countI}
+                                    total = {totalI}
+                                    size ={wp('38%')}
+                                  />
+                                </View>
+                              )
+                            }
+                    </View>
+                  </View>
+              }
+            
               
               {
                 profile && profile.initialBurpeeTestCompleted === undefined && (
