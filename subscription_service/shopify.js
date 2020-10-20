@@ -178,7 +178,7 @@ exports.getShopifyProductsAndUpdate= async(req, res) => {
             shopifyProducts.products.forEach(async (prod) =>{
                 const challengeDetails= await getChallengeDetails(prod.title);
                 console.log("outer challengeDetails",challengeDetails);
-                if(challengeDetails!=null ){
+                if(challengeDetails!=null && !challengeDetails.hasOwnProperty(shopifyProductId)){
                     challengeDetails.shopifyProductId=prod.shopify_product_id;
                     challengeDetails.createdAt= prod.created_at;
                     challengeDetails.productId= prod.product_id;
@@ -271,6 +271,10 @@ const createNewChallenge=(data)=>{
         "endDate":moment(new Date(), 'YYYY-MM-DD').add(data.numberOfDays-1,'days').format('YYYY-MM-DD'),
         "status":"InActive",
         "phases":phases,
+        "shopifyProductId":data.shopifyProductId,
+        "createdAt":data.createdAt,
+        "productId":data.productId,
+        "productReChargeId":data.productReChargeId
       }
       return challenge
 }
