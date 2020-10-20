@@ -66,14 +66,27 @@ export const CustomListItem = (props)=>{
   }
 
  export const RcMealListItem = (props) =>{
-     const {res,index , onPress} = props
+     const {
+         res,
+         index , 
+         onPress,
+         onSwipeableWillOpen,
+         onSwipeableClose,
+         renderRightActions
+        } = props
     return (
+        <Swipeable
+            renderRightActions={renderRightActions}
+            overshootRight={false}
+            onSwipeableWillOpen={onSwipeableWillOpen}
+            onSwipeableClose={onSwipeableClose}
+            >
           <ListItem
             key = {index}
             activeOpacity ={0.5}
             underlayColor="none"
             title={`${res.displayName}`}
-            rightTitle = {res.mealType}
+            rightTitle = {res.mealTitle}
             subtitle={res.subTitle}
             onPress={onPress}
             containerStyle={calendarStyles.listItemContainer}
@@ -83,6 +96,7 @@ export const CustomListItem = (props)=>{
             subtitleStyle={calendarStyles.recipeListItemSubtitle}
             rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
           />
+        </Swipeable>  
     )
   }
 

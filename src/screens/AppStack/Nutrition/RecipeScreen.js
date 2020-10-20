@@ -69,6 +69,9 @@ export default class RecipeScreen extends React.PureComponent {
       this.onFocusFunction()
     })
   }
+  componentWillUnmount = async () => {
+    this.focusListener.remove()
+  }
   setDate = async (event, selectedDate) => {
     if(selectedDate){
     const currentDate = selectedDate;

@@ -10,7 +10,8 @@ const AppStack = createStackNavigator(
     Tabs: { screen: TabStack },
     Profile: { screen: ProfileStack },
     Exercise: { screen: ExerciseStack },
-    ChallengeOnBoarding: { screen:ChallengeOnboardingStack }
+    ChallengeOnBoarding: { screen:ChallengeOnboardingStack },
+    
   },
   {
     initialRouteName: 'Tabs',

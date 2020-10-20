@@ -9,6 +9,7 @@ import {
   Alert,
   TouchableOpacity,
   ColorPropType,
+  Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { ListItem, Slider } from 'react-native-elements';
@@ -63,7 +64,7 @@ const recipeCategories = [
   "lunch",
   "dinner",
   "snack",
-  "snack1"
+  "snack2"
 ]
 
 class CalendarHomeScreen extends React.PureComponent {
@@ -243,6 +244,25 @@ class CalendarHomeScreen extends React.PureComponent {
       </TouchableOpacity>
     );
   }
+  renderRightActionForRC = (type) => {
+    const onClick =() =>{
+      console.log(this.challengeMealsFilterList)
+      this.props.navigation.navigate('RecipeSelection', { 
+        meal:type ,
+        challengeMealsFilterList:this.challengeMealsFilterList
+      })
+    }
+    return (
+      <TouchableOpacity
+        onPress={() => onClick()}
+        style={[calendarStyles.deleteButton]}
+      >
+        <Text style={calendarStyles.deleteButtonText}>
+          View All
+        </Text>
+      </TouchableOpacity>
+    );
+  }
 
  
 // ToDo : for challenges
@@ -316,7 +336,9 @@ getCurrentPhaseInfo(){
     this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
   
    //TODO getToday one recommended meal randomly  
-    this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData)
+    this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
+     //TODO getToday one recommended meal randomly  
+     this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
   }else{
     Alert.alert('Something went wrong please try again')
   }
@@ -353,6 +375,13 @@ async fetchRecipe(id,mealType){
       this.getCurrentPhaseInfo()
     }
 
+    let showRC = false
+    if(this.calendarStrip.current){
+      let currentCalendarDate = new Date(this.calendarStrip.current.getSelectedDate()).getDate();
+      let currentDate = new Date().getDate()
+      if(currentCalendarDate === currentDate)
+        showRC = true
+    }
 
 
     const dayDisplay = (
@@ -361,7 +390,7 @@ async fetchRecipe(id,mealType){
         scrollEnabled={!this.state.isSwiping}
       >
         {
-          this.phaseData && 
+          this.phaseData && activeChallengeUserData && activeChallengeData &&
           <ChallengeProgressCard
             phase={this.phase}
             phaseData={this.phaseData}
@@ -399,21 +428,25 @@ async fetchRecipe(id,mealType){
         </Text>
         <View style={calendarStyles.listContainer}>
           {
-            this.todayRecommendedMeal && this.todayRecommendedMeal.length >0 &&
+            this.todayRecommendedMeal && this.todayRecommendedMeal.length >0 && showRC &&
             this.todayRecommendedMeal.map((res,index)=>{
-              if(res)
-              return <RcMealListItem 
-                        key={index}
-                        res={res} 
-                        index={index} 
-                        onPress={() => this.fetchRecipe(res.id,res.mealType)}  
-                      />
+              if(res){
+                return <RcMealListItem 
+                key={index}
+                res={res} 
+                index={index} 
+                onPress={() => this.fetchRecipe(res.id,res.mealType)} 
+                renderRightActions={() => this.renderRightActionForRC(res.meal)} 
+                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                onSwipeableClose={() => this.setState({ isSwiping: false })}
+              />
+              }
+             
             })
               
           }
           {
             recipeCategories.map((res,index)=>{
-              const {meals} = this.state
               if(meals && meals[res])
                   return <MealSwipable 
                                 key={index}
@@ -426,7 +459,7 @@ async fetchRecipe(id,mealType){
                                 onPress={() => this.props.navigation.navigate('Recipe', { recipe: data ,meal:res })}
                                 stringDate = {this.stringDate}
                         />
-              else 
+              else if(!this.todayRecommendedMeal || !showRC)
                   return <CustomListItem 
                             key={index}
                             name={res.toLocaleUpperCase()} 
@@ -453,7 +486,6 @@ async fetchRecipe(id,mealType){
             ref1={this.calendarStrip}
             onDateSelected={(date) => this.handleDateSelected(date)}
         />
-       
         {dayDisplay}
         <HelperModal
           helperModalVisible={helperModalVisible}

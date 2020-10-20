@@ -35,19 +35,31 @@ export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
         }
         }
     })
+    const challengeMealsFilterList = phaseMeals.map((res)=>res.id)
+
     const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
-    const breakfast = phaseMeals.filter((res)=>res.mealType === 'breakfast')
-    const lunch = phaseMeals.filter((res)=>res.mealType === 'lunch')
-    const dinner = phaseMeals.filter((res)=>res.dinner === 'dinner')
-    const snack = phaseMeals.filter((res)=>res.mealType === 'snack')
-    const morningSnack = getRandomNumber(snack.length-1) >=0?Object.assign({},snack[getRandomNumber(snack.length-1)],{mealType:'Morning Snack'}):undefined
-    const afternoonSnack = getRandomNumber(snack.length-1) >=0?Object.assign({},snack[getRandomNumber(snack.length-1)],{mealType:'Afternoon Snack'}):undefined
+    const breakfastList = phaseMeals.filter((res)=>res.mealType.includes('breakfast'))
+    const lunchList = phaseMeals.filter((res)=>res.mealType.includes('lunch'))
+    const dinnerList = phaseMeals.filter((res)=>res.mealType.includes('dinner'))
+    const snackList = phaseMeals.filter((res)=>res.mealType.includes('snack'))
+
+    const breakfast =  Object.assign({},breakfastList[getRandomNumber(breakfastList.length-1)],{mealTitle:'breakfast',meal:'breakfast'});
+    const lunch = Object.assign({},lunchList[getRandomNumber(lunchList.length-1)],{mealTitle:'lunch',meal:'lunch'});
+    const dinner = Object.assign({},dinnerList[getRandomNumber(dinnerList.length-1)],{mealTitle:'dinner',meal:'dinner'});
+    const morningSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'morning Snack',meal:'snack'}):undefined
+    const afternoonSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'afternoon Snack',meal:'snack'}):undefined
+    
+    
     const recommendedMeal = [
-        breakfast[getRandomNumber(breakfast.length-1)],
-        lunch[getRandomNumber(lunch.length-1)],
-        dinner[getRandomNumber(dinner.length-1)],
+        breakfast,
+        lunch,
+        dinner,
         morningSnack,
         afternoonSnack
     ]
-    return recommendedMeal
+  
+    return {
+                recommendedMeal,
+                challengeMealsFilterList
+           }
 }
