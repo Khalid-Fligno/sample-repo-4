@@ -35,7 +35,6 @@ export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
         }
         }
     })
-    console.log(phaseMeals)
     const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
     const breakfast = phaseMeals.filter((res)=>res.mealType === 'breakfast')
     const lunch = phaseMeals.filter((res)=>res.mealType === 'lunch')
@@ -43,7 +42,6 @@ export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
     const snack = phaseMeals.filter((res)=>res.mealType === 'snack')
     const morningSnack = getRandomNumber(snack.length-1) >=0?Object.assign({},snack[getRandomNumber(snack.length-1)],{mealType:'Morning Snack'}):undefined
     const afternoonSnack = getRandomNumber(snack.length-1) >=0?Object.assign({},snack[getRandomNumber(snack.length-1)],{mealType:'Afternoon Snack'}):undefined
-   console.log(morningSnack,afternoonSnack,snack.length,getRandomNumber(snack.length-1))
     const recommendedMeal = [
         breakfast[getRandomNumber(breakfast.length-1)],
         lunch[getRandomNumber(lunch.length-1)],
@@ -51,6 +49,5 @@ export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
         morningSnack,
         afternoonSnack
     ]
-    console.log(recommendedMeal)
     return recommendedMeal
 }

@@ -38,6 +38,14 @@ import {
   getCurrentChallengeDay, 
   getTodayRecommendedMeal 
 } from '../../../utils/challenges';
+import ChallengeProgressCard from '../../../components/Calendar/ChallengeProgressCard';
+import {
+     CustomListItem,
+     MealSwipable, 
+     RcMealListItem,
+     WorkoutSwipable
+  } from '../../../components/Calendar/ListItem';
+import CustomCalendarStrip from '../../../components/Calendar/CustomCalendarStrip';
 
 const recommendedWorkoutMap = {
   undefined: '',
@@ -167,7 +175,6 @@ class CalendarHomeScreen extends React.PureComponent {
             FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
                 Promise.all(res.map(async (item,index) => {
                     if (item.includes("exercise-")) {
-                      console.log(`${FileSystem.cacheDirectory}${item}`)
                       FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
                       })
                     }
@@ -213,13 +220,15 @@ class CalendarHomeScreen extends React.PureComponent {
   }
   
   deleteCalendarEntry = async (fieldToDelete) => {
+    console.log("....")
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
     this.unsubscribe = await db.collection('users').doc(uid)
       .collection('calendarEntries').doc(stringDate)
       .update({
         [fieldToDelete]: firebase.firestore.FieldValue.delete(),
-      });
+      })
+      this.setState({ isSwiping: false })
   }
 
   renderRightActions = (fieldToDelete) => {
@@ -269,7 +278,6 @@ fetchActiveChallengeUserData = async () =>{
 
 fetchActiveChallengeData = async (activeChallengeUserData) =>{
   try{
-    console.log("<<<<<")
     this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
     .onSnapshot(async (doc) => {
         if(doc.exists){
@@ -299,10 +307,10 @@ getCurrentPhaseInfo(){
 
     //TODO :fetch the current phase data from Challenges collection
     this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
-    const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
+    this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
    
    //TODO :calculate the workout completed till selected date
-    this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,stringDate)
+    this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
 
    //TODO calculate current challenge day
     this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
@@ -314,12 +322,12 @@ getCurrentPhaseInfo(){
   }
 }
 
-async fetchRecipe(id){
+async fetchRecipe(id,mealType){
   this.setState({loading:true})
   let recipeData =  await (await db.collection('recipes').doc(id).get()).data();
   if(recipeData){
     this.setState({loading:false})
-    this.props.navigation.navigate('Recipe', { recipe: recipeData })
+    this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Nutrition' })
   }
 }
  //-------**--------  
@@ -340,220 +348,48 @@ async fetchRecipe(id){
       activeChallengeUserData,
       activeChallengeData
     } = this.state;
-    // const findLocationIcon = () => {
-    //   let location;
-    //   if (workout.home) {
-    //     location = 'home';
-    //   } else if (workout.gym) {
-    //     location = 'gym';
-    //   } else if (workout.outdoors) {
-    //     location = 'park';
-    //   }
-    //   return `workouts-${location}`;
-    // };
+
     if(activeChallengeData && activeChallengeUserData){
       this.getCurrentPhaseInfo()
     }
-    
-    const mealSwipable = (name,data,index)=>{
-      return (
-        <Swipeable
-                renderRightActions={() => this.renderRightActions(name)}
-                overshootRight={false}
-                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
-                onSwipeableClose={() => this.setState({ isSwiping: false })}
-                key={index}
-              >
-                <ListItem
-                  activeOpacity ={0.5}
-                  underlayColor="none"
-                  title={data.title.toUpperCase()}
-                  subtitle={data.subtitle}
-                  onPress={() => this.props.navigation.navigate('Recipe', { recipe: data })}
-                  containerStyle={calendarStyles.listItemContainer}
-                  chevronColor={colors.charcoal.standard}
-                  titleStyle={calendarStyles.recipeListItemTitle}
-                  subtitleStyle={calendarStyles.recipeListItemSubtitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
-                />
-        </Swipeable>
-      )
-    }
-    const mealListItem = (name,index)=>{
-      return (
-        <ListItem
-          activeOpacity ={0.5}
-          underlayColor="none"
-          touchSoundDisabled={false}
-          key={index}
-          title={name}
-          subtitle="Press here to see available recipes"
-          onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: name.toLowerCase() })}
-          containerStyle={calendarStyles.listItemContainer}
-          chevronColor={colors.charcoal.standard}
-          titleStyle={calendarStyles.blankListItemTitle}
-          subtitleStyle={calendarStyles.blankListItemSubtitle}
-          rightIcon={<PlusCircleSvg height={30} width={30} fill={colors.themeColor.color} />}
-      />
-      )
-    }
-    const rcMealListItem = (res,index) =>{
-      return (
-            <ListItem
-              key = {index}
-              activeOpacity ={0.5}
-              underlayColor="none"
-              title={`${res.displayName}`}
-              rightTitle = {res.mealType}
-              subtitle={res.subTitle}
-              onPress={() => this.fetchRecipe(res.id)}
-              containerStyle={calendarStyles.listItemContainer}
-              chevronColor={colors.charcoal.standard}
-              titleStyle={calendarStyles.recipeListItemTitle}
-              rightTitleStyle={[calendarStyles.recipeListItemSubtitle,{textTransform:'capitalize'}]}
-              subtitleStyle={calendarStyles.recipeListItemSubtitle}
-              rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
-            />
-      )
-    }
-    
-  
-    const ChallengeProgressCard = () =>{
-      
-      return(
-        <View style={calendarStyles.ChallengeProgressCardContainer }>
-          <Text style={calendarStyles.challengeLabel}
-          >
-           {activeChallengeData.displayName}{'  '} 
-           <Text style={{fontFamily:fonts.standardNarrow}}>
-               {this.totalChallengeWorkoutsCompleted.length}/{this.phaseData.workouts.length}
-           </Text>
-         </Text>
 
-         <View style={calendarStyles.challengeProgressContainer}>
-           <View style={calendarStyles.progressCircleContainer}>
-              <View style={calendarStyles.sliderContainer}> 
-                  <Text style={calendarStyles.sliderSideText}>0</Text>
-                    <View style={calendarStyles.slider}>
-                      <Slider
-                        value={this.totalChallengeWorkoutsCompleted.length}
-                        minimumValue={0}
-                        maximumValue={this.phaseData.workouts.length}
-                        trackStyle={{height:5,borderRadius:5}}
-                        minimumTrackTintColor={colors.themeColor.color}
-                        maximumTrackTintColor={colors.grey.medium}
-                        thumbStyle={{
-                          height:20, 
-                          width:20,
-                          borderRadius:50,
-                          backgroundColor:"transparent",
-                        }}
-                        disabled={true}
-                      />
-                    </View>
-                    <Text style={calendarStyles.sliderSideText}>{this.phaseData.workouts.length}</Text>
-                </View>
-                  
-              
-           </View>
-           <View style={calendarStyles.phaseContainer}>
-              <CustomBtn 
-                Title={this.phase.displayName}
-                outline={true}
-                customBtnStyle={{padding:wp('1.5%'),width:'75%',borderRadius:30,width:'35%'}}
-                isRightIcon={true}
-                rightIconName="chevron-right"
-                rightIconColor={colors.themeColor.color}
-                customBtnTitleStyle={{marginRight:wp('3%'),fontFamily:fonts.boldNarrow}}
-              />
-              <Text style={calendarStyles.phaseBodyText}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut. 
-              </Text>
-          </View>
-         </View>
-         <View style={{borderBottomColor:colors.grey.light,borderBottomWidth:2,width:'100%',marginTop:hp('2%')}}></View>
-        
-        </View> 
-      )
-    }
+
+
     const dayDisplay = (
       <ScrollView
         contentContainerStyle={calendarStyles.dayDisplayContainer}
         scrollEnabled={!this.state.isSwiping}
       >
         {
-          this.phaseData && ChallengeProgressCard()
+          this.phaseData && 
+          <ChallengeProgressCard
+            phase={this.phase}
+            phaseData={this.phaseData}
+            activeChallengeData={activeChallengeData}
+            activeChallengeUserData = {activeChallengeUserData}
+            totalChallengeWorkoutsCompleted ={this.totalChallengeWorkoutsCompleted}
+          />
         }
         <Text style={calendarStyles.headerText}>
           Workout
         </Text>
         <View style={calendarStyles.listContainer}>
           {
-            workout ? (
-              <Swipeable
-                renderRightActions={() => this.renderRightActions('workout')}
-                overshootRight={false}
-                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
-                onSwipeableClose={() => this.setState({ isSwiping: false })}
-              >
-                <ListItem
-                  activeOpacity ={0.5}
-                  underlayColor="none"
-                  title={workout.displayName}
-                  subtitle={
-                    workout.filters && workout.filters.includes('strength') ? (
-                      <View style={calendarStyles.workoutSubtitleContainer}>
-                        {/* <Icon
-                          name={findLocationIcon()}
-                          size={20}
-                          color={colors.charcoal.standard}
-                        /> */}
-                        {/* <Text style={calendarStyles.workoutSubtitleText}>
-                          {findLocation(workout)}
-                        </Text> */}
-                        <Icon
-                          name={findFocusIcon(workout)}
-                          size={20}
-                          color={colors.charcoal.standard}
-                        />
-                        <Text style={calendarStyles.workoutSubtitleText}>
-                          {findFocus(workout)}
-                        </Text>
-                        
-                      </View>
-                    ) : (
-                      <View style={calendarStyles.workoutSubtitleContainer}>
-                        <Icon
-                          name="workouts-hiit"
-                          size={18}
-                          color={colors.charcoal.standard}
-                        />
-                        <Text style={calendarStyles.workoutSubtitleText}>
-                          {findWorkoutType(workout)}
-                        </Text>
-                      </View>
-                    )
-                  }
-                  // onPress={workout.resistance ? () => this.loadExercises(workout.id) : () => this.loadHiitExercises(workout.id)}
-                  onPress={ () => this.loadExercises(workout.id) }
-                  containerStyle={calendarStyles.listItemContainer}
-                  chevronColor={colors.charcoal.standard}
-                  titleStyle={calendarStyles.workoutListItemTitle}
-                  rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
-                />
-              </Swipeable>
+            workout ? ( <WorkoutSwipable 
+                            workout={workout}
+                            onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                            onSwipeableClose={() => this.setState({ isSwiping: false })}
+                            onPress={ () => this.loadExercises(workout.id) }
+                            renderRightActions={() => this.renderRightActions('workout')}
+                            stringDate = {this.stringDate}
+                       />
             ) : (
-              <ListItem
-                activeOpacity ={0.5}
-                underlayColor="none"
-                title="WORKOUT"
-                subtitle={recommendedWorkoutMap[dayOfWeek]}
+              <CustomListItem 
+                key={1}
+                name="WORKOUT"
+                index={1} 
                 onPress={() => this.props.navigation.navigate('WorkoutsHome')}
-                containerStyle={calendarStyles.listItemContainer}
-                chevronColor={colors.charcoal.standard}
-                titleStyle={calendarStyles.blankListItemTitle}
-                subtitleStyle={calendarStyles.blankListItemSubtitle}
-                rightIcon={<PlusCircleSvg height={30} width={30} fill={colors.themeColor.color} />}
+                subTitle={recommendedWorkoutMap[dayOfWeek]}
               />
           )
         }
@@ -566,8 +402,12 @@ async fetchRecipe(id){
             this.todayRecommendedMeal && this.todayRecommendedMeal.length >0 &&
             this.todayRecommendedMeal.map((res,index)=>{
               if(res)
-              return rcMealListItem(res,index)
-            
+              return <RcMealListItem 
+                        key={index}
+                        res={res} 
+                        index={index} 
+                        onPress={() => this.fetchRecipe(res.id,res.mealType)}  
+                      />
             })
               
           }
@@ -575,10 +415,25 @@ async fetchRecipe(id){
             recipeCategories.map((res,index)=>{
               const {meals} = this.state
               if(meals && meals[res])
-                  return mealSwipable(res,meals[res],index)
+                  return <MealSwipable 
+                                key={index}
+                                name ={res} 
+                                data = {meals[res]} 
+                                index={index} 
+                                renderRightActions={() => this.renderRightActions(res)}
+                                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                                onSwipeableClose={() => this.setState({ isSwiping: false })}
+                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: data ,meal:res })}
+                                stringDate = {this.stringDate}
+                        />
               else 
-                  return mealListItem(res.toLocaleUpperCase(),index)
-            
+                  return <CustomListItem 
+                            key={index}
+                            name={res.toLocaleUpperCase()} 
+                            index={index} 
+                            onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: res.toLowerCase() })}
+                            subTitle ="Press here to see available recipes"
+                            />
           })
           }
       
@@ -594,52 +449,10 @@ async fetchRecipe(id){
 
     return (
       <View style={[globalStyle.container,{paddingHorizontal:0}]}>
-        <View style={calendarStyles.calendarStripContainer}>
-          <CalendarStrip
-            ref={this.calendarStrip}
-            maxDayComponentSize={50}
+        <CustomCalendarStrip 
+            ref1={this.calendarStrip}
             onDateSelected={(date) => this.handleDateSelected(date)}
-            daySelectionAnimation={{
-              type: 'border',
-              duration: 400,
-              highlightColor:'transparent',
-              borderWidth:2,
-              borderHighlightColor:colors.themeColor.color,
-            }}
-            style={calendarStyles.calendarStrip}
-            calendarHeaderStyle={calendarStyles.calendarStripHeader}
-            calendarColor='transparent'
-            dateNumberStyle={{
-              fontFamily: fonts.GothamMedium,
-              color: colors.charcoal.dark,
-            }}
-            dateNameStyle={{
-              fontFamily: fonts.GothamMedium,
-              color: colors.charcoal.dark,
-            }}
-            highlightDateNumberStyle={{
-              fontFamily: fonts.GothamMedium,
-              color: colors.themeColor.color,
-            }}
-            highlightDateNameStyle={{
-              fontFamily: fonts.GothamMedium,
-              color: colors.themeColor.color,
-            }}
-            weekendDateNameStyle={{
-              fontFamily: fonts.bold,
-              color: colors.grey.standard,
-            }}
-            weekendDateNumberStyle={{
-              fontFamily: fonts.bold,
-              color: colors.grey.standard,
-            }}
-            iconContainer={{
-              flex: 0.15,
-            }}
-            leftSelector={<Icon name="chevron-left" size={17} color={colors.themeColor.color} />}
-            rightSelector={<Icon name="chevron-right" size={17} color={colors.themeColor.color} />}
-          />
-        </View>
+        />
        
         {dayDisplay}
         <HelperModal
@@ -668,29 +481,3 @@ CalendarHomeScreen.propTypes = {
 };
 
 export default ReactTimeout(CalendarHomeScreen);
-
-
-{/* <ProgressBar 
-                  title="Workouts Complete"
-                  // completed={this.totalChallengeWorkoutsCompleted.length}
-                  completed={4}
-                  total = {this.phaseData.workouts.length}
-                  total = {10}
-                  customTitleStyle={{
-                    marginHorizontal:20,
-                    // marginBottom:hp('-1.2%'),
-                    marginTop:hp('0.7%'),
-                    fontFamily:fonts.GothamMedium,
-                    color:colors.charcoal.light,
-                    fontSize:wp('2.4%')
-                  }}
-                  size={wp('34%')}
-                  customProgressNumberStyle={{
-                    fontSize:wp('16%'),
-                    fontFamily:fonts.GothamLight,
-                    color:colors.charcoal.dark
-                  }}
-                  customProgessTotalStyle={{
-                    fontSize:wp('3.5%')
-                  }}
-              /> */}
