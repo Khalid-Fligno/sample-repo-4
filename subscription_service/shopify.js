@@ -86,7 +86,7 @@ const createWebhookUrl= async (req,res)=>{
               challenge:true, 
               onboarded: false,
               country:'unavailable',
-              signUpDate: moment(new Date(), 'YYYY-MM-DD'),
+              signUpDate: moment(new Date()).format('YYYY-MM-DD'),
               fitnessLevel: 1,           
           };
           // get the challage from line_items =>properties
@@ -307,37 +307,6 @@ const createNewChallenge=(data)=>{
       return challenge
 }
 //---------------------------subscription---------------------
-exports.createShopifySubscription= async(req, res) => {    
-  const options = {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'x-recharge-access-token' : RECHARGE_API_KEY
-      },
-      body:req.body
-    };
-  const resSubscription = await fetch(subscriptionUrl, options);      
-  const subscription = await resSubscription.json();
-  //return body;
-console.log('subscription',subscription);
-return subscription;
-}
-
-exports.updateShopifySubscription= async(req, res) => {    
-  const options = {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'x-recharge-access-token' : RECHARGE_API_KEY
-      },
-      body:req.body
-    };
-  const updateSubscription = await fetch(`${subscriptionUrl}/${req.params.id}`, options);      
-  const subscription = await updateSubscription.json();
-  //return body;
-console.log('subscription',subscription);
-return subscription;
-}
 
 exports.createShopifySubscriptionWebhook = async(req, res) =>{    
   const request = req.body.subscription;    
