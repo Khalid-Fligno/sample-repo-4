@@ -50,9 +50,17 @@ export default class OnBoarding6 extends Component {
 
   goToScreen(type){
     let {challengeData,fitnessLevel} = this.state
+    let burpeeCount=0;
+    if(fitnessLevel === 1)
+        burpeeCount=10;
+    else if(fitnessLevel === 2 )
+        burpeeCount=15;
+    else if(fitnessLevel === 3)
+        burpeeCount=20;
 
     const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
-      fitnessLevel
+      fitnessLevel,
+      burpeeCount
     })
     let updatedChallengedata = Object.assign({},challengeData,{
       onBoardingInfo,

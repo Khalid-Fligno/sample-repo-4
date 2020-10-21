@@ -126,7 +126,7 @@ export default class OnBoarding2 extends Component {
              showsVerticalScrollIndicator={false}
             >
             <View>
-              <Text style={[ChallengeStyle.onBoardingTitle]}>Dietary preferences</Text>
+              <Text style={[ChallengeStyle.onBoardingTitle]}>Dietary preference</Text>
             </View>            
             <View style={globalStyle.selectBoxContainer}>
                 { 

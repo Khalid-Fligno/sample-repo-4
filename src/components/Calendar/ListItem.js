@@ -9,7 +9,7 @@ import { TouchableOpacity ,Text ,View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { db } from '../../../config/firebase';
 import firebase from 'firebase';
-import { findFocusIcon, findFocus } from '../../utils/workouts';
+import { findFocusIcon, findFocus, findWorkoutType } from '../../utils/workouts';
 export const CustomListItem = (props)=>{
     const {name,index,onPress,subTitle} = props
     return (
@@ -55,6 +55,8 @@ export const CustomListItem = (props)=>{
                 title={data.title.toUpperCase()}
                 subtitle={data.subtitle}
                 onPress={onPress}
+                rightTitle = {name}
+                rightTitleStyle={[calendarStyles.recipeListItemSubtitle,{textTransform:'capitalize'}]}
                 containerStyle={calendarStyles.listItemContainer}
                 chevronColor={colors.charcoal.standard}
                 titleStyle={calendarStyles.recipeListItemTitle}
@@ -99,6 +101,38 @@ export const CustomListItem = (props)=>{
         </Swipeable>  
     )
   }
+  export const RcWorkoutListItem = (props) =>{
+    const {
+        res,
+        index , 
+        onPress,
+        onSwipeableWillOpen,
+        onSwipeableClose,
+        renderRightActions
+       } = props
+   return (
+       <Swipeable
+           renderRightActions={renderRightActions}
+           overshootRight={false}
+           onSwipeableWillOpen={onSwipeableWillOpen}
+           onSwipeableClose={onSwipeableClose}
+           >
+         <ListItem
+           key = {index}
+           activeOpacity ={0.5}
+           underlayColor="none"
+           title={`${res.displayName}`}
+           subtitle={res.name === 'rest'?"Today is your rest day":res.target}
+           onPress={onPress}
+           containerStyle={calendarStyles.listItemContainer}
+           chevronColor={colors.charcoal.standard}
+           titleStyle={calendarStyles.recipeListItemTitle}
+           subtitleStyle={[calendarStyles.recipeListItemSubtitle,{textTransform:'capitalize'}]}
+           rightIcon={<Icon name="chevron-right" size={18} color={colors.themeColor.color} />}
+         />
+       </Swipeable>  
+   )
+ }
 
 
   export const WorkoutSwipable = (props) =>{

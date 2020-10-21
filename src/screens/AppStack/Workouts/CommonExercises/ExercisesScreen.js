@@ -28,7 +28,9 @@ import { set } from 'react-native-reanimated';
 import { consumeAllItemsAndroid } from 'react-native-iap';
 import WorkoutProgressBar from '../../../../components/Workouts/WorkoutProgressBar';
 import { findWorkoutType } from '../../../../utils/workouts';
-
+import { isActiveChallenge } from '../../../../utils/challenges';
+import firebase from 'firebase';
+import moment from 'moment';
 const { width } = Dimensions.get('window');
 
 const updateWeeklyTargets = (obj, field, newTally) => {
@@ -82,6 +84,7 @@ export default class ExercisesScreen extends React.PureComponent {
   }
 
   async updateWeekly(){
+    const {workout} = this.state
     let workoutName = 'none'
     if(this.state.workout.filters.includes('circuit')){
         workoutName = 'circuit'
@@ -96,6 +99,24 @@ export default class ExercisesScreen extends React.PureComponent {
     console.log("here....")
     const uid = await AsyncStorage.getItem('uid');
     const userRef = db.collection('users').doc(uid);
+
+    isActiveChallenge().then((res)=>{
+      if(res){
+        var challengeRef = db.collection('users').doc(uid).collection('challenges').doc(res.id);
+        // Atomically add a new region to the "regions" array field.
+        var workouts = challengeRef.update({
+          workouts: firebase.firestore.FieldValue.arrayUnion({
+            date:moment(new Date()).format('YYYY-MM-DD'),
+            id:workout.id,
+            name:workout.name,
+            displayName:workout.displayName,
+            target:workoutName
+          })
+        });
+        console.log("Adeed to challenge",workouts)
+      }
+    })
+
     return db.runTransaction((transaction) => {
       return transaction.get(userRef).then((userDoc) => {
         const newWeeklyComplete = userDoc.data().weeklyTargets[workoutName] + 1;

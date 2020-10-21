@@ -1,6 +1,23 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { db } from '../../config/firebase';
 
+
+
+export const isActiveChallenge = async() =>{
+    const uid = await AsyncStorage.getItem('uid');
+    const challengeRef = db.collection('users').doc(uid).collection('challenges')
+    const snapshot = await challengeRef.where("status", "==" , "Active").get();
+    if (snapshot.empty) {
+        return false
+    }else{
+        let list = []
+        snapshot.forEach(doc => {
+            list.push(doc.data())
+          });
+        return list[0]
+    }
+}
+
 export const getCurrentPhase = (data) =>{
     let phase = {}
     data.forEach(el => {
@@ -26,6 +43,14 @@ export const getCurrentChallengeDay = (date) =>{
     let currentDate = new Date().getDate();
     return ( currentDate - startDate) +1
 }
+
+export const getTodayRecommendedWorkout = (phaseData,activeChallengeUserData,selectedDate) =>{
+    let startDate = new Date(activeChallengeUserData.startDate).getDate();
+    let currentDate = new Date(selectedDate).getDate();
+    console.log(currentDate)
+    const currentDay =  ( currentDate - startDate) +1;
+    return phaseData.workouts.find((res)=>res.day === currentDay)
+}
 export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
     const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
     const phaseMeals = phaseData.meals.filter((res)=>{
@@ -43,11 +68,12 @@ export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
     const dinnerList = phaseMeals.filter((res)=>res.mealType.includes('dinner'))
     const snackList = phaseMeals.filter((res)=>res.mealType.includes('snack'))
 
-    const breakfast =  Object.assign({},breakfastList[getRandomNumber(breakfastList.length-1)],{mealTitle:'breakfast',meal:'breakfast'});
-    const lunch = Object.assign({},lunchList[getRandomNumber(lunchList.length-1)],{mealTitle:'lunch',meal:'lunch'});
-    const dinner = Object.assign({},dinnerList[getRandomNumber(dinnerList.length-1)],{mealTitle:'dinner',meal:'dinner'});
-    const morningSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'morning Snack',meal:'snack'}):undefined
-    const afternoonSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'afternoon Snack',meal:'snack'}):undefined
+    console.log("????",lunchList)
+    const breakfast =  getRandomNumber(snackList.length-1) >=0?Object.assign({},breakfastList[getRandomNumber(breakfastList.length-1)],{mealTitle:'breakfast',meal:'breakfast'}):undefined;
+    const lunch = getRandomNumber(snackList.length-1) >=0?Object.assign({},lunchList[getRandomNumber(lunchList.length-1)],{mealTitle:'lunch',meal:'lunch'}):undefined;
+    const dinner = getRandomNumber(snackList.length-1) >=0?Object.assign({},dinnerList[getRandomNumber(dinnerList.length-1)],{mealTitle:'dinner',meal:'dinner'}):undefined;
+    const morningSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'morning Snack',meal:'snack'}):undefined;
+    const afternoonSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'afternoon Snack',meal:'snack'}):undefined;
     
     
     const recommendedMeal = [

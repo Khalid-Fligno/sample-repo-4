@@ -37,14 +37,17 @@ import {
   getCurrentPhase, 
   getTotalChallengeWorkoutsCompleted, 
   getCurrentChallengeDay, 
-  getTodayRecommendedMeal 
+  getTodayRecommendedMeal, 
+  getTodayRecommendedWorkout,
+  isActiveChallenge
 } from '../../../utils/challenges';
 import ChallengeProgressCard from '../../../components/Calendar/ChallengeProgressCard';
 import {
      CustomListItem,
      MealSwipable, 
      RcMealListItem,
-     WorkoutSwipable
+     WorkoutSwipable,
+     RcWorkoutListItem
   } from '../../../components/Calendar/ListItem';
 import CustomCalendarStrip from '../../../components/Calendar/CustomCalendarStrip';
 
@@ -247,6 +250,9 @@ class CalendarHomeScreen extends React.PureComponent {
   renderRightActionForRC = (type) => {
     const onClick =() =>{
       console.log(this.challengeMealsFilterList)
+      if(type === 'workout')
+        this.props.navigation.navigate('WorkoutsHome')
+      else  
       this.props.navigation.navigate('RecipeSelection', { 
         meal:type ,
         challengeMealsFilterList:this.challengeMealsFilterList
@@ -258,7 +264,7 @@ class CalendarHomeScreen extends React.PureComponent {
         style={[calendarStyles.deleteButton]}
       >
         <Text style={calendarStyles.deleteButtonText}>
-          View All
+          View all
         </Text>
       </TouchableOpacity>
     );
@@ -321,7 +327,8 @@ getCurrentPhaseInfo(){
   const {activeChallengeUserData,activeChallengeData} = this.state
   if(activeChallengeUserData && activeChallengeData){
     const data  = activeChallengeUserData.phases;
-
+    
+    isActiveChallenge().then((res)=>console.log(res))
     //TODO :getCurrent phase data
     this.phase = getCurrentPhase(activeChallengeUserData.phases)
 
@@ -334,12 +341,13 @@ getCurrentPhaseInfo(){
 
    //TODO calculate current challenge day
     this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
-  
    //TODO getToday one recommended meal randomly  
     this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
      //TODO getToday one recommended meal randomly  
      this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
-  }else{
+    //TODO get recommended workout here
+    this.todayRcWorkout = getTodayRecommendedWorkout(this.phaseData,activeChallengeUserData,this.stringDate ) 
+    }else{
     Alert.alert('Something went wrong please try again')
   }
 }
@@ -404,6 +412,16 @@ async fetchRecipe(id,mealType){
         </Text>
         <View style={calendarStyles.listContainer}>
           {
+            this.todayRcWorkout && 
+            <RcWorkoutListItem 
+                res={this.todayRcWorkout} 
+                onPress={ () => this.todayRcWorkout.name !== 'rest'? this.loadExercises(this.todayRcWorkout.id):'' }
+                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                onSwipeableClose={() => this.setState({ isSwiping: false })}
+                renderRightActions={() => this.renderRightActionForRC('workout')} 
+            />
+          }
+          {
             workout ? ( <WorkoutSwipable 
                             workout={workout}
                             onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
@@ -413,7 +431,7 @@ async fetchRecipe(id,mealType){
                             stringDate = {this.stringDate}
                        />
             ) : (
-              <CustomListItem 
+              !this.todayRcWorkout &&   <CustomListItem 
                 key={1}
                 name="WORKOUT"
                 index={1} 

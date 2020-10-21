@@ -20,8 +20,8 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 
 const TabStack = createBottomTabNavigator(
   {
-    Feed:FeedStack,
     Lifestyle: DashboardStack,
+    Feed:FeedStack,
     Challenges: ChallengeSubscriptionStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,

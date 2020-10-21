@@ -59,11 +59,13 @@ export default class ProgressBar extends React.PureComponent {
                         (fill) => (
                           <View>
                             <Text style={[styles.progressBarLabel,customProgessTotalStyle]}>
-                                <Text style={[styles.progressCircleNumber,customProgressNumberStyle]}>{completed}</Text>/{total}
+                                <Text style={[styles.progressCircleNumber,customProgressNumberStyle]}>{completed}</Text>{total > 0 && `/${total}` }
                             </Text>
-                            <Text style={[styles.progressCircleText,customTitleStyle]}>
-                             {`${title} `}
-                            </Text>
+                            {title &&
+                              <Text style={[styles.progressCircleText,customTitleStyle]}>
+                                {title}
+                              </Text>
+                            }
                          </View>
                         )
                       }
@@ -76,9 +78,9 @@ export default class ProgressBar extends React.PureComponent {
 
 ProgressBar.propTypes = {
   // progressBarType: PropTypes.oneOf(['Strength', 'Circuit','Interval']).isRequired,
-  title: PropTypes.any.isRequired,
+  title: PropTypes.string,
   completed: PropTypes.number.isRequired,
-  total:PropTypes.number.isRequired,
+  total:PropTypes.number,
   customTitleStyle:PropTypes.object,
   size:PropTypes.any,
   customProgressNumberStyle:PropTypes.object,

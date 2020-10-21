@@ -22,6 +22,10 @@ import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 import globalStyle from '../../../styles/globalStyles';
 import ProfileStyles from './ProfileStyles';
+import HomeScreenStyle from '../Home/HomeScreenStyle';
+import ProgressBar from '../../../components/Progress/ProgressBar';
+import { heightPercentageToDP as hp ,widthPercentageToDP as wp} from 'react-native-responsive-screen';
+
 const moment = require('moment-timezone');
 
 const { width } = Dimensions.get('window');
@@ -135,6 +139,27 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 containerStyle={ProfileStyles.listItemContainerBottom}
                 hideChevron
               />
+                <View>
+                    <View style={HomeScreenStyle.sectionHeader}>
+                      <Text style={[HomeScreenStyle.bodyText]}>
+                          Total workout completed
+                      </Text>
+                    </View>
+                    <View style={{width:'100%',flexDirection:"row",justifyContent:"center"}}>
+                        {
+                              profile && (
+                                <View>
+                                  <ProgressBar
+                                    completed={profile.totalWorkoutCompleted}
+                                    total = {0}
+                                    size ={wp('38%')}
+                                    customProgessTotalStyle ={{marginLeft:0}}
+                                  />
+                                </View>
+                              )
+                            }
+                    </View>
+                  </View>
             </View>
             <Loader
               loading={loading}
