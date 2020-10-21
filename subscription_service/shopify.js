@@ -6,6 +6,7 @@ const chargesUrl='https://api.rechargeapps.com/charges';
 const subscriptionUrl='https://api.rechargeapps.com/subscriptions';
 const RECHARGE_API_KEY='defda21cce4018658e95ff12e4f494696b3c2bc2682ce0cc9025e892';
 let moment = require('moment');
+let uniqid = require('uniqid');
 const getRegisteredWebHooks = () => {
     return async (webHooks) => {
       const options = {
@@ -81,17 +82,19 @@ const createWebhookUrl= async (req,res)=>{
       console.log("get user",user);
       // 1. if user not exist, create that user
       if(user=== undefined ){
+
           const newUser={
               email:req.email,
               challenge:true, 
               onboarded: false,
               country:'unavailable',
               signUpDate: moment(new Date()).format('YYYY-MM-DD'),
-              fitnessLevel: 1,           
+              fitnessLevel: 1,
+              id: uniqid(),          
           };
           // get the challage from line_items =>properties
           console.log("newUser",newUser);
-          updateUser(newUser); 
+          addUser(newUser); 
   
       }
       // 2. if user exist update that user
@@ -175,7 +178,7 @@ exports.getShopifyProducts= async(req, res) => {
     const resProducts = await fetch(productUrl, options);      
     const shopifyProducts = await resProducts.json();
     console.log("shopifyProducts",shopifyProducts);
-    return shopifyProducts;   
+    res.send(shopifyProducts);   
   
 }
 // Will get a list of products from shopify account to be displayed on App
@@ -246,9 +249,9 @@ const getUser = async(emailId) => {
   }   
 }
 
-const updateUser = (userInfo) => {
+const addUser = (userInfo) => {
   console.log("update user",userInfo);
-    const userRef = db.collection('users').doc('uid');
+    const userRef = db.collection('users').doc(userInfo.id);
     userRef.set(userInfo).then((state) => {
       console.log("new user added",state);
     })
@@ -257,7 +260,7 @@ const updateUser = (userInfo) => {
     });;
 }
 const updateUserById = (userInfo) => {
-  const userRef = db.collection('users').doc('uid');
+  const userRef = db.collection('users').doc(userInfo.id);
   userRef.set(userInfo, { merge: true });
 }
 
@@ -271,7 +274,7 @@ const getChallengeDetails = async(challengeName) => {
 }
 
 const updateChallengesAgainstUser = (challengeData,userId)=>{
-    const challenge = db.collection('users').doc('uid').collection('challenges').doc(challengeData.id);
+    const challenge = db.collection('users').doc(userId).collection('challenges').doc(challengeData.id);
     challenge.set(challengeData,{merge:true})
 }
 const updateChallenges = (challengeData)=>{
