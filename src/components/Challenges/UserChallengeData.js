@@ -18,6 +18,7 @@ export default createUserChallengeData =(data)=>{
       "name":data.name,
       "displayName":data.displayName,
       "id":data.id,
+      "tag":data.tag,
       "startDate":moment(new Date()).format('YYYY-MM-DD'), 
       "endDate":moment(new Date(), 'YYYY-MM-DD').add(data.numberOfDays-1,'days').format('YYYY-MM-DD'),
       "status":data.status?data.status:"InActive",

@@ -31,6 +31,15 @@ import WorkOutCard from '../../../components/Home/WorkoutCard';
 import TimeSvg from '../../../../assets/icons/time';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
+import { 
+  getCurrentPhase, 
+  getTotalChallengeWorkoutsCompleted, 
+  getCurrentChallengeDay, 
+  getTodayRecommendedMeal, 
+  getTodayRecommendedWorkout,
+  isActiveChallenge
+} from '../../../utils/challenges';
+import ChallengeBlogCard from '../../../components/Home/ChallengeBlogCard';
 const { width } = Dimensions.get('window');
 
 
@@ -55,14 +64,26 @@ export default class FeedScreen extends React.PureComponent {
       loading: false,
       dayOfWeek: undefined,
     //   profile: undefined,
+      activeChallengeUserData:undefined,
+      activeChallengeData:undefined,
+      blogs:undefined
     };
   }
   componentDidMount = () => {
     this.setDayOfWeek();
     // this.fetchProfile();
+    isActiveChallenge().then((res)=>{
+      if(res){
+        this.fetchActiveChallengeData(res);
+        this.fetchBlogs(res.tag);
+       
+      }
+    })
   }
   componentWillUnmount = () => {
     // this.unsubscribe();
+    if(this.unsubscribeFACD)
+      this.unsubscribeFACD()  
   }
 
 
@@ -78,6 +99,39 @@ export default class FeedScreen extends React.PureComponent {
 //     });
 //   }
 
+fetchBlogs = async (tag) => {
+  console.log(tag)
+  const snapshot = await db.collection('blogs').where("tags","==",tag).get()
+    let blogs = []
+    snapshot.forEach(doc => {
+      console.log(doc.data())
+      blogs.push(doc.data())
+    });
+    this.setState({blogs})
+}
+fetchActiveChallengeData = async (activeChallengeUserData) =>{
+  try{
+    
+    this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
+    .onSnapshot(async (doc) => {
+        if(doc.exists){
+          this.setState({ 
+            activeChallengeUserData,
+            activeChallengeData:doc.data() ,
+            // loading:false
+          });
+          this.getCurrentPhaseInfo()
+        }
+     
+    });
+  }catch(err){
+    this.setState({ loading: false });
+    console.log(err);
+    Alert.alert('Fetch active challenge data error!')
+  }
+
+}
+
   setDayOfWeek = async () => {
     const timezone = await Localization.timezone;
     const dayOfWeek = momentTimezone.tz(timezone).day();
@@ -88,17 +142,47 @@ export default class FeedScreen extends React.PureComponent {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Linking.openURL(url);
   }
+  getCurrentPhaseInfo(){
+    const {activeChallengeUserData,activeChallengeData} = this.state
+    if(activeChallengeUserData && activeChallengeData){
+      //TODO :getCurrent phase data
+      this.phase = getCurrentPhase(activeChallengeUserData.phases)
+      //TODO :fetch the current phase data from Challenges collection
+      this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
+      this.stringDate = new Date().toISOString()
+     
+     //TODO calculate current challenge day
+      this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
+      //TODO get recommended workout here
+      this.todayRcWorkout = getTodayRecommendedWorkout(this.phaseData,activeChallengeUserData,this.stringDate ) 
+      console.log("1111",this.todayRcWorkout)
+      
+    }else{
+      Alert.alert('Something went wrong please try again')
+    }
+  }
 
   render() {
     const {
       loading,
-      dayOfWeek
+      dayOfWeek,
+      activeChallengeData,
+      activeChallengeUserData,
+      blogs
     } = this.state;
     let recommendedWorkout =[];
 
     (dayOfWeek > 0 && dayOfWeek < 6) ? recommendedWorkout.push(workoutTypeMap[dayOfWeek]): recommendedWorkout.push(' Rest Day') 
     if(dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) 
       recommendedWorkout.push(resistanceFocusMap[dayOfWeek])
+
+      if(activeChallengeData && activeChallengeUserData){
+      
+        if(this.todayRcWorkout){
+          recommendedWorkout = []
+          recommendedWorkout.push(this.todayRcWorkout.displayName)
+        }
+      }
  
     return (
         <ScrollView
@@ -107,7 +191,6 @@ export default class FeedScreen extends React.PureComponent {
           style={[globalStyle.container]}
         >
           <View style={{marginBottom:20}}>
-           
               <WorkOutCard
                 image={require('../../../../assets/images/homeScreenTiles/todayWorkoutImage2.jpeg')}
                 title="TODAY'S WORKOUT"
@@ -115,6 +198,17 @@ export default class FeedScreen extends React.PureComponent {
                 onPress={() => this.props.navigation.navigate('Calendar')}
                 cardCustomStyle ={{marginTop:20}} 
               />
+              {
+                blogs && blogs.length > 0&&
+                 <ChallengeBlogCard
+                  imageLeft={{uri:blogs[0].coverImage}}
+                  titleLeft1={blogs[0].title}
+                  titleRight1={blogs[0].description}
+                  onPressLeft={() => this.props.navigation.navigate('HomeBlog')}
+                  onPressRight={() => this.openLink('https://fitazfk.zendesk.com/hc/en-us')}
+                />
+              }
+             
               <NewsFeedTile
                 image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
                 title="SHOP APPAREL"
