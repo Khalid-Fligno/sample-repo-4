@@ -211,9 +211,8 @@ export default class SignupScreen extends React.PureComponent {
       challenge.set(challengeDetail,{merge:true});
       //delete old user 
       if(shopifyRegisteredUser != undefined){
-      await db.collection('users').doc(shopifyRegisteredUser.id).delete().then(res=>{
-        console.log("old user is deleted",shopifyRegisteredUser);
-      });
+      await db.collection('users').doc(shopifyRegisteredUser.id).collection('challenges').doc(challengeDetail.id).delete();
+      await db.collection('users').doc(shopifyRegisteredUser.id).delete();
       console.log("old user is deleted");
     }
     }
