@@ -105,12 +105,12 @@ const createWebhookUrl= async (req,res)=>{
       }
       // get product from line item collection
       const challengeProductName=req.productName;
-      if(challengeProductName ==null){
-          challengeProductName="FitazFK 8 Week Challenge";
-      }
-      console.log("challengeProductName",challengeProductName);
+      // if(challengeProductName ==null){
+      //     challengeProductName="FitazFK 8 Week Challenge";
+      // }
+      console.log("challengeShopifyProductId",req.shopify_product_id);
       // get workout challange details by passing product_title
-      const challenge= await getChallengeDetails(challengeProductName);
+      const challenge= await getChallengeDetailByProductId(req.shopify_product_id);
       console.log("challenge",challenge);
       const userInfo=await getUser(req.email);
       console.log("userInfo",userInfo);
@@ -271,6 +271,14 @@ const getChallengeDetails = async(challengeName) => {
      if (snapshot.size > 0) {
       return snapshot.docs[0].data();
   }   
+}
+const getChallengeDetailByProductId = async(challengeProductId) => {
+  let challengeDetail;
+  const snapshot =await db.collection('challenges').where("shopifyProductId","==",challengeProductId)
+   .get();
+   if (snapshot.size > 0) {
+    return snapshot.docs[0].data();
+}   
 }
 
 const updateChallengesAgainstUser = (challengeData,userId)=>{
