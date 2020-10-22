@@ -104,16 +104,13 @@ fetchBlogs = async (tag,currentDay) => {
   const snapshot = await db.collection('blogs')
   .where("tags","array-contains",tag)
   .get()
-    let list = []
-    cDay = currentDay === 1?0:currentDay
-    snapshot.forEach(doc => {
-      if(doc.data().startDay < cDay && doc.data().endDay >= cDay)
-      list.push(doc.data())
-    });
     let blogs = []
-    for(i=list.length-1;i>=0;i--){
-      blogs.push(list[i])
-    }
+    const cDay = currentDay === 1?2:currentDay
+    snapshot.forEach(doc => {
+      console.log(doc.data())
+      if(doc.data().startDay < cDay && doc.data().endDay >= cDay)
+      blogs.unshift(doc.data())
+    });
     this.setState({blogs,loading:false})
 }
 fetchActiveChallengeData = async (activeChallengeUserData) =>{
