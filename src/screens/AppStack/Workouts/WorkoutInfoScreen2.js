@@ -114,7 +114,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
     const data = {
       workout
     };
-    await calendarRef.set(data);
+    await calendarRef.set(data,{merge:true});
     this.setState({ addingToCalendar: false });
     Alert.alert(
       '',

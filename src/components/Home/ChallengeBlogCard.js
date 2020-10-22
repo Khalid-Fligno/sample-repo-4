@@ -51,14 +51,9 @@ export default class ChallengeBlogCard extends React.PureComponent {
   }
   render() {
     const {
-      imageLeft,
-      imageRight,
-      titleLeft1,
-      titleLeft2,
-      titleRight1,
-      titleRight2,
-      onPressLeft,
-      onPressRight,
+     data,
+     onPress,
+     index
     } = this.props;
     const animatedStyleLeft = {
       transform: [{ scale: this.animatedValueLeft }],
@@ -68,9 +63,28 @@ export default class ChallengeBlogCard extends React.PureComponent {
     };
     return (
       <View style={styles.doubleTileContainer}>
+        {
+          index %2 === 0 &&
+          <View style={styles.cardContainer}>
+              <View style={styles.titleContainer}>
+                  <Text style={styles.title}>
+                    {data.title}
+                  </Text>
+                  <Text
+                      style={[
+                        styles.paragraph,
+                        
+                      ]}
+                    >
+                      {data.description}
+                  </Text>
+              </View>
+          </View>
+        }
+       
         <TouchableOpacity
           delayPressIn={50}
-          onPress={onPressLeft}
+          onPress={onPress}
           style={styles.cardContainer}
           onPressIn={this.handlePressIn}
           onPressOut={this.handlePressOut}
@@ -80,7 +94,7 @@ export default class ChallengeBlogCard extends React.PureComponent {
           >
             <ImageBackground
               resizeMode="cover"
-              source={imageLeft}
+              source={{uri:data.coverImage}}
               style={styles.image}
             >
               <View style={styles.opacityLayer}>
@@ -89,10 +103,12 @@ export default class ChallengeBlogCard extends React.PureComponent {
             </ImageBackground>
           </Animated.View>
         </TouchableOpacity>
-        <View style={styles.cardContainer}>
+        {
+          index %2 !== 0 &&
+          <View style={styles.cardContainer}>
               <View style={styles.titleContainer}>
                   <Text style={styles.title}>
-                    {titleLeft1}
+                    {data.title}
                   </Text>
                   <Text
                       style={[
@@ -100,30 +116,21 @@ export default class ChallengeBlogCard extends React.PureComponent {
                         
                       ]}
                     >
-                      {titleRight1}
+                      {data.description}
                   </Text>
               </View>
-        </View>
+          </View>
+        }
       </View>
     );
   }
 }
 
 ChallengeBlogCard.propTypes = {
-  imageLeft: PropTypes.any.isRequired,
-  imageRight: PropTypes.number.isRequired,
-  titleLeft1: PropTypes.string.isRequired,
-  titleLeft2: PropTypes.string,
-  titleRight1: PropTypes.string.isRequired,
-  titleRight2: PropTypes.string,
-  onPressLeft: PropTypes.func.isRequired,
-  onPressRight: PropTypes.func.isRequired,
+  data:PropTypes.object.isRequired
 };
 
-ChallengeBlogCard.defaultProps = {
-  titleLeft2: null,
-  titleRight2: null,
-};
+
 
 const styles = StyleSheet.create({
   doubleTileContainer: {

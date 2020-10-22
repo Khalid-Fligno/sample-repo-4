@@ -66,7 +66,8 @@ export default class FeedScreen extends React.PureComponent {
     //   profile: undefined,
       activeChallengeUserData:undefined,
       activeChallengeData:undefined,
-      blogs:undefined
+      blogs:undefined,
+      loading:false
     };
   }
   componentDidMount = () => {
@@ -74,9 +75,8 @@ export default class FeedScreen extends React.PureComponent {
     // this.fetchProfile();
     isActiveChallenge().then((res)=>{
       if(res){
+        this.setState({loading:true})
         this.fetchActiveChallengeData(res);
-        this.fetchBlogs(res.tag);
-       
       }
     })
   }
@@ -99,19 +99,21 @@ export default class FeedScreen extends React.PureComponent {
 //     });
 //   }
 
-fetchBlogs = async (tag) => {
-  console.log(tag)
-  const snapshot = await db.collection('blogs').where("tags","==",tag).get()
+fetchBlogs = async (tag,currentDay) => {
+  console.log(tag,currentDay)
+  const snapshot = await db.collection('blogs')
+  .where("tags","array-contains",tag)
+  .get()
     let blogs = []
+    cDay = currentDay === 1?0:currentDay
     snapshot.forEach(doc => {
-      console.log(doc.data())
+      if(doc.data().startDay < cDay && doc.data().endDay >= cDay)
       blogs.push(doc.data())
     });
-    this.setState({blogs})
+    this.setState({blogs,loading:false})
 }
 fetchActiveChallengeData = async (activeChallengeUserData) =>{
   try{
-    
     this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
     .onSnapshot(async (doc) => {
         if(doc.exists){
@@ -147,12 +149,14 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
     if(activeChallengeUserData && activeChallengeData){
       //TODO :getCurrent phase data
       this.phase = getCurrentPhase(activeChallengeUserData.phases)
+     
       //TODO :fetch the current phase data from Challenges collection
       this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
       this.stringDate = new Date().toISOString()
      
      //TODO calculate current challenge day
       this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
+      this.fetchBlogs(activeChallengeUserData.tag,this.currentChallengeDay)
       //TODO get recommended workout here
       this.todayRcWorkout = getTodayRecommendedWorkout(this.phaseData,activeChallengeUserData,this.stringDate ) 
       console.log("1111",this.todayRcWorkout)
@@ -200,13 +204,15 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
               />
               {
                 blogs && blogs.length > 0&&
-                 <ChallengeBlogCard
-                  imageLeft={{uri:blogs[0].coverImage}}
-                  titleLeft1={blogs[0].title}
-                  titleRight1={blogs[0].description}
-                  onPressLeft={() => this.props.navigation.navigate('HomeBlog')}
-                  onPressRight={() => this.openLink('https://fitazfk.zendesk.com/hc/en-us')}
-                />
+                blogs.map((res,index)=>
+                    <ChallengeBlogCard
+                    key={index}
+                    data={res}
+                    onPress={() => this.openLink(res.urlLink)}
+                    index = {index}
+                  />
+                )
+               
               }
              
               <NewsFeedTile
@@ -236,7 +242,10 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
                 loading={loading}
                 color={colors.charcoal.standard}
               /> */}
-
+               <Loader
+                  loading={loading}
+                  color={colors.themeColor.color}
+                />
           </View>
           
         </ScrollView>
