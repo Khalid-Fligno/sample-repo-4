@@ -1,4 +1,4 @@
-const hostUrl='https://277695dd9371.ngrok.io';
+const hostUrl='https://3ba01e9caf1c.ngrok.io';
 const { auth, db } = require('./firebase');
 const webhookUrl='https://api.rechargeapps.com/webhooks';
 const productUrl='https://api.rechargeapps.com/products';
@@ -79,7 +79,7 @@ exports.createShopifyWebhooks = async (req, res)  => {
 const createWebhookUrl= async (req,res)=>{
       // get user by email from firebase
       const user =await getUser(req.email);
-      console.log("get user",user);
+      console.log("request",req);
       // 1. if user not exist, create that user
       if(user=== undefined ){
 
@@ -105,12 +105,12 @@ const createWebhookUrl= async (req,res)=>{
       }
       // get product from line item collection
       const challengeProductName=req.productName;
-      if(challengeProductName ==null){
-          challengeProductName="FitazFK 8 Week Challenge";
-      }
-      console.log("challengeProductName",challengeProductName);
+      // if(challengeProductName ==null){
+      //     challengeProductName="FitazFK 8 Week Challenge";
+      // }
+      console.log("challengeShopifyProductId",req.shopify_product_id);
       // get workout challange details by passing product_title
-      const challenge= await getChallengeDetails(challengeProductName);
+      const challenge= await getChallengeDetailByProductId(req.shopify_product_id);
       console.log("challenge",challenge);
       const userInfo=await getUser(req.email);
       console.log("userInfo",userInfo);
@@ -272,6 +272,14 @@ const getChallengeDetails = async(challengeName) => {
       return snapshot.docs[0].data();
   }   
 }
+const getChallengeDetailByProductId = async(challengeProductId) => {
+  let challengeDetail;
+  const snapshot =await db.collection('challenges').where("shopifyProductId","==",challengeProductId)
+   .get();
+   if (snapshot.size > 0) {
+    return snapshot.docs[0].data();
+}   
+}
 
 const updateChallengesAgainstUser = (challengeData,userId)=>{
     const challenge = db.collection('users').doc(userId).collection('challenges').doc(challengeData.id);
@@ -295,12 +303,19 @@ const createNewChallenge=(data)=>{
         )
       })
     const challenge = {
-        "name":data.name,
-        "displayName":data.displayName,
-        "id":data.id,
-        "startDate":moment(new Date()).format('YYYY-MM-DD'), 
-        "endDate":moment(new Date(), 'YYYY-MM-DD').add(data.numberOfDays-1,'days').format('YYYY-MM-DD'),
-        "status":"InActive",
+      "name":data.name,
+      "displayName":data.displayName,
+      "id":data.id,
+      "startDate":moment(new Date()).format('YYYY-MM-DD'), 
+      "endDate":moment(new Date(), 'YYYY-MM-DD').add(data.numberOfDays-1,'days').format('YYYY-MM-DD'),
+      "status":data.status?data.status:"InActive",
+      "phases":phases,
+      "workouts":[],
+      "onBoardingInfo":{},
+      "currentProgressInfo":{},
+      "createdOn":data.createdOn?data.createdOn:moment(new Date()).format('YYYY-MM-DD'),
+      "numberOfDays":data.numberOfDays,
+      "imageUrl":data.imageUrl,
         "phases":phases,
         "shopifyProductId":data.shopifyProductId,
         "createdAt":data.createdAt,

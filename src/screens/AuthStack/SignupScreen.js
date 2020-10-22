@@ -35,7 +35,6 @@ import BigHeadingWithBackButton from '../../components/Shared/BigHeadingWithBack
 import InputBox from '../../components/Shared/inputBox';
 import CustomBtn from '../../components/Shared/CustomBtn';
 import authScreenStyle from './authScreenStyle';
-
 const { width } = Dimensions.get('window');
 
 const getRandomString = (length) => {
@@ -123,10 +122,11 @@ export default class SignupScreen extends React.PureComponent {
         };
         await AsyncStorage.setItem('uid', uid);
         db.collection('users').doc(uid).set(data)
-          .then(() => {
+          .then(async () => {
             this.setState({ loading: false });
             appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Apple' });
             // this.props.navigation.navigate('Subscription', { name: givenName, specialOffer: this.state.specialOffer });
+            await this.addChallengesAfterSignUp(email);
             this.props.navigation.navigate('Onboarding1', { name: givenName, specialOffer: this.state.specialOffer });
             auth.currentUser.sendEmailVerification().then(() => {
               Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
@@ -181,6 +181,7 @@ export default class SignupScreen extends React.PureComponent {
         });
         this.setState({ loading: false });
         appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Facebook' });
+        await this.addChallengesAfterSignUp(data.email);
         auth.currentUser.sendEmailVerification().then(() => {
           Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
           // this.props.navigation.navigate('Subscription', { name: profile.first_name, specialOffer: this.state.specialOffer });
@@ -199,6 +200,38 @@ export default class SignupScreen extends React.PureComponent {
       this.setState({ error: 'Something went wrong', loading: false });
     }
   }
+  addChallengesAfterSignUp = async(email,uid) =>{
+    const shopifyRegisteredUser=  await this.getUserRegisterdFromShopify(email);
+    console.log("shopifyRegisteredUser",shopifyRegisteredUser);
+    if(shopifyRegisteredUser != undefined){
+    const challengeDetail=  await this.getChallengeDetails(shopifyRegisteredUser);
+    console.log("challengeDetail",challengeDetail);
+    if(challengeDetail !=undefined){
+      const challenge =await db.collection('users').doc(uid).collection('challenges').doc(challengeDetail.id);
+      challenge.set(challengeDetail,{merge:true});
+      //delete old user 
+      if(shopifyRegisteredUser != undefined){
+      await db.collection('users').doc(shopifyRegisteredUser.id).collection('challenges').doc(challengeDetail.id).delete();
+      await db.collection('users').doc(shopifyRegisteredUser.id).delete();
+      console.log("old user is deleted");
+    }
+    }
+   }
+  }
+  getUserRegisterdFromShopify = async(emailId) => {
+    const userRef =  await db.collection('users').where("email","==",emailId).where("challenge","==",true).get();
+    if (userRef.size > 0) {
+      return userRef.docs[0].data();
+  }     
+}
+getChallengeDetails = async(user) => {
+let challenges=[];
+const challengeRef =await db.collection("users").doc(user.id).collection("challenges").get();
+if (challengeRef.size > 0) {
+  return challengeRef.docs[0].data();
+}     
+  //return challenges;
+}
   signup = async (firstName, lastName, email, password) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
@@ -208,11 +241,13 @@ export default class SignupScreen extends React.PureComponent {
       return;
     }
     try {
+   
+      console.log("step1");
       const response = await firebase.auth().createUserWithEmailAndPassword(email, password);
       await response.user.updateProfile({ displayName: `${firstName} ${lastName}` });
       const { region } = Localization;
       const { uid } = response.user;
-      const data = {
+      let data = {
         id: uid,
         firstName,
         lastName,
@@ -223,11 +258,14 @@ export default class SignupScreen extends React.PureComponent {
         fitnessLevel: 1,
       };
       await AsyncStorage.setItem('uid', uid);
+      
       db.collection('users').doc(uid).set(data)
-        .then(() => {
+        .then(async () => {
           this.setState({ loading: false });
           appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Email' });
           // this.props.navigation.navigate('Subscription', { name: firstName, specialOffer: this.state.specialOffer });
+                // check if user buy some challenges from shopify  
+          await this.addChallengesAfterSignUp(email,uid); 
           this.props.navigation.navigate('Onboarding1', { name: firstName, specialOffer: this.state.specialOffer });
           auth.currentUser.sendEmailVerification().then(() => {
             Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
@@ -238,7 +276,7 @@ export default class SignupScreen extends React.PureComponent {
             this.setState({ loading: false });
             Alert.alert('Sign up could not be completed', 'Please try again');
           });
-        });
+        });        
     } catch (err) {
       const errorCode = err.code;
       this.setState({ error: errors.createUser[errorCode], loading: false });

@@ -134,8 +134,8 @@ class ChallengeSubscriptionScreen extends Component {
         btnDisabled = false
       } 
     
+      console.log("item.numberOfDays",item);
         return (
-
           <ChallengeCard 
               outline={true}
               imageUrl={item.imageUrl}
