@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ColorPropType,
   Image,
+  Linking
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { ListItem, Slider } from 'react-native-elements';
@@ -29,10 +30,8 @@ import fonts from '../../../styles/fonts';
 import globalStyle, { containerPadding } from '../../../styles/globalStyles';
 const { width } = Dimensions.get('window');
 import { heightPercentageToDP as hp ,widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import ProgressBar from '../../../components/Progress/ProgressBar';
-import CustomBtn from '../../../components/Shared/CustomBtn';
 import calendarStyles from './calendarStyle';
-import PlusCircleSvg from '../../../../assets/icons/PlusCircleSvg';
+import * as Haptics from 'expo-haptics';
 import { 
   getCurrentPhase, 
   getTotalChallengeWorkoutsCompleted, 
@@ -331,7 +330,7 @@ getCurrentPhaseInfo(){
     isActiveChallenge().then((res)=>console.log(res))
     //TODO :getCurrent phase data
     this.phase = getCurrentPhase(activeChallengeUserData.phases)
-
+    console.log("????",this.phase)
     //TODO :fetch the current phase data from Challenges collection
     this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
     this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
@@ -359,6 +358,11 @@ async fetchRecipe(id,mealType){
     this.setState({loading:false})
     this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Nutrition' })
   }
+}
+
+openLink = (url) => {
+  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+  Linking.openURL(url);
 }
  //-------**--------  
 
@@ -405,6 +409,7 @@ async fetchRecipe(id,mealType){
             activeChallengeData={activeChallengeData}
             activeChallengeUserData = {activeChallengeUserData}
             totalChallengeWorkoutsCompleted ={this.totalChallengeWorkoutsCompleted}
+            openLink={()=>this.openLink(this.phase.pdfUrl)}
           />
         }
         <Text style={calendarStyles.headerText}>

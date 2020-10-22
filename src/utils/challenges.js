@@ -77,10 +77,10 @@ export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
     
     const recommendedMeal = [
         breakfast,
-        lunch,
-        dinner,
         morningSnack,
-        afternoonSnack
+        lunch,
+        afternoonSnack,
+        dinner
     ]
   
     return {

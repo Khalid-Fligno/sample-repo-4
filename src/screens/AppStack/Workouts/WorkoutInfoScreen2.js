@@ -297,41 +297,54 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
  
     return (
       <View style={[globalStyle.container,{paddingHorizontal:0}]}>
-        <Modal
-          isVisible={calendarModalVisible}
-          animationIn="fadeIn"
-          animationInTiming={600}
-          animationOut="fadeOut"
-          animationOutTiming={600}
-          onBackdropPress={this.hideCalendarModal}
-        >
-          <View style={globalStyle.modalContainer}>
-            <DateTimePicker
-              mode="date"
-              value={chosenDate}
-              onChange={this.setDate}
-              minimumDate={new Date()}
-            />
-            <TouchableOpacity
-              onPress={() => this.addWorkoutToCalendar(chosenDate)}
-              style={globalStyle.modalButton}
+        {
+          Platform.OS === 'ios' && 
+           <Modal
+              isVisible={calendarModalVisible}
+              animationIn="fadeIn"
+              animationInTiming={600}
+              animationOut="fadeOut"
+              animationOutTiming={600}
+              onBackdropPress={this.hideCalendarModal}
             >
-              {
-                addingToCalendar ? (
-                  <DotIndicator
-                    color={colors.white}
-                    count={3}
-                    size={6}
-                  />
-                ) : (
-                  <Text style={globalStyle.modalButtonText}>
-                    ADD TO CALENDAR
-                  </Text>
-                )
-              }
-            </TouchableOpacity>
-          </View>
-        </Modal>
+              <View style={globalStyle.modalContainer}>
+                <DateTimePicker
+                  mode="date"
+                  value={chosenDate}
+                  onChange={this.setDate}
+                  minimumDate={new Date()}
+                />
+                <TouchableOpacity
+                  onPress={() => this.addWorkoutToCalendar(chosenDate)}
+                  style={globalStyle.modalButton}
+                >
+                  {
+                    addingToCalendar ? (
+                      <DotIndicator
+                        color={colors.white}
+                        count={3}
+                        size={6}
+                      />
+                    ) : (
+                      <Text style={globalStyle.modalButtonText}>
+                        ADD TO CALENDAR
+                      </Text>
+                    )
+                  }
+                </TouchableOpacity>
+              </View>
+            </Modal>
+        }
+         {
+          Platform.OS === 'android' && calendarModalVisible &&
+          <DateTimePicker
+            mode="date"
+            value={chosenDate}
+            onChange={this.setDate}
+            minimumDate={new Date()}
+          />
+         }
+       
         {
           workout && (
             <View style={WorkoutScreenStyle.flatListContainer}>

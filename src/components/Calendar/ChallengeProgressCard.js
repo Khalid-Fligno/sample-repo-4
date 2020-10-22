@@ -20,7 +20,8 @@ class ChallengeProgressCard extends Component {
         phaseData,
         activeChallengeData,
         activeChallengeUserData,
-        totalChallengeWorkoutsCompleted
+        totalChallengeWorkoutsCompleted,
+        openLink
       } = this.props
     return(
         <View style={calendarStyles.ChallengeProgressCardContainer }>
@@ -67,7 +68,8 @@ class ChallengeProgressCard extends Component {
                 rightIconName="chevron-right"
                 rightIconColor={colors.themeColor.color}
                 customBtnTitleStyle={{marginRight:wp('3%'),fontFamily:fonts.boldNarrow}}
-              />
+                onPress={openLink}
+             />
               <Text style={calendarStyles.phaseBodyText}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut. 
               </Text>

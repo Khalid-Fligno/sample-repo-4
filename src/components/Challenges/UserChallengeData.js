@@ -10,7 +10,8 @@ export default createUserChallengeData =(data)=>{
           "startDate":moment(new Date(), 'YYYY-MM-DD').add(res.startDay-1,'days').format('YYYY-MM-DD'),
           "endDate":moment(new Date(), 'YYYY-MM-DD').add(res.endDay-1,'days').format('YYYY-MM-DD'),
           "startDay":res.startDay,
-          "endDay":res.endDay
+          "endDay":res.endDay,
+          "pdfUrl":res.pdfUrl
         }
       )
     })
