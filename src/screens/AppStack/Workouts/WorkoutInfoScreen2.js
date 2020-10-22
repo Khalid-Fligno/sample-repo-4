@@ -62,10 +62,14 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
   }
 
   setDate = async (event, selectedDate) => {
-    if(selectedDate === undefined && Platform.OS === 'android'){
-      this.addWorkoutToCalendar(this.state.chosenDate)
+    console.log("selectedDate",selectedDate);
+    if(selectedDate && Platform.OS === 'android'){
+      console.log("android selectedDate",selectedDate);
+      this.setState({loading:true});
+      this.addWorkoutToCalendar(selectedDate);
+      
     }
-    if(selectedDate){
+    if(selectedDate && Platform.OS === 'ios'){
     const currentDate = selectedDate;
     this.setState({ chosenDate: currentDate });
     }
@@ -101,7 +105,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
   }
 
   hideCalendarModal = () => {
-    this.setState({ calendarModalVisible: false });
+    this.setState({ calendarModalVisible: false,loading:false });
   }
 
   addWorkoutToCalendar = async (date) => {
@@ -118,7 +122,19 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       workout
     };
     await calendarRef.set(data,{merge:true});
-    this.setState({ addingToCalendar: false });
+    
+    if(Platform.OS === 'android'){
+      this.hideCalendarModal();
+      Alert.alert(
+        '',
+        'Added to calendar!',
+        [
+          { text: 'OK', style: 'cancel' },
+        ],
+        { cancelable: false },
+      );
+    }else{
+      this.setState({ addingToCalendar: false});
     Alert.alert(
       '',
       'Added to calendar!',
@@ -127,6 +143,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       ],
       { cancelable: false },
     );
+    }
   }
 
   handleWorkoutStart = () => {
@@ -297,7 +314,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
 
     const workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
 
- 
+    console.log("calendarModalVisible",calendarModalVisible);
     return (
       <View style={[globalStyle.container,{paddingHorizontal:0}]}>
         {
@@ -339,7 +356,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             </Modal>
         }
          {
-          Platform.OS === 'android' && calendarModalVisible &&
+           
+          Platform.OS === 'android' && calendarModalVisible && !loading &&
           <DateTimePicker
             mode="date"
             value={chosenDate}
