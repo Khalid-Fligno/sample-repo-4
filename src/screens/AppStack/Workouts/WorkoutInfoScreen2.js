@@ -62,12 +62,9 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
   }
 
   setDate = async (event, selectedDate) => {
-    console.log("selectedDate",selectedDate);
     if(selectedDate && Platform.OS === 'android'){
-      console.log("android selectedDate",selectedDate);
       this.setState({loading:true});
       this.addWorkoutToCalendar(selectedDate);
-      
     }
     if(selectedDate && Platform.OS === 'ios'){
     const currentDate = selectedDate;
