@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { db } from '../../config/firebase';
-
+import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 
 
 export const isActiveChallenge = async() =>{
@@ -89,3 +90,40 @@ export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
                 challengeMealsFilterList
            }
 }
+//-------------- for login -----------------------
+    export const getChallengeDetails = async(userid) => {
+    let userChallenge=[];
+    const challengeRef =await db.collection("users").doc(userid).collection("challenges").get();
+    if (challengeRef.size > 0) {
+         challengeRef.docs.forEach(doc=>{
+          userChallenge.push(doc.data());
+         });
+         return userChallenge;
+      }      
+  }
+  export const getLatestChallenge = (challenges)=>{
+    return challenges.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];    
+  }
+  export const hasChallenges = async(uid) =>{
+    console.log("uid",uid);
+    const userChallenges= await getChallengeDetails(uid);
+    if(userChallenges !== undefined && userChallenges.length > 0){
+      //check latest challenge user has
+      const latestChallenge = getLatestChallenge(userChallenges);
+      //allow user to 7 days from their challenge end date
+      const date= moment(new Date(latestChallenge.endDate), 'YYYY-MM-DD').add(7,'days').format('YYYY-MM-DD');
+      const challengeEndDate=new Date(date).getTime();
+      const currentDate=new Date().getTime();
+      console.log("challengeEndDate",challengeEndDate,"currentDate",currentDate);
+      if(challengeEndDate >= currentDate){
+        console.log("return true",true);
+        return true;
+      }
+      else {
+        console.log("return false",false);
+        return false;
+      }
+      return false;
+    }
+  }
+

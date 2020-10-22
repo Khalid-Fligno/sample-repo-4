@@ -1,4 +1,4 @@
-const hostUrl='https://277695dd9371.ngrok.io';
+const hostUrl='https://3ba01e9caf1c.ngrok.io';
 const { auth, db } = require('./firebase');
 const webhookUrl='https://api.rechargeapps.com/webhooks';
 const productUrl='https://api.rechargeapps.com/products';
@@ -79,7 +79,7 @@ exports.createShopifyWebhooks = async (req, res)  => {
 const createWebhookUrl= async (req,res)=>{
       // get user by email from firebase
       const user =await getUser(req.email);
-      console.log("get user",user);
+      console.log("request",req);
       // 1. if user not exist, create that user
       if(user=== undefined ){
 
@@ -295,12 +295,19 @@ const createNewChallenge=(data)=>{
         )
       })
     const challenge = {
-        "name":data.name,
-        "displayName":data.displayName,
-        "id":data.id,
-        "startDate":moment(new Date()).format('YYYY-MM-DD'), 
-        "endDate":moment(new Date(), 'YYYY-MM-DD').add(data.numberOfDays-1,'days').format('YYYY-MM-DD'),
-        "status":"InActive",
+      "name":data.name,
+      "displayName":data.displayName,
+      "id":data.id,
+      "startDate":moment(new Date()).format('YYYY-MM-DD'), 
+      "endDate":moment(new Date(), 'YYYY-MM-DD').add(data.numberOfDays-1,'days').format('YYYY-MM-DD'),
+      "status":data.status?data.status:"InActive",
+      "phases":phases,
+      "workouts":[],
+      "onBoardingInfo":{},
+      "currentProgressInfo":{},
+      "createdOn":data.createdOn?data.createdOn:moment(new Date()).format('YYYY-MM-DD'),
+      "numberOfDays":data.numberOfDays,
+      "imageUrl":data.imageUrl,
         "phases":phases,
         "shopifyProductId":data.shopifyProductId,
         "createdAt":data.createdAt,

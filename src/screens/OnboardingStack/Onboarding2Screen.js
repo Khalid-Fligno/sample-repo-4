@@ -14,7 +14,11 @@ import RoundTick from '../../../assets/icons/RoundTick';
 import FitnessLevelCard from '../../components/Onboarding/FitnessLevelCard';
 import BigHeadingWithBackButton from '../../components/Shared/BigHeadingWithBackButton';
 import fonts from '../../styles/fonts';
-
+import {
+  getChallengeDetails,getLatestChallenge,hasChallenges
+} from '../../utils/challenges';
+import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 const { width } = Dimensions.get('window');
 
 class Onboarding2Screen extends Component {
@@ -27,6 +31,7 @@ class Onboarding2Screen extends Component {
       specialOffer: props.navigation.getParam('specialOffer', undefined)
     };
   }
+
   handleSubmit = async () => {
     const {name ,specialOffer } = this.state
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -41,10 +46,15 @@ class Onboarding2Screen extends Component {
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
       // this.props.navigation.navigate('App', { isInitial: true });
+      console.log("check user has challenge",uid);
+      if(await hasChallenges(uid)){
+        this.props.navigation.navigate('App');
+      }else{
       this.props.navigation.navigate('Subscription', { 
           name,
           specialOffer,
       });
+    }
     } catch (err) {
       Alert.alert('Database write error', `${err}`);
       this.setState({ loading: false });

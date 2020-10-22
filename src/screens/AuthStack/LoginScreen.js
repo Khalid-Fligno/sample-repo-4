@@ -56,9 +56,11 @@ import InputBox from '../../components/Shared/inputBox';
 import BigHeadingWithBackButton from '../../components/Shared/BigHeadingWithBackButton';
 import authScreenStyle from './authScreenStyle';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
-
-
+import {
+  getChallengeDetails,getLatestChallenge,hasChallenges
+} from '../../utils/challenges';
+import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get('window');
 const getRandomString = (length) => {
@@ -142,10 +144,17 @@ export default class LoginScreen extends React.PureComponent {
             }
             const { subscriptionInfo = undefined } = await doc.data();
             if (subscriptionInfo === undefined) {
+              if(await hasChallenges(uid)){
+                await goToAppScreen(doc);
+              }else{
               // NO PURCHASE INFORMATION SAVED
               // this.setState({ loading: false });
               this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
+              }
             } else if (subscriptionInfo.expiry < Date.now()) {
+              if(await hasChallenges(uid)){
+                await this.goToAppScreen(doc);
+              }else{
               // EXPIRED
               InAppUtils.restorePurchases(async (error, response) => {
                 if (error) {
@@ -191,6 +200,7 @@ export default class LoginScreen extends React.PureComponent {
                   }
                 }
               });
+            }
             } else {
               // RECEIPT STILL VALID
               this.setState({ loading: false });
@@ -229,9 +239,13 @@ export default class LoginScreen extends React.PureComponent {
             }
             const { subscriptionInfo = undefined } = await doc.data();
             if (subscriptionInfo === undefined) {
+              if(await hasChallenges(uid)){
+                await this.goToAppScreen(doc);
+              }else{
               // NO PURCHASE INFORMATION SAVED
               // this.setState({ loading: false });
               this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
+              }
             } else if (subscriptionInfo.expiry < Date.now()) {
               // EXPIRED
 
@@ -320,7 +334,21 @@ export default class LoginScreen extends React.PureComponent {
       }
     });
   }
-
+  getUserRegisterdFromShopify = async(emailId) => {
+    const userRef =  await db.collection('users').where("email","==",emailId).get();
+    if (userRef.size > 0) {
+      return userRef.docs[0].data();
+    }     
+  }
+  goToAppScreen=async(doc)=>{
+    // RECEIPT STILL VALID
+    this.setState({ loading: false });
+    if (await !doc.data().onboarded) {
+        this.props.navigation.navigate('Onboarding1');
+        return;
+    }
+    this.props.navigation.navigate('App');
+  }
   login = async (email, password) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
@@ -340,20 +368,25 @@ export default class LoginScreen extends React.PureComponent {
             }
             const { subscriptionInfo = undefined, onboarded = false  } = await doc.data();
             if (subscriptionInfo === undefined) {
+              console.log("check has challenge",uid);
+              if(await hasChallenges(uid)){
+                await this.goToAppScreen(doc);
+              }else{
               // NO PURCHASE INFORMATION SAVED
               this.setState({ loading: false });
               this.props.navigation.navigate('Subscription', { specialOffer: this.state.specialOffer });
+              }
             } else if (subscriptionInfo.expiry < Date.now()) {
+              console.log("check has challenge",uid);
+              if(await hasChallenges(uid)){
+                await this.goToAppScreen(doc);
+              }else{
               // EXPIRED
               await this.storePurchase(subscriptionInfo, onboarded);
-            } else {
-              // RECEIPT STILL VALID
-              this.setState({ loading: false });
-              if (await !doc.data().onboarded) {
-                this.props.navigation.navigate('Onboarding1');
-                return;
               }
-              this.props.navigation.navigate('App');
+            } else {
+                //go to app
+                await this.goToAppScreen(doc);
             }
           });
       }

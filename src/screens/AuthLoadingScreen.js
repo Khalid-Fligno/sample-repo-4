@@ -35,6 +35,11 @@ import RNIap, {
   purchaseErrorListener,
   purchaseUpdatedListener,
 } from 'react-native-iap';
+import {
+  getChallengeDetails,getLatestChallenge,hasChallenges
+} from '../utils/challenges';
+import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get('window');
 
@@ -174,6 +179,15 @@ export default class AuthLoadingScreen extends React.PureComponent {
     SplashScreen.hide();
     await this.cachingComplete();
   }
+  goToAppScreen=async(doc)=>{
+    // RECEIPT STILL VALID
+    this.setState({ loading: false });
+    if (await !doc.data().onboarded) {
+        this.props.navigation.navigate('Onboarding1');
+        return;
+    }
+    this.props.navigation.navigate('App');
+  }
   // GRAND UNIFIED()
   cachingComplete = async () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -195,11 +209,20 @@ export default class AuthLoadingScreen extends React.PureComponent {
               const { subscriptionInfo = undefined, onboarded = false } = await doc.data();
                 
               if (subscriptionInfo === undefined) {
+                console.log("uid",uid);
+                if(await hasChallenges(uid)){
+                  await this.goToAppScreen(doc);
+                }else{
                 // NO PURCHASE INFORMATION SAVED
                 this.props.navigation.navigate('Subscription');
+                }
               } else if (subscriptionInfo.expiry < Date.now()) {
+                if(await hasChallenges(uid)){
+                  await this.goToAppScreen(doc);
+                }else{
                 // EXPIRED
                 await this.storePurchase(subscriptionInfo, onboarded);
+                }
               } else if (subscriptionInfo.expiry > Date.now()) {
                 // RECEIPT STILL VALID
                 if (onboarded) {
