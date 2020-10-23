@@ -460,7 +460,7 @@ openLink = (url) => {
                   return(
                   <MealSwipable 
                                 key={index}
-                                name ={res.meal} 
+                                name ={res.mealTitle} 
                                 data = {meals[res.meal]} 
                                 index={index} 
                                 renderRightActions={() => this.renderRightActionForRC(res.meal)}
