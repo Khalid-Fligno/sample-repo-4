@@ -57,3 +57,7 @@ export const findWorkoutType = (workout) => {
   }
   return type;
 };
+
+export const getLastExercise = ()=>{
+  
+}
