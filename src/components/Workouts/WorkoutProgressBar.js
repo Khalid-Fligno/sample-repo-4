@@ -29,7 +29,7 @@ class WorkoutProgressBar extends React.PureComponent {
           = this.props;
 
     let array = exerciseList;
-    if(progressType === 'interval'){
+    if(progressType === 'onlyOne'){
         array = new Array(rounds).fill(undefined).map((val,idx) => idx);
     }
     
@@ -45,7 +45,7 @@ class WorkoutProgressBar extends React.PureComponent {
         return 0
     }
     let getInervalFill = (index)=>{
-        console.log(currentRound)
+        // console.log(currentRound)
         if(currentRound < index+1 ){
             return 0
         }else if(currentRound > index+1 ){
@@ -80,11 +80,11 @@ class WorkoutProgressBar extends React.PureComponent {
     }
 
     let getFill =(index)=>{
-        if(progressType === 'strength'){
+        if(progressType === 'oneByOne'){
             return getStrengthFill(index)
-        }else if(progressType === 'interval'){
+        }else if(progressType === 'onlyOne'){
             return getInervalFill(index)
-        }else if(progressType === 'circuit'){
+        }else if(progressType === 'circular'){
             return getCircuitFill(index)
         }
         
@@ -115,7 +115,7 @@ class WorkoutProgressBar extends React.PureComponent {
             return (<Text style={[styles.currentSetText,{fontSize:20}]}>{index+1}</Text>)
     }
     let getCircuitInnerText = (index)=>{
-        console.log(currentSet,rounds)
+        // console.log(currentSet,rounds)
         if(currentExercise > index+1 && currentSet === rounds){
             return ( <Icon
                 name="tick-heavy"
@@ -135,11 +135,11 @@ class WorkoutProgressBar extends React.PureComponent {
     
     let getInnerText = (index)=>{
 
-        if(progressType === 'strength'){
+        if(progressType === 'oneByOne'){
             return getStrengthInnerText(index)
-        }else if(progressType === 'interval'){
+        }else if(progressType === 'onlyOne'){
             return getInervalInnerText(index)
-        }else if(progressType === 'circuit'){
+        }else if(progressType === 'circular'){
             return getCircuitInnerText(index)
         }
        
@@ -149,7 +149,7 @@ class WorkoutProgressBar extends React.PureComponent {
     }
 
     let getTintColor = (index) =>{
-        if(progressType === 'circuit'){
+        if(progressType === 'circular'){
             if(currentExercise < index+1 )
                 return (colors.grey.dark)
         }
@@ -162,7 +162,7 @@ class WorkoutProgressBar extends React.PureComponent {
           array.map((res,index)=>(
               <View style={styles.exercise} key={index}>
                     <AnimatedCircularProgress
-                            size={progressType ==='interval'?39:45}
+                            size={progressType ==='onlyOne'?39:45}
                             width={5}
                             fill={getFill(index) }
                             rotation={0}
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.themeColor.themeBackgroundColor,
     width:'100%',
     paddingHorizontal:10,
-    justifyContent:'space-between'
+    justifyContent:'space-around'
   },
   exercise: {
     paddingLeft: 5,

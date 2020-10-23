@@ -93,6 +93,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
         }); //for new workout its difficulty level
     } catch (err) {
       this.setState({ loading: false });
+      console.log(err)
       Alert.alert('Could not download exercise videos', 'Please check your internet connection');
     }
   }
@@ -113,6 +114,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
           title = {item.displayName}
           timeInterval = {((item.workIntervalMap[fitnessLevel-1]+item.restIntervalMap[fitnessLevel-1])*item.exercises.length*item.workoutReps)/60}
           onPress ={() => this.loadExercises(item)}
+          count = {item.count}
        />
   )
 

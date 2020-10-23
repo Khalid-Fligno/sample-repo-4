@@ -32,6 +32,7 @@ import TimeSvg from '../../../../assets/icons/time';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
 import { heightPercentageToDP as hp ,widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import StopWatch from '../../../components/Workouts/WorkoutStopwatch';
 const { width } = Dimensions.get('window');
 // const workoutTypeMap = {
 //   1: 'Resistance',
@@ -428,6 +429,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
                 onPress={() => this.props.navigation.navigate('Calendar')}
                 cardCustomStyle ={{marginTop:20}} 
               /> */}
+
              
               <Loader
                 loading={loading}
