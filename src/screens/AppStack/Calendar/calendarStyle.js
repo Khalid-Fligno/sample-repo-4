@@ -66,7 +66,7 @@ const calendarStyles = StyleSheet.create({
       },
       listItemContainer: {
         width:'100%',
-        height: 65,
+        // height: 80,
         justifyContent: 'center',
         backgroundColor: 'transparent',
         borderBottomWidth: 2,
@@ -118,7 +118,7 @@ const calendarStyles = StyleSheet.create({
       },
       deleteButton: {
         width: 80,
-        height: 65,
+        //height: 65,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: colors.themeColor.color,
