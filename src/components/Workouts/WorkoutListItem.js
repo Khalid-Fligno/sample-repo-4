@@ -9,7 +9,7 @@ import { propTypes } from 'react-native-carousel';
 import TimeSvg from '../../../assets/icons/time';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-const WorkoutListItem =({timeInterval,description,title,url ,onPress})=>(
+const WorkoutListItem =({timeInterval,description,title,url ,onPress,count})=>(
   <TouchableOpacity
         onPress={onPress}
         activeOpacity={0.4}
@@ -29,12 +29,22 @@ const WorkoutListItem =({timeInterval,description,title,url ,onPress})=>(
       <View style={styles.textContainer}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>{description}</Text>
-        <View style={styles.timeContainer}> 
-        <TimeSvg width={hp('2.5%')} height={hp('2.5%')} />
-          <Text style={styles.time}>   
-            {timeInterval}m
-          </Text> 
-        </View>  
+        {
+          !count &&
+          <View style={styles.timeContainer}> 
+           <TimeSvg width={hp('2.5%')} height={hp('2.5%')} />
+             <Text style={styles.time}>   
+               {timeInterval}m
+             </Text> 
+          </View>  
+        }
+        {
+          count &&
+          <View style={styles.timeContainer}> 
+           
+          </View>  
+        }
+       
       </View>
      </View>
   </TouchableOpacity>

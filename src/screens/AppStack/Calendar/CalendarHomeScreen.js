@@ -389,7 +389,7 @@ openLink = (url) => {
     if(this.calendarStrip.current){
       let currentCalendarDate = new Date(this.calendarStrip.current.getSelectedDate()).getDate();
       let currentDate = new Date().getDate()
-      if(currentCalendarDate === currentDate)
+      if(currentCalendarDate === currentDate && this.todayRecommendedMeal && this.todayRecommendedMeal.length >0)
         showRC = true
     }
 
@@ -418,7 +418,7 @@ openLink = (url) => {
         </Text>
         <View style={calendarStyles.listContainer}>
           {
-            this.todayRcWorkout && !workout &&
+            this.todayRcWorkout  &&
             <RcWorkoutListItem 
                 res={this.todayRcWorkout} 
                 onPress={ () => this.todayRcWorkout.name !== 'rest'? this.loadExercises(this.todayRcWorkout.id):'' }

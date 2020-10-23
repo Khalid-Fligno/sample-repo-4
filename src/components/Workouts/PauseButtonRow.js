@@ -18,7 +18,9 @@ export default class PauseButtonRow extends React.PureComponent {
       nextExerciseName, 
       handlePause, 
       lastExercise,
-      showNextExercise 
+      showNextExercise ,
+      isNextButton,
+      handleNextButton
     } = this.props;
     console.log(showNextExercise,"<><><>")
     return (
@@ -53,6 +55,26 @@ export default class PauseButtonRow extends React.PureComponent {
               </View>
             )
         }  
+        {
+          isNextButton &&
+            <View style={styles.pauseButtonContainer}>
+                <TouchableOpacity
+                  onPress={handleNextButton}
+                  style={styles.pauseButton}
+                >
+                
+                  <Text style={styles.pauseButtonText}>
+                    NEXT
+                  </Text>
+                  <Icon
+                    name="chevron-right"
+                    size={15}
+                    color={colors.themeColor.color}
+                  />
+                </TouchableOpacity>
+            </View>
+        }
+    
       </View>
     );
   }
@@ -109,7 +131,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   nextExerciseContainer: {
-    width: width - 117.5,
+    width: width/3,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 5,

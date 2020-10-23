@@ -189,7 +189,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             <View>
               
               {
-                this.state.workout.filters.includes('strength')&& (
+                (this.state.workout.workoutProcessType === 'oneByOne') && (
                   <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
                     {this.state.workout['workoutReps']} x {this.state.reps}
                   </Text>
@@ -197,14 +197,16 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
               }
               
               {
-                this.state.workout.filters.includes('interval') && (
+                (this.state.workout.workoutProcessType === 'onlyOne') && (
                    <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
                       {this.state.workout.workIntervalMap[this.state.fitnessLevel-1]}s on/{this.state.workout.restIntervalMap[this.state.fitnessLevel-1]}s off
                   </Text>
                 )
               }
                {
-                this.state.workout.filters.includes('circuit') && (
+                (this.state.workout.workoutProcessType === 'circular') && 
+                (!this.state.workout.count) &&
+                (
                    <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
                       {this.state.workout.workIntervalMap[this.state.fitnessLevel-1]}s on/{this.state.workout.restIntervalMap[this.state.fitnessLevel-1]}s off
                   </Text>
@@ -396,12 +398,16 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                             </View>
                         )
                       } 
-                      <View style={WorkoutScreenStyle.workoutIconContainer}>
-                        <TimeSvg width="40" height="40" />
-                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                          {workoutTime} Mins
-                        </Text>
-                      </View>
+                      {
+                        !workout.count && 
+                         <View style={WorkoutScreenStyle.workoutIconContainer}>
+                          <TimeSvg width="40" height="40" />
+                          <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                            {workoutTime} Mins
+                          </Text>
+                        </View>
+                      }
+                     
                       <View style={WorkoutScreenStyle.workoutIconContainer}>
                         <Icon
                           name="workouts-reps"
