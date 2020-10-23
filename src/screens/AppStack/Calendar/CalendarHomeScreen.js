@@ -223,7 +223,6 @@ class CalendarHomeScreen extends React.PureComponent {
   }
   
   deleteCalendarEntry = async (fieldToDelete) => {
-    console.log("....")
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
     this.unsubscribe = await db.collection('users').doc(uid)
@@ -248,7 +247,6 @@ class CalendarHomeScreen extends React.PureComponent {
   }
   renderRightActionForRC = (type) => {
     const onClick =() =>{
-      console.log(this.challengeMealsFilterList)
       if(type === 'workout')
         this.props.navigation.navigate('WorkoutsHome')
       else  
@@ -327,10 +325,8 @@ getCurrentPhaseInfo(){
   if(activeChallengeUserData && activeChallengeData){
     const data  = activeChallengeUserData.phases;
     
-    isActiveChallenge().then((res)=>console.log(res))
     //TODO :getCurrent phase data
     this.phase = getCurrentPhase(activeChallengeUserData.phases)
-    console.log("????",this.phase)
     //TODO :fetch the current phase data from Challenges collection
     this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
     this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
@@ -341,7 +337,8 @@ getCurrentPhaseInfo(){
    //TODO calculate current challenge day
     this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
    //TODO getToday one recommended meal randomly  
-    this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
+   console.log(typeof this.state.meals)
+   this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
      //TODO getToday one recommended meal randomly  
      this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
     //TODO get recommended workout here
@@ -365,6 +362,7 @@ openLink = (url) => {
   Linking.openURL(url);
 }
  //-------**--------  
+
 
 
   render() {
@@ -395,6 +393,9 @@ openLink = (url) => {
         showRC = true
     }
 
+    if(this.todayRecommendedMeal){
+      
+    }
 
     const dayDisplay = (
       <ScrollView
@@ -417,7 +418,7 @@ openLink = (url) => {
         </Text>
         <View style={calendarStyles.listContainer}>
           {
-            this.todayRcWorkout && 
+            this.todayRcWorkout && !workout &&
             <RcWorkoutListItem 
                 res={this.todayRcWorkout} 
                 onPress={ () => this.todayRcWorkout.name !== 'rest'? this.loadExercises(this.todayRcWorkout.id):'' }
@@ -454,21 +455,42 @@ openLink = (url) => {
             this.todayRecommendedMeal && this.todayRecommendedMeal.length >0 && showRC &&
             this.todayRecommendedMeal.map((res,index)=>{
               if(res){
-                return <RcMealListItem 
-                key={index}
-                res={res} 
-                index={index} 
-                onPress={() => this.fetchRecipe(res.id,res.mealType)} 
-                renderRightActions={() => this.renderRightActionForRC(res.meal)} 
-                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
-                onSwipeableClose={() => this.setState({ isSwiping: false })}
-              />
+                console.log("check karto",res.meal)
+                if(meals && meals[res.meal]){
+                  return(
+                  <MealSwipable 
+                                key={index}
+                                name ={res.meal} 
+                                data = {meals[res.meal]} 
+                                index={index} 
+                                renderRightActions={() => this.renderRightActionForRC(res.meal)}
+                                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                                onSwipeableClose={() => this.setState({ isSwiping: false })}
+                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: meals[res.meal] ,meal:res.meal })}
+                                stringDate = {this.stringDate}
+                        />
+                  )     
+                }else{
+                  return( 
+                  <RcMealListItem 
+                    key={index}
+                    res={res} 
+                    index={index} 
+                    onPress={() => this.fetchRecipe(res.id,res.mealType)} 
+                    renderRightActions={() => this.renderRightActionForRC(res.meal)} 
+                    onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                    onSwipeableClose={() => this.setState({ isSwiping: false })}
+                  />
+                  )
+                }
+            
               }
              
             })
               
           }
           {
+           !showRC &&
             recipeCategories.map((res,index)=>{
               if(meals && meals[res])
                   return <MealSwipable 
@@ -479,7 +501,7 @@ openLink = (url) => {
                                 renderRightActions={() => this.renderRightActions(res)}
                                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                                 onSwipeableClose={() => this.setState({ isSwiping: false })}
-                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: data ,meal:res })}
+                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: meals[res] ,meal:res })}
                                 stringDate = {this.stringDate}
                         />
               else if(!this.todayRecommendedMeal || !showRC)
