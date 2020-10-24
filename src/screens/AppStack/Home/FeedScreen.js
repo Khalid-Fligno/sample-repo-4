@@ -73,17 +73,21 @@ export default class FeedScreen extends React.PureComponent {
   componentDidMount = () => {
     this.setDayOfWeek();
     // this.fetchProfile();
-    isActiveChallenge().then((res)=>{
-      if(res){
-        this.setState({loading:true})
-        this.fetchActiveChallengeData(res);
-      }
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      isActiveChallenge().then((res)=>{
+        if(res){
+          this.setState({loading:true})
+          this.fetchActiveChallengeData(res);
+        }
+      })
     })
+
   }
   componentWillUnmount = () => {
     // this.unsubscribe();
     if(this.unsubscribeFACD)
       this.unsubscribeFACD()  
+    this.focusListener.remove()  
   }
 
 
@@ -108,7 +112,7 @@ fetchBlogs = async (tag,currentDay) => {
     const cDay = currentDay === 1?2:currentDay
     snapshot.forEach(doc => {
       console.log(doc.data())
-      if(doc.data().startDay < cDay && doc.data().endDay >= cDay)
+      if(doc.data().startDay <= cDay && doc.data().endDay >= cDay)
       blogs.unshift(doc.data())
     });
     this.setState({blogs,loading:false})

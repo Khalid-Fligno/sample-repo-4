@@ -27,13 +27,15 @@ import iconSet from '@expo/vector-icons/build/Fontisto';
 import { set } from 'react-native-reanimated';
 import { consumeAllItemsAndroid } from 'react-native-iap';
 import WorkoutProgressBar from '../../../../components/Workouts/WorkoutProgressBar';
-import { findWorkoutType } from '../../../../utils/workouts';
+import { findWorkoutType, getLastExercise, showNextExerciseFlag } from '../../../../utils/workouts';
 import { isActiveChallenge } from '../../../../utils/challenges';
 import firebase from 'firebase';
 import moment from 'moment';
 import { Stop } from 'react-native-svg';
 import StopWatch from '../../../../components/Workouts/WorkoutStopwatch';
-const { width } = Dimensions.get('window');
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { object } from 'prop-types';
+const { width, height } = Dimensions.get('window');
 
 const updateWeeklyTargets = (obj, field, newTally) => {
   return Object.assign({}, obj, { [field]: newTally });
@@ -76,7 +78,7 @@ export default class ExercisesScreen extends React.PureComponent {
           workoutSubCategory : workoutSubCategory,
           currentExerciseIndex:currentExerciseIndex,  // Start from 0
           timerStart: false,
-          totalDuration:5,
+          totalDuration:totalDuration,
           pauseModalVisible: false,
           videoPaused: false,
           exerciseInfoModalVisible: false,
@@ -420,25 +422,19 @@ export default class ExercisesScreen extends React.PureComponent {
       workout,
       isRunning
     } = this.state;
+
     const setCount = this.props.navigation.getParam('setCount', 1)
     // console.log(rest,exerciseList[currentExerciseIndex],exerciseList)
     // console.log(fitnessLevel,totalDuration,setCount)
 
   // let getProgressType = findWorkoutType(workout);
-  let handleSkip = false;
+    let handleSkip = false;
     if(workout.workoutProcessType !== 'onlyOne' && !workout.count){
-       handleSkip = true
+      handleSkip = true
     }
 
   //TODO : calculate next exercise show flag  
-  let showNextExercise = false  
-    if(workout.workoutProcessType === 'oneByOne' && setCount === workout.workoutReps){
-      showNextExercise = true
-    }else if(rest && !workout.count){
-      showNextExercise = true
-    }else if(workout.count && workout.workoutProcessType === 'circular'){
-      showNextExercise = true
-    } 
+    let showNextExercise = showNextExerciseFlag(workout,setCount,rest) 
 
   //TODO : calculate when count true  
     if(workout.count && currentExercise && currentExercise['workIntervalMap']){
@@ -449,22 +445,8 @@ export default class ExercisesScreen extends React.PureComponent {
     }  
     
 
-  //TODO : calculate flag to show last exercise  
-  let lastExercise = false
-  let nextExerciseName = ''
-    if(!exerciseList[currentExerciseIndex + 1] && workout.workoutProcessType === 'oneByOne') {
-      lastExercise = true;
-      nextExerciseName = 'NEARLY DONE!';
-    }else if(!exerciseList[currentExerciseIndex + 1] && setCount === workout.workoutReps){
-      lastExercise = true;
-      nextExerciseName = 'NEARLY DONE!';
-    }else{
-      if(exerciseList[currentExerciseIndex + 1]){
-        nextExerciseName = exerciseList[currentExerciseIndex + 1].displayName
-      }else{
-        nextExerciseName = exerciseList[0].displayName
-      }
-    }
+    //TODO : calculate flag to show last exercise  
+    let lastExercise = getLastExercise(exerciseList,currentExerciseIndex,workout,setCount)
 
     return (
       <SafeAreaView style={styles.container}>
@@ -496,38 +478,41 @@ export default class ExercisesScreen extends React.PureComponent {
              
             <ExerciseInfoButton onPress={this.showExerciseInfoModal} />
 
-  {/* //TODO:workout Timer */}
-            {
-              (!workout.count) && !rest  && 
-              <WorkoutTimer
-                  totalDuration={totalDuration}
-                  start={timerStart}
-                  handleFinish={() =>{
-                    if(!rest)
-                      this.restControl( reps, resistanceCategoryId,currentExerciseIndex)
-                    else  
-                      this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
-                  } }
-                />
+            {/* //TODO:workout Timer */}
+              {
+                (!workout.count) && !rest  && 
+                <WorkoutTimer
+                    totalDuration={totalDuration}
+                    start={timerStart}
+                    handleFinish={() =>{
+                      if(!rest)
+                        this.restControl( reps, resistanceCategoryId,currentExerciseIndex)
+                      else  
+                        this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
+                    } }
+                  />
 
-            }
-           {
-              rest && 
-              <WorkoutTimer
-                  totalDuration={totalDuration}
-                  start={timerStart}
-                  handleFinish={() =>{
-                    if(!rest)
-                      this.restControl( reps, resistanceCategoryId,currentExerciseIndex)
-                    else  
-                      this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
-                  } }
-                />
+              }
+              {
+                  rest && 
+                  <WorkoutTimer
+                      totalDuration={totalDuration}
+                      start={timerStart}
+                      handleFinish={() =>{
+                        if(!rest)
+                          this.restControl( reps, resistanceCategoryId,currentExerciseIndex)
+                        else  
+                          this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
+                      } }
+                    />
 
-            }
-        
-           
+                }
+                {
+                  (workout.count) && !rest &&
+                  <View style={styles.containerEmptyBlackBox} ></View>
+                }
           </View>
+
           <View style={styles.currentExerciseTextContainer}>
             <View style={styles.currentExerciseNameTextContainer}>
               <Text
@@ -554,7 +539,7 @@ export default class ExercisesScreen extends React.PureComponent {
               {
                (workout.count) && this.repsInterval &&(
                  <Text style={styles.currentExerciseRepsText}>
-                    {this.repsInterval}
+                    {this.repsInterval} {rest && 'sec'}
                  </Text> 
                )
               }
@@ -572,7 +557,7 @@ export default class ExercisesScreen extends React.PureComponent {
               currentRound={setCount}
             />
       
-  {/* //TODO pause buttons bottom */}
+          {/* //TODO pause buttons bottom */}
           {
             (workout.workoutProcessType === 'onlyOne') &&
             (
@@ -584,10 +569,11 @@ export default class ExercisesScreen extends React.PureComponent {
             )
           }
           {
-            (workout.workoutProcessType !== 'onlyOne') && <PauseButtonRow
+            (workout.workoutProcessType !== 'onlyOne') && 
+            <PauseButtonRow
               handlePause={this.handlePause}
-              nextExerciseName={nextExerciseName}
-              lastExercise={lastExercise}
+              nextExerciseName={lastExercise.nextExerciseName}
+              lastExercise={lastExercise.isLastExercise}
               showNextExercise = {showNextExercise}
               isNextButton={workout.count}
               handleNextButton={()=>this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)}
@@ -595,11 +581,6 @@ export default class ExercisesScreen extends React.PureComponent {
           }
           
             
-            
-          {/* <PauseButtonRow
-            handlePause={this.handlePause}
-            nextExerciseName={exerciseList[currentExerciseIndex].name}
-          /> */}
           <WorkoutPauseModal
             isVisible={pauseModalVisible}
             handleQuit={this.quitWorkout}
@@ -661,5 +642,14 @@ const styles = StyleSheet.create({
   currentExerciseRepsText: {
     fontFamily: fonts.boldNarrow,
     fontSize: 12,
+  },
+  containerEmptyBlackBox: {
+    width,
+    height:hp("10%"),
+    backgroundColor: colors.black,
+    paddingVertical: height > 800 ? 25 : 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+
   },
 });
