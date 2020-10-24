@@ -14,7 +14,7 @@ const onboardingStyle = StyleSheet.create({
         justifyContent: 'space-between',
       },
    IntensityTitleText:{
-    fontSize: 12,
+    fontSize: 14,
     color: '#d4d8db',
     fontWeight:fonts.fontWeight,
     letterSpacing:fonts.letterSpacing
