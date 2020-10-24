@@ -641,7 +641,7 @@ const styles = StyleSheet.create({
   },
   currentExerciseRepsText: {
     fontFamily: fonts.boldNarrow,
-    fontSize: 12,
+    fontSize: 18,
   },
   containerEmptyBlackBox: {
     width,

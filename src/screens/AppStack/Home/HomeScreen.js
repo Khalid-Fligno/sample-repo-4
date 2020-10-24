@@ -80,7 +80,7 @@ export default class HomeScreen extends React.PureComponent {
       totalStrengthCompleted:undefined,
     };
   }
-  componentDidMount = () => {
+  componentDidMount = async() => {
     this.fetchProfile();
     this.switchWelcomeHeader();
     this.setDayOfWeek();
@@ -176,7 +176,9 @@ fetchActiveChallengeUserData = async () =>{
            this.fetchActiveChallengeData(list[0])
       }else{
         if( activeChallengeEndTime && currentTime >= activeChallengeEndTime){  //TODO check challenge is Completed or not
-          console.log("Challenge Completed....")
+         const challengeRef =db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
+         challengeRef.set({status:"Completed"},{merge:true})
+         console.log("Challenge Completed....")
         }
         this.setState({ 
           activeChallengeUserData:undefined,
@@ -200,13 +202,11 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
           const activeChallengeData = doc.data()
           //TODO calculate total interval circuit strength completed user during challenge
           const totalWorkouts =[] 
-          activeChallengeData.phases.forEach(phase => {
-            phase.workouts.forEach(workout =>{
+            activeChallengeData.workouts.forEach(workout =>{
               totalWorkouts.push(workout)
             })
-          });
           
-          const totalInterval = totalWorkouts.filter((res)=>res.target === 'interval')
+          let totalInterval = totalWorkouts.filter((res)=>res.target === 'interval')
           const totalCircuit = totalWorkouts.filter((res)=>res.target === 'circuit')
           const totalStrength = totalWorkouts.filter((res)=>res.target === 'strength')
     
@@ -260,9 +260,12 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
     let countC = 0;
     let countS = 0;
     if(activeChallengeData !== undefined){
-      totalI = totalInterval.length;
-      totalC = totalCircuit.length;
-      totalS = totalStrength.length;
+      totalI = 0
+      totalInterval.forEach((res)=>totalI += res.days.length )
+      totalC = 0
+      totalCircuit.forEach((res)=>totalC += res.days.length )
+      totalS = 0;
+      totalStrength.forEach((res)=>totalS += res.days.length )
 
       countI = totalIntervalCompleted.length;
       countC = totalCircuitCompleted.length;

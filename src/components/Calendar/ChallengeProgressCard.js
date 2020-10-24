@@ -23,13 +23,15 @@ class ChallengeProgressCard extends Component {
         totalChallengeWorkoutsCompleted,
         openLink
       } = this.props
+      let total = 0
+      activeChallengeData.workouts.forEach((res)=>total += res.days.length )
     return(
         <View style={calendarStyles.ChallengeProgressCardContainer }>
           <Text style={calendarStyles.challengeLabel}
           >
            {activeChallengeUserData.displayName}{'  '} 
            <Text style={{fontFamily:fonts.standardNarrow}}>
-               {totalChallengeWorkoutsCompleted.length}/{phaseData.workouts.length}
+               {totalChallengeWorkoutsCompleted.length}/{total}
            </Text>
          </Text>
 
@@ -41,7 +43,7 @@ class ChallengeProgressCard extends Component {
                       <Slider
                         value={totalChallengeWorkoutsCompleted.length}
                         minimumValue={0}
-                        maximumValue={phaseData.workouts.length}
+                        maximumValue={total}
                         trackStyle={{height:5,borderRadius:5}}
                         minimumTrackTintColor={colors.themeColor.color}
                         maximumTrackTintColor={colors.grey.medium}
@@ -54,7 +56,7 @@ class ChallengeProgressCard extends Component {
                         disabled={true}
                       />
                     </View>
-                    <Text style={calendarStyles.sliderSideText}>{phaseData.workouts.length}</Text>
+                    <Text style={calendarStyles.sliderSideText}>{total}</Text>
                 </View>
                   
               

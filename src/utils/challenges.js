@@ -22,11 +22,10 @@ export const isActiveChallenge = async() =>{
 export const getCurrentPhase = (data) =>{
     let phase = {}
     data.forEach(el => {
-        let currentTime = new Date().getTime();
-        let startTime = new Date(el.startDate).getTime()
-        let endTime = new Date(el.endDate).getTime()
-        console.log(el.startDate)
-        if(currentTime >= startTime && currentTime <=endTime){
+        let currentDate = new Date()
+        const isBetween = moment(currentDate).isBetween(el.startDate, el.endDate, undefined, '[]')
+        console.log()
+        if(isBetween){
           phase =  el
         }
     });
@@ -47,13 +46,13 @@ export const getCurrentChallengeDay = (date) =>{
     return currentDay; 
 }
 
-export const getTodayRecommendedWorkout = (phaseData,activeChallengeUserData,selectedDate) =>{
+export const getTodayRecommendedWorkout = (workouts,activeChallengeUserData,selectedDate) =>{
 
     let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime(); 
     // To calculate the no. of days between two dates 
     let currentDay = Math.round(Difference_In_Time / (1000 * 3600 * 24))+1;
 
-    return phaseData.workouts.find((res)=>res.days.includes(currentDay))
+    return workouts.find((res)=>res.days.includes(currentDay))
 }
 export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
     const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences

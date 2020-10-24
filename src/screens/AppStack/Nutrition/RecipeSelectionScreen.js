@@ -129,8 +129,10 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     const meal = this.props.navigation.getParam('meal', null);
     const { recipes, loading, filterIndex } = this.state;
     const filterButtons = ['All', 'Vegetarian', 'Vegan', 'Gluten-Free'];
+    
     const recipeList = sortBy(recipes, 'newBadge')
       .filter((recipe) => {
+        if(recipe.tags === undefined) return recipes
         if (filterIndex === 1) {
           return recipe.tags.includes('V');
         } else if (filterIndex === 2) {
@@ -140,6 +142,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         }
         return recipes;
       });
+      
     const skeleton = (
       <View style={styles.recipeTileSkeletonContainer}>
         <RecipeTileSkeleton />

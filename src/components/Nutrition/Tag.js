@@ -5,7 +5,6 @@ import fonts from '../../styles/fonts'
 
 
 export default function Tag(props){
-  console.log(props.tag)
     return(
     
       <View

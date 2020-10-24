@@ -342,7 +342,7 @@ getCurrentPhaseInfo(){
      //TODO getToday one recommended meal randomly  
      this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
     //TODO get recommended workout here
-    this.todayRcWorkout = getTodayRecommendedWorkout(this.phaseData,activeChallengeUserData,this.stringDate ) 
+    this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
     }else{
     Alert.alert('Something went wrong please try again')
   }
@@ -414,7 +414,7 @@ openLink = (url) => {
           />
         }
         <Text style={calendarStyles.headerText}>
-          Workout
+           Todays Workout
         </Text>
         <View style={calendarStyles.listContainer}>
           {
@@ -448,7 +448,7 @@ openLink = (url) => {
         }
         </View>
         <Text style={calendarStyles.headerText}>
-          Meals
+        Todays Meals
         </Text>
         <View style={calendarStyles.listContainer}>
           {
