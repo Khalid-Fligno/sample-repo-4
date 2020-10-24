@@ -337,9 +337,9 @@ getCurrentPhaseInfo(){
    //TODO calculate current challenge day
     this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
    //TODO getToday one recommended meal randomly  
-   console.log(typeof this.state.meals)
    this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
-     //TODO getToday one recommended meal randomly  
+   console.log("???",this.todayRecommendedMeal) 
+   //TODO getToday one recommended meal randomly  
      this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
     //TODO get recommended workout here
     this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
@@ -470,7 +470,7 @@ openLink = (url) => {
                                 stringDate = {this.stringDate}
                         />
                   )     
-                }else{
+                }else if(res.id){
                   return( 
                   <RcMealListItem 
                     key={index}
@@ -482,8 +482,17 @@ openLink = (url) => {
                     onSwipeableClose={() => this.setState({ isSwiping: false })}
                   />
                   )
+                }else{
+                  return(
+                    <CustomListItem 
+                      key={index}
+                      name={res.mealTitle} 
+                      index={index} 
+                      onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: res.meal })}
+                      subTitle ="Press here to see available recipes"
+                      />
+                    )
                 }
-            
               }
              
             })
