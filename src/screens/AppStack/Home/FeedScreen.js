@@ -115,7 +115,7 @@ fetchBlogs = async (tag,currentDay) => {
     const cDay = currentDay === 1?2:currentDay
     snapshot.forEach(doc => {
       console.log(doc.data())
-      if(doc.data().startDay <= 9 && doc.data().endDay >= 9)
+      if(doc.data().startDay <= cDay && doc.data().endDay >= cDay)
       blogs.unshift(doc.data())
     });
     this.setState({blogs,loading:false})
@@ -166,8 +166,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
       this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
       this.fetchBlogs(activeChallengeUserData.tag,this.currentChallengeDay)
       //TODO get recommended workout here
-      this.todayRcWorkout = getTodayRecommendedWorkout(this.phaseData,activeChallengeUserData,this.stringDate ) 
-      console.log("1111",this.todayRcWorkout)
+      this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
       
     }else{
       Alert.alert('Something went wrong please try again')
