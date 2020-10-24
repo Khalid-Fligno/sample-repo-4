@@ -65,6 +65,7 @@ export default class Onboarding1Screen extends React.PureComponent {
         dob,
         unitsOfMeasurement: chosenUom,
         // onboarded: true,
+        totalWorkoutCompleted:0,
         weeklyTargets: {
           currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
           resistanceWeeklyComplete: 0,
