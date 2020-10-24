@@ -173,7 +173,7 @@ const createUserAndChallenge= async (req)=>{
       // get product from line item collection
       console.log("challengeShopifyProductId",req.shopify_product_id);
       // get workout challange details by passing product_title      
-      const challenge= await getChallengeDetailByProductId(req.shopify_product_id);
+      const challenge= await getChallengeDetails(challengeProductName);
       console.log("challenge",challenge);
       const userInfo=await getUser(req.email);
       console.log("userInfo",userInfo);
@@ -222,7 +222,6 @@ const updateUserById = (userInfo) => {
 }
 
 const getChallengeDetails = async(challengeName) => {
-    let challengeDetail;
     const snapshot =await db.collection('challenges').where("name","==",challengeName)
      .get();
      if (snapshot.size > 0) {
@@ -230,7 +229,7 @@ const getChallengeDetails = async(challengeName) => {
   }   
 }
 const getChallengeDetailByProductId = async(challengeProductId) => {
-  let challengeDetail;
+  
   const snapshot =await db.collection('challenges').where("shopifyProductId","==",challengeProductId)
    .get();
    if (snapshot.size > 0) {
