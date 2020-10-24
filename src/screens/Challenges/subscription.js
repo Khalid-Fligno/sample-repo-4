@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text ,ScrollView,FlatList, Alert} from 'react-native';
+import { View, Text ,ScrollView,FlatList, Alert, Linking} from 'react-native';
 import { ListItem, Button,  } from 'react-native-elements'
 import colors from '../../styles/colors';
 import globalStyle, { containerPadding } from '../../styles/globalStyles';
@@ -12,7 +12,7 @@ import Loader from '../../components/Shared/Loader';
 import ChallengeStyle from './chellengeStyle';
 import createUserChallengeData from '../../components/Challenges/UserChallengeData';
 import ChallengeCard from '../../components/Challenges/ChallengeCard';
-
+import * as Haptics from 'expo-haptics';
 
 
 class ChallengeSubscriptionScreen extends Component {
@@ -96,7 +96,10 @@ class ChallengeSubscriptionScreen extends Component {
     })
    
  }
-
+ openLink = (url) => {
+  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+  Linking.openURL(url);
+}
 
   renderItem = ({ item ,index}) => (
     <ChallengeCard 
@@ -105,7 +108,8 @@ class ChallengeSubscriptionScreen extends Component {
         numberOfDays={item.numberOfDays}
         key={index}
         btnTitle = "Buy"
-        onPress={()=>this.addChallengeToUser(index)}
+        //onPress={()=>this.addChallengeToUser(index)}
+        onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
         disabled = {false}
     />
       
