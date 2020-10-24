@@ -45,7 +45,7 @@ const calendarStyles = StyleSheet.create({
       },
       listContainer: {
         width,
-        marginTop: 0,
+        marginTop: 10,
         // borderWidth: 0,
         // borderTopColor: colors.grey.light,
         // shadowColor: colors.grey.standard,

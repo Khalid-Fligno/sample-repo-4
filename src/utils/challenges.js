@@ -24,7 +24,6 @@ export const getCurrentPhase = (data) =>{
     data.forEach(el => {
         let currentDate = new Date()
         const isBetween = moment(currentDate).isBetween(el.startDate, el.endDate, undefined, '[]')
-        console.log()
         if(isBetween){
           phase =  el
         }
@@ -71,12 +70,11 @@ export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
     const dinnerList = phaseMeals.filter((res)=>res.mealType.includes('dinner'))
     const snackList = phaseMeals.filter((res)=>res.mealType.includes('snack'))
 
-    const breakfast =  getRandomNumber(breakfastList.length-1) >=0?Object.assign({},breakfastList[getRandomNumber(breakfastList.length-1)],{mealTitle:'breakfast',meal:'breakfast'}):undefined;
-    const lunch = getRandomNumber(lunchList.length-1) >=0?Object.assign({},lunchList[getRandomNumber(lunchList.length-1)],{mealTitle:'lunch',meal:'lunch'}):undefined;
-    const dinner = getRandomNumber(dinnerList.length-1) >=0?Object.assign({},dinnerList[getRandomNumber(dinnerList.length-1)],{mealTitle:'dinner',meal:'dinner'}):undefined;
-    const morningSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'morning Snack',meal:'snack'}):undefined;
-    const afternoonSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'afternoon Snack',meal:'snack2'}):undefined;
-    
+    const breakfast =  getRandomNumber(breakfastList.length-1) >=0?Object.assign({},breakfastList[getRandomNumber(breakfastList.length-1)],{mealTitle:'breakfast',meal:'breakfast'}):{mealTitle:'breakfast',meal:'breakfast'};
+    const lunch = getRandomNumber(lunchList.length-1) >=0?Object.assign({},lunchList[getRandomNumber(lunchList.length-1)],{mealTitle:'lunch',meal:'lunch'}):{mealTitle:'lunch',meal:'lunch'};
+    const dinner = getRandomNumber(dinnerList.length-1) >=0?Object.assign({},dinnerList[getRandomNumber(dinnerList.length-1)],{mealTitle:'dinner',meal:'dinner'}):{mealTitle:'dinner',meal:'dinner'};
+    const morningSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'morning Snack',meal:'snack'}):{mealTitle:'morning Snack',meal:'snack'};
+    const afternoonSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'afternoon Snack',meal:'snack2'}):{mealTitle:'afternoon Snack',meal:'snack'};
     
     const recommendedMeal = [
         breakfast,
@@ -106,7 +104,6 @@ export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
     return challenges.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];    
   }
   export const hasChallenges = async(uid) =>{
-    console.log("uid",uid);
     const userChallenges= await getChallengeDetails(uid);
     if(userChallenges !== undefined && userChallenges.length > 0){
 
