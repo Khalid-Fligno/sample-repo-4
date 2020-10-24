@@ -15,8 +15,9 @@ class ChallengeCard extends Component {
   }
 
   render() {
-      const  {numberOfDays ,outline,btnTitle,onPress,imageUrl,disabled} = this.props
-    return (
+      const  {numberOfDays ,outline,btnTitle,onPress,imageUrl,disabled,numberOfWeeks} = this.props
+   console.log("????",numberOfWeeks)
+      return (
         <ImageBackground
             source ={{uri:imageUrl}}
             style={[globalStyle.FT_ImageContainer,{height:130}]}
@@ -26,9 +27,9 @@ class ChallengeCard extends Component {
                 style={styles.ViewContainer}
               >
                   <View style={styles.titleContainer}>
-                    <Text style={styles.numberTextLabel}>{numberOfDays}</Text>
+                    <Text style={styles.numberTextLabel}>{numberOfWeeks}</Text>
                       <View style={{marginLeft:5}}> 
-                          <Text style={styles.textLabel}>Day</Text>
+                          <Text style={styles.textLabel}>Weeks</Text>
                           <Text style={styles.textLabel}>challenge</Text>
                       </View>
                   </View>
