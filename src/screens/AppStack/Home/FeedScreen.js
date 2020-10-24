@@ -76,8 +76,11 @@ export default class FeedScreen extends React.PureComponent {
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       isActiveChallenge().then((res)=>{
         if(res){
-          this.setState({loading:true})
-          this.fetchActiveChallengeData(res);
+          if(this.state.blogs === undefined){
+            this.setState({loading:true})
+            this.fetchActiveChallengeData(res);
+          }
+        
         }
       })
     })
@@ -112,7 +115,7 @@ fetchBlogs = async (tag,currentDay) => {
     const cDay = currentDay === 1?2:currentDay
     snapshot.forEach(doc => {
       console.log(doc.data())
-      if(doc.data().startDay <= cDay && doc.data().endDay >= cDay)
+      if(doc.data().startDay <= 9 && doc.data().endDay >= 9)
       blogs.unshift(doc.data())
     });
     this.setState({blogs,loading:false})
