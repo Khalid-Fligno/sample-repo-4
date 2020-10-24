@@ -106,6 +106,7 @@ class ChallengeSubscriptionScreen extends Component {
         outline={false}
         imageUrl={item.imageUrl}
         numberOfDays={item.numberOfDays}
+        numberOfWeeks={item.numberOfWeeks}
         title={item.displayName}
         key={index}
         btnTitle = "Buy"
@@ -145,7 +146,7 @@ class ChallengeSubscriptionScreen extends Component {
               outline={true}
               imageUrl={item.imageUrl}
               numberOfDays={item.numberOfDays}
-              title={item.displayName}
+              numberOfWeeks={item.numberOfWeeks}
               key={index}
               btnTitle = {btnTitle}
               onPress={()=>this.onBoarding(item,btnTitle,btnDisabled)}
