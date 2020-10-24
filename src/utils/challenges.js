@@ -25,6 +25,7 @@ export const getCurrentPhase = (data) =>{
         let currentTime = new Date().getTime();
         let startTime = new Date(el.startDate).getTime()
         let endTime = new Date(el.endDate).getTime()
+        console.log(el.startDate)
         if(currentTime >= startTime && currentTime <=endTime){
           phase =  el
         }
@@ -40,17 +41,19 @@ export const getTotalChallengeWorkoutsCompleted = (data,stringDate) =>{
     return totalworkoutCompleted            
 }
 export const getCurrentChallengeDay = (date) =>{
-    let startDate = new Date(date).getDate();
-    let currentDate = new Date().getDate();
-    return ( currentDate - startDate) +1
+    let startTime = new Date(date).getTime();
+    let currentTime = new Date().getTime();
+    let currentDay = Math.round(( currentTime - startTime) / (1000 * 3600 * 24))+1
+    return currentDay; 
 }
 
 export const getTodayRecommendedWorkout = (phaseData,activeChallengeUserData,selectedDate) =>{
-    let startDate = new Date(activeChallengeUserData.startDate).getDate();
-    let currentDate = new Date(selectedDate).getDate();
-    console.log(currentDate)
-    const currentDay =  ( currentDate - startDate) +1;
-    return phaseData.workouts.find((res)=>res.day === currentDay)
+
+    let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime(); 
+    // To calculate the no. of days between two dates 
+    let currentDay = Math.round(Difference_In_Time / (1000 * 3600 * 24))+1;
+
+    return phaseData.workouts.find((res)=>res.days.includes(currentDay))
 }
 export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
     const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences

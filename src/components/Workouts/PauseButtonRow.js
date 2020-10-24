@@ -4,9 +4,9 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-nati
 import Icon from '../../components/Shared/Icon';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
+import { widthPercentageToDP as wp} from 'react-native-responsive-screen';
 
 const { width } = Dimensions.get('window');
-
 export default class PauseButtonRow extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -22,6 +22,16 @@ export default class PauseButtonRow extends React.PureComponent {
       isNextButton,
       handleNextButton
     } = this.props;
+    let exerciseTitle = ''
+    if(!lastExercise && nextExerciseName.toLowerCase() === 'rest' ){
+      exerciseTitle = ""
+    }else if(!lastExercise){
+      exerciseTitle = "NEXT EXERCISE:"
+    }
+    else{
+      exerciseTitle='LAST EXERCISE'
+    }
+
     console.log(showNextExercise,"<><><>")
     return (
       <View style={styles.pauseButtonRow}>
@@ -43,14 +53,18 @@ export default class PauseButtonRow extends React.PureComponent {
           {
             showNextExercise && 
             (
-              <View style={styles.nextExerciseContainer}>
-                <Text style={styles.nextExercise}>{!lastExercise ? 'NEXT EXERCISE:' : 'LAST EXERCISE'}</Text>
+              <View style={[styles.nextExerciseContainer,{width: isNextButton?width/3 :width/1.5,}]}>
+                {
+                  exerciseTitle !=="" &&
+                   <Text style={styles.nextExercise}>{exerciseTitle}</Text>
+                }
+               
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
                   style={styles.nextExerciseName}
                 >
-                  {nextExerciseName.toUpperCase()}
+                  { nextExerciseName.toLowerCase() === 'rest' && 'NEXT'} {nextExerciseName.toUpperCase()}
                 </Text>
               </View>
             )
@@ -131,7 +145,6 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   nextExerciseContainer: {
-    width: width/3,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 5,
@@ -140,6 +153,7 @@ const styles = StyleSheet.create({
   nextExercise: {
     fontFamily: fonts.standard,
     fontSize: 10,
+    marginLeft:-wp('2%')
   },
   nextExerciseName: {
     fontFamily: fonts.bold,

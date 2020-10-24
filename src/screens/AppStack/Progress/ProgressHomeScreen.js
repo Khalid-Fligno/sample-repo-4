@@ -466,7 +466,7 @@ class ProgressHomeScreen extends React.PureComponent {
                               <ProgressBar
                                 title="Interval"
                                 completed={countI}
-                                total = {countI}
+                                total = {totalI}
                                 size ={wp('38%')}
                               />
                             </View>
