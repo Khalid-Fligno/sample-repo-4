@@ -311,7 +311,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
     } = this.state;
 
 
-    const workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
+    // const workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
+    const workoutTime = 18
 
     console.log("calendarModalVisible",calendarModalVisible);
     return (
