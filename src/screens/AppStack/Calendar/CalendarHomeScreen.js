@@ -192,8 +192,8 @@ class CalendarHomeScreen extends React.PureComponent {
             const { exercises } = workout;
             await Promise.all(exercises.map(async (exercise, index) => {
               // const videoUrl = exercise.videoUrls.filter(res=>res.model === 'sharnia')
-              // console.log(exercise.videoUrls[0].url)
-              if(exercise.videoUrls[0].url !== ""){
+              // console.log("???",exercise.videoUrls[0].url)
+              if(exercise.videoUrls && exercise.videoUrls[0].url !== ""){
                   await FileSystem.downloadAsync(
                     exercise.videoUrls[0].url,
                     `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
