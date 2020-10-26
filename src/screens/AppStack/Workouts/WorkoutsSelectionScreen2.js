@@ -163,18 +163,15 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
          
            {
           !loading && (
-            <View>
-            <Text style={WorkoutScreenStyle.description}> {this.workoutList.length ===0 ? 'No':this.workoutList.length } workouts
-            </Text>          
             <FlatList
               // contentContainerStyle={styles.scrollView}
+              ListHeaderComponent={  <Text style={WorkoutScreenStyle.description}> {this.workoutList.length ===0 ? 'No':this.workoutList.length } workouts</Text>  }
               data={this.workoutList}
               keyExtractor={this.keyExtractor}
               renderItem={this.renderItem}
               showsVerticalScrollIndicator={false}
               style={{height:'100%',marginStart:2}}
             />
-            </View>
           )
         }
         <Loader
