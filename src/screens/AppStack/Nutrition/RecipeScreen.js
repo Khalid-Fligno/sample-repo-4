@@ -371,6 +371,7 @@ export default class RecipeScreen extends React.PureComponent {
                   </Text>
                   {
                     ingredients.map((ingredient,index) => {
+                      if(ingredient)
                       return (
                         <View style={{flexDirection:"row"}} key={index}>
                           <Text  style={NutritionStyles.ingredientsText}> • </Text>
@@ -378,7 +379,7 @@ export default class RecipeScreen extends React.PureComponent {
                           key={ingredient}
                           style={NutritionStyles.ingredientsText}
                           >
-                            {ingredient}
+                            {ingredient.trim()}
                           </Text>
                         </View>
                         
@@ -392,6 +393,7 @@ export default class RecipeScreen extends React.PureComponent {
                   </Text>
                   {
                     utensils.map((utensil,index) => {
+                      if(utensil)
                       return (
                         <View style={{flexDirection:"row"}} key={index}>
                         <Text  style={NutritionStyles.ingredientsText}> • </Text>
@@ -399,7 +401,7 @@ export default class RecipeScreen extends React.PureComponent {
                         key={utensil}
                         style={NutritionStyles.ingredientsText}
                         >
-                          {utensil}
+                          {utensil.trim()}
                         </Text>
                       </View>
                         // <Text

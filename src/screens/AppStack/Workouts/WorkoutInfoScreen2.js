@@ -157,7 +157,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
     });
   }
 
-  keyExtractor = (exercise) => exercise.id;
+  keyExtractor = (exercise,index) => index;
 
   renderItem = ({ item: exercise, index }) => (
     <View style={WorkoutScreenStyle.carouselContainer}>
@@ -311,8 +311,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
     } = this.state;
 
 
-    // const workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
-    const workoutTime = 18
+    const workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
 
     console.log("calendarModalVisible",calendarModalVisible);
     return (
