@@ -135,9 +135,13 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   handleDateSelected = async (date) => {
+    const { activeChallengeData,activeChallengeUserData} = this.state
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = date.format('YYYY-MM-DD').toString();
+    if(activeChallengeData && activeChallengeUserData){
+      this.getCurrentPhaseInfo()
+    }
     this.unsubscribeFromEntries2 = await db.collection('users').doc(uid)
       .collection('calendarEntries').doc(stringDate)
       .onSnapshot(async (doc) => {
@@ -188,8 +192,8 @@ class CalendarHomeScreen extends React.PureComponent {
             const { exercises } = workout;
             await Promise.all(exercises.map(async (exercise, index) => {
               // const videoUrl = exercise.videoUrls.filter(res=>res.model === 'sharnia')
-              // console.log(exercise.videoUrls[0].url)
-              if(exercise.videoUrls[0].url !== ""){
+              // console.log("???",exercise.videoUrls[0].url)
+              if(exercise.videoUrls && exercise.videoUrls[0].url !== ""){
                   await FileSystem.downloadAsync(
                     exercise.videoUrls[0].url,
                     `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
@@ -309,8 +313,9 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
             activeChallengeData:doc.data() ,
             loading:false
           });
+          this.getCurrentPhaseInfo()
         }
-     
+        
     });
   }catch(err){
     this.setState({ loading: false });
@@ -324,7 +329,6 @@ getCurrentPhaseInfo(){
   const {activeChallengeUserData,activeChallengeData} = this.state
   if(activeChallengeUserData && activeChallengeData){
     const data  = activeChallengeUserData.phases;
-    
     //TODO :getCurrent phase data
     this.phase = getCurrentPhase(activeChallengeUserData.phases)
     //TODO :fetch the current phase data from Challenges collection
@@ -344,6 +348,7 @@ getCurrentPhaseInfo(){
     //TODO get recommended workout here
     this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
     }else{
+    
     Alert.alert('Something went wrong please try again')
   }
 }
@@ -369,11 +374,6 @@ openLink = (url) => {
     const {
       loading,
       workout,
-      breakfast,
-      lunch,
-      dinner,
-      snack,
-      snack2,
       meals,
       helperModalVisible,
       dayOfWeek,
@@ -381,17 +381,17 @@ openLink = (url) => {
       activeChallengeData
     } = this.state;
 
-    if(activeChallengeData && activeChallengeUserData){
+    if(activeChallengeData && activeChallengeUserData && !this.phase){
       this.getCurrentPhaseInfo()
     }
 
-    let showRC = false
-    if(this.calendarStrip.current){
-      let currentCalendarDate = new Date(this.calendarStrip.current.getSelectedDate()).getDate();
-      let currentDate = new Date().getDate()
-      if(currentCalendarDate === currentDate && this.todayRecommendedMeal && this.todayRecommendedMeal.length >0)
-        showRC = true
-    }
+    let showRC = true
+    // if(this.calendarStrip.current){
+    //   let currentCalendarDate = new Date(this.calendarStrip.current.getSelectedDate()).getDate();
+    //   let currentDate = new Date().getDate()
+    //   if(currentCalendarDate === currentDate && this.todayRecommendedMeal && this.todayRecommendedMeal.length >0)
+    //     showRC = true
+    // }
 
     if(this.todayRecommendedMeal){
       

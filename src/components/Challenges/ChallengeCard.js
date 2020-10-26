@@ -29,7 +29,7 @@ class ChallengeCard extends Component {
                   <View style={styles.titleContainer}>
                     <Text style={styles.numberTextLabel}>{numberOfWeeks}</Text>
                       <View style={{marginLeft:5}}> 
-                          <Text style={styles.textLabel}>Weeks</Text>
+                          <Text style={styles.textLabel}>Week</Text>
                           <Text style={styles.textLabel}>challenge</Text>
                       </View>
                   </View>

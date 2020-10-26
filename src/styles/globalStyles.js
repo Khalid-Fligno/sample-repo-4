@@ -51,7 +51,7 @@ const globalStyle = StyleSheet.create({
       // shadowOpacity: 0.7,
       // shadowRadius: 2,
       marginTop:10,
-      padding:0
+      padding:0,
     },
     filterButtonsContainer: {
         height: 40,

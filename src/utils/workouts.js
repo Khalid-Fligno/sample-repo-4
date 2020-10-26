@@ -91,3 +91,18 @@ export const showNextExerciseFlag = (workout,setCount,rest) =>{
   } 
   return showNextExercise
 }
+
+// export const getRegisteredWebHooks = () => {
+//   return async () => {
+//     const options = {
+//       method: 'GET',
+//       headers: {
+//           'Content-Type': 'application/json',
+//           'x-recharge-access-token' : RECHARGE_API_KEY
+//         },
+//       };
+//     const res = await fetch("https://api.cloudconvert.com/v2/thumbnail", options);      
+//     const body = await res.json();
+//     return body;
+//   };
+// }
