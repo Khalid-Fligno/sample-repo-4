@@ -38,9 +38,9 @@ export const getTotalChallengeWorkoutsCompleted = (data,stringDate) =>{
                                 })
     return totalworkoutCompleted            
 }
-export const getCurrentChallengeDay = (date) =>{
-    let startTime = new Date(date).getTime();
-    let currentTime = new Date().getTime();
+export const getCurrentChallengeDay = (startDate,currentDate) =>{
+    let startTime = new Date(startDate).getTime();
+    let currentTime = new Date(currentDate).getTime();
     let currentDay = Math.round(( currentTime - startTime) / (1000 * 3600 * 24))+1
     return currentDay; 
 }
@@ -50,7 +50,7 @@ export const getTodayRecommendedWorkout = (workouts,activeChallengeUserData,sele
     let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime(); 
     // To calculate the no. of days between two dates 
     let currentDay = Math.round(Difference_In_Time / (1000 * 3600 * 24))+1;
-
+    console.log("???....",currentDay)
     return workouts.find((res)=>res.days.includes(currentDay))
 }
 export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{

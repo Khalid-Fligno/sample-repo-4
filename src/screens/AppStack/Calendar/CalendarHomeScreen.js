@@ -339,10 +339,10 @@ getCurrentPhaseInfo(){
     this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
 
    //TODO calculate current challenge day
-    this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
+    this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
    //TODO getToday one recommended meal randomly  
    this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
-   console.log("???",this.todayRecommendedMeal) 
+   console.log("???",this.currentChallengeDay) 
    //TODO getToday one recommended meal randomly  
      this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
     //TODO get recommended workout here
