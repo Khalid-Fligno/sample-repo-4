@@ -425,6 +425,7 @@ openLink = (url) => {
                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                 onSwipeableClose={() => this.setState({ isSwiping: false })}
                 renderRightActions={() => this.renderRightActionForRC('workout')} 
+                currentDay={this.currentChallengeDay}
             />
           }
           {

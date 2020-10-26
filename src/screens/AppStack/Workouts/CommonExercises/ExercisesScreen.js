@@ -490,6 +490,7 @@ export default class ExercisesScreen extends React.PureComponent {
                       else  
                         this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
                     } }
+                    customContainerStyle={{paddingBottom:20}}
                   />
 
               }
@@ -504,6 +505,7 @@ export default class ExercisesScreen extends React.PureComponent {
                         else  
                           this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
                       } }
+                    customContainerStyle={{paddingBottom:20}}
                     />
 
                 }
@@ -575,7 +577,7 @@ export default class ExercisesScreen extends React.PureComponent {
               nextExerciseName={lastExercise.nextExerciseName}
               lastExercise={lastExercise.isLastExercise}
               showNextExercise = {showNextExercise}
-              isNextButton={workout.count}
+              isNextButton={rest?false:workout.count}
               handleNextButton={()=>this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)}
             />
           }

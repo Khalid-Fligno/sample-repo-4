@@ -55,13 +55,14 @@ export const getTodayRecommendedWorkout = (workouts,activeChallengeUserData,sele
 }
 export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
     const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
-    const phaseMeals = phaseData.meals.filter((res)=>{
-        for(i=0;i<dietryPreferences.length;i++){
-        if(res.tags.includes(dietryPreferences[i])){
-            return true
-        }
-        }
-    })
+    const phaseMeals = phaseData.meals
+    // const phaseMeals = phaseData.meals.filter((res)=>{
+    //     for(i=0;i<dietryPreferences.length;i++){
+    //     if(res.tags.includes(dietryPreferences[i])){
+    //         return true
+    //     }
+    //     }
+    // })
     const challengeMealsFilterList = phaseMeals.map((res)=>res.id)
 
     const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);

@@ -156,6 +156,7 @@ const calendarStyles = StyleSheet.create({
       },
      phaseContainer:{
        width:'100%',
+       alignItems:'center'
       },
       phaseBodyText:{
         marginTop:hp('1.3%'),

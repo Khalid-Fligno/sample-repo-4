@@ -131,7 +131,7 @@ export default class WorkoutTimer extends React.PureComponent {
     const styles = this.findStyles(this.state.remainingTime);
     return (
       <View style={[styles.container,this.props.customContainerStyle]}>
-        <Text style={styles.text}>{this.formatTime()}</Text>
+        <Text style={[styles.text,{fontSize:50}]}>{this.formatTime()}</Text>
       </View>
     );
   }

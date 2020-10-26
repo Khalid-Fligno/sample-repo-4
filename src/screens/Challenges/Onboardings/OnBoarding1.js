@@ -5,6 +5,7 @@ import globalStyle from '../../../styles/globalStyles';
 import SliderComponent from '../../../components/Challenges/slider';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
+import * as FileSystem from 'expo-file-system';
 
 export default class OnBoarding1 extends Component {
   constructor(props) {
@@ -44,7 +45,12 @@ export default class OnBoarding1 extends Component {
   }
   
   // and don't forget to remove the listener
-  componentWillUnmount () {
+  componentWillUnmount= async () =>{
+    console.log(">>>>")
+    await FileSystem.downloadAsync(
+      'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2FBURPEES.mp4?alt=media&token=688885cb-2d70-4fc6-82a9-abc4e95daf89',
+      `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
+    );
     this.focusListener.remove()
   }
  goToNextScreen(){
@@ -68,7 +74,7 @@ export default class OnBoarding1 extends Component {
    let updatedChallengedata = Object.assign({},challengeData,{
      onBoardingInfo
    })
-  this.props.navigation.navigate('ChallengeOnBoarding2',{
+  this.props.navigation.navigate('ChallengeOnBoarding3',{
     data:{
       challengeData:updatedChallengedata
     }

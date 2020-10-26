@@ -58,7 +58,7 @@ const ChallengeStyle = StyleSheet.create({
           color: colors.charcoal.dark,
         },
         IntensityTitleText:{
-          fontSize: 12,
+          fontSize: 15,
           color: '#d4d8db',
           fontWeight:fonts.fontWeight,
           letterSpacing:fonts.letterSpacing

@@ -209,7 +209,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
                 onPress={() => this.props.navigation.navigate('Calendar')}
                 cardCustomStyle ={{marginTop:20}} 
               />
-              {
+              {/* {
                 blogs && blogs.length > 0&&
                 blogs.map((res,index)=>
                     <ChallengeBlogCard
@@ -220,7 +220,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
                   />
                 )
                
-              }
+              } */}
              
               <NewsFeedTile
                 image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
@@ -230,7 +230,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
               <DoubleNewsFeedTile
                 imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-blog.jpg')}
                 imageRight={require('../../../../assets/images/hiit-rest-placeholder.jpg')}
-                titleLeft1="BLOG"
+                titleLeft1="HOW TO USE THIS APP"
                 titleRight1="FAQ"
                 onPressLeft={() => this.props.navigation.navigate('HomeBlog')}
                 onPressRight={() => this.openLink('https://fitazfk.zendesk.com/hc/en-us')}

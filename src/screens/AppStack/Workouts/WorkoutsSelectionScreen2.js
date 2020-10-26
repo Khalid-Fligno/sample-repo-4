@@ -47,6 +47,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       .onSnapshot(async (querySnapshot) => {
         const workouts = [];
         await querySnapshot.forEach(async (doc) => {
+          if(!(doc.data().tags.includes("8WC")))
           await workouts.push(await doc.data());
         });
         this.setState({ workouts, loading: false });
@@ -73,7 +74,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       await Promise.all(exercises.map(async (exercise, index) => {
         // const videoUrl = exercise.videoUrls.filter(res=>res.model === 'sharnia')
         // console.log(exercise.videoUrls[0].url)
-        if(exercise.videoUrls[0].url !== ""){
+        if(exercise.videoUrls && exercise.videoUrls[0].url !== ""){
             await FileSystem.downloadAsync(
               exercise.videoUrls[0].url,
               `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,

@@ -72,9 +72,9 @@ class ChallengeProgressCard extends Component {
                 customBtnTitleStyle={{marginRight:wp('3%'),fontFamily:fonts.boldNarrow}}
                 onPress={openLink}
              />
-              <Text style={calendarStyles.phaseBodyText}>
+              {/* <Text style={calendarStyles.phaseBodyText}>
                 {phase.displayName} details. 
-              </Text>
+              </Text> */}
           </View>
          </View>
          <View style={{borderBottomColor:colors.grey.light,borderBottomWidth:2,width:'100%',marginTop:hp('2%')}}></View>

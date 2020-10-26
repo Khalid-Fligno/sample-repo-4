@@ -59,7 +59,7 @@ export default class ProgressBar extends React.PureComponent {
                         (fill) => (
                           <View>
                             <Text style={[styles.progressBarLabel,customProgessTotalStyle]}>
-                                <Text style={[styles.progressCircleNumber,customProgressNumberStyle]}>{completed}</Text>{total > 0 && `/${total}` }
+                                <Text style={[styles.progressCircleNumber,customProgressNumberStyle]}>{completed}</Text> 
                             </Text>
                             {title &&
                               <Text style={[styles.progressCircleText,customTitleStyle]}>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     fontSize: hp('2%'),
     color: colors.grey.dark,
     textAlign:'center',
-    marginLeft:11,
+    // marginLeft:11,
     marginTop:-20,
     marginBottom:-5,
   },
