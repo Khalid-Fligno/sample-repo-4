@@ -122,7 +122,8 @@ export const CustomListItem = (props)=>{
            key = {index}
            activeOpacity ={0.5}
            underlayColor="none"
-           title={`${res.displayName} - Day ${currentDay}`}
+           title={`${res.displayName}`}
+          //  title={`${res.displayName} - Day ${currentDay}`}
            subtitle={res.name === 'rest'?"Today is your rest day":res.target}
            onPress={onPress}
            containerStyle={calendarStyles.listItemContainer}
