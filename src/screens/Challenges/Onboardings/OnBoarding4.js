@@ -148,9 +148,10 @@ export default class OnBoarding4 extends Component {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     console.log(imgUrl)
     try {
-      if (imgUrl !== null) {
+      if (type === 'next') {
+        // if (imgUrl !== null) {
         const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
-          beforePhotoUrl:imgUrl
+          beforePhotoUrl:imgUrl?imgUrl:''
         })
         let updatedChallengedata = Object.assign({},challengeData,{
           onBoardingInfo,
@@ -294,12 +295,15 @@ pickImage = async () => {
 
 
   render() {
-    const { image, uploading, error ,btnDisabled} = this.state;
+    const { image, uploading, error ,btnDisabled,imgUrl} = this.state;
     return (
       <SafeAreaView style={ChallengeStyle.container}>
           <View style={[globalStyle.container,{paddingVertical:15}]}>
             <View>
-              <Text style={[ChallengeStyle.onBoardingTitle]}>Capture Yourself</Text>
+              <Text style={[ChallengeStyle.onBoardingTitle]}>Take your before picture</Text>
+              <Text style={{fontFamily:fonts.standard,fontSize:15,marginTop:10}}>
+              Taking your before picture is an important part of your challenge journey. It allows you to reflect back and see how far you have progressed 
+              </Text>
             </View>
           
             <View style={styles.contentContainer}>
@@ -344,7 +348,7 @@ pickImage = async () => {
                   error && <Text style={styles.errorText}>{error}</Text>
                 }
                 <CustomBtn 
-                  Title="Next"
+                  Title={imgUrl?"Next":"Skip"}
                   customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}
                   onPress={()=>this.goToScreen('next')}
                   disabled={btnDisabled}

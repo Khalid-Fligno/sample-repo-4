@@ -120,30 +120,30 @@ async  saveOnBoardingInfo(data){
             bounces={false}
             showsVerticalScrollIndicator={false}
           >
-            {/* <View>
+            <View>
               <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Fitness Level</Text>
             </View>
             <View style={{marginTop:8}}>
               <View style={{justifyContent:'center'}}> 
                 <Text style={{marginVertical:10,fontFamily:fonts.standard,fontSize:15}}>What is your current level of fitness?</Text>
               </View>
-            </View>*/}
+            </View>
             <BigHeadingWithBackButton
                     bigTitleText = "Intensity"
                     isBackButton = {false}
                     isBigTitle = {true}
                     customContainerStyle={{marginTop:0,marginBottom:0}}
                   />
-                    <Text style={[ChallengeStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
+                    <Text style={{fontFamily:fonts.standard,fontSize:15}}>
                         Select your intensity level below.  
                     </Text>
-                    <Text style={[ChallengeStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
+                    <Text style={{fontFamily:fonts.standard,fontSize:15}}>
                         Beginner: train once a week,  
                     </Text>
-                    <Text style={[ChallengeStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
+                    <Text style={{fontFamily:fonts.standard,fontSize:15}}>
                          Intermediate: train 2 to 3 times a week, 
                      </Text>
-                     <Text style={[ChallengeStyle.IntensityTitleText,{color:colors.grey.dark,width:'100%'}]}>
+                     <Text style={{fontFamily:fonts.standard,fontSize:15}}>
                          Expert: train 4+ times a week
                      </Text>
                  
@@ -166,7 +166,7 @@ async  saveOnBoardingInfo(data){
                     showTick = {fitnessLevel === 3}
 
                  />
-                  <View style={[{flex:1,justifyContent:'flex-end',marginTop:20}]}>
+                  <View style={[{flex:0.5,justifyContent:'flex-end',marginTop:20}]}>
                       <CustomBtn 
                         Title="Next"
                         customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}

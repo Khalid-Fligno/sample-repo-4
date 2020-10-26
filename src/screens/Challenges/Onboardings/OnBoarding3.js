@@ -109,7 +109,7 @@ export default class OnBoarding3 extends Component {
 
       })
     }else{
-      this.props.navigation.navigate('ChallengeOnBoarding2',{
+      this.props.navigation.navigate('ChallengeOnBoarding1',{
         data:{
                challengeData:updatedChallengedata
              }

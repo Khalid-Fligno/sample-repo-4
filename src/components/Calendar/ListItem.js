@@ -108,7 +108,8 @@ export const CustomListItem = (props)=>{
         onPress,
         onSwipeableWillOpen,
         onSwipeableClose,
-        renderRightActions
+        renderRightActions,
+        currentDay
        } = props
    return (
        <Swipeable
@@ -122,6 +123,7 @@ export const CustomListItem = (props)=>{
            activeOpacity ={0.5}
            underlayColor="none"
            title={`${res.displayName}`}
+          //  title={`${res.displayName} - Day ${currentDay}`}
            subtitle={res.name === 'rest'?"Today is your rest day":res.target}
            onPress={onPress}
            containerStyle={calendarStyles.listItemContainer}

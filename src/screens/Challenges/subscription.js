@@ -13,6 +13,9 @@ import ChallengeStyle from './chellengeStyle';
 import createUserChallengeData from '../../components/Challenges/UserChallengeData';
 import ChallengeCard from '../../components/Challenges/ChallengeCard';
 import * as Haptics from 'expo-haptics';
+import { getCurrentPhase, getCurrentChallengeDay, getTodayRecommendedWorkout, isActiveChallenge } from '../../utils/challenges';
+import ChallengeBlogCard from '../../components/Home/ChallengeBlogCard';
+import { heightPercentageToDP  as hp} from 'react-native-responsive-screen';
 
 
 class ChallengeSubscriptionScreen extends Component {
@@ -22,18 +25,33 @@ class ChallengeSubscriptionScreen extends Component {
       userData:any,
       challengesList:[],
       userChallengesList:[],
-      loading:false
+      loading:false,
+      activeChallengeUserData:undefined,
+      activeChallengeData:undefined,
+      blogs:undefined,
     }
   }
 
   componentDidMount = () => {
     this.fetchProfile();
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      isActiveChallenge().then((res)=>{
+        if(res){
+          if(this.state.blogs === undefined){
+            this.setState({loading:true})
+            this.fetchActiveChallengeData(res);
+          }
+        
+        }
+      })
+    })
    
   }
   componentWillUnmount = () => {
     this.unsubscribeUserChallenges();
     this.unsubscribeUserData();
     this.unsubscribeChallenges();
+    this.focusListener.remove();  
   }
   fetchProfile = async () => {
     this.setState({ loading: true });
@@ -173,9 +191,87 @@ class ChallengeSubscriptionScreen extends Component {
    
   }
 
+  getCurrentPhaseInfo(){
+    const {activeChallengeUserData,activeChallengeData} = this.state
+    if(activeChallengeUserData && activeChallengeData){
+      //TODO :getCurrent phase data
+      this.phase = getCurrentPhase(activeChallengeUserData.phases)
+     
+      //TODO :fetch the current phase data from Challenges collection
+      this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
+      this.stringDate = new Date().toISOString()
+     
+     //TODO calculate current challenge day
+      this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
+      this.fetchBlogs(activeChallengeUserData.tag,this.currentChallengeDay)
+      //TODO get recommended workout here
+      this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
+      
+    }else{
+      Alert.alert('Something went wrong please try again')
+    }
+  }
+
+  fetchBlogs = async (tag,currentDay) => {
+    console.log(tag,currentDay)
+    const snapshot = await db.collection('blogs')
+    .where("tags","array-contains",tag)
+    .get()
+      let blogs = []
+      const cDay = currentDay === 1?2:currentDay
+      snapshot.forEach(doc => {
+        console.log(doc.data())
+        if(doc.data().startDay <= cDay && doc.data().endDay >= cDay)
+        blogs.unshift(doc.data())
+      });
+      this.setState({blogs,loading:false})
+  }
+  fetchActiveChallengeData = async (activeChallengeUserData) =>{
+    try{
+      this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
+      .onSnapshot(async (doc) => {
+          if(doc.exists){
+            this.setState({ 
+              activeChallengeUserData,
+              activeChallengeData:doc.data() ,
+              // loading:false
+            });
+            this.getCurrentPhaseInfo()
+          }
+       
+      });
+    }catch(err){
+      this.setState({ loading: false });
+      console.log(err);
+      Alert.alert('Fetch active challenge data error!')
+    }
+  
+  }
+  fetchActiveChallengeData = async (activeChallengeUserData) =>{
+    try{
+      this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
+      .onSnapshot(async (doc) => {
+          if(doc.exists){
+            this.setState({ 
+              activeChallengeUserData,
+              activeChallengeData:doc.data() ,
+              // loading:false
+            });
+            this.getCurrentPhaseInfo()
+          }
+       
+      });
+    }catch(err){
+      this.setState({ loading: false });
+      console.log(err);
+      Alert.alert('Fetch active challenge data error!')
+    }
+  
+  }
+
   
   render() {
-    const {challengesList,userChallengesList,loading} = this.state
+    const {challengesList,userChallengesList,loading,blogs} = this.state
     return (
       <ScrollView style={{flex:1,paddingHorizontal:containerPadding}} bounces={false}>
          
@@ -196,9 +292,20 @@ class ChallengeSubscriptionScreen extends Component {
           </View>
             
        }  
-       {
-         
-       }
+        {
+            blogs &&  blogs.length > 0 && <Text style={[ChallengeStyle.Title,{marginBottom:hp('1%')}]}>Blogs</Text>
+        }
+        {
+          blogs && blogs.length > 0&&
+          blogs.map((res,index)=>
+              <ChallengeBlogCard
+              key={index}
+              data={res}
+              onPress={() => this.openLink(res.urlLink)}
+              index = {index}
+            />
+          )
+        }
          <Loader
           loading={loading}
           color={colors.themeColor.color}

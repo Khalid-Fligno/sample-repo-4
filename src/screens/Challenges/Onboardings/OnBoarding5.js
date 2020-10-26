@@ -6,7 +6,7 @@ import globalStyle, { containerPadding } from '../../../styles/globalStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import fonts from '../../../styles/fonts';
-import { Video } from 'expo-av';
+import Video from 'react-native-video';
 import WorkoutTimer from '../../../components/Workouts/WorkoutTimer';
 import colors from '../../../styles/colors';
 import { timerSound } from '../../../../config/audio';
@@ -19,6 +19,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import createUserChallengeData from '../../../components/Challenges/UserChallengeData';
 import Loader from '../../../components/Shared/Loader';
 import storeProgressInfo from '../../../components/Challenges/storeProgressInfo';
+import * as FileSystem from 'expo-file-system';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const { width } = Dimensions.get('window');
 
@@ -210,7 +212,18 @@ export default class OnBoarding5 extends Component {
 
     return (
       <SafeAreaView style={ChallengeStyle.container}>
-          <View style={[globalStyle.container,{paddingVertical:15}]}>
+       
+          <View style={[globalStyle.container]}>
+          <ScrollView 
+              bounces={false} 
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                flexGrow: 1, 
+                flexDirection: 'column', 
+                justifyContent: 'space-between',
+                paddingVertical:15
+              }}
+            >
             <View>
               <Text style={[ChallengeStyle.onBoardingTitle]}>Burpee Test</Text>
             </View>
@@ -220,14 +233,13 @@ export default class OnBoarding5 extends Component {
               </View>
             </View>            
             <View style={{backgroundColor:colors.black}}>
-              {/* <Video
-                source={{ uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4` }}
-                resizeMode="contain"
-                repeat
-                muted
-                paused={videoPaused}
-                style={{ width, height: width }}
-              /> */}
+            <Video
+                    source={{ uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4` }}
+                    resizeMode="contain"
+                    repeat
+                    muted
+                    style={{ width: width - wp('10%'), height: width -hp('15%'),marginTop:20}}
+                  />
               <WorkoutTimer
                 totalDuration={totalDuration}
                 start={timerStart}
@@ -236,7 +248,7 @@ export default class OnBoarding5 extends Component {
                   width:width-containerPadding*2
                 }}
               />
-              <View style={[ChallengeStyle.btnContainer,{paddingHorizontal:10,marginVertical:30,flexDirection:'row'}]}>
+              <View style={[ChallengeStyle.btnContainer,{paddingHorizontal:10,marginVertical:10,flexDirection:'row'}]}>
                   <CustomBtn 
                       Title="Reset"
                       customBtnStyle={{borderRadius:7,padding:15,width:"49%",backgroundColor:colors.charcoal.dark}}
@@ -317,7 +329,9 @@ export default class OnBoarding5 extends Component {
                   loading={loading}
                   color={colors.themeColor.color}
                 />
+                 </ScrollView>
           </View>
+         
       </SafeAreaView> 
     );
   }
