@@ -1,10 +1,10 @@
 export const findFocus = (workoutObject) => {
   if (workoutObject.filters && workoutObject.filters.indexOf("upperBody") > -1) {
-    return 'Upper';
+    return 'Upper Body';
   } else if (workoutObject.filters && workoutObject.filters.indexOf("lowerBody") > -1) {
-    return 'A, B & T';
+    return 'Lower Body';
   } else if (workoutObject.filters && workoutObject.filters.indexOf("fullBody") > -1) {
-    return 'Full';
+    return 'Full Body';
   }else if (workoutObject.filters && workoutObject.filters.indexOf("core") > -1) {
     return 'Core';
   }
