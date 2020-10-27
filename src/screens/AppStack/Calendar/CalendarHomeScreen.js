@@ -49,6 +49,7 @@ import {
      RcWorkoutListItem
   } from '../../../components/Calendar/ListItem';
 import CustomCalendarStrip from '../../../components/Calendar/CustomCalendarStrip';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 const recommendedWorkoutMap = {
   undefined: '',
@@ -216,15 +217,15 @@ class CalendarHomeScreen extends React.PureComponent {
             if(challengeCurrentDay > 0){
                Object.assign(workout,{displayName:`${workout.displayName} - Day ${challengeCurrentDay}`}) 
             }
-            this.props.navigation.navigate('WorkoutInfo', 
-            {
-              workout, 
-              reps: workout.difficultyLevel[fitnessLevel-1].toString(),
-              workoutSubCategory:workout.workoutSubCategory,
-              fitnessLevel,
-              extraProps:{fromCalender:true}
-            }
-            );
+                this.props.navigation.navigate('WorkoutInfo', 
+                {
+                  workout, 
+                  reps: workout.difficultyLevel[fitnessLevel-1].toString(),
+                  workoutSubCategory:workout.workoutSubCategory,
+                  fitnessLevel,
+                  extraProps:{fromCalender:true}
+                }
+                )
         }
         catch(err){
           console.log(err)
@@ -521,7 +522,7 @@ openLink = (url) => {
                       key={index}
                       name={res.mealTitle} 
                       index={index} 
-                      onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: res.meal })}
+                      onPress={() => this.props.navigation.navigate('RecipeSelection', { meal:res.meal })}
                       subTitle ="Press here to see available recipes"
                       />
                     )
@@ -551,7 +552,7 @@ openLink = (url) => {
                             key={index}
                             name={res.toLocaleUpperCase()} 
                             index={index} 
-                            onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: res.toLowerCase() })}
+                            onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: res.toLowerCase() === 'snack2'?'snack':res.toLowerCase() })}
                             subTitle ="Press here to see available recipes"
                             />
           })
