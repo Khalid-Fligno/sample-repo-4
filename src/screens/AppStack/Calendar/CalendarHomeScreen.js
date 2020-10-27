@@ -406,7 +406,7 @@ openLink = (url) => {
       activeChallengeData
     } = this.state;
 
-    let showRC = true
+    let showRC = false
     if(activeChallengeData && activeChallengeUserData){
       if(!this.phase)
       this.getCurrentPhaseInfo()
