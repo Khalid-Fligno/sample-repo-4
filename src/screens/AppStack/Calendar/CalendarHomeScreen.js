@@ -173,7 +173,7 @@ class CalendarHomeScreen extends React.PureComponent {
       });
   }
 
-  loadExercises = async (workoutId) => {
+  loadExercises = async (workoutId,challengeCurrentDay = 0) => {
     this.setState({ loading: true });
     db.collection('newWorkouts').doc(workoutId)
       .get()
@@ -188,7 +188,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 }))
             })
 
-            const workout = await doc.data();
+            let workout = await doc.data();
             const { exercises } = workout;
             await Promise.all(exercises.map(async (exercise, index) => {
               // const videoUrl = exercise.videoUrls.filter(res=>res.model === 'sharnia')
@@ -206,6 +206,9 @@ class CalendarHomeScreen extends React.PureComponent {
 
             const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
             this.setState({ loading: false });
+            if(challengeCurrentDay > 0){
+               Object.assign(workout,{displayName:`${workout.displayName} - Day ${challengeCurrentDay}`}) 
+            }
             this.props.navigation.navigate('WorkoutInfo', 
             {
               workout, 
@@ -333,21 +336,25 @@ getCurrentPhaseInfo(){
    
   //TODO :getCurrent phase data
   this.phase = getCurrentPhase(activeChallengeUserData.phases,this.stringDate)
-  //TODO :fetch the current phase data from Challenges collection
-  this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
 
-   //TODO :calculate the workout completed till selected date
-    this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
+  if(this.phase){
+        //TODO :fetch the current phase data from Challenges collection
+      this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
 
-   //TODO calculate current challenge day
-    this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
-   //TODO getToday one recommended meal randomly  
-   this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
-   console.log("???",this.currentChallengeDay) 
-   //TODO getToday one recommended meal randomly  
-     this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
-    //TODO get recommended workout here
-    this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
+      //TODO :calculate the workout completed till selected date
+      this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
+
+      //TODO calculate current challenge day
+      this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
+      //TODO getToday one recommended meal randomly  
+      this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
+      console.log("???",this.currentChallengeDay) 
+      //TODO getToday one recommended meal randomly  
+        this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
+      //TODO get recommended workout here
+      this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
+  }
+ 
     }else{
     
     Alert.alert('Something went wrong please try again')
@@ -436,7 +443,7 @@ openLink = (url) => {
             this.todayRcWorkout  && showRC &&
             <RcWorkoutListItem 
                 res={this.todayRcWorkout} 
-                onPress={ () => this.todayRcWorkout.name !== 'rest'? this.loadExercises(this.todayRcWorkout.id):'' }
+                onPress={ () => this.todayRcWorkout.name !== 'rest'? this.loadExercises(this.todayRcWorkout.id,this.currentChallengeDay):'' }
                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                 onSwipeableClose={() => this.setState({ isSwiping: false })}
                 renderRightActions={() => this.renderRightActionForRC('workout')} 
