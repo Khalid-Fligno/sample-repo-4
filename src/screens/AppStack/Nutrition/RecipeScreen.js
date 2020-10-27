@@ -49,23 +49,27 @@ export default class RecipeScreen extends React.PureComponent {
       modalVisible: false,
       calendarMeal: null,
       addingToCalendar: false,
+      extraProps:undefined
     };
   }
   onFocusFunction(){
     this.setState({ loading: true });
     const { recipe } = this.state;
     // this.props.navigation.setParams({ handleStart: this.props.navigation.navigate('RecipeSteps', { recipe }) });
-    this.props.navigation.setParams({ handleStart: () => this.handleStart(recipe) });
+    this.props.navigation.setParams({ 
+      handleStart: () => this.handleStart(recipe) 
+    });
     this.setState({ 
       recipe: this.props.navigation.getParam('recipe', null),
       ingredients: this.props.navigation.getParam('recipe', null).ingredients,
       utensils: this.props.navigation.getParam('recipe', null).utensils,
       backTitle : this.props.navigation.getParam('backTitle', null),
+      extraProps: this.props.navigation.getParam('extraProps', undefined),
       loading: false 
     });
   }
   componentDidMount = async () => {
-    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+    this.focusListener = this.props.navigation.addListener('willFocus', () => {
       this.onFocusFunction()
     })
   }
@@ -115,7 +119,13 @@ export default class RecipeScreen extends React.PureComponent {
   }
   handleBack = () => {
     const { navigation } = this.props;
-    navigation.pop();
+    const { extraProps } = this.state;
+    if(extraProps && extraProps['fromCalender']){
+      navigation.navigate('Calendar');
+    }else{
+      navigation.pop()
+    }
+    
   }
 
   getBackTitle(){

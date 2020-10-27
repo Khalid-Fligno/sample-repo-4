@@ -387,7 +387,7 @@ async fetchRecipe(id,mealType){
       });
       if(recipeData){
         this.setState({loading:false})
-        this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Nutrition' })
+        this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Calendar',extraProps:{fromCalender:true} })
       }
 
 }
@@ -500,7 +500,7 @@ openLink = (url) => {
                                 renderRightActions={() => this.renderRightActionForRC(res.meal)}
                                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                                 onSwipeableClose={() => this.setState({ isSwiping: false })}
-                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: meals[res.meal] ,meal:res.meal })}
+                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: meals[res.meal] ,meal:res.meal,backTitle:'Calendar',extraProps:{fromCalender:true} })}
                                 stringDate = {this.stringDate}
                         />
                   )     
@@ -544,7 +544,7 @@ openLink = (url) => {
                                 renderRightActions={() => this.renderRightActions(res)}
                                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                                 onSwipeableClose={() => this.setState({ isSwiping: false })}
-                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: meals[res] ,meal:res })}
+                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: meals[res] ,meal:res,backTitle:'Calendar',extraProps:{fromCalender:true} })}
                                 stringDate = {this.stringDate}
                         />
               else if(!this.todayRecommendedMeal || !showRC)

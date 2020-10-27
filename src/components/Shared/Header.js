@@ -36,19 +36,8 @@ export default class Header extends React.PureComponent {
       StatusBar.setTranslucent(false);
       StatusBar.setBackgroundColor("#FFF");
     }
-    this.focusListener = this.props.navigation.addListener('willFocus', () => {
-      this.onFocusFunction()
-    })
-   
 }
-  onFocusFunction(){
-    const { navigation } = this.props;
-    if (navigation.state.params && navigation.state.params.handleBackToCalendar){
-      this.ishandleBackToCalendar = true
-      console.log('ishandlework',this.ishandleBackToCalendar)
-      this.forceUpdate()
-    }
-  }
+
   
   handleBack = () => {
     const { navigation } = this.props;
@@ -118,6 +107,7 @@ export default class Header extends React.PureComponent {
       withProfileButton,
       headerTitleParams,
       withLogoutButton,
+      withHandleBackToCalendar
     } = this.props;
     
     return (
@@ -158,7 +148,7 @@ export default class Header extends React.PureComponent {
             )
           }
           {
-            this.ishandleBackToCalendar && (
+            withHandleBackToCalendar && (
               <TouchableOpacity
                 style={globalStyle.headerContentContainerLeft}
                 onPress={this.handleBackToCalendar}

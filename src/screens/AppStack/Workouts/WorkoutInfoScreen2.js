@@ -108,7 +108,11 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
     this.toggleMusicModal();
   }
   handleBackToCalendar(){
-    this.props.navigation.navigate("Calendar")
+    if(this.state.extraProps['fromCalender']){
+      this.props.navigation.navigate('Calendar');
+    }else{
+      this.props.navigation.pop()
+    }
   }
 
   openApp = (url) => {

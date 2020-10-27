@@ -53,6 +53,7 @@ const WorkoutsStack = createStackNavigator(
             withBackButton={workoutsBackButtonMap[routeName]}
             withStartButton={workoutsStartButtonMap[routeName]}
             withProfileButton={routeName === 'WorkoutsHome' ||routeName === 'WorkoutsSelection'}
+            withHandleBackToCalendar = {routeName === 'WorkoutInfo'}
             // withHelpButton={routeName === 'WorkoutsHome'}
             stack="workouts"
             // headerTitleParams={
