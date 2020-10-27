@@ -39,12 +39,12 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      workout: this.props.navigation.getParam('workout', null),
-      reps: this.props.navigation.getParam('reps', null),
-      workoutSubCategory:this.props.navigation.getParam('workoutSubCategory'),
-      fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
-      extraProps: this.props.navigation.getParam('extraProps', {}),
+      loading: true,
+      workout: undefined,
+      reps: undefined,
+      workoutSubCategory:undefined,
+      fitnessLevel: undefined,
+      extraProps: undefined,
       chosenDate: new Date(),
       calendarModalVisible: false,
       addingToCalendar: false,
@@ -54,11 +54,34 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
     };
   }
 
+  onFocusFunction(){
+    this.setState({ loading: true });
+    const { recipe } = this.state;
+    // this.props.navigation.setParams({ handleStart: this.props.navigation.navigate('RecipeSteps', { recipe }) });
+    this.props.navigation.setParams({ handleStart: () => this.handleStart(recipe) });
+    this.setState({ 
+      workout: this.props.navigation.getParam('workout', null),
+      reps: this.props.navigation.getParam('reps', null),
+      workoutSubCategory:this.props.navigation.getParam('workoutSubCategory'),
+      fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
+      extraProps: this.props.navigation.getParam('extraProps', {}),
+      loading: false
+    });
+  }
+
   componentDidMount = async () => {
+    this.setState({ loading: true });
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
     });
     this.checkMusicAppAvailability();
+  }
+
+  componentWillUnmount = async () => {
+    this.focusListener.remove()
   }
 
   setDate = async (event, selectedDate) => {
@@ -307,11 +330,12 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       appleMusicAvailable,
       spotifyAvailable,
       workoutSubCategory,
-      fitnessLevel
+      fitnessLevel,
+      extraProps
     } = this.state;
-
-
-    const workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
+    let workoutTime = 0
+    if(workout)
+      workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
 
     console.log("calendarModalVisible",calendarModalVisible);
     return (
@@ -378,7 +402,11 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                       <Text style={WorkoutScreenStyle.workoutName}>
                         {workout && workout.displayName.toUpperCase()}
                       </Text>
-                      <AddToCalendarButton onPress={() => this.showCalendarModal()} />
+                      {
+                         !extraProps['fromCalender'] &&
+                         <AddToCalendarButton onPress={() => this.showCalendarModal()} />
+                      }
+                      
                     </View>
                     
                     <View style={WorkoutScreenStyle.workoutIconsRow}>

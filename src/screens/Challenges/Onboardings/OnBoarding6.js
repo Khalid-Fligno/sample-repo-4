@@ -120,14 +120,7 @@ async  saveOnBoardingInfo(data){
             bounces={false}
             showsVerticalScrollIndicator={false}
           >
-            <View>
-              <Text style={[ChallengeStyle.onBoardingTitle,{textAlign:'center'}]}>Fitness Level</Text>
-            </View>
-            <View style={{marginTop:8}}>
-              <View style={{justifyContent:'center'}}> 
-                <Text style={{marginVertical:10,fontFamily:fonts.standard,fontSize:15}}>What is your current level of fitness?</Text>
-              </View>
-            </View>
+           
             <BigHeadingWithBackButton
                     bigTitleText = "Intensity"
                     isBackButton = {false}
