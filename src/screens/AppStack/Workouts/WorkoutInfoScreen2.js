@@ -287,7 +287,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                   <Text
                     style={NutritionStyles.ingredientsText}
                   >
-                    {tip}
+                    {tip.trim()}
                   </Text>
                 </View>
               ))
