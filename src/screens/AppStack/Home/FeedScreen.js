@@ -192,7 +192,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
       
         if(this.todayRcWorkout){
           recommendedWorkout = []
-          recommendedWorkout.push(this.todayRcWorkout.displayName)
+          recommendedWorkout.push(`${this.todayRcWorkout.displayName} - Day ${this.currentChallengeDay}`)
         }
       }
  

@@ -139,7 +139,10 @@ class CalendarHomeScreen extends React.PureComponent {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = date.format('YYYY-MM-DD').toString();
-    if(activeChallengeData && activeChallengeUserData && new Date(activeChallengeUserData.startDate).getTime()<= new Date(stringDate).getTime() ){
+    if(activeChallengeData && activeChallengeUserData && 
+      new Date(activeChallengeUserData.startDate).getTime()<= new Date(stringDate).getTime() &&
+      new Date(activeChallengeUserData.endDate).getTime()>= new Date(stringDate).getTime()
+       ){
       this.getCurrentPhaseInfo()
     }
     this.unsubscribeFromEntries2 = await db.collection('users').doc(uid)
@@ -403,7 +406,7 @@ openLink = (url) => {
       activeChallengeData
     } = this.state;
 
-    let showRC = true
+    let showRC = false
     if(activeChallengeData && activeChallengeUserData){
       if(!this.phase)
       this.getCurrentPhaseInfo()
@@ -411,7 +414,10 @@ openLink = (url) => {
       if(this.calendarStrip.current){
         let currentCalendarTime = new Date(this.calendarStrip.current.getSelectedDate()).getTime()
         let challengeStartTime = new Date(activeChallengeUserData.startDate).getTime()
-        if(currentCalendarTime >= challengeStartTime && this.todayRecommendedMeal && this.todayRecommendedMeal.length >0)
+        let challengeEndTime = new Date(activeChallengeUserData.endDate).getTime()
+        if(currentCalendarTime >= challengeStartTime && 
+            currentCalendarTime <= challengeEndTime && 
+            this.todayRecommendedMeal && this.todayRecommendedMeal.length >0)
           showRC = true
         else
           showRC = false  
