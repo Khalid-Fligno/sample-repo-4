@@ -19,10 +19,10 @@ export const isActiveChallenge = async() =>{
     }
 }
 
-export const getCurrentPhase = (data) =>{
+export const getCurrentPhase = (data,currentDate1) =>{
     let phase = {}
     data.forEach(el => {
-        let currentDate = new Date()
+        let currentDate = new Date(currentDate1)
         const isBetween = moment(currentDate).isBetween(el.startDate, el.endDate, undefined, '[]')
         if(isBetween){
           phase =  el

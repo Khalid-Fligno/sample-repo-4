@@ -329,12 +329,13 @@ getCurrentPhaseInfo(){
   const {activeChallengeUserData,activeChallengeData} = this.state
   if(activeChallengeUserData && activeChallengeData){
     const data  = activeChallengeUserData.phases;
-    //TODO :getCurrent phase data
-    this.phase = getCurrentPhase(activeChallengeUserData.phases)
-    //TODO :fetch the current phase data from Challenges collection
-    this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
     this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
    
+  //TODO :getCurrent phase data
+  this.phase = getCurrentPhase(activeChallengeUserData.phases,this.stringDate)
+  //TODO :fetch the current phase data from Challenges collection
+  this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
+
    //TODO :calculate the workout completed till selected date
     this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
 
@@ -356,10 +357,24 @@ getCurrentPhaseInfo(){
 async fetchRecipe(id,mealType){
   this.setState({loading:true})
   let recipeData =  await (await db.collection('recipes').doc(id).get()).data();
-  if(recipeData){
-    this.setState({loading:false})
-    this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Nutrition' })
-  }
+    const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
+    await FileSystem.getInfoAsync(fileUri)
+      .then(async ({ exists }) => {
+        if (!exists) {
+          await FileSystem.downloadAsync(
+            recipe.coverImage,
+            `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`,
+          )
+        }
+      }).catch(() => {
+        this.setState({ loading: false });
+        Alert.alert('', 'Image download error');
+      });
+      if(recipeData){
+        this.setState({loading:false})
+        this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Nutrition' })
+      }
+
 }
 
 openLink = (url) => {

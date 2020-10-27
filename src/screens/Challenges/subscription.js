@@ -36,7 +36,6 @@ class ChallengeSubscriptionScreen extends Component {
     this.fetchProfile();
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       isActiveChallenge().then((res)=>{
-        console.log("?????//////",res)
         if(res){
           console.log(">>>>>")
           if(this.state.blogs === undefined){
@@ -196,14 +195,15 @@ class ChallengeSubscriptionScreen extends Component {
     const {activeChallengeUserData,activeChallengeData} = this.state
     if(activeChallengeUserData && activeChallengeData){
       //TODO :getCurrent phase data
-      this.phase = getCurrentPhase(activeChallengeUserData.phases)
+       this.stringDate = new Date().toISOString();
+       this.phase = getCurrentPhase(activeChallengeUserData.phases,this.stringDate)
      
-      //TODO :fetch the current phase data from Challenges collection
-      this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
-      this.stringDate = new Date().toISOString()
+       //TODO :fetch the current phase data from Challenges collection
+       this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
+     
      
      //TODO calculate current challenge day
-      this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,new Date().toISOString())
+      this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate)
       console.log("?.",this.currentChallengeDay)
       this.fetchBlogs(activeChallengeUserData.tag,this.currentChallengeDay)
       //TODO get recommended workout here
