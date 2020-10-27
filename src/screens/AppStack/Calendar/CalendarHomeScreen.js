@@ -489,18 +489,20 @@ openLink = (url) => {
             this.todayRecommendedMeal && this.todayRecommendedMeal.length >0 && showRC &&
             this.todayRecommendedMeal.map((res,index)=>{
               if(res){
-                console.log("check karto",res.meal)
-                if(meals && meals[res.meal]){
+                let getMeal = undefined
+                if(meals)
+                  getMeal = meals[res.mealTitle === 'afternoon Snack'?'snack2':res.meal];
+                if(meals && getMeal){
                   return(
                   <MealSwipable 
                                 key={index}
                                 name ={res.mealTitle} 
-                                data = {meals[res.meal]} 
+                                data = {getMeal} 
                                 index={index} 
                                 renderRightActions={() => this.renderRightActionForRC(res.meal)}
                                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                                 onSwipeableClose={() => this.setState({ isSwiping: false })}
-                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: meals[res.meal] ,meal:res.meal,backTitle:'Calendar',extraProps:{fromCalender:true} })}
+                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: getMeal ,meal:res.meal,backTitle:'Calendar',extraProps:{fromCalender:true} })}
                                 stringDate = {this.stringDate}
                         />
                   )     
