@@ -36,11 +36,18 @@ export default class Header extends React.PureComponent {
       StatusBar.setTranslucent(false);
       StatusBar.setBackgroundColor("#FFF");
     }
-  
 }
+
+  
   handleBack = () => {
     const { navigation } = this.props;
     navigation.pop();
+  }
+  handleBackToCalendar = ()=>{
+    const { navigation } = this.props;
+    if (navigation.state.params.handleBackToCalendar) {
+      navigation.state.params.handleBackToCalendar();
+    }
   }
   goToHome = () => {
     const { navigation } = this.props;
@@ -100,6 +107,7 @@ export default class Header extends React.PureComponent {
       withProfileButton,
       headerTitleParams,
       withLogoutButton,
+      withHandleBackToCalendar
     } = this.props;
     
     return (
@@ -126,10 +134,24 @@ export default class Header extends React.PureComponent {
           ]}
         >
           {
-            withBackButton && (
+            withBackButton && !this.ishandleBackToCalendar &&(
               <TouchableOpacity
                 style={globalStyle.headerContentContainerLeft}
                 onPress={this.handleBack}
+              >
+                <Icon
+                  name="chevron-left"
+                  size={20}
+                  color={colors.themeColor.color}
+                />
+              </TouchableOpacity>
+            )
+          }
+          {
+            withHandleBackToCalendar && (
+              <TouchableOpacity
+                style={globalStyle.headerContentContainerLeft}
+                onPress={this.handleBackToCalendar}
               >
                 <Icon
                   name="chevron-left"

@@ -38,7 +38,7 @@ export const workoutsBackButtonMap = {
   WorkoutsHome: true,
   WorkoutsLocation: true,
   WorkoutsSelection: false,
-  WorkoutInfo: true,
+  WorkoutInfo: false,
 };
 
 export const workoutsStartButtonMap = {

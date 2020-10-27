@@ -49,6 +49,7 @@ import {
      RcWorkoutListItem
   } from '../../../components/Calendar/ListItem';
 import CustomCalendarStrip from '../../../components/Calendar/CustomCalendarStrip';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 const recommendedWorkoutMap = {
   undefined: '',
@@ -216,15 +217,15 @@ class CalendarHomeScreen extends React.PureComponent {
             if(challengeCurrentDay > 0){
                Object.assign(workout,{displayName:`${workout.displayName} - Day ${challengeCurrentDay}`}) 
             }
-            this.props.navigation.navigate('WorkoutInfo', 
-            {
-              workout, 
-              reps: workout.difficultyLevel[fitnessLevel-1].toString(),
-              workoutSubCategory:workout.workoutSubCategory,
-              fitnessLevel,
-              extraProps:{fromCalender:true}
-            }
-            );
+                this.props.navigation.navigate('WorkoutInfo', 
+                {
+                  workout, 
+                  reps: workout.difficultyLevel[fitnessLevel-1].toString(),
+                  workoutSubCategory:workout.workoutSubCategory,
+                  fitnessLevel,
+                  extraProps:{fromCalender:true}
+                }
+                )
         }
         catch(err){
           console.log(err)
@@ -386,7 +387,7 @@ async fetchRecipe(id,mealType){
       });
       if(recipeData){
         this.setState({loading:false})
-        this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Nutrition' })
+        this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Calendar',extraProps:{fromCalender:true} })
       }
 
 }
@@ -488,18 +489,20 @@ openLink = (url) => {
             this.todayRecommendedMeal && this.todayRecommendedMeal.length >0 && showRC &&
             this.todayRecommendedMeal.map((res,index)=>{
               if(res){
-                console.log("check karto",res.meal)
-                if(meals && meals[res.meal]){
+                let getMeal = undefined
+                if(meals)
+                  getMeal = meals[res.mealTitle === 'afternoon Snack'?'snack2':res.meal];
+                if(meals && getMeal){
                   return(
                   <MealSwipable 
                                 key={index}
                                 name ={res.mealTitle} 
-                                data = {meals[res.meal]} 
+                                data = {getMeal} 
                                 index={index} 
                                 renderRightActions={() => this.renderRightActionForRC(res.meal)}
                                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                                 onSwipeableClose={() => this.setState({ isSwiping: false })}
-                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: meals[res.meal] ,meal:res.meal })}
+                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: getMeal ,meal:res.meal,backTitle:'Calendar',extraProps:{fromCalender:true} })}
                                 stringDate = {this.stringDate}
                         />
                   )     
@@ -521,7 +524,7 @@ openLink = (url) => {
                       key={index}
                       name={res.mealTitle} 
                       index={index} 
-                      onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: res.meal })}
+                      onPress={() => this.props.navigation.navigate('RecipeSelection', { meal:res.meal })}
                       subTitle ="Press here to see available recipes"
                       />
                     )
@@ -543,7 +546,7 @@ openLink = (url) => {
                                 renderRightActions={() => this.renderRightActions(res)}
                                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                                 onSwipeableClose={() => this.setState({ isSwiping: false })}
-                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: meals[res] ,meal:res })}
+                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: meals[res] ,meal:res,backTitle:'Calendar',extraProps:{fromCalender:true} })}
                                 stringDate = {this.stringDate}
                         />
               else if(!this.todayRecommendedMeal || !showRC)
@@ -551,7 +554,7 @@ openLink = (url) => {
                             key={index}
                             name={res.toLocaleUpperCase()} 
                             index={index} 
-                            onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: res.toLowerCase() })}
+                            onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: res.toLowerCase() === 'snack2'?'snack':res.toLowerCase() })}
                             subTitle ="Press here to see available recipes"
                             />
           })

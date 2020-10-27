@@ -31,6 +31,8 @@ import TimeSvg from '../../../../assets/icons/time';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
 import NutritionStyles from '../Nutrition/NutritionStyles';
+import { StackActions } from 'react-navigation';
+
 const moment = require('moment');
 
 const { width } = Dimensions.get('window');
@@ -39,7 +41,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
+      loading: false,
       workout: undefined,
       reps: undefined,
       workoutSubCategory:undefined,
@@ -56,9 +58,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
 
   onFocusFunction(){
     this.setState({ loading: true });
-    const { recipe } = this.state;
-    // this.props.navigation.setParams({ handleStart: this.props.navigation.navigate('RecipeSteps', { recipe }) });
-    this.props.navigation.setParams({ handleStart: () => this.handleStart(recipe) });
     this.setState({ 
       workout: this.props.navigation.getParam('workout', null),
       reps: this.props.navigation.getParam('reps', null),
@@ -67,15 +66,18 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       extraProps: this.props.navigation.getParam('extraProps', {}),
       loading: false
     });
+   
   }
 
   componentDidMount = async () => {
     this.setState({ loading: true });
-    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+    this.focusListener = this.props.navigation.addListener('willFocus', () => {
+      console.log("will focued call")
       this.onFocusFunction()
     })
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
+      handleBackToCalendar: () => this.handleBackToCalendar()
     });
     this.checkMusicAppAvailability();
   }
@@ -104,6 +106,13 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
 
   handleStart = () => {
     this.toggleMusicModal();
+  }
+  handleBackToCalendar(){
+    if(this.state.extraProps['fromCalender']){
+      this.props.navigation.navigate('Calendar');
+    }else{
+      this.props.navigation.pop()
+    }
   }
 
   openApp = (url) => {
@@ -238,6 +247,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             </View>
           </View>
           <Video
+            key={exercise.name.toUpperCase()}
             ref={(ref) => this.videoRef = ref}
             source={{ uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` }}
             playWhenInactive

@@ -24,7 +24,7 @@ class ChallengeProgressCard extends Component {
         openLink
       } = this.props
       let total = 0
-      activeChallengeData.workouts.forEach((res)=>total += res.days.length )
+      activeChallengeData.workouts.forEach((res)=>{if(res.name.toLowerCase() != 'rest')total += res.days.length })
     return(
         <View style={calendarStyles.ChallengeProgressCardContainer }>
           <Text style={calendarStyles.challengeLabel}
