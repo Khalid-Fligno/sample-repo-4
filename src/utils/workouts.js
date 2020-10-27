@@ -5,6 +5,8 @@ export const findFocus = (workoutObject) => {
     return 'A, B & T';
   } else if (workoutObject.filters && workoutObject.filters.indexOf("fullBody") > -1) {
     return 'Full';
+  }else if (workoutObject.filters && workoutObject.filters.indexOf("core") > -1) {
+    return 'Core';
   }
   return null;
 };
@@ -40,8 +42,10 @@ export const findFocusIcon = (workout) => {
     focus = 'upper';
   } else if (workout.filters && workout.filters.indexOf('lowerBody') > -1) {
     focus = 'lower';
+  }else if (workout.filters && workout.filters.indexOf('core') > -1) {
+    focus = 'lower';
   } else {
-    
+    focus = 'lower';
   }
   return `workouts-${focus}`;
 };
