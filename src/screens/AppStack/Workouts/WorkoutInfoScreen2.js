@@ -206,7 +206,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                 ellipsizeMode="tail"
                 style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}
               >
-                {index + 1}. {exercise.name}
+                {index + 1}. {exercise.name.toUpperCase()}
               </Text>
             </View>
             <View>
@@ -445,7 +445,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
                        { 
                          this.state.workout.filters.includes('strength')
-                          ?(`${reps * workoutTime} Reps`):(`${workout.workoutReps} Reps`)
+                          ?(`${reps * workoutTime} Reps`):(`${workout.workoutReps} Rounds`)
                        
                       }
                         </Text>
