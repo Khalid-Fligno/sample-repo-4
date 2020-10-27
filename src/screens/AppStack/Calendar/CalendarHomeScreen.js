@@ -94,7 +94,11 @@ class CalendarHomeScreen extends React.PureComponent {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     await this.fetchCalendarEntries();
     await this.fetchActiveChallengeUserData();
-    this.showHelperOnFirstOpen();
+    isActiveChallenge().then((res)=>{
+      if(!res){
+        this.showHelperOnFirstOpen();
+      }
+    })
   }
 
   componentWillUnmount() {
