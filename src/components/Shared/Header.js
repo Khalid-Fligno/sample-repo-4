@@ -36,11 +36,29 @@ export default class Header extends React.PureComponent {
       StatusBar.setTranslucent(false);
       StatusBar.setBackgroundColor("#FFF");
     }
-  
+    this.focusListener = this.props.navigation.addListener('willFocus', () => {
+      this.onFocusFunction()
+    })
+   
 }
+  onFocusFunction(){
+    const { navigation } = this.props;
+    if (navigation.state.params && navigation.state.params.handleBackToCalendar){
+      this.ishandleBackToCalendar = true
+      console.log('ishandlework',this.ishandleBackToCalendar)
+      this.forceUpdate()
+    }
+  }
+  
   handleBack = () => {
     const { navigation } = this.props;
     navigation.pop();
+  }
+  handleBackToCalendar = ()=>{
+    const { navigation } = this.props;
+    if (navigation.state.params.handleBackToCalendar) {
+      navigation.state.params.handleBackToCalendar();
+    }
   }
   goToHome = () => {
     const { navigation } = this.props;
@@ -126,10 +144,24 @@ export default class Header extends React.PureComponent {
           ]}
         >
           {
-            withBackButton && (
+            withBackButton && !this.ishandleBackToCalendar &&(
               <TouchableOpacity
                 style={globalStyle.headerContentContainerLeft}
                 onPress={this.handleBack}
+              >
+                <Icon
+                  name="chevron-left"
+                  size={20}
+                  color={colors.themeColor.color}
+                />
+              </TouchableOpacity>
+            )
+          }
+          {
+            this.ishandleBackToCalendar && (
+              <TouchableOpacity
+                style={globalStyle.headerContentContainerLeft}
+                onPress={this.handleBackToCalendar}
               >
                 <Icon
                   name="chevron-left"

@@ -66,7 +66,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       extraProps: this.props.navigation.getParam('extraProps', {}),
       loading: false
     });
-    this.forceUpdate()
+   
   }
 
   componentDidMount = async () => {
@@ -75,18 +75,15 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       console.log("will focued call")
       this.onFocusFunction()
     })
-    this.blurListener = this.props.navigation.addListener('willBlur', () => {
-      this.props.navigation.pop()
-    })
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
+      handleBackToCalendar: () => this.handleBackToCalendar()
     });
     this.checkMusicAppAvailability();
   }
 
   componentWillUnmount = async () => {
     this.focusListener.remove()
-    this.blurListener.remove()
   }
 
   setDate = async (event, selectedDate) => {
@@ -109,6 +106,9 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
 
   handleStart = () => {
     this.toggleMusicModal();
+  }
+  handleBackToCalendar(){
+    this.props.navigation.navigate("Calendar")
   }
 
   openApp = (url) => {
