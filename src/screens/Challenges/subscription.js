@@ -36,7 +36,9 @@ class ChallengeSubscriptionScreen extends Component {
     this.fetchProfile();
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       isActiveChallenge().then((res)=>{
+        console.log("?????//////",res)
         if(res){
+          console.log(">>>>>")
           if(this.state.blogs === undefined){
             this.setState({loading:true})
             this.fetchActiveChallengeData(res);
@@ -158,7 +160,6 @@ class ChallengeSubscriptionScreen extends Component {
         btnDisabled = false
       } 
     
-      console.log("item.numberOfDays",item);
         return (
           <ChallengeCard 
               outline={true}
@@ -202,7 +203,8 @@ class ChallengeSubscriptionScreen extends Component {
       this.stringDate = new Date().toISOString()
      
      //TODO calculate current challenge day
-      this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
+      this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,new Date().toISOString())
+      console.log("?.",this.currentChallengeDay)
       this.fetchBlogs(activeChallengeUserData.tag,this.currentChallengeDay)
       //TODO get recommended workout here
       this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
@@ -213,7 +215,7 @@ class ChallengeSubscriptionScreen extends Component {
   }
 
   fetchBlogs = async (tag,currentDay) => {
-    console.log(tag,currentDay)
+    console.log(">>>>>>>",tag,currentDay)
     const snapshot = await db.collection('blogs')
     .where("tags","array-contains",tag)
     .get()
@@ -236,6 +238,7 @@ class ChallengeSubscriptionScreen extends Component {
               activeChallengeData:doc.data() ,
               // loading:false
             });
+            console.log("??/////")
             this.getCurrentPhaseInfo()
           }
        
@@ -272,6 +275,7 @@ class ChallengeSubscriptionScreen extends Component {
   
   render() {
     const {challengesList,userChallengesList,loading,blogs} = this.state
+    console.log("?????9090909",blogs)
     return (
       <ScrollView style={{flex:1,paddingHorizontal:containerPadding}} bounces={false}>
          
