@@ -155,15 +155,16 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
   getCurrentPhaseInfo(){
     const {activeChallengeUserData,activeChallengeData} = this.state
     if(activeChallengeUserData && activeChallengeData){
+       this.stringDate = new Date().toISOString()
+     
       //TODO :getCurrent phase data
-      this.phase = getCurrentPhase(activeChallengeUserData.phases)
+      this.phase = getCurrentPhase(activeChallengeUserData.phases,this.stringDate)
      
       //TODO :fetch the current phase data from Challenges collection
       this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
-      this.stringDate = new Date().toISOString()
-     
+       
      //TODO calculate current challenge day
-      this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate)
+      this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
       this.fetchBlogs(activeChallengeUserData.tag,this.currentChallengeDay)
       //TODO get recommended workout here
       this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 

@@ -217,7 +217,6 @@ export default class ExercisesScreen extends React.PureComponent {
   }
 
   workoutComplete(reps, resistanceCategoryId){
-    console.log(">>>>>")
     this.props.navigation.replace('WorkoutComplete', {
       workout:this.state.workout,
       reps,
@@ -228,7 +227,7 @@ export default class ExercisesScreen extends React.PureComponent {
   }   
 
   goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,rest=false){
-   let {workoutSubCategory,fitnessLevel,fromCalender} = this.state
+   let {workoutSubCategory,fitnessLevel,fromCalender,extraProps} = this.state
     this.props.navigation.replace('Exercise', {
       workout:this.state.workout,
       setCount,
@@ -238,7 +237,8 @@ export default class ExercisesScreen extends React.PureComponent {
       workoutSubCategory,
       fitnessLevel,
       rest,
-      fromCalender
+      fromCalender,
+      extraProps
     });
   }
 
@@ -290,7 +290,6 @@ export default class ExercisesScreen extends React.PureComponent {
     this.setState({ pauseModalVisible: false });
     
     FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
-      console.log(res)
         Promise.all(res.map(async (item,index) => {
             if (item.includes("exercise-")) {
               console.log(`${FileSystem.cacheDirectory}${item}`)
@@ -302,7 +301,8 @@ export default class ExercisesScreen extends React.PureComponent {
     })
     console.log(this.state.extraProps)
       if(this.state.extraProps['fromCalender']){
-        this.props.navigation.navigate('WorkoutsHome');
+        console.log("?LLLLL")
+        this.props.navigation.navigate('Calendar');
       }else{
         this.props.navigation.navigate('WorkoutsSelection');
       }
@@ -322,6 +322,7 @@ export default class ExercisesScreen extends React.PureComponent {
       ],
       { cancelable: false },
     );
+    console.log("QUIT",this.state.extraProps['fromCalender'])
   }
 
   restartWorkout = (exerciseList, reps,currentExerciseIndex) => {

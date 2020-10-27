@@ -139,7 +139,7 @@ class CalendarHomeScreen extends React.PureComponent {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = date.format('YYYY-MM-DD').toString();
-    if(activeChallengeData && activeChallengeUserData){
+    if(activeChallengeData && activeChallengeUserData && new Date(activeChallengeUserData.startDate).getTime()<= new Date(stringDate).getTime() ){
       this.getCurrentPhaseInfo()
     }
     this.unsubscribeFromEntries2 = await db.collection('users').doc(uid)
@@ -329,12 +329,13 @@ getCurrentPhaseInfo(){
   const {activeChallengeUserData,activeChallengeData} = this.state
   if(activeChallengeUserData && activeChallengeData){
     const data  = activeChallengeUserData.phases;
-    //TODO :getCurrent phase data
-    this.phase = getCurrentPhase(activeChallengeUserData.phases)
-    //TODO :fetch the current phase data from Challenges collection
-    this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
     this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
    
+  //TODO :getCurrent phase data
+  this.phase = getCurrentPhase(activeChallengeUserData.phases,this.stringDate)
+  //TODO :fetch the current phase data from Challenges collection
+  this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
+
    //TODO :calculate the workout completed till selected date
     this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
 
@@ -356,10 +357,24 @@ getCurrentPhaseInfo(){
 async fetchRecipe(id,mealType){
   this.setState({loading:true})
   let recipeData =  await (await db.collection('recipes').doc(id).get()).data();
-  if(recipeData){
-    this.setState({loading:false})
-    this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Nutrition' })
-  }
+    const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
+    await FileSystem.getInfoAsync(fileUri)
+      .then(async ({ exists }) => {
+        if (!exists) {
+          await FileSystem.downloadAsync(
+            recipe.coverImage,
+            `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`,
+          )
+        }
+      }).catch(() => {
+        this.setState({ loading: false });
+        Alert.alert('', 'Image download error');
+      });
+      if(recipeData){
+        this.setState({loading:false})
+        this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Nutrition' })
+      }
+
 }
 
 openLink = (url) => {
@@ -381,21 +396,21 @@ openLink = (url) => {
       activeChallengeData
     } = this.state;
 
-    if(activeChallengeData && activeChallengeUserData && !this.phase){
-      this.getCurrentPhaseInfo()
-    }
-
     let showRC = true
-    // if(this.calendarStrip.current){
-    //   let currentCalendarDate = new Date(this.calendarStrip.current.getSelectedDate()).getDate();
-    //   let currentDate = new Date().getDate()
-    //   if(currentCalendarDate === currentDate && this.todayRecommendedMeal && this.todayRecommendedMeal.length >0)
-    //     showRC = true
-    // }
+    if(activeChallengeData && activeChallengeUserData){
+      if(!this.phase)
+      this.getCurrentPhaseInfo()
 
-    if(this.todayRecommendedMeal){
-      
+      if(this.calendarStrip.current){
+        let currentCalendarTime = new Date(this.calendarStrip.current.getSelectedDate()).getTime()
+        let challengeStartTime = new Date(activeChallengeUserData.startDate).getTime()
+        if(currentCalendarTime >= challengeStartTime && this.todayRecommendedMeal && this.todayRecommendedMeal.length >0)
+          showRC = true
+        else
+          showRC = false  
+      }
     }
+
 
     const dayDisplay = (
       <ScrollView
@@ -403,7 +418,7 @@ openLink = (url) => {
         scrollEnabled={!this.state.isSwiping}
       >
         {
-          this.phaseData && activeChallengeUserData && activeChallengeData &&
+          this.phaseData && showRC &&
           <ChallengeProgressCard
             phase={this.phase}
             phaseData={this.phaseData}
@@ -418,7 +433,7 @@ openLink = (url) => {
         </Text>
         <View style={calendarStyles.listContainer}>
           {
-            this.todayRcWorkout  &&
+            this.todayRcWorkout  && showRC &&
             <RcWorkoutListItem 
                 res={this.todayRcWorkout} 
                 onPress={ () => this.todayRcWorkout.name !== 'rest'? this.loadExercises(this.todayRcWorkout.id):'' }
@@ -438,7 +453,7 @@ openLink = (url) => {
                             stringDate = {this.stringDate}
                        />
             ) : (
-              !this.todayRcWorkout &&   <CustomListItem 
+              (!this.todayRcWorkout || !showRC) && <CustomListItem 
                 key={1}
                 name="WORKOUT"
                 index={1} 

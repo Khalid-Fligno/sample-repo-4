@@ -33,7 +33,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   componentDidMount = async () => {
     this.selectedMainCategory = this.props.navigation.getParam('selectedMainCategory', null);
     this.selectedSubCategory = this.props.navigation.getParam('selectedSubCategory', null);
-    console.log(this.selectedMainCategory,this.selectedSubCategory.name)
+    // console.log(this.selectedMainCategory,this.selectedSubCategory.name)
     await this.fetchWorkouts();
   }
   componentWillUnmount = async () => {

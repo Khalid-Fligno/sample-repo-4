@@ -157,7 +157,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
     });
   }
 
-  keyExtractor = (exercise,index) => index;
+  keyExtractor = (exercise,index) => String(index);
 
   renderItem = ({ item: exercise, index }) => (
     <View style={WorkoutScreenStyle.carouselContainer}>
