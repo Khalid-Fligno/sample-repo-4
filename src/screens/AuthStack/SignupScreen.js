@@ -224,14 +224,14 @@ export default class SignupScreen extends React.PureComponent {
       return userRef.docs[0].data();
   }     
 }
-getChallengeDetails = async(user) => {
-let challenges=[];
-const challengeRef =await db.collection("users").doc(user.id).collection("challenges").get();
-if (challengeRef.size > 0) {
-  return challengeRef.docs[0].data();
-}     
-  //return challenges;
-}
+  getChallengeDetails = async(user) => {
+  let challenges=[];
+  const challengeRef =await db.collection("users").doc(user.id).collection("challenges").get();
+  if (challengeRef.size > 0) {
+    return challengeRef.docs[0].data();
+  }     
+    //return challenges;
+  }
   signup = async (firstName, lastName, email, password) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();

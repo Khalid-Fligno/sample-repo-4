@@ -365,7 +365,7 @@ class CalendarHomeScreen extends React.PureComponent {
         .then(async ({ exists }) => {
           if (!exists) {
             await FileSystem.downloadAsync(
-              recipe.coverImage,
+              recipeData.coverImage,
               `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`,
             )
           }
