@@ -57,7 +57,6 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
     this.setState({ loading: true });
      fitnessLevel = await AsyncStorage.getItem('fitnessLevel');
     const { exercises } = workout;
-    console.log(exercises)
     try {
       FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
         // console.log(res)

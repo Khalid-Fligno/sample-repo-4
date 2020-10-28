@@ -222,7 +222,8 @@ export default class ExercisesScreen extends React.PureComponent {
       reps,
       resistanceCategoryId,
       workoutSubCategory:this.state.workoutSubCategory,
-      fitnessLevel:this.state.fitnessLevel
+      fitnessLevel:this.state.fitnessLevel,
+      extraProps:this.state.extraProps
     });
   }   
 
@@ -299,9 +300,7 @@ export default class ExercisesScreen extends React.PureComponent {
             }
         }))
     })
-    console.log(this.state.extraProps)
       if(this.state.extraProps['fromCalender']){
-        console.log("?LLLLL")
         this.props.navigation.navigate('Calendar');
       }else{
         this.props.navigation.navigate('WorkoutsSelection');

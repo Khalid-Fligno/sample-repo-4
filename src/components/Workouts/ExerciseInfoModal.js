@@ -66,7 +66,7 @@ export default class ExerciseInfoModal extends React.PureComponent {
                       <Text
                         style={NutritionStyles.ingredientsText}
                       >
-                        {tip.trim()}
+                        {tip.trim().replace("-","")}
                     </Text>
                   </View>
                   
