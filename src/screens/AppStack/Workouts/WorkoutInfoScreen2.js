@@ -270,12 +270,12 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
           </View>
           <View style={WorkoutScreenStyle.exerciseDescriptionTextContainer}>
             {
-              exercise.recommendedResistance && (
+              exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A') && (
                 <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Recommended resistance:</Text>
               )
             }
             {
-              exercise.recommendedResistance && (
+               exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A') && (
                 <Text style={WorkoutScreenStyle.exerciseDescriptionText}> {exercise.recommendedResistance}</Text>
               )
             }
@@ -297,7 +297,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                   <Text
                     style={NutritionStyles.ingredientsText}
                   >
-                    {tip.trim()}
+                    {tip.trim().replace('-','')}
                   </Text>
                 </View>
               ))

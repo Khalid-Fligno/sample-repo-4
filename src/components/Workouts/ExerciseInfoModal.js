@@ -33,18 +33,18 @@ export default class ExerciseInfoModal extends React.PureComponent {
             <View style={WorkoutScreenStyle.exerciseTileHeaderBar}>
               <View>
                 <Text style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}>
-                  {exercise.name}
+                  {exercise.name.toUpperCase()}
                 </Text>
               </View>
             </View>
             <View style={WorkoutScreenStyle.exerciseDescriptionTextContainer}>
               {
-                exercise.recommendedResistance && (
+                exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A') && (
                   <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Recommended resistance:</Text>
                 )
               }
               {
-                exercise.recommendedResistance && (
+                exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A') && (
                   <Text style={WorkoutScreenStyle.exerciseDescriptionText}> {exercise.recommendedResistance}</Text>
                 )
               }
@@ -66,7 +66,7 @@ export default class ExerciseInfoModal extends React.PureComponent {
                       <Text
                         style={NutritionStyles.ingredientsText}
                       >
-                        {tip}
+                        {tip.trim()}
                     </Text>
                   </View>
                   

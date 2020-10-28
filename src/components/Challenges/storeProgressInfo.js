@@ -16,7 +16,8 @@ const storeProgressInfo = async (data) => {
           burpeeCount:data.burpeeCount,
           date: moment().format('YYYY-MM-DD'),
         },
-        'currentProgressInfo':{}
+        'currentProgressInfo':{},
+        fitnessLevel:data.fitnessLevel
       }, { merge: true });
    }catch(err){
      console.log(err)
