@@ -589,6 +589,7 @@ export default class SubscriptionScreen extends React.PureComponent {
           Alert.alert('Purchase cancelled');
           return;
         }
+        console.log("Respose from in app purchase",response)
         if (response && response.productIdentifier) {
           const validationData = await this.validate(response.transactionReceipt);
           if (validationData === undefined) {
