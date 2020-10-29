@@ -193,7 +193,10 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
 
   keyExtractor = (exercise,index) => String(index);
 
-  renderItem = ({ item: exercise, index }) => (
+  renderItem = ({ item: exercise, index }) => {
+    let showRR = (exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A'))?true:false
+  console.log(showRR)
+    return(
     <View style={WorkoutScreenStyle.carouselContainer}>
       <Carousel
         key={exercise.id}
@@ -272,19 +275,19 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
           </View>
           <View style={WorkoutScreenStyle.exerciseDescriptionTextContainer}>
             {
-              exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A') && (
+              showRR && (
                 <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Recommended resistance:</Text>
               )
             }
             {
-               exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A') && (
+              showRR && (
                 <Text style={WorkoutScreenStyle.exerciseDescriptionText}> {exercise.recommendedResistance}</Text>
               )
             }
             {
-              exercise.coachingTip && (
+              exercise.coachingTip ? (
                 <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Coaching tip:</Text>
-              )
+              ):null
             }
             {
               exercise.coachingTip && exercise.coachingTip.map((tip,index) => (
@@ -295,8 +298,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                 //   {`• ${tip}`}
                 // </Text>
 
-                tip &&
-                <View style={{flexDirection:"row"}} key={index}>
+                tip ?
+                (<View style={{flexDirection:"row"}} key={index}>
                   <Text  style={NutritionStyles.ingredientsText}> • </Text>
                   <Text
                     style={NutritionStyles.ingredientsText}
@@ -304,6 +307,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                     {tip.trim().replace('-','')}
                   </Text>
                 </View>
+                ): null
               ))
             }
             {
@@ -330,7 +334,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
         </View>
       </Carousel>
     </View>
-  );
+  )};
 
   render() {
     const {
