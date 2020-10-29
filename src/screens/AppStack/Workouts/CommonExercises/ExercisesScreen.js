@@ -124,10 +124,11 @@ export default class ExercisesScreen extends React.PureComponent {
             id:workout.id,
             name:workout.name,
             displayName:workout.displayName,
-            target:workoutName
+            target:workoutName,
+            time:new Date().getTime()
           })
-        });
-        console.log("Adeed to challenge",workouts)
+        }).then((res)=>console.log("Adeed to challenge",res))
+        
       }
     })
 
