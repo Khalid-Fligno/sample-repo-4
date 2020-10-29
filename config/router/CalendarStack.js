@@ -2,10 +2,19 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import CalendarHomeScreen from '../../src/screens/AppStack/Calendar/CalendarHomeScreen';
 import Header from '../../src/components/Shared/Header';
+import WorkoutsSelectionScreen2 from '../../src/screens/AppStack/Workouts/WorkoutsSelectionScreen2';
+import WorkoutInfoScreen2 from '../../src/screens/AppStack/Workouts/WorkoutInfoScreen2';
+import { calendarStartButtonMap, calendarBackButtonMap, calendarProfileButtonMap } from './utils';
+import RecipeScreen from '../../src/screens/AppStack/Nutrition/RecipeScreen';
+import RecipeStepsScreen from '../../src/screens/AppStack/Nutrition/RecipeStepsScreen';
 
 const CalendarStack = createStackNavigator(
   {
     CalendarHome: CalendarHomeScreen,
+    WorkoutsSelection: WorkoutsSelectionScreen2,
+    WorkoutInfo: WorkoutInfoScreen2,
+    Recipe: RecipeScreen,
+    RecipeSteps: RecipeStepsScreen,
   },
   {
     initialRouteName: 'CalendarHome',
@@ -16,7 +25,9 @@ const CalendarStack = createStackNavigator(
           <Header
             navigation={navigation}
             stack="calendar"
-            withProfileButton={routeName === 'CalendarHome'}
+            withProfileButton={calendarProfileButtonMap[routeName]}
+            withStartButton={calendarStartButtonMap[routeName]}
+            withBackButton={calendarBackButtonMap[routeName]}
             // withHomeButton={true}
           />
         );

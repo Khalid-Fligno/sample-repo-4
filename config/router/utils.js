@@ -38,10 +38,13 @@ export const workoutsBackButtonMap = {
   WorkoutsHome: true,
   WorkoutsLocation: true,
   WorkoutsSelection: false,
-  WorkoutInfo: false,
+  WorkoutInfo: true,
 };
 
 export const workoutsStartButtonMap = {
+  WorkoutInfo: true,
+};
+export const calendarStartButtonMap = {
   WorkoutInfo: true,
 };
 
@@ -50,6 +53,18 @@ export const nutritionBackButtonMap = {
   RecipeSelection: false,
   Recipe: false,
   RecipeSteps: true,
+};
+export const calendarBackButtonMap = {
+  Recipe: false,
+  RecipeSteps: true,
+  WorkoutInfo: true,
+  CalendarHome:false
+};
+export const calendarProfileButtonMap = {
+  Recipe: true,
+  RecipeSteps: true,
+  WorkoutInfo: false,
+  CalendarHome:true
 };
 
 export const onboardingBackButtonMap = {
