@@ -195,7 +195,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
 
   renderItem = ({ item: exercise, index }) => {
     let showRR = (exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A'))?true:false
-  console.log(showRR)
+    let showCT =  exercise.coachingTip && exercise.coachingTip.length > 0 && !exercise.coachingTip.includes("none")?true:false
+    console.log(showRR)
     return(
     <View style={WorkoutScreenStyle.carouselContainer}>
       <Carousel
@@ -208,6 +209,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
         inactiveIndicatorText="○"
         indicatorText="●"
         animate={false}
+        hideIndicators={showCT?false:true}
       >
         <View
           key={exercise.id}
@@ -265,73 +267,70 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             style={{ width: width - 30, height: width - 30 }}
           />
         </View>
-        <View style={WorkoutScreenStyle.exerciseDescriptionContainer}>
-          <View style={WorkoutScreenStyle.exerciseTileHeaderBar}>
-            <View>
-              <Text style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}>
-                ADDITIONAL INFORMATION
-              </Text>
+        
+        {
+          showCT &&
+          <View style={WorkoutScreenStyle.exerciseDescriptionContainer}>
+            <View style={WorkoutScreenStyle.exerciseTileHeaderBar}>
+              <View>
+                <Text style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}>
+                  ADDITIONAL INFORMATION
+                </Text>
+              </View>
+            </View>
+            <View style={WorkoutScreenStyle.exerciseDescriptionTextContainer}>
+              {
+                showRR && (
+                  <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Recommended resistance:</Text>
+                )
+              }
+              {
+                showRR && (
+                  <Text style={WorkoutScreenStyle.exerciseDescriptionText}> {exercise.recommendedResistance}</Text>
+                )
+              }
+              {
+                showCT ? (
+                  <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Coaching tip:</Text>
+                ):null
+              }
+              {
+                showCT && exercise.coachingTip.map((tip,index) => (
+                  tip ?
+                  (<View style={{flexDirection:"row"}} key={index}>
+                    <Text  style={NutritionStyles.ingredientsText}> • </Text>
+                    <Text
+                      style={NutritionStyles.ingredientsText}
+                    >
+                      {tip.trim().replace('-','')}
+                    </Text>
+                  </View>
+                  ): null
+                ))
+              }
+              {
+                exercise.scaledVersion && (
+                  <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Scaled version:</Text>
+                )
+              }
+              {
+                exercise.scaledVersion && (
+                  <Text style={WorkoutScreenStyle.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
+                )
+              }
+              {
+                exercise.otherInfo && exercise.otherInfo.map((text,index) => (
+                  <Text
+                    key={index}
+                    style={WorkoutScreenStyle.exerciseDescriptionHeader}
+                  >
+                    {text}
+                  </Text>
+                ))
+              }
             </View>
           </View>
-          <View style={WorkoutScreenStyle.exerciseDescriptionTextContainer}>
-            {
-              showRR && (
-                <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Recommended resistance:</Text>
-              )
-            }
-            {
-              showRR && (
-                <Text style={WorkoutScreenStyle.exerciseDescriptionText}> {exercise.recommendedResistance}</Text>
-              )
-            }
-            {
-              exercise.coachingTip ? (
-                <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Coaching tip:</Text>
-              ):null
-            }
-            {
-              exercise.coachingTip && exercise.coachingTip.map((tip,index) => (
-                // <Text
-                //   key={index}
-                //   style={WorkoutScreenStyle.exerciseDescriptionText}
-                // >
-                //   {`• ${tip}`}
-                // </Text>
-
-                tip ?
-                (<View style={{flexDirection:"row"}} key={index}>
-                  <Text  style={NutritionStyles.ingredientsText}> • </Text>
-                  <Text
-                    style={NutritionStyles.ingredientsText}
-                  >
-                    {tip.trim().replace('-','')}
-                  </Text>
-                </View>
-                ): null
-              ))
-            }
-            {
-              exercise.scaledVersion && (
-                <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Scaled version:</Text>
-              )
-            }
-            {
-              exercise.scaledVersion && (
-                <Text style={WorkoutScreenStyle.exerciseDescriptionText}>{exercise.scaledVersion}</Text>
-              )
-            }
-            {
-              exercise.otherInfo && exercise.otherInfo.map((text,index) => (
-                <Text
-                  key={index}
-                  style={WorkoutScreenStyle.exerciseDescriptionHeader}
-                >
-                  {text}
-                </Text>
-              ))
-            }
-          </View>
-        </View>
+        }
       </Carousel>
     </View>
   )};
