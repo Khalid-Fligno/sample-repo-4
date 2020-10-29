@@ -42,20 +42,25 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
   }
   manageVideoCache = async () => {
-    const exerciseVideos = [
-      `${FileSystem.cacheDirectory}exercise-1.mp4`,
-      `${FileSystem.cacheDirectory}exercise-2.mp4`,
-      `${FileSystem.cacheDirectory}exercise-3.mp4`,
-      `${FileSystem.cacheDirectory}exercise-4.mp4`,
-      `${FileSystem.cacheDirectory}exercise-5.mp4`,
-      `${FileSystem.cacheDirectory}exercise-6.mp4`,
-    ];
-    Promise.all(exerciseVideos.map(async (exerciseVideoURL) => {
-      FileSystem.deleteAsync(exerciseVideoURL, { idempotent: true });
-    }));
+    FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
+      // console.log(res)
+        Promise.all(res.map(async (item,index) => {
+            if (item.includes("exercise-")) {
+              console.log(`${FileSystem.cacheDirectory}${item}`)
+              FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
+                console.log("deleted...",item)
+              })
+            }
+        }))
+    })
   }
   completeWorkout = async () => {
-    this.props.navigation.navigate('WorkoutsHome');
+    const extraProps = this.props.navigation.getParam('extraProps', undefined)
+    if(extraProps['fromCalender']){
+      this.props.navigation.navigate('Calendar');
+    }else{
+      this.props.navigation.navigate('WorkoutsHome');
+    }
   }
   completeWorkoutAndInvite = async () => {
     this.props.navigation.navigate('WorkoutsHome');

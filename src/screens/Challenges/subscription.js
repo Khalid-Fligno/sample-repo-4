@@ -32,28 +32,32 @@ class ChallengeSubscriptionScreen extends Component {
     }
   }
 
+  onFocusFunction(){
+    isActiveChallenge().then((res)=>{
+      if(res){
+        if(this.state.blogs === undefined){
+          this.setState({loading:true})
+          this.fetchActiveChallengeData(res);
+        }
+      }
+    })
+  }
+
   componentDidMount = () => {
     this.fetchProfile();
-    this.focusListener = this.props.navigation.addListener('didFocus', () => {
-      isActiveChallenge().then((res)=>{
-        if(res){
-          console.log(">>>>>")
-          if(this.state.blogs === undefined){
-            this.setState({loading:true})
-            this.fetchActiveChallengeData(res);
-          }
-        
-        }
-      })
+    this.focusListener = this.props.navigation.addListener('willFocus', () => {
+      this.onFocusFunction()
     })
    
   }
+
   componentWillUnmount = () => {
     this.unsubscribeUserChallenges();
     this.unsubscribeUserData();
     this.unsubscribeChallenges();
     this.focusListener.remove();  
   }
+
   fetchProfile = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
@@ -86,11 +90,9 @@ class ChallengeSubscriptionScreen extends Component {
       .onSnapshot(async (querySnapshot) => {
         const challengesList = [];
         await querySnapshot.forEach(async (doc) => {
-          const check = userChallengesList.findIndex((challenge)=>{
-            console.log(doc.id,challenge.id)
+          const check = userChallengesList.findIndex((challenge)=>{   //TODO:Hide challenge if it present in users challenge list
             return  doc.id === challenge.id
           })
-          console.log(check)
           if(check === -1)
             await challengesList.push(await doc.data());
         });
@@ -99,26 +101,26 @@ class ChallengeSubscriptionScreen extends Component {
    
   }
  
- addChallengeToUser(index){
-  let {userData , challengesList} = this.state
-    const userRef = db.collection('users').doc(userData.id).collection('challenges');
-    const data = createUserChallengeData(challengesList[index])
-    console.log( data.id)
-    userRef.doc(data.id).set(data).then((res)=>{
-      this.props.navigation.navigate('ChallengeOnBoarding1',{
-        data:{
-          challengeData:data
-        }
+  addChallengeToUser(index){
+    let {userData , challengesList} = this.state
+      const userRef = db.collection('users').doc(userData.id).collection('challenges');
+      const data = createUserChallengeData(challengesList[index])
+      console.log( data.id)
+      userRef.doc(data.id).set(data).then((res)=>{
+        this.props.navigation.navigate('ChallengeOnBoarding1',{
+          data:{
+            challengeData:data
+          }
+        })
+      }).catch((err)=>{
+        console.log(err)
       })
-    }).catch((err)=>{
-      console.log(err)
-    })
-   
- }
- openLink = (url) => {
-  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-  Linking.openURL(url);
-}
+    
+  }
+  openLink = (url) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Linking.openURL(url);
+  }
 
   renderItem = ({ item ,index}) => (
     <ChallengeCard 
@@ -220,6 +222,7 @@ class ChallengeSubscriptionScreen extends Component {
     .where("tags","array-contains",tag)
     .get()
       let blogs = []
+      // const cDay = currentDay === 1?2:currentDay
       const cDay = currentDay === 1?2:currentDay
       snapshot.forEach(doc => {
         console.log(doc.data())
@@ -228,28 +231,7 @@ class ChallengeSubscriptionScreen extends Component {
       });
       this.setState({blogs,loading:false})
   }
-  fetchActiveChallengeData = async (activeChallengeUserData) =>{
-    try{
-      this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
-      .onSnapshot(async (doc) => {
-          if(doc.exists){
-            this.setState({ 
-              activeChallengeUserData,
-              activeChallengeData:doc.data() ,
-              // loading:false
-            });
-            console.log("??/////")
-            this.getCurrentPhaseInfo()
-          }
-       
-      });
-    }catch(err){
-      this.setState({ loading: false });
-      console.log(err);
-      Alert.alert('Fetch active challenge data error!')
-    }
-  
-  }
+
   fetchActiveChallengeData = async (activeChallengeUserData) =>{
     try{
       this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
@@ -275,7 +257,6 @@ class ChallengeSubscriptionScreen extends Component {
   
   render() {
     const {challengesList,userChallengesList,loading,blogs} = this.state
-    console.log("?????9090909",blogs)
     return (
       <ScrollView style={{flex:1,paddingHorizontal:containerPadding}} bounces={false}>
          

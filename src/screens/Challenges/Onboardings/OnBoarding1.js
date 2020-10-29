@@ -42,15 +42,16 @@ export default class OnBoarding1 extends Component {
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction()
     })
+    await FileSystem.downloadAsync(
+      'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2FBURPEES.mp4?alt=media&token=688885cb-2d70-4fc6-82a9-abc4e95daf89',
+      `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
+    );
   }
   
   // and don't forget to remove the listener
   componentWillUnmount= async () =>{
     console.log(">>>>")
-    await FileSystem.downloadAsync(
-      'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2FBURPEES.mp4?alt=media&token=688885cb-2d70-4fc6-82a9-abc4e95daf89',
-      `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
-    );
+
     this.focusListener.remove()
   }
  goToNextScreen(){

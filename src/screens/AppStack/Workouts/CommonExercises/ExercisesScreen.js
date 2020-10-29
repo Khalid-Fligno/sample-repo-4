@@ -63,7 +63,7 @@ export default class ExercisesScreen extends React.PureComponent {
     }
     //For count true workout Rest
     if(workout.count && currentExercise && currentExercise.name === 'rest' && currentExercise['restIntervalMap']){
-      totalDuration = currentExercise['restIntervalMap'][String(setCount)][String(fitnessLevel)]
+      totalDuration = currentExercise['restIntervalMap'][String(setCount)][String(fitnessLevel-1)]
       rest = true
     }  
 
@@ -222,7 +222,8 @@ export default class ExercisesScreen extends React.PureComponent {
       reps,
       resistanceCategoryId,
       workoutSubCategory:this.state.workoutSubCategory,
-      fitnessLevel:this.state.fitnessLevel
+      fitnessLevel:this.state.fitnessLevel,
+      extraProps:this.state.extraProps
     });
   }   
 
@@ -299,9 +300,7 @@ export default class ExercisesScreen extends React.PureComponent {
             }
         }))
     })
-    console.log(this.state.extraProps)
       if(this.state.extraProps['fromCalender']){
-        console.log("?LLLLL")
         this.props.navigation.navigate('Calendar');
       }else{
         this.props.navigation.navigate('WorkoutsSelection');
@@ -439,10 +438,11 @@ export default class ExercisesScreen extends React.PureComponent {
 
   //TODO : calculate when count true  
     if(workout.count && currentExercise && currentExercise['workIntervalMap']){
-      this.repsInterval = currentExercise['workIntervalMap'][String(setCount)][String(fitnessLevel)]
+      this.repsInterval = currentExercise['workIntervalMap'][String(setCount)][String(fitnessLevel-1)]
     }  
     if(workout.count && currentExercise && currentExercise.name === 'rest' && currentExercise['restIntervalMap']){
-      this.repsInterval = currentExercise['restIntervalMap'][String(setCount)][String(fitnessLevel)]
+      this.repsInterval = currentExercise['restIntervalMap'][String(setCount)][String(fitnessLevel-1)]
+      console.log(this.repsInterval,String(setCount),currentExercise['restIntervalMap'][String(setCount)][String(fitnessLevel-1)])
     }  
     
 

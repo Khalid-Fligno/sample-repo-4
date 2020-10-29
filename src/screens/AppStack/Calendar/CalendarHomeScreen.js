@@ -75,11 +75,6 @@ class CalendarHomeScreen extends React.PureComponent {
     super(props);
     this.state = {
       workout: undefined,
-      breakfast: undefined,
-      lunch: undefined,
-      dinner: undefined,
-      snack: undefined,
-      snack2: undefined,
       loading: false,
       isSwiping: false,
       helperModalVisible: false,
@@ -144,23 +139,21 @@ class CalendarHomeScreen extends React.PureComponent {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     const stringDate = date.format('YYYY-MM-DD').toString();
+
+    //TODO:check the active challenge cndtns
     if(activeChallengeData && activeChallengeUserData && 
       new Date(activeChallengeUserData.startDate).getTime()<= new Date(stringDate).getTime() &&
       new Date(activeChallengeUserData.endDate).getTime()>= new Date(stringDate).getTime()
        ){
       this.getCurrentPhaseInfo()
     }
+
     this.unsubscribeFromEntries2 = await db.collection('users').doc(uid)
       .collection('calendarEntries').doc(stringDate)
       .onSnapshot(async (doc) => {
         if (doc.exists) {
           this.setState({
             workout: await doc.data().workout,
-            breakfast: await doc.data().breakfast,
-            lunch: await doc.data().lunch,
-            dinner: await doc.data().dinner,
-            snack: await doc.data().snack,
-            snack2: await doc.data().snack2,
             loading: false,
             dayOfWeek: date.format('d'),
             meals:await doc.data()
@@ -168,11 +161,6 @@ class CalendarHomeScreen extends React.PureComponent {
         } else {
           this.setState({
             workout: undefined,
-            breakfast: undefined,
-            lunch: undefined,
-            dinner: undefined,
-            snack: undefined,
-            snack2: undefined,
             loading: false,
             dayOfWeek: date.format('d'),
             meals:undefined
@@ -283,120 +271,120 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
  
-// ToDo : for challenges
-fetchActiveChallengeUserData = async () =>{
-      
-  try{  
-    this.setState({ loading: true });
-    const uid = await AsyncStorage.getItem('uid');
-    this.unsubscribeFACUD = await db.collection('users').doc(uid).collection('challenges')
-    .where("status", "==" , "Active")
-    .onSnapshot(async (querySnapshot) => {
-      const list = [];
-      await querySnapshot.forEach(async (doc) => {
-          await list.push(await doc.data());
-      });
-      if(list[0]){
-        this.fetchActiveChallengeData(list[0])
-      }else{
-        this.setState({ 
-          activeChallengeUserData:undefined,
-          loading:false
+  // ToDo : for challenges
+  fetchActiveChallengeUserData = async () =>{
+        
+    try{  
+      this.setState({ loading: true });
+      const uid = await AsyncStorage.getItem('uid');
+      this.unsubscribeFACUD = await db.collection('users').doc(uid).collection('challenges')
+      .where("status", "==" , "Active")
+      .onSnapshot(async (querySnapshot) => {
+        const list = [];
+        await querySnapshot.forEach(async (doc) => {
+            await list.push(await doc.data());
         });
-      }
-    });
-  }
-  catch(err){
-    this.setState({ loading: false });
-    console.log(err)
-    Alert.alert('Fetch active challenge user data error!')
-  }  
-
-}
-
-fetchActiveChallengeData = async (activeChallengeUserData) =>{
-  try{
-    this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
-    .onSnapshot(async (doc) => {
-        if(doc.exists){
+        if(list[0]){
+          this.fetchActiveChallengeData(list[0])
+        }else{
           this.setState({ 
-            activeChallengeUserData,
-            activeChallengeData:doc.data() ,
+            activeChallengeUserData:undefined,
             loading:false
           });
-          this.getCurrentPhaseInfo()
         }
-        
-    });
-  }catch(err){
-    this.setState({ loading: false });
-    console.log(err);
-    Alert.alert('Fetch active challenge data error!')
-  }
-
-}
-
-getCurrentPhaseInfo(){
-  const {activeChallengeUserData,activeChallengeData} = this.state
-  if(activeChallengeUserData && activeChallengeData){
-    const data  = activeChallengeUserData.phases;
-    this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
-   
-  //TODO :getCurrent phase data
-  this.phase = getCurrentPhase(activeChallengeUserData.phases,this.stringDate)
-
-  if(this.phase){
-        //TODO :fetch the current phase data from Challenges collection
-      this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
-
-      //TODO :calculate the workout completed till selected date
-      this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
-
-      //TODO calculate current challenge day
-      this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
-      //TODO getToday one recommended meal randomly  
-      this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
-      console.log("???",this.currentChallengeDay) 
-      //TODO getToday one recommended meal randomly  
-        this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
-      //TODO get recommended workout here
-      this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
-  }
- 
-    }else{
-    
-    Alert.alert('Something went wrong please try again')
-  }
-}
-
-async fetchRecipe(id,mealType){
-  this.setState({loading:true})
-  let recipeData =  await (await db.collection('recipes').doc(id).get()).data();
-    const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
-    await FileSystem.getInfoAsync(fileUri)
-      .then(async ({ exists }) => {
-        if (!exists) {
-          await FileSystem.downloadAsync(
-            recipe.coverImage,
-            `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`,
-          )
-        }
-      }).catch(() => {
-        this.setState({ loading: false });
-        Alert.alert('', 'Image download error');
       });
-      if(recipeData){
-        this.setState({loading:false})
-        this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Calendar',extraProps:{fromCalender:true} })
-      }
+    }
+    catch(err){
+      this.setState({ loading: false });
+      console.log(err)
+      Alert.alert('Fetch active challenge user data error!')
+    }  
 
-}
+  }
 
-openLink = (url) => {
-  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-  Linking.openURL(url);
-}
- //-------**--------  
+  fetchActiveChallengeData = async (activeChallengeUserData) =>{
+    try{
+      this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
+      .onSnapshot(async (doc) => {
+          if(doc.exists){
+            this.setState({ 
+              activeChallengeUserData,
+              activeChallengeData:doc.data() ,
+              loading:false
+            });
+            this.getCurrentPhaseInfo()
+          }
+          
+      });
+    }catch(err){
+      this.setState({ loading: false });
+      console.log(err);
+      Alert.alert('Fetch active challenge data error!')
+    }
+
+  }
+
+  getCurrentPhaseInfo(){
+    const {activeChallengeUserData,activeChallengeData} = this.state
+    if(activeChallengeUserData && activeChallengeData){
+      const data  = activeChallengeUserData.phases;
+      this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
+    
+    //TODO :getCurrent phase data
+    this.phase = getCurrentPhase(activeChallengeUserData.phases,this.stringDate)
+
+    if(this.phase){
+          //TODO :fetch the current phase data from Challenges collection
+        this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
+
+        //TODO :calculate the workout completed till selected date
+        this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
+
+        //TODO calculate current challenge day
+        this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
+        //TODO getToday one recommended meal randomly  
+        this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
+        console.log("???",this.currentChallengeDay) 
+        //TODO getToday one recommended meal randomly  
+          this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
+        //TODO get recommended workout here
+        this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
+    }
+  
+      }else{
+      
+      Alert.alert('Something went wrong please try again')
+    }
+  }
+
+  async fetchRecipe(id,mealType){
+    this.setState({loading:true})
+    let recipeData =  await (await db.collection('recipes').doc(id).get()).data();
+      const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
+      await FileSystem.getInfoAsync(fileUri)
+        .then(async ({ exists }) => {
+          if (!exists) {
+            await FileSystem.downloadAsync(
+              recipeData.coverImage,
+              `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`,
+            )
+          }
+        }).catch(() => {
+          this.setState({ loading: false });
+          Alert.alert('', 'Image download error');
+        });
+        if(recipeData){
+          this.setState({loading:false})
+          this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Calendar',extraProps:{fromCalender:true} })
+        }
+
+  }
+
+  openLink = (url) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Linking.openURL(url);
+  }
+  //-------**--------  
 
 
 
@@ -428,28 +416,8 @@ openLink = (url) => {
           showRC = false  
       }
     }
-
-
-    const dayDisplay = (
-      <ScrollView
-        contentContainerStyle={calendarStyles.dayDisplayContainer}
-        scrollEnabled={!this.state.isSwiping}
-      >
-        {
-          this.phaseData && showRC &&
-          <ChallengeProgressCard
-            phase={this.phase}
-            phaseData={this.phaseData}
-            activeChallengeData={activeChallengeData}
-            activeChallengeUserData = {activeChallengeUserData}
-            totalChallengeWorkoutsCompleted ={this.totalChallengeWorkoutsCompleted}
-            openLink={()=>this.openLink(this.phase.pdfUrl)}
-          />
-        }
-        <Text style={calendarStyles.headerText}>
-           Todays Workout
-        </Text>
-        <View style={calendarStyles.listContainer}>
+    const workoutDisplayList = (
+      <View style={calendarStyles.listContainer}>
           {
             this.todayRcWorkout  && showRC &&
             <RcWorkoutListItem 
@@ -469,7 +437,7 @@ openLink = (url) => {
                             onPress={ () => this.loadExercises(workout.id) }
                             renderRightActions={() => this.renderRightActions('workout')}
                             stringDate = {this.stringDate}
-                       />
+                      />
             ) : (
               (!this.todayRcWorkout || !showRC) && <CustomListItem 
                 key={1}
@@ -481,9 +449,9 @@ openLink = (url) => {
           )
         }
         </View>
-        <Text style={calendarStyles.headerText}>
-        Todays Meals
-        </Text>
+    )
+    
+    const mealsDisplayList = (
         <View style={calendarStyles.listContainer}>
           {
             this.todayRecommendedMeal && this.todayRecommendedMeal.length >0 && showRC &&
@@ -530,12 +498,12 @@ openLink = (url) => {
                     )
                 }
               }
-             
+            
             })
               
           }
           {
-           !showRC &&
+          !showRC &&
             recipeCategories.map((res,index)=>{
               if(meals && meals[res])
                   return <MealSwipable 
@@ -561,6 +529,34 @@ openLink = (url) => {
           }
       
         </View>
+    )  
+
+    const dayDisplay = (
+      <ScrollView
+        contentContainerStyle={calendarStyles.dayDisplayContainer}
+        scrollEnabled={!this.state.isSwiping}
+      >
+        {
+          this.phaseData && showRC &&
+          <ChallengeProgressCard
+            phase={this.phase}
+            phaseData={this.phaseData}
+            activeChallengeData={activeChallengeData}
+            activeChallengeUserData = {activeChallengeUserData}
+            totalChallengeWorkoutsCompleted ={this.totalChallengeWorkoutsCompleted}
+            openLink={()=>this.openLink(this.phase.pdfUrl)}
+          />
+        }
+        <Text style={calendarStyles.headerText}>Todays Workout</Text>
+        {
+          workoutDisplayList
+        }
+
+        <Text style={calendarStyles.headerText}>Todays Meals</Text>
+        {
+          mealsDisplayList
+        }
+  
         {/* <View style={calendarStyles.listContainerBottom}>
           {
            meals && meals['snack2'] ?  mealSwipable('snack',snack2) :  mealListItem('snack')

@@ -74,6 +74,7 @@ export default class OnBoarding6 extends Component {
         waist: onBoardingInfo.measurements.waist,
         hip: onBoardingInfo.measurements.hip,
         burpeeCount:onBoardingInfo.burpeeCount,
+        fitnessLevel:onBoardingInfo.fitnessLevel
       }
       storeProgressInfo(progressData)
       this.saveOnBoardingInfo(data)
