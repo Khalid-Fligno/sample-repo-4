@@ -69,12 +69,13 @@ export default class RecipeScreen extends React.PureComponent {
     });
   }
   componentDidMount = async () => {
-    this.focusListener = this.props.navigation.addListener('willFocus', () => {
-      this.onFocusFunction()
-    })
+    // this.focusListener = this.props.navigation.addListener('willFocus', () => {
+    //   this.onFocusFunction()
+    // })
+    this.onFocusFunction()
   }
   componentWillUnmount = async () => {
-    this.focusListener.remove()
+    // this.focusListener.remove()
   }
   setDate = async (event, selectedDate) => {
     if(selectedDate){
@@ -119,12 +120,9 @@ export default class RecipeScreen extends React.PureComponent {
   }
   handleBack = () => {
     const { navigation } = this.props;
-    const { extraProps } = this.state;
-    if(extraProps && extraProps['fromCalender']){
-      navigation.navigate('Calendar');
-    }else{
+    // const { extraProps } = this.state;
+    // console.log("click",extraProps)
       navigation.pop()
-    }
     
   }
 
@@ -145,8 +143,9 @@ export default class RecipeScreen extends React.PureComponent {
       modalVisible,
       calendarMeal,
       addingToCalendar,
+      extraProps
     } = this.state;
-
+// console.log("from calendar",extraProps)
     return (
       <View style={NutritionStyles.container}>
         {

@@ -57,7 +57,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
   completeWorkout = async () => {
     const extraProps = this.props.navigation.getParam('extraProps', undefined)
     if(extraProps['fromCalender']){
-      this.props.navigation.navigate('Calendar');
+      this.props.navigation.navigate('CalendarHome');
     }else{
       this.props.navigation.navigate('WorkoutsHome');
     }

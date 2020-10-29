@@ -171,19 +171,20 @@ class CalendarHomeScreen extends React.PureComponent {
 
   loadExercises = async (workoutId,challengeCurrentDay = 0) => {
     this.setState({ loading: true });
+
+    FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
+        Promise.all(res.map(async (item,index) => {
+            if (item.includes("exercise-")) {
+              FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
+                console.log(item,"deleted...")
+              })
+            }
+        }))
+    })
     db.collection('newWorkouts').doc(workoutId)
       .get()
       .then(async (doc) => {
         try{
-            FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
-                Promise.all(res.map(async (item,index) => {
-                    if (item.includes("exercise-")) {
-                      FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
-                      })
-                    }
-                }))
-            })
-
             let workout = await doc.data();
             const { exercises } = workout;
             await Promise.all(exercises.map(async (exercise, index) => {
@@ -194,7 +195,7 @@ class CalendarHomeScreen extends React.PureComponent {
                     exercise.videoUrls[0].url,
                     `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
                   ).then(()=>{
-                    // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+                    console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
                   })
                   .catch(err=>console.log(err))
               }
@@ -357,7 +358,7 @@ class CalendarHomeScreen extends React.PureComponent {
     }
   }
 
-  async fetchRecipe(id,mealType){
+  async fetchRecipe(id,mealType=""){
     this.setState({loading:true})
     let recipeData =  await (await db.collection('recipes').doc(id).get()).data();
       const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
@@ -470,7 +471,8 @@ class CalendarHomeScreen extends React.PureComponent {
                                 renderRightActions={() => this.renderRightActionForRC(res.meal)}
                                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                                 onSwipeableClose={() => this.setState({ isSwiping: false })}
-                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: getMeal ,meal:res.meal,backTitle:'Calendar',extraProps:{fromCalender:true} })}
+                                // onPress={() => this.props.navigation.navigate('Recipe', { recipe: getMeal ,meal:res.meal,backTitle:'Calendar',extraProps:{fromCalender:true} })}
+                                onPress={() => this.fetchRecipe(getMeal.id,getMeal.mealType)} 
                                 stringDate = {this.stringDate}
                         />
                   )     
@@ -515,6 +517,7 @@ class CalendarHomeScreen extends React.PureComponent {
                                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                                 onSwipeableClose={() => this.setState({ isSwiping: false })}
                                 onPress={() => this.props.navigation.navigate('Recipe', { recipe: meals[res] ,meal:res,backTitle:'Calendar',extraProps:{fromCalender:true} })}
+                                onPress={() => this.fetchRecipe(meals[res].id)} 
                                 stringDate = {this.stringDate}
                         />
               else if(!this.todayRecommendedMeal || !showRC)

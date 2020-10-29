@@ -15,11 +15,15 @@ export default class RecipeStepsScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true ,
       steps: this.props.navigation.getParam('recipe', null).steps,
       stepsImages: this.props.navigation.getParam('recipe', null).stepsImages,
     };
   }
   componentDidMount = () => {
+    setTimeout(() => {
+      this.setState({ loading: false });
+    }, 10);
     activateKeepAwake();
   }
   componentWillUnmount = () => {
@@ -123,6 +127,9 @@ export default class RecipeStepsScreen extends React.PureComponent {
   }
   render() {
     const { steps } = this.state;
+    if(this.state.loading) {
+      return null;
+    }
     return (
       <View style={[globalStyle.container,{paddingHorizontal:0,alignItems: 'center'}]}>
         <Carousel

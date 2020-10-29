@@ -48,7 +48,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 
   componentDidMount = async () => {
     this.setState({ loading: true });
-    this.focusListener = this.props.navigation.addListener('didFocus', async () => {
+    this.focusListener = this.props.navigation.addListener('willFocus', async () => {
         this.onFocusFunction()
     })
   }

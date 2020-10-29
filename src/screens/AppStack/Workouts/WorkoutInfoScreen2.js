@@ -71,10 +71,11 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
 
   componentDidMount = async () => {
     this.setState({ loading: true });
-    this.focusListener = this.props.navigation.addListener('willFocus', () => {
-      console.log("will focued call")
-      this.onFocusFunction()
-    })
+    // this.focusListener = this.props.navigation.addListener('willFocus', () => {
+    //   console.log("will focued call")
+    //   this.onFocusFunction()
+    // })
+    this.onFocusFunction()
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
       handleBackToCalendar: () => this.handleBackToCalendar()
@@ -83,7 +84,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
   }
 
   componentWillUnmount = async () => {
-    this.focusListener.remove()
+    console.log("unmount")
+    // this.focusListener.remove()
   }
 
   setDate = async (event, selectedDate) => {
@@ -292,6 +294,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                 // >
                 //   {`• ${tip}`}
                 // </Text>
+
+                tip &&
                 <View style={{flexDirection:"row"}} key={index}>
                   <Text  style={NutritionStyles.ingredientsText}> • </Text>
                   <Text
