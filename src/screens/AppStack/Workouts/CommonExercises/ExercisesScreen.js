@@ -84,7 +84,7 @@ export default class ExercisesScreen extends React.PureComponent {
           exerciseInfoModalVisible: false,
           appState: AppState.currentState,
           rest:rest,
-          isRunning:false
+          // isRunning:false
     };
   }
   componentDidMount() {
@@ -127,7 +127,7 @@ export default class ExercisesScreen extends React.PureComponent {
             target:workoutName
           })
         });
-        // console.log("Adeed to challenge",workouts)
+        console.log("Adeed to challenge",workouts)
       }
     })
 
@@ -266,7 +266,7 @@ export default class ExercisesScreen extends React.PureComponent {
       videoPaused: true,
       timerStart: false,
       pauseModalVisible: true,
-      isRunning:false
+      // isRunning:false
     });
   }
 
@@ -275,7 +275,8 @@ export default class ExercisesScreen extends React.PureComponent {
       this.setState({
         videoPaused: false,
         pauseModalVisible: false,
-        isRunning:true
+        // isRunning:true,
+        timerStart: true,
       });
     }else{
       this.setState({
@@ -301,7 +302,7 @@ export default class ExercisesScreen extends React.PureComponent {
         }))
     })
       if(this.state.extraProps['fromCalender']){
-        this.props.navigation.navigate('Calendar');
+        this.props.navigation.navigate('CalendarHome');
       }else{
         this.props.navigation.navigate('WorkoutsSelection');
       }
@@ -321,7 +322,6 @@ export default class ExercisesScreen extends React.PureComponent {
       ],
       { cancelable: false },
     );
-    console.log("QUIT",this.state.extraProps['fromCalender'])
   }
 
   restartWorkout = (exerciseList, reps,currentExerciseIndex) => {
@@ -420,7 +420,7 @@ export default class ExercisesScreen extends React.PureComponent {
       fitnessLevel,
       rest,
       workout,
-      isRunning
+      // isRunning
     } = this.state;
 
     const setCount = this.props.navigation.getParam('setCount', 1)
