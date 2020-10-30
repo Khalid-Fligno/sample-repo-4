@@ -196,7 +196,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
   renderItem = ({ item: exercise, index }) => {
     let showRR = (exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A'))?true:false
     let showCT =  exercise.coachingTip && exercise.coachingTip.length > 0 && !exercise.coachingTip.includes("none")?true:false
-    console.log(showRR)
     return(
     <View style={WorkoutScreenStyle.carouselContainer}>
       <Carousel
