@@ -241,7 +241,6 @@ export default class SignupScreen extends React.PureComponent {
       return;
     }
     try {
-   
       console.log("step1");
       const response = await firebase.auth().createUserWithEmailAndPassword(email, password);
       await response.user.updateProfile({ displayName: `${firstName} ${lastName}` });

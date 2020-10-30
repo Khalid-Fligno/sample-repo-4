@@ -33,9 +33,7 @@ import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
 import { 
   getCurrentPhase, 
-  getTotalChallengeWorkoutsCompleted, 
   getCurrentChallengeDay, 
-  getTodayRecommendedMeal, 
   getTodayRecommendedWorkout,
   isActiveChallenge
 } from '../../../utils/challenges';

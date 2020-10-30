@@ -68,6 +68,7 @@ export default class OnBoarding6 extends Component {
     })
     if(type === 'next'){   
       data = createUserChallengeData(updatedChallengedata)
+      console.log(data)
       const progressData = {
         photoURL: onBoardingInfo.beforePhotoUrl,
         weight: onBoardingInfo.measurements.weight,

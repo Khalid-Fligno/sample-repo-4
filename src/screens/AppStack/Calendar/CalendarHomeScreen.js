@@ -358,7 +358,7 @@ class CalendarHomeScreen extends React.PureComponent {
     }
   }
 
-  async fetchRecipe(id,mealType=""){
+  async fetchRecipe(id){
     this.setState({loading:true})
     let recipeData =  await (await db.collection('recipes').doc(id).get()).data();
       const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
@@ -472,7 +472,7 @@ class CalendarHomeScreen extends React.PureComponent {
                                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                                 onSwipeableClose={() => this.setState({ isSwiping: false })}
                                 // onPress={() => this.props.navigation.navigate('Recipe', { recipe: getMeal ,meal:res.meal,backTitle:'Calendar',extraProps:{fromCalender:true} })}
-                                onPress={() => this.fetchRecipe(getMeal.id,getMeal.mealType)} 
+                                onPress={() => this.fetchRecipe(getMeal.id)} 
                                 stringDate = {this.stringDate}
                         />
                   )     
@@ -482,7 +482,7 @@ class CalendarHomeScreen extends React.PureComponent {
                     key={index}
                     res={res} 
                     index={index} 
-                    onPress={() => this.fetchRecipe(res.id,res.mealType)} 
+                    onPress={() => this.fetchRecipe(res.id)} 
                     renderRightActions={() => this.renderRightActionForRC(res.meal)} 
                     onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                     onSwipeableClose={() => this.setState({ isSwiping: false })}
