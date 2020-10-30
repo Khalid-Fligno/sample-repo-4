@@ -388,7 +388,7 @@ export default class RecipeScreen extends React.PureComponent {
                           key={ingredient}
                           style={NutritionStyles.ingredientsText}
                           >
-                            {ingredient.trim()}
+                            {ingredient.replace("-", "").trim()}
                           </Text>
                         </View>
                         
@@ -410,7 +410,7 @@ export default class RecipeScreen extends React.PureComponent {
                         key={utensil}
                         style={NutritionStyles.ingredientsText}
                         >
-                          {utensil.trim()}
+                          {utensil.replace("-", "").trim()}
                         </Text>
                       </View>
                         // <Text

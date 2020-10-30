@@ -70,9 +70,9 @@ export default class App extends React.PureComponent {
     };
   }
   componentDidMount = () => {
-    this.unsubscribe = NetInfo.addEventListener((state) => {
-      this.handleConnectivityChange(state);
-    });
+    // this.unsubscribe = NetInfo.addEventListener((state) => {
+    //   this.handleConnectivityChange(state);
+    // });
     Linking.addEventListener('url', this.handleOpenURL);
     AppState.addEventListener('change', this.handleAppStateChange);
   }
