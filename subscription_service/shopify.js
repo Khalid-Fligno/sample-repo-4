@@ -159,6 +159,7 @@ const createUserAndChallenge= async (req)=>{
           const newUser={
               email:req.email,
               challenge:true, 
+              formShopify:true,
               onboarded: false,
               country:'unavailable',
               signUpDate: moment(new Date()).format('YYYY-MM-DD'),
