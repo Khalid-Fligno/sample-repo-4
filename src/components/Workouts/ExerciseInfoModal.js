@@ -20,6 +20,9 @@ export default class ExerciseInfoModal extends React.PureComponent {
       hideExerciseInfoModal,
       exercise,
     } = this.props;
+    let showRR = (exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A'))?true:false
+    let showCT =  exercise.coachingTip && exercise.coachingTip.length > 0 && !exercise.coachingTip.includes("none")?true:false
+
     return (
       <Modal
         isVisible={exerciseInfoModalVisible}
@@ -39,12 +42,12 @@ export default class ExerciseInfoModal extends React.PureComponent {
             </View>
             <View style={WorkoutScreenStyle.exerciseDescriptionTextContainer}>
               {
-                exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A') && (
+                showRR && (
                   <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>Recommended resistance:</Text>
                 )
               }
               {
-                exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A') && (
+                showRR && (
                   <Text style={WorkoutScreenStyle.exerciseDescriptionText}> {exercise.recommendedResistance}</Text>
                 )
               }
@@ -55,12 +58,6 @@ export default class ExerciseInfoModal extends React.PureComponent {
               }
               {
                 exercise.coachingTip && exercise.coachingTip.map((tip,index) => (
-                  // <Text
-                  //   key={index}
-                  //   style={WorkoutScreenStyle.exerciseDescriptionText}
-                  // >
-                  //   {`• ${tip}`}
-                  // </Text>
                   <View style={{flexDirection:"row",marginEnd:10,}} key={index}>
                     <Text  style={NutritionStyles.ingredientsText}> • </Text>
                       <Text
@@ -95,14 +92,6 @@ export default class ExerciseInfoModal extends React.PureComponent {
             </View>
           
             <View style={styles.helperModalButtonContainer}>
-              {/* <TouchableOpacity
-                onPress={hideExerciseInfoModal}
-                style={styles.modalButton}
-              >
-                <Text style={styles.modalButtonText}>
-                  CONTINUE
-                </Text>
-              </TouchableOpacity> */}
                 <CustomBtn
                   customBtnStyle={{borderRadius:50,marginBottom:20,marginHorizontal:8}} 
                   titleCapitalise={true}

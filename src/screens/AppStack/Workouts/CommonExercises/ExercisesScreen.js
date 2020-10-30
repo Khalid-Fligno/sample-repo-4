@@ -424,9 +424,7 @@ export default class ExercisesScreen extends React.PureComponent {
       // isRunning
     } = this.state;
 
-    const setCount = this.props.navigation.getParam('setCount', 1)
-    // console.log(rest,exerciseList[currentExerciseIndex],exerciseList)
-    // console.log(fitnessLevel,totalDuration,setCount)
+  const setCount = this.props.navigation.getParam('setCount', 1)
 
   // let getProgressType = findWorkoutType(workout);
     let handleSkip = false;
@@ -447,9 +445,46 @@ export default class ExercisesScreen extends React.PureComponent {
     }  
     
 
-    //TODO : calculate flag to show last exercise  
+  //TODO : calculate flag to show last exercise  
     let lastExercise = getLastExercise(exerciseList,currentExerciseIndex,workout,setCount)
 
+    let showCT =  currentExercise.coachingTip && currentExercise.coachingTip.length > 0 && !currentExercise.coachingTip.includes("none")?true:false
+    
+
+    const workoutTimer = () =>{
+      if((!workout.count) && !rest )
+        return (
+            <WorkoutTimer
+                totalDuration={Number(totalDuration)}
+                start={timerStart}
+                handleFinish={() =>{
+                  if(!rest)
+                    this.restControl( reps, resistanceCategoryId,currentExerciseIndex)
+                  else  
+                    this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
+                } }
+                customContainerStyle={{paddingBottom:20}}
+              />
+        )
+     else if(rest)
+        return (
+          <WorkoutTimer
+              totalDuration={totalDuration}
+              start={timerStart}
+              handleFinish={() =>{
+                if(!rest)
+                  this.restControl( reps, resistanceCategoryId,currentExerciseIndex)
+                else  
+                  this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
+              } }
+            customContainerStyle={{paddingBottom:20}}
+            />
+        )
+      else if((workout.count) && !rest)  
+        return (
+          <View style={styles.containerEmptyBlackBox} ></View>
+        )
+    }
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -478,43 +513,15 @@ export default class ExercisesScreen extends React.PureComponent {
               />
             }
              
-            <ExerciseInfoButton onPress={this.showExerciseInfoModal} />
+             {
+               showCT && <ExerciseInfoButton onPress={this.showExerciseInfoModal} />
+             }
+            
 
             {/* //TODO:workout Timer */}
-              {
-                (!workout.count) && !rest  && 
-                <WorkoutTimer
-                    totalDuration={Number(totalDuration)}
-                    start={timerStart}
-                    handleFinish={() =>{
-                      if(!rest)
-                        this.restControl( reps, resistanceCategoryId,currentExerciseIndex)
-                      else  
-                        this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
-                    } }
-                    customContainerStyle={{paddingBottom:20}}
-                  />
-
-              }
-              {
-                  rest && 
-                  <WorkoutTimer
-                      totalDuration={totalDuration}
-                      start={timerStart}
-                      handleFinish={() =>{
-                        if(!rest)
-                          this.restControl( reps, resistanceCategoryId,currentExerciseIndex)
-                        else  
-                          this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
-                      } }
-                    customContainerStyle={{paddingBottom:20}}
-                    />
-
-                }
-                {
-                  (workout.count) && !rest &&
-                  <View style={styles.containerEmptyBlackBox} ></View>
-                }
+             {
+              workoutTimer()
+             } 
           </View>
 
           <View style={styles.currentExerciseTextContainer}>
