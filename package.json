@@ -91,7 +91,7 @@
     "react-native-gesture-handler": "~1.6.0",
     "react-native-iap": "^4.5.0",
     "react-native-image-progress": "^1.1.1",
-    "react-native-in-app-utils": "^6.0.2",
+    "react-native-in-app-utils": "^6.1.0",
     "react-native-indicators": "^0.17.0",
     "react-native-loading-spinner-overlay": "^1.0.1",
     "react-native-modal": "^11.5.2",
