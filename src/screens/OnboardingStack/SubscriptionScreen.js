@@ -857,13 +857,13 @@ export default class SubscriptionScreen extends React.PureComponent {
                 </Text>
               </View> */}
                <View style={styles.headerContainer}>
-                  <Text style={styles.headerText}>
+                  {/* <Text style={styles.headerText}>
                     {'START YOUR'}
-                  </Text>
+                  </Text> */}
           
-                <Text style={styles.headerText2}>
+                {/* <Text style={styles.headerText2}>
                 {specialOffer ? '1 MONTH' : '7 DAY'} FREE TRIAL 
-                </Text>
+                </Text> */}
               </View>
 
               </ImageBackground>  
@@ -930,7 +930,8 @@ export default class SubscriptionScreen extends React.PureComponent {
                         marginTop:20,
                         marginBottom:10
                       }}
-                Title="Start your free trial"
+                // Title="Start your free trial"
+                Title="Start"
                 onPress={()=> this.handleClick()}
               />
               <Icon
