@@ -1,4 +1,4 @@
-const hostUrl='http://3.8.209.87:8100';
+const hostUrl='https://ad5d22eb2900.ngrok.io';
 const { auth, db } = require('./firebase');
 const webhookUrl='https://api.rechargeapps.com/webhooks';
 const productUrl='https://api.rechargeapps.com/products';
@@ -44,7 +44,7 @@ exports.createShopifyWebhooks = async (req, res)  => {
     let unRegisteredWeekHook=[];
     
     topics.forEach(topic => {
-     const index= registeredWebHooks.findIndex(res1=> res1.topic === topic.name)
+     const index= registeredWebHooks.findIndex(res1=> res1.topic === topic.webhook_url)
      console.log("index",index);
      if(index === -1){
         unRegisteredWeekHook.push(topic);
