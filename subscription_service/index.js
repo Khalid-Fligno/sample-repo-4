@@ -31,7 +31,7 @@ app.post('/subscriptions/', jsonParser, getSubscriptions);
 app.post('/shopify/charge/create/webhooks', jsonParser, createShopifyWebhooks);
 app.post('/shopify/subscription/created', jsonParser, createShopifySubscriptionWebhook);
 app.post('/shopify/subscription/deleted', jsonParser, deleteShopifySubscriptionWebhook);
-app.post('/shopify/getCharges/:date_min/:date_max', jsonParser, shopifyChargesMigration);
+app.post('/shopify/getChargesMigration', jsonParser, shopifyChargesMigration);
 app.post('/shopify/getAllProducts', jsonParser, getShopifyProducts);
 app.post('/shopify/getAlldWebHooks', jsonParser, getAllWebHooks);
 app.listen(8100);

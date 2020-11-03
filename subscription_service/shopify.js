@@ -88,6 +88,9 @@ exports.deleteShopifySubscriptionWebhook = async(req, res) =>{
 }
 //Will get a user's subscription details from firebase DB
 exports.shopifyChargesMigration = async(req, res) => {
+  const minDate=moment(new Date(), 'YYYY-MM-DD').add(-2,'days').format('YYYY-MM-DD');
+  const maxDate=moment(new Date(), 'YYYY-MM-DD').format('YYYY-MM-DD');
+  console.log("minDate",minDate,"maxDate",maxDate);
   const options = {
       method: 'GET',
       headers: {
@@ -96,7 +99,7 @@ exports.shopifyChargesMigration = async(req, res) => {
           'x-recharge-access-token' : RECHARGE_API_KEY
         },
       };
-    const resCharges = await fetch(`${chargesUrl}?date_min=${req.params.date_min}&date_max=${req.params.date_max}`, options);      
+    const resCharges = await fetch(`${chargesUrl}?date_min=${minDate}&date_max=${maxDate}`, options);      
     const shopifyCharges = await resCharges.json();
     // get all charges from shopifyCharges charges
     const charges =shopifyCharges.charges;
@@ -170,7 +173,14 @@ const createUserAndChallenge= async (req)=>{
           console.log("newUser",newUser);
           addUser(newUser);   
       }
-
+      if(user != undefined){
+        const userChallenge= await getUserChallenge(user.id,challengeProductName);
+        if(userChallenge )
+          { 
+            console.log("user has challenge");
+            return true
+          }
+      }
       // get product from line item collection
       console.log("challengeShopifyProductId",req.shopify_product_id);
       // get workout challange details by passing product_title      
@@ -221,7 +231,13 @@ const updateUserById = (userInfo) => {
   const userRef = db.collection('users').doc(userInfo.id);
   userRef.set(userInfo, { merge: true });
 }
-
+const getUserChallenge = async(userId,challengeName)=>{
+  const snapshot=await db.collection('users').doc(userId).collection('challenges').where("name","==",challengeName)
+  .get();
+  if (snapshot.size > 0) {
+   return snapshot.docs[0].data();
+} 
+}
 const getChallengeDetails = async(challengeName) => {
     const snapshot =await db.collection('challenges').where("name","==",challengeName)
      .get();
