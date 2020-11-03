@@ -39,10 +39,10 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   onFocusFunction = async () =>{
     const {meal} = this.state
     const newMeal = this.props.navigation.getParam('meal', null);
-    if(meal && meal !== newMeal || !meal){
+    // if(meal && meal !== newMeal || !meal){
       this.setState({meal:newMeal})
       await this.fetchRecipes();
-    }
+    // }
       
   }
 
