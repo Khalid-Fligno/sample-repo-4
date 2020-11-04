@@ -1,4 +1,4 @@
-const hostUrl='https://ad5d22eb2900.ngrok.io';
+const hostUrl='https://3.8.209.87';
 const { auth, db } = require('./firebase');
 const webhookUrl='https://api.rechargeapps.com/webhooks';
 const productUrl='https://api.rechargeapps.com/products';
