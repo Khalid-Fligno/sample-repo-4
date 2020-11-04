@@ -16,16 +16,18 @@ SavingsBadge.propTypes = {
 
 const styles = StyleSheet.create({
   newRecipeBadgeContainer: {
-    backgroundColor: colors.coral.standard,
-    borderRadius: 2,
-    padding: 3,
-    paddingBottom: 0,
-    marginLeft: 8,
-    marginBottom: 6,
+    backgroundColor: colors.themeColor.color,
+    borderRadius: 15,
+    padding: 5,
+    paddingHorizontal:15,
+    // paddingBottom: 0,
+    // marginLeft: 8,
+    // marginBottom: 6,
+    alignItems:'center'
   },
   newRecipeBadgeText: {
     fontFamily: fonts.bold,
-    fontSize: 8,
+    fontSize: 11,
     color: colors.white,
   },
 });

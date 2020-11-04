@@ -5,6 +5,17 @@ import Modal from 'react-native-modal';
 import Icon from '../../components/Shared/Icon';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
+import CustomBtn from '../Shared/CustomBtn';
+
+const customBtnStyle ={
+  borderRadius:50,
+  marginTop:10,
+  backgroundColor:colors.white,
+  padding:20
+ }
+ const customBtnTitleStyle ={
+   color:colors.transparentBlackDark
+  }
 
 const WorkoutPauseModal = ({
   isVisible,
@@ -14,6 +25,7 @@ const WorkoutPauseModal = ({
   handleUnpause,
   exerciseList,
   fitnessLevel,
+  currentExerciseIndex,
   reps,
 }) => (
   <Modal
@@ -23,7 +35,7 @@ const WorkoutPauseModal = ({
     animationOut="fadeOut"
     animationOutTiming={800}
   >
-    <View>
+    <View style={{flex:1,justifyContent:'center'}}>
       <View style={styles.pauseIconContainer}>
         <Icon
           name="pause"
@@ -32,42 +44,39 @@ const WorkoutPauseModal = ({
         />
       </View>
       <View style={styles.pauseModalContainer}>
-        <TouchableOpacity
-          onPress={handleQuit}
-          style={styles.modalButtonQuit}
-        >
-          <Text style={styles.modalButtonTextDark}>
-            QUIT WORKOUT
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleRestart(exerciseList, fitnessLevel || reps)}
-          style={styles.modalButtonRestart}
-        >
-          <Text style={styles.modalButtonText}>
-            RESTART THIS SET
-          </Text>
-        </TouchableOpacity>
+          <CustomBtn 
+            customBtnStyle={customBtnStyle}
+            customBtnTitleStyle={customBtnTitleStyle}
+            titleCapitalise={true}
+            Title="QUIT WORKOUT"
+            onPress={handleQuit}
+          />
+           <CustomBtn 
+            customBtnStyle={customBtnStyle}
+            customBtnTitleStyle={customBtnTitleStyle}
+            titleCapitalise={true}
+            Title="RESTART THIS SET"
+            onPress={() => handleRestart(exerciseList, fitnessLevel || reps,currentExerciseIndex)}
+          />
+   
         {
           handleSkip && (
-            <TouchableOpacity
-              onPress={() => handleSkip(exerciseList, fitnessLevel || reps)}
-              style={styles.modalButtonSkip}
-            >
-              <Text style={styles.modalButtonText}>
-                SKIP THIS EXERCISE
-              </Text>
-            </TouchableOpacity>
+            <CustomBtn 
+            customBtnStyle={customBtnStyle}
+            customBtnTitleStyle={customBtnTitleStyle}
+            titleCapitalise={true}
+              Title="SKIP THIS EXERCISE"
+              onPress={() => handleSkip(exerciseList, fitnessLevel || reps,currentExerciseIndex)}
+            />
           )
         }
-        <TouchableOpacity
-          onPress={handleUnpause}
-          style={styles.modalButtonContinue}
-        >
-          <Text style={styles.modalButtonText}>
-            CONTINUE
-          </Text>
-        </TouchableOpacity>
+        <CustomBtn 
+            customBtnStyle={customBtnStyle}
+            outline={true}
+            titleCapitalise={true}
+            Title="CONTINUE"
+            onPress={handleUnpause}
+        />
       </View>
     </View>
   </Modal>
@@ -92,7 +101,7 @@ WorkoutPauseModal.defaultProps = {
 
 const styles = StyleSheet.create({
   pauseModalContainer: {
-    backgroundColor: colors.white,
+    // backgroundColor: colors.white,
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -101,50 +110,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingBottom: 30,
   },
-  modalButtonQuit: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.grey.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  modalButtonRestart: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.charcoal.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  modalButtonSkip: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.charcoal.darkest,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  modalButtonContinue: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.coral.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 4,
-  },
-  modalButtonTextDark: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.black,
-    marginTop: 4,
-  },
+
 });
 
 export default WorkoutPauseModal;

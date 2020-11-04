@@ -10,7 +10,6 @@ export class RestoreSubscriptions {
     this.props = props;
   }
   restore = async (subscriptionInfo, onboarded) => {
-
     const newSubscriptionInfoReq = await fetch(subscriptionServiceUrl, {
       method: 'POST',
       headers: {

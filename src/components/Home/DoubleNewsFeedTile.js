@@ -23,6 +23,7 @@ export default class DoubleNewsFeedTile extends React.PureComponent {
   handlePressIn = () => {
     Animated.spring(this.animatedValueLeft, {
       toValue: 0.92,
+      useNativeDriver:true
     }).start();
   }
   handlePressOut = () => {
@@ -30,11 +31,13 @@ export default class DoubleNewsFeedTile extends React.PureComponent {
       toValue: 1,
       friction: 3,
       tension: 40,
+      useNativeDriver:true
     }).start();
   }
   handlePressInRight = () => {
     Animated.spring(this.animatedValueRight, {
       toValue: 0.92,
+      useNativeDriver:true
     }).start();
   }
   handlePressOutRight = () => {
@@ -42,6 +45,7 @@ export default class DoubleNewsFeedTile extends React.PureComponent {
       toValue: 1,
       friction: 3,
       tension: 40,
+      useNativeDriver:true
     }).start();
   }
   render() {

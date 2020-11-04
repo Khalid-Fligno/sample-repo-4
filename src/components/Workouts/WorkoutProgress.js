@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import PropTypes from 'prop-types';
+import PropTypes, { number } from 'prop-types';
 import { PieChart } from 'react-native-svg-charts';
 import Icon from '../Shared/Icon';
 import colors from '../../styles/colors';
@@ -15,23 +15,23 @@ const pieDataIncomplete = [0, 100]
     key: `pie-${index}`,
   }));
 
-const pieDataSet1 = [33, 67]
-  .map((value, index) => ({
-    value,
-    svg: {
-      fill: index === 0 ? colors.coral.standard : colors.grey.light,
-    },
-    key: `pie-${index}`,
-  }));
+// const pieDataSet1 = [33, 67]
+//   .map((value, index) => ({
+//     value,
+//     svg: {
+//       fill: index === 0 ? colors.coral.standard : colors.grey.light,
+//     },
+//     key: `pie-${index}`,
+//   }));
 
-const pieDataSet2 = [33, 34, 33]
-  .map((value, index) => ({
-    value,
-    svg: {
-      fill: index === 1 ? colors.grey.light : colors.coral.standard,
-    },
-    key: `pie-${index}`,
-  }));
+// const pieDataSet2 = [33, 34, 33]
+//   .map((value, index) => ({
+//     value,
+//     svg: {
+//       fill: index === 1 ? colors.grey.light : colors.coral.standard,
+//     },
+//     key: `pie-${index}`,
+//   }));
 
 const pieDataComplete = [100, 0]
   .map((value, index) => ({
@@ -42,11 +42,11 @@ const pieDataComplete = [100, 0]
     key: `pie-${index}`,
   }));
 
-const pieDataMap = {
-  1: pieDataIncomplete,
-  2: pieDataSet1,
-  3: pieDataSet2,
-};
+// const pieDataMap = {
+//   1: pieDataIncomplete,
+//   2: pieDataSet1,
+//   3: pieDataSet2,
+// };
 
 class WorkoutProgress extends React.PureComponent {
   constructor(props) {
@@ -55,7 +55,13 @@ class WorkoutProgress extends React.PureComponent {
     };
   }
   render() {
-    const { currentExercise, currentSet } = this.props;
+    const { currentExercise, currentSet ,exerciseList,workoutReps} = this.props;
+    let dataValue= 100/workoutReps;
+    let dataSet=[]
+    for(i=0;i<workoutReps;i++){
+        dataSet.push(dataValue);
+    }
+    console.log(currentExercise, currentSet)
     const completePieChart = (
       <PieChart
         style={styles.pieChart}
@@ -77,10 +83,18 @@ class WorkoutProgress extends React.PureComponent {
     const currentPieChart = (set) => (
       <PieChart
         style={styles.pieChart}
-        data={pieDataMap[set]}
+        data={
+          dataSet.map((value, index) => ({
+            value,
+            svg: {
+              fill: index < currentSet ? colors.coral.standard : colors.grey.light  ,
+            },
+            key: `pie-${index}`,
+          }))
+        }
         innerRadius="80%"
-        startAngle={Math.PI * 2}
-        endAngle={0}
+        startAngle={0}
+        endAngle={Math.PI * 2}
       />
     );
     const currentSetText = (text) => (
@@ -101,13 +115,8 @@ class WorkoutProgress extends React.PureComponent {
     );
     return (
       <View style={styles.container}>
-        <View style={styles.exercise}>
-          {currentExercise > 1 && completePieChart}
-          {currentExercise > 1 && tickIcon}
-          {currentExercise === 1 && currentPieChart(currentSet)}
-          {currentExercise === 1 && currentSetText(currentSet)}
-        </View>
-        <View style={styles.exercise}>
+        
+        {/* <View style={styles.exercise}>
           {currentExercise > 2 && completePieChart}
           {currentExercise > 2 && tickIcon}
           {currentExercise === 2 && currentPieChart(currentSet)}
@@ -142,6 +151,19 @@ class WorkoutProgress extends React.PureComponent {
           {currentExercise === 6 && currentSetText(currentSet)}
           {currentExercise < 6 && incompletePieChart}
         </View>
+      */}
+        {
+          exerciseList.map((res,index)=>(
+              <View style={styles.exercise} key={index}>
+                {currentExercise > index+1 && completePieChart}
+                {currentExercise > index+1 && tickIcon}
+                {currentExercise === index+1 && currentPieChart(currentSet)}
+                {currentExercise === index+1 && currentSetText(currentSet)}
+                {currentExercise < index+1 && incompletePieChart}
+              </View>
+          ))
+        }
+        
       </View>
     );
   }
@@ -150,20 +172,38 @@ class WorkoutProgress extends React.PureComponent {
 WorkoutProgress.propTypes = {
   currentExercise: PropTypes.number.isRequired,
   currentSet: PropTypes.number.isRequired,
+  exerciseList: PropTypes.array.isRequired,
 };
 
 const styles = StyleSheet.create({
+  // container: {
+  //   flexDirection: 'row',
+  //   flexWrap: 'wrap',
+  //   height: 48,
+  //   paddingLeft: 5,
+  //   paddingRight: 5,
+  //   backgroundColor: colors.white,
+  // },
+  // exercise: {
+  //   flex: 1,
+  //   paddingLeft: 5,
+  //   paddingRight: 5,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
   container: {
+    flex:0.5,
     flexDirection: 'row',
+    flexWrap: 'wrap',
     height: 48,
-    paddingLeft: 5,
-    paddingRight: 5,
+    // paddingLeft: 5,
+    // paddingRight: 5,
     backgroundColor: colors.white,
   },
   exercise: {
-    flex: 1,
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    marginTop:5,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -178,7 +218,7 @@ const styles = StyleSheet.create({
     marginTop: -36,
   },
   currentSetTextContainer: {
-    marginTop: -36,
+    marginTop: -37,
   },
   currentSetText: {
     fontFamily: fonts.bold,

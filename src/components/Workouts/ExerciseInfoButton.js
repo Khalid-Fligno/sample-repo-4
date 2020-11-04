@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     height: 52,
     width: 52,
     position: 'absolute',
-    marginTop: -50,
+    marginTop: -52,
     backgroundColor: colors.transparentBlackLight,
     borderTopLeftRadius: 4,
   },

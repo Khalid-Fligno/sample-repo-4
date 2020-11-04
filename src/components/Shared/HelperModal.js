@@ -4,6 +4,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Modal from 'react-native-modal';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
+import CustomBtn from './CustomBtn';
 
 export default class HelperModal extends React.PureComponent {
   constructor(props) {
@@ -53,20 +54,24 @@ export default class HelperModal extends React.PureComponent {
             }
           </View>
           <View style={styles.helperModalButtonContainer}>
-            <TouchableOpacity
+            <CustomBtn 
+              onPress={hideHelperModal}
+              outline={true}
+              titleCapitalise={true}
+              Title='OK, GOT IT!'
+              customBtnStyle={{borderRadius:50,margin:10}}
+            />
+            {/* <TouchableOpacity
               onPress={hideHelperModal}
               style={[
                 styles.modalButton,
-                color === 'coral' && styles.modalButtonCoral,
-                color === 'violet' && styles.modalButtonViolet,
-                color === 'blue' && styles.modalButtonBlue,
-                color === 'green' && styles.modalButtonGreen,
+                styles.modalThemeButton
               ]}
             >
               <Text style={styles.modalButtonText}>
                 OK, GOT IT!
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </Modal>
@@ -133,28 +138,15 @@ const styles = StyleSheet.create({
   modalButtonCoral: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.coral.standard,
+    backgroundColor: colors.themeColor.color,
     height: 50,
     width: '100%',
   },
-  modalButtonViolet: {
+  
+  modalThemeButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.violet.standard,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonBlue: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.blue.standard,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonGreen: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.green.standard,
+    backgroundColor: colors.themeColor.color,
     height: 50,
     width: '100%',
   },

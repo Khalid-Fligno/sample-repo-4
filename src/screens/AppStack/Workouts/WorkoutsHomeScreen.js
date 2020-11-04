@@ -19,10 +19,17 @@ import Loader from '../../../components/Shared/Loader';
 import HelperModal from '../../../components/Shared/HelperModal';
 import { db } from '../../../../config/firebase';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
-
+// import fonts from '../../../styles/fonts';
+import Tile from '../../../components/Shared/Tile';
 const { width } = Dimensions.get('window');
+import globalStyle from '../../../styles/globalStyles';
+import WorkoutScreenStyle from './WorkoutScreenStyle';
 
+const workout=[
+  {displayName:'Workout Focus',image: require('../../../../assets/images/workouts-resistance.jpg')},
+  {displayName:'Equipment',image: require('../../../../assets/images/workouts-resistance.jpg')},
+  {displayName:'Mascle Group',image: require('../../../../assets/images/workouts-resistance.jpg')}
+]
 const workoutTypes = [
   { displayName: 'RESISTANCE', resistance: true, image: require('../../../../assets/images/workouts-resistance.jpg') },
   { displayName: 'HIIT', hiit: true, image: require('../../../../assets/images/workouts-hiit.jpg') },
@@ -182,19 +189,19 @@ class WorkoutsHomeScreen extends React.PureComponent {
       hiitWeeklyComplete,
     } = this.state;
     return (
-      <View style={styles.slide}>
+      <View style={WorkoutScreenStyle.slide}>
         <ImageBackground
           source={item.image || require('../../../../assets/images/workouts-blank-tile.png')}
-          style={styles.image}
+          style={WorkoutScreenStyle.image}
         >
-          <View style={styles.opacityLayer}>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>
+          <View style={globalStyle.opacityLayer}>
+            <View style={WorkoutScreenStyle.titleContainer}>
+              <Text style={WorkoutScreenStyle.title}>
                 {item.displayName}
               </Text>
               {
                 item.resistance && (
-                  <Text style={styles.weeklyTargetText}>
+                  <Text style={WorkoutScreenStyle.weeklyTargetText}>
                     {
                       resistanceWeeklyComplete !== undefined &&
                       `${resistanceWeeklyComplete}/${resistanceWeeklyTarget} sessions this week`
@@ -204,7 +211,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
               }
               {
                 item.hiit && (
-                  <Text style={styles.weeklyTargetText}>
+                  <Text style={WorkoutScreenStyle.weeklyTargetText}>
                     {
                       hiitWeeklyComplete !== undefined &&
                       `${hiitWeeklyComplete}/${hiitWeeklyTarget} sessions this week`
@@ -226,11 +233,16 @@ class WorkoutsHomeScreen extends React.PureComponent {
       helperModalVisible,
     } = this.state;
     return (
-      <View style={styles.container}>
-        <View style={styles.carouselsContainer}>
-          <View style={styles.flexContainer}>
-            <View style={styles.carouselTitleContainer}>
-              <Text style={styles.carouselTitle}>
+      <View style={globalStyle.container}>
+         {/* <Tile
+              title1="Breakfast"
+              image={require('../../../../assets/images/nutrition-breakfast.jpg')}
+              onPress={() => navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
+            /> */}
+        <View style={globalStyle.carouselsContainer}>
+          <View style={globalStyle.flexContainer}>
+            <View style={globalStyle.carouselTitleContainer}>
+              <Text style={globalStyle.carouselTitle}>
                 Workout Type
               </Text>
             </View>
@@ -242,23 +254,24 @@ class WorkoutsHomeScreen extends React.PureComponent {
               itemWidth={width * 0.8}
               onSnapToItem={(slideIndex) => this.onSnapToItemTopCarousel('selectedWorkoutTypeIndex', slideIndex)}
             />
+           
           </View>
-          <View style={styles.flexContainer}>
-            <View style={styles.carouselTitleContainer}>
-              <View style={styles.flex}>
-                <Text style={styles.carouselTitle}>
+          <View style={globalStyle.flexContainer}>
+            <View style={globalStyle.carouselTitleContainer}>
+              <View style={globalStyle.flex}>
+                <Text style={globalStyle.carouselTitle}>
                   Location
                 </Text>
               </View>
               <Icon
                 name="chevron-down"
                 size={18}
-                style={styles.chevron}
+                style={globalStyle.chevron}
                 color={colors.grey.standard}
               />
-              <View style={styles.flex} />
+              <View style={globalStyle.flex} />
             </View>
-            <FadeInView duration={1500} style={styles.flexContainer}>
+            <FadeInView duration={1500} style={globalStyle.flexContainer}>
               <Carousel
                 ref={(c) => { this.carousel = c; }}
                 data={workoutLocations}
@@ -269,43 +282,43 @@ class WorkoutsHomeScreen extends React.PureComponent {
               />
             </FadeInView>
           </View>
-          <View style={styles.flexContainer}>
+          <View style={globalStyle.flexContainer}>
             {
               selectedWorkoutTypeIndex === 0 ? (
-                <View style={styles.carouselTitleContainer}>
-                  <View style={styles.flex}>
-                    <Text style={styles.carouselTitle}>
+                <View style={globalStyle.carouselTitleContainer}>
+                  <View style={globalStyle.flex}>
+                    <Text style={globalStyle.carouselTitle}>
                       Focus
                     </Text>
                   </View>
                   <Icon
                     name="chevron-down"
                     size={18}
-                    style={styles.chevron}
+                    style={globalStyle.chevron}
                     color={colors.grey.standard}
                   />
-                  <View style={styles.flex} />
+                  <View style={globalStyle.flex} />
                 </View>
               ) : (
-                <View style={styles.carouselTitleContainer}>
-                  <View style={styles.flex}>
-                    <Text style={styles.carouselTitle}>
+                <View style={globalStyle.carouselTitleContainer}>
+                  <View style={globalStyle.flex}>
+                    <Text style={globalStyle.carouselTitle}>
                       HIIT Style
                     </Text>
                   </View>
                   <Icon
                     name="chevron-down"
                     size={18}
-                    style={styles.chevron}
+                    style={globalStyle.chevron}
                     color={colors.grey.standard}
                   />
-                  <View style={styles.flex} />
+                  <View style={globalStyle.flex} />
                 </View>
               )
             }
             {
               selectedWorkoutTypeIndex === 0 && (
-                <FadeInView duration={1000} style={styles.flexContainer}>
+                <FadeInView duration={1000} style={globalStyle.flexContainer}>
                   <Carousel
                     ref={(c) => { this.carousel = c; }}
                     data={workoutTypeImageMap[selectedWorkoutLocationIndex]}
@@ -319,7 +332,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
             }
             {
               selectedWorkoutTypeIndex === 1 && (
-                <FadeInView duration={1000} style={styles.flexContainer}>
+                <FadeInView duration={1000} style={globalStyle.flexContainer}>
                   <Carousel
                     ref={(c) => { this.carousel = c; }}
                     data={hiitStyles}
@@ -335,11 +348,11 @@ class WorkoutsHomeScreen extends React.PureComponent {
           <Icon
             name="chevron-down"
             size={18}
-            style={styles.chevron}
+            style={globalStyle.chevron}
             color={colors.grey.standard}
           />
         </View>
-        <View style={styles.buttonContainer}>
+        <View style={globalStyle.buttonContainer}>
           <CustomButton
             title="SHOW WORKOUTS"
             onPress={() => this.goToWorkouts(selectedWorkoutTypeIndex)}
@@ -368,94 +381,5 @@ WorkoutsHomeScreen.propTypes = {
   setTimeout: PropTypes.func.isRequired,
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.offWhite,
-    alignItems: 'center',
-  },
-  carouselsContainer: {
-    flex: 1,
-    paddingTop: 4,
-    paddingBottom: 5,
-  },
-  flexContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  flex: {
-    flex: 1,
-  },
-  carouselTitleContainer: {
-    width: width * 0.8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  carouselTitle: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
-    color: colors.grey.dark,
-    marginTop: 3,
-  },
-  slide: {
-    flex: 1,
-    marginTop: 5,
-    marginBottom: 5,
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  image: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    resizeMode: 'cover',
-    height: '100%',
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-  },
-  opacityLayer: {
-    flex: 1,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.transparentBlackLight,
-  },
-  titleContainer: {
-    justifyContent: 'center',
-    paddingTop: 8,
-    paddingRight: 12,
-    paddingBottom: 3,
-    paddingLeft: 12,
-    borderRadius: 2,
-  },
-  weeklyTargetText: {
-    fontFamily: fonts.standard,
-    fontSize: 12,
-    color: colors.white,
-    textAlign: 'center',
-    shadowColor: colors.black,
-    shadowOpacity: 1,
-    shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 6,
-  },
-  title: {
-    fontFamily: fonts.bold,
-    fontSize: 22,
-    color: colors.white,
-    textAlign: 'center',
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.8,
-    shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 6,
-  },
-  chevron: {
-    alignSelf: 'center',
-  },
-  buttonContainer: {
-    paddingBottom: 10,
-  },
-});
 
 export default ReactTimeout(WorkoutsHomeScreen);

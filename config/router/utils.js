@@ -28,29 +28,43 @@ export const tabColorMap = {
   Workouts: colors.coral.standard,
   Calendar: colors.green.standard,
   Progress: colors.blue.standard,
+  // FEED: colors.charcoal.standard,
+  // SUBSCRIPTION: colors.violet.standard,
+  // CALENDER: colors.green.standard,
+  // PROGRESS: colors.blue.standard,
 };
 
 export const workoutsBackButtonMap = {
-  WorkoutsHome: false,
+  WorkoutsHome: true,
   WorkoutsLocation: true,
-  WorkoutsSelection: true,
-  HiitWorkoutsSelection: true,
+  WorkoutsSelection: false,
   WorkoutInfo: true,
-  HiitWorkoutInfo: true,
-  HiitCircuitWorkoutInfo: true,
 };
 
 export const workoutsStartButtonMap = {
   WorkoutInfo: true,
-  HiitWorkoutInfo: true,
-  HiitCircuitWorkoutInfo: true,
+};
+export const calendarStartButtonMap = {
+  WorkoutInfo: true,
 };
 
 export const nutritionBackButtonMap = {
-  NutritionHome: false,
-  RecipeSelection: true,
+  NutritionHome: true,
+  RecipeSelection: false,
+  Recipe: false,
+  RecipeSteps: true,
+};
+export const calendarBackButtonMap = {
+  Recipe: false,
+  RecipeSteps: true,
+  WorkoutInfo: true,
+  CalendarHome:false
+};
+export const calendarProfileButtonMap = {
   Recipe: true,
   RecipeSteps: true,
+  WorkoutInfo: false,
+  CalendarHome:true
 };
 
 export const onboardingBackButtonMap = {

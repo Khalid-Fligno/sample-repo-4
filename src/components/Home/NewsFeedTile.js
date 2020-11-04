@@ -22,6 +22,7 @@ export default class NewsFeedTile extends React.PureComponent {
   handlePressIn = () => {
     Animated.spring(this.animatedValue, {
       toValue: 0.92,
+      useNativeDriver:true
     }).start();
   }
   handlePressOut = () => {
@@ -29,6 +30,7 @@ export default class NewsFeedTile extends React.PureComponent {
       toValue: 1,
       friction: 3,
       tension: 40,
+      useNativeDriver:true
     }).start();
   }
   render() {
@@ -65,6 +67,8 @@ export default class NewsFeedTile extends React.PureComponent {
           </ImageBackground>
         </Animated.View>
       </TouchableOpacity>
+     
+      
     );
   }
 }
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    borderRadius: 2,
+    // paddingTop:10
   },
   opacityLayer: {
     flex: 1,

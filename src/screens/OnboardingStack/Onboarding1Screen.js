@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Dimensions,
   Alert,
+  ImageBackground,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
@@ -20,6 +22,9 @@ import { db } from '../../../config/firebase';
 import { uomMap } from '../../utils/index';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import CustomBtn from '../../components/Shared/CustomBtn';
+import globalStyle, { containerPadding } from '../../styles/globalStyles';
+import Icon from '../../components/Shared/Icon';
 
 const moment = require('moment-timezone');
 
@@ -30,12 +35,13 @@ export default class Onboarding1Screen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
-      chosenDate: new Date(1990, 0, 1),
+      chosenDate: '',
       dobModalVisible: false,
       chosenUom: 'metric',
       uomModalVisible: false,
       timezone: null,
       name: props.navigation.getParam('name', null),
+      specialOffer: props.navigation.getParam('specialOffer', undefined)
     };
   }
   componentDidMount = async () => {
@@ -44,9 +50,10 @@ export default class Onboarding1Screen extends React.PureComponent {
   }
   setDate = async (event, selectedDate) => {
     const currentDate = selectedDate;
-    this.setState({ chosenDate: currentDate });
+    this.setState({ chosenDate: currentDate?currentDate:new Date(1990, 0, 1) });
   }
   handleSubmit = async (chosenDate, chosenUom) => {
+    const {name ,specialOffer } = this.state
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     try {
@@ -57,33 +64,27 @@ export default class Onboarding1Screen extends React.PureComponent {
       const data = {
         dob,
         unitsOfMeasurement: chosenUom,
-        onboarded: true,
+        // onboarded: true,
+        totalWorkoutCompleted:0,
         weeklyTargets: {
           currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
           resistanceWeeklyComplete: 0,
           hiitWeeklyComplete: 0,
+          strength:0,
+          circuit:0,
+          interval:0
         },
-        // cycleTargets: {
-        //   1: 0,
-        //   2: 0,
-        //   3: 0,
-        //   4: 0,
-        //   5: 0,
-        //   6: 0,
-        //   7: 0,
-        //   8: 0,
-        //   9: 0,
-        //   10: 0,
-        //   11: 0,
-        //   12: 0,
-        //   cycleStartDate: moment().startOf('week').format('YYYY-MM-DD'),
-        //   target: 3,
-        // },
+   
       };
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
-      this.props.navigation.navigate('Progress1', { isInitial: true });
+      this.props.navigation.navigate('Onboarding2', { 
+        name,
+        specialOffer
+      });
+         
     } catch (err) {
+      console.log(err)
       Alert.alert('Database write error', `${err}`);
       this.setState({ loading: false });
     }
@@ -109,30 +110,45 @@ export default class Onboarding1Screen extends React.PureComponent {
       uomModalVisible,
       timezone,
       name,
+      specialOffer
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
-          <View style={styles.textContainer}>
+          <ImageBackground
+            source ={require('../../../assets/images/OnBoardindImg/izzy1.png')}
+            style={{width:width,height:width/2}}
+          >
+          <View style={[globalStyle.opacityLayer,{alignItems:'flex-start',paddingStart:20,backgroundColor:'none'}]}>
             <Text style={styles.headerText}>
-              Welcome{name !== null && `, ${name}`}
+              {/* Welcome{name !== null && `, ${name}`} */}
+              Welcome
             </Text>
             <Text style={styles.bodyText}>
-              It’s time to start your FitazFK journey! Just a few questions before we start.
+              It’s time to start your FitazFK journey! Just a few questions before we can start.
             </Text>
           </View>
+          </ImageBackground>
+    
           <View style={styles.contentContainer}>
             <View style={styles.inputFieldContainer}>
-              <Text style={styles.inputFieldTitle}>
+              {/* <Text style={styles.inputFieldTitle}>
                 Date of Birth
-              </Text>
+              </Text> */}
+              
               <TouchableOpacity
                 onPress={this.toggleDobModal}
                 style={styles.inputButton}
               >
                 <Text style={styles.inputSelectionText}>
-                  {moment.tz(chosenDate, timezone).format('LL')}
+                  {chosenDate?moment.tz(chosenDate, timezone).format('LL'):'Enter date of birth'}
                 </Text>
+                <Icon
+                  name="chevron-down"
+                  size={19}
+                  color={colors.charcoal.light}
+                  style={{textAlign:'right'}}
+                />
               </TouchableOpacity>
               <Modal
                 isVisible={dobModalVisible}
@@ -142,10 +158,10 @@ export default class Onboarding1Screen extends React.PureComponent {
                 animationOut="fadeOut"
                 animationOutTiming={600}
               >
-                <View style={styles.modalContainer}>
+                <View style={globalStyle.modalContainer}>
                   <DateTimePicker
                     mode="date"
-                    value={chosenDate}
+                    value={chosenDate?chosenDate:new Date(1990, 0, 1)}
                     onChange={this.setDate}
                     minimumDate={new Date(1940, 0, 1)}
                     maximumDate={new Date(2008, 0, 1)}
@@ -153,15 +169,17 @@ export default class Onboarding1Screen extends React.PureComponent {
                       fontFamily: fonts.standard,
                     }}
                   />
+                    { Platform.OS==='ios' &&
                   <TouchableOpacity
                     title="DONE"
                     onPress={this.toggleDobModal}
-                    style={styles.modalButton}
+                    style={globalStyle.modalButton}
                   >
-                    <Text style={styles.modalButtonText}>
+                    <Text style={globalStyle.modalButtonText}>
                       DONE
                     </Text>
                   </TouchableOpacity>
+                  }
                 </View>
               </Modal>
             </View>
@@ -169,49 +187,60 @@ export default class Onboarding1Screen extends React.PureComponent {
               <Text style={styles.inputFieldTitle}>
                 Units of measurement
               </Text>
-              <TouchableOpacity
-                onPress={this.toggleUomModal}
-                style={styles.inputButton}
-              >
-                <Text style={styles.inputSelectionText}>
-                  {uomMap[chosenUom]}
-                </Text>
-              </TouchableOpacity>
-              <Modal
-                isVisible={uomModalVisible}
-                onBackdropPress={this.closeUomModal}
-                animationIn="fadeIn"
-                animationInTiming={600}
-                animationOut="fadeOut"
-                animationOutTiming={600}
-              >
-                <View style={styles.modalContainer}>
-                  <Picker
-                    selectedValue={chosenUom}
-                    onValueChange={(value) => this.setState({ chosenUom: value })}
-                  >
-                    <Picker.Item label="Metric (cm, kg)" value="metric" />
-                    <Picker.Item label="Imperial (inch, lb)" value="imperial" />
-                  </Picker>
-                  <TouchableOpacity
-                    title="DONE"
-                    onPress={this.toggleUomModal}
-                    style={styles.modalButton}
-                  >
-                    <Text style={styles.modalButtonText}>
-                      DONE
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </Modal>
+              <View style={styles.buttonRowContainer}>
+                <CustomBtn 
+                  Title="Metric"
+                  outline={true}
+                  customBtnStyle={{
+                    borderRadius:50,
+                    padding:5,
+                    width:'46%',
+                    borderColor:chosenUom === 'metric'?colors.themeColor.color:colors.grey.standard
+                  }}
+                  onPress={() => this.setState({chosenUom:'metric'})}
+                  customBtnTitleStyle={{
+                    fontSize:15,
+                    marginLeft:5,
+                    color:chosenUom === 'metric'?colors.themeColor.color:colors.grey.dark
+                  }}
+                  leftIconColor={colors.themeColor.color}
+                  leftIconSize={15}
+                  isLeftIcon={chosenUom === 'metric'?true:false}
+                  leftIconName="tick"
+                />
+                <CustomBtn 
+                  Title="Imperial"
+                  outline={true}
+                  customBtnStyle={{
+                                    borderRadius:50,
+                                    padding:5,
+                                    width:'46%',
+                                    borderColor:chosenUom === 'imperial'?colors.themeColor.color:colors.grey.standard
+                                  }}
+                  onPress={() => this.setState({chosenUom:'imperial'})}
+                  customBtnTitleStyle={{
+                    fontSize:15,
+                    marginLeft:5,
+                    color:chosenUom === 'imperial'?colors.themeColor.color:colors.grey.dark
+                  }}
+                  leftIconColor={colors.themeColor.color}
+                  leftIconSize={15}
+                  isLeftIcon={chosenUom === 'imperial'?true:false}
+                  leftIconName="tick"
+                />
+              </View>
+             
+             
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <CustomButton
-              title="NEXT"
+            <CustomBtn 
+              Title="Continue"
+              customBtnStyle={{borderRadius:50,padding:15}}
               onPress={() => this.handleSubmit(chosenDate, chosenUom)}
-              primary
+              customBtnTitleStyle={{letterSpacing:fonts.letterSpacing}}
             />
+           
           </View>
           <Loader
             loading={loading}
@@ -234,72 +263,75 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: colors.offWhite,
+    
   },
-  modalContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    overflow: 'hidden',
+  buttonRowContainer:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    width:width-containerPadding*2,
+    marginTop:15
   },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.coral.standard,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
+
+
   textContainer: {
     flex: 1,
     width,
     padding: 10,
+    paddingHorizontal:containerPadding
   },
   headerText: {
     fontFamily: fonts.bold,
-    fontSize: 24,
-    color: colors.charcoal.light,
-    marginBottom: 5,
+    fontSize: 40,
+    color: colors.offWhite,
+    marginBottom: 7,
+    textTransform:'capitalize'
   },
   bodyText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.light,
+    // fontFamily: fonts.boldNarrow,
+    fontSize: 13,
+    color: '#eaeced',
+    width:'65%',
+    fontWeight:fonts.fontWeight,
+    letterSpacing:fonts.letterSpacing
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   inputFieldContainer: {
     marginBottom: 20,
   },
   inputFieldTitle: {
     marginLeft: 2,
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.charcoal.light,
+    fontSize: 15,
+    color: colors.black,
     marginBottom: 5,
+    fontWeight:fonts.fontWeight,
+    letterSpacing:fonts.letterSpacing
   },
   inputButton: {
-    width: width - 20,
+    width: width - containerPadding*2,
     padding: 15,
     paddingBottom: 12,
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.grey.light,
+    backgroundColor: colors.containerBackground,
+    borderBottomWidth: 2,
+    paddingLeft:0,
+    borderColor: colors.themeColor.color,
     borderRadius: 2,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    marginVertical:20
   },
   inputSelectionText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.charcoal.dark,
+    fontWeight:fonts.fontWeight,
+    letterSpacing:fonts.letterSpacing,
+    fontSize: 15,
+    color: colors.grey.dark,
   },
   buttonContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
+    flex: 0.5,
+    justifyContent: 'flex-start',
     padding: 10,
+    width:width - containerPadding*2
   },
 });

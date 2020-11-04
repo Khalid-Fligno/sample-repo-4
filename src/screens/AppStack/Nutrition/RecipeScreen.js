@@ -20,36 +20,68 @@ import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
 import AddToCalendarButton from '../../../components/Shared/AddToCalendarButton';
 import colors from '../../../styles/colors';
+// import fonts from '../../../styles/fonts';
+import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
+import globalStyle, { containerPadding } from '../../../styles/globalStyles';
+import NutritionStyles from './NutritionStyles';
+import Tag from '../../../components/Nutrition/Tag';
+import CustomButton from '../../../components/Shared/CustomButton';
+import CustomBtn from '../../../components/Shared/CustomBtn';
+import TimeSvg from '../../../../assets/icons/time';
 import fonts from '../../../styles/fonts';
 
 const moment = require('moment');
 
 const { width } = Dimensions.get('window');
 
+const NutritionList = [ "breakfast","lunch","dinner","snack"]
+
 export default class RecipeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      recipe: this.props.navigation.getParam('recipe', null),
-      ingredients: this.props.navigation.getParam('recipe', null).ingredients,
-      utensils: this.props.navigation.getParam('recipe', null).utensils,
-      loading: false,
+      recipe: undefined,
+      ingredients:undefined ,
+      utensils: undefined,
+      backTitle :undefined,
+      loading: true,
       chosenDate: new Date(),
       modalVisible: false,
       calendarMeal: null,
       addingToCalendar: false,
+      extraProps:undefined
     };
   }
-  componentDidMount = async () => {
+  onFocusFunction(){
     this.setState({ loading: true });
     const { recipe } = this.state;
     // this.props.navigation.setParams({ handleStart: this.props.navigation.navigate('RecipeSteps', { recipe }) });
-    this.props.navigation.setParams({ handleStart: () => this.handleStart(recipe) });
-    this.setState({ loading: false });
+    this.props.navigation.setParams({ 
+      handleStart: () => this.handleStart(recipe) 
+    });
+    this.setState({ 
+      recipe: this.props.navigation.getParam('recipe', null),
+      ingredients: this.props.navigation.getParam('recipe', null).ingredients,
+      utensils: this.props.navigation.getParam('recipe', null).utensils,
+      backTitle : this.props.navigation.getParam('backTitle', null),
+      extraProps: this.props.navigation.getParam('extraProps', undefined),
+      loading: false 
+    });
+  }
+  componentDidMount = async () => {
+    // this.focusListener = this.props.navigation.addListener('willFocus', () => {
+    //   this.onFocusFunction()
+    // })
+    this.onFocusFunction()
+  }
+  componentWillUnmount = async () => {
+    // this.focusListener.remove()
   }
   setDate = async (event, selectedDate) => {
+    if(selectedDate){
     const currentDate = selectedDate;
     this.setState({ chosenDate: currentDate });
+    }
   }
   handleStart = (recipe) => {
     this.props.navigation.navigate('RecipeSteps', { recipe });
@@ -86,6 +118,21 @@ export default class RecipeScreen extends React.PureComponent {
       { cancelable: false },
     );
   }
+  handleBack = () => {
+    const { navigation } = this.props;
+    // const { extraProps } = this.state;
+    // console.log("click",extraProps)
+      navigation.pop()
+    
+  }
+
+  getBackTitle(){
+    if(this.state.backTitle){
+      return this.state.backTitle
+    }
+    return NutritionList.filter((res)=>this.state.recipe[res])[0]
+  }
+
   render() {
     const {
       recipe,
@@ -96,254 +143,306 @@ export default class RecipeScreen extends React.PureComponent {
       modalVisible,
       calendarMeal,
       addingToCalendar,
+      extraProps
     } = this.state;
+// console.log("from calendar",extraProps)
     return (
-      <View style={styles.container}>
-        <ParallaxScrollView
-          outputScaleValue={2}
-          backgroundScrollSpeed={2}
-          contentBackgroundColor={colors.white}
-          parallaxHeaderHeight={width}
-          renderBackground={() => (
-            <Image
-              source={{ uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
-              width={width}
-            />
-          )}
-        >
-          <Modal
-            isVisible={modalVisible}
-            animationIn="fadeIn"
-            animationInTiming={600}
-            animationOut="fadeOut"
-            animationOutTiming={600}
-            onBackdropPress={this.hideModal}
-          >
-            <View style={styles.modalContainer}>
-              <DateTimePicker
-                mode="date"
-                value={chosenDate}
-                onChange={this.setDate}
-                minimumDate={new Date()}
-              />
-              <View style={styles.calendarMealButtonContainer}>
-                {
-                  recipe.breakfast && (
-                    <TouchableOpacity
-                      onPress={() => this.setState({ calendarMeal: 'breakfast' })}
-                      style={[
-                        styles.calendarMealButton,
-                        calendarMeal === 'breakfast' && styles.calendarMealButtonActive,
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.calendarMealButtonText,
-                          calendarMeal === 'breakfast' && styles.calendarMealButtonTextActive,
-                        ]}
-                      >
-                        Breakfast
-                      </Text>
-                    </TouchableOpacity>
-                  )
-                }
-                {
-                  recipe.lunch && (
-                    <TouchableOpacity
-                      onPress={() => this.setState({ calendarMeal: 'lunch' })}
-                      style={[
-                        styles.calendarMealButton,
-                        calendarMeal === 'lunch' && styles.calendarMealButtonActive,
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.calendarMealButtonText,
-                          calendarMeal === 'lunch' && styles.calendarMealButtonTextActive,
-                        ]}
-                      >
-                      Lunch
-                      </Text>
-                    </TouchableOpacity>
-                  )
-                }
-                {
-                  recipe.dinner && (
-                    <TouchableOpacity
-                      onPress={() => this.setState({ calendarMeal: 'dinner' })}
-                      style={[
-                        styles.calendarMealButton,
-                        calendarMeal === 'dinner' && styles.calendarMealButtonActive,
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.calendarMealButtonText,
-                          calendarMeal === 'dinner' && styles.calendarMealButtonTextActive,
-                        ]}
-                      >
-                        Dinner
-                      </Text>
-                    </TouchableOpacity>
-                  )
-                }
-                {
-                  recipe.snack && (
-                    <TouchableOpacity
-                      onPress={() => this.setState({ calendarMeal: 'snack' })}
-                      style={[
-                        styles.calendarMealButton,
-                        calendarMeal === 'snack' && styles.calendarMealButtonActive,
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.calendarMealButtonText,
-                          calendarMeal === 'snack' && styles.calendarMealButtonTextActive,
-                        ]}
-                      >
-                        Snack
-                      </Text>
-                    </TouchableOpacity>
-                  )
-                }
-                {
-                  recipe.snack && (
-                    <TouchableOpacity
-                      onPress={() => this.setState({ calendarMeal: 'snack2' })}
-                      style={[
-                        styles.calendarMealButton,
-                        calendarMeal === 'snack2' && styles.calendarMealButtonActive,
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.calendarMealButtonText,
-                          calendarMeal === 'snack2' && styles.calendarMealButtonTextActive,
-                        ]}
-                      >
-                        Snack
-                      </Text>
-                    </TouchableOpacity>
-                  )
-                }
-              </View>
-              <TouchableOpacity
-                onPress={() => this.addRecipeToCalendar(chosenDate)}
-                style={[styles.modalButton, !calendarMeal && styles.disabledModalButton]}
-                disabled={!calendarMeal}
-              >
-                {
-                  addingToCalendar ? (
-                    <DotIndicator
-                      color={colors.white}
-                      count={3}
-                      size={6}
-                    />
-                  ) : (
-                    <Text style={styles.modalButtonText}>
-                      ADD TO CALENDAR
-                    </Text>
-                  )
-                }
-              </TouchableOpacity>
-            </View>
-          </Modal>
-          <View style={styles.recipeInfoContainer}>
-            <Text style={styles.recipeTitle}>
-              {recipe.title}
-            </Text>
-            <Text style={styles.recipeSubTitle}>
-              {recipe.subtitle}
-            </Text>
-            <View style={styles.addToCalendarButtonContainer}>
-              <AddToCalendarButton onPress={() => this.showModal()} />
-            </View>
-            <Divider style={styles.divider} />
-            <View style={styles.infoBar}>
-              {
-                recipe.tags.length > 0 && (
-                  <View style={styles.infoFieldContainer}>
-                    {
-                      recipe.tags.length > 0 && recipe.tags.map((tag) => (
-                        <View
-                          style={styles.tagCircle}
-                          key={tag}
-                        >
-                          <Text style={styles.tagText}>
-                            {tag}
-                          </Text>
+      <View style={NutritionStyles.container}>
+        {
+          !loading && 
+          <ParallaxScrollView
+              outputScaleValue={2}
+              backgroundScrollSpeed={2}
+              contentBackgroundColor={colors.white}
+              parallaxHeaderHeight={width}
+              renderForeground={() => (
+                <View style={{backgroundColor:colors.offWhite}}>
+                  <View style={{marginHorizontal:containerPadding,
+                    flexDirection:'row',
+                    justifyContent:'space-between',
+                    alignItems:'center',
+                    height:60,
+                    }}>
+                    <BigHeadingWithBackButton isBackButton = {true} 
+                      onPress={this.handleBack} 
+                      backButtonText={`Back to ${this.getBackTitle()}`} 
+                      isBigTitle ={false}
+                      backButtonStyle={{marginTop:8}}
+                      />
+                        <View >
+                          <AddToCalendarButton onPress={() => this.showModal()} />
                         </View>
-                      ))
+                    </View>
+                  <Image
+                    source={{ uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
+                    width={width}
+                  />
+                </View>
+              )}
+            
+            >
+              
+              <Modal
+                isVisible={modalVisible}
+                animationIn="fadeIn"
+                animationInTiming={600}
+                animationOut="fadeOut"
+                animationOutTiming={600}
+                onBackdropPress={this.hideModal}
+              >
+                <View style={NutritionStyles.modalContainer}>
+                  <DateTimePicker
+                    mode="date"
+                    value={chosenDate}
+                    onChange={this.setDate}
+                    minimumDate={new Date()}
+                    textColor="red"
+                    backgroundColor='red'
+                    style={NutritionStyles.Picker}
+                  />
+                  <View style={NutritionStyles.calendarMealButtonContainer}>
+                    {
+                      recipe.breakfast && (
+                        <TouchableOpacity
+                          onPress={() => this.setState({ calendarMeal: 'breakfast' })}
+                          style={[
+                            NutritionStyles.calendarMealButton,
+                            calendarMeal === 'breakfast' && NutritionStyles.calendarMealButtonActive,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              NutritionStyles.calendarMealButtonText,
+                              calendarMeal === 'breakfast' && NutritionStyles.calendarMealButtonTextActive,
+                            ]}
+                          >
+                            Breakfast
+                          </Text>
+                        </TouchableOpacity>
+                      )
+                    }
+                    {
+                      recipe.lunch && (
+                        <TouchableOpacity
+                          onPress={() => this.setState({ calendarMeal: 'lunch' })}
+                          style={[
+                            NutritionStyles.calendarMealButton,
+                            calendarMeal === 'lunch' && NutritionStyles.calendarMealButtonActive,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              NutritionStyles.calendarMealButtonText,
+                              calendarMeal === 'lunch' && NutritionStyles.calendarMealButtonTextActive,
+                            ]}
+                          >
+                          Lunch
+                          </Text>
+                        </TouchableOpacity>
+                      )
+                    }
+                    {
+                      recipe.dinner && (
+                        <TouchableOpacity
+                          onPress={() => this.setState({ calendarMeal: 'dinner' })}
+                          style={[
+                            NutritionStyles.calendarMealButton,
+                            calendarMeal === 'dinner' && NutritionStyles.calendarMealButtonActive,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              NutritionStyles.calendarMealButtonText,
+                              calendarMeal === 'dinner' && NutritionStyles.calendarMealButtonTextActive,
+                            ]}
+                          >
+                            Dinner
+                          </Text>
+                        </TouchableOpacity>
+                      )
+                    }
+                    {
+                      recipe.snack && (
+                        <TouchableOpacity
+                          onPress={() => this.setState({ calendarMeal: 'snack' })}
+                          style={[
+                            NutritionStyles.calendarMealButton,
+                            calendarMeal === 'snack' && NutritionStyles.calendarMealButtonActive,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              NutritionStyles.calendarMealButtonText,
+                              calendarMeal === 'snack' && NutritionStyles.calendarMealButtonTextActive,
+                            ]}
+                          >
+                            Snack
+                          </Text>
+                        </TouchableOpacity>
+                      )
+                    }
+                    {
+                      recipe.snack && (
+                        <TouchableOpacity
+                          onPress={() => this.setState({ calendarMeal: 'snack2' })}
+                          style={[
+                            NutritionStyles.calendarMealButton,
+                            calendarMeal === 'snack2' && NutritionStyles.calendarMealButtonActive,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              NutritionStyles.calendarMealButtonText,
+                              calendarMeal === 'snack2' && NutritionStyles.calendarMealButtonTextActive,
+                            ]}
+                          >
+                            Snack
+                          </Text>
+                        </TouchableOpacity>
+                      )
                     }
                   </View>
-                )
-              }
-              {
-                recipe.portions && (
-                  <View style={styles.infoFieldContainer}>
-                    <Icon
-                      name="portions"
-                      size={20}
-                      color={colors.violet.standard}
-                    />
-                    <Text style={styles.portionsText}>
-                      {recipe.portions}
+                  <TouchableOpacity
+                    onPress={() => this.addRecipeToCalendar(chosenDate)}
+                    style={[NutritionStyles.modalButton, !calendarMeal && NutritionStyles.disabledModalButton]}
+                    disabled={!calendarMeal}
+                  >
+                    {
+                      addingToCalendar ? (
+                        <DotIndicator
+                          color={colors.white}
+                          count={3}
+                          size={6}
+                        />
+                      ) : (
+                        <Text style={NutritionStyles.modalButtonText}>
+                          ADD TO CALENDAR
+                        </Text>
+                      )
+                    }
+                  </TouchableOpacity>
+                </View>
+              </Modal>
+              <View style={{paddingHorizontal:containerPadding}}>
+                <View style={NutritionStyles.infoBar}>
+                  {
+                    recipe.tags.length > 0 && (
+                      <View style={NutritionStyles.infoFieldContainer}>
+                        {
+                          recipe.tags.length > 0 && recipe.tags.map((tag,index) => (
+                            <Tag tag = {tag} key={index} />
+                          ))
+                        }
+                      </View>
+                    )
+                  }
+                  <View style={[NutritionStyles.infoFieldContainer,{ marginLeft:10}]}>
+                    <TimeSvg width="22" height="22" />
+                    <Text style={NutritionStyles.infoText}>
+                      {recipe.time}
                     </Text>
                   </View>
-                )
-              }
-              <View style={styles.infoFieldContainer}>
-                <Icon
-                  name="timer"
-                  size={24}
-                  color={colors.violet.standard}
-                />
-                <Text style={styles.timeText}>
-                  {recipe.time}
+                  {
+                    recipe.portions && (
+                      <View style={[NutritionStyles.infoFieldContainer,{ marginLeft:10}]}>
+                        {/* <Icon
+                          name="portions"
+                          size={20}
+                          color={colors.black}
+                        /> */}
+                        <Text style={NutritionStyles.infoText}>
+                          {recipe.portions}
+                        </Text>
+                      </View>
+                    )
+                  }
+                  
+                </View>
+                <Divider style={NutritionStyles.divider} />
+                <View style={NutritionStyles.recipeInfoContainer}>
+                <Text style={NutritionStyles.recipeTitle}>
+                  {recipe.title}
                 </Text>
+                {/* <Text style={NutritionStyles.recipeSubTitle}>
+                  {recipe.subtitle}
+                </Text> */}
+                {/* <View style={styles.addToCalendarButtonContainer}>
+                  <AddToCalendarButton onPress={() => this.showModal()} />
+                </View> */}
+                {/* <Divider style={NutritionStyles.divider} /> */}
+                
+                <Text style={[NutritionStyles.recipeSummaryText,{lineHeight:20}]}>
+                  {recipe.summary}
+                </Text>
+                <View style={NutritionStyles.ingredientsContainer}>
+                  <Text style={[NutritionStyles.ingredientsHeading]} >
+                    Ingredients
+                  </Text>
+                  {
+                    ingredients.map((ingredient,index) => {
+                      if(ingredient)
+                      return (
+                        <View style={{flexDirection:"row"}} key={index}>
+                          <Text  style={NutritionStyles.ingredientsText}> • </Text>
+                          <Text
+                          key={ingredient}
+                          style={NutritionStyles.ingredientsText}
+                          >
+                            {ingredient.replace("-", "").trim()}
+                          </Text>
+                        </View>
+                        
+                      );
+                    })
+                  }
+                </View>
+                <View style={NutritionStyles.ingredientsContainer}>
+                  <Text style={NutritionStyles.ingredientsHeading} >
+                    Utensils
+                  </Text>
+                  {
+                    utensils.map((utensil,index) => {
+                      if(utensil)
+                      return (
+                        <View style={{flexDirection:"row"}} key={index}>
+                        <Text  style={NutritionStyles.ingredientsText}> • </Text>
+                        <Text
+                        key={utensil}
+                        style={NutritionStyles.ingredientsText}
+                        >
+                          {utensil.replace("-", "").trim()}
+                        </Text>
+                      </View>
+                        // <Text
+                        //   key={utensil}
+                        //   style={NutritionStyles.ingredientsText}
+                        // >
+                        //   • {utensil}
+                        // </Text>
+                      );
+                    })
+                  }
+                </View>
+                <View style={{marginTop:20,marginBottom:8}}>
+                  <CustomBtn 
+                    customBtnStyle={{borderRadius:50}} 
+                    Title="Get started"
+                    outline ={true}
+                    onPress={()=>this.handleStart(recipe)}
+                  />
+                </View>
+                <BigHeadingWithBackButton isBackButton = {true} 
+                      onPress={this.handleBack} 
+                      backButtonText={`Back to ${this.getBackTitle()}`} 
+                      isBigTitle ={false}
+                />
               </View>
-            </View>
-            <Divider style={styles.divider} />
-            <Text style={styles.recipeSummaryText}>
-              {recipe.summary}
-            </Text>
-            <View style={styles.ingredientsContainer}>
-              <Text style={styles.ingredientsHeading} >
-                Ingredients
-              </Text>
-              {
-                ingredients.map((ingredient) => {
-                  return (
-                    <Text
-                      key={ingredient}
-                      style={styles.ingredientsText}
-                    >
-                      • {ingredient}
-                    </Text>
-                  );
-                })
-              }
-            </View>
-            <View style={styles.ingredientsContainer}>
-              <Text style={styles.ingredientsHeading} >
-                Utensils
-              </Text>
-              {
-                utensils.map((utensil) => {
-                  return (
-                    <Text
-                      key={utensil}
-                      style={styles.ingredientsText}
-                    >
-                      • {utensil}
-                    </Text>
-                  );
-                })
-              }
-            </View>
-          </View>
+              </View>  
         </ParallaxScrollView>
+      
+      
+        }
+      
         <Loader
           loading={loading}
           color={colors.violet.dark}
@@ -353,158 +452,3 @@ export default class RecipeScreen extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.offWhite,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  recipeInfoContainer: {
-    padding: 15,
-  },
-  recipeTitle: {
-    fontFamily: fonts.bold,
-    fontSize: 24,
-    color: colors.charcoal.standard,
-  },
-  recipeSubTitle: {
-    fontFamily: fonts.standardItalic,
-    fontSize: 16,
-    color: colors.charcoal.standard,
-    marginBottom: 8,
-  },
-  addToCalendarButtonContainer: {
-    marginBottom: 10,
-  },
-  modalContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.violet.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  disabledModalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.grey.standard,
-    height: 50,
-    width: '100%',
-    marginBottom: 0,
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
-  calendarMealButtonContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    padding: 4,
-  },
-  calendarMealButton: {
-    flex: 1,
-    margin: 5,
-    paddingTop: 8,
-    paddingBottom: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: colors.violet.standard,
-    borderRadius: 4,
-  },
-  calendarMealButtonActive: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.violet.standard,
-  },
-  calendarMealButtonText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.violet.standard,
-  },
-  calendarMealButtonTextActive: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.white,
-  },
-  divider: {
-    backgroundColor: colors.grey.light,
-  },
-  infoBar: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: width - 30,
-  },
-  infoFieldContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 5,
-  },
-  timeText: {
-    fontFamily: fonts.standard,
-    color: colors.violet.standard,
-    marginTop: 4,
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  tagCircle: {
-    height: 24,
-    width: 24,
-    marginRight: 10,
-    borderWidth: 2.5,
-    borderColor: colors.violet.standard,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tagText: {
-    fontFamily: fonts.bold,
-    fontSize: 11,
-    color: colors.violet.standard,
-    marginTop: 4,
-  },
-  portionsText: {
-    fontFamily: fonts.standard,
-    color: colors.violet.standard,
-    marginTop: 4,
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  recipeSummaryText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.standard,
-    marginTop: 15,
-  },
-  ingredientsContainer: {
-    padding: 15,
-    borderWidth: 1,
-    borderColor: colors.grey.light,
-    borderRadius: 10,
-    marginTop: 15,
-  },
-  ingredientsHeading: {
-    fontFamily: fonts.bold,
-    fontSize: 18,
-    color: colors.charcoal.standard,
-    marginBottom: 5,
-  },
-  ingredientsText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.standard,
-    marginTop: 3,
-    marginBottom: 3,
-  },
-});

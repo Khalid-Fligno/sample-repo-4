@@ -30,7 +30,11 @@ import FacebookButton from '../../components/Auth/FacebookButton';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import errors from '../../utils/errors';
-
+import { containerPadding } from '../../styles/globalStyles';
+import BigHeadingWithBackButton from '../../components/Shared/BigHeadingWithBackButton';
+import InputBox from '../../components/Shared/inputBox';
+import CustomBtn from '../../components/Shared/CustomBtn';
+import authScreenStyle from './authScreenStyle';
 const { width } = Dimensions.get('window');
 
 const getRandomString = (length) => {
@@ -118,10 +122,12 @@ export default class SignupScreen extends React.PureComponent {
         };
         await AsyncStorage.setItem('uid', uid);
         db.collection('users').doc(uid).set(data)
-          .then(() => {
+          .then(async () => {
             this.setState({ loading: false });
             appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Apple' });
-            this.props.navigation.navigate('Subscription', { name: givenName, specialOffer: this.state.specialOffer });
+            // this.props.navigation.navigate('Subscription', { name: givenName, specialOffer: this.state.specialOffer });
+            await this.addChallengesAfterSignUp(email);
+            this.props.navigation.navigate('Onboarding1', { name: givenName, specialOffer: this.state.specialOffer });
             auth.currentUser.sendEmailVerification().then(() => {
               Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
             });
@@ -175,9 +181,11 @@ export default class SignupScreen extends React.PureComponent {
         });
         this.setState({ loading: false });
         appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Facebook' });
+        await this.addChallengesAfterSignUp(data.email);
         auth.currentUser.sendEmailVerification().then(() => {
           Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
-          this.props.navigation.navigate('Subscription', { name: profile.first_name, specialOffer: this.state.specialOffer });
+          // this.props.navigation.navigate('Subscription', { name: profile.first_name, specialOffer: this.state.specialOffer });
+          this.props.navigation.navigate('Onboarding1', { name: first_name, specialOffer: this.state.specialOffer });
         });
       } else {
         this.setState({ loading: false });
@@ -192,6 +200,38 @@ export default class SignupScreen extends React.PureComponent {
       this.setState({ error: 'Something went wrong', loading: false });
     }
   }
+  addChallengesAfterSignUp = async(email,uid) =>{
+    const shopifyRegisteredUser=  await this.getUserRegisterdFromShopify(email);
+    console.log("shopifyRegisteredUser",shopifyRegisteredUser);
+    if(shopifyRegisteredUser != undefined){
+    const challengeDetail=  await this.getChallengeDetails(shopifyRegisteredUser);
+    console.log("challengeDetail",challengeDetail);
+    if(challengeDetail !=undefined && shopifyRegisteredUser.hasOwnProperty('challenge') && shopifyRegisteredUser.challenge ){
+      const challenge =await db.collection('users').doc(uid).collection('challenges').doc(challengeDetail.id);
+      challenge.set(challengeDetail,{merge:true});
+      //delete old user 
+      if(shopifyRegisteredUser != undefined){
+      await db.collection('users').doc(shopifyRegisteredUser.id).collection('challenges').doc(challengeDetail.id).delete();
+      await db.collection('users').doc(shopifyRegisteredUser.id).delete();
+      console.log("old user is deleted");
+    }
+    }
+   }
+  }
+  getUserRegisterdFromShopify = async(emailId) => {
+    const userRef =  await db.collection('users').where("email","==",emailId).where("challenge","==",true).get();
+    if (userRef.size > 0) {
+      return userRef.docs[0].data();
+  }     
+}
+  getChallengeDetails = async(user) => {
+  let challenges=[];
+  const challengeRef =await db.collection("users").doc(user.id).collection("challenges").get();
+  if (challengeRef.size > 0) {
+    return challengeRef.docs[0].data();
+  }     
+    //return challenges;
+  }
   signup = async (firstName, lastName, email, password) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
@@ -201,11 +241,12 @@ export default class SignupScreen extends React.PureComponent {
       return;
     }
     try {
+      console.log("step1");
       const response = await firebase.auth().createUserWithEmailAndPassword(email, password);
       await response.user.updateProfile({ displayName: `${firstName} ${lastName}` });
       const { region } = Localization;
       const { uid } = response.user;
-      const data = {
+      let data = {
         id: uid,
         firstName,
         lastName,
@@ -216,11 +257,15 @@ export default class SignupScreen extends React.PureComponent {
         fitnessLevel: 1,
       };
       await AsyncStorage.setItem('uid', uid);
+      
       db.collection('users').doc(uid).set(data)
-        .then(() => {
+        .then(async () => {
           this.setState({ loading: false });
           appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Email' });
-          this.props.navigation.navigate('Subscription', { name: firstName, specialOffer: this.state.specialOffer });
+          // this.props.navigation.navigate('Subscription', { name: firstName, specialOffer: this.state.specialOffer });
+                // check if user buy some challenges from shopify  
+          await this.addChallengesAfterSignUp(email,uid); 
+          this.props.navigation.navigate('Onboarding1', { name: firstName, specialOffer: this.state.specialOffer });
           auth.currentUser.sendEmailVerification().then(() => {
             Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
           });
@@ -230,7 +275,7 @@ export default class SignupScreen extends React.PureComponent {
             this.setState({ loading: false });
             Alert.alert('Sign up could not be completed', 'Please try again');
           });
-        });
+        });        
     } catch (err) {
       const errorCode = err.code;
       this.setState({ error: errors.createUser[errorCode], loading: false });
@@ -258,28 +303,28 @@ export default class SignupScreen extends React.PureComponent {
     } = this.state;
     return (
       <React.Fragment>
-        <SafeAreaView style={styles.safeAreaContainer} >
-          <View style={styles.container}>
+        <SafeAreaView style={authScreenStyle.safeAreaContainer} >
+          <View style={authScreenStyle.container}>
             <StatusBar barStyle="light-content" />
 
-            <ImageBackground
+            {/* <ImageBackground
               source={require('../../../assets/images/signup-screen-background.jpg')}
               style={styles.imageBackground}
-            >
-              <ScrollView contentContainerStyle={styles.scrollView}>
-                <View style={styles.closeIconContainer}>
+            > */}
+              <ScrollView contentContainerStyle={authScreenStyle.scrollView}>
+                <View style={authScreenStyle.closeIconContainer}>
                   <TouchableOpacity
                     onPress={() => this.props.navigation.goBack()}
-                    style={styles.closeIconButton}
+                    style={authScreenStyle.closeIconButton}
                   >
                     <Icon
                       name="cross"
-                      color={colors.white}
+                      color={colors.themeColor.color}
                       size={22}
                     />
                   </TouchableOpacity>
                 </View>
-                <Text style={styles.headerText1}>
+                {/* <Text style={styles.headerText1}>
                   CREATE YOUR
                 </Text>
                 <Text style={styles.headerText1}>
@@ -287,91 +332,64 @@ export default class SignupScreen extends React.PureComponent {
                 </Text>
                 <Text style={styles.headerText2}>
                   get started
-                </Text>
-                <KeyboardAvoidingView keyboardVerticalOffset={40} behavior="position" enabled>
-                  <Input
-                    placeholder="First Name"
-                    placeholderTextColor={colors.transparentWhiteLight}
-                    value={firstName}
-                    returnKeyType="next"
-                    autoCorrect={false}
-                    onChangeText={(text) => this.setState({ firstName: text })}
-                    onSubmitEditing={() => this.lastNameInput.focus()}
-                    containerStyle={styles.inputComponentContainer}
-                    inputContainerStyle={styles.inputContainer}
-                    inputStyle={styles.input}
-                    clearButtonMode="while-editing"
-                  />
-                  <Input
-                    placeholder="Last Name"
-                    placeholderTextColor={colors.transparentWhiteLight}
-                    value={lastName}
-                    returnKeyType="next"
-                    autoCorrect={false}
-                    onChangeText={(text) => this.setState({ lastName: text })}
-                    ref={(input) => {
-                      this.lastNameInput = input;
-                    }}
-                    onSubmitEditing={() => this.emailInput.focus()}
-                    containerStyle={styles.inputComponentContainer}
-                    inputContainerStyle={styles.inputContainer}
-                    inputStyle={styles.input}
-                    clearButtonMode="while-editing"
-                  />
-                  <Input
-                    placeholder="Email"
-                    placeholderTextColor={colors.transparentWhiteLight}
-                    value={email}
-                    returnKeyType="next"
-                    keyboardType="email-address"
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    onChangeText={(text) => this.setState({ email: text })}
-                    ref={(input) => {
-                      this.emailInput = input;
-                    }}
-                    onSubmitEditing={() => this.passwordInput.focus()}
-                    containerStyle={styles.inputComponentContainer}
-                    inputContainerStyle={styles.inputContainer}
-                    inputStyle={styles.input}
-                    clearButtonMode="while-editing"
-                  />
-                  <Input
-                    errorMessage={error && error}
-                    placeholder="Password"
-                    placeholderTextColor={colors.transparentWhiteLight}
-                    value={password}
-                    returnKeyType="go"
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    onChangeText={(text) => this.setState({ password: text })}
-                    secureTextEntry
-                    ref={(input) => {
-                      this.passwordInput = input;
-                    }}
-                    onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
-                    containerStyle={styles.inputComponentContainer}
-                    inputContainerStyle={styles.inputContainer}
-                    inputStyle={styles.input}
-                    clearButtonMode="while-editing"
-                  />
-                </KeyboardAvoidingView>
-                <Button
-                  title="CREATE NEW ACCOUNT"
-                  onPress={() => this.signup(firstName, lastName, email, password)}
-                  containerStyle={styles.signupButtonContainer}
-                  buttonStyle={styles.signupButton}
-                  titleStyle={styles.signupButtonText}
+                </Text> */}
+
+                <View >
+                 <BigHeadingWithBackButton 
+                  isBackButton={false}
+                  bigTitleText="Create account"
+                  isBigTitle={true}
+                  // bigTitleStyle={{width:width-containerPadding*2}}
                 />
-                <Divider style={styles.divider} />
-                <View style={styles.dividerOverlay}>
-                  <Text style={styles.dividerOverlayText}>
+                <KeyboardAvoidingView keyboardVerticalOffset={40} behavior="position" enabled>
+                <InputBox 
+                   placeholder="First Name"
+                   value={firstName}
+                   onChangeText={(text) => this.setState({ firstName: text })}
+                />
+                 <InputBox 
+                   placeholder="Last Name"
+                   value={lastName}
+                   onChangeText={(text) => this.setState({ lastName: text })}
+                />
+                 <InputBox 
+                   placeholder="Email address"
+                   value={email}
+                   keyboardType="email-address"
+                   onChangeText={(text) =>{this.setState({ email: text })}}
+                />
+                 <InputBox 
+                   errorMessage={error && error}
+                   placeholder="Password"
+                   value={password}
+                   onChangeText={(text) => this.setState({ password: text })}
+                   onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
+                   secureTextEntry
+                   returnKeyType="go"
+                />
+                 
+                </KeyboardAvoidingView>
+                <CustomBtn 
+                  customBtnStyle={{borderRadius:50,marginTop:20 }}
+                  Title="Create new account"
+                  customBtnTitleStyle={{fontWeight:'500',letterSpacing:0.7}}
+                  onPress={() => this.signup(firstName, lastName, email, password)}
+                />
+              
+                <View style={authScreenStyle.dividerOverlay}>
+                  <Text style={authScreenStyle.dividerOverlayText}>
                     OR
                   </Text>
                 </View>
-                <FacebookButton
-                  title="NEW ACCOUNT WITH FACEBOOK"
-                  onPress={this.signupWithFacebook}
+             
+                <CustomBtn 
+                      customBtnStyle={{borderRadius:50,borderColor:colors.grey.standard}}
+                      outline={true}
+                      Title="Create account with Facebook"
+                      customBtnTitleStyle={{fontWeight:'500',letterSpacing:0.7,color:colors.transparentBlackDark}}
+                      onPress={this.signupWithFacebook}
+                      leftIcon={true}
+                      leftIconUrl={require('../../../assets/icons/facebook.png')}
                 />
                 {
                   appleSignInAvailable && (
@@ -380,18 +398,20 @@ export default class SignupScreen extends React.PureComponent {
                       buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
                       buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
                       cornerRadius={4}
-                      style={styles.appleButton}
+                      style={authScreenStyle.appleButton}
                     />
                   )
                 }
-                <Text
+                  <Text
                   onPress={this.navigateToLogin}
-                  style={styles.navigateToLogin}
-                >
-                  Already have an account? Log in here
-                </Text>
+                  style={[authScreenStyle.navigateToButton,{paddingBottom:20}]}
+                  >
+                  I already have an account? Sign in 
+                  </Text>
+              </View>  
+              
               </ScrollView>
-            </ImageBackground>
+            {/* </ImageBackground> */}
           </View>
         </SafeAreaView>
         {loading && <NativeLoader />}
@@ -400,126 +420,3 @@ export default class SignupScreen extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
-  safeAreaContainer: {
-    flex: 1,
-    backgroundColor: colors.black,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: colors.transparent,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width,
-  },
-  imageBackground: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
-  },
-  scrollView: {
-    alignItems: 'center',
-  },
-  closeIconContainer: {
-    alignItems: 'flex-end',
-    width,
-  },
-  closeIconButton: {
-    padding: 15,
-    paddingBottom: 0,
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 1,
-  },
-  headerText1: {
-    fontFamily: fonts.ultraItalic,
-    fontSize: 20,
-    color: colors.white,
-  },
-  headerText2: {
-    fontFamily: fonts.tuesdayNight,
-    fontSize: 28,
-    color: colors.white,
-    marginTop: -10,
-  },
-  inputComponentContainer: {
-    width: width - 30,
-    alignItems: 'center',
-  },
-  inputContainer: {
-    width: width - 30,
-    alignItems: 'center',
-    marginTop: 5,
-    marginBottom: 5,
-    borderBottomWidth: 0,
-    backgroundColor: colors.transparentWhiteLight,
-    borderRadius: 4,
-  },
-  input: {
-    width: width - 30,
-    padding: 12,
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    borderWidth: 1,
-    borderColor: colors.grey.light,
-    borderRadius: 4,
-  },
-  signupButtonContainer: {
-    marginTop: 6,
-    marginBottom: 7,
-    shadowColor: colors.charcoal.dark,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 2,
-  },
-  signupButton: {
-    backgroundColor: colors.coral.standard,
-    height: 45,
-    width: width - 30,
-    borderRadius: 4,
-  },
-  signupButtonText: {
-    marginTop: 6,
-    fontFamily: fonts.bold,
-    fontSize: 15,
-  },
-  appleButton: {
-    height: 45,
-    width: width - 30,
-    marginTop: 8,
-  },
-  divider: {
-    backgroundColor: colors.transparent,
-    width: width - 30,
-    marginTop: 15,
-    marginBottom: 15,
-  },
-  dividerOverlay: {
-    height: 26,
-    marginTop: -30,
-    paddingTop: 8,
-    paddingLeft: 20,
-    paddingRight: 20,
-    backgroundColor: colors.transparent,
-  },
-  dividerOverlayText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.grey.medium,
-  },
-  navigateToLogin: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    width: width - 30,
-    marginTop: 10,
-    paddingTop: 15,
-    paddingBottom: 15,
-    textAlign: 'center',
-    color: colors.grey.light,
-    textDecorationStyle: 'solid',
-    textDecorationColor: colors.grey.light,
-    textDecorationLine: 'underline',
-  },
-});

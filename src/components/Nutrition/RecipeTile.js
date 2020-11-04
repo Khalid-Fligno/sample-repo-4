@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
   Animated,
+  Image,
 } from 'react-native';
 import { Card } from 'react-native-elements';
 import PropTypes from 'prop-types';
@@ -13,6 +14,9 @@ import NewRecipeBadge from './NewRecipeBadge';
 import Icon from '../../components/Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import Tag from './Tag';
+import TimeSvg from '../../../assets/icons/time';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const { width } = Dimensions.get('window');
 
@@ -24,6 +28,7 @@ export default class RecipeTile extends React.PureComponent {
   handlePressIn = () => {
     Animated.spring(this.animatedValue, {
       toValue: 0.92,
+      useNativeDriver:true
     }).start();
   }
   handlePressOut = () => {
@@ -31,6 +36,7 @@ export default class RecipeTile extends React.PureComponent {
       toValue: 1,
       friction: 3,
       tension: 40,
+      useNativeDriver:true
     }).start();
   }
   render() {
@@ -46,6 +52,7 @@ export default class RecipeTile extends React.PureComponent {
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
+    
     return (
       <TouchableOpacity
         onPress={onPress}
@@ -61,47 +68,37 @@ export default class RecipeTile extends React.PureComponent {
             image={{ uri: image }}
             containerStyle={styles.card}
           >
-            <View style={styles.titleRow}>
-              <Text style={styles.title}>
-                {title}
-              </Text>
-              {newBadge && <NewRecipeBadge />}
-            </View>
-            <Text style={styles.subTitle}>
-              {subTitle}
-            </Text>
-            <View
-              style={styles.recipeInfoContainer}
-            >
-              <View style={styles.recipeInfoSection}>
-                {
-                  tags && tags.map((tag) => (
-                    <View
-                      style={styles.tagCircle}
-                      key={tag}
-                    >
-                      <Text style={styles.tagText}>
-                        {tag}
-                      </Text>
-                    </View>
-                  ))
-                }
+            <View style={{flexDirection:'row' ,justifyContent:'space-between',marginHorizontal:-10}}>
+              <View style={[styles.titleRow]}>
+                <Text style={styles.title}>
+                  {title} { newBadge && <NewRecipeBadge />}
+                </Text>
+                
               </View>
-              <View style={styles.recipeInfoSection}>
-                {
-                  time && (
-                    <View style={styles.recipeInfoSection}>
-                      <Icon
-                        name="timer"
-                        size={25}
-                        color={colors.violet.standard}
-                      />
-                      <Text style={styles.timerText}>
-                        {time}
-                      </Text>
-                    </View>
-                  )
-                }
+              
+              <View
+                style={styles.recipeInfoContainer}
+              >
+                <View style={styles.recipeInfoSection}>
+                  {
+                    tags && tags.map((tag,index) => (
+                     <Tag tag = {tag} key={index}/>
+                    ))
+                  }
+                </View>
+                <View style={styles.recipeInfoSection}>
+                  {
+                    time && (
+                      
+                      <View style={styles.timerContainer}>
+                         <Text style={styles.timerText}>
+                          {time}
+                        </Text>
+                        <TimeSvg width="22" height="22" />
+                      </View>
+                    )
+                  }
+                </View>
               </View>
             </View>
           </Card>
@@ -129,30 +126,32 @@ RecipeTile.defaultProps = {
 const styles = StyleSheet.create({
   cardContainer: {
     margin: 0,
-    width,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    // shadowColor: colors.charcoal.standard,
+    // shadowOpacity: 0.5,
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowRadius: 4,
   },
   flexContainer: {
     flex: 1,
   },
   card: {
-    width: width - 20,
+    width: width - 50,
     borderRadius: 3,
     overflow: 'hidden',
     borderWidth: 0,
+    elevation:0,
   },
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    maxWidth:'60%'
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 16,
+    fontSize: hp('1.6%'),
+    lineHeight:18
   },
   subTitle: {
     fontFamily: fonts.standardItalic,
@@ -160,34 +159,25 @@ const styles = StyleSheet.create({
   },
   recipeInfoContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 3,
+    // justifyContent: 'space-between',
   },
   recipeInfoSection: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  tagCircle: {
-    height: 28,
-    width: 28,
-    marginRight: 5,
-    borderWidth: 2.5,
-    borderColor: colors.violet.standard,
-    borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tagText: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
-    color: colors.violet.standard,
-    marginTop: 4,
-  },
+ 
+ 
   timerText: {
     fontFamily: fonts.standard,
     fontSize: 12,
-    color: colors.violet.standard,
-    marginTop: 6,
+    color: colors.grey.dark,
     marginLeft: 4,
+    alignSelf:'center',
+    marginRight:5
+
   },
+  timerContainer : {
+    flexDirection: 'row',
+    alignItems: 'center',
+  }
 });

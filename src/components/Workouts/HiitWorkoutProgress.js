@@ -40,7 +40,9 @@ class HiitWorkoutProgress extends React.PureComponent {
     };
   }
   render() {
-    const { currentRound, rest } = this.props;
+    const { currentRound, rest ,rounds} = this.props;
+    let array = new Array(rounds).fill(undefined).map((val,idx) => idx);
+    console.log(array)
     const completePieChart = (
       <PieChart
         style={styles.pieChart}
@@ -95,7 +97,20 @@ class HiitWorkoutProgress extends React.PureComponent {
     );
     return (
       <View style={styles.container}>
-        <View style={styles.exercise}>
+
+        {
+           array.map((item,index)=>(
+            <View style={styles.exercise} key={index}>
+              {currentRound > index+1 && completePieChart}
+              {currentRound > index+1 && tickIcon}
+              {currentRound === index+1 && currentRoundPieChart(rest)}
+              {currentRound === index+1 && currentRoundText(currentRound)}
+              {currentRound < index+1 && incompletePieChart}
+              {currentRound < index+1 && inactiveRoundText(index+1)}
+            </View>
+          ))
+        }
+        {/* <View style={styles.exercise}>
           {currentRound > 1 && completePieChart}
           {currentRound > 1 && tickIcon}
           {currentRound === 1 && currentRoundPieChart(rest)}
@@ -156,7 +171,7 @@ class HiitWorkoutProgress extends React.PureComponent {
           {currentRound === 8 && currentRoundText(currentRound)}
           {currentRound < 8 && incompletePieChart}
           {currentRound < 8 && inactiveRoundText(8)}
-        </View>
+        </View> */}
       </View>
     );
   }

@@ -22,6 +22,7 @@ import ImageModal from '../../../components/Progress/ImageModal';
 import { diff } from '../../../utils/index';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+import { widthPercentageToDP as wp ,heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const { width } = Dimensions.get('window');
 
@@ -37,15 +38,28 @@ class ProgressHomeScreen extends React.PureComponent {
       helperModalVisible: false,
       imageModalVisible: false,
       imageModalSource: undefined,
+      activeChallengeUserData:undefined,
+      activeChallengeData:undefined,
+      totalInterval:undefined,
+      totalCircuit:undefined,
+      totalStrength:undefined,
+      totalIntervalCompleted:undefined,
+      totalCircuitCompleted:undefined,
+      totalStrengthCompleted:undefined,
     };
   }
   componentDidMount() {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     this.fetchProgressInfo();
     this.showHelperOnFirstOpen();
+    this.fetchActiveChallengeUserData();
   }
   componentWillUnmount() {
     this.unsubscribe();
+    if(this.unsubscribeFACUD)
+    this.unsubscribeFACUD()
+    if(this.unsubscribeFACD)
+      this.unsubscribeFACD()  
   }
   showHelperOnFirstOpen = async () => {
     const helperShownOnFirstOpen = await AsyncStorage.getItem('progressHelperShownOnFirstOpen');
@@ -74,7 +88,7 @@ class ProgressHomeScreen extends React.PureComponent {
       this.setState({
         profile: await doc.data(),
         initialProgressInfo: await doc.data().initialProgressInfo,
-        currentProgressInfo: await doc.data().currentProgressInfo,
+        currentProgressInfo: await doc.data().currentProgressInfo.weight?await doc.data().currentProgressInfo:null,
         unitsOfMeasurement: await doc.data().unitsOfMeasurement,
         loading: false,
       });
@@ -90,6 +104,83 @@ class ProgressHomeScreen extends React.PureComponent {
       }
     });
   }
+
+  // ToDo : for challenges
+  fetchActiveChallengeUserData = async () =>{
+    try{  
+      this.setState({ loading: true });
+      const uid = await AsyncStorage.getItem('uid');
+      this.unsubscribeFACUD = await db.collection('users').doc(uid).collection('challenges')
+      .where("status", "==" , "Active")
+      .onSnapshot(async (querySnapshot) => {
+        const list = [];
+        await querySnapshot.forEach(async (doc) => {
+            await list.push(await doc.data());
+        });
+        if(list[0]){
+          this.fetchActiveChallengeData(list[0])
+        }else{
+          this.setState({ 
+            activeChallengeUserData:undefined,
+            loading:false
+          });
+        }
+      });
+    }
+    catch(err){
+      this.setState({ loading: false });
+      console.log(err)
+      Alert.alert('Fetch active challenge user data error!')
+    }  
+
+  }
+
+  fetchActiveChallengeData = async (activeChallengeUserData) =>{
+    try{
+      this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
+      .onSnapshot(async (doc) => {
+          if(doc.exists){
+            const activeChallengeData = doc.data()
+            //TODO calculate total interval circuit strength completed user during challenge
+            const totalWorkouts =[] 
+            // activeChallengeData.phases.forEach(phase => {
+              activeChallengeData.workouts.forEach(workout =>{
+                totalWorkouts.push(workout)
+              })
+            // });
+            
+            const totalInterval = totalWorkouts.filter((res)=>res.target === 'interval')
+            const totalCircuit = totalWorkouts.filter((res)=>res.target === 'circuit')
+            const totalStrength = totalWorkouts.filter((res)=>res.target === 'strength')
+      
+            const totalIntervalCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'interval')
+            const totalCircuitCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'circuit')
+            const totalStrengthCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'strength')
+            
+            
+            this.setState({ 
+              activeChallengeUserData,
+              activeChallengeData,
+              totalInterval,
+              totalCircuit,
+              totalStrength,
+              totalIntervalCompleted,
+              totalCircuitCompleted,
+              totalStrengthCompleted,
+              loading:false
+            });
+          }
+      
+      });
+    }catch(err){
+      this.setState({ loading: false });
+      console.log(err);
+      Alert.alert('Fetch active challenge data error!')
+    }
+
+  }
+ //-------**--------  
+
   render() {
     const {
       loading,
@@ -100,11 +191,49 @@ class ProgressHomeScreen extends React.PureComponent {
       helperModalVisible,
       imageModalVisible,
       imageModalSource,
+      activeChallengeData,
+      activeChallengeUserData,
+      totalInterval,
+      totalCircuit,
+      totalStrength,
+      totalIntervalCompleted,
+      totalCircuitCompleted,
+      totalStrengthCompleted,
     } = this.state;
+
+    let totalI = 0;
+    let totalC = 0;
+    let totalS = 0;
+    let countI = 0;
+    let countC = 0;
+    let countS = 0;
+
+    if(activeChallengeData !== undefined){
+      totalI = 0
+      totalInterval.forEach((res)=>totalI += res.days.length )
+      totalC = 0
+      totalCircuit.forEach((res)=>totalC += res.days.length )
+      totalS = 0;
+      totalStrength.forEach((res)=>totalS += res.days.length )
+
+      countI = totalIntervalCompleted.length;
+      countC = totalCircuitCompleted.length;
+      countS = totalStrengthCompleted.length;
+    }else if(profile !== undefined){
+      totalI = 5;
+      totalC = 5;
+      totalS = 5;
+
+      countI = profile.weeklyTargets.interval;
+      countC = profile.weeklyTargets.circuit;
+      countS = profile.weeklyTargets.strength;
+    }
+
     const weightDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.weight, currentProgressInfo.weight);
     const hipDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.hip, currentProgressInfo.hip);
     const waistDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.waist, currentProgressInfo.waist);
     const burpeesDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.burpeeCount, currentProgressInfo.burpeeCount);
+    
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.contentContainer}>
@@ -304,25 +433,49 @@ class ProgressHomeScreen extends React.PureComponent {
           <View style={styles.workoutProgressContainer}>
             <View style={styles.sectionHeader}>
               <Text style={styles.bodyText}>
-                WEEKLY WORKOUT PROGRESS
+              {activeChallengeData?'Active challenge progress' :'Weekly workout progress'}
               </Text>
             </View>
-            {
-              profile && (
-                <ProgressBar
-                  progressBarType="Resistance"
-                  completedWorkouts={profile.weeklyTargets.resistanceWeeklyComplete}
-                />
-              )
-            }
-            {
-              profile && (
-                <ProgressBar
-                  progressBarType="HIIT"
-                  completedWorkouts={profile.weeklyTargets.hiitWeeklyComplete}
-                />
-              )
-            }
+            <View style={{flexDirection:'row',justifyContent:"space-between",width:"100%"}}>
+                    {
+                      profile && (
+                        <View>
+                          <ProgressBar
+                            title="Strength"
+                            completed={countS}
+                            total = {totalS}
+                            size ={wp('38%')}
+                          />
+                        </View>
+                      )
+                    }
+                    {
+                      profile && (
+                        <View>
+                          <ProgressBar
+                            title="Circuit"
+                            completed={countC}
+                            total = {totalC}
+                            size ={wp('38%')}
+                          />
+                        </View>
+                      )
+                    }
+                </View>
+                <View style={{width:'100%',flexDirection:"row",justifyContent:"center",marginTop:-30}}>
+                    {
+                          profile && (
+                            <View>
+                              <ProgressBar
+                                title="Interval"
+                                completed={countI}
+                                total = {totalI}
+                                size ={wp('38%')}
+                              />
+                            </View>
+                          )
+                        }
+                </View>
           </View>
         </ScrollView>
         <HelperModal
@@ -332,17 +485,17 @@ class ProgressHomeScreen extends React.PureComponent {
           bodyText="By tracking your progress, you can stay accountable and motivated throughout your fitness journey."
           bodyText2="Your ‘before’ photo and measurements will stay on the left of screen.  When it comes time to check-in, your ‘after’ photo and measurement will be uploaded on the right."
           bodyText3="When you want to update your ‘after’ photo, press the update button at the bottom of screen. You can reset your ‘before’ photo in Profile => Settings."
-          color="blue"
+          color="red"
         />
         <ImageModal
           imageModalVisible={imageModalVisible}
           toggleImageModal={() => this.toggleImageModal()}
-          color="blue"
+          color="red"
           imageSource={{ uri: imageModalSource }}
         />
         <Loader
           loading={loading}
-          color={colors.blue.standard}
+          color={colors.red.standard}
         />
       </View>
     );
@@ -385,7 +538,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imagePlaceholderButton: {
-    backgroundColor: colors.blue.standard,
+    backgroundColor: colors.themeColor.lightColor,
     width: '70%',
     padding: 10,
     borderRadius: 2,
@@ -394,7 +547,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   disabledImagePlaceHolderButton: {
-    backgroundColor: colors.blue.standard,
+    backgroundColor: colors.themeColor.lightColor,
     width: '70%',
     padding: 10,
     borderRadius: 2,
@@ -444,7 +597,7 @@ const styles = StyleSheet.create({
   fieldContainer: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: colors.blue.standard,
+    backgroundColor: colors.themeColor.lightColor,
   },
   fieldText: {
     fontFamily: fonts.standard,
@@ -487,16 +640,16 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 10,
-    backgroundColor: colors.white,
+    backgroundColor:'transparent',
     borderRadius: 2,
-    shadowColor: colors.grey.standard,
+    shadowColor: colors.themeColor.lightColor,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
   },
   sectionHeader: {
     alignItems: 'center',
-    backgroundColor: colors.blue.standard,
+    // backgroundColor: colors.themeColor.lightColor,
     width: width - 20,
     borderTopLeftRadius: 2,
     borderTopRightRadius: 2,
@@ -504,9 +657,13 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   bodyText: {
-    fontFamily: fonts.standard,
+    fontFamily: fonts.bold,
     fontSize: 12,
-    color: colors.white,
+    color: colors.grey.dark,
+    fontWeight:'500',
+    paddingVertical:20,
+    textAlign:"center",
+    width:'100%'
   },
 });
 

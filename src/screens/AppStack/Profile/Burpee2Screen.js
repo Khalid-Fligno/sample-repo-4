@@ -17,7 +17,7 @@ export default class Progress4Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      countdownDuration: 5,
+      countdownDuration: 3,
       timerStart: false,
       pauseModalVisible: false,
       appState: AppState.currentState,

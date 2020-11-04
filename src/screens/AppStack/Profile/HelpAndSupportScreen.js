@@ -12,7 +12,8 @@ import Loader from '../../../components/Shared/Loader';
 import CustomButton from '../../../components/Shared/CustomButton';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
-
+import globalStyle from '../../../styles/globalStyles';
+import ProfileStyles from './ProfileStyles';
 const { width } = Dimensions.get('window');
 
 export default class HelpAndSupportScreen extends React.PureComponent {
@@ -28,18 +29,18 @@ export default class HelpAndSupportScreen extends React.PureComponent {
   render() {
     const { loading } = this.state;
     return (
-      <SafeAreaView style={styles.safeContainer}>
-        <View style={styles.container}>
-          <ScrollView contentContainerStyle={styles.scrollView}>
-            <View style={styles.textContainer}>
-              <Text style={styles.header}>
+      <SafeAreaView style={globalStyle.safeContainer}>
+        <View style={[globalStyle.container,{paddingHorizontal:0, alignItems:'center'}]}>
+          <ScrollView contentContainerStyle={[ProfileStyles.scrollView,{padding:0}]}>
+            <View style={ProfileStyles.scrollView}>
+              <Text style={ProfileStyles.header}>
                 Help & Support
               </Text>
-              <Text style={styles.paragraph}>
+              <Text style={ProfileStyles.paragraph}>
                 Follow this link to see our frequently asked questions, or submit your own!
               </Text>
             </View>
-            <View style={styles.buttonContainer}>
+            <View style={ProfileStyles.buttonContainer}>
               <CustomButton
                 title="GO TO FITAZFK HELP"
                 onPress={() => this.goToHelp()}
@@ -55,38 +56,3 @@ export default class HelpAndSupportScreen extends React.PureComponent {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  safeContainer: {
-    flex: 1,
-    backgroundColor: colors.black,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-  },
-  scrollView: {
-    width,
-  },
-  textContainer: {
-    width,
-    padding: 15,
-  },
-  header: {
-    fontFamily: fonts.bold,
-    fontSize: 24,
-    marginBottom: 10,
-  },
-  paragraph: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-  },
-  buttonContainer: {
-    width,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-});

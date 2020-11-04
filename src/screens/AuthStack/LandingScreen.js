@@ -3,7 +3,8 @@ import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, Sta
 import Carousel from 'react-native-carousel';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
-
+import CustomBtn from '../../components/Shared/CustomBtn';
+import globalStyle, { containerPadding } from '../../styles/globalStyles';
 const { width, height } = Dimensions.get('window');
 
 export default class LandingScreen extends React.PureComponent {
@@ -21,25 +22,17 @@ export default class LandingScreen extends React.PureComponent {
           <StatusBar barStyle="light-content" />
           <Carousel
             width={width}
-            inactiveIndicatorColor={colors.white}
-            indicatorColor={colors.transparentWhite}
+            inactiveIndicatorColor={colors.black}
+            indicatorColor={colors.black}
             indicatorOffset={120}
-            indicatorSize={15}
+            indicatorSize={20}
             inactiveIndicatorText="○"
             indicatorText="●"
             animate={false}
           >
             <View style={styles.carouselCardContainer}>
               <ImageBackground
-                source={require('../../../assets/images/app-onboarding-carousel-1.jpg')}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayLight} />
-              </ImageBackground>
-            </View>
-            <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require('../../../assets/images/app-onboarding-carousel-2.jpg')}
+                source={require('../../../assets/images/OnBoardindImg/OB_1.jpg')}
                 style={styles.carouselImageBackground}
               >
                 <View style={styles.opacityOverlayTransparent} />
@@ -47,7 +40,7 @@ export default class LandingScreen extends React.PureComponent {
             </View>
             <View style={styles.carouselCardContainer}>
               <ImageBackground
-                source={require('../../../assets/images/app-onboarding-carousel-3.jpg')}
+                source={require('../../../assets/images/OnBoardindImg/OB_2.jpg')}
                 style={styles.carouselImageBackground}
               >
                 <View style={styles.opacityOverlayTransparent} />
@@ -55,15 +48,23 @@ export default class LandingScreen extends React.PureComponent {
             </View>
             <View style={styles.carouselCardContainer}>
               <ImageBackground
-                source={require('../../../assets/images/app-onboarding-carousel-4.jpg')}
+                source={require('../../../assets/images/OnBoardindImg/OB_3.jpg')}
                 style={styles.carouselImageBackground}
               >
                 <View style={styles.opacityOverlayTransparent} />
               </ImageBackground>
             </View>
+            {/* <View style={styles.carouselCardContainer}>
+              <ImageBackground
+                source={require('../../../assets/images/OnBoardindImg/OB_4.jpg')}
+                style={styles.carouselImageBackground}
+              >
+                <View style={styles.opacityOverlayTransparent} />
+              </ImageBackground>
+            </View> */}
             <View style={styles.carouselCardContainer}>
               <ImageBackground
-                source={require('../../../assets/images/app-onboarding-carousel-5.jpg')}
+                source={require('../../../assets/images/OnBoardindImg/OB_5.jpg')}
                 style={styles.carouselImageBackground}
               >
                 <View style={styles.opacityOverlayTransparent} />
@@ -72,7 +73,12 @@ export default class LandingScreen extends React.PureComponent {
           </Carousel>
           <View style={styles.absoluteButtonContainer}>
             <View style={styles.buttonContainer}>
-              <TouchableOpacity
+              <CustomBtn 
+                 customBtnStyle={{borderRadius:50,padding:14}}
+                 Title='Start free trial'
+                 onPress={() => this.props.navigation.navigate('Signup', { specialOffer })}
+              />
+              {/* <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('Signup', { specialOffer })}
                 activeOpacity={0.6}
                 style={styles.signupButton}
@@ -80,14 +86,14 @@ export default class LandingScreen extends React.PureComponent {
                 <Text style={styles.signupButtonText}>
                   START FREE TRIAL
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('Login', { specialOffer })}
                 activeOpacity={0.6}
                 style={styles.loginButton}
               >
                 <Text style={styles.loginButtonText}>
-                  I ALREADY HAVE AN ACCOUNT
+                  I already have an account
                 </Text>
               </TouchableOpacity>
             </View>
@@ -105,7 +111,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.black,
+    backgroundColor: colors.themeColor.themeBackgroundColor,
   },
   carouselCardContainer: {
     flex: 1,
@@ -137,50 +143,54 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'absolute',
     bottom: 0,
+    backgroundColor:colors.themeColor.themeBackgroundColor
   },
   buttonContainer: {
     width,
     backgroundColor: colors.transparent,
-    padding: 10,
+    padding: 12,
+    paddingHorizontal:containerPadding
   },
-  signupButton: {
-    width: width - 20,
-    height: 45,
-    marginTop: 5,
-    marginBottom: 5,
-    backgroundColor: colors.coral.standard,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: colors.charcoal.dark,
-    borderRadius: 2,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 2,
-  },
-  signupButtonText: {
-    marginTop: 4,
-    color: colors.white,
-    fontFamily: fonts.bold,
-    fontSize: 14,
-  },
+  // signupButton: {
+  //   width: width - 20,
+  //   height: 45,
+  //   marginTop: 5,
+  //   marginBottom: 5,
+  //   backgroundColor: colors.coral.standard,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   shadowColor: colors.charcoal.dark,
+  //   borderRadius: 2,
+  //   shadowOpacity: 0.5,
+  //   shadowOffset: { width: 0, height: 2 },
+  //   shadowRadius: 2,
+  // },
+  // signupButtonText: {
+  //   marginTop: 4,
+  //   color: colors.white,
+  //   fontFamily: fonts.bold,
+  //   fontSize: 14,
+  // },
   loginButton: {
-    width: width - 20,
-    height: 45,
+    // width: width - 20,
+    // height: 45,
     marginTop: 5,
-    backgroundColor: colors.transparentCoral,
+    // backgroundColor: colors.transparentCoral,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: colors.charcoal.dark,
-    borderRadius: 2,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 2,
+    // shadowColor: colors.charcoal.dark,
+    // borderRadius: 2,
+    // shadowOpacity: 0.5,
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowRadius: 2,
   },
   loginButtonText: {
     marginTop: 4,
-    color: colors.white,
+    color: colors.themeColor.color,
     fontFamily: fonts.bold,
-    fontSize: 14,
+    fontSize: 15,
     opacity: 0.8,
+    letterSpacing:0.5
+
   },
 });

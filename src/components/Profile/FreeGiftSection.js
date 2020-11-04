@@ -12,6 +12,7 @@ import {
 import Icon from '../Shared/Icon';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
+import { containerPadding } from '../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 
@@ -59,7 +60,7 @@ function FreeGiftSection({
 
 const styles = StyleSheet.create({
   containerLocked: {
-    width: width - 20,
+    width: width - containerPadding*2,
     height: 90,
     marginTop: 5,
     marginBottom: 5,
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
     opacity: 0.3,
   },
   containerUnlocked: {
-    width: width - 20,
+    width: width - containerPadding*2,
     height: 90,
     marginTop: 5,
     marginBottom: 5,

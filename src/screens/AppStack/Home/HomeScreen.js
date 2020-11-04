@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-  StyleSheet,
   View,
   Linking,
   ScrollView,
   Text,
   Dimensions,
+  Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Button } from 'react-native-elements';
@@ -20,38 +20,47 @@ import Loader from '../../../components/Shared/Loader';
 import ProgressBar from '../../../components/Progress/ProgressBar';
 import { db } from '../../../../config/firebase';
 import Icon from '../../../components/Shared/Icon';
-import fonts from '../../../styles/fonts';
+// import fonts from '../../../styles/fonts';
 import colors from '../../../styles/colors';
-
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import globalStyle, { containerPadding } from '../../../styles/globalStyles';
+import RoundButton from '../../../components/Home/RoundButton';
+import HomeScreenStyle from './HomeScreenStyle';
+import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
+import WorkOutCard from '../../../components/Home/WorkoutCard';
+import TimeSvg from '../../../../assets/icons/time';
+import CustomBtn from '../../../components/Shared/CustomBtn';
+import fonts from '../../../styles/fonts';
+import { heightPercentageToDP as hp ,widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import StopWatch from '../../../components/Workouts/WorkoutStopwatch';
 const { width } = Dimensions.get('window');
+// const workoutTypeMap = {
+//   1: 'Resistance',
+//   2: 'HIIT',
+//   3: 'Resistance',
+//   4: 'HIIT',
+//   5: 'Resistance',
+// };
 
-const workoutTypeMap = {
-  1: 'Resistance',
-  2: 'HIIT',
-  3: 'Resistance',
-  4: 'HIIT',
-  5: 'Resistance',
-};
+// const workoutIconMap = {
+//   1: 'dumbbell',
+//   2: 'workouts-hiit',
+//   3: 'dumbbell',
+//   4: 'workouts-hiit',
+//   5: 'dumbbell',
+// };
 
-const workoutIconMap = {
-  1: 'dumbbell',
-  2: 'workouts-hiit',
-  3: 'dumbbell',
-  4: 'workouts-hiit',
-  5: 'dumbbell',
-};
+// const resistanceFocusMap = {
+//   1: 'Full Body',
+//   3: 'Upper Body',
+//   5: 'Abs, Butt & Thighs',
+// };
 
-const resistanceFocusMap = {
-  1: 'Full Body',
-  3: 'Upper Body',
-  5: 'Abs, Butt & Thighs',
-};
-
-const resistanceFocusIconMap = {
-  1: 'workouts-full',
-  3: 'workouts-upper',
-  5: 'workouts-lower',
-};
+// const resistanceFocusIconMap = {
+//   1: 'workouts-full',
+//   3: 'workouts-upper',
+//   5: 'workouts-lower',
+// };
 
 export default class HomeScreen extends React.PureComponent {
   constructor(props) {
@@ -61,15 +70,28 @@ export default class HomeScreen extends React.PureComponent {
       profile: undefined,
       switchWelcomeHeader: true,
       dayOfWeek: undefined,
+      activeChallengeUserData:undefined,
+      activeChallengeData:undefined,
+      totalInterval:undefined,
+      totalCircuit:undefined,
+      totalStrength:undefined,
+      totalIntervalCompleted:undefined,
+      totalCircuitCompleted:undefined,
+      totalStrengthCompleted:undefined,
     };
   }
-  componentDidMount = () => {
+  componentDidMount = async() => {
     this.fetchProfile();
     this.switchWelcomeHeader();
     this.setDayOfWeek();
+    this.fetchActiveChallengeUserData();
   }
   componentWillUnmount = () => {
     this.unsubscribe();
+    if(this.unsubscribeFACUD)
+    this.unsubscribeFACUD()
+    if(this.unsubscribeFACD)
+      this.unsubscribeFACD()  
   }
   setDayOfWeek = async () => {
     const timezone = await Localization.timezone;
@@ -90,17 +112,31 @@ export default class HomeScreen extends React.PureComponent {
     this.unsubscribe = userRef.onSnapshot(async (doc) => {
       this.setState({
         profile: await doc.data(),
-        loading: false,
       });
       if (await doc.data().weeklyTargets.currentWeekStartDate !== moment().startOf('week').format('YYYY-MM-DD')) {
         const data = {
           weeklyTargets: {
             resistanceWeeklyComplete: 0,
             hiitWeeklyComplete: 0,
+            strength:0,
+            interval:0,
+            circuit:0,
             currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
           },
         };
         await userRef.set(data, { merge: true });
+      }
+      if(doc.data().weeklyTargets['strength'] === undefined){
+        // if Weekly targets not available
+        const data = {
+          weeklyTargets: {
+            strength:0,
+            circuit:0,
+            interval:0
+          },
+          totalWorkoutCompleted:0
+        }
+          await userRef.set(data, { merge: true });
       }
     });
   }
@@ -119,13 +155,132 @@ export default class HomeScreen extends React.PureComponent {
     this.setState({ loading: false });
     this.props.navigation.navigate('Burpee1');
   }
+
+  // ToDo : for challenges
+fetchActiveChallengeUserData = async () =>{
+  try{  
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem('uid');
+    this.unsubscribeFACUD = await db.collection('users').doc(uid).collection('challenges')
+    .where("status", "==" , "Active")
+    .onSnapshot(async (querySnapshot) => {
+      const list = [];
+      await querySnapshot.forEach(async (doc) => {
+          await list.push(await doc.data());
+      });
+      //TODO:get Active challenge end time
+      const activeChallengeEndTime = list[0]?new Date(list[0].endDate).getTime():null;
+      const currentTime = new Date().getTime()
+
+      if(list[0] && currentTime <= activeChallengeEndTime){ //TODO:check challenge is active and not completed
+           this.fetchActiveChallengeData(list[0])
+      }else{
+        if( activeChallengeEndTime && currentTime >= activeChallengeEndTime){  //TODO check challenge is Completed or not
+         const challengeRef =db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
+         challengeRef.set({status:"Completed"},{merge:true})
+         console.log("Challenge Completed....")
+        }
+        this.setState({ 
+          activeChallengeUserData:undefined,
+          loading:false
+        });
+      }
+    });
+  }
+  catch(err){
+    this.setState({ loading: false });
+    console.log(err)
+    Alert.alert('Fetch active challenge user data error!')
+  }  
+}
+
+fetchActiveChallengeData = async (activeChallengeUserData) =>{
+  try{
+    this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
+    .onSnapshot(async (doc) => {
+        if(doc.exists){
+          const activeChallengeData = doc.data()
+          //TODO calculate total interval circuit strength completed user during challenge
+          const totalWorkouts =[] 
+            activeChallengeData.workouts.forEach(workout =>{
+              totalWorkouts.push(workout)
+            })
+          
+          let totalInterval = totalWorkouts.filter((res)=>res.target === 'interval')
+          const totalCircuit = totalWorkouts.filter((res)=>res.target === 'circuit')
+          const totalStrength = totalWorkouts.filter((res)=>res.target === 'strength')
+    
+          const totalIntervalCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'interval')
+          const totalCircuitCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'circuit')
+          const totalStrengthCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'strength')
+          
+          
+          this.setState({ 
+            activeChallengeUserData,
+            activeChallengeData,
+            totalInterval,
+            totalCircuit,
+            totalStrength,
+            totalIntervalCompleted,
+            totalCircuitCompleted,
+            totalStrengthCompleted,
+            loading:false
+          });
+        }
+     
+    });
+  }catch(err){
+    this.setState({ loading: false });
+    console.log(err);
+    Alert.alert('Fetch active challenge data error!')
+  }
+
+}
+ //-------**--------  
+
   render() {
     const {
       loading,
       profile,
       switchWelcomeHeader,
       dayOfWeek,
+      activeChallengeData,
+      activeChallengeUserData,
+      totalInterval,
+      totalCircuit,
+      totalStrength,
+      totalIntervalCompleted,
+      totalCircuitCompleted,
+      totalStrengthCompleted,
     } = this.state;
+    let totalI = 0;
+    let totalC = 0;
+    let totalS = 0;
+    let countI = 0;
+    let countC = 0;
+    let countS = 0;
+    if(activeChallengeData !== undefined){
+      totalI = 0
+      totalInterval.forEach((res)=>totalI += res.days.length )
+      totalC = 0
+      totalCircuit.forEach((res)=>totalC += res.days.length )
+      totalS = 0;
+      totalStrength.forEach((res)=>totalS += res.days.length )
+
+      countI = totalIntervalCompleted.length;
+      countC = totalCircuitCompleted.length;
+      countS = totalStrengthCompleted.length;
+    }else if(profile !== undefined){
+      totalI = 5;
+      totalC = 5;
+      totalS = 5;
+
+      countI = profile.weeklyTargets.interval;
+      countC = profile.weeklyTargets.circuit;
+      countS = profile.weeklyTargets.strength;
+    }
+    
+
     const personalisedMessage = () => {
       const { resistanceWeeklyComplete, hiitWeeklyComplete } = profile.weeklyTargets;
       const totalWeeklyWorkoutsCompleted = resistanceWeeklyComplete + hiitWeeklyComplete;
@@ -136,251 +291,161 @@ export default class HomeScreen extends React.PureComponent {
       }
       return 'Keep working, you\'ve got this!';
     };
+
+    const bigHeadeingTitle = (switchWelcomeHeader ? 'Hi' : 'Hi').toString()+' ' + (profile ? profile.firstName:'').toString()
+   
+    // let recommendedWorkout =[];
+
+    // (dayOfWeek > 0 && dayOfWeek < 6) ? recommendedWorkout.push(workoutTypeMap[dayOfWeek]): recommendedWorkout.push(' Rest Day') 
+    // if(dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) 
+    //   recommendedWorkout.push(resistanceFocusMap[dayOfWeek])
+      
     return (
-      <View style={styles.container}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollView}
+          contentContainerStyle={HomeScreenStyle.scrollView}
+          style={[globalStyle.container]}
         >
-          <Text style={styles.welcomeHeaderText}>
-            {switchWelcomeHeader ? 'Welcome back' : 'Hi'}{profile && `, ${profile.firstName}`}
-          </Text>
-          <Text style={styles.welcomeBodyText}>
-            Here is your progress for the week. {profile && personalisedMessage()}
-          </Text>
-          <View style={styles.workoutProgressContainer}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.bodyText}>
-                WEEKLY WORKOUT PROGRESS
-              </Text>
-            </View>
-            {
-              profile && (
-                <ProgressBar
-                  progressBarType="Resistance"
-                  completedWorkouts={profile.weeklyTargets.resistanceWeeklyComplete}
-                />
-              )
-            }
-            {
-              profile && (
-                <ProgressBar
-                  progressBarType="HIIT"
-                  completedWorkouts={profile.weeklyTargets.hiitWeeklyComplete}
-                />
-              )
-            }
-          </View>
-          <View style={styles.workoutProgressContainer}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.bodyText}>
-                TODAYS RECOMMENDED WORKOUT
-              </Text>
-            </View>
-            <View style={styles.recommendedWorkoutContainer}>
-              {
-                (dayOfWeek > 0 && dayOfWeek < 6) ? (
-                  <View style={styles.recommendedWorkoutSection}>
-                    <Icon
-                      name={workoutIconMap[dayOfWeek]}
-                      size={28}
-                      color={colors.charcoal.light}
-                    />
-                    <Text style={styles.recommendedWorkoutText}>
-                      {workoutTypeMap[dayOfWeek]}
-                    </Text>
-                  </View>
-                ) : (
-                  <View style={styles.recommendedWorkoutSection}>
-                    <Icon
-                      name="calendar-tick"
-                      size={28}
-                      color={colors.charcoal.light}
-                    />
-                    <Text style={styles.recommendedWorkoutText}>
-                      Rest Day
-                    </Text>
-                  </View>
-                )
-              }
-              {
-                (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) && (
-                  <View style={styles.recommendedWorkoutSection}>
-                    <Icon
-                      name={resistanceFocusIconMap[dayOfWeek]}
-                      size={28}
-                      color={colors.charcoal.standard}
-                    />
-                    <Text style={styles.recommendedWorkoutText}>
-                      {resistanceFocusMap[dayOfWeek]}
-                    </Text>
-                  </View>
-                )
-              }
-            </View>
-          </View>
-          {
-            profile && profile.initialBurpeeTestCompleted === undefined && (
-              <View style={styles.workoutProgressContainer}>
-                <View style={styles.sectionHeader}>
-                  <Text style={styles.bodyText}>
-                    REMINDER
-                  </Text>
-                </View>
-                <View style={styles.reminderContentContainer}>
-                  <Icon
-                    name="stopwatch"
-                    size={32}
-                    color={colors.charcoal.dark}
-                    style={styles.reminderIcon}
-                  />
-                  <View style={styles.reminderTextContainer}>
-                    <Text style={styles.reminderText}>
-                      Complete a burpee test to assess your current fitness level.  The results from this test will determine the intensity of your workouts!
-                    </Text>
-                  </View>
-                </View>
-                <Button
-                  title="START BURPEE TEST"
-                  buttonStyle={styles.button}
-                  titleStyle={styles.buttonText}
-                  onPress={this.goToBurpeeTest}
-                />
+          <View>
+              {/* <View style={globalStyle.bigHeadingTitleContainer}>
+                <Text style={globalStyle.bigHeadingTitleText}>
+                {switchWelcomeHeader ? 'Hi' : 'Hi'}{profile && ` ${profile.firstName}`}
+                </Text>
+               </View> */}
+             <BigHeadingWithBackButton
+               bigTitleText = {bigHeadeingTitle} 
+               isBackButton = {false}
+               isBigTitle = {true}
+               customContainerStyle={{marginVertical:hp('2%')}}
+
+               />
+              {/* <Text style={HomeScreenStyle.welcomeHeaderText}>
+                {switchWelcomeHeader ? 'Welcome back' : 'Hi'}{profile && `, ${profile.firstName}`}
+              </Text> */}
+              {/* <Text style={HomeScreenStyle.welcomeBodyText}>
+                Here is your progress for the week. {profile && personalisedMessage()}
+              </Text> */}
+
+              <View style={HomeScreenStyle.roundButtonContainer}>
+                <RoundButton title="NUTRITION" 
+                //  customBtnStyle={{borderRightWidth:0}}
+                 leftIcon="fitazfk2-workout.png" 
+                 rightIcon="chevron-right"
+                 onPress={()=>this.props.navigation.navigate('Nutrition')}
+                 />
+                <RoundButton title="WORKOUT"
+                 leftIcon="fitazfk2-workout.png" 
+                 rightIcon="chevron-right"
+                 onPress={()=>this.props.navigation.navigate('Workouts')}
+                 />
               </View>
-            )
-          }
-          <NewsFeedTile
-            image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
-            title="SHOP APPAREL"
-            onPress={() => this.openLink('https://fitazfk.com/collections/wear-fitazfk-apparel')}
-          />
-          <DoubleNewsFeedTile
-            imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-blog.jpg')}
-            imageRight={require('../../../../assets/images/hiit-rest-placeholder.jpg')}
-            titleLeft1="BLOG"
-            titleRight1="FAQ"
-            onPressLeft={() => this.props.navigation.navigate('HomeBlog')}
-            onPressRight={() => this.openLink('https://fitazfk.zendesk.com/hc/en-us')}
-          />
-          <NewsFeedTile
-            image={require('../../../../assets/images/shop-bundles.jpg')}
-            title="SHOP EQUIPMENT"
-            onPress={() => this.openLink('https://fitazfk.com/collections/equipment')}
-          />
-          <NewsFeedTile
-            image={require('../../../../assets/images/fitazfk-army.jpg')}
-            title="JOIN THE FITAZFK ARMY"
-            onPress={() => this.openLink('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
-          />
+           
+              {
+                !loading &&
+                  <View>
+                    <View style={HomeScreenStyle.sectionHeader}>
+                      <Text style={[HomeScreenStyle.bodyText]}>
+                        {activeChallengeData?'Active challenge progress' :'Weekly workout progress'}
+                      </Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:"space-between",width:"100%"}}>
+                        {
+                          profile && (
+                            <View>
+                              <ProgressBar
+                                title="Strength"
+                                completed={countS}
+                                total = {totalS}
+                                size ={wp('38%')}
+                              />
+                            </View>
+                          )
+                        }
+                        {
+                          profile && (
+                            <View>
+                              <ProgressBar
+                                title="Circuit"
+                                completed={countC}
+                                total = {totalC}
+                                size ={wp('38%')}
+                              />
+                            </View>
+                          )
+                        }
+                    </View>
+                    <View style={{width:'100%',flexDirection:"row",justifyContent:"center",marginTop:-30}}>
+                        {
+                              profile && (
+                                <View>
+                                  <ProgressBar
+                                    title="Interval"
+                                    completed={countI}
+                                    total = {totalI}
+                                    size ={wp('38%')}
+                                  />
+                                </View>
+                              )
+                            }
+                    </View>
+                  </View>
+              }
+            
+              
+              {
+                profile && profile.initialBurpeeTestCompleted === undefined && (
+                  <View style={HomeScreenStyle.workoutProgressContainer}>
+                    <View style={HomeScreenStyle.sectionHeader}>
+                      <Text style={HomeScreenStyle.bodyText}>
+                        REMINDER
+                      </Text>
+                    </View>
+                    <View style={HomeScreenStyle.reminderContentContainer}>
+                      <Icon
+                        name="stopwatch"
+                        size={32}
+                        color={colors.charcoal.dark}
+                        style={HomeScreenStyle.reminderIcon}
+                      />
+                      {/* <TimeSvg /> */}
+                      <View style={HomeScreenStyle.reminderTextContainer}>
+                        <Text style={HomeScreenStyle.reminderText}>
+                          Complete a burpee test to assess your current fitness level.  The results from this test will determine the intensity of your workouts!
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={{width:'100%'}}> 
+                      <CustomBtn 
+                        Title="START BURPEE TEST"
+                        customBtnStyle={{borderRadius:50,backgroundColor:colors.charcoal.darkest}}
+                        titleCapitalise={true}
+                        onPress={this.goToBurpeeTest}
+                      />
+                    </View>
+                  </View>
+                )
+              }
+               {/* <WorkOutCard
+                image={require('../../../../assets/images/homeScreenTiles/todayWorkoutImage2.jpeg')}
+                title="TODAY'S WORKOUT"
+                recommendedWorkout ={recommendedWorkout}
+                onPress={() => this.props.navigation.navigate('Calendar')}
+                cardCustomStyle ={{marginTop:20}} 
+              /> */}
+
+             
+              <Loader
+                loading={loading}
+                color={colors.charcoal.standard}
+              />
+
+          </View>
+          
         </ScrollView>
-        <Loader
-          loading={loading}
-          color={colors.charcoal.standard}
-        />
-      </View>
+
+       
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.offWhite,
-  },
-  scrollView: {
-    padding: 5,
-  },
-  welcomeHeaderText: {
-    fontFamily: fonts.bold,
-    fontSize: 18,
-    color: colors.black,
-    margin: 8,
-    marginTop: 10,
-  },
-  welcomeBodyText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.black,
-    margin: 8,
-    marginTop: 0,
-  },
-  workoutProgressContainer: {
-    alignItems: 'center',
-    width: width - 20,
-    margin: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 10,
-    backgroundColor: colors.white,
-    borderRadius: 2,
-    shadowColor: colors.grey.standard,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-  },
-  sectionHeader: {
-    alignItems: 'center',
-    backgroundColor: colors.charcoal.darkest,
-    width: width - 20,
-    borderTopLeftRadius: 2,
-    borderTopRightRadius: 2,
-    padding: 8,
-    paddingBottom: 5,
-  },
-  bodyText: {
-    fontFamily: fonts.standard,
-    fontSize: 12,
-    color: colors.white,
-  },
-  recommendedWorkoutContainer: {
-    flexDirection: 'row',
-  },
-  recommendedWorkoutSection: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 15,
-  },
-  recommendedWorkoutText: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
-    color: colors.charcoal.standard,
-    marginTop: 12,
-  },
-  reminderContentContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  reminderIcon: {
-    margin: 5,
-    marginRight: 8,
-  },
-  reminderTextContainer: {
-    flex: 1,
-  },
-  reminderText: {
-    fontFamily: fonts.standard,
-    fontSize: 12,
-    color: colors.black,
-    margin: 4,
-    marginTop: 12,
-    marginBottom: 12,
-  },
-  button: {
-    backgroundColor: colors.charcoal.darkest,
-    shadowColor: colors.grey.dark,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 40,
-    width: width - 40,
-    borderRadius: 4,
-    shadowOpacity: 0.8,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 2,
-  },
-  buttonText: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
-    marginTop: 3,
-  },
-});
+

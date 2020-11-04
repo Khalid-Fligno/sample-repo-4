@@ -1,78 +1,104 @@
 import React from 'react';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
-import HomeStack from './HomeStack';
-import NutritionStack from './NutritionStack';
-import WorkoutsStack from './WorkoutsStack';
+import { createBottomTabNavigator, BottomTabBar } from 'react-navigation-tabs';
+import ChallengeSubscriptionStack from './ChallengeSubscriptionStack';
 import CalendarStack from './CalendarStack';
 import ProgressStack from './ProgressStack';
 import Icon from '../../src/components/Shared/Icon';
 import colors from '../../src/styles/colors';
-import fonts from '../../src/styles/fonts';
 import { tabColorMap } from './utils';
+import { Image, Text ,TouchableWithoutFeedback, StyleSheet, Dimensions, View} from 'react-native';
+import fonts from '../../src/styles/fonts';
+import DashboardStack from './DashboardStack';
+import FeedStack from './FeedStack';
+import FeedSvg from '../../assets/icons/Feed';
+import CalenderSvg from '../../assets/icons/calender';
+import SubSVG from '../../assets/icons/subscriptionSVG';
+import ProgressSvg from '../../assets/icons/progress';
+import TabBarComponent from '../../src/components/Shared/TabBarComponent';
+import ChallengeSvg from '../../assets/icons/challengeSvg';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const TabStack = createBottomTabNavigator(
   {
-    Home: HomeStack,
-    Nutrition: NutritionStack,
-    Workouts: WorkoutsStack,
+  
+    Feed:FeedStack,
+    Lifestyle: DashboardStack,
+    Challenges: ChallengeSubscriptionStack,
     Calendar: CalendarStack,
     Progress: ProgressStack,
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Lifestyle',
+    tabBarComponent: (props) => (<TabBarComponent  {...props} />), //remember to import it,
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
-        const activeState = tabColorMap[routeName];
-        const inactiveState = colors.charcoal.standard;
+        const activeState = colors.themeColor.color;
+        const inactiveState = colors.themeColor.color;
+        // const inactiveState = colors.charcoal.standard;
         let icon;
         if (routeName === 'Home') {
           icon = (
             <Icon
-              name={focused ? 'home-solid' : 'home-outline'}
-              size={24}
+              name={ 'home-outline'}
+              size={hp('2.5%')}
               color={focused ? activeState : inactiveState}
             />
           );
-        } else if (routeName === 'Nutrition') {
+        } 
+        if ( routeName === 'Feed') {
           icon = (
-            <Icon
-              name={focused ? 'nutrition-solid' : 'nutrition-outline'}
-              size={24}
-              color={focused ? activeState : inactiveState}
+            <FeedSvg 
+                width = {hp('3%')}
+                height = {hp('3%')}
+                fill ={focused ? activeState : inactiveState}
             />
           );
-        } else if (routeName === 'Workouts') {
+        }
+        else if (routeName === 'Lifestyle' ) {
           icon = (
-            <Icon
-              name={focused ? 'workouts-solid' : 'workouts-outline'}
-              size={24}
-              color={focused ? activeState : inactiveState}
+            <SubSVG 
+                width = {hp('2.5%')}
+                height = {hp('2.5%')}
+                fill ={focused ? activeState : inactiveState}
             />
           );
-        } else if (routeName === 'Calendar') {
+        } 
+        else if (routeName === 'Challenges' ) {
           icon = (
-            <Icon
-              name={focused ? 'calendar-solid' : 'calendar-outline'}
-              size={24}
-              color={focused ? activeState : inactiveState}
+            <ChallengeSvg 
+                width = {hp('2.5%')}
+                height = {hp('2.5%')}
+                fill ={focused ? activeState : inactiveState}
             />
+          );
+        } 
+   
+         else if (routeName === 'Calendar') {
+          icon = (
+              <CalenderSvg 
+                  width = {hp('2.5%')}
+                  height = {hp('2.5%')}
+                  fill ={focused ? activeState : inactiveState} 
+              />
+          
           );
         } else if (routeName === 'Progress') {
           icon = (
-            <Icon
-              name={focused ? 'star-solid' : 'star-outline'}
-              size={24}
-              color={focused ? activeState : inactiveState}
-            />
+              <ProgressSvg
+                  width = {hp('2.5%')}
+                  height = {hp('2.5%')}
+                  fill ={focused ? activeState : inactiveState} 
+               />
+        
           );
         }
         return icon;
       },
     }),
     tabBarOptions: {
-      activeTintColor: colors.charcoal.standard,
+      activeTintColor: colors.themeColor.color,
       inactiveTintColor: colors.charcoal.standard,
       style: {
         // shadowColor: colors.charcoal.standard,
@@ -80,15 +106,22 @@ const TabStack = createBottomTabNavigator(
         // shadowOpacity: 0.3,
         // shadowRadius: 2,
         // borderTopWidth: 0,
+        height:60,
         borderTopWidth: 1,
         borderTopColor: colors.grey.light,
-        backgroundColor: colors.white,
+        backgroundColor: colors.themeColor.footerBackgroundColor,
       },
       labelStyle: {
-        fontFamily: fonts.standard,
+        fontFamily: fonts.GothamMedium,
+        textTransform:"uppercase",
+        paddingBottom:4,
+        fontSize:hp('1.1%')
       },
+      
     },
   },
 );
 
 export default TabStack;
+
+

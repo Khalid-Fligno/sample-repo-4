@@ -71,7 +71,7 @@ export default class WorkoutTimer extends React.PureComponent {
     }
   }
   start = async () => {
-    const { handleFinish } = this.props;
+    const { handleFinish  } = this.props;
     const endTime = new Date().getTime() + this.state.remainingTime;
     this.interval = setInterval(async () => {
       const remaining = endTime - new Date();
@@ -130,8 +130,8 @@ export default class WorkoutTimer extends React.PureComponent {
   render() {
     const styles = this.findStyles(this.state.remainingTime);
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>{this.formatTime()}</Text>
+      <View style={[styles.container,this.props.customContainerStyle]}>
+        <Text style={[styles.text,{fontSize:50}]}>{this.formatTime()}</Text>
       </View>
     );
   }
@@ -142,6 +142,7 @@ WorkoutTimer.propTypes = {
   start: PropTypes.bool.isRequired,
   getTime: PropTypes.func,
   handleFinish: PropTypes.func,
+  customContainerStyle: PropTypes.object
 };
 
 WorkoutTimer.defaultProps = {

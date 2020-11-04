@@ -23,6 +23,8 @@ import Loader from '../../components/Shared/Loader';
 import CustomButton from '../../components/Shared/CustomButton';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
+import CustomBtn from '../Shared/CustomBtn';
+import { containerPadding } from '../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 
@@ -204,6 +206,11 @@ export default function InviteFriends({ recordInvites }) {
           contentContainerStyle={styles.sectionList}
         />
         <View style={styles.buttonContainer}>
+          {/* <CustomBtn 
+            Title={`INVITE (${selectedContacts.length})`}
+            titleCapitalise={true}
+            customBtnStyle={{borderRadius:50,width:width-containerPadding}}
+          /> */}
           <CustomButton
             title={`INVITE (${selectedContacts.length})`}
             onPress={onInvitePress}

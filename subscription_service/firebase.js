@@ -1,5 +1,13 @@
 const firebase = require('firebase');
 require('firebase/firestore');
+// let firebaseConfig = {
+//     apiKey: 'AIzaSyAxS1IQqle6bXkO018qwJdaUXAfj845G-s',
+//     authDomain: 'quickstart-1588594831516.firebaseapp.com',
+//     databaseURL: 'https://quickstart-1588594831516.firebaseio.com',
+//     projectId: 'quickstart-1588594831516',
+//     storageBucket: 'quickstart-1588594831516.appspot.com',
+//     messagingSenderId: '213071860801'
+// };
 
 var firebaseConfig = {
     apiKey: "AIzaSyDTwQ2csz41d8Bo60H-wH_NWlQglKC7NDM",

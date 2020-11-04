@@ -23,9 +23,10 @@ import { auth, db } from '../../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import Icon from '../../../components/Shared/Icon';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
+// import fonts from '../../../styles/fonts';
 import ActionSheet from 'react-native-actionsheet';
-
+import globalStyle from '../../../styles/globalStyles';
+import ProfileStyles from './ProfileStyles';
 const { width } = Dimensions.get('window');
 
 const uriToBlob = (url) => {
@@ -245,16 +246,16 @@ export default class ProfileHomeScreen extends React.PureComponent {
   render() {
     const { profile, loading, avatar } = this.state;
     return (
-      <SafeAreaView style={styles.safeContainer}>
-        <View style={styles.container}>
-          <ScrollView contentContainerStyle={styles.scrollView}>
-            <View style={styles.avatarOutline}>
-              <View style={styles.avatarBackdrop}>
+      <SafeAreaView style={globalStyle.safeContainer}>
+        <View style={[globalStyle.container,{paddingHorizontal:0}]}>
+          <ScrollView contentContainerStyle={globalStyle.scrollView}>
+            <View style={ProfileStyles.avatarOutline}>
+              <View style={ProfileStyles.avatarBackdrop}>
                 <TouchableOpacity
                   onPress={() => this.chooseUploadType()}
                 >
                   <FastImage
-                    style={styles.avatar}
+                    style={ProfileStyles.avatar}
                     source={avatar ? { uri: avatar } : require('../../../../assets/images/profile-add.png')}
                   />
                 </TouchableOpacity>
@@ -266,39 +267,39 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 onPress={(index) => this.uploadTypeAction(index)}
               />
             </View>
-            <View style={styles.nameTextContainer}>
+            <View style={ProfileStyles.nameTextContainer}>
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
-                style={styles.nameText}
+                style={ProfileStyles.nameText}
               >
                 {profile && profile.firstName} {profile && profile.lastName}
               </Text>
             </View>
-            <View style={styles.listContainer}>
+            <View style={ProfileStyles.listContainer}>
               <ListItem
                 key="Profile"
                 title="Profile"
-                containerStyle={styles.listItemContainer}
-                titleStyle={styles.listItemTitleStyle}
+                containerStyle={ProfileStyles.listItemContainer}
+                titleStyle={ProfileStyles.listItemTitleStyle}
                 rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                 onPress={() => this.props.navigation.navigate('Profile')}
               />
               <ListItem
                 key="Settings"
                 title="Settings"
-                containerStyle={styles.listItemContainerBottom}
-                titleStyle={styles.listItemTitleStyle}
+                containerStyle={ProfileStyles.listItemContainerBottom}
+                titleStyle={ProfileStyles.listItemTitleStyle}
                 rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                 onPress={() => this.props.navigation.navigate('Settings')}
               />
             </View>
-            <View style={styles.listContainer}>
+            <View style={ProfileStyles.listContainer}>
               <ListItem
                 key="InviteFriends"
                 title="Free Gifts!"
-                containerStyle={styles.listItemContainerGreen}
-                titleStyle={styles.listItemTitleStyleGreen}
+                containerStyle={ProfileStyles.listItemContainerGreen}
+                titleStyle={ProfileStyles.listItemTitleStyleGreen}
                 onPress={() => this.props.navigation.navigate('InviteFriends')}
                 leftIcon={
                   <Icon
@@ -310,14 +311,14 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
               />
             </View>
-            <View style={styles.listContainer}>
+            <View style={ProfileStyles.listContainer}>
               {
                 list.map((l) => (
                   <ListItem
                     key={l.title}
                     title={l.title}
-                    containerStyle={styles.listItemContainer}
-                    titleStyle={styles.listItemTitleStyle}
+                    containerStyle={ProfileStyles.listItemContainer}
+                    titleStyle={ProfileStyles.listItemTitleStyle}
                     rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                     onPress={() => this.props.navigation.navigate(l.route)}
                   />
@@ -325,8 +326,8 @@ export default class ProfileHomeScreen extends React.PureComponent {
               }
               <ListItem
                 title="Log Out"
-                containerStyle={styles.listItemContainerBottom}
-                titleStyle={styles.listItemTitleStyle}
+                containerStyle={ProfileStyles.listItemContainerBottom}
+                titleStyle={ProfileStyles.listItemTitleStyle}
                 rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
                 onPress={() => this.logOutAlert()}
               />
@@ -342,88 +343,3 @@ export default class ProfileHomeScreen extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
-  safeContainer: {
-    flex: 1,
-    backgroundColor: colors.black,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: colors.offWhite,
-    alignItems: 'center',
-  },
-  scrollView: {
-    paddingTop: 20,
-    alignItems: 'center',
-  },
-  avatarOutline: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarBackdrop: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: colors.grey.standard,
-  },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-  },
-  nameTextContainer: {
-    width,
-    alignItems: 'center',
-  },
-  nameText: {
-    marginTop: 15,
-    fontFamily: fonts.bold,
-    fontSize: 24,
-  },
-  listContainer: {
-    width,
-    marginBottom: 20,
-    borderTopWidth: 0,
-    borderColor: colors.grey.light,
-    shadowColor: colors.grey.standard,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    backgroundColor: colors.white,
-  },
-  listItemContainer: {
-    paddingTop: 15,
-    paddingBottom: 15,
-    borderBottomColor: colors.grey.light,
-    borderBottomWidth: 1,
-    backgroundColor: colors.white,
-  },
-  listItemContainerGreen: {
-    paddingTop: 15,
-    paddingBottom: 15,
-    borderBottomWidth: 0,
-    backgroundColor: colors.green.superLight,
-  },
-  listItemContainerBottom: {
-    paddingTop: 15,
-    paddingBottom: 15,
-    borderBottomWidth: 0,
-    backgroundColor: colors.white,
-  },
-  listItemTitleStyle: {
-    fontFamily: fonts.bold,
-    color: colors.charcoal.standard,
-    marginTop: 5,
-    fontSize: 14,
-  },
-  listItemTitleStyleGreen: {
-    fontFamily: fonts.bold,
-    color: colors.green.forest,
-    marginTop: 5,
-    fontSize: 14,
-  },
-});

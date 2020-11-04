@@ -13,7 +13,7 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
 const { width } = Dimensions.get('window');
-
+var tileHeight = 200;
 export default class Tile extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -22,6 +22,7 @@ export default class Tile extends React.PureComponent {
   handlePressIn = () => {
     Animated.spring(this.animatedValue, {
       toValue: 0.92,
+      useNativeDriver: true 
     }).start();
   }
   handlePressOut = () => {
@@ -29,6 +30,7 @@ export default class Tile extends React.PureComponent {
       toValue: 1,
       friction: 3,
       tension: 40,
+      useNativeDriver: true 
     }).start();
   }
   render() {
@@ -37,6 +39,13 @@ export default class Tile extends React.PureComponent {
       title1,
       image,
       disabled,
+      showTitle,
+      overlayTitle,
+      height,
+      customContainerStyle,
+      showTitleStyle,
+      overlayTitleStyle,
+      imageUrl
     } = this.props;
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
@@ -45,7 +54,7 @@ export default class Tile extends React.PureComponent {
       <TouchableOpacity
         disabled={disabled}
         onPress={onPress}
-        style={styles.cardContainer}
+        style={[styles.cardContainer,customContainerStyle]}
         onPressIn={this.handlePressIn}
         onPressOut={this.handlePressOut}
       >
@@ -53,16 +62,23 @@ export default class Tile extends React.PureComponent {
           style={[styles.flexContainer, animatedStyle]}
         >
           <ImageBackground
-            source={image}
+            source={imageUrl?{uri:imageUrl}:image}
             style={styles.image}
           >
-            <View style={styles.opacityLayer}>
-              <Text style={styles.title}>
-                {title1.toUpperCase()}
-              </Text>
-            </View>
+            {
+              overlayTitle && (<View style={styles.opacityLayer}>
+                <Text style={[styles.title,overlayTitleStyle]}>
+                 {title1.toUpperCase()}
+                </Text>
+              </View>)
+            } 
           </ImageBackground>
         </Animated.View>
+        <View>
+         { showTitle && (<Text style={[styles.title,showTitleStyle]}>
+            {title1}
+          </Text>)}
+        </View>
       </TouchableOpacity>
     );
   }
@@ -73,6 +89,11 @@ Tile.propTypes = {
   title1: PropTypes.string.isRequired,
   image: PropTypes.number.isRequired,
   disabled: PropTypes.bool,
+  height: PropTypes.number,
+  customContainerStyle: PropTypes.object,
+  showTitleStyle:PropTypes.object,
+  overlayTitleStyle:PropTypes.object,
+  imageUrl:PropTypes.string
 };
 
 Tile.defaultProps = {
@@ -83,13 +104,13 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 0.25,
     margin: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
-    width,
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    marginTop:0,
+    // width,
+    // shadowColor: colors.charcoal.standard,
+    // shadowOpacity: 0.5,
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowRadius: 4,
+    height:tileHeight
   },
   flexContainer: {
     flex: 1,
@@ -106,16 +127,19 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.transparentBlackLight,
+    backgroundColor: colors.transparentBlackLightest,
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 24,
-    color: colors.white,
-    textAlign: 'center',
-    shadowColor: colors.black,
-    shadowOpacity: 1,
-    shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 5,
+    fontSize: 20,
+    color: colors.black,
+    // shadowColor: colors.black,
+    // shadowOpacity: 1,
+    marginTop:10,
+    marginBottom:10,
+    // shadowOffset: { width: 0, height: 0 },
+    // shadowRadius: 5,
+    width:'100%',
+    textTransform:'capitalize'
   },
 });

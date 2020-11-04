@@ -2,12 +2,15 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  Text,
+  Text,Dimensions
 } from 'react-native';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
-
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { containerPadding } from '../../styles/globalStyles';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+const { width } = Dimensions.get('window');
 export default class ProgressBar extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -15,12 +18,17 @@ export default class ProgressBar extends React.PureComponent {
   }
   render() {
     const {
-      progressBarType,
-      completedWorkouts,
+      title,
+      completed,
+      total,
+      customTitleStyle,
+      size,
+      customProgressNumberStyle,
+      customProgessTotalStyle
     } = this.props;
     return (
       <View style={styles.container}>
-        <Text style={styles.progressBarLabel}>
+        {/* <Text style={styles.progressBarLabel}>
           {`${progressBarType} `}
           {completedWorkouts}/{progressBarType === 'Resistance' ? 3 : 2}
         </Text>
@@ -36,15 +44,47 @@ export default class ProgressBar extends React.PureComponent {
               progressBarType === 'HIIT' && completedWorkouts >= 2 && styles.progressBarFull,
             ]}
           />
-        </View>
+          
+        </View> */}
+        <AnimatedCircularProgress
+                  size={size}
+                  width={4}
+                  fill={(completed/total)*100}
+                  tintColor={colors.themeColor.color}
+                  onAnimationComplete={() => console.log('onAnimationComplete')}
+                  backgroundColor="lightgray" 
+                  rotation={0}
+        >
+                     {
+                        (fill) => (
+                          <View>
+                            <Text style={[styles.progressBarLabel,customProgessTotalStyle]}>
+                                <Text style={[styles.progressCircleNumber,customProgressNumberStyle]}>{completed}</Text> 
+                            </Text>
+                            {title &&
+                              <Text style={[styles.progressCircleText,customTitleStyle]}>
+                                {title}
+                              </Text>
+                            }
+                         </View>
+                        )
+                      }
+                      
+         </AnimatedCircularProgress>         
       </View>
     );
   }
 }
 
 ProgressBar.propTypes = {
-  progressBarType: PropTypes.oneOf(['Resistance', 'HIIT']).isRequired,
-  completedWorkouts: PropTypes.number.isRequired,
+  // progressBarType: PropTypes.oneOf(['Strength', 'Circuit','Interval']).isRequired,
+  title: PropTypes.string,
+  completed: PropTypes.number.isRequired,
+  total:PropTypes.number,
+  customTitleStyle:PropTypes.object,
+  size:PropTypes.any,
+  customProgressNumberStyle:PropTypes.object,
+  customProgessTotalStyle:PropTypes.object,
 };
 
 const styles = StyleSheet.create({
@@ -54,47 +94,27 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   progressBarLabel: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
+    fontFamily: fonts.standardNarrow,
+    fontSize: hp('2%'),
     color: colors.grey.dark,
-    marginTop: 3,
-    marginBottom: 3,
+    textAlign:'center',
+    // marginLeft:11,
+    marginTop:-20,
+    marginBottom:-5,
   },
-  progressBarOuter: {
-    width: '100%',
-    height: 8,
-    borderColor: colors.offWhite,
-    borderRadius: 5,
-    backgroundColor: colors.grey.light,
+
+  progressCircleText:{
+    textAlign:"center",
+    textTransform:'uppercase',
+    fontSize:wp('2.5%'),
+    fontFamily:fonts.standardNarrow,
+    color:colors.transparentBlackMid,
+    letterSpacing:0.7,
+    paddingTop:5,
   },
-  progressBarEmpty: {
-    width: '4%',
-    height: 8,
-    backgroundColor: colors.coral.standard,
-    borderRadius: 5,
-  },
-  resistance1: {
-    width: '33%',
-    height: 8,
-    backgroundColor: colors.yellow.standard,
-    borderRadius: 4,
-  },
-  resistance2: {
-    width: '66%',
-    height: 8,
-    backgroundColor: colors.yellow.standard,
-    borderRadius: 5,
-  },
-  hiit1: {
-    width: '50%',
-    height: 8,
-    backgroundColor: colors.yellow.standard,
-    borderRadius: 5,
-  },
-  progressBarFull: {
-    width: '100%',
-    height: 8,
-    backgroundColor: colors.green.standard,
-    borderRadius: 5,
-  },
+  progressCircleNumber:{
+    fontSize:wp('19%'),
+    fontFamily:fonts.standardNarrow,
+    color:'#4c4d52',
+    fontVariant: ['lining-nums']}
 });

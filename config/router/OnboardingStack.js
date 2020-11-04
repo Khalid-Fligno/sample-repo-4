@@ -10,11 +10,13 @@ import Progress5Screen from '../../src/screens/OnboardingStack/Progress5Screen';
 import Progress6Screen from '../../src/screens/OnboardingStack/Progress6Screen';
 import Header from '../../src/components/Shared/Header';
 import { fadeSpec, fade, onboardingBackButtonMap, onboardingSkipButtonMap } from './utils';
+import Onboarding2Screen from '../../src/screens/OnboardingStack/Onboarding2Screen';
 
 const OnboardingStack = createStackNavigator(
   {
     Subscription: SubscriptionScreen,
     Onboarding1: Onboarding1Screen,
+    Onboarding2: Onboarding2Screen,
     Progress1: Progress1Screen,
     Progress2: Progress2Screen,
     Progress3: Progress3Screen,

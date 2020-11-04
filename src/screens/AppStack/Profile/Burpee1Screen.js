@@ -16,8 +16,19 @@ import CustomButton from '../../../components/Shared/CustomButton';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
+import WorkoutScreenStyle from '../Workouts/WorkoutScreenStyle';
+import NutritionStyles from '../Nutrition/NutritionStyles';
+import CustomBtn from '../../../components/Shared/CustomBtn';
+import { containerPadding } from '../../../styles/globalStyles';
 
 const { width, height } = Dimensions.get('window');
+
+const coachingTip =[
+  'Land with your feet flat on the ground just outside your hands.',
+  'When extending out, avoid keeping your legs dead straight.',
+  'Don’t let your hips drop as you land into your push-up.'
+
+]
 
 export default class Progress3Screen extends React.PureComponent {
   constructor(props) {
@@ -65,8 +76,8 @@ export default class Progress3Screen extends React.PureComponent {
             <View style={styles.carouselContainer}>
               <Carousel
                 width={width}
-                inactiveIndicatorColor={colors.coral.standard}
-                indicatorColor={colors.coral.standard}
+                inactiveIndicatorColor={colors.themeColor.color}
+                indicatorColor={colors.themeColor.color}
                 indicatorOffset={12}
                 indicatorSize={13}
                 inactiveIndicatorText="○"
@@ -76,14 +87,14 @@ export default class Progress3Screen extends React.PureComponent {
                 <View
                   style={styles.exerciseTile}
                 >
-                  <View style={styles.exerciseTileHeaderBar}>
+                  <View style={WorkoutScreenStyle.exerciseTileHeaderBar}>
                     <View>
-                      <Text style={styles.exerciseTileHeaderTextLeft}>
+                      <Text style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}>
                         BURPEES
                       </Text>
                     </View>
                     <View>
-                      <Text style={styles.exerciseTileHeaderBarRight}>
+                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
                         MAX
                       </Text>
                     </View>
@@ -97,37 +108,46 @@ export default class Progress3Screen extends React.PureComponent {
                   />
                 </View>
                 <View style={styles.exerciseDescriptionContainer}>
-                  <View style={styles.exerciseTileHeaderBar}>
+                  <View style={WorkoutScreenStyle.exerciseTileHeaderBar}>
                     <View>
-                      <Text style={styles.exerciseTileHeaderTextLeft}>
+                      <Text style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}>
                         ADDITIONAL INFO
                       </Text>
                     </View>
                   </View>
-                  <View style={styles.exerciseDescriptionTextContainer}>
-                    <Text style={styles.exerciseDescriptionHeader}>
+                  <View style={WorkoutScreenStyle.exerciseDescriptionTextContainer}>
+                    <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>
                       Coaching tip:
                     </Text>
-                    <Text style={styles.exerciseDescriptionText}>
-                      - Land with your feet flat on the ground just outside your hands.
-                    </Text>
-                    <Text style={styles.exerciseDescriptionText}>
-                      - When extending out, avoid keeping your legs dead straight.
-                    </Text>
-                    <Text style={styles.exerciseDescriptionText}>
-                      - Don’t let your hips drop as you land into your push-up.
-                    </Text>
+                    {  
+                       coachingTip.map((tip,index) => (
+                          <View style={{flexDirection:"row"}} key={index}>
+                            <Text  style={NutritionStyles.ingredientsText}> • </Text>
+                            <Text style={NutritionStyles.ingredientsText}>
+                              {tip}
+                            </Text>
+                          </View> 
+                      ))
+                    }    
+              
                   </View>
                 </View>
               </Carousel>
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <CustomButton
+            <CustomBtn 
+              Title="READY!"
+              onPress={this.handleNext}
+              outline={true}
+              customBtnStyle={{borderRadius:50}} 
+              customBtnTitleStyle={{fontSize:14,fontFamily:fonts.bold}}     
+            />
+            {/* <CustomButton
               title="READY!"
               onPress={this.handleNext}
               primary
-            />
+            /> */}
           </View>
           <Loader
             color={colors.coral.standard}
@@ -154,6 +174,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     width,
     padding: 10,
+    paddingHorizontal:containerPadding
   },
   headerText: {
     fontFamily: fonts.bold,
@@ -181,27 +202,10 @@ const styles = StyleSheet.create({
     marginRight: 40,
     borderWidth: 2,
     borderRadius: 4,
-    borderColor: colors.coral.standard,
+    borderColor: colors.themeColor.themeBorderColor,
     overflow: 'hidden',
   },
-  exerciseTileHeaderBar: {
-    height: 35,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 8,
-    paddingBottom: 5,
-    backgroundColor: colors.coral.standard,
-  },
-  exerciseTileHeaderTextLeft: {
-    fontFamily: fonts.standardNarrow,
-    fontSize: 16,
-    color: colors.white,
-  },
-  exerciseTileHeaderBarRight: {
-    fontFamily: fonts.standardNarrow,
-    fontSize: 16,
-    color: colors.white,
-  },
+
   exerciseDescriptionContainer: {
     width: width - 80,
     height: width - 45,
@@ -209,34 +213,22 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginLeft: 40,
     marginRight: 40,
-    borderWidth: 2,
+    borderWidth: colors.themeColor.themeBorderWidth,
     borderRadius: 4,
-    borderColor: colors.coral.standard,
+    borderColor: colors.themeColor.themeBorderColor,
     backgroundColor: colors.white,
     overflow: 'hidden',
   },
-  exerciseDescriptionTextContainer: {
-    padding: 15,
-  },
-  exerciseDescriptionHeader: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.charcoal.darkest,
-  },
-  exerciseDescriptionText: {
-    fontFamily: fonts.standard,
-    fontSize: 14,
-    color: colors.charcoal.darkest,
-    marginTop: 5,
-    marginBottom: 5,
-  },
+
   buttonContainer: {
     flexShrink: 1,
     justifyContent: 'flex-end',
     padding: 10,
+    width:'100%',
+    paddingHorizontal:containerPadding
   },
   carouselContainer: {
-    
+    // width:width
     ...Platform.select({
       android: {
         height: width,

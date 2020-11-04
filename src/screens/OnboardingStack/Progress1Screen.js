@@ -15,6 +15,7 @@ import * as Haptics from 'expo-haptics';
 import Modal from 'react-native-modal';
 import HelperModal from '../../components/Shared/HelperModal';
 import CustomButton from '../../components/Shared/CustomButton';
+import CustomBtn from '../../components/Shared/CustomBtn';
 import Loader from '../../components/Shared/Loader';
 import {
   weightOptionsMetric,
@@ -27,6 +28,7 @@ import {
 import { db } from '../../../config/firebase';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import globalStyle, { containerPadding } from '../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 
@@ -165,7 +167,7 @@ export default class Progress1Screen extends React.PureComponent {
                   animationOut="fadeOut"
                   animationOutTiming={600}
                 >
-                  <View style={styles.modalContainer}>
+                  <View style={globalStyle.modalContainer}>
                     <Picker
                       selectedValue={weight}
                       onValueChange={(value) => this.setState({ weight: value })}
@@ -193,9 +195,9 @@ export default class Progress1Screen extends React.PureComponent {
                     <TouchableOpacity
                       title="DONE"
                       onPress={() => this.hideModal('weightModalVisible')}
-                      style={styles.modalButton}
+                      style={globalStyle.modalButton}
                     >
-                      <Text style={styles.modalButtonText}>
+                      <Text style={globalStyle.modalButtonText}>
                         DONE
                       </Text>
                     </TouchableOpacity>
@@ -222,7 +224,7 @@ export default class Progress1Screen extends React.PureComponent {
                   animationOut="fadeOut"
                   animationOutTiming={600}
                 >
-                  <View style={styles.modalContainer}>
+                  <View style={globalStyle.modalContainer}>
                     <Picker
                       selectedValue={waist}
                       onValueChange={(value) => this.setState({ waist: value })}
@@ -250,9 +252,9 @@ export default class Progress1Screen extends React.PureComponent {
                     <TouchableOpacity
                       title="DONE"
                       onPress={() => this.hideModal('waistModalVisible')}
-                      style={styles.modalButton}
+                      style={globalStyle.modalButton}
                     >
-                      <Text style={styles.modalButtonText}>
+                      <Text style={globalStyle.modalButtonText}>
                         DONE
                       </Text>
                     </TouchableOpacity>
@@ -279,7 +281,7 @@ export default class Progress1Screen extends React.PureComponent {
                   animationOut="fadeOut"
                   animationOutTiming={600}
                 >
-                  <View style={styles.modalContainer}>
+                  <View style={globalStyle.modalContainer}>
                     <Picker
                       selectedValue={hip}
                       onValueChange={(value) => this.setState({ hip: value })}
@@ -307,9 +309,9 @@ export default class Progress1Screen extends React.PureComponent {
                     <TouchableOpacity
                       title="DONE"
                       onPress={() => this.hideModal('hipModalVisible')}
-                      style={styles.modalButton}
+                      style={globalStyle.modalButton}
                     >
-                      <Text style={styles.modalButtonText}>
+                      <Text style={globalStyle.modalButtonText}>
                         DONE
                       </Text>
                     </TouchableOpacity>
@@ -318,11 +320,17 @@ export default class Progress1Screen extends React.PureComponent {
               </View>
             </View>
             <View style={styles.buttonContainer}>
-              <CustomButton
+              <CustomBtn
+                Title="NEXT"
+                titleCapitalise={true}
+                customBtnStyle={{borderRadius:50}}
+                onPress={() => this.handleSubmit(weight, waist, hip)}
+              />
+              {/* <CustomButton
                 title="NEXT"
                 onPress={() => this.handleSubmit(weight, waist, hip)}
                 primary
-              />
+              /> */}
             </View>
             <Loader
               loading={loading}
@@ -361,6 +369,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width,
     padding: 10,
+    paddingHorizontal:containerPadding
   },
   headerText: {
     fontFamily: fonts.bold,
@@ -373,25 +382,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.charcoal.light,
   },
-  modalContainer: {
-    justifyContent: 'space-between',
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.coral.standard,
-    height: 50,
-    width: '100%',
-  },
-  modalButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    marginTop: 3,
-  },
+ 
   contentContainer: {
     flexGrow: 1,
     justifyContent: 'center',
@@ -407,7 +398,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   inputButton: {
-    width: width - 20,
+    width: width - containerPadding*2,
     padding: 15,
     paddingBottom: 12,
     backgroundColor: colors.white,
@@ -424,5 +415,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: 10,
+    paddingHorizontal:containerPadding,
+    width:'100%'
   },
 });

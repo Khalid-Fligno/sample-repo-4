@@ -9,7 +9,7 @@ import { findReps } from '../../../utils/index';
 import Loader from '../../../components/Shared/Loader';
 import WorkoutTile from '../../../components/Workouts/WorkoutTile';
 import colors from '../../../styles/colors';
-
+import globalStyle from '../../../styles/globalStyles';
 const homeSplitImages = [
   require('../../../../assets/images/splitImages/NINA-1.jpg'),
   require('../../../../assets/images/splitImages/NINA-2.jpg'),
@@ -56,6 +56,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     this.setState({ loading: true });
     const focus = this.props.navigation.getParam('workoutFocus', null);
     const location = this.props.navigation.getParam('workoutLocation', null);
+    console.log(focus,location)
     this.unsubscribe = await db.collection('workouts')
       .where(focus, '==', true)
       .where(location, '==', true)
@@ -92,7 +93,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
         );
       }));
       this.setState({ loading: false });
-      this.props.navigation.navigate('WorkoutInfo', { workout, reps: findReps(fitnessLevel) });
+      this.props.navigation.navigate('WorkoutInfo', { workout, reps: findReps(fitnessLevel),fitnessLevel:fitnessLevel });
     } catch (err) {
       this.setState({ loading: false });
       Alert.alert('Could not download exercise videos', 'Please check your internet connection');
@@ -116,7 +117,7 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
     ));
 
     return (
-      <View style={styles.container}>
+      <View style={[globalStyle.container,{paddingHorizontal:0}]}>
         {workoutList}
         <Loader
           loading={loading}
@@ -127,13 +128,3 @@ export default class WorkoutsSelectionScreen extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 5,
-    paddingBottom: 5,
-  },
-});

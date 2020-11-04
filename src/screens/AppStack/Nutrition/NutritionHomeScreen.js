@@ -1,41 +1,72 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import Tile from '../../../components/Shared/Tile';
 import colors from '../../../styles/colors';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-navigation';
+import globalStyle from '../../../styles/globalStyles';
+import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
+import fonts from '../../../styles/fonts';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
+
+const NutritionList = [
+  {
+    title:"breakfast",
+    imageUrl:require('../../../../assets/images/nutrition-breakfast.jpg'),
+  },
+  {
+    title:"lunch",
+    imageUrl:require('../../../../assets/images/nutrition-lunch.jpg'),
+  },
+  {
+    title:"dinner",
+    imageUrl:require('../../../../assets/images/nutrition-dinner.jpg'),
+  },
+  {
+    title:"snack",
+    imageUrl:require('../../../../assets/images/nutrition-snack.jpg'),
+  },
+]
 
 export default function NutritionHomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Tile
-        title1="BREAKFAST"
-        image={require('../../../../assets/images/nutrition-breakfast.jpg')}
-        onPress={() => navigation.navigate('RecipeSelection', { meal: 'breakfast' })}
-      />
-      <Tile
-        title1="LUNCH"
-        image={require('../../../../assets/images/nutrition-lunch.jpg')}
-        onPress={() => navigation.navigate('RecipeSelection', { meal: 'lunch' })}
-      />
-      <Tile
-        title1="DINNER"
-        image={require('../../../../assets/images/nutrition-dinner.jpg')}
-        onPress={() => navigation.navigate('RecipeSelection', { meal: 'dinner' })}
-      />
-      <Tile
-        title1="SNACK"
-        image={require('../../../../assets/images/nutrition-snack.jpg')}
-        onPress={() => navigation.navigate('RecipeSelection', { meal: 'snack' })}
-      />
-    </View>
+    <ScrollView showsVerticalScrollIndicator={false} style={globalStyle.container}>
+      <SafeAreaView >
+       <View>
+        {/* <View style={globalStyle.bigHeadingTitleContainer}>
+          <Text style={globalStyle.bigHeadingTitleText}>
+              Nutrition
+          </Text>
+        </View> */}
+        <BigHeadingWithBackButton 
+           bigTitleText = "Nutrition"
+           isBackButton ={false}
+           isBigTitle = {true}
+           />
+        <View style={{width:'100%',marginBottom:hp('2.5%'),marginTop:hp('0.5%')}}>
+          <Text style={{color:'gray',fontFamily:fonts.standard,fontSize:wp('3%')}}>Choose your mealtime</Text>
+        </View>
+
+        {
+          NutritionList.map((data,i)=>(
+            <Tile
+            key={i}
+            title1={data.title}
+            image={data.imageUrl}
+            onPress={() => navigation.navigate('RecipeSelection', { meal: data.title })}
+            showTitle = {true}
+            overlayTitle = {false}
+            customContainerStyle={{height:170}}
+            showTitleStyle={{marginTop:15}}
+          />
+          ))
+         
+        }
+       
+       </View>
+      </SafeAreaView>
+    </ScrollView> 
+    
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.offWhite,
-    alignItems: 'center',
-    paddingTop: 5,
-    paddingBottom: 5,
-  },
-});
