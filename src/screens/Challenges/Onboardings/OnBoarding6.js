@@ -105,7 +105,7 @@ export default class OnBoarding6 extends Component {
         }
         const stringDate = moment(date).format('YYYY-MM-DD').toString();
 
-        if(new Date(data.startDate).getTime() > new Date(stringDate).getTime()){
+        if(new Date(updatedChallengedata.startDate).getTime() < new Date(stringDate).getTime()){
           data.isSchedule= true
         }
         storeProgressInfo(progressData)

@@ -145,11 +145,12 @@ export default class OnBoarding5 extends Component {
       fitnessLevel:updatedChallengedata.onBoardingInfo.fitnessLevel
     }
     const stringDate = moment(date).format('YYYY-MM-DD').toString();
-    if(new Date(data.startDate).getTime() > new Date(stringDate).getTime()){
+    console.log("date ",stringDate,updatedChallengedata.startDate, new Date(stringDate).getTime(),new Date(updatedChallengedata.startDate).getTime(),new Date(data.startDate).getTime() > new Date(stringDate).getTime())
+    if(new Date(updatedChallengedata.startDate).getTime() < new Date(stringDate).getTime()){
       data.isSchedule= true
     }
-    storeProgressInfo(progressData)
-    this.saveOnBoardingInfo(data)
+    await storeProgressInfo(progressData)
+    await this.saveOnBoardingInfo(data)
     ////////////end saving
     if(Platform.OS === 'android'){
       this.hideCalendarModal();
@@ -390,7 +391,7 @@ export default class OnBoarding5 extends Component {
                 dataMapList = {burpeeOptions}
                 onValueChange={(value) => {this.setState({ burpeeCount: value})}}
                 isVisible = {burpeeModalVisible}
-                onBackdropPress = {() => this.hideModal()}
+                onBackdropPress = {() => this.toggleBurpeeModal()}
                 selectedValue={burpeeCount}
                 onPress={this.toggleBurpeeModal}
                 inputType = 'number'
