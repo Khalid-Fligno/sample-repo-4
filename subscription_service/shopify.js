@@ -290,6 +290,7 @@ const createNewChallenge=(data)=>{
       "currentProgressInfo":{},
       "createdOn":data.createdOn?data.createdOn:moment(new Date()).format('YYYY-MM-DD'),
       "numberOfDays":data.numberOfDays,
+      "numberOfWeeks":data.numberOfWeeks,
       "imageUrl":data.imageUrl,
       "shopifyProductId":data.shopifyProductId,
       "createdAt":data.createdAt,
