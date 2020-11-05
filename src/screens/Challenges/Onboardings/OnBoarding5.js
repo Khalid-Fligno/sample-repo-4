@@ -4,7 +4,7 @@ import { number } from 'prop-types';
 import ChallengeStyle from '../chellengeStyle';
 import globalStyle, { containerPadding } from '../../../styles/globalStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import fonts from '../../../styles/fonts';
 import Video from 'react-native-video';
 import WorkoutTimer from '../../../components/Workouts/WorkoutTimer';
