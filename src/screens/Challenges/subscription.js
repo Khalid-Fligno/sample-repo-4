@@ -13,7 +13,7 @@ import ChallengeStyle from './chellengeStyle';
 import createUserChallengeData from '../../components/Challenges/UserChallengeData';
 import ChallengeCard from '../../components/Challenges/ChallengeCard';
 import * as Haptics from 'expo-haptics';
-import { getCurrentPhase, getCurrentChallengeDay, getTodayRecommendedWorkout, isActiveChallenge,short_months } from '../../utils/challenges';
+import { getCurrentPhase, getCurrentChallengeDay, getTodayRecommendedWorkout, isActiveChallenge,short_months,full_months } from '../../utils/challenges';
 import ChallengeBlogCard from '../../components/Home/ChallengeBlogCard';
 import { heightPercentageToDP  as hp} from 'react-native-responsive-screen';
 
@@ -131,8 +131,8 @@ class ChallengeSubscriptionScreen extends Component {
         title={item.displayName}
         key={index}
         btnTitle = "Buy"
-        onPress={()=>this.addChallengeToUser(index)}
-        //onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
+        //onPress={()=>this.addChallengeToUser(index)}
+        onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
         disabled = {false}
     />
       
@@ -189,10 +189,11 @@ class ChallengeSubscriptionScreen extends Component {
       if(btnTitle === 'Active')
         this.props.navigation.navigate('Calendar')
       else if(challengeData.isSchedule){
-        Alert.alert('Your challenge start from '+challengeData.startDate);
+        const startDate= new Date(challengeData.startDate);
+        Alert.alert('Your challenge will start on \n '+startDate.getUTCDate() + ' '+ full_months(startDate)+ ' '+ startDate.getUTCFullYear());
       }
       else{
-        Alert.alert('Sorry,you cant start new challenge','you have already one active challege')
+        Alert.alert('Sorry,you cant start new challenge','you have already one active challenge')
       }
     }else{
       this.props.navigation.navigate('ChallengeOnBoarding1',{
@@ -200,8 +201,7 @@ class ChallengeSubscriptionScreen extends Component {
           challengeData
         }
       })
-    } 
-   
+    }    
   }
 
   getCurrentPhaseInfo(){
