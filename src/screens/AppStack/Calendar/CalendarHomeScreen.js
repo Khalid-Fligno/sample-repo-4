@@ -102,9 +102,11 @@ class CalendarHomeScreen extends React.PureComponent {
       this.unsubscribeFromEntries2();
     }
     if(this.unsubscribeFACUD)
-      this.unsubscribeFACUD()
+      this.unsubscribeFACUD();
     if(this.unsubscribeFACD)
-      this.unsubscribeFACD()  
+      this.unsubscribeFACD(); 
+    if(this.unsubscribeSchedule)
+      this.unsubscribeSchedule()   
   }
 
   fetchCalendarEntries = async () => {
@@ -294,6 +296,27 @@ class CalendarHomeScreen extends React.PureComponent {
           });
         }
       });
+      const { activeChallengeData,activeChallengeUserData} = this.state
+      console.log("activeChallengeData",activeChallengeData,"activeChallengeUserData",activeChallengeUserData);
+      if(activeChallengeData === undefined && activeChallengeUserData ===undefined ){
+        this.unsubscribeSchedule = await db.collection('users').doc(uid).collection('challenges')
+        .where("isSchedule", "==" ,true)
+        .onSnapshot(async (querySnapshot) => {
+          const list = [];
+          await querySnapshot.forEach(async (doc) => {
+              await list.push(await doc.data());
+          });
+          if(list[0]){
+            this.fetchActiveChallengeData(list[0])
+          }else{
+            this.setState({ 
+              activeChallengeUserData:undefined,
+              loading:false
+            });
+          }
+        });
+
+      }
     }
     catch(err){
       this.setState({ loading: false });

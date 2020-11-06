@@ -1,4 +1,4 @@
-const hostUrl='https://ad5d22eb2900.ngrok.io';
+const hostUrl='https://3.8.209.87';
 const { auth, db } = require('./firebase');
 const webhookUrl='https://api.rechargeapps.com/webhooks';
 const productUrl='https://api.rechargeapps.com/products';
@@ -113,6 +113,37 @@ exports.shopifyChargesMigration = async(req, res) => {
         console.log(`${request.email} user subscribe to ${request.product_title} and successfully migrated`);
         else
         console.log(`${request.email} user has some problem in migration `);
+    })
+
+    res.status(200).send(shopifyCharges);
+}
+exports.shopifyLast2daysCharges = async(req, res) => {
+  const minDate=moment(new Date(), 'YYYY-MM-DD').add(-4,'days').format('YYYY-MM-DD');
+  const maxDate=moment(new Date(), 'YYYY-MM-DD').format('YYYY-MM-DD');
+  console.log("minDate",minDate,"maxDate",maxDate);
+  const options = {
+      method: 'GET',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-recharge-access-token' : RECHARGE_API_KEY
+        },
+      };
+    const resCharges = await fetch(`${chargesUrl}?date_min=${minDate}&date_max=${maxDate}`, options);      
+    const shopifyCharges = await resCharges.json();
+    // get all charges from shopifyCharges charges
+    const charges =shopifyCharges.charges;
+    charges.forEach(async(charge)=>{
+      const request={};
+      request.email=charge.email;
+      request.product_title=charge.line_items[0].title;
+      request.shopify_product_id=charge.line_items[0].shopify_product_id;
+      console.log("request",request);
+      //  const successRequest=  await createUserAndChallenge(request);
+      //  if(successRequest)
+      //   console.log(`${request.email} user subscribe to ${request.product_title} and successfully migrated`);
+      //   else
+      //   console.log(`${request.email} user has some problem in migration `);
     })
 
     res.status(200).send(shopifyCharges);
@@ -295,7 +326,8 @@ const createNewChallenge=(data)=>{
       "shopifyProductId":data.shopifyProductId,
       "createdAt":data.createdAt,
       "productId":data.productId,
-      "productReChargeId":data.productReChargeId
+      "productReChargeId":data.productReChargeId,
+      "isSchedule":false
       }
       return challenge
 }

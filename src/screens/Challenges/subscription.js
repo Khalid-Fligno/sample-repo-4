@@ -13,7 +13,7 @@ import ChallengeStyle from './chellengeStyle';
 import createUserChallengeData from '../../components/Challenges/UserChallengeData';
 import ChallengeCard from '../../components/Challenges/ChallengeCard';
 import * as Haptics from 'expo-haptics';
-import { getCurrentPhase, getCurrentChallengeDay, getTodayRecommendedWorkout, isActiveChallenge } from '../../utils/challenges';
+import { getCurrentPhase, getCurrentChallengeDay, getTodayRecommendedWorkout, isActiveChallenge,short_months,full_months } from '../../utils/challenges';
 import ChallengeBlogCard from '../../components/Home/ChallengeBlogCard';
 import { heightPercentageToDP  as hp} from 'react-native-responsive-screen';
 
@@ -104,7 +104,7 @@ class ChallengeSubscriptionScreen extends Component {
   addChallengeToUser(index){
     let {userData , challengesList} = this.state
       const userRef = db.collection('users').doc(userData.id).collection('challenges');
-      const data = createUserChallengeData(challengesList[index])
+      const data = createUserChallengeData(challengesList[index],new Date())
       console.log( data.id)
       userRef.doc(data.id).set(data).then((res)=>{
         this.props.navigation.navigate('ChallengeOnBoarding1',{
@@ -131,8 +131,8 @@ class ChallengeSubscriptionScreen extends Component {
         title={item.displayName}
         key={index}
         btnTitle = "Buy"
-        onPress={()=>this.addChallengeToUser(index)}
-        // onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
+        //onPress={()=>this.addChallengeToUser(index)}
+        onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
         disabled = {false}
     />
       
@@ -140,8 +140,8 @@ class ChallengeSubscriptionScreen extends Component {
   renderItem1 = ({item,index}) =>{
       let  btnTitle = ''
       let btnDisabled = false
-      const findIndex = this.state.userChallengesList.findIndex((res)=> res.status === 'Active')
-      console.log(findIndex)
+      const findIndex = this.state.userChallengesList.findIndex((res)=> res.status === 'Active');      
+      console.log("item.isSchedule",item.isSchedule);
       if(findIndex === -1 && item.status === 'Completed'){
         btnTitle = 'Restart';
       }
@@ -156,7 +156,14 @@ class ChallengeSubscriptionScreen extends Component {
       else if( findIndex !== -1 &&  item.status === 'InActive'){
         btnTitle='Start';
         btnDisabled = true
-      } else if( findIndex === -1 &&  item.status === 'InActive'){
+      } 
+      else if( findIndex === -1 &&  item.status === 'InActive' && item.isSchedule){
+        const startDate= new Date(item.startDate);
+        btnTitle='from ' +startDate.getUTCDate() + ' '+ short_months(startDate);
+        btnDisabled = true
+      }
+      else if( findIndex === -1 &&  item.status === 'InActive'){
+        
         btnTitle='Start';
         btnDisabled = false
       } 
@@ -169,6 +176,7 @@ class ChallengeSubscriptionScreen extends Component {
               numberOfWeeks={item.numberOfWeeks}
               key={index}
               btnTitle = {btnTitle}
+              startDate= {item.isSchedule? item.startDate : null}
               onPress={()=>this.onBoarding(item,btnTitle,btnDisabled)}
               
           />
@@ -180,8 +188,12 @@ class ChallengeSubscriptionScreen extends Component {
     if(btnDisabled){
       if(btnTitle === 'Active')
         this.props.navigation.navigate('Calendar')
+      else if(challengeData.isSchedule){
+        const startDate= new Date(challengeData.startDate);
+        Alert.alert('Your challenge will start on \n '+startDate.getUTCDate() + ' '+ full_months(startDate)+ ' '+ startDate.getUTCFullYear());
+      }
       else{
-        Alert.alert('Sorry,you cant start new challenge','you have already one active challege')
+        Alert.alert('Sorry,you cant start new challenge','you have already one active challenge')
       }
     }else{
       this.props.navigation.navigate('ChallengeOnBoarding1',{
@@ -189,8 +201,7 @@ class ChallengeSubscriptionScreen extends Component {
           challengeData
         }
       })
-    } 
-   
+    }    
   }
 
   getCurrentPhaseInfo(){
