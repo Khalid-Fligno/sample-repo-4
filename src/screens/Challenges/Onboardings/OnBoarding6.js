@@ -277,7 +277,7 @@ async  saveOnBoardingInfo(data){
                  />
                   <View style={[{flex:0.5,justifyContent:'flex-end',marginTop:20}]}>
                       <CustomBtn 
-                        Title="Next"
+                        Title="Choose Start Date"
                         customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}
                         onPress={()=>this.goToScreen('next')}
                         disabled={btnDisabled}
