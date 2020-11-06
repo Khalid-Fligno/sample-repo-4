@@ -72,7 +72,7 @@ export default class OnBoarding6 extends Component {
         })
         let updatedChallengedata = Object.assign({},challengeData,{
           onBoardingInfo,
-          status:'InActive'
+          status:'Active'
         })
         if(type === 'next'){
           this.setState({ challengeData: updatedChallengedata });
@@ -106,7 +106,8 @@ export default class OnBoarding6 extends Component {
         const stringDate = moment(date).format('YYYY-MM-DD').toString();
 
         if(new Date(updatedChallengedata.startDate).getTime() < new Date(stringDate).getTime()){
-          data.isSchedule= true
+          data.isSchedule= true;
+          data.status='InActive';
         }
         storeProgressInfo(progressData)
         this.saveOnBoardingInfo(data)

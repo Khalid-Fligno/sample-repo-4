@@ -169,9 +169,11 @@ export default class HomeScreen extends React.PureComponent {
       await querySnapshot.forEach(async (doc) => {
           await list.push(await doc.data());
       });      
+      
       const challengeStarTime = list[0]?new Date(list[0].startDate).getTime():null;
       const todayDate=moment(new Date()).format('YYYY-MM-DD');
       const currentTime = new Date(todayDate).getTime();
+      console.log(challengeStarTime,currentTime,challengeStarTime <= currentTime,list[0])
       if(challengeStarTime <= currentTime && list[0]){
         const challengeRef =db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
         challengeRef.set({status:"Active",isSchedule:false},{merge:true})        
