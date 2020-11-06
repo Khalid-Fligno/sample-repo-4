@@ -13,7 +13,7 @@ import ChallengeStyle from './chellengeStyle';
 import createUserChallengeData from '../../components/Challenges/UserChallengeData';
 import ChallengeCard from '../../components/Challenges/ChallengeCard';
 import * as Haptics from 'expo-haptics';
-import { getCurrentPhase, getCurrentChallengeDay, getTodayRecommendedWorkout, isActiveChallenge } from '../../utils/challenges';
+import { getCurrentPhase, getCurrentChallengeDay, getTodayRecommendedWorkout, isActiveChallenge,short_months } from '../../utils/challenges';
 import ChallengeBlogCard from '../../components/Home/ChallengeBlogCard';
 import { heightPercentageToDP  as hp} from 'react-native-responsive-screen';
 
@@ -158,7 +158,8 @@ class ChallengeSubscriptionScreen extends Component {
         btnDisabled = true
       } 
       else if( findIndex === -1 &&  item.status === 'InActive' && item.isSchedule){
-        btnTitle='Schedule';
+        const startDate= new Date(item.startDate);
+        btnTitle='from ' +startDate.getUTCDate() + ' '+ short_months(startDate);
         btnDisabled = true
       }
       else if( findIndex === -1 &&  item.status === 'InActive'){
@@ -175,6 +176,7 @@ class ChallengeSubscriptionScreen extends Component {
               numberOfWeeks={item.numberOfWeeks}
               key={index}
               btnTitle = {btnTitle}
+              startDate= {item.isSchedule? item.startDate : null}
               onPress={()=>this.onBoarding(item,btnTitle,btnDisabled)}
               
           />
@@ -186,8 +188,8 @@ class ChallengeSubscriptionScreen extends Component {
     if(btnDisabled){
       if(btnTitle === 'Active')
         this.props.navigation.navigate('Calendar')
-      else if(btnTitle === 'Schedule'){
-        Alert.alert('Your challenge start soon...')
+      else if(challengeData.isSchedule){
+        Alert.alert('Your challenge start from '+challengeData.startDate);
       }
       else{
         Alert.alert('Sorry,you cant start new challenge','you have already one active challege')

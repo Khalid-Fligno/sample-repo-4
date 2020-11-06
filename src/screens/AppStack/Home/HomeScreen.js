@@ -172,7 +172,7 @@ export default class HomeScreen extends React.PureComponent {
       const challengeStarTime = list[0]?new Date(list[0].startDate).getTime():null;
       const todayDate=moment(new Date()).format('YYYY-MM-DD');
       const currentTime = new Date(todayDate).getTime();
-      if(challengeStarTime === currentTime){
+      if(challengeStarTime <= currentTime && list[0]){
         const challengeRef =db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
         challengeRef.set({status:"Active",isSchedule:false},{merge:true})        
       }

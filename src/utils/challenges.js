@@ -92,6 +92,13 @@ export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
                 challengeMealsFilterList
            }
 }
+/** unit function */
+Date.shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+export const short_months =(dt)=>
+   { 
+     return Date.shortMonths[dt.getMonth()]; 
+   }
 //-------------- for login -----------------------
     export const getChallengeDetails = async(userid) => {
     let userChallenge=[];
