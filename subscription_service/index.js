@@ -10,7 +10,7 @@ const {
     , shopifyChargesMigration
     , getShopifyProducts 
     , getAllWebHooks
-    , shopifyLast2daysCharges
+    , shopifyLastCharges
  } = require('./shopify.js');
 
 const app = express();
@@ -35,5 +35,5 @@ app.post('/shopify/subscription/deleted', jsonParser, deleteShopifySubscriptionW
 app.post('/shopify/getChargesMigration', jsonParser, shopifyChargesMigration);
 app.post('/shopify/getAllProducts', jsonParser, getShopifyProducts);
 app.post('/shopify/getAlldWebHooks', jsonParser, getAllWebHooks);
-app.post('/shopify/getLastdayCharges', jsonParser, shopifyLast2daysCharges);
+app.post('/shopify/getLastdayCharges', jsonParser, shopifyLastCharges);
 app.listen(8100);
