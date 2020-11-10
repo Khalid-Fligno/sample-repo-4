@@ -6,7 +6,7 @@ import colors from '../../styles/colors';
 import CustomBtn from '../../components/Shared/CustomBtn';
 import globalStyle, { containerPadding } from '../../styles/globalStyles';
 const { width, height } = Dimensions.get('window');
-
+import { heightPercentageToDP as hp ,widthPercentageToDP as wp } from 'react-native-responsive-screen'
 export default class LandingScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -74,8 +74,15 @@ export default class LandingScreen extends React.PureComponent {
           <View style={styles.absoluteButtonContainer}>
             <View style={styles.buttonContainer}>
               <CustomBtn 
-                 customBtnStyle={{borderRadius:50,padding:14}}
+                 customBtnStyle={{borderRadius:50,padding:16,margin:5}}
                  Title='Start free trial'
+                 onPress={() => this.props.navigation.navigate('Signup', { specialOffer })}
+              />
+              <CustomBtn 
+                 customBtnStyle={{borderRadius:50,padding:12,margin:5,borderColor:colors.themeColor.color}}
+                 outline={true}
+                 Title='I brought a challenge'
+                 customBtnTitleStyle={{color:colors.themeColor.color}}
                  onPress={() => this.props.navigation.navigate('Signup', { specialOffer })}
               />
               {/* <TouchableOpacity
@@ -90,9 +97,9 @@ export default class LandingScreen extends React.PureComponent {
               <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('Login', { specialOffer })}
                 activeOpacity={0.6}
-                style={styles.loginButton}
+                style={styles.haveAAccountBtnStyle}
               >
-                <Text style={styles.loginButtonText}>
+                <Text style={styles.haveAAccountTitleStyle}>
                   I already have an account
                 </Text>
               </TouchableOpacity>
@@ -193,4 +200,24 @@ const styles = StyleSheet.create({
     letterSpacing:0.5
 
   },
+  haveAAccountBtnStyle : {
+    //flexDirection:"row",
+    padding:hp('2%'),
+    justifyContent:'center',  
+    borderRadius:50,
+    padding:12,
+    margin:5,
+    backgroundColor:colors.themeColor.themeBackgroundColor,
+    borderColor:colors.themeColor.color,
+    borderWidth:2  
+},
+haveAAccountTitleStyle :{
+  fontFamily:fonts.GothamMedium,
+  fontSize:hp('1.8%'),
+  letterSpacing:0.7,
+  color:colors.white,
+  letterSpacing:0.5,
+  textAlign:'center',
+  color:colors.themeColor.color
+}
 });
