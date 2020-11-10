@@ -23,8 +23,8 @@ export default class LandingScreen extends React.PureComponent {
           <Carousel
             width={width}
             inactiveIndicatorColor={colors.black}
-            indicatorColor={colors.black}
-            indicatorOffset={120}
+            indicatorColor={colors.themeColor.color}
+            indicatorOffset={hp('26%')}
             indicatorSize={20}
             inactiveIndicatorText="○"
             indicatorText="●"
@@ -74,11 +74,11 @@ export default class LandingScreen extends React.PureComponent {
           <View style={styles.absoluteButtonContainer}>
             <View style={styles.buttonContainer}>
               <CustomBtn 
-                 customBtnStyle={{borderRadius:50,padding:16,margin:5}}
+                 customBtnStyle={{borderRadius:50,padding:16,marginBottom:5}}
                  Title='Start 7 Day Free Trial'
                  onPress={() => this.props.navigation.navigate('Signup', { specialOffer })}
               />
-              <CustomBtn 
+               <CustomBtn
                  customBtnStyle={{borderRadius:50,padding:12,margin:5,borderColor:colors.themeColor.color}}
                  outline={true}
                  Title='Start My Challenge'
