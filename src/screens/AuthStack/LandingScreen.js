@@ -75,13 +75,13 @@ export default class LandingScreen extends React.PureComponent {
             <View style={styles.buttonContainer}>
               <CustomBtn 
                  customBtnStyle={{borderRadius:50,padding:16,margin:5}}
-                 Title='Start free trial'
+                 Title='Start 7 Day Free Trial'
                  onPress={() => this.props.navigation.navigate('Signup', { specialOffer })}
               />
               <CustomBtn 
                  customBtnStyle={{borderRadius:50,padding:12,margin:5,borderColor:colors.themeColor.color}}
                  outline={true}
-                 Title='I brought a challenge'
+                 Title='Start My Challenge'
                  customBtnTitleStyle={{color:colors.themeColor.color}}
                  onPress={() => this.props.navigation.navigate('Signup', { specialOffer })}
               />
@@ -100,7 +100,7 @@ export default class LandingScreen extends React.PureComponent {
                 style={styles.haveAAccountBtnStyle}
               >
                 <Text style={styles.haveAAccountTitleStyle}>
-                  I already have an account
+                Sign In
                 </Text>
               </TouchableOpacity>
             </View>
