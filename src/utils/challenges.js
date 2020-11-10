@@ -92,6 +92,19 @@ export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
                 challengeMealsFilterList
            }
 }
+/** unit function */
+Date.shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+Date.fullMonths = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+export const short_months =(dt)=>
+   { 
+     return Date.shortMonths[dt.getMonth()]; 
+   }
+export const full_months =(dt)=>
+  { 
+     return Date.fullMonths[dt.getMonth()]; 
+   }   
 //-------------- for login -----------------------
     export const getChallengeDetails = async(userid) => {
     let userChallenge=[];

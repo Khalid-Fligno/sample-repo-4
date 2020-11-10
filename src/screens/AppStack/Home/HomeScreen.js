@@ -84,14 +84,17 @@ export default class HomeScreen extends React.PureComponent {
     this.fetchProfile();
     this.switchWelcomeHeader();
     this.setDayOfWeek();
+    this.updateScheduleChallengeToActive();
     this.fetchActiveChallengeUserData();
   }
   componentWillUnmount = () => {
-    this.unsubscribe();
+      this.unsubscribe();
     if(this.unsubscribeFACUD)
-    this.unsubscribeFACUD()
+      this.unsubscribeFACUD();
     if(this.unsubscribeFACD)
-      this.unsubscribeFACD()  
+      this.unsubscribeFACD(); 
+    if(this.unsubscribeSche) 
+      this.unsubscribeSche();  
   }
   setDayOfWeek = async () => {
     const timezone = await Localization.timezone;
@@ -155,12 +158,36 @@ export default class HomeScreen extends React.PureComponent {
     this.setState({ loading: false });
     this.props.navigation.navigate('Burpee1');
   }
+  /** check and update user challenge is schedule */
+  updateScheduleChallengeToActive = async()=>{
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem('uid');
+    this.unsubscribeSche = await db.collection('users').doc(uid).collection('challenges')
+    .where("isSchedule", "==" , true)
+    .onSnapshot(async (querySnapshot) => {
+      const list = [];
+      await querySnapshot.forEach(async (doc) => {
+          await list.push(await doc.data());
+      });      
+      
+      const challengeStarTime = list[0]?new Date(list[0].startDate).getTime():null;
+      const todayDate=moment(new Date()).format('YYYY-MM-DD');
+      const currentTime = new Date(todayDate).getTime();
+      console.log(challengeStarTime,currentTime,challengeStarTime <= currentTime,list[0])
+      if(challengeStarTime <= currentTime && list[0]){
+        const challengeRef =db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
+        challengeRef.set({status:"Active",isSchedule:false},{merge:true})        
+      }
+    });
 
+  }    
+  /** end  */
   // ToDo : for challenges
 fetchActiveChallengeUserData = async () =>{
   try{  
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
+
     this.unsubscribeFACUD = await db.collection('users').doc(uid).collection('challenges')
     .where("status", "==" , "Active")
     .onSnapshot(async (querySnapshot) => {
