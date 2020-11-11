@@ -24,7 +24,7 @@ export default class LandingScreen extends React.PureComponent {
             width={width}
             inactiveIndicatorColor={colors.black}
             indicatorColor={colors.themeColor.color}
-            indicatorOffset={hp('26%')}
+            indicatorOffset={175}
             indicatorSize={20}
             inactiveIndicatorText="○"
             indicatorText="●"
