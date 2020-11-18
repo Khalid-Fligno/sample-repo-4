@@ -24,6 +24,7 @@ class ChallengeSubscriptionScreen extends Component {
     this.state = {
       userData:any,
       challengesList:[],
+      restartChallengesList:[],
       userChallengesList:[],
       loading:false,
       activeChallengeUserData:undefined,
@@ -89,8 +90,14 @@ class ChallengeSubscriptionScreen extends Component {
     this.unsubscribeChallenges = await db.collection('challenges')
       .onSnapshot(async (querySnapshot) => {
         const challengesList = [];
+        const restartChallengesList=[];
         await querySnapshot.forEach(async (doc) => {
-          const check = userChallengesList.findIndex((challenge)=>{   //TODO:Hide challenge if it present in users challenge list
+          const check = userChallengesList.findIndex(async(challenge)=>{ 
+            if(doc.id === challenge.id){
+              await restartChallengesList.push(await doc.data());
+              this.setState({ restartChallengesList });
+            }
+              //TODO:Hide challenge if it present in users challenge list
             return  doc.id === challenge.id
           })
           if(check === -1)
@@ -102,8 +109,10 @@ class ChallengeSubscriptionScreen extends Component {
   }
  
   addChallengeToUser(index){
+
     let {userData , challengesList} = this.state
       const userRef = db.collection('users').doc(userData.id).collection('challenges');
+      console.log("challengesList[index]",challengesList);
       const data = createUserChallengeData(challengesList[index],new Date())
       console.log( data.id)
       userRef.doc(data.id).set(data).then((res)=>{
@@ -112,6 +121,20 @@ class ChallengeSubscriptionScreen extends Component {
             challengeData:data
           }
         })
+      }).catch((err)=>{
+        console.log(err)
+      })
+    
+  }
+  restartChallengeToUser(index){
+
+    let {userData , restartChallengesList} = this.state
+      const userRef = db.collection('users').doc(userData.id).collection('challenges');
+      console.log("challengesList[index]",restartChallengesList);
+      const data = createUserChallengeData(restartChallengesList[index],new Date())
+      console.log( data.id)
+      userRef.doc(data.id).set(data).then((res)=>{
+        this.setState({blogs:undefined});
       }).catch((err)=>{
         console.log(err)
       })
@@ -138,8 +161,9 @@ class ChallengeSubscriptionScreen extends Component {
       
   )
   renderItem1 = ({item,index}) =>{
-      let  btnTitle = ''
-      let btnDisabled = false
+      let  btnTitle = '';
+      let btnDisabled = false;
+      let isRestartBtn=false;
       const findIndex = this.state.userChallengesList.findIndex((res)=> res.status === 'Active');      
       console.log("item.isSchedule",item.isSchedule);
       if(findIndex === -1 && item.status === 'Completed'){
@@ -147,25 +171,30 @@ class ChallengeSubscriptionScreen extends Component {
       }
       else if(findIndex !== -1 && item.status === 'Completed'){
         btnTitle = 'Completed';
-        btnDisabled = true
+        btnDisabled = true;
+        isRestartBtn=false;
       } 
       else if(item.status === 'Active'){
         btnTitle='Active';
-        btnDisabled = true
+        btnDisabled = true;
+        isRestartBtn=true;
       } 
       else if( findIndex !== -1 &&  item.status === 'InActive'){
         btnTitle='Start';
-        btnDisabled = true
+        btnDisabled = true;
+        isRestartBtn=false;
       } 
       else if( findIndex === -1 &&  item.status === 'InActive' && item.isSchedule){
         const startDate= new Date(item.startDate);
         btnTitle='from ' +startDate.getUTCDate() + ' '+ short_months(startDate);
-        btnDisabled = true
+        btnDisabled = true;
+        isRestartBtn=false;
       }
       else if( findIndex === -1 &&  item.status === 'InActive'){
         
         btnTitle='Start';
-        btnDisabled = false
+        btnDisabled = false;
+        isRestartBtn=false;
       } 
     
         return (
@@ -178,7 +207,19 @@ class ChallengeSubscriptionScreen extends Component {
               btnTitle = {btnTitle}
               startDate= {item.isSchedule? item.startDate : null}
               onPress={()=>this.onBoarding(item,btnTitle,btnDisabled)}
-              
+              restartButton={isRestartBtn}
+              onPressRestart={()=> {   Alert.alert('',
+                'Are you sure to restart your challenge!!!',
+                [
+                  {
+                    text: 'Cancel', style: 'cancel',
+                  },
+                  {
+                    text: 'Restart', onPress: () => this.restartChallengeToUser(0),
+                  },
+                ],
+                { cancelable: false },
+              );}}
           />
        
       )

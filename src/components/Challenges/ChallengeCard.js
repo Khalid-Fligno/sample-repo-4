@@ -15,13 +15,13 @@ class ChallengeCard extends Component {
   }
 
   render() {
-      const  {numberOfDays ,outline,btnTitle,onPress,imageUrl,disabled,numberOfWeeks} = this.props
+      const  {numberOfDays ,outline,btnTitle,onPress,imageUrl,disabled,numberOfWeeks,restartButton,onPressRestart} = this.props
    console.log("????",numberOfWeeks)
       return (
         <ImageBackground
             source ={{uri:imageUrl}}
-            style={[globalStyle.FT_ImageContainer,{height:130}]}
-            imageStyle={{ borderRadius: 5,backgroundColor:colors.grey.medium}}
+            style={[globalStyle.FT_ImageContainer,{height:130,display:'flex'}]}
+            imageStyle={{ borderRadius: 5,backgroundColor:colors.grey.medium,}}
         > 
               <View
                 style={styles.ViewContainer}
@@ -47,7 +47,26 @@ class ChallengeCard extends Component {
                     onPress={onPress}
                     disabled = {disabled}
                  />
-              </View>  
+              </View> 
+              { restartButton && 
+              <View style={{width:'40%',flexBasis:'50%',marginLeft:'60%', }}>
+              <CustomBtn 
+                    outline={outline}
+                    Title='Restart'
+                    customBtnStyle={{ 
+                                      padding:8,
+                                      marginTop:10,
+                                      backgroundColor:!outline?colors.themeColor.color:'transparent',
+                                      borderRadius:50,
+                                      width:'85%',
+                                      marginTop:hp('1.8%'),
+                                    }}
+                    customBtnTitleStyle={{color:colors.offWhite,fontSize:14}}
+                    onPress={onPressRestart}
+                    disabled = {disabled}
+                 />
+              </View> 
+            }
                 
                 
         </ImageBackground> 
@@ -74,7 +93,8 @@ const styles = StyleSheet.create({
         width:'50%',
         height:'100%',
         padding:10,
-        paddingLeft:20
+        paddingLeft:20,
+        flexBasis:'50%',
         },
     titleContainer:{
         flexDirection:'row',
