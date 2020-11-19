@@ -33,6 +33,9 @@ class ChallengeCard extends Component {
                           <Text style={styles.textLabel}>challenge</Text>
                       </View>
                   </View>
+                 
+              </View> 
+              <View style={{flexDirection:'row',justifyContent:'space-between',width:wp('85%'),marginHorizontal:10}}>
                  <CustomBtn 
                     outline={outline}
                     Title={btnTitle}
@@ -40,17 +43,15 @@ class ChallengeCard extends Component {
                                       padding:8,
                                       backgroundColor:!outline?colors.themeColor.color:'transparent',
                                       borderRadius:50,
-                                      width:'85%',
+                                      width:wp('40%'),
                                       marginTop:hp('1.8%'),
                                     }}
                     customBtnTitleStyle={{color:colors.offWhite,fontSize:14}}
                     onPress={onPress}
                     disabled = {disabled}
                  />
-              </View> 
-              { restartButton && 
-              <View style={{width:'40%',flexBasis:'50%',marginLeft:'60%', }}>
-              <CustomBtn 
+                 { restartButton && 
+                 <CustomBtn 
                     outline={outline}
                     Title='Restart'
                     customBtnStyle={{ 
@@ -58,15 +59,15 @@ class ChallengeCard extends Component {
                                       marginTop:10,
                                       backgroundColor:!outline?colors.themeColor.color:'transparent',
                                       borderRadius:50,
-                                      width:'85%',
+                                      width:wp('40%'),
                                       marginTop:hp('1.8%'),
                                     }}
                     customBtnTitleStyle={{color:colors.offWhite,fontSize:14}}
                     onPress={onPressRestart}
                     disabled = {disabled}
                  />
-              </View> 
-            }
+                  }
+                 </View>
                 
                 
         </ImageBackground> 

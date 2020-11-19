@@ -127,14 +127,13 @@ class ChallengeSubscriptionScreen extends Component {
     
   }
   restartChallengeToUser(index){
-
-    let {userData , restartChallengesList} = this.state
+ let {userData , restartChallengesList} = this.state
       const userRef = db.collection('users').doc(userData.id).collection('challenges');
       console.log("challengesList[index]",restartChallengesList);
       const data = createUserChallengeData(restartChallengesList[index],new Date())
       console.log( data.id)
       userRef.doc(data.id).set(data).then((res)=>{
-        this.setState({blogs:undefined});
+        this.setState({blogs:undefined,loading:false});
       }).catch((err)=>{
         console.log(err)
       })
@@ -164,8 +163,7 @@ class ChallengeSubscriptionScreen extends Component {
       let  btnTitle = '';
       let btnDisabled = false;
       let isRestartBtn=false;
-      const findIndex = this.state.userChallengesList.findIndex((res)=> res.status === 'Active');      
-      console.log("item.isSchedule",item.isSchedule);
+      const findIndex = this.state.userChallengesList.findIndex((res)=> res.status === 'Active'); 
       if(findIndex === -1 && item.status === 'Completed'){
         btnTitle = 'Restart';
       }
