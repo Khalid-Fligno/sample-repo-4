@@ -186,7 +186,7 @@ class ChallengeSubscriptionScreen extends Component {
         const startDate= new Date(item.startDate);
         btnTitle='from ' +startDate.getUTCDate() + ' '+ short_months(startDate);
         btnDisabled = true;
-        isRestartBtn=false;
+        isRestartBtn=true;
       }
       else if( findIndex === -1 &&  item.status === 'InActive'){
         
@@ -207,7 +207,7 @@ class ChallengeSubscriptionScreen extends Component {
               onPress={()=>this.onBoarding(item,btnTitle,btnDisabled)}
               restartButton={isRestartBtn}
               onPressRestart={()=> {   Alert.alert('',
-                'Are you sure to restart your challenge!!!',
+                'Are you sure you want to restart your challenge?',
                 [
                   {
                     text: 'Cancel', style: 'cancel',
