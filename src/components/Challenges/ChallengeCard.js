@@ -35,7 +35,7 @@ class ChallengeCard extends Component {
                   </View>
                  
               </View> 
-              <View style={{flexDirection:'row',justifyContent:'space-between',width:wp('85%'),marginHorizontal:10}}>
+              <View style={styles.customButtonContainer}>
                  <CustomBtn 
                     outline={outline}
                     Title={btnTitle}
@@ -111,5 +111,8 @@ const styles = StyleSheet.create({
         fontSize:15,
         fontFamily:fonts.GothamMedium,
         color:colors.offWhite,
-    }  
+    } ,
+    customButtonContainer:{
+      flexDirection:'row',justifyContent:'space-between',width:wp('85%'),marginHorizontal:10
+    } 
 });
