@@ -11,6 +11,9 @@ const {
     , getShopifyProducts 
     , getAllWebHooks
     , shopifyLastCharges
+    , shopifyAllCharges
+    , shopifyAllSubscriptions
+    , shopifyLastSubscriptions
  } = require('./shopify.js');
 
 const app = express();
@@ -32,8 +35,11 @@ app.post('/subscriptions/', jsonParser, getSubscriptions);
 app.post('/shopify/charge/create/webhooks', jsonParser, createShopifyWebhooks);
 app.post('/shopify/subscription/created', jsonParser, createShopifySubscriptionWebhook);
 app.post('/shopify/subscription/deleted', jsonParser, deleteShopifySubscriptionWebhook);
-app.post('/shopify/getChargesMigration', jsonParser, shopifyChargesMigration);
-app.post('/shopify/getAllProducts', jsonParser, getShopifyProducts);
-app.post('/shopify/getAlldWebHooks', jsonParser, getAllWebHooks);
-app.post('/shopify/getLastdayCharges', jsonParser, shopifyLastCharges);
+app.get('/shopify/getChargesMigration', jsonParser, shopifyChargesMigration);
+app.get('/shopify/getAllProducts', jsonParser, getShopifyProducts);
+app.get('/shopify/getAllWebHooks', jsonParser, getAllWebHooks);
+app.get('/shopify/getAllCharges', jsonParser, shopifyAllCharges);
+app.get('/shopify/getLast2DayCharges', jsonParser, shopifyLastCharges);
+app.get('/shopify/getAllSubscriptions', jsonParser, shopifyAllSubscriptions);
+app.get('/shopify/getLast2DaySubscriptions', jsonParser, shopifyLastSubscriptions);
 app.listen(8100);
