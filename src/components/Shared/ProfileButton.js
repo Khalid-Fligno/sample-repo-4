@@ -33,6 +33,7 @@ export default class ProfileButton extends React.PureComponent {
   }
   render() {
     const { initials } = this.state;
+    console.log("Profile....",initials)
     return (
       <View>
         {
@@ -50,7 +51,7 @@ export default class ProfileButton extends React.PureComponent {
             <Icon
               name="profile-solid"
               size={30}
-              color={colors.white}
+              color={colors.themeColor.color}
             />
           )
         }

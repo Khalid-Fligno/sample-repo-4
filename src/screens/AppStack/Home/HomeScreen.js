@@ -318,7 +318,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
       return 'Keep working, you\'ve got this!';
     };
 
-    const bigHeadeingTitle = (switchWelcomeHeader ? 'Hi' : 'Hi').toString()+' ' + (profile ? profile.firstName:'').toString()
+    const bigHeadeingTitle = (switchWelcomeHeader ? 'Hi' : 'Hi').toString()+' ' + (profile && profile.firstName ? profile.firstName:'').toString()
    
     // let recommendedWorkout =[];
 

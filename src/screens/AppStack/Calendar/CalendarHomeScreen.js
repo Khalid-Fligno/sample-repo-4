@@ -81,7 +81,9 @@ class CalendarHomeScreen extends React.PureComponent {
       dayOfWeek: undefined,
       activeChallengeUserData:undefined,
       meals:undefined,
-      activeChallengeData:undefined
+      activeChallengeData:undefined,
+      todayRecommendedMeal:undefined,
+      challengeMealsFilterList:undefined
     };
     this.calendarStrip = React.createRef();
   }
@@ -258,7 +260,7 @@ class CalendarHomeScreen extends React.PureComponent {
       else  
       this.props.navigation.navigate('RecipeSelection', { 
         meal:type ,
-        challengeMealsFilterList:this.challengeMealsFilterList
+        challengeMealsFilterList:this.state.challengeMealsFilterList
       })
     }
     return (
@@ -366,11 +368,19 @@ class CalendarHomeScreen extends React.PureComponent {
 
         //TODO calculate current challenge day
         this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
+
         //TODO getToday one recommended meal randomly  
-        this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
-        console.log("???",this.currentChallengeDay) 
-        //TODO getToday one recommended meal randomly  
-          this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
+        getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).then((res)=>{
+          this.setState({
+            todayRecommendedMeal: res.recommendedMeal,
+            challengeMealsFilterList: res.challengeMealsFilterList
+          })
+        })
+
+        // this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
+        // //TODO getToday one recommended meal randomly  
+        //   this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
+       
         //TODO get recommended workout here
         this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
     }
@@ -381,10 +391,31 @@ class CalendarHomeScreen extends React.PureComponent {
     }
   }
 
-  async fetchRecipe(id){
-    this.setState({loading:true})
-    let recipeData =  await (await db.collection('recipes').doc(id).get()).data();
-      const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
+  // async fetchRecipe(id){
+  //   this.setState({loading:true})
+  //   let recipeData =  await (await db.collection('recipes').doc(id).get()).data();
+  //     const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
+  //     await FileSystem.getInfoAsync(fileUri)
+  //       .then(async ({ exists }) => {
+  //         if (!exists) {
+  //           await FileSystem.downloadAsync(
+  //             recipeData.coverImage,
+  //             `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`,
+  //           )
+  //         }
+  //       }).catch(() => {
+  //         this.setState({ loading: false });
+  //         Alert.alert('', 'Image download error');
+  //       });
+  //       if(recipeData){
+  //         this.setState({loading:false})
+  //         this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Calendar',extraProps:{fromCalender:true} })
+  //       }
+
+  // }
+
+  async goToRecipe(recipeData){
+    const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
       await FileSystem.getInfoAsync(fileUri)
         .then(async ({ exists }) => {
           if (!exists) {
@@ -397,11 +428,7 @@ class CalendarHomeScreen extends React.PureComponent {
           this.setState({ loading: false });
           Alert.alert('', 'Image download error');
         });
-        if(recipeData){
-          this.setState({loading:false})
-          this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Calendar',extraProps:{fromCalender:true} })
-        }
-
+    this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Calendar',extraProps:{fromCalender:true} })
   }
 
   openLink = (url) => {
@@ -420,7 +447,8 @@ class CalendarHomeScreen extends React.PureComponent {
       helperModalVisible,
       dayOfWeek,
       activeChallengeUserData,
-      activeChallengeData
+      activeChallengeData,
+      todayRecommendedMeal
     } = this.state;
 
     let showRC = false
@@ -434,12 +462,14 @@ class CalendarHomeScreen extends React.PureComponent {
         let challengeEndTime = new Date(activeChallengeUserData.endDate).getTime()
         if(currentCalendarTime >= challengeStartTime && 
             currentCalendarTime <= challengeEndTime && 
-            this.todayRecommendedMeal && this.todayRecommendedMeal.length >0)
+            todayRecommendedMeal && todayRecommendedMeal.length >0)
           showRC = true
         else
           showRC = false  
       }
     }
+ 
+
     const workoutDisplayList = (
       <View style={calendarStyles.listContainer}>
           {
@@ -478,8 +508,8 @@ class CalendarHomeScreen extends React.PureComponent {
     const mealsDisplayList = (
         <View style={calendarStyles.listContainer}>
           {
-            this.todayRecommendedMeal && this.todayRecommendedMeal.length >0 && showRC &&
-            this.todayRecommendedMeal.map((res,index)=>{
+            todayRecommendedMeal && todayRecommendedMeal.length >0 && showRC &&
+            todayRecommendedMeal.map((res,index)=>{
               if(res){
                 let getMeal = undefined
                 if(meals)
@@ -494,8 +524,8 @@ class CalendarHomeScreen extends React.PureComponent {
                                 renderRightActions={() => this.renderRightActionForRC(res.meal)}
                                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                                 onSwipeableClose={() => this.setState({ isSwiping: false })}
-                                // onPress={() => this.props.navigation.navigate('Recipe', { recipe: getMeal ,meal:res.meal,backTitle:'Calendar',extraProps:{fromCalender:true} })}
-                                onPress={() => this.fetchRecipe(getMeal.id)} 
+                                // onPress={() => this.fetchRecipe(getMeal.id)} 
+                                onPress={() => this.goToRecipe(getMeal)} 
                                 stringDate = {this.stringDate}
                         />
                   )     
@@ -505,7 +535,8 @@ class CalendarHomeScreen extends React.PureComponent {
                     key={index}
                     res={res} 
                     index={index} 
-                    onPress={() => this.fetchRecipe(res.id)} 
+                    // onPress={() => this.fetchRecipe(res.id)} 
+                    onPress={() => this.goToRecipe(res)} 
                     renderRightActions={() => this.renderRightActionForRC(res.meal)} 
                     onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                     onSwipeableClose={() => this.setState({ isSwiping: false })}
@@ -539,11 +570,11 @@ class CalendarHomeScreen extends React.PureComponent {
                                 renderRightActions={() => this.renderRightActions(res)}
                                 onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
                                 onSwipeableClose={() => this.setState({ isSwiping: false })}
-                                onPress={() => this.props.navigation.navigate('Recipe', { recipe: meals[res] ,meal:res,backTitle:'Calendar',extraProps:{fromCalender:true} })}
-                                onPress={() => this.fetchRecipe(meals[res].id)} 
+                                // onPress={() => this.fetchRecipe(meals[res].id)} 
+                                onPress={() => this.goToRecipe(meals[res])} 
                                 stringDate = {this.stringDate}
                         />
-              else if(!this.todayRecommendedMeal || !showRC)
+              else if(!todayRecommendedMeal || !showRC)
                   return <CustomListItem 
                             key={index}
                             name={res.toLocaleUpperCase()} 

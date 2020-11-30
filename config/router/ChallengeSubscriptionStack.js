@@ -4,10 +4,13 @@ import HomeScreen from '../../src/screens/AppStack/Home/HomeScreen';
 import BlogScreen from '../../src/screens/AppStack/Home/BlogScreen';
 import Header from '../../src/components/Shared/Header';
 import ChallengeSubscriptionScreen from '../../src/screens/Challenges/subscription';
+import CalendarHomeScreen from '../../src/screens/AppStack/Calendar/CalendarHomeScreen';
+import CalendarStack from './CalendarStack';
 
 const ChallengeSubscriptionStack = createStackNavigator(
   {
     ChallengeSubscription: ChallengeSubscriptionScreen,
+    Calendar:CalendarStack
     // Subscription: HomeScreen,
   },
   {
@@ -15,6 +18,8 @@ const ChallengeSubscriptionStack = createStackNavigator(
     defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
+        if(routeName === "Calendar")
+          return null
         return (
           <Header
             stack="ChallengeSubscription"

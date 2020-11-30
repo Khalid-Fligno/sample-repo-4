@@ -208,7 +208,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
                 onPress={() => this.props.navigation.navigate('Calendar')}
                 cardCustomStyle ={{marginTop:20}} 
               />
-              {/* {
+              {
                 blogs && blogs.length > 0&&
                 blogs.map((res,index)=>
                     <ChallengeBlogCard
@@ -219,7 +219,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
                   />
                 )
                
-              } */}
+              }
              
               <NewsFeedTile
                 image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}

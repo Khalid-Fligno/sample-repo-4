@@ -52,11 +52,13 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         this.onFocusFunction()
     })
   }
+
   componentWillUnmount = async () => {
     this.focusListener.remove()
       if(this.unsubscribe)
     await this.unsubscribe();
   }
+
   fetchRecipes = async () => {
     this.setState({ loading: true });
     const meal = this.props.navigation.getParam('meal', null);
@@ -100,10 +102,13 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         this.setState({ recipes: sortBy(recipes, 'title'), loading: false });
       });
   }
+
   updateFilter = (filterIndex) => {
     this.setState({ filterIndex });
   }
+
   keyExtractor = (item) => item.id;
+  
   renderItem = ({ item }) => (
     <RecipeTile
       onPress={() => this.props.navigation.push('Recipe', 
