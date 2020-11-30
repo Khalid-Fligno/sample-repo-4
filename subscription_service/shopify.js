@@ -118,7 +118,7 @@ exports.shopifyChargesMigration = async(req, res) => {
     res.status(200).send(shopifyCharges);
 }
 exports.shopifyLastCharges = async(req, res) => {
-  const minDate=moment(new Date('2020-10-16')).format('YYYY-MM-DD');
+  const minDate=moment(new Date(), 'YYYY-MM-DD').add(-2,'days').format('YYYY-MM-DD')
   const maxDate=moment(new Date(), 'YYYY-MM-DD').format('YYYY-MM-DD');
   console.log("minDate",minDate,"maxDate",maxDate);
   const options = {
