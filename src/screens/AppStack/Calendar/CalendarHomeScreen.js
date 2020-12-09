@@ -415,6 +415,7 @@ class CalendarHomeScreen extends React.PureComponent {
   // }
 
   async goToRecipe(recipeData){
+    this.setState({loading:true})
     const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
       await FileSystem.getInfoAsync(fileUri)
         .then(async ({ exists }) => {
@@ -428,6 +429,7 @@ class CalendarHomeScreen extends React.PureComponent {
           this.setState({ loading: false });
           Alert.alert('', 'Image download error');
         });
+        this.setState({loading:false})
     this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Calendar',extraProps:{fromCalender:true} })
   }
 
