@@ -66,6 +66,7 @@ export default class SignupScreen extends React.PureComponent {
     this.setState({ appleSignInAvailable });
   }
   onSignInWithApple = async () => {
+    console.log("???step 1-->")
     const nonce = getRandomString(32);
     let nonceSHA256 = '';
     try {
@@ -126,7 +127,7 @@ export default class SignupScreen extends React.PureComponent {
             this.setState({ loading: false });
             appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Apple' });
             // this.props.navigation.navigate('Subscription', { name: givenName, specialOffer: this.state.specialOffer });
-            await this.addChallengesAfterSignUp(email);
+            await this.addChallengesAfterSignUp(email,uid);
             this.props.navigation.navigate('Onboarding1', { name: givenName, specialOffer: this.state.specialOffer });
             auth.currentUser.sendEmailVerification().then(() => {
               Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
@@ -181,7 +182,7 @@ export default class SignupScreen extends React.PureComponent {
         });
         this.setState({ loading: false });
         appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Facebook' });
-        await this.addChallengesAfterSignUp(data.email);
+        await this.addChallengesAfterSignUp(data.email,data.id);
         auth.currentUser.sendEmailVerification().then(() => {
           Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
           // this.props.navigation.navigate('Subscription', { name: profile.first_name, specialOffer: this.state.specialOffer });
