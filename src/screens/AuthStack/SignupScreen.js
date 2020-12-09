@@ -363,7 +363,7 @@ export default class SignupScreen extends React.PureComponent {
                    placeholder="Password"
                    value={password}
                    onChangeText={(text) => this.setState({ password: text })}
-                   onSubmitEditing={() => this.signup(firstName, lastName, email, password)}
+                   onSubmitEditing={() => this.signup(firstName, lastName, email.toLowerCase(), password)}
                    secureTextEntry
                    returnKeyType="go"
                 />
@@ -373,7 +373,7 @@ export default class SignupScreen extends React.PureComponent {
                   customBtnStyle={{borderRadius:50,marginTop:20 }}
                   Title="Create new account"
                   customBtnTitleStyle={{fontWeight:'500',letterSpacing:0.7}}
-                  onPress={() => this.signup(firstName, lastName, email, password)}
+                  onPress={() => this.signup(firstName, lastName, email.toLowerCase(), password)}
                 />
               
                 <View style={authScreenStyle.dividerOverlay}>
