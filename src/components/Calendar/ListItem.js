@@ -87,9 +87,9 @@ export const CustomListItem = (props)=>{
             key = {index}
             activeOpacity ={0.5}
             underlayColor="none"
-            title={`${res.displayName}`}
+            title={`${res.title}`}
             rightTitle = {res.mealTitle}
-            subtitle={res.subTitle}
+            subtitle={res.subtitle}
             onPress={onPress}
             containerStyle={calendarStyles.listItemContainer}
             chevronColor={colors.charcoal.standard}
