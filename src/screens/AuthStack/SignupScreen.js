@@ -121,10 +121,14 @@ export default class SignupScreen extends React.PureComponent {
           signUpDate: new Date(),
           fitnessLevel: 1,
         };
+        //Alert.alert('userid', uid);
+        //Alert.alert('useremailid1', data.email);
         await AsyncStorage.setItem('uid', uid);
         db.collection('users').doc(uid).set(data)
           .then(async () => {
             this.setState({ loading: false });
+            //Alert.alert('userid2', uid);
+            //Alert.alert('useremailid', data.email);
             appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Apple' });
             // this.props.navigation.navigate('Subscription', { name: givenName, specialOffer: this.state.specialOffer });
             await this.addChallengesAfterSignUp(email,uid);
@@ -138,7 +142,8 @@ export default class SignupScreen extends React.PureComponent {
             Alert.alert('Could not create your account', 'Please try again or contact support.');
           });
       })
-      .catch(() => {
+      .catch((error) => {
+        //Alert.alert('error', error);
         this.setState({ loading: false });
         Alert.alert('Could not authenticate with Apple', 'Please try again or contact support.');
       });
