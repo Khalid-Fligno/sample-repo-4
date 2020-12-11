@@ -102,11 +102,12 @@ export const getTodayRecommendedMeal = async(phaseData,activeChallengeUserData) 
   const recipeRef = db.collection('recipes')
                     .where("accessFilter","array-contains","8WC")
   const snapshot =  await recipeRef.get();
+  
   snapshot.forEach(doc => {
     if(doc.data().availability.includes(phaseData.displayName.toUpperCase()))
       phaseMeals.push(doc.data())
   });
-  console.log(phaseMeals[0].accessFilter)
+
   const challengeMealsFilterList = phaseMeals.map((res)=>res.id)
 
   const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
@@ -131,7 +132,7 @@ export const getTodayRecommendedMeal = async(phaseData,activeChallengeUserData) 
   return {
     recommendedMeal,
     challengeMealsFilterList
-}
+  }
 }
 
 

@@ -169,9 +169,9 @@ export default class RecipeScreen extends React.PureComponent {
                       isBigTitle ={false}
                       backButtonStyle={{marginTop:8}}
                       />
-                        {/* <View >
+                        <View >
                           <AddToCalendarButton onPress={() => this.showModal()} />
-                        </View> */}
+                        </View>
                     </View>
                   <Image
                     source={{ uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
