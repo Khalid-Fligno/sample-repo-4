@@ -327,7 +327,7 @@ class ChallengeSubscriptionScreen extends Component {
           </View>
             
        }  
-        {/* {
+        {
             blogs &&  blogs.length > 0 && <Text style={[ChallengeStyle.Title,{marginBottom:hp('1%')}]}>Blogs</Text>
         }
         {
@@ -340,7 +340,7 @@ class ChallengeSubscriptionScreen extends Component {
               index = {index}
             />
           )
-        } */}
+        }
          <Loader
           loading={loading}
           color={colors.themeColor.color}

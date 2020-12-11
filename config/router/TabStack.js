@@ -24,7 +24,7 @@ const TabStack = createBottomTabNavigator(
     Feed:FeedStack,
     Lifestyle: DashboardStack,
     Challenges: ChallengeSubscriptionStack,
-    // Calendar: CalendarStack,
+    Calendar: CalendarStack,
     Progress: ProgressStack,
   },
   {

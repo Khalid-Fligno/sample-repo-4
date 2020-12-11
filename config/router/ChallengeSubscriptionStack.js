@@ -10,7 +10,7 @@ import CalendarStack from './CalendarStack';
 const ChallengeSubscriptionStack = createStackNavigator(
   {
     ChallengeSubscription: ChallengeSubscriptionScreen,
-    Calendar:CalendarStack
+    // Calendar:CalendarStack
     // Subscription: HomeScreen,
   },
   {
