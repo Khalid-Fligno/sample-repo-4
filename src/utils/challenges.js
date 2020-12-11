@@ -55,43 +55,87 @@ export const getTodayRecommendedWorkout = (workouts,activeChallengeUserData,sele
     console.log("???....",currentDay)
     return workouts.find((res)=>res.days.includes(currentDay))
 }
-export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
-    const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
-    const phaseMeals = phaseData.meals
-    // const phaseMeals = phaseData.meals.filter((res)=>{
-    //     for(i=0;i<dietryPreferences.length;i++){
-    //     if(res.tags.includes(dietryPreferences[i])){
-    //         return true
-    //     }
-    //     }
-    // })
-    const challengeMealsFilterList = phaseMeals.map((res)=>res.id)
-
-    const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
-    const breakfastList = phaseMeals.filter((res)=>res.mealType.includes('breakfast'))
-    const lunchList = phaseMeals.filter((res)=>res.mealType.includes('lunch'))
-    const dinnerList = phaseMeals.filter((res)=>res.mealType.includes('dinner'))
-    const snackList = phaseMeals.filter((res)=>res.mealType.includes('snack'))
-
-    const breakfast =  getRandomNumber(breakfastList.length-1) >=0?Object.assign({},breakfastList[getRandomNumber(breakfastList.length-1)],{mealTitle:'breakfast',meal:'breakfast'}):{mealTitle:'breakfast',meal:'breakfast'};
-    const lunch = getRandomNumber(lunchList.length-1) >=0?Object.assign({},lunchList[getRandomNumber(lunchList.length-1)],{mealTitle:'lunch',meal:'lunch'}):{mealTitle:'lunch',meal:'lunch'};
-    const dinner = getRandomNumber(dinnerList.length-1) >=0?Object.assign({},dinnerList[getRandomNumber(dinnerList.length-1)],{mealTitle:'dinner',meal:'dinner'}):{mealTitle:'dinner',meal:'dinner'};
-    const morningSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'morning Snack',meal:'snack'}):{mealTitle:'morning Snack',meal:'snack'};
-    const afternoonSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'afternoon Snack',meal:'snack'}):{mealTitle:'afternoon Snack',meal:'snack'};
-    
-    const recommendedMeal = [
-        breakfast,
-        morningSnack,
-        lunch,
-        afternoonSnack,
-        dinner
-    ]
+// export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
+//     const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
+//     const phaseMeals = phaseData.meals
   
-    return {
-                recommendedMeal,
-                challengeMealsFilterList
-           }
+//     // const phaseMeals = phaseData.meals.filter((res)=>{
+//     //     for(i=0;i<dietryPreferences.length;i++){
+//     //     if(res.tags.includes(dietryPreferences[i])){
+//     //         return true
+//     //     }
+//     //     }
+//     // })
+//     const challengeMealsFilterList = phaseMeals.map((res)=>res.id)
+
+//     const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
+//     const breakfastList = phaseMeals.filter((res)=>res.mealType.includes('breakfast'))
+//     const lunchList = phaseMeals.filter((res)=>res.mealType.includes('lunch'))
+//     const dinnerList = phaseMeals.filter((res)=>res.mealType.includes('dinner'))
+//     const snackList = phaseMeals.filter((res)=>res.mealType.includes('snack'))
+
+//     const breakfast =  getRandomNumber(breakfastList.length-1) >=0?Object.assign({},breakfastList[getRandomNumber(breakfastList.length-1)],{mealTitle:'breakfast',meal:'breakfast'}):{mealTitle:'breakfast',meal:'breakfast'};
+//     const lunch = getRandomNumber(lunchList.length-1) >=0?Object.assign({},lunchList[getRandomNumber(lunchList.length-1)],{mealTitle:'lunch',meal:'lunch'}):{mealTitle:'lunch',meal:'lunch'};
+//     const dinner = getRandomNumber(dinnerList.length-1) >=0?Object.assign({},dinnerList[getRandomNumber(dinnerList.length-1)],{mealTitle:'dinner',meal:'dinner'}):{mealTitle:'dinner',meal:'dinner'};
+//     const morningSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'morning Snack',meal:'snack'}):{mealTitle:'morning Snack',meal:'snack'};
+//     const afternoonSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'afternoon Snack',meal:'snack'}):{mealTitle:'afternoon Snack',meal:'snack'};
+    
+//     const recommendedMeal = [
+//         breakfast,
+//         morningSnack,
+//         lunch,
+//         afternoonSnack,
+//         dinner
+//     ]
+  
+//     return {
+//                 recommendedMeal,
+//                 challengeMealsFilterList
+//            }
+// }
+
+
+export const getTodayRecommendedMeal = async(phaseData,activeChallengeUserData) =>{
+  const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
+  let phaseMeals = []
+
+  const recipeRef = db.collection('recipes')
+                    .where("accessFilter","array-contains","8WC")
+  const snapshot =  await recipeRef.get();
+  
+  snapshot.forEach(doc => {
+    if(doc.data().availability.includes(phaseData.displayName.toUpperCase()))
+      phaseMeals.push(doc.data())
+  });
+
+  const challengeMealsFilterList = phaseMeals.map((res)=>res.id)
+
+  const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
+  const breakfastList = phaseMeals.filter((res)=>res.breakfast)
+  const lunchList = phaseMeals.filter((res)=>res.lunch)
+  const dinnerList = phaseMeals.filter((res)=>res.dinner)
+  const snackList = phaseMeals.filter((res)=>res.snack)
+
+  const breakfast =  getRandomNumber(breakfastList.length-1) >=0?Object.assign({},breakfastList[getRandomNumber(breakfastList.length-1)],{mealTitle:'breakfast',meal:'breakfast'}):{mealTitle:'breakfast',meal:'breakfast'};
+  const lunch = getRandomNumber(lunchList.length-1) >=0?Object.assign({},lunchList[getRandomNumber(lunchList.length-1)],{mealTitle:'lunch',meal:'lunch'}):{mealTitle:'lunch',meal:'lunch'};
+  const dinner = getRandomNumber(dinnerList.length-1) >=0?Object.assign({},dinnerList[getRandomNumber(dinnerList.length-1)],{mealTitle:'dinner',meal:'dinner'}):{mealTitle:'dinner',meal:'dinner'};
+  const morningSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'morning Snack',meal:'snack'}):{mealTitle:'morning Snack',meal:'snack'};
+  const afternoonSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'afternoon Snack',meal:'snack'}):{mealTitle:'afternoon Snack',meal:'snack'};
+  
+  const recommendedMeal = [
+      breakfast,
+      morningSnack,
+      lunch,
+      afternoonSnack,
+      dinner
+  ]
+  return {
+    recommendedMeal,
+    challengeMealsFilterList
+  }
 }
+
+
 /** unit function */
 Date.shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 Date.fullMonths = ["January", "February", "March", "April", "May", "June",

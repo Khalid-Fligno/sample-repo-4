@@ -48,7 +48,8 @@ const TabBarComponent = props => {
       {...props}
       style={styles.bottomBarStyle}
       getButtonComponent={({ route }) => {
-          if (route.key === "Dashboard" )
+          if (route.key === "Dashboard")
+        //   if (route.key === "Dashboard" || route.key === "Calendar")
               return HiddenView
           else return TouchableWithoutFeedbackWrapper
       }}

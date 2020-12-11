@@ -58,7 +58,7 @@ export const calendarBackButtonMap = {
   Recipe: false,
   RecipeSteps: true,
   WorkoutInfo: true,
-  CalendarHome:false
+  // CalendarHome:true
 };
 export const calendarProfileButtonMap = {
   Recipe: true,

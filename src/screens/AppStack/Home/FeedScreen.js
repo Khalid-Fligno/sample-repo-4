@@ -219,8 +219,8 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
                   />
                 )
                
-              } */}
-             
+              }
+              */}
               <NewsFeedTile
                 image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
                 title="SHOP APPAREL"

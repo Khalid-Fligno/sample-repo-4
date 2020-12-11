@@ -173,7 +173,6 @@ export default class HomeScreen extends React.PureComponent {
       const challengeStarTime = list[0]?new Date(list[0].startDate).getTime():null;
       const todayDate=moment(new Date()).format('YYYY-MM-DD');
       const currentTime = new Date(todayDate).getTime();
-      console.log(challengeStarTime,currentTime,challengeStarTime <= currentTime,list[0])
       if(challengeStarTime <= currentTime && list[0]){
         const challengeRef =db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
         challengeRef.set({status:"Active",isSchedule:false},{merge:true})        
@@ -319,7 +318,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
       return 'Keep working, you\'ve got this!';
     };
 
-    const bigHeadeingTitle = (switchWelcomeHeader ? 'Hi' : 'Hi').toString()+' ' + (profile ? profile.firstName:'').toString()
+    const bigHeadeingTitle = (switchWelcomeHeader ? 'Hi' : 'Hi').toString()+' ' + (profile && profile.firstName ? profile.firstName:'').toString()
    
     // let recommendedWorkout =[];
 
@@ -372,7 +371,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
                   <View>
                     <View style={HomeScreenStyle.sectionHeader}>
                       <Text style={[HomeScreenStyle.bodyText]}>
-                        {activeChallengeData?'Active challenge progress' :'Weekly workout progress'}
+                        {activeChallengeData !== undefined ?'Active challenge progress' :'Weekly workout progress'}
                       </Text>
                     </View>
                     <View style={{flexDirection:'row',justifyContent:"space-between",width:"100%"}}>

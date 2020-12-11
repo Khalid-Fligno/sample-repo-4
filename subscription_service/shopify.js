@@ -1,9 +1,11 @@
 const hostUrl='https://3.8.209.87';
-const { auth, db } = require('./firebase');
+//const { auth, db } = require('./firebase');
 const webhookUrl='https://api.rechargeapps.com/webhooks';
 const productUrl='https://api.rechargeapps.com/products';
 const chargesUrl='https://api.rechargeapps.com/charges';
 const subscriptionUrl='https://api.rechargeapps.com/subscriptions';
+var  admin  = require('./firebase');
+const db= admin.firestore();
 const RECHARGE_API_KEY='defda21cce4018658e95ff12e4f494696b3c2bc2682ce0cc9025e892';
 let moment = require('moment');
 let uniqid = require('uniqid');
@@ -45,13 +47,10 @@ exports.createShopifyWebhooks = async (req, res)  => {
     
     topics.forEach(topic => {
      const index= registeredWebHooks.findIndex(res1=> res1.topic === topic.webhook_url)
-     console.log("index",index);
      if(index === -1){
         unRegisteredWeekHook.push(topic);
      }
     });
-    
-    console.log("befor foreach unRegisteredWeekHook ",unRegisteredWeekHook)
     //2. if you didn't find related webhook create that
     unRegisteredWeekHook.forEach(async (unreg) =>{ 
         const newChargeReq = await fetch(webhookUrl, {
@@ -66,14 +65,15 @@ exports.createShopifyWebhooks = async (req, res)  => {
             })
           });
           const newChargeInfo = await newChargeReq.json();
-          console.log("new Charge Info ",newChargeInfo);
+          //console.log("new Charge Info ",newChargeInfo);
     });
     res.status(200).send("Shopify Webhook successfully created");
 
 }
 //---------------------------subscription---------------------
 
-exports.createShopifySubscriptionWebhook = async(req, res) =>{    
+exports.createShopifySubscriptionWebhook = async(req, res) =>{ 
+  console.log("req.body.subscription",req.body.subscription);   
     const request = req.body.subscription;    
     const requestSuccess= await createUserAndChallenge(request); 
     if(requestSuccess)
@@ -88,9 +88,8 @@ exports.deleteShopifySubscriptionWebhook = async(req, res) =>{
 }
 //Will get a user's subscription details from firebase DB
 exports.shopifyChargesMigration = async(req, res) => {
-  const minDate=moment(new Date(), 'YYYY-MM-DD').add(-2,'days').format('YYYY-MM-DD');
+  const minDate=moment(new Date(), 'YYYY-MM-DD').add(-11,'days').format('YYYY-MM-DD');
   const maxDate=moment(new Date(), 'YYYY-MM-DD').format('YYYY-MM-DD');
-  console.log("minDate",minDate,"maxDate",maxDate);
   const options = {
       method: 'GET',
       headers: {
@@ -118,9 +117,8 @@ exports.shopifyChargesMigration = async(req, res) => {
     res.status(200).send(shopifyCharges);
 }
 exports.shopifyLastCharges = async(req, res) => {
-  const minDate=moment(new Date('2020-10-16')).format('YYYY-MM-DD');
+  const minDate=moment(new Date(), 'YYYY-MM-DD').add(-2,'days').format('YYYY-MM-DD')
   const maxDate=moment(new Date(), 'YYYY-MM-DD').format('YYYY-MM-DD');
-  console.log("minDate",minDate,"maxDate",maxDate);
   const options = {
       method: 'GET',
       headers: {
@@ -134,19 +132,100 @@ exports.shopifyLastCharges = async(req, res) => {
     // get all charges from shopifyCharges charges
     const charges =shopifyCharges.charges;
     charges.forEach(async(charge)=>{
-      const request={};
-      request.email=charge.email;
-      request.product_title=charge.line_items[0].title;
-      request.shopify_product_id=charge.line_items[0].shopify_product_id;
-      console.log("request",request);
-      //  const successRequest=  await createUserAndChallenge(request);
-      //  if(successRequest)
-      //   console.log(`${request.email} user subscribe to ${request.product_title} and successfully migrated`);
-      //   else
-      //   console.log(`${request.email} user has some problem in migration `);
+      if(charge.line_items[0] &&  charge.line_items[0].title && charge.line_items[0].title.includes("Challenge")){
+        const request={};
+        request.created_at=charge.created_at;
+        request.email=charge.email;
+        request.product_title=charge.line_items[0].title;
+        request.shopify_product_id=charge.line_items[0].shopify_product_id;
+        console.log(request);
+      }
     })
-
     res.status(200).send(shopifyCharges);
+}
+exports.shopifyAllCharges = async(req, res) => {
+  const minDate=moment(new Date('2020-11-15'), 'YYYY-MM-DD').format('YYYY-MM-DD')
+  const maxDate=moment(new Date(), 'YYYY-MM-DD').format('YYYY-MM-DD');
+  const options = {
+      method: 'GET',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-recharge-access-token' : RECHARGE_API_KEY
+        },
+      };
+    const resCharges = await fetch(`${chargesUrl}?date_min=${minDate}&date_max=${maxDate}`, options);      
+    const shopifyCharges = await resCharges.json();
+    // get all charges from shopifyCharges charges
+    let chargesResponse=[];
+    const charges =shopifyCharges.charges;
+    charges.forEach(async(charge)=>{
+      if(charge.line_items[0] &&  charge.line_items[0].title && charge.line_items[0].title.includes("Challenge")){
+        const request={};
+        request.created_at=charge.created_at;
+        request.email=charge.email;
+        request.product_title=charge.line_items[0].title;
+        request.shopify_product_id=charge.line_items[0].shopify_product_id;
+        chargesResponse.push(request);
+      }
+    })
+    res.status(200).send(chargesResponse);
+}
+exports.shopifyLastSubscriptions = async(req, res) => {
+  const minDate=moment(new Date(), 'YYYY-MM-DD').add(-2,'days').format('YYYY-MM-DD')
+  const maxDate=moment(new Date(), 'YYYY-MM-DD').format('YYYY-MM-DD');
+  const options = {
+      method: 'GET',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-recharge-access-token' : RECHARGE_API_KEY
+        },
+      };
+    const resCharges = await fetch(`${subscriptionUrl}?created_at_min=${minDate}&created_at_min=${maxDate}`, options);      
+    const shopifyCharges = await resCharges.json();
+    // get all charges from shopifyCharges charges
+    const subscriptions =shopifyCharges.subscriptions;
+      subscriptions.forEach(async(subscription)=>{
+        if(subscription.product_title.includes("Challenge")){
+          const request={};
+          request.created_at=subscription.created_at;
+          request.email=subscription.email;
+          request.product_title=subscription.product_title;
+          request.shopify_product_id=subscription.shopify_product_id;
+        console.log(request);
+      }
+    })
+    res.status(200).send(shopifyCharges);
+  };
+
+exports.shopifyAllSubscriptions = async(req, res) => {
+  const minDate=moment(new Date('2020-11-15'), 'YYYY-MM-DD').format('YYYY-MM-DD')
+  const maxDate=moment(new Date(), 'YYYY-MM-DD').format('YYYY-MM-DD');
+  const options = {
+      method: 'GET',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-recharge-access-token' : RECHARGE_API_KEY
+        },
+      };
+    const resCharges = await fetch(`${subscriptionUrl}?created_at_min=${minDate}&created_at_min=${maxDate}`, options);      
+    const shopifyCharges = await resCharges.json();
+    // get all charges from shopifyCharges charges
+    let chargesResponse=[];
+    const subscriptions =shopifyCharges.subscriptions;
+    subscriptions.forEach(async(subscription)=>{
+      if(subscription.product_title.includes("Challenge")){
+        const request={};
+        request.created_at=subscription.created_at;
+        request.email=subscription.email;
+        request.product_title=subscription.product_title;
+        request.shopify_product_id=subscription.shopify_product_id;
+        chargesResponse.push(request);
+      }
+    })
+    res.status(200).send(chargesResponse);
 }
 // Will get a list of products from shopify account to be displayed on App
 exports.getShopifyProducts= async(req, res) => {    
@@ -160,7 +239,6 @@ exports.getShopifyProducts= async(req, res) => {
     };
   const resProducts = await fetch(productUrl, options);      
   const shopifyProducts = await resProducts.json();
-  console.log("shopifyProducts",shopifyProducts);
   res.status(200).send(shopifyProducts);   
 }
 exports.getAllWebHooks = async(req, res) => {
@@ -174,12 +252,10 @@ exports.getAllWebHooks = async(req, res) => {
   const resWebHooks = await fetch(webhookUrl, options);      
   const registeredWebHooks = await resWebHooks.json();
   //return body;
-console.log('registeredWebHooks',registeredWebHooks.webhooks);
 res.status(200).send(registeredWebHooks.webhooks);
 }
 
 const createUserAndChallenge= async (req)=>{
-      console.log("request",req);
       //check request contain Challenge work in product_title
       const challengeProductName=req.product_title;
       if(!challengeProductName.includes("Challenge")){
@@ -201,7 +277,6 @@ const createUserAndChallenge= async (req)=>{
               id: uniqid(),          
           };
           // get the challage from line_items =>properties
-          console.log("newUser",newUser);
           addUser(newUser);   
       }
       if(user != undefined){
@@ -213,29 +288,22 @@ const createUserAndChallenge= async (req)=>{
           }
       }
       // get product from line item collection
-      console.log("challengeShopifyProductId",req.shopify_product_id);
       // get workout challange details by passing product_title      
       const challenge= await getChallengeDetails(challengeProductName);
-      console.log("challenge",challenge);
       const userInfo=await getUser(req.email);
-      console.log("userInfo",userInfo);
       if(challenge !=null){        
           const userChallenge=createNewChallenge(challenge)
           updateChallengesAgainstUser(userChallenge,userInfo.id);
-          console.log("updateChallengesAgainstUser");
       }
       return true;
 }
 const deleteWebhookUrl = async(req) => {
       // get user by email from firebase
-      console.log("delete Webhook request",req);
       const user =await getUser(req.email);
-      console.log("user",user);
       // 2. if user exist update that user
       if(user !== null){
        // get product from line item collection      
       const challenge= await getChallengeDetails(challengeProductName);
-      console.log("challenge",challenge);
       //remove user challenges from collection      
       await db.collection('users').doc('uid').collection('challenges').doc(challenge.id).delete();
     }
@@ -249,10 +317,8 @@ const getUser = async(emailId) => {
 }
 
 const addUser = (userInfo) => {
-  console.log("update user",userInfo);
     const userRef = db.collection('users').doc(userInfo.id);
     userRef.set(userInfo).then((state) => {
-      console.log("new user added",state);
     })
     .catch((error) => {
       console.log("new user added error",error);

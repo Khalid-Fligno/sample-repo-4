@@ -111,6 +111,7 @@ export default class LoginScreen extends React.PureComponent {
         nonce: nonceSHA256,
       });
       // Signed in to Apple
+      console.log("LLLL",credential)
       if (credential.user) {
         this.signInWithApple({ identityToken: credential.identityToken, nonce, fullName: credential.fullName });
       }
