@@ -38,6 +38,9 @@ import {
   isActiveChallenge
 } from '../../../utils/challenges';
 import ChallengeBlogCard from '../../../components/Home/ChallengeBlogCard';
+import FeedCard from '../../../components/Home/FeedCard';
+import { widthPercentageToDP as wp ,heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import BlogCard from '../../../components/Home/BlogCard';
 const { width } = Dimensions.get('window');
 
 
@@ -198,15 +201,44 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={HomeScreenStyle.scrollView}
-          style={[globalStyle.container]}
+          style={[globalStyle.container,{paddingHorizontal:0}]}
         >
+           <View style={{paddingHorizontal:containerPadding}}>
+              <BigHeadingWithBackButton 
+                bigTitleText = "Feed"
+                isBackButton ={false}
+                isBigTitle = {true}
+              />
+           </View> 
+           
           <View style={{marginBottom:20}}>
               <WorkOutCard
                 image={require('../../../../assets/images/homeScreenTiles/todayWorkoutImage2.jpeg')}
                 title="TODAY'S WORKOUT"
                 recommendedWorkout ={recommendedWorkout}
                 onPress={() => this.props.navigation.navigate('Calendar')}
-                cardCustomStyle ={{marginTop:20}} 
+                // cardCustomStyle ={{marginTop:20}} 
+              />
+              <FeedCard 
+                title ="COMMUNITY"
+                cardCustomStyle={{
+                  marginHorizontal:0,
+                  marginTop:wp('10%')
+                }}
+                cardImageStyle={{
+                  borderRadius:0
+                }}
+              />
+               <BlogCard 
+                title ="BLOG"
+                cardCustomStyle={{
+                  marginHorizontal:0,
+                  marginTop:wp('10%')
+                }}
+                cardImageStyle={{
+                  borderRadius:0
+                }}
+                data={blogs}
               />
               {/* {
                 blogs && blogs.length > 0&&
@@ -219,9 +251,9 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
                   />
                 )
                
-              }
-              */}
-              <NewsFeedTile
+              } */}
+             
+              {/* <NewsFeedTile
                 image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
                 title="SHOP APPAREL"
                 onPress={() => this.openLink('https://fitazfk.com/collections/wear-fitazfk-apparel')}
@@ -243,7 +275,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
                 image={require('../../../../assets/images/fitazfk-army.jpg')}
                 title="JOIN THE FITAZFK ARMY"
                 onPress={() => this.openLink('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
-              />
+              /> */}
               {/* <Loader
                 loading={loading}
                 color={colors.charcoal.standard}

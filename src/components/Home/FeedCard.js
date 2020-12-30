@@ -17,7 +17,7 @@ import { containerPadding } from '../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 
-export default class WorkOutCard extends React.PureComponent {
+export default class FeedCard extends React.PureComponent {
   constructor(props) {
     super(props);
     this.animatedValue = new Animated.Value(1);
@@ -58,43 +58,34 @@ export default class WorkOutCard extends React.PureComponent {
              <View style={styles.opacityLayer}>
                <View style={styles.titleContainer}>
                  <Text style={styles.title}>
-                   TODAY'S
+                   {title}
                  </Text>
-                 <Text style={styles.title2}>
-                   WORKOUT
-                 </Text>
-               </View>
-               <View style={styles.innerViewContainer}>
-                    <View
+                 <View
                       style={{
                         borderTopWidth:4,
                         width:wp('20%'),
                         marginBottom:wp('5%'),
-                        marginTop:wp('3%'),
-                        borderTopColor:colors.offWhite,
+                        marginTop:wp('1.5%'),
+                        borderTopColor:colors.themeColor.color,
                         borderRadius:50
                       }}
-                    >
-
-                    </View>
-                    {recommendedWorkout.map(res=>(
-                      <Text key={res} style={styles.recTextLabel}> {res}</Text>)
-                    )}
+                    ></View>
                </View>
+         
                <View style={{
                   position:'absolute',
                   bottom:0,
                   alignItems:'center',
                   width:'100%',
-                  marginBottom:wp('15%')
+                  marginBottom:wp('8%')
                  }}>
                 <CustomBtn 
-                    Title ="View Workout"
+                    Title ="Find out more"
                     customBtnStyle ={{
                       // width:"50%",
                       padding:wp('2.2%'),
                       borderRadius:50,
-                      backgroundColor:colors.black,
+                      backgroundColor:colors.themeColor.color,
                       paddingHorizontal:wp('10%')
                     }}
                     customBtnTitleStyle = {{
@@ -112,11 +103,10 @@ export default class WorkOutCard extends React.PureComponent {
   }
 }
 
-WorkOutCard.propTypes = {
+FeedCard.propTypes = {
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   image: PropTypes.number.isRequired,
-  recommendedWorkout: PropTypes.array,
   cardCustomStyle: PropTypes.object
 };
 
@@ -141,7 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     borderRadius:3,
-    backgroundColor:'#f14a42'
+    backgroundColor:'#f7f7f7'
   },
   opacityLayer: {
     flex: 1,
@@ -151,12 +141,12 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     maxWidth: wp('80%'),
-    paddingTop:wp('13%'),
+    paddingTop:wp('8%'),
     paddingLeft:30
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: wp('7%'),
+    fontSize: wp('5.5%'),
     color: colors.black,
     textAlign:'left',
     // shadowColor: colors.black,
@@ -165,17 +155,17 @@ const styles = StyleSheet.create({
     // shadowRadius: 5,
     // fontWeight:'700'
   },
-  title2: {
-    fontSize: wp('11%'),
-    color: colors.offWhite,
-    textAlign:'left',
-    // shadowColor: colors.black,
-    // shadowOpacity: 1,
-    // shadowOffset: { width: 0, height: 0 },
-    // shadowRadius: 5,
-    fontStyle:'italic',
-    fontWeight:'700'
-  },
+//   title2: {
+//     fontSize: wp('11%'),
+//     color: colors.offWhite,
+//     textAlign:'left',
+//     // shadowColor: colors.black,
+//     // shadowOpacity: 1,
+//     // shadowOffset: { width: 0, height: 0 },
+//     // shadowRadius: 5,
+//     fontStyle:'italic',
+//     fontWeight:'700'
+//   },
   innerViewContainer: {
     maxWidth: width / 1.8,
     paddingTop:12,

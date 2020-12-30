@@ -8,16 +8,31 @@ import {
   View,
   Animated,
 } from 'react-native';
-import PropTypes from 'prop-types';
+import PropTypes, { array } from 'prop-types';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import CustomBtn from '../Shared/CustomBtn';
 import { widthPercentageToDP as wp ,heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { containerPadding } from '../../styles/globalStyles';
-
+import Carousel from 'react-native-snap-carousel';
+import { Image } from 'react-native';
 const { width } = Dimensions.get('window');
 
-export default class WorkOutCard extends React.PureComponent {
+const Blogs =[
+    {
+        image:require('../../../assets/images/slideImg.png'),
+        title:"How to stay on track this holiday season",
+        link:""
+    },
+    {
+        image:require('../../../assets/images/slideImg.png'),
+        title:"How to stay on track this holiday season",
+        link:""
+    }
+]
+
+
+export default class BlogCard extends React.PureComponent {
   constructor(props) {
     super(props);
     this.animatedValue = new Animated.Value(1);
@@ -36,6 +51,50 @@ export default class WorkOutCard extends React.PureComponent {
       useNativeDriver:true
     }).start();
   }
+
+  _renderItem = ({item, index}) => {
+    return (
+        <View style={styles.slide}>
+            <Image 
+                // source={item.image}
+                source={{uri:item.coverImage}}
+                resizeMode='cover'
+                style={{
+                  width:'100%',
+                  height:'55%',
+                  borderRadius:3,
+                  backgroundColor:colors.grey.medium
+                }}
+                
+            />
+            <Text style={styles.slideTitle}>{ item.title }</Text>
+             <View style={{
+                  alignItems:'center',
+                  width:'100%',
+                  marginBottom:wp('5%'),
+                  // position:'absolute',
+                  // bottom:0
+                 }}>
+                <CustomBtn 
+                    Title ="Find out more"
+                    customBtnStyle ={{
+                      // width:"50%",
+                      padding:wp('2.2%'),
+                      borderRadius:50,
+                      backgroundColor:colors.themeColor.color,
+                      paddingHorizontal:wp('10%')
+                    }}
+                    customBtnTitleStyle = {{
+                      marginTop:0,
+                      fontSize:13,
+                      fontFamily:fonts.boldNarrow
+                    }}
+                    // onPress = {onPress}
+                />
+               </View> 
+        </View>
+    );
+}
   render() {
     const {
       onPress,
@@ -43,7 +102,8 @@ export default class WorkOutCard extends React.PureComponent {
       image,
       recommendedWorkout,
       cardCustomStyle,
-      cardImageStyle
+      cardImageStyle,
+      data
     } = this.props;
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
@@ -58,53 +118,34 @@ export default class WorkOutCard extends React.PureComponent {
              <View style={styles.opacityLayer}>
                <View style={styles.titleContainer}>
                  <Text style={styles.title}>
-                   TODAY'S
+                   {title}
                  </Text>
-                 <Text style={styles.title2}>
-                   WORKOUT
-                 </Text>
-               </View>
-               <View style={styles.innerViewContainer}>
-                    <View
+                 <View
                       style={{
                         borderTopWidth:4,
                         width:wp('20%'),
                         marginBottom:wp('5%'),
-                        marginTop:wp('3%'),
-                        borderTopColor:colors.offWhite,
+                        marginTop:wp('1.5%'),
+                        borderTopColor:colors.themeColor.color,
                         borderRadius:50
                       }}
-                    >
-
-                    </View>
-                    {recommendedWorkout.map(res=>(
-                      <Text key={res} style={styles.recTextLabel}> {res}</Text>)
-                    )}
+                    ></View>
                </View>
-               <View style={{
-                  position:'absolute',
-                  bottom:0,
-                  alignItems:'center',
-                  width:'100%',
-                  marginBottom:wp('15%')
-                 }}>
-                <CustomBtn 
-                    Title ="View Workout"
-                    customBtnStyle ={{
-                      // width:"50%",
-                      padding:wp('2.2%'),
-                      borderRadius:50,
-                      backgroundColor:colors.black,
-                      paddingHorizontal:wp('10%')
+               <Carousel
+                    ref={(c) => { this._carousel = c; }}
+                    data={data}
+                    renderItem={this._renderItem}
+                    sliderWidth={wp('100%')}
+                    itemWidth={wp('75%')}
+                    containerCustomStyle={{
+                        // backgroundColor:'green',
+                        marginTop:wp('2%')
                     }}
-                    customBtnTitleStyle = {{
-                      marginTop:0,
-                      fontSize:13,
-                      fontFamily:fonts.boldNarrow
+                    slideStyle={{
+                        paddingLeft:0
                     }}
-                    onPress = {onPress}
                 />
-               </View> 
+              
              </View>
            </ImageBackground>
           </View>
@@ -112,18 +153,17 @@ export default class WorkOutCard extends React.PureComponent {
   }
 }
 
-WorkOutCard.propTypes = {
+BlogCard.propTypes = {
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   image: PropTypes.number.isRequired,
-  recommendedWorkout: PropTypes.array,
   cardCustomStyle: PropTypes.object
 };
 
 const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
-    height: wp('110%'),
+    height: wp('130%'),
     // margin: 5,
     // shadowColor: colors.charcoal.standard,
     // shadowOpacity: 0.5,
@@ -141,7 +181,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     borderRadius:3,
-    backgroundColor:'#f14a42'
+    backgroundColor:colors.black
   },
   opacityLayer: {
     flex: 1,
@@ -151,30 +191,19 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     maxWidth: wp('80%'),
-    paddingTop:wp('13%'),
+    paddingTop:wp('8%'),
     paddingLeft:30
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: wp('7%'),
-    color: colors.black,
-    textAlign:'left',
-    // shadowColor: colors.black,
-    // shadowOpacity: 1,
-    // shadowOffset: { width: 0, height: 0 },
-    // shadowRadius: 5,
-    // fontWeight:'700'
-  },
-  title2: {
-    fontSize: wp('11%'),
+    fontSize: wp('5.5%'),
     color: colors.offWhite,
     textAlign:'left',
     // shadowColor: colors.black,
     // shadowOpacity: 1,
     // shadowOffset: { width: 0, height: 0 },
     // shadowRadius: 5,
-    fontStyle:'italic',
-    fontWeight:'700'
+    // fontWeight:'700'
   },
   innerViewContainer: {
     maxWidth: width / 1.8,
@@ -187,5 +216,22 @@ const styles = StyleSheet.create({
     color:colors.offWhite,
     fontFamily:fonts.bold,
     marginBottom:wp('1%')
+  },
+  slide:{
+      backgroundColor:colors.offWhite,
+      height:'92%',
+    //   width:'100%',
+      borderRadius:3
+  },
+  slideTitle:{
+    fontFamily: fonts.bold,
+    fontSize: wp('5%'),
+    color: colors.black,
+    textAlign:'left',
+    paddingHorizontal:'10%',
+    paddingVertical:'8%',
+    textAlign:'center',
+    height:'30%',
+    // backgroundColor:'green',
   }
 });
