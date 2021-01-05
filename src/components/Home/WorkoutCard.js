@@ -14,6 +14,7 @@ import fonts from '../../styles/fonts';
 import CustomBtn from '../Shared/CustomBtn';
 import { widthPercentageToDP as wp ,heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { containerPadding } from '../../styles/globalStyles';
+import DownArrow from './DownArrow';
 
 const { width } = Dimensions.get('window');
 
@@ -51,7 +52,7 @@ export default class WorkOutCard extends React.PureComponent {
     return (
           <View   style={[styles.cardContainer,cardCustomStyle]}>
            <ImageBackground
-            //  source={image}
+             source={image}
              style={[styles.image,cardImageStyle]}
              resizeMode="stretch"
            >
@@ -86,7 +87,7 @@ export default class WorkOutCard extends React.PureComponent {
                   bottom:0,
                   alignItems:'center',
                   width:'100%',
-                  marginBottom:wp('15%')
+                  marginBottom:wp('11%')
                  }}>
                 <CustomBtn 
                     Title ="View Workout"
@@ -107,6 +108,14 @@ export default class WorkOutCard extends React.PureComponent {
                </View> 
              </View>
            </ImageBackground>
+             <View
+              style={{
+                marginTop:-wp('7.5%'),
+                alignItems:'center'
+              }}
+             >
+             <DownArrow/>
+             </View>
           </View>
     );
   }
@@ -123,7 +132,7 @@ WorkOutCard.propTypes = {
 const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
-    height: wp('110%'),
+    height: wp('115%'),
     // margin: 5,
     // shadowColor: colors.charcoal.standard,
     // shadowOpacity: 0.5,
@@ -177,7 +186,7 @@ const styles = StyleSheet.create({
     fontWeight:'700'
   },
   innerViewContainer: {
-    maxWidth: width / 1.8,
+    maxWidth: '80%',
     paddingTop:12,
     paddingLeft:30,
     paddingTop:5,
@@ -186,6 +195,6 @@ const styles = StyleSheet.create({
   recTextLabel:{
     color:colors.offWhite,
     fontFamily:fonts.bold,
-    marginBottom:wp('1%')
+    marginBottom:wp('1%'),
   }
 });

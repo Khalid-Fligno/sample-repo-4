@@ -40,37 +40,46 @@ export default class FeedCard extends React.PureComponent {
     const {
       onPress,
       title,
-      image,
-      recommendedWorkout,
       cardCustomStyle,
-      cardImageStyle
+      cardImageStyle,
+      customTitleStyle,
+      customBtnStyle={},
+      customBtnTitleStyle={},
+      btnTitle,
+      image
     } = this.props;
+
+    
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
     return (
           <View   style={[styles.cardContainer,cardCustomStyle]}>
            <ImageBackground
-            //  source={image}
+             source={image}
              style={[styles.image,cardImageStyle]}
              resizeMode="stretch"
            >
              <View style={styles.opacityLayer}>
-               <View style={styles.titleContainer}>
-                 <Text style={styles.title}>
-                   {title}
-                 </Text>
-                 <View
-                      style={{
-                        borderTopWidth:4,
-                        width:wp('20%'),
-                        marginBottom:wp('5%'),
-                        marginTop:wp('1.5%'),
-                        borderTopColor:colors.themeColor.color,
-                        borderRadius:50
-                      }}
-                    ></View>
-               </View>
+               {
+                  title &&
+                    <View style={styles.titleContainer}>
+                        <Text style={[styles.title,customTitleStyle]}>
+                          {title}
+                        </Text>
+                        <View
+                              style={{
+                                borderTopWidth:4,
+                                width:'15%',
+                                marginBottom:wp('5%'),
+                                marginTop:wp('1.5%'),
+                                borderTopColor:colors.themeColor.color,
+                                borderRadius:50
+                              }}
+                            ></View>
+                      </View>
+               }
+            
          
                <View style={{
                   position:'absolute',
@@ -80,18 +89,19 @@ export default class FeedCard extends React.PureComponent {
                   marginBottom:wp('8%')
                  }}>
                 <CustomBtn 
-                    Title ="Find out more"
+                    Title ={btnTitle}
                     customBtnStyle ={{
                       // width:"50%",
                       padding:wp('2.2%'),
                       borderRadius:50,
                       backgroundColor:colors.themeColor.color,
-                      paddingHorizontal:wp('10%')
-                    }}
+                      paddingHorizontal:wp('10%'),
+                      ...customBtnStyle}}
                     customBtnTitleStyle = {{
                       marginTop:0,
                       fontSize:13,
-                      fontFamily:fonts.boldNarrow
+                      fontFamily:fonts.boldNarrow,
+                      ...customBtnTitleStyle
                     }}
                     onPress = {onPress}
                 />
@@ -105,9 +115,10 @@ export default class FeedCard extends React.PureComponent {
 
 FeedCard.propTypes = {
   onPress: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  image: PropTypes.number.isRequired,
-  cardCustomStyle: PropTypes.object
+  title: PropTypes.string,
+  // image: PropTypes.number.isRequired,
+  cardCustomStyle: PropTypes.object,
+  customTitleStyle:PropTypes.object
 };
 
 const styles = StyleSheet.create({
@@ -140,15 +151,17 @@ const styles = StyleSheet.create({
     // backgroundColor:colors.transparentBlackLightest
   },
   titleContainer: {
-    maxWidth: wp('80%'),
+    // maxWidth: wp('80%'),
     paddingTop:wp('8%'),
-    paddingLeft:30
+    paddingLeft:30,
+    alignItems:'flex-start'
   },
   title: {
     fontFamily: fonts.bold,
     fontSize: wp('5.5%'),
     color: colors.black,
     textAlign:'left',
+    textTransform:'uppercase'
     // shadowColor: colors.black,
     // shadowOpacity: 1,
     // shadowOffset: { width: 0, height: 0 },

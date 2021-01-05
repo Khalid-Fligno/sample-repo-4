@@ -17,6 +17,8 @@ import { containerPadding } from '../../styles/globalStyles';
 import Carousel from 'react-native-snap-carousel';
 import { Image } from 'react-native';
 const { width } = Dimensions.get('window');
+import * as Haptics from 'expo-haptics';
+import { Linking } from 'react-native';
 
 const Blogs =[
     {
@@ -50,6 +52,10 @@ export default class BlogCard extends React.PureComponent {
       tension: 40,
       useNativeDriver:true
     }).start();
+  }
+  openLink = (url) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Linking.openURL(url);
   }
 
   _renderItem = ({item, index}) => {
@@ -89,7 +95,7 @@ export default class BlogCard extends React.PureComponent {
                       fontSize:13,
                       fontFamily:fonts.boldNarrow
                     }}
-                    // onPress = {onPress}
+                    onPress={() => this.openLink(item.urlLink)}
                 />
                </View> 
         </View>
@@ -123,7 +129,7 @@ export default class BlogCard extends React.PureComponent {
                  <View
                       style={{
                         borderTopWidth:4,
-                        width:wp('20%'),
+                        width:wp('14%'),
                         marginBottom:wp('5%'),
                         marginTop:wp('1.5%'),
                         borderTopColor:colors.themeColor.color,
@@ -154,9 +160,9 @@ export default class BlogCard extends React.PureComponent {
 }
 
 BlogCard.propTypes = {
-  onPress: PropTypes.func.isRequired,
+  // onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  image: PropTypes.number.isRequired,
+  data: PropTypes.array.isRequired,
   cardCustomStyle: PropTypes.object
 };
 
