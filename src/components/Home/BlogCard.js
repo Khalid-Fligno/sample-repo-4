@@ -20,19 +20,6 @@ const { width } = Dimensions.get('window');
 import * as Haptics from 'expo-haptics';
 import { Linking } from 'react-native';
 
-const Blogs =[
-    {
-        image:require('../../../assets/images/slideImg.png'),
-        title:"How to stay on track this holiday season",
-        link:""
-    },
-    {
-        image:require('../../../assets/images/slideImg.png'),
-        title:"How to stay on track this holiday season",
-        link:""
-    }
-]
-
 
 export default class BlogCard extends React.PureComponent {
   constructor(props) {
@@ -82,7 +69,7 @@ export default class BlogCard extends React.PureComponent {
                   // bottom:0
                  }}>
                 <CustomBtn 
-                    Title ="Find out more"
+                    Title ="Read more"
                     customBtnStyle ={{
                       // width:"50%",
                       padding:wp('2.2%'),

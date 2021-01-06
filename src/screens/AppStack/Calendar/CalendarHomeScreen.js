@@ -50,6 +50,7 @@ import {
   } from '../../../components/Calendar/ListItem';
 import CustomCalendarStrip from '../../../components/Calendar/CustomCalendarStrip';
 import { NavigationActions, StackActions } from 'react-navigation';
+import ChallengeProgressCard2 from '../../../components/Calendar/ChallengeProgressCard2';
 
 const recommendedWorkoutMap = {
   undefined: '',
@@ -597,7 +598,7 @@ class CalendarHomeScreen extends React.PureComponent {
       >
         {
           this.phaseData && showRC &&
-          <ChallengeProgressCard
+          <ChallengeProgressCard2
             phase={this.phase}
             phaseData={this.phaseData}
             activeChallengeData={activeChallengeData}

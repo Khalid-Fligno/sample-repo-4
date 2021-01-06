@@ -41,7 +41,7 @@ import ChallengeBlogCard from '../../../components/Home/ChallengeBlogCard';
 import FeedCard from '../../../components/Home/FeedCard';
 import { widthPercentageToDP as wp ,heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import BlogCard from '../../../components/Home/BlogCard';
-import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
+// import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
 const { width } = Dimensions.get('window');
 
 
