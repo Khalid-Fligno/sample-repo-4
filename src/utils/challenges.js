@@ -149,13 +149,19 @@ const afternoonSnack = getRandomNumber(snackList.length-1) >=0?
                           {mealTitle:'afternoon Snack',meal:'snack'}
                         ):{mealTitle:'afternoon Snack',meal:'snack'};
   
-  const recommendedMeal = [
-      breakfast,
-      morningSnack,
-      lunch,
-      afternoonSnack,
-      dinner
-  ]
+  // const recommendedMeal = [
+  //     breakfast,
+  //     morningSnack,
+  //     lunch,
+  //     afternoonSnack,
+  //     dinner
+  // ]
+  const recommendedMeal = [{
+    breakfast:breakfastList,
+    snack:snackList,
+    lunch:lunchList,
+    dinner:dinnerList
+  }]
   return {
     recommendedMeal,
     challengeMealsFilterList

@@ -51,6 +51,8 @@ import {
 import CustomCalendarStrip from '../../../components/Calendar/CustomCalendarStrip';
 import { NavigationActions, StackActions } from 'react-navigation';
 import ChallengeProgressCard2 from '../../../components/Calendar/ChallengeProgressCard2';
+import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
+import TodayMealsList from '../../../components/Calendar/TodayMealsList';
 
 const recommendedWorkoutMap = {
   undefined: '',
@@ -365,6 +367,7 @@ class CalendarHomeScreen extends React.PureComponent {
         this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
 
         //TODO :calculate the workout completed till selected date
+        console.log(this.stringDate)
         this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
 
         //TODO calculate current challenge day
@@ -472,19 +475,24 @@ class CalendarHomeScreen extends React.PureComponent {
       }
     }
  
-
     const workoutDisplayList = (
       <View style={calendarStyles.listContainer}>
           {
             this.todayRcWorkout  && showRC &&
-            <RcWorkoutListItem 
-                res={this.todayRcWorkout} 
-                onPress={ () => this.todayRcWorkout.name !== 'rest'? this.loadExercises(this.todayRcWorkout.id,this.currentChallengeDay):'' }
-                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
-                onSwipeableClose={() => this.setState({ isSwiping: false })}
-                renderRightActions={() => this.renderRightActionForRC('workout')} 
-                currentDay={this.currentChallengeDay}
+            <ChallengeWorkoutCard 
+              onPress={ () => this.todayRcWorkout.name !== 'rest'? this.loadExercises(this.todayRcWorkout.id,this.currentChallengeDay):'' }
+              res={this.todayRcWorkout} 
+              currentDay={this.currentChallengeDay}
+              title={activeChallengeData.displayName}
             />
+            // <RcWorkoutListItem 
+            //     res={this.todayRcWorkout} 
+            //     onPress={ () => this.todayRcWorkout.name !== 'rest'? this.loadExercises(this.todayRcWorkout.id,this.currentChallengeDay):'' }
+            //     onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+            //     onSwipeableClose={() => this.setState({ isSwiping: false })}
+            //     renderRightActions={() => this.renderRightActionForRC('workout')} 
+            //     currentDay={this.currentChallengeDay}
+            // />
           }
           {
             workout ? ( <WorkoutSwipable 
@@ -590,11 +598,20 @@ class CalendarHomeScreen extends React.PureComponent {
       
         </View>
     )  
+    
+    const mealsList =(
+      showRC &&
+        <TodayMealsList 
+          data ={todayRecommendedMeal[0]}
+          onPress={(res)=>this.goToRecipe(res)}
+        />
+    )
 
     const dayDisplay = (
       <ScrollView
         contentContainerStyle={calendarStyles.dayDisplayContainer}
         scrollEnabled={!this.state.isSwiping}
+        showsVerticalScrollIndicator={false}
       >
         {
           this.phaseData && showRC &&
@@ -607,21 +624,18 @@ class CalendarHomeScreen extends React.PureComponent {
             openLink={()=>this.openLink(this.phase.pdfUrl)}
           />
         }
-        <Text style={calendarStyles.headerText}>Todays Workout</Text>
+        <Text style={calendarStyles.headerText}>Today's Workout</Text>
         {
           workoutDisplayList
         }
 
-        <Text style={calendarStyles.headerText}>Todays Meals</Text>
-        {
+        <Text style={calendarStyles.headerText}>Today's Meals</Text>
+        {/* {
           mealsDisplayList
-        }
-  
-        {/* <View style={calendarStyles.listContainerBottom}>
-          {
-           meals && meals['snack2'] ?  mealSwipable('snack',snack2) :  mealListItem('snack')
-          } 
-        </View> */}
+        } */}
+         {
+          mealsList
+         }
       </ScrollView>
     );
 

@@ -133,41 +133,40 @@ export default class FeedScreen extends React.PureComponent {
 //     });
 //   }
 
-fetchBlogs = async (tag,currentDay) => {
-  console.log(tag,currentDay)
-  const snapshot = await db.collection('blogs')
-  .where("tags","array-contains",tag)
-  .get()
-    let blogs = []
-    const cDay = currentDay === 1?2:currentDay
-    snapshot.forEach(doc => {
-      console.log(doc.data())
-      if(doc.data().startDay <= cDay && doc.data().endDay >= cDay)
-      blogs.unshift(doc.data())
-    });
-    this.setState({blogs,loading:false})
-}
-fetchActiveChallengeData = async (activeChallengeUserData) =>{
-  try{
-    this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
-    .onSnapshot(async (doc) => {
-        if(doc.exists){
-          this.setState({ 
-            activeChallengeUserData,
-            activeChallengeData:doc.data() ,
-            // loading:false
-          });
-          this.getCurrentPhaseInfo()
-        }
-     
-    });
-  }catch(err){
-    this.setState({ loading: false });
-    console.log(err);
-    Alert.alert('Fetch active challenge data error!')
+  fetchBlogs = async (tag,currentDay) => {
+    console.log(tag,currentDay)
+    const snapshot = await db.collection('blogs')
+    .where("tags","array-contains",tag)
+    .get()
+      let blogs = []
+      const cDay = currentDay === 1?2:currentDay
+      snapshot.forEach(doc => {
+        if(doc.data().startDay <= cDay && doc.data().endDay >= cDay)
+        blogs.unshift(doc.data())
+      });
+      this.setState({blogs,loading:false})
   }
+  fetchActiveChallengeData = async (activeChallengeUserData) =>{
+    try{
+      this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
+      .onSnapshot(async (doc) => {
+          if(doc.exists){
+            this.setState({ 
+              activeChallengeUserData,
+              activeChallengeData:doc.data() ,
+              // loading:false
+            });
+            this.getCurrentPhaseInfo()
+          }
+      
+      });
+    }catch(err){
+      this.setState({ loading: false });
+      console.log(err);
+      Alert.alert('Fetch active challenge data error!')
+    }
 
-}
+  }
 
   setDayOfWeek = async () => {
     const timezone = await Localization.timezone;
@@ -182,7 +181,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
   getCurrentPhaseInfo(){
     const {activeChallengeUserData,activeChallengeData} = this.state
     if(activeChallengeUserData && activeChallengeData){
-       this.stringDate = new Date().toISOString()
+       this.stringDate = moment().format('YYYY-MM-DD').toString();
      
       //TODO :getCurrent phase data
       this.phase = getCurrentPhase(activeChallengeUserData.phases,this.stringDate)
@@ -191,6 +190,7 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
       this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
        
      //TODO calculate current challenge day
+     console.log(this.stringDate)
       this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
       this.fetchBlogs(activeChallengeUserData.tag,this.currentChallengeDay)
       //TODO get recommended workout here
@@ -219,7 +219,8 @@ fetchActiveChallengeData = async (activeChallengeUserData) =>{
       
         if(this.todayRcWorkout){
           recommendedWorkout = []
-          recommendedWorkout.push(`${this.todayRcWorkout.displayName} - Day ${this.currentChallengeDay}`)
+          recommendedWorkout.push(this.todayRcWorkout.displayName)
+          recommendedWorkout.push(`Day ${this.currentChallengeDay}`)
         }
       }
  

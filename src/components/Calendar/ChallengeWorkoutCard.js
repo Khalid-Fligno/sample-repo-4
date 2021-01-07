@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import CustomBtn from '../Shared/CustomBtn';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 const { width } = Dimensions.get('window');
 
@@ -37,10 +38,13 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
   render() {
     const {
       onPress,
-      title,
-      image,
-      recommendedWorkout,
-      cardCustomStyle
+      res,
+      currentDay,
+      // title,
+      // image,
+      // recommendedWorkout,
+      cardCustomStyle,
+      title
     } = this.props;
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
@@ -48,29 +52,52 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
     return (
           <View   style={[styles.cardContainer,cardCustomStyle]}>
            <ImageBackground
-             source={image}
+             source={require('../../../assets/images/Calendar/challengeWorkoutCardBg.png')}
              style={styles.image}
            >
-             <View style={styles.opacityLayer}>
-               <View style={styles.titleContainer}>
+            <View style={styles.opacityLayer}>
+              <View style={styles.innerViewContainer}>
+                      <Text key={res} 
+                            style={[
+                                    styles.recTextLabel,
+                                    {color:colors.themeColor.color}
+                                  ]}>
+                        {title}
+                      </Text>
+              </View>
+              <View style={styles.titleContainer}>
                  <Text style={styles.title}>
-                   {title.toUpperCase()}
+                   Day {currentDay}
                  </Text>
-               </View>
-               <View style={styles.innerViewContainer}>
-                    {recommendedWorkout.map(res=>(
-                      <Text key={res} style={styles.recTextLabel}> {res}</Text>)
-                    )}
-               </View>
-               <View style={{paddingLeft:30,paddingTop:12}}>
-                <CustomBtn 
-                    Title ="View full calender"
-                    customBtnStyle ={{width:"50%",padding:3,borderRadius:50,backgroundColor:colors.coral.standard}}
-                    customBtnTitleStyle = {{marginTop:0,fontSize:13,fontFamily:fonts.boldNarrow}}
-                    onPress = {onPress}
-                />
-               </View> 
-             </View>
+              </View>
+              <View style={styles.innerViewContainer}>
+                 {
+                   res.target !== 'rest' &&
+                   <Text key={res} style={styles.recTextLabel}>{`${res.target} - ${res.focus.toString()}`}</Text>
+                 }
+                 {
+                   res.target === 'rest' &&
+                    <Text key={res} style={styles.recTextLabel}>Today is your rest day</Text>
+                 }
+              </View>
+                    <CustomBtn 
+                      Title ="View Workout"
+                      customBtnStyle ={{
+                        padding:wp('1%'),
+                        borderRadius:50,
+                        backgroundColor:colors.themeColor.color,
+                        width:wp('30%'),
+                        marginTop:wp('1%')
+                      }}
+                      customBtnTitleStyle = {{
+                        marginTop:0,
+                        fontSize:wp('3%'),
+                        fontFamily:fonts.boldNarrow
+                      }}
+                      onPress = {onPress}
+                      disabled={res.target === 'rest'}
+                  />
+            </View>
            </ImageBackground>
           </View>
     );
@@ -79,21 +106,20 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
 
 ChallengeWorkoutCard.propTypes = {
   onPress: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  image: PropTypes.number.isRequired,
-  recommendedWorkout: PropTypes.array,
+  // title: PropTypes.string.isRequired,
+  // image: PropTypes.number.isRequired,
+  // recommendedWorkout: PropTypes.array,
   cardCustomStyle: PropTypes.object
 };
 
 const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
-    height: (width - 30) / 2.2,
-    margin: 5,
-    shadowColor: colors.charcoal.standard,
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    height: wp('33%'),
+    // shadowColor: colors.charcoal.standard,
+    // shadowOpacity: 0.5,
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowRadius: 4,
   },
   flexContainer: {
     flex: 1,
@@ -103,37 +129,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
+    backgroundColor:colors.charcoal.dark,
+    borderRadius:3
   },
   opacityLayer: {
     flex: 1,
     width: '100%',
-    justifyContent: 'flex-start',
-    backgroundColor:colors.transparentBlackLightest
+    justifyContent: 'space-between',
+    // backgroundColor:colors.transparentBlackLightest,
+    paddingHorizontal:wp('5%'),
+    paddingVertical:wp('4%')
   },
   titleContainer: {
     maxWidth: width / 1.8,
-    paddingTop:10,
-    paddingLeft:30
   },
   title: {
     fontFamily: fonts.boldNarrow,
-    fontSize: 28,
+    fontSize: wp('6%'),
     color: colors.offWhite,
     textAlign:'left',
-    shadowColor: colors.black,
-    shadowOpacity: 1,
-    shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 5,
+    // shadowColor: colors.black,
+    // shadowOpacity: 1,
+    // shadowOffset: { width: 0, height: 0 },
+    // shadowRadius: 5,
+    textTransform:'uppercase'
   },
   innerViewContainer: {
     maxWidth: width / 1.8,
-    paddingTop:12,
-    paddingLeft:30,
-    paddingTop:5,flexDirection:'row',
-    
+    flexDirection:'row'
   },
   recTextLabel:{
-    color:colors.themeColor.color,
-    fontFamily:fonts.bold
+    color:colors.offWhite,
+    fontFamily:fonts.GothamMedium,
+    textTransform:'capitalize',
+    fontSize:wp('3%')
   }
 });
