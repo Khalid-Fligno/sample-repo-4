@@ -19,7 +19,8 @@ import { ListItem, Avatar } from 'react-native-elements';
 import WorkoutScreenStyle from './WorkoutScreenStyle';
 import WorkoutListItem from '../../../components/Workouts/WorkoutListItem';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-let fitnessLevel = 1
+let fitnessLevel = 1;
+const customUrl = 'https://firebasestorage.googleapis.com/v0/b/quickstart-1588594831516.appspot.com/o/Photos%2Fworkout1.jpeg?alt=media&token=17a7f10f-a9bb-4bfb-a27e-4b7ac0261392';
 export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -109,9 +110,9 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   keyExtractor = (item, index) => index.toString()
   renderItem = ({ item }) => (
        <WorkoutListItem 
-          url={ require('../../../../assets/images/workouts-resistance.jpg')} 
-          description = {item.displayName}
-          title = {item.displayName}
+          url={item.thumbnail?item.thumbnail:customUrl} 
+          description = {item.subTitle?item.subTitle:item.displayName}
+          title = {item.displayName.toUpperCase()}
           timeInterval = {((item.workIntervalMap[fitnessLevel-1]+item.restIntervalMap[fitnessLevel-1])*item.exercises.length*item.workoutReps)/60}
           onPress ={() => this.loadExercises(item)}
           count = {item.count}
