@@ -55,45 +55,6 @@ export const getTodayRecommendedWorkout = (workouts,activeChallengeUserData,sele
     console.log("???....",currentDay)
     return workouts.find((res)=>res.days.includes(currentDay))
 }
-// export const getTodayRecommendedMeal = (phaseData,activeChallengeUserData) =>{
-//     const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
-//     const phaseMeals = phaseData.meals
-  
-//     // const phaseMeals = phaseData.meals.filter((res)=>{
-//     //     for(i=0;i<dietryPreferences.length;i++){
-//     //     if(res.tags.includes(dietryPreferences[i])){
-//     //         return true
-//     //     }
-//     //     }
-//     // })
-//     const challengeMealsFilterList = phaseMeals.map((res)=>res.id)
-
-//     const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
-//     const breakfastList = phaseMeals.filter((res)=>res.mealType.includes('breakfast'))
-//     const lunchList = phaseMeals.filter((res)=>res.mealType.includes('lunch'))
-//     const dinnerList = phaseMeals.filter((res)=>res.mealType.includes('dinner'))
-//     const snackList = phaseMeals.filter((res)=>res.mealType.includes('snack'))
-
-//     const breakfast =  getRandomNumber(breakfastList.length-1) >=0?Object.assign({},breakfastList[getRandomNumber(breakfastList.length-1)],{mealTitle:'breakfast',meal:'breakfast'}):{mealTitle:'breakfast',meal:'breakfast'};
-//     const lunch = getRandomNumber(lunchList.length-1) >=0?Object.assign({},lunchList[getRandomNumber(lunchList.length-1)],{mealTitle:'lunch',meal:'lunch'}):{mealTitle:'lunch',meal:'lunch'};
-//     const dinner = getRandomNumber(dinnerList.length-1) >=0?Object.assign({},dinnerList[getRandomNumber(dinnerList.length-1)],{mealTitle:'dinner',meal:'dinner'}):{mealTitle:'dinner',meal:'dinner'};
-//     const morningSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'morning Snack',meal:'snack'}):{mealTitle:'morning Snack',meal:'snack'};
-//     const afternoonSnack = getRandomNumber(snackList.length-1) >=0?Object.assign({},snackList[getRandomNumber(snackList.length-1)],{mealTitle:'afternoon Snack',meal:'snack'}):{mealTitle:'afternoon Snack',meal:'snack'};
-    
-//     const recommendedMeal = [
-//         breakfast,
-//         morningSnack,
-//         lunch,
-//         afternoonSnack,
-//         dinner
-//     ]
-  
-//     return {
-//                 recommendedMeal,
-//                 challengeMealsFilterList
-//            }
-// }
-
 
 export const getTodayRecommendedMeal = async(phaseData,activeChallengeUserData) =>{
   const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
@@ -166,25 +127,44 @@ export const full_months =(dt)=>
   export const hasChallenges = async(uid) =>{
     const userChallenges= await getChallengeDetails(uid);
     if(userChallenges !== undefined && userChallenges.length > 0){
-
-      // //check latest challenge user has
-      // const latestChallenge = getLatestChallenge(userChallenges);
-      // //allow user to 7 days from their challenge end date
-      // const date= moment(new Date(latestChallenge.endDate), 'YYYY-MM-DD').add(7,'days').format('YYYY-MM-DD');
-      // const challengeEndDate=new Date(date).getTime();
-      // const currentDate=new Date().getTime();
-      // console.log("challengeEndDate",challengeEndDate,"currentDate",currentDate);
-      // if(challengeEndDate >= currentDate){
-      //   console.log("return true",true);
-      //   return true;
-      // }
-      // else {
-      //   console.log("return false",false);
-      //   return false;
-      // }
       return true;
     }else{
       return false;
     }
   }
+  //---------------------for login subscription---------------
+
+  export const updateUserSubscription = async(subscriptionData,userId) => {
+    const user = await db.collection('users').doc(userId);
+    user.set(subscriptionData,{merge:true});
+  }
+  const today=new Date();
+  const oneDay=new Date(today.setDate(today+1));
+  const oneMonth=new Date(today.setMonth(today.getMonth()+1));
+  const threeMonth=new Date(today.setMonth(today.getMonth()+3));
+  const oneYear = new Date(today.setFullYear(today.getFullYear()+1));
+  export const subOneDay = { "subscriptionInfo":{
+    "expiry":oneDay.getTime(),
+    "originalPurchaseDate":today.getTime(),
+    "productId":"6129876664506",
+    "title":"App (1 Day Test Subscription)",
+ }}
+  export const subMonthly = { "subscriptionInfo":{
+    "expiry":oneMonth.getTime(),
+    "originalPurchaseDate":today.getTime(),
+    "productId":"6122583195834",
+    "title":"App (1 Month Subscription)",
+ }}
+ export const sub3Monthly = { "subscriptionInfo":{
+  "expiry":threeMonth.getTime(),
+  "originalPurchaseDate":today.getTime(),
+  "productId":"6122583326906",
+  "title":"App (3 Month Subscription)"
+}}
+ export const subYearly = { "subscriptionInfo":{
+  "expiry":oneYear.getTime(),
+  "originalPurchaseDate":today.getTime(),
+  "productId":"6122583523514",
+  "title":"App (12 Month Subscription)"
+}}
 

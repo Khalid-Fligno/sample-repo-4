@@ -35,6 +35,9 @@ import BigHeadingWithBackButton from '../../components/Shared/BigHeadingWithBack
 import InputBox from '../../components/Shared/inputBox';
 import CustomBtn from '../../components/Shared/CustomBtn';
 import authScreenStyle from './authScreenStyle';
+import {
+  updateUserSubscription, subOneDay, subMonthly, sub3Monthly, subYearly
+} from '../../utils/challenges';
 const { width } = Dimensions.get('window');
 
 const getRandomString = (length) => {
@@ -207,28 +210,43 @@ export default class SignupScreen extends React.PureComponent {
     }
   }
   addChallengesAfterSignUp = async(email,uid) =>{
-    const shopifyRegisteredUser=  await this.getUserRegisterdFromShopify(email);
-    console.log("shopifyRegisteredUser",shopifyRegisteredUser);
+    const shopifyRegisteredUser =  await this.getUserChallengeFromShopify(email);
+    const subscriptionFromShopify = await this.getUserSubscriptionFromShopify(email);
     if(shopifyRegisteredUser != undefined){
-    const challengeDetail=  await this.getChallengeDetails(shopifyRegisteredUser);
-    console.log("challengeDetail",challengeDetail);
-    if(challengeDetail !=undefined && shopifyRegisteredUser.hasOwnProperty('challenge') && shopifyRegisteredUser.challenge ){
-      const challenge =await db.collection('users').doc(uid).collection('challenges').doc(challengeDetail.id);
-      challenge.set(challengeDetail,{merge:true});
-      //delete old user 
-      if(shopifyRegisteredUser != undefined){
-      await db.collection('users').doc(shopifyRegisteredUser.id).collection('challenges').doc(challengeDetail.id).delete();
-      await db.collection('users').doc(shopifyRegisteredUser.id).delete();
-      console.log("old user is deleted");
+      const challengeDetail =  await this.getChallengeDetails(shopifyRegisteredUser);
+      if(challengeDetail != undefined && shopifyRegisteredUser.hasOwnProperty('challenge') && shopifyRegisteredUser.challenge ){
+          const challenge = await db.collection('users').doc(uid).collection('challenges').doc(challengeDetail.id);
+          challenge.set(challengeDetail,{merge:true});
+          //delete old user 
+          if(shopifyRegisteredUser != undefined){
+          await db.collection('users').doc(shopifyRegisteredUser.id).collection('challenges').doc(challengeDetail.id).delete();
+          await db.collection('users').doc(shopifyRegisteredUser.id).delete();
+      }
     }
+   }else if(subscriptionFromShopify !=null){
+    if(subscriptionFromShopify.shopifyProductId == 6122583326906){
+      await updateUserSubscription(sub3Monthly,uid);
+    } else if(subscriptionFromShopify.shopifyProductId == 6122583523514){
+      await updateUserSubscription(subYearly,uid);
+    } else if(subscriptionFromShopify.shopifyProductId == 6122583195834){
+      await updateUserSubscription(subMonthly,uid);
+    }else if(subscriptionFromShopify.shopifyProductId == 6129876664506){
+      await updateUserSubscription(subOneDay,uid);
     }
+    await db.collection('users').doc(subscriptionFromShopify.id).delete();
    }
   }
-  getUserRegisterdFromShopify = async(emailId) => {
+  getUserChallengeFromShopify = async(emailId) => {
     const userRef =  await db.collection('users').where("email","==",emailId).where("challenge","==",true).get();
     if (userRef.size > 0) {
       return userRef.docs[0].data();
   }     
+}
+getUserSubscriptionFromShopify = async(emailId) => {
+  const userRef =  await db.collection('users').where("email","==",emailId).where("subscription","==",true).get();
+  if (userRef.size > 0) {
+    return userRef.docs[0].data();
+}     
 }
   getChallengeDetails = async(user) => {
   let challenges=[];

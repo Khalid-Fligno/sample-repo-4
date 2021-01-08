@@ -75,7 +75,7 @@ exports.createShopifyWebhooks = async (req, res)  => {
 exports.createShopifySubscriptionWebhook = async(req, res) =>{ 
   console.log("req.body.subscription",req.body.subscription);   
     const request = req.body.subscription;    
-    const requestSuccess= await createUserAndChallenge(request); 
+    const requestSuccess= await createUserChallengeAndSubscription(request); 
     if(requestSuccess)
         res.status(200).send("Purchase Shopify Subscription called successfully");
     else 
@@ -107,7 +107,7 @@ exports.shopifyChargesMigration = async(req, res) => {
       request.email=charge.email;
       request.product_title=charge.line_items[0].title;
       request.shopify_product_id=charge.line_items[0].shopify_product_id;
-       const successRequest=  await createUserAndChallenge(request);
+       const successRequest=  await createUserChallengeAndSubscription(request);
        if(successRequest)
         console.log(`${request.email} user subscribe to ${request.product_title} and successfully migrated`);
         else
@@ -216,7 +216,7 @@ exports.shopifyAllSubscriptions = async(req, res) => {
     let chargesResponse=[];
     const subscriptions =shopifyCharges.subscriptions;
     subscriptions.forEach(async(subscription)=>{
-      if(subscription.product_title.includes("Challenge")){
+      if(subscription.product_title.toLowerCase().includes("challenge") || subscription.product_title.toLowerCase().includes("subscription")){
         const request={};
         request.created_at=subscription.created_at;
         request.email=subscription.email;
@@ -255,10 +255,11 @@ exports.getAllWebHooks = async(req, res) => {
 res.status(200).send(registeredWebHooks.webhooks);
 }
 
-const createUserAndChallenge= async (req)=>{
+const createUserChallengeAndSubscription = async (req)=>{
       //check request contain Challenge work in product_title
       const challengeProductName=req.product_title;
-      if(!challengeProductName.includes("Challenge")){
+      const challengeProductId=req.shopify_product_id;
+      if(!challengeProductName.toLowerCase().includes("challenge")||!challengeProductName.toLowerCase().includes("subscription")){
         return false;
       }
 
@@ -268,19 +269,25 @@ const createUserAndChallenge= async (req)=>{
       if(user === undefined ){
           const newUser={
               email:req.email,
-              challenge:true, 
               formShopify:true,
               onboarded: false,
               country:'unavailable',
               signUpDate: moment(new Date()).format('YYYY-MM-DD'),
               fitnessLevel: 1,
-              id: uniqid(),          
+              id: uniqid(),
+              shopifyProductId:req.shopify_product_id,         
           };
           // get the challage from line_items =>properties
+          if(challengeProductName.toLowerCase().includes("challenge")){            
+            newUser.challenge=true;             
+          }else if (challengeProductName.toLowerCase().includes("subscription")){
+            newUser.subscription=true;
+          }
           addUser(newUser);   
       }
       if(user != undefined){
-        const userChallenge= await getUserChallenge(user.id,challengeProductName);
+        if(challengeProductName.toLowerCase().includes("challenge")){ 
+        const userChallenge= await getUserChallenge(user.id,challengeProductId);
         if(userChallenge )
           { 
             console.log("user has challenge");
@@ -289,12 +296,23 @@ const createUserAndChallenge= async (req)=>{
       }
       // get product from line item collection
       // get workout challange details by passing product_title      
-      const challenge= await getChallengeDetails(challengeProductName);
+      const challenge= await getChallengeDetails(challengeProductId);
       const userInfo=await getUser(req.email);
       if(challenge !=null){        
           const userChallenge=createNewChallenge(challenge)
           updateChallengesAgainstUser(userChallenge,userInfo.id);
       }
+    } else if (challengeProductName.toLowerCase().includes("subscription")){
+        if(challengeProductId ==6122583326906){
+          updateUserSubscription(sub3Monthly,user.id);
+        } else if(challengeProductId ==6122583523514){
+          updateUserSubscription(subYearly,user.id);
+        } else if(challengeProductId ==6122583195834){
+          updateUserSubscription(subMonthly,user.id);
+        }else if(challengeProductId ==6129876664506){
+          updateUserSubscription(subOneDay,user.id);
+        }
+    }
       return true;
 }
 const deleteWebhookUrl = async(req) => {
@@ -328,20 +346,21 @@ const updateUserById = (userInfo) => {
   const userRef = db.collection('users').doc(userInfo.id);
   userRef.set(userInfo, { merge: true });
 }
-const getUserChallenge = async(userId,challengeName)=>{
-  const snapshot=await db.collection('users').doc(userId).collection('challenges').where("name","==",challengeName)
+const getUserChallenge = async(userId,shopifyProductId)=>{
+  const snapshot=await db.collection('users').doc(userId).collection('challenges').where("shopifyProductId","==",shopifyProductId)
   .get();
   if (snapshot.size > 0) {
    return snapshot.docs[0].data();
 } 
 }
-const getChallengeDetails = async(challengeName) => {
-    const snapshot =await db.collection('challenges').where("name","==",challengeName)
+const getChallengeDetails = async(shopifyProductId) => {
+    const snapshot =await db.collection('challenges').where("shopifyProductId","==",shopifyProductId)
      .get();
      if (snapshot.size > 0) {
       return snapshot.docs[0].data();
   }   
 }
+
 const getChallengeDetailByProductId = async(challengeProductId) => {
   
   const snapshot =await db.collection('challenges').where("shopifyProductId","==",challengeProductId)
@@ -359,6 +378,11 @@ const updateChallenges = (challengeData)=>{
     const challenge = db.collection('challenges').doc(challengeData.id);
     challenge.set(challengeData,{merge:true})
 }
+const updateUserSubscription = (subscriptionData,userId) => {
+  const user=db.collection('users').doc(userId);
+  user.set(subscriptionData,{merge:true});
+}
+
 const createNewChallenge=(data)=>{
     const phases = data.phases.map((res)=>{
         return (
@@ -397,5 +421,34 @@ const createNewChallenge=(data)=>{
       }
       return challenge
 }
+const today=new Date();
+  const oneDay=new Date(today.setDate(today+1));
+  const oneMonth=new Date(today.setMonth(today.getMonth()+1));
+  const threeMonth=new Date(today.setMonth(today.getMonth()+3));
+  const oneYear = new Date(today.setFullYear(today.getFullYear()+1));
+  const subOneDay = { "subscriptionInfo":{
+    "expiry":oneDay.getTime(),
+    "originalPurchaseDate":today.getTime(),
+    "productId":"6129876664506",
+    "title":"App (1 Day Test Subscription)",
+ }}
+  const subMonthly = { "subscriptionInfo":{
+    "expiry":oneMonth.getTime(),
+    "originalPurchaseDate":today.getTime(),
+    "productId":"6122583195834",
+    "title":"App (1 Month Subscription)",
+ }}
+ const sub3Monthly = { "subscriptionInfo":{
+  "expiry":threeMonth.getTime(),
+  "originalPurchaseDate":today.getTime(),
+  "productId":"6122583326906",
+  "title":"App (3 Month Subscription)"
+}}
+ const subYearly = { "subscriptionInfo":{
+  "expiry":oneYear.getTime(),
+  "originalPurchaseDate":today.getTime(),
+  "productId":"6122583523514",
+  "title":"App (12 Month Subscription)"
+}}
 
 
