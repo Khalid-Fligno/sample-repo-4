@@ -43,12 +43,6 @@ export default class Header extends React.PureComponent {
     const { navigation } = this.props;
     navigation.pop();
   }
-  handleBackToCalendar = ()=>{
-    const { navigation } = this.props;
-    if (navigation.state.params.handleBackToCalendar) {
-      navigation.state.params.handleBackToCalendar();
-    }
-  }
   goToHome = () => {
     const { navigation } = this.props;
     navigation.navigate('Home')
@@ -93,6 +87,13 @@ export default class Header extends React.PureComponent {
       navigation.state.params.handleStart();
     }
   }
+  handleActiveChallengeSetting = () =>{
+    const { navigation } = this.props;
+    if (navigation.state.params.activeChallengeSetting) {
+      navigation.state.params.activeChallengeSetting();
+    }
+  }
+
   render() {
     const {
       stack,
@@ -107,7 +108,7 @@ export default class Header extends React.PureComponent {
       withProfileButton,
       headerTitleParams,
       withLogoutButton,
-      withHandleBackToCalendar
+      activeChallengeSetting
     } = this.props;
     
     return (
@@ -134,7 +135,7 @@ export default class Header extends React.PureComponent {
           ]}
         >
           {
-            withBackButton && !this.ishandleBackToCalendar &&(
+            withBackButton  &&(
               <TouchableOpacity
                 style={globalStyle.headerContentContainerLeft}
                 onPress={this.handleBack}
@@ -147,18 +148,28 @@ export default class Header extends React.PureComponent {
               </TouchableOpacity>
             )
           }
+  
           {
-            withHandleBackToCalendar && (
-              <TouchableOpacity
-                style={globalStyle.headerContentContainerLeft}
-                onPress={this.handleBackToCalendar}
-              >
-                <Icon
-                  name="chevron-left"
-                  size={20}
-                  color={colors.themeColor.color}
-                />
-              </TouchableOpacity>
+            activeChallengeSetting && (
+              <View style={globalStyle.headerContentContainerLeft}>
+                <TouchableOpacity
+                  style={{
+                    height: 30,
+                    width: 30,
+                    marginLeft:5
+                  }}
+                  onPress={this.handleActiveChallengeSetting}
+                >
+                  <Image
+                        source={require('../../../assets/icons/settingIcon.jpg')}
+                        resizeMode='stretch'
+                        style={{
+                          height: 32,
+                          width: 32,
+                        }}
+                 />
+                </TouchableOpacity>
+              </View>  
             )
           }
           {
@@ -202,7 +213,12 @@ export default class Header extends React.PureComponent {
             )
           }
           {
-            !withHomeButton &&!withBackButton && !withHelpButton && !withLogoutButton && (
+            !withHomeButton &&
+            !withBackButton && 
+            !withHelpButton && 
+            !withLogoutButton && 
+            !activeChallengeSetting &&
+            (
               <View style={globalStyle.headerContentContainerLeft} />
             )
           }

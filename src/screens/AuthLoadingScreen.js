@@ -36,7 +36,7 @@ import RNIap, {
   purchaseUpdatedListener,
 } from 'react-native-iap';
 import {
-  getChallengeDetails,getLatestChallenge,hasChallenges
+  getChallengeDetails,getLatestChallenge,hasChallenges, isActiveChallenge
 } from '../utils/challenges';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
@@ -186,7 +186,13 @@ export default class AuthLoadingScreen extends React.PureComponent {
         this.props.navigation.navigate('Onboarding1');
         return;
     }
-    this.props.navigation.navigate('App');
+    isActiveChallenge().then(res=>{
+      if(res)
+        this.props.navigation.navigate('Calendar');
+      else
+        this.props.navigation.navigate('App');
+
+    })
   }
   // GRAND UNIFIED()
   cachingComplete = async () => {
@@ -213,23 +219,26 @@ export default class AuthLoadingScreen extends React.PureComponent {
                 if(await hasChallenges(uid)){
                   await this.goToAppScreen(doc);
                 }else{
-                // NO PURCHASE INFORMATION SAVED
-                this.props.navigation.navigate('Subscription');
+                  // NO PURCHASE INFORMATION SAVED
+                  this.props.navigation.navigate('Subscription');
                 }
-              } else if (subscriptionInfo.expiry < Date.now()) {
-                if(await hasChallenges(uid)){
+              } 
+              else if (subscriptionInfo.expiry < Date.now()) {
+                  if(await hasChallenges(uid)){
+                    await this.goToAppScreen(doc);
+                  }else{
+                    // EXPIRED
+                    await this.storePurchase(subscriptionInfo, onboarded);
+                  }
+              } 
+              else if (subscriptionInfo.expiry > Date.now()) {
+                  // RECEIPT STILL VALID
                   await this.goToAppScreen(doc);
-                }else{
-                // EXPIRED
-                await this.storePurchase(subscriptionInfo, onboarded);
-                }
-              } else if (subscriptionInfo.expiry > Date.now()) {
-                // RECEIPT STILL VALID
-                if (onboarded) {
-                  this.props.navigation.navigate('App');
-                } else {
-                  this.props.navigation.navigate('Onboarding1');
-                }
+                  // if (onboarded) {
+                  //   this.props.navigation.navigate('App');
+                  // } else {
+                  //   this.props.navigation.navigate('Onboarding1');
+                  // }
               }
             } else {
               Alert.alert('Account data could not be found');

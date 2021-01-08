@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    backgroundColor:colors.charcoal.dark,
+    backgroundColor:colors.grey.medium,
     borderRadius:3
   },
   opacityLayer: {

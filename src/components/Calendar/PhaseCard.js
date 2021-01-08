@@ -120,7 +120,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    borderRadius:3
+    borderRadius:3,
+    backgroundColor:colors.grey.medium
   },
   opacityLayer: {
     flex: 1,
