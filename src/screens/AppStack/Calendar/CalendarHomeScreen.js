@@ -462,6 +462,7 @@ class CalendarHomeScreen extends React.PureComponent {
               activeChallengeUserData = {activeChallengeUserData}
               totalChallengeWorkoutsCompleted ={this.totalChallengeWorkoutsCompleted}
               openLink={()=>this.openLink(this.phase.pdfUrl)}
+              currentDay={this.currentChallengeDay}
             />
         }
         {
@@ -483,6 +484,8 @@ class CalendarHomeScreen extends React.PureComponent {
       >
         <ChallengeSetting 
           onToggle={()=>this.toggleSetting()}
+          activeChallengeUserData={activeChallengeUserData}
+          navigation={this.props.navigation}
         />
       </Modal>
     )

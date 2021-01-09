@@ -40,11 +40,13 @@ class ChallengeProgressCard2 extends Component {
         activeChallengeData,
         activeChallengeUserData,
         totalChallengeWorkoutsCompleted,
-        openLink
+        openLink,
+        currentDay
       } = this.props
       let total = 0
       activeChallengeData.workouts.forEach((res)=>{if(res.name.toLowerCase() != 'rest')total += res.days.length })
-    return(
+      console.log(activeChallengeData.numberOfDays)
+      return(
         <View>
             <View style={styles.ChallengeProgressCardContainer }>
                 <View>
@@ -58,7 +60,8 @@ class ChallengeProgressCard2 extends Component {
                                     fontSize:wp('3%')
                                 }}
                     >
-                        Day {totalChallengeWorkoutsCompleted.length} of {total} - keep it going!
+                        {/* Day {totalChallengeWorkoutsCompleted.length} of {total} - keep it going! */}
+                        Day {currentDay} of {activeChallengeData.numberOfDays} - keep it going!
                     </Text>
                 </View>
             
@@ -67,15 +70,14 @@ class ChallengeProgressCard2 extends Component {
                 >
                     <ChallengeProgressBar
                         // completed={totalChallengeWorkoutsCompleted.length}
-                        completed={20}
-                        total = {total}
+                        completed={currentDay}
+                        total = {activeChallengeData.numberOfDays}
                         size ={wp('26%')}
                     />
                 </View>
             </View> 
             <PhaseCard 
                 onPress={()=>console.log(">>>>")}
-                title="phase 1"
                 image={require('../../../assets/images/Calendar/phaseCardBg.png')}
                 phase={phase}
                 phaseData={phaseData}

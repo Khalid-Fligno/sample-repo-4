@@ -96,7 +96,6 @@ export default class PhaseCard extends React.PureComponent {
 
 PhaseCard.propTypes = {
   onPress: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
   image: PropTypes.number.isRequired,
   recommendedWorkout: PropTypes.array,
   cardCustomStyle: PropTypes.object

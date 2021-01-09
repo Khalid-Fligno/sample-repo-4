@@ -9,15 +9,57 @@ import Icon from '../Shared/Icon';
 import { StyleSheet } from 'react-native';
 import fonts from '../../styles/fonts';
 import DoubleRightArrow from '../../../assets/icons/DoubleRightArrow';
+import AsyncStorage from '@react-native-community/async-storage';
+import { db } from '../../../config/firebase';
+import Loader from '../Shared/Loader';
+import { Alert } from 'react-native';
 
 class ChallengeSetting extends Component {
   constructor(props) {
     super(props);
     this.state = {
+        loading:false
     };
   }
 
+
+  async  quitChallenge(data){
+    this.setState({loading:true})
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
+    userRef.set({status:'Completed'},{merge:true}).then((res)=>{
+        this.setState({loading:false})
+        this.props.onToggle()
+        console.log("res",res)
+        setTimeout(()=>{
+            this.props.navigation.navigate('ChallengeSubscription');
+        },100)
+    }).catch((err)=>{
+      console.log(err)
+    })
+  }
+  async  restartChallenge(data){
+    this.setState({loading:true})
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
+    userRef.set({status:'Completed'},{merge:true}).then((res)=>{
+        this.setState({loading:false})
+        this.props.onToggle()
+        setTimeout(()=>{
+            this.props.navigation.navigate('ChallengeOnBoarding1',{
+                data:{
+                  challengeData:data
+                }
+              })
+        },100)
+    }).catch((err)=>{
+      console.log(err)
+    })
+  }
+
   render() {
+      const {activeChallengeUserData} = this.props
+      console.log("activeChallengeUserData",this.props.activeChallengeUserData)
     return (
                     <SafeAreaView style={{
                         backgroundColor:'white',
@@ -42,6 +84,19 @@ class ChallengeSetting extends Component {
                             }}>
                                 <TouchableOpacity
                                     style={styles.btnContainer}
+                                    onPress={()=>{
+                                        Alert.alert('',
+                                            'Are you sure you want to quit your challenge?',
+                                            [
+                                            {
+                                                text: 'Cancel', style: 'cancel',
+                                            },
+                                            {
+                                                text: 'Quit', onPress: () => this.quitChallenge(activeChallengeUserData),
+                                            }],
+                                            { cancelable: false },
+                                        )
+                                    }}
                                 >
                                     <Text style={styles.title}>Quit challenge</Text>
                                     <DoubleRightArrow height={wp('3.5%')}/>
@@ -49,13 +104,41 @@ class ChallengeSetting extends Component {
 
                                 <TouchableOpacity
                                     style={styles.btnContainer}
+                                    onPress={()=>{
+                                        Alert.alert('',
+                                            'Are you sure you want to restart your challenge?',
+                                            [
+                                            {
+                                                text: 'Cancel', style: 'cancel',
+                                            },
+                                            {
+                                                text: 'Restart', onPress: () => this.restartChallenge(activeChallengeUserData),
+                                            }],
+                                            { cancelable: false },
+                                        )
+                                    }}
                                 >
                                     <Text style={styles.title}>Restart challenge</Text>
                                     <DoubleRightArrow height={wp('3.5%')}/>
                                     
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={styles.btnContainer}>
+                                <TouchableOpacity 
+                                    style={styles.btnContainer}
+                                    onPress={()=>{
+                                        Alert.alert('Are you sure?',
+                                            'To choose another you need to quit current active challenge.',
+                                            [
+                                            {
+                                                text: 'Cancel', style: 'cancel',
+                                            },
+                                            {
+                                                text: 'Quit', onPress: () => this.quitChallenge(activeChallengeUserData),
+                                            }],
+                                            { cancelable: false },
+                                        )
+                                    }}    
+                                >
                                     <Text style={styles.title}>Choose another challenge</Text>
                                     <DoubleRightArrow height={wp('3.5%')}/>
 
@@ -63,7 +146,10 @@ class ChallengeSetting extends Component {
                             </View>
 
                         </View>
-                    
+                        <Loader
+                            loading={this.state.loading}
+                            color={colors.red.standard}
+                        />
                     </SafeAreaView>
     );
   }

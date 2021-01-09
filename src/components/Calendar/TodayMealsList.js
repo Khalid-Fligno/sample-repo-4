@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 0 },
         shadowRadius: 5,
         width:'80%',
-        fontSize:wp('3.5%')
+        fontSize:wp('3.5%'),
+        textTransform:'capitalize'
     }
 });
