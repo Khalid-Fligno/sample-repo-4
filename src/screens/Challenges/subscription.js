@@ -342,7 +342,7 @@ class ChallengeSubscriptionScreen extends Component {
                   <Text style={ChallengeStyle.Title}>Take a new challenge</Text>
                   <ChallengeCard 
                     outline={false}
-                    imageUrl="https://firebasestorage.googleapis.com/v0/b/quickstart-1588594831516.appspot.com/o/Photos%2FFL_2.png?alt=media&token=8eb669ad-7e8b-4a41-bc22-2d3cfa3678fc"
+                    imageUrl="https://firebasestorage.googleapis.com/v0/b/quickstart-1588594831516.appspot.com/o/Photos%2FphaseCardBg.png?alt=media&token=ce690e37-98b6-4a7a-b077-936923d93343"
                     numberOfDays={28}
                     numberOfWeeks={4}
                     title="New Year Better You"
