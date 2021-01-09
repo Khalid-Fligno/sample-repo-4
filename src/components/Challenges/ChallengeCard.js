@@ -15,8 +15,18 @@ class ChallengeCard extends Component {
   }
 
   render() {
-      const  {numberOfDays ,outline,btnTitle,onPress,imageUrl,disabled,numberOfWeeks,restartButton,onPressRestart} = this.props
-   console.log("????",numberOfWeeks)
+      const  {
+        numberOfDays ,
+        outline,btnTitle,
+        onPress,
+        imageUrl,
+        disabled,
+        numberOfWeeks,
+        restartButton,
+        onPressRestart,
+        title,
+        subTitle,
+      } = this.props
       return (
         <ImageBackground
             source ={{uri:imageUrl}}
@@ -26,17 +36,32 @@ class ChallengeCard extends Component {
               <View
                 style={styles.ViewContainer}
               >
-                  <View style={styles.titleContainer}>
+                  {/* <View style={styles.titleContainer}>
                     <Text style={styles.numberTextLabel}>{numberOfWeeks}</Text>
                       <View style={{marginLeft:5}}> 
                           <Text style={styles.textLabel}>Week</Text>
                           <Text style={styles.textLabel}>challenge</Text>
                       </View>
+                  </View> */}
+                  <View style={styles.titleContainer}>
+                    <Text style={[styles.numberTextLabel,{fontSize:wp('6%'),flexWrap:'nowrap'}]}>
+                      {title} 
+                    </Text>
                   </View>
-                 
+                  {
+                    disabled &&
+                    <View style={[styles.titleContainer,{marginTop:wp('2%')}]}>
+                      <Text style={[styles.numberTextLabel,{fontSize:wp('4%')}]}>
+                        {subTitle}
+                      </Text>
+                    </View>
+                  }
+                  
               </View> 
               <View style={styles.customButtonContainer}>
-                 <CustomBtn 
+                {
+                  !disabled &&
+                    <CustomBtn 
                     outline={outline}
                     Title={btnTitle}
                     customBtnStyle={{ 
@@ -49,23 +74,25 @@ class ChallengeCard extends Component {
                     customBtnTitleStyle={{color:colors.offWhite,fontSize:14}}
                     onPress={onPress}
                     disabled = {disabled}
-                 />
+                    />
+                }
+                
                  { restartButton && 
-                 <CustomBtn 
-                    outline={outline}
-                    Title='Restart'
-                    customBtnStyle={{ 
-                                      padding:8,
-                                      marginTop:10,
-                                      backgroundColor:!outline?colors.themeColor.color:'transparent',
-                                      borderRadius:50,
-                                      width:wp('40%'),
-                                      marginTop:hp('1.8%'),
-                                    }}
-                    customBtnTitleStyle={{color:colors.offWhite,fontSize:14}}
-                    onPress={onPressRestart}
-                    disabled = {disabled}
-                 />
+                    <CustomBtn 
+                        outline={outline}
+                        Title='Restart'
+                        customBtnStyle={{ 
+                                          padding:8,
+                                          marginTop:10,
+                                          backgroundColor:!outline?colors.themeColor.color:'transparent',
+                                          borderRadius:50,
+                                          width:wp('40%'),
+                                          marginTop:hp('1.8%'),
+                                        }}
+                        customBtnTitleStyle={{color:colors.offWhite,fontSize:14}}
+                        onPress={onPressRestart}
+                        disabled = {disabled}
+                    />
                   }
                  </View>
                 
@@ -91,21 +118,23 @@ export default ChallengeCard;
 
 const styles = StyleSheet.create({
     ViewContainer:{
-        width:'50%',
+        width:'100%',
         height:'100%',
         padding:10,
         paddingLeft:20,
         flexBasis:'50%',
+        justifyContent:'center',
         },
     titleContainer:{
         flexDirection:'row',
-        alignItems:'flex-end'
+        alignItems:'flex-end',
+        flexWrap:'wrap'
     },
     numberTextLabel:{
         fontSize:50,
         fontFamily:fonts.GothamLight,
         marginBottom:-6,
-        color:colors.offWhite
+        color:colors.offWhite,
     } ,
     textLabel: {
         fontSize:15,
@@ -113,6 +142,9 @@ const styles = StyleSheet.create({
         color:colors.offWhite,
     } ,
     customButtonContainer:{
-      flexDirection:'row',justifyContent:'space-between',width:wp('85%'),marginHorizontal:10
+      flexDirection:'row',
+      justifyContent:'space-between',
+      width:wp('85%'),
+      marginHorizontal:10
     } 
 });
