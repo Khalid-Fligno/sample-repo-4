@@ -135,7 +135,7 @@ export const full_months =(dt)=>
   //---------------------for login subscription---------------
 
   export const updateUserSubscription = async(subscriptionData,userId) => {
-    console.log("subscriptionData",subscriptionData);
+    //console.log("subscriptionData",subscriptionData);
     const user = await db.collection('users').doc(userId);
     user.set(subscriptionData,{merge:true});
   }

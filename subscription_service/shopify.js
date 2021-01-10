@@ -303,7 +303,6 @@ const createUserChallengeAndSubscription = async (req)=>{
         }
       }
       else if (challengeProductName.toLowerCase().includes("subscription")){
-        console.log("in subscription block",challengeProductId);
           if(challengeProductId ==6122583326906){
             updateUserSubscription(sub3Monthly,user.id);
           } else if(challengeProductId ==6122583523514){
@@ -381,7 +380,6 @@ const updateChallenges = (challengeData)=>{
     challenge.set(challengeData,{merge:true})
 }
 const updateUserSubscription = (subscriptionData,userId) => {
-  console.log("subscriptionData",subscriptionData);
   const user=db.collection('users').doc(userId);
   user.set(subscriptionData,{merge:true});
 }
