@@ -117,7 +117,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         backTitle : this.props.navigation.getParam('meal', null)
       })}
       image={`${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage}
-      title={item.title}
+      title={item.title.toUpperCase()}
       tags={item.tags}
       subTitle={item.subtitle}
       time={item.time}

@@ -30,6 +30,7 @@ class ChallengeSubscriptionScreen extends Component {
       activeChallengeUserData:undefined,
       activeChallengeData:undefined,
       blogs:undefined,
+      totalChallengeCount:0
     }
   }
 
@@ -85,16 +86,18 @@ class ChallengeSubscriptionScreen extends Component {
   }
 
   fetchChallenges = async () => {
-    let {userChallengesList} = this.state
+    let {userChallengesList,totalChallengeCount} = this.state
     
     this.unsubscribeChallenges = await db.collection('challenges')
       .onSnapshot(async (querySnapshot) => {
         const challengesList = [];
         const restartChallengesList=[];
         await querySnapshot.forEach(async (doc) => {
-          const check = userChallengesList.findIndex(async(challenge)=>{ 
+          //if(totalChallengeCount < 1)
+            this.setState({totalChallengeCount:totalChallengeCount+1})
+          const check = userChallengesList.findIndex((challenge)=>{ 
             if(doc.id === challenge.id){
-              await restartChallengesList.push(await doc.data());
+              restartChallengesList.push(doc.data());
               this.setState({ restartChallengesList });
             }
               //TODO:Hide challenge if it present in users challenge list
@@ -151,11 +154,13 @@ class ChallengeSubscriptionScreen extends Component {
         numberOfDays={item.numberOfDays}
         numberOfWeeks={item.numberOfWeeks}
         title={item.displayName}
+        subTitle={item.subTitle}
         key={index}
         btnTitle = "Buy"
         //onPress={()=>this.addChallengeToUser(index)}
         onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
         disabled = {false}
+        challengeData={item}
     />
       
   )
@@ -199,6 +204,7 @@ class ChallengeSubscriptionScreen extends Component {
           <ChallengeCard 
               outline={true}
               imageUrl={item.imageUrl}
+              title={item.displayName}
               numberOfDays={item.numberOfDays}
               numberOfWeeks={item.numberOfWeeks}
               key={index}
@@ -306,7 +312,14 @@ class ChallengeSubscriptionScreen extends Component {
 
   
   render() {
-    const {challengesList,userChallengesList,loading,blogs} = this.state
+    const {
+      challengesList,
+      userChallengesList,
+      loading,
+      blogs,
+      totalChallengeCount
+    } = this.state
+    console.log('totalChallengeCount',totalChallengeCount)
     return (
       <ScrollView style={{flex:1,paddingHorizontal:containerPadding}} bounces={false}>
          
@@ -323,11 +336,28 @@ class ChallengeSubscriptionScreen extends Component {
             {
               challengesList.map((item,index)=>(this.renderItem({item,index})))
             }
-          
+            {
+              totalChallengeCount === 1 &&
+              <>
+                  <Text style={ChallengeStyle.Title}>Take a new challenge</Text>
+                  <ChallengeCard 
+                    outline={false}
+                    imageUrl="https://firebasestorage.googleapis.com/v0/b/quickstart-1588594831516.appspot.com/o/Photos%2FphaseCardBg.png?alt=media&token=ce690e37-98b6-4a7a-b077-936923d93343"
+                    numberOfDays={28}
+                    numberOfWeeks={4}
+                    title="New Year Better You"
+                    subTitle="Available from Thursday"
+                    btnTitle = "Buy"
+                    //onPress={()=>this.addChallengeToUser(index)}
+                    onPress={() => console.log("")}
+                    disabled = {true}
+                  />
+          </>
+            }
           </View>
             
        }  
-        {
+        {/* {
             blogs &&  blogs.length > 0 && <Text style={[ChallengeStyle.Title,{marginBottom:hp('1%')}]}>Blogs</Text>
         }
         {
@@ -340,7 +370,7 @@ class ChallengeSubscriptionScreen extends Component {
               index = {index}
             />
           )
-        }
+        } */}
          <Loader
           loading={loading}
           color={colors.themeColor.color}
