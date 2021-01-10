@@ -1,0 +1,9 @@
+1)if in workout count === true 
+    then  difficulty level,workInterval map is based to each exercise level.
+     difficulty level ,workInterval map,restInterval of workout level is not in used then.
+2)if in workout count === false 
+    then  difficulty level,workInterval map is based to workout level.
+
+
+3)filter contains 'strength => workIntervalMap ->[60,60,60] ,restIntervalMap=>[0,0,0]
+4)filter contains 'circuit,interval' => workIntervalMap === difficultyLevel

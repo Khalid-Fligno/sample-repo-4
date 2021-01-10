@@ -86,15 +86,14 @@ class ChallengeSubscriptionScreen extends Component {
 
   fetchChallenges = async () => {
     let {userChallengesList} = this.state
-    
     this.unsubscribeChallenges = await db.collection('challenges')
       .onSnapshot(async (querySnapshot) => {
         const challengesList = [];
         const restartChallengesList=[];
         await querySnapshot.forEach(async (doc) => {
-          const check = userChallengesList.findIndex(async(challenge)=>{ 
+          const check = userChallengesList.findIndex((challenge)=>{ 
             if(doc.id === challenge.id){
-              await restartChallengesList.push(await doc.data());
+               restartChallengesList.push(doc.data());
               this.setState({ restartChallengesList });
             }
               //TODO:Hide challenge if it present in users challenge list
@@ -307,6 +306,7 @@ class ChallengeSubscriptionScreen extends Component {
   
   render() {
     const {challengesList,userChallengesList,loading,blogs} = this.state
+    console.log(challengesList)
     return (
       <ScrollView style={{flex:1,paddingHorizontal:containerPadding}} bounces={false}>
          
