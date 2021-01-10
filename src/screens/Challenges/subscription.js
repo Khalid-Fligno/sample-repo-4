@@ -93,11 +93,11 @@ class ChallengeSubscriptionScreen extends Component {
         const challengesList = [];
         const restartChallengesList=[];
         await querySnapshot.forEach(async (doc) => {
-          if(totalChallengeCount < 1)
+          //if(totalChallengeCount < 1)
             this.setState({totalChallengeCount:totalChallengeCount+1})
-          const check = userChallengesList.findIndex(async(challenge)=>{ 
+          const check = userChallengesList.findIndex((challenge)=>{ 
             if(doc.id === challenge.id){
-              await restartChallengesList.push(await doc.data());
+              restartChallengesList.push(doc.data());
               this.setState({ restartChallengesList });
             }
               //TODO:Hide challenge if it present in users challenge list
@@ -346,7 +346,7 @@ class ChallengeSubscriptionScreen extends Component {
                     numberOfDays={28}
                     numberOfWeeks={4}
                     title="New Year Better You"
-                    subTitle="Coming this Thursday"
+                    subTitle="Available from Thursday"
                     btnTitle = "Buy"
                     //onPress={()=>this.addChallengeToUser(index)}
                     onPress={() => console.log("")}
