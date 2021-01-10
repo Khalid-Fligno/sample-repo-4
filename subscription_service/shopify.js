@@ -187,7 +187,7 @@ exports.shopifyLastSubscriptions = async(req, res) => {
     // get all charges from shopifyCharges charges
     const subscriptions =shopifyCharges.subscriptions;
       subscriptions.forEach(async(subscription)=>{
-        if(subscription.product_title.includes("Challenge")){
+        if(subscription.product_title.includes("Challenge") || subscription.product_title.toLowerCase().includes("subscription")){
           const request={};
           request.created_at=subscription.created_at;
           request.email=subscription.email;
@@ -259,10 +259,10 @@ const createUserChallengeAndSubscription = async (req)=>{
       //check request contain Challenge work in product_title
       const challengeProductName=req.product_title;
       const challengeProductId=req.shopify_product_id;
-      if(!challengeProductName.toLowerCase().includes("challenge")||!challengeProductName.toLowerCase().includes("subscription")){
+      if(!challengeProductName.toLowerCase().includes("challenge") && !challengeProductName.toLowerCase().includes("subscription")){
+        
         return false;
       }
-
       // get user by email from firebase
       const user =await getUser(req.email);     
       // 1. if user not exist, create that user
@@ -293,26 +293,28 @@ const createUserChallengeAndSubscription = async (req)=>{
             console.log("user has challenge");
             return true
           }
-      }
-      // get product from line item collection
-      // get workout challange details by passing product_title      
-      const challenge= await getChallengeDetails(challengeProductId);
-      const userInfo=await getUser(req.email);
-      if(challenge !=null){        
+        // get product from line item collection
+        // get workout challange details by passing product_title      
+        const challenge= await getChallengeDetails(challengeProductId);
+        const userInfo=await getUser(req.email);
+        if(challenge !=null){        
           const userChallenge=createNewChallenge(challenge)
           updateChallengesAgainstUser(userChallenge,userInfo.id);
-      }
-    } else if (challengeProductName.toLowerCase().includes("subscription")){
-        if(challengeProductId ==6122583326906){
-          updateUserSubscription(sub3Monthly,user.id);
-        } else if(challengeProductId ==6122583523514){
-          updateUserSubscription(subYearly,user.id);
-        } else if(challengeProductId ==6122583195834){
-          updateUserSubscription(subMonthly,user.id);
-        }else if(challengeProductId ==6129876664506){
-          updateUserSubscription(subOneDay,user.id);
         }
-    }
+      }
+      else if (challengeProductName.toLowerCase().includes("subscription")){
+        console.log("in subscription block",challengeProductId);
+          if(challengeProductId ==6122583326906){
+            updateUserSubscription(sub3Monthly,user.id);
+          } else if(challengeProductId ==6122583523514){
+            updateUserSubscription(subYearly,user.id);
+          } else if(challengeProductId ==6122583195834){
+            updateUserSubscription(subMonthly,user.id);
+          }else if(challengeProductId ==6129876664506){
+            updateUserSubscription(subOneDay,user.id);
+          }
+      }
+    } 
       return true;
 }
 const deleteWebhookUrl = async(req) => {
@@ -379,6 +381,7 @@ const updateChallenges = (challengeData)=>{
     challenge.set(challengeData,{merge:true})
 }
 const updateUserSubscription = (subscriptionData,userId) => {
+  console.log("subscriptionData",subscriptionData);
   const user=db.collection('users').doc(userId);
   user.set(subscriptionData,{merge:true});
 }
@@ -422,33 +425,32 @@ const createNewChallenge=(data)=>{
       return challenge
 }
 const today=new Date();
-  const oneDay=new Date(today.setDate(today+1));
-  const oneMonth=new Date(today.setMonth(today.getMonth()+1));
-  const threeMonth=new Date(today.setMonth(today.getMonth()+3));
-  const oneYear = new Date(today.setFullYear(today.getFullYear()+1));
+  const oneDay=new Date(new Date().setDate(new Date().getDate()+1));
+  const oneMonth=new Date(new Date().setMonth(new Date().getMonth()+1));
+  const threeMonth=new Date(new Date().setMonth(new Date().getMonth()+3));
+  const oneYear = new Date(new Date().setFullYear(new Date().getFullYear()+1));
   const subOneDay = { "subscriptionInfo":{
     "expiry":oneDay.getTime(),
-    "originalPurchaseDate":today.getTime(),
+    "originalPurchaseDate":new Date().getTime(),
     "productId":"6129876664506",
     "title":"App (1 Day Test Subscription)",
  }}
   const subMonthly = { "subscriptionInfo":{
     "expiry":oneMonth.getTime(),
-    "originalPurchaseDate":today.getTime(),
+    "originalPurchaseDate":new Date().getTime(),
     "productId":"6122583195834",
     "title":"App (1 Month Subscription)",
  }}
  const sub3Monthly = { "subscriptionInfo":{
   "expiry":threeMonth.getTime(),
-  "originalPurchaseDate":today.getTime(),
+  "originalPurchaseDate":new Date().getTime(),
   "productId":"6122583326906",
   "title":"App (3 Month Subscription)"
 }}
  const subYearly = { "subscriptionInfo":{
   "expiry":oneYear.getTime(),
-  "originalPurchaseDate":today.getTime(),
+  "originalPurchaseDate":new Date().getTime(),
   "productId":"6122583523514",
   "title":"App (12 Month Subscription)"
 }}
-
 

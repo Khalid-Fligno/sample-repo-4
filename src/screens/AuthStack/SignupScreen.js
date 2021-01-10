@@ -224,7 +224,7 @@ export default class SignupScreen extends React.PureComponent {
       }
     }
    }else if(subscriptionFromShopify !=null){
-    if(subscriptionFromShopify.shopifyProductId == 6122583326906){
+    if(subscriptionFromShopify.shopifyProductId == 6122583326906 || subscriptionFromShopify.shopifyProductId == 6131066142906){
       await updateUserSubscription(sub3Monthly,uid);
     } else if(subscriptionFromShopify.shopifyProductId == 6122583523514){
       await updateUserSubscription(subYearly,uid);

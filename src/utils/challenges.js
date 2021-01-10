@@ -135,35 +135,36 @@ export const full_months =(dt)=>
   //---------------------for login subscription---------------
 
   export const updateUserSubscription = async(subscriptionData,userId) => {
+    console.log("subscriptionData",subscriptionData);
     const user = await db.collection('users').doc(userId);
     user.set(subscriptionData,{merge:true});
   }
   const today=new Date();
-  const oneDay=new Date(today.setDate(today+1));
-  const oneMonth=new Date(today.setMonth(today.getMonth()+1));
-  const threeMonth=new Date(today.setMonth(today.getMonth()+3));
-  const oneYear = new Date(today.setFullYear(today.getFullYear()+1));
+  const oneDay=new Date(new Date().setDate(new Date().getDate()+1));
+  const oneMonth=new Date(new Date().setMonth(new Date().getMonth()+1));
+  const threeMonth=new Date(new Date().setMonth(new Date().getMonth()+3));
+  const oneYear = new Date(new Date().setFullYear(new Date().getFullYear()+1));
   export const subOneDay = { "subscriptionInfo":{
     "expiry":oneDay.getTime(),
-    "originalPurchaseDate":today.getTime(),
+    "originalPurchaseDate":new Date().getTime(),
     "productId":"6129876664506",
     "title":"App (1 Day Test Subscription)",
  }}
   export const subMonthly = { "subscriptionInfo":{
     "expiry":oneMonth.getTime(),
-    "originalPurchaseDate":today.getTime(),
+    "originalPurchaseDate":new Date().getTime(),
     "productId":"6122583195834",
     "title":"App (1 Month Subscription)",
  }}
  export const sub3Monthly = { "subscriptionInfo":{
   "expiry":threeMonth.getTime(),
-  "originalPurchaseDate":today.getTime(),
+  "originalPurchaseDate":new Date().getTime(),
   "productId":"6122583326906",
   "title":"App (3 Month Subscription)"
 }}
  export const subYearly = { "subscriptionInfo":{
   "expiry":oneYear.getTime(),
-  "originalPurchaseDate":today.getTime(),
+  "originalPurchaseDate":new Date().getTime(),
   "productId":"6122583523514",
   "title":"App (12 Month Subscription)"
 }}
