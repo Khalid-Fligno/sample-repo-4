@@ -46,14 +46,15 @@ class Onboarding2Screen extends Component {
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
       // this.props.navigation.navigate('App', { isInitial: true });
-      console.log("check user has challenge",uid);
+      console.log("check user has challenge",uid,userRef);
       if(await hasChallenges(uid)){
         this.props.navigation.navigate('App');
       }else{
-      this.props.navigation.navigate('Subscription', { 
-          name,
-          specialOffer,
-      });
+        this.props.navigation.navigate('App');
+      // this.props.navigation.navigate('Subscription', { 
+      //     name,
+      //     specialOffer,
+      // });
     }
     } catch (err) {
       Alert.alert('Database write error', `${err}`);
