@@ -112,8 +112,8 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   keyExtractor = (item, index) => index.toString()
   renderItem = ({ item }) => (
        <WorkoutListItem 
-          url={item.thumbnail?item.thumbnail:customUrl} 
-          description = {item.subTitle?item.subTitle:item.displayName}
+          url={ require('../../../../assets/images/workouts-resistance.jpg')} 
+          description = {item.displayName}
           title = {item.displayName}
           timeInterval = {((item.workIntervalMap[fitnessLevel-1]+item.restIntervalMap[fitnessLevel-1])*item.exercises.length*item.workoutReps)/60}
           onPress ={() => this.loadExercises(item)}

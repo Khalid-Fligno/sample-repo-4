@@ -17,7 +17,7 @@ const ChallengeSubscriptionStack = createStackNavigator(
   {
     initialRouteName: 'ChallengeSubscription',
     defaultNavigationOptions: ({ navigation }) => ({
-      gesturesEnabled:false,
+      // gesturesEnabled:false,
       header: () => {
         const { routeName } = navigation.state;
         if(routeName === "Calendar")

@@ -18,7 +18,7 @@ const WorkoutListItem =({timeInterval,description,title,url ,onPress,count})=>(
       <View style={styles.imageContainer}>
         <ImageBackground
             style={styles.image}
-            source={{uri:url}}
+            source={url}
             imageStyle={{borderRadius:3}}
         >
           <View style={styles.opacityLayer}>
@@ -55,7 +55,7 @@ const WorkoutListItem =({timeInterval,description,title,url ,onPress,count})=>(
     timeInterval:PropTypes.number,
     description:PropTypes.string,
     title:PropTypes.string,
-    url:PropTypes.any ,
+    url:PropTypes.number ,
     onPress:PropTypes.func
    }
 
