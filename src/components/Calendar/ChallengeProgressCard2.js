@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
         fontFamily:fonts.bold,
         color:colors.charcoal.dark,
         marginBottom:wp('2%'),
+        textTransform:'capitalize',
       },
 });
 
@@ -49,7 +50,7 @@ class ChallengeProgressCard2 extends Component {
       return(
         <View>
             <View style={styles.ChallengeProgressCardContainer }>
-                <View>
+                <View style={{width:'55%'}}>
                     <Text style={styles.challengeLabel}
                     >
                     {activeChallengeUserData.displayName}{'  '} 

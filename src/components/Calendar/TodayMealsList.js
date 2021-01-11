@@ -43,11 +43,11 @@ class TodayMealsList extends Component {
                 style={{
                     paddingHorizontal:containerPadding,
                     paddingVertical:wp('3%'),
-                    flex:1
+                    // flex:1
                 }}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-                scrollEventThrottle={200}
+                // scrollEventThrottle={200}
                 
             >
                 {
@@ -84,7 +84,7 @@ class TodayMealsList extends Component {
   
   render() {
       const {data} = this.props;
-      data.snack.map((res)=>{
+      data.dinner.map((res)=>{
         console.log(res.title)
       })
     return (

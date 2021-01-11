@@ -137,6 +137,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     
     const recipeList = sortBy(recipes, 'newBadge')
       .filter((recipe) => {
+        // console.log(recipe.title)
         if(recipe.tags === undefined) return recipes
         if (filterIndex === 1) {
           return recipe.tags.includes('V');

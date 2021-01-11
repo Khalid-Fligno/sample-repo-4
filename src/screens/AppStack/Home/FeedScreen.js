@@ -261,7 +261,7 @@ export default class FeedScreen extends React.PureComponent {
                 image={require('../../../../assets/images/Feed/community.jpg')}
               />
               {
-                  blogs &&
+                  blogs && blogs.length >0 &&
                   <BlogCard 
                       title ="BLOG"
                       cardCustomStyle={{

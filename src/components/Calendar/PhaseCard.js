@@ -60,7 +60,7 @@ export default class PhaseCard extends React.PureComponent {
              <View style={styles.opacityLayer}>
                 <View style={styles.titleContainer}>
                     <CustomBtn
-                        Title={phase.displayName}
+                        Title={`${phase.name.substring(0,5)} ${phase.name.substring(5,6)}`}
                         outline={true}
                         customBtnStyle={{
                                             padding:wp('1.7%'),
@@ -79,7 +79,8 @@ export default class PhaseCard extends React.PureComponent {
                         rightIconColor={colors.offWhite}
                         customBtnTitleStyle={{
                                                 fontFamily:fonts.GothamMedium,
-                                                color:colors.offWhite
+                                                color:colors.offWhite,
+                                                textTransform:'capitalize'
                                             }}
                         onPress={openLink}
                     />
