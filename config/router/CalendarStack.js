@@ -4,7 +4,7 @@ import CalendarHomeScreen from '../../src/screens/AppStack/Calendar/CalendarHome
 import Header from '../../src/components/Shared/Header';
 import WorkoutsSelectionScreen2 from '../../src/screens/AppStack/Workouts/WorkoutsSelectionScreen2';
 import WorkoutInfoScreen2 from '../../src/screens/AppStack/Workouts/WorkoutInfoScreen2';
-import { calendarStartButtonMap, calendarBackButtonMap, calendarProfileButtonMap } from './utils';
+import { calendarStartButtonMap, calendarBackButtonMap, calendarProfileButtonMap, activeChallengeSetting } from './utils';
 import RecipeScreen from '../../src/screens/AppStack/Nutrition/RecipeScreen';
 import RecipeStepsScreen from '../../src/screens/AppStack/Nutrition/RecipeStepsScreen';
 
@@ -28,6 +28,7 @@ const CalendarStack = createStackNavigator(
             withProfileButton={calendarProfileButtonMap[routeName]}
             withStartButton={calendarStartButtonMap[routeName]}
             withBackButton={calendarBackButtonMap[routeName]}
+            activeChallengeSetting={activeChallengeSetting[routeName]}
             // withHomeButton={true}
           />
         );

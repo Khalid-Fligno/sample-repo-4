@@ -50,47 +50,53 @@ import {
   } from '../../../components/Calendar/ListItem';
 import CustomCalendarStrip from '../../../components/Calendar/CustomCalendarStrip';
 import { NavigationActions, StackActions } from 'react-navigation';
-import ChallengeProgressCard2 from '../../../components/Calendar/ChallengeProgressCard2';
-import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
-import TodayMealsList from '../../../components/Calendar/TodayMealsList';
-import Modal from "react-native-modal";
-import { Button } from 'react-native';
-import { SafeAreaView } from 'react-native';
-import ChallengeSetting from '../../../components/Calendar/ChallengeSetting';
 
-class CalendarHomeScreen extends React.PureComponent {
+const recommendedWorkoutMap = {
+  undefined: '',
+  0: 'Press here to see available workouts',
+  1: 'Recommended - Strength / Full Body',
+  2: 'Recommended - Circuit',
+  3: 'Recommended - Strength / Upper Body',
+  4: 'Recommended - Interval',
+  5: 'Recommended - Strength / ABT',
+  6: 'Press here to see available workouts',
+};
+
+const recipeCategories = [
+  "breakfast",
+  "lunch",
+  "dinner",
+  "snack",
+  "snack2"
+]
+
+class CalendarHomeOld extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       workout: undefined,
       loading: false,
       isSwiping: false,
+      helperModalVisible: false,
       dayOfWeek: undefined,
       activeChallengeUserData:undefined,
       meals:undefined,
       activeChallengeData:undefined,
       todayRecommendedMeal:undefined,
-      challengeMealsFilterList:undefined,
-      isSettingVisible: false
+      challengeMealsFilterList:undefined
     };
     this.calendarStrip = React.createRef();
   }
-
-  toggleSetting = () => {
-    this.setState({ isSettingVisible: !this.state.isSettingVisible });
-  };
 
   componentDidMount = async () => {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
     await this.fetchCalendarEntries();
     await this.fetchActiveChallengeUserData();
-    await this.props.navigation.setParams({
-      activeChallengeSetting: () => this.handleActiveChallengeSetting()
-    });
-  }
-
-  handleActiveChallengeSetting(){
-    this.toggleSetting()
+    isActiveChallenge().then((res)=>{
+      if(!res){
+        this.showHelperOnFirstOpen();
+      }
+    })
   }
 
   componentWillUnmount() {
@@ -112,6 +118,24 @@ class CalendarHomeScreen extends React.PureComponent {
     //Todo :call the function to get the data of current date
     this.handleDateSelected(selectedDate)
     
+  }
+
+
+
+  showHelperOnFirstOpen = async () => {
+    const helperShownOnFirstOpen = await AsyncStorage.getItem('calendarHelperShownOnFirstOpen');
+    if (helperShownOnFirstOpen === null) {
+      this.props.setTimeout(() => this.setState({ helperModalVisible: true }), 1200);
+      AsyncStorage.setItem('calendarHelperShownOnFirstOpen', 'true');
+    }
+  }
+
+  showHelperModal = () => {
+    this.setState({ helperModalVisible: true });
+  }
+
+  hideHelperModal = () => {
+    this.setState({ helperModalVisible: false });
   }
 
   handleDateSelected = async (date) => {
@@ -340,7 +364,6 @@ class CalendarHomeScreen extends React.PureComponent {
         this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
 
         //TODO :calculate the workout completed till selected date
-        console.log(this.stringDate)
         this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
 
         //TODO calculate current challenge day
@@ -367,6 +390,29 @@ class CalendarHomeScreen extends React.PureComponent {
       Alert.alert('Something went wrong please try again')
     }
   }
+
+  // async fetchRecipe(id){
+  //   this.setState({loading:true})
+  //   let recipeData =  await (await db.collection('recipes').doc(id).get()).data();
+  //     const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
+  //     await FileSystem.getInfoAsync(fileUri)
+  //       .then(async ({ exists }) => {
+  //         if (!exists) {
+  //           await FileSystem.downloadAsync(
+  //             recipeData.coverImage,
+  //             `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`,
+  //           )
+  //         }
+  //       }).catch(() => {
+  //         this.setState({ loading: false });
+  //         Alert.alert('', 'Image download error');
+  //       });
+  //       if(recipeData){
+  //         this.setState({loading:false})
+  //         this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Calendar',extraProps:{fromCalender:true} })
+  //       }
+
+  // }
 
   async goToRecipe(recipeData){
     this.setState({loading:true})
@@ -398,6 +444,10 @@ class CalendarHomeScreen extends React.PureComponent {
   render() {
     const {
       loading,
+      workout,
+      meals,
+      helperModalVisible,
+      dayOfWeek,
       activeChallengeUserData,
       activeChallengeData,
       todayRecommendedMeal
@@ -420,75 +470,160 @@ class CalendarHomeScreen extends React.PureComponent {
           showRC = false  
       }
     }
+ 
 
-    const mealsList =(
-      showRC &&
-      <>
-        <Text style={calendarStyles.headerText}>Today's Meals</Text>
-        <TodayMealsList 
-          data ={todayRecommendedMeal[0]}
-          onPress={(res)=>this.goToRecipe(res)}
-        />
-      </>  
-    )
-
-    const workoutCard =(
-        this.todayRcWorkout  && showRC &&
-        <>
-          <Text style={calendarStyles.headerText}>Today's Workout</Text>
-          <View style={calendarStyles.listContainer}>
-            <ChallengeWorkoutCard 
-              onPress={ () => this.todayRcWorkout.name !== 'rest'? this.loadExercises(this.todayRcWorkout.id,this.currentChallengeDay):'' }
-              res={this.todayRcWorkout} 
-              currentDay={this.currentChallengeDay}
-              title={activeChallengeData.displayName}
+    const workoutDisplayList = (
+      <View style={calendarStyles.listContainer}>
+          {
+            this.todayRcWorkout  && showRC &&
+            <RcWorkoutListItem 
+                res={this.todayRcWorkout} 
+                onPress={ () => this.todayRcWorkout.name !== 'rest'? this.loadExercises(this.todayRcWorkout.id,this.currentChallengeDay):'' }
+                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                onSwipeableClose={() => this.setState({ isSwiping: false })}
+                renderRightActions={() => this.renderRightActionForRC('workout')} 
+                currentDay={this.currentChallengeDay}
             />
-          </View>
-        </>  
+          }
+          {
+            workout ? ( <WorkoutSwipable 
+                            workout={workout}
+                            onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                            onSwipeableClose={() => this.setState({ isSwiping: false })}
+                            onPress={ () => this.loadExercises(workout.id) }
+                            renderRightActions={() => this.renderRightActions('workout')}
+                            stringDate = {this.stringDate}
+                      />
+            ) : (
+              (!this.todayRcWorkout || !showRC) && <CustomListItem 
+                key={1}
+                name="WORKOUT"
+                index={1} 
+                onPress={() => this.props.navigation.navigate('WorkoutsHome')}
+                subTitle={recommendedWorkoutMap[dayOfWeek]}
+              />
+          )
+        }
+        </View>
     )
+    
+    const mealsDisplayList = (
+        <View style={calendarStyles.listContainer}>
+          {
+            todayRecommendedMeal && todayRecommendedMeal.length >0 && showRC &&
+            todayRecommendedMeal.map((res,index)=>{
+              if(res){
+                let getMeal = undefined
+                if(meals)
+                  getMeal = meals[res.mealTitle === 'afternoon Snack'?'snack2':res.meal];
+                if(meals && getMeal){
+                  return(
+                  <MealSwipable 
+                                key={index}
+                                name ={res.mealTitle} 
+                                data = {getMeal} 
+                                index={index} 
+                                renderRightActions={() => this.renderRightActionForRC(res.meal)}
+                                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                                onSwipeableClose={() => this.setState({ isSwiping: false })}
+                                // onPress={() => this.fetchRecipe(getMeal.id)} 
+                                onPress={() => this.goToRecipe(getMeal)} 
+                                stringDate = {this.stringDate}
+                        />
+                  )     
+                }else if(res.id){
+                  return( 
+                  <RcMealListItem 
+                    key={index}
+                    res={res} 
+                    index={index} 
+                    // onPress={() => this.fetchRecipe(res.id)} 
+                    onPress={() => this.goToRecipe(res)} 
+                    renderRightActions={() => this.renderRightActionForRC(res.meal)} 
+                    onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                    onSwipeableClose={() => this.setState({ isSwiping: false })}
+                  />
+                  )
+                }else{
+                  return(
+                    <CustomListItem 
+                      key={index}
+                      name={res.mealTitle} 
+                      index={index} 
+                      onPress={() => this.props.navigation.navigate('RecipeSelection', { meal:res.meal })}
+                      subTitle ="Press here to see available recipes"
+                      />
+                    )
+                }
+              }
+            
+            })
+              
+          }
+          {
+          !showRC &&
+            recipeCategories.map((res,index)=>{
+              if(meals && meals[res])
+                  return <MealSwipable 
+                                key={index}
+                                name ={res} 
+                                data = {meals[res]} 
+                                index={index} 
+                                renderRightActions={() => this.renderRightActions(res)}
+                                onSwipeableWillOpen={() => this.setState({ isSwiping: true })}
+                                onSwipeableClose={() => this.setState({ isSwiping: false })}
+                                // onPress={() => this.fetchRecipe(meals[res].id)} 
+                                onPress={() => this.goToRecipe(meals[res])} 
+                                stringDate = {this.stringDate}
+                        />
+              else if(!todayRecommendedMeal || !showRC)
+                  return <CustomListItem 
+                            key={index}
+                            name={res.toLocaleUpperCase()} 
+                            index={index} 
+                            onPress={() => this.props.navigation.navigate('RecipeSelection', { meal: res.toLowerCase() === 'snack2'?'snack':res.toLowerCase() })}
+                            subTitle ="Press here to see available recipes"
+                            />
+          })
+          }
+      
+        </View>
+    )  
 
     const dayDisplay = (
       <ScrollView
         contentContainerStyle={calendarStyles.dayDisplayContainer}
         scrollEnabled={!this.state.isSwiping}
-        showsVerticalScrollIndicator={false}
       >
         {
           this.phaseData && showRC &&
-            <ChallengeProgressCard2
-              phase={this.phase}
-              phaseData={this.phaseData}
-              activeChallengeData={activeChallengeData}
-              activeChallengeUserData = {activeChallengeUserData}
-              totalChallengeWorkoutsCompleted ={this.totalChallengeWorkoutsCompleted}
-              openLink={()=>this.openLink(this.phase.pdfUrl)}
-              currentDay={this.currentChallengeDay}
-            />
+          <ChallengeProgressCard
+            phase={this.phase}
+            phaseData={this.phaseData}
+            activeChallengeData={activeChallengeData}
+            activeChallengeUserData = {activeChallengeUserData}
+            totalChallengeWorkoutsCompleted ={this.totalChallengeWorkoutsCompleted}
+            openLink={()=>this.openLink(this.phase.pdfUrl)}
+          />
         }
+        <Text style={calendarStyles.headerText}>Todays Workout</Text>
         {
-          workoutCard
+          workoutDisplayList
         }
+
+        <Text style={calendarStyles.headerText}>Todays Meals</Text>
         {
-          mealsList
+          mealsDisplayList
         }
+  
+        {/* <View style={calendarStyles.listContainerBottom}>
+          {
+           meals && meals['snack2'] ?  mealSwipable('snack',snack2) :  mealListItem('snack')
+          } 
+        </View> */}
       </ScrollView>
     );
-    
-    const setting =(
-      <Modal 
-            isVisible={this.state.isSettingVisible}
-            coverScreen={true}
-            style={{ margin: 0 }}
-            animationIn="fadeInLeft"
-            animationOut="fadeOutLeft"
-      >
-        <ChallengeSetting 
-          onToggle={()=>this.toggleSetting()}
-          activeChallengeUserData={activeChallengeUserData}
-          navigation={this.props.navigation}
-        />
-      </Modal>
-    )
+
 
     return (
       <View style={[globalStyle.container,{paddingHorizontal:0}]}>
@@ -496,17 +631,23 @@ class CalendarHomeScreen extends React.PureComponent {
             ref1={this.calendarStrip}
             onDateSelected={(date) => this.handleDateSelected(date)}
         />
-
-
         {dayDisplay}
-      
+        <HelperModal
+          helperModalVisible={helperModalVisible}
+          hideHelperModal={this.hideHelperModal}
+          headingText="Calendar"
+          bodyText="Are you the type of person who likes to stay organised?  This is the perfect tool for you."
+          bodyText2="
+            Schedule workouts and recipes weeks in advance, so you know exactly what you’re training and what you are eating each day.
+            Once you have scheduled these, you can go directly to your workout or recipe from this screen.
+          "
+          bodyText3={'How to add a workout or recipe:\n- Select a recipe/workout\n- On the recipe/workout screen, press ‘Add to Calendar’\n- Select the day you would like to schedule this for'}
+          color="red"
+        />
         <Loader
           loading={loading}
           color={colors.red.standard}
         />
-         {
-           setting
-         }
       </View>
     );
   }
@@ -516,4 +657,4 @@ CalendarHomeScreen.propTypes = {
   setTimeout: PropTypes.func.isRequired,
 };
 
-export default ReactTimeout(CalendarHomeScreen);
+export default ReactTimeout(CalendarHomeOld);

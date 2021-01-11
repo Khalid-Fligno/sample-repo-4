@@ -7,7 +7,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 import { propTypes } from 'react-native-carousel';
 import TimeSvg from '../../../assets/icons/time';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 const WorkoutListItem =({timeInterval,description,title,url ,onPress,count})=>(
   <TouchableOpacity
@@ -82,7 +82,7 @@ const styles= StyleSheet.create({
       marginLeft:15,
       flexDirection:'column',
       justifyContent:'space-between',
-      marginVertical:2
+      marginVertical:2,
     },
 
     title:{
@@ -93,7 +93,9 @@ const styles= StyleSheet.create({
     description:{
       color:colors.grey.dark,
        fontFamily:fonts.bold,
-       fontSize:10
+       fontSize:10,
+       width:wp('50%'),
+       lineHeight:wp('3%')
     },
 
     timeContainer:{

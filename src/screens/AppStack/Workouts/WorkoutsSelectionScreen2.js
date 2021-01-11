@@ -19,8 +19,10 @@ import { ListItem, Avatar } from 'react-native-elements';
 import WorkoutScreenStyle from './WorkoutScreenStyle';
 import WorkoutListItem from '../../../components/Workouts/WorkoutListItem';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-let fitnessLevel = 1;
-const customUrl = 'https://firebasestorage.googleapis.com/v0/b/quickstart-1588594831516.appspot.com/o/Photos%2Fworkout1.jpeg?alt=media&token=17a7f10f-a9bb-4bfb-a27e-4b7ac0261392';
+let fitnessLevel = 1
+const customUrl = 'https://firebasestorage.googleapis.com/v0/b/quickstart-1588594831516.appspot.com/o/Photos%2Fworkout1.jpeg?alt=media&token=17a7f10f-a9bb-4bfb-a27e-4b7ac0261392'
+
+
 export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);

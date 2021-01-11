@@ -7,6 +7,7 @@ import {
     Dimensions
 } from "react-native"
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { isActiveChallenge } from '../../utils/challenges';
 
 var { height,width } = Dimensions.get("window")
 let navigation = null
@@ -21,7 +22,15 @@ const TouchableWithoutFeedbackWrapper = ({
      const routeKey = accessibilityLabel.split(',')[0]
     const onPress1 = () =>{
         if(routeKey === 'Lifestyle')
-          navigation.navigate('Home') 
+          navigation.navigate('Home');
+        else if(routeKey === 'Challenges'){
+          isActiveChallenge().then((res)=>{
+            if(res)
+              navigation.navigate('Calendar');
+            else
+              navigation.navigate('ChallengeSubscription')  
+          })
+        }   
         else  
          navigation.navigate(routeKey) 
     }

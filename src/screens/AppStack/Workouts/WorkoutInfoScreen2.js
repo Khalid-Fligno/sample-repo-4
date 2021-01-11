@@ -78,7 +78,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
     this.onFocusFunction()
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
-      handleBackToCalendar: () => this.handleBackToCalendar()
     });
     this.checkMusicAppAvailability();
   }
@@ -108,13 +107,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
 
   handleStart = () => {
     this.toggleMusicModal();
-  }
-  handleBackToCalendar(){
-    if(this.state.extraProps['fromCalender']){
-      this.props.navigation.navigate('Calendar');
-    }else{
-      this.props.navigation.pop()
-    }
   }
 
   openApp = (url) => {
@@ -418,10 +410,10 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                       <Text style={WorkoutScreenStyle.workoutName}>
                         {workout && workout.displayName.toUpperCase()}
                       </Text>
-                      {
+                      {/* {
                          !extraProps['fromCalender'] &&
                          <AddToCalendarButton onPress={() => this.showCalendarModal()} />
-                      }
+                      } */}
                       
                     </View>
                     

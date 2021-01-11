@@ -66,6 +66,13 @@ export const calendarProfileButtonMap = {
   WorkoutInfo: false,
   CalendarHome:true
 };
+export const activeChallengeSetting = {
+  Recipe: false,
+  RecipeSteps: false,
+  WorkoutInfo: false,
+  CalendarHome:true
+};
+
 
 export const onboardingBackButtonMap = {
   Onboarding1: false,

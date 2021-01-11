@@ -14,11 +14,10 @@ import fonts from '../../styles/fonts';
 import CustomBtn from '../Shared/CustomBtn';
 import { widthPercentageToDP as wp ,heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { containerPadding } from '../../styles/globalStyles';
-import DownArrow from './DownArrow';
 
 const { width } = Dimensions.get('window');
 
-export default class WorkOutCard extends React.PureComponent {
+export default class FeedCard extends React.PureComponent {
   constructor(props) {
     super(props);
     this.animatedValue = new Animated.Value(1);
@@ -41,11 +40,16 @@ export default class WorkOutCard extends React.PureComponent {
     const {
       onPress,
       title,
-      image,
-      recommendedWorkout,
       cardCustomStyle,
-      cardImageStyle
+      cardImageStyle,
+      customTitleStyle,
+      customBtnStyle={},
+      customBtnTitleStyle={},
+      btnTitle,
+      image
     } = this.props;
+
+    
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
@@ -57,82 +61,70 @@ export default class WorkOutCard extends React.PureComponent {
              resizeMode="stretch"
            >
              <View style={styles.opacityLayer}>
-               <View style={styles.titleContainer}>
-                 <Text style={styles.title}>
-                   TODAY'S
-                 </Text>
-                 <Text style={styles.title2}>
-                   WORKOUT
-                 </Text>
-               </View>
-               <View style={styles.innerViewContainer}>
-                    <View
-                      style={{
-                        borderTopWidth:4,
-                        width:wp('20%'),
-                        marginBottom:wp('5%'),
-                        marginTop:wp('3%'),
-                        borderTopColor:colors.offWhite,
-                        borderRadius:50
-                      }}
-                    >
-
-                    </View>
-                    {recommendedWorkout.map(res=>(
-                      <Text key={res} style={styles.recTextLabel}> {res}</Text>)
-                    )}
-               </View>
+               {
+                  title &&
+                    <View style={styles.titleContainer}>
+                        <Text style={[styles.title,customTitleStyle]}>
+                          {title}
+                        </Text>
+                        <View
+                              style={{
+                                borderTopWidth:4,
+                                width:'15%',
+                                marginBottom:wp('5%'),
+                                marginTop:wp('1.5%'),
+                                borderTopColor:colors.themeColor.color,
+                                borderRadius:50
+                              }}
+                            ></View>
+                      </View>
+               }
+            
+         
                <View style={{
                   position:'absolute',
                   bottom:0,
                   alignItems:'center',
                   width:'100%',
-                  marginBottom:wp('11%')
+                  marginBottom:wp('8%')
                  }}>
                 <CustomBtn 
-                    Title ="View Workout"
+                    Title ={btnTitle}
                     customBtnStyle ={{
                       // width:"50%",
                       padding:wp('2.2%'),
                       borderRadius:50,
-                      backgroundColor:colors.black,
-                      paddingHorizontal:wp('10%')
-                    }}
+                      backgroundColor:colors.themeColor.color,
+                      paddingHorizontal:wp('10%'),
+                      ...customBtnStyle}}
                     customBtnTitleStyle = {{
                       marginTop:0,
                       fontSize:13,
-                      fontFamily:fonts.boldNarrow
+                      fontFamily:fonts.boldNarrow,
+                      ...customBtnTitleStyle
                     }}
                     onPress = {onPress}
                 />
                </View> 
              </View>
            </ImageBackground>
-             <View
-              style={{
-                marginTop:-wp('7.5%'),
-                alignItems:'center'
-              }}
-             >
-             <DownArrow/>
-             </View>
           </View>
     );
   }
 }
 
-WorkOutCard.propTypes = {
+FeedCard.propTypes = {
   onPress: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  image: PropTypes.number.isRequired,
-  recommendedWorkout: PropTypes.array,
-  cardCustomStyle: PropTypes.object
+  title: PropTypes.string,
+  // image: PropTypes.number.isRequired,
+  cardCustomStyle: PropTypes.object,
+  customTitleStyle:PropTypes.object
 };
 
 const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
-    height: wp('115%'),
+    height: wp('110%'),
     // margin: 5,
     // shadowColor: colors.charcoal.standard,
     // shadowOpacity: 0.5,
@@ -150,7 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     borderRadius:3,
-    backgroundColor:'#f14a42'
+    backgroundColor:'#f7f7f7'
   },
   opacityLayer: {
     flex: 1,
@@ -159,34 +151,36 @@ const styles = StyleSheet.create({
     // backgroundColor:colors.transparentBlackLightest
   },
   titleContainer: {
-    maxWidth: wp('80%'),
-    paddingTop:wp('13%'),
-    paddingLeft:30
+    // maxWidth: wp('80%'),
+    paddingTop:wp('8%'),
+    paddingLeft:30,
+    alignItems:'flex-start'
   },
   title: {
     fontFamily: fonts.bold,
-    fontSize: wp('7%'),
+    fontSize: wp('5.5%'),
     color: colors.black,
     textAlign:'left',
+    textTransform:'uppercase'
     // shadowColor: colors.black,
     // shadowOpacity: 1,
     // shadowOffset: { width: 0, height: 0 },
     // shadowRadius: 5,
     // fontWeight:'700'
   },
-  title2: {
-    fontSize: wp('11%'),
-    color: colors.offWhite,
-    textAlign:'left',
-    // shadowColor: colors.black,
-    // shadowOpacity: 1,
-    // shadowOffset: { width: 0, height: 0 },
-    // shadowRadius: 5,
-    fontStyle:'italic',
-    fontWeight:'700'
-  },
+//   title2: {
+//     fontSize: wp('11%'),
+//     color: colors.offWhite,
+//     textAlign:'left',
+//     // shadowColor: colors.black,
+//     // shadowOpacity: 1,
+//     // shadowOffset: { width: 0, height: 0 },
+//     // shadowRadius: 5,
+//     fontStyle:'italic',
+//     fontWeight:'700'
+//   },
   innerViewContainer: {
-    maxWidth: '80%',
+    maxWidth: width / 1.8,
     paddingTop:12,
     paddingLeft:30,
     paddingTop:5,
@@ -195,6 +189,6 @@ const styles = StyleSheet.create({
   recTextLabel:{
     color:colors.offWhite,
     fontFamily:fonts.bold,
-    marginBottom:wp('1%'),
+    marginBottom:wp('1%')
   }
 });
