@@ -272,6 +272,7 @@ class CalendarHomeScreen extends React.PureComponent {
             activeChallengeUserData:undefined,
             loading:false
           });
+          this.props.navigation.navigate('ChallengeSubscription')
         }
       });
       const { activeChallengeData,activeChallengeUserData} = this.state

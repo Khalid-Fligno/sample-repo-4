@@ -50,8 +50,13 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       .onSnapshot(async (querySnapshot) => {
         const workouts = [];
         await querySnapshot.forEach(async (doc) => {
-          if(!(doc.data().tags.includes("8WC")))
-          await workouts.push(await doc.data());
+          doc.data().tags.map(async (res)=>{
+            if(res.toLowerCase() === 'subscription')
+              await workouts.push(await doc.data());
+
+          })
+          // if(!(doc.data().tags.includes("8WC")))
+          // await workouts.push(await doc.data());
         });
         this.setState({ workouts, loading: false });
       });
