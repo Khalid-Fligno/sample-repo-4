@@ -287,6 +287,10 @@ const createUserChallengeAndSubscription = async (req)=>{
       }
       if(user != undefined){
         if(challengeProductName.toLowerCase().includes("challenge")){ 
+          if(challengeProductId == 6131066142906){
+            updateUserSubscription(sub3Monthly,user.id);
+            return; 
+          }          
         const userChallenge= await getUserChallenge(user.id,challengeProductId);
         if(userChallenge )
           { 
