@@ -219,13 +219,19 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             <View>
               
               {
-                (this.state.workout.workoutProcessType === 'oneByOne') && (
+                (this.state.workout.workoutProcessType === 'oneByOne') && !this.state.workout.rest && (
                   <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
                     {this.state.workout['workoutReps']} x {this.state.reps}
                   </Text>
                 )
               }
-              
+               {
+                (this.state.workout.workoutProcessType === 'oneByOne') && this.state.workout.rest && (
+                   <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      {this.state.workout.workIntervalMap[this.state.fitnessLevel-1]}s on/{this.state.workout.restIntervalMap[this.state.fitnessLevel-1]}s off
+                  </Text>
+                )
+              }
               {
                 (this.state.workout.workoutProcessType === 'onlyOne') && (
                    <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>

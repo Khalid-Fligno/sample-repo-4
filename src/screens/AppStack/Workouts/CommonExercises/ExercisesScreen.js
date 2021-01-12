@@ -549,17 +549,23 @@ export default class ExercisesScreen extends React.PureComponent {
               </Text>
             </View>
             <View style={styles.currentExerciseRepsTextContainer}>
-              {(workout.workoutProcessType === 'oneByOne' && !workout.count) &&(
+              { (workout.workoutProcessType === 'oneByOne' && !workout.count && !workout.rest) &&(
                  <Text style={styles.currentExerciseRepsText}>
                    {workout.workoutReps} x {reps}
                  </Text> 
-              )
+                )
               }
-               {(workout.workoutProcessType != 'oneByOne' && !workout.count) &&(
+              { (workout.workoutProcessType === 'oneByOne' && !workout.count && workout.rest) &&(
+                 <Text style={styles.currentExerciseRepsText}>
+                  {totalDuration} sec
+                 </Text> 
+                )
+              }
+               {(workout.workoutProcessType != 'oneByOne' && !workout.count)  &&(
                  <Text style={styles.currentExerciseRepsText}>
                     {totalDuration} sec
                  </Text> 
-              )
+                )
               }
               {
                (workout.count) && this.repsInterval &&(
