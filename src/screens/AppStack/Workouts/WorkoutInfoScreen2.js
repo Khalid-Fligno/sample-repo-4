@@ -445,7 +445,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                          <View style={WorkoutScreenStyle.workoutIconContainer}>
                           <TimeSvg width="40" height="40" />
                           <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                            {workoutTime.toFixed(2)} Mins
+                            {workoutTime.toFixed(0)} Mins
                           </Text>
                         </View>
                       }
