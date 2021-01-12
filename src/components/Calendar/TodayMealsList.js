@@ -104,6 +104,9 @@ class TodayMealsList extends Component {
         {
             this.carousel(data.dinner,'Dinner')
         }
+        {
+            this.carousel(data.drink,'Recovery Drink')
+        }
       </View>
     );
   }

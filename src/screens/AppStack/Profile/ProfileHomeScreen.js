@@ -38,7 +38,7 @@ const uriToBlob = (url) => {
         resolve(xhr.response);
       }
     };
-    xhr.open('GET', url);
+    xhr.open('GET', url,true);
     xhr.responseType = 'blob'; // convert type
     xhr.send();
   });
@@ -108,6 +108,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
         contentType: 'image/jpeg',
         cacheControl: 'public, max-age=31536000',
       };
+      console.log(blob)
       const snapshot = await avatarStorageRef.put(blob, metadata);
       const url = await snapshot.ref.getDownloadURL();
       await FastImage.preload([{ uri: url }]);

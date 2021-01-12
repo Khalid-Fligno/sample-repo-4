@@ -183,6 +183,7 @@ export default class ExercisesScreen extends React.PureComponent {
         appsFlyer.trackEvent('resistance_workout_complete');
         this.workoutComplete(reps, resistanceCategoryId);
       }
+   
       else if (setCount === this.state.workout.workoutReps) {
         console.log("Go to next  exercise")
         this.goToExercise(1,reps,resistanceCategoryId,currentExerciseIndex + 1,)
@@ -255,14 +256,21 @@ export default class ExercisesScreen extends React.PureComponent {
     const setCount = this.props.navigation.getParam('setCount', 1)
     console.log("rest call")
     if(workout.workoutProcessType === 'oneByOne'){
-      this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
+
+      if (setCount === workout.workoutReps && workout.rest) 
+        this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex ,true);
+      else
+        this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex);
+
     }else if(workout.workoutProcessType === 'circular'){
+
       if(workout.rest === undefined)
         this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,true);
       else
-        this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
+        this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex);
 
     }else if(workout.workoutProcessType === 'onlyOne'){
+
       this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,true);
       
     }
