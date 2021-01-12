@@ -1,9 +1,53 @@
 1)if in workout count === true 
-    then  difficulty level,workInterval map is based to each exercise level.
-     difficulty level ,workInterval map,restInterval of workout level is not in used then.
+    then 
+    1)DifficultyLevel,workIntervalMap is based to each exercise level.
+    2)DifficultyLevel ,workIntervalMap,restInterval of workout level is not in used then.
+    3)Exercise not have timer then.
+
 2)if in workout count === false 
-    then  difficulty level,workInterval map is based to workout level.
+    then  
+    1)DifficultyLevel,workIntervalMap is based to workout level.
 
 
-3)filter contains 'strength => workIntervalMap ->[60,60,60] ,restIntervalMap=>[0,0,0]
-4)filter contains 'circuit,interval' => workIntervalMap === difficultyLevel
+3)filter contains 'strength => 
+    then
+    1)workIntervalMap ->[60,60,60] ,restIntervalMap=>[0,0,0].
+
+4)filter contains 'circuit,interval' => 
+    then
+    1)workIntervalMap === difficultyLevel
+
+
+5)if in workout doc contain rest === false or true and workoutProcessType === 'circular' 
+        then 
+        1)there is no rest in that workout process. 
+        2)if you include rest video last of that exercises list then u will see the Rest at last set of that workout.
+
+6)if in workout doc contain workoutProcessType === 'oneByOne'  
+        then
+        1)There is no rest in that workout.
+        2)first complete all set of each workout after that goes to next and repeat the same one by one process 
+            till the end of exercise.
+        3)sets is depend on workoutReps which is in number format    
+
+7)If in workout doc contain workoutProcessType === 'circular'
+        then
+        1)Then is rest after the 1 set of each exercise.
+        2)In this process there is 1 set of all workout at time then goes to 2nd and perform same process 
+            circularaly till the workoutReps.
+        3)sets is depend on workoutReps.
+
+8)If in workout doc contain workoutProcessType === 'onlyOne'    
+        then
+        1)there is only one exercise in each workout.
+        2)There is rest after each set of exercise.
+        3)sets is depend on workoutReps.
+
+9)workoutReps is the sets of each exercise.
+
+10)workIntervalMap is the Array which defined time of exercise as per the difficultyLevel        
+
+11)restIntervalMap is the Array which defined time of rest as per the difficultyLevel.
+
+12)difficultyLevel is Array which defined intensity of user to do exercise.
+    eg:[1,2,3]

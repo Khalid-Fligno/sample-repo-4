@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
         fontFamily:fonts.GothamLight,
         marginBottom:-6,
         color:colors.offWhite,
+        textTransform:'capitalize'
     } ,
     textLabel: {
         fontSize:15,

@@ -67,6 +67,12 @@ export default class ExercisesScreen extends React.PureComponent {
       rest = true
     }  
 
+    //for count false and rest varible false in workoutProcessType === 'circular workout
+    if(workout.count === false && currentExercise && currentExercise.name === 'rest'&& workout['restIntervalMap']) {
+      totalDuration = workout['restIntervalMap'][String(fitnessLevel-1)]
+      rest = true
+    }
+
       this.state = {
           workout: workout,
           exerciseList: workout['exercises'],
