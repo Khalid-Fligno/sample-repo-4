@@ -70,13 +70,13 @@ const Feeds =[
     url:"https://fitazfk.com/collections/wear-fitazfk-apparel",
     btnTitle:'Find out more'
   },
-  {
-    bgImage:require('../../../../assets/images/Feed/facebook.jpg'),
-    url:'https://www.facebook.com/groups/180007149128432/?source_id=204363259589572',
-    btnTitle:'Connect with us',
-    btnBg:colors.offWhite,
-    btnTitleColor:'#658dc3'
-  },
+  // {
+  //   bgImage:require('../../../../assets/images/Feed/facebook.jpg'),
+  //   url:'https://www.facebook.com/groups/180007149128432/?source_id=204363259589572',
+  //   btnTitle:'Connect with us',
+  //   btnBg:colors.offWhite,
+  //   btnTitleColor:'#658dc3'
+  // },
   {
     bgImage:require('../../../../assets/images/Feed/equipment.jpg'),
     url:'https://fitazfk.com/collections/equipment',
@@ -246,7 +246,7 @@ export default class FeedScreen extends React.PureComponent {
                 onPress={() => this.props.navigation.navigate('Calendar')}
                 // cardCustomStyle ={{marginTop:20}} 
               />
-           
+{/*            
               <FeedCard 
                 // title ="COMMUNITY"
                 cardCustomStyle={{
@@ -259,6 +259,25 @@ export default class FeedScreen extends React.PureComponent {
                 btnTitle ="Find out more"
                 onPress={()=>console.log("Community Pressed")}
                 image={require('../../../../assets/images/Feed/community.jpg')}
+              /> */}
+               <FeedCard 
+                cardCustomStyle={{
+                  marginHorizontal:containerPadding,
+                  marginTop:wp('7%')
+                }}
+                cardImageStyle={{
+                  borderRadius:3,
+                  backgroundColor:'#658dc3'
+                }}
+                customTitleStyle={{
+                  fontSize: wp('4.5%'),
+                  color:colors.offWhite
+                }}
+                btnTitle ="Connect with us"
+                customBtnStyle={{backgroundColor:colors.offWhite}}
+                customBtnTitleStyle={{color:'#658dc3'}}
+                onPress={()=>console.log("Workouts Pressed")}
+                image={require('../../../../assets/images/Feed/facebook.jpg')}
               />
               {
                   blogs && blogs.length >0 &&
