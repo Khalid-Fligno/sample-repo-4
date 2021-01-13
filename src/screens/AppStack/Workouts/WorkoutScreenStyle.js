@@ -1,6 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 import fonts from "../../../styles/fonts";
 import colors from "../../../styles/colors";
+import { widthPercentageToDP } from "react-native-responsive-screen";
 const { width } = Dimensions.get('window');
 const WorkoutScreenStyle = StyleSheet.create({
   carouselContainer: {
@@ -254,7 +255,7 @@ const WorkoutScreenStyle = StyleSheet.create({
       borderBottomColor:colors.themeColor.themeBorderColor
     },
     exerciseTileHeaderTextLeft: {
-      // width: width - 72,
+      width: widthPercentageToDP('65%'),
       fontFamily: fonts.boldNarrow,
       fontSize: 14,
       color: colors.transparentBlackDark,

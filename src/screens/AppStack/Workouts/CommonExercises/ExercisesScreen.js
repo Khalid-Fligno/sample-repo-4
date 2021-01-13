@@ -558,13 +558,15 @@ export default class ExercisesScreen extends React.PureComponent {
               }
               { (workout.workoutProcessType === 'oneByOne' && !workout.count && workout.rest) &&(
                  <Text style={styles.currentExerciseRepsText}>
-                  {totalDuration} sec
+                   {totalDuration < 60 &&  `${totalDuration} sec`} 
+                   {totalDuration > 60 &&  `${totalDuration/60} m`} 
                  </Text> 
                 )
               }
                {(workout.workoutProcessType != 'oneByOne' && !workout.count)  &&(
                  <Text style={styles.currentExerciseRepsText}>
-                    {totalDuration} sec
+                    {totalDuration < 60 &&  `${totalDuration} sec`} 
+                    {totalDuration > 60 &&  `${totalDuration/60} m`} 
                  </Text> 
                 )
               }
