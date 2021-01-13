@@ -38,14 +38,14 @@ const calendarStyles = StyleSheet.create({
       },
       headerText: {
         fontFamily: fonts.bold,
-        fontSize: wp('3.5%'),
+        fontSize: wp('4.5%'),
         color: colors.charcoal.dark,
-        marginTop: 14,
-        marginBottom: -10,
+        marginVertical: wp('4%'),
+        // marginBottom: -10,
       },
       listContainer: {
         width,
-        marginTop: 10,
+        // marginTop: 10,
         // borderWidth: 0,
         // borderTopColor: colors.grey.light,
         // shadowColor: colors.grey.standard,

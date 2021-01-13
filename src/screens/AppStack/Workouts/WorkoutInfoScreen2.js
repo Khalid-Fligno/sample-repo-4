@@ -78,7 +78,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
     this.onFocusFunction()
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
-      handleBackToCalendar: () => this.handleBackToCalendar()
     });
     this.checkMusicAppAvailability();
   }
@@ -108,13 +107,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
 
   handleStart = () => {
     this.toggleMusicModal();
-  }
-  handleBackToCalendar(){
-    if(this.state.extraProps['fromCalender']){
-      this.props.navigation.navigate('Calendar');
-    }else{
-      this.props.navigation.pop()
-    }
   }
 
   openApp = (url) => {
@@ -196,6 +188,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
   renderItem = ({ item: exercise, index }) => {
     let showRR = (exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A'))?true:false
     let showCT =  exercise.coachingTip && exercise.coachingTip.length > 0 && !exercise.coachingTip.includes("none")?true:false
+    const workIntervalTimeinSec = this.state.workout.workIntervalMap[this.state.fitnessLevel-1];
+    const restIntervalTimeinSec = this.state.workout.restIntervalMap[this.state.fitnessLevel-1];
     return(
     <View style={WorkoutScreenStyle.carouselContainer}>
       <Carousel
@@ -227,17 +221,43 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             <View>
               
               {
-                (this.state.workout.workoutProcessType === 'oneByOne') && (
+                (this.state.workout.workoutProcessType === 'oneByOne') && !this.state.workout.rest && (
                   <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
                     {this.state.workout['workoutReps']} x {this.state.reps}
                   </Text>
                 )
               }
-              
-              {
-                (this.state.workout.workoutProcessType === 'onlyOne') && (
+               {
+                (this.state.workout.workoutProcessType === 'oneByOne') && this.state.workout.rest && (
                    <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                      {this.state.workout.workIntervalMap[this.state.fitnessLevel-1]}s on/{this.state.workout.restIntervalMap[this.state.fitnessLevel-1]}s off
+                      {workIntervalTimeinSec}s on/{restIntervalTimeinSec}s off
+                  </Text>
+                )
+              }
+              {
+                (this.state.workout.workoutProcessType === 'onlyOne') && 
+                workIntervalTimeinSec <= 60 &&
+                (
+                   <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      {workIntervalTimeinSec}s 
+                      {
+                        restIntervalTimeinSec > 0 &&
+                        `/${restIntervalTimeinSec}s off`
+                      }
+                  </Text>
+                )
+              }
+              {
+                (this.state.workout.workoutProcessType === 'onlyOne') && 
+                workIntervalTimeinSec > 60 &&
+                (
+                   <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      {workIntervalTimeinSec/60}m 
+                      on
+                      {
+                        restIntervalTimeinSec > 0 &&
+                        `/${restIntervalTimeinSec/60}m off`
+                      }
                   </Text>
                 )
               }
@@ -418,10 +438,10 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                       <Text style={WorkoutScreenStyle.workoutName}>
                         {workout && workout.displayName.toUpperCase()}
                       </Text>
-                      {
+                      {/* {
                          !extraProps['fromCalender'] &&
                          <AddToCalendarButton onPress={() => this.showCalendarModal()} />
-                      }
+                      } */}
                       
                     </View>
                     
@@ -447,7 +467,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                          <View style={WorkoutScreenStyle.workoutIconContainer}>
                           <TimeSvg width="40" height="40" />
                           <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                            {workoutTime} Mins
+                            {workoutTime.toFixed(0)} Mins
                           </Text>
                         </View>
                       }

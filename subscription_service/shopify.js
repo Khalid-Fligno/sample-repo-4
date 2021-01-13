@@ -278,8 +278,12 @@ const createUserChallengeAndSubscription = async (req)=>{
               shopifyProductId:req.shopify_product_id,         
           };
           // get the challage from line_items =>properties
-          if(challengeProductName.toLowerCase().includes("challenge")){            
-            newUser.challenge=true;             
+          if(challengeProductName.toLowerCase().includes("challenge")){  
+            if(challengeProductId == 6131066142906){
+              newUser.subscription=true;
+            }else{          
+            newUser.challenge=true;  
+            }           
           }else if (challengeProductName.toLowerCase().includes("subscription")){
             newUser.subscription=true;
           }

@@ -194,6 +194,7 @@ async  saveOnBoardingInfo(data){
                   value={chosenDate}
                   onChange={this.setDate}
                   minimumDate={new Date()}
+                  style={{marginLeft:'6.5%'}}
                 />
                 <TouchableOpacity
                   onPress={() => this.addChallengeToCalendar(chosenDate)}

@@ -124,7 +124,8 @@ fetchCategories = async () =>{
 
   handleClick(mainIndex,subIndex){
     Haptics.selectionAsync();
-    console.log(this.state.workoutCategories[mainIndex])
+    console.log('selectedMainCategory', this.state.workoutCategories[mainIndex])
+    console.log('selectedSubCategory', this.state.workoutCategories[mainIndex].subCategories[subIndex])
     this.props.navigation.navigate('WorkoutsSelection', {
       selectedMainCategory : this.state.workoutCategories[mainIndex],
       selectedSubCategory : this.state.workoutCategories[mainIndex].subCategories[subIndex]

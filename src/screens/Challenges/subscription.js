@@ -86,18 +86,15 @@ class ChallengeSubscriptionScreen extends Component {
   }
 
   fetchChallenges = async () => {
-    let {userChallengesList,totalChallengeCount} = this.state
-    
+    let {userChallengesList} = this.state
     this.unsubscribeChallenges = await db.collection('challenges')
       .onSnapshot(async (querySnapshot) => {
         const challengesList = [];
         const restartChallengesList=[];
         await querySnapshot.forEach(async (doc) => {
-          //if(totalChallengeCount < 1)
-            this.setState({totalChallengeCount:totalChallengeCount+1})
           const check = userChallengesList.findIndex((challenge)=>{ 
             if(doc.id === challenge.id){
-              restartChallengesList.push(doc.data());
+               restartChallengesList.push(doc.data());
               this.setState({ restartChallengesList });
             }
               //TODO:Hide challenge if it present in users challenge list
@@ -134,7 +131,7 @@ class ChallengeSubscriptionScreen extends Component {
       const userRef = db.collection('users').doc(userData.id).collection('challenges');
       console.log("challengesList[index]",restartChallengesList);
       const data = createUserChallengeData(restartChallengesList[index],new Date())
-      console.log( data.id)
+      console.log( "???",restartChallengesList.length,index)
       userRef.doc(data.id).set(data).then((res)=>{
         this.setState({blogs:undefined,loading:false});
       }).catch((err)=>{
@@ -157,7 +154,7 @@ class ChallengeSubscriptionScreen extends Component {
         subTitle={item.subTitle}
         key={index}
         btnTitle = "Buy"
-        //onPress={()=>this.addChallengeToUser(index)}
+        // onPress={()=>this.addChallengeToUser(index)}
         onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
         disabled = {false}
         challengeData={item}
@@ -219,7 +216,7 @@ class ChallengeSubscriptionScreen extends Component {
                     text: 'Cancel', style: 'cancel',
                   },
                   {
-                    text: 'Restart', onPress: () => this.restartChallengeToUser(0),
+                    text: 'Restart', onPress: () => this.restartChallengeToUser(index),
                   },
                 ],
                 { cancelable: false },
@@ -312,14 +309,8 @@ class ChallengeSubscriptionScreen extends Component {
 
   
   render() {
-    const {
-      challengesList,
-      userChallengesList,
-      loading,
-      blogs,
-      totalChallengeCount
-    } = this.state
-    console.log('totalChallengeCount',totalChallengeCount)
+    const {challengesList,userChallengesList,loading,blogs} = this.state
+    console.log(challengesList)
     return (
       <ScrollView style={{flex:1,paddingHorizontal:containerPadding}} bounces={false}>
          
@@ -335,24 +326,6 @@ class ChallengeSubscriptionScreen extends Component {
             }
             {
               challengesList.map((item,index)=>(this.renderItem({item,index})))
-            }
-            {
-              totalChallengeCount === 1 &&
-              <>
-                  <Text style={ChallengeStyle.Title}>Take a new challenge</Text>
-                  <ChallengeCard 
-                    outline={false}
-                    imageUrl="https://firebasestorage.googleapis.com/v0/b/quickstart-1588594831516.appspot.com/o/Photos%2FphaseCardBg.png?alt=media&token=ce690e37-98b6-4a7a-b077-936923d93343"
-                    numberOfDays={28}
-                    numberOfWeeks={4}
-                    title="New Year Better You"
-                    subTitle="Available from Thursday"
-                    btnTitle = "Buy"
-                    //onPress={()=>this.addChallengeToUser(index)}
-                    onPress={() => console.log("")}
-                    disabled = {true}
-                  />
-          </>
             }
           </View>
             

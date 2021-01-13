@@ -2,6 +2,7 @@ import moment from 'moment';
 import momentTimezone from 'moment-timezone';
 
 export default createUserChallengeData =(data,challengeDate)=>{
+  console.log(data)
     const phases = data.phases.map((res)=>{
       return (
         {

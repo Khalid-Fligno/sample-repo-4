@@ -67,6 +67,12 @@ export default class ExercisesScreen extends React.PureComponent {
       rest = true
     }  
 
+    //for count false and rest varible false in workoutProcessType === 'circular workout
+    if(workout.count === false && currentExercise && currentExercise.name === 'rest'&& workout['restIntervalMap']) {
+      totalDuration = workout['restIntervalMap'][String(fitnessLevel-1)]
+      rest = true
+    }
+
       this.state = {
           workout: workout,
           exerciseList: workout['exercises'],
@@ -177,13 +183,17 @@ export default class ExercisesScreen extends React.PureComponent {
         appsFlyer.trackEvent('resistance_workout_complete');
         this.workoutComplete(reps, resistanceCategoryId);
       }
+   
       else if (setCount === this.state.workout.workoutReps) {
         console.log("Go to next  exercise")
         this.goToExercise(1,reps,resistanceCategoryId,currentExerciseIndex + 1,)
       } 
       else {
         console.log("Incresase count")
-        this.goToExercise(setCount + 1,reps,resistanceCategoryId,currentExerciseIndex)
+        if (workout.rest && !this.state.rest) //for workout.rest === true
+          this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex ,true);
+        else
+          this.goToExercise(setCount + 1,reps,resistanceCategoryId,currentExerciseIndex)
       }
     }else if(workout.workoutProcessType === 'circular'){
       if(this.checkFinished(currentExerciseIndex,setCount)){
@@ -249,14 +259,19 @@ export default class ExercisesScreen extends React.PureComponent {
     const setCount = this.props.navigation.getParam('setCount', 1)
     console.log("rest call")
     if(workout.workoutProcessType === 'oneByOne'){
-      this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
+      // if (setCount === workout.workoutReps && workout.rest) 
+      //   this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex ,true);
+      // else
+        this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex);
     }else if(workout.workoutProcessType === 'circular'){
+
       if(workout.rest === undefined)
         this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,true);
       else
-        this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex)
+        this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex);
 
     }else if(workout.workoutProcessType === 'onlyOne'){
+
       this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,true);
       
     }
@@ -535,17 +550,25 @@ export default class ExercisesScreen extends React.PureComponent {
               </Text>
             </View>
             <View style={styles.currentExerciseRepsTextContainer}>
-              {(workout.workoutProcessType === 'oneByOne' && !workout.count) &&(
+              { (workout.workoutProcessType === 'oneByOne' && !workout.count && !workout.rest) &&(
                  <Text style={styles.currentExerciseRepsText}>
                    {workout.workoutReps} x {reps}
                  </Text> 
-              )
+                )
               }
-               {(workout.workoutProcessType != 'oneByOne' && !workout.count) &&(
+              { (workout.workoutProcessType === 'oneByOne' && !workout.count && workout.rest) &&(
                  <Text style={styles.currentExerciseRepsText}>
-                    {totalDuration} sec
+                   {totalDuration < 60 &&  `${totalDuration} sec`} 
+                   {totalDuration > 60 &&  `${totalDuration/60} m`} 
                  </Text> 
-              )
+                )
+              }
+               {(workout.workoutProcessType != 'oneByOne' && !workout.count)  &&(
+                 <Text style={styles.currentExerciseRepsText}>
+                    {totalDuration < 60 &&  `${totalDuration} sec`} 
+                    {totalDuration > 60 &&  `${totalDuration/60} m`} 
+                 </Text> 
+                )
               }
               {
                (workout.count) && this.repsInterval &&(

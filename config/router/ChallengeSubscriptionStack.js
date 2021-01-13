@@ -7,15 +7,17 @@ import ChallengeSubscriptionScreen from '../../src/screens/Challenges/subscripti
 import CalendarHomeScreen from '../../src/screens/AppStack/Calendar/CalendarHomeScreen';
 import CalendarStack from './CalendarStack';
 
+
 const ChallengeSubscriptionStack = createStackNavigator(
   {
     ChallengeSubscription: ChallengeSubscriptionScreen,
-    // Calendar:CalendarStack
+    Calendar:CalendarStack
     // Subscription: HomeScreen,
   },
   {
     initialRouteName: 'ChallengeSubscription',
     defaultNavigationOptions: ({ navigation }) => ({
+      gesturesEnabled:false,
       header: () => {
         const { routeName } = navigation.state;
         if(routeName === "Calendar")

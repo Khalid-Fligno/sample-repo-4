@@ -128,6 +128,7 @@ export default class OnBoarding5 extends Component {
     }
      
   }
+
   addChallengeToCalendar = async (date) => {
     if (this.state.addingToCalendar) {
       return;
@@ -175,6 +176,7 @@ export default class OnBoarding5 extends Component {
     );
     }
   }
+
   showCalendarModal = () => {
     this.setState({ calendarModalVisible: true });
   }
@@ -291,12 +293,15 @@ export default class OnBoarding5 extends Component {
               onBackdropPress={this.hideCalendarModal}
             >
               <View style={globalStyle.modalContainer}>
+                
                 <DateTimePicker
                   mode="date"
                   value={chosenDate}
                   onChange={this.setDate}
                   minimumDate={new Date()}
+                  style={{marginLeft:wp('6.5%')}}
                 />
+                
                 <TouchableOpacity
                   onPress={() => this.addChallengeToCalendar(chosenDate)}
                   style={globalStyle.modalButton}
