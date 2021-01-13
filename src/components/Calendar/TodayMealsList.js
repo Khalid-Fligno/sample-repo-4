@@ -117,7 +117,6 @@ export default TodayMealsList;
 const styles = StyleSheet.create({
     container:{
         width:wp("100%"),
-        marginBottom:wp('50%')
     },
     label:{
         fontFamily:fonts.bold,
