@@ -90,21 +90,27 @@ class TodayMealsList extends Component {
     return (
       <View style={styles.container}>
         {
+            data.breakfast.length >0 &&
             this.carousel(data.breakfast,'Breakfast')
         }
         {
+            data.snack.length >0 &&
             this.carousel(data.snack,'Morning snack')
         }
         {
+            data.lunch.length >0 &&
             this.carousel(data.lunch,'Lunch')
         }
         {
+            data.snack.length >0 &&
             this.carousel(data.snack,'Afternoon snack')
         }
         {
+            data.dinner.length >0 &&
             this.carousel(data.dinner,'Dinner')
         }
         {
+            data.drink.length >0 &&
             this.carousel(data.drink,'Recovery Drink')
         }
       </View>
