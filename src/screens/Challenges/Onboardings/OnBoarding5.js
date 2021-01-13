@@ -299,7 +299,7 @@ export default class OnBoarding5 extends Component {
                   value={chosenDate}
                   onChange={this.setDate}
                   minimumDate={new Date()}
-                  display="compact"
+                  style={{marginLeft:wp('6.5%')}}
                 />
                 
                 <TouchableOpacity

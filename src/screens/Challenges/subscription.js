@@ -131,7 +131,7 @@ class ChallengeSubscriptionScreen extends Component {
       const userRef = db.collection('users').doc(userData.id).collection('challenges');
       console.log("challengesList[index]",restartChallengesList);
       const data = createUserChallengeData(restartChallengesList[index],new Date())
-      console.log( data.id)
+      console.log( "???",restartChallengesList.length,index)
       userRef.doc(data.id).set(data).then((res)=>{
         this.setState({blogs:undefined,loading:false});
       }).catch((err)=>{
@@ -216,7 +216,7 @@ class ChallengeSubscriptionScreen extends Component {
                     text: 'Cancel', style: 'cancel',
                   },
                   {
-                    text: 'Restart', onPress: () => this.restartChallengeToUser(0),
+                    text: 'Restart', onPress: () => this.restartChallengeToUser(index),
                   },
                 ],
                 { cancelable: false },

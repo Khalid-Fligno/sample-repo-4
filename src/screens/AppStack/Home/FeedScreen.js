@@ -41,6 +41,7 @@ import ChallengeBlogCard from '../../../components/Home/ChallengeBlogCard';
 import FeedCard from '../../../components/Home/FeedCard';
 import { widthPercentageToDP as wp ,heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import BlogCard from '../../../components/Home/BlogCard';
+import { EquipmentMainCategory, EquipmentSubCategory } from '../../../utils/feedUtils';
 // import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
 const { width } = Dimensions.get('window');
 
@@ -60,11 +61,6 @@ const resistanceFocusMap = {
 };
 
 const Feeds =[
-  {
-    bgImage:require('../../../../assets/images/Feed/workout.jpg'),
-    url:"",
-    btnTitle:'Find out more'
-  },
   {
     bgImage:require('../../../../assets/images/Feed/activewear.jpg'),
     url:"https://fitazfk.com/collections/wear-fitazfk-apparel",
@@ -201,6 +197,13 @@ export default class FeedScreen extends React.PureComponent {
     }
   }
 
+  goToFitazfkEquipmentWorkouts(){
+    this.props.navigation.navigate('WorkoutsSelection', {
+      selectedMainCategory : EquipmentMainCategory(),
+      selectedSubCategory : EquipmentSubCategory()
+    });
+  }
+
   render() {
     const {
       loading,
@@ -276,7 +279,7 @@ export default class FeedScreen extends React.PureComponent {
                 btnTitle ="Connect with us"
                 customBtnStyle={{backgroundColor:colors.offWhite}}
                 customBtnTitleStyle={{color:'#658dc3'}}
-                onPress={()=>console.log("Workouts Pressed")}
+                onPress={()=>this.openLink("https://www.facebook.com/groups/180007149128432/?source_id=204363259589572")}
                 image={require('../../../../assets/images/Feed/facebook.jpg')}
               />
               {
@@ -293,7 +296,23 @@ export default class FeedScreen extends React.PureComponent {
                       data={blogs}
                     />
               }
-   
+              <FeedCard 
+                // title ="Workouts"
+                cardCustomStyle={{
+                  marginHorizontal:containerPadding,
+                  marginTop:wp('7%')
+                }}
+                cardImageStyle={{
+                  borderRadius:3
+                }}
+                customTitleStyle={{
+                  fontSize: wp('4.5%')
+                }}
+                btnTitle ="Find out more"
+                onPress={()=>this.goToFitazfkEquipmentWorkouts()}
+                image={require('../../../../assets/images/Feed/workout.jpg')}
+
+              />
               {
                 Feeds.map((res,i)=>(
                   <FeedCard 
