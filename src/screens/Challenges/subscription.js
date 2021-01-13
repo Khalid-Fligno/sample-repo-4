@@ -154,8 +154,8 @@ class ChallengeSubscriptionScreen extends Component {
         subTitle={item.subTitle}
         key={index}
         btnTitle = "Buy"
-        onPress={()=>this.addChallengeToUser(index)}
-        // onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
+        // onPress={()=>this.addChallengeToUser(index)}
+        onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
         disabled = {false}
         challengeData={item}
     />

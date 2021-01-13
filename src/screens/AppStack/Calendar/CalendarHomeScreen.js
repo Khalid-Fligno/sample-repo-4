@@ -125,28 +125,29 @@ class CalendarHomeScreen extends React.PureComponent {
       new Date(activeChallengeUserData.startDate).getTime()<= new Date(stringDate).getTime() &&
       new Date(activeChallengeUserData.endDate).getTime()>= new Date(stringDate).getTime()
        ){
-      this.getCurrentPhaseInfo()
+      this.getCurrentPhaseInfo();
+      this.setState({loading: false});
     }
 
-    this.unsubscribeFromEntries2 = await db.collection('users').doc(uid)
-      .collection('calendarEntries').doc(stringDate)
-      .onSnapshot(async (doc) => {
-        if (doc.exists) {
-          this.setState({
-            workout: await doc.data().workout,
-            loading: false,
-            dayOfWeek: date.format('d'),
-            meals:await doc.data()
-          });
-        } else {
-          this.setState({
-            workout: undefined,
-            loading: false,
-            dayOfWeek: date.format('d'),
-            meals:undefined
-          });
-        }
-      });
+    // this.unsubscribeFromEntries2 = await db.collection('users').doc(uid)
+    //   .collection('calendarEntries').doc(stringDate)
+    //   .onSnapshot(async (doc) => {
+    //     if (doc.exists) {
+    //       this.setState({
+    //         workout: await doc.data().workout,
+    //         loading: false,
+    //         dayOfWeek: date.format('d'),
+    //         meals:await doc.data()
+    //       });
+    //     } else {
+    //       this.setState({
+    //         workout: undefined,
+    //         loading: false,
+    //         dayOfWeek: date.format('d'),
+    //         meals:undefined
+    //       });
+    //     }
+    //   });
   }
 
   loadExercises = async (workoutId,challengeCurrentDay = 0) => {
@@ -276,7 +277,7 @@ class CalendarHomeScreen extends React.PureComponent {
         }
       });
       const { activeChallengeData,activeChallengeUserData} = this.state
-      console.log("activeChallengeData",activeChallengeData,"activeChallengeUserData",activeChallengeUserData);
+      // console.log("activeChallengeData",activeChallengeData,"activeChallengeUserData",activeChallengeUserData);
       if(activeChallengeData === undefined && activeChallengeUserData ===undefined ){
         this.unsubscribeSchedule = await db.collection('users').doc(uid).collection('challenges')
         .where("isSchedule", "==" ,true)
