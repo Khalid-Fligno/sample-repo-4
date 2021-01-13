@@ -84,30 +84,32 @@ class TodayMealsList extends Component {
   
   render() {
       const {data} = this.props;
-      data.dinner.map((res)=>{
-        console.log(res.title)
-      })
+  
     return (
       <View style={styles.container}>
         {
             data.breakfast.length >0 &&
             this.carousel(data.breakfast,'Breakfast')
         }
-        {
+        {/* {
             data.snack.length >0 &&
             this.carousel(data.snack,'Morning snack')
-        }
+        } */}
         {
             data.lunch.length >0 &&
             this.carousel(data.lunch,'Lunch')
         }
-        {
+        {/* {
             data.snack.length >0 &&
             this.carousel(data.snack,'Afternoon snack')
-        }
+        } */}
         {
             data.dinner.length >0 &&
             this.carousel(data.dinner,'Dinner')
+        }
+       {
+            data.snack.length >0 &&
+            this.carousel(data.snack,'Snack')
         }
         {
             data.drink.length >0 &&

@@ -76,7 +76,6 @@ export const getTodayRecommendedMeal = async(phaseData,activeChallengeUserData) 
   const dinnerList = phaseMeals.filter((res)=>res.dinner)
   const snackList = phaseMeals.filter((res)=>res.snack)
   const drinkList = phaseMeals.filter((res)=>res.drink)
-console.log(drinkList,"drinkList")
 //   const breakfast =  getRandomNumber(breakfastList.length-1) >=0?
 //                       Object.assign(
 //                         {},
