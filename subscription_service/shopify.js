@@ -290,15 +290,16 @@ const createUserChallengeAndSubscription = async (req)=>{
           if(challengeProductId == 6131066142906){
             updateUserSubscription(sub3Monthly,user.id);
           }          
-        const userChallenge= await getUserChallenge(user.id,challengeProductId);
-        if(userChallenge )
+        const userChallenge= await getUserChallenge(user.id,challengeProductName);
+        console.log("userChallenge",userChallenge,user)        
+        if(userChallenge && userChallenge.name == challengeProductName)
           { 
             console.log("user has challenge");
             return true
           }
         // get product from line item collection
         // get workout challange details by passing product_title      
-        const challenge= await getChallengeDetails(challengeProductId);
+        const challenge= await getChallengeDetails(challengeProductName);
         const userInfo=await getUser(req.email);
         if(challenge !=null){        
           const userChallenge=createNewChallenge(challenge)
@@ -350,23 +351,22 @@ const updateUserById = (userInfo) => {
   const userRef = db.collection('users').doc(userInfo.id);
   userRef.set(userInfo, { merge: true });
 }
-const getUserChallenge = async(userId,shopifyProductId)=>{
-  const snapshot=await db.collection('users').doc(userId).collection('challenges').where("shopifyProductId","==",shopifyProductId)
+const getUserChallenge = async(userId,name)=>{
+  const snapshot=await db.collection('users').doc(userId).collection('challenges').where("name","==",name)
   .get();
   if (snapshot.size > 0) {
    return snapshot.docs[0].data();
 } 
 }
-const getChallengeDetails = async(shopifyProductId) => {
-    const snapshot =await db.collection('challenges').where("shopifyProductId","==",shopifyProductId)
+const getChallengeDetails = async(name) => {
+    const snapshot =await db.collection('challenges').where("name","==",name)
      .get();
      if (snapshot.size > 0) {
       return snapshot.docs[0].data();
   }   
 }
 
-const getChallengeDetailByProductId = async(challengeProductId) => {
-  
+const getChallengeDetailByProductId = async(challengeProductId) => {  
   const snapshot =await db.collection('challenges').where("shopifyProductId","==",challengeProductId)
    .get();
    if (snapshot.size > 0) {
