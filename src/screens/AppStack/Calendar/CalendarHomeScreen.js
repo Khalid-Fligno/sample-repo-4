@@ -126,28 +126,27 @@ class CalendarHomeScreen extends React.PureComponent {
       new Date(activeChallengeUserData.endDate).getTime()>= new Date(stringDate).getTime()
        ){
       this.getCurrentPhaseInfo();
-      this.setState({loading: false});
     }
 
-    // this.unsubscribeFromEntries2 = await db.collection('users').doc(uid)
-    //   .collection('calendarEntries').doc(stringDate)
-    //   .onSnapshot(async (doc) => {
-    //     if (doc.exists) {
-    //       this.setState({
-    //         workout: await doc.data().workout,
-    //         loading: false,
-    //         dayOfWeek: date.format('d'),
-    //         meals:await doc.data()
-    //       });
-    //     } else {
-    //       this.setState({
-    //         workout: undefined,
-    //         loading: false,
-    //         dayOfWeek: date.format('d'),
-    //         meals:undefined
-    //       });
-    //     }
-    //   });
+    this.unsubscribeFromEntries2 = await db.collection('users').doc(uid)
+      .collection('calendarEntries').doc(stringDate)
+      .onSnapshot(async (doc) => {
+        if (doc.exists) {
+          this.setState({
+            workout: await doc.data().workout,
+            loading: false,
+            dayOfWeek: date.format('d'),
+            meals:await doc.data()
+          });
+        } else {
+          this.setState({
+            workout: undefined,
+            loading: false,
+            dayOfWeek: date.format('d'),
+            meals:undefined
+          });
+        }
+      });
   }
 
   loadExercises = async (workoutId,challengeCurrentDay = 0) => {
