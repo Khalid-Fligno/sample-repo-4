@@ -166,25 +166,27 @@ export default class OnBoarding5 extends Component {
       );
     }else{
       this.setState({ addingToCalendar: false});
-    Alert.alert(
-      '',
-      'Added to calendar!',
-      [
-        { text: 'OK', onPress: this.hideCalendarModal, style: 'cancel' },
-      ],
-      { cancelable: false },
-    );
+      Alert.alert(
+        '',
+        'Added to calendar!',
+        [
+          { text: 'OK', onPress: this.hideCalendarModal, style: 'cancel' },
+        ],
+        { cancelable: false },
+      );
     }
   }
 
   showCalendarModal = () => {
     this.setState({ calendarModalVisible: true });
   }
+
   hideCalendarModal = () => {
     this.setState({ calendarModalVisible: false,loading:false });
   }
+
   setDate = async (event, selectedDate) => {
-    console.log("setDate call")
+    // console.log("setDate call")
     if(selectedDate && Platform.OS === 'android'){
       this.setState({loading:true});
       this.addChallengeToCalendar(selectedDate);
@@ -194,6 +196,7 @@ export default class OnBoarding5 extends Component {
     this.setState({ chosenDate: currentDate });
     }
   }
+
   async  saveOnBoardingInfo(data){
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
@@ -419,7 +422,7 @@ export default class OnBoarding5 extends Component {
                   customBtnTitleStyle={{marginRight:10}}
                 />:
                 <CustomBtn 
-                  Title="Continue"
+                  Title="Choose Start Date"
                   customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}
                   onPress={()=>this.goToScreen('submit')}
                   disabled={btnDisabled}

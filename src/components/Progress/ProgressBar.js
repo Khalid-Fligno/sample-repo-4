@@ -51,7 +51,7 @@ export default class ProgressBar extends React.PureComponent {
                   width={4}
                   fill={(completed/total)*100}
                   tintColor={colors.themeColor.color}
-                  onAnimationComplete={() => console.log('onAnimationComplete')}
+                  // onAnimationComplete={() => console.log('onAnimationComplete')}
                   backgroundColor="lightgray" 
                   rotation={0}
         >

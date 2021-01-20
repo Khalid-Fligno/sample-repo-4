@@ -33,7 +33,7 @@ export default class ChallengeProgressBar extends React.PureComponent {
                   width={wp('1.2%')}
                   fill={(completed/total)*100}
                   tintColor={colors.themeColor.color}
-                  onAnimationComplete={() => console.log('onAnimationComplete')}
+                  // onAnimationComplete={() => console.log('onAnimationComplete')}
                   backgroundColor="lightgray" 
                   rotation={0}
         >

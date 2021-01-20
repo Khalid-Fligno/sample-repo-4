@@ -44,24 +44,27 @@ export default class Progress2Screen extends React.PureComponent {
   }
   componentDidMount = () => {
     this.props.navigation.setParams({ handleSkip: this.handleSkip });
-    if (Platform.OS === 'android') {
-      this.requestAndroidPermissions();
+    // if (Platform.OS === 'android') {
+    //   this.requestAndroidPermissions();
     
-    }else{
-    this.getCameraPermission();
-    this.getCameraRollPermission();
-    }
+    // }else{
+    // this.getCameraPermission();
+    // this.getCameraRollPermission();
+    // }
   }
+
   getCameraPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
     console.log("getCameraPermission");
   }
+
   getCameraRollPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     this.setState({ hasCameraRollPermission: status === 'granted' });
     console.log("getCameraRollPermission");
   }
+
   async requestAndroidPermissions() {
     try {
         await this.getCameraPermission();
@@ -72,6 +75,114 @@ export default class Progress2Screen extends React.PureComponent {
         return false;
     }
 }
+
+
+  appSettingsPrompt = () => {
+    Alert.alert(
+      'FitazFK needs permissions to do this',
+      'Go to app settings and enable camera and camera roll permissions',
+      [
+        {
+          text: 'Cancel', style: 'cancel',
+        },
+        {
+          text: 'Go to Settings', onPress: () => Linking.openURL('app-settings:'),
+        },
+      ],
+      { cancelable: false },
+    );
+  }
+
+  chooseUploadType = () => {
+      if (Platform.OS === 'android') {
+          this.requestAndroidPermissions();
+          this.showActionSheet();
+          
+      }
+      else {
+
+          this.getCameraPermission();
+          this.getCameraRollPermission();
+          ActionSheetIOS.showActionSheetWithOptions(
+              {
+                  options: actionSheetOptions,
+                  cancelButtonIndex: 0,
+              },
+              async (buttonIndex) => {
+                  this.uploadTypeAction(buttonIndex);
+              },
+          );
+      }
+  }
+
+  async requestAndroidPermissions() {
+      try {
+          await this.getCameraPermission();
+          await this.getCameraRollPermission();
+      }
+      catch (err) {
+          //Handle this error
+          return false;
+      }
+  }
+
+
+  showActionSheet = () => {
+      this.ActionSheet.show()
+  }
+
+  uploadTypeAction = (buttonIndex) => {
+      if (buttonIndex === 1) {
+          if (!this.state.hasCameraPermission || !this.state.hasCameraRollPermission) {
+              this.appSettingsPrompt();
+              return;
+          }
+          this.takePhoto();
+      } else if (buttonIndex === 2) {
+          if (!this.state.hasCameraRollPermission) {
+              this.appSettingsPrompt();
+              return;
+          }
+          this.pickImage();
+      }
+  }
+
+  takePhoto = async () => {
+    const result = await ImagePicker.launchCameraAsync();
+    if (!result.cancelled) {
+      const manipResult = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [{ resize: { width: 600, height: 800 } }],
+        { format: 'jpeg', compress: 0.7 ,base64:true},
+      );
+      this.setState({ image: manipResult });
+    }
+  };
+
+  pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    });
+      console.log(result);
+    const originXValue = result.width > result.height ? 130 : 0;
+    if (!result.cancelled) {
+      try {
+        const manipResult = await ImageManipulator.manipulateAsync(
+          result.uri,
+          [{ resize: { height: 800 } }, {
+            crop: {
+              originX: originXValue, originY: 0, width: 600, height: 800,
+            },
+          }],
+          { format: 'jpeg', compress: 0.7 ,base64:true},
+        );
+        this.setState({ image: manipResult });
+      } catch (err) {
+        this.setState({ error: 'There was a problem with that image, please try a different one' });
+      }
+    }
+  };
+
   handleSkip = () => {
     if (this.props.navigation.getParam('isInitial', false)) {
       Alert.alert(
@@ -103,105 +214,7 @@ export default class Progress2Screen extends React.PureComponent {
       );
     }
   }
-  appSettingsPrompt = () => {
-    Alert.alert(
-      'FitazFK needs permissions to do this',
-      'Go to app settings and enable camera and camera roll permissions',
-      [
-        {
-          text: 'Cancel', style: 'cancel',
-        },
-        {
-          text: 'Go to Settings', onPress: () => Linking.openURL('app-settings:'),
-        },
-      ],
-      { cancelable: false },
-    );
-  }
-    chooseUploadType = () => {
-        if (Platform.OS === 'android') {
-            this.requestAndroidPermissions();
-            this.showActionSheet();
-            
-        }
-        else {
 
-            this.getCameraPermission();
-            this.getCameraRollPermission();
-            ActionSheetIOS.showActionSheetWithOptions(
-                {
-                    options: actionSheetOptions,
-                    cancelButtonIndex: 0,
-                },
-                async (buttonIndex) => {
-                    this.uploadTypeAction(buttonIndex);
-                },
-            );
-        }
-    }
-
-    async requestAndroidPermissions() {
-        try {
-            await this.getCameraPermission();
-            await this.getCameraRollPermission();
-        }
-        catch (err) {
-            //Handle this error
-            return false;
-        }
-    }
-    showActionSheet = () => {
-        this.ActionSheet.show()
-    }
-    uploadTypeAction = (buttonIndex) => {
-        if (buttonIndex === 1) {
-            if (!this.state.hasCameraPermission || !this.state.hasCameraRollPermission) {
-                this.appSettingsPrompt();
-                return;
-            }
-            this.takePhoto();
-        } else if (buttonIndex === 2) {
-            if (!this.state.hasCameraRollPermission) {
-                this.appSettingsPrompt();
-                return;
-            }
-            this.pickImage();
-        }
-    }
-  takePhoto = async () => {
-    const result = await ImagePicker.launchCameraAsync();
-    if (!result.cancelled) {
-      const manipResult = await ImageManipulator.manipulateAsync(
-        result.uri,
-        [{ resize: { width: 600, height: 800 } }],
-        { format: 'jpeg', compress: 0.7 },
-      );
-      this.setState({ image: manipResult });
-    }
-  };
-  pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    });
-      console.log(result);
-    const originXValue = result.width > result.height ? 130 : 0;
-    if (!result.cancelled) {
-      try {
-        const manipResult = await ImageManipulator.manipulateAsync(
-          result.uri,
-          [{ resize: { height: 800 } }, {
-            crop: {
-              originX: originXValue, originY: 0, width: 600, height: 800,
-            },
-          }],
-          { format: 'jpeg', compress: 0.7 },
-        );
-        this.setState({ image: manipResult });
-      } catch (err) {
-        this.setState({ error: 'There was a problem with that image, please try a different one' });
-      }
-    }
-  };
   handleImagePicked = async (pickerResult) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ uploading: true });
@@ -232,6 +245,7 @@ export default class Progress2Screen extends React.PureComponent {
       this.setState({ error: 'Problem uploading image, please try again', uploading: false });
     }
   };
+
   render() {
     const { image, uploading, error } = this.state;
     return (

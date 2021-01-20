@@ -52,7 +52,7 @@ export const getTodayRecommendedWorkout = (workouts,activeChallengeUserData,sele
     let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime(); 
     // To calculate the no. of days between two dates 
     let currentDay = Math.round(Difference_In_Time / (1000 * 3600 * 24))+1;
-    console.log("???....",currentDay)
+    // console.log("???....",currentDay)
     return workouts.find((res)=>res.days.includes(currentDay))
 }
 
@@ -70,7 +70,7 @@ export const getTodayRecommendedMeal = async(phaseData,activeChallengeUserData) 
 
   const challengeMealsFilterList = phaseMeals.map((res)=>res.id)
 
-  const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
+  // const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
   const breakfastList = phaseMeals.filter((res)=>res.breakfast)
   const lunchList = phaseMeals.filter((res)=>res.lunch)
   const dinnerList = phaseMeals.filter((res)=>res.dinner)
@@ -144,6 +144,8 @@ export const full_months =(dt)=>
   { 
      return Date.fullMonths[dt.getMonth()]; 
    }   
+
+   
 //-------------- for login -----------------------
     export const getChallengeDetails = async(userid) => {
     let userChallenge=[];

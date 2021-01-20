@@ -87,7 +87,7 @@ export default class OnBoarding6 extends Component {
         } 
       }
 
-      addChallengeToCalendar = async (date) => {
+    addChallengeToCalendar = async (date) => {
         if (this.state.addingToCalendar) {
           return;
         }
@@ -96,14 +96,15 @@ export default class OnBoarding6 extends Component {
         const updatedChallengedata=this.state.challengeData;
         const data = createUserChallengeData(updatedChallengedata,new Date(date));
         const progressData = {
-          photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
-          weight: updatedChallengedata.onBoardingInfo.measurements.weight,
-          waist: updatedChallengedata.onBoardingInfo.measurements.waist,
-          hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-          burpeeCount:updatedChallengedata.onBoardingInfo.burpeeCount,
-          fitnessLevel:updatedChallengedata.onBoardingInfo.fitnessLevel
-        }
+                                photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+                                weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+                                waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+                                hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+                                burpeeCount:updatedChallengedata.onBoardingInfo.burpeeCount,
+                                fitnessLevel:updatedChallengedata.onBoardingInfo.fitnessLevel
+                              }
         const stringDate = moment(date).format('YYYY-MM-DD').toString();
+        const stringDate2 = moment(date).format('DD-MM-YY').toString();
 
         if(new Date(updatedChallengedata.startDate).getTime() < new Date(stringDate).getTime()){
           data.isSchedule= true;
@@ -124,16 +125,15 @@ export default class OnBoarding6 extends Component {
           );
         }else{
           this.setState({ addingToCalendar: false});
-        Alert.alert(
-          '',
-          'Added to calendar!',
-          [
-            { text: 'OK', onPress: this.hideCalendarModal, style: 'cancel' },
-          ],
-          { cancelable: false },
-        );
+          Alert.alert('',
+                      `Your start date has been added to your challenge. Go to ${stringDate2} on the challenge dashboard to see what Day 1 looks like`,
+                      [
+                        { text: 'OK', onPress: this.hideCalendarModal, style: 'cancel' },
+                      ],
+                      { cancelable: false },
+          );
         }
-      }     
+    }     
 
 async  saveOnBoardingInfo(data){
     this.setState({ loading: true });
@@ -146,12 +146,15 @@ async  saveOnBoardingInfo(data){
       console.log(err)
     })
   }
+  
   showCalendarModal = () => {
     this.setState({ calendarModalVisible: true });
   }
+
   hideCalendarModal = () => {
     this.setState({ calendarModalVisible: false,loading:false });
   }
+
   setDate = async (event, selectedDate) => {
     console.log("setDate call")
     if(selectedDate && Platform.OS === 'android'){

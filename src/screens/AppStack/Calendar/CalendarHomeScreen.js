@@ -40,22 +40,20 @@ import {
   getTodayRecommendedWorkout,
   isActiveChallenge
 } from '../../../utils/challenges';
-import ChallengeProgressCard from '../../../components/Calendar/ChallengeProgressCard';
-import {
-     CustomListItem,
-     MealSwipable, 
-     RcMealListItem,
-     WorkoutSwipable,
-     RcWorkoutListItem
-  } from '../../../components/Calendar/ListItem';
+// import ChallengeProgressCard from '../../../components/Calendar/ChallengeProgressCard';
+// import {
+//      CustomListItem,
+//      MealSwipable, 
+//      RcMealListItem,
+//      WorkoutSwipable,
+//      RcWorkoutListItem
+//   } from '../../../components/Calendar/ListItem';
 import CustomCalendarStrip from '../../../components/Calendar/CustomCalendarStrip';
 import { NavigationActions, StackActions } from 'react-navigation';
 import ChallengeProgressCard2 from '../../../components/Calendar/ChallengeProgressCard2';
 import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
 import TodayMealsList from '../../../components/Calendar/TodayMealsList';
 import Modal from "react-native-modal";
-import { Button } from 'react-native';
-import { SafeAreaView } from 'react-native';
 import ChallengeSetting from '../../../components/Calendar/ChallengeSetting';
 
 class CalendarHomeScreen extends React.PureComponent {
@@ -82,7 +80,7 @@ class CalendarHomeScreen extends React.PureComponent {
 
   componentDidMount = async () => {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
-    await this.fetchCalendarEntries();
+    // await this.fetchCalendarEntries();
     await this.fetchActiveChallengeUserData();
     await this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting()
@@ -187,13 +185,13 @@ class CalendarHomeScreen extends React.PureComponent {
                Object.assign(workout,{displayName:`${workout.displayName} - Day ${challengeCurrentDay}`}) 
             }
                 this.props.navigation.navigate('WorkoutInfo', 
-                {
-                  workout, 
-                  reps: workout.difficultyLevel[fitnessLevel-1].toString(),
-                  workoutSubCategory:workout.workoutSubCategory,
-                  fitnessLevel,
-                  extraProps:{fromCalender:true}
-                }
+                    {
+                      workout, 
+                      reps: workout.difficultyLevel[fitnessLevel-1].toString(),
+                      workoutSubCategory:workout.workoutSubCategory,
+                      fitnessLevel,
+                      extraProps:{fromCalender:true}
+                    }
                 )
         }
         catch(err){
@@ -275,27 +273,26 @@ class CalendarHomeScreen extends React.PureComponent {
           this.props.navigation.navigate('ChallengeSubscription')
         }
       });
-      const { activeChallengeData,activeChallengeUserData} = this.state
-      // console.log("activeChallengeData",activeChallengeData,"activeChallengeUserData",activeChallengeUserData);
-      if(activeChallengeData === undefined && activeChallengeUserData ===undefined ){
-        this.unsubscribeSchedule = await db.collection('users').doc(uid).collection('challenges')
-        .where("isSchedule", "==" ,true)
-        .onSnapshot(async (querySnapshot) => {
-          const list = [];
-          await querySnapshot.forEach(async (doc) => {
-              await list.push(await doc.data());
-          });
-          if(list[0]){
-            this.fetchActiveChallengeData(list[0])
-          }else{
-            this.setState({ 
-              activeChallengeUserData:undefined,
-              loading:false
-            });
-          }
-        });
+      // const { activeChallengeData,activeChallengeUserData} = this.state
+      // if(activeChallengeData === undefined && activeChallengeUserData ===undefined ){
+      //   this.unsubscribeSchedule = await db.collection('users').doc(uid).collection('challenges')
+      //   .where("isSchedule", "==" ,true)
+      //   .onSnapshot(async (querySnapshot) => {
+      //     const list = [];
+      //     await querySnapshot.forEach(async (doc) => {
+      //         await list.push(await doc.data());
+      //     });
+      //     if(list[0]){
+      //       this.fetchActiveChallengeData(list[0])
+      //     }else{
+      //       this.setState({ 
+      //         activeChallengeUserData:undefined,
+      //         loading:false
+      //       });
+      //     }
+      //   });
 
-      }
+      // }
     }
     catch(err){
       this.setState({ loading: false });
@@ -313,9 +310,12 @@ class CalendarHomeScreen extends React.PureComponent {
             this.setState({ 
               activeChallengeUserData,
               activeChallengeData:doc.data() ,
-              loading:false
+              // loading:false
             });
-            this.getCurrentPhaseInfo()
+            setTimeout(()=>{
+              this.setState({ loading: false });
+              this.getCurrentPhaseInfo()
+            },500)
           }
           
       });
@@ -341,7 +341,7 @@ class CalendarHomeScreen extends React.PureComponent {
         this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
 
         //TODO :calculate the workout completed till selected date
-        console.log(this.stringDate)
+        // console.log(this.stringDate)
         this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
 
         //TODO calculate current challenge day
@@ -403,7 +403,7 @@ class CalendarHomeScreen extends React.PureComponent {
       activeChallengeData,
       todayRecommendedMeal
     } = this.state;
-
+    console.log("loading",loading)
     let showRC = false
     if(activeChallengeData && activeChallengeUserData){
       if(!this.phase)
@@ -421,7 +421,6 @@ class CalendarHomeScreen extends React.PureComponent {
           showRC = false  
       }
     }
-
     const mealsList =(
       showRC &&
       <>
@@ -462,7 +461,7 @@ class CalendarHomeScreen extends React.PureComponent {
               activeChallengeData={activeChallengeData}
               activeChallengeUserData = {activeChallengeUserData}
               totalChallengeWorkoutsCompleted ={this.totalChallengeWorkoutsCompleted}
-              openLink={()=>this.openLink(this.phase.pdfUrl)}
+              openLink={()=>this.openLink(this.phaseData.pdfUrl)}
               currentDay={this.currentChallengeDay}
             />
         }
@@ -486,6 +485,7 @@ class CalendarHomeScreen extends React.PureComponent {
         <ChallengeSetting 
           onToggle={()=>this.toggleSetting()}
           activeChallengeUserData={activeChallengeUserData}
+          activeChallengeData={activeChallengeData}
           navigation={this.props.navigation}
         />
       </Modal>

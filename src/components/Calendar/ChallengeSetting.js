@@ -13,7 +13,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { db } from '../../../config/firebase';
 import Loader from '../Shared/Loader';
 import { Alert } from 'react-native';
-
+import createUserChallengeData from '../../components/Challenges/UserChallengeData'
 class ChallengeSetting extends Component {
   constructor(props) {
     super(props);
@@ -23,38 +23,38 @@ class ChallengeSetting extends Component {
   }
 
 
-  async  quitChallenge(data){
+  async resetChallenge(data,callBack){
+    const {activeChallengeData} = this.props
     this.setState({loading:true})
     const uid = await AsyncStorage.getItem('uid');
     const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
-    userRef.set({status:'Completed'},{merge:true}).then((res)=>{
+    const newData = createUserChallengeData(activeChallengeData,new Date())
+    userRef.set(newData).then((res)=>{
         this.setState({loading:false})
         this.props.onToggle()
         console.log("res",res)
-        setTimeout(()=>{
-            this.props.navigation.navigate('ChallengeSubscription');
-        },100)
+        setTimeout(()=>callBack(newData),100)
     }).catch((err)=>{
       console.log(err)
     })
   }
+
+  async  quitChallenge(data){
+    const callBack = ()=>{
+                this.props.navigation.navigate('ChallengeSubscription');
+            };
+    this.resetChallenge(data,callBack);  
+  }
+  
   async  restartChallenge(data){
-    this.setState({loading:true})
-    const uid = await AsyncStorage.getItem('uid');
-    const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
-    userRef.set({status:'Completed'},{merge:true}).then((res)=>{
-        this.setState({loading:false})
-        this.props.onToggle()
-        setTimeout(()=>{
+    const callBack = (newData)=>{
             this.props.navigation.navigate('ChallengeOnBoarding1',{
-                data:{
-                  challengeData:data
-                }
-              })
-        },100)
-    }).catch((err)=>{
-      console.log(err)
-    })
+                    data:{
+                        challengeData:newData
+                    }
+                })
+            };
+    this.resetChallenge(data,callBack); 
   }
 
   render() {

@@ -127,16 +127,16 @@ class ChallengeSubscriptionScreen extends Component {
     
   }
   restartChallengeToUser(index){
- let {userData , restartChallengesList} = this.state
-      const userRef = db.collection('users').doc(userData.id).collection('challenges');
-      console.log("challengesList[index]",restartChallengesList);
-      const data = createUserChallengeData(restartChallengesList[index],new Date())
-      console.log( "???",restartChallengesList.length,index)
-      userRef.doc(data.id).set(data).then((res)=>{
-        this.setState({blogs:undefined,loading:false});
-      }).catch((err)=>{
-        console.log(err)
-      })
+    let {userData , restartChallengesList} = this.state
+          const userRef = db.collection('users').doc(userData.id).collection('challenges');
+          console.log("challengesList[index]",restartChallengesList);
+          const data = createUserChallengeData(restartChallengesList[index],new Date())
+          console.log( "???",restartChallengesList.length,index)
+          userRef.doc(data.id).set(data).then((res)=>{
+            this.setState({blogs:undefined,loading:false});
+          }).catch((err)=>{
+            console.log(err)
+          })
     
   }
   openLink = (url) => {
@@ -154,8 +154,8 @@ class ChallengeSubscriptionScreen extends Component {
         subTitle={item.subTitle}
         key={index}
         btnTitle = "Buy"
-        // onPress={()=>this.addChallengeToUser(index)}
-        onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
+        onPress={()=>this.addChallengeToUser(index)}
+        // onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
         disabled = {false}
         challengeData={item}
     />
@@ -168,6 +168,7 @@ class ChallengeSubscriptionScreen extends Component {
       const findIndex = this.state.userChallengesList.findIndex((res)=> res.status === 'Active'); 
       if(findIndex === -1 && item.status === 'Completed'){
         btnTitle = 'Restart';
+        isRestartBtn=true;
       }
       else if(findIndex !== -1 && item.status === 'Completed'){
         btnTitle = 'Completed';
@@ -210,13 +211,13 @@ class ChallengeSubscriptionScreen extends Component {
               onPress={()=>this.onBoarding(item,btnTitle,btnDisabled)}
               restartButton={isRestartBtn}
               onPressRestart={()=> {   Alert.alert('',
-                'Are you sure you want to restart your challenge?',
+                'Are you sure you want to reset your challenge?',
                 [
                   {
                     text: 'Cancel', style: 'cancel',
                   },
                   {
-                    text: 'Restart', onPress: () => this.restartChallengeToUser(index),
+                    text: 'Reset', onPress: () => this.restartChallengeToUser(index),
                   },
                 ],
                 { cancelable: false },

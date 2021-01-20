@@ -79,7 +79,7 @@ class ChallengeProgressCard2 extends Component {
             </View> 
             <PhaseCard 
                 onPress={()=>console.log(">>>>")}
-                image={require('../../../assets/images/Calendar/phaseCardBg.png')}
+                image={{uri:phaseData.thumbnail}}
                 phase={phase}
                 phaseData={phaseData}
                 openLink={openLink}
