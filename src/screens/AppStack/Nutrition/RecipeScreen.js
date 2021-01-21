@@ -72,7 +72,7 @@ export default class RecipeScreen extends React.PureComponent {
     // this.focusListener = this.props.navigation.addListener('willFocus', () => {
     //   this.onFocusFunction()
     // })
-    this.onFocusFunction()
+    this.onFocusFunction();
   }
   componentWillUnmount = async () => {
     // this.focusListener.remove()

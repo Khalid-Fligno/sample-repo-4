@@ -181,7 +181,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
   }
   goToAppScreen=async(doc)=>{
     // RECEIPT STILL VALID
-    this.setState({ loading: false });
+    // this.setState({ loading: false });
     if (await !doc.data().onboarded) {
         this.props.navigation.navigate('Onboarding1');
         return;

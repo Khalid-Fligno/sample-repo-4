@@ -66,87 +66,96 @@ export default class OnBoarding6 extends Component {
     else if(fitnessLevel === 3)
         burpeeCount=20;
 
-        const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
-          fitnessLevel,
-          burpeeCount
-        })
-        let updatedChallengedata = Object.assign({},challengeData,{
-          onBoardingInfo,
-          status:'Active'
-        })
-        if(type === 'next'){
-          this.setState({ challengeData: updatedChallengedata });
-          // calendarModalVisible true calendar popup
-          this.setState({ calendarModalVisible: true });
-        }else{
-          this.props.navigation.navigate('ChallengeOnBoarding5',{
-            data:{
-                   challengeData:updatedChallengedata,
-                 }
-          })
-        } 
-      }
-
-    addChallengeToCalendar = async (date) => {
-        if (this.state.addingToCalendar) {
-          return;
-        }
-        this.setState({ addingToCalendar: true });
-        ////////////////////saving on calendar
-        const updatedChallengedata=this.state.challengeData;
-        const data = createUserChallengeData(updatedChallengedata,new Date(date));
-        const progressData = {
-                                photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
-                                weight: updatedChallengedata.onBoardingInfo.measurements.weight,
-                                waist: updatedChallengedata.onBoardingInfo.measurements.waist,
-                                hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-                                burpeeCount:updatedChallengedata.onBoardingInfo.burpeeCount,
-                                fitnessLevel:updatedChallengedata.onBoardingInfo.fitnessLevel
-                              }
-        const stringDate = moment(date).format('YYYY-MM-DD').toString();
-        const stringDate2 = moment(date).format('DD-MM-YY').toString();
-
-        if(new Date(updatedChallengedata.startDate).getTime() < new Date(stringDate).getTime()){
-          data.isSchedule= true;
-          data.status='InActive';
-        }
-        storeProgressInfo(progressData)
-        this.saveOnBoardingInfo(data)
-        ////////////end saving
-        if(Platform.OS === 'android'){
-          this.hideCalendarModal();
-          Alert.alert(
-            '',
-            'Added to calendar!',
-            [
-              { text: 'OK', style: 'cancel' },
-            ],
-            { cancelable: false },
-          );
-        }else{
-          this.setState({ addingToCalendar: false});
-          Alert.alert('',
-                      `Your start date has been added to your challenge. Go to ${stringDate2} on the challenge dashboard to see what Day 1 looks like`,
-                      [
-                        { text: 'OK', onPress: this.hideCalendarModal, style: 'cancel' },
-                      ],
-                      { cancelable: false },
-          );
-        }
-    }     
-
-async  saveOnBoardingInfo(data){
-    this.setState({ loading: true });
-    const uid = await AsyncStorage.getItem('uid');
-    const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
-    userRef.set(data,{merge:true}).then((res)=>{
-      this.setState({loading:false})
-      this.props.navigation.navigate('Home');
-    }).catch((err)=>{
-      console.log(err)
+    const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
+      fitnessLevel,
+      burpeeCount
     })
+    let updatedChallengedata = Object.assign({},challengeData,{
+      onBoardingInfo,
+      status:'Active'
+    })
+    if(type === 'next'){
+      this.setState({ challengeData: updatedChallengedata });
+      // calendarModalVisible true calendar popup
+      this.setState({ calendarModalVisible: true });
+    }else{
+      this.props.navigation.navigate('ChallengeOnBoarding5',{
+        data:{
+                challengeData:updatedChallengedata,
+              }
+      })
+    } 
+  }
+
+  addChallengeToCalendar = async (date) => {
+      if (this.state.addingToCalendar) {
+        return;
+      }
+      this.setState({ addingToCalendar: true });
+      ////////////////////saving on calendar
+      const updatedChallengedata=this.state.challengeData;
+      const data = createUserChallengeData(updatedChallengedata,new Date(date));
+      const progressData = {
+                              photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+                              weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+                              waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+                              hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+                              burpeeCount:updatedChallengedata.onBoardingInfo.burpeeCount,
+                              fitnessLevel:updatedChallengedata.onBoardingInfo.fitnessLevel
+                            }
+      const stringDate = moment(date).format('YYYY-MM-DD').toString();
+      const stringDate2 = moment(date).format('DD-MM-YY').toString();
+
+      if(new Date(updatedChallengedata.startDate).getTime() < new Date(stringDate).getTime()){
+        data.isSchedule= true;
+        data.status='InActive';
+      }
+      storeProgressInfo(progressData)
+      this.saveOnBoardingInfo(data,stringDate2)
+
+  }     
+
+  async  saveOnBoardingInfo(data,stringDate2){
+      this.setState({ loading: true });
+      const uid = await AsyncStorage.getItem('uid');
+      const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
+      userRef.set(data,{merge:true}).then(async(res)=>{
+        if(data.onBoardingInfo.fitnessLevel)
+          await AsyncStorage.setItem('fitnessLevel', data.onBoardingInfo.fitnessLevel.toString());
+        this.setState({loading:false})
+        this.addedToCalendarPopup(stringDate2);
+      }).catch((err)=>{
+        console.log(err)
+      })
   }
   
+  addedToCalendarPopup(stringDate2){
+    const onPressAlert=() =>{
+      this.hideCalendarModal();
+      this.props.navigation.navigate('Home');
+    }
+    if(Platform.OS === 'android'){
+      this.hideCalendarModal();
+      Alert.alert(
+        '',
+        'Added to calendar!',
+        [
+          { text: 'OK', style: 'cancel' },
+        ],
+        { cancelable: false },
+      );
+    }else{
+      this.setState({ addingToCalendar: false});
+      Alert.alert('',
+        `Your start date has been added to your challenge. Go to ${stringDate2} on the challenge dashboard to see what Day 1 looks like`,
+        [
+          { text: 'OK', onPress: onPressAlert, style: 'cancel' },
+        ],
+        { cancelable: false },
+      );
+    }
+  }
+
   showCalendarModal = () => {
     this.setState({ calendarModalVisible: true });
   }
@@ -156,7 +165,6 @@ async  saveOnBoardingInfo(data){
   }
 
   setDate = async (event, selectedDate) => {
-    console.log("setDate call")
     if(selectedDate && Platform.OS === 'android'){
       this.setState({loading:true});
       this.addChallengeToCalendar(selectedDate);
@@ -166,6 +174,7 @@ async  saveOnBoardingInfo(data){
     this.setState({ chosenDate: currentDate });
     }
   }
+   
   render() {
     let {
       fitnessLevel,

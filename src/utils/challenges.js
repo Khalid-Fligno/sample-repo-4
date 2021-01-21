@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { db } from '../../config/firebase';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
+import { FileSystem } from 'react-native-unimodules';
 
 
 export const isActiveChallenge = async() =>{
@@ -23,9 +24,9 @@ export const getCurrentPhase = (data,currentDate1) =>{
     let phase = undefined
     data.forEach(el => {
         let currentDate = moment(currentDate1).format('YYYY-MM-DD')
-        console.log(el.startDate, el.endDate,currentDate)
+        // console.log(el.startDate, el.endDate,currentDate)
         const isBetween = moment(currentDate).isBetween(el.startDate, el.endDate, undefined, '[]')
-        console.log("????/////",isBetween)
+        // console.log("????/////",isBetween)
         if(isBetween){
           phase =  el
         }
@@ -68,6 +69,21 @@ export const getTodayRecommendedMeal = async(phaseData,activeChallengeUserData) 
       phaseMeals.push(doc.data())
   });
 
+  await Promise.all(phaseMeals.map(async (recipe) => {
+    const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
+    await FileSystem.getInfoAsync(fileUri)
+      .then(async ({ exists ,size}) => {
+        if (!exists || size < 1000) {
+          await FileSystem.downloadAsync(
+            recipe.coverImage,
+            `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
+          );
+        }
+      }).catch(() => {
+        this.setState({ loading: false });
+        Alert.alert('', 'Image download error');
+      });
+  }));
   const challengeMealsFilterList = phaseMeals.map((res)=>res.id)
 
   // const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
@@ -76,47 +92,7 @@ export const getTodayRecommendedMeal = async(phaseData,activeChallengeUserData) 
   const dinnerList = phaseMeals.filter((res)=>res.dinner)
   const snackList = phaseMeals.filter((res)=>res.snack)
   const drinkList = phaseMeals.filter((res)=>res.drink)
-//   const breakfast =  getRandomNumber(breakfastList.length-1) >=0?
-//                       Object.assign(
-//                         {},
-//                         breakfastList[getRandomNumber(breakfastList.length-1)],
-//                         {mealTitle:'breakfast',meal:'breakfast'}
-//                       ):{mealTitle:'breakfast',meal:'breakfast'};
 
-//        const lunch = getRandomNumber(lunchList.length-1) >=0?
-//                         Object.assign(
-//                           {},
-//                           lunchList[getRandomNumber(lunchList.length-1)],
-//                           {mealTitle:'lunch',meal:'lunch'}
-//                         ):{mealTitle:'lunch',meal:'lunch'};
-
-//       const dinner = getRandomNumber(dinnerList.length-1) >=0?
-//                       Object.assign(
-//                         {},
-//                         dinnerList[getRandomNumber(dinnerList.length-1)],
-//                         {mealTitle:'dinner',meal:'dinner'}
-//                       ):{mealTitle:'dinner',meal:'dinner'};
-
-// const morningSnack = getRandomNumber(snackList.length-1) >=0?
-//                       Object.assign(
-//                         {},
-//                         snackList[getRandomNumber(snackList.length-1)],
-//                         {mealTitle:'morning Snack',meal:'snack'}
-//                       ):{mealTitle:'morning Snack',meal:'snack'};
-                      
-// const afternoonSnack = getRandomNumber(snackList.length-1) >=0?
-//                         Object.assign(
-//                           {},snackList[getRandomNumber(snackList.length-1)],
-//                           {mealTitle:'afternoon Snack',meal:'snack'}
-//                         ):{mealTitle:'afternoon Snack',meal:'snack'};
-  
-  // const recommendedMeal = [
-  //     breakfast,
-  //     morningSnack,
-  //     lunch,
-  //     afternoonSnack,
-  //     dinner
-  // ]
   const recommendedMeal = [{
     breakfast:breakfastList,
     snack:snackList,
@@ -205,3 +181,50 @@ export const full_months =(dt)=>
   "title":"App (12 Month Subscription)"
 }}
 
+
+
+
+
+
+//------no use ---now
+//   const breakfast =  getRandomNumber(breakfastList.length-1) >=0?
+//                       Object.assign(
+//                         {},
+//                         breakfastList[getRandomNumber(breakfastList.length-1)],
+//                         {mealTitle:'breakfast',meal:'breakfast'}
+//                       ):{mealTitle:'breakfast',meal:'breakfast'};
+
+//        const lunch = getRandomNumber(lunchList.length-1) >=0?
+//                         Object.assign(
+//                           {},
+//                           lunchList[getRandomNumber(lunchList.length-1)],
+//                           {mealTitle:'lunch',meal:'lunch'}
+//                         ):{mealTitle:'lunch',meal:'lunch'};
+
+//       const dinner = getRandomNumber(dinnerList.length-1) >=0?
+//                       Object.assign(
+//                         {},
+//                         dinnerList[getRandomNumber(dinnerList.length-1)],
+//                         {mealTitle:'dinner',meal:'dinner'}
+//                       ):{mealTitle:'dinner',meal:'dinner'};
+
+// const morningSnack = getRandomNumber(snackList.length-1) >=0?
+//                       Object.assign(
+//                         {},
+//                         snackList[getRandomNumber(snackList.length-1)],
+//                         {mealTitle:'morning Snack',meal:'snack'}
+//                       ):{mealTitle:'morning Snack',meal:'snack'};
+                      
+// const afternoonSnack = getRandomNumber(snackList.length-1) >=0?
+//                         Object.assign(
+//                           {},snackList[getRandomNumber(snackList.length-1)],
+//                           {mealTitle:'afternoon Snack',meal:'snack'}
+//                         ):{mealTitle:'afternoon Snack',meal:'snack'};
+  
+  // const recommendedMeal = [
+  //     breakfast,
+  //     morningSnack,
+  //     lunch,
+  //     afternoonSnack,
+  //     dinner
+  // ]

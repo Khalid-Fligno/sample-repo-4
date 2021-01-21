@@ -37,10 +37,11 @@ class ChallengeSubscriptionScreen extends Component {
   onFocusFunction(){
     isActiveChallenge().then((res)=>{
       if(res){
-        if(this.state.blogs === undefined){
-          this.setState({loading:true})
-          this.fetchActiveChallengeData(res);
-        }
+        // if(this.state.blogs === undefined){
+        //   this.setState({loading:true})
+        //   this.fetchActiveChallengeData(res);
+        // }
+        this.props.navigation.navigate('Calendar');
       }
     })
   }
@@ -54,9 +55,12 @@ class ChallengeSubscriptionScreen extends Component {
   }
 
   componentWillUnmount = () => {
-    this.unsubscribeUserChallenges();
-    this.unsubscribeUserData();
-    this.unsubscribeChallenges();
+    if(this.unsubscribeUserChallenges)
+      this.unsubscribeUserChallenges();
+    if(this.unsubscribeUserData)  
+      this.unsubscribeUserData();
+    if(this.unsubscribeChallenges)
+      this.unsubscribeChallenges();
     this.focusListener.remove();  
   }
 
@@ -311,7 +315,7 @@ class ChallengeSubscriptionScreen extends Component {
   
   render() {
     const {challengesList,userChallengesList,loading,blogs} = this.state
-    console.log(challengesList)
+    // console.log(challengesList)
     return (
       <ScrollView style={{flex:1,paddingHorizontal:containerPadding}} bounces={false}>
          
