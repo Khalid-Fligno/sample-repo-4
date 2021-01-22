@@ -5,7 +5,7 @@ import {
   ImageBackground,
   NativeModules,
   StyleSheet,
-  View,
+  View
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Audio } from 'expo-av';
@@ -27,6 +27,12 @@ import {
 } from '../utils/subscription';
 import { auth, db } from '../../config/firebase';
 import { timerSound } from '../../config/audio';
+import {
+  getChallengeDetails,getLatestChallenge,hasChallenges, isActiveChallenge
+} from '../utils/challenges';
+import { getBuildNumber } from 'react-native-device-info';
+import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 import RNIap, {
   Product,
   ProductPurchase,
@@ -35,11 +41,9 @@ import RNIap, {
   purchaseErrorListener,
   purchaseUpdatedListener,
 } from 'react-native-iap';
-import {
-  getChallengeDetails,getLatestChallenge,hasChallenges, isActiveChallenge
-} from '../utils/challenges';
-import moment from 'moment';
-import momentTimezone from 'moment-timezone';
+import { Platform } from 'react-native';
+import { Linking } from 'react-native';
+
 const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get('window');
 
@@ -68,7 +72,42 @@ const cacheSound = async (sounds) => {
 export default class AuthLoadingScreen extends React.PureComponent {
   componentDidMount = async () => {
     await this.loadAssetsAsync();
+    // this.checkAppVersion()
   }
+
+  // async checkAppVersion(){
+  //   const versionCodeRef = db.collection('legalDocuments').doc('qiF608JzXVcCpeiWccrC');
+  //   const doc = await versionCodeRef.get();
+  //   if (!doc.exists) {
+  //     await this.loadAssetsAsync();
+  //   } else {
+  //     const appVersion =  doc.data().appVersion;
+  //     const appVersion2 = Number(getBuildNumber());
+
+  //     if(appVersion === appVersion2){
+  //       console.log("app up to date");
+  //       await this.loadAssetsAsync();
+  //     }else{
+  //       SplashScreen.hide();
+
+  //       const updateApp = ()=>{
+  //         if(Platform.OS === "ios"){
+  //           Linking.openURL("https://apps.apple.com/in/app/fitazfk-fitness-nutrition/id1438373600");
+  //         }else{
+  //           Linking.openURL("https://play.google.com/store/apps/details?id=com.fitazfk.fitazfkapp");
+  //         }
+  //       }
+  //       Alert.alert("New Update Available!",
+  //       'You have older version of app please update.',
+  //       [
+  //         {
+  //             text: 'Update', onPress:updateApp,
+  //         }],
+  //       );
+  //     }
+  //   }
+  // }
+
   loadAssetsAsync = async () => {
     const imageAssets = cacheImages([
       require('../../assets/icons/fitazfk-app-icon-gradient-dark.png'),

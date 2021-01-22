@@ -29,6 +29,7 @@ class ChallengeSetting extends Component {
     const uid = await AsyncStorage.getItem('uid');
     const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
     const newData = createUserChallengeData(activeChallengeData,new Date())
+    console.log(newData)
     userRef.set(newData).then((res)=>{
         this.setState({loading:false})
         this.props.onToggle()

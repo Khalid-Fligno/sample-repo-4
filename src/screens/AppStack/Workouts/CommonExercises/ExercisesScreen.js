@@ -511,12 +511,14 @@ export default class ExercisesScreen extends React.PureComponent {
             {
               !rest && (<Video
                   ref={(ref) => this.videoRef = ref}
-                  source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4` || exerciseList[0].videoURL }}
+                  source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
                   resizeMode="contain"
                   repeat
                   muted
                   paused={videoPaused}
+                  playWhenInactive
                   style={{ width, height: width }}
+                  onError={()=>Alert.alert('video play error')}
               />)
                
             }

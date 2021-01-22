@@ -373,6 +373,8 @@ PODS:
     - React
   - RNDateTimePicker (2.2.2):
     - React
+  - RNDeviceInfo (8.0.1):
+    - React-Core
   - RNGestureHandler (1.6.1):
     - React
   - RNIap (4.5.0):
@@ -476,6 +478,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNIap (from `../node_modules/react-native-iap`)
   - RNRate (from `../node_modules/react-native-rate`)
@@ -630,6 +633,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/async-storage"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNIap:
@@ -741,6 +746,7 @@ SPEC CHECKSUMS:
   ReactCommon: a0a1edbebcac5e91338371b72ffc66aa822792ce
   RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
   RNDateTimePicker: 501ab152e78882c183607e05074c37ce19ace5bf
+  RNDeviceInfo: 54401b60514387f9120ab8265be5ed9103d842b9
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNIap: 9a5ad5e38905b4946fc4eadf542a575084821fe2
   RNRate: a747cbaa6040d72994861864c988037fe0696548

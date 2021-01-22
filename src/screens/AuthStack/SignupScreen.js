@@ -240,14 +240,14 @@ export default class SignupScreen extends React.PureComponent {
     const userRef =  await db.collection('users').where("email","==",emailId).where("challenge","==",true).get();
     if (userRef.size > 0) {
       return userRef.docs[0].data();
+    }     
+  }
+  getUserSubscriptionFromShopify = async(emailId) => {
+    const userRef =  await db.collection('users').where("email","==",emailId).where("subscription","==",true).get();
+    if (userRef.size > 0) {
+      return userRef.docs[0].data();
   }     
-}
-getUserSubscriptionFromShopify = async(emailId) => {
-  const userRef =  await db.collection('users').where("email","==",emailId).where("subscription","==",true).get();
-  if (userRef.size > 0) {
-    return userRef.docs[0].data();
-}     
-}
+  }
   getChallengeDetails = async(user) => {
   let challenges=[];
   const challengeRef =await db.collection("users").doc(user.id).collection("challenges").get();
