@@ -71,42 +71,41 @@ const cacheSound = async (sounds) => {
 
 export default class AuthLoadingScreen extends React.PureComponent {
   componentDidMount = async () => {
-    await this.loadAssetsAsync();
-    // this.checkAppVersion()
+    this.checkAppVersion()
   }
 
-  // async checkAppVersion(){
-  //   const versionCodeRef = db.collection('legalDocuments').doc('qiF608JzXVcCpeiWccrC');
-  //   const doc = await versionCodeRef.get();
-  //   if (!doc.exists) {
-  //     await this.loadAssetsAsync();
-  //   } else {
-  //     const appVersion =  doc.data().appVersion;
-  //     const appVersion2 = Number(getBuildNumber());
+  async checkAppVersion(){
+    const versionCodeRef = db.collection('legalDocuments').doc('qiF608JzXVcCpeiWccrC');
+    const doc = await versionCodeRef.get();
+    if (!doc.exists) {
+      await this.loadAssetsAsync();
+    } else {
+      const appVersion =  doc.data().appVersion;
+      const appVersion2 = Number(getBuildNumber());
 
-  //     if(appVersion === appVersion2){
-  //       console.log("app up to date");
-  //       await this.loadAssetsAsync();
-  //     }else{
-  //       SplashScreen.hide();
+      if(appVersion === appVersion2){
+        console.log("app up to date");
+        await this.loadAssetsAsync();
+      }else{
+        SplashScreen.hide();
 
-  //       const updateApp = ()=>{
-  //         if(Platform.OS === "ios"){
-  //           Linking.openURL("https://apps.apple.com/in/app/fitazfk-fitness-nutrition/id1438373600");
-  //         }else{
-  //           Linking.openURL("https://play.google.com/store/apps/details?id=com.fitazfk.fitazfkapp");
-  //         }
-  //       }
-  //       Alert.alert("New Update Available!",
-  //       'You have older version of app please update.',
-  //       [
-  //         {
-  //             text: 'Update', onPress:updateApp,
-  //         }],
-  //       );
-  //     }
-  //   }
-  // }
+        const updateApp = ()=>{
+          if(Platform.OS === "ios"){
+            Linking.openURL("https://apps.apple.com/in/app/fitazfk-fitness-nutrition/id1438373600");
+          }else{
+            Linking.openURL("https://play.google.com/store/apps/details?id=com.fitazfk.fitazfkapp");
+          }
+        }
+        Alert.alert("New Update Available!",
+        'You have older version of app please update.',
+        [
+          {
+              text: 'Update', onPress:updateApp,
+          }],
+        );
+      }
+    }
+  }
 
   loadAssetsAsync = async () => {
     const imageAssets = cacheImages([
