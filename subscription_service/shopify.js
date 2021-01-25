@@ -286,20 +286,18 @@ const createUserChallengeAndSubscription = async (req)=>{
           addUser(newUser);   
       }
       if(user != undefined){
-        if(challengeProductName.toLowerCase().includes("challenge")){ 
-          if(challengeProductId == 6131066142906){
-            updateUserSubscription(sub3Monthly,user.id);
-          }          
+        if(challengeProductName.toLowerCase().includes("challenge")){         
         const userChallenge= await getUserChallenge(user.id,challengeProductName);
-        console.log("userChallenge",userChallenge,user)        
+        console.log("userChallenge",userChallenge,"user",user);        
         if(userChallenge && userChallenge.name == challengeProductName)
           { 
             console.log("user has challenge");
             return true
           }
         // get product from line item collection
-        // get workout challange details by passing product_title      
+        // get workout challenge details by passing product_title      
         const challenge= await getChallengeDetails(challengeProductName);
+        console.log("challenge",challenge);
         const userInfo=await getUser(req.email);
         if(challenge !=null){        
           const userChallenge=createNewChallenge(challenge)
