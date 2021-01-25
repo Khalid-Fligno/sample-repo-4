@@ -30,7 +30,7 @@ import { timerSound } from '../../config/audio';
 import {
   getChallengeDetails,getLatestChallenge,hasChallenges, isActiveChallenge
 } from '../utils/challenges';
-import { getBuildNumber } from 'react-native-device-info';
+import { getBuildNumber ,getVersion} from 'react-native-device-info';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
 import RNIap, {
@@ -80,9 +80,15 @@ export default class AuthLoadingScreen extends React.PureComponent {
     if (!doc.exists) {
       await this.loadAssetsAsync();
     } else {
-      const appVersion =  doc.data().appVersion;
-      const appVersion2 = Number(getBuildNumber());
-
+      let appVersion =  null;
+      let appVersion2 = null;
+      if(Platform.OS === "ios"){
+        appVersion =  doc.data().iosBuildVersion;
+        appVersion2 = Number(getBuildNumber());
+      }else{
+        appVersion =  doc.data().androidBuildVersion;
+        appVersion2 = Number(getBuildNumber());
+      }
       if(appVersion === appVersion2){
         console.log("app up to date");
         await this.loadAssetsAsync();
