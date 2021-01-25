@@ -80,7 +80,7 @@ class ChallengeCard extends Component {
                  { restartButton && 
                     <CustomBtn 
                         outline={outline}
-                        Title='Reset Start Date'
+                        Title='Reset'
                         customBtnStyle={{ 
                                           padding:8,
                                           marginTop:10,

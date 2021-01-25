@@ -83,10 +83,10 @@ export default class AuthLoadingScreen extends React.PureComponent {
       let appVersion =  null;
       let appVersion2 = null;
       if(Platform.OS === "ios"){
-        appVersion =  doc.data().iosBuildVersion;
-        appVersion2 = Number(getBuildNumber());
+        appVersion =  String(doc.data().iosBuildVersion);
+        appVersion2 = String(getVersion());
       }else{
-        appVersion =  doc.data().androidBuildVersion;
+        appVersion =  Number(doc.data().androidBuildVersion);
         appVersion2 = Number(getBuildNumber());
       }
       if(appVersion === appVersion2){
