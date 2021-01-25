@@ -244,6 +244,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
           userRef
           .get()
           .then(async (doc) => {
+            console.log(doc.data())
             if (doc.exists) {
               if (await !doc.data().fitnessLevel) {
                 await AsyncStorage.setItem('fitnessLevel', '1');

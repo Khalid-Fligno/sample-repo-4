@@ -18,6 +18,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { DotIndicator } from 'react-native-indicators';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
+import CalendarModal from '../../../components/Shared/CalendarModal';
 const levelOfFiness=["Begineer","Intermediate","Advanced"];
 export default class OnBoarding6 extends Component {
   constructor(props) {
@@ -190,55 +191,15 @@ export default class OnBoarding6 extends Component {
     return (
       <SafeAreaView style={ChallengeStyle.container}>
           <View style={globalStyle.container}>
-          {
-          Platform.OS === 'ios' && 
-           <Modal
+          <CalendarModal 
               isVisible={calendarModalVisible}
-              animationIn="fadeIn"
-              animationInTiming={600}
-              animationOut="fadeOut"
-              animationOutTiming={600}
               onBackdropPress={this.hideCalendarModal}
-            >
-              <View style={globalStyle.modalContainer}>
-                <DateTimePicker
-                  mode="date"
-                  value={chosenDate}
-                  onChange={this.setDate}
-                  minimumDate={new Date()}
-                  style={{marginLeft:'6.5%'}}
-                />
-                <TouchableOpacity
-                  onPress={() => this.addChallengeToCalendar(chosenDate)}
-                  style={globalStyle.modalButton}
-                >
-                  {
-                    addingToCalendar ? (
-                      <DotIndicator
-                        color={colors.white}
-                        count={3}
-                        size={6}
-                      />
-                    ) : (
-                      <Text style={globalStyle.modalButtonText}>
-                        ADD TO CALENDAR
-                      </Text>
-                    )
-                  }
-                </TouchableOpacity>
-              </View>
-            </Modal>
-        }
-         {
-           
-          Platform.OS === 'android' && calendarModalVisible && !loading &&
-          <DateTimePicker
-            mode="date"
-            value={chosenDate}
-            onChange={this.setDate}
-            minimumDate={new Date()}
-          />
-         }
+              value={chosenDate}
+              onChange={this.setDate}
+              onPress={()=>this.addChallengeToCalendar(chosenDate)}
+              addingToCalendar={addingToCalendar}
+              loading={loading}
+          /> 
           <ScrollView
             contentContainerStyle={{
               flexGrow: 1, 

@@ -25,6 +25,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { DotIndicator } from 'react-native-indicators';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
+import CalendarModal from '../../../components/Shared/CalendarModal';
+import { add } from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
 
@@ -279,7 +281,7 @@ export default class OnBoarding5 extends Component {
       addingToCalendar,
       chosenDate
     } = this.state;
-    
+    console.log("addingToCalendar",addingToCalendar)
     if(!challengeData.onBoardingInfo){
       this.onFocusFunction()
     }
@@ -295,7 +297,7 @@ export default class OnBoarding5 extends Component {
       <SafeAreaView style={ChallengeStyle.container}>
        
         <View style={[globalStyle.container]}>
-          {
+          {/* {
               Platform.OS === 'ios' && 
               <Modal
                   isVisible={calendarModalVisible}
@@ -345,7 +347,16 @@ export default class OnBoarding5 extends Component {
               onChange={this.setDate}
               minimumDate={new Date()}
             />
-          }            
+          }     */}
+          <CalendarModal 
+              isVisible={calendarModalVisible}
+              onBackdropPress={this.hideCalendarModal}
+              value={chosenDate}
+              onChange={this.setDate}
+              onPress={()=>this.addChallengeToCalendar(chosenDate)}
+              addingToCalendar={addingToCalendar}
+              loading={loading}
+          />        
           <ScrollView 
               bounces={false} 
               showsVerticalScrollIndicator={false}

@@ -16,6 +16,7 @@ import * as Haptics from 'expo-haptics';
 import { getCurrentPhase, getCurrentChallengeDay, getTodayRecommendedWorkout, isActiveChallenge,short_months,full_months } from '../../utils/challenges';
 import ChallengeBlogCard from '../../components/Home/ChallengeBlogCard';
 import { heightPercentageToDP  as hp} from 'react-native-responsive-screen';
+import CalendarModal from '../../components/Shared/CalendarModal';
 
 
 class ChallengeSubscriptionScreen extends Component {
@@ -30,7 +31,11 @@ class ChallengeSubscriptionScreen extends Component {
       activeChallengeUserData:undefined,
       activeChallengeData:undefined,
       blogs:undefined,
-      totalChallengeCount:0
+      totalChallengeCount:0,
+      calendarModalVisible:false,
+      chosenDate: new Date(),
+      selectedChallengeIndex:null,
+      addingToCalendar:false
     }
   }
 
@@ -221,7 +226,10 @@ class ChallengeSubscriptionScreen extends Component {
                     text: 'Cancel', style: 'cancel',
                   },
                   {
-                    text: 'Reset', onPress: () => this.restartChallengeToUser(index),
+                    text: 'Reset start date', onPress: () => this.setState({calendarModalVisible:true,selectedChallengeIndex:index}),
+                  },
+                  {
+                    text: 'Reset challenge', onPress: () => this.restartChallengeToUser(index),
                   },
                 ],
                 { cancelable: false },
@@ -312,9 +320,58 @@ class ChallengeSubscriptionScreen extends Component {
   
   }
 
-  
+  hideCalendarModal = () => {
+    this.setState({ 
+      calendarModalVisible: false,
+      blogs:undefined,
+      loading:false,
+      addingToCalendar:false });
+  }
+
+  setDate = async (event, selectedDate) => {
+    // console.log("setDate call")
+    if(selectedDate && Platform.OS === 'android'){
+      this.setState({loading:true});
+      this.setShedular(selectedDate);
+    }
+    if(selectedDate && Platform.OS === 'ios'){
+    const currentDate = selectedDate;
+    this.setState({ chosenDate: currentDate });
+    }
+  }
+
+
+  setShedular(selectedDate){
+    const date = moment(selectedDate).format('YYYY-MM-DD');
+    this.setState({addingToCalendar:true})
+    let {userData,userChallengesList,selectedChallengeIndex} = this.state
+          const userRef = db.collection('users').doc(userData.id).collection('challenges');
+          const ChallengeData = userChallengesList[selectedChallengeIndex];
+          data ={ startDate:date}
+          userRef.doc(ChallengeData.id).set(data,{merge:true}).then((res)=>{
+            Alert.alert('',
+              `Your start date has been added to your challenge. Go to ${moment(selectedDate).format('DD-MM-YY')} on the challenge dashboard to see what Day 1 looks like`,
+              [
+                { text: 'OK', onPress: this.hideCalendarModal, style: 'cancel' },
+              ],
+              { cancelable: false },
+            );
+          }).catch((err)=>{
+            console.log(err)
+          })
+    
+  }
+
   render() {
-    const {challengesList,userChallengesList,loading,blogs} = this.state
+    const {
+      challengesList,
+      userChallengesList,
+      loading,
+      blogs,
+      chosenDate,
+      calendarModalVisible,
+      addingToCalendar
+    } = this.state
     // console.log(challengesList)
     return (
       <ScrollView style={{flex:1,paddingHorizontal:containerPadding}} bounces={false}>
@@ -353,6 +410,15 @@ class ChallengeSubscriptionScreen extends Component {
           loading={loading}
           color={colors.themeColor.color}
         />
+        <CalendarModal 
+            isVisible={calendarModalVisible}
+            onBackdropPress={this.hideCalendarModal}
+            value={chosenDate}
+            onChange={this.setDate}
+            onPress={()=>this.setShedular(chosenDate)}
+            addingToCalendar={addingToCalendar}
+            loading={loading}
+        />    
     </ScrollView>
     );
   }

@@ -188,13 +188,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
           [{ resize: { height: 160, width: 160 } }],
           { format: 'jpeg' ,base64:true},
         );
-
-        this.setState({ loading: true });
-        const base64Response = await fetch(`data:image/jpeg;base64,${manipResult.base64}`);
-        const blob = base64Response.blob();
-        
-        await this.saveImage(manipResult.uri,blob._W);
-        this.setState({ loading: false });
+        this.uploading(manipResult);
       } catch (err) {
         console.log(err)
         this.setState({ loading: false });
@@ -208,13 +202,21 @@ export default class ProfileHomeScreen extends React.PureComponent {
       const manipResult = await ImageManipulator.manipulateAsync(
         result.uri,
         [{ resize: { width: 160, height: 160 } }],
-        { format: 'jpeg' },
+        { format: 'jpeg' ,base64:true},
       );
-      this.setState({ loading: true });
-      await this.saveImage(manipResult.uri);
-      this.setState({ loading: false });
+      this.uploading(manipResult);
     }
   };
+
+  uploading = async(result) =>{
+    this.setState({ loading: true });
+    const base64Response = await fetch(`data:image/jpeg;base64,${result.base64}`);
+    const blob = base64Response.blob();
+    
+    await this.saveImage(result.uri,blob._W);
+    this.setState({ loading: false });
+  }
+  
   appSettingsPrompt = () => {
     Alert.alert(
       'FitazFK needs permissions to do this',

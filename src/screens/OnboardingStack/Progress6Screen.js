@@ -24,20 +24,20 @@ import { containerPadding } from '../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 
-const uriToBlob = (url) => {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.onerror = reject;
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        resolve(xhr.response);
-      }
-    };
-    xhr.open('GET', url);
-    xhr.responseType = 'blob'; // convert type
-    xhr.send();
-  });
-};
+// const uriToBlob = (url) => {
+//   return new Promise((resolve, reject) => {
+//     const xhr = new XMLHttpRequest();
+//     xhr.onerror = reject;
+//     xhr.onreadystatechange = () => {
+//       if (xhr.readyState === 4) {
+//         resolve(xhr.response);
+//       }
+//     };
+//     xhr.open('GET', url);
+//     xhr.responseType = 'blob'; // convert type
+//     xhr.send();
+//   });
+// };
 
 const storeProgressInfo = async (image, isInitial, weight, waist, hip, burpeeCount) => {
   const uid = await AsyncStorage.getItem('uid');

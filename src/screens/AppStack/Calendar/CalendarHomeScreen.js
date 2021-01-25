@@ -375,7 +375,7 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   async goToRecipe(recipeData){
-    this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Calendar',extraProps:{fromCalender:true} })
+    this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'challenge dashboard',extraProps:{fromCalender:true} })
   }
 
   openLink = (url) => {
