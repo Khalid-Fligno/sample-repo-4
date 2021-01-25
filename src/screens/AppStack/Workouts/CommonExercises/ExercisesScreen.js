@@ -500,6 +500,8 @@ export default class ExercisesScreen extends React.PureComponent {
           <View style={styles.containerEmptyBlackBox} ></View>
         )
     }
+
+    console.log("videoPaused",videoPaused)
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />

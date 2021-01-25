@@ -28,6 +28,7 @@ import ActionSheet from 'react-native-actionsheet';
 import globalStyle from '../../../styles/globalStyles';
 import ProfileStyles from './ProfileStyles';
 import { FileSystem } from 'react-native-unimodules';
+import { getBuildNumber, getVersion } from 'react-native-device-info';
 const { width } = Dimensions.get('window');
 
 // const uriToBlob = (url) => {
@@ -345,6 +346,11 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 onPress={() => this.logOutAlert()}
               />
             </View>
+            <Text
+              style={{color:colors.grey.standard}}
+            >
+              Ver {getVersion()} (Build {getBuildNumber()})
+            </Text>
           </ScrollView>
           <Loader
             loading={loading}
