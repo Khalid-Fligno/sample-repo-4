@@ -191,9 +191,12 @@ export default class ExercisesScreen extends React.PureComponent {
       else {
         console.log("Incresase count")
         if (workout.rest && !this.state.rest) //for workout.rest === true
+        {
           this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex ,true);
-        else
-          this.goToExercise(setCount + 1,reps,resistanceCategoryId,currentExerciseIndex)
+        }          
+        else{
+          this.goToExercise(setCount + 1,reps,resistanceCategoryId,currentExerciseIndex);
+        }
       }
     }else if(workout.workoutProcessType === 'circular'){
       if(this.checkFinished(currentExerciseIndex,setCount)){
@@ -252,13 +255,6 @@ export default class ExercisesScreen extends React.PureComponent {
       fromCalender,
       extraProps
     });
-    //TODO: If Freeze solve keep this else remove
-    if(rest){
-      this.handlePause();
-    }
-    else{
-      this.handleUnpause();
-    }
   }
 
   restControl =(reps, resistanceCategoryId,currentExerciseIndex) =>{
@@ -519,11 +515,11 @@ export default class ExercisesScreen extends React.PureComponent {
           <View>
             {
               !rest && (<Video
-                  ref={(ref) => this.videoRef = ref}
+                  //ref={(ref) => this.videoRef = ref}
                   source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
                   resizeMode="contain"
-                  repeat
-                  muted
+                  repeat={true}
+                  muted={true}
                   paused={videoPaused}
                   playWhenInactive
                   style={{ width, height: width }}
