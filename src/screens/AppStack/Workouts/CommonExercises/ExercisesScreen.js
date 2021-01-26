@@ -175,8 +175,8 @@ export default class ExercisesScreen extends React.PureComponent {
 
   handleFinish = async (reps, resistanceCategoryId,currentExerciseIndex) => {
     this.setState({ timerStart: false });
-    let setCount = this.props.navigation.getParam('setCount', 1); //start from 1
-    const {workout} = this.state
+    //let setCount = this.props.navigation.getParam('setCount', 1); //start from 1
+    const {workout, setCount} = this.state
     if(workout.workoutProcessType === 'oneByOne'){
       if (this.checkFinished(currentExerciseIndex,setCount)) {
         console.log("update weekly targets")
@@ -268,8 +268,7 @@ export default class ExercisesScreen extends React.PureComponent {
   }
 
   restControl =(reps, resistanceCategoryId,currentExerciseIndex) =>{
-    const {workout} = this.state
-    const setCount = this.props.navigation.getParam('setCount', 1)
+    const {workout, setCount} = this.state;
     console.log("rest call")
     if(workout.workoutProcessType === 'oneByOne'){
       // if (setCount === workout.workoutReps && workout.rest) 
