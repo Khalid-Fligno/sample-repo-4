@@ -90,6 +90,7 @@ export default class ExercisesScreen extends React.PureComponent {
           exerciseInfoModalVisible: false,
           appState: AppState.currentState,
           rest:rest,
+          setCount:setCount,
           // isRunning:false
     };
   }
@@ -242,19 +243,28 @@ export default class ExercisesScreen extends React.PureComponent {
   }   
 
   goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,rest=false){
-   let {workoutSubCategory,fitnessLevel,fromCalender,extraProps} = this.state
-    this.props.navigation.replace('Exercise', {
-      workout:this.state.workout,
-      setCount,
-      reps,
-      resistanceCategoryId,
-      currentExerciseIndex,
-      workoutSubCategory,
-      fitnessLevel,
-      rest,
-      fromCalender,
-      extraProps
-    });
+   let {workoutSubCategory,fitnessLevel,fromCalender,extraProps,workout} = this.state
+    // this.props.navigation.replace('Exercise', {
+    //   workout:this.state.workout,
+    //   setCount,
+    //   reps,
+    //   resistanceCategoryId,
+    //   currentExerciseIndex,
+    //   workoutSubCategory,
+    //   fitnessLevel,
+    //   rest,
+    //   fromCalender,
+    //   extraProps
+    // });
+    this.setState({
+      setCount:setCount,
+      reps: reps,
+      currentExerciseIndex: currentExerciseIndex,
+      rest: rest,
+      currentExercise:currentExercise,
+      currentExercise:workout['exercises'][currentExerciseIndex],
+      resistanceCategoryId: resistanceCategoryId
+    })
   }
 
   restControl =(reps, resistanceCategoryId,currentExerciseIndex) =>{
