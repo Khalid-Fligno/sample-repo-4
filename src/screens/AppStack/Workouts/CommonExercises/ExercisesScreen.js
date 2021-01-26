@@ -252,6 +252,13 @@ export default class ExercisesScreen extends React.PureComponent {
       fromCalender,
       extraProps
     });
+    //TODO: If Freeze solve keep this else remove
+    if(rest){
+      this.handlePause();
+    }
+    else{
+      this.handleUnpause();
+    }
   }
 
   restControl =(reps, resistanceCategoryId,currentExerciseIndex) =>{
