@@ -563,10 +563,10 @@ export default class ExercisesScreen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
-        <FadeInView
+        {/* <FadeInView
           duration={1000}
           style={styles.flexContainer}
-        >
+        > */}
           <View>
             {
               !rest && (<Video
@@ -693,7 +693,7 @@ export default class ExercisesScreen extends React.PureComponent {
             exerciseInfoModalVisible={exerciseInfoModalVisible}
             hideExerciseInfoModal={this.hideExerciseInfoModal}
           />
-        </FadeInView>
+        {/* </FadeInView> */}
       </SafeAreaView>
     );
   }
