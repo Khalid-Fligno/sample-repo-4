@@ -559,19 +559,20 @@ export default class ExercisesScreen extends React.PureComponent {
         )
     }
 
-    console.log("videoPaused",videoPaused)
+    console.log("videoPaused",currentExercise['videoUrls'][0].url)
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
-        {/* <FadeInView
+        <FadeInView
           duration={1000}
           style={styles.flexContainer}
-        > */}
+        >
           <View>
             {
               !rest && (<Video
                   ref={(ref) => this.videoRef = ref}
-                  source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
+                  // source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
+                  source={{ uri:currentExercise['videoUrls'][0].url }}
                   resizeMode="contain"
                   repeat={true}
                   muted={true}
@@ -693,7 +694,7 @@ export default class ExercisesScreen extends React.PureComponent {
             exerciseInfoModalVisible={exerciseInfoModalVisible}
             hideExerciseInfoModal={this.hideExerciseInfoModal}
           />
-        {/* </FadeInView> */}
+        </FadeInView>
       </SafeAreaView>
     );
   }
