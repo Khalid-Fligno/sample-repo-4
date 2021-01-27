@@ -590,9 +590,10 @@ export default class ExercisesScreen extends React.PureComponent {
                   volume={1.0}
                   isMuted={false}
                   resizeMode="cover"
-                  shouldPlay
+                  shouldPlay={!videoPaused}
                   isLooping
                   style={{ width, height: width }}
+                  pau
               />)
                
             }
