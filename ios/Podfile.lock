@@ -302,11 +302,11 @@ PODS:
     - React (< 1.0.0, >= 0.13.0)
   - react-native-splash-screen (3.2.0):
     - React
-  - react-native-video (5.0.2):
-    - React
-    - react-native-video/Video (= 5.0.2)
-  - react-native-video/Video (5.0.2):
-    - React
+  - react-native-video (5.1.1):
+    - React-Core
+    - react-native-video/Video (= 5.1.1)
+  - react-native-video/Video (5.1.1):
+    - React-Core
   - react-native-viewpager (4.1.3):
     - React
   - React-RCTActionSheet (0.63.2):
@@ -732,7 +732,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: 7f3f3ed9e8f0e7ab3e7cac00cbfdc6997e25ecaf
   react-native-onesignal: 3cb529f99353f5765ca3ce305c9e8c583fd54c81
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-video: 961749da457e73bf0b5565edfbaffc25abfb8974
+  react-native-video: 1574074179ecaf6a9dd067116c8f31bf9fec15c8
   react-native-viewpager: 0433208d1ec62cd8f03258b1956e2f960de1c0af
   React-RCTActionSheet: 910163b6b09685a35c4ebbc52b66d1bfbbe39fc5
   React-RCTAnimation: 9a883bbe1e9d2e158d4fb53765ed64c8dc2200c6

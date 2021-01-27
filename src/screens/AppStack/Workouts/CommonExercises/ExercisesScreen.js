@@ -94,6 +94,44 @@ export default class ExercisesScreen extends React.PureComponent {
           // isRunning:false
     };
   }
+
+//   setExercise(data){
+//     const {workout,fitnessLevel} =this.state; 
+//     const currentExerciseIndex =  data['currentExerciseIndex'];
+//     const currentExercise = workout['exercises'][currentExerciseIndex];
+//     let rest =data['rest'];
+//     const setCount = data['setCount']
+
+//     let totalDuration = 0;
+
+//     if(rest){
+//       totalDuration = workout.restIntervalMap[fitnessLevel-1] 
+//     }else{
+//        totalDuration = workout.workIntervalMap[fitnessLevel-1] 
+//     }
+//     //For count true workout Rest
+//     if(workout.count && currentExercise && currentExercise.name === 'rest' && currentExercise['restIntervalMap']){
+//       totalDuration = currentExercise['restIntervalMap'][String(setCount)][String(fitnessLevel-1)]
+//       rest = true
+//     }  
+
+//     //for count false and rest varible false in workoutProcessType === 'circular workout
+//     if(workout.count === false && currentExercise && currentExercise.name === 'rest'&& workout['restIntervalMap']) {
+//       totalDuration = workout['restIntervalMap'][String(fitnessLevel-1)]
+//       rest = true
+//     }
+// console.log('totalDuration',totalDuration,rest)
+//     this.setState({
+//       setCount:setCount,
+//       currentExerciseIndex: currentExerciseIndex,
+//       rest: rest,
+//       currentExercise:currentExercise,
+//       totalDuration:totalDuration,
+      
+//     })
+
+//   }
+
   componentDidMount() {
       this.startTimer();
     // else if (this.state.workout && this.state.workout.count){
@@ -244,27 +282,35 @@ export default class ExercisesScreen extends React.PureComponent {
 
   goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,rest=false){
    let {workoutSubCategory,fitnessLevel,fromCalender,extraProps,workout} = this.state
-    // this.props.navigation.replace('Exercise', {
-    //   workout:this.state.workout,
-    //   setCount,
-    //   reps,
-    //   resistanceCategoryId,
-    //   currentExerciseIndex,
-    //   workoutSubCategory,
-    //   fitnessLevel,
-    //   rest,
-    //   fromCalender,
-    //   extraProps
-    // });
-    this.setState({
-      setCount:setCount,
-      reps: reps,
-      currentExerciseIndex: currentExerciseIndex,
-      rest: rest,
-      currentExercise:currentExercise,
-      currentExercise:workout['exercises'][currentExerciseIndex],
-      resistanceCategoryId: resistanceCategoryId
-    })
+    this.props.navigation.replace('Exercise', {
+      workout:this.state.workout,
+      setCount,
+      reps,
+      resistanceCategoryId,
+      currentExerciseIndex,
+      workoutSubCategory,
+      fitnessLevel,
+      rest,
+      fromCalender,
+      extraProps
+    });
+
+    // this.setExercise({
+    //     workout:this.state.workout,
+    //     setCount,
+    //     reps,
+    //     currentExerciseIndex,
+    //     rest,
+    //   })
+    // this.setState({
+    //   setCount:setCount,
+    //   reps: reps,
+    //   currentExerciseIndex: currentExerciseIndex,
+    //   rest: rest,
+    //   currentExercise:currentExercise,
+    //   currentExercise:workout['exercises'][currentExerciseIndex],
+    //   resistanceCategoryId: resistanceCategoryId
+    // })
   }
 
   restControl =(reps, resistanceCategoryId,currentExerciseIndex) =>{
