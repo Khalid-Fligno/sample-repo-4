@@ -285,26 +285,25 @@ const createUserChallengeAndSubscription = async (req)=>{
           }
           addUser(newUser);   
       }
-      if(user != undefined){
-        if(challengeProductName.toLowerCase().includes("challenge")){         
+        if(challengeProductName.toLowerCase().includes("challenge")){  
+        if(user && user !== null)  {       
         const userChallenge= await getUserChallenge(user.id,challengeProductName);
-        console.log("userChallenge",userChallenge,"user",user);        
         if(userChallenge && userChallenge.name == challengeProductName)
           { 
             console.log("user has challenge");
             return true
           }
+        }
         // get product from line item collection
-        // get workout challenge details by passing product_title      
+        // get workout challenge details by passing product_title  
         const challenge= await getChallengeDetails(challengeProductName);
-        console.log("challenge",challenge);
         const userInfo=await getUser(req.email);
         if(challenge !=null){        
           const userChallenge=createNewChallenge(challenge)
           updateChallengesAgainstUser(userChallenge,userInfo.id);
         }
       }
-      else if (challengeProductName.toLowerCase().includes("subscription")){
+      else if (challengeProductName.toLowerCase().includes("subscription") && user && user !== null){
           if(challengeProductId ==6122583326906){
             updateUserSubscription(sub3Monthly,user.id);
           } else if(challengeProductId ==6122583523514){
@@ -315,7 +314,6 @@ const createUserChallengeAndSubscription = async (req)=>{
             updateUserSubscription(subOneDay,user.id);
           }
       }
-    } 
       return true;
 }
 const deleteWebhookUrl = async(req) => {
