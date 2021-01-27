@@ -106,8 +106,12 @@ export default class AuthLoadingScreen extends React.PureComponent {
         'You have older version of app please update.',
         [
           {
-              text: 'Update', onPress:updateApp,
-          }],
+              text: 'Cancel', onPress:async()=>await this.loadAssetsAsync(),
+          },
+          {
+            text: 'Update', onPress:updateApp,
+          },
+        ],
         );
       }
     }
