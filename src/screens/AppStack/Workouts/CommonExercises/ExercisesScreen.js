@@ -213,8 +213,8 @@ export default class ExercisesScreen extends React.PureComponent {
 
   handleFinish = async (reps, resistanceCategoryId,currentExerciseIndex) => {
     this.setState({ timerStart: false });
-    //let setCount = this.props.navigation.getParam('setCount', 1); //start from 1
-    const {workout, setCount} = this.state
+    let setCount = this.props.navigation.getParam('setCount', 1); //start from 1
+    const {workout} = this.state
     if(workout.workoutProcessType === 'oneByOne'){
       if (this.checkFinished(currentExerciseIndex,setCount)) {
         console.log("update weekly targets")
@@ -573,13 +573,13 @@ export default class ExercisesScreen extends React.PureComponent {
                   ref={(ref) => this.videoRef = ref}
                   source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
                   resizeMode="contain"
-                  //repeat={true}
+                  repeat={true}
                   muted={true}
                   paused={videoPaused}
                   playWhenInactive
                   style={{ width, height: width }}
                   onError={()=>Alert.alert('video play error')}
-                  onEnd={()=> this.videoRef.seek(0)}
+                  // onEnd={()=> this.videoRef.seek(0)}
               />)
                
             }

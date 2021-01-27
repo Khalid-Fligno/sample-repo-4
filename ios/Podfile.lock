@@ -97,7 +97,6 @@ PODS:
     - FBSDKLoginKit/Login (= 5.8.0)
   - FBSDKLoginKit/Login (5.8.0):
     - FBSDKCoreKit (~> 5.0)
-  - FLAnimatedImage (1.0.12)
   - Folly (2020.01.13.00):
     - boost-for-react-native
     - DoubleConversion
@@ -287,12 +286,6 @@ PODS:
   - react-native-appsflyer (5.4.1):
     - AppsFlyerFramework (~> 5.4.1)
     - React
-  - react-native-fast-image (5.3.0):
-    - FLAnimatedImage
-    - React
-    - SDWebImage/Core
-    - SDWebImage/GIF
-    - SDWebImage/WebP
   - react-native-in-app-utils (6.1.0):
     - React
   - react-native-netinfo (5.9.5):
@@ -375,6 +368,10 @@ PODS:
     - React
   - RNDeviceInfo (8.0.1):
     - React-Core
+  - RNFastImage (8.3.4):
+    - React-Core
+    - SDWebImage (~> 5.8)
+    - SDWebImageWebPCoder (~> 0.6.1)
   - RNGestureHandler (1.6.1):
     - React
   - RNIap (4.5.0):
@@ -389,13 +386,12 @@ PODS:
     - React
   - RNVectorIcons (6.7.0):
     - React
-  - SDWebImage/Core (4.4.8)
-  - SDWebImage/GIF (4.4.8):
-    - FLAnimatedImage (~> 1.0)
-    - SDWebImage/Core
-  - SDWebImage/WebP (4.4.8):
-    - libwebp (< 2.0, >= 0.5)
-    - SDWebImage/Core
+  - SDWebImage (5.9.4):
+    - SDWebImage/Core (= 5.9.4)
+  - SDWebImage/Core (5.9.4)
+  - SDWebImageWebPCoder (0.6.1):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.7)
   - UMAppLoader (1.0.2)
   - UMBarCodeScannerInterface (5.1.0)
   - UMCameraInterface (5.1.0)
@@ -459,7 +455,6 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-appsflyer (from `../node_modules/react-native-appsflyer`)
-  - react-native-fast-image (from `../node_modules/react-native-fast-image`)
   - react-native-in-app-utils (from `../node_modules/react-native-in-app-utils`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
@@ -479,6 +474,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
+  - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNIap (from `../node_modules/react-native-iap`)
   - RNRate (from `../node_modules/react-native-rate`)
@@ -507,10 +503,10 @@ SPEC REPOS:
     - boost-for-react-native
     - FBSDKCoreKit
     - FBSDKLoginKit
-    - FLAnimatedImage
     - libwebp
     - OneSignal
     - SDWebImage
+    - SDWebImageWebPCoder
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -595,8 +591,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-appsflyer:
     :path: "../node_modules/react-native-appsflyer"
-  react-native-fast-image:
-    :path: "../node_modules/react-native-fast-image"
   react-native-in-app-utils:
     :path: "../node_modules/react-native-in-app-utils"
   react-native-netinfo:
@@ -635,6 +629,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
+  RNFastImage:
+    :path: "../node_modules/react-native-fast-image"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNIap:
@@ -711,7 +707,6 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: dc7fa9088f0f2a998503a352b0554d69a4391c5a
   FBSDKCoreKit: e7dcac0aabcfb09d0166998edd95fe3b05a0ce5d
   FBSDKLoginKit: 1b0cf04df0370b37404213157b060d6666ede814
-  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
@@ -727,7 +722,6 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 8ca588cc921e70590820ce72b8789b02c67cce38
   React-jsinspector: b14e62ebe7a66e9231e9581279909f2fc3db6606
   react-native-appsflyer: da2b86284e71d8285e68e353a4e2ed68348ed3c7
-  react-native-fast-image: 56efe6ea964cff19fd9bb1cc28e79b432c4b58e4
   react-native-in-app-utils: 96cdefc90ad74a79a95d19239a183995a6face0b
   react-native-netinfo: 7f3f3ed9e8f0e7ab3e7cac00cbfdc6997e25ecaf
   react-native-onesignal: 3cb529f99353f5765ca3ce305c9e8c583fd54c81
@@ -747,6 +741,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
   RNDateTimePicker: 501ab152e78882c183607e05074c37ce19ace5bf
   RNDeviceInfo: 54401b60514387f9120ab8265be5ed9103d842b9
+  RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNIap: 9a5ad5e38905b4946fc4eadf542a575084821fe2
   RNRate: a747cbaa6040d72994861864c988037fe0696548
@@ -754,7 +749,8 @@ SPEC CHECKSUMS:
   RNScreens: 812b79d384e2bea7eebc4ec981469160d4948fd5
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
-  SDWebImage: 783af2c3fa36291a250030c4752ee370a9a51d13
+  SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
+  SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   UMAppLoader: ae5eaee9f3c8cc847c631a579fed20d217de5913
   UMBarCodeScannerInterface: aa3409ab9d108866e55c09ad0292e4a6c08a7775
   UMCameraInterface: 9d5da92c521e0af7815afbf77ea19bd0312b4928
