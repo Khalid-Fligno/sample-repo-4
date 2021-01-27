@@ -10,7 +10,7 @@ import {
   AppState,
 } from 'react-native';
 import * as FileSystem from 'expo-file-system';
-import Video from 'react-native-video';
+import { Video } from 'expo-av';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
@@ -568,7 +568,7 @@ export default class ExercisesScreen extends React.PureComponent {
           style={styles.flexContainer}
         >
           <View>
-            {
+            {/* {
               !rest && (<Video
                   ref={(ref) => this.videoRef = ref}
                   source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
@@ -582,8 +582,20 @@ export default class ExercisesScreen extends React.PureComponent {
                   onEnd={()=> this.videoRef.seek(0)}
               />)
                
+            } */}
+            {
+              !rest && (<Video
+                source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={false}
+                  resizeMode="cover"
+                  shouldPlay
+                  isLooping
+                  style={{ width, height: width }}
+              />)
+               
             }
-           
             {
              rest && <FastImage
                 source={require('../../../../../assets/images/hiit-rest-placeholder.jpg')}
