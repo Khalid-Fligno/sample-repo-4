@@ -559,7 +559,7 @@ export default class ExercisesScreen extends React.PureComponent {
         )
     }
 
-    console.log("videoPaused",currentExercise['videoUrls'][0].url)
+    console.log("videoPaused",videoPaused)
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -571,8 +571,7 @@ export default class ExercisesScreen extends React.PureComponent {
             {
               !rest && (<Video
                   ref={(ref) => this.videoRef = ref}
-                  // source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
-                  source={{ uri:currentExercise['videoUrls'][0].url }}
+                  source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
                   resizeMode="contain"
                   repeat={true}
                   muted={true}
@@ -580,7 +579,7 @@ export default class ExercisesScreen extends React.PureComponent {
                   playWhenInactive
                   style={{ width, height: width }}
                   onError={()=>Alert.alert('video play error')}
-                  // onEnd={()=> this.videoRef.seek(0)}
+                  onEnd={()=> this.videoRef.seek(0)}
               />)
                
             }
