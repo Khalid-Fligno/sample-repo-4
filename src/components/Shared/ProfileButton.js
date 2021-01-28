@@ -6,12 +6,14 @@ import Icon from '../Shared/Icon';
 import { db } from '../../../config/firebase';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import { Image } from 'react-native';
 
 export default class ProfileButton extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       initials: undefined,
+      avatar:null
     };
   }
   componentDidMount = async () => {
@@ -22,7 +24,7 @@ export default class ProfileButton extends React.PureComponent {
           const profile= await doc.data();                    
           let initials=profile.firstName &&  profile.firstName.length > 0 ? profile.firstName.substring(0, 1).toUpperCase() :'' ;
           initials += profile.lastName &&  profile.lastName.length > 0 ? profile.lastName.substring(0, 1).toUpperCase() :'';
-          this.setState({ initials: initials || undefined });
+          this.setState({ initials: initials || undefined ,avatar:profile.avatar });
         });
     }
   }
@@ -32,28 +34,38 @@ export default class ProfileButton extends React.PureComponent {
     }
   }
   render() {
-    const { initials } = this.state;
+    const { initials,avatar } = this.state;
     console.log("Profile....",initials)
     return (
       <View>
         {
-          initials !== undefined ? (
-            <View style={styles.avatarOutline}>
-              <View style={styles.tagCircle}
-                key={initials}
-              >
-                <Text style={styles.tagText}>
-                  {initials}
-                </Text>
+          !avatar  &&(
+            initials !== undefined ? (
+              <View style={styles.avatarOutline}>
+                <View style={styles.tagCircle}
+                  key={initials}
+                >
+                  <Text style={styles.tagText}>
+                    {initials}
+                  </Text>
+                </View>
               </View>
-            </View>
-          ) : (
-            <Icon
-              name="profile-solid"
-              size={30}
-              color={colors.themeColor.color}
-            />
+            ) : (
+              <Icon
+                name="profile-solid"
+                size={30}
+                color={colors.themeColor.color}
+              />
+            )
           )
+        }
+        {
+          avatar  &&
+          <Image 
+            source={{uri:avatar}}
+            style={styles.avatarBackdrop}
+            resizeMode='cover'
+          />
         }
       </View>
     );

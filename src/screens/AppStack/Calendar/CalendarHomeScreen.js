@@ -316,7 +316,7 @@ class CalendarHomeScreen extends React.PureComponent {
             });
             setTimeout(()=>{
               // this.setState({ loading: false });
-              this.getCurrentPhaseInfo()
+              this.getCurrentPhaseInfo();
             },500)
           }
           
@@ -393,7 +393,6 @@ class CalendarHomeScreen extends React.PureComponent {
       activeChallengeData,
       todayRecommendedMeal
     } = this.state;
-    console.log("loading",loading)
     let showRC = false
     if(activeChallengeData && activeChallengeUserData){
       // if(!this.phase)

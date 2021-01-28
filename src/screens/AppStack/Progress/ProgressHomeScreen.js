@@ -23,6 +23,7 @@ import { diff } from '../../../utils/index';
 import colors from '../../../styles/colors';
 import fonts from '../../../styles/fonts';
 import { widthPercentageToDP as wp ,heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import CustomBtn from '../../../components/Shared/CustomBtn';
 
 const { width } = Dimensions.get('window');
 
@@ -234,20 +235,50 @@ class ProgressHomeScreen extends React.PureComponent {
     const waistDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.waist, currentProgressInfo.waist);
     const burpeesDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.burpeeCount, currentProgressInfo.burpeeCount);
     
+    const updateBtn = (onPress)=>(
+          <CustomBtn
+              Title="Update"
+              outline={true}
+              customBtnStyle={{
+                                  padding:wp('1.7%'),
+                                  borderRadius:30,
+                                  backgroundColor:'transparent',
+                                  justifyContent:'space-between',
+                                  paddingStart:wp('5%'),
+                                  paddingEnd:wp('3%'),
+                                  borderWidth:1.5,
+                                  marginHorizontal:wp('10%'),
+                                  marginVertical:wp('3%')
+                              }}
+              isRightIcon={true}
+              rightIconName="chevron-right"
+              rightIconColor={colors.themeColor.color}
+              customBtnTitleStyle={{
+                                      fontFamily:fonts.GothamMedium,
+                                      // color:colors.offWhite,
+                                      textTransform:'capitalize'
+                                  }}
+            onPress={onPress}
+          />
+    )
+
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <View style={styles.imagesContainer}>
             {
               initialProgressInfo ? (
-                <TouchableOpacity
-                  onPress={() => this.toggleImageModal(initialProgressInfo.photoURL)}
-                >
-                  <FastImage
-                    style={styles.image}
-                    source={{ uri: initialProgressInfo.photoURL }}
-                  />
-                </TouchableOpacity>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => this.toggleImageModal(initialProgressInfo.photoURL)}
+                  >
+                    <FastImage
+                      style={styles.image}
+                      source={{ uri: initialProgressInfo.photoURL }}
+                    />
+                  </TouchableOpacity>
+                  {updateBtn(() => this.props.navigation.navigate('Progress1', { isInitial: true }))}
+                </View>
               ) : (
                 <View style={styles.imagePlaceholder}>
                   <TouchableOpacity
@@ -269,14 +300,17 @@ class ProgressHomeScreen extends React.PureComponent {
             }
             {
               currentProgressInfo ? (
-                <TouchableOpacity
-                  onPress={() => this.toggleImageModal(currentProgressInfo.photoURL)}
-                >
-                  <FastImage
-                    style={styles.image}
-                    source={{ uri: currentProgressInfo.photoURL }}
-                  />
-                </TouchableOpacity>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => this.toggleImageModal(currentProgressInfo.photoURL)}
+                  >
+                    <FastImage
+                      style={styles.image}
+                      source={{ uri: currentProgressInfo.photoURL }}
+                    />
+                  </TouchableOpacity>
+                  {updateBtn(() => this.props.navigation.navigate('Progress1', { isInitial: false }))}
+                </View>
               ) : (
                 <View style={styles.imagePlaceholder}>
                   <TouchableOpacity

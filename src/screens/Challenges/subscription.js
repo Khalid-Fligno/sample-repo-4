@@ -320,13 +320,17 @@ class ChallengeSubscriptionScreen extends Component {
   
   }
 
-  hideCalendarModal = () => {
+  hideCalendarModal = (status) => {
     this.setState({ 
       calendarModalVisible: false,
       blogs:undefined,
       loading:false,
       addingToCalendar:false });
+      console.log(status)
+      if(status === "Active")
+        this.props.navigation.navigate('Calendar');
   }
+
 
   setDate = async (event, selectedDate) => {
     // console.log("setDate call")
@@ -342,17 +346,23 @@ class ChallengeSubscriptionScreen extends Component {
 
 
   setShedular(selectedDate){
-    const date = moment(selectedDate).format('YYYY-MM-DD');
+    const TODAY = moment();
     this.setState({addingToCalendar:true})
     let {userData,userChallengesList,selectedChallengeIndex} = this.state
           const userRef = db.collection('users').doc(userData.id).collection('challenges');
           const ChallengeData = userChallengesList[selectedChallengeIndex];
-          data ={ startDate:date}
+          const data = createUserChallengeData(ChallengeData,new Date(selectedDate));
+          console.log(data.startDate , selectedDate);
+          if(moment(selectedDate).isSame(TODAY, 'd')){
+            Object.assign(data,{status:'Active'});
+          }else{
+            Object.assign(data,{isSchedule:true,status:'InActive'});
+          }
           userRef.doc(ChallengeData.id).set(data,{merge:true}).then((res)=>{
             Alert.alert('',
               `Your start date has been added to your challenge. Go to ${moment(selectedDate).format('DD-MM-YY')} on the challenge dashboard to see what Day 1 looks like`,
               [
-                { text: 'OK', onPress: this.hideCalendarModal, style: 'cancel' },
+                { text: 'OK', onPress:()=> this.hideCalendarModal(data.status), style: 'cancel' },
               ],
               { cancelable: false },
             );
