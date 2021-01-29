@@ -111,7 +111,7 @@ export default class RecipeTile extends React.PureComponent {
 RecipeTile.propTypes = {
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  subTitle: PropTypes.string.isRequired,
+  // subTitle: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string),
   time: PropTypes.string.isRequired,

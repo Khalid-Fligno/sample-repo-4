@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native';
 import { View, Text } from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { FileSystem } from 'react-native-unimodules';
 import DoubleRightArrow from '../../../assets/icons/DoubleRightArrow';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -59,7 +60,7 @@ class TodayMealsList extends Component {
                             onPress={()=>this.props.onPress(res)}
                         >
                             <ImageBackground
-                                source={{uri:res.coverImage}}
+                                source={{uri: `${FileSystem.cacheDirectory}recipe-${res.id}.jpg` }}
                                 style={styles.image}
                                 resizeMode='cover'
                             >

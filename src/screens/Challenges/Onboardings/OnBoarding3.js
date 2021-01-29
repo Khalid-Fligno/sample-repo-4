@@ -78,7 +78,7 @@ export default class OnBoarding3 extends Component {
   
   // and don't forget to remove the listener
   componentWillUnmount () {
-    console.log("unmount")
+    // console.log("unmount")
     this.focusListener.remove()
   }
 

@@ -30,25 +30,25 @@ const { width } = Dimensions.get('window');
 const actionSheetOptions = ['Cancel', 'Take photo', 'Upload from Camera Roll'];
 
 
-const uriToBlob = (url) => {
-  return new Promise((resolve, reject) => {
-    try{
-      const xhr = new XMLHttpRequest();
-      xhr.onerror = reject;
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-          resolve(xhr.response);
-        }
-      };
-      xhr.open('GET', url);
-      xhr.responseType = 'blob'; // convert type
-      xhr.send();
-    }catch(err){
-      console.log(err)
-    }
+// const uriToBlob = (url) => {
+//   return new Promise((resolve, reject) => {
+//     try{
+//       const xhr = new XMLHttpRequest();
+//       xhr.onerror = reject;
+//       xhr.onreadystatechange = () => {
+//         if (xhr.readyState === 4) {
+//           resolve(xhr.response);
+//         }
+//       };
+//       xhr.open('GET', url);
+//       xhr.responseType = 'blob'; // convert type
+//       xhr.send();
+//     }catch(err){
+//       console.log(err)
+//     }
   
-  });
-};
+//   });
+// };
 
 
 export default class OnBoarding4 extends Component {
@@ -85,13 +85,13 @@ export default class OnBoarding4 extends Component {
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction();
     });
-    if (Platform.OS === 'android') {
-      await this.requestAndroidPermissions();
+    // if (Platform.OS === 'android') {
+    //   await this.requestAndroidPermissions();
     
-    }else{
-    this.getCameraPermission();
-    this.getCameraRollPermission();
-    }
+    // }else{
+    // this.getCameraPermission();
+    // this.getCameraRollPermission();
+    // }
   }
 
   getCameraPermission = async () => {
@@ -115,18 +115,122 @@ export default class OnBoarding4 extends Component {
         //Handle this error
         return false;
     }
-}
+  }
   
+
+  chooseUploadType = () => {
+    if (Platform.OS === 'android') {
+        this.requestAndroidPermissions();
+        this.showActionSheet();        
+    }
+    else {
+        this.getCameraPermission();
+        this.getCameraRollPermission();
+        ActionSheetIOS.showActionSheetWithOptions(
+            {
+                options: actionSheetOptions,
+                cancelButtonIndex: 0,
+            },
+            async (buttonIndex) => {
+                this.uploadTypeAction(buttonIndex);
+            },
+        );
+    }
+  }
+
+  async requestAndroidPermissions() {
+    try {
+        await this.getCameraPermission();
+        await this.getCameraRollPermission();
+    }
+    catch (err) {
+        //Handle this error
+        return false;
+    }
+  }
+
+  showActionSheet = () => {
+    this.ActionSheet.show()
+  }
+
+  appSettingsPrompt = () => {
+  Alert.alert(
+    'FitazFK needs permissions to do this',
+    'Go to app settings and enable camera and camera roll permissions',
+    [
+      {
+        text: 'Cancel', style: 'cancel',
+      },
+      {
+        text: 'Go to Settings', onPress: () => Linking.openURL('app-settings:'),
+      },
+    ],
+    { cancelable: false },
+  );
+  }
+
+  uploadTypeAction = (buttonIndex) => {
+    if (buttonIndex === 1) {
+        if (!this.state.hasCameraPermission || !this.state.hasCameraRollPermission) {
+            this.appSettingsPrompt();
+            return;
+        }
+        this.takePhoto();
+    } else if (buttonIndex === 2) {
+        if (!this.state.hasCameraRollPermission) {
+            this.appSettingsPrompt();
+            return;
+        }
+        this.pickImage();
+    }
+  }
+
+  takePhoto = async () => {
+    const result = await ImagePicker.launchCameraAsync();
+      if (!result.cancelled) {
+        const manipResult = await ImageManipulator.manipulateAsync(
+          result.uri,
+          [{ resize: { width: 600, height: 800 } }],
+          { format: 'jpeg', compress: 0.7 ,base64:true},
+        );
+        this.uploading(manipResult);
+      }
+    };
+    
+  pickImage = async () => {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      });
+      // console.log(result);
+      const originXValue = result.width > result.height ? 130 : 0;
+      if (!result.cancelled) {
+        try {
+          const manipResult = await ImageManipulator.manipulateAsync(
+            result.uri,
+            [{ resize: { height: 800 } }, {
+              crop: {
+                originX: originXValue, originY: 0, width: 600, height: 800,
+              },
+            }],
+            { format: 'jpeg', compress: 0.7 ,base64:true},
+          );
+          this.uploading(manipResult);
+        } catch (err) {
+          this.setState({ error: 'There was a problem with that image, please try a different one' });
+        }
+      }
+  };
+
   // and don't forget to remove the listener
   componentWillUnmount () {
     this.focusListener.remove()
   }
   
-  saveImage = async (uri) => {
+  saveImage = async (uri,blob) => {
     try {
       const uid = await AsyncStorage.getItem('uid');
       const firebase = require('firebase');
-      const blob = await uriToBlob(uri);
+      // const blob = await uriToBlob(uri);
       const storageRef = firebase.storage().ref();
       const userPhotosStorageRef = storageRef.child('user-photos');
       const userStorageRef = userPhotosStorageRef.child(uid);
@@ -135,10 +239,13 @@ export default class OnBoarding4 extends Component {
         contentType: 'image/jpeg',
         cacheControl: 'public',
       };
+      console.log(blob)
       const snapshot = await avatarStorageRef.put(blob, metadata);
       const url = await snapshot.ref.getDownloadURL();
+      console.log(url)
       this.setState({ imgUrl: url });
     } catch (err) {
+      console.log(err)
       Alert.alert('Image save error');
     }
   };
@@ -146,7 +253,6 @@ export default class OnBoarding4 extends Component {
   async goToScreen(type){ 
     let {challengeData , image,imgUrl} = this.state 
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    console.log(imgUrl)
     try {
       if (type === 'next') {
         // if (imgUrl !== null) {
@@ -157,7 +263,7 @@ export default class OnBoarding4 extends Component {
           onBoardingInfo,
           image:image
         })
-        console.log(updatedChallengedata)
+        // console.log(updatedChallengedata)
         if(type === 'next'){
           this.props.navigation.navigate('ChallengeOnBoarding5',{
             data:{
@@ -188,110 +294,19 @@ export default class OnBoarding4 extends Component {
   
      
   }
-  chooseUploadType = () => {
-    if (Platform.OS === 'android') {
-        this.requestAndroidPermissions();
-        this.showActionSheet();        
-    }
-    else {
-        this.getCameraPermission();
-        this.getCameraRollPermission();
-        ActionSheetIOS.showActionSheetWithOptions(
-            {
-                options: actionSheetOptions,
-                cancelButtonIndex: 0,
-            },
-            async (buttonIndex) => {
-                this.uploadTypeAction(buttonIndex);
-            },
-        );
-    }
+
+
+
+uploading = async(result) =>{
+  this.setState({ uploading: true });
+  const base64Response = await fetch(`data:image/jpeg;base64,${result.base64}`);
+  const blob = base64Response.blob();
+  
+  await this.saveImage(result.uri,blob._W);
+  this.setState({ uploading: false });
 }
 
-async requestAndroidPermissions() {
-    try {
-        await this.getCameraPermission();
-        await this.getCameraRollPermission();
-    }
-    catch (err) {
-        //Handle this error
-        return false;
-    }
-}
 
-showActionSheet = () => {
-    this.ActionSheet.show()
-}
-
-appSettingsPrompt = () => {
-  Alert.alert(
-    'FitazFK needs permissions to do this',
-    'Go to app settings and enable camera and camera roll permissions',
-    [
-      {
-        text: 'Cancel', style: 'cancel',
-      },
-      {
-        text: 'Go to Settings', onPress: () => Linking.openURL('app-settings:'),
-      },
-    ],
-    { cancelable: false },
-  );
-}
-
-uploadTypeAction = (buttonIndex) => {
-    if (buttonIndex === 1) {
-        if (!this.state.hasCameraPermission || !this.state.hasCameraRollPermission) {
-            this.appSettingsPrompt();
-            return;
-        }
-        this.takePhoto();
-    } else if (buttonIndex === 2) {
-        if (!this.state.hasCameraRollPermission) {
-            this.appSettingsPrompt();
-            return;
-        }
-        this.pickImage();
-    }
-}
-
-takePhoto = async () => {
-const result = await ImagePicker.launchCameraAsync();
-  if (!result.cancelled) {
-    const manipResult = await ImageManipulator.manipulateAsync(
-      result.uri,
-      [{ resize: { width: 600, height: 800 } }],
-      { format: 'jpeg', compress: 0.7 },
-    );
-    this.setState({ image: manipResult });
-    await this.saveImage(manipResult.uri);
-  }
-};
-
-pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    });
-    // console.log(result);
-    const originXValue = result.width > result.height ? 130 : 0;
-    if (!result.cancelled) {
-      try {
-        const manipResult = await ImageManipulator.manipulateAsync(
-          result.uri,
-          [{ resize: { height: 800 } }, {
-            crop: {
-              originX: originXValue, originY: 0, width: 600, height: 800,
-            },
-          }],
-          { format: 'jpeg', compress: 0.7 },
-        );
-        this.setState({ image: manipResult });
-        await this.saveImage(manipResult.uri);
-      } catch (err) {
-        this.setState({ error: 'There was a problem with that image, please try a different one' });
-      }
-    }
-};
 
 
   render() {
@@ -308,14 +323,14 @@ pickImage = async () => {
           
             <View style={styles.contentContainer}>
             {
-              image ? (
+              imgUrl ? (
                 <TouchableOpacity
                   onPress={this.chooseUploadType}
                   style={styles.imageContainer}
                 >
                   <Image
                     resizeMode="contain"
-                    source={{ uri: image.uri }}
+                    source={{ uri: imgUrl }}
                     style={styles.image}
                   />
                 </TouchableOpacity>

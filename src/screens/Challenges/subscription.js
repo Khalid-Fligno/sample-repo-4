@@ -16,6 +16,7 @@ import * as Haptics from 'expo-haptics';
 import { getCurrentPhase, getCurrentChallengeDay, getTodayRecommendedWorkout, isActiveChallenge,short_months,full_months } from '../../utils/challenges';
 import ChallengeBlogCard from '../../components/Home/ChallengeBlogCard';
 import { heightPercentageToDP  as hp} from 'react-native-responsive-screen';
+import CalendarModal from '../../components/Shared/CalendarModal';
 
 
 class ChallengeSubscriptionScreen extends Component {
@@ -30,17 +31,22 @@ class ChallengeSubscriptionScreen extends Component {
       activeChallengeUserData:undefined,
       activeChallengeData:undefined,
       blogs:undefined,
-      totalChallengeCount:0
+      totalChallengeCount:0,
+      calendarModalVisible:false,
+      chosenDate: new Date(),
+      selectedChallengeIndex:null,
+      addingToCalendar:false
     }
   }
 
   onFocusFunction(){
     isActiveChallenge().then((res)=>{
       if(res){
-        if(this.state.blogs === undefined){
-          this.setState({loading:true})
-          this.fetchActiveChallengeData(res);
-        }
+        // if(this.state.blogs === undefined){
+        //   this.setState({loading:true})
+        //   this.fetchActiveChallengeData(res);
+        // }
+        this.props.navigation.navigate('Calendar');
       }
     })
   }
@@ -54,9 +60,12 @@ class ChallengeSubscriptionScreen extends Component {
   }
 
   componentWillUnmount = () => {
-    this.unsubscribeUserChallenges();
-    this.unsubscribeUserData();
-    this.unsubscribeChallenges();
+    if(this.unsubscribeUserChallenges)
+      this.unsubscribeUserChallenges();
+    if(this.unsubscribeUserData)  
+      this.unsubscribeUserData();
+    if(this.unsubscribeChallenges)
+      this.unsubscribeChallenges();
     this.focusListener.remove();  
   }
 
@@ -127,16 +136,16 @@ class ChallengeSubscriptionScreen extends Component {
     
   }
   restartChallengeToUser(index){
- let {userData , restartChallengesList} = this.state
-      const userRef = db.collection('users').doc(userData.id).collection('challenges');
-      console.log("challengesList[index]",restartChallengesList);
-      const data = createUserChallengeData(restartChallengesList[index],new Date())
-      console.log( "???",restartChallengesList.length,index)
-      userRef.doc(data.id).set(data).then((res)=>{
-        this.setState({blogs:undefined,loading:false});
-      }).catch((err)=>{
-        console.log(err)
-      })
+    let {userData , restartChallengesList} = this.state
+          const userRef = db.collection('users').doc(userData.id).collection('challenges');
+          console.log("challengesList[index]",restartChallengesList);
+          const data = createUserChallengeData(restartChallengesList[index],new Date())
+          console.log( "???",restartChallengesList.length,index)
+          userRef.doc(data.id).set(data).then((res)=>{
+            this.setState({blogs:undefined,loading:false});
+          }).catch((err)=>{
+            console.log(err)
+          })
     
   }
   openLink = (url) => {
@@ -154,8 +163,8 @@ class ChallengeSubscriptionScreen extends Component {
         subTitle={item.subTitle}
         key={index}
         btnTitle = "Buy"
-        // onPress={()=>this.addChallengeToUser(index)}
-        onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
+        onPress={()=>this.addChallengeToUser(index)}
+        // onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
         disabled = {false}
         challengeData={item}
     />
@@ -168,6 +177,7 @@ class ChallengeSubscriptionScreen extends Component {
       const findIndex = this.state.userChallengesList.findIndex((res)=> res.status === 'Active'); 
       if(findIndex === -1 && item.status === 'Completed'){
         btnTitle = 'Restart';
+        isRestartBtn=true;
       }
       else if(findIndex !== -1 && item.status === 'Completed'){
         btnTitle = 'Completed';
@@ -210,13 +220,16 @@ class ChallengeSubscriptionScreen extends Component {
               onPress={()=>this.onBoarding(item,btnTitle,btnDisabled)}
               restartButton={isRestartBtn}
               onPressRestart={()=> {   Alert.alert('',
-                'Are you sure you want to restart your challenge?',
+                'Are you sure you want to reset your challenge?',
                 [
                   {
                     text: 'Cancel', style: 'cancel',
                   },
                   {
-                    text: 'Restart', onPress: () => this.restartChallengeToUser(index),
+                    text: 'Reset start date', onPress: () => this.setState({calendarModalVisible:true,selectedChallengeIndex:index}),
+                  },
+                  {
+                    text: 'Reset challenge', onPress: () => this.restartChallengeToUser(index),
                   },
                 ],
                 { cancelable: false },
@@ -307,10 +320,69 @@ class ChallengeSubscriptionScreen extends Component {
   
   }
 
-  
+  hideCalendarModal = (status) => {
+    this.setState({ 
+      calendarModalVisible: false,
+      blogs:undefined,
+      loading:false,
+      addingToCalendar:false });
+      console.log(status)
+      if(status === "Active")
+        this.props.navigation.navigate('Calendar');
+  }
+
+
+  setDate = async (event, selectedDate) => {
+    // console.log("setDate call")
+    if(selectedDate && Platform.OS === 'android'){
+      this.setState({loading:true});
+      this.setShedular(selectedDate);
+    }
+    if(selectedDate && Platform.OS === 'ios'){
+    const currentDate = selectedDate;
+    this.setState({ chosenDate: currentDate });
+    }
+  }
+
+
+  setShedular(selectedDate){
+    const TODAY = moment();
+    this.setState({addingToCalendar:true})
+    let {userData,userChallengesList,selectedChallengeIndex} = this.state
+          const userRef = db.collection('users').doc(userData.id).collection('challenges');
+          const ChallengeData = userChallengesList[selectedChallengeIndex];
+          const data = createUserChallengeData(ChallengeData,new Date(selectedDate));
+          console.log(data.startDate , selectedDate);
+          if(moment(selectedDate).isSame(TODAY, 'd')){
+            Object.assign(data,{status:'Active'});
+          }else{
+            Object.assign(data,{isSchedule:true,status:'InActive'});
+          }
+          userRef.doc(ChallengeData.id).set(data,{merge:true}).then((res)=>{
+            Alert.alert('',
+              `Your start date has been added to your challenge. Go to ${moment(selectedDate).format('DD-MM-YY')} on the challenge dashboard to see what Day 1 looks like`,
+              [
+                { text: 'OK', onPress:()=> this.hideCalendarModal(data.status), style: 'cancel' },
+              ],
+              { cancelable: false },
+            );
+          }).catch((err)=>{
+            console.log(err)
+          })
+    
+  }
+
   render() {
-    const {challengesList,userChallengesList,loading,blogs} = this.state
-    console.log(challengesList)
+    const {
+      challengesList,
+      userChallengesList,
+      loading,
+      blogs,
+      chosenDate,
+      calendarModalVisible,
+      addingToCalendar
+    } = this.state
+    // console.log(challengesList)
     return (
       <ScrollView style={{flex:1,paddingHorizontal:containerPadding}} bounces={false}>
          
@@ -348,6 +420,15 @@ class ChallengeSubscriptionScreen extends Component {
           loading={loading}
           color={colors.themeColor.color}
         />
+        <CalendarModal 
+            isVisible={calendarModalVisible}
+            onBackdropPress={this.hideCalendarModal}
+            value={chosenDate}
+            onChange={this.setDate}
+            onPress={()=>this.setShedular(chosenDate)}
+            addingToCalendar={addingToCalendar}
+            loading={loading}
+        />    
     </ScrollView>
     );
   }

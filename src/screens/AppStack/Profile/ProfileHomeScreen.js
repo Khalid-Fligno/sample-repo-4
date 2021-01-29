@@ -27,22 +27,24 @@ import colors from '../../../styles/colors';
 import ActionSheet from 'react-native-actionsheet';
 import globalStyle from '../../../styles/globalStyles';
 import ProfileStyles from './ProfileStyles';
+import { FileSystem } from 'react-native-unimodules';
+import { getBuildNumber, getVersion } from 'react-native-device-info';
 const { width } = Dimensions.get('window');
 
-const uriToBlob = (url) => {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.onerror = reject;
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        resolve(xhr.response);
-      }
-    };
-    xhr.open('GET', url,true);
-    xhr.responseType = 'blob'; // convert type
-    xhr.send();
-  });
-};
+// const uriToBlob = (url) => {
+//   return new Promise((resolve, reject) => {
+//     const xhr = new XMLHttpRequest();
+//     xhr.onerror = reject;
+//     xhr.onreadystatechange = () => {
+//       if (xhr.readyState === 4) {
+//         resolve(xhr.response);
+//       }
+//     };
+//     xhr.open('GET', url,true);
+//     xhr.responseType = 'blob'; // convert type
+//     xhr.send();
+//   });
+// };
 
 const list = [
   { title: 'Help & Support', route: 'HelpAndSupport' },
@@ -74,7 +76,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
   }
-    getCameraRollPermission = async () => {
+  getCameraRollPermission = async () => {
         try {
             const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
             this.setState({ hasCameraRollPermission: status === 'granted' });
@@ -95,11 +97,11 @@ export default class ProfileHomeScreen extends React.PureComponent {
         }
       });
   }
-  saveImage = async (uri) => {
+  saveImage = async (uri,blob) => {
     try {
       const uid = await AsyncStorage.getItem('uid');
       const firebase = require('firebase');
-      const blob = await uriToBlob(uri);
+      // const blob1 = await uriToBlob(uri);
       const storageRef = firebase.storage().ref();
       const userPhotosStorageRef = storageRef.child('user-photos');
       const userStorageRef = userPhotosStorageRef.child(uid);
@@ -108,15 +110,18 @@ export default class ProfileHomeScreen extends React.PureComponent {
         contentType: 'image/jpeg',
         cacheControl: 'public, max-age=31536000',
       };
-      console.log(blob)
       const snapshot = await avatarStorageRef.put(blob, metadata);
       const url = await snapshot.ref.getDownloadURL();
+      
       await FastImage.preload([{ uri: url }]);
       this.setState({ avatar: url });
+
       await db.collection('users').doc(uid).set({
         avatar: url,
       }, { merge: true });
+
     } catch (err) {
+      console.log("err",err)
       Alert.alert('Image save error');
     }
   };
@@ -175,18 +180,18 @@ export default class ProfileHomeScreen extends React.PureComponent {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: Platform.OS === 'ios',
+      base64:true
     });
     if (!result.cancelled) {
       try {
         const manipResult = await ImageManipulator.manipulateAsync(
           result.uri,
           [{ resize: { height: 160, width: 160 } }],
-          { format: 'jpeg' },
+          { format: 'jpeg' ,base64:true},
         );
-        this.setState({ loading: true });
-        await this.saveImage(manipResult.uri);
-        this.setState({ loading: false });
+        this.uploading(manipResult);
       } catch (err) {
+        console.log(err)
         this.setState({ loading: false });
         Alert.alert('Could not upload this image');
       }
@@ -198,13 +203,21 @@ export default class ProfileHomeScreen extends React.PureComponent {
       const manipResult = await ImageManipulator.manipulateAsync(
         result.uri,
         [{ resize: { width: 160, height: 160 } }],
-        { format: 'jpeg' },
+        { format: 'jpeg' ,base64:true},
       );
-      this.setState({ loading: true });
-      await this.saveImage(manipResult.uri);
-      this.setState({ loading: false });
+      this.uploading(manipResult);
     }
   };
+
+  uploading = async(result) =>{
+    this.setState({ loading: true });
+    const base64Response = await fetch(`data:image/jpeg;base64,${result.base64}`);
+    const blob = base64Response.blob();
+    
+    await this.saveImage(result.uri,blob._W);
+    this.setState({ loading: false });
+  }
+  
   appSettingsPrompt = () => {
     Alert.alert(
       'FitazFK needs permissions to do this',
@@ -333,6 +346,11 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 onPress={() => this.logOutAlert()}
               />
             </View>
+            <Text
+              style={{color:colors.grey.standard}}
+            >
+              Ver {getVersion()} (Build {getBuildNumber()})
+            </Text>
           </ScrollView>
           <Loader
             loading={loading}

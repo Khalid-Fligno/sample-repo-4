@@ -15,7 +15,7 @@ const ChallengeSubscriptionStack = createStackNavigator(
     // Subscription: HomeScreen,
   },
   {
-    initialRouteName: 'ChallengeSubscription',
+    initialRouteName: 'Calendar',
     defaultNavigationOptions: ({ navigation }) => ({
       gesturesEnabled:false,
       header: () => {

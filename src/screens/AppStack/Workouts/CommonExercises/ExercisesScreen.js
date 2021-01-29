@@ -10,7 +10,7 @@ import {
   AppState,
 } from 'react-native';
 import * as FileSystem from 'expo-file-system';
-import Video from 'react-native-video';
+import { Video } from 'expo-av';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
 import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
@@ -90,9 +90,11 @@ export default class ExercisesScreen extends React.PureComponent {
           exerciseInfoModalVisible: false,
           appState: AppState.currentState,
           rest:rest,
+          setCount:setCount,
           // isRunning:false
     };
   }
+
   componentDidMount() {
       this.startTimer();
     // else if (this.state.workout && this.state.workout.count){
@@ -191,9 +193,12 @@ export default class ExercisesScreen extends React.PureComponent {
       else {
         console.log("Incresase count")
         if (workout.rest && !this.state.rest) //for workout.rest === true
+        {
           this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex ,true);
-        else
-          this.goToExercise(setCount + 1,reps,resistanceCategoryId,currentExerciseIndex)
+        }          
+        else{
+          this.goToExercise(setCount + 1,reps,resistanceCategoryId,currentExerciseIndex);
+        }
       }
     }else if(workout.workoutProcessType === 'circular'){
       if(this.checkFinished(currentExerciseIndex,setCount)){
@@ -239,7 +244,7 @@ export default class ExercisesScreen extends React.PureComponent {
   }   
 
   goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,rest=false){
-   let {workoutSubCategory,fitnessLevel,fromCalender,extraProps} = this.state
+   let {workoutSubCategory,fitnessLevel,fromCalender,extraProps,workout} = this.state
     this.props.navigation.replace('Exercise', {
       workout:this.state.workout,
       setCount,
@@ -252,11 +257,27 @@ export default class ExercisesScreen extends React.PureComponent {
       fromCalender,
       extraProps
     });
+
+    // this.setExercise({
+    //     workout:this.state.workout,
+    //     setCount,
+    //     reps,
+    //     currentExerciseIndex,
+    //     rest,
+    //   })
+    // this.setState({
+    //   setCount:setCount,
+    //   reps: reps,
+    //   currentExerciseIndex: currentExerciseIndex,
+    //   rest: rest,
+    //   currentExercise:currentExercise,
+    //   currentExercise:workout['exercises'][currentExerciseIndex],
+    //   resistanceCategoryId: resistanceCategoryId
+    // })
   }
 
   restControl =(reps, resistanceCategoryId,currentExerciseIndex) =>{
-    const {workout} = this.state
-    const setCount = this.props.navigation.getParam('setCount', 1)
+    const {workout, setCount} = this.state;
     console.log("rest call")
     if(workout.workoutProcessType === 'oneByOne'){
       // if (setCount === workout.workoutReps && workout.rest) 
@@ -500,6 +521,8 @@ export default class ExercisesScreen extends React.PureComponent {
           <View style={styles.containerEmptyBlackBox} ></View>
         )
     }
+
+    console.log("videoPaused",videoPaused)
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -508,19 +531,34 @@ export default class ExercisesScreen extends React.PureComponent {
           style={styles.flexContainer}
         >
           <View>
-            {
+            {/* {
               !rest && (<Video
                   ref={(ref) => this.videoRef = ref}
-                  source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4` || exerciseList[0].videoURL }}
+                  source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
                   resizeMode="contain"
-                  repeat
-                  muted
+                  repeat={true}
+                  muted={true}
                   paused={videoPaused}
+                  playWhenInactive
+                  style={{ width, height: width }}
+                  onError={()=>Alert.alert('video play error')}
+                  onEnd={()=> this.videoRef.seek(0)}
+              />)
+               
+            } */}
+            {
+              !rest && (<Video
+                source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={false}
+                  resizeMode="cover"
+                  shouldPlay={!videoPaused}
+                  isLooping
                   style={{ width, height: width }}
               />)
                
             }
-           
             {
              rest && <FastImage
                 source={require('../../../../../assets/images/hiit-rest-placeholder.jpg')}

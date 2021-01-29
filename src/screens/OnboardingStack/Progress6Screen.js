@@ -24,25 +24,28 @@ import { containerPadding } from '../../styles/globalStyles';
 
 const { width } = Dimensions.get('window');
 
-const uriToBlob = (url) => {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.onerror = reject;
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        resolve(xhr.response);
-      }
-    };
-    xhr.open('GET', url);
-    xhr.responseType = 'blob'; // convert type
-    xhr.send();
-  });
-};
+// const uriToBlob = (url) => {
+//   return new Promise((resolve, reject) => {
+//     const xhr = new XMLHttpRequest();
+//     xhr.onerror = reject;
+//     xhr.onreadystatechange = () => {
+//       if (xhr.readyState === 4) {
+//         resolve(xhr.response);
+//       }
+//     };
+//     xhr.open('GET', url);
+//     xhr.responseType = 'blob'; // convert type
+//     xhr.send();
+//   });
+// };
 
-const storeProgressInfo = async (uri, isInitial, weight, waist, hip, burpeeCount) => {
+const storeProgressInfo = async (image, isInitial, weight, waist, hip, burpeeCount) => {
   const uid = await AsyncStorage.getItem('uid');
   const firebase = require('firebase');
-  const blob = await uriToBlob(uri);
+
+  const base64Response = await fetch(`data:image/jpeg;base64,${image.base64}`);
+  const blob = base64Response.blob()._W;
+  
   const storageRef = firebase.storage().ref();
   const userPhotosStorageRef = storageRef.child('user-photos');
   const userStorageRef = userPhotosStorageRef.child(uid);
@@ -123,7 +126,7 @@ export default class Progress6Screen extends React.PureComponent {
       isInitial,
       image,
     } = this.props.navigation.state.params;
-    await storeProgressInfo(image.uri, isInitial, weight, waist, hip, burpeeCount);
+    await storeProgressInfo(image, isInitial, weight, waist, hip, burpeeCount);
     const fitnessLevel = findFitnessLevel(burpeeCount);
     AsyncStorage.setItem('fitnessLevel', fitnessLevel.toString());
     try {

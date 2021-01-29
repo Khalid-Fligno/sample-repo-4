@@ -1,35 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  StyleSheet,
   ScrollView,
   View,
-  Dimensions,
   Text,
   Alert,
   TouchableOpacity,
-  ColorPropType,
-  Image,
   Linking
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { ListItem, Slider } from 'react-native-elements';
 import * as FileSystem from 'expo-file-system';
-import CalendarStrip from 'react-native-calendar-strip';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 import firebase from 'firebase';
 import ReactTimeout from 'react-timeout';
 import { db } from '../../../../config/firebase';
-import HelperModal from '../../../components/Shared/HelperModal';
 import Loader from '../../../components/Shared/Loader';
-import Icon from '../../../components/Shared/Icon';
-import { findReps } from '../../../utils';
-import { findFocus, findLocation, findFocusIcon, findWorkoutType } from '../../../utils/workouts';
 import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
 import globalStyle, { containerPadding } from '../../../styles/globalStyles';
-const { width } = Dimensions.get('window');
-import { heightPercentageToDP as hp ,widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import calendarStyles from './calendarStyle';
 import * as Haptics from 'expo-haptics';
 import { 
@@ -40,23 +26,37 @@ import {
   getTodayRecommendedWorkout,
   isActiveChallenge
 } from '../../../utils/challenges';
-import ChallengeProgressCard from '../../../components/Calendar/ChallengeProgressCard';
-import {
-     CustomListItem,
-     MealSwipable, 
-     RcMealListItem,
-     WorkoutSwipable,
-     RcWorkoutListItem
-  } from '../../../components/Calendar/ListItem';
 import CustomCalendarStrip from '../../../components/Calendar/CustomCalendarStrip';
-import { NavigationActions, StackActions } from 'react-navigation';
 import ChallengeProgressCard2 from '../../../components/Calendar/ChallengeProgressCard2';
 import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
 import TodayMealsList from '../../../components/Calendar/TodayMealsList';
 import Modal from "react-native-modal";
-import { Button } from 'react-native';
-import { SafeAreaView } from 'react-native';
 import ChallengeSetting from '../../../components/Calendar/ChallengeSetting';
+// import { ListItem, Slider } from 'react-native-elements';
+
+// import CalendarStrip from 'react-native-calendar-strip';
+// import Swipeable from 'react-native-gesture-handler/Swipeable';
+
+// import HelperModal from '../../../components/Shared/HelperModal';
+
+// import Icon from '../../../components/Shared/Icon';
+// import { findReps } from '../../../utils';
+// import { findFocus, findLocation, findFocusIcon, findWorkoutType } from '../../../utils/workouts';
+
+// import fonts from '../../../styles/fonts';
+
+// const { width } = Dimensions.get('window');
+// import { heightPercentageToDP as hp ,widthPercentageToDP as wp } from 'react-native-responsive-screen';
+
+// import ChallengeProgressCard from '../../../components/Calendar/ChallengeProgressCard';
+// import {
+//      CustomListItem,
+//      MealSwipable, 
+//      RcMealListItem,
+//      WorkoutSwipable,
+//      RcWorkoutListItem
+//   } from '../../../components/Calendar/ListItem';
+
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -82,7 +82,7 @@ class CalendarHomeScreen extends React.PureComponent {
 
   componentDidMount = async () => {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
-    await this.fetchCalendarEntries();
+    // await this.fetchCalendarEntries();
     await this.fetchActiveChallengeUserData();
     await this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting()
@@ -187,13 +187,13 @@ class CalendarHomeScreen extends React.PureComponent {
                Object.assign(workout,{displayName:`${workout.displayName} - Day ${challengeCurrentDay}`}) 
             }
                 this.props.navigation.navigate('WorkoutInfo', 
-                {
-                  workout, 
-                  reps: workout.difficultyLevel[fitnessLevel-1].toString(),
-                  workoutSubCategory:workout.workoutSubCategory,
-                  fitnessLevel,
-                  extraProps:{fromCalender:true}
-                }
+                    {
+                      workout, 
+                      reps: workout.difficultyLevel[fitnessLevel-1].toString(),
+                      workoutSubCategory:workout.workoutSubCategory,
+                      fitnessLevel,
+                      extraProps:{fromCalender:true}
+                    }
                 )
         }
         catch(err){
@@ -275,27 +275,26 @@ class CalendarHomeScreen extends React.PureComponent {
           this.props.navigation.navigate('ChallengeSubscription')
         }
       });
-      const { activeChallengeData,activeChallengeUserData} = this.state
-      // console.log("activeChallengeData",activeChallengeData,"activeChallengeUserData",activeChallengeUserData);
-      if(activeChallengeData === undefined && activeChallengeUserData ===undefined ){
-        this.unsubscribeSchedule = await db.collection('users').doc(uid).collection('challenges')
-        .where("isSchedule", "==" ,true)
-        .onSnapshot(async (querySnapshot) => {
-          const list = [];
-          await querySnapshot.forEach(async (doc) => {
-              await list.push(await doc.data());
-          });
-          if(list[0]){
-            this.fetchActiveChallengeData(list[0])
-          }else{
-            this.setState({ 
-              activeChallengeUserData:undefined,
-              loading:false
-            });
-          }
-        });
+      // const { activeChallengeData,activeChallengeUserData} = this.state
+      // if(activeChallengeData === undefined && activeChallengeUserData ===undefined ){
+      //   this.unsubscribeSchedule = await db.collection('users').doc(uid).collection('challenges')
+      //   .where("isSchedule", "==" ,true)
+      //   .onSnapshot(async (querySnapshot) => {
+      //     const list = [];
+      //     await querySnapshot.forEach(async (doc) => {
+      //         await list.push(await doc.data());
+      //     });
+      //     if(list[0]){
+      //       this.fetchActiveChallengeData(list[0])
+      //     }else{
+      //       this.setState({ 
+      //         activeChallengeUserData:undefined,
+      //         loading:false
+      //       });
+      //     }
+      //   });
 
-      }
+      // }
     }
     catch(err){
       this.setState({ loading: false });
@@ -313,9 +312,12 @@ class CalendarHomeScreen extends React.PureComponent {
             this.setState({ 
               activeChallengeUserData,
               activeChallengeData:doc.data() ,
-              loading:false
+              // loading:false
             });
-            this.getCurrentPhaseInfo()
+            setTimeout(()=>{
+              // this.setState({ loading: false });
+              this.getCurrentPhaseInfo();
+            },500)
           }
           
       });
@@ -330,6 +332,7 @@ class CalendarHomeScreen extends React.PureComponent {
   getCurrentPhaseInfo(){
     const {activeChallengeUserData,activeChallengeData} = this.state
     if(activeChallengeUserData && activeChallengeData){
+      this.setState({loading:true})
       const data  = activeChallengeUserData.phases;
       this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
     
@@ -341,7 +344,7 @@ class CalendarHomeScreen extends React.PureComponent {
         this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
 
         //TODO :calculate the workout completed till selected date
-        console.log(this.stringDate)
+        // console.log(this.stringDate)
         this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
 
         //TODO calculate current challenge day
@@ -349,9 +352,11 @@ class CalendarHomeScreen extends React.PureComponent {
 
         //TODO getToday one recommended meal randomly  
         getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).then((res)=>{
+          console.log("now display")
           this.setState({
             todayRecommendedMeal: res.recommendedMeal,
-            challengeMealsFilterList: res.challengeMealsFilterList
+            challengeMealsFilterList: res.challengeMealsFilterList,
+            loading:false
           })
         })
 
@@ -370,22 +375,7 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   async goToRecipe(recipeData){
-    this.setState({loading:true})
-    const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
-      await FileSystem.getInfoAsync(fileUri)
-        .then(async ({ exists }) => {
-          if (!exists) {
-            await FileSystem.downloadAsync(
-              recipeData.coverImage,
-              `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`,
-            )
-          }
-        }).catch(() => {
-          this.setState({ loading: false });
-          Alert.alert('', 'Image download error');
-        });
-        this.setState({loading:false})
-    this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'Calendar',extraProps:{fromCalender:true} })
+    this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'challenge dashboard',extraProps:{fromCalender:true} })
   }
 
   openLink = (url) => {
@@ -403,11 +393,10 @@ class CalendarHomeScreen extends React.PureComponent {
       activeChallengeData,
       todayRecommendedMeal
     } = this.state;
-
     let showRC = false
     if(activeChallengeData && activeChallengeUserData){
-      if(!this.phase)
-      this.getCurrentPhaseInfo()
+      // if(!this.phase)
+      // this.getCurrentPhaseInfo()
 
       if(this.calendarStrip.current){
         let currentCalendarTime = new Date(this.calendarStrip.current.getSelectedDate()).getTime()
@@ -421,7 +410,6 @@ class CalendarHomeScreen extends React.PureComponent {
           showRC = false  
       }
     }
-
     const mealsList =(
       showRC &&
       <>
@@ -462,7 +450,7 @@ class CalendarHomeScreen extends React.PureComponent {
               activeChallengeData={activeChallengeData}
               activeChallengeUserData = {activeChallengeUserData}
               totalChallengeWorkoutsCompleted ={this.totalChallengeWorkoutsCompleted}
-              openLink={()=>this.openLink(this.phase.pdfUrl)}
+              openLink={()=>this.openLink(this.phaseData.pdfUrl)}
               currentDay={this.currentChallengeDay}
             />
         }
@@ -482,10 +470,13 @@ class CalendarHomeScreen extends React.PureComponent {
             style={{ margin: 0 }}
             animationIn="fadeInLeft"
             animationOut="fadeOutLeft"
+            onBackdropPress={() => this.toggleSetting()}
+            // useNativeDriver={true}
       >
         <ChallengeSetting 
           onToggle={()=>this.toggleSetting()}
           activeChallengeUserData={activeChallengeUserData}
+          activeChallengeData={activeChallengeData}
           navigation={this.props.navigation}
         />
       </Modal>
@@ -499,15 +490,18 @@ class CalendarHomeScreen extends React.PureComponent {
         />
 
 
-        {dayDisplay}
+        {
+          dayDisplay
+        }
       
-        <Loader
-          loading={loading}
-          color={colors.red.standard}
-        />
+       
          {
            setting
          }
+          <Loader
+            loading={loading}
+            color={colors.red.standard}
+          />
       </View>
     );
   }

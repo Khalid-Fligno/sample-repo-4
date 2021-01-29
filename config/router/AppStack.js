@@ -15,12 +15,12 @@ const AppStack = createStackNavigator(
   },
   {
     initialRouteName: 'Tabs',
-    transitionConfig: () => ({
-      transitionSpec: fadeSpec,
-      screenInterpolator: (props) => {
-        return fade(props);
-      },
-    }),
+    // transitionConfig: () => ({
+    //   transitionSpec: fadeSpec,
+    //   screenInterpolator: (props) => {
+    //     return fade(props);
+    //   },
+    // }),
     defaultNavigationOptions:({ navigation })=>( {
       gesturesEnabled:navigation.state.routeName === 'ChallengeOnBoarding'?false:true,
       header: null,

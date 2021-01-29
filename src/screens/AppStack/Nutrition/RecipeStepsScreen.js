@@ -9,6 +9,7 @@ import colors from '../../../styles/colors';
 // import fonts from '../../../styles/fonts';
 import globalStyle from '../../../styles/globalStyles';
 import NutritionStyles from './NutritionStyles';
+import Loader from '../../../components/Shared/Loader';
 const { width } = Dimensions.get('window');
 
 export default class RecipeStepsScreen extends React.PureComponent {
@@ -23,7 +24,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
   componentDidMount = () => {
     setTimeout(() => {
       this.setState({ loading: false });
-    }, 10);
+    }, 500);
     activateKeepAwake();
   }
   componentWillUnmount = () => {
@@ -126,10 +127,14 @@ export default class RecipeStepsScreen extends React.PureComponent {
     );
   }
   render() {
-    const { steps } = this.state;
-    if(this.state.loading) {
-      return null;
-    }
+    const { steps ,loading} = this.state;
+    if(loading)
+      return(
+                <Loader
+                  loading={loading}
+                  color={colors.red.standard}
+                />
+      )
     return (
       <View style={[globalStyle.container,{paddingHorizontal:0,alignItems: 'center'}]}>
         <Carousel

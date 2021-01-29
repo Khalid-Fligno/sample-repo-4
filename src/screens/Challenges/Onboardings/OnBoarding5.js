@@ -4,7 +4,7 @@ import { number } from 'prop-types';
 import ChallengeStyle from '../chellengeStyle';
 import globalStyle, { containerPadding } from '../../../styles/globalStyles';
 import CustomBtn from '../../../components/Shared/CustomBtn';
-import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import fonts from '../../../styles/fonts';
 import Video from 'react-native-video';
 import WorkoutTimer from '../../../components/Workouts/WorkoutTimer';
@@ -25,6 +25,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { DotIndicator } from 'react-native-indicators';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
+import CalendarModal from '../../../components/Shared/CalendarModal';
+import { add } from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
 
@@ -146,14 +148,24 @@ export default class OnBoarding5 extends Component {
       fitnessLevel:updatedChallengedata.onBoardingInfo.fitnessLevel
     }
     const stringDate = moment(date).format('YYYY-MM-DD').toString();
-    console.log("date ",stringDate,updatedChallengedata.startDate, new Date(stringDate).getTime(),new Date(updatedChallengedata.startDate).getTime(),new Date(data.startDate).getTime() > new Date(stringDate).getTime())
+    const stringDate2 = moment(date).format('DD-MM-YY').toString();
+
+    // console.log("date ",stringDate,updatedChallengedata.startDate, new Date(stringDate).getTime(),new Date(updatedChallengedata.startDate).getTime(),new Date(data.startDate).getTime() > new Date(stringDate).getTime())
     if(new Date(updatedChallengedata.startDate).getTime() < new Date(stringDate).getTime()){
       data.isSchedule= true;
       data.status='InActive'
     }
     await storeProgressInfo(progressData)
-    await this.saveOnBoardingInfo(data)
+    await this.saveOnBoardingInfo(data,stringDate2)
     ////////////end saving
+
+  }
+
+  addedToCalendarPopup(stringDate2){
+    const onPressAlert=() =>{
+      this.hideCalendarModal();
+      this.props.navigation.navigate('Home');
+    }
     if(Platform.OS === 'android'){
       this.hideCalendarModal();
       Alert.alert(
@@ -166,25 +178,26 @@ export default class OnBoarding5 extends Component {
       );
     }else{
       this.setState({ addingToCalendar: false});
-    Alert.alert(
-      '',
-      'Added to calendar!',
-      [
-        { text: 'OK', onPress: this.hideCalendarModal, style: 'cancel' },
-      ],
-      { cancelable: false },
-    );
+      Alert.alert('',
+        `Your start date has been added to your challenge. Go to ${stringDate2} on the challenge dashboard to see what Day 1 looks like`,
+        [
+          { text: 'OK', onPress: onPressAlert, style: 'cancel' },
+        ],
+        { cancelable: false },
+      );
     }
   }
 
   showCalendarModal = () => {
     this.setState({ calendarModalVisible: true });
   }
+
   hideCalendarModal = () => {
     this.setState({ calendarModalVisible: false,loading:false });
   }
+
   setDate = async (event, selectedDate) => {
-    console.log("setDate call")
+    // console.log("setDate call")
     if(selectedDate && Platform.OS === 'android'){
       this.setState({loading:true});
       this.addChallengeToCalendar(selectedDate);
@@ -194,17 +207,19 @@ export default class OnBoarding5 extends Component {
     this.setState({ chosenDate: currentDate });
     }
   }
-  async  saveOnBoardingInfo(data){
+
+  async  saveOnBoardingInfo(data,stringDate2){
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
-    userRef.set(data,{merge:true}).then((res)=>{
-      this.setState({loading:false})
-      this.props.navigation.navigate('Home');
+    userRef.set(data,{merge:true}).then(async(res)=>{
+      if(data.onBoardingInfo.fitnessLevel)
+        await AsyncStorage.setItem('fitnessLevel', data.onBoardingInfo.fitnessLevel.toString());
+      this.setState({loading:false});
+      this.addedToCalendarPopup(stringDate2);
     }).catch((err)=>{
       console.log(err)
     })
-    console.log( data)
   }
 
   resetTimer = () => {
@@ -236,7 +251,7 @@ export default class OnBoarding5 extends Component {
       timerStart:true ,
       counterButtonDisable:true,
     });
-  }
+ }
 
 
   handleFinish(){
@@ -266,7 +281,7 @@ export default class OnBoarding5 extends Component {
       addingToCalendar,
       chosenDate
     } = this.state;
-    
+    console.log("addingToCalendar",addingToCalendar)
     if(!challengeData.onBoardingInfo){
       this.onFocusFunction()
     }
@@ -281,58 +296,67 @@ export default class OnBoarding5 extends Component {
     return (
       <SafeAreaView style={ChallengeStyle.container}>
        
-          <View style={[globalStyle.container]}>
-          {
-          Platform.OS === 'ios' && 
-           <Modal
-              isVisible={calendarModalVisible}
-              animationIn="fadeIn"
-              animationInTiming={600}
-              animationOut="fadeOut"
-              animationOutTiming={600}
-              onBackdropPress={this.hideCalendarModal}
-            >
-              <View style={globalStyle.modalContainer}>
-                
-                <DateTimePicker
-                  mode="date"
-                  value={chosenDate}
-                  onChange={this.setDate}
-                  minimumDate={new Date()}
-                  style={{marginLeft:wp('6.5%')}}
-                />
-                
-                <TouchableOpacity
-                  onPress={() => this.addChallengeToCalendar(chosenDate)}
-                  style={globalStyle.modalButton}
+        <View style={[globalStyle.container]}>
+          {/* {
+              Platform.OS === 'ios' && 
+              <Modal
+                  isVisible={calendarModalVisible}
+                  animationIn="fadeIn"
+                  animationInTiming={600}
+                  animationOut="fadeOut"
+                  animationOutTiming={600}
+                  onBackdropPress={this.hideCalendarModal}
                 >
-                  {
-                    addingToCalendar ? (
-                      <DotIndicator
-                        color={colors.white}
-                        count={3}
-                        size={6}
-                      />
-                    ) : (
-                      <Text style={globalStyle.modalButtonText}>
-                        ADD TO CALENDAR
-                      </Text>
-                    )
-                  }
-                </TouchableOpacity>
-              </View>
-            </Modal>
-        }
-         {
-           
-          Platform.OS === 'android' && calendarModalVisible && !loading &&
-          <DateTimePicker
-            mode="date"
-            value={chosenDate}
-            onChange={this.setDate}
-            minimumDate={new Date()}
-          />
-         }            
+                  <View style={globalStyle.modalContainer}>
+                    
+                    <DateTimePicker
+                      mode="date"
+                      value={chosenDate}
+                      onChange={this.setDate}
+                      minimumDate={new Date()}
+                      style={{marginLeft:wp('6.5%')}}
+                    />
+                    
+                    <TouchableOpacity
+                      onPress={() => this.addChallengeToCalendar(chosenDate)}
+                      style={globalStyle.modalButton}
+                    >
+                      {
+                        addingToCalendar ? (
+                          <DotIndicator
+                            color={colors.white}
+                            count={3}
+                            size={6}
+                          />
+                        ) : (
+                          <Text style={globalStyle.modalButtonText}>
+                            ADD TO CALENDAR
+                          </Text>
+                        )
+                      }
+                    </TouchableOpacity>
+                  </View>
+                </Modal>
+          }
+          {
+            
+            Platform.OS === 'android' && calendarModalVisible && !loading &&
+            <DateTimePicker
+              mode="date"
+              value={chosenDate}
+              onChange={this.setDate}
+              minimumDate={new Date()}
+            />
+          }     */}
+          <CalendarModal 
+              isVisible={calendarModalVisible}
+              onBackdropPress={this.hideCalendarModal}
+              value={chosenDate}
+              onChange={this.setDate}
+              onPress={()=>this.addChallengeToCalendar(chosenDate)}
+              addingToCalendar={addingToCalendar}
+              loading={loading}
+          />        
           <ScrollView 
               bounces={false} 
               showsVerticalScrollIndicator={false}
@@ -384,7 +408,7 @@ export default class OnBoarding5 extends Component {
             {   showInputBox &&
 
             <InputBox2
-             onPress={this.toggleBurpeeModal}
+                  onPress={this.toggleBurpeeModal}
                   title="Total Burpee"
                   extension={''}
                   value={burpeeCount}
@@ -419,7 +443,7 @@ export default class OnBoarding5 extends Component {
                   customBtnTitleStyle={{marginRight:10}}
                 />:
                 <CustomBtn 
-                  Title="Continue"
+                  Title="Choose Start Date"
                   customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}
                   onPress={()=>this.goToScreen('submit')}
                   disabled={btnDisabled}
