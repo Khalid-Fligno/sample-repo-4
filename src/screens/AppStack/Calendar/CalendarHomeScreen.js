@@ -32,6 +32,9 @@ import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutC
 import TodayMealsList from '../../../components/Calendar/TodayMealsList';
 import Modal from "react-native-modal";
 import ChallengeSetting from '../../../components/Calendar/ChallengeSetting';
+import moment from 'moment';
+import createUserChallengeData from '../../../components/Challenges/UserChallengeData';
+
 // import { ListItem, Slider } from 'react-native-elements';
 
 // import CalendarStrip from 'react-native-calendar-strip';
@@ -56,7 +59,6 @@ import ChallengeSetting from '../../../components/Calendar/ChallengeSetting';
 //      WorkoutSwipable,
 //      RcWorkoutListItem
 //   } from '../../../components/Calendar/ListItem';
-
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -87,6 +89,7 @@ class CalendarHomeScreen extends React.PureComponent {
     await this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting()
     });
+
   }
 
   handleActiveChallengeSetting(){
@@ -265,9 +268,20 @@ class CalendarHomeScreen extends React.PureComponent {
         await querySnapshot.forEach(async (doc) => {
             await list.push(await doc.data());
         });
-        if(list[0]){
+        const activeChallengeEndDate = list[0]?list[0].endDate:null;
+        const currentDate = moment().format('YYYY-MM-DD');
+        const isCompleted =  moment(activeChallengeEndDate).isSame(currentDate);
+
+        if(list[0] && !isCompleted){
           this.fetchActiveChallengeData(list[0])
         }else{
+          if(activeChallengeEndDate && isCompleted){  //TODO check challenge is Completed or not
+            const newData = createUserChallengeData({...list[0],status:"InActive"},new Date())
+            const challengeRef =db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
+            challengeRef.set(newData,{merge:true})
+            Alert.alert('Congratulation!','You have completed your challenge')
+           }
+
           this.setState({ 
             activeChallengeUserData:undefined,
             loading:false
@@ -275,26 +289,6 @@ class CalendarHomeScreen extends React.PureComponent {
           this.props.navigation.navigate('ChallengeSubscription')
         }
       });
-      // const { activeChallengeData,activeChallengeUserData} = this.state
-      // if(activeChallengeData === undefined && activeChallengeUserData ===undefined ){
-      //   this.unsubscribeSchedule = await db.collection('users').doc(uid).collection('challenges')
-      //   .where("isSchedule", "==" ,true)
-      //   .onSnapshot(async (querySnapshot) => {
-      //     const list = [];
-      //     await querySnapshot.forEach(async (doc) => {
-      //         await list.push(await doc.data());
-      //     });
-      //     if(list[0]){
-      //       this.fetchActiveChallengeData(list[0])
-      //     }else{
-      //       this.setState({ 
-      //         activeChallengeUserData:undefined,
-      //         loading:false
-      //       });
-      //     }
-      //   });
-
-      // }
     }
     catch(err){
       this.setState({ loading: false });

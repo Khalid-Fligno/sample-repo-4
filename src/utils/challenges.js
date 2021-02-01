@@ -42,18 +42,27 @@ export const getTotalChallengeWorkoutsCompleted = (data,stringDate) =>{
     return totalworkoutCompleted            
 }
 export const getCurrentChallengeDay = (startDate,currentDate) =>{
-    let startTime = new Date(startDate).getTime();
-    let currentTime = new Date(currentDate).getTime();
-    let currentDay = Math.round(( currentTime - startTime) / (1000 * 3600 * 24))+1
-    return currentDay; 
+    // let startTime = new Date(startDate).getTime();
+    // let currentTime = new Date(currentDate).getTime();
+    // let currentDay = Math.round(( currentTime - startTime) / (1000 * 3600 * 24))+1
+    // return currentDay; 
+
+    var b = moment(startDate);
+    var a = moment(currentDate);
+    a.diff(b, 'days') 
+    return a.diff(b, 'days')+1
 }
 
 export const getTodayRecommendedWorkout = (workouts,activeChallengeUserData,selectedDate) =>{
 
-    let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime(); 
-    // To calculate the no. of days between two dates 
-    let currentDay = Math.round(Difference_In_Time / (1000 * 3600 * 24))+1;
-    // console.log("???....",currentDay)
+    // let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime(); 
+    // // To calculate the no. of days between two dates 
+    // let currentDay = Math.round(Difference_In_Time / (1000 * 3600 * 24))+1;
+    // // console.log("???....",currentDay)
+    var b = moment(activeChallengeUserData.startDate);
+    var a = moment(selectedDate);
+    let currentDay = a.diff(b, 'days') 
+    
     return workouts.find((res)=>res.days.includes(currentDay))
 }
 

@@ -195,17 +195,9 @@ fetchActiveChallengeUserData = async () =>{
           await list.push(await doc.data());
       });
       //TODO:get Active challenge end time
-      const activeChallengeEndTime = list[0]?new Date(list[0].endDate).getTime():null;
-      const currentTime = new Date().getTime()
-
-      if(list[0] && currentTime <= activeChallengeEndTime){ //TODO:check challenge is active and not completed
+      if(list[0]){ //TODO:check challenge is active and not completed
            this.fetchActiveChallengeData(list[0])
       }else{
-        if( activeChallengeEndTime && currentTime >= activeChallengeEndTime){  //TODO check challenge is Completed or not
-         const challengeRef =db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
-         challengeRef.set({status:"Completed"},{merge:true})
-         console.log("Challenge Completed....")
-        }
         this.setState({ 
           activeChallengeUserData:undefined,
           loading:false
