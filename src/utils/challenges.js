@@ -49,7 +49,6 @@ export const getCurrentChallengeDay = (startDate,currentDate) =>{
 
     var b = moment(startDate);
     var a = moment(currentDate);
-    a.diff(b, 'days') 
     return a.diff(b, 'days')+1
 }
 
@@ -61,7 +60,7 @@ export const getTodayRecommendedWorkout = (workouts,activeChallengeUserData,sele
     // // console.log("???....",currentDay)
     var b = moment(activeChallengeUserData.startDate);
     var a = moment(selectedDate);
-    let currentDay = a.diff(b, 'days') 
+    let currentDay = a.diff(b, 'days')+1; 
     
     return workouts.find((res)=>res.days.includes(currentDay))
 }
