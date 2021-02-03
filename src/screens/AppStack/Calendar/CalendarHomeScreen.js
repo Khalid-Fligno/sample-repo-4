@@ -391,14 +391,18 @@ class CalendarHomeScreen extends React.PureComponent {
     if(activeChallengeData && activeChallengeUserData){
       // if(!this.phase)
       // this.getCurrentPhaseInfo()
-
+      let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD')
+      // console.log(el.startDate, el.endDate,currentDate)
+      const isBetween = moment(currentDate).isBetween(activeChallengeUserData.startDate,activeChallengeUserData.endDate, undefined, '[]')
       if(this.calendarStrip.current){
-        let currentCalendarTime = new Date(this.calendarStrip.current.getSelectedDate()).getTime()
-        let challengeStartTime = new Date(activeChallengeUserData.startDate).getTime()
-        let challengeEndTime = new Date(activeChallengeUserData.endDate).getTime()
-        if(currentCalendarTime >= challengeStartTime && 
-            currentCalendarTime <= challengeEndTime && 
-            todayRecommendedMeal && todayRecommendedMeal.length >0)
+        // let currentCalendarTime = new Date(this.calendarStrip.current.getSelectedDate()).getTime()
+        // let challengeStartTime = new Date(activeChallengeUserData.startDate).getTime()
+        // let challengeEndTime = new Date(activeChallengeUserData.endDate).getTime()
+        // if(currentCalendarTime >= challengeStartTime && 
+        //     currentCalendarTime <= challengeEndTime && 
+        //     todayRecommendedMeal && todayRecommendedMeal.length >0)
+        //   showRC = true
+        if(isBetween && todayRecommendedMeal && todayRecommendedMeal.length >0)
           showRC = true
         else
           showRC = false  
