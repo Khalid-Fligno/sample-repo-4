@@ -79,6 +79,7 @@ export default class Progress4Screen extends React.PureComponent {
       waist,
       hip,
       isInitial,
+      navigateTo
     } = this.props.navigation.state.params;
     this.props.navigation.replace('Progress5', {
       image,
@@ -86,6 +87,7 @@ export default class Progress4Screen extends React.PureComponent {
       waist,
       hip,
       isInitial,
+      navigateTo
     });
   }
   render() {

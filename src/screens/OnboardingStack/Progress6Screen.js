@@ -21,30 +21,36 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import CustomBtn from '../../components/Shared/CustomBtn';
 import { containerPadding } from '../../styles/globalStyles';
+import { Platform } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
-// const uriToBlob = (url) => {
-//   return new Promise((resolve, reject) => {
-//     const xhr = new XMLHttpRequest();
-//     xhr.onerror = reject;
-//     xhr.onreadystatechange = () => {
-//       if (xhr.readyState === 4) {
-//         resolve(xhr.response);
-//       }
-//     };
-//     xhr.open('GET', url);
-//     xhr.responseType = 'blob'; // convert type
-//     xhr.send();
-//   });
-// };
+const uriToBlob = (url) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onerror = reject;
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        resolve(xhr.response);
+      }
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob'; // convert type
+    xhr.send();
+  });
+};
 
 const storeProgressInfo = async (image, isInitial, weight, waist, hip, burpeeCount) => {
   const uid = await AsyncStorage.getItem('uid');
   const firebase = require('firebase');
 
-  const base64Response = await fetch(`data:image/jpeg;base64,${image.base64}`);
-  const blob = base64Response.blob()._W;
+  let blob = '';
+  if(Platform.OS === 'ios'){
+    const base64Response = await fetch(`data:image/jpeg;base64,${image.base64}`);
+    blob = base64Response.blob()._W;
+  }
+  if(Platform.OS === 'android')
+    blob = await uriToBlob(image.uri)
   
   const storageRef = firebase.storage().ref();
   const userPhotosStorageRef = storageRef.child('user-photos');
@@ -125,6 +131,7 @@ export default class Progress6Screen extends React.PureComponent {
       hip,
       isInitial,
       image,
+      navigateTo
     } = this.props.navigation.state.params;
     await storeProgressInfo(image, isInitial, weight, waist, hip, burpeeCount);
     const fitnessLevel = findFitnessLevel(burpeeCount);
@@ -135,7 +142,10 @@ export default class Progress6Screen extends React.PureComponent {
         initialBurpeeTestCompleted: true,
       }, { merge: true });
       this.setState({ loading: false });
-      if (isInitial) {
+      if(navigateTo === 'Progress'){
+        this.props.navigation.navigate('ProgressHome');
+      }
+      else if (isInitial) {
         this.props.navigation.navigate('App');
       } else {
         this.props.navigation.navigate('ProgressHome');

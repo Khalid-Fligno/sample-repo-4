@@ -166,17 +166,17 @@ export default class OnBoarding5 extends Component {
       this.hideCalendarModal();
       this.props.navigation.navigate('Home');
     }
-    if(Platform.OS === 'android'){
-      this.hideCalendarModal();
-      Alert.alert(
-        '',
-        'Added to calendar!',
-        [
-          { text: 'OK', style: 'cancel' },
-        ],
-        { cancelable: false },
-      );
-    }else{
+    // if(Platform.OS === 'android'){
+    //   this.hideCalendarModal();
+    //   Alert.alert(
+    //     '',
+    //     'Added to calendar!',
+    //     [
+    //       { text: 'OK', style: 'cancel' },
+    //     ],
+    //     { cancelable: false },
+    //   );
+    // }else{
       this.setState({ addingToCalendar: false});
       Alert.alert('',
         `Your start date has been added to your challenge. Go to ${stringDate2} on the challenge dashboard to see what Day 1 looks like`,
@@ -185,7 +185,7 @@ export default class OnBoarding5 extends Component {
         ],
         { cancelable: false },
       );
-    }
+    // }
   }
 
   showCalendarModal = () => {
@@ -199,6 +199,7 @@ export default class OnBoarding5 extends Component {
   setDate = async (event, selectedDate) => {
     // console.log("setDate call")
     if(selectedDate && Platform.OS === 'android'){
+      this.hideCalendarModal();
       this.setState({loading:true});
       this.addChallengeToCalendar(selectedDate);
     }

@@ -33,6 +33,7 @@ const OnboardingStack = createStackNavigator(
       },
     }),
     defaultNavigationOptions: ({ navigation }) => ({
+      gesturesEnabled:false,
       header: () => {
         const { routeName } = navigation.state;
         return (

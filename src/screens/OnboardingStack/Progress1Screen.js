@@ -29,6 +29,7 @@ import { db } from '../../../config/firebase';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import globalStyle, { containerPadding } from '../../styles/globalStyles';
+import { BackHandler } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -48,9 +49,14 @@ export default class Progress1Screen extends React.PureComponent {
     };
   }
   componentDidMount = () => {
+    BackHandler.addEventListener('hardwareBackPress',()=>  true);
     this.props.navigation.setParams({ handleSkip: this.handleSkip, toggleHelperModal: this.showHelperModal });
     this.fetchUom();
   }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress',()=> true);
+  }
+
   toggleHelperModal = () => {
     this.setState((prevState) => ({ helperModalVisible: !prevState.helperModalVisible }));
   }
@@ -64,6 +70,7 @@ export default class Progress1Screen extends React.PureComponent {
       });
   }
   handleSkip = () => {
+    
     if (this.props.navigation.getParam('isInitial', false)) {
       Alert.alert(
         'Warning',
@@ -110,12 +117,14 @@ export default class Progress1Screen extends React.PureComponent {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     const isInitial = this.props.navigation.getParam('isInitial', false);
+    const navigateTo = this.props.navigation.getParam('navigateTo', false);
     this.setState({ loading: false });
     this.props.navigation.navigate('Progress2', {
       isInitial,
       weight,
       waist,
       hip,
+      navigateTo
     });
     this.setState({ loading: false });
   }

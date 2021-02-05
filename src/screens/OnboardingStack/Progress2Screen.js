@@ -225,6 +225,7 @@ export default class Progress2Screen extends React.PureComponent {
           waist,
           hip,
           isInitial,
+          navigateTo
         } = this.props.navigation.state.params;
         await FileSystem.downloadAsync(
           'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2FBURPEES.mp4?alt=media&token=688885cb-2d70-4fc6-82a9-abc4e95daf89',
@@ -237,6 +238,7 @@ export default class Progress2Screen extends React.PureComponent {
           waist,
           hip,
           isInitial,
+          navigateTo
         });
       } else {
         this.setState({ error: 'Please select an image to continue', uploading: false });

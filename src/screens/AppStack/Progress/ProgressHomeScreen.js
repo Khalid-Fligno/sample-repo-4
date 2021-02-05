@@ -277,12 +277,12 @@ class ProgressHomeScreen extends React.PureComponent {
                       source={{ uri: initialProgressInfo.photoURL }}
                     />
                   </TouchableOpacity>
-                  {updateBtn(() => this.props.navigation.navigate('Progress1', { isInitial: true }))}
+                  {updateBtn(() => this.props.navigation.navigate('Progress1', { isInitial: true ,navigateTo:'Progress'}))}
                 </View>
               ) : (
                 <View style={styles.imagePlaceholder}>
                   <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('Progress1', { isInitial: true })}
+                    onPress={() => this.props.navigation.navigate('Progress1', { isInitial: true,navigateTo:'Progress' })}
                     style={styles.imagePlaceholderButton}
                   >
                     <Icon
@@ -453,7 +453,7 @@ class ProgressHomeScreen extends React.PureComponent {
               </Text>
             </View>
           </View>
-          {
+          {/* {
             initialProgressInfo && currentProgressInfo && (
               <View style={styles.buttonContainer}>
                 <CustomButton
@@ -463,7 +463,7 @@ class ProgressHomeScreen extends React.PureComponent {
                 />
               </View>
             )
-          }
+          } */}
           <View style={styles.workoutProgressContainer}>
             <View style={styles.sectionHeader}>
               <Text style={styles.bodyText}>

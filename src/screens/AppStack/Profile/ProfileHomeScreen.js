@@ -31,20 +31,20 @@ import { FileSystem } from 'react-native-unimodules';
 import { getBuildNumber, getVersion } from 'react-native-device-info';
 const { width } = Dimensions.get('window');
 
-// const uriToBlob = (url) => {
-//   return new Promise((resolve, reject) => {
-//     const xhr = new XMLHttpRequest();
-//     xhr.onerror = reject;
-//     xhr.onreadystatechange = () => {
-//       if (xhr.readyState === 4) {
-//         resolve(xhr.response);
-//       }
-//     };
-//     xhr.open('GET', url,true);
-//     xhr.responseType = 'blob'; // convert type
-//     xhr.send();
-//   });
-// };
+const uriToBlob = (url) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onerror = reject;
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        resolve(xhr.response);
+      }
+    };
+    xhr.open('GET', url,true);
+    xhr.responseType = 'blob'; // convert type
+    xhr.send();
+  });
+};
 
 const list = [
   { title: 'Help & Support', route: 'HelpAndSupport' },
@@ -211,10 +211,16 @@ export default class ProfileHomeScreen extends React.PureComponent {
 
   uploading = async(result) =>{
     this.setState({ loading: true });
-    const base64Response = await fetch(`data:image/jpeg;base64,${result.base64}`);
-    const blob = base64Response.blob();
+    let blob = '';
+    if(Platform.OS === 'ios'){
+      const base64Response = await fetch(`data:image/jpeg;base64,${result.base64}`);
+      blob = base64Response.blob()._W;
+    }
+
+    if(Platform.OS === 'android')
+      blob = await uriToBlob(result.uri)
     
-    await this.saveImage(result.uri,blob._W);
+    await this.saveImage(result.uri,blob);
     this.setState({ loading: false });
   }
   

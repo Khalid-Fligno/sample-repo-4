@@ -30,25 +30,25 @@ const { width } = Dimensions.get('window');
 const actionSheetOptions = ['Cancel', 'Take photo', 'Upload from Camera Roll'];
 
 
-// const uriToBlob = (url) => {
-//   return new Promise((resolve, reject) => {
-//     try{
-//       const xhr = new XMLHttpRequest();
-//       xhr.onerror = reject;
-//       xhr.onreadystatechange = () => {
-//         if (xhr.readyState === 4) {
-//           resolve(xhr.response);
-//         }
-//       };
-//       xhr.open('GET', url);
-//       xhr.responseType = 'blob'; // convert type
-//       xhr.send();
-//     }catch(err){
-//       console.log(err)
-//     }
+const uriToBlob = (url) => {
+  return new Promise((resolve, reject) => {
+    try{
+      const xhr = new XMLHttpRequest();
+      xhr.onerror = reject;
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          resolve(xhr.response);
+        }
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob'; // convert type
+      xhr.send();
+    }catch(err){
+      console.log(err)
+    }
   
-//   });
-// };
+  });
+};
 
 
 export default class OnBoarding4 extends Component {
@@ -239,10 +239,10 @@ export default class OnBoarding4 extends Component {
         contentType: 'image/jpeg',
         cacheControl: 'public',
       };
-      console.log(blob)
+      // console.log(blob)
       const snapshot = await avatarStorageRef.put(blob, metadata);
       const url = await snapshot.ref.getDownloadURL();
-      console.log(url)
+      // console.log(url)
       this.setState({ imgUrl: url });
     } catch (err) {
       console.log(err)
@@ -299,10 +299,16 @@ export default class OnBoarding4 extends Component {
 
 uploading = async(result) =>{
   this.setState({ uploading: true });
-  const base64Response = await fetch(`data:image/jpeg;base64,${result.base64}`);
-  const blob = base64Response.blob();
+  let blob = '';
+  if(Platform.OS === 'ios'){
+    const base64Response = await fetch(`data:image/jpeg;base64,${result.base64}`);
+    blob = base64Response.blob()._W;
+  }
+  if(Platform.OS === 'android')
+    blob = await uriToBlob(result.uri)
   
-  await this.saveImage(result.uri,blob._W);
+  await this.saveImage(result.uri,blob);
+  
   this.setState({ uploading: false });
 }
 

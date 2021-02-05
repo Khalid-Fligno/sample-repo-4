@@ -117,7 +117,7 @@ export default class OnBoarding6 extends Component {
   }     
 
   async  saveOnBoardingInfo(data,stringDate2){
-      this.setState({ loading: true });
+      // this.setState({ loading: true });
       const uid = await AsyncStorage.getItem('uid');
       const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
       userRef.set(data,{merge:true}).then(async(res)=>{
@@ -135,17 +135,17 @@ export default class OnBoarding6 extends Component {
       this.hideCalendarModal();
       this.props.navigation.navigate('Home');
     }
-    if(Platform.OS === 'android'){
-      this.hideCalendarModal();
-      Alert.alert(
-        '',
-        'Added to calendar!',
-        [
-          { text: 'OK', style: 'cancel' },
-        ],
-        { cancelable: false },
-      );
-    }else{
+    // if(Platform.OS === 'android'){
+    //   this.hideCalendarModal();
+    //   Alert.alert(
+    //     '',
+    //     `Your start date has been added to your challenge. Go to ${stringDate2} on the challenge dashboard to see what Day 1 looks like`,
+    //     [
+    //       { text: 'OK', style: 'cancel' },
+    //     ],
+    //     { cancelable: false },
+    //   );
+    // }else{
       this.setState({ addingToCalendar: false});
       Alert.alert('',
         `Your start date has been added to your challenge. Go to ${stringDate2} on the challenge dashboard to see what Day 1 looks like`,
@@ -154,7 +154,7 @@ export default class OnBoarding6 extends Component {
         ],
         { cancelable: false },
       );
-    }
+    // }
   }
 
   showCalendarModal = () => {
@@ -167,6 +167,7 @@ export default class OnBoarding6 extends Component {
 
   setDate = async (event, selectedDate) => {
     if(selectedDate && Platform.OS === 'android'){
+      this.hideCalendarModal();
       this.setState({loading:true});
       this.addChallengeToCalendar(selectedDate);
     }
