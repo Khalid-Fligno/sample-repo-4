@@ -39,6 +39,7 @@ class Onboarding2Screen extends Component {
     try {
       const uid = await AsyncStorage.getItem('uid');
       const userRef = db.collection('users').doc(uid);
+      const userData = (await userRef.get()).data();
       const data = {
         fitnessLevel:this.state.fitnessLevel,
         onboarded: true,
@@ -46,15 +47,18 @@ class Onboarding2Screen extends Component {
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
       // this.props.navigation.navigate('App', { isInitial: true });
-      console.log("check user has challenge",uid,userRef);
-      if(await hasChallenges(uid)){
+      // console.log("check user has challenge",uid,userRef);
+      if(userData.subscriptionInfo && userData.subscriptionInfo.expiry > Date.now()){
         this.props.navigation.navigate('App');
-      }else{
+      }
+      else if(await hasChallenges(uid)){
         this.props.navigation.navigate('App');
-      // this.props.navigation.navigate('Subscription', { 
-      //     name,
-      //     specialOffer,
-      // });
+      }
+      else{
+        this.props.navigation.navigate('Subscription', { 
+            name,
+            specialOffer,
+        });
     }
     } catch (err) {
       Alert.alert('Database write error', `${err}`);
