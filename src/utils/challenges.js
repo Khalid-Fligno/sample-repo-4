@@ -66,7 +66,7 @@ export const getTodayRecommendedWorkout = (workouts,activeChallengeUserData,sele
 }
 
 export const getTodayRecommendedMeal = async(phaseData,activeChallengeUserData) =>{
-  const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
+  // const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
   let phaseMeals = []
   const recipeRef = db.collection('recipes')
                     .where("accessFilter","array-contains",activeChallengeUserData.tag)
