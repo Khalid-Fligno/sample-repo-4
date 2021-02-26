@@ -15,6 +15,7 @@ import Icon from '../../../../components/Shared/Icon';
 import CustomButton from '../../../../components/Shared/CustomButton';
 import fonts from '../../../../styles/fonts';
 import colors from '../../../../styles/colors';
+import { Platform } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -36,7 +37,8 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
   }
   componentDidMount = async () => {
     this.manageVideoCache();
-    this.showRatePopup();
+    if(Platform.OS === 'ios')
+      this.showRatePopup();
   }
   showRatePopup = async () => {
     Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
