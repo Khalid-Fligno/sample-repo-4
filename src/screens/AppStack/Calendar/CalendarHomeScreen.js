@@ -135,7 +135,7 @@ class CalendarHomeScreen extends React.PureComponent {
         Promise.all(res.map(async (item,index) => {
             if (item.includes("exercise-")) {
               FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
-                console.log(item,"deleted...")
+                // console.log(item,"deleted...")
               })
             }
         }))
@@ -154,7 +154,7 @@ class CalendarHomeScreen extends React.PureComponent {
                     exercise.videoUrls[0].url,
                     `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
                   ).then(()=>{
-                    console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+                    // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
                   })
                   .catch(err=>console.log(err))
               }
@@ -322,7 +322,7 @@ class CalendarHomeScreen extends React.PureComponent {
 
         //TODO getToday one recommended meal randomly  
         getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).then((res)=>{
-          console.log("now display")
+          // console.log("now display")
           this.setState({
             todayRecommendedMeal: res.recommendedMeal,
             challengeMealsFilterList: res.challengeMealsFilterList,

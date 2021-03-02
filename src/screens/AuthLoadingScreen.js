@@ -90,7 +90,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
         appVersion2 = Number(getBuildNumber());
       }
       if(appVersion === appVersion2){
-        console.log("app up to date");
+        // console.log("app up to date");
         await this.loadAssetsAsync();
       }else{
         SplashScreen.hide();
@@ -254,7 +254,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
           userRef
           .get()
           .then(async (doc) => {
-            console.log(doc.data())
+            // console.log(doc.data())
             if (doc.exists) {
               if (await !doc.data().fitnessLevel) {
                 await AsyncStorage.setItem('fitnessLevel', '1');
@@ -264,7 +264,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
               const { subscriptionInfo = undefined, onboarded = false } = await doc.data();
                 
               if (subscriptionInfo === undefined) {
-                console.log("uid",uid);
+                // console.log("uid",uid);
                 if(await hasChallenges(uid)){
                   await this.goToAppScreen(doc);
                 }else{

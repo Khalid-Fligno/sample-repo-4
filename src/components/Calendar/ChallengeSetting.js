@@ -29,11 +29,11 @@ class ChallengeSetting extends Component {
     const uid = await AsyncStorage.getItem('uid');
     const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
     const newData = createUserChallengeData(activeChallengeData,new Date())
-    console.log(newData)
+    // console.log(newData)
     userRef.set(newData).then((res)=>{
         this.setState({loading:false})
         this.props.onToggle()
-        console.log("res",res)
+        // console.log("res",res)
         setTimeout(()=>callBack(newData),100)
     }).catch((err)=>{
       console.log(err)
@@ -60,7 +60,7 @@ class ChallengeSetting extends Component {
 
   render() {
       const {activeChallengeUserData} = this.props
-      console.log("activeChallengeUserData",this.props.activeChallengeUserData)
+    //   console.log("activeChallengeUserData",this.props.activeChallengeUserData)
     return (
                     <SafeAreaView style={{
                         backgroundColor:'white',

@@ -149,12 +149,12 @@ export default class HomeScreen extends React.PureComponent {
   }
   goToBurpeeTest = async () => {
     this.setState({ loading: true });
-    console.log('downloading....');
+    // console.log('downloading....');
     await FileSystem.downloadAsync(
       'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2FBURPEES.mp4?alt=media&token=688885cb-2d70-4fc6-82a9-abc4e95daf89',
       `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
     );
-    console.log(`downloading complete${FileSystem.cacheDirectory}`);
+    // console.log(`downloading complete${FileSystem.cacheDirectory}`);
     this.setState({ loading: false });
     this.props.navigation.navigate('Burpee1');
   }
