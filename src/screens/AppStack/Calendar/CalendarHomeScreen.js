@@ -35,30 +35,6 @@ import ChallengeSetting from '../../../components/Calendar/ChallengeSetting';
 import moment from 'moment';
 import createUserChallengeData from '../../../components/Challenges/UserChallengeData';
 
-// import { ListItem, Slider } from 'react-native-elements';
-
-// import CalendarStrip from 'react-native-calendar-strip';
-// import Swipeable from 'react-native-gesture-handler/Swipeable';
-
-// import HelperModal from '../../../components/Shared/HelperModal';
-
-// import Icon from '../../../components/Shared/Icon';
-// import { findReps } from '../../../utils';
-// import { findFocus, findLocation, findFocusIcon, findWorkoutType } from '../../../utils/workouts';
-
-// import fonts from '../../../styles/fonts';
-
-// const { width } = Dimensions.get('window');
-// import { heightPercentageToDP as hp ,widthPercentageToDP as wp } from 'react-native-responsive-screen';
-
-// import ChallengeProgressCard from '../../../components/Calendar/ChallengeProgressCard';
-// import {
-//      CustomListItem,
-//      MealSwipable, 
-//      RcMealListItem,
-//      WorkoutSwipable,
-//      RcWorkoutListItem
-//   } from '../../../components/Calendar/ListItem';
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -270,8 +246,8 @@ class CalendarHomeScreen extends React.PureComponent {
         });
         const activeChallengeEndDate = list[0]?list[0].endDate:null;
         const currentDate = moment().format('YYYY-MM-DD');
-        const isCompleted =  moment(activeChallengeEndDate).isSame(currentDate);
-
+        const isCompleted = moment(currentDate).isSameOrAfter(activeChallengeEndDate);
+       
         if(list[0] && !isCompleted){
           this.fetchActiveChallengeData(list[0])
         }else{
@@ -389,19 +365,9 @@ class CalendarHomeScreen extends React.PureComponent {
     } = this.state;
     let showRC = false
     if(activeChallengeData && activeChallengeUserData){
-      // if(!this.phase)
-      // this.getCurrentPhaseInfo()
       let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD')
-      // console.log(el.startDate, el.endDate,currentDate)
       const isBetween = moment(currentDate).isBetween(activeChallengeUserData.startDate,activeChallengeUserData.endDate, undefined, '[]')
       if(this.calendarStrip.current){
-        // let currentCalendarTime = new Date(this.calendarStrip.current.getSelectedDate()).getTime()
-        // let challengeStartTime = new Date(activeChallengeUserData.startDate).getTime()
-        // let challengeEndTime = new Date(activeChallengeUserData.endDate).getTime()
-        // if(currentCalendarTime >= challengeStartTime && 
-        //     currentCalendarTime <= challengeEndTime && 
-        //     todayRecommendedMeal && todayRecommendedMeal.length >0)
-        //   showRC = true
         if(isBetween && todayRecommendedMeal && todayRecommendedMeal.length >0)
           showRC = true
         else
