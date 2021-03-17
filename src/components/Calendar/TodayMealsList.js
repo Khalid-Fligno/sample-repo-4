@@ -60,7 +60,8 @@ class TodayMealsList extends Component {
                             onPress={()=>this.props.onPress(res)}
                         >
                             <ImageBackground
-                                source={{uri: `${FileSystem.cacheDirectory}recipe-${res.id}.jpg` }}
+                                // source={{uri: `${FileSystem.cacheDirectory}recipe-${res.id}.jpg` }}
+                                source={{uri: res.coverImage,cache:'force-cache' }}
                                 style={styles.image}
                                 resizeMode='cover'
                             >

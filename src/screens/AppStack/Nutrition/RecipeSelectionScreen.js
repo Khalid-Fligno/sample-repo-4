@@ -47,14 +47,15 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   }
 
   componentDidMount = async () => {
-    this.setState({ loading: true });
-    this.focusListener = this.props.navigation.addListener('willFocus', async () => {
-        this.onFocusFunction()
-    })
+    // this.setState({ loading: true });
+    // this.focusListener = this.props.navigation.addListener('willFocus', async () => {
+    //     this.onFocusFunction()
+    // })
+    await this.fetchRecipes();
   }
 
   componentWillUnmount = async () => {
-    this.focusListener.remove()
+    // this.focusListener.remove()
       if(this.unsubscribe)
     await this.unsubscribe();
   }
@@ -107,7 +108,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     this.setState({ filterIndex });
   }
 
-  keyExtractor = (item) => item.id;
+  keyExtractor = (item,index) => String(index);
   
   renderItem = ({ item }) => (
     <RecipeTile
@@ -183,10 +184,10 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           )
         }
        
-        <Loader
+        {/* <Loader
           loading={loading}
           color={colors.violet.standard}
-        />
+        /> */}
       </View>
     );
   }

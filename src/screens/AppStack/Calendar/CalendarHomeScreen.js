@@ -247,30 +247,28 @@ class CalendarHomeScreen extends React.PureComponent {
         const activeChallengeEndDate = list[0]?list[0].endDate:null;
         const currentDate = moment().format('YYYY-MM-DD');
         const isCompleted = moment(currentDate).isSameOrAfter(activeChallengeEndDate);
-       
         if(list[0] && !isCompleted){
           this.fetchActiveChallengeData(list[0])
         }else{
-          if(activeChallengeEndDate && isCompleted){  //TODO check challenge is Completed or not
-          
-            Alert.alert('Congratulation!',
+          if(isCompleted){  //TODO check challenge is Completed or not
+            Alert.alert('Congratulations!',
               'You have completed your challenge',
                 [
                   { text: 'OK', onPress: () => {
                     const newData = createUserChallengeData({...list[0],status:"InActive"},new Date())
-                    const challengeRef =db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
-                    challengeRef.set(newData,{merge:true})
+                    const challengeRef = db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
+                    challengeRef.set(newData,{merge:true});
+                    this.props.navigation.navigate('ChallengeSubscription');
                   } }
                 ],
                 { cancelable: false }
               )
+           }else{
+            this.setState({ 
+              activeChallengeUserData:undefined,
+              loading:false
+            });
            }
-
-          this.setState({ 
-            activeChallengeUserData:undefined,
-            loading:false
-          });
-          this.props.navigation.navigate('ChallengeSubscription')
         }
       });
     }
@@ -353,6 +351,23 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   async goToRecipe(recipeData){
+      this.setState({loading:true});
+      const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
+      await FileSystem.getInfoAsync(fileUri)
+        .then(async ({ exists }) => {
+          if (!exists) {
+            await FileSystem.downloadAsync(
+              recipeData.coverImage,
+              `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`,
+            );
+            this.setState({loading:false});
+          }else{
+            this.setState({loading:false});
+          }
+        }).catch(() => {
+          this.setState({ loading: false });
+          Alert.alert('', 'Image download error');
+        });
     this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'challenge dashboard',extraProps:{fromCalender:true} })
   }
 

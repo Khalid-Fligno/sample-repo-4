@@ -77,21 +77,21 @@ export const getTodayRecommendedMeal = async(phaseData,activeChallengeUserData) 
       phaseMeals.push(doc.data())
   });
 
-  await Promise.all(phaseMeals.map(async (recipe) => {
-    const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
-    await FileSystem.getInfoAsync(fileUri)
-      .then(async ({ exists ,size}) => {
-        if (!exists || size < 1000) {
-          await FileSystem.downloadAsync(
-            recipe.coverImage,
-            `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
-          );
-        }
-      }).catch(() => {
-        this.setState({ loading: false });
-        Alert.alert('', 'Image download error');
-      });
-  }));
+  // await Promise.all(phaseMeals.map(async (recipe) => {
+  //   const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
+  //   await FileSystem.getInfoAsync(fileUri)
+  //     .then(async ({ exists ,size}) => {
+  //       if (!exists || size < 1000) {
+  //         await FileSystem.downloadAsync(
+  //           recipe.coverImage,
+  //           `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
+  //         );
+  //       }
+  //     }).catch(() => {
+  //       this.setState({ loading: false });
+  //       Alert.alert('', 'Image download error');
+  //     });
+  // }));
   const challengeMealsFilterList = phaseMeals.map((res)=>res.id)
 
   // const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);

@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { propTypes } from 'react-native-carousel';
 import TimeSvg from '../../../assets/icons/time';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import FastImage from 'react-native-fast-image';
 
 const WorkoutListItem =({timeInterval,description,title,url ,onPress,count})=>(
   <TouchableOpacity
@@ -16,14 +17,15 @@ const WorkoutListItem =({timeInterval,description,title,url ,onPress,count})=>(
   >
     <View style={styles.ItemContainer}>
       <View style={styles.imageContainer}>
-        <ImageBackground
+        <FastImage
             style={styles.image}
-            source={{uri:url}}
+            source={{uri:url,cache:'immutable'}}
             imageStyle={{borderRadius:3}}
+            resizeMode={FastImage.resizeMode.cover}
         >
           <View style={styles.opacityLayer}>
           </View>
-          </ImageBackground>
+          </FastImage>
       </View>
      
       <View style={styles.textContainer}>

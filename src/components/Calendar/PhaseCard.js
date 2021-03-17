@@ -53,7 +53,7 @@ export default class PhaseCard extends React.PureComponent {
     return (
           <View   style={[styles.cardContainer,cardCustomStyle]}>
            <ImageBackground
-             source={image}
+             source={{uri:image,cache:'force-cache'}}
              style={styles.image}
              resizeMode='stretch'
            >
@@ -97,7 +97,7 @@ export default class PhaseCard extends React.PureComponent {
 
 PhaseCard.propTypes = {
   onPress: PropTypes.func.isRequired,
-  image: PropTypes.object.isRequired,
+  image: PropTypes.any.isRequired,
   recommendedWorkout: PropTypes.array,
   cardCustomStyle: PropTypes.object
 };

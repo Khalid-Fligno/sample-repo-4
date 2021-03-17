@@ -62,7 +62,8 @@ export default class Tile extends React.PureComponent {
           style={[styles.flexContainer, animatedStyle]}
         >
           <ImageBackground
-            source={imageUrl?{uri:imageUrl}:image}
+            source={imageUrl?{uri:imageUrl,cache:'force-cache'}:image}
+            // source={{uri:imageUrl,cache:'force-cache'}}
             style={styles.image}
           >
             {

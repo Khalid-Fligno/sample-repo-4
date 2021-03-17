@@ -274,7 +274,8 @@ class ProgressHomeScreen extends React.PureComponent {
                   >
                     <FastImage
                       style={styles.image}
-                      source={{ uri: initialProgressInfo.photoURL }}
+                      source={{ uri: initialProgressInfo.photoURL,cache:'immutable' }}
+                      resizeMode={FastImage.resizeMode.cover}
                     />
                   </TouchableOpacity>
                   {updateBtn(() => this.props.navigation.navigate('Progress1', { isInitial: true ,navigateTo:'Progress'}))}
@@ -306,7 +307,8 @@ class ProgressHomeScreen extends React.PureComponent {
                   >
                     <FastImage
                       style={styles.image}
-                      source={{ uri: currentProgressInfo.photoURL }}
+                      source={{ uri: currentProgressInfo.photoURL,cache:'immutable' }}
+                      resizeMode={FastImage.resizeMode.cover}
                     />
                   </TouchableOpacity>
                   {updateBtn(() => this.props.navigation.navigate('Progress1', { isInitial: false }))}

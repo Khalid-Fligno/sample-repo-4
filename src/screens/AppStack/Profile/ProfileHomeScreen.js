@@ -86,7 +86,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
         }
   }
   fetchProfile = async () => {
-    this.setState({ loading: true });
+    // this.setState({ loading: true });
     const uid = await AsyncStorage.getItem('uid');
     this.unsubscribe = await db.collection('users').doc(uid)
       .onSnapshot(async (doc) => {
@@ -276,7 +276,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 >
                   <FastImage
                     style={ProfileStyles.avatar}
-                    source={avatar ? { uri: avatar } : require('../../../../assets/images/profile-add.png')}
+                    source={avatar ? { uri: avatar ,cache:'immutable'} : require('../../../../assets/images/profile-add.png')}
                   />
                 </TouchableOpacity>
               </View>
