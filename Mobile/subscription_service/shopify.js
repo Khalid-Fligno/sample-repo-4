@@ -39,7 +39,7 @@ exports.createShopifyWebhooks = async (req, res)  => {
             'x-recharge-access-token' : RECHARGE_API_KEY
           },
         };
-      const resWebHooks = await fetch(webhookUrl, options);      
+      const resWebHooks = await fetch(webhookUrl, options);      //getting webhook list here
       let registeredWebHooks = await resWebHooks.json();     
      registeredWebHooks=registeredWebHooks.webhooks;
      console.log("webhook list ",registeredWebHooks);
