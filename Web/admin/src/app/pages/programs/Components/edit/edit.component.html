@@ -1,0 +1,269 @@
+<mat-horizontal-stepper #stepper>
+    <mat-step [stepControl]="Form">
+      <form [formGroup]="Form">
+        <ng-template matStepLabel>Program</ng-template>
+        <div>
+          <h4>Cover Image: </h4>
+          <img 
+            *ngIf="f.imageUrl.valid" 
+            [src]="sanitizedImagePath(f.imageUrl.value)"
+            class="coverImage"
+          />
+          <div>
+            <input type="file" (change)="onFileChange($event)" accept=".png,.jpg" required/>
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Choose a date</mat-label>
+          <input matInput [matDatepicker]="picker" (click)="picker.open()" formControlName="availabilityDate" (keydown)="false">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" >
+          <mat-label>Display Name</mat-label>
+          <input matInput formControlName="displayName" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" >
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" >
+          <mat-label>Description</mat-label>
+          <input matInput formControlName="description" required>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" >
+          <mat-label>Number of Days</mat-label>
+          <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187"  formControlName="numberOfDays" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" >
+          <mat-label>Number of Weeks</mat-label>
+          <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187"  formControlName="numberOfWeeks" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" >
+          <mat-label>Product Recharge ID :</mat-label>
+          <input matInput formControlName="productReChargeId" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" >
+          <mat-label>Shopify Poduct ID :</mat-label>
+          <input matInput formControlName="shopifyProductId" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" >
+          <mat-label>Shopify URL :</mat-label>
+          <input matInput formControlName="shopifyUrl" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" >
+          <mat-label>Tag :</mat-label>
+          <input matInput formControlName="tag" required>
+        </mat-form-field>
+
+        <div style="float: right;">
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="Form2" label="Phases">
+      <form [formGroup]="Form2">
+        <!-- phases field -->
+        <div formArrayName="phases" >
+          <span>
+            <h3>Phases:</h3>
+            <button mat-icon-button color="primary" (click)="addPhase()">
+              <mat-icon>add_circle</mat-icon>
+            </button>
+          </span>
+    
+          <div *ngFor="let item of phases.controls; let i=index">
+            <div [formGroupName]="i" class="group">
+              <span>Phase {{i+1}} 
+                <button mat-icon-button color="primary" (click)="removePhase(i)">
+                  <mat-icon>remove_circle</mat-icon>
+                </button>
+              </span>
+        
+              <div class="imgContainer">
+                <!-- <h4>Upload image:</h4> -->
+                <img 
+                  *ngIf="phases.value[i].thumbnail" 
+                  [src]="sanitizedImagePath(phases.value[i].thumbnail)"
+                  class="coverImage"
+                />
+                <div>
+                  <input type="file" (change)="onFileChange2($event,i)" accept=".png,.jpg" required/>
+                </div>   
+              </div>
+
+              <mat-form-field appearance="outline" >
+                <mat-label>Display Name</mat-label>
+                <input matInput formControlName="displayName">
+              </mat-form-field>  
+
+              <mat-form-field appearance="outline" >
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name">
+              </mat-form-field>  
+
+              <mat-form-field appearance="outline" >
+                <mat-label>Description</mat-label>
+                <input matInput formControlName="description">
+              </mat-form-field>  
+
+              <mat-form-field appearance="outline" >
+                <mat-label>Start Day</mat-label>
+                <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" formControlName="startDay">
+              </mat-form-field>  
+
+              <mat-form-field appearance="outline" >
+                <mat-label>End Day</mat-label>
+                <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" formControlName="endDay">
+              </mat-form-field>  
+
+              <mat-form-field appearance="outline" >
+                <mat-label>PDF URL</mat-label>
+                <input matInput formControlName="pdfUrl">
+              </mat-form-field>  
+
+                <!-- Tags field -->
+              <div>
+                <span>
+                  <h3>Meals</h3> 
+                </span>
+                <mat-form-field appearance="outline">
+                  <mat-select 
+                      formControlName="meals" 
+                      multiple 
+                    
+                      (openedChange)="openedChange($event)"
+                    >
+                    <mat-form-field  appearance="outline" class="searchContainer">
+                      <mat-label>Search</mat-label>
+                      <input type="text" matInput [formControl]="selectedItem" >
+                      <mat-icon matPrefix color="primary">search</mat-icon> 
+                    </mat-form-field>
+                    <mat-option  *ngFor="let item of recipeList" [value]="item.id">{{item.title}}</mat-option>
+                    <p  *ngIf="recipeList.length === 0" >No record found..</p>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="float: right;">
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+
+    <mat-step [stepControl]="Form3" label="Workouts">
+      <form [formGroup]="Form3">
+        
+        <div formArrayName="workouts" >
+          <span>
+            <h3>Workouts :</h3>
+            <button mat-icon-button color="primary" (click)="addWorkout()">
+              <mat-icon>add_circle</mat-icon>
+            </button>
+          </span>
+    
+          <div *ngFor="let item of workouts.controls; let i=index">
+            <div [formGroupName]="i" class="group">
+              <span>Workout {{i+1}} 
+                <button mat-icon-button color="primary" (click)="removeWorkout(i)">
+                  <mat-icon>remove_circle</mat-icon>
+                </button>
+              </span>
+              <mat-form-field appearance="outline">
+                <mat-label>Select workout</mat-label>
+                <mat-select 
+                    formControlName="workoutId" 
+                    (openedChange)="openedChange($event)"
+                  >
+                  <mat-form-field  appearance="outline" class="searchContainer">
+                    <mat-label>Search</mat-label>
+                    <input type="text" matInput [formControl]="selectedItemWorkouts" >
+                    <mat-icon matPrefix color="primary">search</mat-icon> 
+                  </mat-form-field>
+                  <mat-option  *ngFor="let item of workoutList" [value]="item.id">{{item.displayName}}</mat-option>
+                  <p  *ngIf="workoutList.length === 0" >No record found..</p>
+                </mat-select>
+              </mat-form-field>
+
+              <div >
+                <!-- <div formArrayName="days"> -->
+                <!-- <span>
+                  <h3>Days</h3> 
+                  <button mat-icon-button color="primary" (click)="addDays(i)">
+                    <mat-icon>add_circle</mat-icon>
+                  </button>
+                </span> -->
+                <mat-form-field class="example-chip-list" appearance="outline">
+                  <mat-label>Days</mat-label>
+                  <mat-chip-list #chipList aria-label="Days selection">
+                    <mat-chip *ngFor="let item of getDays(i); let a=index" [selectable]="selectable"
+                             [removable]="removable" (removed)="removeDay(item,i)">
+                      {{item}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="New day..."
+                           [matChipInputFor]="chipList"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                           [matChipInputAddOnBlur]="addOnBlur"
+                           (matChipInputTokenEnd)="addDay($event,i)"
+                           type="number"
+                           onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" 
+                           >
+                  </mat-chip-list>
+                </mat-form-field>
+                <!-- <div *ngFor="let item of getDays(i); let a=index">
+                  <span>
+                    <mat-form-field appearance="outline" >
+                      <input matInput type="number" [formControlName]="a">
+                    </mat-form-field>
+                    <button mat-icon-button color="primary" (click)="removeDays(i, a)">
+                      <mat-icon>remove_circle</mat-icon>
+                    </button>
+                  </span>
+                </div> -->
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div style="float: right;">
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+
+      </form>
+    </mat-step>
+
+
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <p>You are now done.</p>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
+        <button  
+          mat-raised-button 
+          color="primary" 
+          (click)="onSubmit()"
+          [disabled] = "!(Form.valid && Form2.valid && Form3.valid)"
+          >Submit</button>
+      </div>
+    </mat-step>
+
+</mat-horizontal-stepper>

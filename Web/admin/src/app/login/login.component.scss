@@ -1,0 +1,35 @@
+.main{
+    height: 9%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #c5c5c561;
+}
+
+.container{
+    display: flex;
+    justify-content:center;
+    height:80%;
+    align-items: center;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 28rem;
+    width: 24rem;
+    padding: 4rem;
+    border: 2px solid lightgray;
+    margin: 10vw;
+}
+
+.login-name{
+    text-align: center; 
+    font-size: xx-large;
+}
+
+.submit{
+    border-radius: 50px;
+    height: 3rem;
+}

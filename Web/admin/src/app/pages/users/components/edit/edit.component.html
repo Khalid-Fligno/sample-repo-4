@@ -1,0 +1,55 @@
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="Form" >
+
+        <!-- firstName field -->
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" required>
+            <mat-error *ngIf="f.firstName.invalid">Please enter first Name</mat-error>
+        </mat-form-field>
+
+        <!-- lastName field -->
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" required>
+            <mat-error *ngIf="f.lastName.invalid">Please enter last Name</mat-error>
+        </mat-form-field>
+
+        <!-- country field -->
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" required>
+            <mat-error *ngIf="f.country.invalid">Please enter country</mat-error>
+        </mat-form-field>
+
+        <!-- email field -->
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>E-mail</mat-label>
+            <input matInput formControlName="email" required>
+            <mat-error *ngIf="f.email.invalid">Please enter E-mail</mat-error>
+        </mat-form-field>
+
+        <!-- signUpDate field -->
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Sign Up Date</mat-label>
+            <input matInput [matDatepicker]="picker" (click)="picker.open()" formControlName="signUpDate" (keydown)="false">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+  
+        <!-- fitnessLevel field -->
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Fitness Level</mat-label>
+            <input matInput formControlName="fitnessLevel" required>
+            <mat-error *ngIf="f.fitnessLevel.invalid">Please enter fitness Level</mat-error>
+        </mat-form-field>
+  
+    </form>  
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <div class="formFooter">
+        <button mat-raised-button color="primary" (click)='handleSave()'>Submit</button>
+    </div>
+</mat-dialog-actions>

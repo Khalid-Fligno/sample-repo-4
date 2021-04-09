@@ -1,0 +1,37 @@
+<!-- Title -->
+<h2 mat-dialog-title>{{data.title}}</h2>
+
+<mat-dialog-content class="mat-typography">
+
+  <!-- Cover Image -->
+  <img [src]="data.coverImage" class="coverImage" />
+
+  <!-- Description -->
+  <h3 class="heading">Description :</h3>
+  <p>{{data.description}}</p>
+  
+  <!-- Start Day -->
+  <h3 class="heading">Start Day :</h3>
+  <p>{{data.startDay}}</p>
+
+  <!-- End Day -->
+  <h3 class="heading">End Day :</h3>
+  <p>{{data.endDay}}</p>
+  
+  <!-- Tags -->
+  <h3 class="heading">Tags :</h3>
+  <p>{{data.tags}}</p>
+  <!-- <mat-list role="list">
+    <mat-list-item role="listitem" >{{data.tags}}</mat-list-item>
+  </mat-list> -->
+
+  <!-- URL Link -->
+  <h3 class="heading">URL Link :</h3>
+  <p> <a [href]="data.urlLink" target="blank">{{data.urlLink}}</a> </p>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Edit</button> -->
+</mat-dialog-actions>

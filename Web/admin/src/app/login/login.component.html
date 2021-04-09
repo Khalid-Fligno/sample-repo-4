@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+
+    <body>
+        <mat-toolbar color="primary">
+            <mat-toolbar-row>
+                <h1>Inflow Active</h1>
+            </mat-toolbar-row>
+        </mat-toolbar>
+
+        <div class="main">
+            <p class="login-name">Login</p>
+        </div>
+        
+        <div class="container">
+            <div class="form">
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input matInput [formControl]="email" placeholder="Please enter your e-mail" required>
+                    <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+                    <mat-icon color="primary" matPrefix>person</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Password</mat-label>
+                    <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password" placeholder="Please enter your password" required>
+                    <mat-icon color="primary" matPrefix>lock</mat-icon>
+                    <button *ngIf="password" mat-icon-button matSuffix color="primary" (click)="hide=!hide">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>       
+                </mat-form-field>
+
+                <p *ngIf="error !== ''" style="color: red;">*{{error}}</p>
+                
+                <button mat-raised-button (click)="handleLogin()" color="primary" class="submit">Login</button>
+
+            </div>
+        </div>
+    </body>
+</html>

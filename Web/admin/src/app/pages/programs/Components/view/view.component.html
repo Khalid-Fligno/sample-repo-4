@@ -1,0 +1,99 @@
+<!-- DIsplay Name -->
+<h2 mat-dialog-title>{{data.displayName}}</h2>
+
+<!-- Name -->
+<h3 mat-dialog-subTitle>{{data.name}}</h3>
+
+<mat-dialog-content class="mat-typography">
+  <mat-tab-group >
+    <mat-tab label="Program Details"> 
+
+      <!-- Cover Image -->
+      <img [src]="data.imageUrl" class="coverImage" />
+
+      <!-- Description -->
+      <h3 class="heading">Description :</h3>
+      <p>{{data.description}}</p>
+
+      <!-- Number of Days -->
+      <h3 class="heading">Number of Days :</h3>
+      <p>{{data.numberOfDays}}</p>
+      
+      <!-- Number of weeks -->
+      <h3 class="heading">Number of Weeks:</h3>
+      <p>{{data.numberOfWeeks}}</p>
+    
+      <!-- Shopify product id -->
+      <h3 class="heading">Shopify Product Id :</h3>
+      <p>{{data.shopifyProductId}}</p>
+
+      <!-- Product recharge id -->
+      <h3 class="heading">Product Recharge Id :</h3>
+      <p>{{data.productReChargeId}}</p>
+
+      <!-- Shopify url -->
+      <h3 class="heading">Shopify URL :</h3>
+      <p><a [href]="data.shopifyUrl" target="blank">{{data.shopifyUrl}}</a></p>
+
+      <!-- Tag -->
+      <h3 class="heading">Tag :</h3>
+      <p>{{data.tag}}</p>
+      
+    </mat-tab>
+
+    <mat-tab label="Phases"> 
+      <mat-tab-group>
+        <mat-tab [label]="item.displayName"  *ngFor="let item of data.phases"  > 
+          
+          <!-- Display Name -->
+          <h3>{{item.displayName}}</h3>
+
+          <!-- Cover Image -->
+          <img [src]="item.thumbnail" class="coverImage" />
+          
+          <!-- Name -->
+          <p>{{item.name}}</p>
+
+          <!-- Start Day -->
+          <h3 class="heading">Start Day :</h3>
+          <p>{{item.startDay}}</p>
+          
+          <!-- End day -->
+          <h3 class="heading">End Day :</h3>
+          <p>{{item.endDay}}</p>
+        
+          <!-- Description -->
+          <h3 class="heading">Description :</h3>
+          <p>{{item.description}}</p>
+
+          <!-- Pdf url -->
+          <h3 class="heading">Pdf URL :</h3>
+          <p><a [href]="data.shopifyUrl" target="blank">{{item.pdfUrl}}</a></p>
+
+          <!-- Meals -->
+          <h3 class="heading">Meals :</h3>
+          <mat-list role="list">
+            <mat-list-item role="listitem" *ngFor="let item of item.meals">&#8226; {{_filter(item)}}</mat-list-item>
+          </mat-list>
+
+        </mat-tab>
+      </mat-tab-group>
+    </mat-tab>
+
+    <mat-tab label="Workouts" >
+      <div *ngFor="let item of data.workouts" style="border-bottom: 1px solid lightgray;">
+        <h3 *ngIf="item.target !== 'rest' && workoutList.length >0">{{__filter(item.workoutId)}}</h3>
+        <h3 *ngIf="item.target === 'rest'">Rest</h3>
+        <h3 class="heading">Days :</h3>
+        <p>{{item.days}}</p>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Edit</button> -->
+</mat-dialog-actions>

@@ -1,0 +1,228 @@
+<mat-dialog-content class="mat-typography">
+<form [formGroup]="Form" >
+
+  <!-- Cover Image field -->
+  <div class="imgContainer">
+    <h3 *ngIf="!isImage">Cover image: *</h3>
+    <h3 *ngIf="isImage" style="color: red;">Cover image: *</h3>
+    <img 
+      *ngIf="f.coverImage.valid" 
+      [src]="sanitizedImagePath(f.coverImage.value)"
+      class="coverImage"
+    />
+    <div>
+      <input type="file" (change)="onFileChange($event)" accept=".png,.jpg" required/>
+      <mat-error *ngIf="isImage">Please upload an image.</mat-error>
+    </div>   
+  </div>
+  
+  <!-- Title field -->
+  <mat-form-field appearance="outline" >
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title" required>
+    <mat-error *ngIf="f.title.invalid">Please enter title.</mat-error>
+  </mat-form-field>
+
+  <!-- Subtitle field -->
+  <mat-form-field appearance="outline" >
+    <mat-label>Subtitle</mat-label>
+    <input matInput formControlName="subTitle" required>
+    <mat-error *ngIf="f.subTitle.invalid">Please enter subtitle.</mat-error>
+  </mat-form-field>
+
+  <!-- Time field -->
+  <mat-form-field appearance="outline" >
+    <mat-label>Time(min)</mat-label>
+    <input 
+      matInput 
+      type="number" 
+      onkeydown="return 
+      event.keyCode !== 69 && 
+      event.keyCode !== 189 && 
+      event.keyCode !== 187" 
+      formControlName="time" 
+      required>
+      <mat-error *ngIf="f.time.invalid">Please enter time.</mat-error>
+  </mat-form-field>
+ 
+  <!-- Time field -->
+  <mat-form-field appearance="outline" >
+    <mat-label>Portions</mat-label>
+    <input matInput type="text" formControlName="portions" required>
+    <mat-error *ngIf="f.portions.invalid">Please enter portions.</mat-error>
+  </mat-form-field>
+
+  <!-- filters field -->
+  <mat-form-field appearance="outline">
+    <mat-label>Types</mat-label>
+    <mat-select formControlName="types" multiple required>
+      <mat-option *ngFor="let item of mealTypeList" [value]="item">{{item.toUpperCase()}}</mat-option>
+    </mat-select>
+    <mat-hint>Select type in which you want to display this recipe.</mat-hint>
+    <mat-error *ngIf="f.types.invalid">Please choose type.</mat-error>
+  </mat-form-field>
+
+  <!-- Tags field   -->
+  <mat-form-field class="example-chip-list" appearance="outline">
+    <mat-label>Tags *</mat-label>
+    <mat-chip-list #chipList aria-label="Tags selection" formControlName="tags">
+      <mat-chip 
+        *ngFor="let item of tags.value; let a=index" 
+        [selectable]="selectable"
+        [removable]="removable" 
+        (removed)="removeTag(item)"
+      >
+        {{item}}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input 
+        matInput
+        placeholder="New tag..."
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="addOnBlur"
+        (matChipInputTokenEnd)="addTag($event)"
+        required
+      >
+    </mat-chip-list>
+    <mat-error>Please enter tags.</mat-error>
+  </mat-form-field>
+
+  <!-- filter-select box -->
+  <mat-form-field appearance="outline">
+    <mat-label>Filter tags</mat-label>
+    <mat-select formControlName="filterTags" multiple>
+      <mat-option *ngFor="let tag of filterTagList" [value]="tag.value">{{tag.label}}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="f.filterTags.invalid">Please select Filter Tags.</mat-error>
+  </mat-form-field>
+
+  <!-- Summary field -->
+  <mat-form-field appearance="outline" >
+    <mat-label>Summary</mat-label>
+    <textarea matInput formControlName="summary" required></textarea>
+    <mat-error *ngIf="f.summary.invalid">Please enter summary.</mat-error>
+  </mat-form-field>
+   
+  <!-- Ingredients field -->
+  <div formArrayName="ingredients" >
+    <span>
+      <h3>Ingredients</h3>
+      <button mat-icon-button color="primary" (click)="addIngredients()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </span>
+    <div *ngFor="let alias of ingredients.controls; let i=index" style="justify-content: center;">
+      <!-- The repeated alias template -->
+      <span>
+        <mat-form-field appearance="outline" >
+          <input matInput [formControlName]="i" required>
+          <mat-error *ngIf="f.ingredients.invalid">Please enter ingredient.</mat-error>
+        </mat-form-field>
+        <button mat-icon-button color="primary" (click)="removeIngredient(i)">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
+      </span>
+    </div>
+  </div>
+
+  <!-- Nutrition field -->
+  <div formArrayName="nutritions">
+    <span>
+      <h3>Nutritions:</h3>
+      <button mat-icon-button color="primary" (click)="addNutrition()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </span>
+    
+    <div *ngFor="let skill of nutritions.controls; let i=index">
+      <div [formGroupName]="i" class="nutritionContainer">
+        <mat-form-field appearance="outline" class="NutritionStyle">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" required>
+          <mat-error *ngIf="f.nutritions.invalid">Please enter name.</mat-error>
+        </mat-form-field>  
+        <mat-form-field appearance="outline" class="NutritionStyle">
+          <mat-label>Value</mat-label>
+          <input matInput formControlName="value" required>
+          <mat-error *ngIf="f.nutritions.invalid">Please enter value.</mat-error>
+        </mat-form-field>  
+        <button mat-icon-button color="primary" (click)="removeNutrition(i)">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Steps field -->
+  <div formArrayName="steps" >
+    <span>
+      <h3>Steps:</h3>
+      <button mat-icon-button color="primary" (click)="addStep()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </span>
+    
+    <div *ngFor="let skill of steps.controls; let i=index">
+      <div [formGroupName]="i" class="group">
+        <span>Step {{i+1}} 
+          <button mat-icon-button color="primary" (click)="removeStep(i)">
+            <mat-icon>remove_circle</mat-icon>
+          </button>
+        </span>
+        
+        <!-- Step Image field -->
+        <div class="imgContainer">
+          <img 
+            *ngIf="steps.value[i].image" 
+            [src]="sanitizedImagePath(steps.value[i].image)"
+            class="coverImage"
+          />
+          <div>
+            <input type="file" (change)="onFileChange2($event,i)" accept=".png,.jpg" />
+            <mat-error *ngIf="isStepImage">Please upload an image.</mat-error>
+          </div>   
+        </div>
+
+        <mat-form-field appearance="outline" >
+          <mat-label>Description</mat-label>
+          <input matInput formControlName="description" required>
+          <mat-error *ngIf="f.steps.invalid">Please enter description.</mat-error>
+        </mat-form-field>  
+      </div>
+    </div>
+  </div>
+
+  <!-- Utensils field -->
+  <div formArrayName="utensils" >
+    <span>
+      <h3>Utensils</h3>
+      <button mat-icon-button  color="primary" (click)="addUtensils()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </span>
+      
+    <div *ngFor="let alias of utensils.controls; let i=index">
+      <!-- The repeated alias template -->
+      <span>
+        <mat-form-field appearance="outline" >
+          <input matInput [formControlName]="i" required>
+          <mat-error *ngIf="f.utensils.invalid">Please enter Utensil.</mat-error>
+        </mat-form-field>
+        <button mat-icon-button color="primary" (click)="removeUtensil(i)">
+            <mat-icon>remove_circle</mat-icon>
+        </button>
+      </span>
+    </div>
+  </div>
+  
+</form>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <div class="formFooter">
+    <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+  </div>
+</mat-dialog-actions>

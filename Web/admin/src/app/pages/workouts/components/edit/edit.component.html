@@ -1,0 +1,122 @@
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="Form" >
+     
+    <!-- Image field -->
+    <div class="imgContainer">
+      <h3>Cover image: *</h3>
+      <img 
+        *ngIf="f.coverImage.valid" 
+        [src]="sanitizedImagePath(f.coverImage.value)"
+        class="coverImage"
+      />
+      <div>
+        <input type="file" (change)="onFileChange($event)" accept=".png,.jpg" required/>
+      </div>   
+    </div>
+
+    <!-- Name field -->
+    <mat-form-field 
+        appearance="outline" class="example-full-width" style="margin-top: 1rem;">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required>
+    </mat-form-field>
+
+    <!-- Title field -->
+    <mat-form-field appearance="outline" class="example-full-width">
+      <mat-label>Display Name</mat-label>
+      <input matInput formControlName="displayName" required>
+    </mat-form-field>
+
+      <!-- Description field -->
+      <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" required>
+      </mat-form-field>
+
+    <!-- Workout Time field -->
+    <mat-form-field appearance="outline" class="example-full-width">
+      <mat-label>Workout Time(min)</mat-label>
+      <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" formControlName="workoutTime" required>
+      <mat-hint>A period of physical exercise that you do in order to improve your fitness, ability, or performance</mat-hint>
+    </mat-form-field>
+
+    <!-- Sets field -->
+    <mat-form-field appearance="outline" class="example-full-width">
+      <mat-label>Sets(number)</mat-label>
+      <input matInput type="number"onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" placeholder="Only allow number" formControlName="sets" required>
+      <mat-hint>A set is a group of consecutive repetitions. For example, you can say, “I did two sets of ten reps on the crunches”</mat-hint>
+    </mat-form-field>
+
+    <!-- Reps field -->
+    <div formArrayName="reps">
+      <span>
+        <h3>Reps(number) :</h3>
+      </span>
+      <div *ngFor="let alias of reps.controls; let i=index" style="justify-content: center;">
+        <!-- The repeated alias template -->
+        <span>
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>{{fitnessLevels[i]}}</mat-label>
+            <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187"  [formControlName]="i" required>
+            <mat-hint *ngIf="i===0">Reps are the number of times you complete a single exercise before taking a rest or a break. </mat-hint>
+          </mat-form-field>
+        </span>
+      </div>
+    </div>
+
+    <!-- filters field -->
+    <div formArrayName="restIntervalMap" >
+      <span>
+        <h3>Rest(number) :</h3>
+      </span>
+      <div *ngFor="let alias of restIntervalMap.controls; let i=index" style="justify-content: center;">
+        <!-- The repeated alias template -->
+        <span>
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>{{fitnessLevels[i]}}</mat-label>
+            <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" [formControlName]="i" required>
+            <mat-hint *ngIf="i === 0">Rest gives your body time to replenish these energy stores before your next workout.</mat-hint>
+          </mat-form-field>
+        </span>
+      </div>
+    </div>
+
+    <!-- workIntervalMap field -->
+    <div formArrayName="workIntervalMap">
+      <span>
+        <h3>Set duration(sec) :</h3>
+      </span>
+      <div *ngFor="let alias of workIntervalMap.controls; let i=index" style="justify-content: center;">
+        <!-- The repeated alias template -->
+        <span>
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>{{fitnessLevels[i]}}</mat-label>
+            <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" [formControlName]="i" required>
+            <mat-hint *ngIf="i === 0">A time to complete 1 set of workout depending on the intensity level</mat-hint>
+          </mat-form-field>
+        </span>
+      </div>
+    </div>
+
+    <!-- filters field -->
+    <div >
+      <span>
+        <h3>Filters</h3>
+      </span>
+      <mat-form-field appearance="outline">
+        <mat-label>Select filter</mat-label>
+        <mat-select formControlName="filters" multiple>
+          <mat-option *ngFor="let item of workoutFilterList" [value]="item.value">{{item.label}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+   
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <div class="formFooter">
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="Form.invalid">Submit</button>
+  </div>
+</mat-dialog-actions>

@@ -1,0 +1,37 @@
+<!-- Name -->
+<h2 mat-dialog-title>{{data.firstName}} {{data.lastName}}</h2>
+
+<mat-dialog-content class="mat-typography">
+
+  <!-- Id -->
+  <h3 class="heading">Id :</h3>
+  <p>{{data.id}}</p>
+
+  <!-- E-mail -->
+  <h3 class="heading">E-mail :</h3>
+  <p>{{data.email}}</p>
+
+  <!-- Country -->
+  <h3 class="heading">Country :</h3>
+  <p>{{data.country}}</p>
+
+  <!-- Fitness Level -->
+  <h3 class="heading">Fitness Level :</h3>
+  <p>{{data.fitnessLevel}}</p>
+
+  <!-- SignUp Date -->
+  <h3 class="heading">SignUp Date :</h3>
+  <p>{{data.signUpDate}}</p>
+
+  <!-- onboarded -->
+  <h3 class="heading">Onboarded :</h3>
+  <p>{{data.onboarded}}</p>
+
+  <h3 class="heading">Subscription Info :</h3>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Edit</button> -->
+</mat-dialog-actions>

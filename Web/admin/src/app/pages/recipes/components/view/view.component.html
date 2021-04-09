@@ -1,0 +1,84 @@
+<!-- title -->
+<h2 mat-dialog-title>{{data.title}}</h2>
+
+<!-- sub title -->
+<h3>{{data.subTitle}}</h3>
+
+<mat-dialog-content class="mat-typography">
+  <!-- Cover Image -->
+  <img 
+    [src]="data.coverImage"
+    class="coverImage"
+  />
+
+  <!-- Ingredients -->
+  <h3 class="heading">Ingredients :</h3>
+  <mat-list role="list">
+    <mat-list-item role="listitem" *ngFor="let item of data.ingredients" style="text-transform: capitalize;">&#8226; {{item}}</mat-list-item>
+  </mat-list>
+
+  <!-- Time -->
+  <h3 class="heading">Time(min) :</h3>
+  <p>{{data.time}}</p>
+  
+  <!-- Nutritions -->
+  <h3 class="heading">Nutritions :</h3>
+  <mat-list role="list">
+    <mat-list-item role="listitem" *ngFor="let item of data.nutritions" style="text-transform: capitalize;">&#8226; {{item.name}} - {{item.value}}</mat-list-item>
+  </mat-list>
+ 
+  <!-- Portions -->
+  <h3 class="heading">Portions :</h3>
+  <p>{{data.portions}}</p>
+
+  <!-- Tags -->
+  <h3 class="heading">Tags :</h3>
+  <mat-list role="list">
+    <mat-list-item role="listitem" *ngFor="let item of data.tags" >&#8226; {{item}}</mat-list-item>
+  </mat-list>
+
+    <!-- Tags -->
+    <h3 class="heading">Filter tags :</h3>
+    <mat-list role="list">
+      <mat-list-item role="listitem" *ngFor="let item of data.filterTags" >&#8226; {{item}}</mat-list-item>
+    </mat-list>
+
+  <!-- Types -->
+  <h3 class="heading">Types :</h3>
+  <mat-list role="list">
+    <mat-list-item role="listitem" *ngFor="let item of data.types" style="text-transform: capitalize;">&#8226; {{item}}</mat-list-item>
+  </mat-list>
+
+  <!-- Utensils -->
+  <h3 class="heading">Utensils :</h3>
+  <mat-list role="list">
+    <mat-list-item role="listitem" *ngFor="let item of data.utensils" style="text-transform: capitalize;">&#8226; {{item}}</mat-list-item>
+  </mat-list>
+
+  <!-- Steps -->
+  <h3 class="heading">Steps :</h3>
+  <div *ngFor="let item of data.steps; let index=index">
+    <h4>Step {{index+1}}</h4>
+    <div class="stepContainer">
+      <div>
+        <img 
+          [src]="item.image"
+          class="stepImage"
+        >
+      </div>
+      <div class="stepTitleContainer">
+        <p style="align-self: center;">{{item.description}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <h3 class="heading">Summary :</h3>
+  <p>{{data.summary}}</p>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Edit</button> -->
+</mat-dialog-actions>

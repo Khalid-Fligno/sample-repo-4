@@ -1,0 +1,111 @@
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="Form" >
+
+        <!-- Image field -->
+        <div class="imgContainer">
+            <h3 *ngIf="!bl">Cover image: *</h3>
+            <h3 *ngIf="bl" style="color: red;">Cover image: *</h3>
+            <img 
+                *ngIf="f.coverImage.valid" 
+                [src]="sanitizedImagePath(f.coverImage.value)"
+                class="coverImage"
+            />
+            <div>
+                <input type="file" (change)="onFileChange($event)" accept=".png,.jpg" required/>
+                <mat-error *ngIf="bl">Please upload an image.</mat-error>
+            </div>   
+        </div>
+
+        <!-- title field -->
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" required>
+            <mat-error *ngIf="f.title.invalid">Please enter a title</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Author name</mat-label>
+            <input matInput formControlName="authorName" required>
+            <mat-error *ngIf="f.authorName.invalid">Please enter author Name</mat-error>
+        </mat-form-field>
+
+        <!-- displayName field -->
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Description</mat-label>
+            <input matInput formControlName="description" required>
+            <mat-error *ngIf="f.description.invalid">Please enter description.</mat-error>
+        </mat-form-field>
+
+         <!-- startDay field -->
+         <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Start Day</mat-label>
+            <input 
+                matInput 
+                type="number" 
+                onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187"  
+                formControlName="startDay" 
+                required
+            >
+            <mat-error *ngIf="f.startDay.invalid">Please enter start Day.</mat-error>
+         </mat-form-field>
+       
+        <!-- endDay field -->
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>End Day</mat-label>
+            <input 
+                matInput 
+                type="number" 
+                onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187"  
+                formControlName="endDay" 
+                required
+            >
+            <mat-error *ngIf="f.endDay.invalid">Please enter end Day.</mat-error>
+        </mat-form-field>
+
+       
+        <!-- Ingredients field -->
+        <!-- <div formArrayName="tags" >
+            <span>
+                <h3>Tags</h3>
+                <button mat-icon-button color="primary" (click)="addTag()">
+                    <mat-icon>add_circle</mat-icon>
+                </button>
+            </span>
+            <div *ngFor="let alias of tags.controls; let i=index" style="justify-content: center;">
+                <span>
+                    <mat-form-field appearance="outline" class="example-full-width">
+                        <input matInput [formControlName]="i" required>
+                    </mat-form-field>
+                    <button mat-icon-button color="primary" (click)="removeTag(i)">
+                        <mat-icon>remove_circle</mat-icon>
+                    </button>
+                </span>
+            </div>
+        </div> -->
+
+        <!-- Programs tag field -->
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Select Program Tag</mat-label>
+            <mat-select formControlName="tags">
+                <mat-option  *ngFor="let item of Tags" [value]="item">{{item}}</mat-option>
+                <p *ngIf="Tags && Tags.length === 0" >No tag found..</p>
+            </mat-select>
+            <mat-error *ngIf="f.tags.invalid">Please select a Program tag.</mat-error>
+        </mat-form-field>
+    
+        <!-- urlLink field -->
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>URL Link</mat-label>
+            <input matInput formControlName="urlLink" required>
+            <mat-error *ngIf="f.urlLink.invalid">Please enter valid url.</mat-error>
+        </mat-form-field>
+    
+    </form>  
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <div class="formFooter">
+        <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+    </div>
+</mat-dialog-actions>
