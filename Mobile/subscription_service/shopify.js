@@ -72,15 +72,37 @@ exports.createShopifyWebhooks = async (req, res)  => {
 }
 //---------------------------subscription---------------------
 
+// exports.createShopifySubscriptionWebhook = async(req, res) =>{ 
+//   console.log("req.body.subscription",req.body.subscription);   
+//     const request = req.body.subscription;    
+//     const requestSuccess= await createUserChallengeAndSubscription(request); 
+//     if(requestSuccess)
+//         res.status(200).send("Purchase Shopify Subscription called successfully");
+//     else 
+//       res.status(200).send("have some problem in Shopify Subscription");    
+// }
+
 exports.createShopifySubscriptionWebhook = async(req, res) =>{ 
-  console.log("req.body.subscription",req.body.subscription);   
-    const request = req.body.subscription;    
-    const requestSuccess= await createUserChallengeAndSubscription(request); 
-    if(requestSuccess)
-        res.status(200).send("Purchase Shopify Subscription called successfully");
-    else 
-      res.status(200).send("have some problem in Shopify Subscription");    
+    const shopifyPurchasedItemList = req.body.line_items;    
+    const customerEmail = req.body.email;    
+    Promise.all(shopifyPurchasedItemList.map((res)=>{
+      return new Promise(async (resolve,reject)=>{
+                await createUserChallengeAndSubscription({
+                  email:customerEmail,
+                  product_title:res.title,
+                  shopify_product_id:res.id
+                }); 
+                resolve();
+             })
+    }))
+    .then((values) => {
+      res.status(200).send("ok");
+    })
+    .catch((err)=>{
+      res.status(200).send('ok')
+    });
 }
+
 exports.deleteShopifySubscriptionWebhook = async(req, res) =>{    
   const request = req.body.subscription;    
     await deleteWebhookUrl(request); 
@@ -259,6 +281,7 @@ const createUserChallengeAndSubscription = async (req)=>{
       //check request contain Challenge work in product_title
       const challengeProductName=req.product_title;
       const challengeProductId=req.shopify_product_id;
+      console.log(challengeProductId,challengeProductName,req.email)
       if(!challengeProductName.toLowerCase().includes("challenge") && !challengeProductName.toLowerCase().includes("subscription")){
         
         return false;
