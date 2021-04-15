@@ -15,12 +15,15 @@ const {
     , shopifyAllSubscriptions
     , shopifyLastSubscriptions
  } = require('./shopify.js');
-
+const adminRouter = require('./adminApi.js');
+var cors = require('cors')
 const app = express();
 // configure the app to use bodyParser()
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.use(cors());
+
 var jsonParser = bodyParser.json();
 
 app.get('/', (req, res) => {
@@ -42,4 +45,7 @@ app.get('/shopify/getAllCharges', jsonParser, shopifyAllCharges);
 app.get('/shopify/getLast2DayCharges', jsonParser, shopifyLastCharges);
 app.get('/shopify/getAllSubscriptions', jsonParser, shopifyAllSubscriptions);
 app.get('/shopify/getLast2DaySubscriptions', jsonParser, shopifyLastSubscriptions);
+
+//admin Api
+app.use('/admin',adminRouter );
 app.listen(8100);

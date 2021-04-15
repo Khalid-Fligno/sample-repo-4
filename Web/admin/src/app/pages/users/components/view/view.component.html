@@ -26,7 +26,8 @@
   <!-- SignUp Date -->
   <div  *ngIf='data.signUpDate'>
     <h3 class="heading">SignUp Date :</h3>
-    <p>{{data.signUpDate.toDate() | date: 'yyyy/MM/dd'}}</p>
+    <p *ngIf="checkDateType(data.signUpDate)">{{data.signUpDate.toDate() | date: 'yyyy/MM/dd'}}</p>
+    <p *ngIf="!checkDateType(data.signUpDate)">{{data.signUpDate | date: 'yyyy/MM/dd'}}</p>
   </div>
 
   <!-- onboarded -->
@@ -37,9 +38,9 @@
 
   <div *ngIf='data.subscriptionInfo'>
     <h3 class="heading">Subscription Info :</h3>
-    <p>Product Id : {{data.subscriptionInfo.productId}}</p>
-    <p>Expiry : {{data.subscriptionInfo.expiry | date: 'yyyy/MM/dd'}}</p>
-    <p>Original Purchase Date : {{data.subscriptionInfo.originalPurchaseDate | date: 'yyyy/MM/dd'}}</p>
+    <p *ngIf="data.subscriptionInfo.productId">Product Id : {{data.subscriptionInfo.productId}}</p>
+    <p *ngIf="data.subscriptionInfo.expiry">Expiry : {{data.subscriptionInfo.expiry | date: 'yyyy/MM/dd'}}</p>
+    <p *ngIf="data.subscriptionInfo.originalPurchaseDate">Original Purchase Date : {{data.subscriptionInfo.originalPurchaseDate | date: 'yyyy/MM/dd'}}</p>
     <p *ngIf='data.subscriptionInfo.originalTransactionId'>Original Transaction Id / Order Id : {{data.subscriptionInfo.originalTransactionId}}</p>
   </div>
 

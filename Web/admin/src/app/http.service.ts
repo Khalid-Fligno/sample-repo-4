@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HttpService {
-  //HttpUrl = "http://localhost:3000/admin"
-  HttpUrl = "http://inflowactive.api.bizminds.io/admin";
+  HttpUrl = "http://localhost:8100/admin"
+  // HttpUrl = "http://inflowactive.api.bizminds.io/admin";
   currentPage = "Dashboard";
   urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
 
@@ -61,7 +61,8 @@ export class HttpService {
 
   //user api
   addEditUser(data:any): Observable<any> {
-    return this.httpClient.post(`${this.HttpUrl}/addEditUser`,data);
+    console.log(data)
+    return this.httpClient.post(`${this.HttpUrl}/addUser`,data);
   }
   deleteUser(data:any): Observable<any> {
     return this.httpClient.post(`${this.HttpUrl}/deleteUser`,data);

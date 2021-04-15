@@ -4,6 +4,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
+import firebase from 'firebase';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SuccessComponent } from 'src/app/components/success/success.component';
 import { HttpService } from 'src/app/http.service';
@@ -11,8 +12,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-add',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+  templateUrl: './add.component.html',
+  styleUrls: ['./add.component.scss']
 })
 
 export class AddComponent{
@@ -38,19 +39,35 @@ export class AddComponent{
   ) 
   {
     const d = this.data;
-    this.Form = this.fb.group
-    ({
-      id:d?d.id:null,
-      firstName: ['',Validators.required],
-      lastName: ['',Validators.required],
-      country: ['unavailable'],
-      email: ['',Validators.required],
-      signUpDate: [new Date()],
-      fitnessLevel: [1],
-      subscriptionInfo:this.fb.group({
-        expiry:['']
-      })
-    });
+    if(d){
+      this.Form = this.fb.group
+      ({
+        id:d?d.id:null,
+        subscriptionInfo:this.fb.group({
+          expiry:[d.subscriptionInfo?new Date(d.subscriptionInfo.expiry):'']
+        }),
+        selectedChallenge:['']
+      });
+      console.log(this.Form.value)
+      this.getUserChallengesList();
+    }else{
+      this.Form = this.fb.group
+      ({
+        id:d?d.id:null,
+        firstName: ['',Validators.required],
+        lastName: ['',Validators.required],
+        country: ['unavailable'],
+        email: ['',Validators.email],
+        password: ['',Validators.required],
+        signUpDate: [new Date()],
+        fitnessLevel: [1],
+        subscriptionInfo:this.fb.group({
+          expiry:['']
+        }),
+        selectedChallenge:['']
+      });
+    }
+
 
     this.getChallengesList();
   }
@@ -83,7 +100,7 @@ export class AddComponent{
 
 
   async getChallengesList(){
-    const Programs = await (await this.db.firestore.collection('Challenges').get()).docs;
+    const Programs = await (await this.db.firestore.collection('challenges').get()).docs;
     if(Programs && Programs.length > 0){
        Programs.map((res)=>{
           this.challengesList.push(res.data());
@@ -92,7 +109,38 @@ export class AddComponent{
     console.log("data",this.challengesList);
   }
 
+  async getUserChallengesList(){
+    const Programs = await (await this.db.firestore.collection('users').doc(this.data.id).collection('challenges').get()).docs;
+    if(Programs && Programs.length > 0){
+       var challengeList:any= []
+       Programs.map((res)=>{
+         console.log(res.data());
+          challengeList.push(res.data().id);
+        });
+        this.Form.patchValue({
+          selectedChallenge:challengeList
+        })
+    }
+    console.log("data",this.challengesList);
+  }
   handleSave(){
     console.log(this.Form.value);
+    // this.spinner.show();
+    // this.http.addEditUser(this.Form.value).subscribe(res=>{
+    //   this.spinner.hide();
+    //   console.log("Success",res);
+    //     this.dialog.open(SuccessComponent,{
+    //       data:{
+    //         title:"Added!",
+    //         subTitle:res.message
+    //       },
+    //     });
+    //     this.dialogRef.close();
+    // },
+    // err=>{
+    //   this.spinner.hide();
+    //   console.log("Error",err);
+    //   alert('Something went wrong,please try again');
+    // })
   }
 }

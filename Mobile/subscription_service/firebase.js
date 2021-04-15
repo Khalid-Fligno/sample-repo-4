@@ -34,8 +34,8 @@ let firebaseConfig = {
 var admin = require("firebase-admin");
 admin.initializeApp({
     credential: admin.credential.cert(firebaseConfig),
-    //databaseURL: "https://quickstart-1588594831516.firebaseio.com",
-    databaseURL: "https://fitazfk-app.firebaseio.com"
+    databaseURL: "https://quickstart-1588594831516.firebaseio.com",
+    // databaseURL: "https://fitazfk-app.firebaseio.com"
   })
   
   module.exports = admin

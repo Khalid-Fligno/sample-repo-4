@@ -22,4 +22,11 @@ export class ViewComponent {
       this.challengeList.push(res.data());
     })
   }
+
+  checkDateType(date:any){
+    if(typeof date === "object")
+      return true
+    
+    return false  
+  }
 }
