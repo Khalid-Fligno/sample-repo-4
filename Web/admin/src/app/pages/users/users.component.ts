@@ -11,6 +11,7 @@ import { map, startWith } from 'rxjs/operators';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { SuccessComponent } from 'src/app/components/success/success.component';
 import { HttpService } from 'src/app/http.service';
+import { AddComponent } from './components/add/add.component';
 import { EditComponent } from './components/edit/edit.component';
 import { ViewComponent } from './components/view/view.component';
 
@@ -117,7 +118,7 @@ export class UsersComponent implements OnInit {
   }
 
   editUser(data:any=null) {
-    const dialogRef = this.dialog.open(EditComponent,{
+    const dialogRef = this.dialog.open(AddComponent,{
       data:data,
       width: '100vw'
     });

@@ -22,7 +22,8 @@ export class AddComponent{
   Tags:any;
 
   bl:boolean = false;
-
+  challengesList:any = [];
+  selectedChallenge='';
   constructor
   (
     private fb:FormBuilder,
@@ -40,111 +41,23 @@ export class AddComponent{
     this.Form = this.fb.group
     ({
       id:d?d.id:null,
-      firstName: [d && d.firstName?d.firstName:'',Validators.required],
-      lastName: [d && d.lastName?d.lastName:'',Validators.required],
-      country: [d && d.country?d.country:'',Validators.required],
-      email: [d && d.email?d.email:'',Validators.required],
-      signUpDate: [d && d.signUpDate?d.signUpDate:'',Validators.required],
-      fitnessLevel: [d && d.fitnessLevel?d.fitnessLevel:'',Validators.required],
-      
+      firstName: ['',Validators.required],
+      lastName: ['',Validators.required],
+      country: ['unavailable'],
+      email: ['',Validators.required],
+      signUpDate: [new Date()],
+      fitnessLevel: [1],
+      subscriptionInfo:this.fb.group({
+        expiry:['']
+      })
     });
 
-    //this.getProgramTags();
+    this.getChallengesList();
   }
 
   get f(){
     return this.Form.controls;
   }
-
-  // get tags() : FormArray {
-  //   return this.Form.get("tags") as FormArray
-  // }
-
-  // addTag(){
-  //   this.tags.push(this.fb.control(''))
-  // }
-  // removeTag(i:number) {
-  //   this.tags.removeAt(i);
-  // }
-
-  // sanitizedImagePath(blob:any)
-  // {
-  //   if(typeof blob === 'object')  
-  //   {
-  //     let objectURL = URL.createObjectURL(blob);  
-  //     return this.sanitizer.bypassSecurityTrustUrl(objectURL);
-  //   }
-  //   else 
-  //     return blob;
-  // }
-
-  // onSubmit() {
-  //   if(this.Form.valid) {
-  //     this.spinner.show();
-  //     if(this.Form.value.urlLink.substring(0,4) != 'http'){
-  //       let url = 'http://'+this.Form.value.urlLink;
-  //       this.Form.value.urlLink = url;
-  //     }
-  //     this.upload();
-  //   }
-  //   else {
-     
-  //     if(this.f.coverImage.invalid){
-  //       this.bl = true;
-  //     }
-      
-  //     this.validateAllFields(this.Form);
-  //   }
-  // }
-
-  // validateAllFields(formGroup: FormGroup) {         
-  //   Object.keys(formGroup.controls).forEach(field => {  
-  //     const control = formGroup.get(field);            
-  //     if (control instanceof FormControl) {             
-  //       control.markAsTouched({ onlySelf: true });
-  //     } 
-  //     else if (control instanceof FormGroup) {        
-  //       this.validateAllFields(control);  
-  //     }
-  //   });
-  // }
-
-  // async upload() {
-  //   let data = [{image:this.Form.value.coverImage}];
-  //   // console.log(data)
-  //   Promise.all(
-  //     data.map(async (res,index)=>{
-  //       return new Promise(async(resolve, reject) => {
-  //         if(typeof res.image === 'object')  {
-  //           // const randomId = Math.random().toString(36).substring(2);
-  //           const ref = this.afStorage.ref(`Blogs/${this.Form.value.id}/coverImage`);
-  //           const task = ref.put(res.image);
-  //           this.uploadProgress = task.percentageChanges();
-  //           (await task).ref.getDownloadURL()
-  //           .then((res)=>{
-  //                 this.Form.patchValue({
-  //                   coverImage: res
-  //                 });
-  //               setTimeout(resolve, 0, 'success');
-  //             }
-  //           )
-  //           .catch(err=>{
-  //             console.log("Error in uploading",err);
-  //             setTimeout(reject, 0, 'failed');
-  //           })
-  //         }else{
-  //           setTimeout(resolve, 0, 'success');
-  //         }
-  //       })
-  //     })
-  //   ) 
-  //   .then((res)=>{
-  //     console.log(res,"then")
-  //     this.saveData();
-  //   })
-  //   .catch(err=>console.log("Error!",err))
-  // }
-
 
   // saveData(){
   //   console.log(this.Form.value);
@@ -169,13 +82,15 @@ export class AddComponent{
   // }
 
 
-  // async getProgramTags(){
-  //   const Programs = await (await this.db.firestore.collection('Programs').get()).docs;
-  //   if(Programs && Programs.length > 0){
-  //     this.Tags =  Programs.map((res)=>res.data().tag)
-  //   }
-  //   console.log("data",this.Tags);
-  // }
+  async getChallengesList(){
+    const Programs = await (await this.db.firestore.collection('Challenges').get()).docs;
+    if(Programs && Programs.length > 0){
+       Programs.map((res)=>{
+          this.challengesList.push(res.data());
+        })
+    }
+    console.log("data",this.challengesList);
+  }
 
   handleSave(){
     console.log(this.Form.value);

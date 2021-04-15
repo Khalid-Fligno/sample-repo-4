@@ -87,18 +87,24 @@ exports.createShopifySubscriptionWebhook = async(req, res) =>{
     const customerEmail = req.body.email;    
     Promise.all(shopifyPurchasedItemList.map((res)=>{
       return new Promise(async (resolve,reject)=>{
-                await createUserChallengeAndSubscription({
+                 createUserChallengeAndSubscription({
                   email:customerEmail,
                   product_title:res.title,
                   shopify_product_id:res.id
-                }); 
-                resolve();
+                }).then((res)=>{
+                  console.log("response ",res)
+                  resolve();
+                }).catch((err)=>{
+                  console.log(err);
+                  resolve();
+                }) 
              })
     }))
     .then((values) => {
       res.status(200).send("ok");
     })
     .catch((err)=>{
+      console.log("error found",err);
       res.status(200).send('ok')
     });
 }
@@ -283,13 +289,15 @@ const createUserChallengeAndSubscription = async (req)=>{
       const challengeProductId=req.shopify_product_id;
       console.log(challengeProductId,challengeProductName,req.email)
       if(!challengeProductName.toLowerCase().includes("challenge") && !challengeProductName.toLowerCase().includes("subscription")){
-        
+        console.log("Not found...")
         return false;
       }
       // get user by email from firebase
       const user =await getUser(req.email);     
+      console.log(">>>",user) 
       // 1. if user not exist, create that user
       if(user === undefined ){
+        console.log("User not found")
           const newUser={
               email:req.email,
               formShopify:true,

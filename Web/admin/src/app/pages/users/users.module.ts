@@ -5,9 +5,10 @@ import { UsersComponent } from './users.component';
 import { SharedModule } from 'src/app/components/shared/shared.module';
 import { ViewComponent } from './components/view/view.component';
 import { EditComponent } from './components/edit/edit.component';
+import { AddComponent } from './components/add/add.component';
 
 @NgModule({
-  declarations: [UsersComponent, ViewComponent, EditComponent],
+  declarations: [UsersComponent, ViewComponent, EditComponent,AddComponent],
   imports: [
     CommonModule,
     UsersRoutingModule,
