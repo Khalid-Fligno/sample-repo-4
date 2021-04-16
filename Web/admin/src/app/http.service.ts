@@ -64,6 +64,11 @@ export class HttpService {
     console.log(data)
     return this.httpClient.post(`${this.HttpUrl}/addUser`,data);
   }
+  //user api
+  updateUser(data:any): Observable<any> {
+    console.log(data)
+    return this.httpClient.post(`${this.HttpUrl}/updateUser`,data);
+  }
   deleteUser(data:any): Observable<any> {
     return this.httpClient.post(`${this.HttpUrl}/deleteUser`,data);
   }

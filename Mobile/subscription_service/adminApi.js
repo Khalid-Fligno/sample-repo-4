@@ -17,7 +17,7 @@ router.post('/addUser',jsonParser,async (req,res)=>{
     console.log(req.body.email)
     var data = req.body;
     if(await getUser(data.email)){
-        res.status(400).json({success:false,message:"User already available with this email"});
+        res.status(200).json({success:false,message:"User already available with this email"});
     }else{
         admin
             .auth()
@@ -60,7 +60,7 @@ router.post('/addUser',jsonParser,async (req,res)=>{
                                 console.log("Error",err)
                             })
                         }else{
-                            res.json({ success:true,response:response,message:"user added successfully with challenge "});
+                            res.json({ success:true,response:response,message:"user added successfully"});
                         }
                     })
                 .catch((err)=>{
@@ -73,22 +73,28 @@ router.post('/addUser',jsonParser,async (req,res)=>{
     }
 })
 
-router.post('/addUser',jsonParser,async (req,res)=>{
-    console.log(req.body.email)
+router.post('/updateUser',jsonParser,async (req,res)=>{
     var data = req.body;
-        const userRef = await db.collection('users').doc(userRecord.uid);
-        const userData = makeUserData(data,userRecord.uid)
+    console.log(data)
+
+        const userRef = await db.collection('users').doc(data.id);
+        const userData = {
+            "subscriptionInfo":{
+                "expiry":new Date(data.subscriptionInfo.expiry).getTime()
+            }
+        }
             userRef.set(userData,{merge:true}).then((response)=>{
+                console.log("user updtaed")
                 if(data.selectedChallenge && data.selectedChallenge.length > 0){
                     Promise.all(data.selectedChallenge.map(challengeId=>{
                         return new Promise(async(resolve,reject)=>{
                             const challengeData = await getChallengeById(challengeId);
                             // console.log(challengeData)
                             const makeChallengeData = createNewChallenge(challengeData);
-                            updateChallengesAgainstUser(makeChallengeData,userRecord.uid)
+                            updateChallengesAgainstUser(makeChallengeData,data.id)
                             .then(res1=>{
                                 if(!res1)
-                                    console.log("failed while updating challenge")
+                                    console.log("failed while updating challenge or already present in user collection")
 
                                 resolve();
                             })
@@ -102,7 +108,7 @@ router.post('/addUser',jsonParser,async (req,res)=>{
                         res.status(200).json({success:true,message:"user added successfully with challenge "});
                     })
                     .catch(err=>{
-                        res.status(200).json({success:true,message:"user added successfully but failed while adding challenge"});
+                        res.status(200).json({success:true,message:"user added successfully but failed while adding challenge or Challenge already present in user db"});
                         console.log("Error",err)
                     })
                 }else{
@@ -113,6 +119,7 @@ router.post('/addUser',jsonParser,async (req,res)=>{
             res.status(500).json({success:false,err:err})
         })
 })
+
 module.exports = router;
 
 
@@ -190,13 +197,32 @@ const getChallengeById = async(challengeId) => {
   }
 
 const updateChallengesAgainstUser = async(challengeData,userId)=>{
-    const challenge = db.collection('users').doc(userId).collection('challenges').doc(challengeData.id);
-    challenge.set(challengeData,{merge:true})
-    .then(res=>{
-        return true
+    getUserChallenge(userId,challengeData.id)
+    .then((res)=>{
+        if(res){
+            return false
+        }else{
+            const challenge = db.collection('users').doc(userId).collection('challenges').doc(challengeData.id);
+            challenge.set(challengeData,{merge:true})
+            .then(res=>{
+                return true
+            })
+            .catch(err=>{
+                console.log("error while adding challenge against user",err);
+                return false
+            })
+        }
     })
-    .catch(err=>{
-        console.log("error while adding challenge against user",err);
-        return false
-    })
+
 }
+
+const getUserChallenge = async(userId,challengeId)=>{
+    console.log(">>>/",userId,challengeId)
+    const snapshot=await db.collection('users').doc(userId).collection('challenges').where("id","==",challengeId)
+    .get();
+    if (snapshot.size > 0) {
+     return true
+    }else{
+        return false
+    }
+  }

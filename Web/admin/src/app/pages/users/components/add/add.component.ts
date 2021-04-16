@@ -125,22 +125,52 @@ export class AddComponent{
   }
   handleSave(){
     console.log(this.Form.value);
-    // this.spinner.show();
-    // this.http.addEditUser(this.Form.value).subscribe(res=>{
-    //   this.spinner.hide();
-    //   console.log("Success",res);
-    //     this.dialog.open(SuccessComponent,{
-    //       data:{
-    //         title:"Added!",
-    //         subTitle:res.message
-    //       },
-    //     });
-    //     this.dialogRef.close();
-    // },
-    // err=>{
-    //   this.spinner.hide();
-    //   console.log("Error",err);
-    //   alert('Something went wrong,please try again');
-    // })
+    if(this.data){
+      this.updateUser();
+    }
+    else{
+      this.addUser();
+    }
+
+  }
+
+  addUser(){
+    this.spinner.show();
+    this.http.addEditUser(this.Form.value).subscribe(res=>{
+      this.spinner.hide();
+      console.log("Success",res);
+        this.dialog.open(SuccessComponent,{
+          data:{
+            title:"Added!",
+            subTitle:res.message
+          },
+        });
+        this.dialogRef.close();
+    },
+    err=>{
+      this.spinner.hide();
+      console.log("Error",err);
+      alert('Something went wrong,please try again');
+    })
+  }
+
+  updateUser(){
+    this.spinner.show();
+    this.http.updateUser(this.Form.value).subscribe(res=>{
+      this.spinner.hide();
+      console.log("Success",res);
+        this.dialog.open(SuccessComponent,{
+          data:{
+            title:"Added!",
+            subTitle:res.message
+          },
+        });
+        this.dialogRef.close();
+    },
+    err=>{
+      this.spinner.hide();
+      console.log("Error",err);
+      alert('Something went wrong,please try again');
+    })
   }
 }
