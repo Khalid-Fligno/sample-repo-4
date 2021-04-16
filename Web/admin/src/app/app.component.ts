@@ -17,13 +17,13 @@ export class AppComponent implements OnInit, OnDestroy{
   
   ngOnInit(){
     this.authService.authSubject.subscribe(state=>{
-      this.router.navigate(['/dashboard'], {replaceUrl:true})
-      // if(state) {
-      //   this.router.navigate(['/dashboard'], {replaceUrl:true})
-      // } 
-      // else {
-      //   this.router.navigate(['login'])
-      // }
+      // this.router.navigate(['/dashboard'], {replaceUrl:true})
+      if(state) {
+        this.router.navigate(['/dashboard'], {replaceUrl:true})
+      } 
+      else {
+        this.router.navigate(['login'])
+      }
     })
   }
 
@@ -31,3 +31,5 @@ export class AppComponent implements OnInit, OnDestroy{
     console.log("Destroeydddd")
   }
 }
+
+//admin-password  Fitazfk-Password! - email admin@test.com

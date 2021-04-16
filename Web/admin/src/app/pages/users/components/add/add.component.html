@@ -32,7 +32,7 @@
             <mat-form-field appearance="outline" class="example-full-width">
                 <mat-label>Password</mat-label>
                 <input matInput formControlName="password" required>
-                <mat-error *ngIf="f.password.invalid">Please enter password</mat-error>
+                <mat-error *ngIf="f.password.invalid">Password must be atleast 6 character</mat-error>
             </mat-form-field>
         </div>
         <div formGroupName="subscriptionInfo">

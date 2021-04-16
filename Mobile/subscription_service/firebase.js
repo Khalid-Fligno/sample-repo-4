@@ -35,6 +35,7 @@ var admin = require("firebase-admin");
 admin.initializeApp({
     credential: admin.credential.cert(firebaseConfig),
     databaseURL: "https://quickstart-1588594831516.firebaseio.com",
+    storageBucket: "quickstart-1588594831516.appspot.com",
     // databaseURL: "https://fitazfk-app.firebaseio.com"
   })
   

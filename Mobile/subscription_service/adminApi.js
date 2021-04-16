@@ -5,6 +5,8 @@ let moment = require('moment');
 const hostUrl='https://3.8.209.87';
 var  admin  = require('./firebase');
 const db= admin.firestore();
+const storage = admin.storage();
+const bucket = storage.bucket()
 var jsonParser = bodyParser.json();
 // exports.getUsers = async (req,res)=>{
 //     res.send("admin api work")
@@ -119,6 +121,37 @@ router.post('/updateUser',jsonParser,async (req,res)=>{
             res.status(500).json({success:false,err:err})
         })
 })
+
+router.post('/deleteUser',jsonParser,async(req,res)=>{
+    const uid = req.body.id
+    console.log("mmmm",uid)
+    db.collection('users').doc(uid).delete()
+    .then((res1)=>{
+        console.log("success")
+        admin
+            .auth()
+            .deleteUser(uid)
+            .then(() => {
+                console.log('Successfully deleted user');
+            })
+            .catch((error) => {
+                console.log('Error deleting user:', error);
+            });
+        bucket.deleteFiles({
+          prefix: `user-photos/${uid}`
+        }, function(err) {
+          if (!err) {
+            console.log("file deleted")
+          }
+        });
+      res.send({success:true})
+    })
+    .catch((err)=>{
+        console.log(err)
+      res.status(500).json({success:false,err:err})
+    })
+  })
+  
 
 module.exports = router;
 

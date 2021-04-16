@@ -57,6 +57,7 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
+    console.log(email)
     const adminRef = this.db.collection('Admin');
     const snapshot = await adminRef.ref.where('email','==',email).get();
     if (snapshot.empty) {

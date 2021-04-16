@@ -37,6 +37,7 @@ export class UsersComponent implements OnInit {
   searchOptions:any=[];
   filteredOptions!: Observable<any>;
   //
+  searchError:any=null;
 
   constructor(
     private http:HttpService,
@@ -151,10 +152,13 @@ export class UsersComponent implements OnInit {
 
 
 async  searchByEmail(){
-    console.log(this.selectedItem.value);
     this.isLoading = true;
     const usersRef = this.db.firestore.collection('users');
     var data = await usersRef.where('email',"==",this.selectedItem.value).get();
+
+    if(data.docs.length === 0){
+        this.dialog.open(SuccessComponent,{data:{title:"Not found!",subTitle:"User not found with this email in db"}});
+    }
     data.docs.forEach((res)=>{
       var data:Array<any> =[];
       console.log(res.data())
@@ -162,6 +166,8 @@ async  searchByEmail(){
       this.dataSource = new MatTableDataSource<any>(data);
       this.dataSource.paginator = this.paginator;
       this.isLoading = false;
+      this.searchError = ""
+
     })
   }
 }

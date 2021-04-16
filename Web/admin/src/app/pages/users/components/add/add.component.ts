@@ -58,7 +58,7 @@ export class AddComponent{
         lastName: ['',Validators.required],
         country: ['unavailable'],
         email: ['',Validators.email],
-        password: ['',Validators.required],
+        password: ['',Validators.pattern('(?=.*[0-9a-zA-Z]).{6,}')],
         signUpDate: [new Date()],
         fitnessLevel: [1],
         subscriptionInfo:this.fb.group({
