@@ -24,11 +24,11 @@
   </div>
 
   <!-- SignUp Date -->
-  <div  *ngIf='data.signUpDate'>
+  <!-- <div  *ngIf='data.signUpDate'>
     <h3 class="heading">SignUp Date :</h3>
     <p *ngIf="checkDateType(data.signUpDate)">{{data.signUpDate.toDate() | date: 'yyyy/MM/dd'}}</p>
     <p *ngIf="!checkDateType(data.signUpDate)">{{data.signUpDate | date: 'yyyy/MM/dd'}}</p>
-  </div>
+  </div> -->
 
   <!-- onboarded -->
   <div *ngIf='data.onboarded'>

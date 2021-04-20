@@ -77,29 +77,6 @@ export class AddComponent{
     return this.Form.controls;
   }
 
-  // saveData(){
-  //   console.log(this.Form.value);
-  //   this.http.addEditBlog(this.Form.value).subscribe((res)=>{
-  //     if(res.success){
-  //       this.dialog.open(SuccessComponent,{
-  //         data:{
-  //           title:"Updated!",
-  //           subTitle:"Blog updated successfully."
-  //         },
-  //       });
-  //       this.dialogRef.close();
-  //     }
-  //     this.spinner.hide();
-  //   },
-  //   err => {
-  //     console.log('HTTP Error', err);
-  //     this.spinner.hide();
-  //     alert('Something went wrong,please try again');
-  //   },
-  //   )
-  // }
-
-
   async getChallengesList(){
     const Programs = await (await this.db.firestore.collection('challenges').get()).docs;
     if(Programs && Programs.length > 0){
@@ -156,23 +133,22 @@ export class AddComponent{
   }
 
   updateUser(){
-    // this.spinner.show();
-    console.log("res")
-    // this.http.updateUser(this.Form.value).subscribe(res=>{
-    //   this.spinner.hide();
-    //   console.log("Success",res);
-    //     this.dialog.open(SuccessComponent,{
-    //       data:{
-    //         title:"Added!",
-    //         subTitle:res.message
-    //       },
-    //     });
-    //     this.dialogRef.close();
-    // },
-    // err=>{
-    //   this.spinner.hide();
-    //   console.log("Error",err);
-    //   alert('Something went wrong,please try again');
-    // })
+    this.spinner.show();
+    this.http.updateUser(this.Form.value).subscribe(res=>{
+      this.spinner.hide();
+      console.log("Success",res);
+        this.dialog.open(SuccessComponent,{
+          data:{
+            title:"Added!",
+            subTitle:res.message
+          },
+        });
+        this.dialogRef.close();
+    },
+    err=>{
+      this.spinner.hide();
+      console.log("Error",err);
+      alert('Something went wrong,please try again');
+    })
   }
 }
