@@ -27,7 +27,7 @@ import iconSet from '@expo/vector-icons/build/Fontisto';
 import { set } from 'react-native-reanimated';
 import { consumeAllItemsAndroid } from 'react-native-iap';
 import WorkoutProgressBar from '../../../../components/Workouts/WorkoutProgressBar';
-import { findWorkoutType, getLastExercise, showNextExerciseFlag } from '../../../../utils/workouts';
+import { findWorkoutType, getLastExercise, getRandomRestImages, showNextExerciseFlag } from '../../../../utils/workouts';
 import { isActiveChallenge } from '../../../../utils/challenges';
 import firebase from 'firebase';
 import moment from 'moment';
@@ -53,11 +53,16 @@ export default class ExercisesScreen extends React.PureComponent {
     const fitnessLevel =props.navigation.getParam('fitnessLevel', null);
     let rest = props.navigation.getParam('rest', false);
     const setCount = this.props.navigation.getParam('setCount', 1);
+    let restImage = '';
 
     let totalDuration = 0;
 
     if(rest){
-      totalDuration = workout.restIntervalMap[fitnessLevel-1] 
+      totalDuration = workout.restIntervalMap[fitnessLevel-1] ;
+      getRandomRestImages()
+      .then(res=>{
+        this.setState({restRandomImage:res})
+      })
     }else{
        totalDuration = workout.workIntervalMap[fitnessLevel-1] 
     }
@@ -91,6 +96,7 @@ export default class ExercisesScreen extends React.PureComponent {
           appState: AppState.currentState,
           rest:rest,
           setCount:setCount,
+          restRandomImage:''
           // isRunning:false
     };
   }
@@ -180,18 +186,18 @@ export default class ExercisesScreen extends React.PureComponent {
     const {workout} = this.state
     if(workout.workoutProcessType === 'oneByOne'){
       if (this.checkFinished(currentExerciseIndex,setCount)) {
-        console.log("update weekly targets")
+        // console.log("update weekly targets")
         this.updateWeekly();
         appsFlyer.trackEvent('resistance_workout_complete');
         this.workoutComplete(reps, resistanceCategoryId);
       }
    
       else if (setCount === this.state.workout.workoutReps) {
-        console.log("Go to next  exercise")
+        // console.log("Go to next  exercise")
         this.goToExercise(1,reps,resistanceCategoryId,currentExerciseIndex + 1,)
       } 
       else {
-        console.log("Incresase count")
+        // console.log("Incresase count")
         if (workout.rest && !this.state.rest) //for workout.rest === true
         {
           this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex ,true);
@@ -257,32 +263,12 @@ export default class ExercisesScreen extends React.PureComponent {
       fromCalender,
       extraProps
     });
-
-    // this.setExercise({
-    //     workout:this.state.workout,
-    //     setCount,
-    //     reps,
-    //     currentExerciseIndex,
-    //     rest,
-    //   })
-    // this.setState({
-    //   setCount:setCount,
-    //   reps: reps,
-    //   currentExerciseIndex: currentExerciseIndex,
-    //   rest: rest,
-    //   currentExercise:currentExercise,
-    //   currentExercise:workout['exercises'][currentExerciseIndex],
-    //   resistanceCategoryId: resistanceCategoryId
-    // })
   }
 
   restControl =(reps, resistanceCategoryId,currentExerciseIndex) =>{
     const {workout, setCount} = this.state;
-    console.log("rest call")
+    // console.log("rest call")
     if(workout.workoutProcessType === 'oneByOne'){
-      // if (setCount === workout.workoutReps && workout.rest) 
-      //   this.goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex ,true);
-      // else
         this.handleFinish( reps, resistanceCategoryId,currentExerciseIndex);
     }else if(workout.workoutProcessType === 'circular'){
 
@@ -331,7 +317,7 @@ export default class ExercisesScreen extends React.PureComponent {
     FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
         Promise.all(res.map(async (item,index) => {
             if (item.includes("exercise-")) {
-              console.log(`${FileSystem.cacheDirectory}${item}`)
+              // console.log(`${FileSystem.cacheDirectory}${item}`)
               FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
                 // console.log("deleted...",item)
               })
@@ -392,14 +378,13 @@ export default class ExercisesScreen extends React.PureComponent {
             let setCount = this.props.navigation.getParam('setCount', 1);
             
             if(this.checkFinished(currentExerciseIndex,setCount)){
-              console.log("update weekly target")
+              // console.log("update weekly target")
               this.updateWeekly();
                 appsFlyer.trackEvent('resistance_workout_complete');
                 this.workoutComplete(reps,null)
                
             }else{
               let {workout} = this.state
-              console.log(currentExerciseIndex,setCount)
               if(workout.workoutProcessType === 'oneByOne'){
                 if(currentExerciseIndex < workout.exercises.length-1)
                     this.goToExercise(1,reps,null,currentExerciseIndex + 1,false)
@@ -414,9 +399,7 @@ export default class ExercisesScreen extends React.PureComponent {
                       this.goToExercise(setCount + 1,reps,null,0,false)
                     }
               }
-       
             }
-           
           },
         },
       ],
@@ -457,12 +440,12 @@ export default class ExercisesScreen extends React.PureComponent {
       fitnessLevel,
       rest,
       workout,
+      restRandomImage
       // isRunning
     } = this.state;
 
   const setCount = this.props.navigation.getParam('setCount', 1)
 
-  // let getProgressType = findWorkoutType(workout);
     let handleSkip = false;
     if(workout.workoutProcessType !== 'onlyOne' && !workout.count){
       handleSkip = true
@@ -477,7 +460,6 @@ export default class ExercisesScreen extends React.PureComponent {
     }  
     if(workout.count && currentExercise && currentExercise.name === 'rest' && currentExercise['restIntervalMap']){
       this.repsInterval = currentExercise['restIntervalMap'][String(setCount)][String(fitnessLevel-1)]
-      console.log(this.repsInterval,String(setCount),currentExercise['restIntervalMap'][String(setCount)][String(fitnessLevel-1)])
     }  
     
 
@@ -522,7 +504,6 @@ export default class ExercisesScreen extends React.PureComponent {
         )
     }
 
-    console.log("videoPaused",videoPaused)
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -531,21 +512,7 @@ export default class ExercisesScreen extends React.PureComponent {
           style={styles.flexContainer}
         >
           <View>
-            {/* {
-              !rest && (<Video
-                  ref={(ref) => this.videoRef = ref}
-                  source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
-                  resizeMode="contain"
-                  repeat={true}
-                  muted={true}
-                  paused={videoPaused}
-                  playWhenInactive
-                  style={{ width, height: width }}
-                  onError={()=>Alert.alert('video play error')}
-                  onEnd={()=> this.videoRef.seek(0)}
-              />)
-               
-            } */}
+
             {
               !rest && (<Video
                 source={{ uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex+1}.mp4`}}
@@ -561,7 +528,8 @@ export default class ExercisesScreen extends React.PureComponent {
             }
             {
              rest && <FastImage
-                source={require('../../../../../assets/images/hiit-rest-placeholder.jpg')}
+                // source={require('../../../../../assets/images/hiit-rest-placeholder.jpg')}
+                source={{uri:restRandomImage,cache:'immutable'}}
                 style={{ width, height: width }}
               />
             }

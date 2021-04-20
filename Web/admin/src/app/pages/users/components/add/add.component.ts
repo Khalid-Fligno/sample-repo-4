@@ -40,6 +40,7 @@ export class AddComponent{
   {
     const d = this.data;
     if(d){
+      console.log(new Date(d.subscriptionInfo.expiry))
       this.Form = this.fb.group
       ({
         id:d?d.id:null,
@@ -155,22 +156,23 @@ export class AddComponent{
   }
 
   updateUser(){
-    this.spinner.show();
-    this.http.updateUser(this.Form.value).subscribe(res=>{
-      this.spinner.hide();
-      console.log("Success",res);
-        this.dialog.open(SuccessComponent,{
-          data:{
-            title:"Added!",
-            subTitle:res.message
-          },
-        });
-        this.dialogRef.close();
-    },
-    err=>{
-      this.spinner.hide();
-      console.log("Error",err);
-      alert('Something went wrong,please try again');
-    })
+    // this.spinner.show();
+    console.log("res")
+    // this.http.updateUser(this.Form.value).subscribe(res=>{
+    //   this.spinner.hide();
+    //   console.log("Success",res);
+    //     this.dialog.open(SuccessComponent,{
+    //       data:{
+    //         title:"Added!",
+    //         subTitle:res.message
+    //       },
+    //     });
+    //     this.dialogRef.close();
+    // },
+    // err=>{
+    //   this.spinner.hide();
+    //   console.log("Error",err);
+    //   alert('Something went wrong,please try again');
+    // })
   }
 }

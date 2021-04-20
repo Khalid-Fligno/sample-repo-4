@@ -1,3 +1,7 @@
+import AsyncStorage from "@react-native-community/async-storage";
+import FastImage from "react-native-fast-image";
+import { db } from "../../config/firebase";
+
 export const findFocus = (workoutObject) => {
   if (workoutObject.filters && workoutObject.filters.indexOf("upperBody") > -1) {
     return 'Upper Body';
@@ -96,6 +100,19 @@ export const showNextExerciseFlag = (workout,setCount,rest) =>{
   return showNextExercise
 }
 
+export const setRestImages =async() =>{
+    var restImages = (await db.collection('RestImages').doc('WFTvMwRtK5W0krXnIT4o').get()).data();
+    console.log("rest images",restImages);
+    FastImage.preload(restImages.images.map(res=>{return {uri:res}}));
+    await AsyncStorage.setItem('restImages', JSON.stringify(restImages.images) );
+}
+
+export const getRandomRestImages =async() =>{
+  const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
+  var images =JSON.parse(await AsyncStorage.getItem('restImages'));
+  console.log("getting rest images",images[getRandomNumber(images.length)])
+  return images[getRandomNumber(images.length)]
+}
 // export const getRegisteredWebHooks = () => {
 //   return async () => {
 //     const options = {

@@ -24,6 +24,7 @@ export class ViewComponent {
   }
 
   checkDateType(date:any){
+    console.log(typeof date)
     if(typeof date === "object")
       return true
     

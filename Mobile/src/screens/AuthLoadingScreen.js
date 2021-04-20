@@ -43,6 +43,7 @@ import RNIap, {
 } from 'react-native-iap';
 import { Platform } from 'react-native';
 import { Linking } from 'react-native';
+import { setRestImages } from '../utils/workouts';
 
 const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get('window');
@@ -71,7 +72,8 @@ const cacheSound = async (sounds) => {
 
 export default class AuthLoadingScreen extends React.PureComponent {
   componentDidMount = async () => {
-    this.checkAppVersion()
+    this.checkAppVersion();
+    await setRestImages();
   }
 
   async checkAppVersion(){
@@ -250,7 +252,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
         const { uid } = user;
         await AsyncStorage.setItem('uid', uid);
         const userRef = db.collection('users').doc(uid);
-       
           userRef
           .get()
           .then(async (doc) => {
