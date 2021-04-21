@@ -294,7 +294,7 @@ const createUserChallengeAndSubscription = async (req)=>{
       }
       // get user by email from firebase
       const user =await getUser(req.email);     
-      console.log(">>>",user) 
+      // console.log(">>>",user) 
       // 1. if user not exist, create that user
       if(user === undefined ){
         console.log("User not found")
@@ -321,7 +321,7 @@ const createUserChallengeAndSubscription = async (req)=>{
         const userChallenge= await getUserChallenge(user.id,challengeProductName);
         if(userChallenge && userChallenge.name == challengeProductName)
           { 
-            console.log("user has challenge");
+            // console.log("user has challenge");
             return true
           }
         }
