@@ -1,0 +1,49 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.formFooter{
+    display:flex;
+    justify-content: flex-end;
+}
+.heading{
+    background: lightgrey;
+    // text-transform: capitalize;
+    padding-left: 0.5rem;
+    border-radius:5px;
+    margin: 0px !important;
+    margin-bottom: 0.5rem !important;
+
+}
+.header{
+    margin: 1rem;
+    flex: 1;
+    display: flex;
+    justify-content:space-between;
+    margin-left: 5% !important;
+    margin-right: 5% !important;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.mat-elevation-z8{
+    margin-left: 5% !important;
+    margin-right: 5% !important;
+  }
+
+  .searchContainer{
+    font-size: xx-small;
+    padding: 0.5rem;
+    position:sticky  !important;
+    z-index: 10001;
+    background-color:white;
+    top:0
+}
+.searchContainer2{
+  margin-bottom: -1.34375em;
+  font-size: small;
+}
+.imgContainer{
+  margin-bottom: 1rem;
+}

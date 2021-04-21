@@ -1,0 +1,59 @@
+<!-- Name -->
+<h2 mat-dialog-title>{{data.firstName}} {{data.lastName}}</h2>
+
+<mat-dialog-content class="mat-typography">
+
+  <!-- Id -->
+  <h3 class="heading">Id :</h3>
+  <p>{{data.id}}</p>
+
+  <!-- E-mail -->
+  <h3 class="heading">E-mail :</h3>
+  <p>{{data.email}}</p>
+
+  <!-- Country -->
+  <div *ngIf='data.country'>
+    <h3 class="heading">Country :</h3>
+    <p>{{data.country}}</p>
+  </div>
+
+  <!-- Fitness Level -->
+  <div *ngIf='data.fitnessLevel'>
+    <h3 class="heading">Fitness Level :</h3>
+    <p>{{data.fitnessLevel}}</p>
+  </div>
+
+  <!-- SignUp Date -->
+  <!-- <div  *ngIf='data.signUpDate'>
+    <h3 class="heading">SignUp Date :</h3>
+    <p *ngIf="checkDateType(data.signUpDate)">{{data.signUpDate.toDate() | date: 'yyyy/MM/dd'}}</p>
+    <p *ngIf="!checkDateType(data.signUpDate)">{{data.signUpDate | date: 'yyyy/MM/dd'}}</p>
+  </div> -->
+
+  <!-- onboarded -->
+  <div *ngIf='data.onboarded'>
+    <h3 class="heading">Onboarded :</h3>
+    <p>{{data.onboarded}}</p>
+  </div>
+
+  <div *ngIf='data.subscriptionInfo'>
+    <h3 class="heading">Subscription Info :</h3>
+    <p *ngIf="data.subscriptionInfo.productId">Product Id : {{data.subscriptionInfo.productId}}</p>
+    <p *ngIf="data.subscriptionInfo.expiry">Expiry : {{data.subscriptionInfo.expiry | date: 'yyyy/MM/dd'}}</p>
+    <p *ngIf="data.subscriptionInfo.originalPurchaseDate">Original Purchase Date : {{data.subscriptionInfo.originalPurchaseDate | date: 'yyyy/MM/dd'}}</p>
+    <p *ngIf='data.subscriptionInfo.originalTransactionId'>Original Transaction Id / Order Id : {{data.subscriptionInfo.originalTransactionId}}</p>
+  </div>
+
+  <div *ngIf='challengeList'>
+    <h3 class="heading">Challenges :</h3>
+    <mat-list role="list">
+      <mat-list-item role="listitem" *ngFor="let item of challengeList" style="text-transform: capitalize;">&#8226; {{item.displayName}} ({{item.startDate}} to {{item.endDate}})</mat-list-item>
+    </mat-list>
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Edit</button> -->
+</mat-dialog-actions>
