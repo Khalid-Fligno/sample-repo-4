@@ -99,7 +99,7 @@ export default class FeedScreen extends React.PureComponent {
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       isActiveChallenge().then((res)=>{
         if(res){
-          if(this.state.blogs === undefined){
+          if(this.state.blogs === undefined && res.status === 'Active'){
             this.setState({loading:true})
             this.fetchActiveChallengeData(res);
           }

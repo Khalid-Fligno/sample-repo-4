@@ -129,7 +129,7 @@ export default class ExercisesScreen extends React.PureComponent {
     const userRef = db.collection('users').doc(uid);
 
     isActiveChallenge().then((res)=>{
-      if(res){
+      if(res && res.status === 'Active'){
         var challengeRef = db.collection('users').doc(uid).collection('challenges').doc(res.id);
         // Atomically add a new region to the "regions" array field.
         var workouts = challengeRef.update({

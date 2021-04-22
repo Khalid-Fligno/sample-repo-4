@@ -145,12 +145,6 @@ const calendarStyles = StyleSheet.create({
         width:'100%',
         marginTop:-20
       },
-    //   progressCircleContainer:{
-    //     width:'50%',
-    //     borderRightWidth:2,
-    //     borderRightColor:colors.grey.light,
-    //     paddingLeft:wp('3.5%')
-    //   },
       progressCircleContainer:{
         width:'100%',
       },
@@ -179,7 +173,20 @@ const calendarStyles = StyleSheet.create({
     alignItems: 'stretch', 
     justifyContent: 'center',
     marginHorizontal:10 
+    },
+
+    scheduleTitleStyle:{
+      textAlign:'center',
+      fontFamily:fonts.GothamMedium,
+      fontSize:wp('5%')
+    },
+    scheduleTextStyle:{
+      textAlign:'center',
+      marginTop:wp('2%'),
+      color:colors.grey.dark,
+      fontFamily:fonts.GothamMedium
     }
+
 });
 
 export default calendarStyles

@@ -9,14 +9,23 @@ export const isActiveChallenge = async() =>{
     const uid = await AsyncStorage.getItem('uid');
     const challengeRef = db.collection('users').doc(uid).collection('challenges')
     const snapshot = await challengeRef.where("status", "==" , "Active").get();
+    const scheduleSnapshot = await challengeRef.where("isSchedule", "==" , true).get();
     if (snapshot.empty) {
-        return false
-    }else{
-        let list = []
-        snapshot.forEach(doc => {
-            list.push(doc.data())
+      if(scheduleSnapshot.empty){
+        return false;
+      }else{
+        let list = [];
+        scheduleSnapshot.forEach(doc => {
+            list.push(doc.data());
           });
-        return list[0]
+        return list[0];
+      }
+    }else{
+        let list = [];
+        snapshot.forEach(doc => {
+            list.push(doc.data());
+          });
+        return list[0];
     }
 }
 
@@ -151,6 +160,10 @@ export const full_months =(dt)=>
     }else{
       return false;
     }
+  }
+
+  export const getSheduleChallenge = ()=>{
+    
   }
   //---------------------for login subscription---------------
 

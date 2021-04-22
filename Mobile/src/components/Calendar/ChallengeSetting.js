@@ -14,11 +14,16 @@ import { db } from '../../../config/firebase';
 import Loader from '../Shared/Loader';
 import { Alert } from 'react-native';
 import createUserChallengeData from '../../components/Challenges/UserChallengeData'
+import CalendarModal from '../Shared/CalendarModal';
+import { Platform } from 'react-native';
+import moment from 'moment';
 class ChallengeSetting extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        loading:false
+        loading:false,
+        calendarModalVisible:false,
+        chosenDate:this.props.ScheduleData?new Date(this.props.ScheduleData.startDate):new Date()
     };
   }
 
@@ -58,99 +63,260 @@ class ChallengeSetting extends Component {
     this.resetChallenge(data,callBack); 
   }
 
+  showCalendarModal = () => {
+    this.setState({ calendarModalVisible: true });
+  }
+
+  hideCalendarModal = () => {
+    this.setState({ calendarModalVisible: false,loading:false });
+  }
+
+  setDate = async (event, selectedDate) => {
+    // console.log("setDate call")
+    if(selectedDate && Platform.OS === 'android'){
+      this.hideCalendarModal();
+      this.setState({loading:true});
+      this.resetChallengeDate(selectedDate);
+    }
+    if(selectedDate && Platform.OS === 'ios'){
+    const currentDate = selectedDate;
+    this.setState({ chosenDate: currentDate });
+    }
+  }
+
+  resetChallengeDate(date){
+      this.setShedular(date);
+  }
+
+  async setShedular(selectedDate){
+    const TODAY = moment();
+    this.setState({loading:true});
+    const uid = await AsyncStorage.getItem('uid');
+    let {ScheduleData} = this.props
+          const userRef = db.collection('users').doc(uid).collection('challenges');
+          const data = createUserChallengeData(ScheduleData,selectedDate);
+          if(moment(selectedDate).isSame(TODAY, 'd')){
+            Object.assign(data,{status:'Active'});
+          }else{
+            Object.assign(data,{isSchedule:true,status:'InActive'});
+          }
+          userRef.doc(ScheduleData.id).set(data,{merge:true}).then((res)=>{
+            
+            Alert.alert('',
+              `Your start date has been added to your challenge. Go to ${moment(selectedDate).format('DD-MM-YY')} on the challenge dashboard to see what Day 1 looks like`,
+              [
+                { text: 'OK', onPress:()=>{
+                    this.hideCalendarModal();
+                    setTimeout(()=>{
+                        this.props.onToggle();
+                        this.props.fetchCalendarEntries();
+                    },100)
+
+                }},
+              ],
+              { cancelable: false },
+            );
+          }).catch((err)=>{
+            console.log(err)
+          })
+    
+  }
+
+  async discardChallengeFromSchedular(){
+    const {ScheduleData} = this.props
+    this.setState({loading:true})
+    const uid = await AsyncStorage.getItem('uid');
+    const userRef = db.collection('users').doc(uid).collection('challenges').doc(ScheduleData.id);
+    const newData = createUserChallengeData(ScheduleData,new Date())
+    // console.log(newData)
+    userRef.set(newData).then((res)=>{
+        this.setState({loading:false})
+        this.props.onToggle()
+        // console.log("res",res)
+        setTimeout(()=>this.props.navigation.navigate('ChallengeSubscription'),100)
+    }).catch((err)=>{
+      console.log(err)
+    })
+  }
+
   render() {
-      const {activeChallengeUserData} = this.props
+      const {activeChallengeUserData,isSchedule} = this.props
+      const {
+        calendarModalVisible,
+        chosenDate,
+        loading
+      } = this.state;
     //   console.log("activeChallengeUserData",this.props.activeChallengeUserData)
+    const activeChallengeSetting = (
+        <View
+        style={{
+            marginHorizontal:wp('4%'),
+        }}
+        >
+
+            <View style={{
+                marginTop:wp('5%'), 
+                borderTopWidth:1,
+                borderTopColor:colors.grey.light
+            }}>
+                <TouchableOpacity
+                    style={styles.btnContainer}
+                    onPress={()=>{
+                        Alert.alert('',
+                            'Are you sure you want to quit your challenge?',
+                            [
+                            {
+                                text: 'Cancel', style: 'cancel',
+                            },
+                            {
+                                text: 'Quit', onPress: () => this.quitChallenge(activeChallengeUserData),
+                            }],
+                            { cancelable: false },
+                        )
+                    }}
+                >
+                    <Text style={styles.title}>Quit challenge</Text>
+                    <DoubleRightArrow height={wp('3.5%')}/>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.btnContainer}
+                    onPress={()=>{
+                        Alert.alert('',
+                            'Are you sure you want to restart your challenge?',
+                            [
+                            {
+                                text: 'Cancel', style: 'cancel',
+                            },
+                            {
+                                text: 'Restart', onPress: () => this.restartChallenge(activeChallengeUserData),
+                            }],
+                            { cancelable: false },
+                        )
+                    }}
+                >
+                    <Text style={styles.title}>Restart challenge</Text>
+                    <DoubleRightArrow height={wp('3.5%')}/>
+                    
+                </TouchableOpacity>
+
+                <TouchableOpacity 
+                    style={styles.btnContainer}
+                    onPress={()=>{
+                        Alert.alert('Are you sure?',
+                            'To choose another you need to quit current active challenge.',
+                            [
+                            {
+                                text: 'Cancel', style: 'cancel',
+                            },
+                            {
+                                text: 'Quit', onPress: () => this.quitChallenge(activeChallengeUserData),
+                            }],
+                            { cancelable: false },
+                        )
+                    }}    
+                >
+                    <Text style={styles.title}>Choose another challenge</Text>
+                    <DoubleRightArrow height={wp('3.5%')}/>
+
+                </TouchableOpacity>
+            </View>
+
+        </View>
+    )
+
+    const scheduleChallengeSetting = (
+        <View
+        style={{
+            marginHorizontal:wp('4%'),
+        }}
+        >
+
+            <View style={{
+                marginTop:wp('5%'), 
+                borderTopWidth:1,
+                borderTopColor:colors.grey.light
+            }}>
+                <TouchableOpacity
+                    style={styles.btnContainer}
+                    onPress={()=>{
+                        Alert.alert('Are you sure!',
+                            'You want to reset your challenge start date?',
+                            [
+                            {
+                                text: 'Cancel', style: 'cancel',
+                            },
+                            {
+                                text: 'Reset', onPress: () => this.showCalendarModal(),
+                            }],
+                            { cancelable: false },
+                        )
+                    }}
+                >
+                    <Text style={styles.title}>Reset challenge start Date</Text>
+                    <DoubleRightArrow height={wp('3.5%')}/>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.btnContainer}
+                    onPress={()=>{
+                        Alert.alert('Are you sure !',
+                            'you want to remove challenge from schedular?',
+                            [
+                            {
+                                text: 'Cancel', style: 'cancel',
+                            },
+                            {
+                                text: 'Remove', onPress: () => this.discardChallengeFromSchedular(),
+                            }],
+                            { cancelable: false },
+                        )
+                    }}
+                >
+                    <Text style={styles.title}>Remove challenge from schedule</Text>
+                    <DoubleRightArrow height={wp('3.5%')}/>
+                    
+                </TouchableOpacity>
+
+            </View>
+
+        </View>
+    )
+    
     return (
                     <SafeAreaView style={{
                         backgroundColor:'white',
                         height:hp('100%'),
                         width:wp('70%'),
                     }}>
-                        <View
-                        style={{
-                            marginHorizontal:wp('4%'),
-                        }}
+                        <TouchableOpacity 
+                            style={{alignSelf:"flex-end", marginHorizontal:wp('4%'),}}
+                            onPress={this.props.onToggle}
                         >
-                            <TouchableOpacity 
-                                style={{alignSelf:"flex-end"}}
-                                onPress={this.props.onToggle}
-                            >
-                                <Icon name="cross" size={hp('2.5%')} color={colors.themeColor.color} />
-                            </TouchableOpacity>
-                            <View style={{
-                                marginTop:wp('5%'), 
-                                borderTopWidth:1,
-                                borderTopColor:colors.grey.light
-                            }}>
-                                <TouchableOpacity
-                                    style={styles.btnContainer}
-                                    onPress={()=>{
-                                        Alert.alert('',
-                                            'Are you sure you want to quit your challenge?',
-                                            [
-                                            {
-                                                text: 'Cancel', style: 'cancel',
-                                            },
-                                            {
-                                                text: 'Quit', onPress: () => this.quitChallenge(activeChallengeUserData),
-                                            }],
-                                            { cancelable: false },
-                                        )
-                                    }}
-                                >
-                                    <Text style={styles.title}>Quit challenge</Text>
-                                    <DoubleRightArrow height={wp('3.5%')}/>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                    style={styles.btnContainer}
-                                    onPress={()=>{
-                                        Alert.alert('',
-                                            'Are you sure you want to restart your challenge?',
-                                            [
-                                            {
-                                                text: 'Cancel', style: 'cancel',
-                                            },
-                                            {
-                                                text: 'Restart', onPress: () => this.restartChallenge(activeChallengeUserData),
-                                            }],
-                                            { cancelable: false },
-                                        )
-                                    }}
-                                >
-                                    <Text style={styles.title}>Restart challenge</Text>
-                                    <DoubleRightArrow height={wp('3.5%')}/>
-                                    
-                                </TouchableOpacity>
-
-                                <TouchableOpacity 
-                                    style={styles.btnContainer}
-                                    onPress={()=>{
-                                        Alert.alert('Are you sure?',
-                                            'To choose another you need to quit current active challenge.',
-                                            [
-                                            {
-                                                text: 'Cancel', style: 'cancel',
-                                            },
-                                            {
-                                                text: 'Quit', onPress: () => this.quitChallenge(activeChallengeUserData),
-                                            }],
-                                            { cancelable: false },
-                                        )
-                                    }}    
-                                >
-                                    <Text style={styles.title}>Choose another challenge</Text>
-                                    <DoubleRightArrow height={wp('3.5%')}/>
-
-                                </TouchableOpacity>
-                            </View>
-
-                        </View>
+                            <Icon name="cross" size={hp('2.5%')} color={colors.themeColor.color} />
+                        </TouchableOpacity>
+                        {
+                            !isSchedule &&
+                            activeChallengeSetting
+                        }
+                        {
+                            isSchedule && 
+                            scheduleChallengeSetting
+                        }
                         <Loader
                             loading={this.state.loading}
                             color={colors.red.standard}
                         />
+                        
+                            <CalendarModal
+                                isVisible={calendarModalVisible}
+                                onBackdropPress={this.hideCalendarModal}
+                                value={chosenDate}
+                                onChange={this.setDate}
+                                onPress={()=>this.resetChallengeDate(chosenDate)}
+                                addingToCalendar={loading}
+                                loading={loading}
+                            />  
                     </SafeAreaView>
     );
   }
@@ -173,6 +339,7 @@ const styles = StyleSheet.create({
         fontSize:wp('2.8%'),
         color:colors.black,
         textTransform:'uppercase',
-        marginLeft:wp('2%')
+        marginLeft:wp('2%'),
+        width:'80%'
     }
 });

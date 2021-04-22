@@ -5,7 +5,6 @@ import {
   View,
   Text,
   Alert,
-  TouchableOpacity,
   Linking
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -34,6 +33,7 @@ import Modal from "react-native-modal";
 import ChallengeSetting from '../../../components/Calendar/ChallengeSetting';
 import moment from 'moment';
 import createUserChallengeData from '../../../components/Challenges/UserChallengeData';
+import { widthPercentageToDP as wp} from 'react-native-responsive-screen';
 
 
 class CalendarHomeScreen extends React.PureComponent {
@@ -49,7 +49,9 @@ class CalendarHomeScreen extends React.PureComponent {
       activeChallengeData:undefined,
       todayRecommendedMeal:undefined,
       challengeMealsFilterList:undefined,
-      isSettingVisible: false
+      isSettingVisible: false,
+      isSchedule:false,
+      ScheduleData:undefined
     };
     this.calendarStrip = React.createRef();
   }
@@ -60,12 +62,18 @@ class CalendarHomeScreen extends React.PureComponent {
 
   componentDidMount = async () => {
     this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
-    // await this.fetchCalendarEntries();
+    await this.fetchCalendarEntries();
     await this.fetchActiveChallengeUserData();
     await this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting()
     });
 
+    this.focusListener = this.props.navigation.addListener('willFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+  async onFocusFunction(){
+    await this.fetchCalendarEntries();
   }
 
   handleActiveChallengeSetting(){
@@ -73,9 +81,10 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    if (this.unsubscribeFromEntries2) {
-      this.unsubscribeFromEntries2();
-    }
+    // if (this.unsubscribeFromEntries2) {
+    //   this.unsubscribeFromEntries2();
+    // }
+    this.focusListener.remove();  
     if(this.unsubscribeFACUD)
       this.unsubscribeFACUD();
     if(this.unsubscribeFACD)
@@ -85,9 +94,7 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   fetchCalendarEntries = async () => {
-    const uid = await AsyncStorage.getItem('uid');
     const selectedDate = this.calendarStrip.current.getSelectedDate();
-    const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
     //Todo :call the function to get the data of current date
     this.handleDateSelected(selectedDate)
     
@@ -95,37 +102,37 @@ class CalendarHomeScreen extends React.PureComponent {
 
   handleDateSelected = async (date) => {
     const { activeChallengeData,activeChallengeUserData} = this.state
-    this.setState({ loading: true });
-    const uid = await AsyncStorage.getItem('uid');
-    const stringDate = date.format('YYYY-MM-DD').toString();
-
+    this.setState({ loading: true,isSchedule:false });
+    this.stringDate = date.format('YYYY-MM-DD').toString();
     //TODO:check the active challenge cndtns
     if(activeChallengeData && activeChallengeUserData && 
-      new Date(activeChallengeUserData.startDate).getTime()<= new Date(stringDate).getTime() &&
-      new Date(activeChallengeUserData.endDate).getTime()>= new Date(stringDate).getTime()
+      new Date(activeChallengeUserData.startDate).getTime()<= new Date(this.stringDate).getTime() &&
+      new Date(activeChallengeUserData.endDate).getTime()>= new Date(this.stringDate).getTime()
        ){
       this.getCurrentPhaseInfo();
     }
-
-    this.unsubscribeFromEntries2 = await db.collection('users').doc(uid)
-      .collection('calendarEntries').doc(stringDate)
-      .onSnapshot(async (doc) => {
-        if (doc.exists) {
-          this.setState({
-            workout: await doc.data().workout,
-            loading: false,
-            dayOfWeek: date.format('d'),
-            meals:await doc.data()
-          });
-        } else {
-          this.setState({
-            workout: undefined,
-            loading: false,
-            dayOfWeek: date.format('d'),
-            meals:undefined
-          });
+    else{
+      this.checkScheduleChallenge();
+    }
+  }
+  
+  async checkScheduleChallenge(){
+    const uid = await AsyncStorage.getItem('uid');
+    //Checking if any schedule challenge is assign to user
+    isActiveChallenge().then((res)=>{
+      // console.log(res)
+        const todayDate=moment(new Date()).format('YYYY-MM-DD');
+        if(moment(res.startDate).isSame(todayDate) && res.isSchedule){
+          const challengeRef =db.collection('users').doc(uid).collection('challenges').doc(res.id);
+          challengeRef.set({status:"Active",isSchedule:false},{merge:true});  
         }
-      });
+        else 
+        if(res.isSchedule){
+          this.setState({isSchedule:true,ScheduleData:res});
+        }
+
+    })
+    this.setState({loading:false});
   }
 
   loadExercises = async (workoutId,challengeCurrentDay = 0) => {
@@ -196,41 +203,6 @@ class CalendarHomeScreen extends React.PureComponent {
       this.setState({ isSwiping: false })
   }
 
-  renderRightActions = (fieldToDelete) => {
-    return (
-      <TouchableOpacity
-        onPress={() => this.deleteCalendarEntry(fieldToDelete)}
-        style={calendarStyles.deleteButton}
-      >
-        <Text style={calendarStyles.deleteButtonText}>
-          Delete
-        </Text>
-      </TouchableOpacity>
-    );
-  }
-  renderRightActionForRC = (type) => {
-    const onClick =() =>{
-      if(type === 'workout')
-        this.props.navigation.navigate('WorkoutsHome')
-      else  
-      this.props.navigation.navigate('RecipeSelection', { 
-        meal:type ,
-        challengeMealsFilterList:this.state.challengeMealsFilterList
-      })
-    }
-    return (
-      <TouchableOpacity
-        onPress={() => onClick()}
-        style={[calendarStyles.deleteButton]}
-      >
-        <Text style={calendarStyles.deleteButtonText}>
-          View all
-        </Text>
-      </TouchableOpacity>
-    );
-  }
-
- 
   // ToDo : for challenges
   fetchActiveChallengeUserData = async () =>{
         
@@ -310,8 +282,8 @@ class CalendarHomeScreen extends React.PureComponent {
     if(activeChallengeUserData && activeChallengeData){
       this.setState({loading:true})
       const data  = activeChallengeUserData.phases;
-      this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
-    
+      // this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
+      console.log("date=>",this.stringDate)
     //TODO :getCurrent phase data
     this.phase = getCurrentPhase(activeChallengeUserData.phases,this.stringDate)
 
@@ -324,8 +296,10 @@ class CalendarHomeScreen extends React.PureComponent {
         this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
 
         //TODO calculate current challenge day
+        console.log(this.stringDate)
         this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
 
+        
         //TODO getToday one recommended meal randomly  
         getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).then((res)=>{
           // console.log("now display")
@@ -384,17 +358,26 @@ class CalendarHomeScreen extends React.PureComponent {
       loading,
       activeChallengeUserData,
       activeChallengeData,
-      todayRecommendedMeal
+      todayRecommendedMeal,
+      isSchedule,
+      ScheduleData
     } = this.state;
-    let showRC = false
+    let showRC = false;
     if(activeChallengeData && activeChallengeUserData){
-      let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD')
-      const isBetween = moment(currentDate).isBetween(activeChallengeUserData.startDate,activeChallengeUserData.endDate, undefined, '[]')
+      let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
+      //check if selected date is between challenge start and end date
+      const isBetween = moment(currentDate)
+                        .isBetween(
+                          activeChallengeUserData.startDate,
+                          activeChallengeUserData.endDate, 
+                          undefined, 
+                          '[]'
+                        );
       if(this.calendarStrip.current){
-        if(isBetween && todayRecommendedMeal && todayRecommendedMeal.length >0)
-          showRC = true
+        if(isBetween && todayRecommendedMeal && todayRecommendedMeal.length >0)  //check if user has recommended meals
+          showRC = true;
         else
-          showRC = false  
+          showRC = false;
       }
     }
     const mealsList =(
@@ -464,7 +447,10 @@ class CalendarHomeScreen extends React.PureComponent {
           onToggle={()=>this.toggleSetting()}
           activeChallengeUserData={activeChallengeUserData}
           activeChallengeData={activeChallengeData}
+          isSchedule={isSchedule}
+          ScheduleData={ScheduleData}
           navigation={this.props.navigation}
+          fetchCalendarEntries = {this.fetchCalendarEntries}
         />
       </Modal>
     )
@@ -473,15 +459,28 @@ class CalendarHomeScreen extends React.PureComponent {
       <View style={[globalStyle.container,{paddingHorizontal:0}]}>
         <CustomCalendarStrip 
             ref1={this.calendarStrip}
-            onDateSelected={(date) => this.handleDateSelected(date)}
+            onDateSelected={(date) => { this.handleDateSelected(date)}}
         />
-
-
+        {
+          isSchedule &&
+          <View 
+            style={{margin:wp('5%')}}
+          >
+            <Text 
+              style={calendarStyles.scheduleTitleStyle}
+            >
+              {ScheduleData.displayName}
+            </Text>
+            <Text
+              style={calendarStyles.scheduleTextStyle}
+            >
+              Your challenge will start from { moment(ScheduleData.startDate).format('DD MMM YYYY')}
+            </Text>
+          </View>  
+        }
         {
           dayDisplay
         }
-      
-       
          {
            setting
          }
