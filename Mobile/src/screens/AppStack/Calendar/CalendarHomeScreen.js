@@ -73,6 +73,7 @@ class CalendarHomeScreen extends React.PureComponent {
     })
   }
   async onFocusFunction(){
+    // this.setState({activeChallengeUserData:undefined})
     await this.fetchCalendarEntries();
   }
 
@@ -100,14 +101,20 @@ class CalendarHomeScreen extends React.PureComponent {
     
   }
 
+  resetActiveChallengeUserData =()=>{
+    this.setState({activeChallengeUserData:undefined})
+  }
+
   handleDateSelected = async (date) => {
     const { activeChallengeData,activeChallengeUserData} = this.state
     this.setState({ loading: true,isSchedule:false });
     this.stringDate = date.format('YYYY-MM-DD').toString();
     //TODO:check the active challenge cndtns
-    if(activeChallengeData && activeChallengeUserData && 
-      new Date(activeChallengeUserData.startDate).getTime()<= new Date(this.stringDate).getTime() &&
-      new Date(activeChallengeUserData.endDate).getTime()>= new Date(this.stringDate).getTime()
+    if(activeChallengeData && 
+        activeChallengeUserData && 
+          activeChallengeUserData.status ==="Active" &&
+            new Date(activeChallengeUserData.startDate).getTime()<= new Date(this.stringDate).getTime() &&
+              new Date(activeChallengeUserData.endDate).getTime()>= new Date(this.stringDate).getTime()
        ){
       this.getCurrentPhaseInfo();
     }
@@ -120,19 +127,33 @@ class CalendarHomeScreen extends React.PureComponent {
     const uid = await AsyncStorage.getItem('uid');
     //Checking if any schedule challenge is assign to user
     isActiveChallenge().then((res)=>{
-      // console.log(res)
         const todayDate=moment(new Date()).format('YYYY-MM-DD');
-        if(moment(res.startDate).isSame(todayDate) && res.isSchedule){
+        if(res && moment(res.startDate).isSame(todayDate) && res.isSchedule){
           const challengeRef =db.collection('users').doc(uid).collection('challenges').doc(res.id);
           challengeRef.set({status:"Active",isSchedule:false},{merge:true});  
         }
         else 
-        if(res.isSchedule){
-          this.setState({isSchedule:true,ScheduleData:res});
+        if( res && res.isSchedule){
+          const isBetween = moment(this.stringDate)
+          .isBetween(
+            res.startDate,
+            res.endDate, 
+            undefined, 
+            '[]'
+          );
+          if(isBetween){
+            this.fetchActiveChallengeData(res);
+            this.setState({isSchedule:true,ScheduleData:res});
+
+          }else{
+            this.setState({isSchedule:true,ScheduleData:res,loading:false});
+          }
+
+        }else{
+          this.setState({loading:false});
         }
 
     })
-    this.setState({loading:false});
   }
 
   loadExercises = async (workoutId,challengeCurrentDay = 0) => {
@@ -278,7 +299,7 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   getCurrentPhaseInfo(){
-    const {activeChallengeUserData,activeChallengeData} = this.state
+    const {activeChallengeUserData,activeChallengeData} = this.state;
     if(activeChallengeUserData && activeChallengeData){
       this.setState({loading:true})
       const data  = activeChallengeUserData.phases;
@@ -451,6 +472,7 @@ class CalendarHomeScreen extends React.PureComponent {
           ScheduleData={ScheduleData}
           navigation={this.props.navigation}
           fetchCalendarEntries = {this.fetchCalendarEntries}
+          resetActiveChallengeUserData={this.resetActiveChallengeUserData}
         />
       </Modal>
     )
@@ -462,7 +484,7 @@ class CalendarHomeScreen extends React.PureComponent {
             onDateSelected={(date) => { this.handleDateSelected(date)}}
         />
         {
-          isSchedule &&
+          isSchedule && !showRC&& 
           <View 
             style={{margin:wp('5%')}}
           >
@@ -475,6 +497,11 @@ class CalendarHomeScreen extends React.PureComponent {
               style={calendarStyles.scheduleTextStyle}
             >
               Your challenge will start from { moment(ScheduleData.startDate).format('DD MMM YYYY')}
+            </Text>
+            <Text
+              style={calendarStyles.scheduleTextStyle}
+            >
+              You can change this in settings
             </Text>
           </View>  
         }

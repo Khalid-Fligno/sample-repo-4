@@ -109,7 +109,9 @@ class ChallengeSetting extends Component {
                     this.hideCalendarModal();
                     setTimeout(()=>{
                         this.props.onToggle();
-                        this.props.fetchCalendarEntries();
+                        this.props.resetActiveChallengeUserData();
+                        setTimeout(()=>this.props.fetchCalendarEntries(),100)
+                        
                     },100)
 
                 }},
