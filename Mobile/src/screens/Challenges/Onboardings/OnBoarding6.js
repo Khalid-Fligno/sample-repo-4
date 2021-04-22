@@ -19,6 +19,7 @@ import { DotIndicator } from 'react-native-indicators';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
 import CalendarModal from '../../../components/Shared/CalendarModal';
+import { NavigationActions, StackActions } from 'react-navigation';
 const levelOfFiness=["Begineer","Intermediate","Advanced"];
 export default class OnBoarding6 extends Component {
   constructor(props) {
@@ -133,19 +134,17 @@ export default class OnBoarding6 extends Component {
   addedToCalendarPopup(stringDate2){
     const onPressAlert=() =>{
       this.hideCalendarModal();
-      this.props.navigation.navigate('Home');
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ 
+          routeName: 'Tabs',
+          action:NavigationActions.navigate({
+            routeName:'Calendar'
+          })
+        })],
+      });
+      this.props.navigation.dispatch(resetAction);
     }
-    // if(Platform.OS === 'android'){
-    //   this.hideCalendarModal();
-    //   Alert.alert(
-    //     '',
-    //     `Your start date has been added to your challenge. Go to ${stringDate2} on the challenge dashboard to see what Day 1 looks like`,
-    //     [
-    //       { text: 'OK', style: 'cancel' },
-    //     ],
-    //     { cancelable: false },
-    //   );
-    // }else{
       this.setState({ addingToCalendar: false});
       Alert.alert('',
         `Your start date has been added to your challenge. Go to ${stringDate2} on the challenge dashboard to see what Day 1 looks like`,

@@ -11,7 +11,8 @@ import Icon from '../Shared/Icon';
 const CustomCalendarStrip = (props) =>{
  const {
          ref1,
-         onDateSelected
+         onDateSelected,
+         CalendarSelectedDate
        } = props
     return (
         <View style={calendarStyles.calendarStripContainer}>
@@ -19,6 +20,7 @@ const CustomCalendarStrip = (props) =>{
           ref={ref1}
           maxDayComponentSize={50}
           onDateSelected={onDateSelected}
+          selectedDate={CalendarSelectedDate}
           daySelectionAnimation={{
             type: 'border',
             duration: 400,

@@ -17,6 +17,7 @@ import createUserChallengeData from '../../components/Challenges/UserChallengeDa
 import CalendarModal from '../Shared/CalendarModal';
 import { Platform } from 'react-native';
 import moment from 'moment';
+import { NavigationActions, StackActions } from 'react-navigation';
 class ChallengeSetting extends Component {
   constructor(props) {
     super(props);
@@ -106,13 +107,8 @@ class ChallengeSetting extends Component {
               `Your start date has been added to your challenge. Go to ${moment(selectedDate).format('DD-MM-YY')} on the challenge dashboard to see what Day 1 looks like`,
               [
                 { text: 'OK', onPress:()=>{
-                    this.hideCalendarModal();
-                    setTimeout(()=>{
-                        this.props.onToggle();
-                        this.props.resetActiveChallengeUserData();
-                        setTimeout(()=>this.props.fetchCalendarEntries(),100)
-                        
-                    },100)
+                    // this.hideCalendarModal();
+                    this.props.navigation.reset([NavigationActions.navigate({ routeName: 'CalendarHome' })], 0);
 
                 }},
               ],
@@ -132,10 +128,19 @@ class ChallengeSetting extends Component {
     const newData = createUserChallengeData(ScheduleData,new Date())
     // console.log(newData)
     userRef.set(newData).then((res)=>{
-        this.setState({loading:false})
-        this.props.onToggle()
-        // console.log("res",res)
-        setTimeout(()=>this.props.navigation.navigate('ChallengeSubscription'),100)
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ 
+              routeName: 'Tabs',
+              action:NavigationActions.navigate({
+                routeName:'ChallengeSubscription'
+              })
+            })],
+          });
+          this.props.navigation.dispatch(resetAction);
+        // this.setState({loading:false})
+        // this.props.onToggle()
+        // setTimeout(()=>this.props.navigation.navigate('ChallengeSubscription'),100)
     }).catch((err)=>{
       console.log(err)
     })
