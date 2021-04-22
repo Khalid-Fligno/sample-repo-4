@@ -40,12 +40,12 @@ export class AddComponent{
   {
     const d = this.data;
     if(d){
-      console.log(new Date(d.subscriptionInfo.expiry))
+      // console.log(new Date(d.subscriptionInfo.expiry))
       this.Form = this.fb.group
       ({
         id:d?d.id:null,
         subscriptionInfo:this.fb.group({
-          expiry:[d.subscriptionInfo?new Date(d.subscriptionInfo.expiry):'']
+          expiry:[d.subscriptionInfo && d.subscriptionInfo.expiry?new Date(d.subscriptionInfo.expiry):'']
         }),
         selectedChallenge:['']
       });

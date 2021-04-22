@@ -80,11 +80,11 @@ router.post('/updateUser',jsonParser,async (req,res)=>{
     console.log(data)
 
         const userRef = await db.collection('users').doc(data.id);
-        const userData = {
+        const userData = data.subscriptionInfo.expiry ?{
             "subscriptionInfo":{
                 "expiry":new Date(data.subscriptionInfo.expiry).getTime()
             }
-        }
+        }:{}
             userRef.set(userData,{merge:true}).then((response)=>{
                 console.log("user updtaed")
                 if(data.selectedChallenge && data.selectedChallenge.length > 0){
