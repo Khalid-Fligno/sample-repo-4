@@ -107,3 +107,4 @@ web-build/
 /.vs/slnx.sqlite-journal
 /.vs/slnx.sqlite
 /.vs
+Web/admin/dist
