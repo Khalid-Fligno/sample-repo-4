@@ -77,8 +77,6 @@ router.post('/addUser',jsonParser,async (req,res)=>{
 
 router.post('/updateUser',jsonParser,async (req,res)=>{
     var data = req.body;
-    console.log(data)
-
         const userRef = await db.collection('users').doc(data.id);
         const userData = data.subscriptionInfo.expiry ?{
             "subscriptionInfo":{
@@ -91,7 +89,6 @@ router.post('/updateUser',jsonParser,async (req,res)=>{
                     Promise.all(data.selectedChallenge.map(challengeId=>{
                         return new Promise(async(resolve,reject)=>{
                             const challengeData = await getChallengeById(challengeId);
-                            // console.log(challengeData)
                             const makeChallengeData = createNewChallenge(challengeData);
                             updateChallengesAgainstUser(makeChallengeData,data.id)
                             .then(res1=>{
@@ -114,7 +111,7 @@ router.post('/updateUser',jsonParser,async (req,res)=>{
                         console.log("Error",err)
                     })
                 }else{
-                    res.json({ success:true,response:response,message:"user added successfully with challenge "});
+                    res.json({ success:true,response:response,message:"user added successfully"});
                 }
             })
         .catch((err)=>{
