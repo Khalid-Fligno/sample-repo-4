@@ -13,7 +13,8 @@ const {
     , shopifyLastCharges
     , shopifyAllCharges
     , shopifyAllSubscriptions
-    , shopifyLastSubscriptions
+    , shopifyLastSubscriptions,
+    getUserByEmail
  } = require('./shopify.js');
 const adminRouter = require('./adminApi.js');
 var cors = require('cors')
@@ -34,6 +35,7 @@ app.get('/android/token/', getAndroidToken);
 
 app.post('/subscriptions/', jsonParser, getSubscriptions);
 
+app.get('/getUser',jsonParser,getUserByEmail)
 
 app.post('/shopify/charge/create/webhooks', jsonParser, createShopifyWebhooks);
 app.post('/shopify/subscription/created', jsonParser, createShopifySubscriptionWebhook);
@@ -48,4 +50,4 @@ app.get('/shopify/getLast2DaySubscriptions', jsonParser, shopifyLastSubscription
 
 //admin Api
 app.use('/admin',adminRouter );
-app.listen(8100);
+app.listen(3000);

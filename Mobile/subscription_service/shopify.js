@@ -25,6 +25,9 @@ const getRegisteredWebHooks = () => {
     };
   }
   
+  
+
+
 exports.createShopifyWebhooks = async (req, res)  => {
     const topics = [
         {'name':  'subscription/created', 'webhook_url': '/shopify/subscription/created'},
@@ -90,7 +93,7 @@ exports.createShopifySubscriptionWebhook = async(req, res) =>{
                  createUserChallengeAndSubscription({
                   email:customerEmail,
                   product_title:res.title,
-                  shopify_product_id:res.id
+                  shopify_product_id:res.product_id
                 }).then((res)=>{
                   console.log("response ",res)
                   resolve();
@@ -363,7 +366,9 @@ const getUser = async(emailId) => {
     const userRef = await db.collection('users').where("email","==",emailId).get();
     if (userRef.size > 0) {
       return userRef.docs[0].data();
-  }   
+    }else{
+      return undefined
+    }   
 }
 
 const addUser = (userInfo) => {
@@ -482,3 +487,10 @@ const today=new Date();
   "title":"App (12 Month Subscription)"
 }}
 
+exports.getUserByEmail =(req,res)=>{
+  var email = req.email;
+  console.log(email)
+  getUser("kuladip@bizminds.io").then(user=>{
+    res.json(user);
+  })
+}

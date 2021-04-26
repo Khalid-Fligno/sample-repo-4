@@ -20,7 +20,7 @@
     </mat-form-field>
 
     <!-- filters field -->
-    <div>
+    <!-- <div>
       <mat-form-field appearance="outline" >
         <mat-label>Select Lesson on which you want to add this exercise</mat-label>
         <mat-select formControlName="workoutIds" multiple>
@@ -33,17 +33,17 @@
         </mat-select>
         <mat-hint>Select workout that contain this exercise.</mat-hint>
       </mat-form-field>
-    </div>
+    </div> -->
     
     <!-- coachingTips field -->
-    <div formArrayName="coachingTips" >
+    <div formArrayName="coachingTip" >
       <span>
         <h3>Coaching tips</h3>
         <button mat-icon-button color="primary" (click)="addCoachingTip()">
           <mat-icon>add_circle</mat-icon>
         </button>
       </span>
-      <div *ngFor="let alias of coachingTips.controls; let i=index" style="justify-content: center;" class="group">
+      <div *ngFor="let alias of coachingTip.controls; let i=index" style="justify-content: center;" class="group">
         <!-- The repeated alias template -->
         <span>
           <mat-form-field appearance="outline" class="example-full-width">
@@ -58,26 +58,26 @@
     </div>
   
     <!-- Steps field -->
-    <div formArrayName="videos" >
+    <div formArrayName="videoUrls" >
       <span>
         <h3>Video:</h3>
-        <!-- <button mat-icon-button color="primary" (click)="addVideo()">
+        <button mat-icon-button color="primary" (click)="addVideo()">
           <mat-icon>add_circle</mat-icon>
-        </button> -->
+        </button>
       </span>
       
-      <div *ngFor="let video of videos.controls; let i=index" class="group">
+      <div *ngFor="let video of videoUrls.controls; let i=index" class="group">
         <div [formGroupName]="i">
-          <!-- <span>
+          <span>
             Video {{i+1}} 
             <button mat-icon-button color="primary" (click)="removeVideo(i)">
               <mat-icon>remove_circle</mat-icon>
             </button>
-          </span> -->
+          </span>
           
           <div class="imgContainer">
-            <video class="coverImage" controls autoplay loop  *ngIf="videos.value[i].url" >
-              <source [src]="sanitizedImagePath(videos.value[i].url)" type="video/mp4">
+            <video class="coverImage" controls autoplay loop  *ngIf="videoUrls.value[i].url" >
+              <source [src]="sanitizedImagePath(videoUrls.value[i].url)" type="video/mp4">
             </video>
             <div>
               <input type="file" (change)="onFileChange2($event,i)" accept=".mp4" required/>

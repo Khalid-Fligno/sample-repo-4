@@ -149,6 +149,39 @@ router.post('/deleteUser',jsonParser,async(req,res)=>{
     })
   })
   
+//Exercise------
+router.post('/addEditExercise',jsonParser, async(req, res) => {
+    console.log(req.body)
+    const recipeRef = await db.collection('Exercises').doc(req.body.id);
+      recipeRef.set(req.body,{merge:true}).then((response)=>{
+        res.json({ success:true,response:response});
+      })
+      .catch((err)=>{
+        res.status(500).json({success:false,err:err})
+      })
+  });
+  
+  router.post('/deleteExercise',jsonParser,async(req,res)=>{
+    db.collection('Exercises').doc(req.body.id).delete()
+    .then((res)=>{
+        bucket.deleteFiles({
+          prefix: `Exercises/${req.body.id}`
+        }, function(err) {
+          if (!err) {
+            console.log("file deleted")
+          }
+        });
+      res.send({success:true})
+    })
+    .catch((err)=>{
+      res.status(500).json({success:false,err:err})
+    })
+  
+  })
+
+
+
+
 
 module.exports = router;
 

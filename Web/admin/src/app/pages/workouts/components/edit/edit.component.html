@@ -5,8 +5,8 @@
     <div class="imgContainer">
       <h3>Cover image: *</h3>
       <img 
-        *ngIf="f.coverImage.valid" 
-        [src]="sanitizedImagePath(f.coverImage.value)"
+        *ngIf="f.thumbnail.valid" 
+        [src]="sanitizedImagePath(f.thumbnail.value)"
         class="coverImage"
       />
       <div>
@@ -43,16 +43,16 @@
     <!-- Sets field -->
     <mat-form-field appearance="outline" class="example-full-width">
       <mat-label>Sets(number)</mat-label>
-      <input matInput type="number"onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" placeholder="Only allow number" formControlName="sets" required>
+      <input matInput type="number"onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" placeholder="Only allow number" formControlName="WorkoutReps" required>
       <mat-hint>A set is a group of consecutive repetitions. For example, you can say, “I did two sets of ten reps on the crunches”</mat-hint>
     </mat-form-field>
 
     <!-- Reps field -->
-    <div formArrayName="reps">
+    <div formArrayName="difficultyLevel">
       <span>
         <h3>Reps(number) :</h3>
       </span>
-      <div *ngFor="let alias of reps.controls; let i=index" style="justify-content: center;">
+      <div *ngFor="let alias of difficultyLevel.controls; let i=index" style="justify-content: center;">
         <!-- The repeated alias template -->
         <span>
           <mat-form-field appearance="outline" class="example-full-width">
@@ -103,11 +103,42 @@
       <span>
         <h3>Filters</h3>
       </span>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="example-full-width">
         <mat-label>Select filter</mat-label>
         <mat-select formControlName="filters" multiple>
           <mat-option *ngFor="let item of workoutFilterList" [value]="item.value">{{item.label}}</mat-option>
         </mat-select>
+      </mat-form-field>
+    </div>
+
+
+    <!-- filters field -->
+    <div >
+      <span>
+        <h3>Tags</h3>
+      </span>
+      <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Select Tags</mat-label>
+        <mat-select formControlName="tags" multiple>
+          <mat-option *ngFor="let item of Tags" [value]="item.value">{{item.label}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+
+        <!-- filters field -->
+    <div>
+      <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Select Exercises</mat-label>
+        <mat-select formControlName="exercises" multiple>
+          <mat-form-field  appearance="outline" class="searchContainer" >
+            <mat-label>Search</mat-label>
+            <input type="text" matInput [formControl]="selectedItem" >
+            <mat-icon matPrefix color="primary">search</mat-icon> 
+          </mat-form-field>
+          <mat-option *ngFor="let item of exerciseList" [value]="item.id">{{item.displayName}}</mat-option>
+        </mat-select>
+        <mat-hint>Select workout that contain this exercise.</mat-hint>
       </mat-form-field>
     </div>
    

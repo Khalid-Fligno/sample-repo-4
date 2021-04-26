@@ -4,14 +4,14 @@
 <mat-dialog-content class="mat-typography">
   <h3 class="heading">Coaching Tips :</h3>
   <mat-list role="list">
-    <mat-list-item role="listitem" *ngFor="let item of data.coachingTips">&#8226; {{item}}</mat-list-item>
+    <mat-list-item role="listitem" *ngFor="let item of data.coachingTip">&#8226; {{item}}</mat-list-item>
   </mat-list>
 
   <h3 class="heading">Recommended resistance :</h3>
   <p>{{data.recommendedResistance}}</p>
 
   <h3 class="heading">Videos :</h3>
-  <div *ngFor="let item of data.videos;let index =index">
+  <div *ngFor="let item of data.videoUrls;let index =index">
     <h4>Video {{index+1}}</h4>
     <video class="coverImage" controls autoplay loop>
       <source [src]="item.url" type="video/mp4">

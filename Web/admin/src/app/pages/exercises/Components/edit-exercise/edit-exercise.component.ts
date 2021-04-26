@@ -49,9 +49,9 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
       name: [d && d.name?d.name:'',Validators.required],
       displayName: [d && d.displayName ?d.displayName:'',Validators.required],
       recommendedResistance: d && d.recommendedResistance?d.recommendedResistance:'',
-      coachingTips:d && d.coachingTips?this.fb.array(d.coachingTips.map((res:any)=>res)):this.fb.array([]),
-      videos: d && d.videos?this.fb.array(d.videos.map((res:any)=>this.newVideo(res))): this.fb.array([this.newVideo()]),
-      workoutIds:[d && d.workoutIds?d.workoutIds:'',Validators.required],
+      coachingTip:d && d.coachingTip?this.fb.array(d.coachingTip.map((res:any)=>res)):this.fb.array([]),
+      videoUrls: d && d.videoUrls?this.fb.array(d.videoUrls.map((res:any)=>this.newVideo(res))): this.fb.array([this.newVideo()]),
+      // workoutIds:[d && d.workoutIds?d.workoutIds:'',Validators.required],
     });
   }
 
@@ -86,29 +86,29 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
   }
 
   addWorkout(){
-    this.coachingTips.push(this.fb.control(''))
+    this.coachingTip.push(this.fb.control(''))
   }
   removeWorkout(i:number) {
-    this.coachingTips.removeAt(i);
+    this.coachingTip.removeAt(i);
   }
 
 
   //coaching tip
-  get coachingTips() : FormArray {
-    return this.Form.get("coachingTips") as FormArray
+  get coachingTip() : FormArray {
+    return this.Form.get("coachingTip") as FormArray
   }
 
   addCoachingTip(){
-    this.coachingTips.push(this.fb.control(''))
+    this.coachingTip.push(this.fb.control(''))
   }
   removeCoacingTip(i:number) {
-    this.coachingTips.removeAt(i);
+    this.coachingTip.removeAt(i);
   }
 
 
   //video
-  get videos() : FormArray {
-    return this.Form.get("videos") as FormArray
+  get videoUrls() : FormArray {
+    return this.Form.get("videoUrls") as FormArray
   }
 
   newVideo(data:any=null): FormGroup {
@@ -120,11 +120,11 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
   }
  
   addVideo() {
-    this.videos.push(this.newVideo());
+    this.videoUrls.push(this.newVideo());
   }
 
   removeVideo(i:number){
-    this.videos.removeAt(i);
+    this.videoUrls.removeAt(i);
   }
 
 
@@ -151,7 +151,7 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
         // var blob = base64Response.blob()._W;
         // console.log(reader.result as string);
         await base64Response.blob().then((res)=>{
-          this.videos.at(index)
+          this.videoUrls.at(index)
           .patchValue({
             url: res
           });
@@ -168,7 +168,7 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
 
 
   async upload() {
-    let data = this.videos.value.length > 0 ?[...this.videos.value]:[];
+    let data = this.videoUrls.value.length > 0 ?[...this.videoUrls.value]:[];
     console.log(data)
     Promise.all(
       data.map(async (res,index)=>{
@@ -180,7 +180,7 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
             this.uploadProgress = task.percentageChanges();
             (await task).ref.getDownloadURL()
             .then((res)=>{
-              this.videos.at(index).patchValue({
+              this.videoUrls.at(index).patchValue({
                 url:res
               })
               setTimeout(resolve, 0, 'success');
