@@ -320,8 +320,9 @@ const createUserChallengeAndSubscription = async (req)=>{
           addUser(newUser);   
       }
         if(challengeProductName.toLowerCase().includes("challenge")){  
+          console.log("here/....",challengeProductId)
         if(user && user !== null)  {       
-        const userChallenge= await getUserChallenge(user.id,challengeProductName);
+        const userChallenge= await getUserChallenge(user.id,challengeProductName,challengeProductId);
         if(userChallenge && userChallenge.name == challengeProductName)
           { 
             // console.log("user has challenge");
@@ -330,7 +331,8 @@ const createUserChallengeAndSubscription = async (req)=>{
         }
         // get product from line item collection
         // get workout challenge details by passing product_title  
-        const challenge= await getChallengeDetails(challengeProductName);
+        const challenge= await getChallengeDetails(challengeProductName,challengeProductId);
+        console.log(challenge)
         const userInfo=await getUser(req.email);
         if(challenge !=null){        
           const userChallenge=createNewChallenge(challenge)
@@ -383,15 +385,18 @@ const updateUserById = (userInfo) => {
   const userRef = db.collection('users').doc(userInfo.id);
   userRef.set(userInfo, { merge: true });
 }
-const getUserChallenge = async(userId,name)=>{
-  const snapshot=await db.collection('users').doc(userId).collection('challenges').where("name","==",name)
+const getUserChallenge = async(userId,name,challengeProductId)=>{
+  console.log("???",String(challengeProductId))
+  const snapshot=await db.collection('users').doc(userId).collection('challenges').where("shopifyProductId","==",String(challengeProductId))
   .get();
+  console.log(snapshot.size)
   if (snapshot.size > 0) {
+    console.log("????",snapshot.docs[0].data())
    return snapshot.docs[0].data();
 } 
 }
-const getChallengeDetails = async(name) => {
-    const snapshot =await db.collection('challenges').where("name","==",name)
+const getChallengeDetails = async(name,challengeProductId) => {
+    const snapshot =await db.collection('challenges').where("shopifyProductId","==",String(challengeProductId))
      .get();
      if (snapshot.size > 0) {
       return snapshot.docs[0].data();
@@ -489,7 +494,6 @@ const today=new Date();
 
 exports.getUserByEmail =(req,res)=>{
   var email = req.email;
-  console.log(email)
   getUser("kuladip@bizminds.io").then(user=>{
     res.json(user);
   })
