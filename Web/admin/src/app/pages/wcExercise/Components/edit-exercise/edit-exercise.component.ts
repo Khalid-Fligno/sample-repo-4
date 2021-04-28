@@ -23,12 +23,18 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
   Form: FormGroup;
   uploadProgress:any;
   unsubWorkouts:any;
-  modelNamesList:any =[];
+
   //search
   searchOptions:any[]=[];
   selectedItem = new FormControl();
   filteredOptions!: Observable<any>;
   //* */
+
+  typeList = [
+    {label:"Warm Up" , value:"WarmUp"},
+    {label:"Cool Down" , value:"coolDown"}
+  ]
+  modelNamesList:any = [];
   constructor
   (
     private fb:FormBuilder,
@@ -48,6 +54,7 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
       id:d && d.id?d.id:uuidv4(),
       name: [d && d.name?d.name:'',Validators.required],
       displayName: [d && d.displayName ?d.displayName:'',Validators.required],
+      type: [d && d.type ?d.type:'',Validators.required],
       recommendedResistance: d && d.recommendedResistance?d.recommendedResistance:'',
       coachingTip:d && d.coachingTip?this.fb.array(d.coachingTip.map((res:any)=>res)):this.fb.array([]),
       videoUrls: d && d.videoUrls?this.fb.array(d.videoUrls.map((res:any)=>this.newVideo(res))): this.fb.array([this.newVideo()]),
@@ -60,15 +67,15 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
     this.applySearch();
     this.getModels();
   }
-  ngOnDestroy(){
-    // this.unsubWorkouts();
-  }
 
   getModels(){
     this.http.getModels()
     .subscribe(res=>this.modelNamesList = res.models);
   }
 
+  ngOnDestroy(){
+    // this.unsubWorkouts();
+  }
 
 
   //form
@@ -182,7 +189,7 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
         return new Promise(async(resolve, reject) => {
           if(typeof res.url === 'object')  {
             // const randomId = Math.random().toString(36).substring(2);
-            const ref = this.afStorage.ref(`Exercises/${this.Form.value.id}/Video${index+1}`);
+            const ref = this.afStorage.ref(`WarmUpCoolDownExercises/${this.Form.value.id}/Video${index+1}`);
             const task = ref.put(res.url);
             this.uploadProgress = task.percentageChanges();
             (await task).ref.getDownloadURL()
@@ -213,7 +220,7 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
 
   saveData(){
     console.log(this.Form.value);
-    this.http.addEditExercises(this.Form.value).subscribe((res)=>{
+    this.http.addEditWCExercises(this.Form.value).subscribe((res)=>{
       if(res.success){
         this.dialog.open(SuccessComponent,{
           data:{
@@ -257,4 +264,6 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
     return this.searchOptions.filter((option:any) => option.name.toLowerCase().indexOf(filterValue) === 0);
   }
   //* *//
+
+
 }

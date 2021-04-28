@@ -25,6 +25,10 @@ const routes: Routes = [
         loadChildren:()=> import('../exercises/exercises.module').then( m => m.ExercisesModule)
       },
       {
+        path:'wcExercises',
+        loadChildren:()=> import('../wcExercise/wcExercises.module').then( m => m.wcExercisesModule)
+      },
+      {
         path:'workouts',
         loadChildren:()=> import('../workouts/workouts.module').then( m => m.WorkoutsModule)
       },

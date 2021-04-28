@@ -13,6 +13,10 @@ export class HttpService {
 
   constructor(private httpClient:HttpClient) { }
   
+
+  getModels(): Observable<any> {
+    return this.httpClient.get(`${this.HttpUrl}/getModels`)
+  }
   //recipe api
   getRecipes(): Observable<any> {
     return this.httpClient.get(`${this.HttpUrl}/getRecipes`);
@@ -34,6 +38,18 @@ export class HttpService {
   deleteExercise(data:any): Observable<any> {
     return this.httpClient.post(`${this.HttpUrl}/deleteExercise`,data);
   }
+
+
+  //Wc Exercises
+  addEditWCExercises(data:any): Observable<any> {
+    return this.httpClient.post(`${this.HttpUrl}/addEditWCExercise`,data);
+  }
+  deleteWCExercise(data:any): Observable<any> {
+    return this.httpClient.post(`${this.HttpUrl}/deleteWCExercise`,data);
+  }
+
+
+
 
   //workout api
   addEditWorkout(data:any): Observable<any> {

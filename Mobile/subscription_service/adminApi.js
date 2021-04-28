@@ -15,6 +15,13 @@ router.get('/',(req,res)=>{
     res.send("admin api work")
 })
 
+router.get('/getModels',jsonParser,async (req,res)=>{
+    const data = await (await db.collection('workoutCategories').doc('modelNamesList').get()).data();
+    if(data)
+        res.status(200).json(data);
+    else
+        res.status(200).json([]);    
+})
 router.post('/addUser',jsonParser,async (req,res)=>{
     console.log(req.body.email)
     var data = req.body;
@@ -179,7 +186,35 @@ router.post('/addEditExercise',jsonParser, async(req, res) => {
   
   })
 
-
+//Warm Up And Cool Down Exercise
+router.post('/addEditWCExercise',jsonParser, async(req, res) => {
+    console.log(req.body)
+    const recipeRef = await db.collection('WarmUpCoolDownExercises').doc(req.body.id);
+      recipeRef.set(req.body,{merge:true}).then((response)=>{
+        res.json({ success:true,response:response});
+      })
+      .catch((err)=>{
+        res.status(500).json({success:false,err:err})
+      })
+  });
+  
+  router.post('/deleteWCExercise',jsonParser,async(req,res)=>{
+    db.collection('WarmUpCoolDownExercises').doc(req.body.id).delete()
+    .then((res)=>{
+        bucket.deleteFiles({
+          prefix: `WarmUpCoolDownExercises/${req.body.id}`
+        }, function(err) {
+          if (!err) {
+            console.log("file deleted")
+          }
+        });
+      res.send({success:true})
+    })
+    .catch((err)=>{
+      res.status(500).json({success:false,err:err})
+    })
+  
+  })
 
 
 

@@ -11,30 +11,34 @@ import { map, startWith } from 'rxjs/operators';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { SuccessComponent } from 'src/app/components/success/success.component';
 import { HttpService } from 'src/app/http.service';
-import { EditComponent } from './components/edit/edit.component';
-import { ViewComponent } from './components/view/view.component';
+import { EditExerciseComponent } from './Components/edit-exercise/edit-exercise.component';
+import { ViewExerciseComponent } from './Components/view-exercise/view-exercise.component';
+
+
 
 @Component({
-  selector: 'app-workouts',
-  templateUrl: './workouts.component.html',
-  styleUrls: ['./workouts.component.scss']
+  selector: 'app-exercises',
+  templateUrl: './wcExercises.component.html',
+  styleUrls: ['./wcExercises.component.scss']
 })
 
-export class WorkoutsComponent implements OnInit {
+export class WCExercisesComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'title', 'view', 'edit','delete'];
+  displayedColumns: string[] = ['id', 'name', 'view', 'edit','delete'];
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   isLoading = true;
-  unsubWorkouts:any;
+  uploadProgress:any
+  uploadURL:any;
+  unsubExercise:any;
 
   //search
   selectedItem = new FormControl();
   searchOptions:any=[];
   filteredOptions!: Observable<any>;
   //*** */
-  
+
   constructor
   (
     private http:HttpService,
@@ -44,28 +48,27 @@ export class WorkoutsComponent implements OnInit {
     private spinner: NgxSpinnerService
   ) 
   { 
-    this.http.currentPage="Workouts";
+    this.http.currentPage="Warm Up and Cool down Exercises";
   }
 
-  async getWorkouts(){
-    const workoutRef = this.db.firestore.collection('Workouts');
-    this.unsubWorkouts = await workoutRef
+  async getExercises(){
+    const exerciseRef = this.db.firestore.collection('WarmUpCoolDownExercises');
+    this.unsubExercise = await exerciseRef
     .onSnapshot((querySnapshot) => {
-      var data:Array<any> =[]
+      var data:Array<any> =[];
       querySnapshot.forEach(doc => {
         data.push(doc.data())
       });
-      
+      this.isLoading = false;
+      this.spinner.hide();
       if(data.length >0){
-        this.searchOptions = data;
+        this.searchOptions = [...data];
         this.dataSource = new MatTableDataSource<any>(data);
         this.dataSource.paginator = this.paginator;
+
       }
-      this.isLoading = false;
-      this.spinner.hide();
-    }, (error) => {
-      this.isLoading = false;
-      this.spinner.hide();
+    }, 
+    (error) => {
       console.log("erroe",error)
     });
   }
@@ -73,18 +76,40 @@ export class WorkoutsComponent implements OnInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
+
   ngOnInit(): void {
     this.spinner.show();
-    this.getWorkouts();
+    this.getExercises();
     this.applySearch();
   }
 
+  //search
+  applySearch(){
+    this.filteredOptions = this.selectedItem.valueChanges
+    .pipe(
+      startWith(''),
+      map(value => typeof value === 'string' ? value : value.name),
+      map(name => name ? this._filter(name) : this.searchOptions.slice())
+    );
+    this.filteredOptions.subscribe(res=>{
+        this.dataSource = new MatTableDataSource<any>(res);
+        this.dataSource.paginator = this.paginator;
+    })
+  }
+
+  private _filter(name: string): any[] {
+    const filterValue = name.toLowerCase();
+
+    return this.searchOptions.filter((option:any) => option.name.toLowerCase().indexOf(filterValue) === 0);
+  }
+  //** */
+
   ngOnDestroy(){
-    this.unsubWorkouts();
+    this.unsubExercise();
   }
 
-  viewWorkout(data:any) {
-    const dialogRef = this.dialog.open(ViewComponent,{
+  viewExercise(data:any) {
+    const dialogRef = this.dialog.open(ViewExerciseComponent,{
       data:data,
       width: '100vw'
     });
@@ -93,8 +118,8 @@ export class WorkoutsComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
     });
   }
-  editWorkout(data:any=null) {
-    const dialogRef = this.dialog.open(EditComponent,{
+  editExercise(data:any=null) {
+    const dialogRef = this.dialog.open(EditExerciseComponent,{
       data:data,
       width: '100vw'
     });
@@ -104,47 +129,26 @@ export class WorkoutsComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
     });
   }
-  
-  deleteWorkout(data:any=null) {
-    console.log(data)
+
+  deleteExercise(data:any=null) {
+    // console.log(data)
     const dialogRef = this.dialog.open(AlertComponent,{
       data:{
         title:"Are you sure!",
-        subTitle:"Do you want to delete this workout"
+        subTitle:"Do you want to delete this exercise"
       },
     });
+
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
       if(result){
         this.spinner.show();
-        this.http.deleteWorkout(data).subscribe(res=>{
+        this.http.deleteWCExercise(data).subscribe(res=>{
           this.spinner.hide();
-          this.dialog.open(SuccessComponent,{data:{title:"Deleted!",subTitle:"Workout deleted successfully."}});
+          this.dialog.open(SuccessComponent,{data:{title:"Deleted!",subTitle:"Recipe deleted successfully."}});
         })
       }
     });
   }
-
-    //search
-    applySearch(){
-      this.filteredOptions = this.selectedItem.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value.name),
-        map(name => name ? this._filter(name) : this.searchOptions.slice())
-      );
-      this.filteredOptions.subscribe(res=>{
-          this.dataSource = new MatTableDataSource<any>(res);
-          this.dataSource.paginator = this.paginator;
-      })
-    }
-  
-    private _filter(name: string): any[] {
-      const filterValue = name.toLowerCase();
-  
-      return this.searchOptions.filter((option:any) => option.displayName.toLowerCase().indexOf(filterValue) === 0);
-    }
-    //** */
-
 }

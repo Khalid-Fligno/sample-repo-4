@@ -19,21 +19,18 @@
       <input matInput formControlName="recommendedResistance" required>
     </mat-form-field>
 
-    <!-- filters field -->
-    <!-- <div>
-      <mat-form-field appearance="outline" >
-        <mat-label>Select Lesson on which you want to add this exercise</mat-label>
-        <mat-select formControlName="workoutIds" multiple>
-          <mat-form-field  appearance="outline" class="searchContainer" >
-            <mat-label>Search</mat-label>
-            <input type="text" matInput [formControl]="selectedItem" >
-            <mat-icon matPrefix color="primary">search</mat-icon> 
-          </mat-form-field>
-          <mat-option *ngFor="let item of workoutList" [value]="item.id">{{item.displayName}}</mat-option>
+    <!-- type field -->
+    <div >
+      <span>
+        <h3>Type</h3>
+      </span>
+      <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Select Type</mat-label>
+        <mat-select formControlName="type" >
+          <mat-option *ngFor="let item of typeList" [value]="item.value">{{item.label}}</mat-option>
         </mat-select>
-        <mat-hint>Select workout that contain this exercise.</mat-hint>
       </mat-form-field>
-    </div> -->
+    </div>
     
     <!-- coachingTips field -->
     <div formArrayName="coachingTip" >
@@ -86,19 +83,20 @@
 
           <!-- <mat-form-field appearance="outline" >
             <mat-label>Model</mat-label>
-            <input matInput formControlName="model" required>
-          </mat-form-field>  -->
+            <input matInput formControlName="Model" required>
+          </mat-form-field>   -->
+            <!-- model field -->
             <div >
               <span>
                 <h3>Model</h3>
               </span>
               <mat-form-field appearance="outline" class="example-full-width">
-                <mat-label>Select Model</mat-label>
+                <mat-label>Select Type</mat-label>
                 <mat-select formControlName="model" >
                   <mat-option *ngFor="let item of modelNamesList" [value]="item.value">{{item.label}}</mat-option>
                 </mat-select>
               </mat-form-field>
-            </div> 
+            </div>
         </div>
       </div>
     </div>

@@ -125,10 +125,22 @@
       </mat-form-field>
     </div>
 
-
-        <!-- filters field -->
+    <!-- Exercise section -->
     <div>
+      <span>
+        <h3>Exercise Model</h3>
+      </span>
       <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Select Exercise Model</mat-label>
+        <mat-select formControlName="exerciseModel" >
+          <mat-option *ngFor="let item of modelNamesList" [value]="item.value">{{item.label}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div> 
+
+        <!-- Exercise field -->
+    <div>
+      <mat-form-field appearance="outline" >
         <mat-label>Select Exercises</mat-label>
         <mat-select formControlName="exercises" multiple>
           <mat-form-field  appearance="outline" class="searchContainer" >
@@ -138,10 +150,70 @@
           </mat-form-field>
           <mat-option *ngFor="let item of exerciseList" [value]="item.id">{{item.displayName}}</mat-option>
         </mat-select>
-        <mat-hint>Select workout that contain this exercise.</mat-hint>
+        <mat-hint>Select exercises you want to add in this workout.</mat-hint>
       </mat-form-field>
     </div>
-   
+    <!-- Exercise section closed-->
+
+      <!-- Warm Up Exercise section -->
+        <div>
+          <span>
+            <h3>Warm-Up Exercise Model</h3>
+          </span>
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Select Model</mat-label>
+            <mat-select formControlName="warmUpExerciseModel" >
+              <mat-option *ngFor="let item of modelNamesList" [value]="item.value">{{item.label}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div> 
+    
+            <!-- Exercise field -->
+        <div>
+          <mat-form-field appearance="outline" >
+            <mat-label>Select Warm Up Exercises</mat-label>
+            <mat-select formControlName="warmUpExercises" multiple>
+              <mat-form-field  appearance="outline" class="searchContainer" >
+                <mat-label>Search</mat-label>
+                <input type="text" matInput [formControl]="selectedItem" >
+                <mat-icon matPrefix color="primary">search</mat-icon> 
+              </mat-form-field>
+              <mat-option *ngFor="let item of exerciseListWC" [value]="item.id">{{item.displayName}}</mat-option>
+            </mat-select>
+            <mat-hint>Select exercises you want to add in this workout.</mat-hint>
+          </mat-form-field>
+        </div>
+      <!-- Warm Up Exercise section closed-->
+
+        <!--  Cool Down Exercise section -->
+          <div>
+            <span>
+              <h3>Cool Down Exercise Model</h3>
+            </span>
+            <mat-form-field appearance="outline" class="example-full-width">
+              <mat-label>Select Model</mat-label>
+              <mat-select formControlName="coolDownExerciseModel" >
+                <mat-option *ngFor="let item of modelNamesList" [value]="item.value">{{item.label}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div> 
+      
+              <!-- Exercise field -->
+          <div>
+            <mat-form-field appearance="outline" >
+              <mat-label>Select Cool Down Exercises</mat-label>
+              <mat-select formControlName="coolDownExercises" multiple>
+                <mat-form-field  appearance="outline" class="searchContainer" >
+                  <mat-label>Search</mat-label>
+                  <input type="text" matInput [formControl]="selectedItem" >
+                  <mat-icon matPrefix color="primary">search</mat-icon> 
+                </mat-form-field>
+                <mat-option *ngFor="let item of exerciseListWC" [value]="item.id">{{item.displayName}}</mat-option>
+              </mat-select>
+              <mat-hint>Select exercises you want to add in this workout.</mat-hint>
+            </mat-form-field>
+          </div>
+      <!-- Cool Down Exercise section closed-->
   </form>
 </mat-dialog-content>
 

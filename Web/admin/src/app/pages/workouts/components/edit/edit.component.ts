@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class EditComponent implements OnInit {
   exerciseList: any[] = [];
+  exerciseListWC: any[] = [];
   unsubExercise:any;
   Form: FormGroup;
   uploadProgress:any;
@@ -42,11 +43,18 @@ export class EditComponent implements OnInit {
     {label:"8 Week Challenge",value:'8WC'},
     {label:"Interval",value:'interval'},
   ];
+  modelNamesList:any =[];
   
     //search
     searchOptions:any[]=[];
     selectedItem = new FormControl();
     filteredOptions!: Observable<any>;
+    //* */
+
+    //search
+      searchOptionsWC:any[]=[];
+      selectedItemWC = new FormControl();
+      filteredOptionsWC!: Observable<any>;
     //* */
   constructor
   (
@@ -74,7 +82,12 @@ export class EditComponent implements OnInit {
       name: [d && d.name?d.name:'',Validators.required],
       restIntervalMap: d && d.restIntervalMap?this.fb.array(d.restIntervalMap.map((res:any)=>res)):this.fb.array(['','','']), //array
       tags : [d &&d.tags?d.tags:'',Validators.required], //array
+      exerciseModel : [d &&d.exercises?d.exercises:'',Validators.required], //array
       exercises : [d &&d.exercises?d.exercises:'',Validators.required], //array
+      warmUpExerciseModel : [d &&d.warmUpExerciseModel?d.warmUpExerciseModel:'',Validators.required], //array
+      warmUpExercises : [d &&d.warmUpExercises?d.warmUpExercises:'',Validators.required], //array
+      coolDownExerciseModel : [d &&d.coolDownExerciseModel?d.coolDownExerciseModel:'',Validators.required], //array
+      coolDownExercises : [d &&d.coolDownExercises?d.coolDownExercises:'',Validators.required], //array
       workIntervalMap: d && d.workIntervalMap?this.fb.array(d.workIntervalMap.map((res:any)=>res)):this.fb.array(['','','']), //array
       WorkoutReps: [d && d.WorkoutReps?d.WorkoutReps:'',Validators.required], //WorkoutReps means Sets
       workoutTime: [d && d.workoutTime?d.workoutTime:'',Validators.required],
@@ -86,7 +99,14 @@ export class EditComponent implements OnInit {
 
     this.getExercises();
     this.applySearch();
+    this.getModels();
    }
+
+   getModels(){
+    this.http.getModels()
+    .subscribe(res=>this.modelNamesList = res.models);
+  }
+
 
   get f(){
     return this.Form.controls;
@@ -136,42 +156,19 @@ export class EditComponent implements OnInit {
       });
     }
   
-    // addExercise(){
-    //   this.exer.push(this.fb.control(''))
-    // }
-    // removeExercise(i:number) {
-    //   this.coachingTip.removeAt(i);
-    // }
-
-  // addDifficultyLevel(){
-  //   this.difficultyLevel.push(this.fb.control(''))
-  // }
-  // removeDifficultyLevel(i:number) {
-  //   this.difficultyLevel.removeAt(i);
-  // }
-
-  // addFilters(){
-  //   this.filters.push(this.fb.control(''))
-  // }
-    // removeFilters(i:number) {
-  //   this.filters.removeAt(i);
-  // }
-
-
-  // addRestIntervalMap(){
-  //   this.restIntervalMap.push(this.fb.control(''))
-  // }
-  // removeRestIntervalMap(i:number) {
-  //   this.restIntervalMap.removeAt(i);
-  // }
-  // addWorkIntervalMap(){
-  //   this.workIntervalMap.push(this.fb.control(''))
-  // }
-
-  // removeWorkIntervalMap(i:number) {
-  //   this.workIntervalMap.removeAt(i);
-  // }
-  
+    async getExercisesWC(){
+      const workoutRef = this.db.firestore.collection('Exercises');
+      this.unsubExercise = await workoutRef
+      .onSnapshot((querySnapshot) => {
+        var data:any =[]
+        querySnapshot.forEach(doc => {
+          data.push(doc.data());
+        });
+        this.exerciseListWC = this.searchOptionsWC = data;
+      }, (error) => {
+        console.log("erroe",error)
+      });
+    }
 
   sanitizedImagePath(blob:any)
   {
@@ -294,4 +291,27 @@ export class EditComponent implements OnInit {
       return this.searchOptions.filter((option:any) => option.name.toLowerCase().indexOf(filterValue) === 0);
     }
     //* *//
+
+        //search
+        applyWarmUpSearch(){
+          this.filteredOptions = this.selectedItem.valueChanges
+          .pipe(
+            startWith(''),
+            map(value => typeof value === 'string' ? value : value.name),
+            map(name => name ? this._filter2(name) : this.searchOptionsWC.slice())
+          );
+          this.filteredOptionsWC.subscribe(res=>{
+            console.log(res)
+            if(res.length > 0) {
+              this.exerciseListWC = res;
+            }
+          })
+        }
+          
+      
+        private _filter2(name: string): any[] {
+          const filterValue = name.toLowerCase();
+          return this.searchOptionsWC.filter((option:any) => option.name.toLowerCase().indexOf(filterValue) === 0);
+        }
+        //* *//
 }
