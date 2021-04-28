@@ -175,7 +175,7 @@
             <mat-select formControlName="warmUpExercises" multiple>
               <mat-form-field  appearance="outline" class="searchContainer" >
                 <mat-label>Search</mat-label>
-                <input type="text" matInput [formControl]="selectedItem" >
+                <input type="text" matInput [formControl]="selectedItemWC" >
                 <mat-icon matPrefix color="primary">search</mat-icon> 
               </mat-form-field>
               <mat-option *ngFor="let item of exerciseListWC" [value]="item.id">{{item.displayName}}</mat-option>
@@ -205,7 +205,7 @@
               <mat-select formControlName="coolDownExercises" multiple>
                 <mat-form-field  appearance="outline" class="searchContainer" >
                   <mat-label>Search</mat-label>
-                  <input type="text" matInput [formControl]="selectedItem" >
+                  <input type="text" matInput [value]="selectedItemWC.value" [formControl]="selectedItemWC" >
                   <mat-icon matPrefix color="primary">search</mat-icon> 
                 </mat-form-field>
                 <mat-option *ngFor="let item of exerciseListWC" [value]="item.id">{{item.displayName}}</mat-option>

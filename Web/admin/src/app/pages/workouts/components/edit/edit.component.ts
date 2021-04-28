@@ -1,5 +1,5 @@
 import { D } from '@angular/cdk/keycodes';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -17,11 +17,14 @@ import { v4 as uuidv4 } from 'uuid';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit ,OnDestroy {
+  Form: FormGroup;
+  
   exerciseList: any[] = [];
   exerciseListWC: any[] = [];
   unsubExercise:any;
-  Form: FormGroup;
+  unsubExerciseWC:any;
+
   uploadProgress:any;
   fitnessLevels=["Beginner","Intermediate","Expert"];
   workoutFilterList: any[] = [
@@ -45,17 +48,17 @@ export class EditComponent implements OnInit {
   ];
   modelNamesList:any =[];
   
-    //search
-    searchOptions:any[]=[];
-    selectedItem = new FormControl();
-    filteredOptions!: Observable<any>;
-    //* */
+  //search
+  searchOptions:any[]=[];
+  selectedItem = new FormControl();
+  filteredOptions!: Observable<any>;
+  //* */
 
-    //search
-      searchOptionsWC:any[]=[];
-      selectedItemWC = new FormControl();
-      filteredOptionsWC!: Observable<any>;
-    //* */
+  //search WC
+    searchOptionsWC:any[]=[];
+    selectedItemWC = new FormControl();
+    filteredOptionsWC!: Observable<any>;
+  //* */
   constructor
   (
     private fb:FormBuilder,
@@ -100,6 +103,14 @@ export class EditComponent implements OnInit {
     this.getExercises();
     this.applySearch();
     this.getModels();
+    this.getExercisesWC();
+    this.applyWarmUpSearch();
+
+   }
+
+   ngOnDestroy(){
+     this.unsubExercise();
+     this.unsubExerciseWC();
    }
 
    getModels(){
@@ -157,8 +168,8 @@ export class EditComponent implements OnInit {
     }
   
     async getExercisesWC(){
-      const workoutRef = this.db.firestore.collection('Exercises');
-      this.unsubExercise = await workoutRef
+      const workoutRef = this.db.firestore.collection('WarmUpCoolDownExercises');
+      this.unsubExerciseWC = await workoutRef
       .onSnapshot((querySnapshot) => {
         var data:any =[]
         querySnapshot.forEach(doc => {
@@ -294,7 +305,7 @@ export class EditComponent implements OnInit {
 
         //search
         applyWarmUpSearch(){
-          this.filteredOptions = this.selectedItem.valueChanges
+          this.filteredOptionsWC = this.selectedItemWC.valueChanges
           .pipe(
             startWith(''),
             map(value => typeof value === 'string' ? value : value.name),

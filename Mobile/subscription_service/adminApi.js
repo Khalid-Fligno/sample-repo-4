@@ -2,7 +2,6 @@ const bodyParser = require('body-parser');
 var express = require('express');
 var router = express.Router();
 let moment = require('moment');
-const hostUrl='https://3.8.209.87';
 var  admin  = require('./firebase');
 const db= admin.firestore();
 const storage = admin.storage();

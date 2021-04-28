@@ -154,7 +154,9 @@ export class UsersComponent implements OnInit {
 async  searchByEmail(){
     this.isLoading = true;
     const usersRef = this.db.firestore.collection('users');
-    var data = await usersRef.where('email',"==",this.selectedItem.value).get();
+    var data = await usersRef
+    .where('email',"==",this.selectedItem.value)
+    .get();
 
     if(data.docs.length === 0){
         this.dialog.open(SuccessComponent,{data:{title:"Not found!",subTitle:"User not found with this email in db"}});
