@@ -135,22 +135,10 @@ export class EditComponent implements OnInit ,OnDestroy {
     return this.Form.get("restIntervalMap") as FormArray
   }
 
-  get tags() : FormArray{
-    return this.Form.get("tags") as FormArray
-  }
-
-  addTags(){
-    this.tags.push(this.fb.control(''))
-  }
-
-  removeTags(i:number) {
-    this.tags.removeAt(i);
-  }
 
   get workIntervalMap() : FormArray{
     return this.Form.get("workIntervalMap") as FormArray
   }
-
 
     //workouts
     async getExercises(){
@@ -303,26 +291,33 @@ export class EditComponent implements OnInit ,OnDestroy {
     }
     //* *//
 
-        //search
-        applyWarmUpSearch(){
-          this.filteredOptionsWC = this.selectedItemWC.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => typeof value === 'string' ? value : value.name),
-            map(name => name ? this._filter2(name) : this.searchOptionsWC.slice())
-          );
-          this.filteredOptionsWC.subscribe(res=>{
-            console.log(res)
-            if(res.length > 0) {
-              this.exerciseListWC = res;
-            }
-          })
+    //search
+    applyWarmUpSearch(){
+      this.filteredOptionsWC = this.selectedItemWC.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(name => name ? this._filter2(name) : this.searchOptionsWC.slice())
+      );
+      this.filteredOptionsWC.subscribe(res=>{
+        console.log(res)
+        if(res.length > 0) {
+          this.exerciseListWC = res;
         }
-          
+      })
+    }
       
-        private _filter2(name: string): any[] {
-          const filterValue = name.toLowerCase();
-          return this.searchOptionsWC.filter((option:any) => option.name.toLowerCase().indexOf(filterValue) === 0);
-        }
-        //* *//
+  
+    private _filter2(name: string): any[] {
+      const filterValue = name.toLowerCase();
+      return this.searchOptionsWC.filter((option:any) => option.name.toLowerCase().indexOf(filterValue) === 0);
+    }
+    //* *//
+
+    onChangeWCModel(model:String){
+      console.log("???",model)
+      // this.exerciseListWC = this.searchOptionsWC.filter((options:any)=>)
+      // console.log("????",this.Form.value)
+    }
+
 }

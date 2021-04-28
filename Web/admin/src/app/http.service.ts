@@ -6,8 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HttpService {
-  HttpUrl = "https://3.10.57.182/admin"
-  // HttpUrl = "http://inflowactive.api.bizminds.io/admin";
+  // HttpUrl = "http://localhost:8100/admin";
+  HttpUrl = "https://3.10.57.182/admin";
+
   currentPage = "Dashboard";
   urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
 

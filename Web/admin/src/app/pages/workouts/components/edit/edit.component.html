@@ -162,7 +162,7 @@
           </span>
           <mat-form-field appearance="outline" class="example-full-width">
             <mat-label>Select Model</mat-label>
-            <mat-select formControlName="warmUpExerciseModel" >
+            <mat-select formControlName="warmUpExerciseModel" (ngModelChange)="onChangeWCModel(Form.value.warmUpExerciseModel)" >
               <mat-option *ngFor="let item of modelNamesList" [value]="item.value">{{item.label}}</mat-option>
             </mat-select>
           </mat-form-field>
@@ -192,7 +192,7 @@
             </span>
             <mat-form-field appearance="outline" class="example-full-width">
               <mat-label>Select Model</mat-label>
-              <mat-select formControlName="coolDownExerciseModel" >
+              <mat-select formControlName="coolDownExerciseModel" (ngModelChange)="onChangeWCModel(Form.value.coolDownExerciseModel)">
                 <mat-option *ngFor="let item of modelNamesList" [value]="item.value">{{item.label}}</mat-option>
               </mat-select>
             </mat-form-field>
