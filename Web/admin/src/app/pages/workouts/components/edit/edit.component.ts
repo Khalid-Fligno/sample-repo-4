@@ -45,7 +45,7 @@ export class EditComponent implements OnInit ,OnDestroy {
   Tags: any[] = [
     {label:"Subscription",value:'Subscription'},
     {label:"8 Week Challenge",value:'8WC'},
-    {label:"Interval",value:'interval'},
+    {label:"New Year Better You",value:'NYBY'},
   ];
   modelNamesList:any =[];
   
@@ -65,9 +65,9 @@ export class EditComponent implements OnInit ,OnDestroy {
     selectedItemCD= new FormControl();
     filteredOptionsCD!: Observable<any>;
   //* */
-  selectedModel:string=''
-  selectedModelWC:string=''
-  selectedModelCD:string=''
+  selectedModel:string='';
+  selectedModelWC:string='';
+  selectedModelCD:string='';
   constructor
   (
     private fb:FormBuilder,
@@ -106,7 +106,8 @@ export class EditComponent implements OnInit ,OnDestroy {
       workIntervalMap: d && d.workIntervalMap?this.fb.array(d.workIntervalMap.map((res:any)=>res)):this.fb.array(['','','']), //array
       WorkoutReps: [d && d.WorkoutReps?d.WorkoutReps:'',Validators.required], //WorkoutReps means Sets
       workoutTime: [d && d.workoutTime?d.workoutTime:'',Validators.required],
-      count:[d && d.count?d.count:false]
+      count:[d && d.count?d.count:false],
+      newWorkout:true
     });
    }
 
@@ -258,7 +259,17 @@ export class EditComponent implements OnInit ,OnDestroy {
 
   saveData(){
       console.log(this.Form.value);
-      this.http.addEditWorkout(this.Form.value).subscribe((res)=>{
+      const filters = this.Form.value.filters;
+      let workoutProcessType = '';
+      if(filters.includes('strength'))
+        workoutProcessType = 'oneByOne'
+      else if(filters.includes('circuit'))
+        workoutProcessType = 'circular'
+      else if(filters.includes('interval'))
+        workoutProcessType = 'onlyOne'
+
+
+      this.http.addEditWorkout({...this.Form.value,workoutProcessType}).subscribe((res)=>{
         if(res.success){
           this.dialog.open(SuccessComponent,{
             data:{
