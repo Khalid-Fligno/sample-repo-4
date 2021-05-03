@@ -215,6 +215,30 @@ router.post('/addEditWCExercise',jsonParser, async(req, res) => {
   
   })
 
+  //Workout
+router.post('/addEditWorkout',jsonParser, async(req, res) => {
+  console.log(req.body)
+  const recipeRef = await db.collection('Workouts').doc(req.body.id);
+    recipeRef.set(req.body,{merge:true}).then((response)=>{
+      res.json({ success:true,response:response});
+    })
+    .catch((err)=>{
+      res.status(500).json({success:false,err:err})
+    })
+});
+
+router.post('/deleteWorkout',jsonParser,async(req,res)=>{
+  db.collection('Workouts').doc(req.body.id).delete()
+  .then((res)=>{
+    res.send({success:true})
+  })
+  .catch((err)=>{
+    res.status(500).json({success:false,err:err})
+  })
+
+})
+
+
 
 
 module.exports = router;

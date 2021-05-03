@@ -132,7 +132,7 @@
       </span>
       <mat-form-field appearance="outline" class="example-full-width">
         <mat-label>Select Exercise Model</mat-label>
-        <mat-select formControlName="exerciseModel" >
+        <mat-select formControlName="exerciseModel" (ngModelChange)="onChangeModel(Form.value.exerciseModel,'')">
           <mat-option *ngFor="let item of modelNamesList" [value]="item.value">{{item.label}}</mat-option>
         </mat-select>
       </mat-form-field>
@@ -148,7 +148,10 @@
             <input type="text" matInput [formControl]="selectedItem" >
             <mat-icon matPrefix color="primary">search</mat-icon> 
           </mat-form-field>
-          <mat-option *ngFor="let item of exerciseList" [value]="item.id">{{item.displayName}}</mat-option>
+          <div *ngFor="let item of exerciseList"> 
+            <mat-option *ngIf="checkExerciseContainModel(item,'')" [value]="item.id">{{item.displayName}}</mat-option>
+
+          </div>
         </mat-select>
         <mat-hint>Select exercises you want to add in this workout.</mat-hint>
       </mat-form-field>
@@ -162,7 +165,7 @@
           </span>
           <mat-form-field appearance="outline" class="example-full-width">
             <mat-label>Select Model</mat-label>
-            <mat-select formControlName="warmUpExerciseModel" (ngModelChange)="onChangeWCModel(Form.value.warmUpExerciseModel)" >
+            <mat-select formControlName="warmUpExerciseModel" (ngModelChange)="onChangeModel(Form.value.warmUpExerciseModel,'WC')" >
               <mat-option *ngFor="let item of modelNamesList" [value]="item.value">{{item.label}}</mat-option>
             </mat-select>
           </mat-form-field>
@@ -178,7 +181,9 @@
                 <input type="text" matInput [formControl]="selectedItemWC" >
                 <mat-icon matPrefix color="primary">search</mat-icon> 
               </mat-form-field>
-              <mat-option *ngFor="let item of exerciseListWC" [value]="item.id">{{item.displayName}}</mat-option>
+              <div *ngFor="let item of exerciseListWC">
+                <mat-option *ngIf="checkExerciseContainModel(item,'WC')"  [value]="item.id" >{{item.displayName}}</mat-option>
+              </div>
             </mat-select>
             <mat-hint>Select exercises you want to add in this workout.</mat-hint>
           </mat-form-field>
@@ -192,7 +197,7 @@
             </span>
             <mat-form-field appearance="outline" class="example-full-width">
               <mat-label>Select Model</mat-label>
-              <mat-select formControlName="coolDownExerciseModel" (ngModelChange)="onChangeWCModel(Form.value.coolDownExerciseModel)">
+              <mat-select formControlName="coolDownExerciseModel" (ngModelChange)="onChangeModel(Form.value.coolDownExerciseModel,'CD')">
                 <mat-option *ngFor="let item of modelNamesList" [value]="item.value">{{item.label}}</mat-option>
               </mat-select>
             </mat-form-field>
@@ -205,10 +210,12 @@
               <mat-select formControlName="coolDownExercises" multiple>
                 <mat-form-field  appearance="outline" class="searchContainer" >
                   <mat-label>Search</mat-label>
-                  <input type="text" matInput [value]="selectedItemWC.value" [formControl]="selectedItemWC" >
+                  <input type="text" matInput [value]="selectedItemCD.value" [formControl]="selectedItemCD" >
                   <mat-icon matPrefix color="primary">search</mat-icon> 
                 </mat-form-field>
-                <mat-option *ngFor="let item of exerciseListWC" [value]="item.id">{{item.displayName}}</mat-option>
+                <div *ngFor="let item of exerciseListCD">
+                  <mat-option *ngIf="checkExerciseContainModel(item,'CD')" [value]="item.id">{{item.displayName}}</mat-option>
+                </div>
               </mat-select>
               <mat-hint>Select exercises you want to add in this workout.</mat-hint>
             </mat-form-field>

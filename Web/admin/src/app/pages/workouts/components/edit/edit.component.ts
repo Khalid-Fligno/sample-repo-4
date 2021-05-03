@@ -1,4 +1,4 @@
-import { D } from '@angular/cdk/keycodes';
+import { D, T } from '@angular/cdk/keycodes';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -22,6 +22,7 @@ export class EditComponent implements OnInit ,OnDestroy {
   
   exerciseList: any[] = [];
   exerciseListWC: any[] = [];
+  exerciseListCD: any[] = [];
   unsubExercise:any;
   unsubExerciseWC:any;
 
@@ -59,6 +60,14 @@ export class EditComponent implements OnInit ,OnDestroy {
     selectedItemWC = new FormControl();
     filteredOptionsWC!: Observable<any>;
   //* */
+  //search WC
+    searchOptionsCD:any[]=[];
+    selectedItemCD= new FormControl();
+    filteredOptionsCD!: Observable<any>;
+  //* */
+  selectedModel:string=''
+  selectedModelWC:string=''
+  selectedModelCD:string=''
   constructor
   (
     private fb:FormBuilder,
@@ -73,7 +82,10 @@ export class EditComponent implements OnInit ,OnDestroy {
   ) 
   {
     console.log(this.data)
-    const d = this.data
+    const d = this.data;
+    this.selectedModel = d && d.exerciseModel?d.exerciseModel:'';
+    this.selectedModelWC = d && d.warmUpExerciseModel?d.warmUpExerciseModel:'';
+    this.selectedModelCD = d && d.exerciseModel?d.exerciseModel:'';
     this.Form = this.fb.group({
       id:d && d.id?d.id:uuidv4(),
       thumbnail: [d && d.thumbnail?d.thumbnail:'',Validators.required],
@@ -85,7 +97,7 @@ export class EditComponent implements OnInit ,OnDestroy {
       name: [d && d.name?d.name:'',Validators.required],
       restIntervalMap: d && d.restIntervalMap?this.fb.array(d.restIntervalMap.map((res:any)=>res)):this.fb.array(['','','']), //array
       tags : [d &&d.tags?d.tags:'',Validators.required], //array
-      exerciseModel : [d &&d.exercises?d.exercises:'',Validators.required], //array
+      exerciseModel : [d &&d.exerciseModel?d.exerciseModel:'',Validators.required], //array
       exercises : [d &&d.exercises?d.exercises:'',Validators.required], //array
       warmUpExerciseModel : [d &&d.warmUpExerciseModel?d.warmUpExerciseModel:'',Validators.required], //array
       warmUpExercises : [d &&d.warmUpExercises?d.warmUpExercises:'',Validators.required], //array
@@ -94,7 +106,7 @@ export class EditComponent implements OnInit ,OnDestroy {
       workIntervalMap: d && d.workIntervalMap?this.fb.array(d.workIntervalMap.map((res:any)=>res)):this.fb.array(['','','']), //array
       WorkoutReps: [d && d.WorkoutReps?d.WorkoutReps:'',Validators.required], //WorkoutReps means Sets
       workoutTime: [d && d.workoutTime?d.workoutTime:'',Validators.required],
-      
+      count:[d && d.count?d.count:false]
     });
    }
 
@@ -105,7 +117,7 @@ export class EditComponent implements OnInit ,OnDestroy {
     this.getModels();
     this.getExercisesWC();
     this.applyWarmUpSearch();
-
+    this.applyCoolDownSearch();
    }
 
    ngOnDestroy(){
@@ -163,7 +175,7 @@ export class EditComponent implements OnInit ,OnDestroy {
         querySnapshot.forEach(doc => {
           data.push(doc.data());
         });
-        this.exerciseListWC = this.searchOptionsWC = data;
+        this.exerciseListWC = this.exerciseListCD=this.searchOptionsWC = data;
       }, (error) => {
         console.log("erroe",error)
       });
@@ -314,10 +326,65 @@ export class EditComponent implements OnInit ,OnDestroy {
     }
     //* *//
 
-    onChangeWCModel(model:String){
-      console.log("???",model)
-      // this.exerciseListWC = this.searchOptionsWC.filter((options:any)=>)
-      // console.log("????",this.Form.value)
+    //search colldown
+    applyCoolDownSearch(){
+      this.filteredOptionsCD = this.selectedItemCD.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(name => name ? this._filter3(name) : this.searchOptionsWC.slice())
+      );
+      this.filteredOptionsCD.subscribe(res=>{
+        console.log(res)
+        if(res.length > 0) {
+          this.exerciseListCD = res;
+        }
+      })
+    }
+      
+  
+    private _filter3(name: string): any[] {
+      const filterValue = name.toLowerCase();
+      return this.searchOptionsWC.filter((option:any) => option.name.toLowerCase().indexOf(filterValue) === 0);
+    }
+    //* *//
+
+    onChangeModel(model:string,type:string){
+      // let data =[]
+      // data = this.searchOptionsWC.filter((exercise)=>{
+      //   let matchVideo = exercise.videoUrls.filter((video: any)=>video.model === model);
+      //   if(matchVideo.length > 0)
+      //     return true;
+      //   else
+      //     return false;
+
+      // });
+      if(type === 'WC')
+        this.selectedModelWC = model;
+      else if(type === 'CD')
+        this.selectedModelCD = model;
+      else
+        this.selectedModel = model;
+
     }
 
+    checkExerciseContainModel(data:any,type:string){
+      let matchVideo = data.videoUrls.filter((video: any)=>{
+        if(type === 'WC'){
+          return video.model === this.selectedModelWC
+        }else if(type === 'CD'){
+          return video.model === this.selectedModelCD
+        }
+        else{
+          return video.model === this.selectedModel
+        }
+         
+      });
+      if(matchVideo.length > 0)
+        return true;
+      else
+        return false;
+    }
+
+    
 }

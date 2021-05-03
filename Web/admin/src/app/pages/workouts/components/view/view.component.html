@@ -3,7 +3,7 @@
 
 <mat-dialog-content class="mat-typography">
 
-  <img [src]="data.coverImage" class="coverImage"/>
+  <img [src]="data.thumbnail" class="coverImage"/>
    
   <h3 class="heading">Workout Time(min) :</h3>
   <mat-list role="list">
@@ -12,14 +12,14 @@
 
   <h3 class="heading">Reps :</h3>
   <mat-list role="list">
-    <div *ngFor="let item of data.reps; let i=index" style="justify-content: center;">
+    <div *ngFor="let item of data.difficultyLevel; let i=index" style="justify-content: center;">
       <mat-list-item role="listitem">&#8226; {{item}} - {{fitnessLevels[i]}}</mat-list-item>
     </div>
   </mat-list>
 
   <h3 class="heading">Sets :</h3>
   <mat-list role="list">
-    <mat-list-item role="listitem">{{data.sets}}</mat-list-item>
+    <mat-list-item role="listitem">{{data.WorkoutReps}}</mat-list-item>
   </mat-list>
 
   <h3 class="heading">Rest :</h3>
@@ -45,7 +45,32 @@
   <div *ngFor="let item of exerciseList;let index =index">
     <h4>&#8226; Exercise {{index+1}} : {{item.displayName}}</h4>
     <div class="stepContainer">
-        <div *ngFor="let video of item.videos" style="margin-left: 0.5rem;">
+        <div *ngFor="let video of item.videoUrls" style="margin-left: 0.5rem;">
+          <video class="stepImage" controls autoplay loop >
+            <source [src]="video.url" type="video/mp4">
+          </video>
+          <p style="padding:0px !important">{{video.model}}</p>
+        </div>
+    </div>
+  </div>
+  <h3 class="heading">Warm Up Exercises :</h3>
+  <div *ngFor="let item of exerciseListWC;let index =index">
+    <h4>&#8226; Exercise {{index+1}} : {{item.displayName}}</h4>
+    <div class="stepContainer">
+        <div *ngFor="let video of item.videoUrls" style="margin-left: 0.5rem;">
+          <video class="stepImage" controls autoplay loop >
+            <source [src]="video.url" type="video/mp4">
+          </video>
+          <p style="padding:0px !important">{{video.model}}</p>
+        </div>
+    </div>
+  </div>
+
+  <h3 class="heading">Cool Down Exercises :</h3>
+  <div *ngFor="let item of exerciseListCD;let index =index">
+    <h4>&#8226; Exercise {{index+1}} : {{item.displayName}}</h4>
+    <div class="stepContainer">
+        <div *ngFor="let video of item.videoUrls" style="margin-left: 0.5rem;">
           <video class="stepImage" controls autoplay loop >
             <source [src]="video.url" type="video/mp4">
           </video>

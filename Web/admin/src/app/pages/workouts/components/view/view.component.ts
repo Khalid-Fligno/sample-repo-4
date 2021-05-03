@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -8,11 +8,15 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./view.component.scss']
 })
 
-export class ViewComponent implements OnInit {
+export class ViewComponent implements OnInit ,OnDestroy {
 
   unsubExercise:any;
+  unsubExerciseWC:any;
+  unsubExerciseCD:any;
   fitnessLevels=["Beginner","Intermediate","Expert"];
   exerciseList:any = [];
+  exerciseListWC:any = [];
+  exerciseListCD:any = [];
 
   constructor
   ( 
@@ -23,11 +27,18 @@ export class ViewComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.data);
     this.getExercises();
+    this.getExercisesWC();
+    this.getExercisesCD();
+  }
+  ngOnDestroy(){
+    this.unsubExercise();
+    this.unsubExerciseWC();
+    this.unsubExerciseCD();
   }
 
   async getExercises()
   {
-    const exerciseRef = this.db.firestore.collection('Exercises').where('workoutIds' ,'array-contains',this.data.id);
+    const exerciseRef = this.db.firestore.collection('Exercises').where('id' ,'in',this.data.exercises);
     this.unsubExercise = await exerciseRef
     .onSnapshot((querySnapshot) => {
       var data:Array<any> =[];
@@ -43,4 +54,44 @@ export class ViewComponent implements OnInit {
       console.log("erroe",error)
     });
   }
+
+  async getExercisesWC()
+  {
+    const exerciseRef = this.db.firestore.collection('WarmUpCoolDownExercises').where('id' ,'in',this.data.warmUpExercises);
+    this.unsubExerciseWC = await exerciseRef
+    .onSnapshot((querySnapshot) => {
+      var data:Array<any> =[];
+      querySnapshot.forEach(doc => {
+        data.push(doc.data())
+      });
+      if(data.length >0){
+        this.exerciseListWC = data;
+        console.log(data)
+      }
+    }, 
+    (error) => {
+      console.log("erroe",error)
+    });
+  }
+
+  async getExercisesCD()
+  {
+    const exerciseRef = this.db.firestore.collection('WarmUpCoolDownExercises').where('id' ,'in',this.data.coolDownExercises);
+    this.unsubExerciseCD = await exerciseRef
+    .onSnapshot((querySnapshot) => {
+      var data:Array<any> =[];
+      querySnapshot.forEach(doc => {
+        data.push(doc.data())
+      });
+      if(data.length >0){
+        this.exerciseListCD = data;
+        console.log(data)
+      }
+    }, 
+    (error) => {
+      console.log("erroe",error)
+    });
+  }
+
+  
 }

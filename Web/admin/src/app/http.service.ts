@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HttpService {
-  // HttpUrl = "http://localhost:8100/admin";
-  HttpUrl = "https://3.10.57.182/admin";
+  HttpUrl = "http://localhost:8100/admin";
+  // HttpUrl = "https://3.10.57.182/admin";
 
   currentPage = "Dashboard";
   urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
@@ -54,7 +54,7 @@ export class HttpService {
 
   //workout api
   addEditWorkout(data:any): Observable<any> {
-    return this.httpClient.post(`${this.HttpUrl}/addWorkout`,data);
+    return this.httpClient.post(`${this.HttpUrl}/addEditWorkout`,data);
   }
   deleteWorkout(data:any): Observable<any> {
     return this.httpClient.post(`${this.HttpUrl}/deleteWorkout`,data);
