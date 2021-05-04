@@ -320,8 +320,8 @@ export class EditComponent implements OnInit, OnDestroy {
 
   saveData(){
     console.log(this.Form.value);
-    const  data = {...this.Form.value,...this.Form2.value,...this.Form3.value}
-    this.http.addEditProgram(data).subscribe((res)=>{
+    const  data = {...this.Form.value,...this.Form2.value,...this.Form3.value,newChallenge:true}
+    this.http.addEditChallenge(data).subscribe((res)=>{
       if(res.success){
        this.dialog.open(SuccessComponent,{
           data:{
@@ -347,7 +347,7 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   async getRecipe(){
-    const recipeRef = this.db.firestore.collection('Recipes');
+    const recipeRef = this.db.firestore.collection('recipes');
     this.unsubRecipe = await recipeRef
     .onSnapshot((querySnapshot) => {
       var data:Array<any> =[];

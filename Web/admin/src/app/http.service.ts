@@ -69,11 +69,11 @@ export class HttpService {
   }
 
   //program api
-  addEditProgram(data:any): Observable<any> {
-    return this.httpClient.post(`${this.HttpUrl}/addEditProgram`,data);
+  addEditChallenge(data:any): Observable<any> {
+    return this.httpClient.post(`${this.HttpUrl}/addEditChallenge`,data);
   }
-  deleteProgram(data:any): Observable<any> {
-    return this.httpClient.post(`${this.HttpUrl}/deleteProgram`,data);
+  deleteChallenge(data:any): Observable<any> {
+    return this.httpClient.post(`${this.HttpUrl}/deleteChallenge`,data);
   }
 
   //user api

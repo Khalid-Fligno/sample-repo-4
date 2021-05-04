@@ -102,9 +102,12 @@ export const showNextExerciseFlag = (workout,setCount,rest) =>{
 
 export const setRestImages =async() =>{
     var restImages = (await db.collection('RestImages').doc('WFTvMwRtK5W0krXnIT4o').get()).data();
-    console.log("rest images",restImages);
-    FastImage.preload(restImages.images.map(res=>{return {uri:res}}));
-    await AsyncStorage.setItem('restImages', JSON.stringify(restImages.images) );
+    // console.log("rest images",restImages);
+    if(restImages && restImages.images.length >0 ){
+      FastImage.preload(restImages.images.map(res=>{return {uri:res}}));
+      await AsyncStorage.setItem('restImages', JSON.stringify(restImages.images) );
+    }
+
 }
 
 export const getRandomRestImages =async() =>{

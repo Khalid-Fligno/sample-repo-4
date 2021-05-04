@@ -28,7 +28,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
 
   async getRecipe(){
-    const recipeRef = this.db.firestore.collection('Recipes');
+    const recipeRef = this.db.firestore.collection('recipes');
     this.unsubRecipe = await recipeRef
     .onSnapshot((querySnapshot) => {
       var data:Array<any> =[];

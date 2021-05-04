@@ -45,15 +45,16 @@ export class ProgramsComponent implements OnInit {
     private spinner: NgxSpinnerService
   ) 
   { 
-    this.http.currentPage="Programs";
+    this.http.currentPage="Challenges";
   }
 
   async getchallenges(){
-    const challengeRef = this.db.firestore.collection('Programs');
+    const challengeRef = this.db.firestore.collection('challenges');
     this.unsubChallenges = await challengeRef
     .onSnapshot((querySnapshot) => {
       var data:Array<any> =[];
       querySnapshot.forEach(doc => {
+        if(doc.data().newChallenge)
         data.push(doc.data())
       });
     if(data.length >0){
@@ -139,7 +140,7 @@ export class ProgramsComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
       if(result){
         this.spinner.show();
-        this.http.deleteProgram(data).subscribe(res=>{
+        this.http.deleteChallenge(data).subscribe(res=>{
           this.spinner.hide();
           this.dialog.open(SuccessComponent,{data:{title:"Deleted!",subTitle:"Program deleted successfully."}});
         })
