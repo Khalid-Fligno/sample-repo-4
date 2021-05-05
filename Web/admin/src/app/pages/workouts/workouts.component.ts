@@ -48,11 +48,12 @@ export class WorkoutsComponent implements OnInit {
   }
 
   async getWorkouts(){
-    const workoutRef = this.db.firestore.collection('Workouts');
+    const workoutRef = this.db.firestore.collection('newWorkouts');
     this.unsubWorkouts = await workoutRef
     .onSnapshot((querySnapshot) => {
       var data:Array<any> =[]
       querySnapshot.forEach(doc => {
+        if(doc.data().newWorkout)
         data.push(doc.data())
       });
       

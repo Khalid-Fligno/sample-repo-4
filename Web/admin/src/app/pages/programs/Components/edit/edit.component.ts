@@ -372,7 +372,7 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   async getWorkout(){
-    const recipeRef = this.db.firestore.collection('Workouts');
+    const recipeRef = this.db.firestore.collection('newWorkouts');
     this.unsubWorkout = await recipeRef
     .onSnapshot((querySnapshot) => {
       var data:Array<any> =[]
