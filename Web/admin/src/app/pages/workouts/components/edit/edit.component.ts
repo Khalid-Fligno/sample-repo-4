@@ -104,7 +104,7 @@ export class EditComponent implements OnInit ,OnDestroy {
       coolDownExerciseModel : [d &&d.coolDownExerciseModel?d.coolDownExerciseModel:'',Validators.required], //array
       coolDownExercises : [d &&d.coolDownExercises?d.coolDownExercises:'',Validators.required], //array
       workIntervalMap: d && d.workIntervalMap?this.fb.array(d.workIntervalMap.map((res:any)=>res)):this.fb.array(['','','']), //array
-      WorkoutReps: [d && d.WorkoutReps?d.WorkoutReps:'',Validators.required], //WorkoutReps means Sets
+      workoutReps: [d && d.workoutReps?d.workoutReps:'',Validators.required], //WorkoutReps means Sets
       workoutTime: [d && d.workoutTime?d.workoutTime:'',Validators.required],
       count:[d && d.count?d.count:false],
       newWorkout:true

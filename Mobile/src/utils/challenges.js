@@ -61,7 +61,7 @@ export const getCurrentChallengeDay = (startDate,currentDate) =>{
     return a.diff(b, 'days')+1
 }
 
-export const getTodayRecommendedWorkout = (workouts,activeChallengeUserData,selectedDate) =>{
+export const getTodayRecommendedWorkout = async(workouts,activeChallengeUserData,selectedDate) =>{
 
     // let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime(); 
     // // To calculate the no. of days between two dates 
@@ -71,36 +71,49 @@ export const getTodayRecommendedWorkout = (workouts,activeChallengeUserData,sele
     var a = moment(selectedDate);
     let currentDay = a.diff(b, 'days')+1; 
     
-    return workouts.find((res)=>res.days.includes(currentDay))
+    const workoutData =  workouts.find((res)=>res.days.includes(currentDay));
+    if(workoutData && workoutData.id){
+      const programRef = db.collection('newWorkouts').where('id','==',workoutData.id);
+      const snapshot = await programRef.get();
+      if (snapshot.docs.length === 0) {
+        return [];
+      }else{
+        return  snapshot.docs.map((res)=>res.data());
+      }
+    }else{
+      return []
+    }
+
 }
 
-export const getTodayRecommendedMeal = async(phaseData,activeChallengeUserData) =>{
+export const getTodayRecommendedMeal = async(phaseData,activeChallengeData) =>{
   // const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
   let phaseMeals = []
-  const recipeRef = db.collection('recipes')
-                    .where("accessFilter","array-contains",activeChallengeUserData.tag)
-  const snapshot =  await recipeRef.get();
-  
-  snapshot.forEach(doc => {
+  if(activeChallengeData && activeChallengeData.newChallenge){
+    let data = phaseData.meals;
+    const recipeRef = db.collection('recipes');
+    const snapshot = await recipeRef.get();
+    if (snapshot.empty) {
+      return null
+    }else{
+      snapshot.forEach(res=>{
+        if(data.includes(res.data().id)){
+          phaseMeals.push(res.data());
+        }
+      })
+    }
+  }
+  else{
+    const recipeRef = db.collection('recipes')
+    .where("accessFilter","array-contains",activeChallengeData.tag)
+    const snapshot =  await recipeRef.get();
+
+    snapshot.forEach(doc => {
     if(doc.data().availability.includes(phaseData.displayName.toUpperCase()))
       phaseMeals.push(doc.data())
-  });
+    });
+  }
 
-  // await Promise.all(phaseMeals.map(async (recipe) => {
-  //   const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
-  //   await FileSystem.getInfoAsync(fileUri)
-  //     .then(async ({ exists ,size}) => {
-  //       if (!exists || size < 1000) {
-  //         await FileSystem.downloadAsync(
-  //           recipe.coverImage,
-  //           `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
-  //         );
-  //       }
-  //     }).catch(() => {
-  //       this.setState({ loading: false });
-  //       Alert.alert('', 'Image download error');
-  //     });
-  // }));
   const challengeMealsFilterList = phaseMeals.map((res)=>res.id)
 
   // const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
@@ -155,6 +168,7 @@ export const full_months =(dt)=>
   }
   export const hasChallenges = async(uid) =>{
     const userChallenges= await getChallengeDetails(uid);
+    console.log("getActive challneg",userChallenges)
     if(userChallenges !== undefined && userChallenges.length > 0){
       return true;
     }else{

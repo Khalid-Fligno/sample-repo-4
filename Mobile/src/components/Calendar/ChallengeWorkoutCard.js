@@ -16,6 +16,33 @@ import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 const { width } = Dimensions.get('window');
 
+const getTarget =(filters)=>{
+  if(filters.includes('strength')){
+    return 'Strength';
+  }
+  else if(filters.includes('interval')){
+    return 'Interval'
+  }
+  else if(filters.includes('circuit')){
+    return 'Circuit'
+  }else if(filters.includes('rest')){
+    return 'rest'
+  }
+}
+
+const getFocus= (filters)=>{
+  if(filters.includes('fullBody')){
+    return 'Full Body'
+  }else if(filters.includes('upperBody')){
+    return 'Upper Body'
+  }else if(filters.includes('lowerBody')){
+    return 'Lower Body'
+  }else if(filters.includes('core')){
+    return 'Core'
+  }
+
+}
+
 export default class ChallengeWorkoutCard extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -49,6 +76,9 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
+    const target = res && res.filters ? getTarget(res.filters):''
+    const focus  = res && res.filters ? getFocus(res.filters):''
+    console.log("here",target,focus,res)
     return (
           <View   style={[styles.cardContainer,cardCustomStyle]}>
            <ImageBackground
@@ -72,14 +102,15 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
               </View>
               <View style={styles.innerViewContainer}>
                  {
-                   res.target !== 'rest' &&
-                   <Text key={res} style={styles.recTextLabel}>{`${res.target} - ${res.focus.toString()}`}</Text>
+                   target !== 'rest' &&
+                   <Text key={res} style={styles.recTextLabel}>{`${target} - ${focus}`}</Text>
                  }
                  {
-                   res.target === 'rest' &&
+                   target === 'rest' &&
                     <Text key={res} style={styles.recTextLabel}>Today is your rest day</Text>
                  }
               </View>
+              
                     <CustomBtn 
                       Title ="View Workout"
                       customBtnStyle ={{
@@ -95,7 +126,7 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
                         fontFamily:fonts.boldNarrow
                       }}
                       onPress = {onPress}
-                      disabled={res.target === 'rest'}
+                      disabled={target === 'rest'}
                   />
             </View>
            </ImageBackground>

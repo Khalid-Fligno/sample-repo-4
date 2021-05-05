@@ -351,6 +351,7 @@ const updateChallengesAgainstUser = async(challengeData,userId)=>{
         if(res){
             return false
         }else{
+          console.log("Heree....",challengeData)
             const challenge = db.collection('users').doc(userId).collection('challenges').doc(challengeData.id);
             challenge.set(challengeData,{merge:true})
             .then(res=>{

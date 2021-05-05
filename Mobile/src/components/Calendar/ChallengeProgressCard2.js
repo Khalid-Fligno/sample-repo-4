@@ -45,7 +45,7 @@ class ChallengeProgressCard2 extends Component {
         currentDay
       } = this.props
       let total = 0
-      activeChallengeData.workouts.forEach((res)=>{if(res.name.toLowerCase() != 'rest')total += res.days.length })
+      activeChallengeData.workouts.forEach((res)=>{if( res.name &&res.name.toLowerCase() != 'rest')total += res.days.length })
       console.log(activeChallengeData.numberOfDays)
       return(
         <View>

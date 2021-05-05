@@ -45,7 +45,7 @@ export class AddComponent{
       ({
         id:d?d.id:null,
         subscriptionInfo:this.fb.group({
-          expiry:[d.subscriptionInfo && d.subscriptionInfo.expiry?new Date(d.subscriptionInfo.expiry):'']
+          expiry:[d.subscriptionInfo && d.subscriptionInfo.expiry?new Date(Number(d.subscriptionInfo.expiry)):'']
         }),
         selectedChallenge:['']
       });

@@ -255,7 +255,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
           userRef
           .get()
           .then(async (doc) => {
-            // console.log(doc.data())
             if (doc.exists) {
               if (await !doc.data().fitnessLevel) {
                 await AsyncStorage.setItem('fitnessLevel', '1');
@@ -278,7 +277,11 @@ export default class AuthLoadingScreen extends React.PureComponent {
                     await this.goToAppScreen(doc);
                   }else{
                     // EXPIRED
-                    await this.storePurchase(subscriptionInfo, onboarded);
+                    if(subscriptionInfo.receipt){
+                      await this.storePurchase(subscriptionInfo, onboarded);
+                    }else{
+                      this.props.navigation.navigate('Subscription');
+                    }
                   }
               } 
               else if (subscriptionInfo.expiry > Date.now()) {

@@ -137,7 +137,7 @@ export class EditComponent implements OnInit, OnDestroy {
   //workouts
   newWorkouts(d:any=null): FormGroup {
     return this.fb.group({
-      workoutId: [d && d.workoutId?d.workoutId:'',Validators.required],
+      id: [d && d.id?d.id:'',Validators.required],
       days: [d && d.days?d.days:[],Validators.required],
     })
   }
@@ -320,7 +320,14 @@ export class EditComponent implements OnInit, OnDestroy {
 
   saveData(){
     console.log(this.Form.value);
-    const  data = {...this.Form.value,...this.Form2.value,...this.Form3.value,newChallenge:true}
+    const  data = {
+      ...this.Form.value,
+      ...this.Form2.value,
+      ...this.Form3.value,
+      newChallenge:true,
+      productId:this.Form.value.shopifyProductId,
+      createdAt:new Date().toISOString()
+    }
     this.http.addEditChallenge(data).subscribe((res)=>{
       if(res.success){
        this.dialog.open(SuccessComponent,{
