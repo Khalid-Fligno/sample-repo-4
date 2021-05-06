@@ -90,7 +90,8 @@ export default class FeedScreen extends React.PureComponent {
       activeChallengeUserData:undefined,
       activeChallengeData:undefined,
       blogs:undefined,
-      loading:false
+      loading:false,
+      todayRcWorkout:undefined
     };
   }
   componentDidMount = () => {
@@ -174,7 +175,7 @@ export default class FeedScreen extends React.PureComponent {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Linking.openURL(url);
   }
-  getCurrentPhaseInfo(){
+  async getCurrentPhaseInfo(){
     const {activeChallengeUserData,activeChallengeData} = this.state
     if(activeChallengeUserData && activeChallengeData){
        this.stringDate = moment().format('YYYY-MM-DD').toString();
@@ -186,12 +187,13 @@ export default class FeedScreen extends React.PureComponent {
       this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
        
      //TODO calculate current challenge day
-     console.log(this.stringDate)
+    //  console.log(this.stringDate)
       this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
       this.fetchBlogs(activeChallengeUserData.tag,this.currentChallengeDay)
       //TODO get recommended workout here
-      this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
-      
+      // this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
+      const todayRcWorkout = (await getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate))[0] 
+      this.setState({todayRcWorkout:todayRcWorkout});
     }else{
       Alert.alert('Something went wrong please try again')
     }
@@ -210,7 +212,8 @@ export default class FeedScreen extends React.PureComponent {
       dayOfWeek,
       activeChallengeData,
       activeChallengeUserData,
-      blogs
+      blogs,
+      todayRcWorkout
     } = this.state;
     let recommendedWorkout =[];
 
@@ -220,9 +223,9 @@ export default class FeedScreen extends React.PureComponent {
 
       if(activeChallengeData && activeChallengeUserData){
       
-        if(this.todayRcWorkout){
+        if(todayRcWorkout){
           recommendedWorkout = []
-          recommendedWorkout.push(this.todayRcWorkout.displayName)
+          recommendedWorkout.push(todayRcWorkout.displayName)
           recommendedWorkout.push(`Day ${this.currentChallengeDay}`)
         }
       }

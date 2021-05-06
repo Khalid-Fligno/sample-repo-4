@@ -78,8 +78,8 @@ export default class WorkOutCard extends React.PureComponent {
                     >
 
                     </View>
-                    {recommendedWorkout.map(res=>(
-                      <Text key={res} style={styles.recTextLabel}> {res}</Text>)
+                    {recommendedWorkout.map((res,i)=>(
+                      <Text key={i} style={styles.recTextLabel}> {res}</Text>)
                     )}
                </View>
                <View style={{

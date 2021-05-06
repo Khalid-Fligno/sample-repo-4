@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-community/async-storage";
+import { Alert } from "react-native";
 import FastImage from "react-native-fast-image";
+import { FileSystem } from "react-native-unimodules";
 import { db } from "../../config/firebase";
 
 export const findFocus = (workoutObject) => {
@@ -115,6 +117,73 @@ export const getRandomRestImages =async() =>{
   var images =JSON.parse(await AsyncStorage.getItem('restImages'));
   console.log("getting rest images",images[getRandomNumber(images.length)])
   return images[getRandomNumber(images.length)]
+}
+
+
+export const loadExercise = async(workoutData)=>{
+  FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
+      Promise.all(res.map(async (item,index) => {
+          if (item.includes("exercise-")) {
+            FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
+              // console.log(item,"deleted...")
+            })
+          }
+      }))
+  })
+  if(workoutData.newWorkout){
+    let exercises = [];
+    const exerciseRef = (await db.collection('Exercises').where('id','in',workoutData.exercises).get()).docs
+    exerciseRef.forEach(exercise=>{
+      exercises.push(exercise.data());
+    })
+    if(exercises.length>0){
+      workoutData = Object.assign({},workoutData,{exercises:exercises});
+      const res = await downloadExercise(workoutData);
+      if(res)
+        return workoutData;
+      else
+        return false;
+    }else{
+      return false;
+    }
+
+  }else{
+     const res =  await downloadExercise(workoutData);
+     if(res)
+      return workoutData;
+     else
+      return false;
+  }
+}
+
+ const downloadExercise = async(workout)=>{
+  try{
+      const exercises = workout.exercises
+      return Promise.all(exercises.map(async (exercise, index) => {
+        return new Promise(async(resolve,reject)=>{
+          let videoIndex = 0;
+          if(workout.newWorkout)
+            videoIndex = exercise.videoUrls.findIndex(res=>res.model === workout.exerciseModel)
+          if(exercise.videoUrls && exercise.videoUrls[0].url !== ""){
+              await FileSystem.downloadAsync(
+                exercise.videoUrls[videoIndex].url,
+                `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+              ).then(()=>{
+                resolve("Downloaded");
+                // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+              })
+              .catch(err=>resolve("Download failed"))
+          }
+        })
+      }))
+  }
+  catch(err){
+    console.log(err)
+    this.setState({ loading: false });
+    Alert.alert('Something went wrong','Workout Not Available')
+    return "false"
+
+  }
 }
 // export const getRegisteredWebHooks = () => {
 //   return async () => {

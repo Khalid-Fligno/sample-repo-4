@@ -35,6 +35,7 @@ import moment from 'moment';
 import createUserChallengeData from '../../../components/Challenges/UserChallengeData';
 import { widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import { NavigationActions } from 'react-navigation';
+import { loadExercise } from '../../../utils/workouts';
 
 
 class CalendarHomeScreen extends React.PureComponent {
@@ -187,70 +188,26 @@ class CalendarHomeScreen extends React.PureComponent {
 
   loadExercises = async (workoutData) => {
     this.setState({ loading: true });
-
-    FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
-        Promise.all(res.map(async (item,index) => {
-            if (item.includes("exercise-")) {
-              FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
-                // console.log(item,"deleted...")
-              })
-            }
-        }))
-    })
-    if(workoutData.newWorkout){
-      let exercises = [];
-      const exerciseRef = (await db.collection('Exercises').where('id','in',workoutData.exercises).get()).docs
-      exerciseRef.forEach(exercise=>{
-        exercises.push(exercise.data())
-      })
-      if(exercises.length>0){
-        workoutData = Object.assign({},workoutData,{exercises:exercises});
-        this.downloadExercise(workoutData);
-      }else
-        Alert.alert("Exercises not loaded")
-    }else{
-      this.downloadExercise(workoutData);
-    }
-
-  }
-
-  async downloadExercise(workout){
-    try{
-        const exercises = workout.exercises
-        await Promise.all(exercises.map(async (exercise, index) => {
-          // const videoUrl = exercise.videoUrls.filter(res=>res.model === 'sharnia')
-          // console.log("???",exercise.videoUrls[0].url)
-          if(exercise.videoUrls && exercise.videoUrls[0].url !== ""){
-              await FileSystem.downloadAsync(
-                exercise.videoUrls[0].url,
-                `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-              ).then(()=>{
-                // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
-              })
-              .catch(err=>console.log(err))
-          }
-        }))
-
-        const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
-        this.setState({ loading: false });
-        if(this.challengeCurrentDay > 0){
-          Object.assign(workout,{displayName:`${workout.displayName} - Day ${this.challengeCurrentDay}`}) 
-        }
-            this.props.navigation.navigate('WorkoutInfo', 
-                {
-                  workout, 
-                  reps: workout.difficultyLevel[fitnessLevel-1].toString(),
-                  workoutSubCategory:workout.workoutSubCategory,
-                  fitnessLevel,
-                  extraProps:{fromCalender:true}
-                }
-            )
-    }
-    catch(err){
-      console.log(err)
+    const workout = await loadExercise(workoutData);
+    if(workout){
+      const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
       this.setState({ loading: false });
-      Alert.alert('Something went wrong','Workout Not Available')
+      if(this.currentChallengeDay > 0){
+        Object.assign(workout,{displayName:`${workout.displayName} - Day ${this.currentChallengeDay}`}) 
+      }
+          this.props.navigation.navigate('WorkoutInfo', 
+              {
+                workout, 
+                reps: workout.difficultyLevel[fitnessLevel-1].toString(),
+                workoutSubCategory:workout.workoutSubCategory,
+                fitnessLevel,
+                extraProps:{fromCalender:true}
+             }
+          ) 
+    }else{
+      Alert.alert("Failed!",'Video downloding failed');
     }
+
   }
   
   deleteCalendarEntry = async (fieldToDelete) => {
@@ -360,7 +317,6 @@ class CalendarHomeScreen extends React.PureComponent {
         //TODO calculate current challenge day
         console.log(this.stringDate)
         this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
-
         
         //TODO getToday one recommended meal randomly  
         getTodayRecommendedMeal(this.phaseData,activeChallengeData).then((res)=>{

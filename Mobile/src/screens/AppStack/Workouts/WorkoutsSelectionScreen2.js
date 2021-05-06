@@ -3,22 +3,16 @@ import { StyleSheet, View, Alert, Text, FlatList, ImageBackground } from 'react-
 import AsyncStorage from '@react-native-community/async-storage';
 import * as FileSystem from 'expo-file-system';
 // import moment from 'moment';
-import sortBy from 'lodash.sortby';
 import { db } from '../../../../config/firebase';
-import { findReps } from '../../../utils/index';
 import Loader from '../../../components/Shared/Loader';
-import WorkoutTile from '../../../components/Workouts/WorkoutTile';
 import colors from '../../../styles/colors';
 import globalStyle from '../../../styles/globalStyles';
-import { any } from 'prop-types';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 import CustomButtonGroup from '../../../components/Shared/CustomButtonGroup';
-import { ListItem, Avatar } from 'react-native-elements';
-// import fonts from '../../../styles/fonts';
-// import Icon from '../../../components/Shared/Icon';
 import WorkoutScreenStyle from './WorkoutScreenStyle';
 import WorkoutListItem from '../../../components/Workouts/WorkoutListItem';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { loadExercise } from '../../../utils/workouts';
 let fitnessLevel = 1
 const customUrl = 'https://firebasestorage.googleapis.com/v0/b/quickstart-1588594831516.appspot.com/o/Photos%2Fworkout1.jpeg?alt=media&token=17a7f10f-a9bb-4bfb-a27e-4b7ac0261392'
 
@@ -61,56 +55,26 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
         this.setState({ workouts, loading: false });
       });
   }
-  loadExercises = async (workout) => {
+  loadExercises = async (workoutData) => {
     this.setState({ loading: true });
-     fitnessLevel = await AsyncStorage.getItem('fitnessLevel');
-    const { exercises } = workout;
-    try {
-      FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
-        // console.log(res)
-          Promise.all(res.map(async (item,index) => {
-              if (item.includes("exercise-")) {
-                console.log(`${FileSystem.cacheDirectory}${item}`)
-                FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
-                  // console.log("deleted...",item)
-                })
+    const workout = await loadExercise(workoutData);
+    if(workout){
+      const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
+      this.setState({ loading: false });
+          this.props.navigation.navigate('WorkoutInfo', 
+              {
+                workout, 
+                reps: workout.difficultyLevel[fitnessLevel-1].toString(),
+                workoutSubCategory:workout.workoutSubCategory,
+                fitnessLevel,
               }
-          }))
-      })
-  
-      await Promise.all(exercises.map(async (exercise, index) => {
-        // const videoUrl = exercise.videoUrls.filter(res=>res.model === 'sharnia')
-        // console.log(exercise.videoUrls[0].url)
-        if(exercise.videoUrls && exercise.videoUrls[0].url !== ""){
-            await FileSystem.downloadAsync(
-              exercise.videoUrls[0].url,
-              `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-            ).then(()=>{
-              // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
-            })
-            .catch(err=>console.log(err))
-        }
-      }))
-      this.setState({ loading: false });
-      // this.props.navigation.navigate('WorkoutInfo', { workout, reps: findReps(fitnessLevel) }); //for new workout its difficulty level
-      this.props.navigation.navigate('WorkoutInfo', {
-         workout, 
-         reps: workout.difficultyLevel[fitnessLevel-1].toString(),
-         workoutSubCategory:this.selectedSubCategory,
-         fitnessLevel
-        }); //for new workout its difficulty level
-    } catch (err) {
-      this.setState({ loading: false });
-      console.log(err)
-      Alert.alert('Could not download exercise videos', 'Please check your internet connection');
+          )
     }
   }
-
-
 //************************New Code*********************** */
 
   updateFilter = (filterIndex) => {
-    console.log(filterIndex)
+    // console.log(filterIndex)
     this.setState({ filterIndex });
   }
 
@@ -148,7 +112,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
     }
 
     
-    console.log(workouts)
+    // console.log(workouts)
     return (
       <View style={globalStyle.container}>
        {!loading &&
