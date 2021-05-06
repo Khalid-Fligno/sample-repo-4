@@ -44,8 +44,6 @@ export class EditComponent implements OnInit ,OnDestroy {
 
   Tags: any[] = [
     {label:"Subscription",value:'Subscription'},
-    {label:"8 Week Challenge",value:'8WC'},
-    {label:"New Year Better You",value:'NYBY'},
   ];
   modelNamesList:any =[];
   
@@ -119,11 +117,17 @@ export class EditComponent implements OnInit ,OnDestroy {
     this.getExercisesWC();
     this.applyWarmUpSearch();
     this.applyCoolDownSearch();
+    this.getChallengeTags();
    }
 
    ngOnDestroy(){
      this.unsubExercise();
      this.unsubExerciseWC();
+   }
+
+   getChallengeTags(){
+    this.http.getChallengeTag()
+    .subscribe(res=>this.Tags = res);
    }
 
    getModels(){
