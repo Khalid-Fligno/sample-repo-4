@@ -28,12 +28,23 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
   searchOptions:any[]=[];
   selectedItem = new FormControl();
   filteredOptions!: Observable<any>;
+
   //* */
 
   typeList = [
     {label:"Warm Up" , value:"WarmUp"},
     {label:"Cool Down" , value:"coolDown"}
   ]
+  exerciseFilterList: any[] = [
+    {label:"Full Body",value:'fullBody'},
+    {label:"Upper Body",value:'upperBody'},
+    {label:"Lower Body",value:'lowerBody'},
+    {label:"Core",value:'core'} ,
+    {label:"Full Equipment",value:'fullEquipment'} ,
+    {label:"FitazFk Equipment",value:'fitazFKEquipment'} ,
+    {label:"Minimal Equipment",value:'minimalEquipment'}, 
+    {label:"No Equipment",value:'noEquipment'} 
+  ];
   modelNamesList:any = [];
   constructor
   (
@@ -58,6 +69,8 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
       recommendedResistance: d && d.recommendedResistance?d.recommendedResistance:'',
       coachingTip:d && d.coachingTip?this.fb.array(d.coachingTip.map((res:any)=>res)):this.fb.array([]),
       videoUrls: d && d.videoUrls?this.fb.array(d.videoUrls.map((res:any)=>this.newVideo(res))): this.fb.array([this.newVideo()]),
+      filters: [d && d.filters?d.filters:'',Validators.required], //array
+      duration: [d && d.duration?d.duration:'',Validators.required],
       // workoutIds:[d && d.workoutIds?d.workoutIds:'',Validators.required],
     });
   }

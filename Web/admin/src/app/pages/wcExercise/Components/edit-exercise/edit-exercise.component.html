@@ -31,6 +31,26 @@
         </mat-select>
       </mat-form-field>
     </div>
+
+        <!-- filters field -->
+        <div >
+          <span>
+            <h3>Filters</h3>
+          </span>
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Select filter</mat-label>
+            <mat-select formControlName="filters" multiple>
+              <mat-option *ngFor="let item of exerciseFilterList" [value]="item.value">{{item.label}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+    <!-- Sets field -->
+    <mat-form-field appearance="outline" class="example-full-width">
+      <mat-label>Duration(sec)</mat-label>
+      <input matInput type="number"onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" placeholder="Only allow number" formControlName="duration" required>
+      <mat-hint>Duration of exercise</mat-hint>
+    </mat-form-field>
     
     <!-- coachingTips field -->
     <div formArrayName="coachingTip" >

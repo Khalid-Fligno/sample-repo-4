@@ -121,9 +121,9 @@ class ChallengeSubscriptionScreen extends Component {
 
     let {userData , challengesList} = this.state
       const userRef = db.collection('users').doc(userData.id).collection('challenges');
-      console.log("challengesList[index]",challengesList);
+      // console.log("challengesList[index]",challengesList);
       const data = createUserChallengeData(challengesList[index],new Date())
-      console.log( data.id)
+      // console.log( data.id)
       userRef.doc(data.id).set(data).then((res)=>{
         this.props.navigation.navigate('ChallengeOnBoarding1',{
           data:{
@@ -138,9 +138,9 @@ class ChallengeSubscriptionScreen extends Component {
   restartChallengeToUser(index){
     let {userData , restartChallengesList} = this.state
           const userRef = db.collection('users').doc(userData.id).collection('challenges');
-          console.log("challengesList[index]",restartChallengesList);
+          // console.log("challengesList[index]",restartChallengesList);
           const data = createUserChallengeData(restartChallengesList[index],new Date())
-          console.log( "???",restartChallengesList.length,index)
+          // console.log( "???",restartChallengesList.length,index)
           userRef.doc(data.id).set(data).then((res)=>{
             this.setState({blogs:undefined,loading:false});
           }).catch((err)=>{
@@ -153,23 +153,26 @@ class ChallengeSubscriptionScreen extends Component {
     Linking.openURL(url);
   }
 
-  renderItem = ({ item ,index}) => (
-    <ChallengeCard 
-        outline={false}
-        imageUrl={item.imageUrl}
-        numberOfDays={item.numberOfDays}
-        numberOfWeeks={item.numberOfWeeks}
-        title={item.displayName}
-        subTitle={item.subTitle}
-        key={index}
-        btnTitle = "Buy"
-        // onPress={()=>this.addChallengeToUser(index)}
-        onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
-        disabled = {false}
-        challengeData={item}
-    />
+  renderItem = ({ item ,index}) => {
+    const TODAY = moment();
+    if(moment(item.availabilityDate).isSameOrAfter(TODAY))
+    return (
+      <ChallengeCard 
+          outline={false}
+          imageUrl={item.imageUrl}
+          numberOfDays={item.numberOfDays}
+          numberOfWeeks={item.numberOfWeeks}
+          title={item.displayName}
+          subTitle={item.subTitle}
+          key={index}
+          btnTitle = "Buy"
+          // onPress={()=>this.addChallengeToUser(index)}
+          onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
+          disabled = {false}
+          challengeData={item}
+      />
       
-  )
+  )}
   renderItem1 = ({item,index}) =>{
       let  btnTitle = '';
       let btnDisabled = false;
@@ -272,7 +275,7 @@ class ChallengeSubscriptionScreen extends Component {
      
      //TODO calculate current challenge day
       this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate)
-      console.log("?.",this.currentChallengeDay)
+      // console.log("?.",this.currentChallengeDay)
       this.fetchBlogs(activeChallengeUserData.tag,this.currentChallengeDay)
       //TODO get recommended workout here
       this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate ) 
@@ -283,7 +286,7 @@ class ChallengeSubscriptionScreen extends Component {
   }
 
   fetchBlogs = async (tag,currentDay) => {
-    console.log(">>>>>>>",tag,currentDay)
+    // console.log(">>>>>>>",tag,currentDay)
     const snapshot = await db.collection('blogs')
     .where("tags","array-contains",tag)
     .get()
@@ -291,7 +294,7 @@ class ChallengeSubscriptionScreen extends Component {
       // const cDay = currentDay === 1?2:currentDay
       const cDay = currentDay === 1?2:currentDay
       snapshot.forEach(doc => {
-        console.log(doc.data())
+        // console.log(doc.data())
         if(doc.data().startDay <= cDay && doc.data().endDay >= cDay)
         blogs.unshift(doc.data())
       });
@@ -326,7 +329,7 @@ class ChallengeSubscriptionScreen extends Component {
       blogs:undefined,
       loading:false,
       addingToCalendar:false });
-      console.log(status)
+      // console.log(status)
       if(status === "Active")
         this.props.navigation.navigate('Calendar');
   }
@@ -352,7 +355,7 @@ class ChallengeSubscriptionScreen extends Component {
           const userRef = db.collection('users').doc(userData.id).collection('challenges');
           const ChallengeData = userChallengesList[selectedChallengeIndex];
           const data = createUserChallengeData(ChallengeData,new Date(selectedDate));
-          console.log(data.startDate , selectedDate);
+          // console.log(data.startDate , selectedDate);
           if(moment(selectedDate).isSame(TODAY, 'd')){
             Object.assign(data,{status:'Active'});
           }else{

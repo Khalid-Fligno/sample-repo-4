@@ -179,12 +179,43 @@ export const loadExercise = async(workoutData)=>{
   }
   catch(err){
     console.log(err)
-    this.setState({ loading: false });
     Alert.alert('Something went wrong','Workout Not Available')
     return "false"
-
   }
 }
+
+export const downloadExerciseWC = async(workout,exerciseIds,exerciseModel,type)=>{
+  try{
+    const exercises = [];
+    const exerciseRef = (await db.collection('WarmUpCoolDownExercises').where('id','in',exerciseIds).get()).docs
+    exerciseRef.forEach(exercise=>{
+      exercises.push(exercise.data());
+    })
+      return Promise.all(exercises.map(async (exercise, index) => {
+        return new Promise(async(resolve,reject)=>{
+          let videoIndex = 0;
+          if(workout.newWorkout)
+            videoIndex = exercise.videoUrls.findIndex(res=>res.model === exerciseModel)
+          if(exercise.videoUrls && exercise.videoUrls[0].url !== ""){
+              await FileSystem.downloadAsync(
+                exercise.videoUrls[videoIndex].url,
+                `${FileSystem.cacheDirectory}exercise-${type}-${index + 1}.mp4`,
+              ).then(()=>{
+                resolve("Downloaded");
+                // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+              })
+              .catch(err=>resolve("Download failed"))
+          }
+        })
+      }))
+  }
+  catch(err){
+    console.log(err)
+    Alert.alert('Something went wrong','Workout Not Available')
+    return "false"
+  }
+}
+
 // export const getRegisteredWebHooks = () => {
 //   return async () => {
 //     const options = {

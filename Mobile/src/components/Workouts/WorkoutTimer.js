@@ -46,6 +46,7 @@ export default class WorkoutTimer extends React.PureComponent {
     };
   }
   static getDerivedStateFromProps(props, state) {
+    console.log("KKKKK",state.remainingTime)
     if (props.start !== state.start) {
       return { start: props.start };
     }

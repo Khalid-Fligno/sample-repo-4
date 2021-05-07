@@ -97,16 +97,30 @@ export default class CountdownScreen2 extends React.PureComponent {
     }
   }
   finishCountdown = (workout, reps, resistanceCategoryId) => {
-    let {workoutSubCategory,fitnessLevel,extraProps} = this.state
-    this.props.navigation.replace('Exercise', {
-      workout,
-      reps,
-      resistanceCategoryId,
-      currentExerciseIndex:0,
-      workoutSubCategory,
-      fitnessLevel,
-      extraProps
-    });
+    let {workoutSubCategory,fitnessLevel,extraProps} = this.state;
+    if(workout.newWorkout){
+      this.props.navigation.replace('ExerciseWC', {
+        workout,
+        reps,
+        resistanceCategoryId,
+        currentExerciseIndex:0,
+        workoutSubCategory,
+        fitnessLevel,
+        extraProps,
+        warmUp:true
+      });
+    }else{
+      this.props.navigation.replace('Exercise', {
+        workout,
+        reps,
+        resistanceCategoryId,
+        currentExerciseIndex:0,
+        workoutSubCategory,
+        fitnessLevel,
+        extraProps
+      });
+    }
+
   }
   render() {
     const {

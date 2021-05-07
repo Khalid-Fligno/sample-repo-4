@@ -27,7 +27,7 @@ class CalendarModal extends Component {
         addingToCalendar,
         loading
       } = this.props
-      console.log('addingToCalendar',addingToCalendar)
+      // console.log('addingToCalendar',addingToCalendar)
     return (
       <View>
                   {
