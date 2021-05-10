@@ -66,7 +66,7 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
       name: [d && d.name?d.name:'',Validators.required],
       displayName: [d && d.displayName ?d.displayName:'',Validators.required],
       type: [d && d.type ?d.type:'',Validators.required],
-      recommendedResistance: d && d.recommendedResistance?d.recommendedResistance:'',
+      // recommendedResistance: d && d.recommendedResistance?d.recommendedResistance:'',
       coachingTip:d && d.coachingTip?this.fb.array(d.coachingTip.map((res:any)=>res)):this.fb.array([]),
       videoUrls: d && d.videoUrls?this.fb.array(d.videoUrls.map((res:any)=>this.newVideo(res))): this.fb.array([this.newVideo()]),
       filters: [d && d.filters?d.filters:'',Validators.required], //array

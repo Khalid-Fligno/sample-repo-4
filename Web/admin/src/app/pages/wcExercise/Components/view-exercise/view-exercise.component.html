@@ -2,13 +2,26 @@
 <!-- <h3>{{data.displayName}}</h3> -->
 
 <mat-dialog-content class="mat-typography">
-  <h3 class="heading">Coaching Tips :</h3>
-  <mat-list role="list">
-    <mat-list-item role="listitem" *ngFor="let item of data.coachingTip">&#8226; {{item}}</mat-list-item>
-  </mat-list>
+  <div *ngIf="data.coachingTip.length > 0">
+    <h3 class="heading">Coaching Tips :</h3>
+    <mat-list role="list">
+      <mat-list-item role="listitem" *ngFor="let item of data.coachingTip">&#8226; {{item}}</mat-list-item>
+    </mat-list>
+  </div>
 
-  <h3 class="heading">Recommended resistance :</h3>
-  <p>{{data.recommendedResistance}}</p>
+
+  <!-- <h3 class="heading">Recommended resistance :</h3>
+  <p>{{data.recommendedResistance}}</p> -->
+
+    <h3 class="heading">Focus :</h3>
+      <p>{{data.type}}</p>
+
+    <div *ngIf="data.filters && data.filters.length > 0">
+      <h3 class="heading">Filters :</h3>
+      <p>{{data.filters.toString()}}</p>
+    </div>
+
+
 
   <h3 class="heading">Videos :</h3>
   <div *ngFor="let item of data.videoUrls;let index =index">

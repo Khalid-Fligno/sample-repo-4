@@ -96,11 +96,11 @@ export class EditComponent implements OnInit ,OnDestroy {
       restIntervalMap: d && d.restIntervalMap?this.fb.array(d.restIntervalMap.map((res:any)=>res)):this.fb.array(['','','']), //array
       tags : [d &&d.tags?d.tags:'',Validators.required], //array
       exerciseModel : [d &&d.exerciseModel?d.exerciseModel:'',Validators.required], //array
-      exercises : [d &&d.exercises?d.exercises:'',Validators.required], //array
+      exercises:d && d.exercises?this.fb.array(d.exercises.map((res:any)=>res)):this.fb.array(['']),
       warmUpExerciseModel : [d &&d.warmUpExerciseModel?d.warmUpExerciseModel:'',Validators.required], //array
-      warmUpExercises : [d &&d.warmUpExercises?d.warmUpExercises:'',Validators.required], //array
+      warmUpExercises : d && d.warmUpExercises?this.fb.array(d.warmUpExercises.map((res:any)=>res)):this.fb.array(['']),
       coolDownExerciseModel : [d &&d.coolDownExerciseModel?d.coolDownExerciseModel:'',Validators.required], //array
-      coolDownExercises : [d &&d.coolDownExercises?d.coolDownExercises:'',Validators.required], //array
+      coolDownExercises : d && d.coolDownExercises?this.fb.array(d.coolDownExercises.map((res:any)=>res)):this.fb.array(['']),
       workIntervalMap: d && d.workIntervalMap?this.fb.array(d.workIntervalMap.map((res:any)=>res)):this.fb.array(['','','']), //array
       workoutReps: [d && d.workoutReps?d.workoutReps:'',Validators.required], //WorkoutReps means Sets
       workoutTime: [d && d.workoutTime?d.workoutTime:'',Validators.required],
@@ -156,6 +156,47 @@ export class EditComponent implements OnInit ,OnDestroy {
   get workIntervalMap() : FormArray{
     return this.Form.get("workIntervalMap") as FormArray
   }
+
+    //Exercises
+    get exercises() : FormArray {
+      return this.Form.get("exercises") as FormArray
+    }
+  
+    addExercise(){
+      this.exercises.push(this.fb.control(''))
+    }
+  
+    removeExercise(i:number){
+      this.exercises.removeAt(i);
+    }
+
+    //Warm Up Exercise
+    get exercisesWU() : FormArray {
+      return this.Form.get("warmUpExercises") as FormArray
+    }
+  
+    addExerciseWU(){
+      this.exercisesWU.push(this.fb.control(''))
+    }
+  
+    removeExerciseWU(i:number){
+      this.exercisesWU.removeAt(i);
+    }
+
+      //Cool Down Exercise
+      get exercisesCD() : FormArray {
+        return this.Form.get("coolDownExercises") as FormArray
+      }
+    
+      addExerciseCD(){
+        this.exercisesCD.push(this.fb.control(''))
+      }
+    
+      removeExerciseCD(i:number){
+        this.exercisesCD.removeAt(i);
+      }
+  
+
 
     //workouts
     async getExercises(){

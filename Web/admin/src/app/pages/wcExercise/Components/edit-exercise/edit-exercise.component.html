@@ -14,18 +14,18 @@
     </mat-form-field>
   
     <!-- recommendedResistance field -->
-    <mat-form-field appearance="outline" >
+    <!-- <mat-form-field appearance="outline" >
       <mat-label>Recommended resistance</mat-label>
       <input matInput formControlName="recommendedResistance" required>
-    </mat-form-field>
+    </mat-form-field> -->
 
     <!-- type field -->
     <div >
       <span>
-        <h3>Type</h3>
+        <h3>Focus</h3>
       </span>
       <mat-form-field appearance="outline" class="example-full-width">
-        <mat-label>Select Type</mat-label>
+        <mat-label>Select Focus</mat-label>
         <mat-select formControlName="type" >
           <mat-option *ngFor="let item of typeList" [value]="item.value">{{item.label}}</mat-option>
         </mat-select>
