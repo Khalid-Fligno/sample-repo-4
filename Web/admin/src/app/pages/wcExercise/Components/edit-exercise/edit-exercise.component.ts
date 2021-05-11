@@ -32,7 +32,7 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
   //* */
 
   typeList = [
-    {label:"Warm Up" , value:"WarmUp"},
+    {label:"Warm Up" , value:"warmUp"},
     {label:"Cool Down" , value:"coolDown"}
   ]
   exerciseFilterList: any[] = [

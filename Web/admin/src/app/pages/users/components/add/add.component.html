@@ -45,10 +45,16 @@
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
         </div>
+        <div>
+            <h3>Purchased Challenges</h3>
+            <p class="info" >
+                (You can't remove purchased challenge)
+              </p>
+        </div>
         <mat-form-field appearance="outline" class="example-full-width">
             <mat-label>Select challenge</mat-label>
             <mat-select formControlName="selectedChallenge" multiple>
-              <mat-option  *ngFor="let d of challengesList" [value]="d.id">{{d.displayName}}</mat-option>
+              <mat-option  *ngFor="let d of challengesList" [value]="d.id" [disabled]="checkChallengeStatus(d.id)">{{d.displayName}}</mat-option>
             </mat-select>
         </mat-form-field>
   

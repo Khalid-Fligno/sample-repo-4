@@ -16,7 +16,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { SharedModule } from './components/shared/shared.module';
 import { AlertComponent } from './components/alert/alert.component';
 import { SuccessComponent } from './components/success/success.component';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { TokenInterceptor } from './auth/token.interceptor';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 
@@ -65,7 +65,8 @@ let firebaseConfig = {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
-    }
+    },
+    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'}
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

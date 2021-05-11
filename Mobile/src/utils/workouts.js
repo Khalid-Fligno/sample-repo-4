@@ -132,9 +132,13 @@ export const loadExercise = async(workoutData)=>{
   })
   if(workoutData.newWorkout){
     let exercises = [];
+    let tempExerciseData = [];
     const exerciseRef = (await db.collection('Exercises').where('id','in',workoutData.exercises).get()).docs
     exerciseRef.forEach(exercise=>{
-      exercises.push(exercise.data());
+      tempExerciseData.push(exercise.data());
+    })
+    exercises = workoutData.exercises.map(id=>{
+      return tempExerciseData.find(res=>res.id === id);
     })
     if(exercises.length>0){
       workoutData = Object.assign({},workoutData,{exercises:exercises});
@@ -186,11 +190,16 @@ export const loadExercise = async(workoutData)=>{
 
 export const downloadExerciseWC = async(workout,exerciseIds,exerciseModel,type)=>{
   try{
-    const exercises = [];
+    const tempExerciseData = [];
+    let exercises = [];
     const exerciseRef = (await db.collection('WarmUpCoolDownExercises').where('id','in',exerciseIds).get()).docs
     exerciseRef.forEach(exercise=>{
-      exercises.push(exercise.data());
+      tempExerciseData.push(exercise.data());
     })
+    exercises = exerciseIds.map(id=>{
+      return tempExerciseData.find(res=>res.id === id);
+    })
+    console.log("kkkk",exercises)
       return Promise.all(exercises.map(async (exercise, index) => {
         return new Promise(async(resolve,reject)=>{
           let videoIndex = 0;

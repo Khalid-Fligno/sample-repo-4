@@ -221,7 +221,10 @@ export class EditComponent implements OnInit ,OnDestroy {
         querySnapshot.forEach(doc => {
           data.push(doc.data());
         });
-        this.exerciseListWC = this.exerciseListCD=this.searchOptionsWC = data;
+        this.exerciseListWC = data.filter((res:any)=>res.type === 'warmUp');
+        this.exerciseListCD = data.filter((res:any)=>res.type === 'coolDown');
+        this.searchOptionsWC = data;
+        console.log(this.exerciseListCD.length,this.exerciseListWC.length)
       }, (error) => {
         console.log("erroe",error)
       });

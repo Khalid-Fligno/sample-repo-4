@@ -141,7 +141,12 @@
   <!-- Exercise field -->
   <div formArrayName="exercises" >
     <span>
-      <h3>Select Exercises</h3>
+      <div>
+        <h3>Select Exercises</h3>
+        <p class="info" >
+          (Exercises as per model selected above)
+        </p>
+      </div>
       <button mat-icon-button color="primary" (click)="addExercise()">
         <mat-icon>add_circle</mat-icon>
       </button>
@@ -224,7 +229,12 @@
          <!-- Warm Exercise field -->
           <div formArrayName="warmUpExercises" >
             <span>
-              <h3>Select Warm Up Exercises</h3>
+              <div>
+                <h3>Select Warm Up Exercises</h3>
+                <p class="info" >
+                  (Exercises as per model selected above)
+                </p>
+              </div>
               <button mat-icon-button color="primary" (click)="addExerciseWU()">
                 <mat-icon>add_circle</mat-icon>
               </button>
@@ -290,7 +300,13 @@
           <!-- Warm Exercise field -->
               <div formArrayName="coolDownExercises" >
               <span>
-                <h3>Select Cool Down Exercises</h3>
+                <div>
+                  <h3>Select Cool Down Exercises</h3>
+                  <p class="info" >
+                  (Exercises as per model selected above)
+                </p>
+                </div>
+
                 <button mat-icon-button color="primary" (click)="addExerciseCD()">
                   <mat-icon>add_circle</mat-icon>
                 </button>

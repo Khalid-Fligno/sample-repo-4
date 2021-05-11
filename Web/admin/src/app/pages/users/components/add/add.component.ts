@@ -25,6 +25,7 @@ export class AddComponent{
   bl:boolean = false;
   challengesList:any = [];
   selectedChallenge='';
+  userChallengeIds:any=[];
   constructor
   (
     private fb:FormBuilder,
@@ -95,6 +96,7 @@ export class AddComponent{
          console.log(res.data());
           challengeList.push(res.data().id);
         });
+        this.userChallengeIds = challengeList;
         this.Form.patchValue({
           selectedChallenge:challengeList
         })
@@ -150,5 +152,14 @@ export class AddComponent{
       console.log("Error",err);
       alert('Something went wrong,please try again');
     })
+  }
+
+  checkChallengeStatus(id:any){
+    const userChallengeList = this.userChallengeIds;
+    if(userChallengeList.includes(id)){
+      return true;
+    }else{
+      return false;
+    }
   }
 }

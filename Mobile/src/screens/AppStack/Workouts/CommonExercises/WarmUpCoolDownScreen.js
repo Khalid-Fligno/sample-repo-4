@@ -91,7 +91,7 @@ export default class WarmUpCoolDownScreen extends Component {
     const {exerciseIndex,totalExercise,exerciseList} = this.state;
     this.setState({timerStart:false});
     const nextExerciseIndex = this.state.exerciseIndex+1;
-    const totalDuration = exerciseList[nextExerciseIndex] && exerciseList[nextExerciseIndex].duration?exerciseList[nextExerciseIndex].duration:30;
+    const totalDuration = exerciseList[nextExerciseIndex-1] && exerciseList[nextExerciseIndex-1].duration?exerciseList[nextExerciseIndex-1].duration:30;
     if(totalExercise <= exerciseIndex){
       this.goToExercise();
     }else{
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.boldNarrow,
     fontSize: 18,
     color: colors.themeColor.color,
-    textTransform:'capitalize'
+    textTransform:'uppercase'
 
   },
 
@@ -248,6 +248,7 @@ const styles = StyleSheet.create({
     fontFamily:fonts.GothamMedium,
     fontSize:wp('8%'),
     marginVertical:15,
-    marginTop:wp('10%')
+    marginTop:wp('10%'),
+    textTransform:'uppercase'
   }
 });

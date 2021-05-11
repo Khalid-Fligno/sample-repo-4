@@ -39,8 +39,8 @@
   <div *ngIf='data.subscriptionInfo'>
     <h3 class="heading">Subscription Info :</h3>
     <p *ngIf="data.subscriptionInfo.productId">Product Id : {{data.subscriptionInfo.productId}}</p>
-    <p *ngIf="data.subscriptionInfo.expiry">Expiry : {{data.subscriptionInfo.expiry | date: 'yyyy/MM/dd'}}</p>
-    <p *ngIf="data.subscriptionInfo.originalPurchaseDate">Original Purchase Date : {{data.subscriptionInfo.originalPurchaseDate | date: 'yyyy/MM/dd'}}</p>
+    <p *ngIf="data.subscriptionInfo.expiry">Expiry : {{data.subscriptionInfo.expiry | date: 'dd/MM/yyyy'}}</p>
+    <p *ngIf="data.subscriptionInfo.originalPurchaseDate">Original Purchase Date : {{data.subscriptionInfo.originalPurchaseDate | date: 'dd/MM/yyyy'}}</p>
     <p *ngIf='data.subscriptionInfo.originalTransactionId'>Original Transaction Id / Order Id : {{data.subscriptionInfo.originalTransactionId}}</p>
   </div>
 
