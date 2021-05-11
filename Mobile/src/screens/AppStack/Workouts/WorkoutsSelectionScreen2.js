@@ -12,7 +12,7 @@ import CustomButtonGroup from '../../../components/Shared/CustomButtonGroup';
 import WorkoutScreenStyle from './WorkoutScreenStyle';
 import WorkoutListItem from '../../../components/Workouts/WorkoutListItem';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { loadExercise } from '../../../utils/workouts';
+import { downloadExerciseWC, loadExercise } from '../../../utils/workouts';
 let fitnessLevel = 1
 const customUrl = 'https://firebasestorage.googleapis.com/v0/b/quickstart-1588594831516.appspot.com/o/Photos%2Fworkout1.jpeg?alt=media&token=17a7f10f-a9bb-4bfb-a27e-4b7ac0261392'
 
@@ -58,18 +58,42 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   loadExercises = async (workoutData) => {
     this.setState({ loading: true });
     const workout = await loadExercise(workoutData);
-    if(workout){
-      const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
-      this.setState({ loading: false });
-          this.props.navigation.navigate('WorkoutInfo', 
-              {
-                workout, 
-                reps: workout.difficultyLevel[fitnessLevel-1].toString(),
-                workoutSubCategory:workout.workoutSubCategory,
-                fitnessLevel,
-              }
-          )
+    console.log(workout)
+    if(workout && workout.newWorkout){
+      console.log('Here....')
+      const warmUpExercises = await downloadExerciseWC(workout,workout.warmUpExercises,workout.warmUpExerciseModel,'warmUp');
+      if(warmUpExercises.length > 0){
+        const coolDownExercises = await downloadExerciseWC(workout,workout.coolDownExercises,workout.coolDownExerciseModel,'coolDown');
+        if(coolDownExercises.length > 0){
+            const newWorkout = Object.assign({},workout,{warmUpExercises:warmUpExercises,coolDownExercises:coolDownExercises});
+            this.goToNext(newWorkout);
+            console.log(newWorkout)
+        }else{
+          this.setState({loading:false});
+          Alert.alert("Alert!","Something went wrong!");
+        }
+      }else{
+        this.setState({loading:false});
+        Alert.alert("Alert!","Something went wrong!");
+      }
     }
+    else if(workout){
+      this.goToNext(workout);
+    }else{
+      this.setState({loading:false});
+    }
+  }
+ async goToNext(workout){
+    const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
+    this.setState({ loading: false });
+        this.props.navigation.navigate('WorkoutInfo', 
+            {
+              workout, 
+              reps: workout.difficultyLevel[fitnessLevel-1].toString(),
+              workoutSubCategory:workout.workoutSubCategory,
+              fitnessLevel,
+            }
+        )
   }
 //************************New Code*********************** */
 

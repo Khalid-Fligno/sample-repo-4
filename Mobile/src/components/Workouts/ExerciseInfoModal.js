@@ -22,7 +22,6 @@ export default class ExerciseInfoModal extends React.PureComponent {
     } = this.props;
     let showRR = (exercise.recommendedResistance && !exercise.recommendedResistance.includes('N/A'))?true:false
     let showCT =  exercise.coachingTip && exercise.coachingTip.length > 0 && !exercise.coachingTip.includes("none")?true:false
-
     return (
       <Modal
         isVisible={exerciseInfoModalVisible}
@@ -111,7 +110,7 @@ export default class ExerciseInfoModal extends React.PureComponent {
 ExerciseInfoModal.propTypes = {
   exerciseInfoModalVisible: PropTypes.bool.isRequired,
   hideExerciseInfoModal: PropTypes.func.isRequired,
-  exercise: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.array])).isRequired,
+  exercise: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.array,PropTypes.number])).isRequired,
 };
 
 const styles = StyleSheet.create({

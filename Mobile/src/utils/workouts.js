@@ -201,7 +201,7 @@ export const downloadExerciseWC = async(workout,exerciseIds,exerciseModel,type)=
                 exercise.videoUrls[videoIndex].url,
                 `${FileSystem.cacheDirectory}exercise-${type}-${index + 1}.mp4`,
               ).then(()=>{
-                resolve("Downloaded");
+                resolve(exercise);
                 // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
               })
               .catch(err=>resolve("Download failed"))

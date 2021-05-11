@@ -35,7 +35,7 @@ import moment from 'moment';
 import createUserChallengeData from '../../../components/Challenges/UserChallengeData';
 import { widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import { NavigationActions } from 'react-navigation';
-import { loadExercise } from '../../../utils/workouts';
+import { downloadExerciseWC, loadExercise } from '../../../utils/workouts';
 
 
 class CalendarHomeScreen extends React.PureComponent {
@@ -189,25 +189,65 @@ class CalendarHomeScreen extends React.PureComponent {
   loadExercises = async (workoutData) => {
     this.setState({ loading: true });
     const workout = await loadExercise(workoutData);
-    if(workout){
-      const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
-      this.setState({ loading: false });
-      if(this.currentChallengeDay > 0){
-        Object.assign(workout,{displayName:`${workout.displayName} - Day ${this.currentChallengeDay}`}) 
+    if(workout && workout.newWorkout){
+      console.log('Here....')
+      const warmUpExercises = await downloadExerciseWC(workout,workout.warmUpExercises,workout.warmUpExerciseModel,'warmUp');
+      if(warmUpExercises.length > 0){
+        const coolDownExercises = await downloadExerciseWC(workout,workout.coolDownExercises,workout.coolDownExerciseModel,'coolDown');
+        if(coolDownExercises.length > 0){
+            const newWorkout = Object.assign({},workout,{warmUpExercises:warmUpExercises,coolDownExercises:coolDownExercises});
+            this.goToNext(newWorkout);
+            console.log(newWorkout)
+        }else{
+          this.setState({loading:false});
+          Alert.alert("Alert!","Something went wrong!");
+        }
+      }else{
+        this.setState({loading:false});
+        Alert.alert("Alert!","Something went wrong!");
       }
-          this.props.navigation.navigate('WorkoutInfo', 
-              {
-                workout, 
-                reps: workout.difficultyLevel[fitnessLevel-1].toString(),
-                workoutSubCategory:workout.workoutSubCategory,
-                fitnessLevel,
-                extraProps:{fromCalender:true}
-             }
-          ) 
-    }else{
-      Alert.alert("Failed!",'Video downloding failed');
     }
+    else if(workout){
+      this.goToNext(workout);
+    }else{
+      this.setState({loading:false});
+    }
+    // if(workout){
+    //   const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
+    //   this.setState({ loading: false });
+    //   if(this.currentChallengeDay > 0){
+    //     Object.assign(workout,{displayName:`${workout.displayName} - Day ${this.currentChallengeDay}`}) 
+    //   }
+    //       this.props.navigation.navigate('WorkoutInfo', 
+    //           {
+    //             workout, 
+    //             reps: workout.difficultyLevel[fitnessLevel-1].toString(),
+    //             workoutSubCategory:workout.workoutSubCategory,
+    //             fitnessLevel,
+    //             extraProps:{fromCalender:true}
+    //          }
+    //       ) 
+    // }else{
+    //   Alert.alert("Failed!",'Video downloding failed');
+    // }
 
+  }
+
+  async goToNext(workout){
+    const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
+    this.setState({ loading: false });
+    if(this.currentChallengeDay > 0){
+      Object.assign(workout,{displayName:`${workout.displayName} - Day ${this.currentChallengeDay}`}) 
+    }
+        this.props.navigation.navigate('WorkoutInfo', 
+            {
+              workout, 
+              reps: workout.difficultyLevel[fitnessLevel-1].toString(),
+              workoutSubCategory:workout.workoutSubCategory,
+              fitnessLevel,
+              extraProps:{fromCalender:true}
+           }
+        ) 
   }
   
   deleteCalendarEntry = async (fieldToDelete) => {

@@ -239,14 +239,27 @@ export default class ExercisesScreen extends React.PureComponent {
   }
 
   workoutComplete(reps, resistanceCategoryId){
-    this.props.navigation.replace('WorkoutComplete', {
-      workout:this.state.workout,
-      reps,
-      resistanceCategoryId,
-      workoutSubCategory:this.state.workoutSubCategory,
-      fitnessLevel:this.state.fitnessLevel,
-      extraProps:this.state.extraProps
-    });
+    if(this.state.workout.newWorkout){
+      this.props.navigation.replace('ExerciseWC', {
+        workout:this.state.workout,
+        reps,
+        resistanceCategoryId,
+        workoutSubCategory:this.state.workoutSubCategory,
+        fitnessLevel:this.state.fitnessLevel,
+        extraProps:this.state.extraProps,
+        warmUp:false
+      });
+    }else{
+      this.props.navigation.replace('WorkoutComplete', {
+        workout:this.state.workout,
+        reps,
+        resistanceCategoryId,
+        workoutSubCategory:this.state.workoutSubCategory,
+        fitnessLevel:this.state.fitnessLevel,
+        extraProps:this.state.extraProps
+      });
+    }
+
   }   
 
   goToExercise(setCount,reps,resistanceCategoryId,currentExerciseIndex,rest=false){

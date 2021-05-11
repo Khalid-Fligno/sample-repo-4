@@ -168,7 +168,9 @@ class WorkoutProgressBar extends React.PureComponent {
                             rotation={0}
                             tintColor={getTintColor(index)}
                             // onAnimationComplete={() => console.log('onAnimationComplete')}
-                            backgroundColor="lightgray" >
+                            backgroundColor="lightgray" 
+                            {...this.props.circleProps}
+                            >
                             {
                                 (fill) => (
                                     <View>

@@ -4,23 +4,29 @@ import CustomBtn from '../../../../components/Shared/CustomBtn';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
 import { downloadExerciseWC } from '../../../../utils/workouts';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
 import { Video } from 'expo-av';
 import { FileSystem } from 'react-native-unimodules';
 import FadeInView from 'react-native-fade-in-view';
 import WorkoutTimer from '../../../../components/Workouts/WorkoutTimer';
+import ExerciseInfoButton from '../../../../components/Workouts/ExerciseInfoButton';
+import ExerciseInfoModal from '../../../../components/Workouts/ExerciseInfoModal';
+import Loader from '../../../../components/Shared/Loader';
+import WorkoutProgressBar from '../../../../components/Workouts/WorkoutProgressBar';
 export default class WarmUpCoolDownScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      exerciseDownloaded:false,
+      exerciseList:[],
       timerStart: false,
       exerciseIndex:1,
-      type:'warmUp',
-      totalDuration:30,
-      totalExercise:0
+      type:null,
+      totalDuration:null,
+      totalExercise:0,
+      videoPaused:false,
+      exerciseInfoModalVisible:false
     };
   }
   componentDidMount(){
@@ -32,16 +38,19 @@ export default class WarmUpCoolDownScreen extends Component {
   async loadExercise(){
     const{warmUp,workout} = this.props.navigation.state.params;
     const type =  warmUp?'warmUp':'coolDown'
-    const exerciseIds =  warmUp?workout.warmUpExercises:workout.coolDownExercises;
-    const exerciseModel =  warmUp?workout.warmUpExerciseModel:workout.coolDownExerciseModel;
-    const data = await downloadExerciseWC(workout,exerciseIds,exerciseModel,type);
-    console.log(exerciseIds,data)
+    // const exerciseIds =  warmUp?workout.warmUpExercises:workout.coolDownExercises;
+    // const exerciseModel =  warmUp?workout.warmUpExerciseModel:workout.coolDownExerciseModel;
+    // const data = await downloadExerciseWC(workout,exerciseIds,exerciseModel,type);
+    const exerciseList = type === 'warmUp'?workout.warmUpExercises:workout.coolDownExercises;
+    console.log(workout);
     this.setState({
-      exerciseDownloaded:data?true:false,
-      timerStart:true,
+      exerciseList:exerciseList,
+      timerStart:false,
       type:type,
-      totalExercise:exerciseIds.length
+      totalExercise:exerciseList.length,
+      totalDuration:exerciseList[0] && exerciseList[0].duration?exerciseList[0].duration:30
     })
+    setTimeout(()=>this.setState({timerStart: true }),100);
   }
 
   goToExercise(){
@@ -53,7 +62,9 @@ export default class WarmUpCoolDownScreen extends Component {
         workoutSubCategory,
         fitnessLevel,
         extraProps,
+        warmUp
       } = this.props.navigation.state.params;
+      if(warmUp){
         this.props.navigation.replace('Exercise', {
             workout,
             reps,
@@ -63,26 +74,67 @@ export default class WarmUpCoolDownScreen extends Component {
             fitnessLevel,
             extraProps
         });
+      }else{
+        this.props.navigation.replace('WorkoutComplete', {
+          workout,
+          reps,
+          resistanceCategoryId,
+          currentExerciseIndex,
+          workoutSubCategory,
+          fitnessLevel,
+          extraProps
+        });
+      }
+
   }
   handleFinish(){
-    const {exerciseIndex,totalExercise} = this.state;
-    this.setState({timerStart:false})
+    const {exerciseIndex,totalExercise,exerciseList} = this.state;
+    this.setState({timerStart:false});
+    const nextExerciseIndex = this.state.exerciseIndex+1;
+    const totalDuration = exerciseList[nextExerciseIndex] && exerciseList[nextExerciseIndex].duration?exerciseList[nextExerciseIndex].duration:30;
     if(totalExercise <= exerciseIndex){
-      // this.goToExercise();
+      this.goToExercise();
     }else{
       this.setState({
-        exerciseIndex:this.state.exerciseIndex+1,
-        totalDuration:30,
-        timerStart:true
-      })
+        exerciseIndex:nextExerciseIndex,
+        totalDuration:totalDuration,
+        timerStart:false
+      });
+      setTimeout(()=>this.setState({timerStart: true }),100);
     }
 
     console.log("habdle finish")
   }
+
+  showExerciseInfoModal = () => {
+    this.setState({
+      videoPaused: true,
+      timerStart: false,
+      exerciseInfoModalVisible: true,
+    });
+  }
+  hideExerciseInfoModal = () => {
+    this.setState({
+      videoPaused: false,
+      timerStart: true,
+      exerciseInfoModalVisible: false,
+    });
+  }
   render() {
-  const {exerciseDownloaded,timerStart,exerciseIndex,type,totalDuration} = this.state;
+  const {
+    exerciseList,
+    timerStart,
+    exerciseIndex,
+    type,
+    totalDuration,
+    videoPaused,
+    exerciseInfoModalVisible
+  } = this.state;
   const{warmUp,workout} = this.props.navigation.state.params;
-  
+  console.log("???",timerStart,totalDuration)
+  const showInfoBtn = exerciseList.length > 0 && 
+                      exerciseList[exerciseIndex-1].coachingTip && 
+                      exerciseList[exerciseIndex-1].coachingTip.length>0 ;
   const workoutTimer = () =>{
       return (
           <WorkoutTimer
@@ -91,6 +143,7 @@ export default class WarmUpCoolDownScreen extends Component {
               handleFinish={() =>{
                   this.handleFinish();
               } }
+              exerciseIndex={exerciseIndex}
               customContainerStyle={{paddingBottom:20}}
             />
       )
@@ -105,35 +158,60 @@ export default class WarmUpCoolDownScreen extends Component {
         <View>
 
           {
-            exerciseDownloaded &&
+            exerciseList.length > 0 &&
             <Video
               source={{ uri: `${FileSystem.cacheDirectory}exercise-${type}-${exerciseIndex}.mp4`}}
                 rate={1.0}
                 volume={1.0}
                 isMuted={false}
                 resizeMode="cover"
-                shouldPlay={true}
+                shouldPlay={!videoPaused}
                 isLooping
                 style={{ width, height: width }}
             />
              
           }
-
-
+          { showInfoBtn &&
+              <ExerciseInfoButton onPress={this.showExerciseInfoModal} />
+          }
           {/* //TODO:workout Timer */}
            {
+             totalDuration !== null &&
             workoutTimer()
            } 
+          {
+            exerciseList.length > 0 &&
+            <View style={styles.textContainer}>
+              <Text style={styles.label}>{type === 'warmUp'?'Warm Up':'Cool Down'}</Text>
+              <Text style={styles.currentExerciseNameText}>{exerciseList[exerciseIndex-1].displayName}</Text>
+            </View>  
+          }
         </View>
-      
+        <WorkoutProgressBar
+              currentExercise={exerciseIndex}
+              currentSet={exerciseIndex}
+              exerciseList={exerciseList}
+              workoutReps={1}
+              rounds={exerciseList.length}
+              progressType='onlyOne'
+              rest={false}
+              currentRound={exerciseIndex}
+              circleProps={{size:wp('12%')}}
+            />
       </FadeInView>
-      <View>
-        <Text> WarmUpCoolDownScreen </Text>
-        <CustomBtn
-            Title="Go To Exercise"
-            onPress={()=>this.goToExercise()}
+
+      {
+        showInfoBtn  &&
+        <ExerciseInfoModal
+          exercise={exerciseList[exerciseIndex-1]}
+          exerciseInfoModalVisible={exerciseInfoModalVisible}
+          hideExerciseInfoModal={this.hideExerciseInfoModal}
         />
-      </View>
+      }
+      <Loader
+          loading={exerciseList.length === 0}
+          color={colors.coral.standard}
+      />
     </SafeAreaView>
  
     );
@@ -150,44 +228,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: colors.white,
+    paddingBottom:wp('22s%')
   },
-  currentExerciseTextContainer: {
-    width,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
-    backgroundColor: colors.white,
-  },
-  currentExerciseNameTextContainer: {
-    // width: width - 50,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
+
   currentExerciseNameText: {
     fontFamily: fonts.boldNarrow,
     fontSize: 18,
     color: colors.themeColor.color,
-  },
-  currentExerciseRepsTextContainer: {
-    // width: 30,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-  },
-  currentExerciseRepsText: {
-    fontFamily: fonts.boldNarrow,
-    fontSize: 18,
-  },
-  containerEmptyBlackBox: {
-    width,
-    height:hp("10%"),
-    backgroundColor: colors.black,
-    paddingVertical: height > 800 ? 25 : 15,
-    alignItems: 'center',
-    justifyContent: 'center',
+    textTransform:'capitalize'
 
   },
+
+  textContainer:{
+    flexDirection:'column',
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  label:{
+    fontFamily:fonts.GothamMedium,
+    fontSize:wp('8%'),
+    marginVertical:15,
+    marginTop:wp('10%')
+  }
 });
