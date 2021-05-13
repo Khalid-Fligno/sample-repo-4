@@ -2,7 +2,7 @@ import moment from 'moment';
 import momentTimezone from 'moment-timezone';
 
 export default createUserChallengeData =(data,challengeDate)=>{
-  console.log(data)
+  // console.log("Active Challenge data",data)
     const phases = data.phases.map((res)=>{
       return (
         {
@@ -28,7 +28,7 @@ export default createUserChallengeData =(data,challengeDate)=>{
       "workouts":[],
       "onBoardingInfo":data.onBoardingInfo?data.onBoardingInfo:{},
       "currentProgressInfo":{},
-      "createdOn":data.createdOn?data.createdOn:moment(new Date()).format('YYYY-MM-DD'),
+      // "createdOn":data.createdOn?data.createdOn:moment(new Date()).format('YYYY-MM-DD'),
       "numberOfDays":data.numberOfDays,
       "numberOfWeeks":data.numberOfWeeks,
       "imageUrl":data.imageUrl,

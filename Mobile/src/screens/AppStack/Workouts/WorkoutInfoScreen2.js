@@ -376,7 +376,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
 
     }
 
-    console.log("calendarModalVisible",calendarModalVisible);
+    // console.log("calendarModalVisible",calendarModalVisible);
     return (
       <View style={[globalStyle.container,{paddingHorizontal:0}]}>
         {

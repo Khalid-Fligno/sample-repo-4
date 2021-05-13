@@ -30,7 +30,7 @@ export default class WarmUpCoolDownScreen extends Component {
     };
   }
   componentDidMount(){
-    console.log("COmpoent call")
+    // console.log("COmpoent call")
     this.loadExercise();
   }
 
@@ -42,7 +42,7 @@ export default class WarmUpCoolDownScreen extends Component {
     // const exerciseModel =  warmUp?workout.warmUpExerciseModel:workout.coolDownExerciseModel;
     // const data = await downloadExerciseWC(workout,exerciseIds,exerciseModel,type);
     const exerciseList = type === 'warmUp'?workout.warmUpExercises:workout.coolDownExercises;
-    console.log(workout);
+    // console.log(workout);
     this.setState({
       exerciseList:exerciseList,
       timerStart:false,
@@ -103,7 +103,7 @@ export default class WarmUpCoolDownScreen extends Component {
       setTimeout(()=>this.setState({timerStart: true }),100);
     }
 
-    console.log("habdle finish")
+    // console.log("habdle finish")
   }
 
   showExerciseInfoModal = () => {
@@ -131,7 +131,7 @@ export default class WarmUpCoolDownScreen extends Component {
     exerciseInfoModalVisible
   } = this.state;
   const{warmUp,workout} = this.props.navigation.state.params;
-  console.log("???",timerStart,totalDuration)
+  // console.log("???",timerStart,totalDuration)
   const showInfoBtn = exerciseList.length > 0 && 
                       exerciseList[exerciseIndex-1].coachingTip && 
                       exerciseList[exerciseIndex-1].coachingTip.length>0 ;

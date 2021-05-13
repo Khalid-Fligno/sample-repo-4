@@ -55,7 +55,8 @@ class CalendarHomeScreen extends React.PureComponent {
       isSchedule:false,
       ScheduleData:undefined,
       CalendarSelectedDate:undefined,
-      todayRcWorkout:undefined
+      todayRcWorkout:undefined,
+      loadingExercises:false
     };
     this.calendarStrip = React.createRef();
   }
@@ -187,30 +188,30 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   loadExercises = async (workoutData) => {
-    this.setState({ loading: true });
+    this.setState({ loadingExercises: true });
     const workout = await loadExercise(workoutData);
     if(workout && workout.newWorkout){
-      console.log('Here....')
+      // console.log('Here....')
       const warmUpExercises = await downloadExerciseWC(workout,workout.warmUpExercises,workout.warmUpExerciseModel,'warmUp');
       if(warmUpExercises.length > 0){
         const coolDownExercises = await downloadExerciseWC(workout,workout.coolDownExercises,workout.coolDownExerciseModel,'coolDown');
         if(coolDownExercises.length > 0){
             const newWorkout = Object.assign({},workout,{warmUpExercises:warmUpExercises,coolDownExercises:coolDownExercises});
             this.goToNext(newWorkout);
-            console.log(newWorkout)
+            // console.log(newWorkout)
         }else{
-          this.setState({loading:false});
+          this.setState({loadingExercises:false});
           Alert.alert("Alert!","Something went wrong!");
         }
       }else{
-        this.setState({loading:false});
+        this.setState({loadingExercises:false});
         Alert.alert("Alert!","Something went wrong!");
       }
     }
     else if(workout){
       this.goToNext(workout);
     }else{
-      this.setState({loading:false});
+      this.setState({loadingExercises:false});
     }
     // if(workout){
     //   const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
@@ -235,7 +236,7 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async goToNext(workout){
     const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
-    this.setState({ loading: false });
+    this.setState({ loadingExercises: false });
     if(this.currentChallengeDay > 0){
       Object.assign(workout,{displayName:`${workout.displayName} - Day ${this.currentChallengeDay}`}) 
     }
@@ -355,7 +356,7 @@ class CalendarHomeScreen extends React.PureComponent {
         this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
 
         //TODO calculate current challenge day
-        console.log(this.stringDate)
+        // console.log(this.stringDate)
         this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
         
         //TODO getToday one recommended meal randomly  
@@ -374,7 +375,7 @@ class CalendarHomeScreen extends React.PureComponent {
        
         //TODO get recommended workout here
         const todayRcWorkout = (await getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate))[0] 
-        console.log("TOfdayya",todayRcWorkout)
+        // console.log("TOfdayya",todayRcWorkout)
         if(todayRcWorkout)
           this.setState({todayRcWorkout:todayRcWorkout});
         else
@@ -425,13 +426,14 @@ class CalendarHomeScreen extends React.PureComponent {
       isSchedule,
       ScheduleData,
       CalendarSelectedDate,
-      todayRcWorkout
+      todayRcWorkout,
+      loadingExercises
     } = this.state;
     let showRC = false;
     if(activeChallengeData && activeChallengeUserData){
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
       //check if selected date is between challenge start and end date
-      console.log("????,,,,",this.stringDate)
+      // console.log("????,,,,",this.stringDate)
       const isBetween = moment(this.stringDate)
                         .isBetween(
                           activeChallengeUserData.startDate,
@@ -456,7 +458,6 @@ class CalendarHomeScreen extends React.PureComponent {
         />
       </>  
     )
-      console.log("Workout flad",todayRcWorkout  )
     const workoutCard =(
         todayRcWorkout  && showRC &&
         <>
@@ -523,7 +524,6 @@ class CalendarHomeScreen extends React.PureComponent {
       </Modal>
     )
 
-    console.log(CalendarSelectedDate)
     return (
       <View style={[globalStyle.container,{paddingHorizontal:0}]}>
         <CustomCalendarStrip 
@@ -560,8 +560,9 @@ class CalendarHomeScreen extends React.PureComponent {
            setting
          }
           <Loader
-            loading={loading}
+            loading={loading || loadingExercises}
             color={colors.red.standard}
+            text={loadingExercises?'Please wait we are loading workout':null}
           />
       </View>
     );

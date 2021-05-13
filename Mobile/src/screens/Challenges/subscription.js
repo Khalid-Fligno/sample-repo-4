@@ -155,7 +155,7 @@ class ChallengeSubscriptionScreen extends Component {
 
   renderItem = ({ item ,index}) => {
     const TODAY = moment();
-    if(moment(item.availabilityDate).isSameOrAfter(TODAY))
+    if(moment(item.availabilityDate).isSameOrBefore(TODAY))
     return (
       <ChallengeCard 
           outline={false}
@@ -385,7 +385,7 @@ class ChallengeSubscriptionScreen extends Component {
       calendarModalVisible,
       addingToCalendar
     } = this.state
-    // console.log(challengesList)
+    console.log("Challenge List",challengesList)
     return (
       <ScrollView style={{flex:1,paddingHorizontal:containerPadding}} bounces={false}>
          

@@ -78,7 +78,7 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
     };
     const target = res && res.filters ? getTarget(res.filters):''
     const focus  = res && res.filters ? getFocus(res.filters):''
-    console.log("here",target,focus,res)
+    // console.log("here",target,focus,res)
     return (
           <View   style={[styles.cardContainer,cardCustomStyle]}>
            <ImageBackground

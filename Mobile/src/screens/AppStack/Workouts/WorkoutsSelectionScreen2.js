@@ -25,6 +25,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       loading: true,
       filterIndex: 0,
       location: props.navigation.getParam('workoutLocation', null),
+      loadingExercises:false
     };
   }
   componentDidMount = async () => {
@@ -56,36 +57,36 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       });
   }
   loadExercises = async (workoutData) => {
-    this.setState({ loading: true });
+    this.setState({ loadingExercises: true });
     const workout = await loadExercise(workoutData);
-    console.log(workout)
+    // console.log(workout)
     if(workout && workout.newWorkout){
-      console.log('Here....')
+      // console.log('Here....')
       const warmUpExercises = await downloadExerciseWC(workout,workout.warmUpExercises,workout.warmUpExerciseModel,'warmUp');
       if(warmUpExercises.length > 0){
         const coolDownExercises = await downloadExerciseWC(workout,workout.coolDownExercises,workout.coolDownExerciseModel,'coolDown');
         if(coolDownExercises.length > 0){
             const newWorkout = Object.assign({},workout,{warmUpExercises:warmUpExercises,coolDownExercises:coolDownExercises});
             this.goToNext(newWorkout);
-            console.log(newWorkout)
+            // console.log(newWorkout)
         }else{
-          this.setState({loading:false});
+          this.setState({loadingExercises:false});
           Alert.alert("Alert!","Something went wrong!");
         }
       }else{
-        this.setState({loading:false});
+        this.setState({loadingExercises:false});
         Alert.alert("Alert!","Something went wrong!");
       }
     }
     else if(workout){
       this.goToNext(workout);
     }else{
-      this.setState({loading:false});
+      this.setState({loadingExercises:false});
     }
   }
  async goToNext(workout){
     const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
-    this.setState({ loading: false });
+    this.setState({ loadingExercises: false });
         this.props.navigation.navigate('WorkoutInfo', 
             {
               workout, 
@@ -123,7 +124,8 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       workouts,
       loading,
       location,
-      filterIndex
+      filterIndex,
+      loadingExercises
     } = this.state;
     if(!loading){
             this.filterButtons = this.selectedMainCategory.filters.map((res)=>res.displayName);
@@ -171,7 +173,8 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
           )
         }
         <Loader
-          loading={loading}
+          loading={loading || loadingExercises}
+          text={loadingExercises?'Please wait we are loading workout':null}
           color={colors.coral.standard}
         />
       </View>

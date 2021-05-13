@@ -35,8 +35,8 @@ class ChallengeSetting extends Component {
     const uid = await AsyncStorage.getItem('uid');
     const userRef = db.collection('users').doc(uid).collection('challenges').doc(data.id);
     const newData = createUserChallengeData(activeChallengeData,new Date())
-    // console.log(newData)
-    userRef.set(newData).then((res)=>{
+    // console.log("new Data",newData)
+    userRef.set(newData,{merge:true}).then((res)=>{
         this.setState({loading:false})
         this.props.onToggle()
         // console.log("res",res)
@@ -127,7 +127,7 @@ class ChallengeSetting extends Component {
     const userRef = db.collection('users').doc(uid).collection('challenges').doc(ScheduleData.id);
     const newData = createUserChallengeData(ScheduleData,new Date())
     // console.log(newData)
-    userRef.set(newData).then((res)=>{
+    userRef.set(newData,{merge:true}).then((res)=>{
         const resetAction = StackActions.reset({
             index: 0,
             actions: [NavigationActions.navigate({ 

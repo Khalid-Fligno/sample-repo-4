@@ -124,8 +124,8 @@ fetchCategories = async () =>{
 
   handleClick(mainIndex,subIndex){
     Haptics.selectionAsync();
-    console.log('selectedMainCategory', this.state.workoutCategories[mainIndex])
-    console.log('selectedSubCategory', this.state.workoutCategories[mainIndex].subCategories[subIndex])
+    // console.log('selectedMainCategory', this.state.workoutCategories[mainIndex])
+    // console.log('selectedSubCategory', this.state.workoutCategories[mainIndex].subCategories[subIndex])
     this.props.navigation.navigate('WorkoutsSelection', {
       selectedMainCategory : this.state.workoutCategories[mainIndex],
       selectedSubCategory : this.state.workoutCategories[mainIndex].subCategories[subIndex]
@@ -140,7 +140,7 @@ fetchCategories = async () =>{
       toggleList,
       workoutCategories
     } = this.state;
-    console.log(workoutCategories)
+    // console.log(workoutCategories)
     return (
         <ScrollView 
                 showsVerticalScrollIndicator={false} 

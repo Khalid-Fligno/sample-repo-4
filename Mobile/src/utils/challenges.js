@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { db } from '../../config/firebase';
 import moment from 'moment';
-import momentTimezone from 'moment-timezone';
-import { FileSystem } from 'react-native-unimodules';
+import { Alert } from 'react-native';
 
 
 export const isActiveChallenge = async() =>{
@@ -168,16 +167,40 @@ export const full_months =(dt)=>
   }
   export const hasChallenges = async(uid) =>{
     const userChallenges= await getChallengeDetails(uid);
-    console.log("getActive challneg",userChallenges)
+    
+    // console.log("getActive challneg",userChallenges)
     if(userChallenges !== undefined && userChallenges.length > 0){
-      return true;
+      let isChallengeValidStatus  = [];
+      isChallengeValidStatus  = userChallenges.map(challenge=>{
+        let challengeEndDate = moment(challenge.createdOn, 'YYYY-MM-DD').add(6,'months');
+        let currentDate = moment();
+        let isChallengeValid = moment(currentDate).isSameOrBefore(challengeEndDate);
+        console.log("Is challenge valid",isChallengeValid);
+        console.log("Created On date=>",challenge.createdOn,challengeEndDate,currentDate);
+        if(!isChallengeValid){
+          Alert.alert('Alert!',`Your ${challenge.displayName} has expired.`)
+          removeChallengeFromUser(uid,challenge.id);
+        }
+        return  isChallengeValid
+        
+      })
+      console.log(isChallengeValidStatus)
+      if(isChallengeValidStatus.includes(true)){
+        console.log("Challenge is still valid")
+        return true;
+      }else{
+        Alert.alert("Alert!","Your challenge has expired.");
+        return false;
+      }
+      console.log("Challenges status",isChallengeValidStatus.includes(true))
+      
     }else{
       return false;
     }
   }
 
-  export const getSheduleChallenge = ()=>{
-    
+  export const removeChallengeFromUser = async(uid,challengeId)=>{
+      await db.collection('users').doc(uid).collection('challenges').doc(challengeId).delete();
   }
   //---------------------for login subscription---------------
 

@@ -199,7 +199,7 @@ export const downloadExerciseWC = async(workout,exerciseIds,exerciseModel,type)=
     exercises = exerciseIds.map(id=>{
       return tempExerciseData.find(res=>res.id === id);
     })
-    console.log("kkkk",exercises)
+    // console.log("kkkk",exercises)
       return Promise.all(exercises.map(async (exercise, index) => {
         return new Promise(async(resolve,reject)=>{
           let videoIndex = 0;

@@ -286,6 +286,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
               } 
               else if (subscriptionInfo.expiry > Date.now()) {
                   // RECEIPT STILL VALID
+                  await hasChallenges(uid);
                   await this.goToAppScreen(doc);
                   // if (onboarded) {
                   //   this.props.navigation.navigate('App');
