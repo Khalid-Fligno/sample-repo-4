@@ -25,9 +25,10 @@ export class UsersComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'name', 'view', 'edit','delete'];
   dataSource = new MatTableDataSource<any>([]);
+  searchResults:any = []
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
-  isLoading = true;
+  isLoading = false;
   uploadProgress:any
   uploadURL:any;
   unsubUser:any;
@@ -78,8 +79,8 @@ export class UsersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.spinner.show();
-    this.getUsers();
+    // this.spinner.show();
+    // this.getUsers();
     // this.applySearch();
   }
 
@@ -104,7 +105,7 @@ export class UsersComponent implements OnInit {
   }
 
   ngOnDestroy(){
-    this.unsubUser();
+    // this.unsubUser();
   }
 
   viewUser(data:any) {
@@ -153,23 +154,36 @@ export class UsersComponent implements OnInit {
 
 async  searchByEmail(){
     this.isLoading = true;
-    const usersRef = this.db.firestore.collection('users');
-    var data = await usersRef
-    .where('email',"==",this.selectedItem.value)
-    .get();
+    const userRef = this.db.firestore.collection('users');
+    var query1 =  userRef.where('email',"==",this.selectedItem.value).get();
+    var query2 = userRef.where('firstName','==',this.selectedItem.value).get();
+    var query3 = userRef.where('lastName','==',this.selectedItem.value).get();
 
-    if(data.docs.length === 0){
+     const [QuerySnapshot1, QuerySnapshot2,QuerySnapshot3] = await Promise.all([
+      query1,
+      query2,
+      query3
+    ]);
+
+    const query1Array = QuerySnapshot1.docs;
+    const query2Array = QuerySnapshot2.docs;
+    const query3Array = QuerySnapshot3.docs;
+
+    const data = [...query1Array,...query2Array,...query3Array];
+    console.log(data.length)
+    if(data.length === 0){
+      this.searchResults = [];
         this.dialog.open(SuccessComponent,{data:{title:"Not found!",subTitle:"User not found with this email in db"}});
-    }
-    data.docs.forEach((res)=>{
-      var data:Array<any> =[];
-      console.log(res.data())
-      data.push(res.data());
-      this.dataSource = new MatTableDataSource<any>(data);
-      this.dataSource.paginator = this.paginator;
-      this.isLoading = false;
-      this.searchError = ""
-
+        return
+      }
+    var results:Array<any> =[];
+    data.forEach((res)=>{
+      results.push(res.data());
     })
+    this.dataSource = new MatTableDataSource<any>(results);
+    this.searchResults = data;
+    this.dataSource.paginator = this.paginator;
+    this.isLoading = false;
+    this.searchError = ""
   }
 }

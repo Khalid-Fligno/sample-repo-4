@@ -1,3 +1,22 @@
 table {
     width: 100%;
 }
+.hideTable{
+    display: none,
+}
+.showTable{
+    display: block;
+}
+.header2{
+    justify-content:flex-end;
+}
+.searchDiv{
+    display:flex;
+    // justify-content: center;
+    margin-left: 5%;
+}
+.searchContainer2{
+    // margin-bottom: -1.34375em;
+    font-size: large;
+    width: 100%;
+  }

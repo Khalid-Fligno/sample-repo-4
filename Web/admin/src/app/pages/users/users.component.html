@@ -1,23 +1,25 @@
-<div class="header">
-    <div>
-        <mat-form-field  appearance="outline" class="searchContainer2">
-            <mat-label>Search by email</mat-label>
-            <input type="text" matInput [formControl]="selectedItem" >
-            <mat-icon matPrefix color="primary">search</mat-icon> 
-        </mat-form-field>
-        <button mat-button color="primary" (click)="searchByEmail()" style="height: 3rem;">
-            Search
-        </button>
-    </div>
-   
-
-    <button mat-button color="primary" (click)="editUser()" style="height: 3rem;">
+<div class="header header2">
+    <button mat-button color="primary" (click)="editUser()" style="margin-left: 1rem;">
         <mat-icon style="margin-right: 0.2rem;">add_circle</mat-icon>
         Add User
     </button>
 </div>
+<div class="searchDiv">
+    <div style="width: 60%;">
+        <mat-form-field  appearance="outline" class="searchContainer2">
+            <mat-label>Search by Email/First name/Last name</mat-label>
+            <input type="text" matInput [formControl]="selectedItem" >
+            <mat-icon matPrefix color="primary">search</mat-icon> 
+        </mat-form-field>
+        <p [ngClass]="{hideTable:searchResults.length ===0,showTable:searchResults.length>0 }">{{searchResults.length}} Results found for '{{selectedItem.value}}'</p>
 
-<div class="mat-elevation-z8">
+    </div>
+
+    <button mat-button color="primary" (click)="searchByEmail()" style="margin-left: 1rem;">
+        Search
+    </button>
+</div>
+<div class="mat-elevation-z8" [ngClass]="{hideTable:searchResults.length ===0,showTable:searchResults.length>0 }">
     <table mat-table [dataSource]="dataSource">
   
         <!-- Position Column -->
