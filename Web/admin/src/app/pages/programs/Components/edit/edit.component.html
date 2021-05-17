@@ -1,9 +1,10 @@
 <mat-horizontal-stepper #stepper>
     <mat-step [stepControl]="Form">
       <form [formGroup]="Form">
-        <ng-template matStepLabel>Program</ng-template>
-        <div>
-          <h4>Cover Image: </h4>
+        <ng-template matStepLabel>Challenge</ng-template>
+        <div style="margin-bottom: 1rem;">
+          <!-- <h4>Cover Image: </h4>650 × 190 -->
+          <span><h4>Cover image: * </h4> <h5>(Image size must be below 500 KB)(Dimension - 650 × 190)</h5></span>
           <img 
             *ngIf="f.imageUrl.valid" 
             [src]="sanitizedImagePath(f.imageUrl.value)"
@@ -83,7 +84,7 @@
             </button>
           </span>
     
-          <div *ngFor="let item of phases.controls; let i=index">
+          <div *ngFor="let item of phases.controls; let i=index" class="groupBackground">
             <div [formGroupName]="i" class="group">
               <span>Phase {{i+1}} 
                 <button mat-icon-button color="primary" (click)="removePhase(i)">
@@ -177,7 +178,7 @@
             </button>
           </span>
     
-          <div *ngFor="let item of workouts.controls; let i=index">
+          <div *ngFor="let item of workouts.controls; let i=index" class="groupBackground">
             <div [formGroupName]="i" class="group">
               <span>Workout {{i+1}} 
                 <button mat-icon-button color="primary" (click)="removeWorkout(i)">

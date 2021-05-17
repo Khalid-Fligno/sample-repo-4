@@ -6,7 +6,7 @@
 
 <mat-dialog-content class="mat-typography">
   <mat-tab-group >
-    <mat-tab label="Program Details"> 
+    <mat-tab label="Challenge Details"> 
 
       <!-- Cover Image -->
       <img [src]="data.imageUrl" class="coverImage" />
@@ -82,8 +82,8 @@
 
     <mat-tab label="Workouts" >
       <div *ngFor="let item of data.workouts" style="border-bottom: 1px solid lightgray;">
-        <h3 *ngIf="item.target !== 'rest' && workoutList.length >0">{{__filter(item.workoutId)}}</h3>
-        <h3 *ngIf="item.target === 'rest'">Rest</h3>
+        <h3 *ngIf="item.target !== 'rest' && workoutList.length >0" class="workoutLabel">{{__filter(item.id)}}</h3>
+        <h3 *ngIf="item.target === 'rest'" class="workoutLabel">Rest</h3>
         <h3 class="heading">Days :</h3>
         <p>{{item.days}}</p>
       </div>

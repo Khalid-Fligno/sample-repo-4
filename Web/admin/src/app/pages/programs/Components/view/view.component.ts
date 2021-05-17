@@ -57,12 +57,12 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   async getWorkout(){
-    const recipeRef = this.db.firestore.collection('Workouts');
-    this.unsubWorkout = await recipeRef
+    const workoutRef = this.db.firestore.collection('newWorkouts');
+    this.unsubWorkout = await workoutRef
     .onSnapshot((querySnapshot) => {
       var data:Array<any> =[]
       querySnapshot.forEach(doc => {
-        if(this.data.workouts.find((res:any)=>res.workoutId === doc.data().id))
+        if(this.data.workouts.find((res:any)=>res.id === doc.data().id))
           data.push(doc.data());
       });
     if(data.length >0){

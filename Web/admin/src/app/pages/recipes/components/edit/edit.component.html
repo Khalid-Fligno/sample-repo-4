@@ -3,7 +3,8 @@
 
   <!-- Cover Image field -->
   <div class="imgContainer">
-    <h3 *ngIf="!isImage">Cover image: *</h3>
+    <span *ngIf="!isImage"><h3>Cover image: * </h3>(Image size must be below 500 KB)(Dimension - 480 × 480)</span>
+    
     <h3 *ngIf="isImage" style="color: red;">Cover image: *</h3>
     <img 
       *ngIf="f.coverImage.valid" 
@@ -163,14 +164,14 @@
         <mat-icon>add_circle</mat-icon>
       </button>
     </span>
-    
     <div *ngFor="let skill of steps.controls; let i=index">
-      <div [formGroupName]="i" class="group">
+      <div [formGroupName]="i" class="group" >
         <span>Step {{i+1}} 
           <button mat-icon-button color="primary" (click)="removeStep(i)">
             <mat-icon>remove_circle</mat-icon>
           </button>
         </span>
+          <span ><h4>Step cover image: * </h4><h5>(Image size must be below 500 KB)(Dimension - 480 × 480)</h5></span>
         
         <!-- Step Image field -->
         <div class="imgContainer">

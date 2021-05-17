@@ -3,7 +3,8 @@
      
     <!-- Image field -->
     <div class="imgContainer">
-      <h3>Cover image: *</h3>
+      <!-- <h3>Cover image: * (Recommended dimension - 354 × 353)</h3> -->
+      <span><h3>Cover image: * </h3> (Image size must be below 500 KB)(Dimension - 354 × 353)</span>
       <img 
         *ngIf="f.thumbnail.valid" 
         [src]="sanitizedImagePath(f.thumbnail.value)"
@@ -134,7 +135,7 @@
     </div>
 
     <!-- Exercise section -->
-    <div>
+    <div class="selectExercisesGroup">
       <span>
         <h3>Exercise Model</h3>
       </span>
@@ -144,7 +145,7 @@
           <mat-option *ngFor="let item of modelNamesList" [value]="item.value">{{item.label}}</mat-option>
         </mat-select>
       </mat-form-field>
-    </div> 
+    
 
   <!-- Exercise field -->
   <div formArrayName="exercises" >
@@ -184,11 +185,12 @@
       </span>
     </div>
   </div>
+</div> 
   <hr>
     <!-- Exercise section closed-->
 
       <!-- Warm Up Exercise section -->
-        <div>
+      <div class="selectExercisesGroup">
           <span>
             <h3>Warm-Up Exercise Model</h3>
           </span>
@@ -198,7 +200,7 @@
               <mat-option *ngFor="let item of modelNamesList" [value]="item.value">{{item.label}}</mat-option>
             </mat-select>
           </mat-form-field>
-        </div> 
+        
          <!-- Warm Exercise field -->
           <div formArrayName="warmUpExercises" >
             <span>
@@ -212,7 +214,9 @@
                 <mat-icon>add_circle</mat-icon>
               </button>
             </span>
-            <div *ngFor="let alias of exercisesWU.controls; let i=index" style="justify-content: center;">
+            <div *ngFor="let alias of exercisesWU.controls; let i=index" 
+                  style="justify-content: center;" 
+            >
               <!-- The repeated alias template -->
               <h4>Exercise {{i+1}}</h4>
               <span>
@@ -237,10 +241,11 @@
               </span>
             </div>
           </div>
+        </div>   
       <!-- Warm Up Exercise section closed-->
       <hr>
         <!--  Cool Down Exercise section -->
-          <div>
+        <div class="selectExercisesGroup">
             <span>
               <h3>Cool Down Exercise Model</h3>
             </span>
@@ -250,7 +255,6 @@
                 <mat-option *ngFor="let item of modelNamesList" [value]="item.value">{{item.label}}</mat-option>
               </mat-select>
             </mat-form-field>
-          </div> 
 
           <!-- Warm Exercise field -->
               <div formArrayName="coolDownExercises" >
@@ -291,6 +295,8 @@
                 </span>
               </div>
             </div>
+          </div>
+            
       <!-- Cool Down Exercise section closed-->
   </form>
 </mat-dialog-content>
