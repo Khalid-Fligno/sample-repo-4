@@ -47,13 +47,12 @@ export class RecipesComponent implements OnInit ,AfterViewInit ,OnDestroy {
 
   async getRecipe(){
   
-    const recipeRef = this.db.firestore.collection('Recipes');
+    const recipeRef = this.db.firestore.collection('recipes');
     this.unsubRecipe = await recipeRef
     .onSnapshot((querySnapshot) => {
       var data:Array<any> =[]
       querySnapshot.forEach(doc => {
         data.push(doc.data());
-        
       });
     if(data.length >0){
       this.searchOptions = [...data];

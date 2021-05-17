@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HttpService {
-  // HttpUrl = "http://localhost:8100/admin";
-  HttpUrl = "https://testsubscription.bizminds.io/admin";
+  HttpUrl = "http://localhost:8100/admin";
+  // HttpUrl = "https://testsubscription.bizminds.io/admin";
   // HttpUrl = "https://3.10.57.182/admin";
 
   currentPage = "Dashboard";

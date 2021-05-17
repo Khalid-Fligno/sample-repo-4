@@ -26,21 +26,22 @@
   <!-- Subtitle field -->
   <mat-form-field appearance="outline" >
     <mat-label>Subtitle</mat-label>
-    <input matInput formControlName="subTitle" required>
-    <mat-error *ngIf="f.subTitle.invalid">Please enter subtitle.</mat-error>
+    <input matInput formControlName="subtitle" required>
+    <mat-error *ngIf="f.subtitle.invalid">Please enter subtitle.</mat-error>
   </mat-form-field>
 
   <!-- Time field -->
+  <!-- onkeydown="return 
+  event.keyCode !== 69 && 
+  event.keyCode !== 189 && 
+  event.keyCode !== 187" 
+  formControlName="time"  -->
   <mat-form-field appearance="outline" >
     <mat-label>Time(min)</mat-label>
     <input 
       matInput 
-      type="number" 
-      onkeydown="return 
-      event.keyCode !== 69 && 
-      event.keyCode !== 189 && 
-      event.keyCode !== 187" 
-      formControlName="time" 
+      type="text" 
+      formControlName="time"
       required>
       <mat-error *ngIf="f.time.invalid">Please enter time.</mat-error>
   </mat-form-field>
@@ -63,7 +64,7 @@
   </mat-form-field>
 
   <!-- Tags field   -->
-  <mat-form-field class="example-chip-list" appearance="outline">
+  <!-- <mat-form-field class="example-chip-list" appearance="outline">
     <mat-label>Tags *</mat-label>
     <mat-chip-list #chipList aria-label="Tags selection" formControlName="tags">
       <mat-chip 
@@ -86,15 +87,15 @@
       >
     </mat-chip-list>
     <mat-error>Please enter tags.</mat-error>
-  </mat-form-field>
+  </mat-form-field> -->
 
   <!-- filter-select box -->
   <mat-form-field appearance="outline">
     <mat-label>Filter tags</mat-label>
-    <mat-select formControlName="filterTags" multiple>
+    <mat-select formControlName="tags" multiple>
       <mat-option *ngFor="let tag of filterTagList" [value]="tag.value">{{tag.label}}</mat-option>
     </mat-select>
-    <mat-error *ngIf="f.filterTags.invalid">Please select Filter Tags.</mat-error>
+    <mat-error *ngIf="f.tags.invalid">Please select Filter Tags.</mat-error>
   </mat-form-field>
 
   <!-- Summary field -->
@@ -127,7 +128,7 @@
   </div>
 
   <!-- Nutrition field -->
-  <div formArrayName="nutritions">
+  <!-- <div formArrayName="nutritions">
     <span>
       <h3>Nutritions:</h3>
       <button mat-icon-button color="primary" (click)="addNutrition()">
@@ -152,7 +153,7 @@
         </button>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- Steps field -->
   <div formArrayName="steps" >

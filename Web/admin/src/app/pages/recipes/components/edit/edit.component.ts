@@ -69,21 +69,25 @@ export class EditComponent implements OnInit {
   {
     // console.log(this.data)
     const d = this.data;
+    const steps = d && d.newRecipe?d.steps:d.steps.map((res:string,i:number)=>{return{image:d.stepsImages[i],description:res}} )
+    const types = d && d.newRecipe?d.types:this.mealTypeList.filter((res:string,i:number)=>d[res])
+    console.log(types)
     this.Form = this.fb.group({
       id:d && d.id?d.id:uuidv4(),
       title: [d && d.title?d.title:'',Validators.required],
       coverImage: [d && d.coverImage?d.coverImage:'',Validators.required],
-      subTitle: d && d.subTitle?d.subTitle:'',
+      subtitle: d && d.subtitle?d.subtitle:'',
       portions:d && d.portions?d.portions:'',
       time: d && d.time?d.time:'',
       summary: d && d.summary?d.summary:'',
-      types: [d && d.types?d.types:'',Validators.required],
+      types: [types?types:'',Validators.required],
       tags: [d && d.tags?d.tags:[],Validators.required],
-      filterTags: [d && d.filterTags?d.filterTags:[],Validators.required],
+      // filterTags: [d && d.filterTags?d.filterTags:[],Validators.required],
       ingredients:d && d.ingredients?this.fb.array(d.ingredients.map((res:any)=>res)):this.fb.array([]),
-      steps:d && d.steps?this.fb.array(d.steps.map((res:any)=>this.newStep(res))): this.fb.array([]) ,
-      nutritions:d && d.nutritions?this.fb.array(d.nutritions.map((res:any)=>this.newNutrition(res))): this.fb.array([]) ,
-      utensils:d && d.utensils?this.fb.array(d.utensils.map((res:any)=>res)): this.fb.array([])
+      steps:steps?this.fb.array(steps.map((res:any)=>this.newStep(res))): this.fb.array([]) ,
+      // nutritions:d && d.nutritions?this.fb.array(d.nutritions.map((res:any)=>this.newNutrition(res))): this.fb.array([]) ,
+      utensils:d && d.utensils?this.fb.array(d.utensils.map((res:any)=>res)): this.fb.array([]),
+      newRecipe:true
     });
   }
 
@@ -241,7 +245,7 @@ export class EditComponent implements OnInit {
         this.isImage = true;
       }
      
-      this.isStepImage = true;
+      // this.isStepImage = true;
       this.validateAllFields(this.Form);
     }
   }
@@ -304,8 +308,9 @@ export class EditComponent implements OnInit {
  
 
   saveData(){
-      console.log(this.Form.value);
-      this.http.addEditRecipe(this.Form.value).subscribe((res)=>{
+    const Data = Object.assign({},this.Form.value,...this.Form.value.types.map((res:string)=>{return{[res]:true}}));
+      console.log(Data);
+      this.http.addEditRecipe(Data).subscribe((res)=>{
         if(res.success){
           this.dialog.open(SuccessComponent,{
             data:{

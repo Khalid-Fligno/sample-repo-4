@@ -23,7 +23,8 @@ import { ViewComponent } from './components/view/view.component';
 
 export class UsersComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'name', 'view', 'edit','delete'];
+  // displayedColumns: string[] = ['id', 'name', 'view', 'edit','delete'];
+  displayedColumns: string[] = ['id', 'name', 'view', 'edit'];
   dataSource = new MatTableDataSource<any>([]);
   searchResults:any = []
   @ViewChild(MatPaginator)

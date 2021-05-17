@@ -2,7 +2,7 @@
 <h2 mat-dialog-title>{{data.title}}</h2>
 
 <!-- sub title -->
-<h3>{{data.subTitle}}</h3>
+<h3>{{data.subtitle}}</h3>
 
 <mat-dialog-content class="mat-typography">
   <!-- Cover Image -->
@@ -22,10 +22,10 @@
   <p>{{data.time}}</p>
   
   <!-- Nutritions -->
-  <h3 class="heading">Nutritions :</h3>
+  <!-- <h3 class="heading">Nutritions :</h3>
   <mat-list role="list">
     <mat-list-item role="listitem" *ngFor="let item of data.nutritions" style="text-transform: capitalize;">&#8226; {{item.name}} - {{item.value}}</mat-list-item>
-  </mat-list>
+  </mat-list> -->
  
   <!-- Portions -->
   <h3 class="heading">Portions :</h3>
@@ -38,15 +38,15 @@
   </mat-list>
 
     <!-- Tags -->
-    <h3 class="heading">Filter tags :</h3>
+    <!-- <h3 class="heading">Filter tags :</h3>
     <mat-list role="list">
       <mat-list-item role="listitem" *ngFor="let item of data.filterTags" >&#8226; {{item}}</mat-list-item>
-    </mat-list>
+    </mat-list> -->
 
   <!-- Types -->
   <h3 class="heading">Types :</h3>
   <mat-list role="list">
-    <mat-list-item role="listitem" *ngFor="let item of data.types" style="text-transform: capitalize;">&#8226; {{item}}</mat-list-item>
+    <mat-list-item role="listitem" *ngFor="let item of types" style="text-transform: capitalize;">&#8226; {{item}}</mat-list-item>
   </mat-list>
 
   <!-- Utensils -->
@@ -57,7 +57,7 @@
 
   <!-- Steps -->
   <h3 class="heading">Steps :</h3>
-  <div *ngFor="let item of data.steps; let index=index">
+  <div *ngFor="let item of steps; let index=index">
     <h4>Step {{index+1}}</h4>
     <div class="stepContainer">
       <div>

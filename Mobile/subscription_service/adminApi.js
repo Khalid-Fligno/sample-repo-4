@@ -281,6 +281,41 @@ router.post('/deleteChallenge',jsonParser,async(req,res)=>{
   })
 })
 
+//Recipe----- 
+router.post('/addEditRecipe', jsonParser,async(req, res) => {
+  const recipeRef = await db.collection('recipes').doc(req.body.id);
+    recipeRef.set(req.body,{merge:true}).then((response)=>{
+      res.status(200).json({ success:true,response:response});
+    }).catch(err=>res.status(500).json(err))
+});
+
+router.get('/getRecipes',jsonParser,async (req,res)=>{
+  var data = []
+  const recipeRef = db.collection('recipes');
+  const snapshot = await recipeRef.get();
+  snapshot.forEach(doc => {
+    data.push(doc.data());
+  });
+  res.json({success:true,data:data})
+})
+
+router.post('/deleteRecipe',jsonParser,async(req,res)=>{
+  db.collection('recipes').doc(req.body.id).delete()
+  .then((res)=>{
+      bucket.deleteFiles({
+        prefix: `Recipes/${req.body.id}`
+      }, function(err) {
+        if (!err) {
+          console.log("file deleted")
+        }
+      });
+    res.send({success:true})
+  })
+  .catch((err)=>{
+    res.status(500).json({success:false,err:err})
+  })
+
+})
 
 
 module.exports = router;
