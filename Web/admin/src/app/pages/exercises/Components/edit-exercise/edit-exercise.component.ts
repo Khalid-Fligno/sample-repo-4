@@ -121,8 +121,8 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
   newVideo(data:any=null): FormGroup {
     return this.fb.group
     ({
-      url: data?data.url:null,
-      model: data?data.model:null,
+      url: [data?data.url:null,Validators.required],
+      model: [data?data.model:null,Validators.required],
     })
   }
  

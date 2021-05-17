@@ -66,6 +66,8 @@ export class EditComponent implements OnInit ,OnDestroy {
   selectedModel:string='';
   selectedModelWC:string='';
   selectedModelCD:string='';
+
+  isFilterError:boolean=false;
   constructor
   (
     private fb:FormBuilder,
@@ -261,10 +263,23 @@ export class EditComponent implements OnInit ,OnDestroy {
   }
  
   onSubmit() {
-    console.log(this.Form.value)
-    this.spinner.show();
-    this.upload();
+    const filters = this.Form.value.filters;
+    if(filters.includes('strength') || filters.includes('circuit')||filters.includes('interval')){
+      console.log(this.Form.value)
+      this.spinner.show();
+      this.upload();
+    }else{
+      this.isFilterError= true;
+      this.dialog.open(SuccessComponent,{
+        data:{
+          title:"Alert!",
+          subTitle:"Filters must contain one of Strength,Circuit or Interval."
+        },
+      });
+    }
+  
   }
+
 
   async upload() {
     let data = [{image:this.Form.value.thumbnail}];

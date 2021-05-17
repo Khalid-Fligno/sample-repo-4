@@ -86,14 +86,14 @@
       <div *ngFor="let video of videoUrls.controls; let i=index" class="group">
         <div [formGroupName]="i">
           <span>
-            Video {{i+1}} 
-            <button mat-icon-button color="primary" (click)="removeVideo(i)">
+            Video {{i+1}} *
+            <button mat-icon-button color="primary" (click)="removeVideo(i)" [disabled]="i === 0">
               <mat-icon>remove_circle</mat-icon>
             </button>
           </span>
           
           <div class="imgContainer">
-            <video class="coverImage" controls autoplay loop  *ngIf="videoUrls.value[i].url" >
+            <video class="coverImage" controls  loop  *ngIf="videoUrls.value[i].url" >
               <source [src]="sanitizedImagePath(videoUrls.value[i].url)" type="video/mp4">
             </video>
             <div>

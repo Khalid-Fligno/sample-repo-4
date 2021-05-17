@@ -7,8 +7,8 @@
 <div class="searchDiv">
     <div style="width: 60%;">
         <mat-form-field  appearance="outline" class="searchContainer2">
-            <mat-label>Search by Email/First name/Last name</mat-label>
-            <input type="text" matInput [formControl]="selectedItem" >
+            <!-- <mat-label>Search by Email/First name/Last name</mat-label> -->
+            <input style=" margin-left: 1rem !important;" type="text" matInput [formControl]="selectedItem" placeholder="Search by Email/First name/Last name">
             <mat-icon matPrefix color="primary">search</mat-icon> 
         </mat-form-field>
         <p [ngClass]="{hideTable:searchResults.length ===0,showTable:searchResults.length>0 }">{{searchResults.length}} Results found for '{{selectedItem.value}}'</p>
@@ -70,5 +70,5 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[10, 20]" showFirstLastButtons></mat-paginator>
 </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import Image from 'react-native-image-progress';
+import{ createImageProgress } from 'react-native-image-progress';
 import { DotIndicator } from 'react-native-indicators';
 import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
 // import Icon from '../../../components/Shared/Icon';
@@ -11,14 +11,20 @@ import globalStyle from '../../../styles/globalStyles';
 import NutritionStyles from './NutritionStyles';
 import Loader from '../../../components/Shared/Loader';
 const { width } = Dimensions.get('window');
+import FastImage from 'react-native-fast-image';
+ 
+const Image = createImageProgress(FastImage);
 
 export default class RecipeStepsScreen extends React.PureComponent {
   constructor(props) {
     super(props);
+    const data = this.props.navigation.getParam('recipe', null);
+    const stepsImages = this.props.navigation.getParam('recipe', null).stepsImages
+    const steps = data && data.newRecipe?data.steps:data.steps.map((res,i)=>{return{image:stepsImages[i],description:res}} )
     this.state = {
       loading: true ,
-      steps: this.props.navigation.getParam('recipe', null).steps,
-      stepsImages: this.props.navigation.getParam('recipe', null).stepsImages,
+      steps:steps,
+      stepsImages:stepsImages,
     };
   }
   componentDidMount = () => {
@@ -102,7 +108,8 @@ export default class RecipeStepsScreen extends React.PureComponent {
         <View style={NutritionStyles.carouselContentContainer}>
           <ScrollView>
             <Image
-              source={{ uri: this.state.stepsImages[index] }}
+              // source={{ uri: this.state.stepsImages[index] }}
+              source={{ uri: item.image,}}
               indicator={DotIndicator}
               indicatorProps={{
                 color: colors.themeColor.color,
@@ -117,7 +124,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
             <View style={NutritionStyles.carouselBottomContainer}>
               <View style={NutritionStyles.carouselTextContainer}>
                 <Text style={NutritionStyles.carouselText}>
-                  {item}
+                  {item.description}
                 </Text>
               </View>
             </View>
