@@ -22,7 +22,7 @@ import { ViewComponent } from './components/view/view.component';
 
 export class WorkoutsComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'title', 'view', 'edit','delete'];
+  displayedColumns: string[] = ['id', 'title', 'view', 'edit'];
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;

@@ -282,14 +282,14 @@ class CalendarHomeScreen extends React.PureComponent {
           this.fetchActiveChallengeData(list[0])
         }else{
           if(isCompleted){  //TODO check challenge is Completed or not
+            const newData = createUserChallengeData({...list[0],status:"InActive"},new Date())
+            const challengeRef = db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
+            challengeRef.set(newData,{merge:true});
+            this.props.navigation.navigate('ChallengeSubscription');
             Alert.alert('Congratulations!',
               'You have completed your challenge',
                 [
                   { text: 'OK', onPress: () => {
-                    const newData = createUserChallengeData({...list[0],status:"InActive"},new Date())
-                    const challengeRef = db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
-                    challengeRef.set(newData,{merge:true});
-                    this.props.navigation.navigate('ChallengeSubscription');
                   } }
                 ],
                 { cancelable: false }

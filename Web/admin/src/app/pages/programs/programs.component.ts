@@ -21,7 +21,7 @@ import { ViewComponent } from './Components/view/view.component';
 })
 export class ProgramsComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'name', 'view', 'edit','delete'];
+  displayedColumns: string[] = ['id', 'name', 'view', 'edit'];
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;

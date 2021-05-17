@@ -18,6 +18,9 @@
     <button mat-button color="primary" (click)="searchByEmail()" style="margin-left: 1rem;">
         Search
     </button>
+    <button mat-button color="primary" (click)="clearSearch()" style="margin-left: 1rem;">
+        Clear
+    </button>
 </div>
 <div class="mat-elevation-z8" [ngClass]="{hideTable:searchResults.length ===0,showTable:searchResults.length>0 }">
     <table mat-table [dataSource]="dataSource">

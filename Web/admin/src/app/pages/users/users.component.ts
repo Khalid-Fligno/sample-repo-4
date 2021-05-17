@@ -153,7 +153,14 @@ export class UsersComponent implements OnInit {
     });
   }
 
-
+  clearSearch(){
+    this.selectedItem.setValue('');
+    this.dataSource = new MatTableDataSource<any>([]);
+    this.searchResults = '';
+    this.dataSource.paginator = this.paginator;
+    this.isLoading = false;
+    this.searchError = ""
+  }
 async  searchByEmail(){
     this.isLoading = true;
     const userRef = this.db.firestore.collection('users');

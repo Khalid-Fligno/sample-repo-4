@@ -46,7 +46,9 @@ export class ViewComponent implements OnInit ,OnDestroy {
         data.push(doc.data())
       });
       if(data.length >0){
-        this.exerciseList = data;
+        this.exerciseList = this.data.exercises.map((id:any)=>{
+          return data.find(res=>res.id === id);
+        })
         console.log(data)
       }
     }, 
@@ -65,7 +67,9 @@ export class ViewComponent implements OnInit ,OnDestroy {
         data.push(doc.data())
       });
       if(data.length >0){
-        this.exerciseListWC = data;
+        this.exerciseListWC = this.data.warmUpExercises.map((id:any)=>{
+          return data.find(res=>res.id === id);
+        });
         console.log(data)
       }
     }, 
@@ -84,7 +88,9 @@ export class ViewComponent implements OnInit ,OnDestroy {
         data.push(doc.data())
       });
       if(data.length >0){
-        this.exerciseListCD = data;
+        this.exerciseListCD = this.data.coolDownExercises.map((id:any)=>{
+          return data.find(res=>res.id === id);
+        });
         console.log(data)
       }
     }, 

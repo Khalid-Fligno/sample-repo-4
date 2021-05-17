@@ -384,8 +384,8 @@ class ChallengeSubscriptionScreen extends Component {
       chosenDate,
       calendarModalVisible,
       addingToCalendar
-    } = this.state
-    console.log("Challenge List",challengesList)
+    } = this.state;
+    // console.log("Challenge List",challengesList)
     return (
       <ScrollView style={{flex:1,paddingHorizontal:containerPadding}} bounces={false}>
          

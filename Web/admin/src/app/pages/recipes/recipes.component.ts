@@ -21,7 +21,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./recipes.component.scss']
 })
 export class RecipesComponent implements OnInit ,AfterViewInit ,OnDestroy {
-  displayedColumns: string[] = ['id', 'title', 'view', 'edit','delete'];
+  displayedColumns: string[] = ['id', 'title', 'view', 'edit'];
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -41,7 +41,7 @@ export class RecipesComponent implements OnInit ,AfterViewInit ,OnDestroy {
     private afStorage: AngularFireStorage,
     private spinner: NgxSpinnerService
     ) { 
-    this.http.currentPage="Recipes";
+    this.http.currentPage="Nutrition";
     
   }
 

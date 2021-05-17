@@ -24,7 +24,7 @@ import { ViewExerciseComponent } from './Components/view-exercise/view-exercise.
 
 export class WCExercisesComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'name', 'view', 'edit','delete'];
+  displayedColumns: string[] = ['id', 'name', 'view', 'edit'];
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
