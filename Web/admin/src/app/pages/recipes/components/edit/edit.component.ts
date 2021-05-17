@@ -69,8 +69,12 @@ export class EditComponent implements OnInit {
   {
     // console.log(this.data)
     const d = this.data;
-    const steps = d && d.newRecipe?d.steps:d.steps.map((res:string,i:number)=>{return{image:d.stepsImages[i],description:res}} )
-    const types = d && d.newRecipe?d.types:this.mealTypeList.filter((res:string,i:number)=>d[res])
+    let steps = [];
+    let types = [];
+    if(d && d.steps && d.types){
+       steps = d  && d.newRecipe?d.steps:d.steps.map((res:string,i:number)=>{return{image:d.stepsImages[i],description:res}} );
+       types = d  && d.newRecipe?d.types:this.mealTypeList.filter((res:string,i:number)=>d[res]);
+    }
     console.log(types)
     this.Form = this.fb.group({
       id:d && d.id?d.id:uuidv4(),
@@ -80,11 +84,11 @@ export class EditComponent implements OnInit {
       portions:d && d.portions?d.portions:'',
       time: d && d.time?d.time:'',
       summary: d && d.summary?d.summary:'',
-      types: [types?types:'',Validators.required],
+      types: [types && types.length > 0?types:'',Validators.required],
       tags: [d && d.tags?d.tags:[],Validators.required],
       // filterTags: [d && d.filterTags?d.filterTags:[],Validators.required],
       ingredients:d && d.ingredients?this.fb.array(d.ingredients.map((res:any)=>res)):this.fb.array([]),
-      steps:steps?this.fb.array(steps.map((res:any)=>this.newStep(res))): this.fb.array([]) ,
+      steps:steps && steps.length > 0?this.fb.array(steps.map((res:any)=>this.newStep(res))): this.fb.array([]) ,
       // nutritions:d && d.nutritions?this.fb.array(d.nutritions.map((res:any)=>this.newNutrition(res))): this.fb.array([]) ,
       utensils:d && d.utensils?this.fb.array(d.utensils.map((res:any)=>res)): this.fb.array([]),
       newRecipe:true
