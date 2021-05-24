@@ -142,7 +142,8 @@ export const loadExercise = async(workoutData)=>{
     })
     if(exercises.length>0){
       workoutData = Object.assign({},workoutData,{exercises:exercises});
-      const res = await downloadExercise(workoutData);
+      const res = await downloadExercise(workoutData)
+      console.log(">>>",res)
       if(res)
         return workoutData;
       else
@@ -153,7 +154,7 @@ export const loadExercise = async(workoutData)=>{
 
   }else{
      const res =  await downloadExercise(workoutData);
-     console.log(res)
+     console.log("....",res)
      if(res)
       return workoutData;
      else
@@ -182,9 +183,7 @@ export const loadExercise = async(workoutData)=>{
             resolve("no video found")
           }
         })
-      })).then(res=>{
-        // console.log(res)
-      })
+      }))
   }
   catch(err){
     console.log(err)

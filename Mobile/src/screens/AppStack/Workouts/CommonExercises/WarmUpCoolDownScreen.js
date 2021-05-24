@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import CustomBtn from '../../../../components/Shared/CustomBtn';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
-import { downloadExerciseWC } from '../../../../utils/workouts';
+import { downloadExerciseWC, getLastExercise } from '../../../../utils/workouts';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
@@ -15,18 +15,23 @@ import ExerciseInfoButton from '../../../../components/Workouts/ExerciseInfoButt
 import ExerciseInfoModal from '../../../../components/Workouts/ExerciseInfoModal';
 import Loader from '../../../../components/Shared/Loader';
 import WorkoutProgressBar from '../../../../components/Workouts/WorkoutProgressBar';
+import PauseButtonRow from '../../../../components/Workouts/PauseButtonRow';
+import WorkoutPauseModal from '../../../../components/Workouts/WorkoutPauseModal';
 export default class WarmUpCoolDownScreen extends Component {
   constructor(props) {
     super(props);
+    const{exerciseIndex} = this.props.navigation.state.params;
     this.state = {
       exerciseList:[],
       timerStart: false,
-      exerciseIndex:1,
+      exerciseIndex:exerciseIndex?exerciseIndex:1,
       type:null,
       totalDuration:null,
       totalExercise:0,
       videoPaused:false,
-      exerciseInfoModalVisible:false
+      exerciseInfoModalVisible:false,
+      pauseModalVisible:false,
+      restart:false
     };
   }
   componentDidMount(){
@@ -37,6 +42,7 @@ export default class WarmUpCoolDownScreen extends Component {
 
   async loadExercise(){
     const{warmUp,workout} = this.props.navigation.state.params;
+    const {exerciseIndex} = this.state;
     const type =  warmUp?'warmUp':'coolDown'
     // const exerciseIds =  warmUp?workout.warmUpExercises:workout.coolDownExercises;
     // const exerciseModel =  warmUp?workout.warmUpExerciseModel:workout.coolDownExerciseModel;
@@ -48,7 +54,7 @@ export default class WarmUpCoolDownScreen extends Component {
       timerStart:false,
       type:type,
       totalExercise:exerciseList.length,
-      totalDuration:exerciseList[0] && exerciseList[0].duration?exerciseList[0].duration:30
+      totalDuration:exerciseList[exerciseIndex-1] && exerciseList[exerciseIndex-1].duration?exerciseList[exerciseIndex-1].duration:30
     })
     setTimeout(()=>this.setState({timerStart: true }),100);
   }
@@ -108,7 +114,7 @@ export default class WarmUpCoolDownScreen extends Component {
 
   showExerciseInfoModal = () => {
     this.setState({
-      videoPaused: true,
+      // videoPaused: true,
       timerStart: false,
       exerciseInfoModalVisible: true,
     });
@@ -120,6 +126,61 @@ export default class WarmUpCoolDownScreen extends Component {
       exerciseInfoModalVisible: false,
     });
   }
+  quitWorkout=()=>{
+    this.goToExercise();
+  }
+  restartWorkout=()=>{
+    this.handleExerciseReplace(this.state.exerciseIndex);
+  }
+  skipExercise=()=>{
+    const {exerciseIndex,totalExercise,exerciseList} = this.state;
+    const nextExerciseIndex = this.state.exerciseIndex+1;
+    const totalDuration = exerciseList[nextExerciseIndex-1] && exerciseList[nextExerciseIndex-1].duration?exerciseList[nextExerciseIndex-1].duration:30;
+    if(totalExercise <= exerciseIndex){
+      this.goToExercise();
+    }else{
+      this.handleExerciseReplace(this.state.exerciseIndex+1);
+    }
+  }
+  handleExerciseReplace(exerciseIndex){
+    const{
+      workout,
+      reps,
+      resistanceCategoryId,
+      currentExerciseIndex,
+      workoutSubCategory,
+      fitnessLevel,
+      extraProps,
+      warmUp
+    } = this.props.navigation.state.params;
+    this.props.navigation.replace('ExerciseWC', {
+          workout,
+          reps,
+          resistanceCategoryId,
+          currentExerciseIndex:currentExerciseIndex,
+          exerciseIndex,
+          workoutSubCategory,
+          fitnessLevel,
+          extraProps,
+          warmUp:warmUp
+        });
+  }
+  handleUnpause=()=>{
+    this.setState({
+      videoPaused: false,
+      pauseModalVisible: false,
+      timerStart: true,
+    });
+  }
+  handlePause=()=>{
+    this.setState({
+      videoPaused: true,
+      timerStart: false,
+      pauseModalVisible: true,
+    });
+  }
+
+
   render() {
   const {
     exerciseList,
@@ -128,7 +189,8 @@ export default class WarmUpCoolDownScreen extends Component {
     type,
     totalDuration,
     videoPaused,
-    exerciseInfoModalVisible
+    exerciseInfoModalVisible,
+    pauseModalVisible
   } = this.state;
   const{warmUp,workout} = this.props.navigation.state.params;
   // console.log("???",timerStart,totalDuration)
@@ -148,6 +210,8 @@ export default class WarmUpCoolDownScreen extends Component {
             />
       )
   }
+
+  let lastExercise = getLastExercise(exerciseList,exerciseIndex-1,workout,1)
     return (
       <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -208,6 +272,23 @@ export default class WarmUpCoolDownScreen extends Component {
           hideExerciseInfoModal={this.hideExerciseInfoModal}
         />
       }
+       <PauseButtonRow
+              handlePause={this.handlePause}
+              nextExerciseName={lastExercise.nextExerciseName}
+              lastExercise={lastExercise.isLastExercise}
+              showNextExercise = {true}
+              isNextButton={false}
+      />
+      <WorkoutPauseModal
+          isVisible={pauseModalVisible}
+          handleQuit={this.quitWorkout}
+          handleRestart={this.restartWorkout}
+          handleSkip={this.skipExercise}
+          handleUnpause={this.handleUnpause}
+          exerciseList={exerciseList}
+          reps={1}
+          currentExerciseIndex = {exerciseIndex}
+      />
       <Loader
           loading={exerciseList.length === 0}
           color={colors.coral.standard}

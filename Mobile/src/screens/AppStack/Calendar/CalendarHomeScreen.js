@@ -192,14 +192,14 @@ class CalendarHomeScreen extends React.PureComponent {
     const workout = await loadExercise(workoutData);
     // console.log("line195",workout)
     if(workout && workout.newWorkout){
-      // console.log('Here....')
+      console.log('Here....')
       const warmUpExercises = await downloadExerciseWC(workout,workout.warmUpExercises,workout.warmUpExerciseModel,'warmUp');
       if(warmUpExercises.length > 0){
         const coolDownExercises = await downloadExerciseWC(workout,workout.coolDownExercises,workout.coolDownExerciseModel,'coolDown');
         if(coolDownExercises.length > 0){
             const newWorkout = Object.assign({},workout,{warmUpExercises:warmUpExercises,coolDownExercises:coolDownExercises});
             this.goToNext(newWorkout);
-            // console.log(newWorkout)
+            console.log(newWorkout)
         }else{
           this.setState({loadingExercises:false});
           Alert.alert("Alert!","Something went wrong!");
@@ -236,6 +236,7 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   async goToNext(workout){
+    console.log(">>here")
     const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
     this.setState({ loadingExercises: false });
     if(this.currentChallengeDay > 0){
