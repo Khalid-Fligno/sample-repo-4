@@ -88,7 +88,7 @@ export default class RecipeTile extends React.PureComponent {
                 </View>
                 <View style={styles.recipeInfoSection}>
                   {
-                    time && (
+                    time !== '' && (
                       
                       <View style={styles.timerContainer}>
                          <Text style={styles.timerText}>

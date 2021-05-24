@@ -153,6 +153,7 @@ export const loadExercise = async(workoutData)=>{
 
   }else{
      const res =  await downloadExercise(workoutData);
+     console.log(res)
      if(res)
       return workoutData;
      else
@@ -177,9 +178,13 @@ export const loadExercise = async(workoutData)=>{
                 // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
               })
               .catch(err=>resolve("Download failed"))
+          }else{
+            resolve("no video found")
           }
         })
-      }))
+      })).then(res=>{
+        // console.log(res)
+      })
   }
   catch(err){
     console.log(err)
