@@ -47,7 +47,14 @@
   <div *ngIf='challengeList'>
     <h3 class="heading">Challenges :</h3>
     <mat-list role="list">
-      <mat-list-item role="listitem" *ngFor="let item of challengeList" style="text-transform: capitalize;">&#8226; {{item.displayName}} ({{item.startDate | date: 'dd/MM/yyyy'}} to {{item.endDate | date: 'dd/MM/yyyy'}})</mat-list-item>
+      <mat-list-item role="listitem" 
+        *ngFor="let item of challengeList" 
+        style="text-transform: capitalize;"
+      >
+        &#8226; {{item.displayName}} 
+        ({{item.startDate | date: 'dd/MM/yyyy'}} to {{item.endDate | date: 'dd/MM/yyyy'}})
+        Challenge expired in ({{item.createdOn}})
+     </mat-list-item>
     </mat-list>
   </div>
 

@@ -286,7 +286,7 @@ export default class WarmUpCoolDownScreen extends Component {
           handleSkip={this.skipExercise}
           handleUnpause={this.handleUnpause}
           exerciseList={exerciseList}
-          reps={1}
+          reps={'1'}
           currentExerciseIndex = {exerciseIndex}
       />
       <Loader

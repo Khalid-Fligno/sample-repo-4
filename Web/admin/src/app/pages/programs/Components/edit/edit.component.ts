@@ -75,7 +75,7 @@ export class EditComponent implements OnInit, OnDestroy {
       imageUrl: [d && d.imageUrl?d.imageUrl:'',Validators.required],
       numberOfDays: [d && d.numberOfDays?d.numberOfDays:'',Validators.required],
       numberOfWeeks: [d && d.numberOfWeeks?d.numberOfWeeks:'',Validators.required],
-      productReChargeId:[d && d.productReChargeId?d.productReChargeId:'',Validators.required],
+      // productReChargeId:[d && d.productReChargeId?d.productReChargeId:'',Validators.required],
       shopifyProductId:[d && d.shopifyProductId?d.shopifyProductId:'',Validators.required],
       shopifyUrl:[d && d.shopifyUrl?d.shopifyUrl:'',Validators.pattern(this.http.urlRegex)],
       tag: [d && d.tag?d.tag:'',Validators.required],
