@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-view',
@@ -29,5 +30,8 @@ export class ViewComponent {
       return true
     
     return false  
+  }
+  getChallengeExpiryDate(startDate:any){
+    return moment(startDate).add(6,'M').format('DD-MM-YYYY')
   }
 }

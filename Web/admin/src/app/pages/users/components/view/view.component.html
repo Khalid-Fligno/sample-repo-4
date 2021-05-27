@@ -53,7 +53,7 @@
       >
         &#8226; {{item.displayName}} 
         ({{item.startDate | date: 'dd/MM/yyyy'}} to {{item.endDate | date: 'dd/MM/yyyy'}})
-        Challenge expired in ({{item.createdOn}})
+         Expires on ({{getChallengeExpiryDate(item.createdOn)}})
      </mat-list-item>
     </mat-list>
   </div>

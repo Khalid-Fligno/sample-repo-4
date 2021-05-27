@@ -151,7 +151,10 @@
                       <input type="text" matInput [formControl]="selectedItem" >
                       <mat-icon matPrefix color="primary">search</mat-icon> 
                     </mat-form-field>
-                    <mat-option  *ngFor="let item of recipeList" [value]="item.id">{{item.title}}</mat-option>
+                    <mat-option  *ngFor="let item of recipeList" [value]="item.id">{{item.title}}
+                      ({{getMealType(item)}}
+                      )
+                    </mat-option>
                     <p  *ngIf="recipeList.length === 0" >No record found..</p>
                   </mat-select>
                 </mat-form-field>

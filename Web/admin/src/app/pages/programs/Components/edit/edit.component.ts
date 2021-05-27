@@ -431,4 +431,21 @@ export class EditComponent implements OnInit, OnDestroy {
       this.selectedItemWorkouts.patchValue('');
     }
   }
+
+  getMealType(meal:any){
+    let types = [];
+    if(meal.breakfast){
+      types.push('Breakfast')
+    }
+    if(meal.lunch){
+      types.push('Lunch')
+    }
+    if(meal.snack){
+      types.push('Snack')
+    }
+    if(meal.dinner){
+      types.push('Dinner')
+    }
+    return types.toString();
+  }
 }
