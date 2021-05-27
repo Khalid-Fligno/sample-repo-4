@@ -134,8 +134,8 @@
                 <input matInput formControlName="pdfUrl">
               </mat-form-field>  
 
-                <!-- Tags field -->
-              <div>
+                <!-- Meals field -->
+              <!-- <div>
                 <span>
                   <h3>Meals</h3> 
                 </span>
@@ -158,7 +158,135 @@
                     <p  *ngIf="recipeList.length === 0" >No record found..</p>
                   </mat-select>
                 </mat-form-field>
+              </div> -->
+
+              <!-- BreakFast field -->
+              <div>
+                <span>
+                  <h3>Breakfast</h3> 
+                </span>
+                <mat-form-field appearance="outline">
+                  <mat-select 
+                      formControlName="breakfast" 
+                      multiple 
+                    
+                      (openedChange)="openedChange($event)"
+                    >
+                    <mat-form-field  appearance="outline" class="searchContainer">
+                      <mat-label>Search</mat-label>
+                      <input type="text" matInput [formControl]="selectedItem" >
+                      <mat-icon matPrefix color="primary">search</mat-icon> 
+                    </mat-form-field>
+                    <div *ngFor="let item of recipeList">
+                      <mat-option   [value]="item.id" *ngIf="item.breakfast">{{item.title}}</mat-option>
+                    </div>
+                    <p  *ngIf="recipeList.length === 0" >No record found..</p>
+                  </mat-select>
+                </mat-form-field>
               </div>
+              <!-- BreakFast field close-->
+
+              <!-- lunch field -->
+              <div>
+                <span>
+                  <h3>Lunch</h3> 
+                </span>
+                <mat-form-field appearance="outline">
+                  <mat-select 
+                      formControlName="lunch" 
+                      multiple 
+                    
+                      (openedChange)="openedChange($event)"
+                    >
+                    <mat-form-field  appearance="outline" class="searchContainer">
+                      <mat-label>Search</mat-label>
+                      <input type="text" matInput [formControl]="selectedItem" >
+                      <mat-icon matPrefix color="primary">search</mat-icon> 
+                    </mat-form-field>
+                    <div *ngFor="let item of recipeList">
+                      <mat-option   [value]="item.id" *ngIf="item.lunch">{{item.title}}</mat-option>
+                    </div>
+                    <p  *ngIf="recipeList.length === 0" >No record found..</p>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <!-- lunch field close-->
+              <!-- Dinner field -->
+                <div>
+                  <span>
+                    <h3>Dinner</h3> 
+                  </span>
+                  <mat-form-field appearance="outline">
+                    <mat-select 
+                        formControlName="dinner" 
+                        multiple 
+                      
+                        (openedChange)="openedChange($event)"
+                      >
+                      <mat-form-field  appearance="outline" class="searchContainer">
+                        <mat-label>Search</mat-label>
+                        <input type="text" matInput [formControl]="selectedItem" >
+                        <mat-icon matPrefix color="primary">search</mat-icon> 
+                      </mat-form-field>
+                      <div *ngFor="let item of recipeList">
+                        <mat-option   [value]="item.id" *ngIf="item.dinner">{{item.title}}</mat-option>
+                      </div>
+                      <p  *ngIf="recipeList.length === 0" >No record found..</p>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              <!-- Dinner field close-->
+              <!-- Snack field -->
+                  <div>
+                    <span>
+                      <h3>Snack</h3> 
+                    </span>
+                    <mat-form-field appearance="outline">
+                      <mat-select 
+                          formControlName="snack" 
+                          multiple 
+                        
+                          (openedChange)="openedChange($event)"
+                        >
+                        <mat-form-field  appearance="outline" class="searchContainer">
+                          <mat-label>Search</mat-label>
+                          <input type="text" matInput [formControl]="selectedItem" >
+                          <mat-icon matPrefix color="primary">search</mat-icon> 
+                        </mat-form-field>
+                        <div *ngFor="let item of recipeList">
+                          <mat-option   [value]="item.id" *ngIf="item.dinner">{{item.title}}</mat-option>
+                        </div>
+                        <p  *ngIf="recipeList.length === 0" >No record found..</p>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                <!-- Snack field close-->
+                <!-- Drink field -->
+                   <div>
+                    <span>
+                      <h3>Drink</h3> 
+                    </span>
+                    <mat-form-field appearance="outline">
+                      <mat-select 
+                          formControlName="drink" 
+                          multiple 
+                        
+                          (openedChange)="openedChange($event)"
+                        >
+                        <mat-form-field  appearance="outline" class="searchContainer">
+                          <mat-label>Search</mat-label>
+                          <input type="text" matInput [formControl]="selectedItem" >
+                          <mat-icon matPrefix color="primary">search</mat-icon> 
+                        </mat-form-field>
+                        <div *ngFor="let item of recipeList">
+                          <mat-option   [value]="item.id" *ngIf="item.drink">{{item.title}}</mat-option>
+                        </div>
+                        <p  *ngIf="recipeList.length === 0" >No record found..</p>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                <!-- Drink field close-->
+
             </div>
           </div>
         </div>
@@ -205,13 +333,6 @@
               </mat-form-field>
 
               <div >
-                <!-- <div formArrayName="days"> -->
-                <!-- <span>
-                  <h3>Days</h3> 
-                  <button mat-icon-button color="primary" (click)="addDays(i)">
-                    <mat-icon>add_circle</mat-icon>
-                  </button>
-                </span> -->
                 <mat-form-field class="example-chip-list" appearance="outline">
                   <mat-label>Days</mat-label>
                   <mat-chip-list #chipList aria-label="Days selection">
@@ -230,18 +351,7 @@
                            >
                   </mat-chip-list>
                 </mat-form-field>
-                <!-- <div *ngFor="let item of getDays(i); let a=index">
-                  <span>
-                    <mat-form-field appearance="outline" >
-                      <input matInput type="number" [formControlName]="a">
-                    </mat-form-field>
-                    <button mat-icon-button color="primary" (click)="removeDays(i, a)">
-                      <mat-icon>remove_circle</mat-icon>
-                    </button>
-                  </span>
-                </div> -->
               </div>
-
             </div>
           </div>
         </div>

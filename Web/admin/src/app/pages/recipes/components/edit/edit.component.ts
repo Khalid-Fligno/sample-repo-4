@@ -37,7 +37,8 @@ export class EditComponent implements OnInit {
     "breakfast",
     "lunch",
     "dinner",
-    "snack"
+    "snack",
+    "drink"
   ];
 
   filterTagList: any[] = [

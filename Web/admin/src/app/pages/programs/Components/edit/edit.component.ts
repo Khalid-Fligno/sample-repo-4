@@ -11,7 +11,7 @@ import { map, startWith } from 'rxjs/operators';
 import { SuccessComponent } from 'src/app/components/success/success.component';
 import { HttpService } from 'src/app/http.service';
 import { v4 as uuidv4 } from 'uuid';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {COMMA, D, ENTER} from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
@@ -122,7 +122,12 @@ export class EditComponent implements OnInit, OnDestroy {
       startDay: [d && d.startDay?d.startDay:'',Validators.required],
       endDay: [d && d.endDay?d.endDay:'',Validators.required],
       pdfUrl: [d && d.pdfUrl?d.pdfUrl:'',Validators.required],
-      meals: [d && d.meals?d.meals:'',Validators.required],
+      // meals: [d && d.meals?d.meals:'',Validators.required],
+      breakfast:[d && d.meals?d.meals:'',Validators.required],
+      lunch:[d && d.meals?d.meals:'',Validators.required],
+      dinner:[d && d.meals?d.meals:'',Validators.required],
+      snack:[d && d.meals?d.meals:'',Validators.required],
+      drink:[d && d.meals?d.meals:''],
     })
   }
 
@@ -263,7 +268,7 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(){
-    this.spinner.show();
+    // this.spinner.show();
 
     let str:string = this.Form.value.shopifyUrl;
     str = str.substring(0,4);
@@ -315,19 +320,27 @@ export class EditComponent implements OnInit, OnDestroy {
       console.log(res,"then")
       this.saveData();
     })
-    .catch(err=>console.log("Error!",err))
+    .catch(err=>{
+      this.spinner.hide();
+      alert("Something went wrong please try again.")
+      console.log("Error!",err);
+    })
   }
 
   saveData(){
-    console.log(this.Form.value);
+    console.log(this.Form2.value);
+
+    const phasesArray = this.getPhases(this.Form2.value.phases);
     const  data = {
       ...this.Form.value,
-      ...this.Form2.value,
+      ...{phases:phasesArray},
       ...this.Form3.value,
       newChallenge:true,
       productId:this.Form.value.shopifyProductId,
       createdAt:new Date().toISOString()
     }
+    console.log(data)
+
     this.http.addEditChallenge(data).subscribe((res)=>{
       if(res.success){
        this.dialog.open(SuccessComponent,{
@@ -447,5 +460,29 @@ export class EditComponent implements OnInit, OnDestroy {
       types.push('Dinner')
     }
     return types.toString();
+  }
+
+  getPhases(phases:any){
+    const meals = [...new Set([...this.Form2.value.phases[0].breakfast,
+      ...this.Form2.value.phases[0].lunch,
+      ...this.Form2.value.phases[0].dinner,
+      ...this.Form2.value.phases[0].snack,
+      ...this.Form2.value.phases[0].drink
+    ])];
+console.log(meals)
+
+    return phases.map((res:any)=>{
+        const meals = [...new Set([...res.breakfast,...res.lunch,...res.dinner,...res.snack,...res.drink])];
+        return {
+                  displayName: res.displayName,
+                  name: res.name,
+                  thumbnail:res.thumbnail ,
+                  description:res.description ,
+                  startDay:res.startDay,
+                  endDay:res.endDay ,
+                  pdfUrl:res.pdfUrl,
+                  meals:meals
+              }
+    })
   }
 }
