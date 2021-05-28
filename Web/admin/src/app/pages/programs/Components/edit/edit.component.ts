@@ -268,7 +268,7 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(){
-    // this.spinner.show();
+    this.spinner.show();
 
     let str:string = this.Form.value.shopifyUrl;
     str = str.substring(0,4);
@@ -469,7 +469,7 @@ export class EditComponent implements OnInit, OnDestroy {
       ...this.Form2.value.phases[0].snack,
       ...this.Form2.value.phases[0].drink
     ])];
-console.log(meals)
+    // console.log(meals)
 
     return phases.map((res:any)=>{
         const meals = [...new Set([...res.breakfast,...res.lunch,...res.dinner,...res.snack,...res.drink])];
@@ -483,6 +483,18 @@ console.log(meals)
                   pdfUrl:res.pdfUrl,
                   meals:meals
               }
+    })
+  }
+
+  getTotalSelected(type:any,index:number){
+    const phase = this.Form2.value.phases[index];
+    if(this.recipeList.length === 0 || !phase[type]){
+      return []
+    }
+   
+    return phase[type].filter((id:any)=>{
+      const recipe = this.recipeList.find((recipe:any)=>recipe.id === id);
+      return recipe[type]
     })
   }
 }

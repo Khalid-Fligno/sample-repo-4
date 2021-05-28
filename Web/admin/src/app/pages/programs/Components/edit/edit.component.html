@@ -94,6 +94,7 @@
         
               <div class="imgContainer">
                 <!-- <h4>Upload image:</h4> -->
+                <span><h4>Cover image: * </h4> <h5>(Image size must be below 500 KB)(Dimension - 650 × 190)</h5></span>
                 <img 
                   *ngIf="phases.value[i].thumbnail" 
                   [src]="sanitizedImagePath(phases.value[i].thumbnail)"
@@ -163,7 +164,7 @@
               <!-- BreakFast field -->
               <div>
                 <span>
-                  <h3>Breakfast</h3> 
+                  <h3>Breakfast (total selected : {{getTotalSelected('breakfast',i).length}})</h3> 
                 </span>
                 <mat-form-field appearance="outline">
                   <mat-select 
@@ -189,7 +190,7 @@
               <!-- lunch field -->
               <div>
                 <span>
-                  <h3>Lunch</h3> 
+                  <h3>Lunch (total selected : {{getTotalSelected('lunch',i).length}})</h3> 
                 </span>
                 <mat-form-field appearance="outline">
                   <mat-select 
@@ -214,7 +215,7 @@
               <!-- Dinner field -->
                 <div>
                   <span>
-                    <h3>Dinner</h3> 
+                    <h3>Dinner (total selected : {{getTotalSelected('dinner',i).length}})</h3> 
                   </span>
                   <mat-form-field appearance="outline">
                     <mat-select 
@@ -239,7 +240,7 @@
               <!-- Snack field -->
                   <div>
                     <span>
-                      <h3>Snack</h3> 
+                      <h3>Snack (total selected : {{getTotalSelected('snack',i).length}})</h3> 
                     </span>
                     <mat-form-field appearance="outline">
                       <mat-select 
@@ -254,7 +255,7 @@
                           <mat-icon matPrefix color="primary">search</mat-icon> 
                         </mat-form-field>
                         <div *ngFor="let item of recipeList">
-                          <mat-option   [value]="item.id" *ngIf="item.dinner">{{item.title}}</mat-option>
+                          <mat-option   [value]="item.id" *ngIf="item.snack">{{item.title}}</mat-option>
                         </div>
                         <p  *ngIf="recipeList.length === 0" >No record found..</p>
                       </mat-select>
@@ -264,7 +265,7 @@
                 <!-- Drink field -->
                    <div>
                     <span>
-                      <h3>Drink</h3> 
+                      <h3>Drink (total selected : {{getTotalSelected('drink',i).length}})</h3> 
                     </span>
                     <mat-form-field appearance="outline">
                       <mat-select 
