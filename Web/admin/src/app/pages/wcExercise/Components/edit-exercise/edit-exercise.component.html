@@ -2,10 +2,10 @@
   <form [formGroup]="Form" >
     
     <!-- name field -->
-    <mat-form-field appearance="outline" >
+    <!-- <mat-form-field appearance="outline" >
       <mat-label>Name</mat-label>
       <input matInput formControlName="name" required>
-    </mat-form-field>
+    </mat-form-field> -->
   
     <!-- displayName field -->
     <mat-form-field appearance="outline" >
@@ -33,7 +33,7 @@
     </div>
 
         <!-- filters field -->
-        <div >
+        <!-- <div >
           <span>
             <h3>Filters</h3>
           </span>
@@ -43,7 +43,7 @@
               <mat-option *ngFor="let item of exerciseFilterList" [value]="item.value">{{item.label}}</mat-option>
             </mat-select>
           </mat-form-field>
-        </div>
+        </div> -->
 
     <!-- Sets field -->
     <mat-form-field appearance="outline" class="example-full-width">
@@ -97,7 +97,7 @@
               <source [src]="sanitizedImagePath(videoUrls.value[i].url)" type="video/mp4">
             </video>
             <div>
-              <input type="file" (change)="onFileChange2($event,i)" accept=".mp4" required/>
+              <input type="file" (change)="onFileChange2($event,i)" accept=".mp4,.mov" required/>
             </div>   
           </div>
 

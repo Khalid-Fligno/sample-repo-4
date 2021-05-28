@@ -94,7 +94,7 @@ export class EditComponent implements OnInit ,OnDestroy {
       displayName: [d && d.displayName?d.displayName:'',Validators.required],
       description: [d && d.description?d.description:'',Validators.required],
       filters: [d && d.filters?d.filters:'',Validators.required], //array
-      name: [d && d.name?d.name:'',Validators.required],
+      name: [d && d.name?d.name:''],
       restIntervalMap: d && d.restIntervalMap?this.fb.array(d.restIntervalMap.map((res:any)=>res)):this.fb.array(['','','']), //array
       tags : [d &&d.tags?d.tags:'',Validators.required], //array
       exerciseModel : [d &&d.exerciseModel?d.exerciseModel:'',Validators.required], //array
@@ -321,6 +321,9 @@ export class EditComponent implements OnInit ,OnDestroy {
  
 
   saveData(){
+      this.Form.patchValue({
+        name:this.Form.value.displayName
+      });
       console.log(this.Form.value);
       const filters = this.Form.value.filters;
       let workoutProcessType = '';

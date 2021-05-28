@@ -46,7 +46,7 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
     this.Form = this.fb.group
     ({
       id:d && d.id?d.id:uuidv4(),
-      name: [d && d.name?d.name:'',Validators.required],
+      name: [d && d.name?d.name:''],
       displayName: [d && d.displayName ?d.displayName:'',Validators.required],
       recommendedResistance: d && d.recommendedResistance?d.recommendedResistance:'',
       coachingTip:d && d.coachingTip?this.fb.array(d.coachingTip.map((res:any)=>res)):this.fb.array([]),
@@ -212,6 +212,9 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
  
 
   saveData(){
+    this.Form.patchValue({
+      name:this.Form.value.displayName
+    });
     console.log(this.Form.value);
     this.http.addEditExercises(this.Form.value).subscribe((res)=>{
       if(res.success){

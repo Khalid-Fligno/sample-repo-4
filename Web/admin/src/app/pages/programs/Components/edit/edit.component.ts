@@ -69,7 +69,7 @@ export class EditComponent implements OnInit, OnDestroy {
     this.Form = this._formBuilder.group({
       id:d && d.id?d.id:uuidv4(),
       displayName: [d && d.displayName?d.displayName:'',Validators.required],
-      name: [d && d.name?d.name:'',Validators.required],
+      name: [d && d.name?d.name:''],
       description: [d && d.description?d.description:'',Validators.required],
       availabilityDate: [d && d.availabilityDate?d.availabilityDate:'',Validators.required],
       imageUrl: [d && d.imageUrl?d.imageUrl:'',Validators.required],
@@ -159,33 +159,6 @@ export class EditComponent implements OnInit, OnDestroy {
     this.workouts.removeAt(i);
   }
 
-
-//Meals
-  // addMeal(i:number){
-  //   var ref = this.phases.at(i).get("meals") as FormArray;
-  //   ref.push(this.fb.control(''))
-  // }
-
-  // meals(i:number){
-  //   var ref =  this.phases.at(i).get("meals") as FormArray;
-  //   return ref.controls
-  // }
-
-  // removeMeal(i:number,deleteIndex:number){
-  //   var ref = this.phases.at(i).get("meals") as FormArray;
-  //   ref.removeAt(deleteIndex);
-  // }
-
-  //days
-  // addDays(i:number) {
-  //   var ref = this.workouts.at(i).get("days") as FormArray;
-  //   ref.push(this.fb.control(''))
-  // }
-
-  // removeDays(i:number, deleteIndex:number) {
-  //   var ref = this.workouts.at(i).get("days") as FormArray;
-  //   ref.removeAt(deleteIndex);
-  // }
 
   //days
   addDay(event: MatChipInputEvent,i:number): void {
@@ -328,16 +301,17 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   saveData(){
-    console.log(this.Form2.value);
-
+    this.Form.patchValue({
+      name:this.Form.value.displayName
+    })
     const phasesArray = this.getPhases(this.Form2.value.phases);
     const  data = {
-      ...this.Form.value,
-      ...{phases:phasesArray},
-      ...this.Form3.value,
-      newChallenge:true,
-      productId:this.Form.value.shopifyProductId,
-      createdAt:new Date().toISOString()
+                    ...this.Form.value,
+                    ...{phases:phasesArray},
+                    ...this.Form3.value,
+                    newChallenge:true,
+                    productId:this.Form.value.shopifyProductId,
+                    createdAt:new Date().toISOString()
     }
     console.log(data)
 
@@ -445,6 +419,7 @@ export class EditComponent implements OnInit, OnDestroy {
     }
   }
 
+  //Not Used...
   getMealType(meal:any){
     let types = [];
     if(meal.breakfast){

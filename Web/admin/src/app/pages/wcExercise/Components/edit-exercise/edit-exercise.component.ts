@@ -63,13 +63,13 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
     this.Form = this.fb.group
     ({
       id:d && d.id?d.id:uuidv4(),
-      name: [d && d.name?d.name:'',Validators.required],
+      name: [d && d.name?d.name:''],
       displayName: [d && d.displayName ?d.displayName:'',Validators.required],
       type: [d && d.type ?d.type:'',Validators.required],
       // recommendedResistance: d && d.recommendedResistance?d.recommendedResistance:'',
       coachingTip:d && d.coachingTip?this.fb.array(d.coachingTip.map((res:any)=>res)):this.fb.array([]),
       videoUrls: d && d.videoUrls?this.fb.array(d.videoUrls.map((res:any)=>this.newVideo(res))): this.fb.array([this.newVideo()]),
-      filters: [d && d.filters?d.filters:'',Validators.required], //array
+      filters: [d && d.filters?d.filters:''], //array
       duration: [d && d.duration?d.duration:'',Validators.required],
       // workoutIds:[d && d.workoutIds?d.workoutIds:'',Validators.required],
     });
@@ -232,6 +232,9 @@ export class EditExerciseComponent implements OnInit, OnDestroy {
  
 
   saveData(){
+    this.Form.patchValue({
+      name:this.Form.value.displayName
+    });
     console.log(this.Form.value);
     this.http.addEditWCExercises(this.Form.value).subscribe((res)=>{
       if(res.success){
