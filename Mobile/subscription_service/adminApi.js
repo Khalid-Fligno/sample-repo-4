@@ -379,7 +379,7 @@ const createNewChallenge=(data)=>{
       "shopifyProductId":data.shopifyProductId,
       "createdAt":data.createdAt,
       "productId":data.productId,
-      "productReChargeId":data.productReChargeId,
+      "productReChargeId":data.productReChargeId?data.productReChargeId:null,
       "isSchedule":false
       }
       return challenge

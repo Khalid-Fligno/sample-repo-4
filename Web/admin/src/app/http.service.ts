@@ -17,11 +17,11 @@ export class HttpService {
   
 
   getModels(): Observable<any> {
-    return this.httpClient.get(`${this.HttpUrl}/getModels`)
+    return this.httpClient.get(`${this.HttpUrl}/getModels`);
   }
 
   getChallengeTag(): Observable<any> {
-    return this.httpClient.get(`${this.HttpUrl}/getChallengeTag`)
+    return this.httpClient.get(`${this.HttpUrl}/getChallengeTag`);
   }
   //recipe api
   getRecipes(): Observable<any> {

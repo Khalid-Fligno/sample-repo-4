@@ -304,6 +304,9 @@ export class EditComponent implements OnInit, OnDestroy {
     this.Form.patchValue({
       name:this.Form.value.displayName
     })
+    this.Form2.patchValue({
+      name:this.Form.value.displayName
+    })
     const phasesArray = this.getPhases(this.Form2.value.phases);
     const  data = {
                     ...this.Form.value,
