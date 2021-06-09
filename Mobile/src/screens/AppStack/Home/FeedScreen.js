@@ -131,7 +131,7 @@ export default class FeedScreen extends React.PureComponent {
 //   }
 
   fetchBlogs = async (tag,currentDay) => {
-    console.log(tag,currentDay)
+    // console.log(tag,currentDay)
     const snapshot = await db.collection('blogs')
     .where("tags","array-contains",tag)
     .get()

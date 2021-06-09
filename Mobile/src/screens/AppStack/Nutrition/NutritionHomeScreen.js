@@ -50,14 +50,14 @@ export default function NutritionHomeScreen({ navigation }) {
         {
           NutritionList.map((data,i)=>(
             <Tile
-            key={i}
-            title1={data.title}
-            image={data.imageUrl}
-            onPress={() => navigation.navigate('RecipeSelection', { meal: data.title })}
-            showTitle = {true}
-            overlayTitle = {false}
-            customContainerStyle={{height:170}}
-            showTitleStyle={{marginTop:15}}
+              key={i}
+              title1={data.title}
+              image={data.imageUrl}
+              onPress={() => navigation.navigate('RecipeSelection', { meal: data.title })}
+              showTitle = {true}
+              overlayTitle = {false}
+              customContainerStyle={{height:170}}
+              showTitleStyle={{marginTop:15}}
           />
           ))
          

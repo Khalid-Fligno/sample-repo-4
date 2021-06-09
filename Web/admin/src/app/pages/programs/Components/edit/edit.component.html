@@ -59,13 +59,13 @@
 
         <mat-form-field appearance="outline" >
           <mat-label>Shopify URL :</mat-label>
-          <input matInput formControlName="shopifyUrl" required>
+          <input matInput formControlName="shopifyUrl" placeholder="https://shopify.com/" required>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" >
+        <!-- <mat-form-field appearance="outline" >
           <mat-label>Tag :</mat-label>
           <input matInput formControlName="tag" required>
-        </mat-form-field>
+        </mat-form-field> -->
 
         <div style="float: right;">
           <button mat-button matStepperNext>Next</button>
@@ -134,33 +134,6 @@
                 <mat-label>PDF URL</mat-label>
                 <input matInput formControlName="pdfUrl">
               </mat-form-field>  
-
-                <!-- Meals field -->
-              <!-- <div>
-                <span>
-                  <h3>Meals</h3> 
-                </span>
-                <mat-form-field appearance="outline">
-                  <mat-select 
-                      formControlName="meals" 
-                      multiple 
-                    
-                      (openedChange)="openedChange($event)"
-                    >
-                    <mat-form-field  appearance="outline" class="searchContainer">
-                      <mat-label>Search</mat-label>
-                      <input type="text" matInput [formControl]="selectedItem" >
-                      <mat-icon matPrefix color="primary">search</mat-icon> 
-                    </mat-form-field>
-                    <mat-option  *ngFor="let item of recipeList" [value]="item.id">{{item.title}}
-                      ({{getMealType(item)}}
-                      )
-                    </mat-option>
-                    <p  *ngIf="recipeList.length === 0" >No record found..</p>
-                  </mat-select>
-                </mat-form-field>
-              </div> -->
-
               <!-- BreakFast field -->
               <div>
                 <span>

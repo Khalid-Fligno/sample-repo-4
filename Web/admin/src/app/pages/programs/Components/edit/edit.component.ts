@@ -10,9 +10,10 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { SuccessComponent } from 'src/app/components/success/success.component';
 import { HttpService } from 'src/app/http.service';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4} from 'uuid';
 import {COMMA, D, ENTER} from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
+import * as shortId from 'short-uuid'
 
 @Component({
   selector: 'app-edit',
@@ -78,7 +79,7 @@ export class EditComponent implements OnInit, OnDestroy {
       // productReChargeId:[d && d.productReChargeId?d.productReChargeId:'',Validators.required],
       shopifyProductId:[d && d.shopifyProductId?d.shopifyProductId:'',Validators.required],
       shopifyUrl:[d && d.shopifyUrl?d.shopifyUrl:'',Validators.pattern(this.http.urlRegex)],
-      tag: [d && d.tag?d.tag:'',Validators.required],
+      tag: [d && d.tag?d.tag:shortId.generate(),Validators.required],
     });
 
     this.Form2 = this._formBuilder.group({
