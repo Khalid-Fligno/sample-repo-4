@@ -351,7 +351,7 @@ class CalendarHomeScreen extends React.PureComponent {
         
         //TODO get recommended workout here
         const todayRcWorkout = (await getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate))[0] 
-        console.log("TOfdayya",todayRcWorkout)
+        // console.log("TOfdayya",todayRcWorkout)
         if(todayRcWorkout)
           this.setState({todayRcWorkout:todayRcWorkout});
         else

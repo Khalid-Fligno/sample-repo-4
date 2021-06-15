@@ -72,9 +72,9 @@ export class EditComponent implements OnInit {
     const d = this.data;
     let steps = [];
     let types = [];
-    if(d && d.steps && d.types){
+    if(d && d.steps ){
        steps = d  && d.newRecipe?d.steps:d.steps.map((res:string,i:number)=>{return{image:d.stepsImages[i],description:res}} );
-       types = d  && d.newRecipe?d.types:this.mealTypeList.filter((res:string,i:number)=>d[res]);
+       types = d  && d.newRecipe && d.types?d.types:this.mealTypeList.filter((res:string,i:number)=>d[res]);
     }
     console.log(types)
     this.Form = this.fb.group({

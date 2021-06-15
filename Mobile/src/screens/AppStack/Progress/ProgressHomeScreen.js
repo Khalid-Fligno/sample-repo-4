@@ -86,11 +86,12 @@ class ProgressHomeScreen extends React.PureComponent {
     const uid = await AsyncStorage.getItem('uid');
     const userRef = db.collection('users').doc(uid);
     this.unsubscribe = userRef.onSnapshot(async (doc) => {
+      var data = await doc.data();
       this.setState({
-        profile: await doc.data(),
-        initialProgressInfo: await doc.data().initialProgressInfo,
-        currentProgressInfo: await doc.data().currentProgressInfo.weight?await doc.data().currentProgressInfo:null,
-        unitsOfMeasurement: await doc.data().unitsOfMeasurement,
+        profile: data,
+        initialProgressInfo: data.initialProgressInfo,
+        currentProgressInfo: data.currentProgressInfo && data.currentProgressInfo.weight?data.currentProgressInfo:null,
+        unitsOfMeasurement: data.unitsOfMeasurement,
         loading: false,
       });
       if (await doc.data().weeklyTargets.currentWeekStartDate !== moment().startOf('week').format('YYYY-MM-DD')) {
