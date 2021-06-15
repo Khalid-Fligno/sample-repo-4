@@ -7,8 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class HttpService {
   // HttpUrl = "http://localhost:8100/admin";
-  HttpUrl = "https://testsubscription.bizminds.io/admin";
-  // HttpUrl = "https://3.10.57.182/admin";
+  // HttpUrl = "https://testsubscription.bizminds.io/admin";
+  // HttpUrl = "https://3.10.57.182/admin"; //bizminds live server
+  HttpUrl = "https://34.87.240.165/admin"; //google cloud live server
 
   currentPage = "Dashboard";
   urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
