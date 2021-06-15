@@ -76,9 +76,14 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
-    const target = res && res.filters ? getTarget(res.filters):''
-    const focus  = res && res.filters ? getFocus(res.filters):''
-    // console.log("here",target,focus,res)
+    let target = '';
+    let focus  = '';
+    if(res && res.target === 'rest'){
+      target = 'rest';
+    }else{
+      target = res && res.filters ? getTarget(res.filters):''
+      focus  = res && res.filters ? getFocus(res.filters):''
+    }
     return (
           <View   style={[styles.cardContainer,cardCustomStyle]}>
            <ImageBackground
@@ -103,14 +108,13 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
               <View style={styles.innerViewContainer}>
                  {
                    target !== 'rest' &&
-                   <Text key={res} style={styles.recTextLabel}>{`${target} - ${focus}`}</Text>
+                   <Text key={res} style={styles.recTextLabel}>{target}{focus?' - '+focus:''}</Text>
                  }
                  {
                    target === 'rest' &&
                     <Text key={res} style={styles.recTextLabel}>Today is your rest day</Text>
                  }
               </View>
-              
                     <CustomBtn 
                       Title ="View Workout"
                       customBtnStyle ={{
@@ -147,10 +151,6 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     height: wp('33%'),
-    // shadowColor: colors.charcoal.standard,
-    // shadowOpacity: 0.5,
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowRadius: 4,
   },
   flexContainer: {
     flex: 1,
@@ -167,7 +167,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     justifyContent: 'space-between',
-    // backgroundColor:colors.transparentBlackLightest,
     paddingHorizontal:wp('5%'),
     paddingVertical:wp('4%')
   },
@@ -179,10 +178,6 @@ const styles = StyleSheet.create({
     fontSize: wp('6%'),
     color: colors.offWhite,
     textAlign:'left',
-    // shadowColor: colors.black,
-    // shadowOpacity: 1,
-    // shadowOffset: { width: 0, height: 0 },
-    // shadowRadius: 5,
     textTransform:'uppercase'
   },
   innerViewContainer: {

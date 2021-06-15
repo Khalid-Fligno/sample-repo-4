@@ -262,6 +262,9 @@ export default class LoginScreen extends React.PureComponent {
           });
       }
     } catch (err) {
+      if(err.message && err.message.includes('An account already exists with the same email address')){
+        Alert.alert('Facebook signup failed',"An account already exists with the same email address but different sign-in credentials.");
+      }
       this.setState({ error: 'Something went wrong', loading: false });
     }
   }

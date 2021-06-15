@@ -80,7 +80,8 @@ export const getTodayRecommendedWorkout = async(workouts,activeChallengeUserData
         return  snapshot.docs.map((res)=>res.data());
       }
     }else{
-      return []
+      console.log("????",workoutData)
+      return [workoutData]
     }
 
 }
@@ -175,8 +176,8 @@ export const full_months =(dt)=>
         let challengeEndDate = moment(challenge.createdOn, 'YYYY-MM-DD').add(6,'months');
         let currentDate = moment();
         let isChallengeValid = moment(currentDate).isSameOrBefore(challengeEndDate);
-        console.log("Is challenge valid",isChallengeValid);
-        console.log("Created On date=>",challenge.createdOn,challengeEndDate,currentDate);
+        // console.log("Is challenge valid",isChallengeValid);
+        // console.log("Created On date=>",challenge.createdOn,challengeEndDate,currentDate);
         if(!isChallengeValid){
           Alert.alert('Alert!',`Your ${challenge.displayName} has expired.`)
           removeChallengeFromUser(uid,challenge.id);
@@ -186,14 +187,12 @@ export const full_months =(dt)=>
       })
       console.log(isChallengeValidStatus)
       if(isChallengeValidStatus.includes(true)){
-        console.log("Challenge is still valid")
+        // console.log("Challenge is still valid")
         return true;
       }else{
         Alert.alert("Alert!","Your challenge has expired.");
         return false;
       }
-      console.log("Challenges status",isChallengeValidStatus.includes(true))
-      
     }else{
       return false;
     }

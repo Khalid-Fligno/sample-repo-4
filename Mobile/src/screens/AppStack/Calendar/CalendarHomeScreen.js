@@ -166,7 +166,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 loading:true
               });
               this.stringDate = res.startDate;
-                this.fetchActiveChallengeData(res);
+              this.fetchActiveChallengeData(res);
             }
             if(isBetween){
               this.setState({isSchedule:true,ScheduleData:res});
@@ -214,25 +214,6 @@ class CalendarHomeScreen extends React.PureComponent {
     }else{
       this.setState({loadingExercises:false});
     }
-    // if(workout){
-    //   const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
-    //   this.setState({ loading: false });
-    //   if(this.currentChallengeDay > 0){
-    //     Object.assign(workout,{displayName:`${workout.displayName} - Day ${this.currentChallengeDay}`}) 
-    //   }
-    //       this.props.navigation.navigate('WorkoutInfo', 
-    //           {
-    //             workout, 
-    //             reps: workout.difficultyLevel[fitnessLevel-1].toString(),
-    //             workoutSubCategory:workout.workoutSubCategory,
-    //             fitnessLevel,
-    //             extraProps:{fromCalender:true}
-    //          }
-    //       ) 
-    // }else{
-    //   Alert.alert("Failed!",'Video downloding failed');
-    // }
-
   }
 
   async goToNext(workout){
@@ -354,30 +335,23 @@ class CalendarHomeScreen extends React.PureComponent {
         this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
 
         //TODO :calculate the workout completed till selected date
-        // console.log(this.stringDate)
         this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
 
         //TODO calculate current challenge day
-        // console.log(this.stringDate)
         this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
         
         //TODO getToday one recommended meal randomly  
         getTodayRecommendedMeal(this.phaseData,activeChallengeData).then((res)=>{
-          // console.log("now display")
           this.setState({
             todayRecommendedMeal: res.recommendedMeal,
             challengeMealsFilterList: res.challengeMealsFilterList,
             loading:false
           })
         })
-
-        // this.todayRecommendedMeal = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).recommendedMeal
-        // //TODO getToday one recommended meal randomly  
-        //   this.challengeMealsFilterList = getTodayRecommendedMeal(this.phaseData,activeChallengeUserData).challengeMealsFilterList
-       
+        
         //TODO get recommended workout here
         const todayRcWorkout = (await getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate))[0] 
-        // console.log("TOfdayya",todayRcWorkout)
+        console.log("TOfdayya",todayRcWorkout)
         if(todayRcWorkout)
           this.setState({todayRcWorkout:todayRcWorkout});
         else

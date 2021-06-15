@@ -35,7 +35,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
     await this.fetchWorkouts();
   }
   componentWillUnmount = async () => {
-    await this.unsubscribe();
+    this.unsubscribe();
   }
   fetchWorkouts = async () => {
     this.setState({ loading: true });
@@ -109,7 +109,8 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
           url={item.thumbnail?item.thumbnail:customUrl} 
           description = {item.subTitle?item.subTitle:item.displayName}
           title = {item.displayName.toUpperCase()}
-          timeInterval = {((item.workIntervalMap[fitnessLevel-1]+item.restIntervalMap[fitnessLevel-1])*item.exercises.length*item.workoutReps)/60}
+          // timeInterval = {((item.workIntervalMap[fitnessLevel-1]+item.restIntervalMap[fitnessLevel-1])*item.exercises.length*item.workoutReps)/60}
+          timeInterval = {Number(item.workoutTime.toFixed(0))}
           onPress ={() => this.loadExercises(item)}
           count = {item.count}
        />

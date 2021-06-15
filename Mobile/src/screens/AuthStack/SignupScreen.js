@@ -206,6 +206,10 @@ export default class SignupScreen extends React.PureComponent {
         Alert.alert('Facebook signup failed', 'Please sign up with your email address');
         return;
       }
+      if(err.message && err.message.includes('An account already exists with the same email address')){
+        Alert.alert('Facebook signup failed', 'An account already exists with the same email address');
+      }
+      console.log(err.message)
       this.setState({ error: 'Something went wrong', loading: false });
     }
   }

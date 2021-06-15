@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ImageBackground } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { StyleSheet } from 'react-native';
-import { ScrollView } from 'react-native';
+import { ScrollView,FlatList } from 'react-native';
 import { View, Text } from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { FileSystem } from 'react-native-unimodules';
@@ -16,6 +16,29 @@ class TodayMealsList extends Component {
     this.state = {
     };
   }
+
+    mealCard=({item:recipe})=>(
+        <TouchableOpacity
+            style={styles.cardContainer}
+            // key={i}
+            onPress={()=>this.props.onPress(recipe)}
+        >
+            <ImageBackground
+                // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
+                source={{uri: recipe.coverImage,cache:'force-cache' }}
+                style={styles.image}
+                resizeMode='cover'
+            >
+                <View style={styles.opacityLayer}>
+                    <Text
+                        style={styles.cardTitle}
+                    >
+                        {recipe.title}
+                    </Text>
+                </View>     
+            </ImageBackground>
+        </TouchableOpacity>
+    )
    carousel =(data,title) =>(
         <View>  
             <View style={{
@@ -40,46 +63,20 @@ class TodayMealsList extends Component {
                     </TouchableOpacity>
                 }
             </View>
-            <ScrollView
+            <FlatList
+                horizontal
+                // pagingEnabled={true}
+                showsHorizontalScrollIndicator={false}
+                legacyImplementation={false}
+                data={data}
+                renderItem={item => this.mealCard(item)}
+                keyExtractor={res => res.id}
                 style={{
                     paddingHorizontal:containerPadding,
-                    paddingVertical:wp('3%'),
-                    // flex:1
+                    paddingVertical:wp('3%')
                 }}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                // scrollEventThrottle={200}
-                
-            >
-                {
-                    data.map((res,i)=>
-                        (
-                        <TouchableOpacity
-                            style={styles.cardContainer}
-                            key={i}
-                            onPress={()=>this.props.onPress(res)}
-                        >
-                            <ImageBackground
-                                // source={{uri: `${FileSystem.cacheDirectory}recipe-${res.id}.jpg` }}
-                                source={{uri: res.coverImage,cache:'force-cache' }}
-                                style={styles.image}
-                                resizeMode='cover'
-                            >
-                                <View style={styles.opacityLayer}>
-                                    <Text
-                                        style={styles.cardTitle}
-                                    >
-                                        {res.title}
-                                    </Text>
-                                </View>     
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        )
-                        )
-                }
-               
-               
-            </ScrollView>
+            />
+            
         </View>
   )
 

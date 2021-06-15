@@ -33,16 +33,10 @@ class ChallengeCard extends Component {
             style={[globalStyle.FT_ImageContainer,{height:130,display:'flex'}]}
             imageStyle={{ borderRadius: 5,backgroundColor:colors.grey.medium,}}
         > 
+            <View style={styles.overlay}>
               <View
                 style={styles.ViewContainer}
               >
-                  {/* <View style={styles.titleContainer}>
-                    <Text style={styles.numberTextLabel}>{numberOfWeeks}</Text>
-                      <View style={{marginLeft:5}}> 
-                          <Text style={styles.textLabel}>Week</Text>
-                          <Text style={styles.textLabel}>challenge</Text>
-                      </View>
-                  </View> */}
                   <View style={styles.titleContainer}>
                     <Text style={[styles.numberTextLabel,{fontSize:wp('6%'),flexWrap:'nowrap'}]}>
                       {title} 
@@ -95,7 +89,7 @@ class ChallengeCard extends Component {
                     />
                   }
                  </View>
-                
+                </View>
                 
         </ImageBackground> 
     );
@@ -147,5 +141,9 @@ const styles = StyleSheet.create({
       justifyContent:'space-between',
       width:wp('85%'),
       marginHorizontal:10
+    },
+    overlay:{
+      backgroundColor:colors.transparentBlackLightest,
+      flex:1
     } 
 });
