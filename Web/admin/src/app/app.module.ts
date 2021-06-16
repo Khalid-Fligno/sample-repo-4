@@ -19,6 +19,7 @@ import { SuccessComponent } from './components/success/success.component';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { TokenInterceptor } from './auth/token.interceptor';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
+import { environment } from 'src/environments/environment';
 
 // let firebaseConfig = {
 //    apiKey: 'AIzaSyAxS1IQqle6bXkO018qwJdaUXAfj845G-s',
@@ -28,15 +29,15 @@ import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 //    storageBucket: 'quickstart-1588594831516.appspot.com',
 //    messagingSenderId: '213071860801'
 // };
-const firebaseConfig = {
-     apiKey: 'AIzaSyBayQ5iob9mqDvVMNQtytsmyRF6YRmFPYQ',
-     authDomain: 'fitazfk-app.firebaseapp.com',
-     databaseURL: 'https://fitazfk-app.firebaseio.com',
-     projectId: 'fitazfk-app',
-     storageBucket: 'fitazfk-app.appspot.com',
-     messagingSenderId: '100949764253',
-     appId: "1:100949764253:ios:fe0422c37d2df031",
-};
+// const firebaseConfig = {
+//      apiKey: 'AIzaSyBayQ5iob9mqDvVMNQtytsmyRF6YRmFPYQ',
+//      authDomain: 'fitazfk-app.firebaseapp.com',
+//      databaseURL: 'https://fitazfk-app.firebaseio.com',
+//      projectId: 'fitazfk-app',
+//      storageBucket: 'fitazfk-app.appspot.com',
+//      messagingSenderId: '100949764253',
+//      appId: "1:100949764253:ios:fe0422c37d2df031",
+// };
 
 @NgModule({
   declarations: [
@@ -53,7 +54,7 @@ const firebaseConfig = {
     BrowserAnimationsModule,
     HttpClientModule,
     MaterialModule,
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule, // firestore
     AngularFireAuthModule, // auth
     AngularFireStorageModule, // storage,
