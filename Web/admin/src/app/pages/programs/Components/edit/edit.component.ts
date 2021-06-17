@@ -117,7 +117,7 @@ export class EditComponent implements OnInit, OnDestroy {
   newPhase(d:any=null): FormGroup {
     return this.fb.group({
       displayName: [d && d.displayName?d.displayName:'',Validators.required],
-      name: [d && d.name?d.name:'',Validators.required],
+      name: [d && d.name?d.name:''],
       thumbnail: [d && d.thumbnail?d.thumbnail:'',Validators.required],
       description: [d && d.description?d.description:'',Validators.required],
       startDay: [d && d.startDay?d.startDay:'',Validators.required],
