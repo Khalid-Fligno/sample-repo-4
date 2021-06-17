@@ -24,16 +24,19 @@ router.get('/getModels',jsonParser,async (req,res)=>{
 router.get('/getChallengeTag',jsonParser,async (req,res)=>{
   const Tags = [
     {label:"Subscription",value:'Subscription'},
+    {label:"Challenge",value:'Challenge'},
   ];
-    const challengeRef = await db.collection('challenges').get();
-    if(challengeRef.empty){
-      res.status(200).json(Tags);    
-    }else{
-      challengeRef.docs.forEach(challenge=>{
-        Tags.push({label:challenge.data().displayName,value:challenge.data().tag})
-      })
-      res.status(200).json(Tags)
-    }
+  res.status(200).json(Tags);    
+
+    // const challengeRef = await db.collection('challenges').get();
+    // if(challengeRef.empty){
+    //   res.status(200).json(Tags);    
+    // }else{
+    //   challengeRef.docs.forEach(challenge=>{
+    //     Tags.push({label:challenge.data().displayName,value:challenge.data().tag})
+    //   })
+    //   res.status(200).json(Tags)
+    // }
 })
 router.post('/addUser',jsonParser,async (req,res)=>{
     console.log(req.body.email)
