@@ -380,7 +380,7 @@ export class EditComponent implements OnInit ,OnDestroy {
     }
     //* *//
 
-    //search
+    //search warm up
     applyWarmUpSearch(){
       this.filteredOptionsWC = this.selectedItemWC.valueChanges
       .pipe(
@@ -403,7 +403,7 @@ export class EditComponent implements OnInit ,OnDestroy {
     }
     //* *//
 
-    //search colldown
+    //search cooldown
     applyCoolDownSearch(){
       this.filteredOptionsCD = this.selectedItemCD.valueChanges
       .pipe(
@@ -427,15 +427,6 @@ export class EditComponent implements OnInit ,OnDestroy {
     //* *//
 
     onChangeModel(model:string,type:string){
-      // let data =[]
-      // data = this.searchOptionsWC.filter((exercise)=>{
-      //   let matchVideo = exercise.videoUrls.filter((video: any)=>video.model === model);
-      //   if(matchVideo.length > 0)
-      //     return true;
-      //   else
-      //     return false;
-
-      // });
       if(type === 'WC')
         this.selectedModelWC = model;
       else if(type === 'CD')
@@ -463,5 +454,20 @@ export class EditComponent implements OnInit ,OnDestroy {
         return false;
     }
 
+    matSelectOpenCloseEvent(event:any,type:string=''){
+      console.log(event,type);
+      switch (type) {
+        case 'WC':
+          this.selectedItemWC.patchValue('');
+          break;
+        case 'CD':
+          this.selectedItemCD.patchValue('');
+          break;
+        default:
+          this.selectedItem.patchValue('');
+          break;
+      }
+      
+    }
     
 }

@@ -11,7 +11,8 @@ export const environment = {
      projectId: 'quickstart-1588594831516',
      storageBucket: 'quickstart-1588594831516.appspot.com',
      messagingSenderId: '213071860801'
-  }
+  },
+  httpUrl:"http://localhost:8100/admin"
 };
 
 /*

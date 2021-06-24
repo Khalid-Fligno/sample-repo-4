@@ -8,5 +8,6 @@ export const environment = {
      storageBucket: 'fitazfk-app.appspot.com',
      messagingSenderId: '100949764253',
      appId: "1:100949764253:ios:fe0422c37d2df031",
-  }
+  },
+  httpUrl:"https://34.87.240.165/admin" //google cloud live server
 };

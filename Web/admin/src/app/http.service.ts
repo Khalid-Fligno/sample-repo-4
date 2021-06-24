@@ -1,19 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
-  // HttpUrl = "http://localhost:8100/admin";
   // HttpUrl = "https://testsubscription.bizminds.io/admin";
-  HttpUrl = "https://34.87.240.165/admin"; //google cloud live server
-
+  HttpUrl = environment.httpUrl;
   currentPage = "Dashboard";
   urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
 
-  constructor(private httpClient:HttpClient) { }
+  constructor(private httpClient:HttpClient) {
+    console.log(this.HttpUrl)
+   }
   
 
   getModels(): Observable<any> {

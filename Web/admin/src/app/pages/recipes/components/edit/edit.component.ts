@@ -34,11 +34,26 @@ export class EditComponent implements OnInit {
   Form: FormGroup;
   uploadProgress:any;
   mealTypeList=[
-    "breakfast",
-    "lunch",
-    "dinner",
-    "snack",
-    "drink"
+    {
+      label:"breakfast",
+      value:"breakfast",
+    },
+    {
+      label:"lunch",
+      value:"lunch",
+    },
+    {
+      label:"dinner",
+      value:"dinner",
+    },
+    {
+      label:"snack",
+      value:"snack",
+    },
+    {
+      label:"post workout",
+      value:"drink",
+    },
   ];
 
   filterTagList: any[] = [
@@ -74,7 +89,7 @@ export class EditComponent implements OnInit {
     let types = [];
     if(d && d.steps ){
        steps = d  && d.newRecipe?d.steps:d.steps.map((res:string,i:number)=>{return{image:d.stepsImages[i],description:res}} );
-       types = d  && d.newRecipe && d.types?d.types:this.mealTypeList.filter((res:string,i:number)=>d[res]);
+       types = d  && d.newRecipe && d.types?d.types:this.mealTypeList.map(res=>res.value).filter((res:string,i:number)=>d[res]);
     }
     console.log(types)
     this.Form = this.fb.group({

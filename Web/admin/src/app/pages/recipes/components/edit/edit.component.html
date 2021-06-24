@@ -58,7 +58,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Types</mat-label>
     <mat-select formControlName="types" multiple required>
-      <mat-option *ngFor="let item of mealTypeList" [value]="item">{{item.toUpperCase()}}</mat-option>
+      <mat-option *ngFor="let item of mealTypeList" [value]="item.value">{{item.label.toUpperCase()}}</mat-option>
     </mat-select>
     <mat-hint>Select type in which you want to display this recipe.</mat-hint>
     <mat-error *ngIf="f.types.invalid">Please choose type.</mat-error>

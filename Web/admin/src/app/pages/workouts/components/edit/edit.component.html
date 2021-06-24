@@ -166,7 +166,7 @@
       <span>
         <mat-form-field appearance="outline" class="example-full-width">
           <!-- <input matInput [formControlName]="i" required> -->
-          <mat-select [formControlName]="i">
+          <mat-select [formControlName]="i" (openedChange)="matSelectOpenCloseEvent($event)">
             <mat-form-field  appearance="outline" class="searchContainer" >
               <mat-label>Search</mat-label>
               <input type="text" matInput [formControl]="selectedItem" >
@@ -222,7 +222,7 @@
               <span>
                 <mat-form-field appearance="outline" class="example-full-width">
                   <!-- <input matInput [formControlName]="i" required> -->
-                  <mat-select [formControlName]="i" >
+                  <mat-select [formControlName]="i" (openedChange)="matSelectOpenCloseEvent($event,'WC')">
                     <mat-form-field  appearance="outline" class="searchContainer" >
                       <mat-label>Search</mat-label>
                       <input type="text" matInput [formControl]="selectedItemWC" >
@@ -276,7 +276,7 @@
                 <span>
                   <mat-form-field appearance="outline" class="example-full-width">
                     <!-- <input matInput [formControlName]="i" required> -->
-                    <mat-select [formControlName]="i" >
+                    <mat-select [formControlName]="i" (openedChange)="matSelectOpenCloseEvent($event,'CD')">
                       <mat-form-field  appearance="outline" class="searchContainer" >
                         <mat-label>Search</mat-label>
                         <input type="text" matInput [value]="selectedItemCD.value" [formControl]="selectedItemCD" >
