@@ -90,6 +90,26 @@ export const getLastExercise = (exerciseList,currentExerciseIndex,workout,setCou
   }
 }
 
+export const getLastExerciseWC = (exerciseList,currentExerciseIndex,workout,setCount)=>{
+  let lastExercise = false
+  let nextExerciseName = ''
+  if(!exerciseList[currentExerciseIndex + 1]) {
+    lastExercise = true;
+    nextExerciseName = 'NEARLY DONE!';
+  }
+  else{
+    if(exerciseList[currentExerciseIndex + 1]){
+      nextExerciseName = exerciseList[currentExerciseIndex + 1].displayName
+    }else{
+      nextExerciseName = exerciseList[0].displayName
+    }
+  }
+  return {
+    isLastExercise:lastExercise,
+    nextExerciseName:nextExerciseName
+  }
+}
+
 export const showNextExerciseFlag = (workout,setCount,rest) =>{
   let showNextExercise = false  
   if(workout.workoutProcessType === 'oneByOne' && setCount === workout.workoutReps){

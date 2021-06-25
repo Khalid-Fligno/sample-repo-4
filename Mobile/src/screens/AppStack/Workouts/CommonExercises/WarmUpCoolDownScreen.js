@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import CustomBtn from '../../../../components/Shared/CustomBtn';
 import colors from '../../../../styles/colors';
 import fonts from '../../../../styles/fonts';
-import { downloadExerciseWC, getLastExercise } from '../../../../utils/workouts';
+import { getLastExercise, getLastExerciseWC } from '../../../../utils/workouts';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
@@ -48,7 +48,7 @@ export default class WarmUpCoolDownScreen extends Component {
     // const exerciseModel =  warmUp?workout.warmUpExerciseModel:workout.coolDownExerciseModel;
     // const data = await downloadExerciseWC(workout,exerciseIds,exerciseModel,type);
     const exerciseList = type === 'warmUp'?workout.warmUpExercises:workout.coolDownExercises;
-    // console.log(workout);
+    // console.log("workout",workout,exerciseList,type);
     this.setState({
       exerciseList:exerciseList,
       timerStart:false,
@@ -193,7 +193,7 @@ export default class WarmUpCoolDownScreen extends Component {
     pauseModalVisible
   } = this.state;
   const{warmUp,workout} = this.props.navigation.state.params;
-  // console.log("???",timerStart,totalDuration)
+  // console.log("???",exerciseList)
   const showInfoBtn = exerciseList.length > 0 && 
                       exerciseList[exerciseIndex-1].coachingTip && 
                       exerciseList[exerciseIndex-1].coachingTip.length>0 ;
@@ -211,7 +211,8 @@ export default class WarmUpCoolDownScreen extends Component {
       )
   }
 
-  let lastExercise = getLastExercise(exerciseList,exerciseIndex-1,workout,1)
+  let lastExercise =exerciseList.length > 0? getLastExerciseWC(exerciseList,exerciseIndex-1,workout,1):{};
+  // let lastExercise = getLastExercise(exerciseList,exerciseIndex-1,workout,1);
     return (
       <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -272,13 +273,17 @@ export default class WarmUpCoolDownScreen extends Component {
           hideExerciseInfoModal={this.hideExerciseInfoModal}
         />
       }
-       <PauseButtonRow
-              handlePause={this.handlePause}
-              nextExerciseName={lastExercise.nextExerciseName}
-              lastExercise={lastExercise.isLastExercise}
-              showNextExercise = {true}
-              isNextButton={false}
-      />
+      {
+        lastExercise && exerciseList.length > 0 &&
+        <PauseButtonRow
+          handlePause={this.handlePause}
+          nextExerciseName={lastExercise.nextExerciseName}
+          lastExercise={lastExercise.isLastExercise}
+          showNextExercise = {true}
+          isNextButton={false}
+        />
+      }
+
       <WorkoutPauseModal
           isVisible={pauseModalVisible}
           handleQuit={this.quitWorkout}
