@@ -212,7 +212,6 @@ export default class WarmUpCoolDownScreen extends Component {
   }
 
   let lastExercise =exerciseList.length > 0? getLastExerciseWC(exerciseList,exerciseIndex-1,workout,1):{};
-  // let lastExercise = getLastExercise(exerciseList,exerciseIndex-1,workout,1);
     return (
       <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />

@@ -169,7 +169,7 @@
           <mat-select [formControlName]="i" (openedChange)="matSelectOpenCloseEvent($event)">
             <mat-form-field  appearance="outline" class="searchContainer" >
               <mat-label>Search</mat-label>
-              <input type="text" matInput [formControl]="selectedItem" >
+              <input type="text" matInput [formControl]="selectedItem" (keydown)="$event.stopPropagation()">
               <mat-icon matPrefix color="primary">search</mat-icon> 
             </mat-form-field>
             <div *ngFor="let item of exerciseList"> 
@@ -279,7 +279,7 @@
                     <mat-select [formControlName]="i" (openedChange)="matSelectOpenCloseEvent($event,'CD')">
                       <mat-form-field  appearance="outline" class="searchContainer" >
                         <mat-label>Search</mat-label>
-                        <input type="text" matInput [value]="selectedItemCD.value" [formControl]="selectedItemCD" >
+                        <input type="text" matInput [value]="selectedItemCD.value" [formControl]="selectedItemCD" (keydown)="$event.stopPropagation()">
                         <mat-icon matPrefix color="primary">search</mat-icon> 
                       </mat-form-field>
                       <div *ngFor="let item of exerciseListCD"> 

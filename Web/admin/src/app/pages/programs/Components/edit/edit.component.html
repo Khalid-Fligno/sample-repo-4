@@ -148,7 +148,7 @@
                     >
                     <mat-form-field  appearance="outline" class="searchContainer">
                       <mat-label>Search</mat-label>
-                      <input type="text" matInput [formControl]="selectedItem" >
+                      <input type="text" matInput [formControl]="selectedItem" (keydown)="$event.stopPropagation()">
                       <mat-icon matPrefix color="primary">search</mat-icon> 
                     </mat-form-field>
                     <div *ngFor="let item of recipeList">
@@ -169,12 +169,11 @@
                   <mat-select 
                       formControlName="lunch" 
                       multiple 
-                    
                       (openedChange)="openedChange($event)"
                     >
                     <mat-form-field  appearance="outline" class="searchContainer">
                       <mat-label>Search</mat-label>
-                      <input type="text" matInput [formControl]="selectedItem" >
+                      <input type="text" matInput [formControl]="selectedItem" (keydown)="$event.stopPropagation()">
                       <mat-icon matPrefix color="primary">search</mat-icon> 
                     </mat-form-field>
                     <div *ngFor="let item of recipeList">
@@ -199,7 +198,7 @@
                       >
                       <mat-form-field  appearance="outline" class="searchContainer">
                         <mat-label>Search</mat-label>
-                        <input type="text" matInput [formControl]="selectedItem" >
+                        <input type="text" matInput [formControl]="selectedItem" (keydown)="$event.stopPropagation()">
                         <mat-icon matPrefix color="primary">search</mat-icon> 
                       </mat-form-field>
                       <div *ngFor="let item of recipeList">
@@ -224,7 +223,7 @@
                         >
                         <mat-form-field  appearance="outline" class="searchContainer">
                           <mat-label>Search</mat-label>
-                          <input type="text" matInput [formControl]="selectedItem" >
+                          <input type="text" matInput [formControl]="selectedItem" (keydown)="$event.stopPropagation()">
                           <mat-icon matPrefix color="primary">search</mat-icon> 
                         </mat-form-field>
                         <div *ngFor="let item of recipeList">
@@ -249,7 +248,7 @@
                         >
                         <mat-form-field  appearance="outline" class="searchContainer">
                           <mat-label>Search</mat-label>
-                          <input type="text" matInput [formControl]="selectedItem" >
+                          <input type="text" matInput [formControl]="selectedItem" (keydown)="$event.stopPropagation()">
                           <mat-icon matPrefix color="primary">search</mat-icon> 
                         </mat-form-field>
                         <div *ngFor="let item of recipeList">

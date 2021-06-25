@@ -470,10 +470,13 @@ export class EditComponent implements OnInit, OnDestroy {
     if(this.recipeList.length === 0 || !phase[type]){
       return []
     }
-   
+    // console.log("????",phase[type])
     return phase[type].filter((id:any)=>{
       const recipe = this.recipeList.find((recipe:any)=>recipe.id === id);
-      return recipe[type]
+      if(recipe && recipe[type])
+        return recipe[type]
+      else
+        return false
     })
   }
 }
