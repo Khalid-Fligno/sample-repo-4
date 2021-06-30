@@ -112,7 +112,7 @@ class TodayMealsList extends Component {
         }
         {
             data.drink.length >0 &&
-            this.carousel(data.drink,'Recovery Drink')
+            this.carousel(data.drink,'Post Workout')
         }
       </View>
     );

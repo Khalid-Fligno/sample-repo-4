@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     justifyContent: 'flex-start',
-    // backgroundColor:colors.transparentBlackLightest
+    backgroundColor:colors.transparentBlackLightest
   },
   titleContainer: {
     maxWidth:'100%',

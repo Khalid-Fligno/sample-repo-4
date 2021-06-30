@@ -49,7 +49,7 @@ export default class WorkoutTimer extends React.PureComponent {
   static getDerivedStateFromProps(props, state) {
     const now = state.remainingTime;
     let seconds = Math.floor(now / 1000);
-    console.log("KKKKK",seconds,props.exerciseIndex);
+    // console.log("KKKKK",seconds,props.exerciseIndex);
     if(state.remainingTime === 0 && state.exerciseIndex !== props.exerciseIndex){
       return {
         remainingTime: (props.totalDuration * 1000) + 990,

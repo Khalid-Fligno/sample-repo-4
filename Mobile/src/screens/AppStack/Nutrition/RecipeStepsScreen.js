@@ -109,7 +109,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
           <ScrollView>
             <Image
               // source={{ uri: this.state.stepsImages[index] }}
-              source={{ uri: item.image,}}
+              source={{ uri: item.image}}
               indicator={DotIndicator}
               indicatorProps={{
                 color: colors.themeColor.color,
@@ -120,6 +120,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
                 width: width - 52,
                 height: width - 52,
               }}
+              resizeMode='cover'
             />
             <View style={NutritionStyles.carouselBottomContainer}>
               <View style={NutritionStyles.carouselTextContainer}>

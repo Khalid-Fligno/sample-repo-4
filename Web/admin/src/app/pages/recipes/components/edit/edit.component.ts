@@ -101,7 +101,7 @@ export class EditComponent implements OnInit {
       time: [d && d.time?d.time:'',Validators.required],
       summary: [d && d.summary?d.summary:'',Validators.required],
       types: [types && types.length > 0?types:'',Validators.required],
-      tags: [d && d.tags?d.tags:[],Validators.required],
+      tags: [d && d.tags?d.tags:[]],
       // filterTags: [d && d.filterTags?d.filterTags:[],Validators.required],
       ingredients:d && d.ingredients?this.fb.array(d.ingredients.map((res:any)=>res)):this.fb.array([]),
       steps:steps && steps.length > 0?this.fb.array(steps.map((res:any)=>this.newStep(res))): this.fb.array([]) ,
@@ -328,7 +328,17 @@ export class EditComponent implements OnInit {
  
 
   saveData(){
-    const Data = Object.assign({},this.Form.value,...this.Form.value.types.map((res:string)=>{return{[res]:true}}));
+    const Data = Object.assign(
+                    {},this.Form.value,
+                    ...this.mealTypeList.map(
+                      (mealType:any)=>{
+                        var type= mealType.value
+                        if(this.Form.value.types.includes(type))
+                          return{[type]:true}
+                        else
+                        return{[type]:false}
+                      })
+                );
       console.log(Data);
       this.http.addEditRecipe(Data).subscribe((res)=>{
         if(res.success){

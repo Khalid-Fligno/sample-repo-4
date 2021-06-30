@@ -39,6 +39,7 @@ export const getCurrentPhase = (data,currentDate1) =>{
           phase =  el
         }
     });
+    // console.log("Current Phase",phase )
     return phase
 }
 export const getTotalChallengeWorkoutsCompleted = (data,stringDate) =>{
