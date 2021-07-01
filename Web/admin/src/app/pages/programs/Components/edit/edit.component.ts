@@ -116,12 +116,12 @@ export class EditComponent implements OnInit, OnDestroy {
 
   newPhase(d:any=null): FormGroup {
     return this.fb.group({
-      displayName: [d && d.displayName?d.displayName:'',Validators.required],
+      displayName: [{value:d && d.displayName?d.displayName:'',disabled:d && d.displayName?true:false},Validators.required],
       name: [d && d.name?d.name:''],
       thumbnail: [d && d.thumbnail?d.thumbnail:'',Validators.required],
       description: [d && d.description?d.description:'',Validators.required],
-      startDay: [d && d.startDay?d.startDay:'',Validators.required],
-      endDay: [d && d.endDay?d.endDay:'',Validators.required],
+      startDay: [{value:d && d.startDay?d.startDay:'',disabled:d && d.startDay?true:false},Validators.required],
+      endDay: [{value:d && d.endDay?d.endDay:'',disabled:d && d.endDay?true:false},Validators.required],
       pdfUrl: [d && d.pdfUrl?d.pdfUrl:'',Validators.required],
       // meals: [d && d.meals?d.meals:'',Validators.required],
       breakfast:[d && d.meals?d.meals:'',Validators.required],
@@ -305,10 +305,7 @@ export class EditComponent implements OnInit, OnDestroy {
     this.Form.patchValue({
       name:this.Form.value.displayName
     })
-    this.Form2.patchValue({
-      name:this.Form.value.displayName
-    })
-    const phasesArray = this.getPhases(this.Form2.value.phases);
+    const phasesArray = this.getPhases(this.Form2.getRawValue().phases);
     const  data = {
                     ...this.Form.value,
                     ...{phases:phasesArray},
@@ -317,7 +314,7 @@ export class EditComponent implements OnInit, OnDestroy {
                     productId:this.Form.value.shopifyProductId,
                     createdAt:new Date().toISOString()
     }
-    console.log(data)
+    console.log("sendObj",data)
 
     this.http.addEditChallenge(data).subscribe((res)=>{
       if(res.success){
@@ -452,9 +449,10 @@ export class EditComponent implements OnInit, OnDestroy {
 
     return phases.map((res:any)=>{
         const meals = [...new Set([...res.breakfast,...res.lunch,...res.dinner,...res.snack,...res.drink])];
+        const displayName = res.displayName.replace(/\s/g,'');
         return {
-                  displayName: res.displayName,
-                  name: res.name,
+                  displayName: displayName,
+                  name: displayName,
                   thumbnail:res.thumbnail ,
                   description:res.description ,
                   startDay:res.startDay,

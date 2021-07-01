@@ -223,9 +223,8 @@ export class EditComponent implements OnInit ,OnDestroy {
         querySnapshot.forEach(doc => {
           data.push(doc.data());
         });
-        this.exerciseListWC = data.filter((res:any)=>res.type === 'warmUp');
-        this.exerciseListCD = data.filter((res:any)=>res.type === 'coolDown');
-        this.searchOptionsWC = data;
+        this.exerciseListWC = this.searchOptionsWC= data.filter((res:any)=>res.type === 'warmUp');
+        this.exerciseListCD = this.searchOptionsCD = data.filter((res:any)=>res.type === 'coolDown');
         console.log(this.exerciseListCD.length,this.exerciseListWC.length)
       }, (error) => {
         console.log("erroe",error)
@@ -409,7 +408,7 @@ export class EditComponent implements OnInit ,OnDestroy {
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value.name),
-        map(name => name ? this._filter3(name) : this.searchOptionsWC.slice())
+        map(name => name ? this._filter3(name) : this.searchOptionsCD.slice())
       );
       this.filteredOptionsCD.subscribe(res=>{
         console.log(res)
@@ -422,7 +421,7 @@ export class EditComponent implements OnInit ,OnDestroy {
   
     private _filter3(name: string): any[] {
       const filterValue = name.toLowerCase();
-      return this.searchOptionsWC.filter((option:any) => option.name.toLowerCase().indexOf(filterValue) === 0);
+      return this.searchOptionsCD.filter((option:any) => option.name.toLowerCase().indexOf(filterValue) === 0);
     }
     //* *//
 

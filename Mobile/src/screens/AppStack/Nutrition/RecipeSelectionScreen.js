@@ -138,7 +138,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     
     const recipeList = sortBy(recipes, 'newBadge')
       .filter((recipe) => {
-        console.log(recipe.title)
+        // console.log(recipe.title)
         if(recipe.tags === undefined) return recipes
         if (filterIndex === 1) {
           return recipe.tags.includes('V');
@@ -180,6 +180,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
               keyExtractor={this.keyExtractor}
               renderItem={this.renderItem}
               showsVerticalScrollIndicator={false}
+              removeClippedSubviews={false}
+              maxToRenderPerBatch={20}
             />
           )
         }
