@@ -46,7 +46,7 @@
   <!-- Types -->
   <h3 class="heading">Types :</h3>
   <mat-list role="list">
-    <mat-list-item role="listitem" *ngFor="let item of types" style="text-transform: capitalize;">&#8226; {{item}}</mat-list-item>
+    <mat-list-item role="listitem" *ngFor="let item of types" style="text-transform: capitalize;">&#8226; {{item === 'drink'?'Post Workout':item}}</mat-list-item>
   </mat-list>
 
   <!-- Utensils -->

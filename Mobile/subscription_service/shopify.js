@@ -332,10 +332,11 @@ const createUserChallengeAndSubscription = async (req)=>{
         // get product from line item collection
         // get workout challenge details by passing product_title  
         const challenge= await getChallengeDetails(challengeProductName,challengeProductId);
-        console.log(challenge)
+        // console.log(challenge)
         const userInfo=await getUser(req.email);
         if(challenge !=null){        
-          const userChallenge=createNewChallenge(challenge)
+          const userChallenge=createNewChallenge(challenge);
+          console.log(userChallenge)
           updateChallengesAgainstUser(userChallenge,userInfo.id);
         }
       }
@@ -455,9 +456,9 @@ const createNewChallenge=(data)=>{
       "numberOfWeeks":data.numberOfWeeks,
       "imageUrl":data.imageUrl,
       "shopifyProductId":data.shopifyProductId,
-      "createdAt":data.createdAt,
+      "createdAt":data.createdAt?data.createdAt:'',
       "productId":data.productId,
-      "productReChargeId":data.productReChargeId,
+      "productReChargeId":data.shopifyProductId,
       "isSchedule":false
       }
       return challenge
