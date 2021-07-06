@@ -286,6 +286,7 @@ router.post('/deleteChallenge',jsonParser,async(req,res)=>{
 
 //Recipe----- 
 router.post('/addEditRecipe', jsonParser,async(req, res) => {
+  console.log(req.body)
   const recipeRef = await db.collection('recipes').doc(req.body.id);
     recipeRef.set(req.body,{merge:true}).then((response)=>{
       res.status(200).json({ success:true,response:response});
