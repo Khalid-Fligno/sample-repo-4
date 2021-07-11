@@ -73,7 +73,7 @@
       </form>
     </mat-step>
 
-    <mat-step [stepControl]="Form2" label="Phases">
+    <mat-step [stepControl]="Form2" label="Phases" *ngIf="recipeList.length">
       <form [formGroup]="Form2">
         <!-- phases field -->
         <div formArrayName="phases" >
@@ -355,7 +355,7 @@
           mat-raised-button 
           color="primary" 
           (click)="onSubmit()"
-          [disabled] = "!(Form.valid && Form2.valid && Form3.valid)"
+          [disabled] = "!(Form.valid && Form2 && Form2.valid && Form3.valid)"
           >Submit</button>
       </div>
     </mat-step>
