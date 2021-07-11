@@ -32,7 +32,7 @@ export class EditComponent implements OnInit, OnDestroy {
   //>>>
 
   Form: FormGroup;
-  Form2: FormGroup;
+  Form2!: FormGroup;
   Form3: FormGroup;
   uploadProgress:any;
   unsubRecipe:any;
@@ -82,9 +82,7 @@ export class EditComponent implements OnInit, OnDestroy {
       tag: [d && d.tag?d.tag:shortId.generate(),Validators.required],
     });
 
-    this.Form2 = this._formBuilder.group({
-      phases:d && d.phases?this.fb.array(d.phases.map((res:any)=>this.newPhase(res))): this.fb.array([])
-    });
+
 
     this.Form3 = this._formBuilder.group({
       workouts:d && d.workouts?this.fb.array(d.workouts.map((res:any)=>this.newWorkouts(res))): this.fb.array([])
@@ -115,6 +113,15 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   newPhase(d:any=null): FormGroup {
+    let breakfast,lunch,dinner,snack,drink =[];
+    if(this.recipeList.length && d){
+      breakfast = this.recipeList.filter((recipe:any)=>d.meals.includes(recipe.id) && recipe.breakfast).map((recipe:any)=>recipe.id);
+      lunch = this.recipeList.filter((recipe:any)=>d.meals.includes(recipe.id) && recipe.lunch).map((recipe:any)=>recipe.id);
+      dinner = this.recipeList.filter((recipe:any)=>d.meals.includes(recipe.id) && recipe.dinner).map((recipe:any)=>recipe.id);
+      snack = this.recipeList.filter((recipe:any)=>d.meals.includes(recipe.id) && recipe.snack).map((recipe:any)=>recipe.id);
+      drink = this.recipeList.filter((recipe:any)=>d.meals.includes(recipe.id) && recipe.drink).map((recipe:any)=>recipe.id);
+    }
+
     return this.fb.group({
       displayName: [{value:d && d.displayName?d.displayName:'',disabled:d && d.displayName?true:false},Validators.required],
       name: [d && d.name?d.name:''],
@@ -124,11 +131,11 @@ export class EditComponent implements OnInit, OnDestroy {
       endDay: [{value:d && d.endDay?d.endDay:'',disabled:d && d.endDay?true:false},Validators.required],
       pdfUrl: [d && d.pdfUrl?d.pdfUrl:'',Validators.required],
       // meals: [d && d.meals?d.meals:'',Validators.required],
-      breakfast:[d && d.meals?d.meals:'',Validators.required],
-      lunch:[d && d.meals?d.meals:'',Validators.required],
-      dinner:[d && d.meals?d.meals:'',Validators.required],
-      snack:[d && d.meals?d.meals:'',Validators.required],
-      drink:[d && d.meals?d.meals:''],
+      breakfast:[d && d.meals?breakfast:'',Validators.required],
+      lunch:[d && d.meals?lunch:'',Validators.required],
+      dinner:[d && d.meals?dinner:'',Validators.required],
+      snack:[d && d.meals?snack:'',Validators.required],
+      drink:[d && d.meals?drink:''],
     })
   }
 
@@ -352,6 +359,12 @@ export class EditComponent implements OnInit, OnDestroy {
       });
     if(data.length >0){
       this.recipeList = this.searchOptions = data;
+      //TODO: Adding phases after fetching recipes
+
+      const d = this.data;
+      this.Form2 = this._formBuilder.group({
+        phases:d && d.phases?this.fb.array(d.phases.map((res:any)=>this.newPhase(res))): this.fb.array([])
+      });
       // console.log(this.recipeList)
     }
     }, (error) => {
@@ -445,9 +458,9 @@ export class EditComponent implements OnInit, OnDestroy {
       ...this.Form2.value.phases[0].snack,
       ...this.Form2.value.phases[0].drink
     ])];
-    // console.log(meals)
 
     return phases.map((res:any)=>{
+        console.log("drink",res.drink)
         const meals = [...new Set([...res.breakfast,...res.lunch,...res.dinner,...res.snack,...res.drink])];
         const displayName = res.displayName.replace(/\s/g,'');
         return {
