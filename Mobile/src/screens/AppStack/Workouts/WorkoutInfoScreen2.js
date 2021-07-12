@@ -32,7 +32,6 @@ import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
 import NutritionStyles from '../Nutrition/NutritionStyles';
 import { StackActions } from 'react-navigation';
-import { Banner } from 'react-native-paper';
 
 const moment = require('moment');
 
@@ -431,18 +430,31 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
         {
           workout && (
             <View style={WorkoutScreenStyle.flatListContainer}>
-              <Banner
-                visible={true}
-                actions={[
-                  {
-                    label: 'Complete',
-                    color: '#fa896e'
-                  }
-                ]}
-                contentStyle={{backgroundColor: '#dee2ea'}}
-              >
-                Complete onboarding
-              </Banner>
+              <View style={{backgroundColor: colors.white}}>
+                <View style={{
+                  borderColor: colors.bloodOrange,
+                  borderWidth: 1,
+                  borderRadius: 2,
+                  paddingRight: 10,
+                  margin: 20,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}>
+                  <Text style={{
+                    padding: 10,
+                    color: colors.bloodOrange
+                  }}>Complete your onboarding process</Text>
+                  <View style={{
+                    borderBottomColor: colors.bloodOrange,
+                    borderBottomWidth: 1
+                  }}>
+                    <Text style={{
+                      color: colors.bloodOrange
+                    }}>Click Here</Text>
+                  </View>
+                </View>
+              </View>
               <FlatList
                 data={workout.exercises}
                 keyExtractor={this.keyExtractor}
