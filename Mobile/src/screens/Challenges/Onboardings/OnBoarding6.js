@@ -79,7 +79,8 @@ export default class OnBoarding6 extends Component {
     if(type === 'next'){
       this.setState({ challengeData: updatedChallengedata });
       // calendarModalVisible true calendar popup
-      this.setState({ calendarModalVisible: true });
+      // this.setState({ calendarModalVisible: true });
+      this.addChallengeToCalendar(moment().set("date", 26));
     }else{
       this.props.navigation.navigate('ChallengeOnBoarding5',{
         data:{
@@ -251,7 +252,8 @@ export default class OnBoarding6 extends Component {
                  />
                   <View style={[{flex:0.5,justifyContent:'flex-end',marginTop:20}]}>
                       <CustomBtn 
-                        Title="Choose Start Date"
+                        // Title="Choose Start Date"
+                        Title="Start Challenge"
                         customBtnStyle={{borderRadius:50,padding:15,width:"100%"}}
                         onPress={()=>this.goToScreen('next')}
                         disabled={btnDisabled}
