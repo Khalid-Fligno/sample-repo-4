@@ -472,7 +472,7 @@ export default class LoginScreen extends React.PureComponent {
                     visible={true}
                     style={colors.grey.standard}
                   >
-                    Enter email used for challenge purchase on fitazfk.com.
+                    Enter email used for previous purchase on fitazfk.com.
                   </HelperText>
                   <InputBox 
                     errorMessage={error && error}
