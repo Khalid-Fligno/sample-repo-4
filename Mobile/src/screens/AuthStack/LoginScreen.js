@@ -72,6 +72,7 @@ const getRandomString = (length) => {
   }
   return result;
 };
+import { HelperText } from 'react-native-paper';
 
 let isFocused = false
 export default class LoginScreen extends React.PureComponent {
@@ -466,6 +467,13 @@ export default class LoginScreen extends React.PureComponent {
                     onChangeText={(text) =>{this.setState({ email: text })}}
                     //  onSubmitEditing={() => {this.passwordInput.focus()}}
                   />
+                  <HelperText
+                    type="info"
+                    visible={true}
+                    style={colors.grey.standard}
+                  >
+                    Enter email used for challenge purchase on fitazfk.com.
+                  </HelperText>
                   <InputBox 
                     errorMessage={error && error}
                     placeholder="Password"

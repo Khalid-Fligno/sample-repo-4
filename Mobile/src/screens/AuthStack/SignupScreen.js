@@ -39,6 +39,7 @@ import {
   updateUserSubscription, subOneDay, subMonthly, sub3Monthly, subYearly
 } from '../../utils/challenges';
 const { width } = Dimensions.get('window');
+import { HelperText } from 'react-native-paper';
 
 const getRandomString = (length) => {
   let result = '';
@@ -386,6 +387,13 @@ export default class SignupScreen extends React.PureComponent {
                    keyboardType="email-address"
                    onChangeText={(text) =>{this.setState({ email: text })}}
                 />
+                <HelperText
+                  type="info"
+                  visible={true}
+                  style={colors.grey.standard}
+                >
+                  Enter email used for previous purchase on fitazfk.com.
+                </HelperText>
                  <InputBox 
                    errorMessage={error && error}
                    placeholder="Password"
