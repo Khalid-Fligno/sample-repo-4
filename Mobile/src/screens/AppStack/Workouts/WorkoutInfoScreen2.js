@@ -32,6 +32,7 @@ import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
 import NutritionStyles from '../Nutrition/NutritionStyles';
 import { StackActions } from 'react-navigation';
+import { Banner } from 'react-native-paper';
 
 const moment = require('moment');
 
@@ -430,6 +431,18 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
         {
           workout && (
             <View style={WorkoutScreenStyle.flatListContainer}>
+              <Banner
+                visible={true}
+                actions={[
+                  {
+                    label: 'Complete',
+                    color: '#fa896e'
+                  }
+                ]}
+                contentStyle={{backgroundColor: '#dee2ea'}}
+              >
+                Complete onboarding
+              </Banner>
               <FlatList
                 data={workout.exercises}
                 keyExtractor={this.keyExtractor}
