@@ -47,7 +47,7 @@ export default class OnBoarding1 extends Component {
       this.onFocusFunction();
     });
     await FileSystem.downloadAsync(
-      "https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/videos%2FBURPEES.mp4?alt=media&token=688885cb-2d70-4fc6-82a9-abc4e95daf89",
+      "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE.mp4?alt=media&token=ff7a5afd-58d2-4508-9cd0-49af7672e333",
       `${FileSystem.cacheDirectory}exercise-burpees.mp4`
     );
   }
