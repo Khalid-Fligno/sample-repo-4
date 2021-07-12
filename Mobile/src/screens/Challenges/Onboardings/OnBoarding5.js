@@ -318,7 +318,7 @@ export default class OnBoarding5 extends Component {
               }}
             >
             <View>
-              <Text style={[ChallengeStyle.onBoardingTitle]}>Burpee Test</Text>
+              {/* <Text style={[ChallengeStyle.onBoardingTitle]}>Burpee Test</Text> */}
             </View>
             <View style={{marginTop:8}}>
               <View style={{justifyContent:'center'}}> 
