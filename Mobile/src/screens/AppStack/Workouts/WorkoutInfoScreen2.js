@@ -431,18 +431,20 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
         {
           workout && (
             <View style={WorkoutScreenStyle.flatListContainer}>
-              <Banner
-                visible={true}
-                actions={[
-                  {
-                    label: 'Complete',
-                    color: '#fa896e'
-                  }
-                ]}
-                contentStyle={{backgroundColor: '#dee2ea'}}
-              >
-                Complete onboarding
-              </Banner>
+              <View>
+                <Banner
+                  visible={true}
+                  actions={[
+                    {
+                      label: 'Complete',
+                      color: '#fa896e'
+                    }
+                  ]}
+                  contentStyle={{backgroundColor: '#dee2ea'}}
+                >
+                  Complete onboarding
+                </Banner>
+              </View>
               <FlatList
                 data={workout.exercises}
                 keyExtractor={this.keyExtractor}
