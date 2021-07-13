@@ -99,7 +99,7 @@ buck-out/
 *.jsbundle
 
 # CocoaPods
-Mobile/ios/Pods/
+/ios/Pods/
 
 # Expo
 .expo/*
