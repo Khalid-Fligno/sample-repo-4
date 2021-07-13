@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -12,38 +12,43 @@ import {
   Keyboard,
   ImageBackground,
   KeyboardAvoidingView,
-} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import { StackActions, NavigationActions } from 'react-navigation';
-import { Button, Divider, Input } from 'react-native-elements';
-import * as Localization from 'expo-localization';
-import * as Haptics from 'expo-haptics';
-import * as Facebook from 'expo-facebook';
-import firebase from 'firebase';
-import appsFlyer from 'react-native-appsflyer';
-import * as Crypto from 'expo-crypto';
-import * as AppleAuthentication from 'expo-apple-authentication';
-import { db, auth } from '../../../config/firebase';
-import NativeLoader from '../../components/Shared/NativeLoader';
-import Icon from '../../components/Shared/Icon';
-import FacebookButton from '../../components/Auth/FacebookButton';
-import colors from '../../styles/colors';
-import fonts from '../../styles/fonts';
-import errors from '../../utils/errors';
-import { containerPadding } from '../../styles/globalStyles';
-import BigHeadingWithBackButton from '../../components/Shared/BigHeadingWithBackButton';
-import InputBox from '../../components/Shared/inputBox';
-import CustomBtn from '../../components/Shared/CustomBtn';
-import authScreenStyle from './authScreenStyle';
+} from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
+import { StackActions, NavigationActions } from "react-navigation";
+import { Button, Divider, Input } from "react-native-elements";
+import * as Localization from "expo-localization";
+import * as Haptics from "expo-haptics";
+import * as Facebook from "expo-facebook";
+import firebase from "firebase";
+import appsFlyer from "react-native-appsflyer";
+import * as Crypto from "expo-crypto";
+import * as AppleAuthentication from "expo-apple-authentication";
+import { db, auth } from "../../../config/firebase";
+import NativeLoader from "../../components/Shared/NativeLoader";
+import Icon from "../../components/Shared/Icon";
+import FacebookButton from "../../components/Auth/FacebookButton";
+import colors from "../../styles/colors";
+import fonts from "../../styles/fonts";
+import errors from "../../utils/errors";
+import { containerPadding } from "../../styles/globalStyles";
+import BigHeadingWithBackButton from "../../components/Shared/BigHeadingWithBackButton";
+import InputBox from "../../components/Shared/inputBox";
+import CustomBtn from "../../components/Shared/CustomBtn";
+import authScreenStyle from "./authScreenStyle";
 import {
-  updateUserSubscription, subOneDay, subMonthly, sub3Monthly, subYearly
-} from '../../utils/challenges';
-const { width } = Dimensions.get('window');
-import { HelperText } from 'react-native-paper';
+  updateUserSubscription,
+  subOneDay,
+  subMonthly,
+  sub3Monthly,
+  subYearly,
+} from "../../utils/challenges";
+const { width } = Dimensions.get("window");
+import { HelperText } from "react-native-paper";
 
 const getRandomString = (length) => {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
   for (let i = 0; i < length; i += 1) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -55,31 +60,31 @@ export default class SignupScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
       error: null,
       loading: false,
-      specialOffer: props.navigation.getParam('specialOffer', undefined),
+      specialOffer: props.navigation.getParam("specialOffer", undefined),
       appleSignInAvailable: undefined,
     };
   }
   componentDidMount = async () => {
     const appleSignInAvailable = await AppleAuthentication.isAvailableAsync();
     this.setState({ appleSignInAvailable });
-  }
+  };
   onSignInWithApple = async () => {
-    console.log("???step 1-->")
+    console.log("???step 1-->");
     const nonce = getRandomString(32);
-    let nonceSHA256 = '';
+    let nonceSHA256 = "";
     try {
       nonceSHA256 = await Crypto.digestStringAsync(
         Crypto.CryptoDigestAlgorithm.SHA256,
-        nonce,
+        nonce
       );
     } catch (e) {
-      Alert.alert('Sign up could not be completed', 'Please try again.');
+      Alert.alert("Sign up could not be completed", "Please try again.");
     }
     this.setState({ loading: true });
     try {
@@ -92,24 +97,33 @@ export default class SignupScreen extends React.PureComponent {
       });
       // Signed in to Apple
       if (credential.user) {
-        this.signInWithApple({ identityToken: credential.identityToken, nonce, fullName: credential.fullName });
+        this.signInWithApple({
+          identityToken: credential.identityToken,
+          nonce,
+          fullName: credential.fullName,
+        });
       }
     } catch (e) {
       this.setState({ loading: false });
-      if (e.code === 'ERR_CANCELED') {
-        Alert.alert('Sign up cancelled');
+      if (e.code === "ERR_CANCELED") {
+        Alert.alert("Sign up cancelled");
       } else {
-        Alert.alert('Could not sign in with Apple', 'Please sign up with your email address.');
+        Alert.alert(
+          "Could not sign in with Apple",
+          "Please sign up with your email address."
+        );
       }
     }
   };
   signInWithApple = async ({ identityToken, nonce, fullName }) => {
-    const provider = new firebase.auth.OAuthProvider('apple.com');
+    const provider = new firebase.auth.OAuthProvider("apple.com");
     const credential = provider.credential({
       idToken: identityToken,
       rawNonce: nonce,
     });
-    firebase.auth().signInWithCredential(credential)
+    firebase
+      .auth()
+      .signInWithCredential(credential)
       // Signed in to Firebase Auth
       .then(async (appleuser) => {
         const { uid, email } = appleuser.user;
@@ -121,52 +135,74 @@ export default class SignupScreen extends React.PureComponent {
           lastName: familyName,
           email,
           onboarded: false,
-          country: region || 'unavailable',
+          country: region || "unavailable",
           signUpDate: new Date(),
           fitnessLevel: 1,
         };
         //Alert.alert('userid', uid);
         //Alert.alert('useremailid1', data.email);
-        await AsyncStorage.setItem('uid', uid);
-        db.collection('users').doc(uid).set(data)
+        await AsyncStorage.setItem("uid", uid);
+        db.collection("users")
+          .doc(uid)
+          .set(data)
           .then(async () => {
             this.setState({ loading: false });
             //Alert.alert('userid2', uid);
             //Alert.alert('useremailid', data.email);
-            appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Apple' });
+            appsFlyer.trackEvent("af_complete_registration", {
+              af_registration_method: "Apple",
+            });
             // this.props.navigation.navigate('Subscription', { name: givenName, specialOffer: this.state.specialOffer });
-            await this.addChallengesAfterSignUp(email,uid);
-            this.props.navigation.navigate('Onboarding1', { name: givenName, specialOffer: this.state.specialOffer });
+            await this.addChallengesAfterSignUp(email, uid);
+            this.props.navigation.navigate("Onboarding1", {
+              name: givenName,
+              specialOffer: this.state.specialOffer,
+            });
             auth.currentUser.sendEmailVerification().then(() => {
-              Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
+              Alert.alert(
+                "Please verify email",
+                "An email verification link has been sent to your email address"
+              );
             });
           })
           .catch(() => {
             this.setState({ loading: false });
-            Alert.alert('Could not create your account', 'Please try again or contact support.');
+            Alert.alert(
+              "Could not create your account",
+              "Please try again or contact support."
+            );
           });
       })
       .catch((error) => {
         //Alert.alert('error', error);
         this.setState({ loading: false });
-        Alert.alert('Could not authenticate with Apple', 'Please try again or contact support.');
+        Alert.alert(
+          "Could not authenticate with Apple",
+          "Please try again or contact support."
+        );
       });
-  }
+  };
   signupWithFacebook = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
-      const { type, token, declinedPermissions } = await Facebook.logInWithReadPermissionsAsync('1825444707513470', {
-        permissions: ['public_profile', 'email'],
-      });
+      const { type, token, declinedPermissions } =
+        await Facebook.logInWithReadPermissionsAsync("1825444707513470", {
+          permissions: ["public_profile", "email"],
+        });
       if (declinedPermissions.length > 0) {
         this.setState({ loading: false });
-        Alert.alert('Could not connect to facebook', 'Please sign up with your email address');
+        Alert.alert(
+          "Could not connect to facebook",
+          "Please sign up with your email address"
+        );
         return;
       }
-      if (type === 'success') {
+      if (type === "success") {
         this.setState({ loading: true });
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        const { user, additionalUserInfo } = await firebase.auth().signInWithCredential(credential);
+        const { user, additionalUserInfo } = await firebase
+          .auth()
+          .signInWithCredential(credential);
         const { region } = Localization;
         const { profile } = additionalUserInfo;
         const data = {
@@ -175,104 +211,168 @@ export default class SignupScreen extends React.PureComponent {
           firstName: profile.first_name,
           lastName: profile.last_name,
           onboarded: false,
-          country: region || 'unavailable',
+          country: region || "unavailable",
           signUpDate: new Date(),
           fitnessLevel: 1,
         };
-        await AsyncStorage.setItem('uid', user.uid);
-        await AsyncStorage.setItem('fitnessLevel', '1');
-        await db.collection('users').doc(user.uid).set(data, (error) => {
-          if (error) {
-            user.delete().then(() => {
-              this.setState({ loading: false });
-              Alert.alert('Sign up could not be completed', 'Please try again');
-            });
-          }
-        });
+        await AsyncStorage.setItem("uid", user.uid);
+        await AsyncStorage.setItem("fitnessLevel", "1");
+        await db
+          .collection("users")
+          .doc(user.uid)
+          .set(data, (error) => {
+            if (error) {
+              user.delete().then(() => {
+                this.setState({ loading: false });
+                Alert.alert(
+                  "Sign up could not be completed",
+                  "Please try again"
+                );
+              });
+            }
+          });
         this.setState({ loading: false });
-        appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Facebook' });
-        await this.addChallengesAfterSignUp(data.email,data.id);
+        appsFlyer.trackEvent("af_complete_registration", {
+          af_registration_method: "Facebook",
+        });
+        await this.addChallengesAfterSignUp(data.email, data.id);
         auth.currentUser.sendEmailVerification().then(() => {
-          Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
+          Alert.alert(
+            "Please verify email",
+            "An email verification link has been sent to your email address"
+          );
           // this.props.navigation.navigate('Subscription', { name: profile.first_name, specialOffer: this.state.specialOffer });
-          this.props.navigation.navigate('Onboarding1', { name: first_name, specialOffer: this.state.specialOffer });
+          this.props.navigation.navigate("Onboarding1", {
+            name: first_name,
+            specialOffer: this.state.specialOffer,
+          });
         });
       } else {
         this.setState({ loading: false });
-        Alert.alert('Could not connect to facebook', 'Please sign up with your email address');
+        Alert.alert(
+          "Could not connect to facebook",
+          "Please sign up with your email address"
+        );
       }
     } catch (err) {
-      if (err.message === 'MISSING_EMAIL') {
+      if (err.message === "MISSING_EMAIL") {
         this.setState({ loading: false });
-        Alert.alert('Facebook signup failed', 'Please sign up with your email address');
+        Alert.alert(
+          "Facebook signup failed",
+          "Please sign up with your email address"
+        );
         return;
       }
-      if(err.message && err.message.includes('An account already exists with the same email address')){
-        Alert.alert('Facebook signup failed', 'An account already exists with the same email address');
+      if (
+        err.message &&
+        err.message.includes(
+          "An account already exists with the same email address"
+        )
+      ) {
+        Alert.alert(
+          "Facebook signup failed",
+          "An account already exists with the same email address"
+        );
       }
-      console.log(err.message)
-      this.setState({ error: 'Something went wrong', loading: false });
+      console.log(err.message);
+      this.setState({ error: "Something went wrong", loading: false });
     }
-  }
-  addChallengesAfterSignUp = async(email,uid) =>{
-    const shopifyRegisteredUser =  await this.getUserChallengeFromShopify(email);
-    const subscriptionFromShopify = await this.getUserSubscriptionFromShopify(email);
-    if(shopifyRegisteredUser != undefined){
-      const challengeDetail =  await this.getChallengeDetails(shopifyRegisteredUser);
-      if(challengeDetail != undefined && shopifyRegisteredUser.hasOwnProperty('challenge') && shopifyRegisteredUser.challenge ){
-          const challenge = await db.collection('users').doc(uid).collection('challenges').doc(challengeDetail.id);
-          challenge.set(challengeDetail,{merge:true});
-          //delete old user 
-          if(shopifyRegisteredUser != undefined){
-          await db.collection('users').doc(shopifyRegisteredUser.id).collection('challenges').doc(challengeDetail.id).delete();
-          await db.collection('users').doc(shopifyRegisteredUser.id).delete();
+  };
+  addChallengesAfterSignUp = async (email, uid) => {
+    const shopifyRegisteredUser = await this.getUserChallengeFromShopify(email);
+    const subscriptionFromShopify = await this.getUserSubscriptionFromShopify(
+      email
+    );
+    if (shopifyRegisteredUser != undefined) {
+      const challengeDetail = await this.getChallengeDetails(
+        shopifyRegisteredUser
+      );
+      if (
+        challengeDetail != undefined &&
+        shopifyRegisteredUser.hasOwnProperty("challenge") &&
+        shopifyRegisteredUser.challenge
+      ) {
+        const challenge = await db
+          .collection("users")
+          .doc(uid)
+          .collection("challenges")
+          .doc(challengeDetail.id);
+        challenge.set(challengeDetail, { merge: true });
+        //delete old user
+        if (shopifyRegisteredUser != undefined) {
+          await db
+            .collection("users")
+            .doc(shopifyRegisteredUser.id)
+            .collection("challenges")
+            .doc(challengeDetail.id)
+            .delete();
+          await db.collection("users").doc(shopifyRegisteredUser.id).delete();
+        }
       }
+    } else if (subscriptionFromShopify != null) {
+      if (
+        subscriptionFromShopify.shopifyProductId == 6122583326906 ||
+        subscriptionFromShopify.shopifyProductId == 6131066142906
+      ) {
+        await updateUserSubscription(sub3Monthly, uid);
+      } else if (subscriptionFromShopify.shopifyProductId == 6122583523514) {
+        await updateUserSubscription(subYearly, uid);
+      } else if (subscriptionFromShopify.shopifyProductId == 6122583195834) {
+        await updateUserSubscription(subMonthly, uid);
+      } else if (subscriptionFromShopify.shopifyProductId == 6129876664506) {
+        await updateUserSubscription(subOneDay, uid);
+      }
+      await db.collection("users").doc(subscriptionFromShopify.id).delete();
     }
-   }else if(subscriptionFromShopify !=null){
-    if(subscriptionFromShopify.shopifyProductId == 6122583326906 || subscriptionFromShopify.shopifyProductId == 6131066142906){
-      await updateUserSubscription(sub3Monthly,uid);
-    } else if(subscriptionFromShopify.shopifyProductId == 6122583523514){
-      await updateUserSubscription(subYearly,uid);
-    } else if(subscriptionFromShopify.shopifyProductId == 6122583195834){
-      await updateUserSubscription(subMonthly,uid);
-    }else if(subscriptionFromShopify.shopifyProductId == 6129876664506){
-      await updateUserSubscription(subOneDay,uid);
-    }
-    await db.collection('users').doc(subscriptionFromShopify.id).delete();
-   }
-  }
-  getUserChallengeFromShopify = async(emailId) => {
-    const userRef =  await db.collection('users').where("email","==",emailId).where("challenge","==",true).get();
+  };
+  getUserChallengeFromShopify = async (emailId) => {
+    const userRef = await db
+      .collection("users")
+      .where("email", "==", emailId)
+      .where("challenge", "==", true)
+      .get();
     if (userRef.size > 0) {
       return userRef.docs[0].data();
-    }     
-  }
-  getUserSubscriptionFromShopify = async(emailId) => {
-    const userRef =  await db.collection('users').where("email","==",emailId).where("subscription","==",true).get();
+    }
+  };
+  getUserSubscriptionFromShopify = async (emailId) => {
+    const userRef = await db
+      .collection("users")
+      .where("email", "==", emailId)
+      .where("subscription", "==", true)
+      .get();
     if (userRef.size > 0) {
       return userRef.docs[0].data();
-  }     
-  }
-  getChallengeDetails = async(user) => {
-  let challenges=[];
-  const challengeRef =await db.collection("users").doc(user.id).collection("challenges").get();
-  if (challengeRef.size > 0) {
-    return challengeRef.docs[0].data();
-  }     
+    }
+  };
+  getChallengeDetails = async (user) => {
+    let challenges = [];
+    const challengeRef = await db
+      .collection("users")
+      .doc(user.id)
+      .collection("challenges")
+      .get();
+    if (challengeRef.size > 0) {
+      return challengeRef.docs[0].data();
+    }
     //return challenges;
-  }
+  };
   signup = async (firstName, lastName, email, password) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
     this.setState({ loading: true });
     if (!firstName || !lastName) {
-      this.setState({ error: 'Please complete all fields', loading: false });
+      this.setState({ error: "Please complete all fields", loading: false });
       return;
     }
     try {
       console.log("step1");
-      const response = await firebase.auth().createUserWithEmailAndPassword(email, password);
-      await response.user.updateProfile({ displayName: `${firstName} ${lastName}` });
+      const response = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password);
+      await response.user.updateProfile({
+        displayName: `${firstName} ${lastName}`,
+      });
       const { region } = Localization;
       const { uid } = response.user;
       let data = {
@@ -281,45 +381,55 @@ export default class SignupScreen extends React.PureComponent {
         lastName,
         email,
         onboarded: false,
-        country: region || 'unavailable',
+        country: region || "unavailable",
         signUpDate: new Date(),
         fitnessLevel: 1,
       };
-      await AsyncStorage.setItem('uid', uid);
-      
-      db.collection('users').doc(uid).set(data)
+      await AsyncStorage.setItem("uid", uid);
+
+      db.collection("users")
+        .doc(uid)
+        .set(data)
         .then(async () => {
           this.setState({ loading: false });
-          appsFlyer.trackEvent('af_complete_registration', { af_registration_method: 'Email' });
+          appsFlyer.trackEvent("af_complete_registration", {
+            af_registration_method: "Email",
+          });
           // this.props.navigation.navigate('Subscription', { name: firstName, specialOffer: this.state.specialOffer });
-                // check if user buy some challenges from shopify  
-          await this.addChallengesAfterSignUp(email,uid); 
-          this.props.navigation.navigate('Onboarding1', { name: firstName, specialOffer: this.state.specialOffer });
+          // check if user buy some challenges from shopify
+          await this.addChallengesAfterSignUp(email, uid);
+          this.props.navigation.navigate("Onboarding1", {
+            name: firstName,
+            specialOffer: this.state.specialOffer,
+          });
           auth.currentUser.sendEmailVerification().then(() => {
-            Alert.alert('Please verify email', 'An email verification link has been sent to your email address');
+            Alert.alert(
+              "Please verify email",
+              "An email verification link has been sent to your email address"
+            );
           });
         })
         .catch(() => {
           response.user.delete().then(() => {
             this.setState({ loading: false });
-            Alert.alert('Sign up could not be completed', 'Please try again');
+            Alert.alert("Sign up could not be completed", "Please try again");
           });
-        });        
+        });
     } catch (err) {
       const errorCode = err.code;
       this.setState({ error: errors.createUser[errorCode], loading: false });
     }
-  }
+  };
   navigateToLogin = () => {
     const resetAction = StackActions.reset({
       index: 1,
       actions: [
-        NavigationActions.navigate({ routeName: 'Landing' }),
-        NavigationActions.navigate({ routeName: 'Login' }),
+        NavigationActions.navigate({ routeName: "Landing" }),
+        NavigationActions.navigate({ routeName: "Login" }),
       ],
     });
     this.props.navigation.dispatch(resetAction);
-  }
+  };
   render() {
     const {
       firstName,
@@ -332,7 +442,7 @@ export default class SignupScreen extends React.PureComponent {
     } = this.state;
     return (
       <React.Fragment>
-        <SafeAreaView style={authScreenStyle.safeAreaContainer} >
+        <SafeAreaView style={authScreenStyle.safeAreaContainer}>
           <View style={authScreenStyle.container}>
             <StatusBar barStyle="light-content" />
 
@@ -340,20 +450,20 @@ export default class SignupScreen extends React.PureComponent {
               source={require('../../../assets/images/signup-screen-background.jpg')}
               style={styles.imageBackground}
             > */}
-              <ScrollView contentContainerStyle={authScreenStyle.scrollView}>
-                <View style={authScreenStyle.closeIconContainer}>
-                  <TouchableOpacity
-                    onPress={() => this.props.navigation.goBack()}
-                    style={authScreenStyle.closeIconButton}
-                  >
-                    <Icon
-                      name="cross"
-                      color={colors.themeColor.color}
-                      size={22}
-                    />
-                  </TouchableOpacity>
-                </View>
-                {/* <Text style={styles.headerText1}>
+            <ScrollView contentContainerStyle={authScreenStyle.scrollView}>
+              <View style={authScreenStyle.closeIconContainer}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.goBack()}
+                  style={authScreenStyle.closeIconButton}
+                >
+                  <Icon
+                    name="cross"
+                    color={colors.themeColor.color}
+                    size={22}
+                  />
+                </TouchableOpacity>
+              </View>
+              {/* <Text style={styles.headerText1}>
                   CREATE YOUR
                 </Text>
                 <Text style={styles.headerText1}>
@@ -363,90 +473,121 @@ export default class SignupScreen extends React.PureComponent {
                   get started
                 </Text> */}
 
-                <View >
-                 <BigHeadingWithBackButton 
+              <View>
+                <BigHeadingWithBackButton
                   isBackButton={false}
                   bigTitleText="Create account"
                   isBigTitle={true}
                   // bigTitleStyle={{width:width-containerPadding*2}}
                 />
-                <KeyboardAvoidingView keyboardVerticalOffset={40} behavior="position" enabled>
-                <InputBox 
-                   placeholder="First Name"
-                   value={firstName}
-                   onChangeText={(text) => this.setState({ firstName: text })}
-                />
-                 <InputBox 
-                   placeholder="Last Name"
-                   value={lastName}
-                   onChangeText={(text) => this.setState({ lastName: text })}
-                />
-                 <InputBox 
-                   placeholder="Email address"
-                   value={email}
-                   keyboardType="email-address"
-                   onChangeText={(text) =>{this.setState({ email: text })}}
-                />
-                <HelperText
-                  type="info"
-                  visible={true}
-                  style={colors.grey.standard}
+                <KeyboardAvoidingView
+                  keyboardVerticalOffset={40}
+                  behavior="position"
+                  enabled
                 >
-                  Enter email used for previous purchase on fitazfk.com.
-                </HelperText>
-                 <InputBox 
-                   errorMessage={error && error}
-                   placeholder="Password"
-                   value={password}
-                   onChangeText={(text) => this.setState({ password: text })}
-                   onSubmitEditing={() => this.signup(firstName, lastName, email.toLowerCase(), password)}
-                   secureTextEntry
-                   returnKeyType="go"
-                />
-                 
-                </KeyboardAvoidingView>
-                <CustomBtn 
-                  customBtnStyle={{borderRadius:50,marginTop:20 }}
-                  Title="Create new account"
-                  customBtnTitleStyle={{fontWeight:'500',letterSpacing:0.7}}
-                  onPress={() => this.signup(firstName, lastName, email.toLowerCase(), password)}
-                />
-              
-                <View style={authScreenStyle.dividerOverlay}>
-                  <Text style={authScreenStyle.dividerOverlayText}>
-                    OR
-                  </Text>
-                </View>
-             
-                <CustomBtn 
-                      customBtnStyle={{borderRadius:50,borderColor:colors.grey.standard}}
-                      outline={true}
-                      Title="Create account with Facebook"
-                      customBtnTitleStyle={{fontWeight:'500',letterSpacing:0.7,color:colors.transparentBlackDark}}
-                      onPress={this.signupWithFacebook}
-                      leftIcon={true}
-                      leftIconUrl={require('../../../assets/icons/facebook.png')}
-                />
-                {
-                  appleSignInAvailable && (
-                    <AppleAuthentication.AppleAuthenticationButton
-                      onPress={this.onSignInWithApple}
-                      buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
-                      buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
-                      cornerRadius={4}
-                      style={authScreenStyle.appleButton}
-                    />
-                  )
-                }
-                  <Text
-                  onPress={this.navigateToLogin}
-                  style={[authScreenStyle.navigateToButton,{paddingBottom:20}]}
+                  <InputBox
+                    placeholder="First Name"
+                    value={firstName}
+                    onChangeText={(text) => this.setState({ firstName: text })}
+                  />
+                  <InputBox
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChangeText={(text) => this.setState({ lastName: text })}
+                  />
+                  <InputBox
+                    placeholder="Email address"
+                    value={email}
+                    keyboardType="email-address"
+                    onChangeText={(text) => {
+                      this.setState({ email: text });
+                    }}
+                  />
+                  <HelperText
+                    type="info"
+                    visible={true}
+                    style={colors.grey.standard}
                   >
-                  I already have an account? Sign in 
-                  </Text>
-              </View>  
-              
-              </ScrollView>
+                    Enter email used for previous purchase on fitazfk.com.
+                  </HelperText>
+                  <InputBox
+                    errorMessage={error && error}
+                    placeholder="Create Password"
+                    value={password}
+                    onChangeText={(text) => this.setState({ password: text })}
+                    onSubmitEditing={() =>
+                      this.signup(
+                        firstName,
+                        lastName,
+                        email.toLowerCase(),
+                        password
+                      )
+                    }
+                    secureTextEntry
+                    returnKeyType="go"
+                  />
+                </KeyboardAvoidingView>
+                <CustomBtn
+                  customBtnStyle={{ borderRadius: 50, marginTop: 20 }}
+                  Title="Create new account"
+                  customBtnTitleStyle={{
+                    fontWeight: "500",
+                    letterSpacing: 0.7,
+                  }}
+                  onPress={() =>
+                    this.signup(
+                      firstName,
+                      lastName,
+                      email.toLowerCase(),
+                      password
+                    )
+                  }
+                />
+
+                <View style={authScreenStyle.dividerOverlay}>
+                  <Text style={authScreenStyle.dividerOverlayText}>OR</Text>
+                </View>
+
+                <CustomBtn
+                  customBtnStyle={{
+                    borderRadius: 50,
+                    borderColor: colors.grey.standard,
+                  }}
+                  outline={true}
+                  Title="Create account with Facebook"
+                  customBtnTitleStyle={{
+                    fontWeight: "500",
+                    letterSpacing: 0.7,
+                    color: colors.transparentBlackDark,
+                  }}
+                  onPress={this.signupWithFacebook}
+                  leftIcon={true}
+                  leftIconUrl={require("../../../assets/icons/facebook.png")}
+                />
+                {appleSignInAvailable && (
+                  <AppleAuthentication.AppleAuthenticationButton
+                    onPress={this.onSignInWithApple}
+                    buttonType={
+                      AppleAuthentication.AppleAuthenticationButtonType.CONTINUE
+                    }
+                    buttonStyle={
+                      AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
+                    }
+                    cornerRadius={4}
+                    style={authScreenStyle.appleButton}
+                  />
+                )}
+                <Text
+                  onPress={this.navigateToLogin}
+                  style={[
+                    authScreenStyle.navigateToButton,
+                    { paddingBottom: 20 },
+                  ]}
+                >
+                  I already have an account? Sign in
+                </Text>
+              </View>
+            </ScrollView>
             {/* </ImageBackground> */}
           </View>
         </SafeAreaView>
@@ -455,4 +596,3 @@ export default class SignupScreen extends React.PureComponent {
     );
   }
 }
-

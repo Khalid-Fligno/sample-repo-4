@@ -33,7 +33,7 @@ const globalStyle = StyleSheet.create({
   bigHeadingTitleText: {
     // fontSize:35,
     fontSize: hp("4%"),
-    fontFamily: fonts.boldNarrow,
+    fontFamily: fonts.SimplonMonoLight,
     color: colors.black,
     letterSpacing: 0.5,
     textTransform: "capitalize",
