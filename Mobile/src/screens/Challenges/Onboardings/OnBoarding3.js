@@ -177,26 +177,27 @@ export default class OnBoarding3 extends Component {
             <View style={ChallengeStyle.checkBox}>
               <CustomBtn
                 Title="Metric"
-                outline={true}
+                outline={chosenUom != "metric"}
                 customBtnStyle={{
                   borderRadius: 50,
                   padding: 5,
                   width: "46%",
+                  backgroundColor:
+                    chosenUom === "metric"
+                      ? colors.themeColor.color
+                      : colors.transparent,
                   borderColor:
                     chosenUom === "metric"
                       ? colors.themeColor.color
-                      : colors.grey.standard,
+                      : colors.black,
                 }}
                 onPress={() => this.setState({ chosenUom: "metric" })}
                 customBtnTitleStyle={{
                   fontSize: 15,
                   marginLeft: 5,
-                  color:
-                    chosenUom === "metric"
-                      ? colors.themeColor.color
-                      : colors.grey.dark,
+                  color: chosenUom === "metric" ? colors.black : colors.black,
                 }}
-                leftIconColor={colors.themeColor.color}
+                leftIconColor={colors.black}
                 leftIconSize={15}
                 isLeftIcon={chosenUom === "metric" ? true : false}
                 leftIconName="tick"
@@ -204,26 +205,27 @@ export default class OnBoarding3 extends Component {
 
               <CustomBtn
                 Title="Imperial"
-                outline={true}
+                outline={chosenUom != "imperial"}
                 customBtnStyle={{
                   borderRadius: 50,
                   padding: 5,
                   width: "46%",
+                  backgroundColor:
+                    chosenUom === "imperial"
+                      ? colors.themeColor.color
+                      : colors.transparent,
                   borderColor:
                     chosenUom === "imperial"
                       ? colors.themeColor.color
-                      : colors.grey.standard,
+                      : colors.black,
                 }}
                 onPress={() => this.setState({ chosenUom: "imperial" })}
                 customBtnTitleStyle={{
                   fontSize: 15,
                   marginLeft: 5,
-                  color:
-                    chosenUom === "imperial"
-                      ? colors.themeColor.color
-                      : colors.grey.dark,
+                  color: chosenUom === "imperial" ? colors.black : colors.black,
                 }}
-                leftIconColor={colors.themeColor.color}
+                leftIconColor={colors.black}
                 leftIconSize={15}
                 isLeftIcon={chosenUom === "imperial" ? true : false}
                 leftIconName="tick"
@@ -292,7 +294,7 @@ export default class OnBoarding3 extends Component {
                 disabled={btnDisabled}
                 isRightIcon={true}
                 rightIconName="chevron-right"
-                rightIconColor={colors.white}
+                rightIconColor={colors.black}
                 rightIconSize={13}
                 customBtnTitleStyle={{ marginRight: 10 }}
               />

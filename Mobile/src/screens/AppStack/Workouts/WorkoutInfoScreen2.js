@@ -212,8 +212,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
         <Carousel
           key={exercise.id}
           width={width}
-          inactiveIndicatorColor={colors.coral.standard}
-          indicatorColor={colors.coral.standard}
+          inactiveIndicatorColor={colors.themeColor.color}
+          indicatorColor={colors.themeColor.color}
           indicatorOffset={Platform.OS === "ios" ? -3 : -10}
           indicatorSize={10}
           inactiveIndicatorText="○"
@@ -586,7 +586,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             </View>
           </View>
         </Modal>
-        <Loader loading={loading} color={colors.coral.standard} />
+        <Loader loading={loading} color={colors.themeColor.color} />
       </View>
     );
   }

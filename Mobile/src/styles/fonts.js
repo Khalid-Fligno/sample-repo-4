@@ -14,6 +14,7 @@ const fonts = {
   GothamMedium: "GothamMedium",
   GothamBookItalic: "GothamBookItalic",
   SimplonMonoLight: "SimplonMonoLight",
+  SimplonMonoMedium: "SimplonMonoMedium",
   StyreneAWebRegular: "StyreneAWebRegular",
   StyreneAWebThin: "StyreneAWebThin",
   letterSpacing: 1,

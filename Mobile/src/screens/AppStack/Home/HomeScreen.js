@@ -481,7 +481,12 @@ export default class HomeScreen extends React.PureComponent {
                   Title="START BURPEE TEST"
                   customBtnStyle={{
                     borderRadius: 50,
-                    backgroundColor: colors.charcoal.darkest,
+                    backgroundColor: colors.black,
+                  }}
+                  customBtnTitleStyle={{
+                    fontFamily: fonts.SimplonMonoMedium,
+                    color: colors.white,
+                    fontSize: 15,
                   }}
                   titleCapitalise={true}
                   onPress={this.goToBurpeeTest}

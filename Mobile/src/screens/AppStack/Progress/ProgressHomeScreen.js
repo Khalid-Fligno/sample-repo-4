@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 import {
   StyleSheet,
   View,
@@ -7,25 +7,28 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
-} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import moment from 'moment';
-import FastImage from 'react-native-fast-image';
-import ReactTimeout from 'react-timeout';
-import { db } from '../../../../config/firebase';
-import Loader from '../../../components/Shared/Loader';
-import ProgressBar from '../../../components/Progress/ProgressBar';
-import Icon from '../../../components/Shared/Icon';
-import HelperModal from '../../../components/Shared/HelperModal';
-import CustomButton from '../../../components/Shared/CustomButton';
-import ImageModal from '../../../components/Progress/ImageModal';
-import { diff } from '../../../utils/index';
-import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
-import { widthPercentageToDP as wp ,heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import CustomBtn from '../../../components/Shared/CustomBtn';
+} from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
+import moment from "moment";
+import FastImage from "react-native-fast-image";
+import ReactTimeout from "react-timeout";
+import { db } from "../../../../config/firebase";
+import Loader from "../../../components/Shared/Loader";
+import ProgressBar from "../../../components/Progress/ProgressBar";
+import Icon from "../../../components/Shared/Icon";
+import HelperModal from "../../../components/Shared/HelperModal";
+import CustomButton from "../../../components/Shared/CustomButton";
+import ImageModal from "../../../components/Progress/ImageModal";
+import { diff } from "../../../utils/index";
+import colors from "../../../styles/colors";
+import fonts from "../../../styles/fonts";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import CustomBtn from "../../../components/Shared/CustomBtn";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 class ProgressHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -39,128 +42,156 @@ class ProgressHomeScreen extends React.PureComponent {
       helperModalVisible: false,
       imageModalVisible: false,
       imageModalSource: undefined,
-      activeChallengeUserData:undefined,
-      activeChallengeData:undefined,
-      totalInterval:undefined,
-      totalCircuit:undefined,
-      totalStrength:undefined,
-      totalIntervalCompleted:undefined,
-      totalCircuitCompleted:undefined,
-      totalStrengthCompleted:undefined,
+      activeChallengeUserData: undefined,
+      activeChallengeData: undefined,
+      totalInterval: undefined,
+      totalCircuit: undefined,
+      totalStrength: undefined,
+      totalIntervalCompleted: undefined,
+      totalCircuitCompleted: undefined,
+      totalStrengthCompleted: undefined,
     };
   }
   componentDidMount() {
-    this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
+    this.props.navigation.setParams({
+      toggleHelperModal: this.showHelperModal,
+    });
     this.fetchProgressInfo();
     this.showHelperOnFirstOpen();
     this.fetchActiveChallengeUserData();
   }
   componentWillUnmount() {
     this.unsubscribe();
-    if(this.unsubscribeFACUD)
-    this.unsubscribeFACUD()
-    if(this.unsubscribeFACD)
-      this.unsubscribeFACD()  
+    if (this.unsubscribeFACUD) this.unsubscribeFACUD();
+    if (this.unsubscribeFACD) this.unsubscribeFACD();
   }
   showHelperOnFirstOpen = async () => {
-    const helperShownOnFirstOpen = await AsyncStorage.getItem('progressHelperShownOnFirstOpen');
+    const helperShownOnFirstOpen = await AsyncStorage.getItem(
+      "progressHelperShownOnFirstOpen"
+    );
     if (helperShownOnFirstOpen === null) {
-      this.props.setTimeout(() => this.setState({ helperModalVisible: true }), 1200);
-      AsyncStorage.setItem('progressHelperShownOnFirstOpen', 'true');
+      this.props.setTimeout(
+        () => this.setState({ helperModalVisible: true }),
+        1200
+      );
+      AsyncStorage.setItem("progressHelperShownOnFirstOpen", "true");
     }
-  }
+  };
   showHelperModal = () => {
     this.setState({ helperModalVisible: true });
-  }
+  };
   hideHelperModal = () => {
     this.setState({ helperModalVisible: false });
-  }
+  };
   toggleImageModal = (imageSource) => {
     this.setState((prevState) => ({
       imageModalSource: imageSource,
       imageModalVisible: !prevState.imageModalVisible,
     }));
-  }
+  };
   fetchProgressInfo = async () => {
     this.setState({ loading: true });
-    const uid = await AsyncStorage.getItem('uid');
-    const userRef = db.collection('users').doc(uid);
+    const uid = await AsyncStorage.getItem("uid");
+    const userRef = db.collection("users").doc(uid);
     this.unsubscribe = userRef.onSnapshot(async (doc) => {
       var data = await doc.data();
       this.setState({
         profile: data,
         initialProgressInfo: data.initialProgressInfo,
-        currentProgressInfo: data.currentProgressInfo && data.currentProgressInfo.weight?data.currentProgressInfo:null,
+        currentProgressInfo:
+          data.currentProgressInfo && data.currentProgressInfo.weight
+            ? data.currentProgressInfo
+            : null,
         unitsOfMeasurement: data.unitsOfMeasurement,
         loading: false,
       });
-      if (await doc.data().weeklyTargets.currentWeekStartDate !== moment().startOf('week').format('YYYY-MM-DD')) {
+      if (
+        (await doc.data().weeklyTargets.currentWeekStartDate) !==
+        moment().startOf("week").format("YYYY-MM-DD")
+      ) {
         const data = {
           weeklyTargets: {
             resistanceWeeklyComplete: 0,
             hiitWeeklyComplete: 0,
-            currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
+            currentWeekStartDate: moment().startOf("week").format("YYYY-MM-DD"),
           },
         };
         await userRef.set(data, { merge: true });
       }
     });
-  }
+  };
 
   // ToDo : for challenges
-  fetchActiveChallengeUserData = async () =>{
-    try{  
+  fetchActiveChallengeUserData = async () => {
+    try {
       this.setState({ loading: true });
-      const uid = await AsyncStorage.getItem('uid');
-      this.unsubscribeFACUD = await db.collection('users').doc(uid).collection('challenges')
-      .where("status", "==" , "Active")
-      .onSnapshot(async (querySnapshot) => {
-        const list = [];
-        await querySnapshot.forEach(async (doc) => {
+      const uid = await AsyncStorage.getItem("uid");
+      this.unsubscribeFACUD = await db
+        .collection("users")
+        .doc(uid)
+        .collection("challenges")
+        .where("status", "==", "Active")
+        .onSnapshot(async (querySnapshot) => {
+          const list = [];
+          await querySnapshot.forEach(async (doc) => {
             await list.push(await doc.data());
-        });
-        if(list[0]){
-          this.fetchActiveChallengeData(list[0])
-        }else{
-          this.setState({ 
-            activeChallengeUserData:undefined,
-            loading:false
           });
-        }
-      });
-    }
-    catch(err){
+          if (list[0]) {
+            this.fetchActiveChallengeData(list[0]);
+          } else {
+            this.setState({
+              activeChallengeUserData: undefined,
+              loading: false,
+            });
+          }
+        });
+    } catch (err) {
       this.setState({ loading: false });
-      console.log(err)
-      Alert.alert('Fetch active challenge user data error!')
-    }  
+      console.log(err);
+      Alert.alert("Fetch active challenge user data error!");
+    }
+  };
 
-  }
-
-  fetchActiveChallengeData = async (activeChallengeUserData) =>{
-    try{
-      this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
-      .onSnapshot(async (doc) => {
-          if(doc.exists){
-            const activeChallengeData = doc.data()
+  fetchActiveChallengeData = async (activeChallengeUserData) => {
+    try {
+      this.unsubscribeFACD = await db
+        .collection("challenges")
+        .doc(activeChallengeUserData.id)
+        .onSnapshot(async (doc) => {
+          if (doc.exists) {
+            const activeChallengeData = doc.data();
             //TODO calculate total interval circuit strength completed user during challenge
-            const totalWorkouts =[] 
+            const totalWorkouts = [];
             // activeChallengeData.phases.forEach(phase => {
-              activeChallengeData.workouts.forEach(workout =>{
-                totalWorkouts.push(workout)
-              })
+            activeChallengeData.workouts.forEach((workout) => {
+              totalWorkouts.push(workout);
+            });
             // });
-            
-            const totalInterval = totalWorkouts.filter((res)=>res.target === 'interval')
-            const totalCircuit = totalWorkouts.filter((res)=>res.target === 'circuit')
-            const totalStrength = totalWorkouts.filter((res)=>res.target === 'strength')
-      
-            const totalIntervalCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'interval')
-            const totalCircuitCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'circuit')
-            const totalStrengthCompleted = activeChallengeUserData.workouts.filter((res)=>res.target === 'strength')
-            
-            
-            this.setState({ 
+
+            const totalInterval = totalWorkouts.filter(
+              (res) => res.target === "interval"
+            );
+            const totalCircuit = totalWorkouts.filter(
+              (res) => res.target === "circuit"
+            );
+            const totalStrength = totalWorkouts.filter(
+              (res) => res.target === "strength"
+            );
+
+            const totalIntervalCompleted =
+              activeChallengeUserData.workouts.filter(
+                (res) => res.target === "interval"
+              );
+            const totalCircuitCompleted =
+              activeChallengeUserData.workouts.filter(
+                (res) => res.target === "circuit"
+              );
+            const totalStrengthCompleted =
+              activeChallengeUserData.workouts.filter(
+                (res) => res.target === "strength"
+              );
+
+            this.setState({
               activeChallengeUserData,
               activeChallengeData,
               totalInterval,
@@ -169,19 +200,17 @@ class ProgressHomeScreen extends React.PureComponent {
               totalIntervalCompleted,
               totalCircuitCompleted,
               totalStrengthCompleted,
-              loading:false
+              loading: false,
             });
           }
-      
-      });
-    }catch(err){
+        });
+    } catch (err) {
       this.setState({ loading: false });
       console.log(err);
-      Alert.alert('Fetch active challenge data error!')
+      Alert.alert("Fetch active challenge data error!");
     }
-
-  }
- //-------**--------  
+  };
+  //-------**--------
 
   render() {
     const {
@@ -210,18 +239,18 @@ class ProgressHomeScreen extends React.PureComponent {
     let countC = 0;
     let countS = 0;
 
-    if(activeChallengeData !== undefined){
-      totalI = 0
-      totalInterval.forEach((res)=>totalI += res.days.length )
-      totalC = 0
-      totalCircuit.forEach((res)=>totalC += res.days.length )
+    if (activeChallengeData !== undefined) {
+      totalI = 0;
+      totalInterval.forEach((res) => (totalI += res.days.length));
+      totalC = 0;
+      totalCircuit.forEach((res) => (totalC += res.days.length));
       totalS = 0;
-      totalStrength.forEach((res)=>totalS += res.days.length )
+      totalStrength.forEach((res) => (totalS += res.days.length));
 
       countI = totalIntervalCompleted.length;
       countC = totalCircuitCompleted.length;
       countS = totalStrengthCompleted.length;
-    }else if(profile !== undefined){
+    } else if (profile !== undefined) {
       totalI = 5;
       totalC = 5;
       totalS = 5;
@@ -231,228 +260,287 @@ class ProgressHomeScreen extends React.PureComponent {
       countS = profile.weeklyTargets.strength;
     }
 
-    const weightDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.weight, currentProgressInfo.weight);
-    const hipDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.hip, currentProgressInfo.hip);
-    const waistDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.waist, currentProgressInfo.waist);
-    const burpeesDifference = initialProgressInfo && currentProgressInfo && diff(initialProgressInfo.burpeeCount, currentProgressInfo.burpeeCount);
-    
-    const updateBtn = (onPress)=>(
-          <CustomBtn
-              Title="Update"
-              outline={true}
-              customBtnStyle={{
-                                  padding:wp('1.7%'),
-                                  borderRadius:30,
-                                  backgroundColor:'transparent',
-                                  justifyContent:'space-between',
-                                  paddingStart:wp('5%'),
-                                  paddingEnd:wp('3%'),
-                                  borderWidth:1.5,
-                                  marginHorizontal:wp('10%'),
-                                  marginVertical:wp('3%')
-                              }}
-              isRightIcon={true}
-              rightIconName="chevron-right"
-              rightIconColor={colors.themeColor.color}
-              customBtnTitleStyle={{
-                                      fontFamily:fonts.GothamMedium,
-                                      // color:colors.offWhite,
-                                      textTransform:'capitalize'
-                                  }}
-            onPress={onPress}
-          />
-    )
+    const weightDifference =
+      initialProgressInfo &&
+      currentProgressInfo &&
+      diff(initialProgressInfo.weight, currentProgressInfo.weight);
+    const hipDifference =
+      initialProgressInfo &&
+      currentProgressInfo &&
+      diff(initialProgressInfo.hip, currentProgressInfo.hip);
+    const waistDifference =
+      initialProgressInfo &&
+      currentProgressInfo &&
+      diff(initialProgressInfo.waist, currentProgressInfo.waist);
+    const burpeesDifference =
+      initialProgressInfo &&
+      currentProgressInfo &&
+      diff(initialProgressInfo.burpeeCount, currentProgressInfo.burpeeCount);
+
+    const updateBtn = (onPress) => (
+      <CustomBtn
+        Title="Update"
+        outline={true}
+        customBtnStyle={{
+          padding: wp("1.7%"),
+          borderRadius: 30,
+
+          justifyContent: "space-between",
+          paddingStart: wp("5%"),
+          paddingEnd: wp("3%"),
+          borderWidth: 1.5,
+          marginHorizontal: wp("10%"),
+          marginVertical: wp("3%"),
+        }}
+        isRightIcon={true}
+        rightIconName="chevron-right"
+        rightIconColor={colors.black}
+        customBtnTitleStyle={{
+          fontFamily: fonts.SimplonMonoMedium,
+          // color:colors.offWhite,
+          textTransform: "capitalize",
+        }}
+        onPress={onPress}
+      />
+    );
 
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <View style={styles.imagesContainer}>
-            {
-              initialProgressInfo ? (
-                <View>
-                  <TouchableOpacity
-                    onPress={() => this.toggleImageModal(initialProgressInfo.photoURL)}
-                  >
-                    <FastImage
-                      style={styles.image}
-                      source={{ uri: initialProgressInfo.photoURL,cache:'immutable' }}
-                      resizeMode={FastImage.resizeMode.cover}
-                    />
-                  </TouchableOpacity>
-                  {updateBtn(() => this.props.navigation.navigate('Progress1', { isInitial: true ,navigateTo:'Progress'}))}
-                </View>
-              ) : (
-                <View style={styles.imagePlaceholder}>
-                  <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('Progress1', { isInitial: true,navigateTo:'Progress' })}
-                    style={styles.imagePlaceholderButton}
-                  >
-                    <Icon
-                      name="add-circle"
-                      color={colors.white}
-                      size={20}
-                      style={styles.addIcon}
-                    />
-                    <Text style={styles.imagePlaceholderButtonText}>
-                      Add before photo and measurements
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )
-            }
-            {
-              currentProgressInfo ? (
-                <View>
-                  <TouchableOpacity
-                    onPress={() => this.toggleImageModal(currentProgressInfo.photoURL)}
-                  >
-                    <FastImage
-                      style={styles.image}
-                      source={{ uri: currentProgressInfo.photoURL,cache:'immutable' }}
-                      resizeMode={FastImage.resizeMode.cover}
-                    />
-                  </TouchableOpacity>
-                  {updateBtn(() => this.props.navigation.navigate('Progress1', { isInitial: false }))}
-                </View>
-              ) : (
-                <View style={styles.imagePlaceholder}>
-                  <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
-                    disabled={initialProgressInfo === undefined}
-                    style={[
-                      styles.imagePlaceholderButton,
-                      initialProgressInfo === undefined && styles.disabledImagePlaceHolderButton,
-                    ]}
-                  >
-                    <Icon
-                      name="add-circle"
-                      color={colors.white}
-                      size={20}
-                      style={styles.addIcon}
-                    />
-                    <Text style={styles.imagePlaceholderButtonText}>
-                      Add after photo and measurements
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )
-            }
+            {initialProgressInfo ? (
+              <View>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.toggleImageModal(initialProgressInfo.photoURL)
+                  }
+                >
+                  <FastImage
+                    style={styles.image}
+                    source={{
+                      uri: initialProgressInfo.photoURL,
+                      cache: "immutable",
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                </TouchableOpacity>
+                {updateBtn(() =>
+                  this.props.navigation.navigate("Progress1", {
+                    isInitial: true,
+                    navigateTo: "Progress",
+                  })
+                )}
+              </View>
+            ) : (
+              <View style={styles.imagePlaceholder}>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.navigation.navigate("Progress1", {
+                      isInitial: true,
+                      navigateTo: "Progress",
+                    })
+                  }
+                  style={styles.imagePlaceholderButton}
+                >
+                  <Icon
+                    name="add-circle"
+                    color={colors.white}
+                    size={20}
+                    style={styles.addIcon}
+                  />
+                  <Text style={styles.imagePlaceholderButtonText}>
+                    Add before photo and measurements
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            {currentProgressInfo ? (
+              <View>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.toggleImageModal(currentProgressInfo.photoURL)
+                  }
+                >
+                  <FastImage
+                    style={styles.image}
+                    source={{
+                      uri: currentProgressInfo.photoURL,
+                      cache: "immutable",
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                </TouchableOpacity>
+                {updateBtn(() =>
+                  this.props.navigation.navigate("Progress1", {
+                    isInitial: false,
+                  })
+                )}
+              </View>
+            ) : (
+              <View style={styles.imagePlaceholder}>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.navigation.navigate("Progress1", {
+                      isInitial: false,
+                    })
+                  }
+                  disabled={initialProgressInfo === undefined}
+                  style={[
+                    styles.imagePlaceholderButton,
+                    initialProgressInfo === undefined &&
+                      styles.disabledImagePlaceHolderButton,
+                  ]}
+                >
+                  <Icon
+                    name="add-circle"
+                    color={colors.white}
+                    size={20}
+                    style={styles.addIcon}
+                  />
+                  <Text style={styles.imagePlaceholderButtonText}>
+                    Add after photo and measurements
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
           <View style={styles.dateRowContainer}>
             <View style={styles.dateContainer}>
               <Text style={styles.dateText}>
-                {initialProgressInfo ? moment(initialProgressInfo.date).format('DD/MM/YYYY') : '-'}
+                {initialProgressInfo
+                  ? moment(initialProgressInfo.date).format("DD/MM/YYYY")
+                  : "-"}
               </Text>
             </View>
             <View style={styles.dateContainer}>
               <Text style={styles.dateText}>
-                {currentProgressInfo ? moment(currentProgressInfo.date).format('DD/MM/YYYY') : '-'}
+                {currentProgressInfo
+                  ? moment(currentProgressInfo.date).format("DD/MM/YYYY")
+                  : "-"}
               </Text>
             </View>
           </View>
           <View style={styles.dataRowContainer}>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {initialProgressInfo ? initialProgressInfo.weight : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'kg'}
-                {initialProgressInfo && unitsOfMeasurement === 'imperial' && 'lbs'}
+                {initialProgressInfo ? initialProgressInfo.weight : "-"}{" "}
+                {initialProgressInfo && unitsOfMeasurement === "metric" && "kg"}
+                {initialProgressInfo &&
+                  unitsOfMeasurement === "imperial" &&
+                  "lbs"}
               </Text>
             </View>
             <View style={styles.fieldContainer}>
-              <Text style={styles.fieldText}>
-                WEIGHT
-              </Text>
+              <Text style={styles.fieldText}>WEIGHT</Text>
               <Text
                 style={[
                   styles.dataTextNegative,
                   weightDifference >= 0 && styles.dataTextPositive,
                 ]}
               >
-                {weightDifference || '-'} {weightDifference && unitsOfMeasurement === 'metric' && 'kg'}{weightDifference && unitsOfMeasurement === 'imperial' && 'lbs'}
+                {weightDifference || "-"}{" "}
+                {weightDifference && unitsOfMeasurement === "metric" && "kg"}
+                {weightDifference && unitsOfMeasurement === "imperial" && "lbs"}
               </Text>
             </View>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {currentProgressInfo ? currentProgressInfo.weight : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'kg'}
-                {currentProgressInfo && unitsOfMeasurement === 'imperial' && 'lbs'}
+                {currentProgressInfo ? currentProgressInfo.weight : "-"}{" "}
+                {currentProgressInfo && unitsOfMeasurement === "metric" && "kg"}
+                {currentProgressInfo &&
+                  unitsOfMeasurement === "imperial" &&
+                  "lbs"}
               </Text>
             </View>
           </View>
           <View style={styles.dataRowContainer}>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {initialProgressInfo ? initialProgressInfo.waist : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}
-                {initialProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
+                {initialProgressInfo ? initialProgressInfo.waist : "-"}{" "}
+                {initialProgressInfo && unitsOfMeasurement === "metric" && "cm"}
+                {initialProgressInfo &&
+                  unitsOfMeasurement === "imperial" &&
+                  "inches"}
               </Text>
             </View>
             <View style={styles.fieldContainer}>
-              <Text style={styles.fieldText}>
-                WAIST
-              </Text>
+              <Text style={styles.fieldText}>WAIST</Text>
               <Text
                 style={[
                   styles.dataTextNegative,
                   waistDifference >= 0 && styles.dataTextPositive,
                 ]}
               >
-                {waistDifference || '-'} {waistDifference && unitsOfMeasurement === 'metric' && 'cm'}{waistDifference && unitsOfMeasurement === 'imperial' && 'inches'}
+                {waistDifference || "-"}{" "}
+                {waistDifference && unitsOfMeasurement === "metric" && "cm"}
+                {waistDifference &&
+                  unitsOfMeasurement === "imperial" &&
+                  "inches"}
               </Text>
             </View>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {currentProgressInfo ? currentProgressInfo.waist : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}
-                {currentProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
+                {currentProgressInfo ? currentProgressInfo.waist : "-"}{" "}
+                {currentProgressInfo && unitsOfMeasurement === "metric" && "cm"}
+                {currentProgressInfo &&
+                  unitsOfMeasurement === "imperial" &&
+                  "inches"}
               </Text>
             </View>
           </View>
           <View style={styles.dataRowContainer}>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {initialProgressInfo ? initialProgressInfo.hip : '-'} {initialProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}
-                {initialProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
+                {initialProgressInfo ? initialProgressInfo.hip : "-"}{" "}
+                {initialProgressInfo && unitsOfMeasurement === "metric" && "cm"}
+                {initialProgressInfo &&
+                  unitsOfMeasurement === "imperial" &&
+                  "inches"}
               </Text>
             </View>
             <View style={styles.fieldContainer}>
-              <Text style={styles.fieldText}>
-                HIP
-              </Text>
+              <Text style={styles.fieldText}>HIP</Text>
               <Text
                 style={[
                   styles.dataTextNegative,
                   hipDifference >= 0 && styles.dataTextPositive,
                 ]}
               >
-                {hipDifference || '-'} {hipDifference && unitsOfMeasurement === 'metric' && 'cm'}{hipDifference && unitsOfMeasurement === 'imperial' && 'inches'}
+                {hipDifference || "-"}{" "}
+                {hipDifference && unitsOfMeasurement === "metric" && "cm"}
+                {hipDifference && unitsOfMeasurement === "imperial" && "inches"}
               </Text>
             </View>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {currentProgressInfo ? currentProgressInfo.hip : '-'} {currentProgressInfo && unitsOfMeasurement === 'metric' && 'cm'}
-                {currentProgressInfo && unitsOfMeasurement === 'imperial' && 'inches'}
+                {currentProgressInfo ? currentProgressInfo.hip : "-"}{" "}
+                {currentProgressInfo && unitsOfMeasurement === "metric" && "cm"}
+                {currentProgressInfo &&
+                  unitsOfMeasurement === "imperial" &&
+                  "inches"}
               </Text>
             </View>
           </View>
           <View style={styles.dataRowContainer}>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {initialProgressInfo ? initialProgressInfo.burpeeCount : '-'}
+                {initialProgressInfo ? initialProgressInfo.burpeeCount : "-"}
               </Text>
             </View>
             <View style={styles.fieldContainer}>
-              <Text style={styles.fieldText}>
-                BURPEES
-              </Text>
+              <Text style={styles.fieldText}>BURPEES</Text>
               <Text
                 style={[
                   styles.dataTextNegative,
                   burpeesDifference >= 0 && styles.dataTextPositive,
                 ]}
               >
-                {burpeesDifference || '-'}
+                {burpeesDifference || "-"}
               </Text>
             </View>
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
-                {currentProgressInfo ? currentProgressInfo.burpeeCount : '-'}
+                {currentProgressInfo ? currentProgressInfo.burpeeCount : "-"}
               </Text>
             </View>
           </View>
@@ -470,49 +558,58 @@ class ProgressHomeScreen extends React.PureComponent {
           <View style={styles.workoutProgressContainer}>
             <View style={styles.sectionHeader}>
               <Text style={styles.bodyText}>
-              {activeChallengeData?'Active challenge progress' :'Weekly workout progress'}
+                {activeChallengeData
+                  ? "Active challenge progress"
+                  : "Weekly workout progress"}
               </Text>
             </View>
-            <View style={{flexDirection:'row',justifyContent:"space-between",width:"100%"}}>
-                    {
-                      profile && (
-                        <View>
-                          <ProgressBar
-                            title="Strength"
-                            completed={countS}
-                            total = {totalS}
-                            size ={wp('38%')}
-                          />
-                        </View>
-                      )
-                    }
-                    {
-                      profile && (
-                        <View>
-                          <ProgressBar
-                            title="Circuit"
-                            completed={countC}
-                            total = {totalC}
-                            size ={wp('38%')}
-                          />
-                        </View>
-                      )
-                    }
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              {profile && (
+                <View>
+                  <ProgressBar
+                    title="Strength"
+                    completed={countS}
+                    total={totalS}
+                    size={wp("38%")}
+                  />
                 </View>
-                <View style={{width:'100%',flexDirection:"row",justifyContent:"center",marginTop:-30}}>
-                    {
-                          profile && (
-                            <View>
-                              <ProgressBar
-                                title="Interval"
-                                completed={countI}
-                                total = {totalI}
-                                size ={wp('38%')}
-                              />
-                            </View>
-                          )
-                        }
+              )}
+              {profile && (
+                <View>
+                  <ProgressBar
+                    title="Circuit"
+                    completed={countC}
+                    total={totalC}
+                    size={wp("38%")}
+                  />
                 </View>
+              )}
+            </View>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "center",
+                marginTop: -30,
+              }}
+            >
+              {profile && (
+                <View>
+                  <ProgressBar
+                    title="Interval"
+                    completed={countI}
+                    total={totalI}
+                    size={wp("38%")}
+                  />
+                </View>
+              )}
+            </View>
           </View>
         </ScrollView>
         <HelperModal
@@ -530,10 +627,7 @@ class ProgressHomeScreen extends React.PureComponent {
           color="red"
           imageSource={{ uri: imageModalSource }}
         />
-        <Loader
-          loading={loading}
-          color={colors.red.standard}
-        />
+        <Loader loading={loading} color={colors.red.standard} />
       </View>
     );
   }
@@ -547,17 +641,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.offWhite,
-    alignItems: 'center',
+    alignItems: "center",
   },
   contentContainer: {
     width,
     backgroundColor: colors.offWhite,
-    alignItems: 'center',
+    alignItems: "center",
     paddingBottom: 5,
   },
   imagesContainer: {
     width,
-    flexDirection: 'row',
+    flexDirection: "row",
     shadowColor: colors.grey.standard,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
@@ -568,15 +662,15 @@ const styles = StyleSheet.create({
     height: (width / 3) * 2,
   },
   imagePlaceholder: {
-    backgroundColor: colors.grey.light,
+    backgroundColor: colors.smoke,
     width: width / 2,
     height: (width / 3) * 2,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   imagePlaceholderButton: {
     backgroundColor: colors.themeColor.lightColor,
-    width: '70%',
+    width: "70%",
     padding: 10,
     borderRadius: 2,
     shadowOpacity: 0.5,
@@ -585,7 +679,7 @@ const styles = StyleSheet.create({
   },
   disabledImagePlaceHolderButton: {
     backgroundColor: colors.themeColor.lightColor,
-    width: '70%',
+    width: "70%",
     padding: 10,
     borderRadius: 2,
     shadowOpacity: 0.5,
@@ -594,25 +688,25 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   imagePlaceholderButtonText: {
-    color: colors.white,
+    color: colors.black,
     fontFamily: fonts.standard,
     fontSize: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
   addIcon: {
-    alignSelf: 'center',
+    alignSelf: "center",
     marginBottom: 10,
   },
   dateRowContainer: {
     width,
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingTop: 10,
     paddingBottom: 5,
   },
   dateContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   dateText: {
     fontFamily: fonts.bold,
@@ -623,7 +717,7 @@ const styles = StyleSheet.create({
     width: width - 20,
     marginTop: 5,
     marginBottom: 5,
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: colors.white,
     borderRadius: 2,
     shadowColor: colors.grey.standard,
@@ -633,20 +727,20 @@ const styles = StyleSheet.create({
   },
   fieldContainer: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     backgroundColor: colors.themeColor.lightColor,
   },
   fieldText: {
     fontFamily: fonts.standard,
     fontSize: 12,
-    color: colors.white,
+    color: colors.black,
     marginTop: 5,
     marginBottom: 5,
   },
   dataContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   dataText: {
     fontFamily: fonts.standard,
@@ -657,27 +751,27 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.white,
+    color: colors.black,
   },
   dataTextNegative: {
     marginBottom: 5,
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.white,
+    color: colors.black,
   },
   buttonContainer: {
     paddingTop: 5,
     paddingBottom: 5,
   },
   workoutProgressContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     width: width - 20,
     marginTop: 5,
     marginBottom: 5,
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 10,
-    backgroundColor:'transparent',
+    backgroundColor: "transparent",
     borderRadius: 2,
     shadowColor: colors.themeColor.lightColor,
     shadowOffset: { width: 0, height: 2 },
@@ -685,7 +779,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   sectionHeader: {
-    alignItems: 'center',
+    alignItems: "center",
     // backgroundColor: colors.themeColor.lightColor,
     width: width - 20,
     borderTopLeftRadius: 2,
@@ -696,11 +790,11 @@ const styles = StyleSheet.create({
   bodyText: {
     fontFamily: fonts.bold,
     fontSize: 12,
-    color: colors.grey.dark,
-    fontWeight:'500',
-    paddingVertical:20,
-    textAlign:"center",
-    width:'100%'
+    color: colors.black,
+    fontWeight: "500",
+    paddingVertical: 20,
+    textAlign: "center",
+    width: "100%",
   },
 });
 

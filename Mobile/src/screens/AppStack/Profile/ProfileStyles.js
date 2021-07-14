@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions } from "react-native";
 import colors from "../../../styles/colors";
 import fonts from "../../../styles/fonts";
 import { containerPadding } from "../../../styles/globalStyles";
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 const ProfileStyles = StyleSheet.create({
   scrollView: {
     width,
@@ -13,8 +13,8 @@ const ProfileStyles = StyleSheet.create({
     height: 88,
     borderRadius: 44,
     backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   avatarBackdrop: {
     width: 80,
@@ -29,7 +29,7 @@ const ProfileStyles = StyleSheet.create({
   },
   nameTextContainer: {
     width,
-    alignItems: 'center',
+    alignItems: "center",
   },
   nameText: {
     marginTop: 15,
@@ -55,7 +55,7 @@ const ProfileStyles = StyleSheet.create({
   },
   listItemTitleStyle: {
     fontFamily: fonts.bold,
-    color: colors.grey.standard,
+    color: colors.black,
     fontSize: 14,
   },
   listItemSubtitleStyle: {
@@ -70,7 +70,7 @@ const ProfileStyles = StyleSheet.create({
     borderBottomWidth: 0,
     backgroundColor: colors.themeColor.lightColor,
   },
- 
+
   listItemTitleStyleGreen: {
     fontFamily: fonts.bold,
     color: colors.green.forest,
@@ -100,17 +100,17 @@ const ProfileStyles = StyleSheet.create({
     fontSize: 14,
     color: colors.blue.vivid,
     marginBottom: 8,
-    textDecorationStyle: 'solid',
+    textDecorationStyle: "solid",
     textDecorationColor: colors.blue.vivid,
-    textDecorationLine: 'underline',
+    textDecorationLine: "underline",
   },
   buttonContainer: {
     width,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 10,
     marginBottom: 10,
   },
-  });
-  
-  export default ProfileStyles
+});
+
+export default ProfileStyles;

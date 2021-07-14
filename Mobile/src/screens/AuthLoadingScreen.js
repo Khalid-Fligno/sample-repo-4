@@ -231,6 +231,9 @@ export default class AuthLoadingScreen extends React.PureComponent {
         SimplonMonoLight: require("../../assets/fonts/SimplonMono-Light.otf"),
       },
       {
+        SimplonMonoMedium: require("../../assets/fonts/SimplonMono-Medium-Regular.otf"),
+      },
+      {
         StyreneAWebRegular: require("../../assets/fonts/StyreneAWeb-Regular.ttf"),
       },
       {

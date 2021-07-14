@@ -102,7 +102,7 @@ const WorkoutScreenStyle = StyleSheet.create({
   },
   workoutPreviewHeaderContainer: {
     width,
-    backgroundColor: colors.grey.light,
+    backgroundColor: colors.smoke,
     paddingTop: 12,
   },
   workoutPreviewHeaderText: {

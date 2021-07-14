@@ -88,7 +88,7 @@ class ChallengeCard extends Component {
                     width: wp("40%"),
                     marginTop: hp("1.8%"),
                   }}
-                  customBtnTitleStyle={{ color: colors.offWhite, fontSize: 14 }}
+                  customBtnTitleStyle={{ color: colors.black, fontSize: 14 }}
                   onPress={onPress}
                   disabled={disabled}
                 />

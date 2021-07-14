@@ -3,6 +3,7 @@ import { View, Text, ScrollView, SafeAreaView } from "react-native";
 import ChallengeStyle from "../chellengeStyle";
 import globalStyle from "../../../styles/globalStyles";
 import SliderComponent from "../../../components/Challenges/slider";
+import CheckboxComponent from "../../../components/Challenges/CheckboxComponent";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import * as FileSystem from "expo-file-system";
@@ -132,7 +133,7 @@ export default class OnBoarding1 extends Component {
               </Text>
             </View>
 
-            <SliderComponent
+            {/* <SliderComponent
               title="Weight loss"
               value={weightLoss}
               minimumValue={1}
@@ -176,6 +177,55 @@ export default class OnBoarding1 extends Component {
               onValueChange={(value) =>
                 this.setState({ increaseFitness: Math.round(value) })
               }
+            /> */}
+            <CheckboxComponent
+              title="Weight loss"
+              isChecked={weightLoss > 1}
+              onPress={(isChecked) => {
+                if (isChecked) {
+                  this.setState({ weightLoss: 10 });
+                } else this.setState({ weightLoss: 1 });
+              }}
+            />
+
+            <CheckboxComponent
+              title="Increase energy"
+              isChecked={increaseEnergy > 1}
+              onPress={(isChecked) => {
+                if (isChecked) {
+                  this.setState({ increaseEnergy: 10 });
+                } else this.setState({ increaseEnergy: 1 });
+              }}
+            />
+
+            <CheckboxComponent
+              title="Tone up"
+              isChecked={toneUp > 1}
+              onPress={(isChecked) => {
+                if (isChecked) {
+                  this.setState({ toneUp: 10 });
+                } else this.setState({ toneUp: 1 });
+              }}
+            />
+
+            <CheckboxComponent
+              title="Mental health"
+              isChecked={mentalHealth > 1}
+              onPress={(isChecked) => {
+                if (isChecked) {
+                  this.setState({ mentalHealth: 10 });
+                } else this.setState({ mentalHealth: 1 });
+              }}
+            />
+
+            <CheckboxComponent
+              title="Increase fitness"
+              isChecked={increaseFitness > 1}
+              onPress={(isChecked) => {
+                if (isChecked) {
+                  this.setState({ increaseFitness: 10 });
+                } else this.setState({ increaseFitness: 1 });
+              }}
             />
 
             <View

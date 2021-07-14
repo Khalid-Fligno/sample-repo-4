@@ -54,8 +54,8 @@ const TabStack = createBottomTabNavigator(
       title: getTabName(navigation.state.routeName),
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
-        const activeState = colors.themeColor.color;
-        const inactiveState = colors.themeColor.color;
+        const activeState = colors.black;
+        const inactiveState = colors.smoke;
         // const inactiveState = colors.charcoal.standard;
         let icon;
         if (routeName === "Home") {
@@ -112,8 +112,8 @@ const TabStack = createBottomTabNavigator(
       },
     }),
     tabBarOptions: {
-      activeTintColor: colors.themeColor.color,
-      inactiveTintColor: colors.charcoal.standard,
+      activeTintColor: colors.black,
+      inactiveTintColor: colors.smoke,
       style: {
         // shadowColor: colors.charcoal.standard,
         // shadowOffset: { width: 0, height: -1 },
@@ -126,7 +126,7 @@ const TabStack = createBottomTabNavigator(
         backgroundColor: colors.themeColor.footerBackgroundColor,
       },
       labelStyle: {
-        fontFamily: fonts.GothamMedium,
+        fontFamily: fonts.StyreneAWebRegular,
         textTransform: "uppercase",
         paddingBottom: 4,
         fontSize: hp("1.1%"),
