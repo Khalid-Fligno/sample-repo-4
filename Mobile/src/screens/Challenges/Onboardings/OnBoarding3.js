@@ -1,20 +1,20 @@
-import React, { Component } from "react";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  Picker,
-} from "react-native";
-import { number, any } from "prop-types";
-import ChallengeStyle from "../chellengeStyle";
-import globalStyle from "../../../styles/globalStyles";
-import CustomBtn from "../../../components/Shared/CustomBtn";
-import { CheckBox } from "react-native-elements";
-import colors from "../../../styles/colors";
-import fonts from "../../../styles/fonts";
-import authScreenStyle from "../../AuthStack/authScreenStyle";
-import Modal from "react-native-modal";
+import React, { Component } from 'react';
+import { View, 
+        Text, 
+        SafeAreaView,
+        TouchableOpacity,
+        Picker,
+        Alert
+      } from 'react-native';
+import { number, any } from 'prop-types';
+import ChallengeStyle from '../chellengeStyle';
+import globalStyle from '../../../styles/globalStyles';
+import CustomBtn from '../../../components/Shared/CustomBtn';
+import { CheckBox } from 'react-native-elements';
+import colors from '../../../styles/colors';
+import fonts from '../../../styles/fonts';
+import authScreenStyle from '../../AuthStack/authScreenStyle';
+import Modal from 'react-native-modal';
 import {
   weightOptionsMetric,
   waistOptionsMetric,
@@ -83,37 +83,76 @@ export default class OnBoarding3 extends Component {
     this.focusListener.remove();
   }
 
-  goToScreen(type) {
-    let { challengeData } = this.state;
+  goToScreen(type){
+    let {
+      challengeData,
+    } = this.state
 
-    const onBoardingInfo = Object.assign({}, challengeData.onBoardingInfo, {
-      measurements: {
-        height: this.state.height,
-        weight: this.state.weight,
-        goalWeight: this.state.goalWeight,
-        waist: this.state.waist,
-        hip: this.state.hip,
-        unit: this.state.chosenUom,
-      },
-    });
-    console.log(challengeData);
-    let updatedChallengedata = Object.assign({}, challengeData, {
-      onBoardingInfo,
-    });
-    console.log(updatedChallengedata);
-    if (type === "next") {
-      this.props.navigation.navigate("ChallengeOnBoarding4", {
-        data: {
-          challengeData: updatedChallengedata,
-        },
-      });
-    } else {
-      this.props.navigation.navigate("ChallengeOnBoarding1", {
-        data: {
-          challengeData: updatedChallengedata,
-        },
-      });
+
+    const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
+      measurements:{
+        height:this.state.height,
+        weight:this.state.weight,
+        goalWeight:this.state.goalWeight,
+        waist:this.state.waist,
+        hip:this.state.hip,
+        unit:this.state.chosenUom
+      }
+    })
+    console.log(challengeData)
+    let updatedChallengedata = Object.assign({},challengeData,{onBoardingInfo})
+    console.log(updatedChallengedata)
+
+    let measurements = '';
+
+   for (var key in onBoardingInfo.measurements) {
+    if (key === 'height') {
+      if (150 !== onBoardingInfo.measurements[key]) {
+        measurements += key.toString() + ', '
+      }
+    } else if (key === 'weight') {
+      if (60 !== onBoardingInfo.measurements[key]) {
+        measurements += key.toString() + ', '
+      }
+    } else if (key === 'goalWeight') {
+      if (60 !== onBoardingInfo.measurements[key]) {
+        measurements += key.toString() + ', '
+      }
+    } else if (key === 'waist') {
+      if (60 !== onBoardingInfo.measurements[key]) {
+        measurements += key.toString() + ', '
+      }
+    } else if (key === 'hip') {
+      if (60 !== onBoardingInfo.measurements[key]) {
+        measurements += key.toString() + ', '
+      }
     }
+   }
+
+  if(type === 'next'){
+    Alert.alert('',
+      `Measurements ${measurements.length === 0 ? 'Default' : measurements.substring(0, measurements.length - 2)}`,
+      [
+        {
+          text: 'OK', onPress:()=>{
+            this.props.navigation.navigate('ChallengeOnBoarding4',{
+              data:{ challengeData:updatedChallengedata },
+              onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
+            })
+          } 
+        },
+      ],
+      { cancelable: false }
+    );
+  }else{
+    this.props.navigation.navigate('ChallengeOnBoarding1',{
+      data:{
+              challengeData:updatedChallengedata
+            },
+            onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
+    })
+  }
+     
   }
   showModal = (inputType) => {
     console.log(inputType);

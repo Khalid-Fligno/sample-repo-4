@@ -120,13 +120,14 @@ export default class OnBoarding5 extends Component {
       status: "Active",
     });
 
-    if (type === "next") {
-      this.props.navigation.navigate("ChallengeOnBoarding6", {
-        data: {
-          challengeData: updatedChallengedata,
-        },
-      });
-    } else if (type === "submit") {
+    if(type === 'next'){
+      this.props.navigation.navigate('ChallengeOnBoarding6',{
+        data:{
+               challengeData:updatedChallengedata
+             },
+             onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
+      })
+    }else if(type === 'submit'){
       this.setState({ challengeData: updatedChallengedata });
       // calendarModalVisible true calendar popup
       this.setState({ calendarModalVisible: true });
@@ -137,6 +138,7 @@ export default class OnBoarding5 extends Component {
         },
       });
     }
+     
   }
 
   addChallengeToCalendar = async (date) => {

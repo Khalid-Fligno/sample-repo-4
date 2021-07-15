@@ -22,12 +22,18 @@ import "firebase/firestore";
 
 // Staging configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCNhs6I_Im0s57HgowFzI9KO_meK9T341Y",
-  authDomain: "staging-fitazfk-app.firebaseapp.com",
-  projectId: "staging-fitazfk-app",
-  storageBucket: "staging-fitazfk-app.appspot.com",
-  messagingSenderId: "148679785242",
-  appId: "1:148679785242:web:aa3e9d4b3b51e728714aa3",
+//  apiKey: 'AIzaSyBayQ5iob9mqDvVMNQtytsmyRF6YRmFPYQ',
+//  authDomain: 'fitazfk-app.firebaseapp.com',
+//  databaseURL: 'https://fitazfk-app.firebaseio.com',
+//  projectId: 'fitazfk-app',
+//  storageBucket: 'fitazfk-app.appspot.com',
+//  messagingSenderId: '100949764253',
+    apiKey: "AIzaSyCNhs6I_Im0s57HgowFzI9KO_meK9T341Y",
+    authDomain: "staging-fitazfk-app.firebaseapp.com",
+    databaseURL: 'https://fitazfk-app.firebaseio.com',
+    projectId: "staging-fitazfk-app",
+    storageBucket: "staging-fitazfk-app.appspot.com",
+    messagingSenderId: "148679785242"
 };
 
 firebase.initializeApp(firebaseConfig);

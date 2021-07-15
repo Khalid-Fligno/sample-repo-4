@@ -81,6 +81,8 @@ const colors = {
     themeBorderColor: "rgb(113, 114, 115)",
     themeBorderWidth: 2,
   },
+
+  bloodOrange: 'rgb(250, 137, 110)'
 };
 
 export default colors;
