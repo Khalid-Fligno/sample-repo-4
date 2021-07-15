@@ -124,6 +124,7 @@ class ChallengeSubscriptionScreen extends Component {
       // console.log("challengesList[index]",challengesList);
       const data = createUserChallengeData(challengesList[index],new Date())
       // console.log( data.id)
+      console.log('xxxxx', data)
       userRef.doc(data.id).set(data).then((res)=>{
         this.props.navigation.navigate('ChallengeOnBoarding1',{
           data:{

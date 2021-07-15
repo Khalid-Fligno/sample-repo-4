@@ -85,7 +85,8 @@ export default class OnBoarding6 extends Component {
       this.props.navigation.navigate('ChallengeOnBoarding5',{
         data:{
                 challengeData:updatedChallengedata,
-              }
+              },
+              onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
       })
     } 
   }
@@ -100,6 +101,8 @@ export default class OnBoarding6 extends Component {
       const data = createUserChallengeData(updatedChallengedata,new Date(date));
       const progressData = {
                               photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+                              height: updatedChallengedata.onBoardingInfo.measurements.height,
+                              goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
                               weight: updatedChallengedata.onBoardingInfo.measurements.weight,
                               waist: updatedChallengedata.onBoardingInfo.measurements.waist,
                               hip: updatedChallengedata.onBoardingInfo.measurements.hip,

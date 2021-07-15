@@ -32,6 +32,7 @@ import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
 import NutritionStyles from '../Nutrition/NutritionStyles';
 import { StackActions } from 'react-navigation';
+import createUserChallengeData from '../../../components/Challenges/UserChallengeData';
 
 const moment = require('moment');
 
@@ -53,6 +54,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       musicModalVisible: false,
       appleMusicAvailable: undefined,
       spotifyAvailable: undefined,
+      userChallengesList:[],
+      notificationBanner: false
     };
   }
 
@@ -70,6 +73,28 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
   }
 
   componentDidMount = async () => {
+    this.fetchProfile();
+    const uid = await AsyncStorage.getItem('uid');
+    if (uid) {
+      this.unsubscribe = await db.collection('users').doc(uid)
+        .onSnapshot(async (doc) => {
+          const users = await doc.data();
+          console.log('xxxx', users)
+          if (users.initialProgressInfo.photoURL === "") {
+            this.setState({notificationBanner: true});
+          } else if (users.initialProgressInfo.height === "") {
+            this.setState({notificationBanner: true});
+          } else if (users.initialProgressInfo.goalWeight === "") {
+            this.setState({notificationBanner: true});
+          } else if (users.initialProgressInfo.weight === "") {
+            this.setState({notificationBanner: true});
+          } else if (users.initialProgressInfo.waist === "") {
+            this.setState({notificationBanner: true});
+          } else {
+            this.setState({notificationBanner: true});
+          }
+        });
+    };
     this.setState({ loading: true });
     // this.focusListener = this.props.navigation.addListener('willFocus', () => {
     //   console.log("will focued call")
@@ -80,6 +105,40 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       handleStart: () => this.handleStart(),
     });
     this.checkMusicAppAvailability();
+  }
+
+  fetchProfile = async () => {
+    const uid = await AsyncStorage.getItem('uid');
+    try{
+    this.unsubscribeUserChallenges = db.collection('users').doc(uid).collection('challenges')
+      .onSnapshot(async (querySnapshot) => {
+        const userChallengesList = [];
+        await querySnapshot.forEach(async (doc) => {
+          await userChallengesList.push(await doc.data());
+        });
+        this.setState({ userChallengesList});
+        this.fetchChallenges();
+      });
+    }
+    catch(err){
+      Alert.alert('Something went wrong')
+    }
+  }
+
+  fetchChallenges = async () => {
+    let {userChallengesList} = this.state;
+    this.unsubscribeChallenges = await db.collection('challenges')
+      .onSnapshot(async (querySnapshot) => {
+        const challengesList = [];
+        await querySnapshot.forEach(async (doc) => {
+          const check = userChallengesList.findIndex((challenge)=>{ 
+            return  doc.id === challenge.id
+          })
+          if(check === -1)
+            await challengesList.push(await doc.data());
+        });
+        this.setState({ challengesList});
+      });
   }
 
   componentWillUnmount = async () => {
@@ -367,7 +426,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       spotifyAvailable,
       workoutSubCategory,
       fitnessLevel,
-      extraProps
+      extraProps,
+      notificationBanner
     } = this.state;
     let workoutTime = 0;
     if(workout){
@@ -430,31 +490,43 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
         {
           workout && (
             <View style={WorkoutScreenStyle.flatListContainer}>
-              <View style={{backgroundColor: colors.white}}>
-                <View style={{
-                  borderColor: colors.bloodOrange,
-                  borderWidth: 1,
-                  borderRadius: 2,
-                  paddingRight: 10,
-                  margin: 20,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
-                  <Text style={{
-                    padding: 10,
-                    color: colors.bloodOrange
-                  }}>Complete your onboarding process</Text>
-                  <View style={{
-                    borderBottomColor: colors.bloodOrange,
-                    borderBottomWidth: 1
-                  }}>
-                    <Text style={{
-                      color: colors.bloodOrange
-                    }}>Click Here</Text>
+              {
+                notificationBanner && (
+                  <View style={{backgroundColor: colors.white}}>
+                    <View style={{
+                      borderColor: colors.bloodOrange,
+                      borderWidth: 1,
+                      borderRadius: 2,
+                      paddingRight: 10,
+                      margin: 20,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}>
+                      <Text style={{
+                        padding: 10,
+                        color: colors.bloodOrange
+                      }}>Complete your onboarding process</Text>
+                      <TouchableOpacity 
+                        onPress={()=>{
+                          this.props.navigation.navigate('ChallengeOnBoarding1',{
+                            data: { challengeData:this.state.challengesList[0] },
+                            onboardingProcessComplete: true
+                          });
+                        }}>
+                        <View style={{
+                          borderBottomColor: colors.bloodOrange,
+                          borderBottomWidth: 1
+                        }}>
+                          <Text style={{
+                            color: colors.bloodOrange
+                          }}>Click Here</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-              </View>
+                )
+              }
               <FlatList
                 data={workout.exercises}
                 keyExtractor={this.keyExtractor}

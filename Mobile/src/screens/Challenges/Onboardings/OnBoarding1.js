@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, ScrollView, SafeAreaView, Alert } from 'react-native';
 import ChallengeStyle from '../chellengeStyle';
 import globalStyle from '../../../styles/globalStyles';
 import SliderComponent from '../../../components/Challenges/slider';
@@ -72,14 +72,37 @@ export default class OnBoarding1 extends Component {
                             })
 
    console.log(challengeData)
+
    let updatedChallengedata = Object.assign({},challengeData,{
      onBoardingInfo
    })
-  this.props.navigation.navigate('ChallengeOnBoarding3',{
-    data:{
-      challengeData:updatedChallengedata
+
+   console.log('xxxxx', onBoardingInfo)
+
+   let toAchieve = '';
+
+   for (var key in onBoardingInfo.toAchieve) {
+    if (onBoardingInfo.toAchieve[key] !== undefined && onBoardingInfo.toAchieve[key] !== 1) {
+      toAchieve += key.toString() + ', '
     }
-  })
+   }
+
+    Alert.alert('',
+      `Transform ${toAchieve.length === 0 ? 'Nothing' : toAchieve.substring(0, toAchieve.length - 2)}`,
+      [
+        {
+          text: 'OK', onPress:()=>{
+            this.props.navigation.navigate('ChallengeOnBoarding3',{
+              data:{
+                challengeData:updatedChallengedata
+              },
+              onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
+            });
+          } 
+        },
+      ],
+      { cancelable: false }
+    );
  }
 
   render() {

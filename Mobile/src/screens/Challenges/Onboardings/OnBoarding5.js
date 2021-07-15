@@ -115,7 +115,8 @@ export default class OnBoarding5 extends Component {
       this.props.navigation.navigate('ChallengeOnBoarding6',{
         data:{
                challengeData:updatedChallengedata
-             }
+             },
+             onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
       })
     }else if(type === 'submit'){
       this.setState({ challengeData: updatedChallengedata });
@@ -126,7 +127,8 @@ export default class OnBoarding5 extends Component {
       this.props.navigation.navigate('ChallengeOnBoarding4',{
         data:{
                challengeData:updatedChallengedata
-             }
+             },
+             onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
       })
     }
      

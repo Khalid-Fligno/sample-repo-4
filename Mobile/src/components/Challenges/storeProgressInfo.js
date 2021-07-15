@@ -10,6 +10,8 @@ const storeProgressInfo = async (data) => {
       await db.collection('users').doc(uid).set({
         'initialProgressInfo': {
           photoURL: data.photoURL,
+          height: parseInt(data.height, 10),
+          goalWeight: parseInt(data.goalWeight, 10),
           weight: parseInt(data.weight, 10),
           waist: parseInt(data.waist, 10),
           hip: parseInt(data.hip, 10),

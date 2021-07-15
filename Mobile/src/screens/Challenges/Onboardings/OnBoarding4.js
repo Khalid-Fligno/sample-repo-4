@@ -28,7 +28,7 @@ import colors from '../../../styles/colors';
 import AsyncStorage from '@react-native-community/async-storage';
 const { width } = Dimensions.get('window');
 const actionSheetOptions = ['Cancel', 'Take photo', 'Upload from Camera Roll'];
-
+import storeProgressInfo from '../../../components/Challenges/storeProgressInfo';
 
 const uriToBlob = (url) => {
   return new Promise((resolve, reject) => {
@@ -254,8 +254,7 @@ export default class OnBoarding4 extends Component {
     let {challengeData , image,imgUrl} = this.state 
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
-      if (type === 'next') {
-        // if (imgUrl !== null) {
+      // if (imgUrl !== null) {
         const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
           beforePhotoUrl:imgUrl?imgUrl:''
         })
@@ -264,19 +263,55 @@ export default class OnBoarding4 extends Component {
           image:image
         })
         // console.log(updatedChallengedata)
-        if(type === 'next'){
-          this.props.navigation.navigate('ChallengeOnBoarding5',{
-            data:{
-                   challengeData:updatedChallengedata
-                 }
-          })
-        }else{
-          this.props.navigation.navigate('ChallengeOnBoarding3',{
-            data:{
-                   challengeData:updatedChallengedata
-                 }
-          })
-        }
+      if(type === 'next'){
+        Alert.alert('',
+          `Before Picture ${onBoardingInfo.beforePhotoUrl === "" ? 'None' : onBoardingInfo.beforePhotoUrl.toString()}`,
+          [
+            {
+              text: 'OK', onPress:()=>{
+                const progressData = {
+                  photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+                  height: updatedChallengedata.onBoardingInfo.measurements.height,
+                  goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
+                  weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+                  waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+                  hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+                  burpeeCount: 1,
+                  fitnessLevel: 1
+                }
+                storeProgressInfo(progressData);
+                if (this.props.navigation.getParam('onboardingProcessComplete')) {
+                  this.props.navigation.navigate('WorkoutInfo');
+                } else {
+                  this.props.navigation.navigate('ChallengeOnBoarding5',{
+                    data:{
+                           challengeData:updatedChallengedata
+                         },
+                         onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
+                  })
+                }
+                
+              } 
+            },
+          ],
+          { cancelable: false }
+        );
+      }else{
+        this.props.navigation.navigate('ChallengeOnBoarding3',{
+          data:{
+                 challengeData:updatedChallengedata
+               },
+               onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
+        })
+      }
+      if (type === 'next') {
+        // if(type === 'next'){
+        //   this.props.navigation.navigate('ChallengeOnBoarding5',{
+        //     data:{
+        //            challengeData:updatedChallengedata
+        //          }
+        //   })
+        // }
       }else if(type === 'previous'){
         this.props.navigation.navigate('ChallengeOnBoarding3',{
           data:{

@@ -4,6 +4,7 @@ import { View,
         SafeAreaView,
         TouchableOpacity,
         Picker,
+        Alert
       } from 'react-native';
 import { number, any } from 'prop-types';
 import ChallengeStyle from '../chellengeStyle';
@@ -101,20 +102,56 @@ export default class OnBoarding3 extends Component {
     console.log(challengeData)
     let updatedChallengedata = Object.assign({},challengeData,{onBoardingInfo})
     console.log(updatedChallengedata)
-    if(type === 'next'){
-      this.props.navigation.navigate('ChallengeOnBoarding4',{
-        data:{
-               challengeData:updatedChallengedata
-             }
 
-      })
-    }else{
-      this.props.navigation.navigate('ChallengeOnBoarding1',{
-        data:{
-               challengeData:updatedChallengedata
-             }
-      })
+    let measurements = '';
+
+   for (var key in onBoardingInfo.measurements) {
+    if (key === 'height') {
+      if (150 !== onBoardingInfo.measurements[key]) {
+        measurements += key.toString() + ', '
+      }
+    } else if (key === 'weight') {
+      if (60 !== onBoardingInfo.measurements[key]) {
+        measurements += key.toString() + ', '
+      }
+    } else if (key === 'goalWeight') {
+      if (60 !== onBoardingInfo.measurements[key]) {
+        measurements += key.toString() + ', '
+      }
+    } else if (key === 'waist') {
+      if (60 !== onBoardingInfo.measurements[key]) {
+        measurements += key.toString() + ', '
+      }
+    } else if (key === 'hip') {
+      if (60 !== onBoardingInfo.measurements[key]) {
+        measurements += key.toString() + ', '
+      }
     }
+   }
+
+  if(type === 'next'){
+    Alert.alert('',
+      `Measurements ${measurements.length === 0 ? 'Default' : measurements.substring(0, measurements.length - 2)}`,
+      [
+        {
+          text: 'OK', onPress:()=>{
+            this.props.navigation.navigate('ChallengeOnBoarding4',{
+              data:{ challengeData:updatedChallengedata },
+              onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
+            })
+          } 
+        },
+      ],
+      { cancelable: false }
+    );
+  }else{
+    this.props.navigation.navigate('ChallengeOnBoarding1',{
+      data:{
+              challengeData:updatedChallengedata
+            },
+            onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
+    })
+  }
      
   }
   showModal = (inputType) => {
