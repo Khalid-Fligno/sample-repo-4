@@ -6,11 +6,11 @@ import SliderComponent from '../../../components/Challenges/slider';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
 import * as FileSystem from 'expo-file-system';
+import CheckboxComponent from '../../../components/Challenges/CheckboxComponent';
 
 export default class OnBoarding1 extends Component {
   constructor(props) {
     super(props);
-    console.log("constructr call");
     this.state = {
       challengeData: [],
       weightLoss: 1,
@@ -29,7 +29,6 @@ export default class OnBoarding1 extends Component {
     const toAchieve = challengeData["onBoardingInfo"]
       ? challengeData["onBoardingInfo"]["toAchieve"]
       : [];
-    console.log(challengeData);
     this.setState({
       challengeData: challengeData,
       weightLoss: toAchieve ? toAchieve.weightLoss : 1,
@@ -54,8 +53,6 @@ export default class OnBoarding1 extends Component {
 
   // and don't forget to remove the listener
   componentWillUnmount = async () => {
-    console.log(">>>>");
-
     this.focusListener.remove();
   };
   goToNextScreen() {
@@ -77,13 +74,9 @@ export default class OnBoarding1 extends Component {
       },
     });
 
-   console.log(challengeData)
-
    let updatedChallengedata = Object.assign({},challengeData,{
      onBoardingInfo
    })
-
-   console.log('xxxxx', onBoardingInfo)
 
    let toAchieve = '';
 
@@ -121,7 +114,6 @@ export default class OnBoarding1 extends Component {
       mentalHealth,
       btnDisabled,
     } = this.state;
-    // console.log(challengeData)
     return (
       <SafeAreaView style={ChallengeStyle.container}>
         <View style={globalStyle.container}>

@@ -30,8 +30,6 @@ import colors from "../../../styles/colors";
 import AsyncStorage from "@react-native-community/async-storage";
 const { width } = Dimensions.get("window");
 const actionSheetOptions = ["Cancel", "Take photo", "Upload from Camera Roll"];
-const { width } = Dimensions.get('window');
-const actionSheetOptions = ['Cancel', 'Take photo', 'Upload from Camera Roll'];
 import storeProgressInfo from '../../../components/Challenges/storeProgressInfo';
 
 const uriToBlob = (url) => {

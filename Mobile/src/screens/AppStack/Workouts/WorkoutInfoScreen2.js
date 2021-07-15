@@ -489,7 +489,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                 notificationBanner && (
                   <View style={{backgroundColor: colors.white}}>
                     <View style={{
-                      borderColor: colors.bloodOrange,
+                      borderColor: colors.themeColor.color,
                       borderWidth: 1,
                       borderRadius: 2,
                       paddingRight: 10,
@@ -500,7 +500,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                     }}>
                       <Text style={{
                         padding: 10,
-                        color: colors.bloodOrange
+                        color: colors.themeColor.color,
+                        fontFamily: fonts.StyreneAWebRegular,
                       }}>Complete your onboarding process</Text>
                       <TouchableOpacity 
                         onPress={()=>{
@@ -510,11 +511,12 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                           });
                         }}>
                         <View style={{
-                          borderBottomColor: colors.bloodOrange,
+                          borderBottomColor: colors.themeColor.color,
                           borderBottomWidth: 1
                         }}>
                           <Text style={{
-                            color: colors.bloodOrange
+                            color: colors.themeColor.color,
+                            fontFamily: fonts.StyreneAWebRegular,
                           }}>Click Here</Text>
                         </View>
                       </TouchableOpacity>

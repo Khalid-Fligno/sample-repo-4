@@ -48,7 +48,6 @@ export default class OnBoarding3 extends Component {
   onFocusFunction = () => {
     const data = this.props.navigation.getParam("data", {});
     const measurments = data["challengeData"]["onBoardingInfo"]["measurements"];
-    console.log(measurments);
     if (measurments) {
       this.setState({
         challengeData: data["challengeData"],
@@ -66,8 +65,6 @@ export default class OnBoarding3 extends Component {
         btnDisabled: false,
       });
     }
-
-    console.log(data["challengeData"], "<><><<");
   };
 
   // add a focus listener onDidMount
@@ -79,7 +76,6 @@ export default class OnBoarding3 extends Component {
 
   // and don't forget to remove the listener
   componentWillUnmount() {
-    // console.log("unmount")
     this.focusListener.remove();
   }
 
@@ -99,31 +95,30 @@ export default class OnBoarding3 extends Component {
         unit:this.state.chosenUom
       }
     })
-    console.log(challengeData)
+
     let updatedChallengedata = Object.assign({},challengeData,{onBoardingInfo})
-    console.log(updatedChallengedata)
 
     let measurements = '';
 
    for (var key in onBoardingInfo.measurements) {
     if (key === 'height') {
-      if (150 !== onBoardingInfo.measurements[key]) {
+      if (150 !== onBoardingInfo.measurements[key] && onBoardingInfo.measurements[key] !== 0) {
         measurements += key.toString() + ', '
       }
     } else if (key === 'weight') {
-      if (60 !== onBoardingInfo.measurements[key]) {
+      if (60 !== onBoardingInfo.measurements[key] && onBoardingInfo.measurements[key] !== 0) {
         measurements += key.toString() + ', '
       }
     } else if (key === 'goalWeight') {
-      if (60 !== onBoardingInfo.measurements[key]) {
+      if (60 !== onBoardingInfo.measurements[key] && onBoardingInfo.measurements[key] !== 0) {
         measurements += key.toString() + ', '
       }
     } else if (key === 'waist') {
-      if (60 !== onBoardingInfo.measurements[key]) {
+      if (60 !== onBoardingInfo.measurements[key] && onBoardingInfo.measurements[key] !== 0) {
         measurements += key.toString() + ', '
       }
     } else if (key === 'hip') {
-      if (60 !== onBoardingInfo.measurements[key]) {
+      if (60 !== onBoardingInfo.measurements[key] && onBoardingInfo.measurements[key] !== 0) {
         measurements += key.toString() + ', '
       }
     }
@@ -155,7 +150,6 @@ export default class OnBoarding3 extends Component {
      
   }
   showModal = (inputType) => {
-    console.log(inputType);
     let { modalVisible, chosenUom } = this.state;
     let dataList = [];
     if (inputType === "weight" || inputType === "goalWeight")
