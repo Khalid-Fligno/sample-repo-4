@@ -508,7 +508,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
     return (
       <View style={styles.container}>
         <ImageBackground
-          source={require("../../assets/icons/fitazfk-splash-dark-logo.png")}
+          source={require("../../assets/icons/FITAZ_SplashScreen.png")}
           style={styles.background}
         />
       </View>
@@ -519,11 +519,8 @@ export default class AuthLoadingScreen extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width,
   },
   background: {
     flex: 1,
-    width: undefined,
-    height: undefined,
   },
 });

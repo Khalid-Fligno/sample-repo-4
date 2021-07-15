@@ -219,8 +219,8 @@ const globalStyle = StyleSheet.create({
     marginTop: 5,
   },
   fitazfkIcon: {
-    width: 120,
-    height: 50,
+    width: 60,
+    height: 30,
   },
   /**************END******************** */
 
@@ -264,6 +264,7 @@ const globalStyle = StyleSheet.create({
   FT_Title: {
     fontSize: 20,
     fontWeight: fonts.fontWeight,
+    fontFamily: fonts.SimplonMonoLight,
     color: colors.offWhite,
     letterSpacing: fonts.letterSpacing,
     marginStart: 15,
@@ -272,6 +273,7 @@ const globalStyle = StyleSheet.create({
   FT_Paragraph: {
     fontSize: 12,
     fontWeight: fonts.fontWeight,
+    fontFamily: fonts.SimplonMonoMedium,
     color: colors.offWhite,
     letterSpacing: fonts.letterSpacing,
     marginStart: 15,

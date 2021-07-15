@@ -308,7 +308,7 @@ class ProgressHomeScreen extends React.PureComponent {
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <View style={styles.imagesContainer}>
-            {initialProgressInfo ? (
+            {initialProgressInfo && initialProgressInfo.photoURL ? (
               <View>
                 <TouchableOpacity
                   onPress={() =>

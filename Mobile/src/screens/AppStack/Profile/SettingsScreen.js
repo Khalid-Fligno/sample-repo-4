@@ -135,7 +135,7 @@ export default class SettingsScreen extends React.PureComponent {
                 isPasswordAccount && (
                   <ListItem
                     title="Change Password"
-                    titleStyle={ProfileStyles.listItemTitle}
+                    titleStyle={ProfileStyles.listItemTitleStyle}
                     containerStyle={ProfileStyles.listItemContainer}
                     rightIcon={{
                       name: "chevron-right",
@@ -150,7 +150,7 @@ export default class SettingsScreen extends React.PureComponent {
                 profile && (
                   <ListItem
                     title="Reset initial progress info"
-                    titleStyle={ProfileStyles.listItemTitle}
+                    titleStyle={ProfileStyles.listItemTitleStyle}
                     disabled={profile && !profile.initialProgressInfo}
                     containerStyle={ProfileStyles.listItemContainer}
                     rightIcon={{
@@ -163,7 +163,7 @@ export default class SettingsScreen extends React.PureComponent {
               }
               <ListItem
                 title="Re-take burpee test"
-                titleStyle={ProfileStyles.listItemTitle}
+                titleStyle={ProfileStyles.listItemTitleStyle}
                 containerStyle={ProfileStyles.listItemContainerBottom}
                 rightIcon={{
                   name: "chevron-right",

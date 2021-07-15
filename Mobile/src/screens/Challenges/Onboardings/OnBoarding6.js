@@ -284,7 +284,7 @@ export default class OnBoarding6 extends Component {
                 disabled={btnDisabled}
                 isRightIcon={true}
                 rightIconName="chevron-right"
-                rightIconColor={colors.white}
+                rightIconColor={colors.black}
                 rightIconSize={13}
                 customBtnTitleStyle={{ marginRight: 10 }}
               />

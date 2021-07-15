@@ -1,7 +1,7 @@
 const fonts = {
   // bold: "GothamBold",
   bold: "StyreneAWebRegular",
-  boldNarrow: "GothamNarrowBold",
+  boldNarrow: "StyreneAWebThin",
   // standard: "GothamBook",
   standard: "StyreneAWebThin",
   standardNarrow: "GothamNarrowBook",
