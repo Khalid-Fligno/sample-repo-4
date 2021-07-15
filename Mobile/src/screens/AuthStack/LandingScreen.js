@@ -32,7 +32,7 @@ export default class LandingScreen extends React.PureComponent {
       <SafeAreaView style={styles.safeAreaContainer}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" />
-          <Carousel
+          {/* <Carousel
             width={width}
             inactiveIndicatorColor={colors.black}
             indicatorColor={colors.themeColor.color}
@@ -66,14 +66,7 @@ export default class LandingScreen extends React.PureComponent {
                 <View style={styles.opacityOverlayTransparent} />
               </ImageBackground>
             </View>
-            {/* <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require('../../../assets/images/OnBoardindImg/OB_4.jpg')}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayTransparent} />
-              </ImageBackground>
-            </View> */}
+            
             <View style={styles.carouselCardContainer}>
               <ImageBackground
                 source={require("../../../assets/images/OnBoardindImg/OB_5.jpg")}
@@ -82,7 +75,15 @@ export default class LandingScreen extends React.PureComponent {
                 <View style={styles.opacityOverlayTransparent} />
               </ImageBackground>
             </View>
-          </Carousel>
+          </Carousel> */}
+          <View style={styles.carouselCardContainer}>
+            <ImageBackground
+              source={require("../../../assets/images/OnBoardindImg/OB_1.jpg")}
+              style={styles.carouselImageBackground}
+            >
+              <View style={styles.opacityOverlayTransparent} />
+            </ImageBackground>
+          </View>
           <View style={styles.absoluteButtonContainer}>
             <View style={styles.buttonContainer}>
               <CustomBtn

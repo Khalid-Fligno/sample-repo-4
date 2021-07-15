@@ -56,6 +56,12 @@ const getRandomString = (length) => {
   return result;
 };
 
+const styles = StyleSheet.create({
+  inputText: {
+    fontFamily: fonts.bold,
+  },
+});
+
 export default class SignupScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -489,15 +495,18 @@ export default class SignupScreen extends React.PureComponent {
                     placeholder="First Name"
                     value={firstName}
                     onChangeText={(text) => this.setState({ firstName: text })}
+                    inputStyle={styles.inputText}
                   />
                   <InputBox
                     placeholder="Last Name"
                     value={lastName}
+                    inputStyle={styles.inputText}
                     onChangeText={(text) => this.setState({ lastName: text })}
                   />
                   <InputBox
                     placeholder="Email address"
                     value={email}
+                    inputStyle={styles.inputText}
                     keyboardType="email-address"
                     onChangeText={(text) => {
                       this.setState({ email: text });
@@ -506,7 +515,7 @@ export default class SignupScreen extends React.PureComponent {
                   <HelperText
                     type="info"
                     visible={true}
-                    style={colors.grey.standard}
+                    style={(colors.grey.standard, styles.inputText)}
                   >
                     Enter email used for previous purchase on fitazfk.com.
                   </HelperText>
@@ -514,6 +523,7 @@ export default class SignupScreen extends React.PureComponent {
                     errorMessage={error && error}
                     placeholder="Create Password"
                     value={password}
+                    // inputStyle={styles.inputText}
                     onChangeText={(text) => this.setState({ password: text })}
                     onSubmitEditing={() =>
                       this.signup(
