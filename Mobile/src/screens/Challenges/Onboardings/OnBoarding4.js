@@ -284,18 +284,18 @@ export default class OnBoarding4 extends Component {
           [
             {
               text: 'OK', onPress:()=>{
-                const progressData = {
-                  photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
-                  height: updatedChallengedata.onBoardingInfo.measurements.height,
-                  goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
-                  weight: updatedChallengedata.onBoardingInfo.measurements.weight,
-                  waist: updatedChallengedata.onBoardingInfo.measurements.waist,
-                  hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-                  burpeeCount: 1,
-                  fitnessLevel: 1
-                }
-                storeProgressInfo(progressData);
                 if (this.props.navigation.getParam('onboardingProcessComplete')) {
+                  const progressData = {
+                    photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+                    height: updatedChallengedata.onBoardingInfo.measurements.height,
+                    goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
+                    weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+                    waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+                    hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+                    burpeeCount: 1,
+                    fitnessLevel: 1
+                  }
+                  storeProgressInfo(progressData);
                   this.props.navigation.navigate('WorkoutInfo');
                 } else {
                   this.props.navigation.navigate('ChallengeOnBoarding5',{

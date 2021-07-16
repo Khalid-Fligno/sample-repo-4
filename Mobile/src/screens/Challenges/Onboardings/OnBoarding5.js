@@ -49,7 +49,8 @@ export default class OnBoarding5 extends Component {
     this.state = {
       burpeeCount: 0,
       burpeeModalVisible: false,
-      showInputBox: false,
+      // showInputBox: false,
+      showInputBox: true,
       timerStart: false,
       totalDuration: 60,
       challengeData: {},
@@ -425,7 +426,22 @@ export default class OnBoarding5 extends Component {
 
             <View style={[{ flex: 1, justifyContent: "flex-end" }]}>
               {<Text style={ChallengeStyle.errorText}>{error}</Text>}
-              {burpeeCount <= 0 ? (
+              <CustomBtn
+                  Title="Skip"
+                  customBtnStyle={{
+                    borderRadius: 50,
+                    padding: 15,
+                    width: "100%",
+                  }}
+                  onPress={() => this.goToScreen("next")}
+                  disabled={btnDisabled}
+                  isRightIcon={true}
+                  rightIconName="chevron-right"
+                  rightIconColor={colors.black}
+                  rightIconSize={13}
+                  customBtnTitleStyle={{ marginRight: 10 }}
+                />
+              {/* {burpeeCount <= 0 ? (
                 <CustomBtn
                   Title="Skip"
                   customBtnStyle={{
@@ -457,7 +473,7 @@ export default class OnBoarding5 extends Component {
                   rightIconSize={13}
                   customBtnTitleStyle={{ marginRight: 10 }}
                 />
-              )}
+              )} */}
               <CustomBtn
                 Title="Back"
                 customBtnStyle={{
