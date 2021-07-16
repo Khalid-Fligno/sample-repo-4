@@ -517,7 +517,7 @@ export default class SignupScreen extends React.PureComponent {
                     visible={true}
                     style={(colors.grey.standard, styles.inputText)}
                   >
-                    Enter email used for previous purchase on fitazfk.com.
+                    Enter email used for challenge purchase on fitazfk.com.
                   </HelperText>
                   <InputBox
                     errorMessage={error && error}
