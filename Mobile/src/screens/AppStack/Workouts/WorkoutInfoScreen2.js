@@ -498,11 +498,19 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                       justifyContent: 'space-between',
                       alignItems: 'center'
                     }}>
-                      <Text style={{
-                        padding: 10,
-                        color: colors.themeColor.color,
-                        fontFamily: fonts.StyreneAWebRegular,
-                      }}>Complete your onboarding process</Text>
+                      <View style={{
+                          flexDirection: 'row',
+                          justifyContent: 'flex-start',
+                          borderBottomColor: colors.themeColor.color,
+                          borderBottomWidth: 1
+                        }}>
+                        <Text style={{
+                          flexShrink: 1,
+                          padding: 10,
+                          color: colors.themeColor.color,
+                          fontFamily: fonts.StyreneAWebRegular,
+                        }}>Complete your onboarding process</Text>
+                      </View>
                       <TouchableOpacity 
                         onPress={()=>{
                           this.props.navigation.navigate('ChallengeOnBoarding1',{
@@ -511,6 +519,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                           });
                         }}>
                         <View style={{
+                          flexDirection: 'row',
+                          justifyContent: 'flex-end',
                           borderBottomColor: colors.themeColor.color,
                           borderBottomWidth: 1
                         }}>
