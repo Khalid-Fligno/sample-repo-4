@@ -20,6 +20,11 @@ export default class OnBoarding1 extends Component {
       mentalHealth: 1,
       increaseFitness: 1,
       btnDisabled: true,
+      weightLossCheckboxState: false,
+      increaseEnergyCheckboxState: false,
+      toneUpCheckboxState: false,
+      mentalHealthCheckboxState: false,
+      increaseFitnessCheckboxState: false
     };
   }
 
@@ -79,25 +84,27 @@ export default class OnBoarding1 extends Component {
      onBoardingInfo
    })
 
-   let toAchieve = '';
+   console.log(onBoardingInfo)
 
-   for (var key in onBoardingInfo.toAchieve) {
-    if (onBoardingInfo.toAchieve[key] !== undefined && onBoardingInfo.toAchieve[key] !== 1) {
-      toAchieve += key.toString() + ', '
-    }
-   }
+  //  let toAchieve = '';
+
+  //  for (var key in onBoardingInfo.toAchieve) {
+  //   if (onBoardingInfo.toAchieve[key] !== undefined && onBoardingInfo.toAchieve[key] !== 1) {
+  //     toAchieve += key.toString() + ', '
+  //   }
+  //  }
 
     if (type === 'previous') {
       this.props.navigation.navigate('ChallengeOnBoarding6');
     } else {
 
-      this.props.navigation.navigate('ChallengeOnBoarding3',{
-        data:{
-          challengeData:updatedChallengedata
-        },
-        onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
-        challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
-      });
+      // this.props.navigation.navigate('ChallengeOnBoarding3',{
+      //   data:{
+      //     challengeData:updatedChallengedata
+      //   },
+      //   onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
+      //   challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
+      // });
       // Alert.alert('',
       //   `Transform ${toAchieve.length === 0 ? 'Nothing' : toAchieve.substring(0, toAchieve.length - 2)}`,
       //   [
@@ -127,6 +134,11 @@ export default class OnBoarding1 extends Component {
       toneUp,
       mentalHealth,
       btnDisabled,
+      weightLossCheckboxState,
+      increaseEnergyCheckboxState,
+      toneUpCheckboxState,
+      mentalHealthCheckboxState,
+      increaseFitnessCheckboxState
     } = this.state;
     return (
       <SafeAreaView style={ChallengeStyle.container}>
@@ -208,57 +220,90 @@ export default class OnBoarding1 extends Component {
             /> */}
             <CheckboxComponent
               title="Weight loss"
-              isChecked={weightLoss > 1}
-              onPress={(isChecked) => {
+              isChecked={this.state.weightLossCheckboxState}
+              onPress={() => {
                 this.setState({btnDisabled: false});
-                if (isChecked) {
+                if (!this.state.weightLossCheckboxState) {
                   this.setState({ weightLoss: 10 });
                 } else this.setState({ weightLoss: 1 });
+                this.setState({weightLossCheckboxState: !this.state.weightLossCheckboxState})
               }}
             />
 
             <CheckboxComponent
               title="Increase energy"
-              isChecked={increaseEnergy > 1}
-              onPress={(isChecked) => {
+              isChecked={this.state.increaseEnergyCheckboxState}
+              onPress={() => {
                 this.setState({btnDisabled: false});
-                if (isChecked) {
+                if (!this.state.increaseEnergyCheckboxState) {
                   this.setState({ increaseEnergy: 10 });
                 } else this.setState({ increaseEnergy: 1 });
+                this.setState({increaseEnergyCheckboxState: !this.state.increaseEnergyCheckboxState})
               }}
+              // isChecked={increaseEnergy > 1}
+              // onPress={(isChecked) => {
+              //   this.setState({btnDisabled: false});
+              //   if (isChecked) {
+              //     this.setState({ increaseEnergy: 10 });
+              //   } else this.setState({ increaseEnergy: 1 });
+              // }}
             />
 
             <CheckboxComponent
               title="Tone up"
-              isChecked={toneUp > 1}
-              onPress={(isChecked) => {
+              isChecked={this.state.toneUpCheckboxState}
+              onPress={() => {
                 this.setState({btnDisabled: false});
-                if (isChecked) {
+                if (!this.state.toneUpCheckboxState) {
                   this.setState({ toneUp: 10 });
                 } else this.setState({ toneUp: 1 });
+                this.setState({toneUpCheckboxState: !this.state.toneUpCheckboxState})
               }}
+              // isChecked={toneUp > 1}
+              // onPress={(isChecked) => {
+              //   this.setState({btnDisabled: false});
+              //   if (isChecked) {
+              //     this.setState({ toneUp: 10 });
+              //   } else this.setState({ toneUp: 1 });
+              // }}
             />
 
             <CheckboxComponent
               title="Mental health"
-              isChecked={mentalHealth > 1}
-              onPress={(isChecked) => {
+              isChecked={this.state.mentalHealthCheckboxState}
+              onPress={() => {
                 this.setState({btnDisabled: false});
-                if (isChecked) {
+                if (!this.state.mentalHealthCheckboxState) {
                   this.setState({ mentalHealth: 10 });
                 } else this.setState({ mentalHealth: 1 });
+                this.setState({mentalHealthCheckboxState: !this.state.mentalHealthCheckboxState})
               }}
+              // isChecked={mentalHealth > 1}
+              // onPress={(isChecked) => {
+              //   this.setState({btnDisabled: false});
+              //   if (isChecked) {
+              //     this.setState({ mentalHealth: 10 });
+              //   } else this.setState({ mentalHealth: 1 });
+              // }}
             />
 
             <CheckboxComponent
               title="Increase fitness"
-              isChecked={increaseFitness > 1}
-              onPress={(isChecked) => {
+              isChecked={this.state.increaseFitnessCheckboxState}
+              onPress={() => {
                 this.setState({btnDisabled: false});
-                if (isChecked) {
+                if (!this.state.increaseFitnessCheckboxState) {
                   this.setState({ increaseFitness: 10 });
                 } else this.setState({ increaseFitness: 1 });
+                this.setState({increaseFitnessCheckboxState: !this.state.increaseFitnessCheckboxState})
               }}
+              // isChecked={increaseFitness > 1}
+              // onPress={(isChecked) => {
+              //   this.setState({btnDisabled: false});
+              //   if (isChecked) {
+              //     this.setState({ increaseFitness: 10 });
+              //   } else this.setState({ increaseFitness: 1 });
+              // }}
             />
 
             <View

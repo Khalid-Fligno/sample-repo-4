@@ -1,14 +1,12 @@
 import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import { View, Text } from "react-native";
-// import BouncyCheckbox from "react-native-bouncy-checkbox";
-import BouncyCheckbox from "./../../../node_modules/react-native-bouncy-checkbox/lib/BouncyCheckbox";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
 import { TouchableWithoutFeedback } from "react-native";
 
 const CheckboxComponent = ({ title, isChecked, onPress }) => {
-  let bouncyCheckboxRef: BouncyCheckbox | null = null;
   return (
     <View style={{ marginTop: 20 }}>
       <TouchableWithoutFeedback onPress={onPress}>
@@ -34,13 +32,13 @@ const CheckboxComponent = ({ title, isChecked, onPress }) => {
           </View>
           <View>
             <BouncyCheckbox
-              ref={(ref: any) => (bouncyCheckboxRef = ref)}
               size={35}
               disableText={true}
               isChecked={isChecked}
               fillColor={colors.themeColor.color}
               iconStyle={{ borderColor: colors.coolIce }}
               style={{ marginRight: 10 }}
+              //onPress{onPress}
               disableBuiltInState
             />
           </View>
