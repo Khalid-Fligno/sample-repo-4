@@ -345,9 +345,11 @@ export default class HomeScreen extends React.PureComponent {
     };
 
     const bigHeadeingTitle =
-      (switchWelcomeHeader ? "Hi" : "Hi").toString() +
+      (switchWelcomeHeader ? "HI" : "HI").toString().toUpperCase() +
       " " +
-      (profile && profile.firstName ? profile.firstName : "").toString();
+      (profile && profile.firstName ? profile.firstName : "")
+        .toString()
+        .toUpperCase();
 
     // let recommendedWorkout =[];
 

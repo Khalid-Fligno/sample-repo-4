@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { View, Text, ScrollView, SafeAreaView, Alert } from 'react-native';
-import ChallengeStyle from '../chellengeStyle';
-import globalStyle from '../../../styles/globalStyles';
-import SliderComponent from '../../../components/Challenges/slider';
-import CustomBtn from '../../../components/Shared/CustomBtn';
-import fonts from '../../../styles/fonts';
-import * as FileSystem from 'expo-file-system';
-import CheckboxComponent from '../../../components/Challenges/CheckboxComponent';
-import colors from '../../../styles/colors';
+import React, { Component } from "react";
+import { View, Text, ScrollView, SafeAreaView, Alert } from "react-native";
+import ChallengeStyle from "../chellengeStyle";
+import globalStyle from "../../../styles/globalStyles";
+import SliderComponent from "../../../components/Challenges/slider";
+import CustomBtn from "../../../components/Shared/CustomBtn";
+import fonts from "../../../styles/fonts";
+import * as FileSystem from "expo-file-system";
+import CheckboxComponent from "../../../components/Challenges/CheckboxComponent";
+import colors from "../../../styles/colors";
 
 export default class OnBoarding1 extends Component {
   constructor(props) {
@@ -75,28 +75,37 @@ export default class OnBoarding1 extends Component {
       },
     });
 
-   let updatedChallengedata = Object.assign({},challengeData,{
-     onBoardingInfo
-   })
+    let updatedChallengedata = Object.assign({}, challengeData, {
+      onBoardingInfo,
+    });
 
-   let toAchieve = '';
+    let toAchieve = "";
 
-   for (var key in onBoardingInfo.toAchieve) {
-    if (onBoardingInfo.toAchieve[key] !== undefined && onBoardingInfo.toAchieve[key] !== 1) {
-      toAchieve += key.toString() + ', '
+    for (var key in onBoardingInfo.toAchieve) {
+      if (
+        onBoardingInfo.toAchieve[key] !== undefined &&
+        onBoardingInfo.toAchieve[key] !== 1
+      ) {
+        toAchieve += key.toString() + ", ";
+      }
     }
-   }
 
-    if (type === 'previous') {
-      this.props.navigation.navigate('ChallengeOnBoarding6');
+    if (type === "previous") {
+      this.props.navigation.navigate("ChallengeOnBoarding6");
     } else {
-
-      this.props.navigation.navigate('ChallengeOnBoarding3',{
-        data:{
-          challengeData:updatedChallengedata
+      this.props.navigation.navigate("ChallengeOnBoarding3", {
+        data: {
+          challengeData: updatedChallengedata,
         },
-        onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
-        challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
+        onboardingProcessComplete:
+          this.props.navigation.getParam("onboardingProcessComplete") !==
+          undefined
+            ? this.props.navigation.getParam("onboardingProcessComplete")
+            : false,
+        challengeOnboard:
+          this.props.navigation.getParam("challengeOnboard") !== undefined
+            ? this.props.navigation.getParam("challengeOnboard")
+            : false,
       });
       // Alert.alert('',
       //   `Transform ${toAchieve.length === 0 ? 'Nothing' : toAchieve.substring(0, toAchieve.length - 2)}`,
@@ -110,13 +119,13 @@ export default class OnBoarding1 extends Component {
       //           onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
       //           challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
       //         });
-      //       } 
+      //       }
       //     },
       //   ],
       //   { cancelable: false }
       // );
     }
- }
+  }
 
   render() {
     let {
@@ -210,7 +219,7 @@ export default class OnBoarding1 extends Component {
               title="Weight loss"
               isChecked={weightLoss > 1}
               onPress={(isChecked) => {
-                this.setState({btnDisabled: false});
+                this.setState({ btnDisabled: false });
                 if (isChecked) {
                   this.setState({ weightLoss: 10 });
                 } else this.setState({ weightLoss: 1 });
@@ -221,7 +230,7 @@ export default class OnBoarding1 extends Component {
               title="Increase energy"
               isChecked={increaseEnergy > 1}
               onPress={(isChecked) => {
-                this.setState({btnDisabled: false});
+                this.setState({ btnDisabled: false });
                 if (isChecked) {
                   this.setState({ increaseEnergy: 10 });
                 } else this.setState({ increaseEnergy: 1 });
@@ -232,7 +241,7 @@ export default class OnBoarding1 extends Component {
               title="Tone up"
               isChecked={toneUp > 1}
               onPress={(isChecked) => {
-                this.setState({btnDisabled: false});
+                this.setState({ btnDisabled: false });
                 if (isChecked) {
                   this.setState({ toneUp: 10 });
                 } else this.setState({ toneUp: 1 });
@@ -243,7 +252,7 @@ export default class OnBoarding1 extends Component {
               title="Mental health"
               isChecked={mentalHealth > 1}
               onPress={(isChecked) => {
-                this.setState({btnDisabled: false});
+                this.setState({ btnDisabled: false });
                 if (isChecked) {
                   this.setState({ mentalHealth: 10 });
                 } else this.setState({ mentalHealth: 1 });
@@ -254,7 +263,7 @@ export default class OnBoarding1 extends Component {
               title="Increase fitness"
               isChecked={increaseFitness > 1}
               onPress={(isChecked) => {
-                this.setState({btnDisabled: false});
+                this.setState({ btnDisabled: false });
                 if (isChecked) {
                   this.setState({ increaseFitness: 10 });
                 } else this.setState({ increaseFitness: 1 });
@@ -265,31 +274,40 @@ export default class OnBoarding1 extends Component {
               style={{ flex: 1, justifyContent: "flex-end", marginTop: 20 }}
             >
               <CustomBtn
-                Title="Continue"
+                Title="Next"
                 customBtnStyle={{
                   borderRadius: 50,
                   padding: 15,
                   width: "100%",
                 }}
-                onPress={() => this.goToNextScreen('')}
+                isRightIcon={true}
+                rightIconName="chevron-right"
+                rightIconColor={colors.black}
+                rightIconSize={13}
+                onPress={() => this.goToNextScreen("")}
                 disabled={btnDisabled}
               />
             </View>
-            {
-              this.props.navigation.getParam("challengeOnboard", {}) && (
-                <CustomBtn 
-                  Title="Back"
-                  customBtnStyle={{borderRadius:50,padding:15,width:"100%",marginTop:5,marginBottom:-10,backgroundColor:'transparent'}}
-                  onPress={()=>this.goToNextScreen('previous')}
-                  disabled={false}
-                  customBtnTitleStyle={{color:colors.black,marginRight:40}}
-                  isLeftIcon={true}
-                  leftIconName="chevron-left"
-                  leftIconColor={colors.black}
-                  leftIconSize={13}
-                />
-              )
-            }
+            {this.props.navigation.getParam("challengeOnboard", {}) && (
+              <CustomBtn
+                Title="Back"
+                customBtnStyle={{
+                  borderRadius: 50,
+                  padding: 15,
+                  width: "100%",
+                  marginTop: 5,
+                  marginBottom: -10,
+                  backgroundColor: "transparent",
+                }}
+                onPress={() => this.goToNextScreen("previous")}
+                disabled={false}
+                customBtnTitleStyle={{ color: colors.black, marginRight: 40 }}
+                isLeftIcon={true}
+                leftIconName="chevron-left"
+                leftIconColor={colors.black}
+                leftIconSize={13}
+              />
+            )}
           </ScrollView>
         </View>
       </SafeAreaView>

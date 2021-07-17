@@ -78,7 +78,7 @@ export default class LandingScreen extends React.PureComponent {
           </Carousel> */}
           <View style={styles.carouselCardContainer}>
             <ImageBackground
-              source={require("../../../assets/images/OnBoardindImg/OB_1.jpg")}
+              source={require("../../../assets/images/OnBoardindImg/Thessy238.jpeg")}
               style={styles.carouselImageBackground}
             >
               <View style={styles.opacityOverlayTransparent} />
@@ -102,11 +102,12 @@ export default class LandingScreen extends React.PureComponent {
                   borderRadius: 50,
                   padding: 12,
                   margin: 5,
-                  borderColor: colors.themeColor.color,
+                  borderColor: colors.black,
+                  backgroundColor: colors.black,
                 }}
-                outline={true}
-                Title="Transform Now"
-                customBtnTitleStyle={{ color: colors.themeColor.color }}
+                outline={false}
+                Title="TRANSFORM"
+                customBtnTitleStyle={{ color: colors.white }}
                 onPress={() =>
                   this.props.navigation.navigate("Signup", { specialOffer })
                 }
@@ -120,7 +121,7 @@ export default class LandingScreen extends React.PureComponent {
                   START FREE TRIAL
                 </Text>
               </TouchableOpacity> */}
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() =>
                   this.props.navigation.navigate("Login", { specialOffer })
                 }
@@ -128,7 +129,21 @@ export default class LandingScreen extends React.PureComponent {
                 style={styles.haveAAccountBtnStyle}
               >
                 <Text style={styles.haveAAccountTitleStyle}>Sign In</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+              <CustomBtn
+                customBtnStyle={{
+                  borderRadius: 50,
+                  padding: 12,
+                  margin: 5,
+                  borderColor: colors.themeColor.color,
+                }}
+                outline={false}
+                Title="Sign In"
+                customBtnTitleStyle={{ color: colors.black }}
+                onPress={() =>
+                  this.props.navigation.navigate("Login", { specialOffer })
+                }
+              />
             </View>
           </View>
         </View>
@@ -237,12 +252,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   haveAAccountTitleStyle: {
-    fontFamily: fonts.GothamMedium,
+    fontFamily: fonts.SimplonMonoMedium,
     fontSize: hp("1.8%"),
     letterSpacing: 0.7,
     color: colors.white,
     letterSpacing: 0.5,
     textAlign: "center",
-    color: colors.themeColor.color,
+    color: colors.black,
   },
 });
