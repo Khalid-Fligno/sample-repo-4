@@ -251,7 +251,7 @@ export default class OnBoarding5 extends Component {
     this.setState({ addingToCalendar: false });
     Alert.alert(
       "",
-      `Your start date has been added to your challenge. Go to ${stringDate2} on the challenge dashboard to see what Day 1 looks like`,
+      `Your start date has been added to your challenge. Go to ${stringDate2} on the challenge dashboard to see what Day 1 looks like.`,
       [{ text: "OK", onPress: onPressAlert, style: "cancel" }],
       { cancelable: false }
     );
