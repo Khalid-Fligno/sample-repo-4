@@ -27,19 +27,19 @@ const CustomCalendarStrip = (props) => {
         calendarColor="transparent"
         dateNumberStyle={{
           fontFamily: fonts.SimplonMonoMedium,
-          color: colors.black,
+          color: colors.charcoal.dark,
         }}
         dateNameStyle={{
           fontFamily: fonts.SimplonMonoMedium,
-          color: colors.black,
+          color: colors.charcoal.dark,
         }}
         highlightDateNumberStyle={{
           fontFamily: fonts.SimplonMonoMedium,
-          color: colors.black,
+          color: colors.themeColor.color,
         }}
         highlightDateNameStyle={{
           fontFamily: fonts.SimplonMonoMedium,
-          color: colors.black,
+          color: colors.themeColor.color,
         }}
         weekendDateNameStyle={{
           fontFamily: fonts.bold,

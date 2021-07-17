@@ -36,14 +36,13 @@ const globalStyle = StyleSheet.create({
     fontFamily: fonts.SimplonMonoLight,
     color: colors.black,
     letterSpacing: 0.5,
-    textTransform: "uppercase",
+    textTransform: "capitalize",
   },
   bigHeadingWithBackButtonText: {
     fontSize: 12,
-    fontFamily: fonts.StyreneAWebRegular,
-    color: colors.back,
+    fontWeight: "bold",
+    color: colors.themeColor.color,
     marginLeft: 5,
-    textTransform: "uppercase",
   },
   //**********END ************* */
   //Custom Filter Button Style Section

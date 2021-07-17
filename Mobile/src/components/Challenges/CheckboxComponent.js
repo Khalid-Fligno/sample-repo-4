@@ -1,4 +1,4 @@
-import React, { createRef, useState } from "react";
+import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import { View, Text } from "react-native";
 // import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -8,16 +8,10 @@ import colors from "../../styles/colors";
 import { TouchableWithoutFeedback } from "react-native";
 
 const CheckboxComponent = ({ title, isChecked, onPress }) => {
-  let checkboxRef = createRef();
-  const [checked, setChecked] = useState(isChecked);
+  let bouncyCheckboxRef: BouncyCheckbox | null = null;
   return (
     <View style={{ marginTop: 20 }}>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          onPress(!checked);
-          checkboxRef?.onPress();
-        }}
-      >
+      <TouchableWithoutFeedback onPress={onPress}>
         <View
           style={{
             flexDirection: "row",
@@ -40,16 +34,13 @@ const CheckboxComponent = ({ title, isChecked, onPress }) => {
           </View>
           <View>
             <BouncyCheckbox
-              ref={(ref) => {
-                checkboxRef = ref;
-              }}
+              ref={(ref: any) => (bouncyCheckboxRef = ref)}
               size={35}
               disableText={true}
-              isChecked={checked}
+              isChecked={isChecked}
               fillColor={colors.themeColor.color}
               iconStyle={{ borderColor: colors.coolIce }}
               style={{ marginRight: 10 }}
-              onPress={() => setChecked(!checked)}
               disableBuiltInState
             />
           </View>
