@@ -242,6 +242,7 @@ export default class OnBoarding1 extends Component {
               title="Increase fitness"
               isChecked={increaseFitness > 1}
               onPress={(isChecked) => {
+                console.log('asdfasdf')
                 if (isChecked) {
                   this.setState({ increaseFitness: 10 });
                 } else this.setState({ increaseFitness: 1 });
