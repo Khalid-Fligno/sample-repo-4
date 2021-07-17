@@ -130,7 +130,7 @@ const WorkoutScreenStyle = StyleSheet.create({
     marginRight: 10,
     fontFamily: fonts.StyreneAWebRegular,
     fontSize: 20,
-    color: colors.themeColor.color,
+    color: colors.black,
   },
   workoutIconsRow: {
     width,
