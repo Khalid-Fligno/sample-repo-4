@@ -290,10 +290,11 @@ class ChallengeSubscriptionScreen extends Component {
         );
       }
     } else {
-      this.props.navigation.navigate("ChallengeOnBoarding1", {
+      this.props.navigation.navigate("ChallengeOnBoardingReverse", {
         data: {
           challengeData,
         },
+        challengeOnboard: true
       });
     }
   }

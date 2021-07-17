@@ -7,6 +7,7 @@ import CustomBtn from '../../../components/Shared/CustomBtn';
 import fonts from '../../../styles/fonts';
 import * as FileSystem from 'expo-file-system';
 import CheckboxComponent from '../../../components/Challenges/CheckboxComponent';
+import colors from '../../../styles/colors';
 
 export default class OnBoarding1 extends Component {
   constructor(props) {
@@ -55,7 +56,7 @@ export default class OnBoarding1 extends Component {
   componentWillUnmount = async () => {
     this.focusListener.remove();
   };
-  goToNextScreen() {
+  goToNextScreen(type) {
     let {
       challengeData,
       weightLoss,
@@ -86,22 +87,27 @@ export default class OnBoarding1 extends Component {
     }
    }
 
-    Alert.alert('',
-      `Transform ${toAchieve.length === 0 ? 'Nothing' : toAchieve.substring(0, toAchieve.length - 2)}`,
-      [
-        {
-          text: 'OK', onPress:()=>{
-            this.props.navigation.navigate('ChallengeOnBoarding3',{
-              data:{
-                challengeData:updatedChallengedata
-              },
-              onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
-            });
-          } 
-        },
-      ],
-      { cancelable: false }
-    );
+    if (type === 'previous') {
+      this.props.navigation.navigate('ChallengeOnBoarding6');
+    } else {
+      Alert.alert('',
+        `Transform ${toAchieve.length === 0 ? 'Nothing' : toAchieve.substring(0, toAchieve.length - 2)}`,
+        [
+          {
+            text: 'OK', onPress:()=>{
+              this.props.navigation.navigate('ChallengeOnBoarding3',{
+                data:{
+                  challengeData:updatedChallengedata
+                },
+                onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
+                challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
+              });
+            } 
+          },
+        ],
+        { cancelable: false }
+      );
+    }
  }
 
   render() {
@@ -252,10 +258,25 @@ export default class OnBoarding1 extends Component {
                   padding: 15,
                   width: "100%",
                 }}
-                onPress={() => this.goToNextScreen()}
+                onPress={() => this.goToNextScreen('')}
                 disabled={btnDisabled}
               />
             </View>
+            {
+              this.props.navigation.getParam("challengeOnboard", {}) && (
+                <CustomBtn 
+                  Title="Back"
+                  customBtnStyle={{borderRadius:50,padding:15,width:"100%",marginTop:5,marginBottom:-10,backgroundColor:'transparent'}}
+                  onPress={()=>this.goToNextScreen('previous')}
+                  disabled={false}
+                  customBtnTitleStyle={{color:colors.black,marginRight:40}}
+                  isLeftIcon={true}
+                  leftIconName="chevron-left"
+                  leftIconColor={colors.black}
+                  leftIconSize={13}
+                />
+              )
+            }
           </ScrollView>
         </View>
       </SafeAreaView>

@@ -122,12 +122,70 @@ export default class OnBoarding5 extends Component {
     });
 
     if(type === 'next'){
-      this.props.navigation.navigate('ChallengeOnBoarding6',{
-        data:{
-               challengeData:updatedChallengedata
-             },
-             onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
-      })
+      if (this.props.navigation.getParam('challengeOnboard')) {
+        let burpeeCount = 0;
+        if (fitnessLevel === 1) burpeeCount = 10;
+        else if (fitnessLevel === 2) burpeeCount = 15;
+        else if (fitnessLevel === 3) burpeeCount = 20;
+
+        const onBoardingInfo = Object.assign({}, challengeData.onBoardingInfo, {
+          fitnessLevel,
+          burpeeCount,
+        });
+        let updatedChallengedata = Object.assign({}, challengeData, {
+          onBoardingInfo,
+          status: "Active",
+        });
+
+        this.setState({ challengeData: updatedChallengedata });
+        // calendarModalVisible true calendar popup
+        // this.setState({ calendarModalVisible: true });
+        this.addChallengeToCalendar(moment().set("date", 26));
+
+        if (this.state.addingToCalendar) {
+          return;
+        }
+        this.setState({ addingToCalendar: true });
+        ////////////////////saving on calendar
+        const data = createUserChallengeData(updatedChallengedata,new Date(moment().set("date", 26)));
+        const progressData = {
+                                photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+                                height: updatedChallengedata.onBoardingInfo.measurements.height,
+                                goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
+                                weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+                                waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+                                hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+                                burpeeCount:updatedChallengedata.onBoardingInfo.burpeeCount,
+                                fitnessLevel:updatedChallengedata.onBoardingInfo.fitnessLevel
+                              }
+        const stringDate = moment(moment().set("date", 26)).format('YYYY-MM-DD').toString();
+        const stringDate2 = moment(moment().set("date", 26)).format('DD-MM-YY').toString();
+  
+        if(new Date(updatedChallengedata.startDate).getTime() < new Date(stringDate).getTime()){
+          data.isSchedule= true;
+          data.status='InActive';
+        }
+        storeProgressInfo(progressData)
+        this.saveOnBoardingInfo(data,stringDate2)
+  
+        if (
+          new Date(updatedChallengedata.startDate).getTime() <
+          new Date(stringDate).getTime()
+        ) {
+          data.isSchedule = true;
+          data.status = "InActive";
+        }
+        storeProgressInfo(progressData);
+        this.saveOnBoardingInfo(data, stringDate2);
+      } else {
+        this.props.navigation.navigate('ChallengeOnBoarding6',{
+          data:{
+                challengeData:updatedChallengedata
+              },
+              onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
+              challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
+        });
+      }
     }else if(type === 'submit'){
       this.setState({ challengeData: updatedChallengedata });
       // calendarModalVisible true calendar popup
@@ -222,7 +280,7 @@ export default class OnBoarding5 extends Component {
   };
 
   async saveOnBoardingInfo(data, stringDate2) {
-    this.setState({ loading: true });
+    {this.props.navigation.getParam('challengeOnboard') ? this.setState({ loading: false }) : this.setState({ loading: true })}
     const uid = await AsyncStorage.getItem("uid");
     const userRef = db
       .collection("users")
@@ -427,7 +485,11 @@ export default class OnBoarding5 extends Component {
             <View style={[{ flex: 1, justifyContent: "flex-end" }]}>
               {<Text style={ChallengeStyle.errorText}>{error}</Text>}
               <CustomBtn
-                  Title="Skip"
+                  Title={
+                    this.props.navigation.getParam("challengeOnboard", {}) 
+                      ? "Start Challenge"
+                      : "Skip"
+                    }
                   customBtnStyle={{
                     borderRadius: 50,
                     padding: 15,

@@ -82,17 +82,27 @@ export default class OnBoarding6 extends Component {
       status: "Active",
     });
     if (type === "next") {
-      this.setState({ challengeData: updatedChallengedata });
-      // calendarModalVisible true calendar popup
-      // this.setState({ calendarModalVisible: true });
-      this.addChallengeToCalendar(moment().set("date", 26));
+      if (this.props.navigation.getParam("challengeOnboard", {})) {
+        this.props.navigation.navigate('ChallengeOnBoarding1',{
+          data: { challengeData: this.props.navigation.getParam("data", {})['challengeData'] },
+          onboardingProcessComplete: false,
+          challengeOnboard: true
+        });
+      } else {
+        this.setState({ challengeData: updatedChallengedata });
+        // calendarModalVisible true calendar popup
+        // this.setState({ calendarModalVisible: true });
+        this.addChallengeToCalendar(moment().set("date", 26));
+      }
     }else{
-      this.props.navigation.navigate('ChallengeOnBoarding5',{
-        data:{
-                challengeData:updatedChallengedata,
-              },
-              onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
-      })
+      if (this.props.navigation.getParam("challengeOnboard", {})) {
+        this.props.navigation.navigate('ChallengeSubscription',{});
+      } else {
+        this.props.navigation.navigate('ChallengeOnBoarding5',{
+          data:{ challengeData:updatedChallengedata },
+          onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
+        });
+      }
     } 
   }
 
@@ -284,7 +294,11 @@ export default class OnBoarding6 extends Component {
             >
               <CustomBtn
                 // Title="Choose Start Date"
-                Title="Start Challenge"
+                Title={
+                  this.props.navigation.getParam("challengeOnboard", {}) 
+                    ? "Next"
+                    : "Start Challenge"
+                  }
                 customBtnStyle={{
                   borderRadius: 50,
                   padding: 15,

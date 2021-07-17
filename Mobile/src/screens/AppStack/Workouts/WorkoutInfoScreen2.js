@@ -513,9 +513,10 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                       </View>
                       <TouchableOpacity 
                         onPress={()=>{
-                          this.props.navigation.navigate('ChallengeOnBoarding1',{
+                          this.props.navigation.navigate('ChallengeOnBoarding',{
                             data: { challengeData:this.state.challengesList[0] },
-                            onboardingProcessComplete: true
+                            onboardingProcessComplete: true,
+                            challengeOnboard: false
                           });
                         }}>
                         <View style={{
