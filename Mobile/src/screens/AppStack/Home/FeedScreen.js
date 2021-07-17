@@ -297,8 +297,8 @@ export default class FeedScreen extends React.PureComponent {
               color: colors.offWhite,
             }}
             btnTitle="Connect with us"
-            customBtnStyle={{ backgroundColor: colors.offWhite }}
-            customBtnTitleStyle={{ color: "#658dc3" }}
+            customBtnStyle={{ backgroundColor: colors.themeColor.color }}
+            customBtnTitleStyle={{ color: colors.black }}
             onPress={() =>
               this.openLink(
                 "https://www.facebook.com/groups/180007149128432/?source_id=204363259589572"
