@@ -37,7 +37,7 @@ export default class OnBoarding1 extends Component {
       toneUp: toAchieve ? toAchieve.toneUp : 1,
       mentalHealth: toAchieve ? toAchieve.mentalHealth : 1,
       increaseFitness: toAchieve ? toAchieve.increaseFitness : 1,
-      btnDisabled: false,
+      btnDisabled: true,
     });
   };
 
@@ -90,23 +90,31 @@ export default class OnBoarding1 extends Component {
     if (type === 'previous') {
       this.props.navigation.navigate('ChallengeOnBoarding6');
     } else {
-      Alert.alert('',
-        `Transform ${toAchieve.length === 0 ? 'Nothing' : toAchieve.substring(0, toAchieve.length - 2)}`,
-        [
-          {
-            text: 'OK', onPress:()=>{
-              this.props.navigation.navigate('ChallengeOnBoarding3',{
-                data:{
-                  challengeData:updatedChallengedata
-                },
-                onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
-                challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
-              });
-            } 
-          },
-        ],
-        { cancelable: false }
-      );
+
+      this.props.navigation.navigate('ChallengeOnBoarding3',{
+        data:{
+          challengeData:updatedChallengedata
+        },
+        onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
+        challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
+      });
+      // Alert.alert('',
+      //   `Transform ${toAchieve.length === 0 ? 'Nothing' : toAchieve.substring(0, toAchieve.length - 2)}`,
+      //   [
+      //     {
+      //       text: 'OK', onPress:()=>{
+      //         this.props.navigation.navigate('ChallengeOnBoarding3',{
+      //           data:{
+      //             challengeData:updatedChallengedata
+      //           },
+      //           onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
+      //           challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
+      //         });
+      //       } 
+      //     },
+      //   ],
+      //   { cancelable: false }
+      // );
     }
  }
 
@@ -202,6 +210,7 @@ export default class OnBoarding1 extends Component {
               title="Weight loss"
               isChecked={weightLoss > 1}
               onPress={(isChecked) => {
+                this.setState({btnDisabled: false});
                 if (isChecked) {
                   this.setState({ weightLoss: 10 });
                 } else this.setState({ weightLoss: 1 });
@@ -212,6 +221,7 @@ export default class OnBoarding1 extends Component {
               title="Increase energy"
               isChecked={increaseEnergy > 1}
               onPress={(isChecked) => {
+                this.setState({btnDisabled: false});
                 if (isChecked) {
                   this.setState({ increaseEnergy: 10 });
                 } else this.setState({ increaseEnergy: 1 });
@@ -222,6 +232,7 @@ export default class OnBoarding1 extends Component {
               title="Tone up"
               isChecked={toneUp > 1}
               onPress={(isChecked) => {
+                this.setState({btnDisabled: false});
                 if (isChecked) {
                   this.setState({ toneUp: 10 });
                 } else this.setState({ toneUp: 1 });
@@ -232,6 +243,7 @@ export default class OnBoarding1 extends Component {
               title="Mental health"
               isChecked={mentalHealth > 1}
               onPress={(isChecked) => {
+                this.setState({btnDisabled: false});
                 if (isChecked) {
                   this.setState({ mentalHealth: 10 });
                 } else this.setState({ mentalHealth: 1 });
@@ -242,7 +254,7 @@ export default class OnBoarding1 extends Component {
               title="Increase fitness"
               isChecked={increaseFitness > 1}
               onPress={(isChecked) => {
-                console.log('asdfasdf')
+                this.setState({btnDisabled: false});
                 if (isChecked) {
                   this.setState({ increaseFitness: 10 });
                 } else this.setState({ increaseFitness: 1 });

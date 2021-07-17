@@ -125,21 +125,26 @@ export default class OnBoarding3 extends Component {
    }
 
   if(type === 'next'){
-    Alert.alert('',
-      `Measurements ${measurements.length === 0 ? 'Default' : measurements.substring(0, measurements.length - 2)}`,
-      [
-        {
-          text: 'OK', onPress:()=>{
-            this.props.navigation.navigate('ChallengeOnBoarding4',{
-              data:{ challengeData:updatedChallengedata },
-              onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
-              challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
-            })
-          } 
-        },
-      ],
-      { cancelable: false }
-    );
+    this.props.navigation.navigate('ChallengeOnBoarding4',{
+      data:{ challengeData:updatedChallengedata },
+      onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
+      challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
+    });
+    // Alert.alert('',
+    //   `Measurements ${measurements.length === 0 ? 'Default' : measurements.substring(0, measurements.length - 2)}`,
+    //   [
+    //     {
+    //       text: 'OK', onPress:()=>{
+    //         this.props.navigation.navigate('ChallengeOnBoarding4',{
+    //           data:{ challengeData:updatedChallengedata },
+    //           onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
+    //           challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
+    //         });
+    //       } 
+    //     },
+    //   ],
+    //   { cancelable: false }
+    // );
   }else{
     this.props.navigation.navigate('ChallengeOnBoarding1',{
       data:{

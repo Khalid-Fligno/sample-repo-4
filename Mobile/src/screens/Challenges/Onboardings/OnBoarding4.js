@@ -279,39 +279,61 @@ export default class OnBoarding4 extends Component {
         });
         // console.log(updatedChallengedata)
       if(type === 'next'){
-        Alert.alert('',
-          `Before Picture ${onBoardingInfo.beforePhotoUrl === "" ? 'None' : onBoardingInfo.beforePhotoUrl.toString()}`,
-          [
-            {
-              text: 'OK', onPress:()=>{
-                if (this.props.navigation.getParam('onboardingProcessComplete')) {
-                  const progressData = {
-                    photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
-                    height: updatedChallengedata.onBoardingInfo.measurements.height,
-                    goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
-                    weight: updatedChallengedata.onBoardingInfo.measurements.weight,
-                    waist: updatedChallengedata.onBoardingInfo.measurements.waist,
-                    hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-                    burpeeCount: 1,
-                    fitnessLevel: 1
-                  }
-                  storeProgressInfo(progressData);
-                  this.props.navigation.navigate('WorkoutInfo');
-                } else {
-                  this.props.navigation.navigate('ChallengeOnBoarding5',{
-                    data:{
-                           challengeData:updatedChallengedata
-                         },
-                         onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
-                         challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
-                  })
-                }
+        if (this.props.navigation.getParam('onboardingProcessComplete')) {
+          const progressData = {
+            photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+            height: updatedChallengedata.onBoardingInfo.measurements.height,
+            goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
+            weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+            waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+            hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+            burpeeCount: 1,
+            fitnessLevel: 1
+          }
+          storeProgressInfo(progressData);
+          this.props.navigation.navigate('WorkoutInfo');
+        } else {
+          this.props.navigation.navigate('ChallengeOnBoarding5',{
+            data:{
+                   challengeData:updatedChallengedata
+                 },
+                 onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
+                 challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
+          })
+        }
+        // Alert.alert('',
+        //   `Before Picture ${onBoardingInfo.beforePhotoUrl === "" ? 'None' : onBoardingInfo.beforePhotoUrl.toString()}`,
+        //   [
+        //     {
+        //       text: 'OK', onPress:()=>{
+        //         if (this.props.navigation.getParam('onboardingProcessComplete')) {
+        //           const progressData = {
+        //             photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+        //             height: updatedChallengedata.onBoardingInfo.measurements.height,
+        //             goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
+        //             weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+        //             waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+        //             hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+        //             burpeeCount: 1,
+        //             fitnessLevel: 1
+        //           }
+        //           storeProgressInfo(progressData);
+        //           this.props.navigation.navigate('WorkoutInfo');
+        //         } else {
+        //           this.props.navigation.navigate('ChallengeOnBoarding5',{
+        //             data:{
+        //                    challengeData:updatedChallengedata
+        //                  },
+        //                  onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
+        //                  challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
+        //           })
+        //         }
                 
-              } 
-            },
-          ],
-          { cancelable: false }
-        );
+        //       } 
+        //     },
+        //   ],
+        //   { cancelable: false }
+        // );
       }else{
         this.props.navigation.navigate('ChallengeOnBoarding3',{
           data:{
