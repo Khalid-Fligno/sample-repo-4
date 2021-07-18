@@ -276,7 +276,6 @@ export default class OnBoarding1 extends Component {
               <CustomBtn
                 Title="Next"
                 customBtnStyle={{
-                  borderRadius: 50,
                   padding: 15,
                   width: "100%",
                 }}
@@ -292,7 +291,6 @@ export default class OnBoarding1 extends Component {
               <CustomBtn
                 Title="Back"
                 customBtnStyle={{
-                  borderRadius: 50,
                   padding: 15,
                   width: "100%",
                   marginTop: 5,

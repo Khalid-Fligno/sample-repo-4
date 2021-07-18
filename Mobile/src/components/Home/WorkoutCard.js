@@ -96,7 +96,7 @@ export default class WorkOutCard extends React.PureComponent {
                 customBtnStyle={{
                   // width:"50%",
                   padding: wp("2.2%"),
-                  borderRadius: 50,
+
                   backgroundColor: colors.themeColor.color,
                   paddingHorizontal: wp("10%"),
                 }}

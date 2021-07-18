@@ -20,6 +20,7 @@ import WorkoutScreenStyle from "../Workouts/WorkoutScreenStyle";
 import NutritionStyles from "../Nutrition/NutritionStyles";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import { containerPadding } from "../../../styles/globalStyles";
+import { throwIfAudioIsDisabled } from "expo-av/build/Audio/AudioAvailability";
 
 const { width, height } = Dimensions.get("window");
 
@@ -41,6 +42,15 @@ export default class Progress3Screen extends React.PureComponent {
   }
   handleNext = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (this.props.navigation.getParam("fromScreen")) {
+      const screen = this.props.navigation.getParam("fromScreen");
+      const params = this.props.navigation.getParam("screenReturnParams");
+      this.props.navigation.navigate("Burpee2", {
+        fromScreen: screen,
+        screenReturnParams: params,
+      });
+      return;
+    }
     this.props.navigation.navigate("Burpee2");
   };
   handleCancel = () => {
@@ -54,7 +64,16 @@ export default class Progress3Screen extends React.PureComponent {
         },
         {
           text: "Yes",
-          onPress: () => this.props.navigation.navigate("Home"),
+          onPress: () => {
+            if (this.props.navigation.getParam("fromScreen")) {
+              const screen = this.props.navigation.getParam("fromScreen");
+              const params =
+                this.props.navigation.getParam("screenReturnParams");
+              this.props.navigation.navigate(screen, params);
+              return;
+            }
+            this.props.navigation.navigate("Home");
+          },
         },
       ],
       { cancelable: false }
@@ -145,8 +164,7 @@ export default class Progress3Screen extends React.PureComponent {
             <CustomBtn
               Title="READY!"
               onPress={this.handleNext}
-              outline={true}
-              customBtnStyle={{ borderRadius: 50 }}
+              outline={false}
               customBtnTitleStyle={{ fontSize: 14, fontFamily: fonts.bold }}
             />
             {/* <CustomButton

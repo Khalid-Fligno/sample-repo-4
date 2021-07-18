@@ -50,7 +50,7 @@ const authScreenStyle = StyleSheet.create({
     marginTop: 8,
     borderWidth: 2,
     borderColor: colors.grey.standard,
-    borderRadius: hp("3.5%"),
+
     padding: hp("3%"),
   },
   dividerOverlay: {

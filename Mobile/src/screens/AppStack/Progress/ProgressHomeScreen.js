@@ -280,15 +280,13 @@ class ProgressHomeScreen extends React.PureComponent {
     const updateBtn = (onPress) => (
       <CustomBtn
         Title="Update"
-        outline={true}
+        outline={false}
         customBtnStyle={{
           padding: wp("1.7%"),
-          borderRadius: 30,
 
           justifyContent: "space-between",
           paddingStart: wp("5%"),
           paddingEnd: wp("3%"),
-          borderWidth: 1.5,
           marginHorizontal: wp("10%"),
           marginVertical: wp("3%"),
         }}

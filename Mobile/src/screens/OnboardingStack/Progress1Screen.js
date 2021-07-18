@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -9,14 +9,14 @@ import {
   Alert,
   TouchableOpacity,
   Picker,
-} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import * as Haptics from 'expo-haptics';
-import Modal from 'react-native-modal';
-import HelperModal from '../../components/Shared/HelperModal';
-import CustomButton from '../../components/Shared/CustomButton';
-import CustomBtn from '../../components/Shared/CustomBtn';
-import Loader from '../../components/Shared/Loader';
+} from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
+import * as Haptics from "expo-haptics";
+import Modal from "react-native-modal";
+import HelperModal from "../../components/Shared/HelperModal";
+import CustomButton from "../../components/Shared/CustomButton";
+import CustomBtn from "../../components/Shared/CustomBtn";
+import Loader from "../../components/Shared/Loader";
 import {
   weightOptionsMetric,
   waistOptionsMetric,
@@ -24,14 +24,14 @@ import {
   weightOptionsImperial,
   waistOptionsImperial,
   hipOptionsImperial,
-} from '../../utils/index';
-import { db } from '../../../config/firebase';
-import colors from '../../styles/colors';
-import fonts from '../../styles/fonts';
-import globalStyle, { containerPadding } from '../../styles/globalStyles';
-import { BackHandler } from 'react-native';
+} from "../../utils/index";
+import { db } from "../../../config/firebase";
+import colors from "../../styles/colors";
+import fonts from "../../styles/fonts";
+import globalStyle, { containerPadding } from "../../styles/globalStyles";
+import { BackHandler } from "react-native";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 export default class Progress1Screen extends React.PureComponent {
   constructor(props) {
@@ -49,85 +49,97 @@ export default class Progress1Screen extends React.PureComponent {
     };
   }
   componentDidMount = () => {
-    BackHandler.addEventListener('hardwareBackPress',()=>  true);
-    this.props.navigation.setParams({ handleSkip: this.handleSkip, toggleHelperModal: this.showHelperModal });
+    BackHandler.addEventListener("hardwareBackPress", () => true);
+    this.props.navigation.setParams({
+      handleSkip: this.handleSkip,
+      toggleHelperModal: this.showHelperModal,
+    });
     this.fetchUom();
-  }
+  };
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress',()=> true);
+    BackHandler.removeEventListener("hardwareBackPress", () => true);
   }
 
   toggleHelperModal = () => {
-    this.setState((prevState) => ({ helperModalVisible: !prevState.helperModalVisible }));
-  }
+    this.setState((prevState) => ({
+      helperModalVisible: !prevState.helperModalVisible,
+    }));
+  };
   fetchUom = async () => {
     this.setState({ loading: true });
-    const uid = await AsyncStorage.getItem('uid');
-    db.collection('users').doc(uid)
+    const uid = await AsyncStorage.getItem("uid");
+    db.collection("users")
+      .doc(uid)
       .get()
       .then(async (doc) => {
-        this.setState({ unitsOfMeasurement: await doc.data().unitsOfMeasurement, loading: false });
+        this.setState({
+          unitsOfMeasurement: await doc.data().unitsOfMeasurement,
+          loading: false,
+        });
       });
-  }
+  };
   handleSkip = () => {
-    
-    if (this.props.navigation.getParam('isInitial', false)) {
+    if (this.props.navigation.getParam("isInitial", false)) {
       Alert.alert(
-        'Warning',
-        'Entering your progress information is a good way to stay accountable. Are you sure you want to skip?',
+        "Warning",
+        "Entering your progress information is a good way to stay accountable. Are you sure you want to skip?",
         [
           {
-            text: 'Cancel', style: 'cancel',
+            text: "Cancel",
+            style: "cancel",
           },
           {
-            text: 'Skip', onPress: () => this.props.navigation.navigate('App'),
+            text: "Skip",
+            onPress: () => this.props.navigation.navigate("App"),
           },
         ],
-        { cancelable: false },
+        { cancelable: false }
       );
     } else {
       Alert.alert(
-        'Warning',
-        'Skipping means that you will lose any information that you have already entered.',
+        "Warning",
+        "Skipping means that you will lose any information that you have already entered.",
         [
           {
-            text: 'Cancel', style: 'cancel',
+            text: "Cancel",
+            style: "cancel",
           },
           {
-            text: 'Skip', onPress: () => this.props.navigation.navigate('App'),
+            text: "Skip",
+            onPress: () => this.props.navigation.navigate("App"),
           },
         ],
-        { cancelable: false },
+        { cancelable: false }
       );
     }
-  }
+  };
   showModal = (modalNameVisible) => {
     this.setState({ [modalNameVisible]: true });
-  }
+  };
   hideModal = (modalNameVisible) => {
     this.setState({ [modalNameVisible]: false });
-  }
+  };
   showHelperModal = () => {
     this.setState({ helperModalVisible: true });
-  }
+  };
   hideHelperModal = () => {
     this.setState({ helperModalVisible: false });
-  }
+  };
   handleSubmit = async (weight, waist, hip) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
-    const isInitial = this.props.navigation.getParam('isInitial', false);
-    const navigateTo = this.props.navigation.getParam('navigateTo', false);
+    const isInitial = this.props.navigation.getParam("isInitial", false);
+    const navigateTo = this.props.navigation.getParam("navigateTo", false);
     this.setState({ loading: false });
-    this.props.navigation.navigate('Progress2', {
+    this.props.navigation.navigate("Progress2", {
       isInitial,
       weight,
       waist,
       hip,
-      navigateTo
+      navigateTo,
     });
     this.setState({ loading: false });
-  }
+  };
   render() {
     const {
       loading,
@@ -142,35 +154,30 @@ export default class Progress1Screen extends React.PureComponent {
     } = this.state;
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
-        <KeyboardAvoidingView
-          keyboardVerticalOffset={-60}
-          behavior="position"
-        >
+        <KeyboardAvoidingView keyboardVerticalOffset={-60} behavior="position">
           <View style={styles.container}>
             <View style={styles.textContainer}>
-              <Text style={styles.headerText}>
-                Measurements
-              </Text>
+              <Text style={styles.headerText}>Measurements</Text>
               <Text style={styles.bodyText}>
-                To help you track your progress, let’s find out where you are now.
+                To help you track your progress, let’s find out where you are
+                now.
               </Text>
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.inputFieldContainer}>
-                <Text style={styles.inputFieldTitle}>
-                  Weight
-                </Text>
+                <Text style={styles.inputFieldTitle}>Weight</Text>
                 <TouchableOpacity
-                  onPress={() => this.showModal('weightModalVisible')}
+                  onPress={() => this.showModal("weightModalVisible")}
                   style={styles.inputButton}
                 >
                   <Text style={styles.inputSelectionText}>
-                    {weight} {unitsOfMeasurement === 'metric' && 'kg'}{unitsOfMeasurement === 'imperial' && 'lbs'}
+                    {weight} {unitsOfMeasurement === "metric" && "kg"}
+                    {unitsOfMeasurement === "imperial" && "lbs"}
                   </Text>
                 </TouchableOpacity>
                 <Modal
                   isVisible={weightModalVisible}
-                  onBackdropPress={() => this.hideModal('weightModalVisible')}
+                  onBackdropPress={() => this.hideModal("weightModalVisible")}
                   animationIn="fadeIn"
                   animationInTiming={600}
                   animationOut="fadeOut"
@@ -179,55 +186,50 @@ export default class Progress1Screen extends React.PureComponent {
                   <View style={globalStyle.modalContainer}>
                     <Picker
                       selectedValue={weight}
-                      onValueChange={(value) => this.setState({ weight: value })}
+                      onValueChange={(value) =>
+                        this.setState({ weight: value })
+                      }
                     >
-                      {
-                        unitsOfMeasurement === 'metric'
-                        ?
-                          weightOptionsMetric.map((i) => (
+                      {unitsOfMeasurement === "metric"
+                        ? weightOptionsMetric.map((i) => (
                             <Picker.Item
                               key={i.value}
                               label={`${i.label} kg`}
                               value={i.value}
                             />
                           ))
-                        :
-                          weightOptionsImperial.map((i) => (
+                        : weightOptionsImperial.map((i) => (
                             <Picker.Item
                               key={i.value}
                               label={`${i.label} lbs`}
                               value={i.value}
                             />
-                          ))
-                      }
+                          ))}
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
-                      onPress={() => this.hideModal('weightModalVisible')}
+                      onPress={() => this.hideModal("weightModalVisible")}
                       style={globalStyle.modalButton}
                     >
-                      <Text style={globalStyle.modalButtonText}>
-                        DONE
-                      </Text>
+                      <Text style={globalStyle.modalButtonText}>DONE</Text>
                     </TouchableOpacity>
                   </View>
                 </Modal>
               </View>
               <View style={styles.inputFieldContainer}>
-                <Text style={styles.inputFieldTitle}>
-                  Waist
-                </Text>
+                <Text style={styles.inputFieldTitle}>Waist</Text>
                 <TouchableOpacity
-                  onPress={() => this.showModal('waistModalVisible')}
+                  onPress={() => this.showModal("waistModalVisible")}
                   style={styles.inputButton}
                 >
                   <Text style={styles.inputSelectionText}>
-                    {waist} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
+                    {waist} {unitsOfMeasurement === "metric" && "cm"}
+                    {unitsOfMeasurement === "imperial" && "inches"}
                   </Text>
                 </TouchableOpacity>
                 <Modal
                   isVisible={waistModalVisible}
-                  onBackdropPress={() => this.hideModal('waistModalVisible')}
+                  onBackdropPress={() => this.hideModal("waistModalVisible")}
                   animationIn="fadeIn"
                   animationInTiming={600}
                   animationOut="fadeOut"
@@ -238,53 +240,46 @@ export default class Progress1Screen extends React.PureComponent {
                       selectedValue={waist}
                       onValueChange={(value) => this.setState({ waist: value })}
                     >
-                      {
-                        unitsOfMeasurement === 'metric'
-                        ?
-                          waistOptionsMetric.map((i) => (
+                      {unitsOfMeasurement === "metric"
+                        ? waistOptionsMetric.map((i) => (
                             <Picker.Item
                               key={i.value}
                               label={`${i.label} cm`}
                               value={i.value}
                             />
                           ))
-                        :
-                          waistOptionsImperial.map((i) => (
+                        : waistOptionsImperial.map((i) => (
                             <Picker.Item
                               key={i.value}
                               label={`${i.label} inches`}
                               value={i.value}
                             />
-                          ))
-                      }
+                          ))}
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
-                      onPress={() => this.hideModal('waistModalVisible')}
+                      onPress={() => this.hideModal("waistModalVisible")}
                       style={globalStyle.modalButton}
                     >
-                      <Text style={globalStyle.modalButtonText}>
-                        DONE
-                      </Text>
+                      <Text style={globalStyle.modalButtonText}>DONE</Text>
                     </TouchableOpacity>
                   </View>
                 </Modal>
               </View>
               <View style={styles.inputFieldContainer}>
-                <Text style={styles.inputFieldTitle}>
-                  Hip
-                </Text>
+                <Text style={styles.inputFieldTitle}>Hip</Text>
                 <TouchableOpacity
-                  onPress={() => this.showModal('hipModalVisible')}
+                  onPress={() => this.showModal("hipModalVisible")}
                   style={styles.inputButton}
                 >
                   <Text style={styles.inputSelectionText}>
-                    {hip} {unitsOfMeasurement === 'metric' && 'cm'}{unitsOfMeasurement === 'imperial' && 'inches'}
+                    {hip} {unitsOfMeasurement === "metric" && "cm"}
+                    {unitsOfMeasurement === "imperial" && "inches"}
                   </Text>
                 </TouchableOpacity>
                 <Modal
                   isVisible={hipModalVisible}
-                  onBackdropPress={() => this.hideModal('hipModalVisible')}
+                  onBackdropPress={() => this.hideModal("hipModalVisible")}
                   animationIn="fadeIn"
                   animationInTiming={600}
                   animationOut="fadeOut"
@@ -295,34 +290,28 @@ export default class Progress1Screen extends React.PureComponent {
                       selectedValue={hip}
                       onValueChange={(value) => this.setState({ hip: value })}
                     >
-                      {
-                        unitsOfMeasurement === 'metric'
-                        ?
-                          hipOptionsMetric.map((i) => (
+                      {unitsOfMeasurement === "metric"
+                        ? hipOptionsMetric.map((i) => (
                             <Picker.Item
                               key={i.value}
                               label={`${i.label} cm`}
                               value={i.value}
                             />
                           ))
-                        :
-                          hipOptionsImperial.map((i) => (
+                        : hipOptionsImperial.map((i) => (
                             <Picker.Item
                               key={i.value}
                               label={`${i.label} inches`}
                               value={i.value}
                             />
-                          ))
-                      }
+                          ))}
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
-                      onPress={() => this.hideModal('hipModalVisible')}
+                      onPress={() => this.hideModal("hipModalVisible")}
                       style={globalStyle.modalButton}
                     >
-                      <Text style={globalStyle.modalButtonText}>
-                        DONE
-                      </Text>
+                      <Text style={globalStyle.modalButtonText}>DONE</Text>
                     </TouchableOpacity>
                   </View>
                 </Modal>
@@ -332,7 +321,6 @@ export default class Progress1Screen extends React.PureComponent {
               <CustomBtn
                 Title="NEXT"
                 titleCapitalise={true}
-                customBtnStyle={{borderRadius:50}}
                 onPress={() => this.handleSubmit(weight, waist, hip)}
               />
               {/* <CustomButton
@@ -341,10 +329,7 @@ export default class Progress1Screen extends React.PureComponent {
                 primary
               /> */}
             </View>
-            <Loader
-              loading={loading}
-              color={colors.coral.standard}
-            />
+            <Loader loading={loading} color={colors.themeColor.color} />
           </View>
         </KeyboardAvoidingView>
         <HelperModal
@@ -365,20 +350,20 @@ const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
     backgroundColor: colors.black,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: colors.offWhite,
   },
   textContainer: {
     flex: 1,
     width,
     padding: 10,
-    paddingHorizontal:containerPadding
+    paddingHorizontal: containerPadding,
   },
   headerText: {
     fontFamily: fonts.bold,
@@ -391,10 +376,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.charcoal.light,
   },
- 
+
   contentContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   inputFieldContainer: {
     marginBottom: 20,
@@ -407,7 +392,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   inputButton: {
-    width: width - containerPadding*2,
+    width: width - containerPadding * 2,
     padding: 15,
     paddingBottom: 12,
     backgroundColor: colors.white,
@@ -422,9 +407,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     padding: 10,
-    paddingHorizontal:containerPadding,
-    width:'100%'
+    paddingHorizontal: containerPadding,
+    width: "100%",
   },
 });

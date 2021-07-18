@@ -482,7 +482,6 @@ export default class HomeScreen extends React.PureComponent {
                 <CustomBtn
                   Title="START BURPEE TEST"
                   customBtnStyle={{
-                    borderRadius: 50,
                     backgroundColor: colors.black,
                   }}
                   customBtnTitleStyle={{

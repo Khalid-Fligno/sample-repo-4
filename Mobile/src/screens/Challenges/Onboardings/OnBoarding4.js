@@ -30,7 +30,11 @@ import colors from "../../../styles/colors";
 import AsyncStorage from "@react-native-community/async-storage";
 const { width } = Dimensions.get("window");
 const actionSheetOptions = ["Cancel", "Take photo", "Upload from Camera Roll"];
-import storeProgressInfo from '../../../components/Challenges/storeProgressInfo';
+import storeProgressInfo from "../../../components/Challenges/storeProgressInfo";
+import { NavigationActions, StackActions } from "react-navigation";
+import createUserChallengeData from "../../../components/Challenges/UserChallengeData";
+import { db } from "../../../../config/firebase";
+import moment from "moment";
 
 const uriToBlob = (url) => {
   return new Promise((resolve, reject) => {
@@ -64,6 +68,9 @@ export default class OnBoarding4 extends Component {
       error: null,
       imgUrl: null,
       btnDisabled: true,
+      addingToCalendar: false,
+      chosenDate: new Date(),
+      loading: false,
     };
   }
 
@@ -265,41 +272,136 @@ export default class OnBoarding4 extends Component {
     }
   };
 
+  addedToCalendarPopup(stringDate2) {
+    const onPressAlert = () => {
+      // this.hideCalendarModal();
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: "Tabs",
+            action: NavigationActions.navigate({
+              routeName: "Calendar",
+            }),
+          }),
+        ],
+      });
+      this.props.navigation.dispatch(resetAction);
+    };
+    this.setState({ addingToCalendar: false });
+    Alert.alert(
+      "",
+      `Your start date has been added to your challenge. Go to ${stringDate2} on the challenge dashboard to see what Day 1 looks like.`,
+      [{ text: "OK", onPress: onPressAlert, style: "cancel" }],
+      { cancelable: false }
+    );
+    // }
+  }
+
+  async saveOnBoardingInfo(data, stringDate2) {
+    this.setState({ loading: true });
+    {
+      this.props.navigation.getParam("challengeOnboard")
+        ? this.setState({ loading: false })
+        : this.setState({ loading: true });
+    }
+    const uid = await AsyncStorage.getItem("uid");
+    const userRef = db
+      .collection("users")
+      .doc(uid)
+      .collection("challenges")
+      .doc(data.id);
+    userRef
+      .set(data, { merge: true })
+      .then(async (res) => {
+        if (data.onBoardingInfo.fitnessLevel)
+          await AsyncStorage.setItem(
+            "fitnessLevel",
+            data.onBoardingInfo.fitnessLevel.toString()
+          );
+        this.setState({ loading: false });
+        this.addedToCalendarPopup(stringDate2);
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ loading: false });
+      });
+  }
+
+  addChallengeToCalendar = async (date) => {
+    if (this.state.addingToCalendar) {
+      return;
+    }
+    this.setState({ addingToCalendar: true });
+    ////////////////////saving on calendar
+    const updatedChallengedata = this.state.challengeData;
+    const data = createUserChallengeData(updatedChallengedata, new Date(date));
+    const progressData = {
+      photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+      weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+      waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+      hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+      burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount,
+      fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
+    };
+    const stringDate = moment(date).format("YYYY-MM-DD").toString();
+    const stringDate2 = moment(date).format("DD-MM-YY").toString();
+    if (
+      new Date(updatedChallengedata.startDate).getTime() <
+      new Date(stringDate).getTime()
+    ) {
+      data.isSchedule = true;
+      data.status = "InActive";
+    }
+    await storeProgressInfo(progressData);
+    await this.saveOnBoardingInfo(data, stringDate2);
+  };
+
   async goToScreen(type) {
     let { challengeData, image, imgUrl } = this.state;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
       // if (imgUrl !== null) {
-        const onBoardingInfo = Object.assign({},challengeData.onBoardingInfo,{
-          beforePhotoUrl:imgUrl?imgUrl:''
-        })
-        let updatedChallengedata = Object.assign({},challengeData,{
-          onBoardingInfo,
-          image: image,
-        });
-        // console.log(updatedChallengedata)
-      if(type === 'next'){
-        if (this.props.navigation.getParam('onboardingProcessComplete')) {
+      const onBoardingInfo = Object.assign({}, challengeData.onBoardingInfo, {
+        beforePhotoUrl: imgUrl ? imgUrl : "",
+      });
+      let updatedChallengedata = Object.assign({}, challengeData, {
+        onBoardingInfo,
+        image: image,
+      });
+      // console.log(updatedChallengedata)
+      if (type === "next") {
+        if (this.props.navigation.getParam("onboardingProcessComplete")) {
           const progressData = {
             photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
             height: updatedChallengedata.onBoardingInfo.measurements.height,
-            goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
+            goalWeight:
+              updatedChallengedata.onBoardingInfo.measurements.goalWeight,
             weight: updatedChallengedata.onBoardingInfo.measurements.weight,
             waist: updatedChallengedata.onBoardingInfo.measurements.waist,
             hip: updatedChallengedata.onBoardingInfo.measurements.hip,
             burpeeCount: 1,
-            fitnessLevel: 1
-          }
+            fitnessLevel: 1,
+          };
           storeProgressInfo(progressData);
-          this.props.navigation.navigate('WorkoutInfo');
+          this.props.navigation.navigate("WorkoutInfo");
         } else {
-          this.props.navigation.navigate('ChallengeOnBoarding5',{
-            data:{
-                   challengeData:updatedChallengedata
-                 },
-                 onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
-                 challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
-          })
+          // this.props.navigation.navigate("ChallengeOnBoarding5", {
+          //   data: {
+          //     challengeData: updatedChallengedata,
+          //   },
+          //   onboardingProcessComplete:
+          //     this.props.navigation.getParam("onboardingProcessComplete") !==
+          //     undefined
+          //       ? this.props.navigation.getParam("onboardingProcessComplete")
+          //       : false,
+          //   challengeOnboard:
+          //     this.props.navigation.getParam("challengeOnboard") !== undefined
+          //       ? this.props.navigation.getParam("challengeOnboard")
+          //       : false,
+          // });
+
+          this.addChallengeToCalendar(moment().set("date", 26));
         }
         // Alert.alert('',
         //   `Before Picture ${onBoardingInfo.beforePhotoUrl === "" ? 'None' : onBoardingInfo.beforePhotoUrl.toString()}`,
@@ -328,21 +430,25 @@ export default class OnBoarding4 extends Component {
         //                  challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
         //           })
         //         }
-                
-        //       } 
+
+        //       }
         //     },
         //   ],
         //   { cancelable: false }
         // );
-      }else{
-        this.props.navigation.navigate('ChallengeOnBoarding3',{
-          data:{
-                 challengeData:updatedChallengedata
-               },
-               onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
-        })
+      } else {
+        this.props.navigation.navigate("ChallengeOnBoarding3", {
+          data: {
+            challengeData: updatedChallengedata,
+          },
+          onboardingProcessComplete:
+            this.props.navigation.getParam("onboardingProcessComplete") !==
+            undefined
+              ? this.props.navigation.getParam("onboardingProcessComplete")
+              : false,
+        });
       }
-      if (type === 'next') {
+      if (type === "next") {
         // if(type === 'next'){
         //   this.props.navigation.navigate('ChallengeOnBoarding5',{
         //     data:{
@@ -350,15 +456,17 @@ export default class OnBoarding4 extends Component {
         //          }
         //   })
         // }
-      }else if(type === 'previous'){
-        this.props.navigation.navigate('ChallengeOnBoarding3',{
-          data:{
-                 challengeData:challengeData
-               }
-        })
-      } 
-      else {
-        this.setState({ error: 'Please select an image to continue', uploading: false });
+      } else if (type === "previous") {
+        this.props.navigation.navigate("ChallengeOnBoarding3", {
+          data: {
+            challengeData: challengeData,
+          },
+        });
+      } else {
+        this.setState({
+          error: "Please select an image to continue",
+          uploading: false,
+        });
       }
     } catch (err) {
       console.log(err);
@@ -386,7 +494,8 @@ export default class OnBoarding4 extends Component {
   };
 
   render() {
-    const { image, uploading, error, btnDisabled, imgUrl } = this.state;
+    const { image, uploading, error, btnDisabled, imgUrl, loading } =
+      this.state;
     return (
       <SafeAreaView style={ChallengeStyle.container}>
         <View style={[globalStyle.container, { paddingVertical: 15 }]}>
@@ -443,8 +552,8 @@ export default class OnBoarding4 extends Component {
           <View style={[{ flex: 1, justifyContent: "flex-end" }]}>
             {error && <Text style={styles.errorText}>{error}</Text>}
             <CustomBtn
-              Title={imgUrl ? "Next" : "I'll do it later"}
-              customBtnStyle={{ borderRadius: 50, padding: 15, width: "100%" }}
+              Title={imgUrl ? "Start Challenge" : "I'll do it later"}
+              customBtnStyle={{ padding: 15, width: "100%" }}
               onPress={() => this.goToScreen("next")}
               disabled={btnDisabled}
               isRightIcon={true}
@@ -456,7 +565,6 @@ export default class OnBoarding4 extends Component {
             <CustomBtn
               Title="Back"
               customBtnStyle={{
-                borderRadius: 50,
                 padding: 15,
                 width: "100%",
                 marginTop: 5,
@@ -472,7 +580,10 @@ export default class OnBoarding4 extends Component {
               leftIconSize={13}
             />
           </View>
-          <Loader loading={uploading} color={colors.coral.standard} />
+          <Loader
+            loading={uploading || loading}
+            color={colors.themeColor.color}
+          />
         </View>
       </SafeAreaView>
     );

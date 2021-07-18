@@ -84,7 +84,7 @@ class ChallengeCard extends Component {
                     backgroundColor: !outline
                       ? colors.themeColor.color
                       : "transparent",
-                    borderRadius: 50,
+
                     width: wp("40%"),
                     marginTop: hp("1.8%"),
                   }}

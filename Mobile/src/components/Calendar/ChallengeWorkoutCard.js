@@ -119,7 +119,7 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
               Title="View Workout"
               customBtnStyle={{
                 padding: wp("1%"),
-                borderRadius: 50,
+
                 backgroundColor: colors.themeColor.color,
                 width: wp("30%"),
                 marginTop: wp("1%"),

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -6,12 +6,12 @@ import {
   SafeAreaView,
   AppState,
   Alert,
-} from 'react-native';
-import * as FileSystem from 'expo-file-system';
-import CountdownPauseModal from '../../../components/Workouts/CountdownPauseModal';
-import CountdownTimer from '../../../components/Workouts/CountdownTimer';
-import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
+} from "react-native";
+import * as FileSystem from "expo-file-system";
+import CountdownPauseModal from "../../../components/Workouts/CountdownPauseModal";
+import CountdownTimer from "../../../components/Workouts/CountdownTimer";
+import colors from "../../../styles/colors";
+import fonts from "../../../styles/fonts";
 
 export default class Progress4Screen extends React.PureComponent {
   constructor(props) {
@@ -25,62 +25,75 @@ export default class Progress4Screen extends React.PureComponent {
   }
   componentDidMount() {
     this.startTimer();
-    AppState.addEventListener('change', this.handleAppStateChange);
+    AppState.addEventListener("change", this.handleAppStateChange);
   }
   componentWillUnmount = async () => {
-    await AppState.removeEventListener('change', this.handleAppStateChange);
-  }
+    await AppState.removeEventListener("change", this.handleAppStateChange);
+  };
   handleAppStateChange = async (nextAppState) => {
     const { appState } = this.state;
-    if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+    if (appState === "active" && nextAppState.match(/inactive|background/)) {
       this.handlePause();
     }
     this.setState({ appState: nextAppState });
-  }
+  };
   startTimer = () => {
     this.setState({ timerStart: true });
-  }
+  };
   handlePause = () => {
     this.setState({
       timerStart: false,
       pauseModalVisible: true,
     });
-  }
+  };
   handleUnpause = () => {
     this.setState({
       timerStart: true,
       pauseModalVisible: false,
     });
-  }
+  };
   handleQuitWorkout = () => {
     this.setState({ pauseModalVisible: false }, () => {
-      this.props.navigation.navigate('Home');
+      if (this.props.navigation.getParam("fromScreen")) {
+        const screen = this.props.navigation.getParam("fromScreen");
+        const params = this.props.navigation.getParam("screenReturnParams");
+        this.props.navigation.navigate(screen, params);
+        return;
+      }
+      this.props.navigation.navigate("Home");
     });
-    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, { idempotent: true });
-  }
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, {
+      idempotent: true,
+    });
+  };
   quitWorkout = () => {
     Alert.alert(
-      'Stop burpee test?',
-      '',
+      "Stop burpee test?",
+      "",
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: "Cancel", style: "cancel" },
         {
-          text: 'OK',
+          text: "OK",
           onPress: this.handleQuitWorkout,
         },
       ],
-      { cancelable: false },
+      { cancelable: false }
     );
-  }
+  };
   finishCountdown = () => {
-    this.props.navigation.replace('Burpee3');
-  }
+    if (this.props.navigation.getParam("fromScreen")) {
+      const screen = this.props.navigation.getParam("fromScreen");
+      const params = this.props.navigation.getParam("screenReturnParams");
+      this.props.navigation.replace("Burpee3", {
+        fromScreen: screen,
+        screenReturnParams: params,
+      });
+      return;
+    }
+    this.props.navigation.replace("Burpee3");
+  };
   render() {
-    const {
-      countdownDuration,
-      timerStart,
-      pauseModalVisible,
-    } = this.state;
+    const { countdownDuration, timerStart, pauseModalVisible } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
@@ -90,9 +103,7 @@ export default class Progress4Screen extends React.PureComponent {
               start={timerStart}
               handleFinish={() => this.finishCountdown()}
             />
-            <Text style={styles.countdownText}>
-              GET READY!
-            </Text>
+            <Text style={styles.countdownText}>GET READY!</Text>
           </View>
           <CountdownPauseModal
             isVisible={pauseModalVisible}
@@ -112,14 +123,14 @@ const styles = StyleSheet.create({
   },
   flexContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: colors.white,
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   countdownText: {
     fontFamily: fonts.bold,

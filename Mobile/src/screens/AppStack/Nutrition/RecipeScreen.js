@@ -434,7 +434,6 @@ export default class RecipeScreen extends React.PureComponent {
                 </View>
                 <View style={{ marginTop: 20, marginBottom: 8 }}>
                   <CustomBtn
-                    customBtnStyle={{ borderRadius: 50 }}
                     Title="Get started"
                     outline={false}
                     onPress={() => this.handleStart(recipe)}

@@ -121,8 +121,8 @@ export default class OnBoarding5 extends Component {
       status: "Active",
     });
 
-    if(type === 'next'){
-      if (this.props.navigation.getParam('challengeOnboard')) {
+    if (type === "next") {
+      if (this.props.navigation.getParam("challengeOnboard")) {
         let burpeeCount = 0;
         if (fitnessLevel === 1) burpeeCount = 10;
         else if (fitnessLevel === 2) burpeeCount = 15;
@@ -147,27 +147,38 @@ export default class OnBoarding5 extends Component {
         }
         this.setState({ addingToCalendar: true });
         ////////////////////saving on calendar
-        const data = createUserChallengeData(updatedChallengedata,new Date(moment().set("date", 26)));
+        const data = createUserChallengeData(
+          updatedChallengedata,
+          new Date(moment().set("date", 26))
+        );
         const progressData = {
-                                photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
-                                height: updatedChallengedata.onBoardingInfo.measurements.height,
-                                goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
-                                weight: updatedChallengedata.onBoardingInfo.measurements.weight,
-                                waist: updatedChallengedata.onBoardingInfo.measurements.waist,
-                                hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-                                burpeeCount:updatedChallengedata.onBoardingInfo.burpeeCount,
-                                fitnessLevel:updatedChallengedata.onBoardingInfo.fitnessLevel
-                              }
-        const stringDate = moment(moment().set("date", 26)).format('YYYY-MM-DD').toString();
-        const stringDate2 = moment(moment().set("date", 26)).format('DD-MM-YY').toString();
-  
-        if(new Date(updatedChallengedata.startDate).getTime() < new Date(stringDate).getTime()){
-          data.isSchedule= true;
-          data.status='InActive';
+          photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+          height: updatedChallengedata.onBoardingInfo.measurements.height,
+          goalWeight:
+            updatedChallengedata.onBoardingInfo.measurements.goalWeight,
+          weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+          waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+          hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+          burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount,
+          fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
+        };
+        const stringDate = moment(moment().set("date", 26))
+          .format("YYYY-MM-DD")
+          .toString();
+        const stringDate2 = moment(moment().set("date", 26))
+          .format("DD-MM-YY")
+          .toString();
+
+        if (
+          new Date(updatedChallengedata.startDate).getTime() <
+          new Date(stringDate).getTime()
+        ) {
+          data.isSchedule = true;
+          data.status = "InActive";
         }
-        storeProgressInfo(progressData)
-        this.saveOnBoardingInfo(data,stringDate2)
-  
+        storeProgressInfo(progressData);
+        this.saveOnBoardingInfo(data, stringDate2);
+
         if (
           new Date(updatedChallengedata.startDate).getTime() <
           new Date(stringDate).getTime()
@@ -178,15 +189,22 @@ export default class OnBoarding5 extends Component {
         storeProgressInfo(progressData);
         this.saveOnBoardingInfo(data, stringDate2);
       } else {
-        this.props.navigation.navigate('ChallengeOnBoarding6',{
-          data:{
-                challengeData:updatedChallengedata
-              },
-              onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
-              challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
+        this.props.navigation.navigate("ChallengeOnBoarding6", {
+          data: {
+            challengeData: updatedChallengedata,
+          },
+          onboardingProcessComplete:
+            this.props.navigation.getParam("onboardingProcessComplete") !==
+            undefined
+              ? this.props.navigation.getParam("onboardingProcessComplete")
+              : false,
+          challengeOnboard:
+            this.props.navigation.getParam("challengeOnboard") !== undefined
+              ? this.props.navigation.getParam("challengeOnboard")
+              : false,
         });
       }
-    }else if(type === 'submit'){
+    } else if (type === "submit") {
       this.setState({ challengeData: updatedChallengedata });
       // calendarModalVisible true calendar popup
       this.setState({ calendarModalVisible: true });
@@ -197,7 +215,6 @@ export default class OnBoarding5 extends Component {
         },
       });
     }
-     
   }
 
   addChallengeToCalendar = async (date) => {
@@ -280,7 +297,11 @@ export default class OnBoarding5 extends Component {
   };
 
   async saveOnBoardingInfo(data, stringDate2) {
-    {this.props.navigation.getParam('challengeOnboard') ? this.setState({ loading: false }) : this.setState({ loading: true })}
+    {
+      this.props.navigation.getParam("challengeOnboard")
+        ? this.setState({ loading: false })
+        : this.setState({ loading: true });
+    }
     const uid = await AsyncStorage.getItem("uid");
     const userRef = db
       .collection("users")
@@ -439,20 +460,18 @@ export default class OnBoarding5 extends Component {
                 <CustomBtn
                   Title="Reset"
                   customBtnStyle={{
-                    borderRadius: 7,
                     padding: 15,
                     width: "49%",
-                    backgroundColor: colors.charcoal.dark,
+                    backgroundColor: colors.themeColor.color,
                   }}
                   onPress={() => this.resetTimer()}
                 />
                 <CustomBtn
                   Title="Start"
                   customBtnStyle={{
-                    borderRadius: 7,
                     padding: 15,
                     width: "49%",
-                    backgroundColor: colors.charcoal.dark,
+                    backgroundColor: colors.themeColor.color,
                   }}
                   onPress={() => this.startTimer()}
                   disabled={counterButtonDisable}
@@ -485,24 +504,23 @@ export default class OnBoarding5 extends Component {
             <View style={[{ flex: 1, justifyContent: "flex-end" }]}>
               {<Text style={ChallengeStyle.errorText}>{error}</Text>}
               <CustomBtn
-                  Title={
-                    this.props.navigation.getParam("challengeOnboard", {}) 
-                      ? "Start Challenge"
-                      : "Skip"
-                    }
-                  customBtnStyle={{
-                    borderRadius: 50,
-                    padding: 15,
-                    width: "100%",
-                  }}
-                  onPress={() => this.goToScreen("next")}
-                  disabled={btnDisabled}
-                  isRightIcon={true}
-                  rightIconName="chevron-right"
-                  rightIconColor={colors.black}
-                  rightIconSize={13}
-                  customBtnTitleStyle={{ marginRight: 10 }}
-                />
+                Title={
+                  this.props.navigation.getParam("challengeOnboard", {})
+                    ? "Start Challenge"
+                    : "Skip"
+                }
+                customBtnStyle={{
+                  padding: 15,
+                  width: "100%",
+                }}
+                onPress={() => this.goToScreen("next")}
+                disabled={btnDisabled}
+                isRightIcon={true}
+                rightIconName="chevron-right"
+                rightIconColor={colors.black}
+                rightIconSize={13}
+                customBtnTitleStyle={{ marginRight: 10 }}
+              />
               {/* {burpeeCount <= 0 ? (
                 <CustomBtn
                   Title="Skip"
@@ -539,7 +557,6 @@ export default class OnBoarding5 extends Component {
               <CustomBtn
                 Title="Back"
                 customBtnStyle={{
-                  borderRadius: 50,
                   padding: 15,
                   width: "100%",
                   marginTop: 5,

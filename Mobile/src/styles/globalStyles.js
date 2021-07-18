@@ -109,7 +109,7 @@ const globalStyle = StyleSheet.create({
   modalButtonText: {
     fontFamily: fonts.bold,
     fontSize: 14,
-    color: colors.white,
+    color: colors.black,
     marginTop: 3,
   },
   opacityLayer: {

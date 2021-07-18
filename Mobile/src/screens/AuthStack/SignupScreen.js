@@ -538,7 +538,7 @@ export default class SignupScreen extends React.PureComponent {
                   />
                 </KeyboardAvoidingView>
                 <CustomBtn
-                  customBtnStyle={{ borderRadius: 50, marginTop: 20 }}
+                  customBtnStyle={{ marginTop: 20 }}
                   Title="Create new account"
                   customBtnTitleStyle={{
                     fontWeight: "500",
@@ -560,7 +560,6 @@ export default class SignupScreen extends React.PureComponent {
 
                 <CustomBtn
                   customBtnStyle={{
-                    borderRadius: 50,
                     borderColor: colors.grey.standard,
                   }}
                   outline={true}

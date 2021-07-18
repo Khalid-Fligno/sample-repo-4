@@ -314,7 +314,6 @@ export default class Progress2Screen extends React.PureComponent {
             <CustomBtn
               Title="NEXT"
               titleCapitalise={true}
-              customBtnStyle={{ borderRadius: 50 }}
               onPress={() => this.handleImagePicked(image)}
             />
             {/* <CustomButton

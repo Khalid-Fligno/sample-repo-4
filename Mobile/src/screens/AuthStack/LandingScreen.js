@@ -88,7 +88,6 @@ export default class LandingScreen extends React.PureComponent {
             <View style={styles.buttonContainer}>
               <CustomBtn
                 customBtnStyle={{
-                  borderRadius: 50,
                   padding: 16,
                   marginBottom: 5,
                 }}
@@ -99,7 +98,6 @@ export default class LandingScreen extends React.PureComponent {
               />
               <CustomBtn
                 customBtnStyle={{
-                  borderRadius: 50,
                   padding: 12,
                   margin: 5,
                   borderColor: colors.black,
@@ -132,7 +130,6 @@ export default class LandingScreen extends React.PureComponent {
               </TouchableOpacity> */}
               <CustomBtn
                 customBtnStyle={{
-                  borderRadius: 50,
                   padding: 12,
                   margin: 5,
                   borderColor: colors.themeColor.color,

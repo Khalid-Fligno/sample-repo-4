@@ -83,10 +83,14 @@ export default class OnBoarding6 extends Component {
     });
     if (type === "next") {
       if (this.props.navigation.getParam("challengeOnboard", {})) {
-        this.props.navigation.navigate('ChallengeOnBoarding1',{
-          data: { challengeData: this.props.navigation.getParam("data", {})['challengeData'] },
+        this.props.navigation.navigate("ChallengeOnBoarding1", {
+          data: {
+            challengeData: this.props.navigation.getParam("data", {})[
+              "challengeData"
+            ],
+          },
           onboardingProcessComplete: false,
-          challengeOnboard: true
+          challengeOnboard: true,
         });
       } else {
         this.setState({ challengeData: updatedChallengedata });
@@ -94,45 +98,52 @@ export default class OnBoarding6 extends Component {
         // this.setState({ calendarModalVisible: true });
         this.addChallengeToCalendar(moment().set("date", 26));
       }
-    }else{
+    } else {
       if (this.props.navigation.getParam("challengeOnboard", {})) {
-        this.props.navigation.navigate('ChallengeSubscription',{});
+        this.props.navigation.navigate("ChallengeSubscription", {});
       } else {
-        this.props.navigation.navigate('ChallengeOnBoarding5',{
-          data:{ challengeData:updatedChallengedata },
-          onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false
+        this.props.navigation.navigate("ChallengeOnBoarding5", {
+          data: { challengeData: updatedChallengedata },
+          onboardingProcessComplete:
+            this.props.navigation.getParam("onboardingProcessComplete") !==
+            undefined
+              ? this.props.navigation.getParam("onboardingProcessComplete")
+              : false,
         });
       }
-    } 
+    }
   }
 
   addChallengeToCalendar = async (date) => {
-      if (this.state.addingToCalendar) {
-        return;
-      }
-      this.setState({ addingToCalendar: true });
-      ////////////////////saving on calendar
-      const updatedChallengedata=this.state.challengeData;
-      const data = createUserChallengeData(updatedChallengedata,new Date(date));
-      const progressData = {
-                              photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
-                              height: updatedChallengedata.onBoardingInfo.measurements.height,
-                              goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
-                              weight: updatedChallengedata.onBoardingInfo.measurements.weight,
-                              waist: updatedChallengedata.onBoardingInfo.measurements.waist,
-                              hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-                              burpeeCount:updatedChallengedata.onBoardingInfo.burpeeCount,
-                              fitnessLevel:updatedChallengedata.onBoardingInfo.fitnessLevel
-                            }
-      const stringDate = moment(date).format('YYYY-MM-DD').toString();
-      const stringDate2 = moment(date).format('DD-MM-YY').toString();
+    if (this.state.addingToCalendar) {
+      return;
+    }
+    this.setState({ addingToCalendar: true });
+    ////////////////////saving on calendar
+    const updatedChallengedata = this.state.challengeData;
+    const data = createUserChallengeData(updatedChallengedata, new Date(date));
+    const progressData = {
+      photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+      height: updatedChallengedata.onBoardingInfo.measurements.height,
+      goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
+      weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+      waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+      hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+      burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount,
+      fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
+    };
+    const stringDate = moment(date).format("YYYY-MM-DD").toString();
+    const stringDate2 = moment(date).format("DD-MM-YY").toString();
 
-      if(new Date(updatedChallengedata.startDate).getTime() < new Date(stringDate).getTime()){
-        data.isSchedule= true;
-        data.status='InActive';
-      }
-      storeProgressInfo(progressData)
-      this.saveOnBoardingInfo(data,stringDate2)
+    if (
+      new Date(updatedChallengedata.startDate).getTime() <
+      new Date(stringDate).getTime()
+    ) {
+      data.isSchedule = true;
+      data.status = "InActive";
+    }
+    storeProgressInfo(progressData);
+    this.saveOnBoardingInfo(data, stringDate2);
 
     if (
       new Date(updatedChallengedata.startDate).getTime() <
@@ -295,12 +306,11 @@ export default class OnBoarding6 extends Component {
               <CustomBtn
                 // Title="Choose Start Date"
                 Title={
-                  this.props.navigation.getParam("challengeOnboard", {}) 
+                  this.props.navigation.getParam("challengeOnboard", {})
                     ? "Next"
                     : "Start Challenge"
-                  }
+                }
                 customBtnStyle={{
-                  borderRadius: 50,
                   padding: 15,
                   width: "100%",
                 }}
@@ -315,7 +325,6 @@ export default class OnBoarding6 extends Component {
               <CustomBtn
                 Title="Back"
                 customBtnStyle={{
-                  borderRadius: 50,
                   padding: 15,
                   width: "100%",
                   marginTop: 5,

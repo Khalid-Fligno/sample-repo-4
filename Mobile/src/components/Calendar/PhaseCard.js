@@ -67,7 +67,7 @@ export default class PhaseCard extends React.PureComponent {
                 outline={true}
                 customBtnStyle={{
                   padding: wp("1.7%"),
-                  borderRadius: 30,
+
                   width: "50%",
                   backgroundColor: "transparent",
                   justifyContent: "space-between",

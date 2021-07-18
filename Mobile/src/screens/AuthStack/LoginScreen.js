@@ -577,7 +577,7 @@ export default class LoginScreen extends React.PureComponent {
                 />
 
                 <CustomBtn
-                  customBtnStyle={{ borderRadius: 50, marginTop: 20 }}
+                  customBtnStyle={{ marginTop: 20 }}
                   Title="Sign in"
                   onPress={() => this.login(email, password)}
                 />
@@ -599,7 +599,6 @@ export default class LoginScreen extends React.PureComponent {
                   /> */}
                 <CustomBtn
                   customBtnStyle={{
-                    borderRadius: 50,
                     borderColor: colors.grey.standard,
                   }}
                   outline={true}

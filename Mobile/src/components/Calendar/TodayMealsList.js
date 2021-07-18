@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: fonts.bold,
     fontSize: wp("4%"),
-    color: colors.themeColor.color,
+    color: colors.black,
   },
   rLabel: {
     fontFamily: fonts.GothamMedium,
