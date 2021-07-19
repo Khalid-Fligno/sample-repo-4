@@ -83,11 +83,18 @@ export default class OnBoarding6 extends Component {
     });
     if (type === "next") {
       if (this.props.navigation.getParam("challengeOnboard", {})) {
+        // this.props.navigation.navigate("ChallengeOnBoarding1", {
+        //   data: {
+        //     challengeData: this.props.navigation.getParam("data", {})[
+        //       "challengeData"
+        //     ],
+        //   },
+        //   onboardingProcessComplete: false,
+        //   challengeOnboard: true,
+        // });
         this.props.navigation.navigate("ChallengeOnBoarding1", {
           data: {
-            challengeData: this.props.navigation.getParam("data", {})[
-              "challengeData"
-            ],
+            challengeData: updatedChallengedata,
           },
           onboardingProcessComplete: false,
           challengeOnboard: true,
@@ -285,6 +292,8 @@ export default class OnBoarding6 extends Component {
               title="Beginner"
               helpText="Train once a week"
               showTick={fitnessLevel === 1}
+              isCardColored={true}
+              cardColor={colors.coolIce}
             />
             <FitnessLevelCard
               source={require("../../../../assets/images/OnBoardindImg/FL_2.png")}
@@ -292,6 +301,8 @@ export default class OnBoarding6 extends Component {
               title="Intermediate"
               helpText="Train 2 to 3 times a week"
               showTick={fitnessLevel === 2}
+              isCardColored={true}
+              cardColor={colors.coolIce}
             />
             <FitnessLevelCard
               source={require("../../../../assets/images/OnBoardindImg/FL_3.png")}
@@ -299,6 +310,8 @@ export default class OnBoarding6 extends Component {
               title="Expert"
               helpText="Train 4+ times a week"
               showTick={fitnessLevel === 3}
+              isCardColored={true}
+              cardColor={colors.coolIce}
             />
             <View
               style={[{ flex: 0.5, justifyContent: "flex-end", marginTop: 20 }]}

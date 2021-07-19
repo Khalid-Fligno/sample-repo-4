@@ -14,7 +14,6 @@ const CheckboxComponent = ({ title, isChecked, onPress }) => {
     <View style={{ marginTop: 20 }}>
       <TouchableWithoutFeedback
         onPress={() => {
-          onPress(!checked);
           checkboxRef?.onPress();
         }}
       >
@@ -49,7 +48,10 @@ const CheckboxComponent = ({ title, isChecked, onPress }) => {
               fillColor={colors.themeColor.color}
               iconStyle={{ borderColor: colors.coolIce }}
               style={{ marginRight: 10 }}
-              onPress={() => setChecked(!checked)}
+              onPress={() => {
+                onPress(!checked);
+                setChecked(!checked);
+              }}
               disableBuiltInState
             />
           </View>

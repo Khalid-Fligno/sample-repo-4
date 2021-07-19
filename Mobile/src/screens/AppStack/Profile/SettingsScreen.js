@@ -117,7 +117,7 @@ export default class SettingsScreen extends React.PureComponent {
   retakeBurpeeTest = async () => {
     this.setState({ loading: true });
     await FileSystem.downloadAsync(
-      "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE.mp4?alt=media&token=ff7a5afd-58d2-4508-9cd0-49af7672e333",
+      "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
       `${FileSystem.cacheDirectory}exercise-burpees.mp4`
     );
     this.setState({ loading: false });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Alert,
   View,
@@ -7,27 +7,26 @@ import {
   Linking,
   AppState,
   Platform,
-} from 'react-native';
+} from "react-native";
 // import * as Facebook from 'expo-facebook';
-import NetInfo from '@react-native-community/netinfo';
-import OneSignal from 'react-native-onesignal';
-import appsFlyer from 'react-native-appsflyer';
-import { NavigationActions } from 'react-navigation';
-import { Audio } from 'expo-av';
-import { appsFlyerDevKey, appId } from './config/appsFlyer';
-import SwitchNavigator from './config/router/index';
-import colors from './src/styles/colors';
-import { YellowBox } from 'react-native';
-import _ from 'lodash';
+import NetInfo from "@react-native-community/netinfo";
+import OneSignal from "react-native-onesignal";
+import appsFlyer from "react-native-appsflyer";
+import { NavigationActions } from "react-navigation";
+import { Audio } from "expo-av";
+import { appsFlyerDevKey, appId } from "./config/appsFlyer";
+import SwitchNavigator from "./config/router/index";
+import colors from "./src/styles/colors";
+import { YellowBox } from "react-native";
+import _ from "lodash";
 
-YellowBox.ignoreWarnings(['Setting a timer']);
+YellowBox.ignoreWarnings(["Setting a timer"]);
 const _console = _.clone(console);
-console.warn = message => {
-  if (message.indexOf('Setting a timer') <= -1) {
+console.warn = (message) => {
+  if (message.indexOf("Setting a timer") <= -1) {
     _console.warn(message);
   }
 };
-
 
 let navigator;
 
@@ -36,10 +35,12 @@ function setTopLevelNavigator(navigatorRef) {
 }
 
 function navigate(routeName, params) {
-  navigator.dispatch(NavigationActions.navigate({
-    routeName,
-    params,
-  }));
+  navigator.dispatch(
+    NavigationActions.navigate({
+      routeName,
+      params,
+    })
+  );
 }
 
 // Facebook.initializeAsync({ appId: '1825444707513470' });
@@ -52,13 +53,10 @@ export default class App extends React.PureComponent {
     //   enableInExpoDevelopment: true,
     //   debug: false,
     // });
-    OneSignal.init(
-      '7078b922-5fed-4cc4-9bf4-2bd718e8b548',
-      {
-        kOSSettingsKeyAutoPrompt: true,
-        kOSSettingsKeyInAppLaunchURL: false,
-      },
-    );
+    OneSignal.init("7078b922-5fed-4cc4-9bf4-2bd718e8b548", {
+      kOSSettingsKeyAutoPrompt: true,
+      kOSSettingsKeyInAppLaunchURL: false,
+    });
     OneSignal.setLocationShared(false);
     appsFlyer.initSdk({
       devKey: appsFlyerDevKey,
@@ -73,20 +71,20 @@ export default class App extends React.PureComponent {
     // this.unsubscribe = NetInfo.addEventListener((state) => {
     //   this.handleConnectivityChange(state);
     // });
-    Linking.addEventListener('url', this.handleOpenURL);
-    AppState.addEventListener('change', this.handleAppStateChange);
-  }
+    Linking.addEventListener("url", this.handleOpenURL);
+    AppState.addEventListener("change", this.handleAppStateChange);
+  };
   componentWillUnmount = () => {
-    this.unsubscribe();
-    Linking.removeEventListener('url', this.handleOpenURL);
-    AppState.removeEventListener('change', this.handleAppStateChange);
-  }
+    // this.unsubscribe();
+    Linking.removeEventListener("url", this.handleOpenURL);
+    AppState.removeEventListener("change", this.handleAppStateChange);
+  };
   handleAppStateChange = async (nextAppState) => {
     if (
       this.state.appState.match(/inactive|background/) &&
-      nextAppState === 'active'
+      nextAppState === "active"
     ) {
-      if (Platform.OS === 'ios') {
+      if (Platform.OS === "ios") {
         appsFlyer.trackAppLaunch();
       }
       await Audio.setIsEnabledAsync(true);
@@ -94,19 +92,22 @@ export default class App extends React.PureComponent {
     this.setState({ appState: nextAppState });
   };
   handleOpenURL = (event) => {
-    if (event.url === 'fitazfk://special-offer') {
-      navigate('SpecialOffer');
+    if (event.url === "fitazfk://special-offer") {
+      navigate("SpecialOffer");
     }
-  }
+  };
   handleConnectivityChange = (netInfoState) => {
     if (netInfoState.isInternetReachable === false) {
-      Alert.alert('No internet connection', 'You will need a healthy internet connection to use this app');
+      Alert.alert(
+        "No internet connection",
+        "You will need a healthy internet connection to use this app"
+      );
     }
-  }
+  };
   render() {
     return (
       <View style={styles.appContainer}>
-        <StatusBar barStyle="light-content"  />
+        <StatusBar barStyle="light-content" />
         <SwitchNavigator
           ref={(navigatorRef) => setTopLevelNavigator(navigatorRef)}
         />
@@ -114,7 +115,6 @@ export default class App extends React.PureComponent {
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   appContainer: {

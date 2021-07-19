@@ -337,11 +337,11 @@ export default class OnBoarding4 extends Component {
     const updatedChallengedata = this.state.challengeData;
     const data = createUserChallengeData(updatedChallengedata, new Date(date));
     const progressData = {
-      photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+      photoURL: this.state.imgUrl,
       weight: updatedChallengedata.onBoardingInfo.measurements.weight,
       waist: updatedChallengedata.onBoardingInfo.measurements.waist,
       hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-      burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount,
+      burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
       fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
     };
     const stringDate = moment(date).format("YYYY-MM-DD").toString();
