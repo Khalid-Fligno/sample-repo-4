@@ -1,99 +1,103 @@
-import React, { Component } from 'react';
-import { View, Text ,StyleSheet } from 'react-native';
-import calendarStyles from '../../screens/AppStack/Calendar/calendarStyle';
-import colors from '../../styles/colors';
-import fonts from '../../styles/fonts';
-import { Slider } from 'react-native-elements';
-import CustomBtn from '../Shared/CustomBtn';
-import { heightPercentageToDP as hp ,widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import { containerPadding } from '../../styles/globalStyles';
-import ChallengeProgressBar from './ChallengeProgressBar';
-import { ImageBackground } from 'react-native';
-import PhaseCard from './PhaseCard';
+import React, { Component } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import calendarStyles from "../../screens/AppStack/Calendar/calendarStyle";
+import colors from "../../styles/colors";
+import fonts from "../../styles/fonts";
+import { Slider } from "react-native-elements";
+import CustomBtn from "../Shared/CustomBtn";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
+import { containerPadding } from "../../styles/globalStyles";
+import ChallengeProgressBar from "./ChallengeProgressBar";
+import { ImageBackground } from "react-native";
+import PhaseCard from "./PhaseCard";
 
 const styles = StyleSheet.create({
-    ChallengeProgressCardContainer:{
-        flexDirection:'row',
-        alignItems:'center',
-        width:wp('100')-containerPadding*2,
-        paddingVertical:wp('2%'),
-      },
-      challengeLabel:{
-        fontSize:wp('4.7%'),
-        fontFamily:fonts.bold,
-        color:colors.charcoal.dark,
-        marginBottom:wp('2%'),
-        textTransform:'capitalize',
-      },
+  ChallengeProgressCardContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: wp("100") - containerPadding * 2,
+    paddingVertical: wp("2%"),
+  },
+  challengeLabel: {
+    fontSize: wp("4.7%"),
+    fontFamily: fonts.bold,
+    color: colors.black,
+    marginBottom: wp("2%"),
+    textTransform: "capitalize",
+  },
 });
 
 class ChallengeProgressCard2 extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
   render() {
-      const {
-        phase,
-        phaseData,
-        activeChallengeData,
-        activeChallengeUserData,
-        totalChallengeWorkoutsCompleted,
-        openLink,
-        currentDay
-      } = this.props
-      let total = 0
-      activeChallengeData.workouts.forEach((res)=>{if( res.name &&res.name.toLowerCase() != 'rest')total += res.days.length })
-      console.log(activeChallengeData.numberOfDays)
-      return(
-        <View>
-            <View style={styles.ChallengeProgressCardContainer }>
-                <View style={{width:'55%'}}>
-                    <Text style={styles.challengeLabel}
-                    >
-                    {activeChallengeUserData.displayName}{'  '} 
-                    </Text>
-                    <Text style={{
-                                    fontFamily:fonts.GothamMedium,
-                                    color:colors.grey.dark,
-                                    fontSize:wp('3%')
-                                }}
-                    >
-                        {/* Day {totalChallengeWorkoutsCompleted.length} of {total} - keep it going! */}
-                        Day {currentDay} of {activeChallengeData.numberOfDays} - keep it going!
-                    </Text>
-                </View>
-            
-                <View
-                    style={{marginStart:wp('8%')}}
-                >
-                    <ChallengeProgressBar
-                        // completed={totalChallengeWorkoutsCompleted.length}
-                        completed={currentDay}
-                        total = {activeChallengeData.numberOfDays}
-                        size ={wp('26%')}
-                    />
-                </View>
-            </View> 
-            <PhaseCard 
-                onPress={()=>console.log(">>>>")}
-                image={phaseData.thumbnail}
-                phase={phase}
-                phaseData={phaseData}
-                openLink={openLink}
-            />
+    const {
+      phase,
+      phaseData,
+      activeChallengeData,
+      activeChallengeUserData,
+      totalChallengeWorkoutsCompleted,
+      openLink,
+      currentDay,
+    } = this.props;
+    let total = 0;
+    activeChallengeData.workouts.forEach((res) => {
+      if (res.name && res.name.toLowerCase() != "rest")
+        total += res.days.length;
+    });
+    console.log(activeChallengeData.numberOfDays);
+    return (
+      <View>
+        <View style={styles.ChallengeProgressCardContainer}>
+          <View style={{ width: "55%" }}>
+            <Text style={styles.challengeLabel}>
+              {activeChallengeUserData.displayName}
+              {"  "}
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.SimplonMonoMedium,
+                color: colors.grey.dark,
+                fontSize: wp("3%"),
+              }}
+            >
+              {/* Day {totalChallengeWorkoutsCompleted.length} of {total} - keep it going! */}
+              Day {currentDay} of {activeChallengeData.numberOfDays} - keep it
+              going!
+            </Text>
+          </View>
 
+          <View style={{ marginStart: wp("8%") }}>
+            <ChallengeProgressBar
+              // completed={totalChallengeWorkoutsCompleted.length}
+              completed={currentDay}
+              total={activeChallengeData.numberOfDays}
+              size={wp("26%")}
+            />
+          </View>
         </View>
-      )
+        <PhaseCard
+          onPress={() => console.log(">>>>")}
+          image={phaseData.thumbnail}
+          phase={phase}
+          phaseData={phaseData}
+          openLink={openLink}
+        />
+      </View>
+    );
   }
 }
 
 export default ChallengeProgressCard2;
 
-
-         {/* <View style={calendarStyles.challengeProgressContainer}>
+{
+  /* <View style={calendarStyles.challengeProgressContainer}>
            <View style={calendarStyles.progressCircleContainer}>
               <View style={calendarStyles.sliderContainer}> 
                   <Text style={calendarStyles.sliderSideText}>0</Text>
@@ -131,4 +135,5 @@ export default ChallengeProgressCard2;
                 onPress={openLink}
              />
           </View>
-         </View> */}
+         </View> */
+}

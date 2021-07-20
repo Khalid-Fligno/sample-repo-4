@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   SafeAreaView,
@@ -10,89 +10,89 @@ import {
   Dimensions,
   ActivityIndicator,
   Platform,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import ProfileButton from '../Shared/ProfileButton';
-import Icon from '../Shared/Icon';
-import colors from '../../styles/colors';
-import globalStyle from '../../styles/globalStyles';
-const { width } = Dimensions.get('window');
+} from "react-native";
+import PropTypes from "prop-types";
+import ProfileButton from "../Shared/ProfileButton";
+import Icon from "../Shared/Icon";
+import colors from "../../styles/colors";
+import globalStyle from "../../styles/globalStyles";
+import VIcon from "react-native-vector-icons/Fontisto";
+const { width } = Dimensions.get("window");
 
 const headerContainer = {
   width,
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
   height: 50,
   borderBottomWidth: 0,
-  backgroundColor:colors.white,
-  borderBottomWidth:1,
-  borderBottomColor:colors.grey.light
+  backgroundColor: colors.white,
+  borderBottomWidth: 1,
+  borderBottomColor: colors.grey.light,
 };
 
 export default class Header extends React.PureComponent {
-  componentDidMount(){
-    if(Platform.OS === 'android'){
+  componentDidMount() {
+    if (Platform.OS === "android") {
       StatusBar.setTranslucent(false);
       StatusBar.setBackgroundColor("#FFF");
     }
-}
+  }
 
-  
   handleBack = () => {
     const { navigation } = this.props;
     navigation.pop();
-  }
+  };
   goToHome = () => {
     const { navigation } = this.props;
-    navigation.navigate('Home')
-  }
+    navigation.navigate("Home");
+  };
   handleLogout = () => {
     const { navigation } = this.props;
     if (navigation.state.params.handleLogout) {
       navigation.state.params.handleLogout();
     }
-  }
+  };
   handleHelper = () => {
     const { navigation } = this.props;
     if (navigation.state.params.toggleHelperModal) {
       navigation.state.params.toggleHelperModal();
     }
-  }
+  };
   handleSkip = () => {
     const { navigation } = this.props;
     if (navigation.state.params.handleSkip) {
       navigation.state.params.handleSkip();
     }
-  }
+  };
   handleCancel = () => {
     const { navigation } = this.props;
     if (navigation.state.params.handleCancel) {
       navigation.state.params.handleCancel();
     }
-  }
+  };
   handleProfileButton = () => {
     const { navigation } = this.props;
-    navigation.navigate('ProfileHome');
-  }
+    navigation.navigate("ProfileHome");
+  };
   handleRestore = () => {
     const { navigation } = this.props;
     if (navigation.state.params.handleRestore) {
       navigation.state.params.handleRestore();
     }
-  }
+  };
   handleStart = () => {
     const { navigation } = this.props;
     if (navigation.state.params.handleStart) {
       navigation.state.params.handleStart();
     }
-  }
-  handleActiveChallengeSetting = () =>{
+  };
+  handleActiveChallengeSetting = () => {
     const { navigation } = this.props;
     if (navigation.state.params.activeChallengeSetting) {
       navigation.state.params.activeChallengeSetting();
     }
-  }
+  };
 
   render() {
     const {
@@ -108,9 +108,9 @@ export default class Header extends React.PureComponent {
       withProfileButton,
       headerTitleParams,
       withLogoutButton,
-      activeChallengeSetting
+      activeChallengeSetting,
     } = this.props;
-    
+
     return (
       <SafeAreaView
         style={[
@@ -134,187 +134,149 @@ export default class Header extends React.PureComponent {
             // stack === 'progress' && styles.progressHeader,
           ]}
         >
-          {
-            withBackButton  &&(
+          {withBackButton && (
+            <TouchableOpacity
+              style={globalStyle.headerContentContainerLeft}
+              onPress={this.handleBack}
+            >
+              <Icon
+                name="chevron-left"
+                size={20}
+                color={colors.themeColor.color}
+              />
+            </TouchableOpacity>
+          )}
+
+          {activeChallengeSetting && (
+            <View style={globalStyle.headerContentContainerLeft}>
               <TouchableOpacity
-                style={globalStyle.headerContentContainerLeft}
-                onPress={this.handleBack}
+                style={{
+                  height: 30,
+                  width: 30,
+                  marginLeft: 5,
+                }}
+                onPress={this.handleActiveChallengeSetting}
               >
-                <Icon
-                  name="chevron-left"
-                  size={20}
-                  color={colors.themeColor.color}
-                />
-              </TouchableOpacity>
-            )
-          }
-  
-          {
-            activeChallengeSetting && (
-              <View style={globalStyle.headerContentContainerLeft}>
-                <TouchableOpacity
+                {/* <Image
+                  source={require("../../../assets/icons/settingIcon.jpg")}
+                  resizeMode="stretch"
                   style={{
-                    height: 30,
-                    width: 30,
-                    marginLeft:5
+                    height: 32,
+                    width: 32,
                   }}
-                  onPress={this.handleActiveChallengeSetting}
-                >
-                  <Image
-                        source={require('../../../assets/icons/settingIcon.jpg')}
-                        resizeMode='stretch'
-                        style={{
-                          height: 32,
-                          width: 32,
-                        }}
-                 />
-                </TouchableOpacity>
-              </View>  
-            )
-          }
-          {
-            withHomeButton && (
-              <TouchableOpacity
-                style={globalStyle.headerContentContainerLeft}
-                onPress={this.goToHome}
-              >
-                <Icon
-                  name="chevron-left"
-                  size={20}
-                  color={colors.themeColor.color}
-                />
+                /> */}
+                <VIcon name="player-settings" size={27} color={colors.citrus} />
               </TouchableOpacity>
-            )
-          }
-          {
-            withHelpButton && (
-              <TouchableOpacity
-                style={globalStyle.headerContentContainerLeft}
-                onPress={this.handleHelper}
-              >
-                <Icon
-                  name="question-speech-bubble"
-                  size={30}
-                  color={colors.themeColor.color}
-                />
-              </TouchableOpacity>
-            )
-          }
-          {
-            withLogoutButton && (
-              <TouchableOpacity
-                style={globalStyle.headerContentContainerLeft}
-                onPress={this.handleLogout}
-              >
-                <Text style={globalStyle.logoutButton}>
-                  Logout
-                </Text>
-              </TouchableOpacity>
-            )
-          }
-          {
-            !withHomeButton &&
-            !withBackButton && 
-            !withHelpButton && 
-            !withLogoutButton && 
-            !activeChallengeSetting &&
-            (
+            </View>
+          )}
+          {withHomeButton && (
+            <TouchableOpacity
+              style={globalStyle.headerContentContainerLeft}
+              onPress={this.goToHome}
+            >
+              <Icon
+                name="chevron-left"
+                size={20}
+                color={colors.themeColor.color}
+              />
+            </TouchableOpacity>
+          )}
+          {withHelpButton && (
+            <TouchableOpacity
+              style={globalStyle.headerContentContainerLeft}
+              onPress={this.handleHelper}
+            >
+              <Icon
+                name="question-speech-bubble"
+                size={30}
+                color={colors.themeColor.color}
+              />
+            </TouchableOpacity>
+          )}
+          {withLogoutButton && (
+            <TouchableOpacity
+              style={globalStyle.headerContentContainerLeft}
+              onPress={this.handleLogout}
+            >
+              <Text style={globalStyle.logoutButton}>Logout</Text>
+            </TouchableOpacity>
+          )}
+          {!withHomeButton &&
+            !withBackButton &&
+            !withHelpButton &&
+            !withLogoutButton &&
+            !activeChallengeSetting && (
               <View style={globalStyle.headerContentContainerLeft} />
-            )
-          }
+            )}
           <View style={globalStyle.headerContentContainer}>
-            {
-              headerTitleParams ? (
-                <Text style={globalStyle.headerTitleText}>
-                  {headerTitleParams}
-                </Text>
-              ) : (
-                    <Image
-                      source={require('../../../assets/icons/fitazfk2-logo.png')}
-                      style={globalStyle.fitazfkIcon}
-                    />
-              
-              )
-            }
+            {headerTitleParams ? (
+              <Text style={globalStyle.headerTitleText}>
+                {headerTitleParams}
+              </Text>
+            ) : (
+              <Image
+                source={require("../../../assets/icons/FITAZ_BrandMark.png")}
+                style={globalStyle.fitazfkIcon}
+                resizeMode="contain"
+              />
+            )}
           </View>
-          {
-            withSkipButton && (
-              <TouchableOpacity
-                style={globalStyle.headerContentContainerRight}
-                onPress={this.handleSkip}
-              >
-                <Text style={globalStyle.skipButton}>
-                  Skip
-                </Text>
-              </TouchableOpacity>
-            )
-          }
-          {
-            withCancelButton && (
-              <TouchableOpacity
-                style={globalStyle.headerContentContainerRight}
-                onPress={this.handleCancel}
-              >
-                <Text style={globalStyle.skipButton}>
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-            )
-          }
-          {
-            withRestoreButton && (
-              <TouchableOpacity
-                style={globalStyle.headerContentContainerRight}
-                onPress={this.handleRestore}
-              >
-                <Text style={globalStyle.skipButton}>
-                  Restore
-                </Text>
-              </TouchableOpacity>
-            )
-          }
-          {
-            withStartButton && navigation.state.params.handleStart && (
-              <TouchableOpacity
-                style={globalStyle.headerContentContainerRight}
-                onPress={this.handleStart}
-              >
-                <Text style={globalStyle.skipButton}>
-                  Start
-                </Text>
-                <Icon
-                  name="chevron-right"
-                  size={20}
-                  color={colors.black}
-                />
-              </TouchableOpacity>
-            )
-          }
-          {
-            withStartButton && !navigation.state.params.handleStart && (
-              <View style={globalStyle.headerContentContainerRightLoading}>
-                <ActivityIndicator
-                  color={colors.themeColor.color}
-                  style={globalStyle.activityIndicator}
-                />
-              </View>
-            )
-          }
-          {
-            withProfileButton && (
-              <TouchableOpacity
-                style={globalStyle.headerContentContainerRight}
-                onPress={this.handleProfileButton}
-              >
-                <ProfileButton />
-              </TouchableOpacity>
-              )
-          }
-          {
-            !withStartButton && !withSkipButton && !withCancelButton && !withProfileButton && !withRestoreButton && (
+          {withSkipButton && (
+            <TouchableOpacity
+              style={globalStyle.headerContentContainerRight}
+              onPress={this.handleSkip}
+            >
+              <Text style={globalStyle.skipButton}>Skip</Text>
+            </TouchableOpacity>
+          )}
+          {withCancelButton && (
+            <TouchableOpacity
+              style={globalStyle.headerContentContainerRight}
+              onPress={this.handleCancel}
+            >
+              <Text style={globalStyle.skipButton}>Cancel</Text>
+            </TouchableOpacity>
+          )}
+          {withRestoreButton && (
+            <TouchableOpacity
+              style={globalStyle.headerContentContainerRight}
+              onPress={this.handleRestore}
+            >
+              <Text style={globalStyle.skipButton}>Restore</Text>
+            </TouchableOpacity>
+          )}
+          {withStartButton && navigation.state.params.handleStart && (
+            <TouchableOpacity
+              style={globalStyle.headerContentContainerRight}
+              onPress={this.handleStart}
+            >
+              <Text style={globalStyle.skipButton}>Start</Text>
+              <Icon name="chevron-right" size={20} color={colors.black} />
+            </TouchableOpacity>
+          )}
+          {withStartButton && !navigation.state.params.handleStart && (
+            <View style={globalStyle.headerContentContainerRightLoading}>
+              <ActivityIndicator
+                color={colors.themeColor.color}
+                style={globalStyle.activityIndicator}
+              />
+            </View>
+          )}
+          {withProfileButton && (
+            <TouchableOpacity
+              style={globalStyle.headerContentContainerRight}
+              onPress={this.handleProfileButton}
+            >
+              <ProfileButton />
+            </TouchableOpacity>
+          )}
+          {!withStartButton &&
+            !withSkipButton &&
+            !withCancelButton &&
+            !withProfileButton &&
+            !withRestoreButton && (
               <View style={globalStyle.headerContentContainerRight} />
-            )
-          }
+            )}
         </View>
       </SafeAreaView>
     );
@@ -349,11 +311,11 @@ Header.defaultProps = {
   headerTitleParams: null,
 };
 
-const styles = StyleSheet.create({  
+const styles = StyleSheet.create({
   defaultHeader: {
     ...headerContainer,
     backgroundColor: colors.themeColor.headerBackgroundColor,
-    marginTop: Platform.OS === 'android' ? StatusBar.currentHeight+1 : 0
+    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 1 : 0,
   },
   // nutritionHeader: {
   //   ...headerContainer,
@@ -369,5 +331,4 @@ const styles = StyleSheet.create({
   // progressHeader: {
   //   ...headerContainer,
   // },
-  
 });

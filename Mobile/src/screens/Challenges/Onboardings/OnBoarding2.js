@@ -85,7 +85,9 @@ export default class OnBoarding2 extends Component {
       this.props.navigation.navigate('ChallengeOnBoarding3',{
         data:{
                challengeData:updatedChallengedata
-             }
+             },
+             onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
+             challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
       })
     }else{
       this.props.navigation.navigate('ChallengeOnBoarding1',{

@@ -4,12 +4,14 @@ import ExerciseStack from './ExerciseStack';
 import ProfileStack from './ProfileStack';
 import { fadeSpec, fade } from './utils';
 import ChallengeOnboardingStack from './ChallengeOnboardingStack';
+import ChallengeOnboardingStackReverse from './ChallengeOnboardingStackReverse';
 
 const AppStack = createStackNavigator(
   {
     Tabs: { screen: TabStack },
     Profile: { screen: ProfileStack },
     Exercise: { screen: ExerciseStack },
+    ChallengeOnBoardingReverse: { screen: ChallengeOnboardingStackReverse },
     ChallengeOnBoarding: { screen:ChallengeOnboardingStack },
     
   },

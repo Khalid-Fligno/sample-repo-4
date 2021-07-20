@@ -1,42 +1,35 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
+import { ScrollView, View, Text, Alert, Linking } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
+import * as FileSystem from "expo-file-system";
+import firebase from "firebase";
+import ReactTimeout from "react-timeout";
+import { db } from "../../../../config/firebase";
+import Loader from "../../../components/Shared/Loader";
+import colors from "../../../styles/colors";
+import globalStyle, { containerPadding } from "../../../styles/globalStyles";
+import calendarStyles from "./calendarStyle";
+import * as Haptics from "expo-haptics";
 import {
-  ScrollView,
-  View,
-  Text,
-  Alert,
-  Linking
-} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import * as FileSystem from 'expo-file-system';
-import firebase from 'firebase';
-import ReactTimeout from 'react-timeout';
-import { db } from '../../../../config/firebase';
-import Loader from '../../../components/Shared/Loader';
-import colors from '../../../styles/colors';
-import globalStyle, { containerPadding } from '../../../styles/globalStyles';
-import calendarStyles from './calendarStyle';
-import * as Haptics from 'expo-haptics';
-import { 
-  getCurrentPhase, 
-  getTotalChallengeWorkoutsCompleted, 
-  getCurrentChallengeDay, 
-  getTodayRecommendedMeal, 
+  getCurrentPhase,
+  getTotalChallengeWorkoutsCompleted,
+  getCurrentChallengeDay,
+  getTodayRecommendedMeal,
   getTodayRecommendedWorkout,
-  isActiveChallenge
-} from '../../../utils/challenges';
-import CustomCalendarStrip from '../../../components/Calendar/CustomCalendarStrip';
-import ChallengeProgressCard2 from '../../../components/Calendar/ChallengeProgressCard2';
-import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
-import TodayMealsList from '../../../components/Calendar/TodayMealsList';
+  isActiveChallenge,
+} from "../../../utils/challenges";
+import CustomCalendarStrip from "../../../components/Calendar/CustomCalendarStrip";
+import ChallengeProgressCard2 from "../../../components/Calendar/ChallengeProgressCard2";
+import ChallengeWorkoutCard from "../../../components/Calendar/ChallengeWorkoutCard";
+import TodayMealsList from "../../../components/Calendar/TodayMealsList";
 import Modal from "react-native-modal";
-import ChallengeSetting from '../../../components/Calendar/ChallengeSetting';
-import moment from 'moment';
-import createUserChallengeData from '../../../components/Challenges/UserChallengeData';
-import { widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import { NavigationActions } from 'react-navigation';
-import { downloadExerciseWC, loadExercise } from '../../../utils/workouts';
-
+import ChallengeSetting from "../../../components/Calendar/ChallengeSetting";
+import moment from "moment";
+import createUserChallengeData from "../../../components/Challenges/UserChallengeData";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { NavigationActions } from "react-navigation";
+import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -46,17 +39,17 @@ class CalendarHomeScreen extends React.PureComponent {
       loading: false,
       isSwiping: false,
       dayOfWeek: undefined,
-      activeChallengeUserData:undefined,
-      meals:undefined,
-      activeChallengeData:undefined,
-      todayRecommendedMeal:undefined,
-      challengeMealsFilterList:undefined,
+      activeChallengeUserData: undefined,
+      meals: undefined,
+      activeChallengeData: undefined,
+      todayRecommendedMeal: undefined,
+      challengeMealsFilterList: undefined,
       isSettingVisible: false,
-      isSchedule:false,
-      ScheduleData:undefined,
-      CalendarSelectedDate:undefined,
-      todayRcWorkout:undefined,
-      loadingExercises:false
+      isSchedule: false,
+      ScheduleData: undefined,
+      CalendarSelectedDate: undefined,
+      todayRcWorkout: undefined,
+      loadingExercises: false,
     };
     this.calendarStrip = React.createRef();
   }
@@ -66,332 +59,402 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   componentDidMount = async () => {
-    this.props.navigation.setParams({ toggleHelperModal: this.showHelperModal });
+    this.props.navigation.setParams({
+      toggleHelperModal: this.showHelperModal,
+    });
     await this.fetchCalendarEntries();
     await this.fetchActiveChallengeUserData();
     await this.props.navigation.setParams({
-      activeChallengeSetting: () => this.handleActiveChallengeSetting()
+      activeChallengeSetting: () => this.handleActiveChallengeSetting(),
     });
 
     // this.focusListener = this.props.navigation.addListener('willFocus', () => {
     //   this.onFocusFunction()
     // })
-  }
+  };
   // async onFocusFunction(){
   //   await this.fetchCalendarEntries();
   // }
 
-  handleActiveChallengeSetting(){
-    this.toggleSetting()
+  handleActiveChallengeSetting() {
+    this.toggleSetting();
   }
 
   componentWillUnmount() {
-    // this.focusListener.remove();  
-    if(this.unsubscribeFACUD)
-      this.unsubscribeFACUD();
-    if(this.unsubscribeFACD)
-      this.unsubscribeFACD(); 
-    if(this.unsubscribeSchedule)
-      this.unsubscribeSchedule()   
+    // this.focusListener.remove();
+    if (this.unsubscribeFACUD) this.unsubscribeFACUD();
+    if (this.unsubscribeFACD) this.unsubscribeFACD();
+    if (this.unsubscribeSchedule) this.unsubscribeSchedule();
   }
 
   fetchCalendarEntries = async () => {
     const selectedDate = this.calendarStrip.current.getSelectedDate();
     //Todo :call the function to get the data of current date
-    this.handleDateSelected(selectedDate)
-    
-  }
+    this.handleDateSelected(selectedDate);
+  };
 
-  resetActiveChallengeUserData =()=>{
-    this.props.navigation.reset([NavigationActions.navigate({ routeName: 'CalendarHome' })], 0);
-  }
+  resetActiveChallengeUserData = () => {
+    this.props.navigation.reset(
+      [NavigationActions.navigate({ routeName: "CalendarHome" })],
+      0
+    );
+  };
 
   handleDateSelected = async (date) => {
-    const { activeChallengeData,activeChallengeUserData} = this.state
-    this.setState({ loading: true});
-    this.stringDate = date.format('YYYY-MM-DD').toString();
+    const { activeChallengeData, activeChallengeUserData } = this.state;
+    this.setState({ loading: true });
+    this.stringDate = date.format("YYYY-MM-DD").toString();
     //TODO:check the active challenge cndtns
-    if(activeChallengeData && 
-        activeChallengeUserData && 
-          activeChallengeUserData.status ==="Active" &&
-            new Date(activeChallengeUserData.startDate).getTime()<= new Date(this.stringDate).getTime() &&
-              new Date(activeChallengeUserData.endDate).getTime()>= new Date(this.stringDate).getTime()
-       ){
+    if (
+      activeChallengeData &&
+      activeChallengeUserData &&
+      activeChallengeUserData.status === "Active" &&
+      new Date(activeChallengeUserData.startDate).getTime() <=
+        new Date(this.stringDate).getTime() &&
+      new Date(activeChallengeUserData.endDate).getTime() >=
+        new Date(this.stringDate).getTime()
+    ) {
       this.getCurrentPhaseInfo();
-    }
-    else{
-      if(!this.state.isSchedule && !this.state.ScheduleData)
+    } else {
+      if (!this.state.isSchedule && !this.state.ScheduleData)
         this.checkScheduleChallenge();
-      else{
-        const isBetween = moment(this.stringDate)
-        .isBetween(
+      else {
+        const isBetween = moment(this.stringDate).isBetween(
           this.state.ScheduleData.startDate,
-          this.state.ScheduleData.endDate, 
-          undefined, 
-          '[]'
+          this.state.ScheduleData.endDate,
+          undefined,
+          "[]"
         );
-        if(isBetween)
-          this.getCurrentPhaseInfo();
-        else{
-          this.setState({loading:false});
+        if (isBetween) this.getCurrentPhaseInfo();
+        else {
+          this.setState({ loading: false });
           this.forceUpdate();
         }
       }
     }
-  }
-  
-  async checkScheduleChallenge(){
-    const uid = await AsyncStorage.getItem('uid');
+  };
+
+  async checkScheduleChallenge() {
+    const uid = await AsyncStorage.getItem("uid");
     //Checking if any schedule challenge is assign to user
-    isActiveChallenge().then((res)=>{
-        const todayDate=moment(new Date()).format('YYYY-MM-DD');
-        if(res && moment(res.startDate).isSame(todayDate) && res.isSchedule){
-          const challengeRef =db.collection('users').doc(uid).collection('challenges').doc(res.id);
-          challengeRef.set({status:"Active",isSchedule:false},{merge:true});  
+    isActiveChallenge().then((res) => {
+      const todayDate = moment(new Date()).format("YYYY-MM-DD");
+      if (res && moment(res.startDate).isSame(todayDate) && res.isSchedule) {
+        const challengeRef = db
+          .collection("users")
+          .doc(uid)
+          .collection("challenges")
+          .doc(res.id);
+        challengeRef.set(
+          { status: "Active", isSchedule: false },
+          { merge: true }
+        );
+      } else if (res && res.isSchedule) {
+        const isBetween = moment(this.stringDate).isBetween(
+          res.startDate,
+          res.endDate,
+          undefined,
+          "[]"
+        );
+        if (!this.state.isSchedule) {
+          this.setState({
+            CalendarSelectedDate: moment(res.startDate),
+            isSchedule: true,
+            ScheduleData: res,
+            loading: true,
+          });
+          this.stringDate = res.startDate;
+          this.fetchActiveChallengeData(res);
         }
-        else 
-        if( res && res.isSchedule){
-          const isBetween = moment(this.stringDate)
-          .isBetween(
-            res.startDate,
-            res.endDate, 
-            undefined, 
-            '[]'
-          );
-            if(!this.state.isSchedule){
-              this.setState({
-                CalendarSelectedDate:moment(res.startDate),
-                isSchedule:true,
-                ScheduleData:res,
-                loading:true
-              });
-              this.stringDate = res.startDate;
-              this.fetchActiveChallengeData(res);
-            }
-            if(isBetween){
-              this.setState({isSchedule:true,ScheduleData:res});
-              if(!this.state.activeChallengeData){
-                this.fetchActiveChallengeData(res);
-              }else{
-                this.getCurrentPhaseInfo();
-              }
-
-            }else{
-              this.setState({isSchedule:true,ScheduleData:res,loading:false});
-            }
-
-        }else{
-          this.setState({loading:false});
+        if (isBetween) {
+          this.setState({ isSchedule: true, ScheduleData: res });
+          if (!this.state.activeChallengeData) {
+            this.fetchActiveChallengeData(res);
+          } else {
+            this.getCurrentPhaseInfo();
+          }
+        } else {
+          this.setState({
+            isSchedule: true,
+            ScheduleData: res,
+            loading: false,
+          });
         }
-
-    })
+      } else {
+        this.setState({ loading: false });
+      }
+    });
   }
 
   loadExercises = async (workoutData) => {
     this.setState({ loadingExercises: true });
     const workout = await loadExercise(workoutData);
     // console.log("line195",workout)
-    if(workout && workout.newWorkout){
-      console.log('Here....')
-      const warmUpExercises = await downloadExerciseWC(workout,workout.warmUpExercises,workout.warmUpExerciseModel,'warmUp');
-      if(warmUpExercises.length > 0){
-        const coolDownExercises = await downloadExerciseWC(workout,workout.coolDownExercises,workout.coolDownExerciseModel,'coolDown');
-        if(coolDownExercises.length > 0){
-            const newWorkout = Object.assign({},workout,{warmUpExercises:warmUpExercises,coolDownExercises:coolDownExercises});
-            this.goToNext(newWorkout);
-            console.log(newWorkout)
-        }else{
-          this.setState({loadingExercises:false});
-          Alert.alert("Alert!","Something went wrong!");
+    if (workout && workout.newWorkout) {
+      console.log("Here....");
+      const warmUpExercises = await downloadExerciseWC(
+        workout,
+        workout.warmUpExercises,
+        workout.warmUpExerciseModel,
+        "warmUp"
+      );
+      if (warmUpExercises.length > 0) {
+        const coolDownExercises = await downloadExerciseWC(
+          workout,
+          workout.coolDownExercises,
+          workout.coolDownExerciseModel,
+          "coolDown"
+        );
+        if (coolDownExercises.length > 0) {
+          const newWorkout = Object.assign({}, workout, {
+            warmUpExercises: warmUpExercises,
+            coolDownExercises: coolDownExercises,
+          });
+          this.goToNext(newWorkout);
+          console.log(newWorkout);
+        } else {
+          this.setState({ loadingExercises: false });
+          Alert.alert("Alert!", "Something went wrong!");
         }
-      }else{
-        this.setState({loadingExercises:false});
-        Alert.alert("Alert!","Something went wrong!");
+      } else {
+        this.setState({ loadingExercises: false });
+        Alert.alert("Alert!", "Something went wrong!");
       }
-    }
-    else if(workout){
+    } else if (workout) {
       this.goToNext(workout);
-    }else{
-      this.setState({loadingExercises:false});
+    } else {
+      this.setState({ loadingExercises: false });
     }
-  }
+  };
 
-  async goToNext(workout){
-    console.log(">>here")
-    const fitnessLevel = await AsyncStorage.getItem('fitnessLevel', null);
+  async goToNext(workout) {
+    console.log(">>here");
+    if (this.currentChallengeDay === 1) {
+      await FileSystem.downloadAsync(
+        "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+        `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+      );
+    }
+    const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
     this.setState({ loadingExercises: false });
-    if(this.currentChallengeDay > 0){
-      Object.assign(workout,{displayName:`${workout.displayName} - Day ${this.currentChallengeDay}`}) 
-    }
-        this.props.navigation.navigate('WorkoutInfo', 
-            {
-              workout, 
-              reps: workout.difficultyLevel[fitnessLevel-1].toString(),
-              workoutSubCategory:workout.workoutSubCategory,
-              fitnessLevel,
-              extraProps:{fromCalender:true}
-           }
-        ) 
-  }
-  
-  deleteCalendarEntry = async (fieldToDelete) => {
-    const uid = await AsyncStorage.getItem('uid');
-    const stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
-    this.unsubscribe = await db.collection('users').doc(uid)
-      .collection('calendarEntries').doc(stringDate)
-      .update({
-        [fieldToDelete]: firebase.firestore.FieldValue.delete(),
-      })
-      this.setState({ isSwiping: false })
-  }
-
-  // ToDo : for challenges
-  fetchActiveChallengeUserData = async () =>{
-        
-    try{  
-      this.setState({ loading: true });
-      const uid = await AsyncStorage.getItem('uid');
-      this.unsubscribeFACUD = await db.collection('users').doc(uid).collection('challenges')
-      .where("status", "==" , "Active")
-      .onSnapshot(async (querySnapshot) => {
-        const list = [];
-        await querySnapshot.forEach(async (doc) => {
-            await list.push(await doc.data());
-        });
-        const activeChallengeEndDate = list[0]?list[0].endDate:null;
-        const currentDate = moment().format('YYYY-MM-DD');
-        const isCompleted = moment(currentDate).isSameOrAfter(activeChallengeEndDate);
-        if(list[0] && !isCompleted){
-          this.fetchActiveChallengeData(list[0])
-        }else{
-          if(isCompleted){  //TODO check challenge is Completed or not
-            const newData = createUserChallengeData({...list[0],status:"InActive"},new Date())
-            const challengeRef = db.collection('users').doc(uid).collection('challenges').doc(list[0].id)
-            challengeRef.set(newData,{merge:true});
-            this.props.navigation.navigate('ChallengeSubscription');
-            Alert.alert('Congratulations!',
-              'You have completed your challenge',
-                [
-                  { text: 'OK', onPress: () => {
-                  } }
-                ],
-                { cancelable: false }
-              )
-           }else{
-            this.setState({ 
-              activeChallengeUserData:undefined,
-              loading:false
-            });
-           }
-        }
+    if (this.currentChallengeDay > 0) {
+      Object.assign(workout, {
+        displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
       });
     }
-    catch(err){
-      this.setState({ loading: false });
-      console.log(err)
-      Alert.alert('Fetch active challenge user data error!')
-    }  
-
+    if (this.currentChallengeDay === 1) {
+      this.props.navigation.navigate("Burpee1", {
+        fromScreen: "WorkoutInfo",
+        screenReturnParams: {
+          workout,
+          reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
+          workoutSubCategory: workout.workoutSubCategory,
+          fitnessLevel,
+          extraProps: { fromCalender: true },
+        },
+      });
+      return;
+    }
+    this.props.navigation.navigate("WorkoutInfo", {
+      workout,
+      reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
+      workoutSubCategory: workout.workoutSubCategory,
+      fitnessLevel,
+      extraProps: { fromCalender: true },
+    });
   }
 
-  fetchActiveChallengeData = async (activeChallengeUserData) =>{
-    try{
-      this.unsubscribeFACD = await db.collection('challenges').doc(activeChallengeUserData.id)
-      .onSnapshot(async (doc) => {
-          if(doc.exists){
-            this.setState({ 
+  deleteCalendarEntry = async (fieldToDelete) => {
+    const uid = await AsyncStorage.getItem("uid");
+    const stringDate = this.calendarStrip.current
+      .getSelectedDate()
+      .format("YYYY-MM-DD")
+      .toString();
+    this.unsubscribe = await db
+      .collection("users")
+      .doc(uid)
+      .collection("calendarEntries")
+      .doc(stringDate)
+      .update({
+        [fieldToDelete]: firebase.firestore.FieldValue.delete(),
+      });
+    this.setState({ isSwiping: false });
+  };
+
+  // ToDo : for challenges
+  fetchActiveChallengeUserData = async () => {
+    try {
+      this.setState({ loading: true });
+      const uid = await AsyncStorage.getItem("uid");
+      this.unsubscribeFACUD = await db
+        .collection("users")
+        .doc(uid)
+        .collection("challenges")
+        .where("status", "==", "Active")
+        .onSnapshot(async (querySnapshot) => {
+          const list = [];
+          await querySnapshot.forEach(async (doc) => {
+            await list.push(await doc.data());
+          });
+          const activeChallengeEndDate = list[0] ? list[0].endDate : null;
+          const currentDate = moment().format("YYYY-MM-DD");
+          const isCompleted = moment(currentDate).isSameOrAfter(
+            activeChallengeEndDate
+          );
+          if (list[0] && !isCompleted) {
+            this.fetchActiveChallengeData(list[0]);
+          } else {
+            if (isCompleted) {
+              //TODO check challenge is Completed or not
+              const newData = createUserChallengeData(
+                { ...list[0], status: "InActive" },
+                new Date()
+              );
+              const challengeRef = db
+                .collection("users")
+                .doc(uid)
+                .collection("challenges")
+                .doc(list[0].id);
+              challengeRef.set(newData, { merge: true });
+              this.props.navigation.navigate("ChallengeSubscription");
+              Alert.alert(
+                "Congratulations!",
+                "You have completed your challenge",
+                [{ text: "OK", onPress: () => {} }],
+                { cancelable: false }
+              );
+            } else {
+              this.setState({
+                activeChallengeUserData: undefined,
+                loading: false,
+              });
+            }
+          }
+        });
+    } catch (err) {
+      this.setState({ loading: false });
+      console.log(err);
+      Alert.alert("Fetch active challenge user data error!");
+    }
+  };
+
+  fetchActiveChallengeData = async (activeChallengeUserData) => {
+    try {
+      this.unsubscribeFACD = await db
+        .collection("challenges")
+        .doc(activeChallengeUserData.id)
+        .onSnapshot(async (doc) => {
+          if (doc.exists) {
+            this.setState({
               activeChallengeUserData,
-              activeChallengeData:doc.data() ,
+              activeChallengeData: doc.data(),
               // loading:false
             });
-            setTimeout(()=>{
+            setTimeout(() => {
               // this.setState({ loading: false });
               // if(!doc.data().newChallenge)
               this.getCurrentPhaseInfo();
-            },500)
+            }, 500);
           }
-          
-      });
-    }catch(err){
+        });
+    } catch (err) {
       this.setState({ loading: false });
       console.log(err);
-      Alert.alert('Fetch active challenge data error!')
+      Alert.alert("Fetch active challenge data error!");
     }
+  };
 
-  }
-
-  async getCurrentPhaseInfo(){
-    const {activeChallengeUserData,activeChallengeData} = this.state;
-    if(activeChallengeUserData && activeChallengeData){
-      this.setState({loading:true})
-      const data  = activeChallengeUserData.phases;
+  async getCurrentPhaseInfo() {
+    const { activeChallengeUserData, activeChallengeData } = this.state;
+    if (activeChallengeUserData && activeChallengeData) {
+      this.setState({ loading: true });
+      const data = activeChallengeUserData.phases;
       // this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
-      console.log("date=>",this.stringDate)
-    //TODO :getCurrent phase data
-    this.phase = getCurrentPhase(activeChallengeUserData.phases,this.stringDate)
+      console.log("date=>", this.stringDate);
+      //TODO :getCurrent phase data
+      this.phase = getCurrentPhase(
+        activeChallengeUserData.phases,
+        this.stringDate
+      );
 
-    if(this.phase){
-          //TODO :fetch the current phase data from Challenges collection
-        this.phaseData = activeChallengeData.phases.filter((res)=> res.name === this.phase.name)[0];
+      if (this.phase) {
+        //TODO :fetch the current phase data from Challenges collection
+        this.phaseData = activeChallengeData.phases.filter(
+          (res) => res.name === this.phase.name
+        )[0];
 
         //TODO :calculate the workout completed till selected date
-        this.totalChallengeWorkoutsCompleted = getTotalChallengeWorkoutsCompleted(activeChallengeUserData,this.stringDate)
+        this.totalChallengeWorkoutsCompleted =
+          getTotalChallengeWorkoutsCompleted(
+            activeChallengeUserData,
+            this.stringDate
+          );
 
         //TODO calculate current challenge day
-        this.currentChallengeDay = getCurrentChallengeDay(activeChallengeUserData.startDate,this.stringDate )
-        
-        //TODO getToday one recommended meal randomly  
-        getTodayRecommendedMeal(this.phaseData,activeChallengeData).then((res)=>{
-          this.setState({
-            todayRecommendedMeal: res.recommendedMeal,
-            challengeMealsFilterList: res.challengeMealsFilterList,
-            loading:false
-          })
-        })
-        
+        this.currentChallengeDay = getCurrentChallengeDay(
+          activeChallengeUserData.startDate,
+          this.stringDate
+        );
+
+        //TODO getToday one recommended meal randomly
+        getTodayRecommendedMeal(this.phaseData, activeChallengeData).then(
+          (res) => {
+            this.setState({
+              todayRecommendedMeal: res.recommendedMeal,
+              challengeMealsFilterList: res.challengeMealsFilterList,
+              loading: false,
+            });
+          }
+        );
+
         //TODO get recommended workout here
-        const todayRcWorkout = (await getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate))[0] 
+        const todayRcWorkout = (
+          await getTodayRecommendedWorkout(
+            activeChallengeData.workouts,
+            activeChallengeUserData,
+            this.stringDate
+          )
+        )[0];
         // console.log("TOfdayya",todayRcWorkout)
-        if(todayRcWorkout)
-          this.setState({todayRcWorkout:todayRcWorkout});
-        else
-          this.setState({todayRcWorkout:undefined});
+        if (todayRcWorkout) this.setState({ todayRcWorkout: todayRcWorkout });
+        else this.setState({ todayRcWorkout: undefined });
       }
-  
-      }else{
-      
-      Alert.alert('Something went wrong please try again')
+    } else {
+      // Alert.alert('Something went wrong please try again')
     }
   }
 
-  async goToRecipe(recipeData){
-      this.setState({loading:true});
-      const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
-      await FileSystem.getInfoAsync(fileUri)
-        .then(async ({ exists }) => {
-          if (!exists) {
-            await FileSystem.downloadAsync(
-              recipeData.coverImage,
-              `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`,
-            );
-            this.setState({loading:false});
-          }else{
-            this.setState({loading:false});
-          }
-        }).catch(() => {
+  async goToRecipe(recipeData) {
+    this.setState({ loading: true });
+    const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
+    await FileSystem.getInfoAsync(fileUri)
+      .then(async ({ exists }) => {
+        if (!exists) {
+          await FileSystem.downloadAsync(
+            recipeData.coverImage,
+            `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`
+          );
           this.setState({ loading: false });
-          Alert.alert('', 'Image download error');
-        });
-    this.props.navigation.navigate('Recipe', { recipe: recipeData ,backTitle:'challenge dashboard',extraProps:{fromCalender:true} })
+        } else {
+          this.setState({ loading: false });
+        }
+      })
+      .catch(() => {
+        this.setState({ loading: false });
+        Alert.alert("", "Image download error");
+      });
+    this.props.navigation.navigate("Recipe", {
+      recipe: recipeData,
+      backTitle: "challenge dashboard",
+      extraProps: { fromCalender: true },
+    });
   }
 
   openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Linking.openURL(url);
-  }
-  //-------**--------  
-
-
+  };
+  //-------**--------
 
   render() {
     const {
@@ -403,51 +466,56 @@ class CalendarHomeScreen extends React.PureComponent {
       ScheduleData,
       CalendarSelectedDate,
       todayRcWorkout,
-      loadingExercises
+      loadingExercises,
     } = this.state;
     let showRC = false;
-    if(activeChallengeData && activeChallengeUserData){
+    if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
       //check if selected date is between challenge start and end date
       // console.log("????,,,,",this.stringDate)
-      const isBetween = moment(this.stringDate)
-                        .isBetween(
-                          activeChallengeUserData.startDate,
-                          activeChallengeUserData.endDate, 
-                          undefined, 
-                          '[]'
-                        );
-      if(this.calendarStrip.current){
-        if(isBetween && todayRecommendedMeal && todayRecommendedMeal.length >0)  //check if user has recommended meals
+      const isBetween = moment(this.stringDate).isBetween(
+        activeChallengeUserData.startDate,
+        activeChallengeUserData.endDate,
+        undefined,
+        "[]"
+      );
+      if (this.calendarStrip.current) {
+        if (
+          isBetween &&
+          todayRecommendedMeal &&
+          todayRecommendedMeal.length > 0
+        )
+          //check if user has recommended meals
           showRC = true;
-        else
-          showRC = false;
+        else showRC = false;
       }
     }
-    const mealsList =(
-      showRC &&
+    const mealsList = showRC && (
       <>
         <Text style={calendarStyles.headerText}>Today's Meals</Text>
-        <TodayMealsList 
-          data ={todayRecommendedMeal[0]}
-          onPress={(res)=>this.goToRecipe(res)}
+        <TodayMealsList
+          data={todayRecommendedMeal[0]}
+          onPress={(res) => this.goToRecipe(res)}
         />
-      </>  
-    )
-    const workoutCard =(
-        todayRcWorkout  && showRC &&
-        <>
-          <Text style={calendarStyles.headerText}>Today's Workout</Text>
-          <View style={calendarStyles.listContainer}>
-            <ChallengeWorkoutCard 
-              onPress={ () => todayRcWorkout.name && todayRcWorkout.name !== 'rest'? this.loadExercises(todayRcWorkout,this.currentChallengeDay):'' }
-              res={todayRcWorkout} 
-              currentDay={this.currentChallengeDay}
-              title={activeChallengeData.displayName}
-            />
-          </View>
-        </>  
-    )
+      </>
+    );
+    const workoutCard = todayRcWorkout && showRC && (
+      <>
+        <Text style={calendarStyles.headerText}>Today's Workout</Text>
+        <View style={calendarStyles.listContainer}>
+          <ChallengeWorkoutCard
+            onPress={() =>
+              todayRcWorkout.name && todayRcWorkout.name !== "rest"
+                ? this.loadExercises(todayRcWorkout, this.currentChallengeDay)
+                : ""
+            }
+            res={todayRcWorkout}
+            currentDay={this.currentChallengeDay}
+            title={activeChallengeData.displayName}
+          />
+        </View>
+      </>
+    );
 
     const dayDisplay = (
       <ScrollView
@@ -455,91 +523,78 @@ class CalendarHomeScreen extends React.PureComponent {
         scrollEnabled={!this.state.isSwiping}
         showsVerticalScrollIndicator={false}
       >
-        {
-          this.phaseData && showRC &&
-            <ChallengeProgressCard2
-              phase={this.phase}
-              phaseData={this.phaseData}
-              activeChallengeData={activeChallengeData}
-              activeChallengeUserData = {activeChallengeUserData}
-              totalChallengeWorkoutsCompleted ={this.totalChallengeWorkoutsCompleted}
-              openLink={()=>this.openLink(this.phaseData.pdfUrl)}
-              currentDay={this.currentChallengeDay}
-            />
-        }
-         {
-          workoutCard
-        }
-        {
-          mealsList
-        }
+        {this.phaseData && showRC && (
+          <ChallengeProgressCard2
+            phase={this.phase}
+            phaseData={this.phaseData}
+            activeChallengeData={activeChallengeData}
+            activeChallengeUserData={activeChallengeUserData}
+            totalChallengeWorkoutsCompleted={
+              this.totalChallengeWorkoutsCompleted
+            }
+            openLink={() => this.openLink(this.phaseData.pdfUrl)}
+            currentDay={this.currentChallengeDay}
+          />
+        )}
+        {workoutCard}
+        {mealsList}
       </ScrollView>
     );
-    
-    const setting =(
-      <Modal 
-            isVisible={this.state.isSettingVisible}
-            coverScreen={true}
-            style={{ margin: 0 }}
-            animationIn="fadeInLeft"
-            animationOut="fadeOutLeft"
-            onBackdropPress={() => this.toggleSetting()}
-            // useNativeDriver={true}
+
+    const setting = (
+      <Modal
+        isVisible={this.state.isSettingVisible}
+        coverScreen={true}
+        style={{ margin: 0 }}
+        animationIn="fadeInLeft"
+        animationOut="fadeOutLeft"
+        onBackdropPress={() => this.toggleSetting()}
+        // useNativeDriver={true}
       >
-        <ChallengeSetting 
-          onToggle={()=>this.toggleSetting()}
+        <ChallengeSetting
+          onToggle={() => this.toggleSetting()}
           activeChallengeUserData={activeChallengeUserData}
           activeChallengeData={activeChallengeData}
           isSchedule={isSchedule}
           ScheduleData={ScheduleData}
           navigation={this.props.navigation}
-          fetchCalendarEntries = {this.fetchCalendarEntries}
+          fetchCalendarEntries={this.fetchCalendarEntries}
           resetActiveChallengeUserData={this.resetActiveChallengeUserData}
           navigation={this.props.navigation}
         />
       </Modal>
-    )
+    );
 
     return (
-      <View style={[globalStyle.container,{paddingHorizontal:0}]}>
-        <CustomCalendarStrip 
-            ref1={this.calendarStrip}
-            onDateSelected={(date) => { this.handleDateSelected(date)}}
-            CalendarSelectedDate={CalendarSelectedDate}
+      <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
+        <CustomCalendarStrip
+          ref1={this.calendarStrip}
+          onDateSelected={(date) => {
+            this.handleDateSelected(date);
+          }}
+          CalendarSelectedDate={CalendarSelectedDate}
         />
-        {
-          isSchedule && !showRC && !loading &&
-          <View 
-            style={{margin:wp('5%')}}
-          >
-            <Text 
-              style={calendarStyles.scheduleTitleStyle}
-            >
+        {isSchedule && !showRC && !loading && (
+          <View style={{ margin: wp("5%") }}>
+            <Text style={calendarStyles.scheduleTitleStyle}>
               {ScheduleData.displayName}
             </Text>
-            <Text
-              style={calendarStyles.scheduleTextStyle}
-            >
-              Your challenge will start from { moment(ScheduleData.startDate).format('DD MMM YYYY')}
+            <Text style={calendarStyles.scheduleTextStyle}>
+              Your challenge will start from{" "}
+              {moment(ScheduleData.startDate).format("DD MMM YYYY")}
             </Text>
-            <Text
-              style={calendarStyles.scheduleTextStyle}
-            >
+            <Text style={calendarStyles.scheduleTextStyle}>
               You can change this in settings
             </Text>
-          </View>  
-        }
-        {
-          dayDisplay
-        }
-         {
-           setting
-         }
-          <Loader
-            loading={loading || loadingExercises}
-            color={colors.red.standard}
-            text={loadingExercises?'Please wait we are loading workout':null}
-          />
+          </View>
+        )}
+        {dayDisplay}
+        {setting}
+        <Loader
+          loading={loading || loadingExercises}
+          color={colors.red.standard}
+          text={loadingExercises ? "Please wait we are loading workout" : null}
+        />
       </View>
     );
   }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -8,20 +8,20 @@ import {
   Dimensions,
   TouchableOpacity,
   Picker,
-} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import * as Haptics from 'expo-haptics';
-import Modal from 'react-native-modal';
-import { db } from '../../../../config/firebase';
-import { burpeeOptions, findFitnessLevel } from '../../../utils';
-import CustomButton from '../../../components/Shared/CustomButton';
-import Loader from '../../../components/Shared/Loader';
-import colors from '../../../styles/colors';
-import fonts from '../../../styles/fonts';
-import CustomBtn from '../../../components/Shared/CustomBtn';
-import { containerPadding } from '../../../styles/globalStyles';
+} from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
+import * as Haptics from "expo-haptics";
+import Modal from "react-native-modal";
+import { db } from "../../../../config/firebase";
+import { burpeeOptions, findFitnessLevel } from "../../../utils";
+import CustomButton from "../../../components/Shared/CustomButton";
+import Loader from "../../../components/Shared/Loader";
+import colors from "../../../styles/colors";
+import fonts from "../../../styles/fonts";
+import CustomBtn from "../../../components/Shared/CustomBtn";
+import { containerPadding } from "../../../styles/globalStyles";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 export default class Progress6Screen extends React.PureComponent {
   constructor(props) {
@@ -34,74 +34,86 @@ export default class Progress6Screen extends React.PureComponent {
   }
   componentDidMount = () => {
     this.props.navigation.setParams({ handleCancel: this.handleCancel });
-  }
+  };
   handleCancel = () => {
     Alert.alert(
-      'Stop burpee test?',
-      '',
+      "Stop burpee test?",
+      "",
       [
         {
-          text: 'Cancel', style: 'cancel',
+          text: "Cancel",
+          style: "cancel",
         },
         {
-          text: 'Yes', onPress: () => this.props.navigation.navigate('Home'),
+          text: "Yes",
+          onPress: () => {
+            if (this.props.navigation.getParam("fromScreen")) {
+              const screen = this.props.navigation.getParam("fromScreen");
+              const params =
+                this.props.navigation.getParam("screenReturnParams");
+              this.props.navigation.navigate(screen, params);
+              return;
+            }
+            this.props.navigation.navigate("Home");
+          },
         },
       ],
-      { cancelable: false },
+      { cancelable: false }
     );
-  }
+  };
   handleSubmit = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     const { burpeeCount } = this.state;
-    const uid = await AsyncStorage.getItem('uid');
-    const userRef = db.collection('users').doc(uid);
+    const uid = await AsyncStorage.getItem("uid");
+    const userRef = db.collection("users").doc(uid);
     const fitnessLevel = findFitnessLevel(burpeeCount);
-    AsyncStorage.setItem('fitnessLevel', fitnessLevel.toString());
+    AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
     try {
-      await userRef.set({
-        fitnessLevel,
-        initialBurpeeTestCompleted: true,
-      }, { merge: true });
+      await userRef.set(
+        {
+          fitnessLevel,
+          initialBurpeeTestCompleted: true,
+        },
+        { merge: true }
+      );
       this.setState({ loading: false });
-      this.props.navigation.navigate('Home');
+      if (this.props.navigation.getParam("fromScreen")) {
+        const screen = this.props.navigation.getParam("fromScreen");
+        const params = this.props.navigation.getParam("screenReturnParams");
+        this.props.navigation.navigate(screen, params);
+        return;
+      }
+      this.props.navigation.navigate("Home");
     } catch (err) {
-      Alert.alert('Database write error', `${err}`);
+      Alert.alert("Database write error", `${err}`);
       this.setState({ loading: false });
     }
-  }
+  };
   toggleBurpeeModal = () => {
-    this.setState((prevState) => ({ burpeeModalVisible: !prevState.burpeeModalVisible }));
-  }
+    this.setState((prevState) => ({
+      burpeeModalVisible: !prevState.burpeeModalVisible,
+    }));
+  };
   render() {
-    const {
-      burpeeCount,
-      burpeeModalVisible,
-      loading,
-    } = this.state;
+    const { burpeeCount, burpeeModalVisible, loading } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
           <View style={styles.textContainer}>
-            <Text style={styles.headerText}>
-              Results
-            </Text>
+            <Text style={styles.headerText}>Results</Text>
             <Text style={styles.bodyText}>
               Please enter the number of burpees you completed.
             </Text>
           </View>
           <View style={styles.contentContainer}>
             <View style={styles.inputFieldContainer}>
-              <Text style={styles.inputFieldTitle}>
-                Burpee Count
-              </Text>
+              <Text style={styles.inputFieldTitle}>Burpee Count</Text>
               <TouchableOpacity
                 onPress={this.toggleBurpeeModal}
                 style={styles.inputButton}
               >
-                <Text style={styles.inputSelectionText}>
-                  {burpeeCount}
-                </Text>
+                <Text style={styles.inputSelectionText}>{burpeeCount}</Text>
               </TouchableOpacity>
               <Modal
                 isVisible={burpeeModalVisible}
@@ -114,7 +126,9 @@ export default class Progress6Screen extends React.PureComponent {
                 <View style={styles.modalContainer}>
                   <Picker
                     selectedValue={burpeeCount}
-                    onValueChange={(value) => this.setState({ burpeeCount: value })}
+                    onValueChange={(value) =>
+                      this.setState({ burpeeCount: value })
+                    }
                   >
                     {burpeeOptions.map((i) => (
                       <Picker.Item
@@ -124,26 +138,23 @@ export default class Progress6Screen extends React.PureComponent {
                       />
                     ))}
                   </Picker>
-                  <CustomBtn 
+                  <CustomBtn
                     Title="DONE"
                     titleCapitalise={true}
-                    outline={true}
-                    customBtnStyle={{borderRadius:50,margin:10,marginTop:0}}
+                    outline={false}
+                    customBtnStyle={{ margin: 10, marginTop: 0 }}
                     onPress={this.toggleBurpeeModal}
                   />
-              
                 </View>
               </Modal>
             </View>
           </View>
           <View style={styles.buttonContainer}>
-              <CustomBtn
-                  Title="NEXT"
-                  titleCapitalise={true}
-                  customBtnStyle={{borderRadius:50}}
-                  onPress={this.handleSubmit}
-              />
-      
+            <CustomBtn
+              Title="NEXT"
+              titleCapitalise={true}
+              onPress={this.handleSubmit}
+            />
           </View>
           <Loader
             loading={loading}
@@ -163,15 +174,15 @@ const styles = StyleSheet.create({
   },
   flexContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: colors.offWhite,
   },
   textContainer: {
     flex: 1,
     width,
     padding: 10,
-    paddingHorizontal:containerPadding
+    paddingHorizontal: containerPadding,
   },
   headerText: {
     fontFamily: fonts.bold,
@@ -195,7 +206,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   inputButton: {
-    width: width - containerPadding*2,
+    width: width - containerPadding * 2,
     padding: 15,
     paddingBottom: 12,
     backgroundColor: colors.white,
@@ -211,19 +222,19 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: colors.white,
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
 
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     padding: 10,
-    paddingHorizontal:containerPadding,
-    width:'100%'
+    paddingHorizontal: containerPadding,
+    width: "100%",
   },
 });
