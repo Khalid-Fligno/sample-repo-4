@@ -26,6 +26,7 @@ import fonts from "../../styles/fonts";
 import ActionSheet from "react-native-actionsheet";
 import CustomBtn from "../../components/Shared/CustomBtn";
 import { containerPadding } from "../../styles/globalStyles";
+import * as MediaLibrary from "expo-media-library";
 
 const { width } = Dimensions.get("window");
 const actionSheetOptions = ["Cancel", "Take photo", "Upload from Camera Roll"];
@@ -155,6 +156,8 @@ export default class Progress2Screen extends React.PureComponent {
       );
       this.setState({ image: manipResult });
     }
+    console.log("Image location: ", result.uri);
+    MediaLibrary.saveToLibraryAsync(result.uri);
   };
 
   pickImage = async () => {
