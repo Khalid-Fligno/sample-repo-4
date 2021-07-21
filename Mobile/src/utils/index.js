@@ -1,11 +1,9 @@
 export const uomMap = {
-  metric: 'Metric (cm, kg)',
-  imperial: 'Imperial (inch, lb)',
+  metric: "Metric (cm, kg)",
+  imperial: "Imperial (inch, lb)",
 };
 
-export const weightOptionsMetric = [
-  { value: 30, label: '30' },
-];
+export const weightOptionsMetric = [{ value: 30, label: "30" }];
 
 const populateWeightOptionsMetric = () => {
   for (let i = 31; i <= 150; i += 1) {
@@ -17,9 +15,7 @@ const populateWeightOptionsMetric = () => {
 };
 populateWeightOptionsMetric();
 
-export const waistOptionsMetric = [
-  { value: 20, label: '20' },
-];
+export const waistOptionsMetric = [{ value: 20, label: "20" }];
 
 const populateWaistOptionsMetric = () => {
   for (let i = 21; i <= 250; i += 1) {
@@ -31,9 +27,7 @@ const populateWaistOptionsMetric = () => {
 };
 populateWaistOptionsMetric();
 
-export const hipOptionsMetric = [
-  { value: 20, label: '20' },
-];
+export const hipOptionsMetric = [{ value: 20, label: "20" }];
 
 const populateHipOptionsMetric = () => {
   for (let i = 21; i <= 250; i += 1) {
@@ -45,9 +39,7 @@ const populateHipOptionsMetric = () => {
 };
 populateHipOptionsMetric();
 
-export const weightOptionsImperial = [
-  { value: 60, label: '60' },
-];
+export const weightOptionsImperial = [{ value: 60, label: "60" }];
 
 const populateWeightOptionsImperial = () => {
   for (let i = 61; i <= 350; i += 1) {
@@ -59,9 +51,7 @@ const populateWeightOptionsImperial = () => {
 };
 populateWeightOptionsImperial();
 
-export const waistOptionsImperial = [
-  { value: 15, label: '15' },
-];
+export const waistOptionsImperial = [{ value: 15, label: "15" }];
 
 const populateWaistOptionsImperial = () => {
   for (let i = 16; i <= 100; i += 1) {
@@ -73,9 +63,7 @@ const populateWaistOptionsImperial = () => {
 };
 populateWaistOptionsImperial();
 
-export const hipOptionsImperial = [
-  { value: 15, label: '15' },
-];
+export const hipOptionsImperial = [{ value: 15, label: "15" }];
 
 const populateHipOptionsImperial = () => {
   for (let i = 16; i <= 100; i += 1) {
@@ -87,21 +75,18 @@ const populateHipOptionsImperial = () => {
 };
 populateHipOptionsImperial();
 
-export const hipOptionsFt = [
-];
+export const hipOptionsFt = [];
 const populateHipOptionsFt = () => {
-  for (let i = 1.1; i <= 10.10; i += 0.1) {
+  for (let i = 1.1; i <= 10.1; i += 0.1) {
     hipOptionsFt.push({
-      value: Number( i.toFixed(1)),
+      value: Number(i.toFixed(1)),
       label: `${i.toFixed(1)}`,
     });
   }
 };
 populateHipOptionsFt();
 
-export const burpeeOptions = [
-  { value: 0, label: '0' },
-];
+export const burpeeOptions = [{ value: 0, label: "0" }];
 
 const populateBurpeeOptions = () => {
   for (let i = 1; i <= 50; i += 1) {
@@ -114,7 +99,7 @@ const populateBurpeeOptions = () => {
 populateBurpeeOptions();
 
 export const findFitnessLevel = (burpeeCount) => {
-  if (burpeeCount <= 12) {
+  if (burpeeCount < 12) {
     return 1;
   } else if (burpeeCount > 16) {
     return 3;
@@ -123,28 +108,26 @@ export const findFitnessLevel = (burpeeCount) => {
 };
 
 export const findReps = (fitnessLevel) => {
-  if (fitnessLevel === '1') {
-    return '10';
-  } else if (fitnessLevel === '2') {
-    return '14';
-  } else if (fitnessLevel === '3') {
-    return '18';
+  if (fitnessLevel === "1") {
+    return "10";
+  } else if (fitnessLevel === "2") {
+    return "14";
+  } else if (fitnessLevel === "3") {
+    return "18";
   }
-  return '10';
+  return "10";
 };
 
 export const diff = (a, b) => {
-  if ((b - a) > 0) {
-    return `+${(b - a)}`;
-  } else if ((b - a) < 0) {
-    return `${(b - a)}`;
+  if (b - a > 0) {
+    return `+${b - a}`;
+  } else if (b - a < 0) {
+    return `${b - a}`;
   }
   return null;
 };
 
-export const weeklySessionsPickerOptions = [
-  { value: 0, label: '0' },
-];
+export const weeklySessionsPickerOptions = [{ value: 0, label: "0" }];
 
 const populateWeeklySessionsPickerOptions = () => {
   for (let i = 1; i <= 5; i += 1) {
