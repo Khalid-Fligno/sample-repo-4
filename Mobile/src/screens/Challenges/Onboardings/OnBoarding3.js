@@ -53,7 +53,7 @@ export default class OnBoarding3 extends Component {
       this.setState({
         challengeData: data["challengeData"],
         btnDisabled: false,
-        height: measurments.height,
+        height: measurments.height ?? 0,
         weight: measurments.weight,
         goalWeight: measurments.goalWeight,
         waist: measurments.waist,

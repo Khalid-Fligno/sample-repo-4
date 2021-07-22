@@ -29,6 +29,7 @@ import moment from "moment";
 import createUserChallengeData from "../../../components/Challenges/UserChallengeData";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { NavigationActions } from "react-navigation";
+import OnBoardingNotification from "../../../components/Shared/OnBoardingNotification";
 import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
 
 class CalendarHomeScreen extends React.PureComponent {
@@ -50,6 +51,7 @@ class CalendarHomeScreen extends React.PureComponent {
       CalendarSelectedDate: undefined,
       todayRcWorkout: undefined,
       loadingExercises: false,
+      onboarded: false,
     };
     this.calendarStrip = React.createRef();
   }
@@ -63,6 +65,7 @@ class CalendarHomeScreen extends React.PureComponent {
       toggleHelperModal: this.showHelperModal,
     });
     await this.fetchCalendarEntries();
+    await this.fetchUserData();
     await this.fetchActiveChallengeUserData();
     await this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting(),
@@ -132,6 +135,15 @@ class CalendarHomeScreen extends React.PureComponent {
         }
       }
     }
+  };
+
+  fetchUserData = async () => {
+    const uid = await AsyncStorage.getItem("uid");
+    const userRef = db.collection("users").doc(uid);
+    userRef.get().then((res) => {
+      const data = res.data();
+      this.setState({ onboarded: data.onboarded ?? false });
+    });
   };
 
   async checkScheduleChallenge() {
@@ -467,6 +479,7 @@ class CalendarHomeScreen extends React.PureComponent {
       CalendarSelectedDate,
       todayRcWorkout,
       loadingExercises,
+      onboarded,
     } = this.state;
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
@@ -588,6 +601,7 @@ class CalendarHomeScreen extends React.PureComponent {
             </Text>
           </View>
         )}
+        {!onboarded && <OnBoardingNotification />}
         {dayDisplay}
         {setting}
         <Loader

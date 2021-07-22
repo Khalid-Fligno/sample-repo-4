@@ -82,7 +82,7 @@ export default class Progress5Screen extends React.PureComponent {
   };
   handleQuitWorkout = () => {
     this.setState({ pauseModalVisible: false }, () => {
-      this.props.navigation.navigate("Home");
+      this.props.navigation.navigate("Progress");
     });
     FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, {
       idempotent: true,

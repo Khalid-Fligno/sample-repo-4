@@ -18,6 +18,7 @@ import * as Haptics from "expo-haptics";
 import * as FileSystem from "expo-file-system";
 import * as Permissions from "expo-permissions";
 import * as ImageManipulator from "expo-image-manipulator";
+import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import Icon from "../../../components/Shared/Icon";
 import Loader from "../../../components/Shared/Loader";
@@ -74,14 +75,21 @@ export default class OnBoarding4 extends Component {
     };
   }
 
-  onFocusFunction = () => {
+  fetchUserImageUrl = async () => {
+    const uid = await AsyncStorage.getItem("uid");
+    const userSnapshot = await db.collection("users").doc(uid).get();
+    const user = userSnapshot.data();
+    return user.initialProgressInfo.photoURL ?? null;
+  };
+
+  onFocusFunction = async () => {
     const data = this.props.navigation.getParam("data", {});
+    console.log("OnBoarding4 data:", data);
     const image = data["challengeData"].image
       ? data["challengeData"].image
       : null;
-    const imgUrl = data["challengeData"]["onBoardingInfo"]["beforePhotoUrl"]
-      ? data["challengeData"]["onBoardingInfo"]["beforePhotoUrl"]
-      : null;
+    const imgUrl = await this.fetchUserImageUrl();
+    console.log("Image URL: ", imgUrl);
     this.setState({
       challengeData: data["challengeData"],
       image,
@@ -205,6 +213,7 @@ export default class OnBoarding4 extends Component {
         { format: "jpeg", compress: 0.7, base64: true }
       );
       this.uploading(manipResult);
+      MediaLibrary.saveToLibraryAsync(result.uri);
     }
   };
 
@@ -338,7 +347,9 @@ export default class OnBoarding4 extends Component {
     const data = createUserChallengeData(updatedChallengedata, new Date(date));
     const progressData = {
       photoURL: this.state.imgUrl,
+      height: updatedChallengedata.onBoardingInfo.measurements.height,
       weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+      goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
       waist: updatedChallengedata.onBoardingInfo.measurements.waist,
       hip: updatedChallengedata.onBoardingInfo.measurements.hip,
       burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
@@ -363,7 +374,7 @@ export default class OnBoarding4 extends Component {
     try {
       // if (imgUrl !== null) {
       const onBoardingInfo = Object.assign({}, challengeData.onBoardingInfo, {
-        beforePhotoUrl: imgUrl ? imgUrl : "",
+        beforePhotoUrl: imgUrl ? imgUrl : null,
       });
       let updatedChallengedata = Object.assign({}, challengeData, {
         onBoardingInfo,
@@ -373,7 +384,7 @@ export default class OnBoarding4 extends Component {
       if (type === "next") {
         if (this.props.navigation.getParam("onboardingProcessComplete")) {
           const progressData = {
-            photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+            photoURL: this.state.imgUrl,
             height: updatedChallengedata.onBoardingInfo.measurements.height,
             goalWeight:
               updatedChallengedata.onBoardingInfo.measurements.goalWeight,

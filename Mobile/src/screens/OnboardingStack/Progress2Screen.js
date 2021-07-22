@@ -18,6 +18,7 @@ import * as FileSystem from "expo-file-system";
 import * as Permissions from "expo-permissions";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
+import AsyncStorage from "@react-native-community/async-storage";
 import Loader from "../../components/Shared/Loader";
 import Icon from "../../components/Shared/Icon";
 import CustomButton from "../../components/Shared/CustomButton";
@@ -27,6 +28,7 @@ import ActionSheet from "react-native-actionsheet";
 import CustomBtn from "../../components/Shared/CustomBtn";
 import { containerPadding } from "../../styles/globalStyles";
 import * as MediaLibrary from "expo-media-library";
+import { db } from "../../../config/firebase";
 
 const { width } = Dimensions.get("window");
 const actionSheetOptions = ["Cancel", "Take photo", "Upload from Camera Roll"];
@@ -52,6 +54,23 @@ export default class Progress2Screen extends React.PureComponent {
     // this.getCameraPermission();
     // this.getCameraRollPermission();
     // }
+  };
+
+  fetchInitialImage = async () => {
+    const uid = await AsyncStorage.getItem("uid");
+    db.collection("users")
+      .doc(uid)
+      .get()
+      .then(async (snapshot) => {
+        const data = snapshot.data();
+        const progressInfo = data.initialProgressInfo;
+        const imageURL = progressInfo.photoURL;
+        const image = await FileSystem.downloadAsync(
+          imageURL,
+          `${FileSystem.cacheDirectory}initialImage.jpeg`
+        );
+        console.log("Image: ", image);
+      });
   };
 
   getCameraPermission = async () => {
@@ -205,7 +224,7 @@ export default class Progress2Screen extends React.PureComponent {
           },
           {
             text: "Skip",
-            onPress: () => this.props.navigation.navigate("App"),
+            onPress: () => this.props.navigation.navigate("Progress"),
           },
         ],
         { cancelable: false }
@@ -221,7 +240,7 @@ export default class Progress2Screen extends React.PureComponent {
           },
           {
             text: "Skip",
-            onPress: () => this.props.navigation.navigate("App"),
+            onPress: () => this.props.navigation.navigate("Progress"),
           },
         ],
         { cancelable: false }
