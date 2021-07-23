@@ -249,7 +249,6 @@ export default class Progress6Screen extends React.PureComponent {
             <CustomBtn
               Title="NEXT"
               titleCapitalise={true}
-              customBtnStyle={{ borderRadius: 50 }}
               onPress={this.handleSubmit}
             />
             {/* <CustomButton

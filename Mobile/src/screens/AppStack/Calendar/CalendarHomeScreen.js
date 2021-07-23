@@ -52,6 +52,7 @@ class CalendarHomeScreen extends React.PureComponent {
       todayRcWorkout: undefined,
       loadingExercises: false,
       onboarded: false,
+      initialBurpeeTestCompleted: false,
     };
     this.calendarStrip = React.createRef();
   }
@@ -142,7 +143,10 @@ class CalendarHomeScreen extends React.PureComponent {
     const userRef = db.collection("users").doc(uid);
     userRef.get().then((res) => {
       const data = res.data();
-      this.setState({ onboarded: data.onboarded ?? false });
+      this.setState({
+        onboarded: data.onboarded ?? false,
+        initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
+      });
     });
   };
 
@@ -241,7 +245,10 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async goToNext(workout) {
     console.log(">>here");
-    if (this.currentChallengeDay === 1) {
+    if (
+      this.currentChallengeDay === 1 &&
+      !this.state.initialBurpeeTestCompleted
+    ) {
       await FileSystem.downloadAsync(
         "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
         `${FileSystem.cacheDirectory}exercise-burpees.mp4`
@@ -254,7 +261,10 @@ class CalendarHomeScreen extends React.PureComponent {
         displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
       });
     }
-    if (this.currentChallengeDay === 1) {
+    if (
+      this.currentChallengeDay === 1 &&
+      !this.state.initialBurpeeTestCompleted
+    ) {
       this.props.navigation.navigate("Burpee1", {
         fromScreen: "WorkoutInfo",
         screenReturnParams: {

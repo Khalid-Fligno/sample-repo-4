@@ -54,22 +54,37 @@ export default class Progress2Screen extends React.PureComponent {
     // this.getCameraPermission();
     // this.getCameraRollPermission();
     // }
+    this.fetchImage();
   };
 
-  fetchInitialImage = async () => {
+  fetchImage = async () => {
     const uid = await AsyncStorage.getItem("uid");
     db.collection("users")
       .doc(uid)
       .get()
       .then(async (snapshot) => {
+        const isInitial = this.props.navigation.getParam("isInitial");
         const data = snapshot.data();
-        const progressInfo = data.initialProgressInfo;
-        const imageURL = progressInfo.photoURL;
-        const image = await FileSystem.downloadAsync(
-          imageURL,
-          `${FileSystem.cacheDirectory}initialImage.jpeg`
-        );
-        console.log("Image: ", image);
+        const progressInfo = isInitial
+          ? data.initialProgressInfo
+          : data.currentProgressInfo;
+        const imageURL = progressInfo.photoURL ?? null;
+        if (imageURL) {
+          await FileSystem.downloadAsync(
+            imageURL,
+            `${FileSystem.cacheDirectory}progressImage.jpeg`
+          );
+          const image = await ImageManipulator.manipulateAsync(
+            `${FileSystem.cacheDirectory}progressImage.jpeg`,
+            null,
+            { base64: true }
+          );
+          this.setState({ image });
+        }
+      })
+      .catch((reason) => {
+        console.log("[Progress2Screen.js fetchImage()] error: ", reason);
+        Alert.alert("Error", `Error: ${reason}.`);
       });
   };
 
