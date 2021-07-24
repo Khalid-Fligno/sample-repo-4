@@ -15,7 +15,7 @@ import {
 const CustomBtn = (props) => {
   const customBtnStyle = {
     flexDirection: "row",
-    backgroundColor: colors.themeColor.color,
+    backgroundColor: props.workoutComplete ? colors.charcoal.light : colors.themeColor.color,
     padding: hp("2%"),
     justifyContent: "center",
   };
@@ -24,7 +24,7 @@ const CustomBtn = (props) => {
     fontSize: hp("1.8%"),
     letterSpacing: 0.7,
     // marginTop: 3,
-    color: colors.black,
+    color: props.workoutComplete ? colors.citrus :colors.black,
     letterSpacing: 0.5,
     textAlign: "center",
   };

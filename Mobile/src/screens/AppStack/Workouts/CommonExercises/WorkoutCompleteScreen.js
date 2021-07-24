@@ -13,7 +13,7 @@ import { PieChart } from 'react-native-svg-charts';
 import Rate from 'react-native-rate';
 import Loader from '../../../../components/Shared/Loader';
 import Icon from '../../../../components/Shared/Icon';
-import CustomButton from '../../../../components/Shared/CustomButton';
+import CustomBtn from "../../../../components/Shared/CustomBtn";
 import fonts from '../../../../styles/fonts';
 import colors from '../../../../styles/colors';
 import { Platform } from 'react-native';
@@ -110,19 +110,19 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
           </View> */}
           <Image
             source={require("../../../../../assets/icons/FITAZ_BrandMark.png")}
-            style={{width: 160}}
+            style={{width: 75}}
             resizeMode="contain"
           />
           <View style={styles.iconContainer}>
             <View style={styles.textContainer}>
               <Text style={styles.headerText}>
-                WORKOUT COMPLETE
+                Workout Complete!
               </Text>
-              <Text style={styles.bodyText}>
+              <Text style={styles.bodyText1}>
                 "Congratulations on empowering yourself!"
               </Text>
-              <Text style={styles.bodyText}>
-                "See you back here soon."
+              <Text style={styles.bodyText2}>
+                See you back here soon.
               </Text>
             </View>
           </View>
@@ -144,9 +144,19 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
               rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
             /> */}
             <View style={styles.buttonContainer}>
-              <CustomButton
-                title="NEXT"
+              <CustomBtn
+                Title="Next"
+                customBtnStyle={{
+                  padding: 15,
+                  width: width - 20,
+                }}
+                isRightIcon={true}
+                rightIconName="chevron-right"
+                rightIconColor={colors.citrus}
+                rightIconSize={13}
                 onPress={() => this.completeWorkout()}
+                disabled={false}
+                workoutComplete={true}
               />
             </View>
           </View>
@@ -167,7 +177,8 @@ const styles = StyleSheet.create({
   },
   flexContainer: {
     flex: 1,
-    backgroundColor: colors.white,
+    // backgroundColor: colors.white,
+    backgroundColor: colors.citrus,
     alignItems: 'center',
   },
   textContainer: {
@@ -180,20 +191,34 @@ const styles = StyleSheet.create({
     // fontFamily: fonts.ultraItalic,
     fontFamily: fonts.SimplonMonoMedium,
     fontSize: 44,
-    color: colors.themeColor.color,
+    // color: colors.themeColor.color,
+    color: colors.charcoal.dark,
     textAlign: 'center',
     //
-    paddingBottom: 25
+    paddingBottom: 60
   },
-  bodyText: {
+  bodyText1: {
     // fontFamily: fonts.bold,
     fontFamily: fonts.SimplonMonoLight,
-    fontSize: 16,
+    // fontSize: 16,
+    fontSize: 36,
     color: colors.charcoal.dark,
     marginTop: 10,
     textAlign: 'center',
     //
     paddingBottom: 25
+  },
+  bodyText2: {
+    // fontFamily: fonts.bold,
+    fontFamily: fonts.SimplonMonoLight,
+    // fontSize: 16,
+    fontSize: 36,
+    color: colors.charcoal.dark,
+    marginTop: 10,
+    textAlign: 'center',
+    //
+    paddingBottom: 220,
+    width: 300
   },
   iconContainer: {
     flex: 1,
