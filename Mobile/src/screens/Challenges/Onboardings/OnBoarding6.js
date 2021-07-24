@@ -43,6 +43,19 @@ export default class OnBoarding6 extends Component {
     };
   }
 
+  fetchFitnessLevel = async () => {
+    const uid = await AsyncStorage.getItem("uid");
+    db.collection("users")
+      .doc(uid)
+      .get()
+      .then((snapshot) => {
+        const fitnessLevel = snapshot.data().fitnessLevel ?? 2;
+        this.setState({
+          fitnessLevel: fitnessLevel,
+        });
+      });
+  };
+
   onFocusFunction = () => {
     const data = this.props.navigation.getParam("data", {});
     const fitnessLevel =
@@ -58,6 +71,7 @@ export default class OnBoarding6 extends Component {
   async componentDidMount() {
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
+      this.fetchFitnessLevel();
     });
   }
 
