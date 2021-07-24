@@ -5,6 +5,7 @@ import {
   View,
   Text,
   Dimensions,
+  Image
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import * as FileSystem from 'expo-file-system';
@@ -16,6 +17,7 @@ import CustomButton from '../../../../components/Shared/CustomButton';
 import fonts from '../../../../styles/fonts';
 import colors from '../../../../styles/colors';
 import { Platform } from 'react-native';
+import globalStyle from "../../../../styles/globalStyles";
 
 const { width } = Dimensions.get('window');
 
@@ -91,7 +93,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
-          <View style={styles.textContainer}>
+          {/* <View style={styles.textContainer}>
             <Text style={styles.headerText}>
               WORKOUT
             </Text>
@@ -105,9 +107,27 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
           <View style={styles.iconContainer}>
             {completePieChart}
             {tickIcon}
+          </View> */}
+          <Image
+            source={require("../../../../../assets/icons/FITAZ_BrandMark.png")}
+            style={{width: 160}}
+            resizeMode="contain"
+          />
+          <View style={styles.iconContainer}>
+            <View style={styles.textContainer}>
+              <Text style={styles.headerText}>
+                WORKOUT COMPLETE
+              </Text>
+              <Text style={styles.bodyText}>
+                "Congratulations on empowering yourself!"
+              </Text>
+              <Text style={styles.bodyText}>
+                "See you back here soon."
+              </Text>
+            </View>
           </View>
           <View>
-            <ListItem
+            {/* <ListItem
               key="InviteFriends"
               title="Earn Free Gifts!"
               containerStyle={styles.listItemContainerGreen}
@@ -122,12 +142,11 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
                 />
               }
               rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
-            />
+            /> */}
             <View style={styles.buttonContainer}>
               <CustomButton
-                title="COMPLETE"
+                title="NEXT"
                 onPress={() => this.completeWorkout()}
-                primary
               />
             </View>
           </View>
@@ -158,22 +177,28 @@ const styles = StyleSheet.create({
     paddingTop: 25,
   },
   headerText: {
-    fontFamily: fonts.ultraItalic,
+    // fontFamily: fonts.ultraItalic,
+    fontFamily: fonts.SimplonMonoMedium,
     fontSize: 44,
     color: colors.themeColor.color,
     textAlign: 'center',
+    //
+    paddingBottom: 25
   },
   bodyText: {
-    fontFamily: fonts.bold,
+    // fontFamily: fonts.bold,
+    fontFamily: fonts.SimplonMonoLight,
     fontSize: 16,
     color: colors.charcoal.dark,
     marginTop: 10,
     textAlign: 'center',
+    //
+    paddingBottom: 25
   },
   iconContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   pieChart: {
     height: 160,
