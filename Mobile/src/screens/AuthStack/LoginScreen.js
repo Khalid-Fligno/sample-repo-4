@@ -433,6 +433,30 @@ export default class LoginScreen extends React.PureComponent {
     this.props.navigation.navigate("App");
   };
   login = async (email, password) => {
+    // const users = db.collection('users');
+    // const snapshot = await users.where('email', '==', this.state.email).get();
+    
+    // if (snapshot.empty) {
+    //   console.log('No matching documents.');
+    //   return;
+    // }  
+
+    // snapshot.forEach(doc => {
+    //   console.log(doc.id, ' ', doc.data())
+    //   var query = db.collection("users").where("id", "==", doc.id);
+    //   query.get().then((querySnapshot) => {
+    //     querySnapshot.forEach((document) => {
+    //       document.ref.collection("challenges").get().then((querySnapshot) => {
+    //         querySnapshot.forEach(docs => {
+    //           console.log(docs.data())
+    //           // if (docs.data()) {
+    //           //   db.collection('users').doc(uid).collection('challenges').doc(docs.id).set(docs.data());
+    //           // }
+    //         });
+    //       });
+    //     });
+    //   }); 
+    // });  
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
     this.setState({ loading: true });
@@ -496,6 +520,23 @@ export default class LoginScreen extends React.PureComponent {
             db.collection("users")
               .doc(uid)
               .set(doc.data());
+            db.collection("users")
+              .doc(uid)
+              .update({
+                 "id": uid,
+              });
+            var query = db.collection("users").where("id", "==", uid);
+            query.get().then((querySnapshot) => {
+              querySnapshot.forEach((document) => {
+                document.ref.collection("challenges").get().then((querySnapshot) => {
+                  querySnapshot.forEach(doc => {
+                    if (doc.data()) {
+                      db.collection('users').doc(uid).collection('challenges').doc(doc.id).set(doc.data());
+                    }
+                  });
+                });
+              });
+            });              
             // doc.ref.delete(); 
             db.collection("users")
               .doc(uid)
