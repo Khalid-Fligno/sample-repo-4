@@ -154,7 +154,7 @@ export default class OnBoarding1 extends Component {
               <Text style={ChallengeStyle.onBoardingTitle}>
                 What do you want to achieve?
               </Text>
-              <Text
+              {/* <Text
                 style={[
                   ChallengeStyle.onBoardingTitle,
                   {
@@ -167,7 +167,7 @@ export default class OnBoarding1 extends Component {
                 ]}
               >
                 {challengeData.displayName}
-              </Text>
+              </Text> */}
             </View>
 
             {/* <SliderComponent
