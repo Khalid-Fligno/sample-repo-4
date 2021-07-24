@@ -24,6 +24,7 @@ const storeProgressInfo = async (data) => {
           },
           currentProgressInfo: {},
           fitnessLevel: data.fitnessLevel,
+          onboarded: data.onboarded,
         },
         { merge: true }
       );

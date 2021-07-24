@@ -587,7 +587,6 @@ class CalendarHomeScreen extends React.PureComponent {
         />
       </Modal>
     );
-
     return (
       <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
         <CustomCalendarStrip
@@ -611,7 +610,12 @@ class CalendarHomeScreen extends React.PureComponent {
             </Text>
           </View>
         )}
-        {!onboarded && <OnBoardingNotification />}
+        {!onboarded && (
+          <OnBoardingNotification
+            navigation={this.props.navigation}
+            data={activeChallengeUserData}
+          />
+        )}
         {dayDisplay}
         {setting}
         <Loader

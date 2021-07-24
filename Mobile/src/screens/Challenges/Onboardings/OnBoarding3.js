@@ -44,6 +44,7 @@ export default class OnBoarding3 extends Component {
       pickerDataList: [],
       inputType: any,
       chosenUom: "metric",
+      skipped: false,
     };
   }
   onFocusFunction = () => {
@@ -92,6 +93,7 @@ export default class OnBoarding3 extends Component {
         hip: this.state.hip,
         unit: this.state.chosenUom,
       },
+      skipped: this.state.skipped,
     });
 
     let updatedChallengedata = Object.assign({}, challengeData, {

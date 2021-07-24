@@ -76,10 +76,14 @@ export default class OnBoarding4 extends Component {
   }
 
   fetchUserImageUrl = async () => {
-    const uid = await AsyncStorage.getItem("uid");
-    const userSnapshot = await db.collection("users").doc(uid).get();
-    const user = userSnapshot.data();
-    return user.initialProgressInfo.photoURL ?? null;
+    try {
+      const uid = await AsyncStorage.getItem("uid");
+      const userSnapshot = await db.collection("users").doc(uid).get();
+      const user = userSnapshot.data();
+      return user.initialProgressInfo.photoURL ?? null;
+    } catch (error) {
+      return null;
+    }
   };
 
   onFocusFunction = async () => {
@@ -89,7 +93,7 @@ export default class OnBoarding4 extends Component {
       ? data["challengeData"].image
       : null;
     const imgUrl = await this.fetchUserImageUrl();
-    console.log("Image URL: ", imgUrl);
+    console.log("Challenge: ", data["challengeData"]);
     this.setState({
       challengeData: data["challengeData"],
       image,
@@ -345,6 +349,10 @@ export default class OnBoarding4 extends Component {
     ////////////////////saving on calendar
     const updatedChallengedata = this.state.challengeData;
     const data = createUserChallengeData(updatedChallengedata, new Date(date));
+    let skipped = updatedChallengedata.onBoardingInfo.skipped;
+    if (!skipped) {
+      skipped = this.state.imgUrl == null ? true : false;
+    }
     const progressData = {
       photoURL: this.state.imgUrl,
       height: updatedChallengedata.onBoardingInfo.measurements.height,
@@ -354,6 +362,7 @@ export default class OnBoarding4 extends Component {
       hip: updatedChallengedata.onBoardingInfo.measurements.hip,
       burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
       fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
+      onboarded: skipped ? false : true,
     };
     const stringDate = moment(date).format("YYYY-MM-DD").toString();
     const stringDate2 = moment(date).format("DD-MM-YY").toString();
@@ -383,19 +392,37 @@ export default class OnBoarding4 extends Component {
       // console.log(updatedChallengedata)
       if (type === "next") {
         if (this.props.navigation.getParam("onboardingProcessComplete")) {
+          let skipped = updatedChallengedata.onBoardingInfo.skipped;
+          if (!skipped) {
+            skipped = this.state.imgUrl == null ? true : false;
+          }
+          console.log("Skipped: ", skipped);
           const progressData = {
             photoURL: this.state.imgUrl,
             height: updatedChallengedata.onBoardingInfo.measurements.height,
+            weight: updatedChallengedata.onBoardingInfo.measurements.weight,
             goalWeight:
               updatedChallengedata.onBoardingInfo.measurements.goalWeight,
-            weight: updatedChallengedata.onBoardingInfo.measurements.weight,
             waist: updatedChallengedata.onBoardingInfo.measurements.waist,
             hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-            burpeeCount: 1,
-            fitnessLevel: 1,
+            burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
+            fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
+            onboarded: skipped ? false : true,
           };
           storeProgressInfo(progressData);
-          this.props.navigation.navigate("WorkoutInfo");
+          // this.props.navigation.navigate("WorkoutInfo");
+          const resetAction = StackActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: "Tabs",
+                action: NavigationActions.navigate({
+                  routeName: "Calendar",
+                }),
+              }),
+            ],
+          });
+          this.props.navigation.dispatch(resetAction);
         } else {
           // this.props.navigation.navigate("ChallengeOnBoarding5", {
           //   data: {
@@ -566,7 +593,6 @@ export default class OnBoarding4 extends Component {
               Title={imgUrl ? "Start Challenge" : "I'll do it later"}
               customBtnStyle={{ padding: 15, width: "100%" }}
               onPress={() => this.goToScreen("next")}
-              disabled={btnDisabled}
               isRightIcon={true}
               rightIconName="chevron-right"
               rightIconColor={colors.black}

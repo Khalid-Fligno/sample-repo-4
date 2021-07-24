@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
+import { db } from "../../../config/firebase";
+import AsyncStorage from "@react-native-community/async-storage";
 
-export default function OnBoardingNotification() {
+export default function OnBoardingNotification({ navigation, data }) {
   return (
     <View style={{ backgroundColor: colors.white }}>
       <View
@@ -41,8 +43,8 @@ export default function OnBoardingNotification() {
         </View>
         <TouchableOpacity
           onPress={() => {
-            this.props.navigation.navigate("ChallengeOnBoarding", {
-              data: { challengeData: this.state.challengesList[0] },
+            navigation.navigate("ChallengeOnBoarding", {
+              data: { challengeData: data },
               onboardingProcessComplete: true,
               challengeOnboard: false,
             });
