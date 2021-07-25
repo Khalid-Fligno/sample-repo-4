@@ -36,6 +36,7 @@ import { NavigationActions, StackActions } from "react-navigation";
 import createUserChallengeData from "../../../components/Challenges/UserChallengeData";
 import { db } from "../../../../config/firebase";
 import moment from "moment";
+import CalendarModal from "../../../components/Shared/CalendarModal";
 
 const uriToBlob = (url) => {
   return new Promise((resolve, reject) => {
@@ -72,6 +73,9 @@ export default class OnBoarding4 extends Component {
       addingToCalendar: false,
       chosenDate: new Date(),
       loading: false,
+      calendarModalVisible: false,
+      addingToCalendar: false,
+      chosenDate: new Date(),
     };
   }
 
@@ -83,6 +87,27 @@ export default class OnBoarding4 extends Component {
       return user.initialProgressInfo.photoURL ?? null;
     } catch (error) {
       return null;
+    }
+  };
+
+  showCalendarModal = () => {
+    this.setState({ calendarModalVisible: true });
+  };
+
+  hideCalendarModal = () => {
+    this.setState({ calendarModalVisible: false, loading: false });
+  };
+
+  setDate = async (event, selectedDate) => {
+    // console.log("setDate call")
+    if (selectedDate && Platform.OS === "android") {
+      this.hideCalendarModal();
+      this.setState({ loading: true });
+      this.addChallengeToCalendar(selectedDate);
+    }
+    if (selectedDate && Platform.OS === "ios") {
+      const currentDate = selectedDate;
+      this.setState({ chosenDate: currentDate });
     }
   };
 
@@ -439,7 +464,8 @@ export default class OnBoarding4 extends Component {
           //       : false,
           // });
 
-          this.addChallengeToCalendar(moment().set("date", 26));
+          // this.addChallengeToCalendar(moment().set("date", 26));
+          this.showCalendarModal();
         }
         // Alert.alert('',
         //   `Before Picture ${onBoardingInfo.beforePhotoUrl === "" ? 'None' : onBoardingInfo.beforePhotoUrl.toString()}`,
@@ -532,11 +558,29 @@ export default class OnBoarding4 extends Component {
   };
 
   render() {
-    const { image, uploading, error, btnDisabled, imgUrl, loading } =
-      this.state;
+    const {
+      image,
+      uploading,
+      error,
+      btnDisabled,
+      imgUrl,
+      loading,
+      calendarModalVisible,
+      addingToCalendar,
+      chosenDate,
+    } = this.state;
     return (
       <SafeAreaView style={ChallengeStyle.container}>
         <View style={[globalStyle.container, { paddingVertical: 15 }]}>
+          <CalendarModal
+            isVisible={calendarModalVisible}
+            onBackdropPress={this.hideCalendarModal}
+            value={chosenDate}
+            onChange={this.setDate}
+            onPress={() => this.addChallengeToCalendar(chosenDate)}
+            addingToCalendar={addingToCalendar}
+            loading={loading}
+          />
           <View>
             <Text style={[ChallengeStyle.onBoardingTitle]}>
               Take your before picture
