@@ -288,8 +288,8 @@ export default class OnBoarding6 extends Component {
               customContainerStyle={{ marginTop: 0, marginBottom: 0 }}
             />
             <Text style={{ fontFamily: fonts.standard, fontSize: 15 }}>
-                {/* Select your intensity level below. */}
-                How often do you currently train.
+              {/* Select your intensity level below. */}
+              How often do you currently train.
             </Text>
             {/* <Text style={{ fontFamily: fonts.standard, fontSize: 15 }}>
                 Beginner: train once a week,
@@ -302,34 +302,34 @@ export default class OnBoarding6 extends Component {
             </Text> */}
 
             <FitnessLevelCard
-                source={require("../../../../assets/images/OnBoardindImg/FL_1.png")}
-                onPress={() => this.setState({ fitnessLevel: 1 })}
-                title="0-2 times a week"
-                // title="Beginner"
-                // helpText="Train once a week"
-                showTick={fitnessLevel === 1}
-                isCardColored={true}
-                cardColor={colors.coolIce}
+              source={require("../../../../assets/images/OnBoardindImg/FL_1.png")}
+              onPress={() => this.setState({ fitnessLevel: 1 })}
+              title="0-2 times a week"
+              // title="Beginner"
+              helpText="Train once a week"
+              showTick={fitnessLevel === 1}
+              isCardColored={true}
+              cardColor={colors.coolIce}
             />
             <FitnessLevelCard
-                source={require("../../../../assets/images/OnBoardindImg/FL_2.png")}
-                onPress={() => this.setState({ fitnessLevel: 2 })}
-                title="2-3 times a week"
-                // title="Intermediate"
-                // helpText="Train 2 to 3 times a week"
-                showTick={fitnessLevel === 2}
-                isCardColored={true}
-                cardColor={colors.coolIce}
+              source={require("../../../../assets/images/OnBoardindImg/FL_2.png")}
+              onPress={() => this.setState({ fitnessLevel: 2 })}
+              title="2-3 times a week"
+              // title="Intermediate"
+              helpText="Train 2 to 3 times a week"
+              showTick={fitnessLevel === 2}
+              isCardColored={true}
+              cardColor={colors.coolIce}
             />
             <FitnessLevelCard
-                source={require("../../../../assets/images/OnBoardindImg/FL_3.png")}
-                onPress={() => this.setState({ fitnessLevel: 3 })}
-                title="4+ times a week"
-                // title="Expert"
-                // helpText="Train 4+ times a week"
-                showTick={fitnessLevel === 3}
-                isCardColored={true}
-                cardColor={colors.coolIce}
+              source={require("../../../../assets/images/OnBoardindImg/FL_3.png")}
+              onPress={() => this.setState({ fitnessLevel: 3 })}
+              title="4+ times a week"
+              // title="Expert"
+              helpText="Train 4+ times a week"
+              showTick={fitnessLevel === 3}
+              isCardColored={true}
+              cardColor={colors.coolIce}
             />
             <View
               style={[{ flex: 0.5, justifyContent: "flex-end", marginTop: 20 }]}

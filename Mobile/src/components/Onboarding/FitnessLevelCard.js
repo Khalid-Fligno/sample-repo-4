@@ -17,7 +17,7 @@ const containerPadding = 20;
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: fonts.fontWeight,
     fontFamily: fonts.SimplonMonoLight,
     color: colors.black,
