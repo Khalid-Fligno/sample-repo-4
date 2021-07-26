@@ -5,6 +5,7 @@ import {
   View,
   Text,
   Dimensions,
+  Image
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import * as FileSystem from 'expo-file-system';
@@ -12,10 +13,11 @@ import { PieChart } from 'react-native-svg-charts';
 import Rate from 'react-native-rate';
 import Loader from '../../../../components/Shared/Loader';
 import Icon from '../../../../components/Shared/Icon';
-import CustomButton from '../../../../components/Shared/CustomButton';
+import CustomBtn from "../../../../components/Shared/CustomBtn";
 import fonts from '../../../../styles/fonts';
 import colors from '../../../../styles/colors';
 import { Platform } from 'react-native';
+import globalStyle from "../../../../styles/globalStyles";
 
 const { width } = Dimensions.get('window');
 
@@ -91,7 +93,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
-          <View style={styles.textContainer}>
+          {/* <View style={styles.textContainer}>
             <Text style={styles.headerText}>
               WORKOUT
             </Text>
@@ -105,9 +107,27 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
           <View style={styles.iconContainer}>
             {completePieChart}
             {tickIcon}
+          </View> */}
+          <Image
+            source={require("../../../../../assets/icons/FITAZ_BrandMark.png")}
+            style={{width: 75}}
+            resizeMode="contain"
+          />
+          <View style={styles.iconContainer}>
+            <View style={styles.textContainer}>
+              <Text style={styles.headerText}>
+                Workout Complete!
+              </Text>
+              <Text style={styles.bodyText1}>
+                "Congratulations on empowering yourself!"
+              </Text>
+              <Text style={styles.bodyText2}>
+                See you back here soon.
+              </Text>
+            </View>
           </View>
           <View>
-            <ListItem
+            {/* <ListItem
               key="InviteFriends"
               title="Earn Free Gifts!"
               containerStyle={styles.listItemContainerGreen}
@@ -122,12 +142,21 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
                 />
               }
               rightIcon={{ name: 'chevron-right', color: colors.grey.standard }}
-            />
+            /> */}
             <View style={styles.buttonContainer}>
-              <CustomButton
-                title="COMPLETE"
+              <CustomBtn
+                Title="Next"
+                customBtnStyle={{
+                  padding: 15,
+                  width: width - 20,
+                }}
+                isRightIcon={true}
+                rightIconName="chevron-right"
+                rightIconColor={colors.citrus}
+                rightIconSize={13}
                 onPress={() => this.completeWorkout()}
-                primary
+                disabled={false}
+                workoutComplete={true}
               />
             </View>
           </View>
@@ -148,7 +177,8 @@ const styles = StyleSheet.create({
   },
   flexContainer: {
     flex: 1,
-    backgroundColor: colors.white,
+    // backgroundColor: colors.white,
+    backgroundColor: colors.citrus,
     alignItems: 'center',
   },
   textContainer: {
@@ -158,22 +188,42 @@ const styles = StyleSheet.create({
     paddingTop: 25,
   },
   headerText: {
-    fontFamily: fonts.ultraItalic,
+    // fontFamily: fonts.ultraItalic,
+    fontFamily: fonts.SimplonMonoMedium,
     fontSize: 44,
-    color: colors.themeColor.color,
+    // color: colors.themeColor.color,
+    color: colors.charcoal.dark,
     textAlign: 'center',
+    //
+    paddingBottom: 60
   },
-  bodyText: {
-    fontFamily: fonts.bold,
-    fontSize: 16,
+  bodyText1: {
+    // fontFamily: fonts.bold,
+    fontFamily: fonts.SimplonMonoLight,
+    // fontSize: 16,
+    fontSize: 36,
     color: colors.charcoal.dark,
     marginTop: 10,
     textAlign: 'center',
+    //
+    paddingBottom: 25
+  },
+  bodyText2: {
+    // fontFamily: fonts.bold,
+    fontFamily: fonts.SimplonMonoLight,
+    // fontSize: 16,
+    fontSize: 36,
+    color: colors.charcoal.dark,
+    marginTop: 10,
+    textAlign: 'center',
+    //
+    paddingBottom: 220,
+    width: 300
   },
   iconContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   pieChart: {
     height: 160,

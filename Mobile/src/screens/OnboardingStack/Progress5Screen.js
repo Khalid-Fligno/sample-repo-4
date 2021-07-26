@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   AppState,
 } from "react-native";
 import * as FileSystem from "expo-file-system";
-import Video from "react-native-video";
+import { Video } from "expo-av";
 import FadeInView from "react-native-fade-in-view";
 import CountdownPauseModal from "../../components/Workouts/CountdownPauseModal";
 import WorkoutTimer from "../../components/Workouts/WorkoutTimer";
@@ -43,10 +43,12 @@ export default class Progress5Screen extends React.PureComponent {
       videoPaused: false,
       pauseModalVisible: false,
     };
+    this.videoRef = createRef();
   }
   componentDidMount() {
     this.props.navigation.setParams({ handleSkip: this.handlePause });
     this.startTimer();
+    this.videoRef.current.playAsync();
     AppState.addEventListener("change", this.handleAppStateChange);
   }
   componentWillUnmount() {
@@ -63,6 +65,7 @@ export default class Progress5Screen extends React.PureComponent {
     this.setState({ timerStart: true });
   };
   handlePause = () => {
+    this.videoRef.current.pauseAsync();
     this.setState({
       videoPaused: true,
       timerStart: false,
@@ -70,6 +73,7 @@ export default class Progress5Screen extends React.PureComponent {
     });
   };
   handleUnpause = () => {
+    this.videoRef.current.playAsync();
     this.setState({
       videoPaused: false,
       timerStart: true,
@@ -78,7 +82,7 @@ export default class Progress5Screen extends React.PureComponent {
   };
   handleQuitWorkout = () => {
     this.setState({ pauseModalVisible: false }, () => {
-      this.props.navigation.navigate("Home");
+      this.props.navigation.navigate("Progress");
     });
     FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, {
       idempotent: true,
@@ -119,12 +123,13 @@ export default class Progress5Screen extends React.PureComponent {
         <FadeInView duration={1000} style={styles.flexContainer}>
           <View>
             <Video
+              ref={this.videoRef}
               source={{
                 uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
               }}
               resizeMode="contain"
-              repeat
-              muted
+              isLooping
+              isMuted
               paused={videoPaused}
               style={{ width, height: width }}
             />

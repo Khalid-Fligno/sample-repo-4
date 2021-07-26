@@ -16,7 +16,7 @@ const ChallengeOnboardingStack = createStackNavigator(
     ChallengeOnBoarding2:OnBoarding2,
     ChallengeOnBoarding3:OnBoarding3,
     ChallengeOnBoarding4:OnBoarding4,
-    ChallengeOnBoarding5:OnBoarding5,
+    // ChallengeOnBoarding5:OnBoarding5,
     ChallengeOnBoarding6:OnBoarding6,
     ChallengeCompleteBoarding:CompleteBoarding,
     

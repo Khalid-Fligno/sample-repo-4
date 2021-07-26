@@ -433,6 +433,30 @@ export default class LoginScreen extends React.PureComponent {
     this.props.navigation.navigate("App");
   };
   login = async (email, password) => {
+    // const users = db.collection('users');
+    // const snapshot = await users.where('email', '==', this.state.email).get();
+    
+    // if (snapshot.empty) {
+    //   console.log('No matching documents.');
+    //   return;
+    // }  
+
+    // snapshot.forEach(doc => {
+    //   console.log(doc.id, ' ', doc.data())
+    //   var query = db.collection("users").where("id", "==", doc.id);
+    //   query.get().then((querySnapshot) => {
+    //     querySnapshot.forEach((document) => {
+    //       document.ref.collection("challenges").get().then((querySnapshot) => {
+    //         querySnapshot.forEach(docs => {
+    //           console.log(docs.data())
+    //           // if (docs.data()) {
+    //           //   db.collection('users').doc(uid).collection('challenges').doc(docs.id).set(docs.data());
+    //           // }
+    //         });
+    //       });
+    //     });
+    //   }); 
+    // });  
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
     this.setState({ loading: true });
@@ -446,42 +470,112 @@ export default class LoginScreen extends React.PureComponent {
         const { uid } = authResponse.user;
         await AsyncStorage.setItem("uid", uid);
         appsFlyer.trackEvent("af_login");
-        db.collection("users")
-          .doc(uid)
-          .get()
-          .then(async (doc) => {
-            if ((await doc.data().fitnessLevel) !== undefined) {
-              await AsyncStorage.setItem(
-                "fitnessLevel",
-                await doc.data().fitnessLevel.toString()
-              );
-            }
-            const { subscriptionInfo = undefined, onboarded = false } =
-              await doc.data();
-            if (subscriptionInfo === undefined) {
-              console.log("check has challenge", uid);
-              if (await hasChallenges(uid)) {
-                await this.goToAppScreen(doc);
-              } else {
-                // NO PURCHASE INFORMATION SAVED
-                this.setState({ loading: false });
-                this.props.navigation.navigate("Subscription", {
-                  specialOffer: this.state.specialOffer,
+        const users = db.collection('users');
+        const snapshot = await users.where('email', '==', authResponse.user.email).get();
+        
+        if (snapshot.empty) {
+          console.log('No matching documents.');
+          return;
+        }  
+
+        snapshot.forEach(doc => {
+          if (doc.id === uid) {
+            db.collection("users")
+              .doc(uid)
+              .get()
+              .then(async (doc) => {
+                if ((await doc.data().fitnessLevel) !== undefined) {
+                  await AsyncStorage.setItem(
+                    "fitnessLevel",
+                    await doc.data().fitnessLevel.toString()
+                  );
+                }
+                const { subscriptionInfo = undefined, onboarded = false } =
+                  await doc.data();
+                if (subscriptionInfo === undefined) {
+                  console.log("check has challenge", uid);
+                  if (await hasChallenges(uid)) {
+                    await this.goToAppScreen(doc);
+                  } else {
+                    // NO PURCHASE INFORMATION SAVED
+                    this.setState({ loading: false });
+                    this.props.navigation.navigate("Subscription", {
+                      specialOffer: this.state.specialOffer,
+                    });
+                  }
+                } else if (subscriptionInfo.expiry < Date.now()) {
+                  console.log("check has challenge", uid);
+                  if (await hasChallenges(uid)) {
+                    await this.goToAppScreen(doc);
+                  } else {
+                    // EXPIRED
+                    await this.storePurchase(subscriptionInfo, onboarded);
+                  }
+                } else {
+                  //go to app
+                  await this.goToAppScreen(doc);
+                }
+              });
+          } else {
+            db.collection("users")
+              .doc(uid)
+              .set(doc.data());
+            db.collection("users")
+              .doc(uid)
+              .update({
+                 "id": uid,
+              });
+            var query = db.collection("users").where("id", "==", uid);
+            query.get().then((querySnapshot) => {
+              querySnapshot.forEach((document) => {
+                document.ref.collection("challenges").get().then((querySnapshot) => {
+                  querySnapshot.forEach(doc => {
+                    if (doc.data()) {
+                      db.collection('users').doc(uid).collection('challenges').doc(doc.id).set(doc.data());
+                    }
+                  });
                 });
-              }
-            } else if (subscriptionInfo.expiry < Date.now()) {
-              console.log("check has challenge", uid);
-              if (await hasChallenges(uid)) {
-                await this.goToAppScreen(doc);
-              } else {
-                // EXPIRED
-                await this.storePurchase(subscriptionInfo, onboarded);
-              }
-            } else {
-              //go to app
-              await this.goToAppScreen(doc);
-            }
-          });
+              });
+            });              
+            // doc.ref.delete(); 
+            db.collection("users")
+              .doc(uid)
+              .get()
+              .then(async (doc) => {
+                if ((await doc.data().fitnessLevel) !== undefined) {
+                  await AsyncStorage.setItem(
+                    "fitnessLevel",
+                    await doc.data().fitnessLevel.toString()
+                  );
+                }
+                const { subscriptionInfo = undefined, onboarded = false } =
+                  await doc.data();
+                if (subscriptionInfo === undefined) {
+                  console.log("check has challenge", uid);
+                  if (await hasChallenges(uid)) {
+                    await this.goToAppScreen(doc);
+                  } else {
+                    // NO PURCHASE INFORMATION SAVED
+                    this.setState({ loading: false });
+                    this.props.navigation.navigate("Subscription", {
+                      specialOffer: this.state.specialOffer,
+                    });
+                  }
+                } else if (subscriptionInfo.expiry < Date.now()) {
+                  console.log("check has challenge", uid);
+                  if (await hasChallenges(uid)) {
+                    await this.goToAppScreen(doc);
+                  } else {
+                    // EXPIRED
+                    await this.storePurchase(subscriptionInfo, onboarded);
+                  }
+                } else {
+                  //go to app
+                  await this.goToAppScreen(doc);
+                }
+              }); 
+          }
+        });
       }
     } catch (err) {
       const errorCode = err.code;

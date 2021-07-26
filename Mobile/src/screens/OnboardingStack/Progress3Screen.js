@@ -49,7 +49,7 @@ export default class Progress3Screen extends React.PureComponent {
           },
           {
             text: "Skip",
-            onPress: () => this.props.navigation.navigate("App"),
+            onPress: () => this.props.navigation.navigate("Progress"),
           },
         ],
         { cancelable: false }
@@ -65,7 +65,7 @@ export default class Progress3Screen extends React.PureComponent {
           },
           {
             text: "Skip",
-            onPress: () => this.props.navigation.navigate("App"),
+            onPress: () => this.props.navigation.navigate("Progress"),
           },
         ],
         { cancelable: false }

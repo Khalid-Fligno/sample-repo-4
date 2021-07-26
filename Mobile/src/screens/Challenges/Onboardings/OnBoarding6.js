@@ -43,6 +43,19 @@ export default class OnBoarding6 extends Component {
     };
   }
 
+  fetchFitnessLevel = async () => {
+    const uid = await AsyncStorage.getItem("uid");
+    db.collection("users")
+      .doc(uid)
+      .get()
+      .then((snapshot) => {
+        const fitnessLevel = snapshot.data().fitnessLevel ?? 2;
+        this.setState({
+          fitnessLevel: fitnessLevel,
+        });
+      });
+  };
+
   onFocusFunction = () => {
     const data = this.props.navigation.getParam("data", {});
     const fitnessLevel =
@@ -58,6 +71,7 @@ export default class OnBoarding6 extends Component {
   async componentDidMount() {
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
+      this.fetchFitnessLevel();
     });
   }
 
@@ -274,22 +288,24 @@ export default class OnBoarding6 extends Component {
               customContainerStyle={{ marginTop: 0, marginBottom: 0 }}
             />
             <Text style={{ fontFamily: fonts.standard, fontSize: 15 }}>
-              Select your intensity level below.
+              {/* Select your intensity level below. */}
+              How often do you currently train.
+            </Text>
+            {/* <Text style={{ fontFamily: fonts.standard, fontSize: 15 }}>
+                Beginner: train once a week,
             </Text>
             <Text style={{ fontFamily: fonts.standard, fontSize: 15 }}>
-              Beginner: train once a week,
+                Intermediate: train 2 to 3 times a week,
             </Text>
             <Text style={{ fontFamily: fonts.standard, fontSize: 15 }}>
-              Intermediate: train 2 to 3 times a week,
-            </Text>
-            <Text style={{ fontFamily: fonts.standard, fontSize: 15 }}>
-              Expert: train 4+ times a week
-            </Text>
+                Expert: train 4+ times a week
+            </Text> */}
 
             <FitnessLevelCard
               source={require("../../../../assets/images/OnBoardindImg/FL_1.png")}
               onPress={() => this.setState({ fitnessLevel: 1 })}
-              title="Beginner"
+              title="0-2 times a week"
+              // title="Beginner"
               helpText="Train once a week"
               showTick={fitnessLevel === 1}
               isCardColored={true}
@@ -298,7 +314,8 @@ export default class OnBoarding6 extends Component {
             <FitnessLevelCard
               source={require("../../../../assets/images/OnBoardindImg/FL_2.png")}
               onPress={() => this.setState({ fitnessLevel: 2 })}
-              title="Intermediate"
+              title="2-3 times a week"
+              // title="Intermediate"
               helpText="Train 2 to 3 times a week"
               showTick={fitnessLevel === 2}
               isCardColored={true}
@@ -307,7 +324,8 @@ export default class OnBoarding6 extends Component {
             <FitnessLevelCard
               source={require("../../../../assets/images/OnBoardindImg/FL_3.png")}
               onPress={() => this.setState({ fitnessLevel: 3 })}
-              title="Expert"
+              title="4+ times a week"
+              // title="Expert"
               helpText="Train 4+ times a week"
               showTick={fitnessLevel === 3}
               isCardColored={true}

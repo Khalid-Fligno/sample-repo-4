@@ -29,6 +29,7 @@ import moment from "moment";
 import createUserChallengeData from "../../../components/Challenges/UserChallengeData";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { NavigationActions } from "react-navigation";
+import OnBoardingNotification from "../../../components/Shared/OnBoardingNotification";
 import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
 
 class CalendarHomeScreen extends React.PureComponent {
@@ -50,6 +51,8 @@ class CalendarHomeScreen extends React.PureComponent {
       CalendarSelectedDate: undefined,
       todayRcWorkout: undefined,
       loadingExercises: false,
+      onboarded: false,
+      initialBurpeeTestCompleted: false,
     };
     this.calendarStrip = React.createRef();
   }
@@ -63,6 +66,7 @@ class CalendarHomeScreen extends React.PureComponent {
       toggleHelperModal: this.showHelperModal,
     });
     await this.fetchCalendarEntries();
+    await this.fetchUserData();
     await this.fetchActiveChallengeUserData();
     await this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting(),
@@ -132,6 +136,18 @@ class CalendarHomeScreen extends React.PureComponent {
         }
       }
     }
+  };
+
+  fetchUserData = async () => {
+    const uid = await AsyncStorage.getItem("uid");
+    const userRef = db.collection("users").doc(uid);
+    userRef.get().then((res) => {
+      const data = res.data();
+      this.setState({
+        onboarded: data.onboarded ?? false,
+        initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
+      });
+    });
   };
 
   async checkScheduleChallenge() {
@@ -229,7 +245,10 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async goToNext(workout) {
     console.log(">>here");
-    if (this.currentChallengeDay === 1) {
+    if (
+      this.currentChallengeDay === 1 &&
+      !this.state.initialBurpeeTestCompleted
+    ) {
       await FileSystem.downloadAsync(
         "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
         `${FileSystem.cacheDirectory}exercise-burpees.mp4`
@@ -242,7 +261,10 @@ class CalendarHomeScreen extends React.PureComponent {
         displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
       });
     }
-    if (this.currentChallengeDay === 1) {
+    if (
+      this.currentChallengeDay === 1 &&
+      !this.state.initialBurpeeTestCompleted
+    ) {
       this.props.navigation.navigate("Burpee1", {
         fromScreen: "WorkoutInfo",
         screenReturnParams: {
@@ -467,6 +489,7 @@ class CalendarHomeScreen extends React.PureComponent {
       CalendarSelectedDate,
       todayRcWorkout,
       loadingExercises,
+      onboarded,
     } = this.state;
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
@@ -564,7 +587,6 @@ class CalendarHomeScreen extends React.PureComponent {
         />
       </Modal>
     );
-
     return (
       <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
         <CustomCalendarStrip
@@ -587,6 +609,12 @@ class CalendarHomeScreen extends React.PureComponent {
               You can change this in settings
             </Text>
           </View>
+        )}
+        {!onboarded && (
+          <OnBoardingNotification
+            navigation={this.props.navigation}
+            data={activeChallengeUserData}
+          />
         )}
         {dayDisplay}
         {setting}

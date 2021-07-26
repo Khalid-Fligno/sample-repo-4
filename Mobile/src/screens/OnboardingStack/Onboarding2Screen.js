@@ -53,7 +53,7 @@ class Onboarding2Screen extends Component {
       const userData = (await userRef.get()).data();
       const data = {
         fitnessLevel: this.state.fitnessLevel,
-        onboarded: true,
+        onboarded: false,
       };
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });

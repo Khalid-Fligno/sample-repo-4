@@ -67,6 +67,25 @@ export default class Progress6Screen extends React.PureComponent {
     const { burpeeCount } = this.state;
     const uid = await AsyncStorage.getItem("uid");
     const userRef = db.collection("users").doc(uid);
+    const userSnapshot = await userRef.get();
+    const initialProgressInfo = userSnapshot.data().initialProgressInfo ?? null;
+    if (initialProgressInfo) {
+      const progressInfo = {
+        ...initialProgressInfo,
+        burpeeCount: burpeeCount,
+      };
+      try {
+        await userRef.set(
+          {
+            initialProgressInfo: progressInfo,
+          },
+          { merge: true }
+        );
+      } catch (reason) {
+        console.log("[Burpee4Screen.js handleSubmit() error: ", reason);
+        Alert.alert("Error", `Error: ${reason}.`);
+      }
+    }
     const fitnessLevel = findFitnessLevel(burpeeCount);
     AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
     try {

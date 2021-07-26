@@ -18,6 +18,7 @@ import * as Haptics from "expo-haptics";
 import * as FileSystem from "expo-file-system";
 import * as Permissions from "expo-permissions";
 import * as ImageManipulator from "expo-image-manipulator";
+import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import Icon from "../../../components/Shared/Icon";
 import Loader from "../../../components/Shared/Loader";
@@ -35,6 +36,7 @@ import { NavigationActions, StackActions } from "react-navigation";
 import createUserChallengeData from "../../../components/Challenges/UserChallengeData";
 import { db } from "../../../../config/firebase";
 import moment from "moment";
+import CalendarModal from "../../../components/Shared/CalendarModal";
 
 const uriToBlob = (url) => {
   return new Promise((resolve, reject) => {
@@ -71,17 +73,52 @@ export default class OnBoarding4 extends Component {
       addingToCalendar: false,
       chosenDate: new Date(),
       loading: false,
+      calendarModalVisible: false,
+      addingToCalendar: false,
+      chosenDate: new Date(),
     };
   }
 
-  onFocusFunction = () => {
+  fetchUserImageUrl = async () => {
+    try {
+      const uid = await AsyncStorage.getItem("uid");
+      const userSnapshot = await db.collection("users").doc(uid).get();
+      const user = userSnapshot.data();
+      return user.initialProgressInfo.photoURL ?? null;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  showCalendarModal = () => {
+    this.setState({ calendarModalVisible: true });
+  };
+
+  hideCalendarModal = () => {
+    this.setState({ calendarModalVisible: false, loading: false });
+  };
+
+  setDate = async (event, selectedDate) => {
+    // console.log("setDate call")
+    if (selectedDate && Platform.OS === "android") {
+      this.hideCalendarModal();
+      this.setState({ loading: true });
+      this.addChallengeToCalendar(selectedDate);
+    }
+    if (selectedDate && Platform.OS === "ios") {
+      const currentDate = selectedDate;
+      this.setState({ chosenDate: currentDate });
+    }
+  };
+
+  onFocusFunction = async () => {
     const data = this.props.navigation.getParam("data", {});
+    console.log("OnBoarding4 data:", data);
     const image = data["challengeData"].image
       ? data["challengeData"].image
       : null;
-    const imgUrl = data["challengeData"]["onBoardingInfo"]["beforePhotoUrl"]
-      ? data["challengeData"]["onBoardingInfo"]["beforePhotoUrl"]
-      : null;
+    const imgUrl = await this.fetchUserImageUrl();
+    console.log("Challenge: ", data["challengeData"]);
     this.setState({
       challengeData: data["challengeData"],
       image,
@@ -92,6 +129,11 @@ export default class OnBoarding4 extends Component {
 
   // add a focus listener onDidMount
   async componentDidMount() {
+    this.props.navigation.setParams({
+      handleSkip: () => {
+        this.goToScreen("next");
+      },
+    });
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     });
@@ -205,6 +247,7 @@ export default class OnBoarding4 extends Component {
         { format: "jpeg", compress: 0.7, base64: true }
       );
       this.uploading(manipResult);
+      MediaLibrary.saveToLibraryAsync(result.uri);
     }
   };
 
@@ -336,13 +379,20 @@ export default class OnBoarding4 extends Component {
     ////////////////////saving on calendar
     const updatedChallengedata = this.state.challengeData;
     const data = createUserChallengeData(updatedChallengedata, new Date(date));
+    let skipped = updatedChallengedata.onBoardingInfo.skipped;
+    if (!skipped) {
+      skipped = this.state.imgUrl == null ? true : false;
+    }
     const progressData = {
       photoURL: this.state.imgUrl,
+      height: updatedChallengedata.onBoardingInfo.measurements.height,
       weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+      goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
       waist: updatedChallengedata.onBoardingInfo.measurements.waist,
       hip: updatedChallengedata.onBoardingInfo.measurements.hip,
       burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
       fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
+      onboarded: skipped ? false : true,
     };
     const stringDate = moment(date).format("YYYY-MM-DD").toString();
     const stringDate2 = moment(date).format("DD-MM-YY").toString();
@@ -363,7 +413,7 @@ export default class OnBoarding4 extends Component {
     try {
       // if (imgUrl !== null) {
       const onBoardingInfo = Object.assign({}, challengeData.onBoardingInfo, {
-        beforePhotoUrl: imgUrl ? imgUrl : "",
+        beforePhotoUrl: imgUrl ? imgUrl : null,
       });
       let updatedChallengedata = Object.assign({}, challengeData, {
         onBoardingInfo,
@@ -372,19 +422,37 @@ export default class OnBoarding4 extends Component {
       // console.log(updatedChallengedata)
       if (type === "next") {
         if (this.props.navigation.getParam("onboardingProcessComplete")) {
+          let skipped = updatedChallengedata.onBoardingInfo.skipped;
+          if (!skipped) {
+            skipped = this.state.imgUrl == null ? true : false;
+          }
+          console.log("Skipped: ", skipped);
           const progressData = {
-            photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
+            photoURL: this.state.imgUrl,
             height: updatedChallengedata.onBoardingInfo.measurements.height,
+            weight: updatedChallengedata.onBoardingInfo.measurements.weight,
             goalWeight:
               updatedChallengedata.onBoardingInfo.measurements.goalWeight,
-            weight: updatedChallengedata.onBoardingInfo.measurements.weight,
             waist: updatedChallengedata.onBoardingInfo.measurements.waist,
             hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-            burpeeCount: 1,
-            fitnessLevel: 1,
+            burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
+            fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
+            onboarded: skipped ? false : true,
           };
           storeProgressInfo(progressData);
-          this.props.navigation.navigate("WorkoutInfo");
+          // this.props.navigation.navigate("WorkoutInfo");
+          const resetAction = StackActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: "Tabs",
+                action: NavigationActions.navigate({
+                  routeName: "Calendar",
+                }),
+              }),
+            ],
+          });
+          this.props.navigation.dispatch(resetAction);
         } else {
           // this.props.navigation.navigate("ChallengeOnBoarding5", {
           //   data: {
@@ -401,7 +469,8 @@ export default class OnBoarding4 extends Component {
           //       : false,
           // });
 
-          this.addChallengeToCalendar(moment().set("date", 26));
+          // this.addChallengeToCalendar(moment().set("date", 26));
+          this.showCalendarModal();
         }
         // Alert.alert('',
         //   `Before Picture ${onBoardingInfo.beforePhotoUrl === "" ? 'None' : onBoardingInfo.beforePhotoUrl.toString()}`,
@@ -494,11 +563,29 @@ export default class OnBoarding4 extends Component {
   };
 
   render() {
-    const { image, uploading, error, btnDisabled, imgUrl, loading } =
-      this.state;
+    const {
+      image,
+      uploading,
+      error,
+      btnDisabled,
+      imgUrl,
+      loading,
+      calendarModalVisible,
+      addingToCalendar,
+      chosenDate,
+    } = this.state;
     return (
       <SafeAreaView style={ChallengeStyle.container}>
         <View style={[globalStyle.container, { paddingVertical: 15 }]}>
+          <CalendarModal
+            isVisible={calendarModalVisible}
+            onBackdropPress={this.hideCalendarModal}
+            value={chosenDate}
+            onChange={this.setDate}
+            onPress={() => this.addChallengeToCalendar(chosenDate)}
+            addingToCalendar={addingToCalendar}
+            loading={loading}
+          />
           <View>
             <Text style={[ChallengeStyle.onBoardingTitle]}>
               Take your before picture
@@ -552,10 +639,9 @@ export default class OnBoarding4 extends Component {
           <View style={[{ flex: 1, justifyContent: "flex-end" }]}>
             {error && <Text style={styles.errorText}>{error}</Text>}
             <CustomBtn
-              Title={imgUrl ? "Start Challenge" : "I'll do it later"}
+              Title={imgUrl ? "Start Challenge" : "Next"}
               customBtnStyle={{ padding: 15, width: "100%" }}
               onPress={() => this.goToScreen("next")}
-              disabled={btnDisabled}
               isRightIcon={true}
               rightIconName="chevron-right"
               rightIconColor={colors.black}

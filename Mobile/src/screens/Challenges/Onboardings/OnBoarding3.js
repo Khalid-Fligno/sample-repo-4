@@ -44,6 +44,7 @@ export default class OnBoarding3 extends Component {
       pickerDataList: [],
       inputType: any,
       chosenUom: "metric",
+      skipped: false,
     };
   }
   onFocusFunction = () => {
@@ -53,7 +54,7 @@ export default class OnBoarding3 extends Component {
       this.setState({
         challengeData: data["challengeData"],
         btnDisabled: false,
-        height: measurments.height,
+        height: measurments.height ?? 0,
         weight: measurments.weight,
         goalWeight: measurments.goalWeight,
         waist: measurments.waist,
@@ -70,6 +71,11 @@ export default class OnBoarding3 extends Component {
 
   // add a focus listener onDidMount
   async componentDidMount() {
+    this.props.navigation.setParams({
+      handleSkip: () => {
+        this.goToScreen("next");
+      },
+    });
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     });
@@ -82,6 +88,14 @@ export default class OnBoarding3 extends Component {
 
   goToScreen(type) {
     let { challengeData } = this.state;
+    let { goalWeight, hip, height, waist, weight } = this.state;
+
+    const skipped =
+      weight == 0 && height == 0 && goalWeight == 0 && waist == 0 && hip == 0
+        ? true
+        : false;
+
+    this.setState({ skipped: skipped });
 
     const onBoardingInfo = Object.assign({}, challengeData.onBoardingInfo, {
       measurements: {
@@ -92,6 +106,7 @@ export default class OnBoarding3 extends Component {
         hip: this.state.hip,
         unit: this.state.chosenUom,
       },
+      skipped: skipped,
     });
 
     let updatedChallengedata = Object.assign({}, challengeData, {

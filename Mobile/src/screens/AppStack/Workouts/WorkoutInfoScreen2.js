@@ -489,7 +489,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
 
         {workout && (
           <View style={WorkoutScreenStyle.flatListContainer}>
-            {notificationBanner && (
+            {/* {notificationBanner && (
               <View style={{ backgroundColor: colors.white }}>
                 <View
                   style={{
@@ -553,7 +553,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                   </TouchableOpacity>
                 </View>
               </View>
-            )}
+            )} */}
             <FlatList
               data={workout.exercises}
               keyExtractor={this.keyExtractor}

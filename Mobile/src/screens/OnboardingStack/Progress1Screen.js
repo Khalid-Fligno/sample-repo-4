@@ -55,6 +55,11 @@ export default class Progress1Screen extends React.PureComponent {
       toggleHelperModal: this.showHelperModal,
     });
     this.fetchUom();
+    if (this.props.navigation.getParam("isInitial")) {
+      this.fetchInitialDataMeasurements();
+    } else {
+      this.fetchCurrentDataMeasurements();
+    }
   };
   componentWillUnmount() {
     BackHandler.removeEventListener("hardwareBackPress", () => true);
@@ -78,6 +83,43 @@ export default class Progress1Screen extends React.PureComponent {
         });
       });
   };
+
+  fetchInitialDataMeasurements = async () => {
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem("uid");
+    db.collection("users")
+      .doc(uid)
+      .get()
+      .then((snapshot) => {
+        const data = snapshot.data();
+        const initialProgressInfo = data.initialProgressInfo;
+        this.setState({
+          weight: initialProgressInfo.weight ?? 0,
+          waist: initialProgressInfo.waist ?? 0,
+          hip: initialProgressInfo.hip ?? 0,
+          loading: false,
+        });
+      });
+  };
+
+  fetchCurrentDataMeasurements = async () => {
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem("uid");
+    db.collection("users")
+      .doc(uid)
+      .get()
+      .then((snapshot) => {
+        const data = snapshot.data();
+        const progressInfo = data.currentProgressInfo;
+        this.setState({
+          weight: progressInfo.weight ?? 0,
+          waist: progressInfo.waist ?? 0,
+          hip: progressInfo.hip ?? 0,
+          loading: false,
+        });
+      });
+  };
+
   handleSkip = () => {
     if (this.props.navigation.getParam("isInitial", false)) {
       Alert.alert(
@@ -90,7 +132,7 @@ export default class Progress1Screen extends React.PureComponent {
           },
           {
             text: "Skip",
-            onPress: () => this.props.navigation.navigate("App"),
+            onPress: () => this.props.navigation.navigate("Progress"),
           },
         ],
         { cancelable: false }
@@ -106,7 +148,7 @@ export default class Progress1Screen extends React.PureComponent {
           },
           {
             text: "Skip",
-            onPress: () => this.props.navigation.navigate("App"),
+            onPress: () => this.props.navigation.navigate("Progress"),
           },
         ],
         { cancelable: false }
