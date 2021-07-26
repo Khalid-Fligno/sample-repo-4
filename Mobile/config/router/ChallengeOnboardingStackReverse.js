@@ -27,7 +27,10 @@ const ChallengeOnboardingStackReverse = createStackNavigator(
       gesturesEnabled: false,
       header: () => {
         const { routeName } = navigation.state;
-        if (routeName === "ChallengeOnBoarding3") {
+        if (
+          routeName === "ChallengeOnBoarding3" ||
+          routeName === "ChallengeOnBoarding4"
+        ) {
           return (
             <Header
               stack="Subscription"

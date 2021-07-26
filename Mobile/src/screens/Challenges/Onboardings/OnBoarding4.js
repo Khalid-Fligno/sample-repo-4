@@ -129,6 +129,11 @@ export default class OnBoarding4 extends Component {
 
   // add a focus listener onDidMount
   async componentDidMount() {
+    this.props.navigation.setParams({
+      handleSkip: () => {
+        this.goToScreen("next");
+      },
+    });
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     });
@@ -634,7 +639,7 @@ export default class OnBoarding4 extends Component {
           <View style={[{ flex: 1, justifyContent: "flex-end" }]}>
             {error && <Text style={styles.errorText}>{error}</Text>}
             <CustomBtn
-              Title={imgUrl ? "Start Challenge" : "I'll do it later"}
+              Title={imgUrl ? "Start Challenge" : "Next"}
               customBtnStyle={{ padding: 15, width: "100%" }}
               onPress={() => this.goToScreen("next")}
               isRightIcon={true}
