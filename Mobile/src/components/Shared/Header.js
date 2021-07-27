@@ -111,6 +111,8 @@ export default class Header extends React.PureComponent {
       activeChallengeSetting,
     } = this.props;
 
+    console.log('xxxxxxxx ', navigation.state.routeName)
+
     return (
       <SafeAreaView
         style={[
@@ -142,7 +144,13 @@ export default class Header extends React.PureComponent {
               <Icon
                 name="chevron-left"
                 size={20}
-                color={colors.themeColor.color}
+                color={
+                  navigation.state.routeName === 'ChallengeOnBoarding6' ||
+                  navigation.state.routeName === 'ProfileHome' || 
+                  navigation.state.routeName === 'RecipeSteps'
+                    ? colors.black 
+                    : colors.themeColor.color
+                }
               />
             </TouchableOpacity>
           )}
