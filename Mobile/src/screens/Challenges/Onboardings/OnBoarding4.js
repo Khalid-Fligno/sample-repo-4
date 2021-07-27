@@ -341,6 +341,35 @@ export default class OnBoarding4 extends Component {
     // }
   }
 
+  async updateOnBoardingInfo(data) {
+    this.setState({ loading: true });
+    {
+      this.props.navigation.getParam("challengeOnboard")
+        ? this.setState({ loading: false })
+        : this.setState({ loading: true });
+    }
+    const uid = await AsyncStorage.getItem("uid");
+    const userRef = db
+      .collection("users")
+      .doc(uid)
+      .collection("challenges")
+      .doc(data.id);
+    userRef
+      .set(data, { merge: true })
+      .then(async (res) => {
+        if (data.onBoardingInfo.fitnessLevel)
+          await AsyncStorage.setItem(
+            "fitnessLevel",
+            data.onBoardingInfo.fitnessLevel.toString()
+          );
+        this.setState({ loading: false });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ loading: false });
+      });
+  }
+
   async saveOnBoardingInfo(data, stringDate2) {
     this.setState({ loading: true });
     {
@@ -377,12 +406,30 @@ export default class OnBoarding4 extends Component {
     }
     this.setState({ addingToCalendar: true });
     ////////////////////saving on calendar
-    const updatedChallengedata = this.state.challengeData;
-    const data = createUserChallengeData(updatedChallengedata, new Date(date));
+    let updatedChallengedata = this.state.challengeData;
+
+    console.log("Challenge data: ", updatedChallengedata);
+
     let skipped = updatedChallengedata.onBoardingInfo.skipped;
     if (!skipped) {
       skipped = this.state.imgUrl == null ? true : false;
     }
+
+    console.log("Skipped: ", skipped);
+    const onBoardingInfo = Object.assign(
+      {},
+      updatedChallengedata.onBoardingInfo,
+      {
+        skipped: skipped,
+      }
+    );
+
+    updatedChallengedata = Object.assign({}, updatedChallengedata, {
+      onBoardingInfo,
+    });
+
+    const data = createUserChallengeData(updatedChallengedata, new Date(date));
+
     const progressData = {
       photoURL: this.state.imgUrl,
       height: updatedChallengedata.onBoardingInfo.measurements.height,
@@ -392,7 +439,6 @@ export default class OnBoarding4 extends Component {
       hip: updatedChallengedata.onBoardingInfo.measurements.hip,
       burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
       fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
-      onboarded: skipped ? false : true,
     };
     const stringDate = moment(date).format("YYYY-MM-DD").toString();
     const stringDate2 = moment(date).format("DD-MM-YY").toString();
@@ -422,11 +468,30 @@ export default class OnBoarding4 extends Component {
       // console.log(updatedChallengedata)
       if (type === "next") {
         if (this.props.navigation.getParam("onboardingProcessComplete")) {
-          let skipped = updatedChallengedata.onBoardingInfo.skipped;
+          let skipped = challengeData.onBoardingInfo.skipped;
           if (!skipped) {
             skipped = this.state.imgUrl == null ? true : false;
           }
           console.log("Skipped: ", skipped);
+          const onBoardingInfo = Object.assign(
+            {},
+            updatedChallengedata.onBoardingInfo,
+            {
+              skipped: skipped,
+            }
+          );
+
+          updatedChallengedata = Object.assign({}, updatedChallengedata, {
+            onBoardingInfo,
+          });
+
+          const data = createUserChallengeData(
+            updatedChallengedata,
+            new Date(updatedChallengedata.startDate)
+          );
+
+          this.updateOnBoardingInfo(data);
+
           const progressData = {
             photoURL: this.state.imgUrl,
             height: updatedChallengedata.onBoardingInfo.measurements.height,
@@ -437,7 +502,6 @@ export default class OnBoarding4 extends Component {
             hip: updatedChallengedata.onBoardingInfo.measurements.hip,
             burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
             fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
-            onboarded: skipped ? false : true,
           };
           storeProgressInfo(progressData);
           // this.props.navigation.navigate("WorkoutInfo");

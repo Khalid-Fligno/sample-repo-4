@@ -68,18 +68,20 @@ export default class Progress2Screen extends React.PureComponent {
         const progressInfo = isInitial
           ? data.initialProgressInfo
           : data.currentProgressInfo;
-        const imageURL = progressInfo.photoURL ?? null;
-        if (imageURL) {
-          await FileSystem.downloadAsync(
-            imageURL,
-            `${FileSystem.cacheDirectory}progressImage.jpeg`
-          );
-          const image = await ImageManipulator.manipulateAsync(
-            `${FileSystem.cacheDirectory}progressImage.jpeg`,
-            null,
-            { base64: true }
-          );
-          this.setState({ image });
+        if (progressInfo) {
+          const imageURL = progressInfo.photoURL ?? null;
+          if (imageURL) {
+            await FileSystem.downloadAsync(
+              imageURL,
+              `${FileSystem.cacheDirectory}progressImage.jpeg`
+            );
+            const image = await ImageManipulator.manipulateAsync(
+              `${FileSystem.cacheDirectory}progressImage.jpeg`,
+              null,
+              { base64: true }
+            );
+            this.setState({ image });
+          }
         }
       })
       .catch((reason) => {

@@ -43,7 +43,7 @@ class Onboarding2Screen extends Component {
     };
   }
 
-  handleSubmit = async () => {
+  handleSubmit = async (fitnessLevel) => {
     const { name, specialOffer } = this.state;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
@@ -52,8 +52,8 @@ class Onboarding2Screen extends Component {
       const userRef = db.collection("users").doc(uid);
       const userData = (await userRef.get()).data();
       const data = {
-        fitnessLevel: this.state.fitnessLevel,
-        onboarded: false,
+        fitnessLevel: fitnessLevel,
+        onboarded: true,
       };
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
@@ -133,28 +133,34 @@ class Onboarding2Screen extends Component {
             </Text>
 
             <FitnessLevelCard
-              source={require("../../../assets/images/OnBoardindImg/FL_1.png")}
-              onPress={() => this.setState({ fitnessLevel: 1 })}
-              title="Beginner"
+              // source={require("../../../../assets/images/OnBoardindImg/FL_1.png")}
+              onPress={() => this.handleSubmit(1)}
+              title="0-2 times a week"
+              // title="Beginner"
               helpText="Train once a week"
-              showTick={fitnessLevel === 1}
+              isCardColored={true}
+              cardColor={colors.coolIce}
             />
             <FitnessLevelCard
-              source={require("../../../assets/images/OnBoardindImg/FL_2.png")}
-              onPress={() => this.setState({ fitnessLevel: 2 })}
-              title="Intermediate"
+              // source={require("../../../../assets/images/OnBoardindImg/FL_2.png")}
+              onPress={() => this.handleSubmit(2)}
+              title="2-3 times a week"
+              // title="Intermediate"
               helpText="Train 2 to 3 times a week"
-              showTick={fitnessLevel === 2}
+              isCardColored={true}
+              cardColor={colors.coolIce}
             />
             <FitnessLevelCard
-              source={require("../../../assets/images/OnBoardindImg/FL_3.png")}
-              onPress={() => this.setState({ fitnessLevel: 3 })}
-              title="Expert"
+              // source={require("../../../../assets/images/OnBoardindImg/FL_3.png")}
+              onPress={() => this.handleSubmit(3)}
+              title="4+ times a week"
+              // title="Expert"
               helpText="Train 4+ times a week"
-              showTick={fitnessLevel === 3}
+              isCardColored={true}
+              cardColor={colors.coolIce}
             />
 
-            <View
+            {/* <View
               style={{ flex: 0.5, justifyContent: "flex-end", marginTop: 20 }}
             >
               <CustomBtn
@@ -163,7 +169,7 @@ class Onboarding2Screen extends Component {
                 onPress={() => this.handleSubmit()}
                 customBtnTitleStyle={{ letterSpacing: fonts.letterSpacing }}
               />
-            </View>
+            </View> */}
           </ScrollView>
           <Loader loading={loading} color={colors.coral.standard} />
         </View>
