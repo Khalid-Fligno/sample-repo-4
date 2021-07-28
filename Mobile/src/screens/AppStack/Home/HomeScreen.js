@@ -118,6 +118,10 @@ export default class HomeScreen extends React.PureComponent {
       this.setState({
         profile: await doc.data(),
       });
+      console.log(
+        "Start of week: ",
+        moment().startOf("week").format("YYYY-MM-DD")
+      );
       if (
         (await doc.data().weeklyTargets.currentWeekStartDate) !==
         moment().startOf("week").format("YYYY-MM-DD")

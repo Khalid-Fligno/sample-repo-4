@@ -66,15 +66,17 @@ class CalendarHomeScreen extends React.PureComponent {
       toggleHelperModal: this.showHelperModal,
     });
 
-    this.focusListener = this.props.navigation.addListener("willFocus", () => {
+    this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     });
+    // this.onFocusFunction();
   };
 
   async onFocusFunction() {
+    console.log("On focus");
     await this.fetchCalendarEntries();
-    await this.fetchUserData();
     await this.fetchActiveChallengeUserData();
+    await this.fetchUserData();
     await this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting(),
     });
@@ -141,13 +143,17 @@ class CalendarHomeScreen extends React.PureComponent {
   fetchUserData = async () => {
     const uid = await AsyncStorage.getItem("uid");
     const userRef = db.collection("users").doc(uid);
-    userRef.get().then((res) => {
-      const data = res.data();
-      this.setState({
-        skipped: activeChallengeUserData.onBoardingInfo.skipped ?? false,
-        initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
-      });
-    });
+    userRef
+      .get()
+      .then((res) => {
+        const data = res.data();
+        this.setState({
+          skipped:
+            this.state.activeChallengeUserData.onBoardingInfo.skipped ?? false,
+          initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
+        });
+      })
+      .catch((reason) => console.log("Fetching user data error: ", reason));
   };
 
   async checkScheduleChallenge() {
@@ -491,6 +497,7 @@ class CalendarHomeScreen extends React.PureComponent {
       loadingExercises,
       skipped,
     } = this.state;
+    console.log("Skipped 2: ", skipped);
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
