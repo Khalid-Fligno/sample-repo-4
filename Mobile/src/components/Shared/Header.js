@@ -144,13 +144,7 @@ export default class Header extends React.PureComponent {
               <Icon
                 name="chevron-left"
                 size={20}
-                color={
-                  navigation.state.routeName === 'ChallengeOnBoarding6' ||
-                  navigation.state.routeName === 'ProfileHome' || 
-                  navigation.state.routeName === 'RecipeSteps'
-                    ? colors.black 
-                    : colors.themeColor.color
-                }
+                color={colors.black}
               />
             </TouchableOpacity>
           )}
@@ -185,7 +179,7 @@ export default class Header extends React.PureComponent {
               <Icon
                 name="chevron-left"
                 size={20}
-                color={colors.themeColor.color}
+                color={colors.black}
               />
             </TouchableOpacity>
           )}
