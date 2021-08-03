@@ -669,6 +669,45 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 </TouchableOpacity>
               </View>
             </View>
+            {!rest && (
+              <Video
+                source={{
+                  uri: `${FileSystem.cacheDirectory}exercise-${
+                    currentExerciseIndex + 1
+                  }.mp4`,
+                }}
+                rate={1.0}
+                volume={1.0}
+                isMuted={false}
+                resizeMode="cover"
+                shouldPlay={!videoPaused}
+                isLooping
+                style={{ width, height: width }}
+              />
+            )}
+            {rest && (
+              <FastImage
+                // source={require('../../../../../assets/images/hiit-rest-placeholder.jpg')}
+                source={{ uri: restRandomImage, cache: "immutable" }}
+                style={{ width, height: width }}
+              />
+            )}
+            {workoutTimer()}
+          </View>
+
+          <View style={styles.currentExerciseTextContainer}>
+            <Text style={styles.currentExerciseTextCount}>{`Exercise ${
+              currentExerciseIndex + 1
+            } of ${exerciseList.length}`}</Text>
+            <View style={styles.currentExerciseNameTextContainer}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.currentExerciseNameText}
+              >
+                {rest ? "Rest" : currentExercise.name.toUpperCase()}
+              </Text>
+            </View>
           </View>
         </FadeInView>
       </SafeAreaView>
@@ -695,6 +734,7 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.5,
+    zIndex: 1,
     marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 1 : 0,
   },
   exitButton: { alignSelf: "flex-end", paddingRight: 20 },
@@ -707,13 +747,8 @@ const styles = StyleSheet.create({
   },
   currentExerciseTextContainer: {
     width,
-    flexDirection: "row",
-    flexWrap: "wrap",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingTop: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
+    justifyContent: "center",
     backgroundColor: colors.white,
   },
   currentExerciseNameTextContainer: {
@@ -722,8 +757,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   currentExerciseNameText: {
+    fontFamily: fonts.bold,
+    fontSize: 25,
+    color: colors.black,
+  },
+  currentExerciseTextCount: {
     fontFamily: fonts.boldNarrow,
-    fontSize: 18,
+    fontSize: 20,
     color: colors.black,
   },
   currentExerciseRepsTextContainer: {
