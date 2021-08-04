@@ -37,6 +37,8 @@ import { object } from "prop-types";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 const { width, height } = Dimensions.get("window");
+import ExerciseInfoButtonV2 from "../../../../components/Workouts/ExerciseInfoButtonV2";
+import WorkoutProgressControl from "../../../../components/Workouts/WorkoutProgressControl";
 
 const updateWeeklyTargets = (obj, field, newTally) => {
   return Object.assign({}, obj, { [field]: newTally });
@@ -515,6 +517,38 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     );
   };
 
+  prevExercise = (exerciseList, reps, currentExerciseIndex) => {
+    // console.log(exerciseList, reps,currentExerciseIndex)
+    let setCount = this.props.navigation.getParam("setCount", 1);
+
+    let { workout } = this.state;
+    if (workout.workoutProcessType === "oneByOne") {
+      if (currentExerciseIndex > 0)
+        this.goToExercise(1, reps, null, currentExerciseIndex - 1, false);
+      else {
+        this.goToExercise(
+          workout.workoutReps,
+          reps,
+          null,
+          currentExerciseIndex,
+          false
+        );
+      }
+    } else if (workout.workoutProcessType === "circular") {
+      if (currentExerciseIndex > 0) {
+        this.goToExercise(
+          setCount,
+          reps,
+          null,
+          currentExerciseIndex + 1,
+          false
+        );
+      } else if (currentExerciseIndex === workout.exercises.length - 1) {
+        this.goToExercise(setCount + 1, reps, null, 0, false);
+      }
+    }
+  };
+
   showExerciseInfoModal = () => {
     this.setState({
       videoPaused: true,
@@ -529,6 +563,52 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       timerStart: true,
       exerciseInfoModalVisible: false,
     });
+  };
+
+  setCounterView = () => {
+    const setCount = this.props.navigation.getParam("setCount", 1);
+    const { reps, workout } = this.state;
+    if (this.state.workout.filters.includes("strength")) {
+      return (
+        <View style={styles.invisibleView}>
+          <View style={styles.setCounter}>
+            <Text
+              style={styles.setCounterText}
+            >{`Set ${setCount} of ${workout.workoutReps} - ${reps} Reps`}</Text>
+          </View>
+        </View>
+      );
+    } else if (this.state.workout.filters.includes("interval")) {
+      return (
+        <View style={styles.invisibleView}>
+          <View style={styles.setCounter}>
+            <Text style={styles.setCounterText}>
+              Non Stop Until Time Runs Out
+            </Text>
+          </View>
+        </View>
+      );
+    } else if (this.state.workout.filters.includes("circuit")) {
+      return (
+        <View style={styles.invisibleView}>
+          <View style={styles.setCounter}>
+            <Text style={styles.setCounterText}>
+              Non Stop Until Time Runs Out
+            </Text>
+          </View>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.invisibleView}>
+          <View style={styles.setCounter}>
+            <Text
+              style={styles.setCounterText}
+            >{`Set ${setCount} of ${workout.workoutReps}`}</Text>
+          </View>
+        </View>
+      );
+    }
   };
 
   render() {
@@ -619,7 +699,13 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                   currentExerciseIndex
                 );
             }}
-            customContainerStyle={{ paddingBottom: 20 }}
+            customContainerStyle={{
+              paddingTop: 10,
+              height: 75,
+              paddingBottom: 10,
+              backgroundColor: colors.white,
+            }}
+            customTextStyle={{ color: colors.black }}
           />
         );
       else if (rest)
@@ -641,7 +727,13 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                   currentExerciseIndex
                 );
             }}
-            customContainerStyle={{ paddingBottom: 20 }}
+            customContainerStyle={{
+              paddingTop: 10,
+              height: 75,
+              paddingBottom: 10,
+              backgroundColor: colors.white,
+            }}
+            customTextStyle={{ color: colors.black }}
           />
         );
       else if (workout.count && !rest)
@@ -659,7 +751,10 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 <Text style={styles.title}>Workout</Text>
               </View>
               <View style={{ alignItems: "center" }}>
-                <TouchableOpacity style={styles.exitButton}>
+                <TouchableOpacity
+                  style={styles.exitButton}
+                  onPress={this.quitWorkout}
+                >
                   <Icon name="close" size={25} />
                   <Text
                     style={{ fontSize: 10, fontFamily: fonts.StyreneAWebThin }}
@@ -692,6 +787,10 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 style={{ width, height: width }}
               />
             )}
+            {showCT && (
+              <ExerciseInfoButtonV2 onPress={this.showExerciseInfoModal} />
+            )}
+            {this.setCounterView()}
             {workoutTimer()}
           </View>
 
@@ -701,7 +800,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
             } of ${exerciseList.length}`}</Text>
             <View style={styles.currentExerciseNameTextContainer}>
               <Text
-                numberOfLines={1}
+                numberOfLines={3}
                 ellipsizeMode="tail"
                 style={styles.currentExerciseNameText}
               >
@@ -709,6 +808,34 @@ export default class ExercisesScreenV2 extends React.PureComponent {
               </Text>
             </View>
           </View>
+
+          <View>
+            <WorkoutProgressControl
+              currentExercise={currentExercise}
+              currentExerciseIndex={currentExerciseIndex}
+              currentSet={setCount}
+              exerciseList={exerciseList}
+              workoutReps={workout.workoutReps}
+              rounds={workout.workoutReps}
+              progressType={workout.workoutProcessType}
+              rest={rest}
+              reps={reps}
+              currentRound={setCount}
+              workout={workout}
+              isPaused={videoPaused}
+              onPrev={this.prevExercise}
+              onNext={handleSkip ? this.skipExercise : null}
+              onPlayPause={videoPaused ? this.handleUnpause : this.handlePause}
+            />
+          </View>
+
+          <View />
+
+          <ExerciseInfoModal
+            exercise={currentExercise}
+            exerciseInfoModalVisible={exerciseInfoModalVisible}
+            hideExerciseInfoModal={this.hideExerciseInfoModal}
+          />
         </FadeInView>
       </SafeAreaView>
     );
@@ -730,7 +857,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderBottomWidth: 1,
     borderBottomColor: colors.grey.light,
-    elevation: 10,
+    elevation: 1,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.5,
@@ -738,7 +865,34 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 1 : 0,
   },
   exitButton: { alignSelf: "flex-end", paddingRight: 20 },
-  title: { alignSelf: "flex-end", fontSize: 20, fontFamily: fonts.bold },
+  title: {
+    alignSelf: "flex-end",
+    fontSize: 20,
+    fontFamily: fonts.bold,
+    paddingLeft: 20,
+  },
+  setCounter: {
+    borderColor: colors.black,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 40,
+    paddingRight: 10,
+    paddingLeft: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+  },
+  setCounterText: {
+    fontFamily: fonts.bold,
+    fontSize: 17,
+  },
+  invisibleView: {
+    height: 0,
+    width,
+    alignItems: "center",
+    marginTop: 60,
+    position: "absolute",
+  },
   flexContainer: {
     flex: 1,
     alignItems: "center",
@@ -760,6 +914,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 25,
     color: colors.black,
+    textAlign: "center",
   },
   currentExerciseTextCount: {
     fontFamily: fonts.boldNarrow,
