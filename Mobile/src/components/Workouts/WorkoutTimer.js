@@ -17,7 +17,7 @@ export const defaultStyles = {
   },
   text: {
     fontFamily: fonts.bold,
-    fontSize: height > 800 ? 80 : 60,
+    fontSize: 10,
     color: colors.white,
   },
 };
@@ -144,7 +144,7 @@ export default class WorkoutTimer extends React.PureComponent {
     return (
       <View style={[styles.container, this.props.customContainerStyle]}>
         <Text
-          style={[styles.text, this.props.customTextStyle, { fontSize: 50 }]}
+          style={[styles.text, this.props.customTextStyle, { fontSize: 30 }]}
         >
           {this.formatTime()}
         </Text>

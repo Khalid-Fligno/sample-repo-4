@@ -705,7 +705,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
               paddingBottom: 10,
               backgroundColor: colors.white,
             }}
-            customTextStyle={{ color: colors.black }}
+            customTextStyle={{ color: colors.black, fontSize: 10 }}
           />
         );
       else if (rest)
@@ -800,7 +800,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
             } of ${exerciseList.length}`}</Text>
             <View style={styles.currentExerciseNameTextContainer}>
               <Text
-                numberOfLines={3}
+                numberOfLines={1}
                 ellipsizeMode="tail"
                 style={styles.currentExerciseNameText}
               >
@@ -912,7 +912,7 @@ const styles = StyleSheet.create({
   },
   currentExerciseNameText: {
     fontFamily: fonts.bold,
-    fontSize: 25,
+    fontSize: 20,
     color: colors.black,
     textAlign: "center",
   },
