@@ -277,9 +277,10 @@ class ProgressHomeScreen extends React.PureComponent {
       currentProgressInfo &&
       diff(initialProgressInfo.burpeeCount, currentProgressInfo.burpeeCount);
 
-    const updateBtn = (onPress) => (
+    const editBeforeBtn = (onPress) => (
       <CustomBtn
-        Title="Update"
+        // Title="Update"
+        Title="Edit Before"
         outline={false}
         customBtnStyle={{
           padding: wp("1.7%"),
@@ -287,14 +288,43 @@ class ProgressHomeScreen extends React.PureComponent {
           justifyContent: "space-between",
           paddingStart: wp("5%"),
           paddingEnd: wp("3%"),
-          marginHorizontal: wp("10%"),
+          // marginHorizontal: wp("10%"),
           marginVertical: wp("3%"),
         }}
-        isRightIcon={true}
-        rightIconName="chevron-right"
-        rightIconColor={colors.black}
+        // isRightIcon={true}
+        // rightIconName="chevron-right"
+        // rightIconColor={colors.black}
         customBtnTitleStyle={{
-          fontFamily: fonts.SimplonMonoMedium,
+          // fontFamily: fonts.SimplonMonoMedium,
+          fontFamily: fonts.bold,
+          // color:colors.offWhite,
+          textTransform: "capitalize",
+        }}
+        onPress={onPress}
+      />
+    );
+
+    const editProgressBtn = (onPress) => (
+      <CustomBtn
+        // Title="Update"
+        Title="Edit Progress"
+        outline={false}
+        customBtnStyle={{
+          padding: wp("1.7%"),
+
+          justifyContent: "space-between",
+          paddingStart: wp("5%"),
+          paddingEnd: wp("1%"),
+          marginLeft: 90
+          // marginHorizontal: wp("10%"),
+          // marginVertical: wp("3%"),
+        }}
+        // isRightIcon={true}
+        // rightIconName="chevron-right"
+        // rightIconColor={colors.black}
+        customBtnTitleStyle={{
+          // fontFamily: fonts.SimplonMonoMedium,
+          fontFamily: fonts.bold,
           // color:colors.offWhite,
           textTransform: "capitalize",
         }}
@@ -322,20 +352,26 @@ class ProgressHomeScreen extends React.PureComponent {
                     resizeMode={FastImage.resizeMode.cover}
                   />
                 </TouchableOpacity>
-                {updateBtn(() =>
+                {/* {updateBtn(() =>
                   this.props.navigation.navigate("Progress1", {
                     isInitial: true,
                     navigateTo: "Progress",
                   })
-                )}
+                )} */}
               </View>
             ) : (
               <View style={styles.imagePlaceholder}>
                 <TouchableOpacity
+                  disabled={initialProgressInfo ? false : true}
                   onPress={() =>
-                    this.props.navigation.navigate("Progress1", {
-                      isInitial: true,
-                      navigateTo: "Progress",
+                    // this.props.navigation.navigate("Progress1", {
+                    //   isInitial: true,
+                    //   navigateTo: "Progress",
+                    // })
+                    this.props.navigation.navigate("Progress2", {
+                      initialProgressInfo: initialProgressInfo,
+                      currentProgressInfo: currentProgressInfo,
+                      isInitial: true
                     })
                   }
                   style={styles.imagePlaceholderButton}
@@ -347,7 +383,8 @@ class ProgressHomeScreen extends React.PureComponent {
                     style={styles.addIcon}
                   />
                   <Text style={styles.imagePlaceholderButtonText}>
-                    Add before photo and measurements
+                    {/* Add before photo and measurements */}
+                    Add Before Photo
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -368,18 +405,23 @@ class ProgressHomeScreen extends React.PureComponent {
                     resizeMode={FastImage.resizeMode.cover}
                   />
                 </TouchableOpacity>
-                {updateBtn(() =>
+                {/* {updateBtn(() =>
                   this.props.navigation.navigate("Progress1", {
                     isInitial: false,
                   })
-                )}
+                )} */}
               </View>
             ) : (
               <View style={styles.imagePlaceholder}>
                 <TouchableOpacity
                   onPress={() =>
-                    this.props.navigation.navigate("Progress1", {
-                      isInitial: false,
+                    // this.props.navigation.navigate("Progress1", {
+                    //   isInitial: false,
+                    // })
+                    this.props.navigation.navigate("Progress2", {
+                      initialProgressInfo: initialProgressInfo,
+                      currentProgressInfo: currentProgressInfo,
+                      isInitial: false
                     })
                   }
                   disabled={initialProgressInfo === undefined}
@@ -396,7 +438,8 @@ class ProgressHomeScreen extends React.PureComponent {
                     style={styles.addIcon}
                   />
                   <Text style={styles.imagePlaceholderButtonText}>
-                    Add after photo and measurements
+                    {/* Add after photo and measurements */}
+                    Progress Photo
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -542,6 +585,47 @@ class ProgressHomeScreen extends React.PureComponent {
               </Text>
             </View>
           </View>
+          <View style={{width: width - 20,
+                        marginTop: 5,
+                        marginBottom: 5,
+                        flexDirection: "row"}}>
+            <View style={{
+            }}>
+              {editBeforeBtn(() =>
+                this.props.navigation.navigate("ProgressEdit", {
+                  initialProgressInfo: initialProgressInfo,
+                  currentProgressInfo: currentProgressInfo,
+                  isInitial: true
+                })
+              )}
+            </View>
+            {/* <View style={{
+              flex: 1,
+            }}>
+            </View> */}
+            <View style={styles.dataContainer}>
+              {editProgressBtn(() =>
+                this.props.navigation.navigate("ProgressEdit", {
+                  initialProgressInfo: initialProgressInfo,
+                  currentProgressInfo: currentProgressInfo,
+                  isInitial: false
+                })
+              )}
+            </View>
+          </View>
+          {/* <View>
+            {initialProgressInfo ? updateBtn(() =>
+              this.props.navigation.navigate("ProgressEdit", {
+                initialProgressInfo: initialProgressInfo,
+                isInitial: true
+              })
+            ) : updateBtn(() =>
+            this.props.navigation.navigate("ProgressEdit", {
+              initialProgressInfo: initialProgressInfo,
+              isInitial: true
+            })
+          )}
+          </View> */}
           {/* {
             initialProgressInfo && currentProgressInfo && (
               <View style={styles.buttonContainer}>

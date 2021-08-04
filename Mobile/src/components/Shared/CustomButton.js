@@ -18,7 +18,8 @@ const CustomButton = ({
   red,
   outline,
   loading,
-  round
+  round,
+  workoutComplete
 }) => (
   <Button
     title={title}
@@ -48,6 +49,7 @@ const CustomButton = ({
       green && styles.whiteText,
       green && outline && styles.greenOutlineText,
       blue && styles.whiteText,
+      workoutComplete && styles.citrusText
     ]}
     disabledStyle={[
       styles.defaultDisabled,
@@ -144,6 +146,10 @@ const styles = StyleSheet.create({
   },
   whiteText: {
     color: colors.white,
+    ...common.button.text,
+  },
+  citrusText: {
+    color: colors.citrus,
     ...common.button.text,
   },
   defaultOutline: {

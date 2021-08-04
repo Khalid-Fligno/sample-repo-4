@@ -29,9 +29,80 @@ import CustomBtn from "../../components/Shared/CustomBtn";
 import { containerPadding } from "../../styles/globalStyles";
 import * as MediaLibrary from "expo-media-library";
 import { db } from "../../../config/firebase";
+import { findFitnessLevel } from "../../utils";
+import moment from "moment";
 
 const { width } = Dimensions.get("window");
 const actionSheetOptions = ["Cancel", "Take photo", "Upload from Camera Roll"];
+
+const uriToBlob = (url) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onerror = reject;
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        resolve(xhr.response);
+      }
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob"; // convert type
+    xhr.send();
+  });
+};
+
+const storeProgressInfo = async (
+  image,
+  isInitial,
+  weight,
+  waist,
+  hip,
+  burpeeCount
+) => {
+  const uid = await AsyncStorage.getItem("uid");
+  const firebase = require("firebase");
+
+  let blob = "";
+  if (Platform.OS === "ios") {
+    const base64Response = await fetch(
+      `data:image/jpeg;base64,${image.base64}`
+    );
+    blob = base64Response.blob()._W;
+  }
+  if (Platform.OS === "android") blob = await uriToBlob(image.uri);
+
+  const storageRef = firebase.storage().ref();
+  const userPhotosStorageRef = storageRef.child("user-photos");
+  const userStorageRef = userPhotosStorageRef.child(uid);
+  const progressDataFieldName = isInitial
+    ? "initialProgressInfo"
+    : "currentProgressInfo";
+  const progressPhotoFilename = isInitial
+    ? "initial-progress-photo.jpeg"
+    : "current-progress-photo.jpeg";
+  const progressPhotoStorageRef = userStorageRef.child(progressPhotoFilename);
+  const metadata = {
+    contentType: "image/jpeg",
+    cacheControl: "public",
+  };
+  const snapshot = await progressPhotoStorageRef.put(blob, metadata);
+  const url = await snapshot.ref.getDownloadURL();
+  await db
+    .collection("users")
+    .doc(uid)
+    .set(
+      {
+        [progressDataFieldName]: {
+          photoURL: url,
+          weight: parseInt(weight, 10),
+          waist: parseInt(waist, 10),
+          hip: parseInt(hip, 10),
+          burpeeCount,
+          date: moment().format("YYYY-MM-DD"),
+        },
+      },
+      { merge: true }
+    );
+};
 
 export default class Progress2Screen extends React.PureComponent {
   constructor(props) {
@@ -266,6 +337,7 @@ export default class Progress2Screen extends React.PureComponent {
   };
 
   handleImagePicked = async (pickerResult) => {
+    const { navigation } = this.props;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ uploading: true });
     try {
@@ -276,15 +348,40 @@ export default class Progress2Screen extends React.PureComponent {
           "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
           `${FileSystem.cacheDirectory}exercise-burpees.mp4`
         );
-        this.setState({ uploading: false });
-        this.props.navigation.navigate("Progress3", {
-          image: pickerResult,
-          weight,
-          waist,
-          hip,
-          isInitial,
-          navigateTo,
-        });
+        // this.props.navigation.navigate("Progress3", {
+        //   image: pickerResult,
+        //   weight,
+        //   waist,
+        //   hip,
+        //   isInitial,
+        //   navigateTo,
+        // });
+        const uid = await AsyncStorage.getItem("uid")
+        const userRef = db.collection("users").doc(uid)
+        await storeProgressInfo(pickerResult, 
+          this.props.navigation.getParam('isInitial'), 
+          this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').weight ?? 0 : this.props.navigation.getParam('currentProgressInfo').weight ?? 0, 
+          this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').waist ?? 0 : this.props.navigation.getParam('currentProgressInfo').waist ?? 0, 
+          this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').hip ?? 0 : this.props.navigation.getParam('currentProgressInfo').hip ?? 0, 
+          this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').burpeeCount ?? 0 : this.props.navigation.getParam('currentProgressInfo').burpeeCount ?? 0, );
+        const fitnessLevel = findFitnessLevel(this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').burpeeCount ?? 0 : this.props.navigation.getParam('currentProgressInfo').burpeeCount ?? 0, );
+        AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
+        try {
+          await userRef.set(
+            {
+              fitnessLevel,
+              initialBurpeeTestCompleted: true,
+            },
+            { merge: true }
+          );
+          this.setState({ uploading: false });
+          navigation.state.params.progressEdit !== undefined
+            ? this.props.navigation.navigate("ProgressEdit")
+            : this.props.navigation.navigate("ProgressHome");
+        } catch (err) {
+          this.setState({ uploading: false });
+          Alert.alert("Database write error", `${err}`);
+        }
       } else {
         this.setState({
           error: "Please select an image to continue",
@@ -292,11 +389,21 @@ export default class Progress2Screen extends React.PureComponent {
         });
       }
     } catch (err) {
+      console.log(err)
       this.setState({
         error: "Problem uploading image, please try again",
         uploading: false,
       });
     }
+  };
+
+  handleCancel = () => {
+    const { navigation } = this.props;
+    // navigation.pop();
+    navigation.state.params.progressEdit !== undefined
+      ?
+        navigation.navigate("ProgressEdit")
+      : navigation.pop();
   };
 
   render() {
@@ -350,16 +457,25 @@ export default class Progress2Screen extends React.PureComponent {
 
           <View style={styles.buttonContainer}>
             {error && <Text style={styles.errorText}>{error}</Text>}
-            <CustomBtn
+            {/* <CustomBtn
               Title="NEXT"
               titleCapitalise={true}
               onPress={() => this.handleImagePicked(image)}
-            />
-            {/* <CustomButton
-              title="NEXT"
-              onPress={() => this.handleImagePicked(image)}
-              primary
             /> */}
+            <CustomBtn
+              Title="Update Photo"
+              titleCapitalise={true}
+              onPress={() => this.handleImagePicked(image)}
+            />
+            <CustomBtn
+                Title="Cancel"
+                customBtnStyle={{
+                  marginTop: 5,
+                  backgroundColor: colors.coolIce,
+                }}
+                titleCapitalise={true}
+                onPress={() => this.handleCancel()}
+              />
           </View>
           <Loader loading={uploading} color={colors.coral.standard} />
         </View>

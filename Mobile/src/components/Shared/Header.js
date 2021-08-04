@@ -41,7 +41,17 @@ export default class Header extends React.PureComponent {
 
   handleBack = () => {
     const { navigation } = this.props;
-    navigation.pop();
+    // navigation.pop();
+    navigation.state.params !== undefined
+      ?
+        navigation.state.params.isInitial !== undefined
+          ?
+            navigation.state.params.progressEdit !== undefined
+              ?
+                navigation.navigate("ProgressEdit")
+              : navigation.navigate("ProgressHome")
+          : navigation.pop()
+      : navigation.pop();
   };
   goToHome = () => {
     const { navigation } = this.props;
@@ -111,7 +121,7 @@ export default class Header extends React.PureComponent {
       activeChallengeSetting,
     } = this.props;
 
-    console.log('xxxxxxxx ', navigation.state.routeName)
+    // console.log('xxxxxxxx ', navigation.state.params.mode)
 
     return (
       <SafeAreaView
@@ -146,6 +156,25 @@ export default class Header extends React.PureComponent {
                 size={20}
                 color={colors.black}
               />
+              
+              {
+                navigation.state.params !== undefined
+                  ?
+                    navigation.state.params.progressEdit !== undefined
+                      ?
+                        navigation.state.params.measurements !== undefined
+                          ?
+                            <TouchableOpacity onPress={this.handleHelper}>
+                              <Icon
+                                name="question-speech-bubble"
+                                size={30}
+                                color={colors.themeColor.color}
+                              />
+                            </TouchableOpacity>
+                          : <></> 
+                      : <></>
+                  : <></>
+              }
             </TouchableOpacity>
           )}
 
@@ -185,14 +214,23 @@ export default class Header extends React.PureComponent {
           )}
           {withHelpButton && (
             <TouchableOpacity
-              style={globalStyle.headerContentContainerLeft}
+              style={navigation.state.params !== undefined ? navigation.state.params.progressEdit !== undefined ? {} : globalStyle.headerContentContainerLeft : globalStyle.headerContentContainerLeft}
               onPress={this.handleHelper}
             >
-              <Icon
-                name="question-speech-bubble"
-                size={30}
-                color={colors.themeColor.color}
-              />
+              {
+                navigation.state.params !== undefined
+                  ?
+                    navigation.state.params.progressEdit !== undefined 
+                      ?
+                        <></>
+                      : 
+                        <Icon
+                            name="question-speech-bubble"
+                            size={30}
+                            color={colors.themeColor.color}
+                          />
+                  : <></>
+              }
             </TouchableOpacity>
           )}
           {withLogoutButton && (

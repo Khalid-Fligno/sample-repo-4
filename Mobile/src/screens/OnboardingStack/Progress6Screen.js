@@ -162,7 +162,8 @@ export default class Progress6Screen extends React.PureComponent {
       );
       this.setState({ loading: false });
       if (navigateTo === "Progress") {
-        this.props.navigation.navigate("ProgressHome");
+        // this.props.navigation.navigate("ProgressHome");
+        this.props.navigation.navigate("ProgressEdit");
       } else if (isInitial) {
         this.props.navigation.navigate("App");
       } else {
