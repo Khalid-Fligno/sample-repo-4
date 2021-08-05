@@ -540,11 +540,9 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           setCount,
           reps,
           null,
-          currentExerciseIndex + 1,
+          currentExerciseIndex - 1,
           false
         );
-      } else if (currentExerciseIndex === workout.exercises.length - 1) {
-        this.goToExercise(setCount + 1, reps, null, 0, false);
       }
     }
   };
@@ -567,7 +565,18 @@ export default class ExercisesScreenV2 extends React.PureComponent {
 
   setCounterView = () => {
     const setCount = this.props.navigation.getParam("setCount", 1);
-    const { reps, workout } = this.state;
+    const { reps, workout, rest } = this.state;
+    if (workout.count && !rest) {
+      return (
+        <View style={styles.invisibleView}>
+          <View style={styles.setCounter}>
+            <Text
+              style={styles.setCounterText}
+            >{`Set ${setCount} of ${workout.workoutReps} - ${reps} Reps`}</Text>
+          </View>
+        </View>
+      );
+    }
     if (this.state.workout.filters.includes("strength")) {
       return (
         <View style={styles.invisibleView}>
@@ -700,6 +709,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 );
             }}
             customContainerStyle={{
+              marginTop: 0,
               paddingTop: 10,
               height: 75,
               paddingBottom: 10,
@@ -728,6 +738,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 );
             }}
             customContainerStyle={{
+              marginTop: 0,
               paddingTop: 10,
               height: 75,
               paddingBottom: 10,
@@ -791,10 +802,10 @@ export default class ExercisesScreenV2 extends React.PureComponent {
               <ExerciseInfoButtonV2 onPress={this.showExerciseInfoModal} />
             )}
             {this.setCounterView()}
-            {workoutTimer()}
           </View>
 
           <View style={styles.currentExerciseTextContainer}>
+            {workoutTimer()}
             <Text style={styles.currentExerciseTextCount}>{`Exercise ${
               currentExerciseIndex + 1
             } of ${exerciseList.length}`}</Text>
@@ -824,7 +835,17 @@ export default class ExercisesScreenV2 extends React.PureComponent {
               workout={workout}
               isPaused={videoPaused}
               onPrev={this.prevExercise}
-              onNext={handleSkip ? this.skipExercise : null}
+              onNext={
+                handleSkip
+                  ? this.skipExercise
+                  : () => {
+                      this.handleFinish(
+                        reps,
+                        resistanceCategoryId,
+                        currentExerciseIndex
+                      );
+                    }
+              }
               onPlayPause={videoPaused ? this.handleUnpause : this.handlePause}
             />
           </View>
@@ -933,7 +954,7 @@ const styles = StyleSheet.create({
   containerEmptyBlackBox: {
     width,
     height: hp("10%"),
-    backgroundColor: colors.black,
+    backgroundColor: colors.white,
     paddingVertical: height > 800 ? 25 : 15,
     alignItems: "center",
     justifyContent: "center",
