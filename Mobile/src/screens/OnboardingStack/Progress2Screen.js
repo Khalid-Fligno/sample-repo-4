@@ -148,7 +148,7 @@ export default class Progress2Screen extends React.PureComponent {
             );
             const image = await ImageManipulator.manipulateAsync(
               `${FileSystem.cacheDirectory}progressImage.jpeg`,
-              null,
+              [],
               { base64: true }
             );
             this.setState({ image });

@@ -278,7 +278,7 @@ export default class Progress1Screen extends React.PureComponent {
           );
           const image = await ImageManipulator.manipulateAsync(
             `${FileSystem.cacheDirectory}progressImage.jpeg`,
-            null,
+            [],
             { base64: true }
           );
           const userRef = db.collection("users").doc(uid);

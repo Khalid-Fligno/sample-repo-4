@@ -121,8 +121,6 @@ export default class Header extends React.PureComponent {
       activeChallengeSetting,
     } = this.props;
 
-    // console.log('xxxxxxxx ', navigation.state.params.mode)
-
     return (
       <SafeAreaView
         style={[
@@ -156,25 +154,6 @@ export default class Header extends React.PureComponent {
                 size={20}
                 color={colors.black}
               />
-              
-              {
-                navigation.state.params !== undefined
-                  ?
-                    navigation.state.params.progressEdit !== undefined
-                      ?
-                        navigation.state.params.measurements !== undefined
-                          ?
-                            <TouchableOpacity onPress={this.handleHelper}>
-                              <Icon
-                                name="question-speech-bubble"
-                                size={30}
-                                color={colors.themeColor.color}
-                              />
-                            </TouchableOpacity>
-                          : <></> 
-                      : <></>
-                  : <></>
-              }
             </TouchableOpacity>
           )}
 
@@ -261,6 +240,26 @@ export default class Header extends React.PureComponent {
               />
             )}
           </View>
+          {
+            navigation.state.params !== undefined
+              ?
+                navigation.state.params.progressEdit !== undefined
+                  ?
+                    navigation.state.params.measurements !== undefined
+                      ?
+                        <TouchableOpacity
+                        style={globalStyle.headerContentContainerRight}
+                          onPress={this.handleHelper}>
+                          <Icon
+                            name="question-speech-bubble"
+                            size={30}
+                            color={colors.black}
+                          />
+                        </TouchableOpacity>
+                      : <View style={globalStyle.headerContentContainerRight} /> 
+                  : <View style={globalStyle.headerContentContainerRight} />
+              : <></>
+          }
           {withSkipButton && (
             <TouchableOpacity
               style={globalStyle.headerContentContainerRight}
@@ -314,7 +313,7 @@ export default class Header extends React.PureComponent {
             !withSkipButton &&
             !withCancelButton &&
             !withProfileButton &&
-            !withRestoreButton && (
+            !withRestoreButton && navigation.state.params === undefined && (
               <View style={globalStyle.headerContentContainerRight} />
             )}
         </View>
