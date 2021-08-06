@@ -283,13 +283,17 @@ class ProgressHomeScreen extends React.PureComponent {
         Title="Edit Before"
         outline={false}
         customBtnStyle={{
-          padding: wp("1.7%"),
+          // padding: wp("1.7%"),
 
-          justifyContent: "space-between",
-          paddingStart: wp("5%"),
-          paddingEnd: wp("3%"),
+          // justifyContent: "space-between",
+          // paddingStart: wp("5%"),
+          // paddingEnd: wp("3%"),
           // marginHorizontal: wp("10%"),
-          marginVertical: wp("3%"),
+          // marginVertical: wp("3%"),
+          paddingTop: 8,
+          paddingBottom: 8,
+          paddingLeft: 20,
+          paddingRight: 20
         }}
         // isRightIcon={true}
         // rightIconName="chevron-right"
@@ -297,27 +301,28 @@ class ProgressHomeScreen extends React.PureComponent {
         customBtnTitleStyle={{
           // fontFamily: fonts.SimplonMonoMedium,
           fontFamily: fonts.bold,
+          fontSize: 8
           // color:colors.offWhite,
-          textTransform: "capitalize",
+          // textTransform: "capitalize",
         }}
         onPress={onPress}
       />
     );
 
-    const editProgressBtn = (onPress) => (
+    const updateProgressBtn = (onPress) => (
       <CustomBtn
         // Title="Update"
-        Title="Edit Progress"
+        Title="Update Progress"
         outline={false}
         customBtnStyle={{
-          padding: wp("1.7%"),
+          // padding: wp("1.7%"),
 
-          justifyContent: "space-between",
-          paddingStart: wp("5%"),
-          paddingEnd: wp("1%"),
-          marginLeft: 90
+          // justifyContent: "space-between",
+          // paddingStart: wp("5%"),
+          // paddingEnd: wp("1%"),
           // marginHorizontal: wp("10%"),
           // marginVertical: wp("3%"),
+          padding: 8
         }}
         // isRightIcon={true}
         // rightIconName="chevron-right"
@@ -325,8 +330,9 @@ class ProgressHomeScreen extends React.PureComponent {
         customBtnTitleStyle={{
           // fontFamily: fonts.SimplonMonoMedium,
           fontFamily: fonts.bold,
+          fontSize: 8
           // color:colors.offWhite,
-          textTransform: "capitalize",
+          // textTransform: "capitalize",
         }}
         onPress={onPress}
       />
@@ -362,7 +368,7 @@ class ProgressHomeScreen extends React.PureComponent {
             ) : (
               <View style={styles.imagePlaceholder}>
                 <TouchableOpacity
-                  disabled={initialProgressInfo ? false : true}
+                  disabled={initialProgressInfo === undefined}
                   onPress={() =>
                     // this.props.navigation.navigate("Progress1", {
                     //   isInitial: true,
@@ -586,10 +592,13 @@ class ProgressHomeScreen extends React.PureComponent {
             </View>
           </View>
           <View style={{width: width - 20,
-                        marginTop: 5,
-                        marginBottom: 5,
-                        flexDirection: "row"}}>
+            marginTop: 5,
+            marginBottom: 5,
+            flexDirection: "row"}}>
             <View style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
             }}>
               {editBeforeBtn(() =>
                 this.props.navigation.navigate("ProgressEdit", {
@@ -599,12 +608,16 @@ class ProgressHomeScreen extends React.PureComponent {
                 })
               )}
             </View>
-            {/* <View style={{
-              flex: 1,
+            <View style={{
+              flex: 1
             }}>
-            </View> */}
-            <View style={styles.dataContainer}>
-              {editProgressBtn(() =>
+            </View>
+            <View style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+              {updateProgressBtn(() =>
                 this.props.navigation.navigate("ProgressEdit", {
                   initialProgressInfo: initialProgressInfo,
                   currentProgressInfo: currentProgressInfo,
