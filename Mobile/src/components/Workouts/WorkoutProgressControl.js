@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import PropTypes, { number } from "prop-types";
 import { PieChart } from "react-native-svg-charts";
@@ -23,8 +23,34 @@ export default WorkoutProgressControl = ({
   onPlayPause,
   onPrev,
   onNext,
+  onRestart,
   fitnessLevel,
+  lastExercise,
 }) => {
+  const [willGoBack, setWillGoBack] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setWillGoBack(false);
+    }, 3000);
+  });
+
+  useEffect(() => {
+    if (willGoBack) {
+      setTimeout(() => {
+        setWillGoBack(false);
+      }, 3000);
+    }
+  }, [willGoBack]);
+
+  const handleOnPrevPressed = (exerciseList, reps, currentExerciseIndex) => {
+    if (willGoBack) {
+      onPrev(exerciseList, reps, currentExerciseIndex);
+    } else {
+      onRestart(exerciseList, reps, currentExerciseIndex);
+    }
+  };
+
   let array = exerciseList;
   if (progressType === "onlyOne") {
     array = new Array(rounds).fill(undefined).map((val, idx) => idx);
@@ -33,34 +59,102 @@ export default WorkoutProgressControl = ({
   console.log("ExerciseList: ", exerciseList[currentExerciseIndex]);
   console.log("Current Index: ", currentExerciseIndex);
   console.log("Workout reps: ", workoutReps);
+  console.log("Workout process type: ", workout.workoutProcessType);
+  console.log("Last exercise: ", lastExercise);
 
-  return (
-    <View style={styles.container}>
-      <View />
-      <TouchableOpacity
-        disabled={currentExerciseIndex == 0}
-        style={styles.button}
-        onPress={() =>
-          onPrev(exerciseList, fitnessLevel || reps, currentExerciseIndex)
-        }
-      >
-        <Icon
-          name={"skip-previous"}
-          size={50}
-          color={currentExerciseIndex > 0 ? colors.black : colors.smoke}
-        />
-        <Text style={styles.buttonTextTitle}>Previous Exercise</Text>
-        {currentExerciseIndex > 0 ? (
+  const nextExerciseText = () => {
+    if (exerciseList && currentExerciseIndex < exerciseList.length - 1) {
+      return (
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={styles.buttonTextInfo}
+        >
+          {exerciseList[currentExerciseIndex + 1].displayName}
+        </Text>
+      );
+    } else if (workout.workoutProcessType !== "onlyOne") {
+      if (
+        lastExercise.nextExerciseName &&
+        lastExercise.nextExerciseName !== ""
+      ) {
+        return (
           <Text
             numberOfLines={1}
             ellipsizeMode="tail"
             style={styles.buttonTextInfo}
           >
-            {exerciseList[currentExerciseIndex - 1].name}
+            {lastExercise.nextExerciseName}
           </Text>
-        ) : (
-          <Text style={styles.buttonTextInfo}>-</Text>
-        )}
+        );
+      } else {
+        return <Text style={styles.buttonTextInfo}>-</Text>;
+      }
+    } else {
+      return <Text style={styles.buttonTextInfo}>NEARLY DONE!</Text>;
+    }
+  };
+
+  const prevExerciseText = () => {
+    if (currentSet > 1) {
+      return (
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={styles.buttonTextInfo}
+        >
+          {exerciseList[currentExerciseIndex].displayName}
+        </Text>
+      );
+    } else if (currentExerciseIndex > 0) {
+      return (
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={styles.buttonTextInfo}
+        >
+          {willGoBack
+            ? exerciseList[currentExerciseIndex - 1].displayName
+            : exerciseList[currentExerciseIndex].displayName}
+        </Text>
+      );
+    } else {
+      return (
+        <Text style={styles.buttonTextInfo}>
+          {willGoBack ? "-" : exerciseList[currentExerciseIndex].displayName}
+        </Text>
+      );
+    }
+  };
+
+  const isPrevButtonDisabled = () => {
+    if (currentSet > 1) {
+      return false;
+    }
+    return willGoBack ? currentExerciseIndex == 0 : false;
+  };
+
+  return (
+    <View style={styles.container}>
+      <View />
+      <TouchableOpacity
+        disabled={isPrevButtonDisabled()}
+        style={styles.button}
+        onPress={() =>
+          handleOnPrevPressed(
+            exerciseList,
+            fitnessLevel || reps,
+            currentExerciseIndex
+          )
+        }
+      >
+        <Icon
+          name={"skip-previous"}
+          size={50}
+          color={!isPrevButtonDisabled() ? colors.black : colors.smoke}
+        />
+        <Text style={styles.buttonTextTitle}>Previous Exercise</Text>
+        {prevExerciseText()}
       </TouchableOpacity>
       <View style={{ width: "5%" }} />
       <TouchableOpacity onPress={onPlayPause}>
@@ -76,31 +170,15 @@ export default WorkoutProgressControl = ({
         onPress={() =>
           onNext(exerciseList, fitnessLevel || reps, currentExerciseIndex)
         }
-        disabled={
-          !exerciseList || currentExerciseIndex >= exerciseList.length - 1
-        }
+        disabled={false}
       >
         <Icon
           name={"skip-next"}
           size={50}
-          color={
-            exerciseList && currentExerciseIndex < exerciseList.length - 1
-              ? colors.black
-              : colors.smoke
-          }
+          color={true ? colors.black : colors.smoke}
         />
         <Text style={styles.buttonTextTitle}>Next Exercise</Text>
-        {exerciseList && currentExerciseIndex < exerciseList.length - 1 ? (
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={styles.buttonTextInfo}
-          >
-            {exerciseList[currentExerciseIndex + 1].name}
-          </Text>
-        ) : (
-          <Text style={styles.buttonTextInfo}>-</Text>
-        )}
+        {nextExerciseText()}
       </TouchableOpacity>
       <View />
     </View>

@@ -39,6 +39,8 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 const { width, height } = Dimensions.get("window");
 import ExerciseInfoButtonV2 from "../../../../components/Workouts/ExerciseInfoButtonV2";
 import WorkoutProgressControl from "../../../../components/Workouts/WorkoutProgressControl";
+import { Platform } from "react-native";
+import TextTicker from "react-native-text-ticker";
 
 const updateWeeklyTargets = (obj, field, newTally) => {
   return Object.assign({}, obj, { [field]: newTally });
@@ -433,88 +435,47 @@ export default class ExercisesScreenV2 extends React.PureComponent {
   };
 
   restartWorkout = (exerciseList, reps, currentExerciseIndex) => {
-    Alert.alert(
-      "Warning",
-      "Are you sure you want to restart this set?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "OK",
-          onPress: () => {
-            const setCount = this.props.navigation.getParam("setCount", 1);
-            this.goToExercise(
-              setCount,
-              reps,
-              null,
-              currentExerciseIndex,
-              false
-            );
-          },
-        },
-      ],
-      { cancelable: false }
-    );
+    const setCount = this.props.navigation.getParam("setCount", 1);
+    this.goToExercise(setCount, reps, null, currentExerciseIndex, false);
   };
 
   skipExercise = (exerciseList, reps, currentExerciseIndex) => {
     // console.log(exerciseList, reps,currentExerciseIndex)
-    Alert.alert(
-      "Warning",
-      "Are you sure you want to skip this exercise?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Skip",
-          onPress: () => {
-            let setCount = this.props.navigation.getParam("setCount", 1);
+    let setCount = this.props.navigation.getParam("setCount", 1);
 
-            if (this.checkFinished(currentExerciseIndex, setCount)) {
-              // console.log("update weekly target")
-              this.updateWeekly();
-              appsFlyer.trackEvent("resistance_workout_complete");
-              this.workoutComplete(reps, null);
-            } else {
-              let { workout } = this.state;
-              if (workout.workoutProcessType === "oneByOne") {
-                if (currentExerciseIndex < workout.exercises.length - 1)
-                  this.goToExercise(
-                    1,
-                    reps,
-                    null,
-                    currentExerciseIndex + 1,
-                    false
-                  );
-                else {
-                  this.goToExercise(
-                    workout.workoutReps,
-                    reps,
-                    null,
-                    currentExerciseIndex,
-                    false
-                  );
-                }
-              } else if (workout.workoutProcessType === "circular") {
-                if (currentExerciseIndex < workout.exercises.length - 1) {
-                  this.goToExercise(
-                    setCount,
-                    reps,
-                    null,
-                    currentExerciseIndex + 1,
-                    false
-                  );
-                } else if (
-                  currentExerciseIndex ===
-                  workout.exercises.length - 1
-                ) {
-                  this.goToExercise(setCount + 1, reps, null, 0, false);
-                }
-              }
-            }
-          },
-        },
-      ],
-      { cancelable: false }
-    );
+    if (this.checkFinished(currentExerciseIndex, setCount)) {
+      // console.log("update weekly target")
+      this.updateWeekly();
+      appsFlyer.trackEvent("resistance_workout_complete");
+      this.workoutComplete(reps, null);
+    } else {
+      let { workout } = this.state;
+      if (workout.workoutProcessType === "oneByOne") {
+        if (currentExerciseIndex < workout.exercises.length - 1)
+          this.goToExercise(1, reps, null, currentExerciseIndex + 1, false);
+        else {
+          this.goToExercise(
+            workout.workoutReps,
+            reps,
+            null,
+            currentExerciseIndex,
+            false
+          );
+        }
+      } else if (workout.workoutProcessType === "circular") {
+        if (currentExerciseIndex < workout.exercises.length - 1) {
+          this.goToExercise(
+            setCount,
+            reps,
+            null,
+            currentExerciseIndex + 1,
+            false
+          );
+        } else if (currentExerciseIndex === workout.exercises.length - 1) {
+          this.goToExercise(setCount + 1, reps, null, 0, false);
+        }
+      }
+    }
   };
 
   prevExercise = (exerciseList, reps, currentExerciseIndex) => {
@@ -523,7 +484,15 @@ export default class ExercisesScreenV2 extends React.PureComponent {
 
     let { workout } = this.state;
     if (workout.workoutProcessType === "oneByOne") {
-      if (currentExerciseIndex > 0)
+      if (setCount > 1) {
+        this.goToExercise(
+          setCount - 1,
+          reps,
+          null,
+          currentExerciseIndex,
+          false
+        );
+      } else if (currentExerciseIndex > 0)
         this.goToExercise(1, reps, null, currentExerciseIndex - 1, false);
       else {
         this.goToExercise(
@@ -543,6 +512,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           currentExerciseIndex - 1,
           false
         );
+      } else if (currentExerciseIndex === 0 && setCount > 1) {
+        this.goToExercise(setCount - 1, reps, null, 0, false);
       }
     }
   };
@@ -566,13 +537,13 @@ export default class ExercisesScreenV2 extends React.PureComponent {
   setCounterView = () => {
     const setCount = this.props.navigation.getParam("setCount", 1);
     const { reps, workout, rest } = this.state;
-    if (workout.count && !rest) {
+    if (workout.count && this.repsInterval) {
       return (
         <View style={styles.invisibleView}>
           <View style={styles.setCounter}>
-            <Text
-              style={styles.setCounterText}
-            >{`Set ${setCount} of ${workout.workoutReps} - ${reps} Reps`}</Text>
+            <Text style={styles.setCounterText}>{`Set ${setCount} of ${
+              workout.workoutReps
+            } - ${this.repsInterval} ${rest ? "sec" : ""}`}</Text>
           </View>
         </View>
       );
@@ -710,12 +681,15 @@ export default class ExercisesScreenV2 extends React.PureComponent {
             }}
             customContainerStyle={{
               marginTop: 0,
-              paddingTop: 10,
-              height: 75,
-              paddingBottom: 10,
+              paddingTop: 5,
+              height: 50,
+              paddingBottom: 5,
               backgroundColor: colors.white,
             }}
-            customTextStyle={{ color: colors.black, fontSize: 10 }}
+            customTextStyle={{
+              color: colors.black,
+              fontFamily: fonts.bold,
+            }}
           />
         );
       else if (rest)
@@ -744,7 +718,10 @@ export default class ExercisesScreenV2 extends React.PureComponent {
               paddingBottom: 10,
               backgroundColor: colors.white,
             }}
-            customTextStyle={{ color: colors.black }}
+            customTextStyle={{
+              color: colors.black,
+              fontFamily: fonts.bold,
+            }}
           />
         );
       else if (workout.count && !rest)
@@ -788,7 +765,10 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 resizeMode="cover"
                 shouldPlay={!videoPaused}
                 isLooping
-                style={{ width, height: width }}
+                style={{
+                  width,
+                  height: width > height / 2 ? height / 2 : width,
+                }}
               />
             )}
             {rest && (
@@ -810,13 +790,17 @@ export default class ExercisesScreenV2 extends React.PureComponent {
               currentExerciseIndex + 1
             } of ${exerciseList.length}`}</Text>
             <View style={styles.currentExerciseNameTextContainer}>
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
+              <TextTicker
                 style={styles.currentExerciseNameText}
+                duration={6000}
+                loop
+                bounce
+                bounceSpeed={10}
+                repeatSpacer={50}
+                marqueeDelay={1000}
               >
                 {rest ? "Rest" : currentExercise.name.toUpperCase()}
-              </Text>
+              </TextTicker>
             </View>
           </View>
 
@@ -835,6 +819,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
               workout={workout}
               isPaused={videoPaused}
               onPrev={this.prevExercise}
+              lastExercise={lastExercise}
+              onRestart={this.restartWorkout}
               onNext={
                 handleSkip
                   ? this.skipExercise
@@ -911,7 +897,7 @@ const styles = StyleSheet.create({
     height: 0,
     width,
     alignItems: "center",
-    marginTop: 60,
+    marginTop: Platform.OS === "ios" ? 60 : 60 + StatusBar.currentHeight,
     position: "absolute",
   },
   flexContainer: {
@@ -933,9 +919,11 @@ const styles = StyleSheet.create({
   },
   currentExerciseNameText: {
     fontFamily: fonts.bold,
-    fontSize: 20,
+    fontSize: 25,
     color: colors.black,
     textAlign: "center",
+    marginLeft: 10,
+    marginRight: 10,
   },
   currentExerciseTextCount: {
     fontFamily: fonts.boldNarrow,
