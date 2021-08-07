@@ -34,6 +34,7 @@ import { findFitnessLevel } from "../../utils";
 import moment from "moment";
 import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
+import _ from "lodash";
 
 const { width } = Dimensions.get("window");
 
@@ -269,7 +270,7 @@ export default class Progress1Screen extends React.PureComponent {
       const progressInfo = isInitial
         ? data.initialProgressInfo
         : data.currentProgressInfo;
-      if (progressInfo) {
+      if (!_.isEmpty(progressInfo)) {
         const imageURL = progressInfo.photoURL ?? null;
         if (imageURL) {
           await FileSystem.downloadAsync(
@@ -288,7 +289,7 @@ export default class Progress1Screen extends React.PureComponent {
             waist, 
             hip, 
             this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').burpeeCount ?? 0 : this.props.navigation.getParam('currentProgressInfo').burpeeCount ?? 0);
-          const fitnessLevel = findFitnessLevel(this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').burpeeCount ?? 0 : this.props.navigation.getParam('currentProgressInfo').burpeeCount ?? 0, );
+          const fitnessLevel = findFitnessLevel(this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').burpeeCount ?? 0 : this.props.navigation.getParam('currentProgressInfo').burpeeCount ?? 0);
           AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
           try {
             await userRef.set(
@@ -305,6 +306,30 @@ export default class Progress1Screen extends React.PureComponent {
             Alert.alert("Database write error", `${err}`);
           }
         }
+      } else {
+          const userRef = db.collection("users").doc(uid);
+          await storeProgressInfo("", 
+            this.props.navigation.getParam('isInitial'), 
+            weight, 
+            waist, 
+            hip, 
+            0);
+          const fitnessLevel = findFitnessLevel(0);
+          AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
+          try {
+            await userRef.set(
+              {
+                fitnessLevel,
+                initialBurpeeTestCompleted: true,
+              },
+              { merge: true }
+            );
+            this.setState({ loading: false });
+            this.props.navigation.navigate("ProgressEdit")
+          } catch (err) {
+            this.setState({ loading: false });
+            Alert.alert("Database write error", `${err}`);
+          }
       }
     })
     .catch((reason) => {
