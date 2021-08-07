@@ -22,6 +22,7 @@ import { containerPadding } from "../../styles/globalStyles";
 import { db } from "../../../config/firebase";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as ImageManipulator from "expo-image-manipulator";
+import _ from "lodash";
 
 const { width } = Dimensions.get("window");
 const coachingTip = [
@@ -97,7 +98,7 @@ export default class Progress3Screen extends React.PureComponent {
       const progressInfo = isInitial
         ? data.initialProgressInfo
         : data.currentProgressInfo;
-      if (progressInfo) {
+      if (!_.isEmpty(progressInfo)) {
         const imageURL = progressInfo.photoURL ?? null;
         if (imageURL) {
           await FileSystem.downloadAsync(
@@ -118,6 +119,15 @@ export default class Progress3Screen extends React.PureComponent {
             navigateTo: "Progress",
           });
         }
+      } else {
+        this.props.navigation.navigate("Progress4", {
+          image: "",
+          weight: 0,
+          waist: 0,
+          hip: 0,
+          isInitial: isInitial,
+          navigateTo: "Progress",
+        });
       }
     })
     .catch((reason) => {
