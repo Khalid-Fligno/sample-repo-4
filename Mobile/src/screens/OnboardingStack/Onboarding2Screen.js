@@ -99,15 +99,11 @@ class Onboarding2Screen extends Component {
               isBigTitle={true}
               customContainerStyle={{ marginTop: 15, marginBottom: 0 }}
             />
-            <Text
-              style={[
-                onboardingStyle.IntensityTitleText,
-                { color: colors.grey.dark, width: "100%" },
-              ]}
-            >
-              Select your intensity level below.
+            <Text style={{ fontFamily: fonts.standard, fontSize: 15 }}>
+              {/* Select your intensity level below. */}
+              How often do you currently train.
             </Text>
-            <Text
+            {/* <Text
               style={[
                 onboardingStyle.IntensityTitleText,
                 { color: colors.grey.dark, width: "100%" },
@@ -130,7 +126,7 @@ class Onboarding2Screen extends Component {
               ]}
             >
               Expert: train 4+ times a week
-            </Text>
+            </Text> */}
 
             <FitnessLevelCard
               // source={require("../../../../assets/images/OnBoardindImg/FL_1.png")}

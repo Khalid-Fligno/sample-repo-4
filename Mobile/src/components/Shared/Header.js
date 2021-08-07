@@ -43,14 +43,11 @@ export default class Header extends React.PureComponent {
     const { navigation } = this.props;
     // navigation.pop();
     navigation.state.params !== undefined
-      ?
-        navigation.state.params.isInitial !== undefined
-          ?
-            navigation.state.params.progressEdit !== undefined
-              ?
-                navigation.navigate("ProgressEdit")
-              : navigation.navigate("ProgressHome")
-          : navigation.pop()
+      ? navigation.state.params.isInitial !== undefined
+        ? navigation.state.params.progressEdit !== undefined
+          ? navigation.navigate("ProgressEdit")
+          : navigation.navigate("ProgressHome")
+        : navigation.pop()
       : navigation.pop();
   };
   goToHome = () => {
@@ -149,11 +146,7 @@ export default class Header extends React.PureComponent {
               style={globalStyle.headerContentContainerLeft}
               onPress={this.handleBack}
             >
-              <Icon
-                name="chevron-left"
-                size={20}
-                color={colors.black}
-              />
+              <Icon name="chevron-left" size={20} color={colors.black} />
             </TouchableOpacity>
           )}
 
@@ -184,32 +177,33 @@ export default class Header extends React.PureComponent {
               style={globalStyle.headerContentContainerLeft}
               onPress={this.goToHome}
             >
-              <Icon
-                name="chevron-left"
-                size={20}
-                color={colors.black}
-              />
+              <Icon name="chevron-left" size={20} color={colors.black} />
             </TouchableOpacity>
           )}
           {withHelpButton && (
             <TouchableOpacity
-              style={navigation.state.params !== undefined ? navigation.state.params.progressEdit !== undefined ? {} : globalStyle.headerContentContainerLeft : globalStyle.headerContentContainerLeft}
+              style={
+                navigation.state.params !== undefined
+                  ? navigation.state.params.progressEdit !== undefined
+                    ? {}
+                    : globalStyle.headerContentContainerLeft
+                  : globalStyle.headerContentContainerLeft
+              }
               onPress={this.handleHelper}
             >
-              {
-                navigation.state.params !== undefined
-                  ?
-                    navigation.state.params.progressEdit !== undefined 
-                      ?
-                        <></>
-                      : 
-                        <Icon
-                            name="question-speech-bubble"
-                            size={30}
-                            color={colors.themeColor.color}
-                          />
-                  : <></>
-              }
+              {navigation.state.params !== undefined ? (
+                navigation.state.params.progressEdit !== undefined ? (
+                  <></>
+                ) : (
+                  <Icon
+                    name="question-speech-bubble"
+                    size={30}
+                    color={colors.themeColor.color}
+                  />
+                )
+              ) : (
+                <></>
+              )}
             </TouchableOpacity>
           )}
           {withLogoutButton && (
@@ -240,26 +234,28 @@ export default class Header extends React.PureComponent {
               />
             )}
           </View>
-          {
-            navigation.state.params !== undefined
-              ?
-                navigation.state.params.progressEdit !== undefined
-                  ?
-                    navigation.state.params.measurements !== undefined
-                      ?
-                        <TouchableOpacity
-                        style={globalStyle.headerContentContainerRight}
-                          onPress={this.handleHelper}>
-                          <Icon
-                            name="question-speech-bubble"
-                            size={30}
-                            color={colors.black}
-                          />
-                        </TouchableOpacity>
-                      : <View style={globalStyle.headerContentContainerRight} /> 
-                  : <View style={globalStyle.headerContentContainerRight} />
-              : <></>
-          }
+          {navigation.state.params !== undefined ? (
+            navigation.state.params.progressEdit !== undefined ? (
+              navigation.state.params.measurements !== undefined ? (
+                <TouchableOpacity
+                  style={globalStyle.headerContentContainerRight}
+                  onPress={this.handleHelper}
+                >
+                  <Icon
+                    name="question-speech-bubble"
+                    size={30}
+                    color={colors.black}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <View style={globalStyle.headerContentContainerRight} />
+              )
+            ) : (
+              <View style={globalStyle.headerContentContainerRight} />
+            )
+          ) : (
+            <></>
+          )}
           {withSkipButton && (
             <TouchableOpacity
               style={globalStyle.headerContentContainerRight}
@@ -313,7 +309,8 @@ export default class Header extends React.PureComponent {
             !withSkipButton &&
             !withCancelButton &&
             !withProfileButton &&
-            !withRestoreButton && navigation.state.params === undefined && (
+            !withRestoreButton &&
+            navigation.state.params === undefined && (
               <View style={globalStyle.headerContentContainerRight} />
             )}
         </View>
