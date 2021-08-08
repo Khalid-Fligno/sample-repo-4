@@ -49,43 +49,43 @@ const storeProgressInfo = async (
   burpeeCount
 ) => {
   const uid = await AsyncStorage.getItem("uid");
-  const firebase = require("firebase");
+  // const firebase = require("firebase");
 
-  let blob = "";
-  if (Platform.OS === "ios") {
-    const base64Response = await fetch(
-      `data:image/jpeg;base64,${image.base64}`
-    );
-    blob = base64Response.blob()._W;
-  }
-  if (Platform.OS === "android") blob = await uriToBlob(image.uri);
+  // let blob = "";
+  // if (Platform.OS === "ios") {
+  //   const base64Response = await fetch(
+  //     `data:image/jpeg;base64,${image.base64}`
+  //   );
+  //   blob = base64Response.blob()._W;
+  // }
+  // if (Platform.OS === "android") blob = await uriToBlob(image.uri);
 
-  const storageRef = firebase.storage().ref();
-  const userPhotosStorageRef = storageRef.child("user-photos");
-  const userStorageRef = userPhotosStorageRef.child(uid);
+  // const storageRef = firebase.storage().ref();
+  // const userPhotosStorageRef = storageRef.child("user-photos");
+  // const userStorageRef = userPhotosStorageRef.child(uid);
   const progressDataFieldName = isInitial
     ? "initialProgressInfo"
     : "currentProgressInfo";
   const progressPhotoFilename = isInitial
     ? "initial-progress-photo.jpeg"
     : "current-progress-photo.jpeg";
-  const progressPhotoStorageRef = userStorageRef.child(progressPhotoFilename);
-  const metadata = {
-    contentType: "image/jpeg",
-    cacheControl: "public",
-  };
-  const snapshot = await progressPhotoStorageRef.put(blob, metadata);
-  const url = await snapshot.ref.getDownloadURL();
+  // const progressPhotoStorageRef = userStorageRef.child(progressPhotoFilename);
+  // const metadata = {
+  //   contentType: "image/jpeg",
+  //   cacheControl: "public",
+  // };
+  // const snapshot = await progressPhotoStorageRef.put(blob, metadata);
+  // const url = await snapshot.ref.getDownloadURL();
   await db
     .collection("users")
     .doc(uid)
     .set(
       {
         [progressDataFieldName]: {
-          photoURL: url,
-          weight: parseInt(weight, 10),
-          waist: parseInt(waist, 10),
-          hip: parseInt(hip, 10),
+          // photoURL: url,
+          // weight: parseInt(weight, 10),
+          // waist: parseInt(waist, 10),
+          // hip: parseInt(hip, 10),
           burpeeCount,
           date: moment().format("YYYY-MM-DD"),
         },

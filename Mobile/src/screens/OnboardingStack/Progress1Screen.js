@@ -62,49 +62,57 @@ const storeProgressInfo = async (
   burpeeCount
 ) => {
   const uid = await AsyncStorage.getItem("uid");
-  const firebase = require("firebase");
+  // const firebase = require("firebase");
 
-  let blob = "";
-  if (Platform.OS === "ios") {
-    const base64Response = await fetch(
-      `data:image/jpeg;base64,${image.base64}`
-    );
-    blob = base64Response.blob()._W;
-  }
-  if (Platform.OS === "android") blob = await uriToBlob(image.uri);
+  // let blob = "";
+  // if (Platform.OS === "ios") {
+  //   const base64Response = await fetch(
+  //     `data:image/jpeg;base64,${image.base64}`
+  //   );
+  //   console.log("image: ", image);
+  //   blob = base64Response.blob()._W;
+  // }
+  // if (Platform.OS === "android") blob = await uriToBlob(image.uri);
 
-  const storageRef = firebase.storage().ref();
-  const userPhotosStorageRef = storageRef.child("user-photos");
-  const userStorageRef = userPhotosStorageRef.child(uid);
+  // const storageRef = firebase.storage().ref();
+
+  // const userPhotosStorageRef = storageRef.child("user-photos");
+  // const userStorageRef = userPhotosStorageRef.child(uid);
   const progressDataFieldName = isInitial
     ? "initialProgressInfo"
     : "currentProgressInfo";
-  const progressPhotoFilename = isInitial
-    ? "initial-progress-photo.jpeg"
-    : "current-progress-photo.jpeg";
-  const progressPhotoStorageRef = userStorageRef.child(progressPhotoFilename);
-  const metadata = {
-    contentType: "image/jpeg",
-    cacheControl: "public",
-  };
-  const snapshot = await progressPhotoStorageRef.put(blob, metadata);
-  const url = await snapshot.ref.getDownloadURL();
-  await db
-    .collection("users")
-    .doc(uid)
-    .set(
-      {
-        [progressDataFieldName]: {
-          photoURL: url,
-          weight: parseInt(weight, 10),
-          waist: parseInt(waist, 10),
-          hip: parseInt(hip, 10),
-          burpeeCount,
-          date: moment().format("YYYY-MM-DD"),
+  // const progressPhotoFilename = isInitial
+  //   ? "initial-progress-photo.jpeg"
+  //   : "current-progress-photo.jpeg";
+
+  // const progressPhotoStorageRef = userStorageRef.child(progressPhotoFilename);
+  // const metadata = {
+  //   contentType: "image/jpeg",
+  //   cacheControl: "public",
+  // };
+  // const snapshot = await progressPhotoStorageRef.put(blob, metadata);
+  console.log("Uid: ", uid);
+  try {
+    await db
+      .collection("users")
+      .doc(uid)
+      .set(
+        {
+          [progressDataFieldName]: {
+            // photoURL: url,
+            weight: parseInt(weight, 10),
+            waist: parseInt(waist, 10),
+            hip: parseInt(hip, 10),
+            // burpeeCount,
+            date: moment().format("YYYY-MM-DD"),
+          },
         },
-      },
-      { merge: true }
-    );
+        { merge: true }
+      );
+  } catch (err) {
+    console.log("Data set error: ", err);
+  }
+  console.log("Success");
 };
 
 export default class Progress1Screen extends React.PureComponent {
@@ -262,88 +270,109 @@ export default class Progress1Screen extends React.PureComponent {
     // this.setState({ loading: false });
     const uid = await AsyncStorage.getItem("uid");
     db.collection("users")
-    .doc(uid)
-    .get()
-    .then(async (snapshot) => {
-      const isInitial = this.props.navigation.getParam("isInitial");
-      const data = snapshot.data();
-      const progressInfo = isInitial
-        ? data.initialProgressInfo
-        : data.currentProgressInfo;
-      if (!_.isEmpty(progressInfo)) {
-        const imageURL = progressInfo.photoURL ?? null;
-        if (imageURL) {
-          await FileSystem.downloadAsync(
-            imageURL,
-            `${FileSystem.cacheDirectory}progressImage.jpeg`
-          );
-          const image = await ImageManipulator.manipulateAsync(
-            `${FileSystem.cacheDirectory}progressImage.jpeg`,
-            [],
-            { base64: true }
-          );
-          const userRef = db.collection("users").doc(uid);
-          await storeProgressInfo(image, 
-            this.props.navigation.getParam('isInitial'), 
-            weight, 
-            waist, 
-            hip, 
-            this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').burpeeCount ?? 0 : this.props.navigation.getParam('currentProgressInfo').burpeeCount ?? 0);
-          const fitnessLevel = findFitnessLevel(this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').burpeeCount ?? 0 : this.props.navigation.getParam('currentProgressInfo').burpeeCount ?? 0);
-          AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
-          try {
-            await userRef.set(
-              {
-                fitnessLevel,
-                initialBurpeeTestCompleted: true,
-              },
-              { merge: true }
+      .doc(uid)
+      .get()
+      .then(async (snapshot) => {
+        const isInitial = this.props.navigation.getParam("isInitial");
+        const data = snapshot.data();
+        const progressInfo = isInitial
+          ? data.initialProgressInfo
+          : data.currentProgressInfo;
+        if (progressInfo) {
+          const imageURL = progressInfo.photoURL ?? null;
+          console.log("ImageURL: ", imageURL);
+          if (true) {
+            // await FileSystem.downloadAsync(
+            //   imageURL,
+            //   `${FileSystem.cacheDirectory}progressImage.jpeg`
+            // );
+            // const image = await ImageManipulator.manipulateAsync(
+            //   `${FileSystem.cacheDirectory}progressImage.jpeg`,
+            //   [],
+            //   { base64: true }
+            // );
+            const userRef = db.collection("users").doc(uid);
+
+            await storeProgressInfo(
+              null,
+              this.props.navigation.getParam("isInitial"),
+              weight,
+              waist,
+              hip,
+              0
+              // this.props.navigation.getParam("isInitial")
+              //   ? this.props.navigation.getParam("initialProgressInfo")
+              //       .burpeeCount ?? 0
+              //   : this.props.navigation.getParam("currentProgressInfo")
+              //       .burpeeCount ?? 0
             );
-            this.setState({ loading: false });
-            this.props.navigation.navigate("ProgressEdit")
-          } catch (err) {
-            this.setState({ loading: false });
-            Alert.alert("Database write error", `${err}`);
+            // const fitnessLevel = findFitnessLevel(
+            //   this.props.navigation.getParam("isInitial")
+            //     ? this.props.navigation.getParam("initialProgressInfo")
+            //         .burpeeCount ?? 0
+            //     : this.props.navigation.getParam("currentProgressInfo")
+            //         .burpeeCount ?? 0
+            // );
+            // AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
+            // try {
+            //   await userRef.set(
+            //     {
+            //       fitnessLevel,
+            //       initialBurpeeTestCompleted: true,
+            //     },
+            //     { merge: true }
+            //   );
+            //   this.setState({ loading: false });
+            //   this.props.navigation.navigate("ProgressEdit");
+            // } catch (err) {
+            //   this.setState({ loading: false });
+            //   Alert.alert("Database write error", `${err}`);
+            // }
+            this.props.navigation.navigate("ProgressEdit");
           }
+        } else {
+          const userRef = db.collection("users").doc(uid);
+          await storeProgressInfo(
+            null,
+            this.props.navigation.getParam("isInitial"),
+            weight,
+            waist,
+            hip,
+            0
+          );
+
+          // const fitnessLevel = findFitnessLevel(0);
+          // AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
+          // try {
+          //   await userRef.set(
+          //     {
+          //       fitnessLevel,
+          //       initialBurpeeTestCompleted: true,
+          //     },
+          //     { merge: true }
+          //   );
+          //   this.setState({ loading: false });
+
+          // } catch (err) {
+          //   this.setState({ loading: false });
+          //   Alert.alert("Database write error", `${err}`);
+          // }
+          this.props.navigation.navigate("ProgressEdit");
         }
-      } else {
-          const userRef = db.collection("users").doc(uid);
-          await storeProgressInfo("", 
-            this.props.navigation.getParam('isInitial'), 
-            weight, 
-            waist, 
-            hip, 
-            0);
-          const fitnessLevel = findFitnessLevel(0);
-          AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
-          try {
-            await userRef.set(
-              {
-                fitnessLevel,
-                initialBurpeeTestCompleted: true,
-              },
-              { merge: true }
-            );
-            this.setState({ loading: false });
-            this.props.navigation.navigate("ProgressEdit")
-          } catch (err) {
-            this.setState({ loading: false });
-            Alert.alert("Database write error", `${err}`);
-          }
-      }
-    })
-    .catch((reason) => {
-      console.log("[Progress2Screen.js fetchImage()] error: ", reason);
-      Alert.alert("Error", `Error: ${reason}.`);
-    });
+      })
+      .catch((reason) => {
+        console.log("[Progress2Screen.js fetchImage()] error: ", reason);
+        Alert.alert("Error", `Error: ${reason}.`, [
+          { text: "OK", onPress: () => this.setState({ loading: false }) },
+        ]);
+      });
   };
 
   handleCancel = () => {
     const { navigation } = this.props;
     // navigation.pop();
     navigation.state.params.progressEdit !== undefined
-      ?
-        navigation.navigate("ProgressEdit")
+      ? navigation.navigate("ProgressEdit")
       : navigation.pop();
   };
 

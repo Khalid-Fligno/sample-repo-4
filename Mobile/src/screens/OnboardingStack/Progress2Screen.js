@@ -93,10 +93,10 @@ const storeProgressInfo = async (
       {
         [progressDataFieldName]: {
           photoURL: url,
-          weight: parseInt(weight, 10),
-          waist: parseInt(waist, 10),
-          hip: parseInt(hip, 10),
-          burpeeCount,
+          // weight: parseInt(weight, 10),
+          // waist: parseInt(waist, 10),
+          // hip: parseInt(hip, 10),
+          // burpeeCount,
           date: moment().format("YYYY-MM-DD"),
         },
       },
@@ -356,32 +356,57 @@ export default class Progress2Screen extends React.PureComponent {
         //   isInitial,
         //   navigateTo,
         // });
-        const uid = await AsyncStorage.getItem("uid")
-        const userRef = db.collection("users").doc(uid)
-        await storeProgressInfo(pickerResult, 
-          this.props.navigation.getParam('isInitial'), 
-          this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').weight ?? 0 : this.props.navigation.getParam('currentProgressInfo').weight ?? 0, 
-          this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').waist ?? 0 : this.props.navigation.getParam('currentProgressInfo').waist ?? 0, 
-          this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').hip ?? 0 : this.props.navigation.getParam('currentProgressInfo').hip ?? 0, 
-          this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').burpeeCount ?? 0 : this.props.navigation.getParam('currentProgressInfo').burpeeCount ?? 0, );
-        const fitnessLevel = findFitnessLevel(this.props.navigation.getParam('isInitial') ? this.props.navigation.getParam('initialProgressInfo').burpeeCount ?? 0 : this.props.navigation.getParam('currentProgressInfo').burpeeCount ?? 0, );
-        AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
-        try {
-          await userRef.set(
-            {
-              fitnessLevel,
-              initialBurpeeTestCompleted: true,
-            },
-            { merge: true }
-          );
-          this.setState({ uploading: false });
-          navigation.state.params.progressEdit !== undefined
-            ? this.props.navigation.navigate("ProgressEdit")
-            : this.props.navigation.navigate("ProgressHome");
-        } catch (err) {
-          this.setState({ uploading: false });
-          Alert.alert("Database write error", `${err}`);
-        }
+        const uid = await AsyncStorage.getItem("uid");
+        const userRef = db.collection("users").doc(uid);
+        await storeProgressInfo(
+          pickerResult,
+          this.props.navigation.getParam("isInitial"),
+          0,
+          0,
+          0,
+          0
+          // this.props.navigation.getParam("isInitial")
+          //   ? this.props.navigation.getParam("initialProgressInfo").weight ?? 0
+          //   : this.props.navigation.getParam("currentProgressInfo").weight ?? 0,
+          // this.props.navigation.getParam("isInitial")
+          //   ? this.props.navigation.getParam("initialProgressInfo").waist ?? 0
+          //   : this.props.navigation.getParam("currentProgressInfo").waist ?? 0,
+          // this.props.navigation.getParam("isInitial")
+          //   ? this.props.navigation.getParam("initialProgressInfo").hip ?? 0
+          //   : this.props.navigation.getParam("currentProgressInfo").hip ?? 0,
+          // this.props.navigation.getParam("isInitial")
+          //   ? this.props.navigation.getParam("initialProgressInfo")
+          //       .burpeeCount ?? 0
+          //   : this.props.navigation.getParam("currentProgressInfo")
+          //       .burpeeCount ?? 0
+        );
+        // const fitnessLevel = findFitnessLevel(
+        //   this.props.navigation.getParam("isInitial")
+        //     ? this.props.navigation.getParam("initialProgressInfo")
+        //         .burpeeCount ?? 0
+        //     : this.props.navigation.getParam("currentProgressInfo")
+        //         .burpeeCount ?? 0
+        // );
+        // AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
+        // try {
+        //   await userRef.set(
+        //     {
+        //       fitnessLevel,
+        //       initialBurpeeTestCompleted: true,
+        //     },
+        //     { merge: true }
+        //   );
+        //   this.setState({ uploading: false });
+        //   navigation.state.params.progressEdit !== undefined
+        //     ? this.props.navigation.navigate("ProgressEdit")
+        //     : this.props.navigation.navigate("ProgressHome");
+        // } catch (err) {
+        //   this.setState({ uploading: false });
+        //   Alert.alert("Database write error", `${err}`);
+        // }
+        navigation.state.params.progressEdit !== undefined
+          ? this.props.navigation.navigate("ProgressEdit")
+          : this.props.navigation.navigate("ProgressHome");
       } else {
         this.setState({
           error: "Please select an image to continue",
@@ -389,7 +414,7 @@ export default class Progress2Screen extends React.PureComponent {
         });
       }
     } catch (err) {
-      console.log(err)
+      console.log(err);
       this.setState({
         error: "Problem uploading image, please try again",
         uploading: false,
@@ -401,8 +426,7 @@ export default class Progress2Screen extends React.PureComponent {
     const { navigation } = this.props;
     // navigation.pop();
     navigation.state.params.progressEdit !== undefined
-      ?
-        navigation.navigate("ProgressEdit")
+      ? navigation.navigate("ProgressEdit")
       : navigation.pop();
   };
 
@@ -468,14 +492,14 @@ export default class Progress2Screen extends React.PureComponent {
               onPress={() => this.handleImagePicked(image)}
             />
             <CustomBtn
-                Title="Cancel"
-                customBtnStyle={{
-                  marginTop: 5,
-                  backgroundColor: colors.coolIce,
-                }}
-                titleCapitalise={true}
-                onPress={() => this.handleCancel()}
-              />
+              Title="Cancel"
+              customBtnStyle={{
+                marginTop: 5,
+                backgroundColor: colors.coolIce,
+              }}
+              titleCapitalise={true}
+              onPress={() => this.handleCancel()}
+            />
           </View>
           <Loader loading={uploading} color={colors.coral.standard} />
         </View>
