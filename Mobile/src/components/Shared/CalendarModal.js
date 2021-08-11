@@ -44,7 +44,7 @@ class CalendarModal extends Component {
                 mode="date"
                 value={value}
                 onChange={onChange}
-                minimumDate={new Date()}
+                // minimumDate={new Date()}
                 style={{ marginLeft: wp("6.5%") }}
               />
 
@@ -68,7 +68,7 @@ class CalendarModal extends Component {
             mode="date"
             value={value}
             onChange={onChange}
-            minimumDate={new Date()}
+            // minimumDate={new Date()}
           />
         )}
       </View>

@@ -41,7 +41,14 @@ export default class Header extends React.PureComponent {
 
   handleBack = () => {
     const { navigation } = this.props;
-    navigation.pop();
+    // navigation.pop();
+    navigation.state.params !== undefined
+      ? navigation.state.params.isInitial !== undefined
+        ? navigation.state.params.progressEdit !== undefined
+          ? navigation.navigate("ProgressEdit")
+          : navigation.navigate("ProgressHome")
+        : navigation.pop()
+      : navigation.pop();
   };
   goToHome = () => {
     const { navigation } = this.props;
@@ -101,6 +108,7 @@ export default class Header extends React.PureComponent {
       withBackButton,
       withHomeButton,
       withHelpButton,
+      withRightHelpButton,
       withSkipButton,
       withCancelButton,
       withRestoreButton,
@@ -139,11 +147,7 @@ export default class Header extends React.PureComponent {
               style={globalStyle.headerContentContainerLeft}
               onPress={this.handleBack}
             >
-              <Icon
-                name="chevron-left"
-                size={20}
-                color={colors.themeColor.color}
-              />
+              <Icon name="chevron-left" size={20} color={colors.black} />
             </TouchableOpacity>
           )}
 
@@ -174,11 +178,7 @@ export default class Header extends React.PureComponent {
               style={globalStyle.headerContentContainerLeft}
               onPress={this.goToHome}
             >
-              <Icon
-                name="chevron-left"
-                size={20}
-                color={colors.themeColor.color}
-              />
+              <Icon name="chevron-left" size={20} color={colors.black} />
             </TouchableOpacity>
           )}
           {withHelpButton && (
@@ -189,7 +189,7 @@ export default class Header extends React.PureComponent {
               <Icon
                 name="question-speech-bubble"
                 size={30}
-                color={colors.themeColor.color}
+                color={colors.black}
               />
             </TouchableOpacity>
           )}
@@ -221,6 +221,32 @@ export default class Header extends React.PureComponent {
               />
             )}
           </View>
+          {/* {navigation.state.params &&
+            navigation.state.params.progressEdit &&
+            navigation.state.params.measurements && (
+              <TouchableOpacity
+                style={globalStyle.headerContentContainerRight}
+                onPress={this.handleHelper}
+              >
+                <Icon
+                  name="question-speech-bubble"
+                  size={30}
+                  color={colors.black}
+                />
+              </TouchableOpacity>
+            )} */}
+          {withRightHelpButton && (
+            <TouchableOpacity
+              style={globalStyle.headerContentContainerRight}
+              onPress={this.handleHelper}
+            >
+              <Icon
+                name="question-speech-bubble"
+                size={30}
+                color={colors.black}
+              />
+            </TouchableOpacity>
+          )}
           {withSkipButton && (
             <TouchableOpacity
               style={globalStyle.headerContentContainerRight}
@@ -274,7 +300,9 @@ export default class Header extends React.PureComponent {
             !withSkipButton &&
             !withCancelButton &&
             !withProfileButton &&
+            !withRightHelpButton &&
             !withRestoreButton && (
+              // navigation.state.params === undefined &&
               <View style={globalStyle.headerContentContainerRight} />
             )}
         </View>

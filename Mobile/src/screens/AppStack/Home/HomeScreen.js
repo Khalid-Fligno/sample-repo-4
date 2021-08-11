@@ -83,13 +83,21 @@ export default class HomeScreen extends React.PureComponent {
       totalStrengthCompleted: undefined,
     };
   }
-  componentDidMount = async () => {
+
+  componentDidMount = () => {
+    this.unsubscribe = this.props.navigation.addListener("didFocus", () => {
+      this.onFocus();
+    });
+  };
+
+  onFocus = () => {
     this.fetchProfile();
     this.switchWelcomeHeader();
     this.setDayOfWeek();
     this.updateScheduleChallengeToActive();
     this.fetchActiveChallengeUserData();
   };
+
   componentWillUnmount = () => {
     this.unsubscribe();
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
@@ -118,6 +126,10 @@ export default class HomeScreen extends React.PureComponent {
       this.setState({
         profile: await doc.data(),
       });
+      console.log(
+        "Start of week: ",
+        moment().startOf("week").format("YYYY-MM-DD")
+      );
       if (
         (await doc.data().weeklyTargets.currentWeekStartDate) !==
         moment().startOf("week").format("YYYY-MM-DD")
@@ -321,7 +333,7 @@ export default class HomeScreen extends React.PureComponent {
       countI = totalIntervalCompleted.length;
       countC = totalCircuitCompleted.length;
       countS = totalStrengthCompleted.length;
-    } else if (profile !== undefined) {
+    } else if (profile) {
       totalI = 5;
       totalC = 5;
       totalS = 5;

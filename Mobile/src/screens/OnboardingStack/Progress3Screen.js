@@ -19,6 +19,10 @@ import WorkoutScreenStyle from "../AppStack/Workouts/WorkoutScreenStyle";
 import NutritionStyles from "../AppStack/Nutrition/NutritionStyles";
 import CustomBtn from "../../components/Shared/CustomBtn";
 import { containerPadding } from "../../styles/globalStyles";
+import { db } from "../../../config/firebase";
+import AsyncStorage from "@react-native-community/async-storage";
+import * as ImageManipulator from "expo-image-manipulator";
+import _ from "lodash";
 
 const { width } = Dimensions.get("window");
 const coachingTip = [
@@ -76,13 +80,59 @@ export default class Progress3Screen extends React.PureComponent {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     const { image, weight, waist, hip, isInitial, navigateTo } =
       this.props.navigation.state.params;
-    this.props.navigation.navigate("Progress4", {
-      image,
-      weight,
-      waist,
-      hip,
-      isInitial,
-      navigateTo,
+    // this.props.navigation.navigate("Progress4", {
+    //   image,
+    //   weight,
+    //   waist,
+    //   hip,
+    //   isInitial,
+    //   navigateTo,
+    // });
+    const uid = await AsyncStorage.getItem("uid");
+    db.collection("users")
+    .doc(uid)
+    .get()
+    .then(async (snapshot) => {
+      const isInitial = this.props.navigation.getParam("isInitial");
+      const data = snapshot.data();
+      const progressInfo = isInitial
+        ? data.initialProgressInfo
+        : data.currentProgressInfo;
+      if (!_.isEmpty(progressInfo)) {
+        const imageURL = progressInfo.photoURL ?? null;
+        if (imageURL) {
+          await FileSystem.downloadAsync(
+            imageURL,
+            `${FileSystem.cacheDirectory}progressImage.jpeg`
+          );
+          const image = await ImageManipulator.manipulateAsync(
+            `${FileSystem.cacheDirectory}progressImage.jpeg`,
+            [],
+            { base64: true }
+          );
+          this.props.navigation.navigate("Progress4", {
+            image: image,
+            weight: progressInfo.weight,
+            waist: progressInfo.waist,
+            hip: progressInfo.hip,
+            isInitial: isInitial,
+            navigateTo: "Progress",
+          });
+        }
+      } else {
+        this.props.navigation.navigate("Progress4", {
+          image: "",
+          weight: 0,
+          waist: 0,
+          hip: 0,
+          isInitial: isInitial,
+          navigateTo: "Progress",
+        });
+      }
+    })
+    .catch((reason) => {
+      console.log("[Progress2Screen.js fetchImage()] error: ", reason);
+      Alert.alert("Error", `Error: ${reason}.`);
     });
   };
   render() {
@@ -169,7 +219,8 @@ export default class Progress3Screen extends React.PureComponent {
 
           <View style={styles.buttonContainer}>
             <CustomBtn
-              Title="READY!"
+              // Title="READY!"
+              Title={this.props.navigation.getParam("progressEdit") !== undefined ? "Re-take Burpee Test" : "READY!"}
               onPress={this.handleNext}
               outline={false}
               customBtnTitleStyle={{ fontSize: 14, fontFamily: fonts.bold }}

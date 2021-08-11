@@ -367,7 +367,6 @@ export default class OnBoarding6 extends Component {
                 customBtnTitleStyle={{ color: colors.black, marginRight: 40 }}
                 isLeftIcon={true}
                 leftIconName="chevron-left"
-                leftIconColor={colors.black}
                 leftIconSize={13}
               />
             </View>

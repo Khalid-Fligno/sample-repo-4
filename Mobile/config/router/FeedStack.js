@@ -1,14 +1,14 @@
-import React from 'react';
-import { createStackNavigator } from 'react-navigation-stack';
-import Header from '../../src/components/Shared/Header';
-import FeedScreen from '../../src/screens/AppStack/Home/FeedScreen';
+import React from "react";
+import { createStackNavigator } from "react-navigation-stack";
+import Header from "../../src/components/Shared/Header";
+import FeedScreen from "../../src/screens/AppStack/Home/FeedScreen";
 
 const FeedStack = createStackNavigator(
   {
-    FeedScreen:FeedScreen
+    FeedScreen: FeedScreen,
   },
   {
-    initialRouteName: 'FeedScreen',
+    initialRouteName: "FeedScreen",
     defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
@@ -16,13 +16,13 @@ const FeedStack = createStackNavigator(
           <Header
             stack="home"
             navigation={navigation}
-            withProfileButton={routeName === 'FeedScreen'}
+            withProfileButton={routeName === "FeedScreen"}
             // withHomeButton={true}
           />
         );
       },
     }),
-  },
+  }
 );
 
 export default FeedStack;
