@@ -153,6 +153,9 @@ export default class WarmUpCoolDownScreenV2 extends Component {
   restartWorkout = () => {
     this.handleExerciseReplace(this.state.exerciseIndex);
   };
+  prevExercise = () => {
+    this.handleExerciseReplace(this.state.exerciseIndex - 1);
+  };
   skipExercise = () => {
     const { exerciseIndex, totalExercise, exerciseList } = this.state;
     const nextExerciseIndex = this.state.exerciseIndex + 1;
@@ -261,7 +264,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
             <View style={styles.header}>
               <View style={{ width: 25 }} />
               <View>
-                <Text style={styles.title}>Workout</Text>
+                <Text style={styles.title}>Warmup</Text>
               </View>
               <View style={{ alignItems: "center" }}>
                 <TouchableOpacity
@@ -347,6 +350,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
                 isPaused={videoPaused}
                 //   onPrev={this.prevExercise}
                 lastExercise={lastExercise}
+                onPrev={this.prevExercise}
                 onRestart={this.restartWorkout}
                 onNext={this.skipExercise}
                 onPlayPause={
@@ -356,7 +360,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
             </View>
           )}
 
-          {/* <View /> */}
+          <View />
         </FadeInView>
 
         {showInfoBtn && (
@@ -405,7 +409,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: colors.white,
-    paddingBottom: wp("22s%"),
   },
   header: {
     width,
