@@ -41,9 +41,17 @@ export default class ProgressEditScreen extends React.PureComponent {
     };
   }
   componentDidMount = () => {
+    BackHandler.addEventListener('hardwareBackPress',() =>true)
+    
+
   };
   componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress',() =>true)
+
+
   }
+
+  
   render() {
     const { initialProgressInfo, currentProgressInfo, isInitial } = this.props.navigation.state.params;
     return (

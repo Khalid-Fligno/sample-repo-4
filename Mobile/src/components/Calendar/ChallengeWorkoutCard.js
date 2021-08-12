@@ -7,6 +7,7 @@ import {
   ImageBackground,
   View,
   Animated,
+  TouchableHighlight
 } from "react-native";
 import PropTypes from "prop-types";
 import colors from "../../styles/colors";
@@ -83,6 +84,7 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
     }
     return (
       <View style={[styles.cardContainer, cardCustomStyle]}>
+        <TouchableOpacity style={styles.cardContainer} onPress={onPress}>
         <ImageBackground
           source={require("../../../assets/images/Calendar/challengeWorkoutCardBg.png")}
           style={styles.image}
@@ -134,6 +136,7 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
             />
           </View>
         </ImageBackground>
+        </TouchableOpacity>
       </View>
     );
   }
