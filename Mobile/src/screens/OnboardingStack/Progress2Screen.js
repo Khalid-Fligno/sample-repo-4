@@ -486,11 +486,21 @@ export default class Progress2Screen extends React.PureComponent {
               titleCapitalise={true}
               onPress={() => this.handleImagePicked(image)}
             /> */}
-            <CustomBtn
+
+            {image ? (
+              
+              <CustomBtn
               Title="Update Photo"
               titleCapitalise={true}
               onPress={() => this.handleImagePicked(image)}
             />
+            ) : (
+              <CustomBtn
+              Title="Upload Photo"
+              titleCapitalise={true}
+              onPress={() => this.handleImagePicked(image)}
+            />
+            )}
             <CustomBtn
               Title="Cancel"
               customBtnStyle={{
