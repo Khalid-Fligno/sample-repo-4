@@ -222,6 +222,30 @@ class ChallengeSetting extends Component {
             style={styles.btnContainer}
             onPress={() => {
               Alert.alert(
+                "Are you sure!",
+                "You want to change your challenge start date?",
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
+                  },
+                  {
+                    text: "Change",
+                    onPress: () => this.showCalendarModal(),
+                  },
+                ],
+                { cancelable: false }
+              );
+            }}
+          >
+            <Text style={styles.title}>Change challenge start date</Text>
+            <DoubleRightArrow height={wp("3.5%")} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.btnContainer}
+            onPress={() => {
+              Alert.alert(
                 "",
                 "Are you sure you want to restart your challenge?",
                 [
@@ -243,7 +267,7 @@ class ChallengeSetting extends Component {
             <DoubleRightArrow height={wp("3.5%")} />
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.btnContainer}
             onPress={() => {
               Alert.alert(
@@ -265,7 +289,7 @@ class ChallengeSetting extends Component {
           >
             <Text style={styles.title}>Choose another challenge</Text>
             <DoubleRightArrow height={wp("3.5%")} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     );
@@ -283,7 +307,7 @@ class ChallengeSetting extends Component {
             borderTopColor: colors.grey.light,
           }}
         >
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.btnContainer}
             onPress={() => {
               Alert.alert(
@@ -305,9 +329,9 @@ class ChallengeSetting extends Component {
           >
             <Text style={styles.title}>Reset challenge start Date</Text>
             <DoubleRightArrow height={wp("3.5%")} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.btnContainer}
             onPress={() => {
               Alert.alert(
@@ -328,6 +352,78 @@ class ChallengeSetting extends Component {
             }}
           >
             <Text style={styles.title}>Remove challenge from schedule</Text>
+            <DoubleRightArrow height={wp("3.5%")} />
+          </TouchableOpacity> */}
+          <TouchableOpacity
+            style={styles.btnContainer}
+            onPress={() => {
+              Alert.alert(
+                "",
+                "Are you sure you want to quit your challenge?",
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
+                  },
+                  {
+                    text: "Quit",
+                    onPress: () => this.quitChallenge(activeChallengeUserData),
+                  },
+                ],
+                { cancelable: false }
+              );
+            }}
+          >
+            <Text style={styles.title}>Quit challenge</Text>
+            <DoubleRightArrow height={wp("3.5%")} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.btnContainer}
+            onPress={() => {
+              Alert.alert(
+                "Are you sure!",
+                "You want to change your challenge start date?",
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
+                  },
+                  {
+                    text: "Change",
+                    onPress: () => this.showCalendarModal(),
+                  },
+                ],
+                { cancelable: false }
+              );
+            }}
+          >
+            <Text style={styles.title}>Change challenge start date</Text>
+            <DoubleRightArrow height={wp("3.5%")} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.btnContainer}
+            onPress={() => {
+              Alert.alert(
+                "",
+                "Are you sure you want to restart your challenge?",
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
+                  },
+                  {
+                    text: "Restart",
+                    onPress: () =>
+                      this.restartChallenge(activeChallengeUserData),
+                  },
+                ],
+                { cancelable: false }
+              );
+            }}
+          >
+            <Text style={styles.title}>Restart challenge</Text>
             <DoubleRightArrow height={wp("3.5%")} />
           </TouchableOpacity>
         </View>
