@@ -81,6 +81,12 @@ export default class HomeScreen extends React.PureComponent {
       totalIntervalCompleted: undefined,
       totalCircuitCompleted: undefined,
       totalStrengthCompleted: undefined,
+      totalI: 0,
+      totalS: 0,
+      totalC: 0,
+      countI: 0,
+      countS: 0,
+      countC: 0
     };
   }
 
@@ -225,7 +231,7 @@ export default class HomeScreen extends React.PureComponent {
           await querySnapshot.forEach(async (doc) => {
             await list.push(await doc.data());
           });
-          //TODO:get Active challenge end time
+          //TODO:get Active challenge end tim
           if (list[0]) {
             //TODO:check challenge is active and not completed
             this.fetchActiveChallengeData(list[0]);
@@ -280,6 +286,15 @@ export default class HomeScreen extends React.PureComponent {
                 (res) => res.target === "strength"
               );
 
+            this.fetchHomeScreenData(
+              activeChallengeUserData, 
+              totalInterval,
+              totalCircuit,
+              totalStrength,
+              totalIntervalCompleted,
+              totalCircuitCompleted,
+              totalStrengthCompleted);
+
             this.setState({
               activeChallengeUserData,
               activeChallengeData,
@@ -299,6 +314,45 @@ export default class HomeScreen extends React.PureComponent {
       Alert.alert("Fetch active challenge data error!");
     }
   };
+
+  fetchHomeScreenData = async (
+    activeChallengeUserData, 
+    totalInterval,
+    totalCircuit,
+    totalStrength,
+    totalIntervalCompleted,
+    totalCircuitCompleted,
+    totalStrengthCompleted) => {
+    if (activeChallengeUserData.workouts.length !== 0) {
+      let tempTotalI = 0
+      let tempTotalC = 0
+      let tempTotalS = 0
+      totalInterval.forEach((res) => {
+        tempTotalI += res.days.length
+        this.setState({totalI: tempTotalI})
+      });
+      totalCircuit.forEach((res) => {
+        tempTotalC += res.days.length
+        this.setState({totalC: tempTotalC})
+      });
+      totalStrength.forEach((res) => {
+        tempTotalS += res.days.length
+        this.setState({totalS: tempTotalS})
+      });
+
+      this.setState({countI: totalIntervalCompleted.length})
+      this.setState({countC: totalCircuitCompleted.length})
+      this.setState({countS: totalStrengthCompleted.length})
+    } else {
+      this.setState({totalS: 5})
+      this.setState({totalI: 5})
+      this.setState({totalC: 5})
+
+      this.setState({countI: this.state.profile.weeklyTargets.interval})
+      this.setState({countC: this.state.profile.weeklyTargets.circuit})
+      this.setState({countS: this.state.profile.weeklyTargets.strength})
+    }
+  };
   //-------**--------
 
   render() {
@@ -315,33 +369,39 @@ export default class HomeScreen extends React.PureComponent {
       totalIntervalCompleted,
       totalCircuitCompleted,
       totalStrengthCompleted,
+      countI,
+      countC,
+      countS,
+      totalI,
+      totalC,
+      totalS
     } = this.state;
-    let totalI = 0;
-    let totalC = 0;
-    let totalS = 0;
-    let countI = 0;
-    let countC = 0;
-    let countS = 0;
-    if (activeChallengeData !== undefined) {
-      totalI = 0;
-      totalInterval.forEach((res) => (totalI += res.days.length));
-      totalC = 0;
-      totalCircuit.forEach((res) => (totalC += res.days.length));
-      totalS = 0;
-      totalStrength.forEach((res) => (totalS += res.days.length));
+    // let totalI = 0;
+    // let totalC = 0;
+    // let totalS = 0;
+    // let countI = 0;
+    // let countC = 0;
+    // let countS = 0;
+    // if (activeChallengeData.workouts !== undefined) {
+    //   totalI = 0;
+    //   totalInterval.forEach((res) => (totalI += res.days.length));
+    //   totalC = 0;
+    //   totalCircuit.forEach((res) => (totalC += res.days.length));
+    //   totalS = 0;
+    //   totalStrength.forEach((res) => (totalS += res.days.length));
 
-      countI = totalIntervalCompleted.length;
-      countC = totalCircuitCompleted.length;
-      countS = totalStrengthCompleted.length;
-    } else if (profile) {
-      totalI = 5;
-      totalC = 5;
-      totalS = 5;
+    //   countI = totalIntervalCompleted.length;
+    //   countC = totalCircuitCompleted.length;
+    //   countS = totalStrengthCompleted.length;
+    // } else if (profile) {
+    //   totalI = 5;
+    //   totalC = 5;
+    //   totalS = 5;
 
-      countI = profile.weeklyTargets.interval;
-      countC = profile.weeklyTargets.circuit;
-      countS = profile.weeklyTargets.strength;
-    }
+    //   countI = profile.weeklyTargets.interval;
+    //   countC = profile.weeklyTargets.circuit;
+    //   countS = profile.weeklyTargets.strength;
+    // }
 
     const personalisedMessage = () => {
       const { resistanceWeeklyComplete, hiitWeeklyComplete } =
