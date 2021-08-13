@@ -61,7 +61,7 @@ export default class ProgressEditScreen extends React.PureComponent {
       }]}>
         <View style={{flex: 1}}>
           <View style={styles.textContainer}>
-            <Text style={styles.headerText}>{isInitial ? 'Edit Before' : 'After Progress'}</Text>
+            <Text style={styles.headerText}>{isInitial ? 'Edit Before' : 'Progress'}</Text>
           </View>
         </View>
         <View style={{flex: 2, flexDirection: "column"}}>
@@ -95,7 +95,7 @@ export default class ProgressEditScreen extends React.PureComponent {
                   fontSize: 22,
                   color: colors.charcoal.light,
                   marginBottom: 5,
-                }}>{isInitial ? "Before" : "After"} Photo</Text>
+                }}>{isInitial ? "Before Photo" : "Progress Photo"}</Text>
               </View>
               <View style={{
                 flexDirection: 'row',
@@ -137,7 +137,7 @@ export default class ProgressEditScreen extends React.PureComponent {
                   fontSize: 22,
                   color: colors.charcoal.light,
                   marginBottom: 5,
-                }}>Measurements</Text>
+                }}>{isInitial ? "Measurements" : "Progress Measurements"}</Text>
               </View>
               <View style={{
                 flexDirection: 'row',
@@ -179,7 +179,7 @@ export default class ProgressEditScreen extends React.PureComponent {
                   fontSize: 22,
                   color: colors.charcoal.light,
                   marginBottom: 5,
-                }}>Retake Burpee Test</Text>
+                }}>{isInitial ? "Retake Burpee Test" : "Update Burpee Test"}</Text>
               </View>
               <View style={{
                 flexDirection: 'row',
