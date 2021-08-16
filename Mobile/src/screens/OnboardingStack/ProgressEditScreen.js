@@ -39,19 +39,26 @@ export default class ProgressEditScreen extends React.PureComponent {
     super(props);
     this.state = {
     };
+    this.backButtonClick = this.backButtonClick.bind(this);
   }
   componentDidMount = () => {
-    BackHandler.addEventListener('hardwareBackPress',() =>true)
-    
+    BackHandler.addEventListener('hardwareBackPress',this.backButtonClick)
 
   };
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress',() =>true)
+    BackHandler.removeEventListener('hardwareBackPress',this.backButtonClick)
 
 
   }
 
-  
+  backButtonClick(){
+    if(this.props.navigation && this.props.navigation.goBack){
+      this.props.navigation.navigate('ProgressHome')
+      return true;
+
+    }
+    return false;
+  }
   render() {
     const { initialProgressInfo, currentProgressInfo, isInitial } = this.props.navigation.state.params;
     return (
