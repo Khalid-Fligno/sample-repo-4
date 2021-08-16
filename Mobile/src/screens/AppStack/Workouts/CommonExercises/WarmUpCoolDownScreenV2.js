@@ -264,7 +264,9 @@ export default class WarmUpCoolDownScreenV2 extends Component {
             <View style={styles.header}>
               <View style={{ width: 25 }} />
               <View>
-                <Text style={styles.title}>Warmup</Text>
+                <Text style={styles.title}>
+                  {type === "warmUp" ? "Warm Up" : "Cool Down"}
+                </Text>
               </View>
               <View style={{ alignItems: "center" }}>
                 <TouchableOpacity
