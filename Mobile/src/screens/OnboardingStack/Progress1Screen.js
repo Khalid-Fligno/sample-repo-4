@@ -386,14 +386,14 @@ export default class Progress1Screen extends React.PureComponent {
       waistModalVisible,
       hipModalVisible,
       unitsOfMeasurement,
-      helperModalVisible,
+      helperModalVisible
     } = this.state;
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
         <KeyboardAvoidingView keyboardVerticalOffset={-60} behavior="position">
           <View style={styles.container}>
             <View style={styles.textContainer}>
-              <Text style={styles.headerText}>Measurements</Text>
+              <Text style={styles.headerText}>{this.props.navigation.getParam("isInitial") ? "Measurements" : "Progress Measurements"}</Text>
               <Text style={styles.bodyText}>
                 To help you track your progress, let’s find out where you are
                 now.
