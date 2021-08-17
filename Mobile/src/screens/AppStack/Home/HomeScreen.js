@@ -236,6 +236,13 @@ export default class HomeScreen extends React.PureComponent {
             //TODO:check challenge is active and not completed
             this.fetchActiveChallengeData(list[0]);
           } else {
+            this.setState({totalS: 5})
+            this.setState({totalI: 5})
+            this.setState({totalC: 5})
+
+            this.setState({countI: this.state.profile.weeklyTargets.interval})
+            this.setState({countC: this.state.profile.weeklyTargets.circuit})
+            this.setState({countS: this.state.profile.weeklyTargets.strength})
             this.setState({
               activeChallengeUserData: undefined,
               loading: false,
@@ -340,9 +347,9 @@ export default class HomeScreen extends React.PureComponent {
         this.setState({totalS: tempTotalS})
       });
 
-      this.setState({countI: totalIntervalCompleted.length})
-      this.setState({countC: totalCircuitCompleted.length})
-      this.setState({countS: totalStrengthCompleted.length})
+      this.setState({countI: this.state.profile.weeklyTargets.interval})
+      this.setState({countC: this.state.profile.weeklyTargets.circuit})
+      this.setState({countS: this.state.profile.weeklyTargets.strength})
     } else {
       this.setState({totalS: 5})
       this.setState({totalI: 5})
