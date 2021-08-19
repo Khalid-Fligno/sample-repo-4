@@ -570,10 +570,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                     <Text style={WorkoutScreenStyle.workoutName}>
                       {workout && workout.displayName.toUpperCase()}
                     </Text>
-                    {/* {
-                         !extraProps['fromCalender'] &&
-                         <AddToCalendarButton onPress={() => this.showCalendarModal()} />
-                      } */}
                   </View>
 
                   <View style={WorkoutScreenStyle.workoutIconsRow}>
