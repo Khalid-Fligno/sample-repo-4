@@ -103,13 +103,15 @@ const WorkoutScreenStyle = StyleSheet.create({
   workoutPreviewHeaderContainer: {
     width,
     backgroundColor: colors.smoke,
-    paddingTop: 12,
+    paddingTop: 15,
+    borderBottomWidth: 1,
   },
   workoutPreviewHeaderText: {
     textAlign: "center",
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.dark,
+    marginBottom: 15,
   },
   workoutInfoContainer: {
     backgroundColor: colors.white,

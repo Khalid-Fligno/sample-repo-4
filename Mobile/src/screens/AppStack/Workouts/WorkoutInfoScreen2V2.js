@@ -11,6 +11,8 @@ import {
   FlatList,
   Platform,
   UIManager,
+  LayoutAnimation,
+  SectionList,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
@@ -22,6 +24,7 @@ import { DotIndicator } from "react-native-indicators";
 import { db } from "../../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import Icon from "../../../components/Shared/Icon";
+import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import AddToCalendarButton from "../../../components/Shared/AddToCalendarButton";
 import {
   findFocus,
@@ -68,6 +71,9 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       spotifyAvailable: undefined,
       userChallengesList: [],
       notificationBanner: false,
+      expandedExercise: false,
+      expandedWarmup: false,
+      expandedCooldown: false,
     };
   }
 
@@ -225,7 +231,43 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     // this.focusListener.remove()
   };
 
-  renderItem = ({ item: exercise, index }) => {
+  togglePreview = (section) => {
+    if (section.key === 0) {
+      this.setState({ expandedWarmup: !this.state.expandedWarmup });
+    } else if (section.key === 1) {
+      this.setState({ expandedExercise: !this.state.expandedExercise });
+    } else if (section.key === 2) {
+      this.setState({ expandedCooldown: !this.state.expandedCooldown });
+    }
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  };
+
+  renderItem = (render) => {
+    const section = render.section;
+    const { expandedWarmup, expandedExercise, expandedCooldown } = this.state;
+    if (section.key === 0) {
+      return expandedWarmup ? (
+        this.renderExercise(render)
+      ) : (
+        <View style={{ height: 0 }} />
+      );
+    } else if (section.key === 1) {
+      return expandedExercise ? (
+        this.renderExercise(render)
+      ) : (
+        <View style={{ height: 0 }} />
+      );
+    } else if (section.key === 2) {
+      return expandedCooldown ? (
+        this.renderExercise(render)
+      ) : (
+        <View style={{ height: 0 }} />
+      );
+    }
+    return <View />;
+  };
+
+  renderExercise = ({ item: exercise, index }) => {
     let showRR =
       exercise.recommendedResistance &&
       !exercise.recommendedResistance.includes("N/A")
@@ -395,5 +437,292 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     );
   };
 
-  render() {}
+  render() {
+    const {
+      loading,
+      workout,
+      reps,
+      chosenDate,
+      calendarModalVisible,
+      addingToCalendar,
+      musicModalVisible,
+      appleMusicAvailable,
+      spotifyAvailable,
+      workoutSubCategory,
+      fitnessLevel,
+      extraProps,
+      notificationBanner,
+      expandedExercise,
+      expandedWarmup,
+      expandedCooldown,
+    } = this.state;
+    let workoutTime = 0;
+    let warmupInterval = 0;
+    let workoutInterval = 0;
+    let cooldownInterval = 0;
+    if (workout) {
+      workoutTime = workout.workoutTime;
+
+      if (workout.coolDownExercises) {
+        let seconds = 0;
+        workout.coolDownExercises.map((exercise) => {
+          seconds += exercise.duration;
+        });
+        cooldownInterval = Math.floor(seconds / 60);
+      }
+
+      if (workout.warmUpExercises) {
+        let seconds = 0;
+        workout.warmUpExercises.map((exercise) => {
+          seconds += exercise.duration;
+        });
+        warmupInterval = Math.floor(seconds / 60);
+      }
+      if (workout.exercises) {
+        workoutInterval =
+          workout.workoutTime - (warmupInterval + cooldownInterval);
+      }
+      console.log("Workout: ", workout);
+      // workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
+    }
+
+    return (
+      <View
+        style={[
+          globalStyle.container,
+          { paddingHorizontal: 0, backgroundColor: colors.smoke },
+        ]}
+      >
+        {Platform.OS === "ios" && (
+          <Modal
+            isVisible={calendarModalVisible}
+            animationIn="fadeIn"
+            animationInTiming={600}
+            animationOut="fadeOut"
+            animationOutTiming={600}
+            onBackdropPress={this.hideCalendarModal}
+          >
+            <View style={globalStyle.modalContainer}>
+              <DateTimePicker
+                mode="date"
+                value={chosenDate}
+                onChange={this.setDate}
+                minimumDate={new Date()}
+              />
+              <TouchableOpacity
+                onPress={() => this.addWorkoutToCalendar(chosenDate)}
+                style={globalStyle.modalButton}
+              >
+                {addingToCalendar ? (
+                  <DotIndicator color={colors.white} count={3} size={6} />
+                ) : (
+                  <Text style={globalStyle.modalButtonText}>
+                    ADD TO CALENDAR
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        )}
+        {Platform.OS === "android" && calendarModalVisible && !loading && (
+          <DateTimePicker
+            mode="date"
+            value={chosenDate}
+            onChange={this.setDate}
+            minimumDate={new Date()}
+          />
+        )}
+        {workout && !loading && (
+          <View style={WorkoutScreenStyle.flatListContainer}>
+            <SectionList
+              sections={
+                workout.warmUpExercises && workout.coolDownExercises
+                  ? [
+                      {
+                        data: workout.warmUpExercises,
+                        title: "Warmup",
+                        key: 0,
+                      },
+                      {
+                        data: workout.exercises,
+                        title: "Workout",
+                        key: 1,
+                      },
+                      {
+                        data: workout.coolDownExercises,
+                        title: "Cooldown",
+                        key: 2,
+                      },
+                    ]
+                  : [
+                      {
+                        data: workout.exercises,
+                        title: "Workout",
+                        key: 1,
+                      },
+                    ]
+              }
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderItem}
+              ListHeaderComponent={
+                <View style={WorkoutScreenStyle.workoutInfoContainer}>
+                  <View style={WorkoutScreenStyle.workoutNameContainer}>
+                    <Text style={WorkoutScreenStyle.workoutName}>
+                      {workout && workout.displayName.toUpperCase()}
+                    </Text>
+                    {/* {
+                         !extraProps['fromCalender'] &&
+                         <AddToCalendarButton onPress={() => this.showCalendarModal()} />
+                      } */}
+                  </View>
+
+                  <View style={WorkoutScreenStyle.workoutIconsRow}>
+                    {!this.state.workout.filters.includes("strength") && (
+                      <View style={WorkoutScreenStyle.workoutIconContainer}>
+                        <Icon
+                          name="workouts-hiit"
+                          size={36}
+                          color={colors.charcoal.standard}
+                          style={WorkoutScreenStyle.hiitIcon}
+                        />
+                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                          HIIT {findWorkoutType(workout)}
+                        </Text>
+                      </View>
+                    )}
+                    {!workout.count && (
+                      <View style={WorkoutScreenStyle.workoutIconContainer}>
+                        <TimeSvg width="40" height="40" />
+                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                          {workoutTime.toFixed(0)} Mins
+                        </Text>
+                      </View>
+                    )}
+
+                    <View style={WorkoutScreenStyle.workoutIconContainer}>
+                      <Icon
+                        name="workouts-reps"
+                        size={40}
+                        color={colors.charcoal.standard}
+                      />
+                      <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                        {this.state.workout.filters.includes("strength")
+                          ? `${reps * workoutTime} Reps`
+                          : `${workout.workoutReps} Rounds`}
+                      </Text>
+                    </View>
+                    {this.state.workout.filters.includes("strength") && (
+                      <View style={WorkoutScreenStyle.workoutIconContainer}>
+                        <Icon
+                          name={workout && findFocusIcon(workout)}
+                          size={40}
+                          color={colors.charcoal.standard}
+                        />
+                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                          {workout && findFocus(workout)}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                  <View
+                    style={WorkoutScreenStyle.workoutPreviewHeaderContainer}
+                  >
+                    <Text style={WorkoutScreenStyle.workoutPreviewHeaderText}>
+                      WORKOUT PREVIEW
+                    </Text>
+                  </View>
+                </View>
+              }
+              renderSectionHeader={({ section }) => {
+                const interval = (() => {
+                  switch (section.key) {
+                    case 0:
+                      return warmupInterval;
+                    case 1:
+                      return workoutInterval;
+                    case 2:
+                      return cooldownInterval;
+                  }
+                })();
+                return (
+                  <View style={styles.sectionHeader}>
+                    <View style={{ marginLeft: 15 }}>
+                      <Text style={{ fontSize: 15, fontFamily: fonts.bold }}>
+                        {section.title}
+                      </Text>
+                      <Text
+                        style={{ fontSize: 12, fontFamily: fonts.boldNarrow }}
+                      >{`${section.data.length} exercises - ${interval} min`}</Text>
+                    </View>
+                    <View style={{ marginRight: 15 }}>
+                      <TouchableOpacity
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                        onPress={() => this.togglePreview(section)}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 11,
+                            fontFamily: fonts.boldNarrow,
+                            textDecorationLine: "underline",
+                            textDecorationColor: colors.black,
+                          }}
+                        >
+                          {"Tap to preview"}
+                        </Text>
+                        <MaterialIcon
+                          name="chevron-down"
+                          size={30}
+                          color={colors.black}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              }}
+              stickySectionHeadersEnabled={true}
+            />
+          </View>
+        )}
+        <TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
+          <Text
+            style={{
+              color: colors.white,
+              fontFamily: fonts.bold,
+              fontSize: 20,
+              alignSelf: "center",
+            }}
+          >
+            {"Start now"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
+
+const styles = StyleSheet.create({
+  sectionHeader: {
+    height: 60,
+    flexDirection: "row",
+    backgroundColor: colors.smoke,
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderColor: colors.black,
+  },
+  startButton: {
+    height: 50,
+    width: "90%",
+    position: "absolute",
+    bottom: 20,
+    backgroundColor: colors.black,
+    alignSelf: "center",
+    alignContent: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    shadowColor: colors.black,
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 6,
+  },
+});
