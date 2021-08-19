@@ -98,7 +98,7 @@ class ChallengeSetting extends Component {
   resetChallengeDate(date) {
     this.setShedular(date);
   }
-
+/*
   async setShedular(selectedDate) {
     const TODAY = moment();
     this.setState({ loading: true });
@@ -140,7 +140,52 @@ class ChallengeSetting extends Component {
       .catch((err) => {
         console.log(err);
       });
+  } */
+
+
+async setShedular(selectedDate) {
+  const TODAY = moment();
+  this.setState({ loading: true });
+  const uid = await AsyncStorage.getItem("uid");
+  const { activeChallengeData } = this.props;
+  const userRef = db.collection("users").doc(uid).collection("challenges");
+  const data = createUserChallengeData(activeChallengeData, selectedDate);
+  if (moment(selectedDate).isSame(TODAY, "d")) {
+    Object.assign(data, { status: "Active" });
+  } else {
+    Object.assign(data, { isSchedule: true, status: "InActive" });
   }
+  userRef
+    .doc(activeChallengeData.id)
+    .set(data, { merge: true })
+    .then((res) => {
+      Alert.alert(
+        "",
+        `Your start date has been added to your challenge. Go to ${moment(
+          selectedDate
+        ).format(
+          "DD-MM-YY"
+        )} on the challenge dashboard to see what Day 1 looks like`,
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              // this.hideCalendarModal();
+              this.props.navigation.reset(
+                [NavigationActions.navigate({ routeName: "CalendarHome" })],
+                0
+              );
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
 
   async discardChallengeFromSchedular() {
     const { ScheduleData } = this.props;
