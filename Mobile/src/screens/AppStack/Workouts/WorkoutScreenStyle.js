@@ -8,7 +8,7 @@ const WorkoutScreenStyle = StyleSheet.create({
     paddingBottom: 8,
     ...Platform.select({
       android: {
-        height: width + 40,
+        height: width + 70,
         width: width,
       },
     }),
