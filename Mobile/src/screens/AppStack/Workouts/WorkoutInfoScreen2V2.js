@@ -71,7 +71,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       spotifyAvailable: undefined,
       userChallengesList: [],
       notificationBanner: false,
-      expandedExercise: false,
+      expandedExercise: true,
       expandedWarmup: false,
       expandedCooldown: false,
     };
@@ -268,6 +268,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   };
 
   renderExercise = ({ item: exercise, index }) => {
+    console.log("Render exercise: ", exercise);
     let showRR =
       exercise.recommendedResistance &&
       !exercise.recommendedResistance.includes("N/A")
@@ -360,8 +361,12 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
               key={exercise.name.toUpperCase()}
               ref={(ref) => (this.videoRef = ref)}
               source={{
-                uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+                // uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+                uri: exercise.videoUrls[0].url,
               }}
+              poster={
+                "../../../../assets/icons/fitazfk-app-icon-gradient-dark.png"
+              }
               playWhenInactive
               resizeMode="contain"
               repeat
@@ -462,7 +467,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     let cooldownInterval = 0;
     if (workout) {
       workoutTime = workout.workoutTime;
-
+      console.log("Workout: ", workout);
       if (workout.coolDownExercises) {
         let seconds = 0;
         workout.coolDownExercises.map((exercise) => {

@@ -84,6 +84,7 @@ const WorkoutScreenStyle = StyleSheet.create({
   flatListContainer: {
     width,
     backgroundColor: colors.grey.light,
+    flex: 1,
   },
   hiitIcon: {
     margin: 2,
