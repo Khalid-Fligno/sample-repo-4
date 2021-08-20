@@ -223,7 +223,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
     });
-    this.checkMusicAppAvailability();
+    // this.checkMusicAppAvailability();
   };
 
   componentWillUnmount = async () => {
@@ -267,8 +267,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     return <View />;
   };
 
-  renderExercise = ({ item: exercise, index }) => {
-    console.log("Render exercise: ", exercise);
+  renderExercise = ({ item: exercise, index, section }) => {
     let showRR =
       exercise.recommendedResistance &&
       !exercise.recommendedResistance.includes("N/A")
@@ -284,6 +283,22 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       this.state.workout.workIntervalMap[this.state.fitnessLevel - 1];
     const restIntervalTimeinSec =
       this.state.workout.restIntervalMap[this.state.fitnessLevel - 1];
+    let videoUrl = "";
+    switch (section.key) {
+      case 0:
+        videoUrl = `${FileSystem.cacheDirectory}warmUpExercise-${
+          index + 1
+        }.mp4`;
+        break;
+      case 1:
+        videoUrl = `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`;
+        break;
+      case 2:
+        videoUrl = `${FileSystem.cacheDirectory}coolDownExercise-${
+          index + 1
+        }.mp4`;
+        break;
+    }
     return (
       <View style={WorkoutScreenStyle.carouselContainer}>
         <Carousel
@@ -362,11 +377,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
               ref={(ref) => (this.videoRef = ref)}
               source={{
                 // uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-                uri: exercise.videoUrls[0].url,
+                uri: videoUrl,
               }}
-              poster={
-                "../../../../assets/icons/fitazfk-app-icon-gradient-dark.png"
-              }
               playWhenInactive
               resizeMode="contain"
               repeat
