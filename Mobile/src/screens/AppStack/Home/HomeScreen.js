@@ -152,18 +152,18 @@ export default class HomeScreen extends React.PureComponent {
       //   };
       //   await userRef.set(data, { merge: true });
       // }
-      // if (doc.data().weeklyTargets["strength"] == null) {
-      //   // if Weekly targets not available
-      //   const data = {
-      //     weeklyTargets: {
-      //       strength: 0,
-      //       circuit: 0,
-      //       interval: 0,
-      //     },
-      //     totalWorkoutCompleted: 0,
-      //   };
-      //   await userRef.set(data, { merge: true });
-      // }
+      if ((await doc.data().weeklyTargets["strength"]) == null) {
+        // if Weekly targets not available
+        const data = {
+          weeklyTargets: {
+            strength: 0,
+            circuit: 0,
+            interval: 0,
+          },
+          totalWorkoutCompleted: 0,
+        };
+        await userRef.set(data, { merge: true });
+      }
     });
   };
   openLink = (url) => {
