@@ -78,16 +78,19 @@ class WorkoutsHomeScreen2 extends React.PureComponent {
           .resistanceWeeklyComplete,
         hiitWeeklyComplete: await doc.data().weeklyTargets.hiitWeeklyComplete,
       });
-      // if (await doc.data().weeklyTargets.currentWeekStartDate !== moment().startOf('week').format('YYYY-MM-DD')) {
-      //   const data = {
-      //     weeklyTargets: {
-      //       resistanceWeeklyComplete: 0,
-      //       hiitWeeklyComplete: 0,
-      //       currentWeekStartDate: moment().startOf('week').format('YYYY-MM-DD'),
-      //     },
-      //   };
-      //   await userRef.set(data, { merge: true });
-      // }
+      if (
+        (await doc.data().weeklyTargets.currentWeekStartDate) !==
+        moment().startOf("week").format("YYYY-MM-DD")
+      ) {
+        const data = {
+          weeklyTargets: {
+            // resistanceWeeklyComplete: 0,
+            // hiitWeeklyComplete: 0,
+            currentWeekStartDate: moment().startOf("week").format("YYYY-MM-DD"),
+          },
+        };
+        await userRef.set(data, { merge: true });
+      }
     });
   };
   showHelperModal = () => {

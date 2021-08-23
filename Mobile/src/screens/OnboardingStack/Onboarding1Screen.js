@@ -63,21 +63,21 @@ export default class Onboarding1Screen extends React.PureComponent {
       const dob = moment.tz(chosenDate, timezone).format("YYYY-MM-DD");
       const uid = await AsyncStorage.getItem("uid");
       const userRef = db.collection("users").doc(uid);
-      // const data = {
-      //   dob,
-      //   unitsOfMeasurement: chosenUom,
-      //   // onboarded: true,
-      //   totalWorkoutCompleted: 0,
-      //   weeklyTargets: {
-      //     currentWeekStartDate: moment().startOf("week").format("YYYY-MM-DD"),
-      //     resistanceWeeklyComplete: 0,
-      //     hiitWeeklyComplete: 0,
-      //     strength: 0,
-      //     circuit: 0,
-      //     interval: 0,
-      //   },
-      // };
-      // await userRef.set(data, { merge: true });
+      const data = {
+        dob,
+        unitsOfMeasurement: chosenUom,
+        // onboarded: true,
+        totalWorkoutCompleted: 0,
+        weeklyTargets: {
+          currentWeekStartDate: moment().startOf("week").format("YYYY-MM-DD"),
+          resistanceWeeklyComplete: 0,
+          hiitWeeklyComplete: 0,
+          strength: 0,
+          circuit: 0,
+          interval: 0,
+        },
+      };
+      await userRef.set(data, { merge: true });
       this.setState({ loading: false });
       this.props.navigation.navigate("Onboarding2", {
         name,

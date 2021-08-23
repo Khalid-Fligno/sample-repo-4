@@ -128,19 +128,19 @@ class ProgressHomeScreen extends React.PureComponent {
         loading: false,
       });
 
-      // if (
-      //   (await doc.data().weeklyTargets.currentWeekStartDate) !==
-      //   moment().startOf("week").format("YYYY-MM-DD")
-      // ) {
-      //   const data = {
-      //     weeklyTargets: {
-      //       resistanceWeeklyComplete: 0,
-      //       hiitWeeklyComplete: 0,
-      //       currentWeekStartDate: moment().startOf("week").format("YYYY-MM-DD"),
-      //     },
-      //   };
-      //   await userRef.set(data, { merge: true });
-      // }
+      if (
+        (await doc.data().weeklyTargets.currentWeekStartDate) !==
+        moment().startOf("week").format("YYYY-MM-DD")
+      ) {
+        const data = {
+          weeklyTargets: {
+            // resistanceWeeklyComplete: 0,
+            // hiitWeeklyComplete: 0,
+            currentWeekStartDate: moment().startOf("week").format("YYYY-MM-DD"),
+          },
+        };
+        await userRef.set(data, { merge: true });
+      }
     });
   };
 

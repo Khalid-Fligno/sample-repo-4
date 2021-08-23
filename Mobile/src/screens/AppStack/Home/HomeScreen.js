@@ -136,22 +136,22 @@ export default class HomeScreen extends React.PureComponent {
         "Start of week: ",
         moment().startOf("week").format("YYYY-MM-DD")
       );
-      // if (
-      //   (await doc.data().weeklyTargets.currentWeekStartDate) !==
-      //   moment().startOf("week").format("YYYY-MM-DD")
-      // ) {
-      //   const data = {
-      //     weeklyTargets: {
-      //       resistanceWeeklyComplete: 0,
-      //       hiitWeeklyComplete: 0,
-      //       strength: 0,
-      //       interval: 0,
-      //       circuit: 0,
-      //       currentWeekStartDate: moment().startOf("week").format("YYYY-MM-DD"),
-      //     },
-      //   };
-      //   await userRef.set(data, { merge: true });
-      // }
+      if (
+        (await doc.data().weeklyTargets.currentWeekStartDate) !==
+        moment().startOf("week").format("YYYY-MM-DD")
+      ) {
+        const data = {
+          weeklyTargets: {
+            // resistanceWeeklyComplete: 0,
+            // hiitWeeklyComplete: 0,
+            // strength: 0,
+            // interval: 0,
+            // circuit: 0,
+            currentWeekStartDate: moment().startOf("week").format("YYYY-MM-DD"),
+          },
+        };
+        await userRef.set(data, { merge: true });
+      }
       if ((await doc.data().weeklyTargets["strength"]) == null) {
         // if Weekly targets not available
         const data = {
