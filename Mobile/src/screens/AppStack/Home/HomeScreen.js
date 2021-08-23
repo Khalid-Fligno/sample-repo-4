@@ -130,7 +130,7 @@ export default class HomeScreen extends React.PureComponent {
     const userRef = db.collection("users").doc(uid);
     this.unsubscribe = userRef.onSnapshot(async (doc) => {
       this.setState({
-        profile: await doc.data(),
+        profile: doc.data(),
       });
       console.log(
         "Start of week: ",
@@ -152,18 +152,18 @@ export default class HomeScreen extends React.PureComponent {
       //   };
       //   await userRef.set(data, { merge: true });
       // }
-      if (doc.data().weeklyTargets["strength"] === undefined) {
-        // if Weekly targets not available
-        const data = {
-          weeklyTargets: {
-            strength: 0,
-            circuit: 0,
-            interval: 0,
-          },
-          totalWorkoutCompleted: 0,
-        };
-        await userRef.set(data, { merge: true });
-      }
+      // if (doc.data().weeklyTargets["strength"] == null) {
+      //   // if Weekly targets not available
+      //   const data = {
+      //     weeklyTargets: {
+      //       strength: 0,
+      //       circuit: 0,
+      //       interval: 0,
+      //     },
+      //     totalWorkoutCompleted: 0,
+      //   };
+      //   await userRef.set(data, { merge: true });
+      // }
     });
   };
   openLink = (url) => {
