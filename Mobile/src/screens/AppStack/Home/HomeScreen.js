@@ -248,13 +248,7 @@ export default class HomeScreen extends React.PureComponent {
           if (list[0]) {
             //TODO:check challenge is active and not completed
             this.fetchActiveChallengeData(list[0]);
-<<<<<<< HEAD
-            console.log("qwer");
           } else {
-            console.log("asdf");
-=======
-          } else {
->>>>>>> 8fab817290b2cb2c695c1f1c615e6e7ec76dac09
             this.setState({ totalS: 5 });
             this.setState({ totalI: 5 });
             this.setState({ totalC: 5 });
