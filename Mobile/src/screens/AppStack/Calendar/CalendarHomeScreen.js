@@ -147,6 +147,21 @@ class CalendarHomeScreen extends React.PureComponent {
       .get()
       .then((res) => {
         const data = res.data();
+        if (res.data().weeklyTargets == null) {
+          const data = {
+            weeklyTargets: {
+              resistanceWeeklyComplete: 0,
+              hiitWeeklyComplete: 0,
+              strength: 0,
+              interval: 0,
+              circuit: 0,
+              currentWeekStartDate: moment()
+                .startOf("week")
+                .format("YYYY-MM-DD"),
+            },
+          };
+          userRef.set(data, { merge: true });
+        }
         this.setState({
           skipped:
             this.state.activeChallengeUserData.onBoardingInfo.skipped ?? false,
