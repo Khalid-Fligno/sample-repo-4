@@ -427,7 +427,7 @@ export default class Progress2Screen extends React.PureComponent {
     // navigation.pop();
     navigation.state.params.progressEdit !== undefined
       ? navigation.navigate("ProgressEdit")
-      : navigation.navigate("ProgressHome")
+      : navigation.navigate("ProgressHome");
   };
 
   render() {
