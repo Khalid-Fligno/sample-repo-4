@@ -108,7 +108,7 @@ class CalendarHomeScreen extends React.PureComponent {
 
   handleDateSelected = async (date) => {
     const { activeChallengeData, activeChallengeUserData } = this.state;
-    this.setState({ loading: true });
+    this.setState({ loading: false });
     this.stringDate = date.format("YYYY-MM-DD").toString();
     //TODO:check the active challenge cndtns
     if (
@@ -618,6 +618,7 @@ class CalendarHomeScreen extends React.PureComponent {
           }}
           CalendarSelectedDate={CalendarSelectedDate}
         />
+         
         {isSchedule && !showRC && !loading && (
           <View style={{ margin: wp("5%") }}>
             <Text style={calendarStyles.scheduleTitleStyle}>
