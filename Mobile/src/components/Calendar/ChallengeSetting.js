@@ -63,7 +63,7 @@ class ChallengeSetting extends Component {
     this.resetChallenge(data, callBack);
   }
 
-  async restartChallenge(data) {
+  async  restartChallenge(data) {
     const callBack = (newData) => {
       this.props.navigation.navigate("ChallengeOnBoarding6", {
         data: {
@@ -159,6 +159,7 @@ async setShedular(selectedDate) {
     .doc(activeChallengeData.id)
     .set(data, { merge: true })
     .then((res) => {
+      
       Alert.alert(
         "",
         `Your start date has been added to your challenge. Go to ${moment(
@@ -171,11 +172,27 @@ async setShedular(selectedDate) {
             text: "OK",
             onPress: () => {
               // this.hideCalendarModal();
+              /*
               this.props.navigation.reset(
                 [NavigationActions.navigate({ routeName: "CalendarHome" })],
                 0
-              );
-            },
+              );    
+              */
+                  
+              const resetAction = StackActions.reset({
+                index: 0,
+                actions: [
+                  NavigationActions.navigate({
+                    routeName: "Tabs",
+                    action: NavigationActions.navigate({
+                      routeName: "CalendarHome",
+                    }),
+                  }),
+                ],
+              });
+              this.props.navigation.dispatch(resetAction);
+            
+            }, 
           },
         ],
         { cancelable: false }
@@ -183,8 +200,8 @@ async setShedular(selectedDate) {
     })
     .catch((err) => {
       console.log(err);
-    });
-}
+    }); 
+} 
 
 
   async discardChallengeFromSchedular() {
