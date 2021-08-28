@@ -74,10 +74,9 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async onFocusFunction() {
     console.log("On focus");
-    await this.fetchCalendarEntries();
+    // await this.fetchCalendarEntries();
     // await this.fetchActiveChallengeUserData();
-    // await this.fetchUserData();
-    await this.fetchShowRc();
+    await this.fetchUserData();
     await this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting(),
     });
