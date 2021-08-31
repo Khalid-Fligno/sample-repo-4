@@ -75,7 +75,7 @@ class CalendarHomeScreen extends React.PureComponent {
   async onFocusFunction() {
     console.log("On focus");
     await this.fetchCalendarEntries();
-    // await this.fetchActiveChallengeUserData();
+    await this.fetchActiveChallengeUserData();
     await this.fetchUserData();
     await this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting(),
@@ -512,10 +512,8 @@ class CalendarHomeScreen extends React.PureComponent {
       loadingExercises,
       skipped,
     } = this.state;
-    console.log("Skipped 2: ", skipped);
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
-      console.log('asdf')
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
       //check if selected date is between challenge start and end date
       // console.log("????,,,,",this.stringDate)
