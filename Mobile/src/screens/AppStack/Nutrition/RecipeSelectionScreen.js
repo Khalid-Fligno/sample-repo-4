@@ -82,7 +82,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           }
         });
 
-        await Promise.all(
+        Promise.all(
           recipes.map(async (recipe) => {
             const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
             await FileSystem.getInfoAsync(fileUri)
