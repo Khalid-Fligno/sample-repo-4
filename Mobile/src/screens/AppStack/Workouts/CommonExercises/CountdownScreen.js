@@ -32,11 +32,11 @@ export default class CountdownScreen2 extends React.PureComponent {
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
-  handleAppStateChange = async (nextAppState) => {
+  handleAppStateChange = (nextAppState) => {
     const { appState } = this.state;
     if (appState === 'active' && nextAppState.match(/inactive|background/)) {
       this.handlePause();
-      await Audio.setIsEnabledAsync(true);
+      Audio.setIsEnabledAsync(true);
     }
     this.setState({ appState: nextAppState });
   }
