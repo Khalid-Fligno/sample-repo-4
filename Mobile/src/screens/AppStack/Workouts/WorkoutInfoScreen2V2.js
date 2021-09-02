@@ -400,7 +400,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 right: 28,
               }}
             >
-              <Text style={{fontFamily: fonts.StyreneAWebRegular, bottom: 6.5, color: "black"}}>Swipe for more info</Text>
+              <Text style={{fontFamily: fonts.StyreneAWebRegular, bottom: 6.5, color: "black"}}>Swipe for more info</Text> 
               <DoubleRightArrow height={wp("4%")} />
             </View>
           </View>
