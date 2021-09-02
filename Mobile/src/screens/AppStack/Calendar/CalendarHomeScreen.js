@@ -114,7 +114,7 @@ class CalendarHomeScreen extends React.PureComponent {
     if (
       activeChallengeData &&
       activeChallengeUserData &&
-      activeChallengeUserData.status === "Active" &&
+      activeChallengeUserData.status === "Active"  &&
       new Date(activeChallengeUserData.startDate).getTime() <=
         new Date(this.stringDate).getTime() &&
       new Date(activeChallengeUserData.endDate).getTime() >=
@@ -333,7 +333,7 @@ class CalendarHomeScreen extends React.PureComponent {
         .collection("users")
         .doc(uid)
         .collection("challenges")
-        .where("status", "==", "Active")
+        .where("status", "in", ["Active","InActive"])
         .onSnapshot(async (querySnapshot) => {
           const list = [];
           await querySnapshot.forEach(async (doc) => {
@@ -410,10 +410,18 @@ class CalendarHomeScreen extends React.PureComponent {
   async getCurrentPhaseInfo() {
     const { activeChallengeUserData, activeChallengeData } = this.state;
     if (activeChallengeUserData && activeChallengeData) {
-      this.setState({ loading: true });
+      this.setState({ loading: false });
       const data = activeChallengeUserData.phases;
+      const test = activeChallengeUserData.startDate;
+      /*
+      if(this.stringDate != test){
+        this.setState({loading :false})
+      } */if(this.stringDate >= test){
+        this.setState({loading :true})
+      } 
       // this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
       console.log("date=>", this.stringDate);
+      //console.log(test);
       //TODO :getCurrent phase data
       this.phase = getCurrentPhase(
         activeChallengeUserData.phases,

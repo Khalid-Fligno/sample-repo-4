@@ -12,7 +12,7 @@ import "firebase/firestore";
 
 // Live configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBayQ5iob9mqDvVMNQtytsmyRF6YRmFPYQ",
+  apiKey: "AIzaSyBayQ5iob9mqDvVMNgQtytsmyRF6YRmFPYQ",
   authDomain: "fitazfk-app.firebaseapp.com",
   databaseURL: "https://fitazfk-app.firebaseio.com",
   projectId: "fitazfk-app",
