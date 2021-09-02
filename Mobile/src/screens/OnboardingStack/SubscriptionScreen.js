@@ -884,7 +884,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                       <SubscriptionTile
                         key={product.identifier}
                         primary={product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
-                        title={productTitleMap[index]}
+                        title={productTitleMap[1]}
                         price={product.priceString}
                         priceNumber={product.price}
                         currencyCode={product.currencyCode}
@@ -902,7 +902,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                       <SubscriptionTile
                         key={product.identifier}
                         primary={product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
-                        title={productTitleMap[index]}
+                        title={productTitleMap[0]}
                         price={product.priceString}
                         priceNumber={product.price}
                         currencyCode={product.currencyCode}
