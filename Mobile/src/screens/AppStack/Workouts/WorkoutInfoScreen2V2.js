@@ -399,32 +399,33 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 selectedAudioTrack={{
                   type: "disabled",
                 }}
-                style={{ width: width - 30, height: width - 30, position: "relative", zIndex: 0 }}
-                
+                style={{
+                  width: width - 30,
+                  height: width - 30,
+                  position: "relative",
+                  zIndex: 0,
+                }}
               />
             </View>
             <View
               style={{
-<<<<<<< HEAD
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ fontFamily: fonts.StyreneAWebRegular }}>
-                swipe for more info
-              </Text>
-=======
-                position: 'absolute',
+                position: "absolute",
                 zIndex: 1,
                 flexDirection: "row",
                 bottom: 28,
                 right: 28,
               }}
             >
-              <Text style={{fontFamily: fonts.StyreneAWebRegular, bottom: 6.5, color: "black"}}>Swipe for more info</Text> 
+              <Text
+                style={{
+                  fontFamily: fonts.StyreneAWebRegular,
+                  bottom: 6.5,
+                  color: "black",
+                }}
+              >
+                Swipe for more info
+              </Text>
               <DoubleRightArrow height={wp("4%")} />
->>>>>>> 10a2d17a014a9fb5515913890b0e989e9ae28991
             </View>
           </View>
 
