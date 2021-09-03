@@ -8,6 +8,7 @@ import {
   Alert,
   Linking,
   Image,
+  StatusBar,
   FlatList,
   Platform,
   UIManager,
@@ -86,7 +87,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       reps: this.props.navigation.getParam("reps", null),
       workoutSubCategory: this.props.navigation.getParam("workoutSubCategory"),
       fitnessLevel: this.props.navigation.getParam("fitnessLevel", null),
-      extraProps: this.props.navigation.getParam("extraProps", { }),
+      extraProps: this.props.navigation.getParam("extraProps", {}),
       loading: false,
     });
   }
@@ -176,7 +177,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       .doc(uid)
       .collection("calendarEntries")
       .doc(formattedDate);
-    let workout = Object.assign({ }, this.state.workout, { workoutSubCategory });
+    let workout = Object.assign({}, this.state.workout, { workoutSubCategory });
     const data = {
       workout,
     };
@@ -388,20 +389,16 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                   type: "disabled",
                 }}
                 style={{ width: width - 30, height: width - 30, position: "relative", zIndex: 0 }}
-                
+
               />
             </View>
-            <View 
-              style={{
-                position: 'absolute',
-                zIndex: 1,
-                flexDirection: "row",
-                bottom: 28,
-                right: 28,
-              }}
-            >
-              <Text style={{fontFamily: fonts.StyreneAWebRegular, bottom: 6.5, color: "black"}}>Swipe for more info</Text> 
-              <DoubleRightArrow height={wp("4%")} />
+            <View style={styles.invisibleView}>
+              <View
+                style={styles.setCounter}
+              >
+                <Text style={styles.setCounterText}>Swipe for more info</Text>
+                <Icon name="chevron-right" size={10} style={styles.icon} />
+              </View>
             </View>
           </View>
 
@@ -729,6 +726,47 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+  setCounter: {
+    borderColor: colors.black,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    height: 35,
+    paddingRight: 10,
+    paddingLeft: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+  },
+  setCounterText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+  },
+  invisibleView: {
+    bottom: 75,
+    right: 26,
+    height: 0,
+    width,
+    alignItems: "flex-end",
+    position: "absolute",
+  },
+  icon: {
+    marginTop: 2,
+    paddingLeft: 8,
+  },
+  helpButton: {
+    borderColor: colors.black,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    borderWidth: 1,
+    padding: 4,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    borderRadius: 4,
+    flexDirection: "row",
+    paddingRight: 10,
+    paddingLeft: 10,
+  },
   sectionHeader: {
     height: 60,
     flexDirection: "row",
