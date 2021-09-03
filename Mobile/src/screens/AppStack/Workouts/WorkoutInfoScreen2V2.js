@@ -41,6 +41,8 @@ import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import NutritionStyles from "../Nutrition/NutritionStyles";
 import { StackActions } from "react-navigation";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import DoubleRightArrow from "../../../../assets/icons/DoubleRightArrow";
 
 const moment = require("moment");
 
@@ -397,11 +399,13 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 selectedAudioTrack={{
                   type: "disabled",
                 }}
-                style={{ width: width - 30, height: width - 30 }}
+                style={{ width: width - 30, height: width - 30, position: "relative", zIndex: 0 }}
+                
               />
             </View>
             <View
               style={{
+<<<<<<< HEAD
                 flex: 1,
                 alignItems: "center",
                 justifyContent: "center",
@@ -410,6 +414,17 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
               <Text style={{ fontFamily: fonts.StyreneAWebRegular }}>
                 swipe for more info
               </Text>
+=======
+                position: 'absolute',
+                zIndex: 1,
+                flexDirection: "row",
+                bottom: 28,
+                right: 28,
+              }}
+            >
+              <Text style={{fontFamily: fonts.StyreneAWebRegular, bottom: 6.5, color: "black"}}>Swipe for more info</Text> 
+              <DoubleRightArrow height={wp("4%")} />
+>>>>>>> 10a2d17a014a9fb5515913890b0e989e9ae28991
             </View>
           </View>
 
