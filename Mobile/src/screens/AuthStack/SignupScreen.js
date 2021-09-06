@@ -482,6 +482,7 @@ export default class SignupScreen extends React.PureComponent {
                 </Text> */}
 
               <View>
+                {/* */}
                 <BigHeadingWithBackButton
                   isBackButton={false}
                   bigTitleText="Create account"
@@ -557,9 +558,11 @@ export default class SignupScreen extends React.PureComponent {
                 />
 
                 <View style={authScreenStyle.dividerOverlay}>
+                  {/*
                   <Text style={authScreenStyle.dividerOverlayText}>OR</Text>
+                  */}
                 </View>
-
+                  {/* 
                 <CustomBtn
                   customBtnStyle={{
                     borderColor: colors.grey.standard,
@@ -574,7 +577,7 @@ export default class SignupScreen extends React.PureComponent {
                   onPress={this.signupWithFacebook}
                   leftIcon={true}
                   leftIconUrl={require("../../../assets/icons/facebook.png")}
-                />
+                /> */}
                 {appleSignInAvailable && (
                   <AppleAuthentication.AppleAuthenticationButton
                     onPress={this.onSignInWithApple}
