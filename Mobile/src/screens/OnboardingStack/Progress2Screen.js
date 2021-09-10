@@ -427,7 +427,7 @@ export default class Progress2Screen extends React.PureComponent {
     // navigation.pop();
     navigation.state.params.progressEdit !== undefined
       ? navigation.navigate("ProgressEdit")
-      : navigation.pop();
+      : navigation.navigate("ProgressHome");
   };
 
   render() {
@@ -486,6 +486,21 @@ export default class Progress2Screen extends React.PureComponent {
               titleCapitalise={true}
               onPress={() => this.handleImagePicked(image)}
             /> */}
+
+            {/* {image ? (
+              
+              <CustomBtn
+              Title="Update Photo"
+              titleCapitalise={true}
+              onPress={() => this.handleImagePicked(image)}
+            />
+            ) : (
+              <CustomBtn
+              Title="Upload Photo"
+              titleCapitalise={true}
+              onPress={() => this.handleImagePicked(image)}
+            />
+            )} */}
             <CustomBtn
               Title="Update Photo"
               titleCapitalise={true}

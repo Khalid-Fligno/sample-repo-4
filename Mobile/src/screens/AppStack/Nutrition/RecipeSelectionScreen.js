@@ -82,7 +82,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           }
         });
 
-        await Promise.all(
+        Promise.all(
           recipes.map(async (recipe) => {
             const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
             await FileSystem.getInfoAsync(fileUri)
@@ -125,9 +125,10 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           backTitle: this.props.navigation.getParam("meal", null),
         })
       }
-      image={
-        `${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage
-      }
+      // image={
+      //   `${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage
+      // }
+      image={item.coverImage}
       title={item.title.toUpperCase()}
       tags={item.tags}
       subTitle={item.subtitle}
@@ -193,7 +194,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             renderItem={this.renderItem}
             showsVerticalScrollIndicator={false}
             removeClippedSubviews={false}
-            maxToRenderPerBatch={20}
+            // maxToRenderPerBatch={20}
           />
         )}
 

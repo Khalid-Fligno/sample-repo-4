@@ -249,7 +249,7 @@ export default class SignupScreen extends React.PureComponent {
           );
           // this.props.navigation.navigate('Subscription', { name: profile.first_name, specialOffer: this.state.specialOffer });
           this.props.navigation.navigate("Onboarding1", {
-            name: first_name,
+            name: profile.first_name,
             specialOffer: this.state.specialOffer,
           });
         });
@@ -279,8 +279,10 @@ export default class SignupScreen extends React.PureComponent {
           "Facebook signup failed",
           "An account already exists with the same email address"
         );
+      } else {
+        Alert.alert("Facebook signup failed", `Error: ${err}`);
       }
-      console.log(err.message);
+      console.log("Facebook signup error: ", err);
       this.setState({ error: "Something went wrong", loading: false });
     }
   };
@@ -480,6 +482,7 @@ export default class SignupScreen extends React.PureComponent {
                 </Text> */}
 
               <View>
+                {/* */}
                 <BigHeadingWithBackButton
                   isBackButton={false}
                   bigTitleText="Create account"
@@ -555,9 +558,11 @@ export default class SignupScreen extends React.PureComponent {
                 />
 
                 <View style={authScreenStyle.dividerOverlay}>
+                  {/*
                   <Text style={authScreenStyle.dividerOverlayText}>OR</Text>
+                  */}
                 </View>
-
+                  {/* 
                 <CustomBtn
                   customBtnStyle={{
                     borderColor: colors.grey.standard,
@@ -572,7 +577,7 @@ export default class SignupScreen extends React.PureComponent {
                   onPress={this.signupWithFacebook}
                   leftIcon={true}
                   leftIconUrl={require("../../../assets/icons/facebook.png")}
-                />
+                /> */}
                 {appleSignInAvailable && (
                   <AppleAuthentication.AppleAuthenticationButton
                     onPress={this.onSignInWithApple}

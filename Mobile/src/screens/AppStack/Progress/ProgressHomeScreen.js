@@ -50,16 +50,38 @@ class ProgressHomeScreen extends React.PureComponent {
       totalIntervalCompleted: undefined,
       totalCircuitCompleted: undefined,
       totalStrengthCompleted: undefined,
+      totalI: 0,
+      totalS: 0,
+      totalC: 0,
+      countI: 0,
+      countS: 0,
+      countC: 0,
     };
   }
-  componentDidMount() {
+
+  componentDidMount = () => {
+    this.unsubscribe = this.props.navigation.addListener("didFocus", () => {
+      this.onFocus();
+    });
+  };
+
+  onFocus = () => {
     this.props.navigation.setParams({
       toggleHelperModal: this.showHelperModal,
     });
     this.fetchProgressInfo();
     this.showHelperOnFirstOpen();
     this.fetchActiveChallengeUserData();
-  }
+  };
+
+  // componentDidMount() {
+  //   this.props.navigation.setParams({
+  //     toggleHelperModal: this.showHelperModal,
+  //   });
+  //   this.fetchProgressInfo();
+  //   this.showHelperOnFirstOpen();
+  //   this.fetchActiveChallengeUserData();
+  // }
   componentWillUnmount() {
     this.unsubscribe();
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
@@ -112,8 +134,8 @@ class ProgressHomeScreen extends React.PureComponent {
       ) {
         const data = {
           weeklyTargets: {
-            resistanceWeeklyComplete: 0,
-            hiitWeeklyComplete: 0,
+            // resistanceWeeklyComplete: 0,
+            // hiitWeeklyComplete: 0,
             currentWeekStartDate: moment().startOf("week").format("YYYY-MM-DD"),
           },
         };
@@ -140,6 +162,17 @@ class ProgressHomeScreen extends React.PureComponent {
           if (list[0]) {
             this.fetchActiveChallengeData(list[0]);
           } else {
+            this.setState({ totalS: 5 });
+            this.setState({ totalI: 5 });
+            this.setState({ totalC: 5 });
+
+            this.setState({
+              countI: this.state.profile.weeklyTargets.interval,
+            });
+            this.setState({ countC: this.state.profile.weeklyTargets.circuit });
+            this.setState({
+              countS: this.state.profile.weeklyTargets.strength,
+            });
             this.setState({
               activeChallengeUserData: undefined,
               loading: false,
@@ -192,6 +225,16 @@ class ProgressHomeScreen extends React.PureComponent {
                 (res) => res.target === "strength"
               );
 
+            this.fetchHomeScreenData(
+              activeChallengeUserData,
+              totalInterval,
+              totalCircuit,
+              totalStrength,
+              totalIntervalCompleted,
+              totalCircuitCompleted,
+              totalStrengthCompleted
+            );
+
             this.setState({
               activeChallengeUserData,
               activeChallengeData,
@@ -209,6 +252,46 @@ class ProgressHomeScreen extends React.PureComponent {
       this.setState({ loading: false });
       console.log(err);
       Alert.alert("Fetch active challenge data error!");
+    }
+  };
+
+  fetchHomeScreenData = async (
+    activeChallengeUserData,
+    totalInterval,
+    totalCircuit,
+    totalStrength,
+    totalIntervalCompleted,
+    totalCircuitCompleted,
+    totalStrengthCompleted
+  ) => {
+    if (activeChallengeUserData.workouts.length !== 0) {
+      let tempTotalI = 0;
+      let tempTotalC = 0;
+      let tempTotalS = 0;
+      totalInterval.forEach((res) => {
+        tempTotalI += res.days.length;
+        this.setState({ totalI: tempTotalI });
+      });
+      totalCircuit.forEach((res) => {
+        tempTotalC += res.days.length;
+        this.setState({ totalC: tempTotalC });
+      });
+      totalStrength.forEach((res) => {
+        tempTotalS += res.days.length;
+        this.setState({ totalS: tempTotalS });
+      });
+
+      this.setState({ countI: this.state.profile.weeklyTargets.interval });
+      this.setState({ countC: this.state.profile.weeklyTargets.circuit });
+      this.setState({ countS: this.state.profile.weeklyTargets.strength });
+    } else {
+      this.setState({ totalS: 5 });
+      this.setState({ totalI: 5 });
+      this.setState({ totalC: 5 });
+
+      this.setState({ countI: this.state.profile.weeklyTargets.interval });
+      this.setState({ countC: this.state.profile.weeklyTargets.circuit });
+      this.setState({ countS: this.state.profile.weeklyTargets.strength });
     }
   };
   //-------**--------
@@ -231,35 +314,41 @@ class ProgressHomeScreen extends React.PureComponent {
       totalIntervalCompleted,
       totalCircuitCompleted,
       totalStrengthCompleted,
+      countI,
+      countC,
+      countS,
+      totalI,
+      totalC,
+      totalS,
     } = this.state;
 
-    let totalI = 0;
-    let totalC = 0;
-    let totalS = 0;
-    let countI = 0;
-    let countC = 0;
-    let countS = 0;
+    // let totalI = 0;
+    // let totalC = 0;
+    // let totalS = 0;
+    // let countI = 0;
+    // let countC = 0;
+    // let countS = 0;
 
-    if (activeChallengeData !== undefined) {
-      totalI = 0;
-      totalInterval.forEach((res) => (totalI += res.days.length));
-      totalC = 0;
-      totalCircuit.forEach((res) => (totalC += res.days.length));
-      totalS = 0;
-      totalStrength.forEach((res) => (totalS += res.days.length));
+    // if (activeChallengeData !== undefined) {
+    //   totalI = 0;
+    //   totalInterval.forEach((res) => (totalI += res.days.length));
+    //   totalC = 0;
+    //   totalCircuit.forEach((res) => (totalC += res.days.length));
+    //   totalS = 0;
+    //   totalStrength.forEach((res) => (totalS += res.days.length));
 
-      countI = totalIntervalCompleted.length;
-      countC = totalCircuitCompleted.length;
-      countS = totalStrengthCompleted.length;
-    } else if (profile !== undefined) {
-      totalI = 5;
-      totalC = 5;
-      totalS = 5;
+    //   countI = totalIntervalCompleted.length;
+    //   countC = totalCircuitCompleted.length;
+    //   countS = totalStrengthCompleted.length;
+    // } else if (profile !== undefined) {
+    //   totalI = 5;
+    //   totalC = 5;
+    //   totalS = 5;
 
-      countI = profile.weeklyTargets.interval;
-      countC = profile.weeklyTargets.circuit;
-      countS = profile.weeklyTargets.strength;
-    }
+    //   countI = profile.weeklyTargets.interval;
+    //   countC = profile.weeklyTargets.circuit;
+    //   countS = profile.weeklyTargets.strength;
+    // }
 
     const weightDifference =
       initialProgressInfo &&

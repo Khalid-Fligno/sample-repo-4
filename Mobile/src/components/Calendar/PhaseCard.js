@@ -52,6 +52,7 @@ export default class PhaseCard extends React.PureComponent {
     };
     return (
       <View style={[styles.cardContainer, cardCustomStyle]}>
+        <TouchableOpacity style={styles.cardContainer} onPress={openLink}>
         <ImageBackground
           source={{ uri: image, cache: "force-cache" }}
           style={styles.image}
@@ -90,6 +91,7 @@ export default class PhaseCard extends React.PureComponent {
             </View>
           </View>
         </ImageBackground>
+        </TouchableOpacity>
       </View>
     );
   }

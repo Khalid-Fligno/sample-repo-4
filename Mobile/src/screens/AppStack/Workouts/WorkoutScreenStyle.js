@@ -8,7 +8,7 @@ const WorkoutScreenStyle = StyleSheet.create({
     paddingBottom: 8,
     ...Platform.select({
       android: {
-        height: width + 40,
+        height: width + 70,
         width: width,
       },
     }),
@@ -84,6 +84,7 @@ const WorkoutScreenStyle = StyleSheet.create({
   flatListContainer: {
     width,
     backgroundColor: colors.grey.light,
+    flex: 1,
   },
   hiitIcon: {
     margin: 2,
@@ -103,13 +104,15 @@ const WorkoutScreenStyle = StyleSheet.create({
   workoutPreviewHeaderContainer: {
     width,
     backgroundColor: colors.smoke,
-    paddingTop: 12,
+    paddingTop: 15,
+    borderBottomWidth: 1,
   },
   workoutPreviewHeaderText: {
     textAlign: "center",
     fontFamily: fonts.standard,
     fontSize: 14,
     color: colors.charcoal.dark,
+    marginBottom: 15,
   },
   workoutInfoContainer: {
     backgroundColor: colors.white,

@@ -108,13 +108,13 @@ class CalendarHomeScreen extends React.PureComponent {
 
   handleDateSelected = async (date) => {
     const { activeChallengeData, activeChallengeUserData } = this.state;
-    this.setState({ loading: true });
+    this.setState({ loading: false });
     this.stringDate = date.format("YYYY-MM-DD").toString();
     //TODO:check the active challenge cndtns
     if (
       activeChallengeData &&
       activeChallengeUserData &&
-      activeChallengeUserData.status === "Active" &&
+      activeChallengeUserData.status === "Active"  &&
       new Date(activeChallengeUserData.startDate).getTime() <=
         new Date(this.stringDate).getTime() &&
       new Date(activeChallengeUserData.endDate).getTime() >=
@@ -147,6 +147,21 @@ class CalendarHomeScreen extends React.PureComponent {
       .get()
       .then((res) => {
         const data = res.data();
+        if (res.data().weeklyTargets == null) {
+          const data = {
+            weeklyTargets: {
+              resistanceWeeklyComplete: 0,
+              hiitWeeklyComplete: 0,
+              strength: 0,
+              interval: 0,
+              circuit: 0,
+              currentWeekStartDate: moment()
+                .startOf("week")
+                .format("YYYY-MM-DD"),
+            },
+          };
+          userRef.set(data, { merge: true });
+        }
         this.setState({
           skipped:
             this.state.activeChallengeUserData.onBoardingInfo.skipped ?? false,
@@ -318,7 +333,7 @@ class CalendarHomeScreen extends React.PureComponent {
         .collection("users")
         .doc(uid)
         .collection("challenges")
-        .where("status", "==", "Active")
+        .where("status", "in", ["Active","InActive"])
         .onSnapshot(async (querySnapshot) => {
           const list = [];
           await querySnapshot.forEach(async (doc) => {
@@ -395,10 +410,18 @@ class CalendarHomeScreen extends React.PureComponent {
   async getCurrentPhaseInfo() {
     const { activeChallengeUserData, activeChallengeData } = this.state;
     if (activeChallengeUserData && activeChallengeData) {
-      this.setState({ loading: true });
+      this.setState({ loading: false });
       const data = activeChallengeUserData.phases;
+      const test = activeChallengeUserData.startDate;
+      /*
+      if(this.stringDate != test){
+        this.setState({loading :false})
+      } */if(this.stringDate >= test){
+        this.setState({loading :true})
+      } 
       // this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
       console.log("date=>", this.stringDate);
+      //console.log(test);
       //TODO :getCurrent phase data
       this.phase = getCurrentPhase(
         activeChallengeUserData.phases,
@@ -497,7 +520,6 @@ class CalendarHomeScreen extends React.PureComponent {
       loadingExercises,
       skipped,
     } = this.state;
-    console.log("Skipped 2: ", skipped);
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
@@ -603,6 +625,7 @@ class CalendarHomeScreen extends React.PureComponent {
           }}
           CalendarSelectedDate={CalendarSelectedDate}
         />
+         
         {isSchedule && !showRC && !loading && (
           <View style={{ margin: wp("5%") }}>
             <Text style={calendarStyles.scheduleTitleStyle}>

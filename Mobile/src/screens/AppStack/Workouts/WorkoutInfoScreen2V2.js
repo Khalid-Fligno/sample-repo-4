@@ -8,8 +8,12 @@ import {
   Alert,
   Linking,
   Image,
+  StatusBar,
   FlatList,
   Platform,
+  UIManager,
+  LayoutAnimation,
+  SectionList,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
@@ -21,6 +25,7 @@ import { DotIndicator } from "react-native-indicators";
 import { db } from "../../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import Icon from "../../../components/Shared/Icon";
+import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import AddToCalendarButton from "../../../components/Shared/AddToCalendarButton";
 import {
   findFocus,
@@ -37,12 +42,21 @@ import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import NutritionStyles from "../Nutrition/NutritionStyles";
 import { StackActions } from "react-navigation";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import DoubleRightArrow from "../../../../assets/icons/DoubleRightArrow";
 
 const moment = require("moment");
 
 const { width } = Dimensions.get("window");
 
-export default class WorkoutInfoScreen2 extends React.PureComponent {
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -60,6 +74,9 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       spotifyAvailable: undefined,
       userChallengesList: [],
       notificationBanner: false,
+      expandedExercise: true,
+      expandedWarmup: false,
+      expandedCooldown: false,
     };
   }
 
@@ -74,43 +91,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       loading: false,
     });
   }
-
-  componentDidMount = async () => {
-    this.fetchProfile();
-    const uid = await AsyncStorage.getItem("uid");
-    if (uid) {
-      this.unsubscribe = await db
-        .collection("users")
-        .doc(uid)
-        .onSnapshot(async (doc) => {
-          const users = await doc.data();
-          console.log("xxxx", users);
-          if (users.initialProgressInfo.photoURL === "") {
-            this.setState({ notificationBanner: true });
-          } else if (users.initialProgressInfo.height === "") {
-            this.setState({ notificationBanner: true });
-          } else if (users.initialProgressInfo.goalWeight === "") {
-            this.setState({ notificationBanner: true });
-          } else if (users.initialProgressInfo.weight === "") {
-            this.setState({ notificationBanner: true });
-          } else if (users.initialProgressInfo.waist === "") {
-            this.setState({ notificationBanner: true });
-          } else {
-            this.setState({ notificationBanner: true });
-          }
-        });
-    }
-    this.setState({ loading: true });
-    // this.focusListener = this.props.navigation.addListener('willFocus', () => {
-    //   console.log("will focued call")
-    //   this.onFocusFunction()
-    // })
-    this.onFocusFunction();
-    await this.props.navigation.setParams({
-      handleStart: () => this.handleStart(),
-    });
-    this.checkMusicAppAvailability();
-  };
 
   fetchProfile = async () => {
     const uid = await AsyncStorage.getItem("uid");
@@ -148,11 +128,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       });
   };
 
-  componentWillUnmount = async () => {
-    console.log("unmount");
-    // this.focusListener.remove()
-  };
-
   setDate = async (event, selectedDate) => {
     if (selectedDate && Platform.OS === "android") {
       this.setState({ loading: true });
@@ -162,13 +137,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       const currentDate = selectedDate;
       this.setState({ chosenDate: currentDate });
     }
-  };
-
-  checkMusicAppAvailability = async () => {
-    this.setState({
-      appleMusicAvailable: await Linking.canOpenURL("music:"),
-      spotifyAvailable: await Linking.canOpenURL("spotify:"),
-    });
   };
 
   handleStart = () => {
@@ -186,12 +154,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
         }
       })
       .catch((err) => Alert.alert("An error occurred", err));
-  };
-
-  toggleMusicModal = () => {
-    this.setState((prevState) => ({
-      musicModalVisible: !prevState.musicModalVisible,
-    }));
   };
 
   showCalendarModal = () => {
@@ -253,7 +215,62 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
 
   keyExtractor = (exercise, index) => String(index);
 
-  renderItem = ({ item: exercise, index }) => {
+  componentDidMount = async () => {
+    this.fetchProfile();
+    this.setState({ loading: true });
+    // this.focusListener = this.props.navigation.addListener('willFocus', () => {
+    //   console.log("will focued call")
+    //   this.onFocusFunction()
+    // })
+    this.onFocusFunction();
+    await this.props.navigation.setParams({
+      handleStart: () => this.handleStart(),
+    });
+    // this.checkMusicAppAvailability();
+  };
+
+  componentWillUnmount = async () => {
+    console.log("unmount");
+    // this.focusListener.remove()
+  };
+
+  togglePreview = (section) => {
+    if (section.key === 0) {
+      this.setState({ expandedWarmup: !this.state.expandedWarmup });
+    } else if (section.key === 1) {
+      this.setState({ expandedExercise: !this.state.expandedExercise });
+    } else if (section.key === 2) {
+      this.setState({ expandedCooldown: !this.state.expandedCooldown });
+    }
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  };
+
+  renderItem = (render) => {
+    const section = render.section;
+    const { expandedWarmup, expandedExercise, expandedCooldown } = this.state;
+    if (section.key === 0) {
+      return expandedWarmup ? (
+        this.renderExercise(render)
+      ) : (
+        <View style={{ height: 0 }} />
+      );
+    } else if (section.key === 1) {
+      return expandedExercise ? (
+        this.renderExercise(render)
+      ) : (
+        <View style={{ height: 0 }} />
+      );
+    } else if (section.key === 2) {
+      return expandedCooldown ? (
+        this.renderExercise(render)
+      ) : (
+        <View style={{ height: 0 }} />
+      );
+    }
+    return <View />;
+  };
+
+  renderExercise = ({ item: exercise, index, section }) => {
     let showRR =
       exercise.recommendedResistance &&
         !exercise.recommendedResistance.includes("N/A")
@@ -269,6 +286,20 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       this.state.workout.workIntervalMap[this.state.fitnessLevel - 1];
     const restIntervalTimeinSec =
       this.state.workout.restIntervalMap[this.state.fitnessLevel - 1];
+    let videoUrl = "";
+    switch (section.key) {
+      case 0:
+        videoUrl = `${FileSystem.cacheDirectory}warmUpExercise-${index + 1
+          }.mp4`;
+        break;
+      case 1:
+        videoUrl = `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`;
+        break;
+      case 2:
+        videoUrl = `${FileSystem.cacheDirectory}coolDownExercise-${index + 1
+          }.mp4`;
+        break;
+    }
     return (
       <View style={WorkoutScreenStyle.carouselContainer}>
         <Carousel
@@ -347,7 +378,8 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                 key={exercise.name.toUpperCase()}
                 ref={(ref) => (this.videoRef = ref)}
                 source={{
-                  uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+                  // uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+                  uri: videoUrl,
                 }}
                 playWhenInactive
                 resizeMode="contain"
@@ -356,22 +388,20 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                 selectedAudioTrack={{
                   type: "disabled",
                 }}
-                style={{
-                  width: width - 30,
-                  height: width - 30
-                }}
+                style={{ width: width - 30, height: width - 30, position: "relative", zIndex: 0 }}
+
               />
             </View>
-            <View 
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Text style={{fontFamily: fonts.StyreneAWebRegular}}>swipe for more info</Text>
+            <View style={styles.invisibleView}>
+              <View
+                style={styles.setCounter}
+              >
+                <Text style={styles.setCounterText}>Swipe for more info</Text>
+                <Icon name="chevron-right" size={10} style={styles.icon} />
+              </View>
             </View>
           </View>
+
           {showCT && (
             <View style={WorkoutScreenStyle.exerciseDescriptionContainer}>
               <View style={WorkoutScreenStyle.exerciseTileHeaderBar}>
@@ -432,7 +462,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             </View>
           )}
         </Carousel>
-
       </View>
     );
   };
@@ -452,15 +481,47 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
       fitnessLevel,
       extraProps,
       notificationBanner,
+      expandedExercise,
+      expandedWarmup,
+      expandedCooldown,
     } = this.state;
     let workoutTime = 0;
+    let warmupInterval = 0;
+    let workoutInterval = 0;
+    let cooldownInterval = 0;
     if (workout) {
       workoutTime = workout.workoutTime;
+      console.log("Workout: ", workout);
+      if (workout.coolDownExercises) {
+        let seconds = 0;
+        workout.coolDownExercises.map((exercise) => {
+          seconds += exercise.duration;
+        });
+        cooldownInterval = Math.floor(seconds / 60);
+      }
+
+      if (workout.warmUpExercises) {
+        let seconds = 0;
+        workout.warmUpExercises.map((exercise) => {
+          seconds += exercise.duration;
+        });
+        warmupInterval = Math.floor(seconds / 60);
+      }
+      if (workout.exercises) {
+        workoutInterval =
+          workout.workoutTime - (warmupInterval + cooldownInterval);
+      }
+      console.log("Workout: ", workout);
       // workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
     }
-    // console.log("calendarModalVisible",calendarModalVisible);
+
     return (
-      <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
+      <View
+        style={[
+          globalStyle.container,
+          { paddingHorizontal: 0, backgroundColor: colors.smoke },
+        ]}
+      >
         {Platform.OS === "ios" && (
           <Modal
             isVisible={calendarModalVisible}
@@ -500,76 +561,36 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             minimumDate={new Date()}
           />
         )}
-
-        {workout && (
+        {workout && !loading && (
           <View style={WorkoutScreenStyle.flatListContainer}>
-            {/* {notificationBanner && (
-              <View style={{ backgroundColor: colors.white }}>
-                <View
-                  style={{
-                    borderColor: colors.themeColor.color,
-                    borderWidth: 1,
-                    borderRadius: 2,
-                    paddingRight: 10,
-                    margin: 20,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "flex-start",
-                      borderBottomColor: colors.themeColor.color,
-                      borderBottomWidth: 1,
-                      backgroundColor: colors.themeColor.color,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        flexShrink: 1,
-                        padding: 10,
-                        color: colors.black,
-                        fontFamily: fonts.StyreneAWebRegular,
-                      }}
-                    >
-                      Complete your onboarding process
-                    </Text>
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.props.navigation.navigate("ChallengeOnBoarding", {
-                        data: { challengeData: this.state.challengesList[0] },
-                        onboardingProcessComplete: true,
-                        challengeOnboard: false,
-                      });
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "flex-end",
-                        borderBottomColor: colors.themeColor.color,
-                        borderBottomWidth: 1,
-                        backgroundColor: colors.themeColor.color,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: colors.black,
-                          fontFamily: fonts.StyreneAWebRegular,
-                        }}
-                      >
-                        Click Here
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )} */}
-            <FlatList
-              data={workout.exercises}
+            <SectionList
+              sections={
+                workout.warmUpExercises && workout.coolDownExercises
+                  ? [
+                    {
+                      data: workout.warmUpExercises,
+                      title: "Warmup",
+                      key: 0,
+                    },
+                    {
+                      data: workout.exercises,
+                      title: "Workout",
+                      key: 1,
+                    },
+                    {
+                      data: workout.coolDownExercises,
+                      title: "Cooldown",
+                      key: 2,
+                    },
+                  ]
+                  : [
+                    {
+                      data: workout.exercises,
+                      title: "Workout",
+                      key: 1,
+                    },
+                  ]
+              }
               keyExtractor={this.keyExtractor}
               renderItem={this.renderItem}
               ListHeaderComponent={
@@ -578,10 +599,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                     <Text style={WorkoutScreenStyle.workoutName}>
                       {workout && workout.displayName.toUpperCase()}
                     </Text>
-                    {/* {
-                         !extraProps['fromCalender'] &&
-                         <AddToCalendarButton onPress={() => this.showCalendarModal()} />
-                      } */}
                   </View>
 
                   <View style={WorkoutScreenStyle.workoutIconsRow}>
@@ -619,16 +636,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                           : `${workout.workoutReps} Rounds`}
                       </Text>
                     </View>
-                    {/* <View style={WorkoutScreenStyle.workoutIconContainer}>
-                        <Icon
-                          name={workout && findLocationIcon()}
-                          size={40}
-                          color={colors.charcoal.standard}
-                        />
-                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                          {workout && findLocation(workout)}
-                        </Text>
-                      </View> */}
                     {this.state.workout.filters.includes("strength") && (
                       <View style={WorkoutScreenStyle.workoutIconContainer}>
                         <Icon
@@ -651,85 +658,137 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                   </View>
                 </View>
               }
+              renderSectionHeader={({ section }) => {
+                const interval = (() => {
+                  switch (section.key) {
+                    case 0:
+                      return warmupInterval;
+                    case 1:
+                      return workoutInterval;
+                    case 2:
+                      return cooldownInterval;
+                  }
+                })();
+                return (
+                  <View style={styles.sectionHeader}>
+                    <View style={{ marginLeft: 15 }}>
+                      <Text style={{ fontSize: 15, fontFamily: fonts.bold }}>
+                        {section.title}
+                      </Text>
+                      <Text
+                        style={{ fontSize: 12, fontFamily: fonts.boldNarrow }}
+                      >{`${section.data.length} exercises - ${interval} min`}</Text>
+                    </View>
+                    <View style={{ marginRight: 15 }}>
+                      <TouchableOpacity
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                        onPress={() => this.togglePreview(section)}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 11,
+                            fontFamily: fonts.boldNarrow,
+                            textDecorationLine: "underline",
+                            textDecorationColor: colors.black,
+                          }}
+                        >
+                          {"Tap to preview"}
+                        </Text>
+                        <MaterialIcon
+                          name="chevron-down"
+                          size={30}
+                          color={colors.black}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              }}
+              stickySectionHeadersEnabled={true}
             />
           </View>
         )}
-        <Modal
-          isVisible={musicModalVisible}
-          animationIn="fadeIn"
-          animationInTiming={800}
-          animationOut="fadeOut"
-          animationOutTiming={800}
-        >
-          <View style={WorkoutScreenStyle.musicModalContainer}>
-            <View style={WorkoutScreenStyle.musicModalTextContainer}>
-              <Text style={WorkoutScreenStyle.musicModalHeaderText}>
-                Choose your music
-              </Text>
-              <View
-                style={{
-                  borderBottomColor: colors.themeColor.themeBorderColor,
-                  borderBottomWidth: colors.themeColor.themeBorderWidth,
-                  marginHorizontal: -20,
-                }}
-              />
-              <View style={WorkoutScreenStyle.musicIconContainer}>
-                <TouchableOpacity
-                  style={[
-                    WorkoutScreenStyle.appleMusicIcon,
-                    !appleMusicAvailable &&
-                    WorkoutScreenStyle.appleMusicDisabled,
-                  ]}
-                  disabled={!appleMusicAvailable}
-                  onPress={() => this.openApp("music:")}
-                >
-                  <Image
-                    source={require("../../../../assets/icons/apple-music-icon.png")}
-                    style={WorkoutScreenStyle.musicIconImage}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => this.openApp("spotify:open")}
-                  disabled={!spotifyAvailable}
-                  style={[
-                    WorkoutScreenStyle.spotifyIcon,
-                    !spotifyAvailable && WorkoutScreenStyle.spotifyDisabled,
-                  ]}
-                >
-                  <Image
-                    source={require("../../../../assets/icons/spotify-icon.png")}
-                    style={WorkoutScreenStyle.musicIconImage}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={WorkoutScreenStyle.musicModalButtonContainer}>
-              <CustomBtn
-                customBtnStyle={{
-                  borderRadius: 50,
-                  borderColor: colors.grey.standard,
-                }}
-                customBtnTitleStyle={{ color: colors.transparentBlackDark }}
-                titleCapitalise={true}
-                Title="BACK"
-                isLeftIcon={true}
-                leftIconName="chevron-left"
-                leftIconColor={colors.transparentBlackDark}
-                outline={true}
-                onPress={this.toggleMusicModal}
-              />
-              <CustomBtn
-                customBtnStyle={{ borderRadius: 50, marginTop: 10 }}
-                titleCapitalise={true}
-                Title="CONTINUE"
-                outline={true}
-                onPress={this.handleWorkoutStart}
-              />
-            </View>
-          </View>
-        </Modal>
-        <Loader loading={loading} color={colors.themeColor.color} />
+        <TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
+          <Text
+            style={{
+              color: colors.white,
+              fontFamily: fonts.bold,
+              fontSize: 20,
+              alignSelf: "center",
+            }}
+          >
+            {"Start now"}
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  setCounter: {
+    borderColor: colors.black,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    height: 35,
+    paddingRight: 10,
+    paddingLeft: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+  },
+  setCounterText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+  },
+  invisibleView: {
+    bottom: 75,
+    right: 26,
+    height: 0,
+    width,
+    alignItems: "flex-end",
+    position: "absolute",
+  },
+  icon: {
+    marginTop: 2,
+    paddingLeft: 8,
+  },
+  helpButton: {
+    borderColor: colors.black,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    borderWidth: 1,
+    padding: 4,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    borderRadius: 4,
+    flexDirection: "row",
+    paddingRight: 10,
+    paddingLeft: 10,
+  },
+  sectionHeader: {
+    height: 60,
+    flexDirection: "row",
+    backgroundColor: colors.smoke,
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderColor: colors.black,
+  },
+  startButton: {
+    height: 55,
+    width: "100%",
+    // position: "absolute",
+    // bottom: 20,
+    backgroundColor: colors.black,
+    alignSelf: "center",
+    alignContent: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    shadowColor: colors.black,
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 6,
+  },
+});

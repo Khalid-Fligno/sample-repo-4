@@ -88,8 +88,8 @@ export default class SettingsScreen extends React.PureComponent {
   };
   resetProgressAlert = () => {
     Alert.alert(
-      "Are you sure?",
-      "This will clear your progress photos and measurements",
+      "Reset Progress Info",
+      "Are you sure you want to reset initial Progress info?",
       [
         {
           text: "Cancel",
@@ -97,6 +97,7 @@ export default class SettingsScreen extends React.PureComponent {
         },
         {
           text: "Reset",
+          style: "destructive",
           onPress: () => this.resetInitialProgress(),
         },
       ],
