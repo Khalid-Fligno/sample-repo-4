@@ -53,8 +53,8 @@ import CustomBtn from '../../components/Shared/CustomBtn';
 import { containerPadding } from '../../styles/globalStyles';
 
 const productTitleMap = {
-  0: 'Yearly ',
-  1: 'Monthly ',
+  0: 'Monthly ',
+  1: 'Yearly ',
 };
 
 const subscriptionPeriodMap = {
@@ -884,7 +884,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                       <SubscriptionTile
                         key={product.identifier}
                         primary={product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
-                        title={productTitleMap[1]}
+                        title={productTitleMap[index]}
                         price={product.priceString}
                         priceNumber={product.price}
                         currencyCode={product.currencyCode}
@@ -902,7 +902,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                       <SubscriptionTile
                         key={product.identifier}
                         primary={product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
-                        title={productTitleMap[0]}
+                        title={productTitleMap[index]}
                         price={product.priceString}
                         priceNumber={product.price}
                         currencyCode={product.currencyCode}
