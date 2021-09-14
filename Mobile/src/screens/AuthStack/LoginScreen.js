@@ -330,7 +330,7 @@ export default class LoginScreen extends React.PureComponent {
           "An account already exists with the same email address but different sign-in credentials."
         );
       }
-      this.setState({ error: "Something went wrong", loading: false });
+      this.setState({ error: "The account entered doesn't match any account. Signup for an account", loading: false });
     }
   };
 
