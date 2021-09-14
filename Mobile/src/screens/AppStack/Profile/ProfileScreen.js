@@ -39,6 +39,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
       timezone: undefined,
       dobModalVisible: false,
       chosenDate: null,
+      totalWorkoutCompleted: 0
     };
   }
   componentDidMount = async () => {
@@ -58,6 +59,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
     this.unsubscribe = db.collection('users').doc(uid)
       .onSnapshot(async (doc) => {
         if (doc.exists) {
+          this.setState({ totalWorkoutCompleted: await doc.data().weeklyTargets.circuit + await doc.data().weeklyTargets.interval + await doc.data().weeklyTargets.strength })
           this.setState({
             profile: await doc.data(),
             timezone,
@@ -94,6 +96,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
       loading,
       dobModalVisible,
       chosenDate,
+      totalWorkoutCompleted
     } = this.state;
     return (
       <SafeAreaView style={globalStyle.safeContainer}>
@@ -150,7 +153,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                               profile && (
                                 <View>
                                   <ProgressBar
-                                    completed={profile.totalWorkoutCompleted}
+                                    completed={totalWorkoutCompleted}
                                     total = {0}
                                     size ={wp('38%')}
                                     customProgessTotalStyle ={{marginLeft:0,marginTop:0,marginBottom:0}}

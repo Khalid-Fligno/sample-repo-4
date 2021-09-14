@@ -800,6 +800,31 @@ class ProgressHomeScreen extends React.PureComponent {
           <View style={styles.workoutProgressContainer}>
             <View style={styles.sectionHeader}>
               <Text style={styles.bodyText}>
+                Total workout completed
+              </Text>
+            </View>
+            <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+            >
+              {profile && (
+                  <View>
+                    <ProgressBar
+                        title="Strength"
+                        completed={countS + countI + countC}
+                        total={totalS}
+                        size={wp("38%")}
+                    />
+                  </View>
+              )}
+            </View>
+          </View>
+          <View style={styles.workoutProgressContainer}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.bodyText}>
                 {activeChallengeData
                   ? "Active challenge progress"
                   : "Weekly workout progress"}

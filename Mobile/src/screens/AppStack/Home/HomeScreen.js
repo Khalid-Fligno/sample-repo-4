@@ -511,58 +511,71 @@ export default class HomeScreen extends React.PureComponent {
             <View>
               <View style={HomeScreenStyle.sectionHeader}>
                 <Text style={[HomeScreenStyle.bodyText]}>
-                  {activeChallengeData !== undefined
-                    ? "Active challenge progress"
-                    : "Weekly workout progress"}
+                  {/*{activeChallengeData !== undefined*/}
+                  {/*  ? "Active challenge progress"*/}
+                  {/*  : "Weekly workout progress"}*/}
+                  Total workout completed
                 </Text>
               </View>
               <View
                 style={{
                   flexDirection: "row",
-                  justifyContent: "space-between",
+                  // justifyContent: "space-between",
                   width: "100%",
+                  justifyContent: "center"
                 }}
               >
                 {profile && (
                   <View>
                     <ProgressBar
-                      title="Strength"
-                      completed={countS}
-                      total={totalS}
-                      size={wp("38%")}
-                    />
-                  </View>
-                )}
-                {profile && (
-                  <View>
-                    <ProgressBar
-                      title="Circuit"
-                      completed={countC}
+                      // title="Circuit"
+                      completed={countC + countS + countI}
                       total={totalC}
                       size={wp("38%")}
                     />
                   </View>
                 )}
+
+                {/*{profile && (*/}
+                {/*  <View>*/}
+                {/*    <ProgressBar*/}
+                {/*      title="Strength"*/}
+                {/*      completed={countS}*/}
+                {/*      total={totalS}*/}
+                {/*      size={wp("38%")}*/}
+                {/*    />*/}
+                {/*  </View>*/}
+                {/*)}*/}
+                {/*{profile && (*/}
+                {/*  <View>*/}
+                {/*    <ProgressBar*/}
+                {/*      title="Circuit"*/}
+                {/*      completed={countC}*/}
+                {/*      total={totalC}*/}
+                {/*      size={wp("38%")}*/}
+                {/*    />*/}
+                {/*  </View>*/}
+                {/*)}*/}
               </View>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  marginTop: -30,
-                }}
-              >
-                {profile && (
-                  <View>
-                    <ProgressBar
-                      title="Interval"
-                      completed={countI}
-                      total={totalI}
-                      size={wp("38%")}
-                    />
-                  </View>
-                )}
-              </View>
+              {/*<View*/}
+              {/*  style={{*/}
+              {/*    width: "100%",*/}
+              {/*    flexDirection: "row",*/}
+              {/*    justifyContent: "center",*/}
+              {/*    marginTop: -30,*/}
+              {/*  }}*/}
+              {/*>*/}
+              {/*  {profile && (*/}
+              {/*    <View>*/}
+              {/*      <ProgressBar*/}
+              {/*        title="Interval"*/}
+              {/*        completed={countI}*/}
+              {/*        total={totalI}*/}
+              {/*        size={wp("38%")}*/}
+              {/*      />*/}
+              {/*    </View>*/}
+              {/*  )}*/}
+              {/*</View>*/}
             </View>
           )}
 
