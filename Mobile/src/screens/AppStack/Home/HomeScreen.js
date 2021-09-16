@@ -529,7 +529,7 @@ export default class HomeScreen extends React.PureComponent {
                   <View>
                     <ProgressBar
                       // title="Circuit"
-                      completed={countC + countS + countI}
+                      completed={profile.totalWorkoutCompleted}
                       total={totalC}
                       size={wp("38%")}
                     />
