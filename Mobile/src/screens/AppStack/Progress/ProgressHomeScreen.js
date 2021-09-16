@@ -223,13 +223,11 @@ class ProgressHomeScreen extends React.PureComponent {
             const activeChallengeData = doc.data();
             //TODO calculate total interval circuit strength completed user during challenge
             const totalWorkouts = [];
-            // activeChallengeData.phases.forEach(phase => {
             activeChallengeData.workouts.forEach((workout) => {
               totalWorkouts.push(workout);
             });
-            // });
 
-            const totalInterval = totalWorkouts.filter(
+            let totalInterval = totalWorkouts.filter(
               (res) => res.target === "interval"
             );
             const totalCircuit = totalWorkouts.filter(
@@ -250,7 +248,11 @@ class ProgressHomeScreen extends React.PureComponent {
             const totalStrengthCompleted =
               activeChallengeUserData.workouts.filter(
                 (res) => res.target === "strength"
-              );
+              );  
+
+            this.setState({ countI: totalIntervalCompleted.length });
+            this.setState({ countC: totalCircuitCompleted.length });
+            this.setState({ countS: totalStrengthCompleted.length });
 
             this.fetchHomeScreenData(
               activeChallengeUserData,
@@ -282,6 +284,77 @@ class ProgressHomeScreen extends React.PureComponent {
     }
   };
 
+  // fetchActiveChallengeData = async (activeChallengeUserData) => {
+  //   try {
+  //     this.unsubscribeFACD = await db
+  //       .collection("challenges")
+  //       .doc(activeChallengeUserData.id)
+  //       .onSnapshot(async (doc) => {
+  //         if (doc.exists) {
+  //           const activeChallengeData = doc.data();
+  //           //TODO calculate total interval circuit strength completed user during challenge
+  //           const totalWorkouts = [];
+  //           // activeChallengeData.phases.forEach(phase => {
+  //           activeChallengeData.workouts.forEach((workout) => {
+  //             totalWorkouts.push(workout);
+  //           });
+  //           // });
+
+  //           const totalInterval = totalWorkouts.filter(
+  //             (res) => res.target === "interval"
+  //           );
+  //           const totalCircuit = totalWorkouts.filter(
+  //             (res) => res.target === "circuit"
+  //           );
+  //           const totalStrength = totalWorkouts.filter(
+  //             (res) => res.target === "strength"
+  //           );
+
+  //           const totalIntervalCompleted =
+  //             activeChallengeUserData.workouts.filter(
+  //               (res) => res.target === "interval"
+  //             );
+  //           const totalCircuitCompleted =
+  //             activeChallengeUserData.workouts.filter(
+  //               (res) => res.target === "circuit"
+  //             );
+  //           const totalStrengthCompleted =
+  //             activeChallengeData.workouts.filter(
+  //               (res) => res.target === "strength"
+  //             );
+
+  //             console.log('asdfasdfasdf', totalStrengthCompleted.length)
+
+  //           this.fetchHomeScreenData(
+  //             activeChallengeUserData,
+  //             totalInterval,
+  //             totalCircuit,
+  //             totalStrength,
+  //             totalIntervalCompleted,
+  //             totalCircuitCompleted,
+  //             totalStrengthCompleted
+  //           );
+
+  //           this.setState({
+  //             activeChallengeUserData,
+  //             activeChallengeData,
+  //             totalInterval,
+  //             totalCircuit,
+  //             totalStrength,
+  //             totalIntervalCompleted,
+  //             totalCircuitCompleted,
+  //             totalStrengthCompleted,
+  //             loading: false,
+  //           });
+  //         }
+  //       });
+  //   } catch (err) {
+  //     this.setState({ loading: false });
+  //     console.log(err);
+  //     Alert.alert("Fetch active challenge data error!");
+  //   }
+  // };
+
   fetchHomeScreenData = async (
     activeChallengeUserData,
     totalInterval,
@@ -308,17 +381,17 @@ class ProgressHomeScreen extends React.PureComponent {
         this.setState({ totalS: tempTotalS });
       });
 
-      this.setState({ countI: this.state.profile.weeklyTargets.interval });
-      this.setState({ countC: this.state.profile.weeklyTargets.circuit });
-      this.setState({ countS: this.state.profile.weeklyTargets.strength });
+      // this.setState({ countI: this.state.profile.weeklyTargets.interval });
+      // this.setState({ countC: this.state.profile.weeklyTargets.circuit });
+      // this.setState({ countS: this.state.profile.weeklyTargets.strength });
     } else {
       this.setState({ totalS: 5 });
       this.setState({ totalI: 5 });
       this.setState({ totalC: 5 });
 
-      this.setState({ countI: this.state.profile.weeklyTargets.interval });
-      this.setState({ countC: this.state.profile.weeklyTargets.circuit });
-      this.setState({ countS: this.state.profile.weeklyTargets.strength });
+      // this.setState({ countI: this.state.profile.weeklyTargets.interval });
+      // this.setState({ countC: this.state.profile.weeklyTargets.circuit });
+      // this.setState({ countS: this.state.profile.weeklyTargets.strength });
     }
   };
   //-------**--------
@@ -813,8 +886,8 @@ class ProgressHomeScreen extends React.PureComponent {
               {profile && (
                   <View>
                     <ProgressBar
-                        title=""
-                        completed={profile.totalWorkoutCompleted}
+                        // title=""
+                        completed={countC + countI + countS}
                         total={totalS}
                         size={wp("38%")}
                     />

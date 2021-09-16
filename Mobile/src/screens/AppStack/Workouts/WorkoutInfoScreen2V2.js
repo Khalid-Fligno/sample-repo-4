@@ -77,6 +77,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       expandedExercise: true,
       expandedWarmup: false,
       expandedCooldown: false,
+      lifestyle: false
     };
   }
 
@@ -89,6 +90,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       fitnessLevel: this.props.navigation.getParam("fitnessLevel", null),
       extraProps: this.props.navigation.getParam("extraProps", {}),
       loading: false,
+      lifestyle: this.props.navigation.getParam("lifestyle"),
     });
   }
 
@@ -200,10 +202,11 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   };
 
   handleWorkoutStart = () => {
-    const { workout, reps, extraProps } = this.state;
+    const { workout, reps, extraProps, lifestyle } = this.state;
     this.setState({ musicModalVisible: false });
     // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
     this.props.navigation.navigate("Countdown", {
+      lifestyle,
       workout: workout,
       reps,
       resistanceCategoryId: workout.id,

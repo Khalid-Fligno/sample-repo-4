@@ -321,6 +321,8 @@ export default class HomeScreen extends React.PureComponent {
                 (res) => res.target === "strength"
               );
 
+            console.log('asdfasdfasdf', totalIntervalCompleted.length, totalCircuitCompleted.length, totalStrengthCompleted.length)  
+
             this.fetchHomeScreenData(
               activeChallengeUserData,
               totalInterval,

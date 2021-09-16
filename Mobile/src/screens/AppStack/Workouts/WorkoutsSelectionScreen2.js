@@ -89,6 +89,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
     this.setState({ loadingExercises: false });
         this.props.navigation.navigate('WorkoutInfo', 
             {
+              lifestyle: true,
               workout, 
               reps: workout.difficultyLevel[fitnessLevel-1].toString(),
               workoutSubCategory:workout.workoutSubCategory,
