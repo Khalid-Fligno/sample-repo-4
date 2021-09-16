@@ -26,6 +26,10 @@ export default class HelpAndSupportScreen extends React.PureComponent {
   goToHelp = () => {
     Linking.openURL('https://fitazfk.zendesk.com/hc/en-us');
   }
+
+  goToReport = () => {
+    Linking.openURL('https://fitazfk.canny.io/fitazfk-app-feedback');
+  }
   render() {
     const { loading } = this.state;
     return (
@@ -41,10 +45,18 @@ export default class HelpAndSupportScreen extends React.PureComponent {
               </Text>
             </View>
             <View style={ProfileStyles.buttonContainer}>
-              <CustomButton
-                title="Go to FAQ's Page"
-                onPress={() => this.goToHelp()}
-              />
+              <View>
+                <CustomButton
+                  title="Go to FAQ's Page"
+                  onPress={() => this.goToHelp()}
+                />
+              </View>
+              <View style={{ marginTop: 10 }}>
+                <CustomButton
+                  title="Report an issue"
+                  onPress={() => this.goToReport()}
+                />
+              </View>
             </View>
           </ScrollView>
           <Loader
