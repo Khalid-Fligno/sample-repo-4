@@ -534,6 +534,7 @@ export default class HomeScreen extends React.PureComponent {
                       completed={profile.totalWorkoutCompleted}
                       total={totalC}
                       size={wp("38%")}
+                      customProgessTotalStyle ={{marginLeft:0,marginTop:0,marginBottom:0}}
                     />
                   </View>
                 )}
