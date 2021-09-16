@@ -42,7 +42,7 @@ export default class HelpAndSupportScreen extends React.PureComponent {
             </View>
             <View style={ProfileStyles.buttonContainer}>
               <CustomButton
-                title="Go to FAQ's Page"
+                title="GO TO FITAZFK HELP"
                 onPress={() => this.goToHelp()}
               />
             </View>
