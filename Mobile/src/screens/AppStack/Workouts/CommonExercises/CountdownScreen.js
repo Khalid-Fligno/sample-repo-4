@@ -22,6 +22,7 @@ export default class CountdownScreen2 extends React.PureComponent {
       timerStart: false,
       pauseModalVisible: false,
       appState: AppState.currentState,
+      lifestyle: this.props.navigation.getParam('lifestyle')
     };
   }
   componentDidMount() {
@@ -96,8 +97,9 @@ export default class CountdownScreen2 extends React.PureComponent {
       }));
     }
   }
-  finishCountdown = (workout, reps, resistanceCategoryId) => {
-    let {workoutSubCategory,fitnessLevel,extraProps} = this.state;
+  finishCountdown = (test, workout, reps, resistanceCategoryId) => {
+    let {workoutSubCategory,fitnessLevel,extraProps, lifestyle} = this.state;
+    workout['lifestyle'] = lifestyle
     if(workout.newWorkout){
       this.props.navigation.replace('ExerciseWC', {
         workout,
@@ -117,7 +119,8 @@ export default class CountdownScreen2 extends React.PureComponent {
         currentExerciseIndex:0,
         workoutSubCategory,
         fitnessLevel,
-        extraProps
+        extraProps,
+        test
       });
     }
 
@@ -138,7 +141,7 @@ export default class CountdownScreen2 extends React.PureComponent {
           <CountdownTimer
             totalDuration={countdownDuration}
             start={timerStart}
-            handleFinish={() => this.finishCountdown(workout, reps, resistanceCategoryId)}
+            handleFinish={() => this.finishCountdown('test', workout, reps, resistanceCategoryId)}
           />
           <Text style={styles.countdownText}>
             GET READY!

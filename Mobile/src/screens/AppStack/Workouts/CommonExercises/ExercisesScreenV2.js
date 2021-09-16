@@ -150,45 +150,49 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     const uid = await AsyncStorage.getItem("uid");
     const userRef = db.collection("users").doc(uid);
 
-    isActiveChallenge().then((res) => {
-      if (res && res.status === "Active") {
-        var challengeRef = db
-          .collection("users")
-          .doc(uid)
-          .collection("challenges")
-          .doc(res.id);
-        // Atomically add a new region to the "regions" array field.
-        var workouts = challengeRef
-          .update({
-            workouts: firebase.firestore.FieldValue.arrayUnion({
-              date: moment(new Date()).format("YYYY-MM-DD"),
-              id: workout.id,
-              name: workout.name,
-              displayName: workout.displayName,
-              target: workoutName,
-              time: new Date().getTime(),
-            }),
-          })
-          .then((res) => console.log("Adeed to challenge", res));
-      }
-    });
+    console.log('workoutworkout', workout['lifestyle'])
 
-    return db.runTransaction((transaction) => {
-      return transaction.get(userRef).then((userDoc) => {
-        const newWeeklyComplete = userDoc.data().weeklyTargets[workoutName] + 1;
-        const workoutCount = userDoc.data().totalWorkoutCompleted + 1;
-        const oldWeeklyTargets = userDoc.data().weeklyTargets;
-        const newWeeklyTargets = updateWeeklyTargets(
-          oldWeeklyTargets,
-          workoutName,
-          newWeeklyComplete
-        );
-        transaction.update(userRef, {
-          weeklyTargets: newWeeklyTargets,
-          totalWorkoutCompleted: workoutCount,
+    if (workout['lifestyle']) {
+      return db.runTransaction((transaction) => {
+        return transaction.get(userRef).then((userDoc) => {
+          const newWeeklyComplete = userDoc.data().weeklyTargets[workoutName] + 1;
+          const workoutCount = userDoc.data().totalWorkoutCompleted + 1;
+          const oldWeeklyTargets = userDoc.data().weeklyTargets;
+          const newWeeklyTargets = updateWeeklyTargets(
+            oldWeeklyTargets,
+            workoutName,
+            newWeeklyComplete
+          );
+          transaction.update(userRef, {
+            weeklyTargets: newWeeklyTargets,
+            totalWorkoutCompleted: workoutCount,
+          });
         });
       });
-    });
+    } else {
+      isActiveChallenge().then((res) => {
+        if (res && res.status === "Active") {
+          var challengeRef = db
+            .collection("users")
+            .doc(uid)
+            .collection("challenges")
+            .doc(res.id);
+          // Atomically add a new region to the "regions" array field.
+          var workouts = challengeRef
+            .update({
+              workouts: firebase.firestore.FieldValue.arrayUnion({
+                date: moment(new Date()).format("YYYY-MM-DD"),
+                id: workout.id,
+                name: workout.name,
+                displayName: workout.displayName,
+                target: workoutName,
+                time: new Date().getTime(),
+              }),
+            })
+            .then((res) => console.log("Adeed to challenge", res));
+        }
+      });
+    }
   }
 
   handleAppStateChange = (nextAppState) => {
