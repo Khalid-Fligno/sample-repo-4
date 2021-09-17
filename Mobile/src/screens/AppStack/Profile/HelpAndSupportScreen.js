@@ -6,6 +6,7 @@ import {
   Text,
   ScrollView,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { Linking } from 'expo';
 import Loader from '../../../components/Shared/Loader';
@@ -34,8 +35,8 @@ export default class HelpAndSupportScreen extends React.PureComponent {
     const { loading } = this.state;
     return (
       <SafeAreaView style={globalStyle.safeContainer}>
-        <View style={[globalStyle.container,{paddingHorizontal:0, alignItems:'center'}]}>
-          <ScrollView contentContainerStyle={[ProfileStyles.scrollView,{padding:0}]}>
+        <View style={[globalStyle.container, { paddingHorizontal: 0, alignItems: 'center' }]}>
+          <ScrollView contentContainerStyle={[ProfileStyles.scrollView, { padding: 0 }]}>
             <View style={ProfileStyles.scrollView}>
               <Text style={ProfileStyles.header}>
                 Help & Support
@@ -52,10 +53,18 @@ export default class HelpAndSupportScreen extends React.PureComponent {
                 />
               </View>
               <View style={{ marginTop: 10 }}>
-                <CustomButton
-                  title="Report an issue"
-                  onPress={() => this.goToReport()}
-                />
+                {
+                  Platform.OS === 'android' ?
+                    <CustomButton
+                      title="Report an issue"
+                      onPress={() => this.goToReport()}
+                    />
+                    :
+                    <CustomButton
+                      title="Report an issue"
+                      onPress={() => this.goToReport()}
+                    />
+                }
               </View>
             </View>
           </ScrollView>
