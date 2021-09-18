@@ -172,11 +172,32 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     } else {
       isActiveChallenge().then((res) => {
         if (res && res.status === "Active") {
+          // const userRef = db.collection("users").doc(uid);
           var challengeRef = db
             .collection("users")
             .doc(uid)
             .collection("challenges")
             .doc(res.id);
+          // challengeRef.onSnapshot((doc) => {
+          //   const totalIntervalCompleted =
+          //     doc.data().workouts.filter(
+          //       (res) => res.target === "interval"
+          //     );
+          //   const totalCircuitCompleted =
+          //     doc.data().workouts.filter(
+          //       (res) => res.target === "circuit"
+          //     );
+          //   const totalStrengthCompleted =
+          //     doc.data().workouts.filter(
+          //       (res) => res.target === "strength"
+          //     );
+          //   userRef.set({
+          //     "totalChallengeWorkoutCompleted": totalIntervalCompleted.length + totalCircuitCompleted.length + totalStrengthCompleted.length,
+          //     "challengeStrength": totalStrengthCompleted.length,
+          //     "challengeCircuit": totalCircuitCompleted.length,
+          //     "challengeInterval": totalIntervalCompleted.length,
+          //   }, {merge: true});
+          // });
           // Atomically add a new region to the "regions" array field.
           var workouts = challengeRef
             .update({

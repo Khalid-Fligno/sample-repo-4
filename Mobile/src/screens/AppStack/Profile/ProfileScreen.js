@@ -153,7 +153,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                               profile && (
                                 <View>
                                   <ProgressBar
-                                    completed={profile.totalWorkoutCompleted}
+                                    completed={profile.totalWorkoutCompleted + profile.totalChallengeWorkoutCompleted ? profile.totalChallengeWorkoutCompleted : 0}
                                     total = {0}
                                     size ={wp('38%')}
                                     customProgessTotalStyle ={{marginLeft:0,marginTop:0,marginBottom:0}}
