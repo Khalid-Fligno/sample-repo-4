@@ -263,14 +263,14 @@ export default class OnBoarding4 extends Component {
           result.uri,
           [
             { resize: { height: 800 } },
-            {
-              crop: {
-                originX: originXValue,
-                originY: 0,
-                width: 600,
-                height: 800,
-              },
-            },
+            // {
+            //   crop: {
+            //     originX: originXValue,
+            //     originY: 0,
+            //     width: 600,
+            //     height: 800,
+            //   },
+            // },
           ],
           { format: "jpeg", compress: 0.7, base64: true }
         );
