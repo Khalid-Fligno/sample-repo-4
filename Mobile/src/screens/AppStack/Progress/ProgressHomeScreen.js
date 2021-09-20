@@ -873,7 +873,7 @@ class ProgressHomeScreen extends React.PureComponent {
           <View style={styles.workoutProgressContainer}>
             <View style={styles.sectionHeader}>
               <Text style={styles.bodyText}>
-                Total workout completed
+                Total workout complete
               </Text>
             </View>
             <View
@@ -887,7 +887,7 @@ class ProgressHomeScreen extends React.PureComponent {
                   <View>
                     <ProgressBar
                         // title=""
-                        completed={countC + countI + countS}
+                        completed={profile.totalWorkoutCompleted}
                         total={totalS}
                         size={wp("38%")}
                     />

@@ -516,7 +516,7 @@ export default class HomeScreen extends React.PureComponent {
                   {/*{activeChallengeData !== undefined*/}
                   {/*  ? "Active challenge progress"*/}
                   {/*  : "Weekly workout progress"}*/}
-                  Total workout completed
+                  Total workout complete
                 </Text>
               </View>
               <View
