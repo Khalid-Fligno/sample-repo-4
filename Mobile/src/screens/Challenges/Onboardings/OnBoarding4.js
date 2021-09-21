@@ -262,7 +262,7 @@ export default class OnBoarding4 extends Component {
         const manipResult = await ImageManipulator.manipulateAsync(
           result.uri,
           [
-            { resize: { height: 800 } },
+            { resize: { height: 800, width: 600, } },
             // {
             //   crop: {
             //     originX: originXValue,
