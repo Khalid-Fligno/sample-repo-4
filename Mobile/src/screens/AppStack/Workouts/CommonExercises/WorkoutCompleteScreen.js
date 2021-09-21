@@ -41,6 +41,19 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     this.manageVideoCache();
     if(Platform.OS === 'ios')
       this.showRatePopup();
+    if(Platform.OS === 'android') {
+      const options = {
+        GooglePackageName:"com.fitazfk.fitazfkapp"
+      }
+      Rate.rate(options, (success, errorMessage)=>{
+        if (success) {
+          console.log('ANDROID RATE REVIEW ', success)
+        }
+        if (errorMessage) {
+          console.log('ANDROID RATE REVIEW ', errorMessage)
+        }
+      })
+    }
   }
   showRatePopup = async () => {
     Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
