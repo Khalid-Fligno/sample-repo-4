@@ -17,6 +17,7 @@ export default class SubscriptionTile extends React.PureComponent {
   }
   render() {
     const {
+      key,
       title,
       price,
       priceNumber,
@@ -38,14 +39,17 @@ export default class SubscriptionTile extends React.PureComponent {
             <View >
               <View style={styles.subscriptionTitleContainer}>
                 {
-                  Platform.OS === 'android' ?
-                    <Text style={styles.subscriptionTitleText}>
-                      {title}
-                    </Text>
-                    :
-                    <Text style={styles.subscriptionTitleText}>
-                      {title}
-                    </Text>
+                  // Platform.OS === 'android' ?
+                  //   <Text style={styles.subscriptionTitleText}>
+                  //     {title}
+                  //   </Text>
+                  //   :
+                  //   <Text style={styles.subscriptionTitleText}>
+                  //     {title}
+                  //   </Text>
+                  <Text>
+                    {title}
+                  </Text>
                 }
 
                 <Text>
@@ -56,7 +60,7 @@ export default class SubscriptionTile extends React.PureComponent {
 
               <Text style={[styles.priceTitle, { color: selected ? colors.themeColor.color : colors.grey.dark }]}>
                 {/* {!primary?`${price[0]}${(priceNumber / 12).toFixed(2)}`:price}<Text style={styles.yearlySubTitle}>{` / month` }</Text></Text>  */}
-                {price}<Text style={styles.yearlySubTitle}>{Platform.OS === 'ios' ? primary ? ` / yearly` : ` / monthly` : primary ? ` / monthly` : ` / yearly`}</Text></Text>
+                {price}<Text style={styles.yearlySubTitle}>{primary ? ` / monthly` : ` / yearly`}</Text></Text>
             </View>
             {
               comparisonPrice && (
