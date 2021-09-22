@@ -189,21 +189,25 @@ class ProgressHomeScreen extends React.PureComponent {
           if (list[0]) {
             this.fetchActiveChallengeData(list[0]);
           } else {
-            this.setState({ totalS: 5 });
-            this.setState({ totalI: 5 });
-            this.setState({ totalC: 5 });
+            this.setState({ totalS: 0 });
+            this.setState({ totalI: 0 });
+            this.setState({ totalC: 0 });
 
-            this.setState({
-              countI: this.state.profile.weeklyTargets.interval,
-            });
-            this.setState({ countC: this.state.profile.weeklyTargets.circuit });
-            this.setState({
-              countS: this.state.profile.weeklyTargets.strength,
-            });
-            this.setState({
-              activeChallengeUserData: undefined,
-              loading: false,
-            });
+            this.setState({ countC: 0 });
+            this.setState({ countI: 0 });
+            this.setState({ countS: 0 });
+
+            // this.setState({
+            //   countI: this.state.profile.weeklyTargets.interval,
+            // });
+            // this.setState({ countC: this.state.profile.weeklyTargets.circuit });
+            // this.setState({
+            //   countS: this.state.profile.weeklyTargets.strength,
+            // });
+            // this.setState({
+            //   activeChallengeUserData: undefined,
+            //   loading: false,
+            // });
           }
         });
     } catch (err) {
@@ -248,7 +252,11 @@ class ProgressHomeScreen extends React.PureComponent {
             const totalStrengthCompleted =
               activeChallengeUserData.workouts.filter(
                 (res) => res.target === "strength"
-              );  
+              );
+
+            this.setState({ totalS: 5 });
+            this.setState({ totalI: 5 });
+            this.setState({ totalC: 5 });
 
             this.setState({ countI: totalIntervalCompleted.length });
             this.setState({ countC: totalCircuitCompleted.length });
@@ -887,7 +895,7 @@ class ProgressHomeScreen extends React.PureComponent {
                   <View>
                     <ProgressBar
                         // title=""
-                        completed={profile.totalWorkoutCompleted}
+                        completed={profile.totalWorkoutCompleted + countC + countI + countS}
                         total={totalS}
                         size={wp("38%")}
                     />
