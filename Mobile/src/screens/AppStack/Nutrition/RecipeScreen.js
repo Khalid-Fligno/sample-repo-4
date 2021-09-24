@@ -213,14 +213,14 @@ export default class RecipeScreen extends React.PureComponent {
                       style={[
                         NutritionStyles.calendarMealButton,
                         calendarMeal === "breakfast" &&
-                          NutritionStyles.calendarMealButtonActive,
+                        NutritionStyles.calendarMealButtonActive,
                       ]}
                     >
                       <Text
                         style={[
                           NutritionStyles.calendarMealButtonText,
                           calendarMeal === "breakfast" &&
-                            NutritionStyles.calendarMealButtonTextActive,
+                          NutritionStyles.calendarMealButtonTextActive,
                         ]}
                       >
                         Breakfast
@@ -233,14 +233,14 @@ export default class RecipeScreen extends React.PureComponent {
                       style={[
                         NutritionStyles.calendarMealButton,
                         calendarMeal === "lunch" &&
-                          NutritionStyles.calendarMealButtonActive,
+                        NutritionStyles.calendarMealButtonActive,
                       ]}
                     >
                       <Text
                         style={[
                           NutritionStyles.calendarMealButtonText,
                           calendarMeal === "lunch" &&
-                            NutritionStyles.calendarMealButtonTextActive,
+                          NutritionStyles.calendarMealButtonTextActive,
                         ]}
                       >
                         Lunch
@@ -253,14 +253,14 @@ export default class RecipeScreen extends React.PureComponent {
                       style={[
                         NutritionStyles.calendarMealButton,
                         calendarMeal === "dinner" &&
-                          NutritionStyles.calendarMealButtonActive,
+                        NutritionStyles.calendarMealButtonActive,
                       ]}
                     >
                       <Text
                         style={[
                           NutritionStyles.calendarMealButtonText,
                           calendarMeal === "dinner" &&
-                            NutritionStyles.calendarMealButtonTextActive,
+                          NutritionStyles.calendarMealButtonTextActive,
                         ]}
                       >
                         Dinner
@@ -273,14 +273,14 @@ export default class RecipeScreen extends React.PureComponent {
                       style={[
                         NutritionStyles.calendarMealButton,
                         calendarMeal === "snack" &&
-                          NutritionStyles.calendarMealButtonActive,
+                        NutritionStyles.calendarMealButtonActive,
                       ]}
                     >
                       <Text
                         style={[
                           NutritionStyles.calendarMealButtonText,
                           calendarMeal === "snack" &&
-                            NutritionStyles.calendarMealButtonTextActive,
+                          NutritionStyles.calendarMealButtonTextActive,
                         ]}
                       >
                         Snack
@@ -293,14 +293,14 @@ export default class RecipeScreen extends React.PureComponent {
                       style={[
                         NutritionStyles.calendarMealButton,
                         calendarMeal === "snack2" &&
-                          NutritionStyles.calendarMealButtonActive,
+                        NutritionStyles.calendarMealButtonActive,
                       ]}
                     >
                       <Text
                         style={[
                           NutritionStyles.calendarMealButtonText,
                           calendarMeal === "snack2" &&
-                            NutritionStyles.calendarMealButtonTextActive,
+                          NutritionStyles.calendarMealButtonTextActive,
                         ]}
                       >
                         Snack
@@ -403,6 +403,16 @@ export default class RecipeScreen extends React.PureComponent {
                         </View>
                       );
                   })}
+                  {
+                    recipe.notes ?
+                      < View style={{ marginLeft: 5 }}>
+                        <Text style={NutritionStyles.ingredientsText}>
+                          Note: {recipe.notes}
+                        </Text>
+                      </View>
+                      :
+                      null
+                  }
                 </View>
                 <View style={NutritionStyles.ingredientsContainer}>
                   <Text style={NutritionStyles.ingredientsHeading}>
@@ -448,10 +458,11 @@ export default class RecipeScreen extends React.PureComponent {
               </View>
             </View>
           </ParallaxScrollView>
-        )}
+        )
+        }
 
         <Loader loading={loading} color={colors.violet.dark} />
-      </View>
+      </View >
     );
   }
 }
