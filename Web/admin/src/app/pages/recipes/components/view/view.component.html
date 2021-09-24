@@ -17,6 +17,10 @@
     <mat-list-item role="listitem" *ngFor="let item of data.ingredients" style="text-transform: capitalize;">&#8226; {{item}}</mat-list-item>
   </mat-list>
 
+  <!-- Notes -->
+  <h3 class="heading">Note for Ingredients :</h3>
+  <p>{{data.notes}}</p>
+
   <!-- Time -->
   <h3 class="heading">Time(min) :</h3>
   <p>{{data.time}}</p>
@@ -75,10 +79,6 @@
   <!-- Summary -->
   <h3 class="heading">Summary :</h3>
   <p>{{data.summary}}</p>
-
-  <!-- Notes -->
-  <h3 class="heading">Notes :</h3>
-  <p>{{data.notes}}</p>
 
 </mat-dialog-content>
 

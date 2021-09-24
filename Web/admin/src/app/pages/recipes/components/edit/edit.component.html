@@ -129,10 +129,13 @@
   </div>
 
   <!-- Notes field -->
+  <span>
+    <h4>Note for Ingredients:</h4>
+  </span>
   <mat-form-field appearance="outline" >
-    <mat-label>Notes</mat-label>
+    <mat-label>Note</mat-label>
     <textarea matInput formControlName="notes" required></textarea>
-    <mat-error *ngIf="f.notes.invalid">Notes.</mat-error>
+    <mat-error *ngIf="f.notes.invalid">Note.</mat-error>
   </mat-form-field>
 
   <!-- Nutrition field -->
