@@ -53,8 +53,17 @@ const globalStyle = StyleSheet.create({
     // shadowOffset: { width: 0, height: 2 },
     // shadowOpacity: 0.7,
     // shadowRadius: 2,
-    marginTop: 10,
+    marginTop: 0,
     padding: 0,
+  },
+  absoluteFilterButtonsContainer1: {
+    // width: width - 40,
+    // shadowColor: colors.grey.dark,
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.7,
+    // shadowRadius: 2,
+    // marginTop: 10,
+    // padding: 0,
   },
   filterButtonsContainer: {
     height: 40,

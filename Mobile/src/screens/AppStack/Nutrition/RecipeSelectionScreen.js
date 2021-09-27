@@ -146,6 +146,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     const meal = this.props.navigation.getParam("meal", null);
     const { recipes, loading, filterIndex } = this.state;
     const filterButtons = ["All", "Vegetarian", "Vegan", "Gluten-Free"];
+    const filterButtons1 = ["Level 1", "Level 2", ""];
 
     const recipeList = sortBy(recipes, "newBadge").filter((recipe) => {
       // console.log(recipe.title)
@@ -178,6 +179,11 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           isBigTitle={true}
           isBackButton={true}
           customContainerStyle={{ marginTop: 10, marginBottom: hp("2.5%") }}
+        />
+        <CustomButtonGroup
+          // onPress={this.updateFilter}
+          // selectedIndex={filterIndex}
+          buttons={filterButtons1}
         />
         <CustomButtonGroup
           onPress={this.updateFilter}
