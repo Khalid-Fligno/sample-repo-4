@@ -449,16 +449,23 @@ export default class Progress2Screen extends React.PureComponent {
           </View>
           <View style={styles.contentContainer}>
             {image ? (
-              <TouchableOpacity
-                onPress={this.chooseUploadType}
-                style={styles.imageContainer}
-              >
+              // <TouchableOpacity
+              //   onPress={this.chooseUploadType}
+              //   style={styles.imageContainer}
+              // ></TouchableOpacity>
+              <View>
                 <Image
                   resizeMode="contain"
                   source={{ uri: image.uri }}
                   style={styles.image}
                 />
-              </TouchableOpacity>
+                <CustomBtn
+                  style={{marginTop: 10}}
+                  Title="Update Photo"
+                  titleCapitalise={true}
+                  onPress={this.chooseUploadType}
+                />
+              </View>
             ) : (
               <TouchableOpacity
                 onPress={this.chooseUploadType}
@@ -503,7 +510,8 @@ export default class Progress2Screen extends React.PureComponent {
             />
             )} */}
             <CustomBtn
-              Title="Update Photo"
+              // Title="Update Photo"
+              Title="Upload Photo"
               titleCapitalise={true}
               onPress={() => this.handleImagePicked(image)}
             />
