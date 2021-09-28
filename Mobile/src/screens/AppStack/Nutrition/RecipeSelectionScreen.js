@@ -81,7 +81,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         
         // var sortedObjs = _.sortBy( objs, 'first_nom' );
 
-        // console.log(sortedObjs)
+        // console.log(sortedObjs)git s
         
         const recipes = [];
         await querySnapshot.forEach(async (doc) => {
