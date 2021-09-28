@@ -13,6 +13,7 @@ import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { SuccessComponent } from 'src/app/components/success/success.component';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import 'hammerjs';
 
 
 @Component({
@@ -52,6 +53,9 @@ export class RecipesComponent implements OnInit ,AfterViewInit ,OnDestroy {
     .onSnapshot((querySnapshot) => {
       var data:Array<any> =[]
       querySnapshot.forEach(doc => {
+        // const batch = this.db.firestore.batch();
+        // batch.set(recipeRef.doc(doc.id), {active: true}, { merge: true })
+        // batch.commit()
         data.push(doc.data());
       });
     if(data.length >0){

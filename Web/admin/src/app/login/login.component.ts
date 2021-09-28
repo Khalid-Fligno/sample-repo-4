@@ -30,7 +30,7 @@ export class LoginComponent {
       this.authService.login(this.email.value,this.password)
       .then(res => {
         if(res)
-          console.log(res)
+          console.log('asdfasdfasdf', res)
         // localStorage.setItem("token", "asdjjalsdjlasdgqwbjqgwhj");
         // this.authService.authSubject.next(true);
       })

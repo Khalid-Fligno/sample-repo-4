@@ -1,24 +1,25 @@
 {
   "name": "react-native-viewpager",
-  "version": "4.1.3",
-  "summary": "React Native ViewPager native view",
+  "version": "4.2.4",
+  "summary": "React Native wrapper for Android and iOS ViewPager",
   "license": "MIT",
   "authors": {
-    "name": "Ferran Negre Pizarro",
-    "email": "fnp.developer@gmail.com"
+    "name": "troZee",
+    "email": "hello@callstack.com",
+    "url": "https://github.com/callstack"
   },
-  "homepage": "https://github.com/react-native-community/react-native-viewpager#readme",
+  "homepage": "https://github.com/callstack/react-native-viewpager#readme",
   "platforms": {
-    "ios": "7.0"
+    "ios": "9.0"
   },
   "source": {
     "git": "https://github.com/react-native-community/react-native-viewpager.git",
-    "tag": "v4.1.3"
+    "tag": "v4.2.4"
   },
   "source_files": "ios/**/*.{h,m}",
   "requires_arc": true,
   "dependencies": {
-    "React": [
+    "React-Core": [
 
     ]
   }

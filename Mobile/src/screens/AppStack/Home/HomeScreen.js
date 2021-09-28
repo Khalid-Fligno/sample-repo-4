@@ -35,6 +35,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import firebase from 'firebase';
 import StopWatch from "../../../components/Workouts/WorkoutStopwatch";
 const { width } = Dimensions.get("window");
 // const workoutTypeMap = {
@@ -178,6 +179,28 @@ export default class HomeScreen extends React.PureComponent {
         await userRef.set(data, { merge: true });
       }
     });
+    // const citiesRef = db.collection('recipes');
+
+    // // const snapshot = await citiesRef.where('active', '==', true).get();
+    // const snapshot = await citiesRef.get();
+    // if (snapshot.empty) {
+    //   console.log('No matching documents.');
+    //   return;
+    // }  
+    
+    // snapshot.forEach(async doc => {
+    //   console.log(doc.id)
+    //   // const batch = db.batch();
+    //   // batch.set(citiesRef.doc(doc.id), {active: true}, { merge: true })
+    //   // batch.commit()
+    //   const recipeRef = await db
+    //     .collection("recipes")
+    //     .doc(doc.id)
+    //     .set({order: 0}, { merge: true })
+    //   // const removeActive = recipeRef.update({
+    //   //     ['active']: firebase.firestore.FieldValue.delete(),
+    //   //   }) 
+    // });
   };
   openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
