@@ -25,7 +25,6 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import _ from 'lodash'
 
 const { width } = Dimensions.get("window");
 
@@ -73,26 +72,13 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       .collection("recipes")
       .where(meal, "==", true)
       .onSnapshot(async (querySnapshot) => {
-        // var objs = [ 
-        //   { first_nom: 0,last_nom: 'Jamf' },
-        //   { first_nom: 2, last_nom: 'Bodine'  },
-        //   { first_nom: 1, last_nom: 'Prentice' }
-        // ];
-        
-        // var sortedObjs = _.sortBy( objs, 'first_nom' );
-
-        // console.log(sortedObjs)git s
-        
         const recipes = [];
         await querySnapshot.forEach(async (doc) => {
-          if (doc.data().active) {
-            console.log(doc.data().title)
-            if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
-              if (challengeMealsFilterList.includes(doc.data().id))
-                await recipes.push(await doc.data());
-            } else {
+          if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
+            if (challengeMealsFilterList.includes(doc.data().id))
               await recipes.push(await doc.data());
-            }
+          } else {
+            await recipes.push(await doc.data());
           }
         });
 
@@ -121,7 +107,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         //     `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
         //   );
         // }));
-        this.setState({ recipes: sortBy(recipes, "order"), loading: false });
+        this.setState({ recipes: sortBy(recipes, "title"), loading: false });
       });
   };
 
@@ -159,8 +145,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   render() {
     const meal = this.props.navigation.getParam("meal", null);
     const { recipes, loading, filterIndex } = this.state;
-    const filterButtons = ["All", "Vegetarian", "Vegan", "Gluten-Free"];
-    const filterButtons1 = ["Level 1", "Level 2", ""];
+    const filterButtons = ["All", "Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2"];
 
     const recipeList = sortBy(recipes, "newBadge").filter((recipe) => {
       // console.log(recipe.title)
@@ -172,6 +157,11 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       }
       if (filterIndex === 3) {
         return recipe.tags.includes("GF");
+      }
+      if (filterIndex === 4) {
+        return recipe.tags.includes("L1");
+      } else if (filterIndex === 5) {
+        return recipe.tags.includes("L2");
       }
       return recipes;
     });
@@ -193,11 +183,6 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           isBigTitle={true}
           isBackButton={true}
           customContainerStyle={{ marginTop: 10, marginBottom: hp("2.5%") }}
-        />
-        <CustomButtonGroup
-          // onPress={this.updateFilter}
-          // selectedIndex={filterIndex}
-          buttons={filterButtons1}
         />
         <CustomButtonGroup
           onPress={this.updateFilter}

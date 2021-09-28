@@ -52,7 +52,8 @@ export default class RecipeTile extends React.PureComponent {
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
-    
+    console.log("qwertyuio", tags)
+
     return (
       <TouchableOpacity
         onPress={onPress}
