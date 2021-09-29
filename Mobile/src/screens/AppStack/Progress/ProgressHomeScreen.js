@@ -39,7 +39,6 @@ class ProgressHomeScreen extends React.PureComponent {
       initialProgressInfo: undefined,
       currentProgressInfo: undefined,
       unitsOfMeasurement: undefined,
-      measurements: undefined,
       helperModalVisible: false,
       imageModalVisible: false,
       imageModalSource: undefined,
@@ -73,7 +72,7 @@ class ProgressHomeScreen extends React.PureComponent {
     this.fetchProgressInfo();
     this.showHelperOnFirstOpen();
     this.fetchActiveChallengeUserData();
-    this.fetchDataMeasurement();
+    // this.fetchDataMeasurement();
   };
 
   // componentDidMount() {
@@ -114,29 +113,29 @@ class ProgressHomeScreen extends React.PureComponent {
     }));
   };
 
-  fetchDataMeasurement = async () => {
-    this.setState({ loading: true });
-    const uid = await AsyncStorage.getItem("uid");
-    this.unsubscribe = await db.collection("users")
-    .doc(uid)
-    .collection("challenges")
-    .where("status", "==", "Active")
-    .onSnapshot(async (querySnapshot) => {
-      const list = []
-      await querySnapshot.forEach(async (doc) => {
-        await list.push(await doc.data());
-      });
+  // fetchDataMeasurement = async () => {
+  //   this.setState({ loading: true });
+  //   const uid = await AsyncStorage.getItem("uid");
+  //   this.unsubscribe = await db.collection("users")
+  //   .doc(uid)
+  //   .collection("challenges")
+  //   .where("status", "==", "Active")
+  //   .onSnapshot(async (querySnapshot) => {
+  //     const list = []
+  //     await querySnapshot.forEach(async (doc) => {
+  //       await list.push(await doc.data());
+  //     });
 
-      if (list[0]){
-        const listing = list[0]
-        const listing1 = listing.onBoardingInfo.measurements.unit
-        console.log("Listing Uno", listing1)
-        this.setState({
-          measurements: listing1
-        })
-      }
-    })
-  }
+  //     if (list[0]){
+  //       const listing = list[0]
+  //       const listing1 = listing.onBoardingInfo.measurements.unit
+  //       console.log("Listing Uno", listing1)
+  //       this.setState({
+  //         measurements: listing1
+  //       })
+  //     }
+  //   })
+  // }
 
   fetchProgressInfo = async () => {
     this.setState({ loading: true });
@@ -144,14 +143,14 @@ class ProgressHomeScreen extends React.PureComponent {
     const userRef = db.collection("users").doc(uid);
     this.unsubscribe = userRef.onSnapshot(async (doc) => {
       var data = await doc.data();
-      console.log("qwertyuiop", data.unitsOfMeasurement)
+      console.log("qwertyuiop", data.unitOfMeasurement)
       this.setState({
         profile: data,
         initialProgressInfo: data.initialProgressInfo,
         currentProgressInfo: data.currentProgressInfo
           ? data.currentProgressInfo
           : null,
-        // unitsOfMeasurement: data.unitsOfMeasurement,
+        unitsOfMeasurement: data.unitOfMeasurement,
         loading: false,
       });
 
@@ -411,7 +410,6 @@ class ProgressHomeScreen extends React.PureComponent {
       initialProgressInfo,
       currentProgressInfo,
       unitsOfMeasurement,
-      measurements,
       helperModalVisible,
       imageModalVisible,
       imageModalSource,
@@ -670,9 +668,9 @@ class ProgressHomeScreen extends React.PureComponent {
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
                 {initialProgressInfo ? initialProgressInfo.weight : "-"}{" "}
-                {initialProgressInfo && measurements === "metric" && "kg"}
+                {initialProgressInfo && unitsOfMeasurement === "metric" && "kg"}
                 {initialProgressInfo &&
-                  measurements === "imperial" &&
+                  unitsOfMeasurement === "imperial" &&
                   "lbs"}
               </Text>
             </View>
@@ -685,8 +683,8 @@ class ProgressHomeScreen extends React.PureComponent {
                 ]}
               >
                 {weightDifference || "-"}{" "}
-                {weightDifference && measurements === "metric" && "kg"}
-                {weightDifference && measurements === "imperial" && "lbs"}
+                {weightDifference && unitsOfMeasurement === "metric" && "kg"}
+                {weightDifference && unitsOfMeasurement === "imperial" && "lbs"}
               </Text>
             </View>
             <View style={styles.dataContainer}>
@@ -696,11 +694,11 @@ class ProgressHomeScreen extends React.PureComponent {
                   : "-"}{" "}
                 {currentProgressInfo &&
                   currentProgressInfo.weight &&
-                  measurements === "metric" &&
+                  unitsOfMeasurement === "metric" &&
                   "kg"}
                 {currentProgressInfo &&
                   currentProgressInfo.weight &&
-                  measurements === "imperial" &&
+                  unitsOfMeasurement === "imperial" &&
                   "lbs"}
               </Text>
             </View>
@@ -709,9 +707,9 @@ class ProgressHomeScreen extends React.PureComponent {
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
                 {initialProgressInfo ? initialProgressInfo.waist : "-"}{" "}
-                {initialProgressInfo && measurements === "metric" && "cm"}
+                {initialProgressInfo && unitsOfMeasurement === "metric" && "cm"}
                 {initialProgressInfo &&
-                  measurements === "imperial" &&
+                  unitsOfMeasurement === "imperial" &&
                   "inches"}
               </Text>
             </View>
@@ -724,9 +722,9 @@ class ProgressHomeScreen extends React.PureComponent {
                 ]}
               >
                 {waistDifference || "-"}{" "}
-                {waistDifference && measurements === "metric" && "cm"}
+                {waistDifference && unitsOfMeasurement === "metric" && "cm"}
                 {waistDifference &&
-                  measurements === "imperial" &&
+                  unitsOfMeasurement === "imperial" &&
                   "inches"}
               </Text>
             </View>
@@ -737,11 +735,11 @@ class ProgressHomeScreen extends React.PureComponent {
                   : "-"}{" "}
                 {currentProgressInfo &&
                   currentProgressInfo.waist &&
-                  measurements === "metric" &&
+                  unitsOfMeasurement === "metric" &&
                   "cm"}
                 {currentProgressInfo &&
                   currentProgressInfo.waist &&
-                  measurements === "imperial" &&
+                  unitsOfMeasurement === "imperial" &&
                   "inches"}
               </Text>
             </View>
@@ -750,9 +748,9 @@ class ProgressHomeScreen extends React.PureComponent {
             <View style={styles.dataContainer}>
               <Text style={styles.dataText}>
                 {initialProgressInfo ? initialProgressInfo.hip : "-"}{" "}
-                {initialProgressInfo && measurements === "metric" && "cm"}
+                {initialProgressInfo && unitsOfMeasurement === "metric" && "cm"}
                 {initialProgressInfo &&
-                  measurements === "imperial" &&
+                  unitsOfMeasurement === "imperial" &&
                   "inches"}
               </Text>
             </View>
@@ -765,8 +763,8 @@ class ProgressHomeScreen extends React.PureComponent {
                 ]}
               >
                 {hipDifference || "-"}{" "}
-                {hipDifference && measurements === "metric" && "cm"}
-                {hipDifference && measurements === "imperial" && "inches"}
+                {hipDifference && unitsOfMeasurement === "metric" && "cm"}
+                {hipDifference && unitsOfMeasurement === "imperial" && "inches"}
               </Text>
             </View>
             <View style={styles.dataContainer}>
@@ -776,11 +774,11 @@ class ProgressHomeScreen extends React.PureComponent {
                   : "-"}{" "}
                 {currentProgressInfo &&
                   currentProgressInfo.hip &&
-                  measurements === "metric" &&
+                  unitsOfMeasurement === "metric" &&
                   "cm"}
                 {currentProgressInfo &&
                   currentProgressInfo.hip &&
-                  measurements === "imperial" &&
+                  unitsOfMeasurement === "imperial" &&
                   "inches"}
               </Text>
             </View>
