@@ -74,11 +74,14 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       .onSnapshot(async (querySnapshot) => {
         const recipes = [];
         await querySnapshot.forEach(async (doc) => {
-          if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
-            if (challengeMealsFilterList.includes(doc.data().id))
+          console.log(doc.data().title)
+          if (doc.data().active) {
+            if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
+              if (challengeMealsFilterList.includes(doc.data().id))
+                await recipes.push(await doc.data());
+            } else {
               await recipes.push(await doc.data());
-          } else {
-            await recipes.push(await doc.data());
+            }
           }
         });
 
@@ -107,7 +110,29 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         //     `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
         //   );
         // }));
-        this.setState({ recipes: sortBy(recipes, "title"), loading: false });
+
+        // console.log(recipes.sort((a, b) => {
+        //   if (a.order === b.order)
+        //     return 0;
+        //   else if (a.order === 0)  
+        //     return 1;
+        //   else if (b.order === 0) 
+        //     return -1;
+        //   else                  
+        //     return 1
+        // }));
+
+        // this.setState({ recipes: sortBy(recipes, "order"), loading: false });
+        this.setState({ recipes: recipes.sort((a, b) => {
+          if (a.order === b.order)
+            return 0;
+          else if (a.order === 0)  
+            return 1;
+          else if (b.order === 0) 
+            return -1;
+          else                  
+            return 1
+        }), loading: false });
       });
   };
 
