@@ -6,7 +6,8 @@ import {
   Text,
   Dimensions,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  BackHandler
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import * as FileSystem from 'expo-file-system';
@@ -39,15 +40,26 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
       loading: false,
       popUp: false
     };
+    this.backButtonClick = this.backButtonClick.bind(this);
   }
   componentDidMount = async () => {
+    BackHandler.addEventListener('hardwareBackPress',this.backButtonClick)
     this.manageVideoCache();
     if(Platform.OS === 'ios')
       this.showRatePopup();
     if(Platform.OS === 'android') {
       this.setState({popUp: true})
     }
+  };
+
+  componentWillUnmount = () => {
+    BackHandler.removeEventListener('hardwareBackPress',this.backButtonClick)
+  };
+
+  backButtonClick() {
+    this.setState({popUp: false})
   }
+
   showRatePopup = async () => {
     Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
   }
