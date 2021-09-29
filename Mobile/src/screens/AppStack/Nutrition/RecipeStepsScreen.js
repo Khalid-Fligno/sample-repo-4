@@ -128,7 +128,7 @@ export default class RecipeStepsScreen extends React.PureComponent {
                 {/* <Text style={NutritionStyles.carouselText}>
                   {item.description}
                 </Text> */}
-                <HtmlText style={NutritionStyles.carouselText} html={`${item.description}`}></HtmlText>
+                <HtmlText html={`${item.description}`}></HtmlText>
               </View>
             </View>
           </ScrollView>
