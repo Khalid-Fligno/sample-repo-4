@@ -163,8 +163,7 @@ class CalendarHomeScreen extends React.PureComponent {
           userRef.set(data, { merge: true });
         }
         this.setState({
-          skipped:
-            this.state.activeChallengeUserData.onBoardingInfo.skipped ?? false,
+          skipped: true,
           initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
         });
       })
