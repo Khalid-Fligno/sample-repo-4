@@ -85,9 +85,8 @@ export default class OnBoarding3 extends Component {
       .onSnapshot(async (doc) => {
         var data = await doc.data();
 
-        console.log("Listing Uno", data.unitOfMeasurement)
         this.setState({
-          unitOfMeasurement: data.unitOfMeasurement
+          unitOfMeasurement: data.unitsOfMeasurement
         })
       })
   }
@@ -261,6 +260,7 @@ export default class OnBoarding3 extends Component {
       this.onFocusFunction();
     }
     console.log("Listing dos", unitOfMeasurement)
+    console.log("Listing tres", challengeData)
     return (
       <SafeAreaView style={ChallengeStyle.container}>
         <View style={[globalStyle.container]}>
