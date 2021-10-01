@@ -16,6 +16,7 @@ export default createUserChallengeData =(data,challengeDate)=>{
         }
       )
     })
+    // "status":data.status?data.status":"InActive",
     const challenge = {
       "name":data.name,
       "displayName":data.displayName,
@@ -23,7 +24,7 @@ export default createUserChallengeData =(data,challengeDate)=>{
       "tag":data.tag,
       "startDate":moment(challengeDate).format('YYYY-MM-DD'), 
       "endDate":moment(challengeDate, 'YYYY-MM-DD').add(data.numberOfDays-1,'days').format('YYYY-MM-DD'),
-      "status":data.status?data.status:"InActive",
+      "status":data.status?"Active":"InActive",
       "phases":phases,
       "workouts":[],
       "onBoardingInfo":data.onBoardingInfo?data.onBoardingInfo:{},

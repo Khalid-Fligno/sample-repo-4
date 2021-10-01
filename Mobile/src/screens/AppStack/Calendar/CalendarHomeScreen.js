@@ -163,7 +163,7 @@ class CalendarHomeScreen extends React.PureComponent {
           userRef.set(data, { merge: true });
         }
         this.setState({
-          skipped: true,
+          skipped: this.state.activeChallengeUserData.onBoardingInfo.skipped ?? false,
           initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
         });
       })
@@ -332,7 +332,7 @@ class CalendarHomeScreen extends React.PureComponent {
         .collection("users")
         .doc(uid)
         .collection("challenges")
-        .where("status", "in", ["Active","InActive"])
+        .where("status", "in", ["Active"])
         .onSnapshot(async (querySnapshot) => {
           const list = [];
           await querySnapshot.forEach(async (doc) => {
