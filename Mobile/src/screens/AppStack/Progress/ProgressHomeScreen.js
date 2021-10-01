@@ -150,7 +150,7 @@ class ProgressHomeScreen extends React.PureComponent {
         currentProgressInfo: data.currentProgressInfo
           ? data.currentProgressInfo
           : null,
-        unitsOfMeasurement: data.unitOfMeasurement,
+        unitsOfMeasurement: data.unitsOfMeasurement,
         loading: false,
       });
 
