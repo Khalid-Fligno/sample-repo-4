@@ -129,6 +129,12 @@ const NutritionStyles = StyleSheet.create({
     color: colors.charcoal.standard,
     marginBottom: 5,
   },
+  ingredientsHeading1: {
+    fontFamily: fonts.StyreneAWebRegular,
+    fontSize: 14,
+    color: colors.charcoal.standard,
+    marginBottom: 5,
+  },
   ingredientsText: {
     fontFamily: fonts.StyreneAWebThin,
     fontSize: 14,

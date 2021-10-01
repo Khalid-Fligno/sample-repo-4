@@ -407,7 +407,7 @@ export default class RecipeScreen extends React.PureComponent {
                     recipe.notes ?
                       < View style={{ marginLeft: 5 }}>
                         <Text style={NutritionStyles.ingredientsText}>
-                          Note: {recipe.notes}
+                          <Text style={[NutritionStyles.ingredientsHeading1]}>Note:</Text> {recipe.notes}
                         </Text>
                       </View>
                       :
