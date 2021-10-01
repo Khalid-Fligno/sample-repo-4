@@ -25,6 +25,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import { containerPadding } from "../../../styles/globalStyles";
 
 const { width } = Dimensions.get("window");
 
@@ -123,16 +124,18 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         // }));
 
         // this.setState({ recipes: sortBy(recipes, "order"), loading: false });
-        this.setState({ recipes: recipes.sort((a, b) => {
-          if (a.order === b.order)
-            return 0;
-          else if (a.order === 0)  
-            return 1;
-          else if (b.order === 0) 
-            return -1;
-          else                  
-            return 1
-        }), loading: false });
+        this.setState({
+          recipes: recipes.sort((a, b) => {
+            if (a.order === b.order)
+              return 0;
+            else if (a.order === 0)
+              return 1;
+            else if (b.order === 0)
+              return -1;
+            else
+              return 1
+          }), loading: false
+        });
       });
   };
 
@@ -170,8 +173,22 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   render() {
     const meal = this.props.navigation.getParam("meal", null);
     const { recipes, loading, filterIndex } = this.state;
-    const filterButtons = ["All", "Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2"];
+    const filterButtons = [
+      {
+        id: '1',
+        data: ["All", "Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2", "Phase 1", "Phase 2", "Phase 3"]
+      }
+    ]
 
+    const renderItem1 = ({ item: items }) => 
+    (
+      <CustomButtonGroup
+        onPress={this.updateFilter}
+        selectedIndex={filterIndex}
+        buttons={filterButtons[0].data}
+      />
+    );
+    
     const recipeList = sortBy(recipes, "newBadge").filter((recipe) => {
       // console.log(recipe.title)
       if (recipe.tags === undefined) return recipes;
@@ -188,6 +205,14 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       } else if (filterIndex === 5) {
         return recipe.tags.includes("L2");
       }
+      if (filterIndex === 6) {
+        return recipe.tags.includes("P1");
+      } else if (filterIndex === 7) {
+        return recipe.tags.includes("P2");
+      } else if (filterIndex === 8) {
+        return recipe.tags.includes("P3");
+      }
+      
       return recipes;
     });
 
@@ -209,10 +234,16 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           isBackButton={true}
           customContainerStyle={{ marginTop: 10, marginBottom: hp("2.5%") }}
         />
-        <CustomButtonGroup
-          onPress={this.updateFilter}
-          selectedIndex={filterIndex}
-          buttons={filterButtons}
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={filterButtons}
+          keyExtractor={(item) => item.id}
+          renderItem={(item) => renderItem1(item)}
+          style={{
+            paddingHorizontal: containerPadding,
+            paddingVertical: wp("3%"),
+          }}
         />
         {loading ? (
           skeleton
@@ -224,7 +255,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             renderItem={this.renderItem}
             showsVerticalScrollIndicator={false}
             removeClippedSubviews={false}
-            // maxToRenderPerBatch={20}
+          // maxToRenderPerBatch={20}
           />
         )}
 
