@@ -176,19 +176,19 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     const filterButtons = [
       {
         id: '1',
-        data: ["All", "Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2", "Phase 1", "Phase 2", "Phase 3"]
+        data: ["All", "Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2"]
       }
     ]
 
-    const renderItem1 = ({ item: items }) => 
-    (
-      <CustomButtonGroup
-        onPress={this.updateFilter}
-        selectedIndex={filterIndex}
-        buttons={filterButtons[0].data}
-      />
-    );
-    
+    // const renderItem1 = ({ item: items }) => 
+    // (
+    //   <CustomButtonGroup
+    //     onPress={this.updateFilter}
+    //     selectedIndex={filterIndex}
+    //     buttons={filterButtons[0].data}
+    //   />
+    // );
+
     const recipeList = sortBy(recipes, "newBadge").filter((recipe) => {
       // console.log(recipe.title)
       if (recipe.tags === undefined) return recipes;
@@ -205,14 +205,14 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       } else if (filterIndex === 5) {
         return recipe.tags.includes("L2");
       }
-      if (filterIndex === 6) {
-        return recipe.tags.includes("P1");
-      } else if (filterIndex === 7) {
-        return recipe.tags.includes("P2");
-      } else if (filterIndex === 8) {
-        return recipe.tags.includes("P3");
-      }
-      
+      // if (filterIndex === 6) {
+      //   return recipe.tags.includes("P1");
+      // } else if (filterIndex === 7) {
+      //   return recipe.tags.includes("P2");
+      // } else if (filterIndex === 8) {
+      //   return recipe.tags.includes("P3");
+      // }
+
       return recipes;
     });
 
@@ -234,7 +234,12 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           isBackButton={true}
           customContainerStyle={{ marginTop: 10, marginBottom: hp("2.5%") }}
         />
-        <FlatList
+        <CustomButtonGroup
+          onPress={this.updateFilter}
+          selectedIndex={filterIndex}
+          buttons={filterButtons[0].data}
+        />
+        {/* <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
           data={filterButtons}
@@ -244,7 +249,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             paddingHorizontal: containerPadding,
             paddingVertical: wp("3%"),
           }}
-        />
+        /> */}
         {loading ? (
           skeleton
         ) : (
