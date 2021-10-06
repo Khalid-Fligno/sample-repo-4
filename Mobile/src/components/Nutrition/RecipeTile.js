@@ -128,7 +128,7 @@ export default class RecipeTile extends React.PureComponent {
                 </View>
               </View>
               <View
-                style={{ flexDirection: 'row', bottom: 20 }}
+                style={{ flexDirection: 'row', bottom: 12 }}
               >
                 <View style={styles.recipeInfoSection}>
                   {
