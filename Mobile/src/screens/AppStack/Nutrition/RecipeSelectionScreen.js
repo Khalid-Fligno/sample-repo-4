@@ -7,15 +7,13 @@ import {
   FlatList,
   Text,
 } from "react-native";
-import { ButtonGroup } from "react-native-elements";
 import * as FileSystem from "expo-file-system";
 import sortBy from "lodash.sortby";
 import { db } from "../../../../config/firebase";
 import RecipeTile from "../../../components/Nutrition/RecipeTile";
 import RecipeTileSkeleton from "../../../components/Nutrition/RecipeTileSkeleton";
-import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
-// import fonts from '../../../styles/fonts';
+import fonts from '../../../styles/fonts';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "../../../components/Shared/Icon";
 import globalStyle from "../../../styles/globalStyles";
@@ -25,7 +23,6 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import { containerPadding } from "../../../styles/globalStyles";
 
 const { width } = Dimensions.get("window");
 
@@ -176,18 +173,18 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     const filterButtons = [
       {
         id: '1',
-        data: ["All", "Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2"]
+        data: ["All", "Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2", "Phase 1", "Phase 2", "Phase 3"]
       }
     ]
 
-    // const renderItem1 = ({ item: items }) => 
-    // (
-    //   <CustomButtonGroup
-    //     onPress={this.updateFilter}
-    //     selectedIndex={filterIndex}
-    //     buttons={filterButtons[0].data}
-    //   />
-    // );
+    const renderItem1 = ({ item: items }) =>
+    (
+      <CustomButtonGroup
+        onPress={this.updateFilter}
+        selectedIndex={filterIndex}
+        buttons={filterButtons[0].data}
+      />
+    );
 
     const recipeList = sortBy(recipes, "newBadge").filter((recipe) => {
       // console.log(recipe.title)
@@ -205,13 +202,13 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       } else if (filterIndex === 5) {
         return recipe.tags.includes("L2");
       }
-      // if (filterIndex === 6) {
-      //   return recipe.tags.includes("P1");
-      // } else if (filterIndex === 7) {
-      //   return recipe.tags.includes("P2");
-      // } else if (filterIndex === 8) {
-      //   return recipe.tags.includes("P3");
-      // }
+      if (filterIndex === 6) {
+        return recipe.tags.includes("P1");
+      } else if (filterIndex === 7) {
+        return recipe.tags.includes("P2");
+      } else if (filterIndex === 8) {
+        return recipe.tags.includes("P3");
+      }
 
       return recipes;
     });
@@ -234,22 +231,30 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           isBackButton={true}
           customContainerStyle={{ marginTop: 10, marginBottom: hp("2.5%") }}
         />
-        <CustomButtonGroup
-          onPress={this.updateFilter}
-          selectedIndex={filterIndex}
-          buttons={filterButtons[0].data}
-        />
-        {/* <FlatList
+        <View
+          style={{
+            marginTop: 5,
+            marginBottom: -20,
+          }}
+        >
+          <TouchableOpacity
+            style={{ flexDirection: "row", alignItems: "center", left: 240, }}
+            activeOpacity={1}
+          >
+            <Text style={styles.rLabel}>Scroll for more </Text>
+            <Icon name="chevron-right" size={8} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+        <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
           data={filterButtons}
           keyExtractor={(item) => item.id}
           renderItem={(item) => renderItem1(item)}
           style={{
-            paddingHorizontal: containerPadding,
-            paddingVertical: wp("3%"),
+            paddingVertical: wp("4%"),
           }}
-        /> */}
+        />
         {loading ? (
           skeleton
         ) : (
@@ -279,5 +284,14 @@ const styles = StyleSheet.create({
   },
   recipeTileSkeletonContainer: {
     // paddingTop: 35,
+  },
+  rLabel: {
+    fontFamily: fonts.GothamMedium,
+    fontSize: 8,
+    color: colors.grey.dark,
+  },
+  icon: {
+    marginTop: 2,
+    paddingLeft: 8,
   },
 });

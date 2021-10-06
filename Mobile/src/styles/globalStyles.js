@@ -87,7 +87,7 @@ const globalStyle = StyleSheet.create({
     color: colors.grey.standard,
     marginTop: 2,
     fontWeight: "bold",
-    // paddingHorizontal: 10
+    paddingHorizontal: 10
   },
   filterButtonSelected: {
     backgroundColor: colors.themeColor.themeBackgroundColor,
