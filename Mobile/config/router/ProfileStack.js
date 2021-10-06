@@ -11,6 +11,7 @@ import Burpee1Screen from '../../src/screens/AppStack/Profile/Burpee1Screen';
 import Burpee2Screen from '../../src/screens/AppStack/Profile/Burpee2Screen';
 import Burpee3Screen from '../../src/screens/AppStack/Profile/Burpee3Screen';
 import Burpee4Screen from '../../src/screens/AppStack/Profile/Burpee4Screen';
+import ChangeUnitScreen from '../../src/screens/AppStack/Profile/ChangeUnit';
 import Header from '../../src/components/Shared/Header';
 
 const findProfileHeaderTitle = {
@@ -28,6 +29,7 @@ const backButtonMap = {
   PrivacyPolicy: true,
   TermsOfService: true,
   Settings: true,
+  ChangeUnit: true,
 };
 
 const cancelButtonMap = {
@@ -49,6 +51,7 @@ const ProfileStack = createStackNavigator(
     Burpee2: Burpee2Screen,
     Burpee3: Burpee3Screen,
     Burpee4: Burpee4Screen,
+    ChangeUnit: ChangeUnitScreen,
   },
   {
     initialRouteName: 'ProfileHome',
