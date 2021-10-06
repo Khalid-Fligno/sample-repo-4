@@ -74,11 +74,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async onFocusFunction() {
     console.log("On focus");
-    const version = await checkVersion();
-    const versionCodeRef = db
-      .collection("legalDocuments")
-      .doc("qiF608JzXVcCpeiWccrC")
-      .set({AppVersionUse: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
     await this.fetchCalendarEntries();
     await this.fetchActiveChallengeUserData();
     await this.fetchUserData();
@@ -146,6 +141,11 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   fetchUserData = async () => {
+    const version = await checkVersion();
+    const versionCodeRef = db
+      .collection("legalDocuments")
+      .doc("qiF608JzXVcCpeiWccrC")
+      .set({AppVersionUse: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
     const uid = await AsyncStorage.getItem("uid");
     const userRef = db.collection("users").doc(uid);
     userRef
