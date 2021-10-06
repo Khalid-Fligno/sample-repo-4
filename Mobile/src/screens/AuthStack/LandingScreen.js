@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   StatusBar,
   ImageBackground,
+  Platform
 } from "react-native";
 import Carousel from "react-native-carousel";
 import fonts from "../../styles/fonts";
@@ -21,6 +22,7 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { getBuildNumber, getVersion } from "react-native-device-info";
+import { checkVersion } from "react-native-check-version";
 export default class LandingScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -34,10 +36,11 @@ export default class LandingScreen extends React.PureComponent {
   };
 
   async checkAppVersion() {
+    const version = await checkVersion();
     const versionCodeRef = db
       .collection("legalDocuments")
       .doc("qiF608JzXVcCpeiWccrC")
-      .set({AppVersionUse: String(getVersion())}, { merge: true });
+      .set({AppVersionUse: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
   }
 
   render() {

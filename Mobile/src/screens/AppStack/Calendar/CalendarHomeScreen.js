@@ -30,7 +30,7 @@ import createUserChallengeData from "../../../components/Challenges/UserChalleng
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { NavigationActions } from "react-navigation";
 import OnBoardingNotification from "../../../components/Shared/OnBoardingNotification";
-import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
+import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";import { checkVersion } from "react-native-check-version";
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -74,6 +74,11 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async onFocusFunction() {
     console.log("On focus");
+    const version = await checkVersion();
+    const versionCodeRef = db
+      .collection("legalDocuments")
+      .doc("qiF608JzXVcCpeiWccrC")
+      .set({AppVersionUse: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
     await this.fetchCalendarEntries();
     await this.fetchActiveChallengeUserData();
     await this.fetchUserData();
