@@ -28,7 +28,7 @@ export default class RecipeTile extends React.PureComponent {
   handlePressIn = () => {
     Animated.spring(this.animatedValue, {
       toValue: 0.92,
-      useNativeDriver:true
+      useNativeDriver: true
     }).start();
   }
   handlePressOut = () => {
@@ -36,7 +36,7 @@ export default class RecipeTile extends React.PureComponent {
       toValue: 1,
       friction: 3,
       tension: 40,
-      useNativeDriver:true
+      useNativeDriver: true
     }).start();
   }
   render() {
@@ -54,6 +54,32 @@ export default class RecipeTile extends React.PureComponent {
     };
     console.log("qwertyuio", tags)
 
+    const tagsV = (tags).filter((tag) => {
+      if (tag === 'V') {
+        return tag
+      } else if (tag === 'V+') {
+        return tag
+      }
+      if (tag === 'GF') {
+        return tag
+      }
+    })
+
+    const tagsP = (tags).filter((tag) => {
+      if (tag === 'L1') {
+        return tag
+      } else if (tag === 'L2') {
+        return tag
+      }
+      if (tag === 'P1') {
+        return tag
+      } else if (tag === 'P2') {
+        return tag
+      } else if (tag === 'P3') {
+        return tag
+      }
+    })
+
     return (
       <TouchableOpacity
         onPress={onPress}
@@ -69,35 +95,46 @@ export default class RecipeTile extends React.PureComponent {
             image={{ uri: image }}
             containerStyle={styles.card}
           >
-            <View style={{flexDirection:'row' ,justifyContent:'space-between',marginHorizontal:-10}}>
-              <View style={[styles.titleRow]}>
-                <Text style={styles.title}>
-                  {title} { newBadge && <NewRecipeBadge />}
-                </Text>
-                
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10 }}>
+              <View style={{ flexDirection: 'column' }}>
+                <View
+                  style={styles.recipeInfoContainer}
+                >
+                  <View style={styles.recipeInfoSection}>
+                    {
+                      tagsV && tagsV.map((tagV, index) => (
+                        <Tag tag={tagV} key={index} />
+                      ))
+                    }
+                  </View>
+                  <View style={styles.recipeInfoSection}>
+                    {
+                      time !== '' && (
+
+                        <View style={styles.timerContainer}>
+                          <Text style={styles.timerText}>
+                            {time}
+                          </Text>
+                          <TimeSvg width="22" height="22" />
+                        </View>
+                      )
+                    }
+                  </View>
+                </View>
+                <View style={[styles.titleRow]}>
+                  <Text style={styles.title}>
+                    {title} {newBadge && <NewRecipeBadge />}
+                  </Text>
+                </View>
               </View>
-              
               <View
-                style={styles.recipeInfoContainer}
+                style={{ flexDirection: 'row', bottom: 20 }}
               >
                 <View style={styles.recipeInfoSection}>
                   {
-                    tags && tags.map((tag,index) => (
-                     <Tag tag = {tag} key={index}/>
+                    tagsP && tagsP.map((tagP, index) => (
+                      <Tag tag={tagP} key={index} />
                     ))
-                  }
-                </View>
-                <View style={styles.recipeInfoSection}>
-                  {
-                    time !== '' && (
-                      
-                      <View style={styles.timerContainer}>
-                         <Text style={styles.timerText}>
-                          {time}
-                        </Text>
-                        <TimeSvg width="22" height="22" />
-                      </View>
-                    )
                   }
                 </View>
               </View>
@@ -142,17 +179,17 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     overflow: 'hidden',
     borderWidth: 0,
-    elevation:0,
+    elevation: 0,
   },
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    maxWidth:'60%'
+    maxWidth: '200%'
   },
   title: {
     fontFamily: fonts.bold,
     fontSize: hp('1.6%'),
-    lineHeight:18
+    lineHeight: 18
   },
   subTitle: {
     fontFamily: fonts.standardItalic,
@@ -160,24 +197,25 @@ const styles = StyleSheet.create({
   },
   recipeInfoContainer: {
     flexDirection: 'row',
+    marginBottom: 5,
     // justifyContent: 'space-between',
   },
   recipeInfoSection: {
     flexDirection: 'row',
     alignItems: 'center',
   },
- 
- 
+
+
   timerText: {
     fontFamily: fonts.standard,
     fontSize: 12,
     color: colors.grey.dark,
     marginLeft: 4,
-    alignSelf:'center',
-    marginRight:5
+    alignSelf: 'center',
+    marginRight: 5
 
   },
-  timerContainer : {
+  timerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   }
