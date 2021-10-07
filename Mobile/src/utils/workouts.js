@@ -91,7 +91,7 @@ export const getLastExercise = (
   ) {
     lastExercise = true;
     // nextExerciseName = "NEARLY DONE!";
-    nextExerciseName = workout.coolDownExercises[0].name;
+    nextExerciseName = typeof workout.coolDownExercises === 'undefined' ? "NEARLY DONE!" : workout.coolDownExercises[0].name;
   } else if (
     !exerciseList[currentExerciseIndex + 1] &&
     setCount === workout.workoutReps

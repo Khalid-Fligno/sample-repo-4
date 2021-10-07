@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   },
   slideTitle:{
     fontFamily: fonts.bold,
-    fontSize: wp('5%'),
+    fontSize: wp('4%'),
     color: colors.black,
     textAlign:'left',
     paddingHorizontal:'10%',

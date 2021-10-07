@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { ScrollView, View, Text, Alert, Linking, Platform } from "react-native";
+import { ScrollView, View, Text, Alert, Linking } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
 import firebase from "firebase";
@@ -30,7 +30,9 @@ import createUserChallengeData from "../../../components/Challenges/UserChalleng
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { NavigationActions } from "react-navigation";
 import OnBoardingNotification from "../../../components/Shared/OnBoardingNotification";
-import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";import { checkVersion } from "react-native-check-version";
+import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
+import { checkVersion } from "react-native-check-version";
+import { getVersion } from "react-native-device-info";
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -141,12 +143,12 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   fetchUserData = async () => {
-    // const version = await checkVersion();
-    // const versionCodeRef = db
-    //   .collection("legalDocuments")
-    //   .doc("qiF608JzXVcCpeiWccrC")
-    //   .set({AppVersionUse: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
     const uid = await AsyncStorage.getItem("uid");
+    const version = await checkVersion();
+    const versionCodeRef = db
+      .collection("users")
+      .doc(uid)
+      .set({AppVersion: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
     const userRef = db.collection("users").doc(uid);
     userRef
       .get()
@@ -604,7 +606,7 @@ class CalendarHomeScreen extends React.PureComponent {
         style={{ margin: 0 }}
         animationIn="fadeInLeft"
         animationOut="fadeOutLeft"
-        onBackdropPress={() => this.setState({isSettingVisible: !this.state.isSettingVisible})}
+        onBackdropPress={() => this.toggleSetting()}
         // useNativeDriver={true}
       >
         <ChallengeSetting

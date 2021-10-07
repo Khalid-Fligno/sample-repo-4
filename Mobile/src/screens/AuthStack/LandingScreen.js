@@ -23,6 +23,7 @@ import {
 } from "react-native-responsive-screen";
 import { getBuildNumber, getVersion } from "react-native-device-info";
 import { checkVersion } from "react-native-check-version";
+import AsyncStorage from '@react-native-community/async-storage';
 export default class LandingScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -36,10 +37,11 @@ export default class LandingScreen extends React.PureComponent {
   };
 
   async checkAppVersion() {
+    const uid = await AsyncStorage.getItem('uid');
     const version = await checkVersion();
     const versionCodeRef = db
-      .collection("legalDocuments")
-      .doc("qiF608JzXVcCpeiWccrC")
+      .collection("users")
+      .doc(uid)
       .set({AppVersionUse: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
   }
 

@@ -105,18 +105,18 @@ export default class FeedScreen extends React.PureComponent {
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       isActiveChallenge().then((res) => {
         if (res) {
-          if (this.state.blogs === undefined && res.status === "Active") {
+          if (res.status === "Active") {
             this.setState({ loading: true });
             this.fetchActiveChallengeData(res);
+            this.fetchBlogs(res.tag, res.startDate);
           }
         }
       });
     });
   };
   componentWillUnmount = () => {
-    // this.unsubscribe();
+    this.focusListener();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
-    this.focusListener.remove();
   };
 
   //   fetchProfile = async () => {
