@@ -17,6 +17,7 @@ import fonts from '../../styles/fonts';
 import Tag from './Tag';
 import TimeSvg from '../../../assets/icons/time';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { sortBy } from 'lodash';
 
 const { width } = Dimensions.get('window');
 
@@ -54,7 +55,7 @@ export default class RecipeTile extends React.PureComponent {
     };
     console.log("qwertyuio", tags)
 
-    const tagsV = (tags).filter((tag) => {
+    const tagsV = sortBy(tags).filter((tag) => {
       if (tag === 'V') {
         return tag
       } else if (tag === 'V+') {
@@ -65,7 +66,7 @@ export default class RecipeTile extends React.PureComponent {
       }
     })
 
-    const tagsP = (tags).filter((tag) => {
+    const tagsP = sortBy(tags).filter((tag) => {
       if (tag === 'L1') {
         return tag
       } else if (tag === 'L2') {
