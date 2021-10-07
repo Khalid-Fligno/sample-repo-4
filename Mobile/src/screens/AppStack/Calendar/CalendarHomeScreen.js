@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { ScrollView, View, Text, Alert, Linking } from "react-native";
+import { ScrollView, View, Text, Alert, Linking, Platform } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
 import firebase from "firebase";
@@ -141,11 +141,11 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   fetchUserData = async () => {
-    const version = await checkVersion();
-    const versionCodeRef = db
-      .collection("legalDocuments")
-      .doc("qiF608JzXVcCpeiWccrC")
-      .set({AppVersionUse: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
+    // const version = await checkVersion();
+    // const versionCodeRef = db
+    //   .collection("legalDocuments")
+    //   .doc("qiF608JzXVcCpeiWccrC")
+    //   .set({AppVersionUse: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
     const uid = await AsyncStorage.getItem("uid");
     const userRef = db.collection("users").doc(uid);
     userRef
@@ -604,7 +604,7 @@ class CalendarHomeScreen extends React.PureComponent {
         style={{ margin: 0 }}
         animationIn="fadeInLeft"
         animationOut="fadeOutLeft"
-        onBackdropPress={() => this.toggleSetting()}
+        onBackdropPress={() => this.setState({isSettingVisible: !this.state.isSettingVisible})}
         // useNativeDriver={true}
       >
         <ChallengeSetting
