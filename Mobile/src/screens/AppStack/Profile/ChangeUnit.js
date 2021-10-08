@@ -31,20 +31,50 @@ export default class ChangeUnitScreen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
-      chosenUom: "metric",
+      unitOfMeasurement: undefined,
     };
   }
-  componentDidMount = async () => {
-  };
+  // componentDidMount = async () => {
+  //   this.focusListener = this.props.navigation.addListener("didFocus", () => {
+  //     this.fetchDataMeasurement();
+  //   });
+  // };
 
-  handleSubmit = async (chosenUom) => {
+  async componentDidMount() {
+    this.focusListener = this.props.navigation.addListener("didFocus", () => {
+      this.onFocusFunction();
+    });
+  }
+
+  fetchDataMeasurement = async () => {
+    const uid = await AsyncStorage.getItem("uid");
+    this.focusListener = db.collection("users")
+      .doc(uid)
+      .onSnapshot(async (doc) => {
+        var data = doc.data();
+        console.log('data:', data.unitsOfMeasurement)
+        this.setState({
+          unitOfMeasurement: data.unitsOfMeasurement
+        })
+      })
+  }
+
+  async onFocusFunction() {
+    this.fetchDataMeasurement();
+  }
+
+  async componentWillUnmount() {
+    // await this.focusListener.remove();
+  }
+
+  handleSubmit = async (unitOfMeasurement) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     try {
       const uid = await AsyncStorage.getItem("uid");
       const userRef = db.collection("users").doc(uid);
       const data = {
-        unitsOfMeasurement: chosenUom,
+        unitsOfMeasurement: unitOfMeasurement,
       };
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
@@ -58,7 +88,7 @@ export default class ChangeUnitScreen extends React.PureComponent {
   render() {
     const {
       loading,
-      chosenUom,
+      unitOfMeasurement,
     } = this.state;
 
     return (
@@ -75,19 +105,19 @@ export default class ChangeUnitScreen extends React.PureComponent {
                     padding: 5,
                     width: "46%",
                     borderColor:
-                      chosenUom === "metric"
+                    unitOfMeasurement === "metric"
                         ? colors.themeColor.color
                         : colors.themeColor.color,
                   }}
-                  onPress={() => this.setState({ chosenUom: "metric" })}
+                  onPress={() => this.setState({ unitOfMeasurement: "metric" })}
                   customBtnTitleStyle={{
                     fontSize: 15,
                     marginLeft: 5,
-                    color: chosenUom === "metric" ? colors.black : colors.black,
+                    color: unitOfMeasurement === "metric" ? colors.black : colors.black,
                   }}
                   leftIconColor={colors.black}
                   leftIconSize={15}
-                  isLeftIcon={chosenUom === "metric" ? true : false}
+                  isLeftIcon={unitOfMeasurement === "metric" ? true : false}
                   leftIconName="tick"
                 />
                 <CustomBtn
@@ -97,20 +127,20 @@ export default class ChangeUnitScreen extends React.PureComponent {
                     padding: 5,
                     width: "46%",
                     borderColor:
-                      chosenUom === "imperial"
+                    unitOfMeasurement === "imperial"
                         ? colors.themeColor.color
                         : colors.themeColor.color,
                   }}
-                  onPress={() => this.setState({ chosenUom: "imperial" })}
+                  onPress={() => this.setState({ unitOfMeasurement: "imperial" })}
                   customBtnTitleStyle={{
                     fontSize: 15,
                     marginLeft: 5,
                     color:
-                      chosenUom === "imperial" ? colors.black : colors.black,
+                    unitOfMeasurement === "imperial" ? colors.black : colors.black,
                   }}
                   leftIconColor={colors.black}
                   leftIconSize={15}
-                  isLeftIcon={chosenUom === "imperial" ? true : false}
+                  isLeftIcon={unitOfMeasurement === "imperial" ? true : false}
                   leftIconName="tick"
                 />
               </View>
@@ -120,7 +150,7 @@ export default class ChangeUnitScreen extends React.PureComponent {
             <CustomBtn
               Title="Confirm"
               customBtnStyle={{ padding: 15 }}
-              onPress={() => this.handleSubmit(chosenUom)}
+              onPress={() => this.handleSubmit(unitOfMeasurement)}
               customBtnTitleStyle={{ letterSpacing: fonts.letterSpacing }}
             />
           </View>
