@@ -243,6 +243,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           >
             <Text style={styles.rLabel}>Scroll for more </Text>
             <Icon name="chevron-right" size={8} style={styles.icon} />
+            <Icon name="chevron-right" size={8} style={styles.icon2} />
           </TouchableOpacity>
         </View>
         <FlatList
@@ -292,6 +293,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginTop: 2,
-    paddingLeft: 8,
+  },
+  icon2: {
+    marginTop: 2,
   },
 });

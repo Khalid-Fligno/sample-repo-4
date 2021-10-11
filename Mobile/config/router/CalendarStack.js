@@ -13,6 +13,7 @@ import {
 } from "./utils";
 import RecipeScreen from "../../src/screens/AppStack/Nutrition/RecipeScreen";
 import RecipeStepsScreen from "../../src/screens/AppStack/Nutrition/RecipeStepsScreen";
+import FilterRecipeScreen from "../../src/screens/AppStack/Nutrition/FilterRecipeScreen";
 
 const CalendarStack = createStackNavigator(
   {
@@ -21,6 +22,7 @@ const CalendarStack = createStackNavigator(
     WorkoutInfo: WorkoutInfoScreen2V2,
     Recipe: RecipeScreen,
     RecipeSteps: RecipeStepsScreen,
+    FilterRecipe: FilterRecipeScreen,
   },
   {
     initialRouteName: "CalendarHome",
