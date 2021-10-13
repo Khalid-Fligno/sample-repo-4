@@ -238,7 +238,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           }}
         >
           <TouchableOpacity
-            style={{ flexDirection: "row", alignItems: "center", left: 240, }}
+            style={{ flexDirection: "row", alignItems: "center", justifyContent: 'flex-end', }}
             activeOpacity={1}
           >
             <Text style={styles.rLabel}>Scroll for more </Text>

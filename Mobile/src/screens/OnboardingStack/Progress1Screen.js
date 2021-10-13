@@ -127,7 +127,7 @@ export default class Progress1Screen extends React.PureComponent {
       waistModalVisible: false,
       hipModalVisible: false,
       helperModalVisible: false,
-      unitsOfMeasurement: null,
+      unitOfMeasurement: null,
       measurements: null,
       image: null,
     };
@@ -139,6 +139,7 @@ export default class Progress1Screen extends React.PureComponent {
       toggleHelperModal: this.showHelperModal,
     });
     this.fetchUom();
+    this.fetchDataMeasurement();
     if (this.props.navigation.getParam("isInitial")) {
       this.fetchInitialDataMeasurements();
     } else {
@@ -154,6 +155,19 @@ export default class Progress1Screen extends React.PureComponent {
       helperModalVisible: !prevState.helperModalVisible,
     }));
   };
+  fetchDataMeasurement = async () => {
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem("uid");
+    this.unsubscribe = await db.collection("users")
+      .doc(uid)
+      .onSnapshot(async (doc) => {
+        var data = await doc.data();
+
+        this.setState({
+          unitOfMeasurement: data.unitsOfMeasurement
+        })
+      })
+  }
   fetchUom = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem("uid");
@@ -396,7 +410,7 @@ export default class Progress1Screen extends React.PureComponent {
       weightModalVisible,
       waistModalVisible,
       hipModalVisible,
-      unitsOfMeasurement,
+      unitOfMeasurement,
       measurements,
       helperModalVisible
     } = this.state;
@@ -419,8 +433,8 @@ export default class Progress1Screen extends React.PureComponent {
                   style={styles.inputButton}
                 >
                   <Text style={styles.inputSelectionText}>
-                    {weight} {measurements === "metric" && "kg"}
-                    {measurements === "imperial" && "lbs"}
+                    {weight} {unitOfMeasurement === "metric" && "kg"}
+                    {unitOfMeasurement === "imperial" && "lbs"}
                   </Text>
                 </TouchableOpacity>
                 <Modal
@@ -438,7 +452,7 @@ export default class Progress1Screen extends React.PureComponent {
                         this.setState({ weight: value })
                       }
                     >
-                      {measurements === "metric"
+                      {unitOfMeasurement === "metric"
                         ? weightOptionsMetric.map((i) => (
                           <Picker.Item
                             key={i.value}
@@ -471,8 +485,8 @@ export default class Progress1Screen extends React.PureComponent {
                   style={styles.inputButton}
                 >
                   <Text style={styles.inputSelectionText}>
-                    {waist} {measurements === "metric" && "cm"}
-                    {measurements === "imperial" && "inches"}
+                    {waist} {unitOfMeasurement === "metric" && "cm"}
+                    {unitOfMeasurement === "imperial" && "inches"}
                   </Text>
                 </TouchableOpacity>
                 <Modal
@@ -488,7 +502,7 @@ export default class Progress1Screen extends React.PureComponent {
                       selectedValue={waist}
                       onValueChange={(value) => this.setState({ waist: value })}
                     >
-                      {measurements === "metric"
+                      {unitOfMeasurement === "metric"
                         ? waistOptionsMetric.map((i) => (
                           <Picker.Item
                             key={i.value}
@@ -521,8 +535,8 @@ export default class Progress1Screen extends React.PureComponent {
                   style={styles.inputButton}
                 >
                   <Text style={styles.inputSelectionText}>
-                    {hip} {measurements === "metric" && "cm"}
-                    {measurements === "imperial" && "inches"}
+                    {hip} {unitOfMeasurement === "metric" && "cm"}
+                    {unitOfMeasurement === "imperial" && "inches"}
                   </Text>
                 </TouchableOpacity>
                 <Modal
@@ -538,7 +552,7 @@ export default class Progress1Screen extends React.PureComponent {
                       selectedValue={hip}
                       onValueChange={(value) => this.setState({ hip: value })}
                     >
-                      {measurements === "metric"
+                      {unitOfMeasurement === "metric"
                         ? hipOptionsMetric.map((i) => (
                           <Picker.Item
                             key={i.value}
