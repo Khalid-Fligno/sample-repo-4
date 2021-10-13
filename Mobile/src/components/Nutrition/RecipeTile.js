@@ -53,7 +53,7 @@ export default class RecipeTile extends React.PureComponent {
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
-    console.log("qwertyuio", tags)
+    // console.log("qwertyuio", tags)
 
     const tagsV = sortBy(tags).filter((tag) => {
       if (tag === 'V') {
