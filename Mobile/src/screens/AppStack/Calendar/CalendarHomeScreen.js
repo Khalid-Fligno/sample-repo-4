@@ -235,10 +235,9 @@ class CalendarHomeScreen extends React.PureComponent {
     // console.log("line195",workout)
     if (workout && workout.newWorkout) {
       // console.log("Here....");
-      let warmUpExers = workout.warmUpExercises.filter((warmUpExercise) => {return warmUpExercise});
       const warmUpExercises = await downloadExerciseWC(
         workout,
-        warmUpExers,
+        Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array")>-1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => {return warmUpExercise}),
         workout.warmUpExerciseModel,
         "warmUp"
       );
