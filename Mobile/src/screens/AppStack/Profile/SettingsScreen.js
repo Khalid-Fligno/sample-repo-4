@@ -124,6 +124,7 @@ export default class SettingsScreen extends React.PureComponent {
     this.setState({ loading: false });
     this.props.navigation.navigate("Burpee1");
   };
+
   render() {
     const { isPasswordAccount, profile, loading } = this.state;
     return (
@@ -165,12 +166,22 @@ export default class SettingsScreen extends React.PureComponent {
               <ListItem
                 title="Re-take burpee test"
                 titleStyle={ProfileStyles.listItemTitleStyle}
-                containerStyle={ProfileStyles.listItemContainerBottom}
+                containerStyle={ProfileStyles.listItemContainer}
                 rightIcon={{
                   name: "chevron-right",
                   color: colors.grey.standard,
                 }}
                 onPress={() => this.retakeBurpeeTest()}
+              />
+              <ListItem
+                title="Change the unit of measurements"
+                titleStyle={ProfileStyles.listItemTitleStyle}
+                containerStyle={ProfileStyles.listItemContainerBottom}
+                rightIcon={{
+                  name: "chevron-right",
+                  color: colors.grey.standard,
+                }}
+                onPress={() => this.props.navigation.navigate("ChangeUnit")}
               />
             </View>
           </ScrollView>

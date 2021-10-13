@@ -12,6 +12,7 @@ import NutritionStyles from './NutritionStyles';
 import Loader from '../../../components/Shared/Loader';
 const { width } = Dimensions.get('window');
 import FastImage from 'react-native-fast-image';
+import HtmlText from 'react-native-html-to-text';
  
 const Image = createImageProgress(FastImage);
 
@@ -124,9 +125,10 @@ export default class RecipeStepsScreen extends React.PureComponent {
             />
             <View style={NutritionStyles.carouselBottomContainer}>
               <View style={NutritionStyles.carouselTextContainer}>
-                <Text style={NutritionStyles.carouselText}>
+                {/* <Text style={NutritionStyles.carouselText}>
                   {item.description}
-                </Text>
+                </Text> */}
+                <HtmlText html={`${item.description}`}></HtmlText>
               </View>
             </View>
           </ScrollView>

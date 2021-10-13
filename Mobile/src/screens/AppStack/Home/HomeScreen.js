@@ -35,6 +35,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import firebase from 'firebase';
 import StopWatch from "../../../components/Workouts/WorkoutStopwatch";
 const { width } = Dimensions.get("window");
 // const workoutTypeMap = {
@@ -178,6 +179,28 @@ export default class HomeScreen extends React.PureComponent {
         await userRef.set(data, { merge: true });
       }
     });
+    // const citiesRef = db.collection('recipes');
+
+    // // const snapshot = await citiesRef.where('active', '==', true).get();
+    // const snapshot = await citiesRef.get();
+    // if (snapshot.empty) {
+    //   console.log('No matching documents.');
+    //   return;
+    // }  
+    
+    // snapshot.forEach(async doc => {
+    //   console.log(doc.id)
+    //   // const batch = db.batch();
+    //   // batch.set(citiesRef.doc(doc.id), {active: true}, { merge: true })
+    //   // batch.commit()
+    //   const recipeRef = await db
+    //     .collection("recipes")
+    //     .doc(doc.id)
+    //     .set({order: 0}, { merge: true })
+    //   // const removeActive = recipeRef.update({
+    //   //     ['active']: firebase.firestore.FieldValue.delete(),
+    //   //   }) 
+    // });
   };
   openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -320,6 +343,8 @@ export default class HomeScreen extends React.PureComponent {
               activeChallengeUserData.workouts.filter(
                 (res) => res.target === "strength"
               );
+
+            console.log('asdfasdfasdf', totalIntervalCompleted.length, totalCircuitCompleted.length, totalStrengthCompleted.length)  
 
             this.fetchHomeScreenData(
               activeChallengeUserData,
@@ -511,58 +536,72 @@ export default class HomeScreen extends React.PureComponent {
             <View>
               <View style={HomeScreenStyle.sectionHeader}>
                 <Text style={[HomeScreenStyle.bodyText]}>
-                  {activeChallengeData !== undefined
-                    ? "Active challenge progress"
-                    : "Weekly workout progress"}
+                  {/*{activeChallengeData !== undefined*/}
+                  {/*  ? "Active challenge progress"*/}
+                  {/*  : "Weekly workout progress"}*/}
+                  Total workout complete
                 </Text>
               </View>
               <View
                 style={{
                   flexDirection: "row",
-                  justifyContent: "space-between",
+                  // justifyContent: "space-between",
                   width: "100%",
+                  justifyContent: "center"
                 }}
               >
                 {profile && (
                   <View>
                     <ProgressBar
-                      title="Strength"
-                      completed={countS}
-                      total={totalS}
-                      size={wp("38%")}
-                    />
-                  </View>
-                )}
-                {profile && (
-                  <View>
-                    <ProgressBar
-                      title="Circuit"
-                      completed={countC}
+                      // title="Circuit"
+                      completed={profile.totalWorkoutCompleted}
                       total={totalC}
                       size={wp("38%")}
+                      customProgessTotalStyle ={{marginLeft:0,marginTop:0,marginBottom:0}}
                     />
                   </View>
                 )}
+
+                {/*{profile && (*/}
+                {/*  <View>*/}
+                {/*    <ProgressBar*/}
+                {/*      title="Strength"*/}
+                {/*      completed={countS}*/}
+                {/*      total={totalS}*/}
+                {/*      size={wp("38%")}*/}
+                {/*    />*/}
+                {/*  </View>*/}
+                {/*)}*/}
+                {/*{profile && (*/}
+                {/*  <View>*/}
+                {/*    <ProgressBar*/}
+                {/*      title="Circuit"*/}
+                {/*      completed={countC}*/}
+                {/*      total={totalC}*/}
+                {/*      size={wp("38%")}*/}
+                {/*    />*/}
+                {/*  </View>*/}
+                {/*)}*/}
               </View>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  marginTop: -30,
-                }}
-              >
-                {profile && (
-                  <View>
-                    <ProgressBar
-                      title="Interval"
-                      completed={countI}
-                      total={totalI}
-                      size={wp("38%")}
-                    />
-                  </View>
-                )}
-              </View>
+              {/*<View*/}
+              {/*  style={{*/}
+              {/*    width: "100%",*/}
+              {/*    flexDirection: "row",*/}
+              {/*    justifyContent: "center",*/}
+              {/*    marginTop: -30,*/}
+              {/*  }}*/}
+              {/*>*/}
+              {/*  {profile && (*/}
+              {/*    <View>*/}
+              {/*      <ProgressBar*/}
+              {/*        title="Interval"*/}
+              {/*        completed={countI}*/}
+              {/*        total={totalI}*/}
+              {/*        size={wp("38%")}*/}
+              {/*      />*/}
+              {/*    </View>*/}
+              {/*  )}*/}
+              {/*</View>*/}
             </View>
           )}
 

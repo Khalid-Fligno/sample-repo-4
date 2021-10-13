@@ -24,7 +24,7 @@ const CustomBtn = (props) => {
     fontSize: hp("1.8%"),
     letterSpacing: 0.7,
     // marginTop: 3,
-    color: props.workoutComplete ? colors.citrus :colors.black,
+    color: props.workoutComplete ? colors.citrus : colors.black,
     letterSpacing: 0.5,
     textAlign: "center",
   };
@@ -43,6 +43,7 @@ const CustomBtn = (props) => {
     fontSize: hp("1.5%"),
     fontFamily: fonts.bold,
   };
+
   return (
     <TouchableOpacity
       disabled={props.disabled}

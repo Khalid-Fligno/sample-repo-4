@@ -20,6 +20,7 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { TokenInterceptor } from './auth/token.interceptor';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 import { environment } from 'src/environments/environment';
+import { MatButtonToggleModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { environment } from 'src/environments/environment';
     AngularFireAuthModule, // auth
     AngularFireStorageModule, // storage,
     MatNativeDateModule,
+    MatButtonToggleModule
   ],
   providers: [
     HttpService,

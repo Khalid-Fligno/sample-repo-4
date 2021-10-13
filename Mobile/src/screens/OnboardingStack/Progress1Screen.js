@@ -127,7 +127,8 @@ export default class Progress1Screen extends React.PureComponent {
       waistModalVisible: false,
       hipModalVisible: false,
       helperModalVisible: false,
-      unitsOfMeasurement: null,
+      unitOfMeasurement: null,
+      measurements: null,
       image: null,
     };
   }
@@ -138,6 +139,7 @@ export default class Progress1Screen extends React.PureComponent {
       toggleHelperModal: this.showHelperModal,
     });
     this.fetchUom();
+    this.fetchDataMeasurement();
     if (this.props.navigation.getParam("isInitial")) {
       this.fetchInitialDataMeasurements();
     } else {
@@ -153,18 +155,41 @@ export default class Progress1Screen extends React.PureComponent {
       helperModalVisible: !prevState.helperModalVisible,
     }));
   };
+  fetchDataMeasurement = async () => {
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem("uid");
+    this.unsubscribe = await db.collection("users")
+      .doc(uid)
+      .onSnapshot(async (doc) => {
+        var data = await doc.data();
+
+        this.setState({
+          unitOfMeasurement: data.unitsOfMeasurement
+        })
+      })
+  }
   fetchUom = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem("uid");
-    db.collection("users")
+    this.unsubscribe = await db.collection("users")
       .doc(uid)
-      .get()
-      .then(async (doc) => {
-        this.setState({
-          unitsOfMeasurement: await doc.data().unitsOfMeasurement,
-          loading: false,
+      .collection("challenges")
+      .where("status", "==", "Active")
+      .onSnapshot(async (querySnapshot) => {
+        const list = []
+        await querySnapshot.forEach(async (doc) => {
+          await list.push(await doc.data());
         });
-      });
+
+        if (list[0]) {
+          const listing = list[0]
+          const listing1 = listing.onBoardingInfo.measurements.unit
+          console.log("Listing Uno", listing1)
+          this.setState({
+            measurements: listing1
+          })
+        }
+      })
   };
 
   fetchInitialDataMeasurements = async () => {
@@ -385,7 +410,8 @@ export default class Progress1Screen extends React.PureComponent {
       weightModalVisible,
       waistModalVisible,
       hipModalVisible,
-      unitsOfMeasurement,
+      unitOfMeasurement,
+      measurements,
       helperModalVisible
     } = this.state;
     return (
@@ -407,8 +433,8 @@ export default class Progress1Screen extends React.PureComponent {
                   style={styles.inputButton}
                 >
                   <Text style={styles.inputSelectionText}>
-                    {weight} {unitsOfMeasurement === "metric" && "kg"}
-                    {unitsOfMeasurement === "imperial" && "lbs"}
+                    {weight} {unitOfMeasurement === "metric" && "kg"}
+                    {unitOfMeasurement === "imperial" && "lbs"}
                   </Text>
                 </TouchableOpacity>
                 <Modal
@@ -426,21 +452,21 @@ export default class Progress1Screen extends React.PureComponent {
                         this.setState({ weight: value })
                       }
                     >
-                      {unitsOfMeasurement === "metric"
+                      {unitOfMeasurement === "metric"
                         ? weightOptionsMetric.map((i) => (
-                            <Picker.Item
-                              key={i.value}
-                              label={`${i.label} kg`}
-                              value={i.value}
-                            />
-                          ))
+                          <Picker.Item
+                            key={i.value}
+                            label={`${i.label} kg`}
+                            value={i.value}
+                          />
+                        ))
                         : weightOptionsImperial.map((i) => (
-                            <Picker.Item
-                              key={i.value}
-                              label={`${i.label} lbs`}
-                              value={i.value}
-                            />
-                          ))}
+                          <Picker.Item
+                            key={i.value}
+                            label={`${i.label} lbs`}
+                            value={i.value}
+                          />
+                        ))}
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
@@ -459,8 +485,8 @@ export default class Progress1Screen extends React.PureComponent {
                   style={styles.inputButton}
                 >
                   <Text style={styles.inputSelectionText}>
-                    {waist} {unitsOfMeasurement === "metric" && "cm"}
-                    {unitsOfMeasurement === "imperial" && "inches"}
+                    {waist} {unitOfMeasurement === "metric" && "cm"}
+                    {unitOfMeasurement === "imperial" && "inches"}
                   </Text>
                 </TouchableOpacity>
                 <Modal
@@ -476,21 +502,21 @@ export default class Progress1Screen extends React.PureComponent {
                       selectedValue={waist}
                       onValueChange={(value) => this.setState({ waist: value })}
                     >
-                      {unitsOfMeasurement === "metric"
+                      {unitOfMeasurement === "metric"
                         ? waistOptionsMetric.map((i) => (
-                            <Picker.Item
-                              key={i.value}
-                              label={`${i.label} cm`}
-                              value={i.value}
-                            />
-                          ))
+                          <Picker.Item
+                            key={i.value}
+                            label={`${i.label} cm`}
+                            value={i.value}
+                          />
+                        ))
                         : waistOptionsImperial.map((i) => (
-                            <Picker.Item
-                              key={i.value}
-                              label={`${i.label} inches`}
-                              value={i.value}
-                            />
-                          ))}
+                          <Picker.Item
+                            key={i.value}
+                            label={`${i.label} inches`}
+                            value={i.value}
+                          />
+                        ))}
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
@@ -509,8 +535,8 @@ export default class Progress1Screen extends React.PureComponent {
                   style={styles.inputButton}
                 >
                   <Text style={styles.inputSelectionText}>
-                    {hip} {unitsOfMeasurement === "metric" && "cm"}
-                    {unitsOfMeasurement === "imperial" && "inches"}
+                    {hip} {unitOfMeasurement === "metric" && "cm"}
+                    {unitOfMeasurement === "imperial" && "inches"}
                   </Text>
                 </TouchableOpacity>
                 <Modal
@@ -526,21 +552,21 @@ export default class Progress1Screen extends React.PureComponent {
                       selectedValue={hip}
                       onValueChange={(value) => this.setState({ hip: value })}
                     >
-                      {unitsOfMeasurement === "metric"
+                      {unitOfMeasurement === "metric"
                         ? hipOptionsMetric.map((i) => (
-                            <Picker.Item
-                              key={i.value}
-                              label={`${i.label} cm`}
-                              value={i.value}
-                            />
-                          ))
+                          <Picker.Item
+                            key={i.value}
+                            label={`${i.label} cm`}
+                            value={i.value}
+                          />
+                        ))
                         : hipOptionsImperial.map((i) => (
-                            <Picker.Item
-                              key={i.value}
-                              label={`${i.label} inches`}
-                              value={i.value}
-                            />
-                          ))}
+                          <Picker.Item
+                            key={i.value}
+                            label={`${i.label} inches`}
+                            value={i.value}
+                          />
+                        ))}
                     </Picker>
                     <TouchableOpacity
                       title="DONE"

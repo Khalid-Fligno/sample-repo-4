@@ -5,7 +5,9 @@ import {
   View,
   Text,
   Dimensions,
-  Image
+  Image,
+  TouchableOpacity,
+  BackHandler
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import * as FileSystem from 'expo-file-system';
@@ -18,6 +20,7 @@ import fonts from '../../../../styles/fonts';
 import colors from '../../../../styles/colors';
 import { Platform } from 'react-native';
 import globalStyle from "../../../../styles/globalStyles";
+import Dialog, { DialogContent, DialogTitle, DialogFooter, DialogButton } from 'react-native-popup-dialog';
 
 const { width } = Dimensions.get('window');
 
@@ -35,13 +38,28 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
+      popUp: false
     };
+    this.backButtonClick = this.backButtonClick.bind(this);
   }
   componentDidMount = async () => {
+    BackHandler.addEventListener('hardwareBackPress',this.backButtonClick)
     this.manageVideoCache();
     if(Platform.OS === 'ios')
       this.showRatePopup();
+    if(Platform.OS === 'android') {
+      this.setState({popUp: true})
+    }
+  };
+
+  componentWillUnmount = () => {
+    BackHandler.removeEventListener('hardwareBackPress',this.backButtonClick)
+  };
+
+  backButtonClick() {
+    this.setState({popUp: false})
   }
+
   showRatePopup = async () => {
     Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
   }
@@ -71,7 +89,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     this.props.navigation.navigate('InviteFriends');
   }
   render() {
-    const { loading } = this.state;
+    const { loading, popUp } = this.state;
     const completePieChart = (
       <PieChart
         style={styles.pieChart}
@@ -93,6 +111,69 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
+          <Dialog
+            visible={popUp}
+            onTouchOutside={() => {
+              this.setState({ popUp: false });
+            }}
+            dialogTitle={<DialogTitle title="Your feedback matters to us" align="left" />}
+            footer={
+              <DialogFooter>
+                <DialogButton
+                  text="DO THIS LATER"
+                  onPress={() => {
+                    this.setState({ popUp: false });
+                  }}
+                />
+                <DialogButton
+                  text="RATE NOW"
+                  onPress={() => {
+                    const options = {
+                      GooglePackageName:"com.fitazfk.fitazfkapp"
+                    }
+                    Rate.rate(options, (success, errorMessage)=>{
+                      if (success) {
+                        console.log('ANDROID RATE REVIEW ', success)
+                      }
+                      if (errorMessage) {
+                        console.log('ANDROID RATE REVIEW ', errorMessage)
+                      }
+                    })
+                  }}
+                />
+              </DialogFooter>
+            }
+            // onTouchOutside={() => {
+            //   this.setState({ visible: false });
+            // }}
+          >
+            <DialogContent>
+              <TouchableOpacity
+                onPress={() => {
+                  const options = {
+                    GooglePackageName:"com.fitazfk.fitazfkapp"
+                  }
+                  Rate.rate(options, (success, errorMessage)=>{
+                    if (success) {
+                      console.log('ANDROID RATE REVIEW ', success)
+                    }
+                    if (errorMessage) {
+                      console.log('ANDROID RATE REVIEW ', errorMessage)
+                    }
+                  })
+                }}
+              >
+                <View style={{flexDirection:'row', justifyContent:'space-between', paddingBottom: 10}}>
+                  <Icon name="star-outline" size={50} />
+                  <Icon name="star-outline" size={50} />
+                  <Icon name="star-outline" size={50} />
+                  <Icon name="star-outline" size={50} />
+                  <Icon name="star-outline" size={50} />
+                </View>
+              </TouchableOpacity>
+              <Text>If you enjoy using this app, would you mind{"\n"}taking a moment to rate it? It won't take more{"\n"}than a minute. Thank you for your support!</Text>
+            </DialogContent>
+          </Dialog>
           {/* <View style={styles.textContainer}>
             <Text style={styles.headerText}>
               WORKOUT

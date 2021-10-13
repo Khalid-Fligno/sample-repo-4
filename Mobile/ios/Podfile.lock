@@ -4,13 +4,13 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXAppleAuthentication (2.1.1):
     - UMCore
-  - EXAV (8.4.0):
+  - EXAV (8.7.0):
     - UMCore
     - UMFileSystemInterface
     - UMPermissionsInterface
   - EXBlur (8.1.2):
     - UMCore
-  - EXConstants (9.1.1):
+  - EXConstants (9.3.5):
     - UMConstantsInterface
     - UMCore
   - EXContacts (8.1.0):
@@ -59,7 +59,7 @@ PODS:
   - EXMailComposer (8.1.0):
     - UMCore
     - UMFileSystemInterface
-  - EXMediaLibrary (8.4.0):
+  - EXMediaLibrary (8.5.0):
     - React
     - UMCore
     - UMFileSystemInterface
@@ -76,7 +76,7 @@ PODS:
   - EXSQLite (8.1.0):
     - UMCore
     - UMFileSystemInterface
-  - EXUpdates (0.2.12):
+  - EXUpdates (0.2.14):
     - React
     - UMCore
   - EXWebBrowser (8.2.1):
@@ -118,7 +118,7 @@ PODS:
   - libwebp/mux (1.2.0):
     - libwebp/demux
   - libwebp/webp (1.2.0)
-  - OneSignal (2.14.3)
+  - OneSignal (2.16.5)
   - RCTRequired (0.63.2)
   - RCTTypeSafety (0.63.2):
     - FBLazyVector (= 0.63.2)
@@ -285,15 +285,15 @@ PODS:
     - React-cxxreact (= 0.63.2)
     - React-jsi (= 0.63.2)
   - React-jsinspector (0.63.2)
-  - react-native-appsflyer (5.4.1):
-    - AppsFlyerFramework (~> 5.4.1)
+  - react-native-appsflyer (5.4.40):
+    - AppsFlyerFramework (~> 5.4.4)
     - React
   - react-native-in-app-utils (6.1.0):
     - React
-  - react-native-netinfo (5.9.5):
-    - React
-  - react-native-onesignal (3.9.0):
-    - OneSignal (= 2.14.3)
+  - react-native-netinfo (5.9.10):
+    - React-Core
+  - react-native-onesignal (3.9.4):
+    - OneSignal (= 2.16.5)
     - React (< 1.0.0, >= 0.13.0)
   - react-native-splash-screen (3.2.0):
     - React
@@ -302,8 +302,8 @@ PODS:
     - react-native-video/Video (= 5.1.1)
   - react-native-video/Video (5.1.1):
     - React-Core
-  - react-native-viewpager (4.1.3):
-    - React
+  - react-native-viewpager (4.2.4):
+    - React-Core
   - React-RCTActionSheet (0.63.2):
     - React-Core/RCTActionSheetHeaders (= 0.63.2)
   - React-RCTAnimation (0.63.2):
@@ -364,11 +364,11 @@ PODS:
     - React-Core (= 0.63.2)
     - React-cxxreact (= 0.63.2)
     - React-jsi (= 0.63.2)
-  - RNCAsyncStorage (1.11.0):
-    - React
+  - RNCAsyncStorage (1.12.1):
+    - React-Core
   - RNDateTimePicker (2.2.2):
     - React
-  - RNDeviceInfo (8.0.1):
+  - RNDeviceInfo (8.3.2):
     - React-Core
   - RNFastImage (8.3.4):
     - React-Core
@@ -376,10 +376,10 @@ PODS:
     - SDWebImageWebPCoder (~> 0.6.1)
   - RNGestureHandler (1.6.1):
     - React
-  - RNIap (4.5.0):
-    - React
-  - RNRate (1.2.1):
-    - React
+  - RNIap (4.6.3):
+    - React-Core
+  - RNRate (1.2.9):
+    - React-Core
   - RNReanimated (1.7.1):
     - React
   - RNScreens (2.2.0):
@@ -684,9 +684,9 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cde416483dac037923206447da6e1454df403714
   EXAppleAuthentication: 6cb27bf3d48e69da0ca7a3a135c4838a9e34fdd7
-  EXAV: b50e42821a48110add008bf83f480ce6ac2b8471
+  EXAV: 4ffb487c2b58d41553edcb30cede0df1b56a7d15
   EXBlur: 5b7a7344c97f448fa88e40df58a755f84084e292
-  EXConstants: c2c6d5805520a34f274e09b778404310c52b118f
+  EXConstants: 5874c3bf65601ce96049412e6e5f43d198c1cdaf
   EXContacts: 1d080edad7fe1b84eca6f2b97c80dc170d38a77d
   EXCrypto: e925582b93c5fcea7ac52640db71c214bfa6f4ee
   EXErrorRecovery: 88541714d9bbf8a823f4ee0b7078a92d3e0e42d2
@@ -702,12 +702,12 @@ SPEC CHECKSUMS:
   EXLocalization: 74aefb246a9760c0839f6744feea0c325b475f9d
   EXLocation: 0397e4f11666d6ceb026b6424fdf66995c604964
   EXMailComposer: 8b50b7940fe7122954cd0eee2f47681f2539ee05
-  EXMediaLibrary: ec1333a64018a83a0285643d133cb7adff43f7f1
+  EXMediaLibrary: bce8a3ca36e452d79a2cdd7a62f5aa278a68009f
   EXPermissions: 9804d7ec7399e7b24e3d9dea2b3db976a7f6b5de
   EXSMS: 15d62c93625fa3f35ea9eee02fcd220c44d817be
   EXSplashScreen: 2290058b9a3760ea3906ac552baff24d5d33b725
   EXSQLite: 15268ec49f859e4594fe5b0a1c7a47913da0b67e
-  EXUpdates: 4380bf17a6391fab639a32e31ed27fb956c4505f
+  EXUpdates: 8c4570807f9435337769850d9976d63a407cecfc
   EXWebBrowser: 6364e9e1ea73f6c3c2e6e3cc0ac17259a260e3a8
   FBLazyVector: 3ef4a7f62e7db01092f9d517d2ebc0d0677c4a37
   FBReactNativeSpec: dc7fa9088f0f2a998503a352b0554d69a4391c5a
@@ -716,7 +716,7 @@ SPEC CHECKSUMS:
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
-  OneSignal: 7dfe466265c05f02b95a274b9c997a0619ad2117
+  OneSignal: b72068b06b359f22e27404edee87338f4b68e783
   RCTRequired: f13f25e7b12f925f1f6a6a8c69d929a03c0129fe
   RCTTypeSafety: 44982c5c8e43ff4141eb519a8ddc88059acd1f3a
   React: e1c65dd41cb9db13b99f24608e47dd595f28ca9a
@@ -727,13 +727,13 @@ SPEC CHECKSUMS:
   React-jsi: 54245e1d5f4b690dec614a73a3795964eeef13a8
   React-jsiexecutor: 8ca588cc921e70590820ce72b8789b02c67cce38
   React-jsinspector: b14e62ebe7a66e9231e9581279909f2fc3db6606
-  react-native-appsflyer: da2b86284e71d8285e68e353a4e2ed68348ed3c7
+  react-native-appsflyer: 0825f29df0e244ad487a84e55a16ba53cee7793d
   react-native-in-app-utils: 96cdefc90ad74a79a95d19239a183995a6face0b
-  react-native-netinfo: 7f3f3ed9e8f0e7ab3e7cac00cbfdc6997e25ecaf
-  react-native-onesignal: 3cb529f99353f5765ca3ce305c9e8c583fd54c81
+  react-native-netinfo: 52cf0ee8342548a485e28f4b09e56b477567244d
+  react-native-onesignal: b6cdb41fdf4b4e48d0db1246ecf0d29ab590eca7
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-video: 1574074179ecaf6a9dd067116c8f31bf9fec15c8
-  react-native-viewpager: 0433208d1ec62cd8f03258b1956e2f960de1c0af
+  react-native-viewpager: 2bd854c85a76bfe6f75dc232f3889301bcb3a720
   React-RCTActionSheet: 910163b6b09685a35c4ebbc52b66d1bfbbe39fc5
   React-RCTAnimation: 9a883bbe1e9d2e158d4fb53765ed64c8dc2200c6
   React-RCTBlob: 39cf0ece1927996c4466510e25d2105f67010e13
@@ -744,13 +744,13 @@ SPEC CHECKSUMS:
   React-RCTText: 1b6773e776e4b33f90468c20fe3b16ca3e224bb8
   React-RCTVibration: 4d2e726957f4087449739b595f107c0d4b6c2d2d
   ReactCommon: a0a1edbebcac5e91338371b72ffc66aa822792ce
-  RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
+  RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
   RNDateTimePicker: 501ab152e78882c183607e05074c37ce19ace5bf
-  RNDeviceInfo: 54401b60514387f9120ab8265be5ed9103d842b9
+  RNDeviceInfo: 6c3729b234a00f449e962cbe64cc6e630582c126
   RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
-  RNIap: 9a5ad5e38905b4946fc4eadf542a575084821fe2
-  RNRate: a747cbaa6040d72994861864c988037fe0696548
+  RNIap: 091b98e143440e580e51d08b43a3196ae788e87b
+  RNRate: 622db602051b6abf6ec467cdcc3c5e3112076745
   RNReanimated: 4e102df74a9674fa943e05f97f3362b6e44d0b48
   RNScreens: 812b79d384e2bea7eebc4ec981469160d4948fd5
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
@@ -774,4 +774,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: ca35d5451732892b05a650861fdbb108de0c041d
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2

@@ -28,11 +28,15 @@ import {
 import PickerModal from "../../../components/Challenges/PickerModal";
 import InputBox2 from "../../../components/Challenges/InputBox2";
 import { ScrollView } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-community/async-storage";
+import { db } from "../../../../config/firebase";
+
 export default class OnBoarding3 extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      loading: false,
       challengeData: {},
       height: 0,
       weight: 0,
@@ -44,12 +48,15 @@ export default class OnBoarding3 extends Component {
       pickerDataList: [],
       inputType: any,
       chosenUom: "metric",
+      unitOfMeasurement: undefined,
       skipped: false,
     };
   }
+
   onFocusFunction = () => {
     const data = this.props.navigation.getParam("data", {});
     const measurments = data["challengeData"]["onBoardingInfo"]["measurements"];
+    console.log("asdfghjkl", measurments)
     if (measurments) {
       this.setState({
         challengeData: data["challengeData"],
@@ -59,7 +66,7 @@ export default class OnBoarding3 extends Component {
         goalWeight: measurments.goalWeight,
         waist: measurments.waist,
         hip: measurments.hip,
-        chosenUom: measurments.unit,
+        unitOfMeasurement: measurments.unit,
       });
     } else {
       this.setState({
@@ -67,7 +74,22 @@ export default class OnBoarding3 extends Component {
         btnDisabled: false,
       });
     }
+    this.fetchDataMeasurement();
   };
+
+  fetchDataMeasurement = async () => {
+    this.setState({ loading: true });
+    const uid = await AsyncStorage.getItem("uid");
+    this.focusListener = await db.collection("users")
+      .doc(uid)
+      .onSnapshot(async (doc) => {
+        var data = await doc.data();
+
+        this.setState({
+          unitOfMeasurement: data.unitsOfMeasurement
+        })
+      })
+  }
 
   // add a focus listener onDidMount
   async componentDidMount() {
@@ -83,7 +105,7 @@ export default class OnBoarding3 extends Component {
 
   // and don't forget to remove the listener
   componentWillUnmount() {
-    this.focusListener.remove();
+    // this.focusListener.remove();
   }
 
   goToScreen(type) {
@@ -104,7 +126,7 @@ export default class OnBoarding3 extends Component {
         goalWeight: this.state.goalWeight,
         waist: this.state.waist,
         hip: this.state.hip,
-        unit: this.state.chosenUom,
+        unit: this.state.unitOfMeasurement,
       },
       skipped: skipped,
     });
@@ -159,7 +181,7 @@ export default class OnBoarding3 extends Component {
         data: { challengeData: updatedChallengedata },
         onboardingProcessComplete:
           this.props.navigation.getParam("onboardingProcessComplete") !==
-          undefined
+            undefined
             ? this.props.navigation.getParam("onboardingProcessComplete")
             : false,
         challengeOnboard:
@@ -189,22 +211,22 @@ export default class OnBoarding3 extends Component {
         },
         onboardingProcessComplete:
           this.props.navigation.getParam("onboardingProcessComplete") !==
-          undefined
+            undefined
             ? this.props.navigation.getParam("onboardingProcessComplete")
             : false,
       });
     }
   }
   showModal = (inputType) => {
-    let { modalVisible, chosenUom } = this.state;
+    let { modalVisible, unitOfMeasurement } = this.state;
     let dataList = [];
     if (inputType === "weight" || inputType === "goalWeight")
       dataList =
-        chosenUom === "metric" ? weightOptionsMetric : weightOptionsImperial;
+        unitOfMeasurement === "metric" ? weightOptionsMetric : weightOptionsImperial;
 
     if (inputType === "waist" || inputType === "hip" || inputType === "height")
       dataList =
-        chosenUom === "metric" ? waistOptionsMetric : waistOptionsImperial;
+        unitOfMeasurement === "metric" ? waistOptionsMetric : waistOptionsImperial;
 
     this.setState({
       modalVisible: true,
@@ -232,11 +254,13 @@ export default class OnBoarding3 extends Component {
       hip,
       height,
       waist,
-      chosenUom,
+      unitOfMeasurement,
     } = this.state;
     if (!challengeData["onBoardingInfo"]) {
       this.onFocusFunction();
     }
+    console.log("Listing dos", unitOfMeasurement)
+    console.log("Listing tres", challengeData)
     return (
       <SafeAreaView style={ChallengeStyle.container}>
         <View style={[globalStyle.container]}>
@@ -254,77 +278,77 @@ export default class OnBoarding3 extends Component {
               <Text style={[ChallengeStyle.onBoardingTitle]}>Measurements</Text>
             </View>
             <View style={ChallengeStyle.checkBox}>
-              <CustomBtn
-                Title="Metric"
-                outline={chosenUom != "metric"}
-                customBtnStyle={{
-                  padding: 5,
-                  width: "46%",
-                  backgroundColor:
-                    chosenUom === "metric"
-                      ? colors.themeColor.color
-                      : colors.transparent,
-                  borderColor:
-                    chosenUom === "metric"
-                      ? colors.themeColor.color
-                      : colors.black,
-                }}
-                onPress={() => this.setState({ chosenUom: "metric" })}
-                customBtnTitleStyle={{
-                  fontSize: 15,
-                  marginLeft: 5,
-                  color: chosenUom === "metric" ? colors.black : colors.black,
-                }}
-                leftIconColor={colors.black}
-                leftIconSize={15}
-                isLeftIcon={chosenUom === "metric" ? true : false}
-                leftIconName="tick"
-              />
+              {/* <CustomBtn
+              Title="Metric"
+              outline={unitOfMeasurement != "metric"}
+              customBtnStyle={{
+                padding: 5,
+                width: "46%",
+                backgroundColor:
+                unitOfMeasurement === "metric"
+                    ? colors.themeColor.color
+                    : colors.transparent,
+                borderColor:
+                unitOfMeasurement === "metric"
+                    ? colors.themeColor.color
+                    : colors.black,
+              }}
+              onPress={() => this.setState({ unitOfMeasurement: "metric" })}
+              customBtnTitleStyle={{
+                fontSize: 15,
+                marginLeft: 5,
+                color: unitOfMeasurement === "metric" ? colors.black : colors.black,
+              }}
+              leftIconColor={colors.black}
+              leftIconSize={15}
+              isLeftIcon={unitOfMeasurement === "metric" ? true : false}
+              leftIconName="tick"
+            />
 
-              <CustomBtn
-                Title="Imperial"
-                outline={chosenUom != "imperial"}
-                customBtnStyle={{
-                  padding: 5,
-                  width: "46%",
-                  backgroundColor:
-                    chosenUom === "imperial"
-                      ? colors.themeColor.color
-                      : colors.transparent,
-                  borderColor:
-                    chosenUom === "imperial"
-                      ? colors.themeColor.color
-                      : colors.black,
-                }}
-                onPress={() => this.setState({ chosenUom: "imperial" })}
-                customBtnTitleStyle={{
-                  fontSize: 15,
-                  marginLeft: 5,
-                  color: chosenUom === "imperial" ? colors.black : colors.black,
-                }}
-                leftIconColor={colors.black}
-                leftIconSize={15}
-                isLeftIcon={chosenUom === "imperial" ? true : false}
-                leftIconName="tick"
-              />
+            <CustomBtn
+              Title="Imperial"
+              outline={unitOfMeasurement != "imperial"}
+              customBtnStyle={{
+                padding: 5,
+                width: "46%",
+                backgroundColor:
+                  chosenUom === "imperial"
+                    ? colors.themeColor.color
+                    : colors.transparent,
+                borderColor:
+                  chosenUom === "imperial"
+                    ? colors.themeColor.color
+                    : colors.black,
+              }}
+              onPress={() => this.setState({ chosenUom: "imperial" })}
+              customBtnTitleStyle={{
+                fontSize: 15,
+                marginLeft: 5,
+                color: chosenUom === "imperial" ? colors.black : colors.black,
+              }}
+              leftIconColor={colors.black}
+              leftIconSize={15}
+              isLeftIcon={chosenUom === "imperial" ? true : false}
+              leftIconName="tick"
+            /> */}
             </View>
             <InputBox2
               onPress={() => this.showModal("height")}
               title="Height"
-              extension={chosenUom === "metric" ? "cm" : "inches"}
+              extension={unitOfMeasurement === "metric" ? "cm" : "inches"}
               value={height}
             />
 
             <InputBox2
               onPress={() => this.showModal("weight")}
               title="Weight"
-              extension={chosenUom === "metric" ? "kg" : "lbs"}
+              extension={unitOfMeasurement === "metric" ? "kg" : "lbs"}
               value={weight}
             />
             <InputBox2
               onPress={() => this.showModal("goalWeight")}
               title="Goal weight"
-              extension={chosenUom === "metric" ? "kg" : "lbs"}
+              extension={unitOfMeasurement === "metric" ? "kg" : "lbs"}
               value={goalWeight}
             />
 
@@ -342,23 +366,23 @@ export default class OnBoarding3 extends Component {
             <InputBox2
               onPress={() => this.showModal("waist")}
               title="Waist (Optional)"
-              extension={chosenUom === "metric" ? "cm" : "inches"}
+              extension={unitOfMeasurement === "metric" ? "cm" : "inches"}
               value={waist}
             />
             <InputBox2
               onPress={() => this.showModal("hip")}
               title="Hip (Optional)"
-              extension={chosenUom === "metric" ? "cm" : "inches"}
+              extension={unitOfMeasurement === "metric" ? "cm" : "inches"}
               value={hip}
             />
             <View style={[{ flex: 1, justifyContent: "flex-end" }]}>
               <CustomBtn
                 Title={
                   weight == 0 &&
-                  height == 0 &&
-                  goalWeight == 0 &&
-                  waist == 0 &&
-                  hip == 0
+                    height == 0 &&
+                    goalWeight == 0 &&
+                    waist == 0 &&
+                    hip == 0
                     ? "Skip"
                     : "Next"
                 }
@@ -394,8 +418,8 @@ export default class OnBoarding3 extends Component {
             </View>
           </ScrollView>
           <PickerModal
-            metric={chosenUom === "metric"}
-            imerial={chosenUom === "imperial"}
+            metric={unitOfMeasurement === "metric"}
+            imerial={unitOfMeasurement === "imperial"}
             dataMapList={pickerDataList}
             onValueChange={(value) => this.setState({ [inputType]: value })}
             isVisible={modalVisible}

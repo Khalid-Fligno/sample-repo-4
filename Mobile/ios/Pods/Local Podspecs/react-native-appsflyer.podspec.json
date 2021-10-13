@@ -1,6 +1,6 @@
 {
   "name": "react-native-appsflyer",
-  "version": "5.4.1",
+  "version": "5.4.40",
   "summary": "React Native Appsflyer plugin",
   "requires_arc": true,
   "license": {
@@ -21,7 +21,7 @@
   "static_framework": true,
   "dependencies": {
     "AppsFlyerFramework": [
-      "~> 5.4.1"
+      "~> 5.4.4"
     ],
     "React": [
 

@@ -94,7 +94,7 @@ export default class OnBoarding5 extends Component {
 
   // and don't forget to remove the listener
   componentWillUnmount() {
-    this.focusListener.remove();
+    // this.focusListener.remove();
   }
 
   goToScreen(type) {

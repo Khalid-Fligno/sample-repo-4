@@ -74,7 +74,6 @@ export default class OnBoarding4 extends Component {
       chosenDate: new Date(),
       loading: false,
       calendarModalVisible: false,
-      addingToCalendar: false,
       chosenDate: new Date(),
     };
   }
@@ -262,15 +261,15 @@ export default class OnBoarding4 extends Component {
         const manipResult = await ImageManipulator.manipulateAsync(
           result.uri,
           [
-            { resize: { height: 800 } },
-            {
-              crop: {
-                originX: originXValue,
-                originY: 0,
-                width: 600,
-                height: 800,
-              },
-            },
+            { resize: { height: 800, width: 600, } },
+            // {
+            //   crop: {
+            //     originX: originXValue,
+            //     originY: 0,
+            //     width: 600,
+            //     height: 800,
+            //   },
+            // },
           ],
           { format: "jpeg", compress: 0.7, base64: true }
         );
@@ -411,6 +410,7 @@ export default class OnBoarding4 extends Component {
     console.log("Challenge data: ", updatedChallengedata);
 
     let skipped = updatedChallengedata.onBoardingInfo.skipped;
+
     if (!skipped) {
       skipped = this.state.imgUrl == null ? true : false;
     }
@@ -449,8 +449,8 @@ export default class OnBoarding4 extends Component {
       data.isSchedule = true;
       data.status = "InActive";
     }
-    await storeProgressInfo(progressData);
-    await this.saveOnBoardingInfo(data, stringDate2);
+      await storeProgressInfo(progressData);
+      await this.saveOnBoardingInfo(data, stringDate2);
   };
 
   async goToScreen(type) {
@@ -638,6 +638,7 @@ export default class OnBoarding4 extends Component {
       addingToCalendar,
       chosenDate,
     } = this.state;
+    console.log("addingToCalendar: ", addingToCalendar)
     return (
       <SafeAreaView style={ChallengeStyle.container}>
         <View style={[globalStyle.container, { paddingVertical: 15 }]}>

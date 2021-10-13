@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import Icon from '../../components/Shared/Icon';
 import SavingsBadge from './SavingsBadge';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
-import {containerPadding} from '../../styles/globalStyles';
+import { containerPadding } from '../../styles/globalStyles';
 import RoundTick from '../../../assets/icons/RoundTick';
 import EmptyRoundTick from '../../../assets/icons/EmptyRoundTick';
 
@@ -17,6 +17,7 @@ export default class SubscriptionTile extends React.PureComponent {
   }
   render() {
     const {
+      key,
       title,
       price,
       priceNumber,
@@ -31,24 +32,35 @@ export default class SubscriptionTile extends React.PureComponent {
     return (
       <TouchableOpacity
         onPress={onPress}
-        style={[styles.subscriptionTile,{ borderColor:selected?colors.themeColor.color:colors.grey.dark}]}
+        style={[styles.subscriptionTile, { borderColor: selected ? colors.themeColor.color : colors.grey.dark }]}
       >
         <View style={styles.subscriptionTileContainer}>
           <View style={styles.textContainer}>
             <View >
               <View style={styles.subscriptionTitleContainer}>
-                <Text style={styles.subscriptionTitleText}>
-                  {title} 
-                </Text>
+                {
+                  // Platform.OS === 'android' ?
+                  //   <Text style={styles.subscriptionTitleText}>
+                  //     {title}
+                  //   </Text>
+                  //   :
+                  //   <Text style={styles.subscriptionTitleText}>
+                  //     {title}
+                  //   </Text>
+                  <Text>
+                    {title}
+                  </Text>
+                }
+
                 <Text>
                   {!primary && <SavingsBadge text="Save 40%" />}
                 </Text>
               </View>
-              
-             
-              <Text style={[styles.priceTitle,{ color:selected?colors.themeColor.color:colors.grey.dark}]}>
-              {/* {!primary?`${price[0]}${(priceNumber / 12).toFixed(2)}`:price}<Text style={styles.yearlySubTitle}>{` / month` }</Text></Text>  */}
-              {price}<Text style={styles.yearlySubTitle}>{primary?` / month`:` / yearly` }</Text></Text> 
+
+
+              <Text style={[styles.priceTitle, { color: selected ? colors.themeColor.color : colors.grey.dark }]}>
+                {/* {!primary?`${price[0]}${(priceNumber / 12).toFixed(2)}`:price}<Text style={styles.yearlySubTitle}>{` / month` }</Text></Text>  */}
+                {price}<Text style={styles.yearlySubTitle}>{primary ? ` / monthly` : ` / yearly`}</Text></Text>
             </View>
             {
               comparisonPrice && (
@@ -57,15 +69,15 @@ export default class SubscriptionTile extends React.PureComponent {
             }
             {
               !primary &&
-                <Text style={{marginTop:3}}>
-                   <Text style={styles.subscriptionPriceText}>
-                     { `${price[0]}${(priceNumber / 12).toFixed(2)}` } / month
-                   </Text>
+              <Text style={{ marginTop: 3 }}>
+                <Text style={styles.subscriptionPriceText}>
+                  {`${price[0]}${(priceNumber / 12).toFixed(2)}`} / month
                 </Text>
+              </Text>
             }
-         
-            <Text style={[styles.subText,{marginTop:1}]}>
-                {`After ${isDiscounted ? '1 month' : '7 day'} free trial`}
+
+            <Text style={[styles.subText, { marginTop: 1 }]}>
+              {`After ${isDiscounted ? '1 month' : '7 day'} free trial`}
             </Text>
           </View>
           <View style={styles.iconSubscriptionTileColumn}>
@@ -85,7 +97,7 @@ export default class SubscriptionTile extends React.PureComponent {
                 />
               )
             }
-          
+
           </View>
         </View>
       </TouchableOpacity>
@@ -102,22 +114,22 @@ SubscriptionTile.propTypes = {
   comparisonPrice: PropTypes.string,
   priceNumber: PropTypes.number.isRequired,
   isDiscounted: PropTypes.bool,
-  selected:PropTypes.bool,
-  currencyCode:PropTypes.any,
-  currencySymbol:PropTypes.any
+  selected: PropTypes.bool,
+  currencyCode: PropTypes.any,
+  currencySymbol: PropTypes.any
 };
 
 SubscriptionTile.defaultProps = {
   primary: false,
   comparisonPrice: undefined,
   isDiscounted: false,
-  selected:false
+  selected: false
 };
 
 const styles = StyleSheet.create({
   subscriptionTile: {
     justifyContent: 'space-between',
-    backgroundColor:'transparent',
+    backgroundColor: 'transparent',
     margin: 10,
     paddingHorizontal: 25,
     paddingVertical: 15,
@@ -159,27 +171,27 @@ const styles = StyleSheet.create({
   subscriptionTitleRow: {
     flexDirection: 'row',
   },
-  subscriptionTitleContainer:{
-    flexDirection:'row',
-    alignItems:'center',
-    marginBottom:3
+  subscriptionTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 3
   },
   subscriptionTitleText: {
-    letterSpacing:fonts.letterSpacing,
-    fontFamily:fonts.GothamMedium ,
+    letterSpacing: fonts.letterSpacing,
+    fontFamily: fonts.GothamMedium,
     fontSize: 15,
     color: colors.charcoal.dark,
     marginBottom: 2,
   },
   yearlySubTitle: {
     fontFamily: fonts.GothamMedium,
-    fontSize:12,
-    color:colors.grey.dark
+    fontSize: 12,
+    color: colors.grey.dark
   },
-  priceTitle:{
-    fontSize:30,
-    fontFamily:fonts.bold,
-   
+  priceTitle: {
+    fontSize: 30,
+    fontFamily: fonts.bold,
+
   },
   comparisonPrice: {
     textDecorationLine: 'line-through',

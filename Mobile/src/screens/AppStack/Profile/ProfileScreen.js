@@ -39,13 +39,18 @@ export default class ProfileHomeScreen extends React.PureComponent {
       timezone: undefined,
       dobModalVisible: false,
       chosenDate: null,
+      cicuit: 0,
+      strength: 0,
+      interval: 0
     };
   }
   componentDidMount = async () => {
     this.fetchProfile();
+    this.fetchActiveChallengeUserData();
   }
   componentWillUnmount() {
     this.unsubscribe();
+    this.unsubscribeFACUD();
   }
   setDate = async (event, selectedDate) => {
     const currentDate = selectedDate;
@@ -58,6 +63,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
     this.unsubscribe = db.collection('users').doc(uid)
       .onSnapshot(async (doc) => {
         if (doc.exists) {
+          this.setState({ totalWorkoutCompleted: await doc.data().weeklyTargets.circuit + await doc.data().weeklyTargets.interval + await doc.data().weeklyTargets.strength })
           this.setState({
             profile: await doc.data(),
             timezone,
@@ -69,6 +75,47 @@ export default class ProfileHomeScreen extends React.PureComponent {
         }
       });
   }
+
+  fetchActiveChallengeUserData = async () => {
+    try {
+      this.setState({ loading: true });
+      const uid = await AsyncStorage.getItem("uid");
+      this.unsubscribeFACUD = await db
+        .collection("users")
+        .doc(uid)
+        .collection("challenges")
+        .where("status", "==", "Active")
+        .onSnapshot(async (querySnapshot) => {
+          await querySnapshot.forEach(async (doc) => {
+            const totalIntervalCompleted =
+              await doc.data().workouts.filter(
+                (res) => res.target === "interval"
+              );
+            const totalCircuitCompleted =
+              await doc.data().workouts.filter(
+                (res) => res.target === "circuit"
+              );
+            const totalStrengthCompleted =
+              await doc.data().workouts.filter(
+                (res) => res.target === "strength"
+              ); 
+            
+            this.setState({
+              cicuit: totalCircuitCompleted.length,
+              strength: totalStrengthCompleted.length,
+              interval: totalIntervalCompleted.length
+            });
+
+            console.log(totalCircuitCompleted.length, totalIntervalCompleted.length, totalStrengthCompleted.length)  
+          });
+        });
+    } catch (err) {
+      this.setState({ loading: false });
+      console.log(err);
+      Alert.alert("Fetch active challenge user data error!");
+    }
+  };
+
   toggleDobModal = () => {
     this.setState((prevState) => ({ dobModalVisible: !prevState.dobModalVisible }));
   }
@@ -94,6 +141,10 @@ export default class ProfileHomeScreen extends React.PureComponent {
       loading,
       dobModalVisible,
       chosenDate,
+      totalWorkoutCompleted,
+      strength,
+      cicuit,
+      interval
     } = this.state;
     return (
       <SafeAreaView style={globalStyle.safeContainer}>
@@ -142,7 +193,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 <View>
                     <View style={HomeScreenStyle.sectionHeader}>
                       <Text style={[HomeScreenStyle.bodyText]}>
-                          Total workout completed
+                          Total workout complete
                       </Text>
                     </View>
                     <View style={{width:'100%',flexDirection:"row",justifyContent:"center"}}>
@@ -150,7 +201,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                               profile && (
                                 <View>
                                   <ProgressBar
-                                    completed={profile.totalWorkoutCompleted}
+                                    completed={profile.totalWorkoutCompleted + strength + cicuit + interval}
                                     total = {0}
                                     size ={wp('38%')}
                                     customProgessTotalStyle ={{marginLeft:0,marginTop:0,marginBottom:0}}

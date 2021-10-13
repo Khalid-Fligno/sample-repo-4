@@ -52,9 +52,14 @@ import RNIap, {
 import CustomBtn from '../../components/Shared/CustomBtn';
 import { containerPadding } from '../../styles/globalStyles';
 
-const productTitleMap = {
+const productTitleMapIOS = {
   0: 'Yearly ',
   1: 'Monthly ',
+};
+
+const productTitleMapAndroid = {
+  0: 'Monthly ',
+  1: 'Yearly ',
 };
 
 const subscriptionPeriodMap = {
@@ -880,29 +885,29 @@ export default class SubscriptionScreen extends React.PureComponent {
                 <View style={styles.subscriptionTileRow}>
 
                 {
-                    !specialOffer && products && products.map((product, index) => (
-                      <SubscriptionTile
-                        key={product.identifier}
-                        primary={product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
-                        title={productTitleMap[1]}
-                        price={product.priceString}
-                        priceNumber={product.price}
-                        currencyCode={product.currencyCode}
-                        currencySymbol={product.currencySymbol}
-                        // onPress={() => this.purchaseProduct(product.identifier, product.price, product.currencyCode)}
-                        onPress={() => this.setState({selectedIndex:index})}
-                        selected = {selectedIndex === index}
-                        term={Platform.OS === 'android' ? andriodSubscriptionTitleMap[index] : subscriptionPeriodMap[product.identifier]}
-                      />
-                    ))
-                  }
+                  !specialOffer && products && products.map((product, index) => (
+                    <SubscriptionTile
+                      key={product.identifier}
+                      primary={product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
+                      title={Platform.OS === 'ios' ? productTitleMapIOS[index] : productTitleMapAndroid[index]}
+                      price={product.priceString}
+                      priceNumber={product.price}
+                      currencyCode={product.currencyCode}
+                      currencySymbol={product.currencySymbol}
+                      // onPress={() => this.purchaseProduct(product.identifier, product.price, product.currencyCode)}
+                      onPress={() => this.setState({selectedIndex:index})}
+                      selected = {selectedIndex === index}
+                      term={Platform.OS === 'android' ? andriodSubscriptionTitleMap[index] : subscriptionPeriodMap[product.identifier]}
+                    />
+                  ))
+                }
 
-                  {
+                  {/* {
                     specialOffer && discountedProducts && products && discountedProducts.map((product, index) => (
                       <SubscriptionTile
                         key={product.identifier}
                         primary={product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
-                        title={productTitleMap[0]}
+                        title={productTitleMap[index]}
                         price={product.priceString}
                         priceNumber={product.price}
                         currencyCode={product.currencyCode}
@@ -918,7 +923,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                         isDiscounted={product.identifier.indexOf('fitazfkapp.sub.fullaccess.yearly.discounted') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
                       />
                     ))
-                  }
+                  } */}
 
                 </View>
               </View>

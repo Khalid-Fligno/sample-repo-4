@@ -90,7 +90,8 @@ export const getLastExercise = (
     workout.workoutProcessType === "oneByOne"
   ) {
     lastExercise = true;
-    nextExerciseName = "NEARLY DONE!";
+    // nextExerciseName = "NEARLY DONE!";
+    nextExerciseName = typeof workout.coolDownExercises === 'undefined' ? "NEARLY DONE!" : workout.coolDownExercises[0].name;
   } else if (
     !exerciseList[currentExerciseIndex + 1] &&
     setCount === workout.workoutReps
@@ -120,7 +121,8 @@ export const getLastExerciseWC = (
   let nextExerciseName = "";
   if (!exerciseList[currentExerciseIndex + 1]) {
     lastExercise = true;
-    nextExerciseName = "NEARLY DONE!";
+    // nextExerciseName = "NEARLY DONE!";
+    nextExerciseName = exerciseList[0].type === 'coolDown' ? 'NEARLY DONE!' : workout.exercises[0].name;
   } else {
     if (exerciseList[currentExerciseIndex + 1]) {
       nextExerciseName = exerciseList[currentExerciseIndex + 1].displayName;

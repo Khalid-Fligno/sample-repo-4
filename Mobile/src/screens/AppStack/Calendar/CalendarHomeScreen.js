@@ -31,6 +31,8 @@ import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { NavigationActions } from "react-navigation";
 import OnBoardingNotification from "../../../components/Shared/OnBoardingNotification";
 import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
+import { checkVersion } from "react-native-check-version";
+import { getVersion } from "react-native-device-info";
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -142,6 +144,11 @@ class CalendarHomeScreen extends React.PureComponent {
 
   fetchUserData = async () => {
     const uid = await AsyncStorage.getItem("uid");
+    const version = await checkVersion();
+    const versionCodeRef = db
+      .collection("users")
+      .doc(uid)
+      .set({AppVersion: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
     const userRef = db.collection("users").doc(uid);
     userRef
       .get()
@@ -163,8 +170,7 @@ class CalendarHomeScreen extends React.PureComponent {
           userRef.set(data, { merge: true });
         }
         this.setState({
-          skipped:
-            this.state.activeChallengeUserData.onBoardingInfo.skipped ?? false,
+          skipped: this.state.activeChallengeUserData.onBoardingInfo.skipped ?? false,
           initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
         });
       })
@@ -228,10 +234,10 @@ class CalendarHomeScreen extends React.PureComponent {
     const workout = await loadExercise(workoutData);
     // console.log("line195",workout)
     if (workout && workout.newWorkout) {
-      console.log("Here....");
+      // console.log("Here....");
       const warmUpExercises = await downloadExerciseWC(
         workout,
-        workout.warmUpExercises,
+        Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array")>-1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => {return warmUpExercise}),
         workout.warmUpExerciseModel,
         "warmUp"
       );
@@ -333,7 +339,7 @@ class CalendarHomeScreen extends React.PureComponent {
         .collection("users")
         .doc(uid)
         .collection("challenges")
-        .where("status", "in", ["Active","InActive"])
+        .where("status", "in", ["Active"])
         .onSnapshot(async (querySnapshot) => {
           const list = [];
           await querySnapshot.forEach(async (doc) => {

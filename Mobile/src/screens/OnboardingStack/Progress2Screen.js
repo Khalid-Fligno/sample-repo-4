@@ -271,22 +271,22 @@ export default class Progress2Screen extends React.PureComponent {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
-    console.log(result);
+    console.log("qwertyuio", result);
     const originXValue = result.width > result.height ? 130 : 0;
     if (!result.cancelled) {
       try {
         const manipResult = await ImageManipulator.manipulateAsync(
           result.uri,
           [
-            { resize: { height: 800 } },
-            {
-              crop: {
-                originX: originXValue,
-                originY: 0,
-                width: 600,
-                height: 800,
-              },
-            },
+            { resize: { height: 800, width: 600 } },
+            // {
+            //   crop: {
+            //     originX: originXValue,
+            //     originY: 0,
+            //     width: 600,
+            //     height: 800,
+            //   },
+            // },
           ],
           { format: "jpeg", compress: 0.7, base64: true }
         );
@@ -296,6 +296,7 @@ export default class Progress2Screen extends React.PureComponent {
           error:
             "There was a problem with that image, please try a different one",
         });
+        console.log("123456789", err)
       }
     }
   };
@@ -448,16 +449,23 @@ export default class Progress2Screen extends React.PureComponent {
           </View>
           <View style={styles.contentContainer}>
             {image ? (
-              <TouchableOpacity
-                onPress={this.chooseUploadType}
-                style={styles.imageContainer}
-              >
+              // <TouchableOpacity
+              //   onPress={this.chooseUploadType}
+              //   style={styles.imageContainer}
+              // ></TouchableOpacity>
+              <View>
                 <Image
                   resizeMode="contain"
                   source={{ uri: image.uri }}
                   style={styles.image}
                 />
-              </TouchableOpacity>
+                <CustomBtn
+                  style={{marginTop: 10}}
+                  Title="Update Photo"
+                  titleCapitalise={true}
+                  onPress={this.chooseUploadType}
+                />
+              </View>
             ) : (
               <TouchableOpacity
                 onPress={this.chooseUploadType}
@@ -502,7 +510,8 @@ export default class Progress2Screen extends React.PureComponent {
             />
             )} */}
             <CustomBtn
-              Title="Update Photo"
+              // Title="Update Photo"
+              Title="Upload Photo"
               titleCapitalise={true}
               onPress={() => this.handleImagePicked(image)}
             />

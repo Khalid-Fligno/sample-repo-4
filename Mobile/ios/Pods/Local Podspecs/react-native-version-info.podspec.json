@@ -1,0 +1,26 @@
+{
+  "name": "react-native-version-info",
+  "version": "1.1.1",
+  "summary": "Access native app version in React Native",
+  "homepage": "https://github.com/tessus/react-native-version-info",
+  "license": "MIT",
+  "authors": {
+    "{\"name\"=>\"Helmut K. C. Tessarek\", \"email\"=>\"tessarek@evermeet.cx\"}": {
+      "name": "Helmut K. C. Tessarek",
+      "email": "tessarek@evermeet.cx"
+    }
+  },
+  "platforms": {
+    "ios": "7.0"
+  },
+  "source": {
+    "git": "git+https://github.com/tessus/react-native-version-info.git",
+    "tag": "1.1.1"
+  },
+  "source_files": "ios/*.{h,m}",
+  "dependencies": {
+    "React-Core": [
+
+    ]
+  }
+}

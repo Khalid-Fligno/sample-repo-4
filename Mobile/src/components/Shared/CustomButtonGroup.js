@@ -6,7 +6,7 @@ import { View } from 'react-native'
 
 export default function CustomButtonGroup(props){
     return(
-        <View style={globalStyle.absoluteFilterButtonsContainer}>
+        <View style={globalStyle.absoluteFilterButtonsContainer1}>
             <ButtonGroup
                 onPress={props.onPress}
                 selectedIndex={props.selectedIndex}

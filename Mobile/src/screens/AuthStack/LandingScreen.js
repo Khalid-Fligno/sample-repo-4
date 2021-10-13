@@ -8,17 +8,22 @@ import {
   TouchableOpacity,
   StatusBar,
   ImageBackground,
+  Platform
 } from "react-native";
 import Carousel from "react-native-carousel";
 import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
 import CustomBtn from "../../components/Shared/CustomBtn";
 import globalStyle, { containerPadding } from "../../styles/globalStyles";
+import { db } from "../../../config/firebase";
 const { width, height } = Dimensions.get("window");
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import { getBuildNumber, getVersion } from "react-native-device-info";
+import { checkVersion } from "react-native-check-version";
+import AsyncStorage from '@react-native-community/async-storage';
 export default class LandingScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -26,6 +31,20 @@ export default class LandingScreen extends React.PureComponent {
       specialOffer: props.navigation.getParam("specialOffer", undefined),
     };
   }
+
+  componentDidMount = async () => {
+    this.checkAppVersion();
+  };
+
+  async checkAppVersion() {
+    const uid = await AsyncStorage.getItem('uid');
+    const version = await checkVersion();
+    const versionCodeRef = db
+      .collection("users")
+      .doc(uid)
+      .set({AppVersionUse: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
+  }
+
   render() {
     const { specialOffer } = this.state;
     return (
