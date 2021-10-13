@@ -44,30 +44,14 @@ const CustomBtn = (props) => {
     fontFamily: fonts.bold,
   };
 
-  const filterBtnStyle = {
-    borderRadius: 45,
-    borderWidth: 0,
-    backgroundColor: colors.white,
-    color: colors.black,
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 9,
-    },
-    shadowOpacity: 0.48,
-    shadowRadius: 11.95,
-    elevation: 18,
-  };
   return (
     <TouchableOpacity
       disabled={props.disabled}
       style={[
-        filterBtnStyle,
         customBtnStyle,
         props.style,
         props.outline ? outlineBtnStyle : {},
         props.customBtnStyle,
-        props.filterBtnStyle,
       ]}
       activeOpacity={0.5}
       onPress={props.onPress}
@@ -115,7 +99,6 @@ const CustomBtn = (props) => {
 };
 
 CustomBtn.propTypes = {
-  filterBtnStyle: PropTypes.object,
   customBtnStyle: PropTypes.object,
   customBtnTitleStyle: PropTypes.object,
   Title: PropTypes.string,
