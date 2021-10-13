@@ -1,0 +1,6 @@
+module Pods_FitazFK {
+  umbrella header "Pods-FitazFK-umbrella.h"
+
+  export *
+  module * { export * }
+}
