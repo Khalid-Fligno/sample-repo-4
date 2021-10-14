@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    TouchableOpacity,
     StyleSheet,
     View,
     Dimensions,
@@ -17,6 +16,7 @@ import RecipeTile from "../../../components/Nutrition/RecipeTile";
 import RecipeTileSkeleton from "../../../components/Nutrition/RecipeTileSkeleton";
 import colors from "../../../styles/colors";
 import fonts from '../../../styles/fonts';
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "../../../components/Shared/Icon";
 import globalStyle from "../../../styles/globalStyles";
 import BigHeadingWithBackButton from "../../../components/Shared/BigHeadingWithBackButton";
@@ -39,7 +39,6 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             loading: false,
             filterIndex: 0,
             isFilterVisible: false,
-            isClickVisible: false,
             meal: 'Breakfast',
         };
     }
@@ -230,52 +229,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             </View>
         );
 
-        const clickModal = (
-            <Modal
-                isVisible={this.state.isFilterVisible ? this.state.isClickVisible : this.state.isClickVisible}
-                coverScreen={true}
-                style={{ margin: 0 }}
-                animationIn="fadeInRightBig"
-                animationOut="fadeOutDownBig"
-                onBackdropPress={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
-            >
-                <View style={{ backgroundColor: 'white', height: hp('50%'), marginTop: 320 }}>
-                    <View style={globalStyle.container}>
-                        <View style={styles.closeContainer}><Text></Text></View>
-                        <TouchableOpacity
-                            style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}
-                            onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
-                        >
-                            <Icon name='chevron-left' size={13} color={colors.black} style={{ marginRight: 10 }} />
-                            <Text style={{ fontSize: 15 }}>Back</Text>
-                        </TouchableOpacity>
-                        <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginVertical: 20, fontWeight: 'bold', fontSize: 20 }}>Select Phase</Text>
-                        <View style={styles.tagContainer}>
-                            <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 1</Text>
-                            <CheckBox />
-                        </View>
-                        <View style={styles.tagContainer}>
-                            <Text style={{ marginBottom: 10 , fontSize: 15 }}>Phase 2</Text>
-                            <CheckBox />
-                        </View>
-                        <View style={styles.tagContainer}>
-                            <Text style={{ marginBottom: 10 , fontSize: 15 }}>Phase 3</Text>
-                            <CheckBox />
-                        </View>
-                        <View style={{ marginTop: 50 }}>
-                            <Button
-                                title="Apply"
-                                color='#4d4c4c'
-                            />
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-        )
-
         const filterModal = (
             <Modal
-                isVisible={this.state.isClickVisible ? !this.state.isFilterVisible : this.state.isFilterVisible}
+                isVisible={this.state.isFilterVisible}
                 coverScreen={true}
                 style={{ margin: 0 }}
                 animationIn="fadeInUpBig"
@@ -286,10 +242,10 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                     <View style={globalStyle.container}>
                         <View style={styles.closeContainer}><Text></Text></View>
                         <View style={{ marginTop: 10 }}>
-                            <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter receipes to</Text>
+                            <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginTop:10 }}>Filter receipes to</Text>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
-                                    <View style={{
+                                    <View style={{ 
                                         height: 25,
                                         width: 25,
                                         marginRight: 10,
@@ -300,21 +256,21 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                         alignItems: "center",
                                         backgroundColor: '#00C520',
                                     }}>
-                                        <Text style={{
+                                        <Text style={{ 
                                             fontFamily: fonts.bold,
                                             fontSize: 9,
-                                            color: colors.white,
+                                            color: colors.white, 
                                         }}>
-                                            V
+                                        V
                                         </Text>
                                     </View>
-                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Vegan</Text>
+                                    <Text style={{ marginTop: 4 }}>Vegan</Text>
                                 </View>
-                                <CheckBox />
+                                <CheckBox/>
                             </View>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
-                                    <View style={{
+                                    <View style={{ 
                                         height: 25,
                                         width: 25,
                                         marginRight: 10,
@@ -325,21 +281,21 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                         alignItems: "center",
                                         backgroundColor: '#469753',
                                     }}>
-                                        <Text style={{
+                                        <Text style={{ 
                                             fontFamily: fonts.bold,
                                             fontSize: 9,
                                             color: colors.white,
                                         }}>
-                                            VEG
+                                        VEG
                                         </Text>
                                     </View>
-                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Vegetarian</Text>
+                                    <Text style={{ marginTop: 4 }}>Vegetarian</Text>
                                 </View>
-                                <CheckBox />
+                                <CheckBox/>
                             </View>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
-                                    <View style={{
+                                    <View style={{ 
                                         height: 25,
                                         width: 25,
                                         marginRight: 10,
@@ -350,21 +306,21 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                         alignItems: "center",
                                         backgroundColor: '#469753',
                                     }}>
-                                        <Text style={{
+                                        <Text style={{ 
                                             fontFamily: fonts.bold,
                                             fontSize: 9,
-                                            color: colors.white,
+                                            color: colors.white, 
                                         }}>
-                                            GF
+                                        GF
                                         </Text>
                                     </View>
-                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Gluta-Free</Text>
+                                    <Text style={{ marginTop: 4 }}>Gluta-Free</Text>
                                 </View>
-                                <CheckBox />
+                                <CheckBox/>
                             </View>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
-                                    <View style={{
+                                    <View style={{ 
                                         height: 25,
                                         width: 25,
                                         marginRight: 10,
@@ -375,21 +331,21 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                         alignItems: "center",
                                         backgroundColor: '#B7782B',
                                     }}>
-                                        <Text style={{
+                                        <Text style={{ 
                                             fontFamily: fonts.bold,
                                             fontSize: 9,
-                                            color: colors.white,
+                                            color: colors.white, 
                                         }}>
-                                            DF
+                                        DF
                                         </Text>
                                     </View>
-                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Dairy-Free</Text>
+                                    <Text style={{ marginTop: 4 }}>Dairy-Free</Text>
                                 </View>
-                                <CheckBox />
+                                <CheckBox/>
                             </View>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
-                                    <View style={{
+                                    <View style={{ 
                                         height: 25,
                                         width: 25,
                                         marginRight: 10,
@@ -400,47 +356,35 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                         alignItems: "center",
                                         backgroundColor: '#965734',
                                     }}>
-                                        <Text style={{
+                                        <Text style={{ 
                                             fontFamily: fonts.bold,
                                             fontSize: 9,
-                                            color: colors.white,
+                                            color: colors.white, 
                                         }}>
-                                            GH
+                                        GH
                                         </Text>
                                     </View>
-                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Gut Health</Text>
+                                    <Text style={{ marginTop: 4 }}>Gut Health</Text>
                                 </View>
-                                <CheckBox />
+                                <CheckBox/>
                             </View>
-                            <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select transform level</Text>
+                            <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginVertical: 30 }}>Select transform level</Text>
                             <View style={styles.tagContainer}>
-                                <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 1</Text>
-                                <TouchableOpacity
-                                    onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
-                                >
-                                    <Icon name="chevron-right" size={12} color={colors.black} />
-                                </TouchableOpacity>
+                                <Text style={{ marginBottom: 8 }}>Level 1</Text>
+                                <Icon name="chevron-right" size={12} color={colors.black} />
                             </View>
                             <View style={styles.tagContainer}>
-                                <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 2</Text>
-                                <TouchableOpacity
-                                    onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
-                                >
-                                    <Icon name="chevron-right" size={12} color={colors.black} />
-                                </TouchableOpacity>
+                                <Text style={{ marginBottom: 8 }}>Level 2</Text>
+                                <Icon name="chevron-right" size={12} color={colors.black} />
                             </View>
                             <View style={styles.tagContainer}>
-                                <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 3</Text>
-                                <TouchableOpacity
-                                    onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
-                                >
-                                    <Icon name="chevron-right" size={12} color={colors.black} />
-                                </TouchableOpacity>
+                                <Text style={{ marginBottom: 8 }}>Level 3</Text>
+                                <Icon name="chevron-right" size={12} color={colors.black} />
                             </View>
                             <View style={{ marginTop: 50 }}>
-                                <Button
+                                <Button 
                                     title="Apply"
-                                    color='#4d4c4c'
+                                    color='grey'
                                 />
                             </View>
                         </View>
@@ -468,12 +412,12 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             Title='Filter'
                             style={styles.oblongBtnStyle}
                             isRightIcon={true}
-                            customBtnTitleStyle={{ marginHorizontal: 10, fontSize: 12 }}
+                            customBtnTitleStyle={{ marginHorizontal: 10 }}
                             onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
                         />
                     </View>
                 </View>
-                {/* <FlatList
+                <FlatList
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     data={filterButtons}
@@ -482,7 +426,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                     style={{
                         paddingVertical: wp("4%"),
                     }}
-                /> */}
+                />
                 {/* {loading ? (
                     skeleton
                 ) : (
@@ -497,7 +441,6 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                     />
                 )} */}
                 {filterModal}
-                {clickModal}
             </View>
         );
     }
@@ -539,7 +482,6 @@ const styles = StyleSheet.create({
         letterSpacing: 0.5,
     },
     oblongBtnStyle: {
-        alignItems: 'center',
         borderRadius: 45,
         borderWidth: 0,
         backgroundColor: colors.white,
@@ -552,14 +494,13 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.48,
         shadowRadius: 11.95,
         elevation: 18,
-        height: 38,
     },
     closeContainer: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'grey',
-        marginHorizontal: 160,
+        marginHorizontal: 130,
         marginTop: 10,
         borderRadius: 50,
         height: 5,
