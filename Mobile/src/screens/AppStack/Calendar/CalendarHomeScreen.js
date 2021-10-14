@@ -235,15 +235,17 @@ class CalendarHomeScreen extends React.PureComponent {
     // console.log("line195",workout)
     if (workout && workout.newWorkout) {
       // console.log("Here....");
+      let warmUpExers = workout.warmUpExercises.filter((warmUpExercise) => {return warmUpExercise});
       const warmUpExercises = await downloadExerciseWC(
         workout,
-        Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array")>-1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => {return warmUpExercise}),
+        workout.warmUpExercises,
         workout.warmUpExerciseModel,
         "warmUp"
       );
       if (warmUpExercises.length > 0) {
         const coolDownExercises = await downloadExerciseWC(
           workout,
+          warmUpExers,
           workout.coolDownExercises,
           workout.coolDownExerciseModel,
           "coolDown"
@@ -554,6 +556,7 @@ class CalendarHomeScreen extends React.PureComponent {
         <TodayMealsList
           data={todayRecommendedMeal[0]}
           onPress={(res) => this.goToRecipe(res)}
+
         />
       </>
     );
