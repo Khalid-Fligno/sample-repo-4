@@ -509,10 +509,6 @@ class CalendarHomeScreen extends React.PureComponent {
     });
   }
 
-  getToFilter() {
-    this.props.navigation.navigate('FilterRecipe')
-  }
-
   openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Linking.openURL(url);
@@ -560,7 +556,7 @@ class CalendarHomeScreen extends React.PureComponent {
         <TodayMealsList
           data={todayRecommendedMeal[0]}
           onPress={(res) => this.goToRecipe(res)}
-          filterPress={() => this.getToFilter()}
+
         />
       </>
     );
