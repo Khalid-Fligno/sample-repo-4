@@ -6,23 +6,23 @@ import { db } from "../../config/firebase";
 
 export const findFocus = (workoutObject) => {
   if (
-    workoutObject.filters &&
-    workoutObject.filters.indexOf("upperBody") > -1
+      workoutObject.filters &&
+      workoutObject.filters.indexOf("upperBody") > -1
   ) {
     return "Upper Body";
   } else if (
-    workoutObject.filters &&
-    workoutObject.filters.indexOf("lowerBody") > -1
+      workoutObject.filters &&
+      workoutObject.filters.indexOf("lowerBody") > -1
   ) {
     return "Lower Body";
   } else if (
-    workoutObject.filters &&
-    workoutObject.filters.indexOf("fullBody") > -1
+      workoutObject.filters &&
+      workoutObject.filters.indexOf("fullBody") > -1
   ) {
     return "Full Body";
   } else if (
-    workoutObject.filters &&
-    workoutObject.filters.indexOf("core") > -1
+      workoutObject.filters &&
+      workoutObject.filters.indexOf("core") > -1
   ) {
     return "Core";
   }
@@ -78,23 +78,23 @@ export const findWorkoutType = (workout) => {
 };
 
 export const getLastExercise = (
-  exerciseList,
-  currentExerciseIndex,
-  workout,
-  setCount
+    exerciseList,
+    currentExerciseIndex,
+    workout,
+    setCount
 ) => {
   let lastExercise = false;
   let nextExerciseName = "";
   if (
-    !exerciseList[currentExerciseIndex + 1] &&
-    workout.workoutProcessType === "oneByOne"
+      !exerciseList[currentExerciseIndex + 1] &&
+      workout.workoutProcessType === "oneByOne"
   ) {
     lastExercise = true;
     // nextExerciseName = "NEARLY DONE!";
     nextExerciseName = typeof workout.coolDownExercises === 'undefined' ? "NEARLY DONE!" : workout.coolDownExercises[0].name;
   } else if (
-    !exerciseList[currentExerciseIndex + 1] &&
-    setCount === workout.workoutReps
+      !exerciseList[currentExerciseIndex + 1] &&
+      setCount === workout.workoutReps
   ) {
     lastExercise = true;
     nextExerciseName = "NEARLY DONE!";
@@ -112,10 +112,10 @@ export const getLastExercise = (
 };
 
 export const getLastExerciseWC = (
-  exerciseList,
-  currentExerciseIndex,
-  workout,
-  setCount
+    exerciseList,
+    currentExerciseIndex,
+    workout,
+    setCount
 ) => {
   let lastExercise = false;
   let nextExerciseName = "";
@@ -139,8 +139,8 @@ export const getLastExerciseWC = (
 export const showNextExerciseFlag = (workout, setCount, rest) => {
   let showNextExercise = false;
   if (
-    workout.workoutProcessType === "oneByOne" &&
-    setCount === workout.workoutReps
+      workout.workoutProcessType === "oneByOne" &&
+      setCount === workout.workoutReps
   ) {
     showNextExercise = true;
   } else if (rest && !workout.count) {
@@ -153,14 +153,14 @@ export const showNextExerciseFlag = (workout, setCount, rest) => {
 
 export const setRestImages = async () => {
   var restImages = (
-    await db.collection("RestImages").doc("WFTvMwRtK5W0krXnIT4o").get()
+      await db.collection("RestImages").doc("WFTvMwRtK5W0krXnIT4o").get()
   ).data();
   // console.log("rest images",restImages);
   if (restImages && restImages.images.length > 0) {
     FastImage.preload(
-      restImages.images.map((res) => {
-        return { uri: res };
-      })
+        restImages.images.map((res) => {
+          return { uri: res };
+        })
     );
     await AsyncStorage.setItem("restImages", JSON.stringify(restImages.images));
   }
@@ -176,15 +176,15 @@ export const getRandomRestImages = async () => {
 export const loadExercise = async (workoutData) => {
   FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res) => {
     Promise.all(
-      res.map(async (item, index) => {
-        if (item.includes("exercise-")) {
-          FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
-            idempotent: true,
-          }).then(() => {
-            // console.log(item,"deleted...")
-          });
-        }
-      })
+        res.map(async (item, index) => {
+          if (item.includes("exercise-")) {
+            FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
+              idempotent: true,
+            }).then(() => {
+              // console.log(item,"deleted...")
+            });
+          }
+        })
     );
   });
   console.log("Workout data: ", workoutData);
@@ -193,10 +193,10 @@ export const loadExercise = async (workoutData) => {
     let tempExerciseData = [];
 
     const exerciseRef = (
-      await db
-        .collection("Exercises")
-        // .where("id", "in", workoutData.exercises)
-        .get()
+        await db
+            .collection("Exercises")
+            // .where("id", "in", workoutData.exercises)
+            .get()
     ).docs;
 
     exerciseRef.forEach((exercise) => {
@@ -236,10 +236,10 @@ const downloadExercise = async (workout) => {
     if (workout.warmUpExercises) {
       let tempExerciseData = [];
       const exerciseRef = (
-        await db
-          .collection("WarmUpCoolDownExercises")
-          .where("id", "in", workout.warmUpExercises)
-          .get()
+          await db
+              .collection("WarmUpCoolDownExercises")
+              .where("id", "in", workout.warmUpExercises)
+              .get()
       ).docs;
 
       exerciseRef.forEach((exercise) => {
@@ -252,10 +252,10 @@ const downloadExercise = async (workout) => {
     if (workout.coolDownExercises) {
       let tempExerciseData = [];
       const exerciseRef = (
-        await db
-          .collection("WarmUpCoolDownExercises")
-          .where("id", "in", workout.coolDownExercises)
-          .get()
+          await db
+              .collection("WarmUpCoolDownExercises")
+              .where("id", "in", workout.coolDownExercises)
+              .get()
       ).docs;
 
       exerciseRef.forEach((exercise) => {
@@ -268,72 +268,72 @@ const downloadExercise = async (workout) => {
     console.log("WarmUp exercises: ", warmUpExercises);
     console.log("Cooldown exercises: ", coolDownExercises);
     return Promise.all(
-      exercises.map(async (exercise, index) => {
-        return new Promise(async (resolve, reject) => {
-          let videoIndex = 0;
-          if (workout.newWorkout)
-            videoIndex = exercise.videoUrls.findIndex(
-              (res) => res.model === workout.exerciseModel
-            );
-          if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-            await FileSystem.downloadAsync(
-              exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-              `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`
-            )
-              .then(() => {
-                resolve("Downloaded");
-                // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
-              })
-              .catch((err) => resolve("Download failed"));
-          } else {
-            resolve("no video found");
-          }
-        });
-      }),
-      warmUpExercises.map(async (exercise, index) => {
-        return new Promise(async (resolve, reject) => {
-          let videoIndex = 0;
-          if (workout.newWorkout)
-            videoIndex = exercise.videoUrls.findIndex(
-              (res) => res.model === workout.exerciseModel
-            );
-          if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-            await FileSystem.downloadAsync(
-              exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-              `${FileSystem.cacheDirectory}warmUpExercise-${index + 1}.mp4`
-            )
-              .then(() => {
-                resolve("Downloaded");
-                // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
-              })
-              .catch((err) => resolve("Download failed"));
-          } else {
-            resolve("no video found");
-          }
-        });
-      }),
-      coolDownExercises.map(async (exercise, index) => {
-        return new Promise(async (resolve, reject) => {
-          let videoIndex = 0;
-          if (workout.newWorkout)
-            videoIndex = exercise.videoUrls.findIndex(
-              (res) => res.model === workout.exerciseModel
-            );
-          if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-            await FileSystem.downloadAsync(
-              exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-              `${FileSystem.cacheDirectory}coolDownExercise-${index + 1}.mp4`
-            )
-              .then(() => {
-                resolve("Downloaded");
-                // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
-              })
-              .catch((err) => resolve("Download failed"));
-          } else {
-            resolve("no video found");
-          }
-        });
-      })
+        exercises.map(async (exercise, index) => {
+          return new Promise(async (resolve, reject) => {
+            let videoIndex = 0;
+            if (workout.newWorkout)
+              videoIndex = exercise.videoUrls.findIndex(
+                  (res) => res.model === workout.exerciseModel
+              );
+            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+              await FileSystem.downloadAsync(
+                  exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
+                  `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`
+              )
+                  .then(() => {
+                    resolve("Downloaded");
+                    // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+                  })
+                  .catch((err) => resolve("Download failed"));
+            } else {
+              resolve("no video found");
+            }
+          });
+        }),
+        warmUpExercises.map(async (exercise, index) => {
+          return new Promise(async (resolve, reject) => {
+            let videoIndex = 0;
+            if (workout.newWorkout)
+              videoIndex = exercise.videoUrls.findIndex(
+                  (res) => res.model === workout.exerciseModel
+              );
+            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+              await FileSystem.downloadAsync(
+                  exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
+                  `${FileSystem.cacheDirectory}warmUpExercise-${index + 1}.mp4`
+              )
+                  .then(() => {
+                    resolve("Downloaded");
+                    // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+                  })
+                  .catch((err) => resolve("Download failed"));
+            } else {
+              resolve("no video found");
+            }
+          });
+        }),
+        coolDownExercises.map(async (exercise, index) => {
+          return new Promise(async (resolve, reject) => {
+            let videoIndex = 0;
+            if (workout.newWorkout)
+              videoIndex = exercise.videoUrls.findIndex(
+                  (res) => res.model === workout.exerciseModel
+              );
+            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+              await FileSystem.downloadAsync(
+                  exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
+                  `${FileSystem.cacheDirectory}coolDownExercise-${index + 1}.mp4`
+              )
+                  .then(() => {
+                    resolve("Downloaded");
+                    // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+                  })
+                  .catch((err) => resolve("Download failed"));
+            } else {
+              resolve("no video found");
+            }
+          });
+        })
     );
   } catch (err) {
     console.log(err);
@@ -343,19 +343,19 @@ const downloadExercise = async (workout) => {
 };
 
 export const downloadExerciseWC = async (
-  workout,
-  exerciseIds,
-  exerciseModel,
-  type
+    workout,
+    exerciseIds,
+    exerciseModel,
+    type
 ) => {
   try {
     const tempExerciseData = [];
     let exercises = [];
     const exerciseRef = (
-      await db
-        .collection("WarmUpCoolDownExercises")
-        .where("id", "in", exerciseIds)
-        .get()
+        await db
+            .collection("WarmUpCoolDownExercises")
+            .where("id", "in", exerciseIds)
+            .get()
     ).docs;
     exerciseRef.forEach((exercise) => {
       tempExerciseData.push(exercise.data());
@@ -365,26 +365,26 @@ export const downloadExerciseWC = async (
     });
     // console.log("kkkk",exercises)
     return Promise.all(
-      exercises.map(async (exercise, index) => {
-        return new Promise(async (resolve, reject) => {
-          let videoIndex = 0;
-          if (workout.newWorkout)
-            videoIndex = exercise.videoUrls.findIndex(
-              (res) => res.model === exerciseModel
-            );
-          if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-            await FileSystem.downloadAsync(
-              exercise.videoUrls[videoIndex].url,
-              `${FileSystem.cacheDirectory}exercise-${type}-${index + 1}.mp4`
-            )
-              .then(() => {
-                resolve(exercise);
-                // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
-              })
-              .catch((err) => resolve("Download failed"));
-          }
-        });
-      })
+        exercises.map(async (exercise, index) => {
+          return new Promise(async (resolve, reject) => {
+            let videoIndex = 0;
+            if (workout.newWorkout)
+              videoIndex = exercise.videoUrls.findIndex(
+                  (res) => res.model === exerciseModel
+              );
+            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+              await FileSystem.downloadAsync(
+                  exercise.videoUrls[videoIndex].url,
+                  `${FileSystem.cacheDirectory}exercise-${type}-${index + 1}.mp4`
+              )
+                  .then(() => {
+                    resolve(exercise);
+                    // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+                  })
+                  .catch((err) => resolve("Download failed"));
+            }
+          });
+        })
     );
   } catch (err) {
     console.log(err);
