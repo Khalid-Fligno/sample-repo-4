@@ -199,33 +199,16 @@ export const loadExercise = async (workoutData) => {
         .get()
     ).docs;
 
-    // db.collection("Exercises")
-    // .get()
-    // .then(async function(querySnapshot) {
-    //     querySnapshot.forEach(function(doc) {
-    //         // console.log(doc.id, " => ", doc.data());
-    //         if( workoutData.exercises.includes( doc.id )){
-    //           console.log(doc.data())
-    //           exercises.push(doc.data())
-    //          }
-    //     });
-
-    //     await asdf(workoutData, exercises);
-    // })
-    // .catch(function(error) {
-    //     console.log("Error getting documents: ", error);
-    // });
-
     exerciseRef.forEach((exercise) => {
       if( workoutData.exercises.includes( exercise.id )){
         tempExerciseData.push(exercise.data());
       }
     });
+
     exercises = workoutData.exercises.map((id) => {
       return tempExerciseData.find((res) => res.id === id);
     });
 
-    // console.log(exercises)
     if (exercises.length > 0) {
       workoutData = Object.assign({}, workoutData, { exercises: exercises });
       const res = await downloadExercise(workoutData);
@@ -241,18 +224,6 @@ export const loadExercise = async (workoutData) => {
     if (res) return workoutData;
     else return false;
   }
-};
-
-const asdf = async (workoutData, exercises) => {
-  if (exercises.length > 0) {
-      workoutData = Object.assign({}, workoutData, { exercises: exercises });
-      const res = await downloadExercise(workoutData);
-      console.log(">>>", res);
-      if (res) return workoutData;
-      else return false;
-    } else {
-      return false;
-    }
 };
 
 const downloadExercise = async (workout) => {
