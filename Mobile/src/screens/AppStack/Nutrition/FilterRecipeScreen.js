@@ -27,7 +27,7 @@ import {
 } from "react-native-responsive-screen";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import Modal from "react-native-modal";
-import { SafeAreaView } from "react-navigation";
+import { Card } from 'react-native-elements';
 
 const { width } = Dimensions.get("window");
 
@@ -255,11 +255,11 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             <CheckBox />
                         </View>
                         <View style={styles.tagContainer}>
-                            <Text style={{ marginBottom: 10 , fontSize: 15 }}>Phase 2</Text>
+                            <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 2</Text>
                             <CheckBox />
                         </View>
                         <View style={styles.tagContainer}>
-                            <Text style={{ marginBottom: 10 , fontSize: 15 }}>Phase 3</Text>
+                            <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 3</Text>
                             <CheckBox />
                         </View>
                         <View style={{ marginTop: 50 }}>
@@ -473,6 +473,122 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                         />
                     </View>
                 </View>
+                <View
+                    style={{ flexDirection: 'row', marginVertical: 10 }}
+                >
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            backgroundColor: '#e3e3e3',
+                            borderRadius: 50,
+                            marginRight: 7,
+                        }}
+                    >
+                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 11 }}>Vegan</Text>
+                        <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            backgroundColor: '#e3e3e3',
+                            borderRadius: 50,
+                            marginRight: 7,
+                        }}
+                    >
+                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 11 }}>Vegetarian</Text>
+                        <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            backgroundColor: '#e3e3e3',
+                            borderRadius: 50,
+                            marginRight: 7,
+                        }}
+                    >
+                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 11 }}>L1 - P1</Text>
+                        <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+                    </View>
+                </View>
+                <View
+                    style={styles.cardContainer}
+                >
+                    <Card
+                        image={{ uri: '../../../../assets/images/nutrition-snack.jpg' }}
+                        containerStyle={styles.card}
+                    >
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10 }}>
+                                <View>
+                                    <Text style={{ fontFamily: fonts.bold, fontSize: 15, lineHeight: 18 }}>2-ingredient Sashimi</Text>
+                                </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <View style={{
+                                    height: 24,
+                                    width: 24,
+                                    marginRight: 10,
+                                    borderWidth: 0,
+                                    // borderColor: colors.violet.standard,
+                                    borderRadius: 14,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    backgroundColor: '#469753',
+                                }}>
+                                    <Text style={{
+                                        fontFamily: fonts.bold,
+                                        fontSize: 9,
+                                        color: colors.white,
+                                    }}>
+                                        GF
+                                    </Text>
+                                </View>
+                                <View style={{
+                                    height: 24,
+                                    width: 24,
+                                    marginRight: 10,
+                                    borderWidth: 0,
+                                    // borderColor: colors.violet.standard,
+                                    borderRadius: 14,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    backgroundColor: '#469753',
+                                }}>
+                                    <Text style={{
+                                        fontFamily: fonts.bold,
+                                        fontSize: 9,
+                                        color: colors.white,
+                                    }}>
+                                        VEG
+                                    </Text>
+                                </View>
+                                <View style={{
+                                    height: 24,
+                                    width: 24,
+                                    marginRight: 10,
+                                    borderWidth: 0,
+                                    // borderColor: colors.violet.standard,
+                                    borderRadius: 14,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    backgroundColor: '#B7782B',
+                                }}>
+                                    <Text style={{
+                                        fontFamily: fonts.bold,
+                                        fontSize: 9,
+                                        color: colors.white,
+                                    }}>
+                                        DF
+                                    </Text>
+                                </View>
+                                <Text style={{ fontSize: 11 }}>+ more</Text>
+                            </View>
+                        </View>
+                    </Card>
+                </View>
                 {/* <FlatList
                     horizontal
                     showsHorizontalScrollIndicator={false}
@@ -573,5 +689,21 @@ const styles = StyleSheet.create({
     },
     tagContainer1: {
         flexDirection: 'row',
-    }
+    },
+    cardContainer: {
+        margin: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        // shadowColor: colors.charcoal.standard,
+        // shadowOpacity: 0.5,
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowRadius: 4,
+    },
+    card: {
+        width: width - 50,
+        borderRadius: 3,
+        overflow: 'hidden',
+        borderWidth: 0,
+        elevation: 0,
+    },
 });

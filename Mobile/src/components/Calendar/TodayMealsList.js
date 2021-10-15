@@ -10,11 +10,26 @@ import DoubleRightArrow from "../../../assets/icons/DoubleRightArrow";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import { containerPadding } from "../../styles/globalStyles";
+import Icon from "../Shared/Icon";
 class TodayMealsList extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
+
+  sample = ({ }) => (
+
+    <TouchableOpacity
+      style={styles.cardContainer1}
+      onPress={() => this.props.filterPress()}
+    >
+      <View style={styles.opacityLayer1}>
+        <Icon name="add-circle" size={15} style={{ left: 50 }}/>
+        <Text style={styles.cardTitle1}>Choose a recipe</Text>
+      </View>
+    </TouchableOpacity>
+
+  )
 
   mealCard = ({ item: recipe }) => (
     <TouchableOpacity
@@ -33,7 +48,8 @@ class TodayMealsList extends Component {
         </View>
       </ImageBackground>
     </TouchableOpacity>
-  );
+  )
+
   carousel = (data, title) => (
     <View>
       <View
@@ -61,6 +77,7 @@ class TodayMealsList extends Component {
         legacyImplementation={false}
         data={data}
         renderItem={(item) => this.mealCard(item)}
+        ListFooterComponent={this.sample}
         keyExtractor={(res) => res.id}
         style={{
           paddingHorizontal: containerPadding,
@@ -68,7 +85,7 @@ class TodayMealsList extends Component {
         }}
       />
     </View>
-  );
+  )
 
   render() {
     const { data } = this.props;
@@ -100,6 +117,9 @@ const styles = StyleSheet.create({
   container: {
     width: wp("100%"),
   },
+  footerComponet: {
+    paddingHorizontal: 20,
+  },
   label: {
     fontFamily: fonts.bold,
     fontSize: wp("4%"),
@@ -122,6 +142,13 @@ const styles = StyleSheet.create({
     height: wp("33%"),
     width: wp("65%"),
     marginRight: wp("3.5%"),
+    // paddingRight: 100
+  },
+  cardContainer1: {
+    height: wp("33%"),
+    width: wp("65%"),
+    marginRight: wp("3.5%"),
+    backgroundColor: '#ececec',
   },
   opacityLayer: {
     flex: 1,
@@ -129,6 +156,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     backgroundColor: colors.transparentBlackLightest,
     padding: wp("5%"),
+  },
+  opacityLayer1: {
+    flexDirection: 'column',
+    width: "100%",
+    justifyContent: "center",
+    padding: 50,
+    left: 15
   },
   cardTitle: {
     fontFamily: fonts.bold,
@@ -141,4 +175,15 @@ const styles = StyleSheet.create({
     fontSize: wp("3.5%"),
     textTransform: "capitalize",
   },
+  cardTitle1: {
+    fontFamily: fonts.bold,
+    color: colors.black,
+    shadowColor: colors.grey.dark,
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 5,
+    width: "90%",
+    fontSize: wp("3.5%"),
+  },
 });
+  
