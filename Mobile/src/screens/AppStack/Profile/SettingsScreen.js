@@ -17,6 +17,7 @@ import colors from "../../../styles/colors";
 // import fonts from '../../../styles/fonts';
 import globalStyle from "../../../styles/globalStyles";
 import ProfileStyles from "./ProfileStyles";
+import moment from "moment";
 
 const { width } = Dimensions.get("window");
 
@@ -38,9 +39,11 @@ export default class SettingsScreen extends React.PureComponent {
       }
     });
   };
+
   componentWillUnmount() {
     this.unsubscribe();
   }
+
   fetchProfile = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem("uid");
@@ -58,6 +61,7 @@ export default class SettingsScreen extends React.PureComponent {
         }
       });
   };
+
   changePasswordAlert = () => {
     Alert.alert(
       "Change Password",
@@ -104,17 +108,49 @@ export default class SettingsScreen extends React.PureComponent {
       { cancelable: false }
     );
   };
+
   resetInitialProgress = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem("uid");
-    const userRef = db.collection("users").doc(uid);
+    const userRef = db.collection("users")
+      .doc(uid)
     await userRef.update({
-      initialProgressInfo: firebase.firestore.FieldValue.delete(),
-      currentProgressInfo: firebase.firestore.FieldValue.delete(),
+      initialProgressInfo: {
+        date: moment().format("YYYY-MM-DD"),
+        weight: null ?? 0,
+        waist: null ?? 0,
+        hip: null ?? 0,
+        // height: null ?? 0,
+        // goalWeight: null ?? 0,
+        // burpeeCount: null ?? 0,
+      },
+      // initialProgressInfo: firebase.firestore.FieldValue.delete(),
+      currentProgressInfo: {
+        date: moment().format("YYYY-MM-DD"),
+        weight: null,
+        waist: null,
+        hip: null,
+        // height: null,
+        // goalWeight: null,
+        // burpeeCount: null,
+      }
     });
     Alert.alert("Your progress info has been reset");
     this.setState({ loading: false });
   };
+
+  // resetInitialProgress = async () => {
+  //   this.setState({ loading: true });
+  //   const uid = await AsyncStorage.getItem("uid");
+  //   const userRef = db.collection("users").doc(uid);
+  //   await userRef.update({
+  //     initialProgressInfo: firebase.firestore.FieldValue.delete(),
+  //     currentProgressInfo: firebase.firestore.FieldValue.delete(),
+  //   });
+  //   Alert.alert("Your progress info has been reset");
+  //   this.setState({ loading: false });
+  // };
+
   retakeBurpeeTest = async () => {
     this.setState({ loading: true });
     await FileSystem.downloadAsync(
@@ -127,6 +163,8 @@ export default class SettingsScreen extends React.PureComponent {
 
   render() {
     const { isPasswordAccount, profile, loading } = this.state;
+
+
     return (
       <SafeAreaView style={globalStyle.safeContainer}>
         <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
