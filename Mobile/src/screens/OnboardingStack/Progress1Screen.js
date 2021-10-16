@@ -138,7 +138,6 @@ export default class Progress1Screen extends React.PureComponent {
       handleSkip: this.handleSkip,
       toggleHelperModal: this.showHelperModal,
     });
-    this.fetchUom();
     this.fetchDataMeasurement();
     if (this.props.navigation.getParam("isInitial")) {
       this.fetchInitialDataMeasurements();
@@ -168,29 +167,6 @@ export default class Progress1Screen extends React.PureComponent {
         })
       })
   }
-  fetchUom = async () => {
-    this.setState({ loading: true });
-    const uid = await AsyncStorage.getItem("uid");
-    this.unsubscribe = await db.collection("users")
-      .doc(uid)
-      .collection("challenges")
-      .where("status", "==", "Active")
-      .onSnapshot(async (querySnapshot) => {
-        const list = []
-        await querySnapshot.forEach(async (doc) => {
-          await list.push(await doc.data());
-        });
-
-        if (list[0]) {
-          const listing = list[0]
-          const listing1 = listing.onBoardingInfo.measurements.unit
-          console.log("Listing Uno", listing1)
-          this.setState({
-            measurements: listing1
-          })
-        }
-      })
-  };
 
   fetchInitialDataMeasurements = async () => {
     this.setState({ loading: true });
@@ -298,7 +274,7 @@ export default class Progress1Screen extends React.PureComponent {
       .doc(uid)
       .get()
       .then(async (snapshot) => {
-        const isInitial = this.props.navigation.getParam("isInitial");
+        const isInitial = this.props.navigation.getParam("isInitial", false);
         const data = snapshot.data();
         const progressInfo = isInitial
           ? data.initialProgressInfo
