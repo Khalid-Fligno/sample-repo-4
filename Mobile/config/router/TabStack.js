@@ -69,26 +69,41 @@ const TabStack = createBottomTabNavigator(
         }
         if (routeName === "Feed") {
           icon = (
-            <FeedSvg
-              width={hp("3%")}
-              height={hp("3%")}
-              fill={focused ? activeState : inactiveState}
-            />
+            // <FeedSvg
+            //   width={hp("3%")}
+            //   height={hp("3%")}
+            //   fill={focused ? activeState : inactiveState}
+            // />
+              <FeedSvg
+                  width={hp("2.5%")}
+                  height={hp("2.5%")}
+                  focused={focused}
+              />
           );
         } else if (routeName === "Lifestyle") {
           icon = (
-            <SubSVG
-              width={hp("2.5%")}
-              height={hp("2.5%")}
-              fill={focused ? activeState : inactiveState}
-            />
+            // <SubSVG
+            //   width={hp("2.5%")}
+            //   height={hp("2.5%")}
+            //   fill={focused ? activeState : inactiveState}
+            // />
+              <SubSVG
+                  width={hp("2.5%")}
+                  height={hp("2.5%")}
+                  focused={focused}
+              />
           );
         } else if (routeName === "Challenges") {
           icon = (
+            // <ChallengeSvg
+            //   width={hp("2.5%")}
+            //   height={hp("2.5%")}
+            //   fill={focused ? activeState : inactiveState}
+            // />
             <ChallengeSvg
               width={hp("2.5%")}
               height={hp("2.5%")}
-              fill={focused ? activeState : inactiveState}
+              focused={focused}
             />
           );
         } else if (routeName === "Calendar") {
@@ -101,11 +116,16 @@ const TabStack = createBottomTabNavigator(
           );
         } else if (routeName === "Progress") {
           icon = (
-            <ProgressSvg
-              width={hp("2.5%")}
-              height={hp("2.5%")}
-              fill={focused ? activeState : inactiveState}
-            />
+            // <ProgressSvg
+            //   width={hp("2.5%")}
+            //   height={hp("2.5%")}
+            //   fill={focused ? activeState : inactiveState}
+            // />
+              <ProgressSvg
+                  width={hp("2.5%")}
+                  height={hp("2.5%")}
+                  focused={focused}
+              />
           );
         }
         return icon;
@@ -113,7 +133,8 @@ const TabStack = createBottomTabNavigator(
     }),
     tabBarOptions: {
       activeTintColor: colors.black,
-      inactiveTintColor: colors.smoke,
+      // inactiveTintColor: colors.smoke,
+      inactiveTintColor: colors.black,
       style: {
         // shadowColor: colors.charcoal.standard,
         // shadowOffset: { width: 0, height: -1 },
@@ -123,7 +144,7 @@ const TabStack = createBottomTabNavigator(
         height: 60,
         borderTopWidth: 1,
         borderTopColor: colors.grey.light,
-        backgroundColor: colors.themeColor.footerBackgroundColor,
+        // backgroundColor: colors.themeColor.footerBackgroundColor,
       },
       labelStyle: {
         fontFamily: fonts.StyreneAWebRegular,
