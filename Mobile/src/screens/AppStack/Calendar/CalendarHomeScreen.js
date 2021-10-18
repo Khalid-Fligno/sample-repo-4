@@ -33,6 +33,7 @@ import OnBoardingNotification from "../../../components/Shared/OnBoardingNotific
 import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
 import { checkVersion } from "react-native-check-version";
 import { getVersion } from "react-native-device-info";
+import fonts from "../../../styles/fonts";
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -554,7 +555,16 @@ class CalendarHomeScreen extends React.PureComponent {
     }
     const mealsList = showRC && (
         <>
-          <Text style={calendarStyles.headerText}>Today's Meals</Text>
+          {/*<Text style={calendarStyles.headerText}>Today's Meals</Text>*/}
+          <Text style={{
+            fontFamily: fonts.bold,
+            fontSize: wp("6.5%"),
+            color: colors.charcoal.dark,
+            marginVertical: wp("4%"),
+            marginLeft: wp("8%"),
+            textAlign: "right !important",
+            width: '100%'
+          }}>Today's Meals</Text>
           <TodayMealsList
               data={todayRecommendedMeal[0]}
               onPress={(res) => this.goToRecipe(res)}
