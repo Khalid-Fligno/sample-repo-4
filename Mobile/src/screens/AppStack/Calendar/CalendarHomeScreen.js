@@ -507,7 +507,8 @@ class CalendarHomeScreen extends React.PureComponent {
     });
   }
 
-  getToFilter() {
+  getToFilter(data) {
+    console.log('Data: ', data)
     this.props.navigation.navigate('FilterRecipe')
   }
 
@@ -558,7 +559,7 @@ class CalendarHomeScreen extends React.PureComponent {
           <TodayMealsList
               data={todayRecommendedMeal[0]}
               onPress={(res) => this.goToRecipe(res)}
-              filterPress={() => this.getToFilter()}
+              filterPress={(res) => this.getToFilter(res)}
           />
         </>
     );

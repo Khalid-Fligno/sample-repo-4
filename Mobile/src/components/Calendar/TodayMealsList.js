@@ -14,53 +14,97 @@ import Icon from "../Shared/Icon";
 class TodayMealsList extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      recipeData: this.props.data,
+    };
   }
 
-  sample = ({ }) => (
+  // sample = () => (
 
-    <TouchableOpacity
-      style={styles.cardContainer1}
-      onPress={() => this.props.filterPress()}
-    >
-      <View style={styles.opacityLayer1}>
-        <Icon name="add-circle" size={15} style={{ left: 50 }}/>
-        <Text style={styles.cardTitle1}>Choose a recipe</Text>
-      </View>
-    </TouchableOpacity>
+  //   <TouchableOpacity
+  //     style={styles.cardContainer1}
+  //     onPress={() => this.props.filterPress()}
+  //   >
+  //     <View style={styles.opacityLayer1}>
+  //       <Icon name="add-circle" size={15} style={{ left: 50 }} />
+  //       <Text style={styles.cardTitle1}>Choose a recipe</Text>
+  //     </View>
+  //   </TouchableOpacity>
 
-  )
+  // )
 
-  mealCard = ({ item: recipe }) => (
-    <TouchableOpacity
-      style={styles.cardContainer}
-      // key={i}
-      onPress={() => this.props.onPress(recipe)}
-    >
-      <ImageBackground
-        // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
-        source={{ uri: recipe.coverImage, cache: "force-cache" }}
-        style={styles.image}
-        resizeMode="cover"
-      >
-        <View style={styles.opacityLayer}>
-          <Text style={styles.cardTitle}>{recipe.title}</Text>
-        </View>
-      </ImageBackground>
-    </TouchableOpacity>
-  )
+  // mealCard = ({ item: recipe }) =>
+  // (
+  //   <TouchableOpacity
+  //     style={styles.cardContainer}
+  //     // key={i}
+  //     onPress={() => this.props.onPress(recipe)}
+  //   >
+  //     <ImageBackground
+  //       // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
+  //       source={{ uri: recipe.coverImage, cache: "force-cache" }}
+  //       style={styles.image}
+  //       resizeMode="cover"
+  //     >
+  //       <View style={styles.opacityLayer}>
+  //         <Text style={styles.cardTitle}>{recipe.title}</Text>
+  //       </View>
+  //     </ImageBackground>
+  //   </TouchableOpacity>
+  // )
 
-  carousel = (data, title) => (
-    <View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingHorizontal: containerPadding,
-        }}
-      >
-        <Text style={styles.label}>{title} </Text>
-        {title === "Breakfast" && (
+  // carousel = (data, title) => {
+
+  //   return (
+  //     <View>
+  //       <View
+  //         style={{
+  //           flexDirection: "row",
+  //           justifyContent: "space-between",
+  //           paddingHorizontal: containerPadding,
+  //         }}
+  //       >
+  //         <Text style={styles.label}>{title} </Text>
+  //         {title === "Breakfast" && (
+  //           <TouchableOpacity
+  //             style={{ flexDirection: "row", alignItems: "center" }}
+  //             activeOpacity={1}
+  //           >
+  //             <Text style={styles.rLabel}>Scroll for more </Text>
+  //             <DoubleRightArrow height={wp("4%")} />
+  //           </TouchableOpacity>
+  //         )}
+  //       </View>
+  //       <FlatList
+  //         horizontal
+  //         // pagingEnabled={true}
+  //         showsHorizontalScrollIndicator={false}
+  //         legacyImplementation={false}
+  //         data={data}
+  //         renderItem={(item) => this.mealCard(item)}
+  //         ListFooterComponent={this.sample}
+  //         keyExtractor={(res) => res.id}
+  //         style={{
+  //           paddingHorizontal: containerPadding,
+  //           paddingVertical: wp("3%"),
+  //         }}
+  //       />
+  //     </View>
+  //   )
+  // }
+
+  carouselBreakfast = (data, title) => {
+
+    return (
+      <View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingHorizontal: containerPadding,
+          }}
+        >
+          <Text style={styles.label}>{title}</Text>
           <TouchableOpacity
             style={{ flexDirection: "row", alignItems: "center" }}
             activeOpacity={1}
@@ -68,44 +112,283 @@ class TodayMealsList extends Component {
             <Text style={styles.rLabel}>Scroll for more </Text>
             <DoubleRightArrow height={wp("4%")} />
           </TouchableOpacity>
-        )}
+        </View>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={{
+            paddingHorizontal: containerPadding,
+            paddingVertical: wp("3%"),
+          }}
+        >
+          {data.map((recipe) => (
+            <TouchableOpacity
+              style={styles.cardContainer}
+              key={recipe.id}
+              // key={i}
+              onPress={() => this.props.onPress(recipe)}
+            >
+              <ImageBackground
+                // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
+                source={{ uri: recipe.coverImage, cache: "force-cache" }}
+                style={styles.image}
+                resizeMode="cover"
+              >
+                <View style={styles.opacityLayer}>
+                  <Text style={styles.cardTitle}>{recipe.title}</Text>
+                </View>
+              </ImageBackground>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={styles.cardContainer1}
+            onPress={() => this.props.filterPress(data)}
+          >
+            <View style={styles.opacityLayer1}>
+              <Icon name="add-circle" size={15} style={{ left: 50 }} />
+              <Text style={styles.cardTitle1}>Choose a recipe</Text>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
-      <FlatList
-        horizontal
-        // pagingEnabled={true}
-        showsHorizontalScrollIndicator={false}
-        legacyImplementation={false}
-        data={data}
-        renderItem={(item) => this.mealCard(item)}
-        ListFooterComponent={this.sample}
-        keyExtractor={(res) => res.id}
-        style={{
-          paddingHorizontal: containerPadding,
-          paddingVertical: wp("3%"),
-        }}
-      />
-    </View>
-  )
+    )
+  }
+
+  carouselLunch = (data, title) => {
+
+    return (
+      <View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingHorizontal: containerPadding,
+          }}
+        >
+          <Text style={styles.label}>{title}</Text>
+        </View>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={{
+            paddingHorizontal: containerPadding,
+            paddingVertical: wp("3%"),
+          }}
+        >
+          {data.map((recipe) => (
+            <TouchableOpacity
+              style={styles.cardContainer}
+              key={recipe.id}
+              // key={i}
+              onPress={() => this.props.onPress(recipe)}
+            >
+              <ImageBackground
+                // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
+                source={{ uri: recipe.coverImage, cache: "force-cache" }}
+                style={styles.image}
+                resizeMode="cover"
+              >
+                <View style={styles.opacityLayer}>
+                  <Text style={styles.cardTitle}>{recipe.title}</Text>
+                </View>
+              </ImageBackground>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={styles.cardContainer1}
+            onPress={() => this.props.filterPress(data)}
+          >
+            <View style={styles.opacityLayer1}>
+              <Icon name="add-circle" size={15} style={{ left: 50 }} />
+              <Text style={styles.cardTitle1}>Choose a recipe</Text>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    )
+  }
+
+  carouselDinner = (data, title) => {
+
+    return (
+      <View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingHorizontal: containerPadding,
+          }}
+        >
+          <Text style={styles.label}>{title}</Text>
+        </View>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={{
+            paddingHorizontal: containerPadding,
+            paddingVertical: wp("3%"),
+          }}
+        >
+          {data.map((recipe) => (
+            <TouchableOpacity
+              style={styles.cardContainer}
+              key={recipe.id}
+              // key={i}
+              onPress={() => this.props.onPress(recipe)}
+            >
+              <ImageBackground
+                // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
+                source={{ uri: recipe.coverImage, cache: "force-cache" }}
+                style={styles.image}
+                resizeMode="cover"
+              >
+                <View style={styles.opacityLayer}>
+                  <Text style={styles.cardTitle}>{recipe.title}</Text>
+                </View>
+              </ImageBackground>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={styles.cardContainer1}
+            onPress={() => this.props.filterPress(data)}
+          >
+            <View style={styles.opacityLayer1}>
+              <Icon name="add-circle" size={15} style={{ left: 50 }} />
+              <Text style={styles.cardTitle1}>Choose a recipe</Text>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    )
+  }
+
+  carouselSnack = (data, title) => {
+
+    return (
+      <View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingHorizontal: containerPadding,
+          }}
+        >
+          <Text style={styles.label}>{title}</Text>
+        </View>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={{
+            paddingHorizontal: containerPadding,
+            paddingVertical: wp("3%"),
+          }}
+        >
+          {data.map((recipe) => (
+            <TouchableOpacity
+              style={styles.cardContainer}
+              key={recipe.id}
+              // key={i}
+              onPress={() => this.props.onPress(recipe)}
+            >
+              <ImageBackground
+                // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
+                source={{ uri: recipe.coverImage, cache: "force-cache" }}
+                style={styles.image}
+                resizeMode="cover"
+              >
+                <View style={styles.opacityLayer}>
+                  <Text style={styles.cardTitle}>{recipe.title}</Text>
+                </View>
+              </ImageBackground>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={styles.cardContainer1}
+            onPress={() => this.props.filterPress(data)}
+          >
+            <View style={styles.opacityLayer1}>
+              <Icon name="add-circle" size={15} style={{ left: 50 }} />
+              <Text style={styles.cardTitle1}>Choose a recipe</Text>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    )
+  }
+
+  carouselDrink = (data, title) => {
+
+    return (
+      <View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingHorizontal: containerPadding,
+          }}
+        >
+          <Text style={styles.label}>{title}</Text>
+        </View>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={{
+            paddingHorizontal: containerPadding,
+            paddingVertical: wp("3%"),
+          }}
+        >
+          {data.map((recipe) => (
+            <TouchableOpacity
+              style={styles.cardContainer}
+              key={recipe.id}
+              // key={i}
+              onPress={() => this.props.onPress(recipe)}
+            >
+              <ImageBackground
+                // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
+                source={{ uri: recipe.coverImage, cache: "force-cache" }}
+                style={styles.image}
+                resizeMode="cover"
+              >
+                <View style={styles.opacityLayer}>
+                  <Text style={styles.cardTitle}>{recipe.title}</Text>
+                </View>
+              </ImageBackground>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={styles.cardContainer1}
+            onPress={() => this.props.filterPress(data)}
+          >
+            <View style={styles.opacityLayer1}>
+              <Icon name="add-circle" size={15} style={{ left: 50 }} />
+              <Text style={styles.cardTitle1}>Choose a recipe</Text>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    )
+  }
 
   render() {
-    const { data } = this.props;
+    // const { data } = this.props;
+    const { recipeData } = this.state
 
     return (
       <View style={styles.container}>
-        {data.breakfast.length > 0 &&
-          this.carousel(data.breakfast, "Breakfast")}
+        {recipeData.breakfast.length > 0 && this.carouselBreakfast(recipeData.breakfast, "Breakfast")}
         {/* {
             data.snack.length >0 &&
             this.carousel(data.snack,'Morning snack')
         } */}
-        {data.lunch.length > 0 && this.carousel(data.lunch, "Lunch")}
+        {recipeData.lunch.length > 0 && this.carouselLunch(recipeData.lunch, "Lunch")}
         {/* {
             data.snack.length >0 &&
             this.carousel(data.snack,'Afternoon snack')
         } */}
-        {data.dinner.length > 0 && this.carousel(data.dinner, "Dinner")}
-        {data.snack.length > 0 && this.carousel(data.snack, "Snack")}
-        {data.drink.length > 0 && this.carousel(data.drink, "Post Workout")}
+        {recipeData.dinner.length > 0 && this.carouselDinner(recipeData.dinner, "Dinner")}
+        {recipeData.snack.length > 0 && this.carouselSnack(recipeData.snack, "Snack")}
+        {recipeData.drink.length > 0 && this.carouselDrink(recipeData.drink, "Post Workout")}
       </View>
     );
   }
@@ -186,4 +469,3 @@ const styles = StyleSheet.create({
     fontSize: wp("3.5%"),
   },
 });
-  
