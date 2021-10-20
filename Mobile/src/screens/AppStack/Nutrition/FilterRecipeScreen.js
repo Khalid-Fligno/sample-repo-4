@@ -44,191 +44,118 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         };
     }
 
-    onFocusFunction = async () => {
-        const { meal } = this.state;
-        const newMeal = this.props.navigation.getParam("meal", null);
-        // if(meal && meal !== newMeal || !meal){
-        this.setState({ meal: newMeal });
-        await this.fetchRecipes();
-        // }
-    };
-
-    componentDidMount = async () => {
-        // this.setState({ loading: true });
-        // this.focusListener = this.props.navigation.addListener('willFocus', async () => {
-        //     this.onFocusFunction()
-        // })
-        await this.fetchRecipes();
-    };
-
-    componentWillUnmount = async () => {
-        // this.focusListener.remove()
-        if (this.unsubscribe) await this.unsubscribe();
-    };
-
-    fetchRecipes = async () => {
+    onFocusFunction() {
         this.setState({ loading: true });
-        const meal = this.props.navigation.getParam("meal", null);
-        const challengeMealsFilterList = this.props.navigation.getParam(
-            "challengeMealsFilterList",
-            null
-        );
-        this.unsubscribe = await db
-            .collection("recipes")
-            .where('breakfast', "==", true)
-            .onSnapshot(async (querySnapshot) => {
-                const recipes = [];
-                await querySnapshot.forEach(async (doc) => {
-                    //   console.log(doc.data().title)
-                    if (doc.data().active) {
-                        if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
-                            if (challengeMealsFilterList.includes(doc.data().id))
-                                await recipes.push(await doc.data());
-                        } else {
-                            await recipes.push(await doc.data());
-                        }
-                    }
-                });
-
-                Promise.all(
-                    recipes.map(async (recipe) => {
-                        const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
-                        await FileSystem.getInfoAsync(fileUri)
-                            .then(async ({ exists }) => {
-                                if (!exists) {
-                                    await FileSystem.downloadAsync(
-                                        recipe.coverImage,
-                                        `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`
-                                    );
-                                }
-                            })
-                            .catch((reason) => {
-                                this.setState({ loading: false });
-                                Alert.alert("Error", `Error: ${reason}`);
-                            });
-                    })
-                );
-                // OLD CODE - DOWNLOADING ALL IMAGES EVERY TIME
-                // await Promise.all(recipes.map(async (recipe) => {
-                //   await FileSystem.downloadAsync(
-                //     recipe.coverImage,
-                //     `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
-                //   );
-                // }));
-
-                // console.log(recipes.sort((a, b) => {
-                //   if (a.order === b.order)
-                //     return 0;
-                //   else if (a.order === 0)  
-                //     return 1;
-                //   else if (b.order === 0) 
-                //     return -1;
-                //   else                  
-                //     return 1
-                // }));
-
-                // this.setState({ recipes: sortBy(recipes, "order"), loading: false });
-                this.setState({
-                    recipes: recipes.sort((a, b) => {
-                        if (a.order === b.order)
-                            return 0;
-                        else if (a.order === 0)
-                            return 1;
-                        else if (b.order === 0)
-                            return -1;
-                        else
-                            return 1
-                    }), loading: false
-                });
-            });
+        // this.props.navigation.setParams({ handleStart: this.props.navigation.navigate('RecipeSteps', { recipe }) });
+        // this.props.navigation.setParams({
+        //     handleStart: () => this.handleStart(recipes),
+        // });
+        this.setState({
+            recipes: this.props.navigation.getParam("recipes", null),
+            loading: false
+        });
+    }
+    componentDidMount = async () => {
+        // this.focusListener = this.props.navigation.addListener('willFocus', () => {
+        //   this.onFocusFunction()
+        // })
+        this.onFocusFunction();
     };
 
-    updateFilter = (filterIndex) => {
-        this.setState({ filterIndex });
-    };
-
-    keyExtractor = (item, index) => String(index);
-
-    renderItem = ({ item }) => (
-        <RecipeTile
-            onPress={() =>
-                this.props.navigation.push("Recipe", {
-                    recipe: item,
-                    backTitle: this.props.navigation.getParam("meal", null),
-                })
-            }
-            // image={
-            //   `${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage
-            // }
-            image={item.coverImage}
-            title={item.title.toUpperCase()}
-            tags={item.tags}
-            subTitle={item.subtitle}
-            time={item.time}
-            newBadge={item.newBadge}
-        />
-    );
+    // handleStart = (recipes) => {
+    //     this.props.navigation.navigate("RecipeSteps", { recipes });
+    // };
 
     handleBack = () => {
         const { navigation } = this.props;
         navigation.pop();
     };
 
+    renderItem = ({ item }) => (
+        <View
+            style={styles.cardContainer}
+        >
+            <Card
+                image={{ uri: item.coverImage }}
+                containerStyle={styles.card}
+            >
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10 }}>
+                        <View style={{ maxWidth: '70%' }}>
+                            <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>
+                        </View>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{
+                            height: 20,
+                            width: 20,
+                            marginRight: 4,
+                            borderWidth: 0,
+                            // borderColor: colors.violet.standard,
+                            borderRadius: 14,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: '#469753',
+                        }}>
+                            <Text style={{
+                                fontFamily: fonts.bold,
+                                fontSize: 7,
+                                color: colors.white,
+                            }}>
+                                GF
+                            </Text>
+                        </View>
+                        <View style={{
+                            height: 20,
+                            width: 20,
+                            marginRight: 4,
+                            borderWidth: 0,
+                            // borderColor: colors.violet.standard,
+                            borderRadius: 14,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: '#469753',
+                        }}>
+                            <Text style={{
+                                fontFamily: fonts.bold,
+                                fontSize: 7,
+                                color: colors.white,
+                            }}>
+                                VEG
+                            </Text>
+                        </View>
+                        <View style={{
+                            height: 20,
+                            width: 20,
+                            marginRight: 4,
+                            borderWidth: 0,
+                            // borderColor: colors.violet.standard,
+                            borderRadius: 14,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: '#B7782B',
+                        }}>
+                            <Text style={{
+                                fontFamily: fonts.bold,
+                                fontSize: 7,
+                                color: colors.white,
+                            }}>
+                                DF
+                            </Text>
+                        </View>
+                        <Text style={{ fontSize: 9 }}>+ more</Text>
+                    </View>
+                </View>
+            </Card>
+        </View>
+    );
+
+    keyExtractor = (item, index) => String(index);
+
     render() {
-        const meal = this.props.navigation.getParam("meal", null);
-        const { recipes, loading, filterIndex } = this.state;
-        const filterButtons = [
-            {
-                id: '1',
-                data: ["All", "Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2", "Phase 1", "Phase 2", "Phase 3"]
-            }
-        ]
+        const { recipes, loading } = this.state
 
-        // console.log('recipes', recipes)
-
-        const renderItem1 = ({ item: items }) =>
-        (
-            <CustomButtonGroup
-                onPress={this.updateFilter}
-                selectedIndex={filterIndex}
-                buttons={filterButtons[0].data}
-            />
-        );
-
-        const recipeList = sortBy(recipes, "newBadge").filter((recipe) => {
-            // console.log(recipe.title)
-            if (recipe.tags === undefined) return recipes;
-            if (filterIndex === 1) {
-                return recipe.tags.includes("V");
-            } else if (filterIndex === 2) {
-                return recipe.tags.includes("V+");
-            }
-            if (filterIndex === 3) {
-                return recipe.tags.includes("GF");
-            }
-            if (filterIndex === 4) {
-                return recipe.tags.includes("L1");
-            } else if (filterIndex === 5) {
-                return recipe.tags.includes("L2");
-            }
-            if (filterIndex === 6) {
-                return recipe.tags.includes("P1");
-            } else if (filterIndex === 7) {
-                return recipe.tags.includes("P2");
-            } else if (filterIndex === 8) {
-                return recipe.tags.includes("P3");
-            }
-
-            return recipes;
-        });
-
-        const skeleton = (
-            <View style={styles.recipeTileSkeletonContainer}>
-                <RecipeTileSkeleton />
-                <RecipeTileSkeleton />
-                <RecipeTileSkeleton />
-            </View>
-        );
+        // console.log('RecipeData: ', recipes)
 
         const clickModal = (
             <Modal
@@ -478,7 +405,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                     </View>
                 </View>
                 <View
-                    style={{ flexDirection: 'row', marginVertical: 10, top: 10 }}
+                    style={{ flexDirection: 'row', marginVertical: 10, top: 10, marginBottom: 20 }}
                 >
                     <View
                         style={{
@@ -517,7 +444,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                         <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
                     </View>
                 </View>
-                <View
+                {/* <View
                     style={styles.cardContainer}
                 >
                     <Card
@@ -592,7 +519,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             </View>
                         </View>
                     </Card>
-                </View>
+                </View> */}
                 {/* <FlatList
                     horizontal
                     showsHorizontalScrollIndicator={false}
@@ -603,19 +530,19 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                         paddingVertical: wp("4%"),
                     }}
                 /> */}
-                {/* {loading ? (
+                {loading ? (
                     skeleton
                 ) : (
                     <FlatList
                         contentContainerStyle={styles.scrollView}
-                        data={recipeList}
-                        keyExtractor={this.keyExtractor}
-                        renderItem={this.renderItem}
+                        data={recipes}
+                        keyExtractor={(res) => res.id}
+                        renderItem={(item) => this.renderItem(item)}
                         showsVerticalScrollIndicator={false}
                         removeClippedSubviews={false}
                     // maxToRenderPerBatch={20}
                     />
-                )} */}
+                )}
                 {filterModal}
                 {clickModal}
             </View>

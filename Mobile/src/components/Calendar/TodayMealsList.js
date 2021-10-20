@@ -22,8 +22,6 @@ class TodayMealsList extends Component {
   }
 
   // sample = () => (
-
-<<<<<<< HEAD
   //   <TouchableOpacity
   //     style={styles.cardContainer1}
   //     onPress={() => this.props.filterPress()}
@@ -108,80 +106,6 @@ class TodayMealsList extends Component {
           }}
         >
           <Text style={styles.label}>{title}</Text>
-=======
-    <TouchableOpacity
-      style={styles.cardContainer1}
-      onPress={() => this.props.filterPress()}
-    >
-      <View style={styles.opacityLayer1}>
-        {/*<Icon name="add-circle" size={15} style={{ left: 50 }}/>*/}
-        <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
-        <Text style={styles.cardTitle1}>Choose a recipe</Text>
-      </View>
-    </TouchableOpacity>
-
-  )
-
-  mealCard = ({ item: recipe }) => (
-    <TouchableOpacity
-      style={styles.cardContainer}
-      // key={i}
-      onPress={() => this.props.onPress(recipe)}
-    >
-      <ImageBackground
-        // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
-        source={{ uri: recipe.coverImage, cache: "force-cache" }}
-        style={styles.image}
-        resizeMode="cover"
-      >
-        <View style={styles.opacityLayer}>
-          <Text style={styles.cardTitle}>{recipe.title}</Text>
-        </View>
-      </ImageBackground>
-      <View
-          style={{
-            position: 'absolute',
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            height: wp("33%"),
-            width: wp("65%"),
-            borderRadius: 10
-          }}
-      >
-        <View style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}>
-          <FeatherIcon name="edit" size={25} color={'#ffffff'}/>
-          <Text style={{color: '#ffffff'}}>Build your own recipe</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  )
-
-  carousel = (data, title) => (
-    <View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingHorizontal: containerPadding,
-        }}
-      >
-        <Text style={styles.label}>{title} </Text>
-        {title === "Breakfast" && (
->>>>>>> milestone/oct-11-21
-          <TouchableOpacity
-            style={{ flexDirection: "row", alignItems: "center" }}
-            activeOpacity={1}
-          >
-            <Text style={styles.rLabel}>Scroll for more </Text>
-            <DoubleRightArrow height={wp("4%")} />
-          </TouchableOpacity>
         </View>
         <ScrollView
           horizontal={true}
@@ -194,7 +118,6 @@ class TodayMealsList extends Component {
           {data.map((recipe) => (
             <TouchableOpacity
               style={styles.cardContainer}
-              key={recipe.id}
               // key={i}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -208,6 +131,28 @@ class TodayMealsList extends Component {
                   <Text style={styles.cardTitle}>{recipe.title}</Text>
                 </View>
               </ImageBackground>
+              <View
+                style={{
+                  position: 'absolute',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  height: wp("33%"),
+                  width: wp("65%"),
+                  borderRadius: 10
+                }}
+              >
+                <View style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <FeatherIcon name="edit" size={25} color={'#ffffff'} />
+                  <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>
+                </View>
+              </View>
             </TouchableOpacity>
           ))}
           <TouchableOpacity
@@ -215,7 +160,7 @@ class TodayMealsList extends Component {
             onPress={() => this.props.filterPress(data)}
           >
             <View style={styles.opacityLayer1}>
-              <Icon name="add-circle" size={15} style={{ left: 50 }} />
+              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
               <Text style={styles.cardTitle1}>Choose a recipe</Text>
             </View>
           </TouchableOpacity>
@@ -248,7 +193,6 @@ class TodayMealsList extends Component {
           {data.map((recipe) => (
             <TouchableOpacity
               style={styles.cardContainer}
-              key={recipe.id}
               // key={i}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -262,6 +206,28 @@ class TodayMealsList extends Component {
                   <Text style={styles.cardTitle}>{recipe.title}</Text>
                 </View>
               </ImageBackground>
+              <View
+                style={{
+                  position: 'absolute',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  height: wp("33%"),
+                  width: wp("65%"),
+                  borderRadius: 10
+                }}
+              >
+                <View style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <FeatherIcon name="edit" size={25} color={'#ffffff'} />
+                  <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>
+                </View>
+              </View>
             </TouchableOpacity>
           ))}
           <TouchableOpacity
@@ -269,7 +235,7 @@ class TodayMealsList extends Component {
             onPress={() => this.props.filterPress(data)}
           >
             <View style={styles.opacityLayer1}>
-              <Icon name="add-circle" size={15} style={{ left: 50 }} />
+              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
               <Text style={styles.cardTitle1}>Choose a recipe</Text>
             </View>
           </TouchableOpacity>
@@ -302,7 +268,6 @@ class TodayMealsList extends Component {
           {data.map((recipe) => (
             <TouchableOpacity
               style={styles.cardContainer}
-              key={recipe.id}
               // key={i}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -316,6 +281,28 @@ class TodayMealsList extends Component {
                   <Text style={styles.cardTitle}>{recipe.title}</Text>
                 </View>
               </ImageBackground>
+              <View
+                style={{
+                  position: 'absolute',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  height: wp("33%"),
+                  width: wp("65%"),
+                  borderRadius: 10
+                }}
+              >
+                <View style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <FeatherIcon name="edit" size={25} color={'#ffffff'} />
+                  <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>
+                </View>
+              </View>
             </TouchableOpacity>
           ))}
           <TouchableOpacity
@@ -323,7 +310,7 @@ class TodayMealsList extends Component {
             onPress={() => this.props.filterPress(data)}
           >
             <View style={styles.opacityLayer1}>
-              <Icon name="add-circle" size={15} style={{ left: 50 }} />
+              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
               <Text style={styles.cardTitle1}>Choose a recipe</Text>
             </View>
           </TouchableOpacity>
@@ -356,7 +343,6 @@ class TodayMealsList extends Component {
           {data.map((recipe) => (
             <TouchableOpacity
               style={styles.cardContainer}
-              key={recipe.id}
               // key={i}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -370,6 +356,28 @@ class TodayMealsList extends Component {
                   <Text style={styles.cardTitle}>{recipe.title}</Text>
                 </View>
               </ImageBackground>
+              <View
+                style={{
+                  position: 'absolute',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  height: wp("33%"),
+                  width: wp("65%"),
+                  borderRadius: 10
+                }}
+              >
+                <View style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <FeatherIcon name="edit" size={25} color={'#ffffff'} />
+                  <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>
+                </View>
+              </View>
             </TouchableOpacity>
           ))}
           <TouchableOpacity
@@ -377,7 +385,7 @@ class TodayMealsList extends Component {
             onPress={() => this.props.filterPress(data)}
           >
             <View style={styles.opacityLayer1}>
-              <Icon name="add-circle" size={15} style={{ left: 50 }} />
+              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
               <Text style={styles.cardTitle1}>Choose a recipe</Text>
             </View>
           </TouchableOpacity>
@@ -410,7 +418,6 @@ class TodayMealsList extends Component {
           {data.map((recipe) => (
             <TouchableOpacity
               style={styles.cardContainer}
-              key={recipe.id}
               // key={i}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -424,6 +431,28 @@ class TodayMealsList extends Component {
                   <Text style={styles.cardTitle}>{recipe.title}</Text>
                 </View>
               </ImageBackground>
+              <View
+                style={{
+                  position: 'absolute',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  height: wp("33%"),
+                  width: wp("65%"),
+                  borderRadius: 10
+                }}
+              >
+                <View style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <FeatherIcon name="edit" size={25} color={'#ffffff'} />
+                  <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>
+                </View>
+              </View>
             </TouchableOpacity>
           ))}
           <TouchableOpacity
@@ -431,7 +460,7 @@ class TodayMealsList extends Component {
             onPress={() => this.props.filterPress(data)}
           >
             <View style={styles.opacityLayer1}>
-              <Icon name="add-circle" size={15} style={{ left: 50 }} />
+              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
               <Text style={styles.cardTitle1}>Choose a recipe</Text>
             </View>
           </TouchableOpacity>
