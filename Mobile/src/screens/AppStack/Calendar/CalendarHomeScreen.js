@@ -562,7 +562,7 @@ class CalendarHomeScreen extends React.PureComponent {
             color: colors.charcoal.dark,
             marginVertical: wp("4%"),
             marginLeft: wp("8%"),
-            textAlign: "right !important",
+            textAlign: "left",
             width: '100%'
           }}>Today's Meals</Text>
           <TodayMealsList

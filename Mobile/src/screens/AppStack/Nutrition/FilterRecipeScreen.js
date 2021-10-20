@@ -455,11 +455,15 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                     style={styles.customContainerStyle}
                 >
                     {/* BigHeadText */}
-                    <Text
-                        style={styles.bigTitleStyle}
-                    >
-                        Breakfast
-                    </Text>
+                    <BigHeadingWithBackButton
+                        isBackButton={true}
+                        bigTitleText={'Breakfast'}
+                        onPress={this.handleBack}
+                        backButtonText="Back to Workout"
+                        isBigTitle={true}
+                        isBackButton={true}
+                        customContainerStyle={{ bottom: 25 }}
+                    />
 
                     {/* Filter Button */}
                     <View>
@@ -474,7 +478,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                     </View>
                 </View>
                 <View
-                    style={{ flexDirection: 'row', marginVertical: 10 }}
+                    style={{ flexDirection: 'row', marginVertical: 10, top: 10 }}
                 >
                     <View
                         style={{
@@ -485,7 +489,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             marginRight: 7,
                         }}
                     >
-                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 11 }}>Vegan</Text>
+                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>Vegan</Text>
                         <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
                     </View>
                     <View
@@ -497,7 +501,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             marginRight: 7,
                         }}
                     >
-                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 11 }}>Vegetarian</Text>
+                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>Vegetarian</Text>
                         <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
                     </View>
                     <View
@@ -509,7 +513,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             marginRight: 7,
                         }}
                     >
-                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 11 }}>L1 - P1</Text>
+                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>L1 - P1</Text>
                         <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
                     </View>
                 </View>
@@ -528,9 +532,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <View style={{
-                                    height: 24,
-                                    width: 24,
-                                    marginRight: 10,
+                                    height: 20,
+                                    width: 20,
+                                    marginRight: 4,
                                     borderWidth: 0,
                                     // borderColor: colors.violet.standard,
                                     borderRadius: 14,
@@ -540,16 +544,16 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                 }}>
                                     <Text style={{
                                         fontFamily: fonts.bold,
-                                        fontSize: 9,
+                                        fontSize: 7,
                                         color: colors.white,
                                     }}>
                                         GF
                                     </Text>
                                 </View>
                                 <View style={{
-                                    height: 24,
-                                    width: 24,
-                                    marginRight: 10,
+                                    height: 20,
+                                    width: 20,
+                                    marginRight: 4,
                                     borderWidth: 0,
                                     // borderColor: colors.violet.standard,
                                     borderRadius: 14,
@@ -559,16 +563,16 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                 }}>
                                     <Text style={{
                                         fontFamily: fonts.bold,
-                                        fontSize: 9,
+                                        fontSize: 7,
                                         color: colors.white,
                                     }}>
                                         VEG
                                     </Text>
                                 </View>
                                 <View style={{
-                                    height: 24,
-                                    width: 24,
-                                    marginRight: 10,
+                                    height: 20,
+                                    width: 20,
+                                    marginRight: 4,
                                     borderWidth: 0,
                                     // borderColor: colors.violet.standard,
                                     borderRadius: 14,
@@ -578,13 +582,13 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                 }}>
                                     <Text style={{
                                         fontFamily: fonts.bold,
-                                        fontSize: 9,
+                                        fontSize: 7,
                                         color: colors.white,
                                     }}>
                                         DF
                                     </Text>
                                 </View>
-                                <Text style={{ fontSize: 11 }}>+ more</Text>
+                                <Text style={{ fontSize: 9 }}>+ more</Text>
                             </View>
                         </View>
                     </Card>
@@ -675,7 +679,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'grey',
-        marginHorizontal: 160,
+        marginHorizontal: 140,
         marginTop: 10,
         borderRadius: 50,
         height: 5,
