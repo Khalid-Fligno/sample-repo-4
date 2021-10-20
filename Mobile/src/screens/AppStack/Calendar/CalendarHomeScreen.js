@@ -509,8 +509,9 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   getToFilter(data) {
-    console.log('Data: ', data)
-    this.props.navigation.navigate('FilterRecipe')
+    this.props.navigation.navigate('FilterRecipe', {
+      recipes: data,
+    })
   }
 
   openLink = (url) => {

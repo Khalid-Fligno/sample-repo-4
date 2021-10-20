@@ -72,7 +72,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       .onSnapshot(async (querySnapshot) => {
         const recipes = [];
         await querySnapshot.forEach(async (doc) => {
-          console.log(doc.data().title)
+          // console.log(doc.data().title)
           if (doc.data().active) {
             if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
               if (challengeMealsFilterList.includes(doc.data().id))
@@ -177,6 +177,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       }
     ]
 
+    // console.log("RecipeList: ", recipes)
+
     const renderItem1 = ({ item: items }) =>
     (
       <CustomButtonGroup
@@ -220,6 +222,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         <RecipeTileSkeleton />
       </View>
     );
+
+    console.log('recipeList: ', recipeList)
     return (
       <View style={globalStyle.container}>
         <BigHeadingWithBackButton
