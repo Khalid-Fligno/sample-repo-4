@@ -10,7 +10,9 @@ import DoubleRightArrow from "../../../assets/icons/DoubleRightArrow";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import { containerPadding } from "../../styles/globalStyles";
-import Icon from "../Shared/Icon";
+// import Icon from "../Shared/Icon";
+import Icon from "react-native-vector-icons/AntDesign";
+import FeatherIcon from "react-native-vector-icons/Feather";
 class TodayMealsList extends Component {
   constructor(props) {
     super(props);
@@ -21,6 +23,7 @@ class TodayMealsList extends Component {
 
   // sample = () => (
 
+<<<<<<< HEAD
   //   <TouchableOpacity
   //     style={styles.cardContainer1}
   //     onPress={() => this.props.filterPress()}
@@ -105,6 +108,73 @@ class TodayMealsList extends Component {
           }}
         >
           <Text style={styles.label}>{title}</Text>
+=======
+    <TouchableOpacity
+      style={styles.cardContainer1}
+      onPress={() => this.props.filterPress()}
+    >
+      <View style={styles.opacityLayer1}>
+        {/*<Icon name="add-circle" size={15} style={{ left: 50 }}/>*/}
+        <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
+        <Text style={styles.cardTitle1}>Choose a recipe</Text>
+      </View>
+    </TouchableOpacity>
+
+  )
+
+  mealCard = ({ item: recipe }) => (
+    <TouchableOpacity
+      style={styles.cardContainer}
+      // key={i}
+      onPress={() => this.props.onPress(recipe)}
+    >
+      <ImageBackground
+        // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
+        source={{ uri: recipe.coverImage, cache: "force-cache" }}
+        style={styles.image}
+        resizeMode="cover"
+      >
+        <View style={styles.opacityLayer}>
+          <Text style={styles.cardTitle}>{recipe.title}</Text>
+        </View>
+      </ImageBackground>
+      <View
+          style={{
+            position: 'absolute',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            height: wp("33%"),
+            width: wp("65%"),
+            borderRadius: 10
+          }}
+      >
+        <View style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <FeatherIcon name="edit" size={25} color={'#ffffff'}/>
+          <Text style={{color: '#ffffff'}}>Build your own recipe</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  )
+
+  carousel = (data, title) => (
+    <View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingHorizontal: containerPadding,
+        }}
+      >
+        <Text style={styles.label}>{title} </Text>
+        {title === "Breakfast" && (
+>>>>>>> milestone/oct-11-21
           <TouchableOpacity
             style={{ flexDirection: "row", alignItems: "center" }}
             activeOpacity={1}
@@ -419,7 +489,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden",
     backgroundColor: colors.grey.light,
-    borderRadius: 3,
+    // borderRadius: 3,
+    borderRadius: 10,
   },
   cardContainer: {
     height: wp("33%"),
@@ -431,7 +502,12 @@ const styles = StyleSheet.create({
     height: wp("33%"),
     width: wp("65%"),
     marginRight: wp("3.5%"),
-    backgroundColor: '#ececec',
+    // backgroundColor: '#ececec',
+    borderStyle: "dashed",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#000000",
+    borderTopColor: "#000000"
   },
   opacityLayer: {
     flex: 1,
@@ -461,10 +537,10 @@ const styles = StyleSheet.create({
   cardTitle1: {
     fontFamily: fonts.bold,
     color: colors.black,
-    shadowColor: colors.grey.dark,
-    shadowOpacity: 1,
-    shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 5,
+    // shadowColor: colors.grey.dark,
+    // shadowOpacity: 1,
+    // shadowOffset: { width: 0, height: 0 },
+    // shadowRadius: 5,
     width: "90%",
     fontSize: wp("3.5%"),
   },
