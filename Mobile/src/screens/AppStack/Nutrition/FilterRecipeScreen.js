@@ -405,15 +405,16 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                     style={styles.customContainerStyle}
                 >
                     {/* BigHeadText */}
-                    <BigHeadingWithBackButton
-                        isBackButton={true}
-                        bigTitleText={'Breakfast'}
-                        onPress={this.handleBack}
-                        backButtonText="Back to Workout"
-                        isBigTitle={true}
-                        isBackButton={true}
-                        customContainerStyle={{ bottom: 25 }}
-                    />
+                    <View>
+                        <BigHeadingWithBackButton
+                            isBackButton={true}
+                            onPress={this.handleBack}
+                            backButtonText="Back to Workout"
+                            isBackButton={true}
+                            customContainerStyle={{ bottom: 25 }}
+                        />
+                        <Text style={{ bottom: 60, fontSize: 30, fontFamily: 'monospace' }}>Breakfast</Text>
+                    </View>
 
                     {/* Filter Button */}
                     <View>
@@ -427,7 +428,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                         />
                     </View>
                 </View>
-                {/* <View
+                <View
                     style={{ flexDirection: 'row', marginVertical: 10, top: 10, marginBottom: 20 }}
                 >
                     <View
@@ -466,8 +467,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                         <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>L1 - P1</Text>
                         <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
                     </View>
-                </View> */}
-                <FlatList
+                </View>
+                {/* <FlatList
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     data={recipes}
@@ -476,7 +477,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                     style={{
                         paddingVertical: wp("4%"),
                     }}
-                />
+                /> */}
                 {loading ? (
                     skeleton
                 ) : (
