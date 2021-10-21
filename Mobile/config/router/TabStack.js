@@ -77,6 +77,7 @@ const TabStack = createBottomTabNavigator(
               <FeedSvg
                   width={hp("2.5%")}
                   height={hp("2.5%")}
+                  fill={focused ? activeState : inactiveState}
                   focused={focused}
               />
           );
@@ -90,6 +91,7 @@ const TabStack = createBottomTabNavigator(
               <SubSVG
                   width={hp("2.5%")}
                   height={hp("2.5%")}
+                  fill={focused ? activeState : inactiveState}
                   focused={focused}
               />
           );
@@ -103,6 +105,7 @@ const TabStack = createBottomTabNavigator(
             <ChallengeSvg
               width={hp("2.5%")}
               height={hp("2.5%")}
+              fill={focused ? activeState : inactiveState}
               focused={focused}
             />
           );
@@ -124,6 +127,7 @@ const TabStack = createBottomTabNavigator(
               <ProgressSvg
                   width={hp("2.5%")}
                   height={hp("2.5%")}
+                  fill={focused ? activeState : inactiveState}
                   focused={focused}
               />
           );
