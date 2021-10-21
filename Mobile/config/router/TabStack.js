@@ -79,6 +79,12 @@ const TabStack = createBottomTabNavigator(
             //   height={hp("2.5%")}
             //   focused={focused}
             // />
+              <FeedSvg
+                  width={hp("2.5%")}
+                  height={hp("2.5%")}
+                  fill={focused ? activeState : inactiveState}
+                  focused={focused}
+              />
           );
         } else if (routeName === "Lifestyle") {
           icon = (
@@ -92,6 +98,12 @@ const TabStack = createBottomTabNavigator(
             //   height={hp("2.5%")}
             //   focused={focused}
             // />
+              <SubSVG
+                  width={hp("2.5%")}
+                  height={hp("2.5%")}
+                  fill={focused ? activeState : inactiveState}
+                  focused={focused}
+              />
           );
         } else if (routeName === "Challenges") {
           icon = (
@@ -105,6 +117,12 @@ const TabStack = createBottomTabNavigator(
             //   height={hp("2.5%")}
             //   focused={focused}
             // />
+            <ChallengeSvg
+              width={hp("2.5%")}
+              height={hp("2.5%")}
+              fill={focused ? activeState : inactiveState}
+              focused={focused}
+            />
           );
         } else if (routeName === "Calendar") {
           icon = (
@@ -126,6 +144,12 @@ const TabStack = createBottomTabNavigator(
             //   height={hp("2.5%")}
             //   focused={focused}
             // />
+              <ProgressSvg
+                  width={hp("2.5%")}
+                  height={hp("2.5%")}
+                  fill={focused ? activeState : inactiveState}
+                  focused={focused}
+              />
           );
         }
         return icon;
