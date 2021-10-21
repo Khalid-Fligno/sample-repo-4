@@ -71,86 +71,109 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         navigation.pop();
     };
 
-    renderItem = ({ item }) => (
-        <View
-            style={styles.cardContainer}
-        >
-            <Card
-                image={{ uri: item.coverImage }}
-                containerStyle={styles.card}
+    renderItem = ({ item }) => {
+
+        const tagList = item.tags.slice(0, 3)
+
+        return (
+
+            <View
+                style={styles.cardContainer}
             >
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10 }}>
-                        <View style={{ maxWidth: '70%' }}>
-                            <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>
+                <Card
+                    image={{ uri: item.coverImage }}
+                    containerStyle={styles.card}
+                >
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10 }}>
+                            <View style={{ maxWidth: '70%' }}>
+                                <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            {
+                                tagList && tagList.map((tag, index) => (
+                                    <View
+                                        style={{
+                                            height: 20,
+                                            width: 20,
+                                            marginRight: 4,
+                                            borderWidth: 0,
+                                            // borderColor: colors.violet.standard,
+                                            borderRadius: 14,
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            backgroundColor: '#469753',
+                                        }}
+                                        key={index}
+                                    >
+                                        <Text style={{
+                                            fontFamily: fonts.bold,
+                                            fontSize: 7,
+                                            color: colors.white,
+                                        }}>
+                                            {tag}
+                                        </Text>
+                                    </View>
+                                ))
+                            }
+                            <Text style={{ fontSize: 9 }}>+ more</Text>
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <View style={{
-                            height: 20,
-                            width: 20,
-                            marginRight: 4,
-                            borderWidth: 0,
-                            // borderColor: colors.violet.standard,
-                            borderRadius: 14,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: '#469753',
-                        }}>
-                            <Text style={{
-                                fontFamily: fonts.bold,
-                                fontSize: 7,
-                                color: colors.white,
-                            }}>
-                                GF
-                            </Text>
-                        </View>
-                        <View style={{
-                            height: 20,
-                            width: 20,
-                            marginRight: 4,
-                            borderWidth: 0,
-                            // borderColor: colors.violet.standard,
-                            borderRadius: 14,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: '#469753',
-                        }}>
-                            <Text style={{
-                                fontFamily: fonts.bold,
-                                fontSize: 7,
-                                color: colors.white,
-                            }}>
-                                VEG
-                            </Text>
-                        </View>
-                        <View style={{
-                            height: 20,
-                            width: 20,
-                            marginRight: 4,
-                            borderWidth: 0,
-                            // borderColor: colors.violet.standard,
-                            borderRadius: 14,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: '#B7782B',
-                        }}>
-                            <Text style={{
-                                fontFamily: fonts.bold,
-                                fontSize: 7,
-                                color: colors.white,
-                            }}>
-                                DF
-                            </Text>
-                        </View>
-                        <Text style={{ fontSize: 9 }}>+ more</Text>
-                    </View>
+                </Card>
+            </View>
+        )
+    };
+
+    renderItem1 = ({ }) => {
+
+        return (
+            <View
+                style={{ flexDirection: 'row', marginVertical: 10, height: 20, bottom: 10, marginTop: 20 }}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        backgroundColor: '#e3e3e3',
+                        borderRadius: 50,
+                        marginRight: 7,
+                    }}
+                >
+                    <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>Vegan</Text>
+                    <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
                 </View>
-            </Card>
-        </View>
-    );
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        backgroundColor: '#e3e3e3',
+                        borderRadius: 50,
+                        marginRight: 7,
+                    }}
+                >
+                    <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>Vegetarian</Text>
+                    <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+                </View>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        backgroundColor: '#e3e3e3',
+                        borderRadius: 50,
+                        marginRight: 7,
+                    }}
+                >
+                    <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>L1 - P1</Text>
+                    <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+                </View>
+            </View>
+        )
+    }
 
     keyExtractor = (item, index) => String(index);
+
+    tagName = ["Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2", "Phase 1", "Phase 2", "Phase 3"]
 
     render() {
         const { recipes, loading } = this.state
@@ -404,7 +427,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                         />
                     </View>
                 </View>
-                <View
+                {/* <View
                     style={{ flexDirection: 'row', marginVertical: 10, top: 10, marginBottom: 20 }}
                 >
                     <View
@@ -443,93 +466,17 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                         <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>L1 - P1</Text>
                         <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
                     </View>
-                </View>
-                {/* <View
-                    style={styles.cardContainer}
-                >
-                    <Card
-                        image={{ uri: '../../../../assets/images/nutrition-snack.jpg' }}
-                        containerStyle={styles.card}
-                    >
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10 }}>
-                                <View>
-                                    <Text style={{ fontFamily: fonts.bold, fontSize: 15, lineHeight: 18 }}>2-ingredient Sashimi</Text>
-                                </View>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <View style={{
-                                    height: 20,
-                                    width: 20,
-                                    marginRight: 4,
-                                    borderWidth: 0,
-                                    // borderColor: colors.violet.standard,
-                                    borderRadius: 14,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    backgroundColor: '#469753',
-                                }}>
-                                    <Text style={{
-                                        fontFamily: fonts.bold,
-                                        fontSize: 7,
-                                        color: colors.white,
-                                    }}>
-                                        GF
-                                    </Text>
-                                </View>
-                                <View style={{
-                                    height: 20,
-                                    width: 20,
-                                    marginRight: 4,
-                                    borderWidth: 0,
-                                    // borderColor: colors.violet.standard,
-                                    borderRadius: 14,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    backgroundColor: '#469753',
-                                }}>
-                                    <Text style={{
-                                        fontFamily: fonts.bold,
-                                        fontSize: 7,
-                                        color: colors.white,
-                                    }}>
-                                        VEG
-                                    </Text>
-                                </View>
-                                <View style={{
-                                    height: 20,
-                                    width: 20,
-                                    marginRight: 4,
-                                    borderWidth: 0,
-                                    // borderColor: colors.violet.standard,
-                                    borderRadius: 14,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    backgroundColor: '#B7782B',
-                                }}>
-                                    <Text style={{
-                                        fontFamily: fonts.bold,
-                                        fontSize: 7,
-                                        color: colors.white,
-                                    }}>
-                                        DF
-                                    </Text>
-                                </View>
-                                <Text style={{ fontSize: 9 }}>+ more</Text>
-                            </View>
-                        </View>
-                    </Card>
                 </View> */}
-                {/* <FlatList
+                <FlatList
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    data={filterButtons}
+                    data={recipes}
                     keyExtractor={(item) => item.id}
-                    renderItem={(item) => renderItem1(item)}
+                    renderItem={(item) => this.renderItem1(item)}
                     style={{
                         paddingVertical: wp("4%"),
                     }}
-                /> */}
+                />
                 {loading ? (
                     skeleton
                 ) : (
