@@ -1,6 +1,6 @@
 {
   "name": "RNDeviceInfo",
-  "version": "8.3.2",
+  "version": "8.3.3",
   "summary": "Get device information using react-native",
   "license": "MIT",
   "authors": {
@@ -15,7 +15,7 @@
   },
   "source": {
     "git": "https://github.com/react-native-community/react-native-device-info.git",
-    "tag": "v8.3.2"
+    "tag": "v8.3.3"
   },
   "source_files": "ios/**/*.{h,m}",
   "dependencies": {
