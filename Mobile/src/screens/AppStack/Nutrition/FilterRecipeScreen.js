@@ -189,9 +189,16 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                 animationOut="fadeOutDownBig"
                 onBackdropPress={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
             >
-                <View style={{ backgroundColor: 'white', height: hp('50%'), marginTop: 320 }}>
+                <View style={{ backgroundColor: 'white', height: hp('43%'), marginTop: wp('115%') }}>
                     <View style={globalStyle.container}>
-                        <View style={styles.closeContainer}><Text></Text></View>
+                        <TouchableOpacity
+                            style={styles.closeContainer}
+                            onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
+                        >
+                            <View>
+                                <Text></Text>
+                            </View>
+                        </TouchableOpacity>
                         <TouchableOpacity
                             style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}
                             onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
@@ -212,7 +219,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 3</Text>
                             <CheckBox />
                         </View>
-                        <View style={{ marginTop: 50 }}>
+                        <View style={{ marginTop: hp('3%') }}>
                             <Button
                                 title="Apply"
                                 color='#4d4c4c'
@@ -232,9 +239,16 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                 animationOut="fadeOutDownBig"
                 onBackdropPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
             >
-                <View style={{ backgroundColor: 'white', height: hp('90%'), marginTop: 200 }}>
+                <View style={{ backgroundColor: 'white', height: hp('72%'), marginTop: wp('55%') }}>
                     <View style={globalStyle.container}>
-                        <View style={styles.closeContainer}><Text></Text></View>
+                        <TouchableOpacity
+                            style={styles.closeContainer}
+                            onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
+                        >
+                            <View>
+                                <Text></Text>
+                            </View>
+                        </TouchableOpacity>
                         <View style={{ marginTop: 10 }}>
                             <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter receipes to</Text>
                             <View style={styles.tagContainer}>
@@ -387,7 +401,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                     <Icon name="chevron-right" size={12} color={colors.black} />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ marginTop: 50 }}>
+                            <View style={{ marginTop: hp('5%') }}>
                                 <Button
                                     title="Apply"
                                     color='#4d4c4c'
@@ -554,7 +568,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'grey',
-        marginHorizontal: 140,
+        marginHorizontal: wp('38%'),
         marginTop: 10,
         borderRadius: 50,
         height: 5,
