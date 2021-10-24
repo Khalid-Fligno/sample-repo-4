@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { ScrollView, View, Text, Alert, Linking } from "react-native";
+import {ScrollView, View, Text, Alert, Linking, Dimensions} from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
 import firebase from "firebase";
@@ -34,6 +34,10 @@ import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
 import { checkVersion } from "react-native-check-version";
 import { getVersion } from "react-native-device-info";
 import fonts from "../../../styles/fonts";
+import Svg, { Path } from "react-native-svg"
+import {
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -56,6 +60,7 @@ class CalendarHomeScreen extends React.PureComponent {
       loadingExercises: false,
       skipped: false,
       initialBurpeeTestCompleted: false,
+      width: 0
     };
     this.calendarStrip = React.createRef();
   }
@@ -530,6 +535,7 @@ class CalendarHomeScreen extends React.PureComponent {
       todayRcWorkout,
       loadingExercises,
       skipped,
+      width
     } = this.state;
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
@@ -590,24 +596,135 @@ class CalendarHomeScreen extends React.PureComponent {
         </>
     );
 
+    const Progress = ({day, days}) => {
+      return (
+          <>
+            <View
+              onLayout={e => {
+                const newWidth = e.nativeEvent.layout.width;
+                this.setState({ width: newWidth });
+              }}
+              style={{
+                height: 10,
+                backgroundColor: 'rgba(0,0,0,0.1)',
+                borderRadius: 10,
+                overflow: 'hidden'
+              }}>
+              <View style={{
+                height: 10,
+                width: (width * day) / days,
+                borderRadius: 10,
+                backgroundColor: colors.themeColor.color,
+                position: 'absolute',
+                left: 0,
+                top: 0
+              }}></View>
+            </View>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 8
+            }}>
+              <View style={{
+                borderRadius: 5,
+                // shadowColor: "#000",
+                // shadowOffset: {
+                //   width: 0,
+                //   height: 8,
+                // },
+                // shadowOpacity: 0.75,
+                // shadowRadius: 3.84,
+                // elevation: 5,
+                backgroundColor: 'rgba(0,0,0,0.1)',
+                padding: 5
+              }}>
+                <Text style={{
+                  fontFamily: fonts.GothamMedium,
+                }}>Day 1</Text>
+              </View>
+              <Text style={{
+                fontFamily: fonts.GothamMedium
+              }}>Day 56</Text>
+            </View>
+            <View style={{
+              position: 'absolute',
+              left: ((width * day) / days) + 12,
+              top: 30
+            }}>
+              <Svg
+                  id="prefix__Layer_1"
+                  viewBox="0 0 110 90"
+                  xmlSpace="preserve"
+                  width={hp("1.5%")}
+                  height={hp("1.5%")}
+                  fill={colors.themeColor.color}
+                  style={{
+                    strokeWidth: 20,
+                    stroke: colors.themeColor.color,
+                    strokeLinejoin: 'round',
+                    strokeLinecap: 'round',
+                    shadowColor: '#171717',
+                    shadowOffset: {width: 0, height: 0},
+                    shadowOpacity: 0.2,
+                    shadowRadius: 3,
+                  }}
+              >
+                <Path
+                    className="prefix__st0"
+                    d="M 55 10 L 100 90 L 10 90 z"
+                />
+              </Svg>
+            </View>
+            <View style={{
+              position: 'absolute',
+              left: ((width * day) / days) + 6,
+              top: 42,
+              backgroundColor: colors.themeColor.color,
+              width: 30,
+              height: 30,
+              justifyContent: 'center',
+              alignItems: 'center',
+              flex:1,
+              borderRadius: 5,
+              shadowColor: '#171717',
+              shadowOffset: {width: 0, height: 5},
+              shadowOpacity: 0.2,
+              shadowRadius: 3,
+            }}>
+              <Text style={{
+                fontFamily: fonts.GothamMedium
+              }}>{day}</Text>
+            </View>
+          </>
+    )};
+
     const dayDisplay = (
         <ScrollView
             contentContainerStyle={calendarStyles.dayDisplayContainer}
             scrollEnabled={!this.state.isSwiping}
             showsVerticalScrollIndicator={false}
         >
+          <View style={{
+            paddingVertical: 20,
+            width: Dimensions.get("window").width,
+            paddingHorizontal: 20
+          }}>
+            <Progress day={25} days={56} />
+          </View>
           {this.phaseData && showRC && (
-              <ChallengeProgressCard2
-                  phase={this.phase}
-                  phaseData={this.phaseData}
-                  activeChallengeData={activeChallengeData}
-                  activeChallengeUserData={activeChallengeUserData}
-                  totalChallengeWorkoutsCompleted={
-                    this.totalChallengeWorkoutsCompleted
-                  }
-                  openLink={() => this.openLink(this.phaseData.pdfUrl)}
-                  currentDay={this.currentChallengeDay}
-              />
+              <>
+                <ChallengeProgressCard2
+                    phase={this.phase}
+                    phaseData={this.phaseData}
+                    activeChallengeData={activeChallengeData}
+                    activeChallengeUserData={activeChallengeUserData}
+                    totalChallengeWorkoutsCompleted={
+                      this.totalChallengeWorkoutsCompleted
+                    }
+                    openLink={() => this.openLink(this.phaseData.pdfUrl)}
+                    currentDay={this.currentChallengeDay}
+                />
+              </>
           )}
           {workoutCard}
           {mealsList}
