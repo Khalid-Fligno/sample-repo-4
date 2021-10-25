@@ -339,7 +339,7 @@ class CalendarHomeScreen extends React.PureComponent {
         .collection("users")
         .doc(uid)
         .collection("challenges")
-        .where("status", "in", ["Active"])
+        .where("status", "in", ["Active", "InActive"])
         .onSnapshot(async (querySnapshot) => {
           const list = [];
           await querySnapshot.forEach(async (doc) => {

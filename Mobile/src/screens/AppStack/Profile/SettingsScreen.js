@@ -17,6 +17,7 @@ import colors from "../../../styles/colors";
 // import fonts from '../../../styles/fonts';
 import globalStyle from "../../../styles/globalStyles";
 import ProfileStyles from "./ProfileStyles";
+import moment from 'moment';
 
 const { width } = Dimensions.get("window");
 
@@ -109,9 +110,27 @@ export default class SettingsScreen extends React.PureComponent {
     const uid = await AsyncStorage.getItem("uid");
     const userRef = db.collection("users").doc(uid);
     await userRef.update({
-      initialProgressInfo: firebase.firestore.FieldValue.delete(),
-      currentProgressInfo: firebase.firestore.FieldValue.delete(),
+      initialProgressInfo: {
+        date: moment().format("YYYY-MM-DD"),
+        weight: null ?? 0,
+        waist: null ?? 0,
+        hip: null ?? 0,
+        // height: null ?? 0,
+        // goalWeight: null ?? 0,
+        // burpeeCount: null ?? 0,
+      },
+      // initialProgressInfo: firebase.firestore.FieldValue.delete(),
+      currentProgressInfo: {
+        date: moment().format("YYYY-MM-DD"),
+        weight: null,
+        waist: null,
+        hip: null,
+        // height: null,
+        // goalWeight: null,
+        // burpeeCount: null,
+      }
     });
+
     Alert.alert("Your progress info has been reset");
     this.setState({ loading: false });
   };
