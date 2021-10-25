@@ -626,17 +626,13 @@ class CalendarHomeScreen extends React.PureComponent {
               marginTop: 8
             }}>
               <View style={{
-                borderRadius: 5,
-                // shadowColor: "#000",
-                // shadowOffset: {
-                //   width: 0,
-                //   height: 8,
-                // },
-                // shadowOpacity: 0.75,
-                // shadowRadius: 3.84,
-                // elevation: 5,
-                backgroundColor: 'rgba(0,0,0,0.1)',
-                padding: 5
+                shadowColor: 'black',
+                shadowOffset: { width: 0, height: 0.5 * 5 },
+                shadowOpacity: 0.3,
+                shadowRadius: 0.8 * 5,
+                // width: 50,
+                // height: 20,
+                backgroundColor: 'white'
               }}>
                 <Text style={{
                   fontFamily: fonts.GothamMedium,
@@ -648,8 +644,8 @@ class CalendarHomeScreen extends React.PureComponent {
             </View>
             <View style={{
               position: 'absolute',
-              left: ((width * day) / days) + 12,
-              top: 30
+              left: Platform.OS === "ios" ? ((width * day) / days) + 13 : ((width * day) / days) + 14,
+              top: 29
             }}>
               <Svg
                   id="prefix__Layer_1"
@@ -663,10 +659,10 @@ class CalendarHomeScreen extends React.PureComponent {
                     stroke: colors.themeColor.color,
                     strokeLinejoin: 'round',
                     strokeLinecap: 'round',
-                    shadowColor: '#171717',
-                    shadowOffset: {width: 0, height: 0},
-                    shadowOpacity: 0.2,
-                    shadowRadius: 3,
+                    // shadowColor: '#171717',
+                    // shadowOffset: {width: 0, height: 0},
+                    // shadowOpacity: 0.2,
+                    // shadowRadius: 3,
                   }}
               >
                 <Path
@@ -677,19 +673,19 @@ class CalendarHomeScreen extends React.PureComponent {
             </View>
             <View style={{
               position: 'absolute',
-              left: ((width * day) / days) + 6,
-              top: 42,
+              left: Platform.OS === "ios" ? ((width * day) / days) + 5 : ((width * day) / days) + 5,
+              top: Platform.OS === "ios" ? 42 : 40,
               backgroundColor: colors.themeColor.color,
-              width: 30,
+              width: 31,
               height: 30,
               justifyContent: 'center',
               alignItems: 'center',
               flex:1,
               borderRadius: 5,
-              shadowColor: '#171717',
-              shadowOffset: {width: 0, height: 5},
-              shadowOpacity: 0.2,
-              shadowRadius: 3,
+              // shadowColor: '#171717',
+              // shadowOffset: {width: 0, height: 5},
+              // shadowOpacity: 0.2,
+              // shadowRadius: 3,
             }}>
               <Text style={{
                 fontFamily: fonts.GothamMedium
