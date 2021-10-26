@@ -73,7 +73,81 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 
     renderItem = ({ item }) => {
 
-        const tagList = item.tags.slice(0, 3)
+        const color1 = []
+
+        const tagList1 = sortBy(item.tags).filter((tag) => {
+
+            if(tag === 'V'){
+                color1.push({
+                    name: tag,
+                    color: '#00C520'
+                })
+            }
+            if(tag === 'V+'){
+                color1.push({
+                    name: tag.replace('V+', 'VEG'),
+                    color: '#9403fc'
+                })
+            }
+            if(tag === 'GF'){
+                color1.push({
+                    name: tag,
+                    color: '#469753'
+                })
+            }
+            if(tag === 'DF'){
+                color1.push({
+                    name: tag,
+                    color: '#B7782B'
+                })
+            }
+            if(tag === 'GH'){
+                color1.push({
+                    name: tag,
+                    color: '#965734'
+                })
+            }
+            if(tag === 'L3'){
+                color1.push({
+                    name: tag,
+                    color: '#F89500'
+                })
+            }
+            if(tag === 'L2'){
+                color1.push({
+                    name: tag,
+                    color: '#fc1403'
+                })
+            }
+            if(tag === 'L1'){
+                color1.push({
+                    name: tag,
+                    color: '#03adfc'
+                })
+            }
+            if(tag === 'P3'){
+                color1.push({
+                    name: tag,
+                    color: '#c203fc'
+                })
+            }
+            if(tag === 'P2'){
+                color1.push({
+                    name: tag,
+                    color: '#fc0384'
+                })
+            }
+            if(tag === 'P1'){
+                color1.push({
+                    name: tag,
+                    color: '#fc8403'
+                })
+            }
+        })
+
+        const result = color1.splice(0, 3)
+
+        console.log('RecipeData: ', result)
 
         return (
 
@@ -92,7 +166,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             {
-                                tagList && tagList.map((tag, index) => (
+                                result && result.map((tag, index) => (
                                     <View
                                         style={{
                                             height: 20,
@@ -103,7 +177,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                             borderRadius: 14,
                                             justifyContent: "center",
                                             alignItems: "center",
-                                            backgroundColor: '#469753',
+                                            backgroundColor: tag.color,
                                         }}
                                         key={index}
                                     >
@@ -112,7 +186,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                             fontSize: 7,
                                             color: colors.white,
                                         }}>
-                                            {tag}
+                                            {tag.name}
                                         </Text>
                                     </View>
                                 ))
@@ -173,12 +247,10 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 
     keyExtractor = (item, index) => String(index);
 
-    tagName = ["Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2", "Phase 1", "Phase 2", "Phase 3"]
+    // tagName = ["Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2", "Phase 1", "Phase 2", "Phase 3"]
 
     render() {
         const { recipes, loading } = this.state
-
-        // console.log('RecipeData: ', recipes)
 
         const clickModal = (
             <Modal
@@ -189,7 +261,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                 animationOut="fadeOutDownBig"
                 onBackdropPress={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
             >
-                <View style={{ backgroundColor: 'white', height: hp('43%'), marginTop: wp('115%') }}>
+                <View style={{ backgroundColor: 'white', height: hp('60%'), marginTop: wp('115%') }}>
                     <View style={globalStyle.container}>
                         <TouchableOpacity
                             style={styles.closeContainer}
@@ -239,7 +311,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                 animationOut="fadeOutDownBig"
                 onBackdropPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
             >
-                <View style={{ backgroundColor: 'white', height: hp('72%'), marginTop: wp('55%') }}>
+                <View style={{ backgroundColor: 'white', height: hp('90%'), marginTop: wp('55%') }}>
                     <View style={globalStyle.container}>
                         <TouchableOpacity
                             style={styles.closeContainer}
@@ -312,7 +384,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                         borderRadius: 14,
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        backgroundColor: '#469753',
+                                        backgroundColor: '#9403fc',
                                     }}>
                                         <Text style={{
                                             fontFamily: fonts.bold,
@@ -568,7 +640,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'grey',
-        marginHorizontal: wp('38%'),
+        marginHorizontal: wp('40%'),
         marginTop: 10,
         borderRadius: 50,
         height: 5,
