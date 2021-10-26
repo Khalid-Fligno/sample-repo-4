@@ -232,9 +232,9 @@ class CalendarHomeScreen extends React.PureComponent {
   loadExercises = async (workoutData) => {
     this.setState({ loadingExercises: true });
     const workout = await loadExercise(workoutData);
-    // console.log("line195",workout)
+
     if (workout && workout.newWorkout) {
-      // console.log("Here....");
+
       const warmUpExercises = await downloadExerciseWC(
         workout,
         Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array")>-1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => {return warmUpExercise}),
