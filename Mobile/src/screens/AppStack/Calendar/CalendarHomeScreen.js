@@ -596,7 +596,7 @@ class CalendarHomeScreen extends React.PureComponent {
         </>
     );
 
-    const Progress = ({day, days}) => {
+    const Progress = () => {
       return (
           <>
             <View
@@ -612,7 +612,7 @@ class CalendarHomeScreen extends React.PureComponent {
               }}>
               <View style={{
                 height: 10,
-                width: (width * day) / days,
+                width: (width * this.currentChallengeDay) / activeChallengeData.numberOfDays,
                 borderRadius: 10,
                 backgroundColor: colors.themeColor.color,
                 position: 'absolute',
@@ -623,28 +623,48 @@ class CalendarHomeScreen extends React.PureComponent {
             <View style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              marginTop: 8
+              marginTop: 15
             }}>
-              <View style={{
-                shadowColor: 'black',
-                shadowOffset: { width: 0, height: 0.5 * 5 },
-                shadowOpacity: 0.3,
-                shadowRadius: 0.8 * 5,
-                // width: 50,
-                // height: 20,
-                backgroundColor: 'white'
+              <View elevation={5} style={{
+                borderRadius: 3,
+                backgroundColor: '#ffffff',
+                shadowColor: '#000000',
+                shadowOpacity: 0.5,
+                shadowRadius: 0.5,
+                shadowOffset: {
+                  height: 0,
+                  width: 0
+                },
+                padding: 5,
+                borderBottomColor: 'rgba(0,0,0,0.1)',
+                borderBottomWidth: 2,
               }}>
                 <Text style={{
                   fontFamily: fonts.GothamMedium,
-                }}>Day 1</Text>
+                }}>Day {this.currentChallengeDay}</Text>
               </View>
-              <Text style={{
-                fontFamily: fonts.GothamMedium
-              }}>Day 56</Text>
+              <View elevation={5} style={{
+                borderRadius: 3,
+                backgroundColor: '#ffffff',
+                shadowColor: '#000000',
+                shadowOpacity: 0.5,
+                shadowRadius: 0.5,
+                shadowOffset: {
+                  height: 0,
+                  width: 0
+                },
+                padding: 5,
+                borderBottomColor: 'rgba(0,0,0,0.1)',
+                borderBottomWidth: 2,
+              }}>
+                <Text style={{
+                  fontFamily: fonts.GothamMedium
+                }}>Day {activeChallengeData.numberOfDays}</Text>
+              </View>
             </View>
             <View style={{
               position: 'absolute',
-              left: Platform.OS === "ios" ? ((width * day) / days) + 13 : ((width * day) / days) + 14,
+              left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 13 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 14,
               top: 29
             }}>
               <Svg
@@ -673,7 +693,7 @@ class CalendarHomeScreen extends React.PureComponent {
             </View>
             <View style={{
               position: 'absolute',
-              left: Platform.OS === "ios" ? ((width * day) / days) + 5 : ((width * day) / days) + 5,
+              left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 5 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 5,
               top: Platform.OS === "ios" ? 42 : 40,
               backgroundColor: colors.themeColor.color,
               width: 31,
@@ -689,7 +709,7 @@ class CalendarHomeScreen extends React.PureComponent {
             }}>
               <Text style={{
                 fontFamily: fonts.GothamMedium
-              }}>{day}</Text>
+              }}>{this.currentChallengeDay}</Text>
             </View>
           </>
     )};
@@ -700,26 +720,26 @@ class CalendarHomeScreen extends React.PureComponent {
             scrollEnabled={!this.state.isSwiping}
             showsVerticalScrollIndicator={false}
         >
-          <View style={{
-            paddingVertical: 20,
-            width: Dimensions.get("window").width,
-            paddingHorizontal: 20
-          }}>
-            <Progress day={25} days={56} />
-          </View>
           {this.phaseData && showRC && (
               <>
-                <ChallengeProgressCard2
-                    phase={this.phase}
-                    phaseData={this.phaseData}
-                    activeChallengeData={activeChallengeData}
-                    activeChallengeUserData={activeChallengeUserData}
-                    totalChallengeWorkoutsCompleted={
-                      this.totalChallengeWorkoutsCompleted
-                    }
-                    openLink={() => this.openLink(this.phaseData.pdfUrl)}
-                    currentDay={this.currentChallengeDay}
-                />
+                <View style={{
+                  paddingVertical: 20,
+                  width: Dimensions.get("window").width,
+                  paddingHorizontal: 20
+                }}>
+                  <Progress />
+                </View>
+                {/*<ChallengeProgressCard2*/}
+                {/*    phase={this.phase}*/}
+                {/*    phaseData={this.phaseData}*/}
+                {/*    activeChallengeData={activeChallengeData}*/}
+                {/*    activeChallengeUserData={activeChallengeUserData}*/}
+                {/*    totalChallengeWorkoutsCompleted={*/}
+                {/*      this.totalChallengeWorkoutsCompleted*/}
+                {/*    }*/}
+                {/*    openLink={() => this.openLink(this.phaseData.pdfUrl)}*/}
+                {/*    currentDay={this.currentChallengeDay}*/}
+                {/*/>*/}
               </>
           )}
           {workoutCard}
