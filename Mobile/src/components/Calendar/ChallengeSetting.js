@@ -42,7 +42,7 @@ class ChallengeSetting extends Component {
             .doc(uid)
             .collection("challenges")
             .doc(data.id);
-        Object.assign(activeChallengeData, { status: "InActive" });
+        Object.assign(activeChallengeData, { isSchedule: true, status: "InActive" });
         const newData = createUserChallengeData(activeChallengeData, new Date());
         userRef
             .set(newData, { merge: true })
@@ -175,10 +175,10 @@ class ChallengeSetting extends Component {
         const userRef = db.collection("users").doc(uid).collection("challenges");
         const data = createUserChallengeData(activeChallengeData, selectedDate);
         if (moment(selectedDate).isSame(TODAY, "d")) {
-            Object.assign(data, { status: "Active" });
-        } else {
-            // Object.assign(data, { isSchedule: true, status: "InActive" });
             Object.assign(data, { isSchedule: true, status: "Active" });
+        } else {
+            Object.assign(data, { isSchedule: true, status: "InActive" });
+            // Object.assign(data, { isSchedule: true, status: "Active" });
         }
         userRef
             .doc(activeChallengeData.id)

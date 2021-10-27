@@ -406,7 +406,7 @@ class ChallengeSubscriptionScreen extends Component {
     const data = createUserChallengeData(ChallengeData, new Date(selectedDate));
     // console.log(data.startDate , selectedDate);
     if (moment(selectedDate).isSame(TODAY, "d")) {
-      Object.assign(data, { status: "Active" });
+      Object.assign(data, { isSchedule: true, status: "Active" });
     } else {
       Object.assign(data, { isSchedule: true, status: "InActive" });
     }

@@ -244,7 +244,7 @@ export default class HomeScreen extends React.PureComponent {
             .collection("challenges")
             .doc(list[0].id);
           challengeRef.set(
-            { status: "Active", isSchedule: false },
+            { status: "Active", isSchedule: true },
             { merge: true }
           );
         }

@@ -440,17 +440,28 @@ export default class OnBoarding4 extends Component {
       burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
       fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
     };
-    const stringDate = moment(date).format("YYYY-MM-DD").toString();
+
+    // const stringDate = moment(date).format("YYYY-MM-DD").toString();
     const stringDate2 = moment(date).format("DD-MM-YY").toString();
-    if (
-      new Date(updatedChallengedata.startDate).getTime() <
-      new Date(stringDate).getTime()
-    ) {
-      data.isSchedule = true;
-      data.status = "InActive";
+    const TODAY = moment();
+
+     // if (
+    //   new Date(updatedChallengedata.startDate).getTime() <
+    //   new Date(stringDate).getTime()
+    // ) {
+    //   data.isSchedule = true;
+    //   data.status = "InActive";
+    // }
+    
+    if (moment(date).isSame(TODAY, "d")) {
+      Object.assign(data, { isSchedule: true, status: "Active" });
+    } else {
+      Object.assign(data, { isSchedule: true, status: "InActive" });
+      // Object.assign(data, { isSchedule: true, status: "Active" });
     }
-      await storeProgressInfo(progressData);
-      await this.saveOnBoardingInfo(data, stringDate2);
+
+    await storeProgressInfo(progressData);
+    await this.saveOnBoardingInfo(data, stringDate2);
   };
 
   async goToScreen(type) {

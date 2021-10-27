@@ -183,15 +183,47 @@ class CalendarHomeScreen extends React.PureComponent {
     isActiveChallenge().then((res) => {
       const todayDate = moment(new Date()).format("YYYY-MM-DD");
       if (res && moment(res.startDate).isSame(todayDate) && res.isSchedule) {
+        const isBetween = moment(this.stringDate).isBetween(
+          res.startDate,
+          res.endDate,
+          undefined,
+          "[]"
+        );
+        
         const challengeRef = db
           .collection("users")
           .doc(uid)
           .collection("challenges")
           .doc(res.id);
         challengeRef.set(
-          { status: "Active", isSchedule: false },
+          { status: "Active", isSchedule: true },
           { merge: true }
         );
+
+        if (!this.state.isSchedule) {
+          this.setState({
+            CalendarSelectedDate: moment(res.startDate),
+            isSchedule: true,
+            ScheduleData: res,
+            loading: true,
+          });
+          this.stringDate = res.startDate;
+          this.fetchActiveChallengeData(res);
+        }
+        if (isBetween) {
+          this.setState({ isSchedule: true, ScheduleData: res });
+          if (!this.state.activeChallengeData) {
+            this.fetchActiveChallengeData(res);
+          } else {
+            this.getCurrentPhaseInfo();
+          }
+        } else {
+          this.setState({
+            isSchedule: true,
+            ScheduleData: res,
+            loading: false,
+          });
+        }
       } else if (res && res.isSchedule) {
         const isBetween = moment(this.stringDate).isBetween(
           res.startDate,
