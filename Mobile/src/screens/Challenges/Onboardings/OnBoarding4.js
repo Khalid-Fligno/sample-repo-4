@@ -456,8 +456,8 @@ export default class OnBoarding4 extends Component {
     if (moment(date).isSame(TODAY, "d")) {
       Object.assign(data, { isSchedule: true, status: "Active" });
     } else {
-      Object.assign(data, { isSchedule: true, status: "InActive" });
-      // Object.assign(data, { isSchedule: true, status: "Active" });
+      // Object.assign(data, { isSchedule: true, status: "InActive" });
+      Object.assign(data, { isSchedule: true, status: "Active" });
     }
 
     await storeProgressInfo(progressData);

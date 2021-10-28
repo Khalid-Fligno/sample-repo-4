@@ -175,7 +175,7 @@ class ChallengeSetting extends Component {
         const userRef = db.collection("users").doc(uid).collection("challenges");
         const data = createUserChallengeData(activeChallengeData, selectedDate);
         if (moment(selectedDate).isSame(TODAY, "d")) {
-            Object.assign(data, { status: "Active" });
+            Object.assign(data, { isSchedule: true, status: "Active" });
         } else {
             // Object.assign(data, { isSchedule: true, status: "InActive" });
             Object.assign(data, { isSchedule: true, status: "Active" });
