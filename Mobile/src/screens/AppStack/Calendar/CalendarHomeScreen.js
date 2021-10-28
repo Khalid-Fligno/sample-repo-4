@@ -596,6 +596,11 @@ class CalendarHomeScreen extends React.PureComponent {
         </>
     );
 
+    const getPhase = (phaseData) => {
+      console.log('phaseData ', phaseData)
+      return phaseData.name.substring(0, 5) + ' ' + phaseData.name.substring(5, phaseData.name.length);;
+    };
+
     const Progress = () => {
       return (
           <>
@@ -625,16 +630,20 @@ class CalendarHomeScreen extends React.PureComponent {
               justifyContent: 'space-between',
               marginTop: 15
             }}>
-              <View elevation={3} style={{
+              <View elevation={5} style={{
                 borderRadius: 3,
                 backgroundColor: '#ffffff',
-                shadowColor: '#000000',
-                shadowOpacity: 0.5,
-                shadowRadius: 0.5,
-                shadowOffset: {
-                  height: 0,
-                  width: 0
-                },
+                // shadowColor: '#000000',
+                // shadowOpacity: 0.5,
+                // shadowRadius: 0.5,
+                // shadowOffset: {
+                //   height: 0,
+                //   width: 0
+                // },
+                shadowColor: '#000',
+                shadowOffset: { width: -1, height: 2 },
+                shadowOpacity: 0.4,
+                shadowRadius: 2,
                 padding: 5,
                 borderBottomColor: 'rgba(0,0,0,0.1)',
                 borderBottomWidth: 2,
@@ -643,16 +652,20 @@ class CalendarHomeScreen extends React.PureComponent {
                   fontFamily: fonts.GothamMedium,
                 }}>Day {this.currentChallengeDay}</Text>
               </View>
-              <View style={{
+              <View elevation={5} style={{
                 borderRadius: 3,
                 backgroundColor: '#ffffff',
-                shadowColor: '#000000',
-                shadowOpacity: 0.5,
-                shadowRadius: 0.5,
-                shadowOffset: {
-                  height: 0,
-                  width: 0
-                },
+                // shadowColor: '#000000',
+                // shadowOpacity: 0.5,
+                // shadowRadius: 0.5,
+                // shadowOffset: {
+                //   height: 0,
+                //   width: 0
+                // },
+                shadowColor: '#000',
+                shadowOffset: { width: 1, height: 2 },
+                shadowOpacity: 0.4,
+                shadowRadius: 2,
                 padding: 5,
                 borderBottomColor: 'rgba(0,0,0,0.1)',
                 borderBottomWidth: 2,
@@ -662,22 +675,52 @@ class CalendarHomeScreen extends React.PureComponent {
                 }}>Day {activeChallengeData.numberOfDays}</Text>
               </View>
             </View>
-            <View>
-              <View>
-                <Text>
+            <View style={{
+              flexDirection:'row',
+              marginTop: 60
+            }}>
+              <View style={{
+                backgroundColor: '#ffffff',
+                width: 92,
+                borderRadius: 3,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 2
+              }}>
+                <Text style={{
+                  fontSize: 18,
+                  fontFamily: fonts.GothamMedium
+                }}>
                   Transform
                 </Text>
               </View>
-              <Text>{'>'}</Text>
-              <View>
-                <Text>
-                  Phase 1
+              <Text style={{
+                fontSize: 18,
+                fontFamily: fonts.GothamMedium,
+                marginRight: 5,
+                marginLeft: 5
+              }}>{'>'}</Text>
+              <View style={{
+                backgroundColor: '#ffffff',
+                width: 67,
+                borderRadius: 3,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 2
+              }}>
+                <Text style={{
+                  fontSize: 18,
+                  fontFamily: fonts.GothamMedium
+                }}>
+                  {getPhase(this.phaseData)}
                 </Text>
               </View>
             </View>
-            <View style={{
+            <View elevation={5} style={{
               position: 'absolute',
-              left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 13 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 14,
+              left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 11 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 12,
               top: 29
             }}>
               <Svg
@@ -704,9 +747,9 @@ class CalendarHomeScreen extends React.PureComponent {
                 />
               </Svg>
             </View>
-            <View elevation={3} style={{
+            <View elevation={5} style={{
               position: 'absolute',
-              left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 5 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 5,
+              left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 3 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 3,
               top: Platform.OS === "ios" ? 42 : 40,
               backgroundColor: colors.themeColor.color,
               width: 31,
