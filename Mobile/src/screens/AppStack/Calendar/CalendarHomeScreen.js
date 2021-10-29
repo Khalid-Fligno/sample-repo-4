@@ -597,8 +597,12 @@ class CalendarHomeScreen extends React.PureComponent {
     );
 
     const getPhase = (phaseData) => {
-      console.log('phaseData ', phaseData)
-      return phaseData.name.substring(0, 5) + ' ' + phaseData.name.substring(5, phaseData.name.length);;
+      return (phaseData.name.substring(0, 5)
+          + ' '
+          + phaseData.name.substring(5, phaseData.name.length)).charAt(0).toUpperCase()
+          + (phaseData.name.substring(0, 5)
+          + ' '
+          + phaseData.name.substring(5, phaseData.name.length)).slice(1);
     };
 
     const Progress = () => {
@@ -630,48 +634,26 @@ class CalendarHomeScreen extends React.PureComponent {
               justifyContent: 'space-between',
               marginTop: 15
             }}>
-              <View elevation={5} style={{
+              <View style={{
                 borderRadius: 3,
-                backgroundColor: '#ffffff',
-                // shadowColor: '#000000',
-                // shadowOpacity: 0.5,
-                // shadowRadius: 0.5,
-                // shadowOffset: {
-                //   height: 0,
-                //   width: 0
-                // },
-                shadowColor: '#000',
-                shadowOffset: { width: -1, height: 2 },
-                shadowOpacity: 0.4,
-                shadowRadius: 2,
+                backgroundColor: 'rgba(0,0,0,0.1)',
                 padding: 5,
                 borderBottomColor: 'rgba(0,0,0,0.1)',
                 borderBottomWidth: 2,
               }}>
                 <Text style={{
-                  fontFamily: fonts.GothamMedium,
+                  fontFamily: fonts.bold,
                 }}>Day {this.currentChallengeDay}</Text>
               </View>
-              <View elevation={5} style={{
+              <View style={{
                 borderRadius: 3,
-                backgroundColor: '#ffffff',
-                // shadowColor: '#000000',
-                // shadowOpacity: 0.5,
-                // shadowRadius: 0.5,
-                // shadowOffset: {
-                //   height: 0,
-                //   width: 0
-                // },
-                shadowColor: '#000',
-                shadowOffset: { width: 1, height: 2 },
-                shadowOpacity: 0.4,
-                shadowRadius: 2,
+                backgroundColor: 'rgba(0,0,0,0.1)',
                 padding: 5,
                 borderBottomColor: 'rgba(0,0,0,0.1)',
                 borderBottomWidth: 2,
               }}>
                 <Text style={{
-                  fontFamily: fonts.GothamMedium
+                  fontFamily: fonts.bold
                 }}>Day {activeChallengeData.numberOfDays}</Text>
               </View>
             </View>
@@ -681,42 +663,41 @@ class CalendarHomeScreen extends React.PureComponent {
             }}>
               <View style={{
                 backgroundColor: '#ffffff',
-                width: 92,
+                width: 104,
                 borderRadius: 3,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 2
+                borderBottomColor: 'rgba(0,0,0,0.1)',
+                borderBottomWidth: 1,
               }}>
                 <Text style={{
                   fontSize: 18,
-                  fontFamily: fonts.GothamMedium
+                  fontFamily: fonts.bold
                 }}>
                   Transform
                 </Text>
               </View>
               <Text style={{
                 fontSize: 18,
-                fontFamily: fonts.GothamMedium,
+                fontFamily: fonts.bold,
                 marginRight: 5,
                 marginLeft: 5
               }}>{'>'}</Text>
               <View style={{
                 backgroundColor: '#ffffff',
-                width: 67,
+                width: 72,
                 borderRadius: 3,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 2
+                borderBottomColor: 'rgba(0,0,0,0.1)',
+                borderBottomWidth: 1,
               }}>
                 <Text style={{
                   fontSize: 18,
-                  fontFamily: fonts.GothamMedium
+                  fontFamily: fonts.bold
                 }}>
                   {getPhase(this.phaseData)}
                 </Text>
               </View>
+            </View>
+            <View>
+              <Text>Friday, Oct 1</Text>
             </View>
             <View elevation={5} style={{
               position: 'absolute',
