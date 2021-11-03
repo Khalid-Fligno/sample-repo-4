@@ -38,6 +38,7 @@ import Svg, { Path } from "react-native-svg"
 import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -663,41 +664,51 @@ class CalendarHomeScreen extends React.PureComponent {
             }}>
               <View style={{
                 backgroundColor: '#ffffff',
-                width: 104,
+                // width: 104,
                 borderRadius: 3,
                 borderBottomColor: 'rgba(0,0,0,0.1)',
                 borderBottomWidth: 1,
               }}>
                 <Text style={{
-                  fontSize: 18,
+                  // fontSize: 18,
                   fontFamily: fonts.bold
                 }}>
                   Transform
                 </Text>
               </View>
               <Text style={{
-                fontSize: 18,
+                // fontSize: 18,
                 fontFamily: fonts.bold,
                 marginRight: 5,
                 marginLeft: 5
               }}>{'>'}</Text>
               <View style={{
                 backgroundColor: '#ffffff',
-                width: 72,
+                // width: 74,
                 borderRadius: 3,
                 borderBottomColor: 'rgba(0,0,0,0.1)',
                 borderBottomWidth: 1,
               }}>
                 <Text style={{
-                  fontSize: 18,
+                  // fontSize: 18,
                   fontFamily: fonts.bold
                 }}>
                   {getPhase(this.phaseData)}
                 </Text>
               </View>
             </View>
+            <View style={{
+              marginTop: hp("1%")
+            }}>
+              <Text style={{
+                fontSize: 28,
+                fontFamily: fonts.bold
+              }}>{moment().format('dddd')}, {moment().format('MMMM')} {moment().day()}</Text>
+            </View>
             <View>
-              <Text>Friday, Oct 1</Text>
+              <View>
+                <Icon name="glass" size={20} />
+              </View>
             </View>
             <View elevation={5} style={{
               position: 'absolute',
@@ -712,7 +723,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   height={hp("1.5%")}
                   fill={colors.themeColor.color}
                   style={{
-                    strokeWidth: 20,
+                    strokeWidth: 50,
                     stroke: colors.themeColor.color,
                     strokeLinejoin: 'round',
                     strokeLinecap: 'round',
@@ -724,28 +735,29 @@ class CalendarHomeScreen extends React.PureComponent {
               >
                 <Path
                     className="prefix__st0"
-                    d="M 55 10 L 100 90 L 10 90 z"
+                    d="M 55 46 L 87 90 L 22 90 z"
                 />
               </Svg>
             </View>
             <View elevation={5} style={{
               position: 'absolute',
-              left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 3 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 3,
-              top: Platform.OS === "ios" ? 42 : 40,
+              left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7,
+              top: Platform.OS === "ios" ? 41 : 39,
               backgroundColor: colors.themeColor.color,
-              width: 31,
-              height: 30,
+              width: 52,
+              height: 50,
               justifyContent: 'center',
               alignItems: 'center',
               flex:1,
-              borderRadius: 5,
+              borderRadius: 8,
               // shadowColor: '#171717',
               // shadowOffset: {width: 0, height: 5},
               // shadowOpacity: 0.2,
               // shadowRadius: 3,
             }}>
               <Text style={{
-                fontFamily: fonts.GothamMedium
+                fontFamily: fonts.GothamMedium,
+                fontSize: 28
               }}>{this.currentChallengeDay}</Text>
             </View>
           </>
