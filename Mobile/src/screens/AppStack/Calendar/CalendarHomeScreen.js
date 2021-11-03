@@ -263,6 +263,13 @@ class CalendarHomeScreen extends React.PureComponent {
 
   loadExercises = async (workoutData) => {
     this.setState({ loadingExercises: true });
+
+    let uniqueWarmUpExercises = [...new Set(workoutData.warmUpExercises)];
+
+    Object.assign(workoutData, {
+      warmUpExercises: uniqueWarmUpExercises
+    });
+
     const workout = await loadExercise(workoutData);
 
     if (workout && workout.newWorkout) {
