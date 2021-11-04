@@ -475,31 +475,42 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       this.workoutComplete(reps, null);
     } else {
       let { workout } = this.state;
-      if (workout.workoutProcessType === "oneByOne") {
-        if (currentExerciseIndex < workout.exercises.length - 1)
-          this.goToExercise(1, reps, null, currentExerciseIndex + 1, false);
-        else {
-          this.goToExercise(
+      if (currentExerciseIndex < workout.exercises.length - 1)
+        this.goToExercise(1, reps, null, currentExerciseIndex + 1, false);
+      else {
+        this.goToExercise(
             workout.workoutReps,
             reps,
             null,
             currentExerciseIndex,
             false
-          );
-        }
-      } else if (workout.workoutProcessType === "circular") {
-        if (currentExerciseIndex < workout.exercises.length - 1) {
-          this.goToExercise(
-            setCount,
-            reps,
-            null,
-            currentExerciseIndex + 1,
-            false
-          );
-        } else if (currentExerciseIndex === workout.exercises.length - 1) {
-          this.goToExercise(setCount + 1, reps, null, 0, false);
-        }
+        );
       }
+      // if (workout.workoutProcessType === "oneByOne") {
+      //   if (currentExerciseIndex < workout.exercises.length - 1)
+      //     this.goToExercise(1, reps, null, currentExerciseIndex + 1, false);
+      //   else {
+      //     this.goToExercise(
+      //       workout.workoutReps,
+      //       reps,
+      //       null,
+      //       currentExerciseIndex,
+      //       false
+      //     );
+      //   }
+      // } else if (workout.workoutProcessType === "circular") {
+      //   if (currentExerciseIndex < workout.exercises.length - 1) {
+      //     this.goToExercise(
+      //       setCount,
+      //       reps,
+      //       null,
+      //       currentExerciseIndex + 1,
+      //       false
+      //     );
+      //   } else if (currentExerciseIndex === workout.exercises.length - 1) {
+      //     this.goToExercise(setCount + 1, reps, null, 0, false);
+      //   }
+      // }
     }
   };
 
