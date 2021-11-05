@@ -177,8 +177,8 @@ class ChallengeSetting extends Component {
         if (moment(selectedDate).isSame(TODAY, "d")) {
             Object.assign(data, { isSchedule: true, status: "Active" });
         } else {
-            Object.assign(data, { isSchedule: true, status: "InActive" });
-            // Object.assign(data, { isSchedule: true, status: "Active" });
+            Object.assign(data, { isSchedule: true, status: "Active" });
+            // Object.assign(data, { isSchedule: true, status: "InActive" });
         }
         userRef
             .doc(activeChallengeData.id)
