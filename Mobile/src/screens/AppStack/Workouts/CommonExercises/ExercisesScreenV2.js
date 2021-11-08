@@ -478,13 +478,9 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       if (currentExerciseIndex < workout.exercises.length - 1)
         this.goToExercise(1, reps, null, currentExerciseIndex + 1, false);
       else {
-        this.goToExercise(
-            workout.workoutReps,
-            reps,
-            null,
-            currentExerciseIndex,
-            false
-        );
+        this.updateWeekly();
+        appsFlyer.trackEvent("resistance_workout_complete");
+        this.workoutComplete(reps, null);
       }
       // if (workout.workoutProcessType === "oneByOne") {
       //   if (currentExerciseIndex < workout.exercises.length - 1)
