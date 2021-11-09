@@ -13,6 +13,7 @@ export const isActiveChallenge = async() =>{
       if(scheduleSnapshot.empty){
         return false;
       }else{
+        console.log('scheduleSnapshot: ', scheduleSnapshot)
         let list = [];
         scheduleSnapshot.forEach(doc => {
             list.push(doc.data());

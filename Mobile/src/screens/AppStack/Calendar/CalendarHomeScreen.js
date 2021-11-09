@@ -182,14 +182,8 @@ class CalendarHomeScreen extends React.PureComponent {
     //Checking if any schedule challenge is assign to user
     isActiveChallenge().then((res) => {
       const todayDate = moment(new Date()).format("YYYY-MM-DD");
+      console.log('res: ', res.isSchedule)
       if (res && moment(res.startDate).isSame(todayDate) && res.isSchedule) {
-        const isBetween = moment(this.stringDate).isBetween(
-          res.startDate,
-          res.endDate,
-          undefined,
-          "[]"
-        );
-        
         const challengeRef = db
           .collection("users")
           .doc(uid)
@@ -199,31 +193,6 @@ class CalendarHomeScreen extends React.PureComponent {
           { status: "Active", isSchedule: true },
           { merge: true }
         );
-
-        if (!this.state.isSchedule) {
-          this.setState({
-            CalendarSelectedDate: moment(res.startDate),
-            isSchedule: true,
-            ScheduleData: res,
-            loading: true,
-          });
-          this.stringDate = res.startDate;
-          this.fetchActiveChallengeData(res);
-        }
-        if (isBetween) {
-          this.setState({ isSchedule: true, ScheduleData: res });
-          if (!this.state.activeChallengeData) {
-            this.fetchActiveChallengeData(res);
-          } else {
-            this.getCurrentPhaseInfo();
-          }
-        } else {
-          this.setState({
-            isSchedule: true,
-            ScheduleData: res,
-            loading: false,
-          });
-        }
       } else if (res && res.isSchedule) {
         const isBetween = moment(this.stringDate).isBetween(
           res.startDate,
@@ -257,6 +226,26 @@ class CalendarHomeScreen extends React.PureComponent {
         }
       } else {
         this.setState({ loading: false });
+        const isBetween = moment(this.stringDate).isBetween(
+          res.startDate,
+          res.endDate,
+          undefined,
+          "[]"
+        );
+        if (isBetween) {
+          this.setState({ isSchedule: true, ScheduleData: res });
+          if (!this.state.activeChallengeData) {
+            this.fetchActiveChallengeData(res);
+          } else {
+            this.getCurrentPhaseInfo();
+          }
+        } else {
+          this.setState({
+            isSchedule: true,
+            ScheduleData: res,
+            loading: false,
+          });
+        }
       }
     });
   }
@@ -566,6 +555,8 @@ class CalendarHomeScreen extends React.PureComponent {
       skipped,
     } = this.state;
     let showRC = false;
+
+    console.log('isSchedule: ', isSchedule)
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
       //check if selected date is between challenge start and end date
