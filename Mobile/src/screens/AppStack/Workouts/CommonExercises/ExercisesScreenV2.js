@@ -244,79 +244,99 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     this.setState({ timerStart: false });
     let setCount = this.props.navigation.getParam("setCount", 1); //start from 1
     const { workout } = this.state;
-    if (workout.workoutProcessType === "oneByOne") {
-      console.log('if')
-      if (this.checkFinished(currentExerciseIndex, setCount)) {
-        // console.log("update weekly targets")
-        this.updateWeekly();
-        appsFlyer.trackEvent("resistance_workout_complete");
-        this.workoutComplete(reps, resistanceCategoryId);
-      } else if (setCount === this.state.workout.workoutReps) {
-        // console.log("Go to next  exercise")
-        this.goToExercise(
-          1,
-          reps,
-          resistanceCategoryId,
-          currentExerciseIndex + 1
-        );
-      } else {
-        // console.log("Incresase count")
-        if (workout.rest && !this.state.rest) {
-          //for workout.rest === true
-          this.goToExercise(
-            setCount,
-            reps,
-            resistanceCategoryId,
-            currentExerciseIndex,
-            true
-          );
-        } else {
-          this.goToExercise(
-            setCount + 1,
-            reps,
-            resistanceCategoryId,
-            currentExerciseIndex
-          );
-        }
-      }
-    } else if (workout.workoutProcessType === "circular") {
-      console.log('else if 1')
-      if (this.checkFinished(currentExerciseIndex, setCount)) {
-        // console.log("finished");
-        this.updateWeekly();
-        appsFlyer.trackEvent("complete_hiit_circuit_workout");
 
-        this.workoutComplete(reps, resistanceCategoryId);
-      } else if (currentExerciseIndex === this.state.exerciseList.length - 1) {
-        // console.log("Increase Count")
-        setCount += 1; //increase count when 1st,2nd... round finished
-        this.goToExercise(setCount, reps, resistanceCategoryId, 0);
-      } else {
-        // console.log("Go to next Exercise") //go to next exercise if round not finished
-        this.goToExercise(
+    if (this.checkFinished(currentExerciseIndex, setCount)) {
+      // console.log("finished");
+      this.updateWeekly();
+      appsFlyer.trackEvent("complete_hiit_circuit_workout");
+
+      this.workoutComplete(reps, resistanceCategoryId);
+    } else if (currentExerciseIndex === this.state.exerciseList.length - 1) {
+      // console.log("Increase Count")
+      setCount += 1; //increase count when 1st,2nd... round finished
+      this.goToExercise(setCount, reps, resistanceCategoryId, 0);
+    } else {
+      // console.log("Go to next Exercise") //go to next exercise if round not finished
+      this.goToExercise(
           setCount,
           reps,
           resistanceCategoryId,
           currentExerciseIndex + 1
-        );
-      }
-    } else if (workout.workoutProcessType === "onlyOne") {
-      console.log('else if 2')
-      if (this.checkFinished(currentExerciseIndex, setCount)) {
-        // console.log("Finished") //finished when all rounds are finished
-        this.updateWeekly();
-        appsFlyer.trackEvent("complete_hiit_workout");
-        this.workoutComplete(reps, resistanceCategoryId);
-      } else {
-        // console.log("Go to next round")
-        this.goToExercise(
-          setCount + 1,
-          reps,
-          resistanceCategoryId,
-          currentExerciseIndex
-        );
-      }
+      );
     }
+    // if (workout.workoutProcessType === "oneByOne") {
+    //   console.log('if')
+    //   if (this.checkFinished(currentExerciseIndex, setCount)) {
+    //     // console.log("update weekly targets")
+    //     this.updateWeekly();
+    //     appsFlyer.trackEvent("resistance_workout_complete");
+    //     this.workoutComplete(reps, resistanceCategoryId);
+    //   } else if (setCount === this.state.workout.workoutReps) {
+    //     // console.log("Go to next  exercise")
+    //     this.goToExercise(
+    //       1,
+    //       reps,
+    //       resistanceCategoryId,
+    //       currentExerciseIndex + 1
+    //     );
+    //   } else {
+    //     // console.log("Incresase count")
+    //     if (workout.rest && !this.state.rest) {
+    //       //for workout.rest === true
+    //       this.goToExercise(
+    //         setCount,
+    //         reps,
+    //         resistanceCategoryId,
+    //         currentExerciseIndex,
+    //         true
+    //       );
+    //     } else {
+    //       this.goToExercise(
+    //         setCount + 1,
+    //         reps,
+    //         resistanceCategoryId,
+    //         currentExerciseIndex
+    //       );
+    //     }
+    //   }
+    // } else if (workout.workoutProcessType === "circular") {
+    //   console.log('else if 1')
+    //   if (this.checkFinished(currentExerciseIndex, setCount)) {
+    //     // console.log("finished");
+    //     this.updateWeekly();
+    //     appsFlyer.trackEvent("complete_hiit_circuit_workout");
+    //
+    //     this.workoutComplete(reps, resistanceCategoryId);
+    //   } else if (currentExerciseIndex === this.state.exerciseList.length - 1) {
+    //     // console.log("Increase Count")
+    //     setCount += 1; //increase count when 1st,2nd... round finished
+    //     this.goToExercise(setCount, reps, resistanceCategoryId, 0);
+    //   } else {
+    //     // console.log("Go to next Exercise") //go to next exercise if round not finished
+    //     this.goToExercise(
+    //       setCount,
+    //       reps,
+    //       resistanceCategoryId,
+    //       currentExerciseIndex + 1
+    //     );
+    //   }
+    // } else if (workout.workoutProcessType === "onlyOne") {
+    //   console.log('else if 2')
+    //   if (this.checkFinished(currentExerciseIndex, setCount)) {
+    //     // console.log("Finished") //finished when all rounds are finished
+    //     this.updateWeekly();
+    //     appsFlyer.trackEvent("complete_hiit_workout");
+    //     this.workoutComplete(reps, resistanceCategoryId);
+    //   } else {
+    //     // console.log("Go to next round")
+    //     this.goToExercise(
+    //       setCount + 1,
+    //       reps,
+    //       resistanceCategoryId,
+    //       currentExerciseIndex
+    //     );
+    //   }
+    // }
   };
 
   workoutComplete(reps, resistanceCategoryId) {
