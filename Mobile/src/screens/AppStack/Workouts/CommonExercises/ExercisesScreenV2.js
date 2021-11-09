@@ -240,10 +240,12 @@ export default class ExercisesScreenV2 extends React.PureComponent {
   }
 
   handleFinish = async (reps, resistanceCategoryId, currentExerciseIndex) => {
+    console.log('diri musulod kung dili e skip')
     this.setState({ timerStart: false });
     let setCount = this.props.navigation.getParam("setCount", 1); //start from 1
     const { workout } = this.state;
     if (workout.workoutProcessType === "oneByOne") {
+      console.log('if')
       if (this.checkFinished(currentExerciseIndex, setCount)) {
         // console.log("update weekly targets")
         this.updateWeekly();
@@ -278,6 +280,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         }
       }
     } else if (workout.workoutProcessType === "circular") {
+      console.log('else if 1')
       if (this.checkFinished(currentExerciseIndex, setCount)) {
         // console.log("finished");
         this.updateWeekly();
@@ -298,6 +301,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         );
       }
     } else if (workout.workoutProcessType === "onlyOne") {
+      console.log('else if 2')
       if (this.checkFinished(currentExerciseIndex, setCount)) {
         // console.log("Finished") //finished when all rounds are finished
         this.updateWeekly();
