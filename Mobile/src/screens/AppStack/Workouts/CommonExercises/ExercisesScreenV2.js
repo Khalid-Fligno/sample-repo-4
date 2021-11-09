@@ -253,8 +253,13 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       this.workoutComplete(reps, resistanceCategoryId);
     } else if (currentExerciseIndex === this.state.exerciseList.length - 1) {
       // console.log("Increase Count")
-      setCount += 1; //increase count when 1st,2nd... round finished
-      this.goToExercise(setCount, reps, resistanceCategoryId, 0);
+      // setCount += 1; //increase count when 1st,2nd... round finished
+      // this.goToExercise(setCount, reps, resistanceCategoryId, 0);
+
+      this.updateWeekly();
+      appsFlyer.trackEvent("complete_hiit_circuit_workout");
+
+      this.workoutComplete(reps, resistanceCategoryId);
     } else {
       // console.log("Go to next Exercise") //go to next exercise if round not finished
       this.goToExercise(
@@ -265,7 +270,6 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       );
     }
     // if (workout.workoutProcessType === "oneByOne") {
-    //   console.log('if')
     //   if (this.checkFinished(currentExerciseIndex, setCount)) {
     //     // console.log("update weekly targets")
     //     this.updateWeekly();
@@ -300,7 +304,6 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     //     }
     //   }
     // } else if (workout.workoutProcessType === "circular") {
-    //   console.log('else if 1')
     //   if (this.checkFinished(currentExerciseIndex, setCount)) {
     //     // console.log("finished");
     //     this.updateWeekly();
@@ -321,7 +324,6 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     //     );
     //   }
     // } else if (workout.workoutProcessType === "onlyOne") {
-    //   console.log('else if 2')
     //   if (this.checkFinished(currentExerciseIndex, setCount)) {
     //     // console.log("Finished") //finished when all rounds are finished
     //     this.updateWeekly();
