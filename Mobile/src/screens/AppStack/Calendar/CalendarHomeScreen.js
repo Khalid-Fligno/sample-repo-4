@@ -116,11 +116,11 @@ class CalendarHomeScreen extends React.PureComponent {
     if (
       activeChallengeData &&
       activeChallengeUserData &&
-      activeChallengeUserData.status === "Active"  &&
+      activeChallengeUserData.status === "Active" &&
       new Date(activeChallengeUserData.startDate).getTime() <=
-        new Date(this.stringDate).getTime() &&
+      new Date(this.stringDate).getTime() &&
       new Date(activeChallengeUserData.endDate).getTime() >=
-        new Date(this.stringDate).getTime()
+      new Date(this.stringDate).getTime()
     ) {
       this.getCurrentPhaseInfo();
     } else {
@@ -148,7 +148,7 @@ class CalendarHomeScreen extends React.PureComponent {
     const versionCodeRef = db
       .collection("users")
       .doc(uid)
-      .set({AppVersion: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
+      .set({ AppVersion: Platform.OS === "ios" ? String(version.version) : String(getVersion()) }, { merge: true });
     const userRef = db.collection("users").doc(uid);
     userRef
       .get()
@@ -200,6 +200,16 @@ class CalendarHomeScreen extends React.PureComponent {
           undefined,
           "[]"
         );
+        const challengeRef = db
+          .collection("users")
+          .doc(uid)
+          .collection("challenges")
+          .doc(res.id);
+        challengeRef.set(
+          { status: "Active", isSchedule: false },
+          { merge: true }
+        );
+
         if (!this.state.isSchedule) {
           this.setState({
             CalendarSelectedDate: moment(res.startDate),
@@ -265,7 +275,7 @@ class CalendarHomeScreen extends React.PureComponent {
 
       const warmUpExercises = await downloadExerciseWC(
         workout,
-        Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array")>-1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => {return warmUpExercise}),
+        Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array") > -1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => { return warmUpExercise }),
         workout.warmUpExerciseModel,
         "warmUp"
       );
@@ -397,7 +407,7 @@ class CalendarHomeScreen extends React.PureComponent {
               Alert.alert(
                 "Congratulations!",
                 "You have completed your challenge",
-                [{ text: "OK", onPress: () => {} }],
+                [{ text: "OK", onPress: () => { } }],
                 { cancelable: false }
               );
             } else {
@@ -450,9 +460,9 @@ class CalendarHomeScreen extends React.PureComponent {
       /*
       if(this.stringDate != test){
         this.setState({loading :false})
-      } */if(this.stringDate >= test){
-        this.setState({loading :true})
-      } 
+      } */if (this.stringDate >= test) {
+        this.setState({ loading: true })
+      }
       // this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
       console.log("date=>", this.stringDate);
       //console.log(test);
@@ -637,7 +647,7 @@ class CalendarHomeScreen extends React.PureComponent {
         animationIn="fadeInLeft"
         animationOut="fadeOutLeft"
         onBackdropPress={() => this.toggleSetting()}
-        // useNativeDriver={true}
+      // useNativeDriver={true}
       >
         <ChallengeSetting
           onToggle={() => this.toggleSetting()}
@@ -661,7 +671,7 @@ class CalendarHomeScreen extends React.PureComponent {
           }}
           CalendarSelectedDate={CalendarSelectedDate}
         />
-         
+
         {isSchedule && !showRC && !loading && (
           <View style={{ margin: wp("5%") }}>
             <Text style={calendarStyles.scheduleTitleStyle}>
