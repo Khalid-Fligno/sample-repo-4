@@ -79,11 +79,11 @@ export default class HomeScreenV2 extends React.PureComponent {
                         bigTitleText={bigHeadeingTitle}
                         isBackButton={false}
                         isBigTitle={true}
-                        customContainerStyle={{ marginVertical: hp("2%"), height: 50 }}
-                        bigTitleStyle={{ textTransform: 'none' }}
+                        customContainerStyle={{ height: hp("5%") }}
+                        bigTitleStyle={{ textTransform: 'none', }}
                     />
 
-                    <View style={{ marginTop: 40 }}>
+                    <View style={{ marginTop: hp('12%') }}>
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Nutrition")}>
                                 <ImageBackground
@@ -119,13 +119,13 @@ export default class HomeScreenV2 extends React.PureComponent {
                         <Text style={{ fontFamily: fonts.StyreneAWebRegular }}>Start a challenge</Text>
                     </View>
 
-                    <View style={{ paddingHorizontal: 80 }}>
+                    <View>
                         <CustomBtn
                             titleCapitalise={true}
                             Title='Explore a challenge'
                             style={styles.oblongBtnStyle}
                             isRightIcon={true}
-                            customBtnTitleStyle={{ marginHorizontal: 10, fontSize: wp("3%"), paddingVertical: 40 }}
+                            customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}
                         />
                     </View>
 
@@ -140,8 +140,8 @@ export default class HomeScreenV2 extends React.PureComponent {
 const styles = StyleSheet.create({
     cardContainer: {
         borderRadius: 30,
-        height: wp("33%"),
-        marginBottom: 15
+        height: wp("40%"),
+        marginBottom: 18
     },
     flexContainer: {
         flex: 1,
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 20
+        marginTop: hp('2%')
     },
     title1: {
         fontFamily: fonts.StyreneAWebRegular,
@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         backgroundColor: colors.white,
         color: colors.black,
-        height: 38,
+        height: hp('6%'),
+        marginHorizontal: hp('10%')
     },
 });

@@ -261,7 +261,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                 animationOut="fadeOutDownBig"
                 onBackdropPress={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
             >
-                <View style={{ backgroundColor: 'white', height: hp('60%'), marginTop: wp('115%') }}>
+                <View style={{ backgroundColor: 'white', height: hp('50%'), marginTop: hp('66%') }}>
                     <View style={globalStyle.container}>
                         <TouchableOpacity
                             style={styles.closeContainer}
@@ -311,7 +311,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                 animationOut="fadeOutDownBig"
                 onBackdropPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
             >
-                <View style={{ backgroundColor: 'white', height: hp('90%'), marginTop: wp('55%') }}>
+                <View style={{ backgroundColor: 'white', height: hp('80%'), marginTop: hp('36%') }}>
                     <View style={globalStyle.container}>
                         <TouchableOpacity
                             style={styles.closeContainer}
