@@ -284,24 +284,27 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           currentExerciseIndex + 1
         );
       } else {
+        this.updateWeekly();
+        appsFlyer.trackEvent("resistance_workout_complete");
+        this.workoutComplete(reps, resistanceCategoryId);
         // console.log("Incresase count")
-        if (workout.rest && !this.state.rest) {
-          //for workout.rest === true
-          this.goToExercise(
-            setCount,
-            reps,
-            resistanceCategoryId,
-            currentExerciseIndex,
-            true
-          );
-        } else {
-          this.goToExercise(
-            setCount + 1,
-            reps,
-            resistanceCategoryId,
-            currentExerciseIndex
-          );
-        }
+        // if (workout.rest && !this.state.rest) {
+        //   //for workout.rest === true
+        //   this.goToExercise(
+        //     setCount,
+        //     reps,
+        //     resistanceCategoryId,
+        //     currentExerciseIndex,
+        //     true
+        //   );
+        // } else {
+        //   this.goToExercise(
+        //     setCount + 1,
+        //     reps,
+        //     resistanceCategoryId,
+        //     currentExerciseIndex
+        //   );
+        // }
       }
     } else if (workout.workoutProcessType === "circular") {
       if (this.checkFinished(currentExerciseIndex, setCount)) {
@@ -514,13 +517,16 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         if (currentExerciseIndex < workout.exercises.length - 1)
           this.goToExercise(1, reps, null, currentExerciseIndex + 1, false);
         else {
-          this.goToExercise(
-            workout.workoutReps,
-            reps,
-            null,
-            currentExerciseIndex,
-            false
-          );
+          this.updateWeekly();
+          appsFlyer.trackEvent("resistance_workout_complete");
+          this.workoutComplete(reps, null);
+          // this.goToExercise(
+          //   workout.workoutReps,
+          //   reps,
+          //   null,
+          //   currentExerciseIndex,
+          //   false
+          // );
         }
       } else if (workout.workoutProcessType === "circular") {
         if (currentExerciseIndex < workout.exercises.length - 1) {
