@@ -176,7 +176,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
   quitWorkout = () => {
     Alert.alert(
       "Warning",
-      "Are you sure you want to quit this warm up?",
+      "Are you sure you want to quit this workout?",
       [
         { text: "Cancel", style: "cancel" },
         {
