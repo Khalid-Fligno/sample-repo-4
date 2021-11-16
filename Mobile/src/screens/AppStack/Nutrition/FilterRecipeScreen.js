@@ -4,7 +4,7 @@ import {
     StyleSheet,
     View,
     Dimensions,
-    Alert,
+    SafeAreaView,
     FlatList,
     Text,
     CheckBox,
@@ -147,7 +147,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 
         const result = color1.splice(0, 3)
 
-        console.log('RecipeData: ', result)
+        // console.log('RecipeData: ', result)
 
         return (
 
@@ -256,13 +256,13 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             <Modal
                 isVisible={this.state.isFilterVisible ? this.state.isClickVisible : this.state.isClickVisible}
                 coverScreen={true}
-                style={{ margin: 0 }}
+                style={{ margin: 0, justifyContent: 'flex-end' }}
                 animationIn="fadeInRightBig"
                 animationOut="fadeOutDownBig"
                 onBackdropPress={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
             >
-                <View style={{ backgroundColor: 'white', height: hp('50%'), marginTop: hp('66%') }}>
-                    <View style={globalStyle.container}>
+                <SafeAreaView style={{ backgroundColor: 'white', paddingHorizontal: 20 }}>
+                    <View>
                         <TouchableOpacity
                             style={styles.closeContainer}
                             onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
@@ -291,14 +291,14 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 3</Text>
                             <CheckBox />
                         </View>
-                        <View style={{ marginTop: hp('3%') }}>
+                        <View style={{ marginVertical: 20 }}>
                             <Button
                                 title="Apply"
                                 color='#4d4c4c'
                             />
                         </View>
                     </View>
-                </View>
+                </SafeAreaView>
             </Modal>
         )
 
@@ -306,13 +306,13 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             <Modal
                 isVisible={this.state.isClickVisible ? !this.state.isFilterVisible : this.state.isFilterVisible}
                 coverScreen={true}
-                style={{ margin: 0 }}
+                style={{ margin: 0, justifyContent: 'flex-end' }}
                 animationIn="fadeInUpBig"
                 animationOut="fadeOutDownBig"
                 onBackdropPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
             >
-                <View style={{ backgroundColor: 'white', height: hp('80%'), marginTop: hp('36%') }}>
-                    <View style={globalStyle.container}>
+                <SafeAreaView style={{ backgroundColor: 'white', paddingHorizontal: 20 }}>
+                    <View>
                         <TouchableOpacity
                             style={styles.closeContainer}
                             onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
@@ -322,7 +322,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             </View>
                         </TouchableOpacity>
                         <View style={{ marginTop: 10 }}>
-                            <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter receipes to</Text>
+                            <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter recipes to</Text>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
                                     <View style={{
@@ -473,7 +473,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                     <Icon name="chevron-right" size={12} color={colors.black} />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ marginTop: hp('5%') }}>
+                            <View style={{ marginVertical: 20 }}>
                                 <Button
                                     title="Apply"
                                     color='#4d4c4c'
@@ -481,7 +481,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             </View>
                         </View>
                     </View>
-                </View>
+                </SafeAreaView>
             </Modal>
         )
 
