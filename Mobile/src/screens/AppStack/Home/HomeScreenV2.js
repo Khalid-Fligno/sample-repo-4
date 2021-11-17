@@ -79,11 +79,14 @@ export default class HomeScreenV2 extends React.PureComponent {
                         bigTitleText={bigHeadeingTitle}
                         isBackButton={false}
                         isBigTitle={true}
-                        customContainerStyle={{ height: hp("5%") }}
-                        bigTitleStyle={{ textTransform: 'none', }}
+                        customContainerStyle={{ height: hp('15%') }}
+                        // customContainerStyle={{ height: hp("5%") }}
+                        // bigTitleStyle={{ textTransform: 'none', }}
                     />
 
-                    <View style={{ marginTop: hp('12%') }}>
+                    <View
+                        // style={{ marginTop: hp('12%') }}
+                        >
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Nutrition")}>
                                 <ImageBackground
@@ -123,9 +126,10 @@ export default class HomeScreenV2 extends React.PureComponent {
                         <CustomBtn
                             titleCapitalise={true}
                             Title='Explore a challenge'
-                            style={styles.oblongBtnStyle}
-                            isRightIcon={true}
-                            customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}
+                            customBtnStyle={styles.oblongBtnStyle}
+                            // style={styles.oblongBtnStyle}
+                            // isRightIcon={true}
+                            // customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}
                         />
                     </View>
 
