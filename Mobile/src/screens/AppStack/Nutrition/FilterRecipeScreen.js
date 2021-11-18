@@ -28,6 +28,8 @@ import {
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import Modal from "react-native-modal";
 import { Card } from 'react-native-elements';
+import Animated from 'react-native-reanimated';
+import BottomSheet from 'reanimated-bottom-sheet';
 
 const { width } = Dimensions.get("window");
 
@@ -278,7 +280,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             <Icon name='chevron-left' size={13} color={colors.black} style={{ marginRight: 10 }} />
                             <Text style={{ fontSize: 15 }}>Back</Text>
                         </TouchableOpacity>
-                        <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginVertical: 20, fontWeight: 'bold', fontSize: 20 }}>Select Phase</Text>
+                        <Text style={{
+                            // fontFamily: 'monospace',
+                            marginBottom: 20, marginVertical: 20, fontWeight: 'bold', fontSize: 20 }}>Select Phase</Text>
                         <View style={styles.tagContainer}>
                             <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 1</Text>
                             <CheckBox />
@@ -302,188 +306,188 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             </Modal>
         )
 
-        const filterModal = (
-            <Modal
-                isVisible={this.state.isClickVisible ? !this.state.isFilterVisible : this.state.isFilterVisible}
-                coverScreen={true}
-                style={{ margin: 0, justifyContent: 'flex-end' }}
-                animationIn="fadeInUpBig"
-                animationOut="fadeOutDownBig"
-                onBackdropPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
-            >
-                <SafeAreaView style={{ backgroundColor: 'white', paddingHorizontal: 20 }}>
-                    <View>
-                        <TouchableOpacity
-                            style={styles.closeContainer}
-                            onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
-                        >
-                            <View>
-                                <Text></Text>
-                            </View>
-                        </TouchableOpacity>
-                        <View style={{ marginTop: 10 }}>
-                            <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter recipes to</Text>
-                            <View style={styles.tagContainer}>
-                                <View style={styles.tagContainer1}>
-                                    <View style={{
-                                        height: 25,
-                                        width: 25,
-                                        marginRight: 10,
-                                        borderWidth: 0,
-                                        // borderColor: colors.violet.standard,
-                                        borderRadius: 14,
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        backgroundColor: '#00C520',
-                                    }}>
-                                        <Text style={{
-                                            fontFamily: fonts.bold,
-                                            fontSize: 9,
-                                            color: colors.white,
-                                        }}>
-                                            V
-                                        </Text>
-                                    </View>
-                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Vegan</Text>
-                                </View>
-                                <CheckBox />
-                            </View>
-                            <View style={styles.tagContainer}>
-                                <View style={styles.tagContainer1}>
-                                    <View style={{
-                                        height: 25,
-                                        width: 25,
-                                        marginRight: 10,
-                                        borderWidth: 0,
-                                        // borderColor: colors.violet.standard,
-                                        borderRadius: 14,
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        backgroundColor: '#469753',
-                                    }}>
-                                        <Text style={{
-                                            fontFamily: fonts.bold,
-                                            fontSize: 9,
-                                            color: colors.white,
-                                        }}>
-                                            VEG
-                                        </Text>
-                                    </View>
-                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Vegetarian</Text>
-                                </View>
-                                <CheckBox />
-                            </View>
-                            <View style={styles.tagContainer}>
-                                <View style={styles.tagContainer1}>
-                                    <View style={{
-                                        height: 25,
-                                        width: 25,
-                                        marginRight: 10,
-                                        borderWidth: 0,
-                                        // borderColor: colors.violet.standard,
-                                        borderRadius: 14,
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        backgroundColor: '#9403fc',
-                                    }}>
-                                        <Text style={{
-                                            fontFamily: fonts.bold,
-                                            fontSize: 9,
-                                            color: colors.white,
-                                        }}>
-                                            GF
-                                        </Text>
-                                    </View>
-                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Gluta-Free</Text>
-                                </View>
-                                <CheckBox />
-                            </View>
-                            <View style={styles.tagContainer}>
-                                <View style={styles.tagContainer1}>
-                                    <View style={{
-                                        height: 25,
-                                        width: 25,
-                                        marginRight: 10,
-                                        borderWidth: 0,
-                                        // borderColor: colors.violet.standard,
-                                        borderRadius: 14,
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        backgroundColor: '#B7782B',
-                                    }}>
-                                        <Text style={{
-                                            fontFamily: fonts.bold,
-                                            fontSize: 9,
-                                            color: colors.white,
-                                        }}>
-                                            DF
-                                        </Text>
-                                    </View>
-                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Dairy-Free</Text>
-                                </View>
-                                <CheckBox />
-                            </View>
-                            <View style={styles.tagContainer}>
-                                <View style={styles.tagContainer1}>
-                                    <View style={{
-                                        height: 25,
-                                        width: 25,
-                                        marginRight: 10,
-                                        borderWidth: 0,
-                                        // borderColor: colors.violet.standard,
-                                        borderRadius: 14,
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        backgroundColor: '#965734',
-                                    }}>
-                                        <Text style={{
-                                            fontFamily: fonts.bold,
-                                            fontSize: 9,
-                                            color: colors.white,
-                                        }}>
-                                            GH
-                                        </Text>
-                                    </View>
-                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Gut Health</Text>
-                                </View>
-                                <CheckBox />
-                            </View>
-                            <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select transform level</Text>
-                            <View style={styles.tagContainer}>
-                                <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 1</Text>
-                                <TouchableOpacity
-                                    onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
-                                >
-                                    <Icon name="chevron-right" size={12} color={colors.black} />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.tagContainer}>
-                                <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 2</Text>
-                                <TouchableOpacity
-                                    onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
-                                >
-                                    <Icon name="chevron-right" size={12} color={colors.black} />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.tagContainer}>
-                                <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 3</Text>
-                                <TouchableOpacity
-                                    onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
-                                >
-                                    <Icon name="chevron-right" size={12} color={colors.black} />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{ marginVertical: 20 }}>
-                                <Button
-                                    title="Apply"
-                                    color='#4d4c4c'
-                                />
-                            </View>
-                        </View>
-                    </View>
-                </SafeAreaView>
-            </Modal>
-        )
+        // const filterModal = (
+        //     <Modal
+        //         isVisible={this.state.isClickVisible ? !this.state.isFilterVisible : this.state.isFilterVisible}
+        //         coverScreen={true}
+        //         style={{ margin: 0, justifyContent: 'flex-end' }}
+        //         animationIn="fadeInUpBig"
+        //         animationOut="fadeOutDownBig"
+        //         onBackdropPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
+        //     >
+        //         <SafeAreaView style={{ backgroundColor: 'white', paddingHorizontal: 20 }}>
+        //             <View>
+        //                 <TouchableOpacity
+        //                     style={styles.closeContainer}
+        //                     onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
+        //                 >
+        //                     <View>
+        //                         <Text></Text>
+        //                     </View>
+        //                 </TouchableOpacity>
+        //                 <View style={{ marginTop: 10 }}>
+        //                     <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter recipes to</Text>
+        //                     <View style={styles.tagContainer}>
+        //                         <View style={styles.tagContainer1}>
+        //                             <View style={{
+        //                                 height: 25,
+        //                                 width: 25,
+        //                                 marginRight: 10,
+        //                                 borderWidth: 0,
+        //                                 // borderColor: colors.violet.standard,
+        //                                 borderRadius: 14,
+        //                                 justifyContent: "center",
+        //                                 alignItems: "center",
+        //                                 backgroundColor: '#00C520',
+        //                             }}>
+        //                                 <Text style={{
+        //                                     fontFamily: fonts.bold,
+        //                                     fontSize: 9,
+        //                                     color: colors.white,
+        //                                 }}>
+        //                                     V
+        //                                 </Text>
+        //                             </View>
+        //                             <Text style={{ marginTop: 3, fontSize: 15 }}>Vegan</Text>
+        //                         </View>
+        //                         <CheckBox />
+        //                     </View>
+        //                     <View style={styles.tagContainer}>
+        //                         <View style={styles.tagContainer1}>
+        //                             <View style={{
+        //                                 height: 25,
+        //                                 width: 25,
+        //                                 marginRight: 10,
+        //                                 borderWidth: 0,
+        //                                 // borderColor: colors.violet.standard,
+        //                                 borderRadius: 14,
+        //                                 justifyContent: "center",
+        //                                 alignItems: "center",
+        //                                 backgroundColor: '#469753',
+        //                             }}>
+        //                                 <Text style={{
+        //                                     fontFamily: fonts.bold,
+        //                                     fontSize: 9,
+        //                                     color: colors.white,
+        //                                 }}>
+        //                                     VEG
+        //                                 </Text>
+        //                             </View>
+        //                             <Text style={{ marginTop: 3, fontSize: 15 }}>Vegetarian</Text>
+        //                         </View>
+        //                         <CheckBox />
+        //                     </View>
+        //                     <View style={styles.tagContainer}>
+        //                         <View style={styles.tagContainer1}>
+        //                             <View style={{
+        //                                 height: 25,
+        //                                 width: 25,
+        //                                 marginRight: 10,
+        //                                 borderWidth: 0,
+        //                                 // borderColor: colors.violet.standard,
+        //                                 borderRadius: 14,
+        //                                 justifyContent: "center",
+        //                                 alignItems: "center",
+        //                                 backgroundColor: '#9403fc',
+        //                             }}>
+        //                                 <Text style={{
+        //                                     fontFamily: fonts.bold,
+        //                                     fontSize: 9,
+        //                                     color: colors.white,
+        //                                 }}>
+        //                                     GF
+        //                                 </Text>
+        //                             </View>
+        //                             <Text style={{ marginTop: 3, fontSize: 15 }}>Gluta-Free</Text>
+        //                         </View>
+        //                         <CheckBox />
+        //                     </View>
+        //                     <View style={styles.tagContainer}>
+        //                         <View style={styles.tagContainer1}>
+        //                             <View style={{
+        //                                 height: 25,
+        //                                 width: 25,
+        //                                 marginRight: 10,
+        //                                 borderWidth: 0,
+        //                                 // borderColor: colors.violet.standard,
+        //                                 borderRadius: 14,
+        //                                 justifyContent: "center",
+        //                                 alignItems: "center",
+        //                                 backgroundColor: '#B7782B',
+        //                             }}>
+        //                                 <Text style={{
+        //                                     fontFamily: fonts.bold,
+        //                                     fontSize: 9,
+        //                                     color: colors.white,
+        //                                 }}>
+        //                                     DF
+        //                                 </Text>
+        //                             </View>
+        //                             <Text style={{ marginTop: 3, fontSize: 15 }}>Dairy-Free</Text>
+        //                         </View>
+        //                         <CheckBox />
+        //                     </View>
+        //                     <View style={styles.tagContainer}>
+        //                         <View style={styles.tagContainer1}>
+        //                             <View style={{
+        //                                 height: 25,
+        //                                 width: 25,
+        //                                 marginRight: 10,
+        //                                 borderWidth: 0,
+        //                                 // borderColor: colors.violet.standard,
+        //                                 borderRadius: 14,
+        //                                 justifyContent: "center",
+        //                                 alignItems: "center",
+        //                                 backgroundColor: '#965734',
+        //                             }}>
+        //                                 <Text style={{
+        //                                     fontFamily: fonts.bold,
+        //                                     fontSize: 9,
+        //                                     color: colors.white,
+        //                                 }}>
+        //                                     GH
+        //                                 </Text>
+        //                             </View>
+        //                             <Text style={{ marginTop: 3, fontSize: 15 }}>Gut Health</Text>
+        //                         </View>
+        //                         <CheckBox />
+        //                     </View>
+        //                     <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select transform level</Text>
+        //                     <View style={styles.tagContainer}>
+        //                         <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 1</Text>
+        //                         <TouchableOpacity
+        //                             onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
+        //                         >
+        //                             <Icon name="chevron-right" size={12} color={colors.black} />
+        //                         </TouchableOpacity>
+        //                     </View>
+        //                     <View style={styles.tagContainer}>
+        //                         <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 2</Text>
+        //                         <TouchableOpacity
+        //                             onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
+        //                         >
+        //                             <Icon name="chevron-right" size={12} color={colors.black} />
+        //                         </TouchableOpacity>
+        //                     </View>
+        //                     <View style={styles.tagContainer}>
+        //                         <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 3</Text>
+        //                         <TouchableOpacity
+        //                             onPress={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
+        //                         >
+        //                             <Icon name="chevron-right" size={12} color={colors.black} />
+        //                         </TouchableOpacity>
+        //                     </View>
+        //                     <View style={{ marginVertical: 20 }}>
+        //                         <Button
+        //                             title="Apply"
+        //                             color='#4d4c4c'
+        //                         />
+        //                     </View>
+        //                 </View>
+        //             </View>
+        //         </SafeAreaView>
+        //     </Modal>
+        // )
 
         return (
             <View style={globalStyle.container}>
@@ -499,7 +503,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             isBackButton={true}
                             customContainerStyle={{ bottom: 25 }}
                         />
-                        <Text style={{ bottom: 60, fontSize: 30, fontFamily: 'monospace' }}>Breakfast</Text>
+                        <Text style={{ bottom: 60, fontSize: 30
+                            // , fontFamily: 'monospace'
+                        }}>Breakfast</Text>
                     </View>
 
                     {/* Filter Button */}
@@ -510,7 +516,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             style={styles.oblongBtnStyle}
                             isRightIcon={true}
                             customBtnTitleStyle={{ marginHorizontal: 10, fontSize: 12 }}
-                            onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
+                            // onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
                         />
                     </View>
                 </View>
@@ -577,7 +583,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                     // maxToRenderPerBatch={20}
                     />
                 )}
-                {filterModal}
+                {/*{filterModal}*/}
                 {clickModal}
             </View>
         );
@@ -615,7 +621,7 @@ const styles = StyleSheet.create({
     bigTitleStyle: {
         fontSize: hp("4%"),
         fontWeight: '700',
-        fontFamily: 'monospace',
+        // fontFamily: 'monospace',
         color: colors.black,
         letterSpacing: 0.5,
     },

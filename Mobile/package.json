@@ -92,7 +92,7 @@
     "react-native-elements": "^1.2.7",
     "react-native-fade-in-view": "^1.0.5",
     "react-native-fast-image": "8.3.4",
-    "react-native-gesture-handler": "~1.6.0",
+    "react-native-gesture-handler": "^1.6.1",
     "react-native-html-to-text": "^0.0.5",
     "react-native-iap": "^4.5.0",
     "react-native-image-progress": "^1.1.1",
@@ -105,7 +105,7 @@
     "react-native-parallax-scroll-view": "^0.21.3",
     "react-native-popup-dialog": "^0.18.3",
     "react-native-rate": "^1.2.9",
-    "react-native-reanimated": "~1.7.0",
+    "react-native-reanimated": "^1.7.1",
     "react-native-responsive-screen": "^1.4.1",
     "react-native-scalable-image": "^1.0.0",
     "react-native-screens": "~2.2.0",
@@ -122,6 +122,7 @@
     "react-navigation-stack": "^1.10.3",
     "react-navigation-tabs": "^2.5.6",
     "react-timeout": "^1.1.2",
+    "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "save": "^2.4.0"
   }
 }
