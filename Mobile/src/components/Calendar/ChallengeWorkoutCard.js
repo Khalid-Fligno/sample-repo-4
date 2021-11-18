@@ -41,6 +41,7 @@ const getFocus = (filters) => {
   }
 };
 
+
 export default class ChallengeWorkoutCard extends React.PureComponent {
   constructor(props) {
     super(props);
