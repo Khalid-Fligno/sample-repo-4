@@ -7,13 +7,15 @@ import {
   ImageBackground,
   View,
   Animated,
-  TouchableHighlight
+  TouchableHighlight,
+  TextInput,
 } from "react-native";
 import PropTypes from "prop-types";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import CustomBtn from "../Shared/CustomBtn";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const { width } = Dimensions.get("window");
 
@@ -78,6 +80,7 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
     let focus = "";
     if (res && res.target === "rest") {
       target = "rest";
+      console.log(target);
     } else {
       target = res && res.filters ? getTarget(res.filters) : "";
       focus = res && res.filters ? getFocus(res.filters) : "";
@@ -98,17 +101,18 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
                   { color: colors.themeColor.color },
                 ]}
               >
-                {title}
+                Today's Workout
               </Text>
             </View>
             <View style={styles.titleContainer}>
-              <Text style={styles.title}>Day {currentDay}</Text>
+              <Text style={styles.target}>
+                {target}
+                {focus ? " - " + focus : ""}</Text>
             </View>
             <View style={styles.innerViewContainer}>
               {target !== "rest" && (
                 <Text key={res} style={styles.recTextLabel}>
-                  {target}
-                  {focus ? " - " + focus : ""}
+                  
                 </Text>
               )}
               {target === "rest" && (
@@ -117,6 +121,8 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
                 </Text>
               )}
             </View>
+
+            {/* 
             <CustomBtn
               Title="View Workout"
               customBtnStyle={{
@@ -134,6 +140,32 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
               onPress={onPress}
               disabled={target === "rest"}
             />
+             */}
+             <View style={{flex: 1,paddingTop: 10,}}>
+               <TouchableOpacity onPress={onPress} disabled={target === "rest"}>
+               <Text 
+               style={styles.startButton}
+               >
+                 Start
+               </Text>
+               <View 
+               style=
+               {{
+                 borderBottomColor: 'white',
+                 borderBottomWidth: 1,
+                 width:57,
+                 paddingTop: 3,
+                }}
+                 >
+               <View style={{flex: 1,marginTop: -19,paddingLeft: 45,alignItems: 'flex-start'}}>
+                   <Icon name="arrow-right" size={13} style={{ color: 'white'}}/>  
+               </View>
+
+               </View>
+               </TouchableOpacity>
+
+             </View>
+
           </View>
         </ImageBackground>
         </TouchableOpacity>
@@ -153,7 +185,7 @@ ChallengeWorkoutCard.propTypes = {
 const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
-    height: wp("33%"),
+    height: wp("35%"),
   },
   flexContainer: {
     flex: 1,
@@ -175,6 +207,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     maxWidth: width / 1.8,
+    
   },
   title: {
     fontFamily: fonts.boldNarrow,
@@ -186,6 +219,7 @@ const styles = StyleSheet.create({
   innerViewContainer: {
     maxWidth: width / 1.8,
     flexDirection: "row",
+    
   },
   recTextLabel: {
     color: colors.offWhite,
@@ -193,4 +227,17 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
     fontSize: wp("3%"),
   },
+  target:{
+    color: colors.offWhite,
+    fontFamily: fonts.StyreneAWebRegular,
+    textTransform: "capitalize",
+    fontSize: wp("4%"),
+
+  },
+  startButton:{
+    color: colors.offWhite,
+    fontFamily: fonts.StyreneAWebRegular,
+    fontSize: 14,
+  }
+  
 });
