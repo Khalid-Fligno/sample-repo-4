@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { ScrollView, View, Text, Alert, Linking } from "react-native";
+import {ScrollView, View, Text, Alert, Linking, Dimensions,TextInput,TouchableOpacity} from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
 import firebase from "firebase";
@@ -34,6 +34,11 @@ import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
 import { checkVersion } from "react-native-check-version";
 import { getVersion } from "react-native-device-info";
 import fonts from "../../../styles/fonts";
+import Svg, { Path } from "react-native-svg"
+import {
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -56,6 +61,7 @@ class CalendarHomeScreen extends React.PureComponent {
       loadingExercises: false,
       skipped: false,
       initialBurpeeTestCompleted: false,
+      width: 0
     };
     this.calendarStrip = React.createRef();
   }
@@ -508,10 +514,8 @@ class CalendarHomeScreen extends React.PureComponent {
     });
   }
 
-  getToFilter(data) {
-    this.props.navigation.navigate('FilterRecipe', {
-      recipes: data,
-    })
+  getToFilter() {
+    this.props.navigation.navigate('FilterRecipe')
   }
 
   openLink = (url) => {
@@ -532,6 +536,7 @@ class CalendarHomeScreen extends React.PureComponent {
       todayRcWorkout,
       loadingExercises,
       skipped,
+      width
     } = this.state;
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
@@ -570,7 +575,7 @@ class CalendarHomeScreen extends React.PureComponent {
           <TodayMealsList
               data={todayRecommendedMeal[0]}
               onPress={(res) => this.goToRecipe(res)}
-              filterPress={(res) => this.getToFilter(res)}
+              filterPress={() => this.getToFilter()}
           />
         </>
     );
@@ -592,6 +597,217 @@ class CalendarHomeScreen extends React.PureComponent {
         </>
     );
 
+    const getPhase = (phaseData) => {
+      return (phaseData.name.substring(0, 5)
+          + ' '
+          + phaseData.name.substring(5, phaseData.name.length)).charAt(0).toUpperCase()
+          + (phaseData.name.substring(0, 5)
+          + ' '
+          + phaseData.name.substring(5, phaseData.name.length)).slice(1);
+    };
+    const onPress = () =>{
+      console.log("test")
+    }
+
+    const Progress = () => {
+      return (
+          <>
+            <View
+              onLayout={e => {
+                const newWidth = e.nativeEvent.layout.width;
+                this.setState({ width: newWidth });
+              }}
+              style={{
+                height: 10,
+                backgroundColor: 'rgba(0,0,0,0.1)',
+                borderRadius: 10,
+                overflow: 'hidden'
+              }}>
+              <View style={{
+                height: 10,
+                width: (width * this.currentChallengeDay) / activeChallengeData.numberOfDays,
+                borderRadius: 10,
+                backgroundColor: colors.themeColor.color,
+                position: 'absolute',
+                left: 0,
+                top: 0
+              }}></View>
+            </View>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 15
+            }}>
+              <View style={{
+                borderRadius: 3,
+                backgroundColor: 'rgba(0,0,0,0.1)',
+                padding: 5,
+                borderBottomColor: 'rgba(0,0,0,0.1)',
+                borderBottomWidth: 2,
+              }}>
+                <Text style={{
+                  fontFamily: fonts.bold,
+                }}>Day 1</Text>
+              </View>
+              <View style={{
+                borderRadius: 3,
+                backgroundColor: 'rgba(0,0,0,0.1)',
+                padding: 5,
+                borderBottomColor: 'rgba(0,0,0,0.1)',
+                borderBottomWidth: 2,
+              }}>
+                <Text style={{
+                  fontFamily: fonts.bold
+                }}>Day {activeChallengeData.numberOfDays}</Text>
+              </View>
+            </View>
+            <View style={{
+              flexDirection:'row',
+              marginTop: 40
+            }}>
+              <View style={{
+                backgroundColor: '#ffffff',
+                // width: 104,
+                borderRadius: 3,
+                borderBottomColor: 'rgba(0,0,0,0.1)',
+                borderBottomWidth: 1,
+              }}>
+                <Text style={{
+                  // fontSize: 18,
+                  fontFamily: fonts.bold
+                }}>
+                  Transform
+                </Text>
+              </View>
+              <Text style={{
+                // fontSize: 18,
+                fontFamily: fonts.bold,
+                marginRight: 5,
+                marginLeft: 5
+              }}>{'>'}</Text>
+              <View style={{
+                backgroundColor: '#ffffff',
+                // width: 74,
+                borderRadius: 3,
+                borderBottomColor: 'rgba(0,0,0,0.1)',
+                borderBottomWidth: 1,
+              }}>
+                <Text style={{
+                  // fontSize: 18,
+                  fontFamily: fonts.bold
+                }}>
+                  {getPhase(this.phaseData)}
+                </Text>
+              </View>
+            </View>
+            <View style={{
+              marginTop: hp("1%")
+            }}>
+              <Text style={{
+                fontSize: 28,
+                fontFamily: fonts.bold
+              }}>{moment().format('dddd')}, {moment().format('MMMM')} {moment().day()}</Text>
+            </View>
+            <View>
+              <View>
+                <Icon name="glass" size={20} />
+              </View>
+            </View>
+              <View style={{marginTop: 20,flex: 1}}>
+              <TouchableOpacity phase={this.phase} onPress={() =>this.openLink(this.phase.pdfUrl)}>
+
+                <View style={{flex: 1}}>
+                <Icon 
+                name="file-text-o" 
+                size={20}/>
+                </View>
+
+                <View style={{marginTop: -20}}>
+
+                  <Text 
+                  style=
+                  {{
+                  fontSize: 15,
+                  fontFamily: fonts.bold,
+                  paddingLeft: 25,
+                  
+                  }}>
+                  Phase guide doc
+                  </Text>
+
+                </View>
+                <View style={{marginTop: -20,}}>
+                  <View style={{paddingLeft: 20,alignItems:'flex-end'}}>
+                    <Icon name="arrow-right" size={18} />
+                  </View>
+                </View>
+                <View style={{marginTop: 10}}>
+                <View 
+                style=
+                {{
+                  borderBottomColor: '#cccccc',
+                  borderBottomWidth: 1,
+                  width:'100%',
+                  }}
+                 >
+                
+               </View>
+                </View>
+                </TouchableOpacity>
+              </View>
+            <View elevation={5} style={{
+              position: 'absolute',
+              left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 11 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 12,
+              top: 29
+            }}>
+              <Svg
+                  id="prefix__Layer_1"
+                  viewBox="0 0 110 90"
+                  xmlSpace="preserve"
+                  width={hp("1.5%")}
+                  height={hp("1.5%")}
+                  fill={colors.themeColor.color}
+                  style={{
+                    strokeWidth: 50,
+                    stroke: colors.themeColor.color,
+                    strokeLinejoin: 'round',
+                    strokeLinecap: 'round',
+                    // shadowColor: '#171717',
+                    // shadowOffset: {width: 0, height: 0},
+                    // shadowOpacity: 0.2,
+                    // shadowRadius: 3,
+                  }}
+              >
+                <Path
+                    className="prefix__st0"
+                    d="M 55 46 L 87 90 L 22 90 z"
+                />
+              </Svg>
+            </View>
+            <View elevation={5} style={{
+              position: 'absolute',
+              left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7,
+              top: Platform.OS === "ios" ? 41 : 39,
+              backgroundColor: colors.themeColor.color,
+              width: 40,
+              height: 40,
+              justifyContent: 'center',
+              alignItems: 'center',
+              flex:1,
+              borderRadius: 8,
+              // shadowColor: '#171717',
+              // shadowOffset: {width: 0, height: 5},
+              // shadowOpacity: 0.2,
+              // shadowRadius: 3,
+            }}>
+              <Text style={{
+                fontFamily: fonts.GothamMedium,
+                fontSize: 25
+              }}>{this.currentChallengeDay}</Text>
+            </View>
+          </>
+    )};
+
     const dayDisplay = (
         <ScrollView
             contentContainerStyle={calendarStyles.dayDisplayContainer}
@@ -599,17 +815,26 @@ class CalendarHomeScreen extends React.PureComponent {
             showsVerticalScrollIndicator={false}
         >
           {this.phaseData && showRC && (
-              <ChallengeProgressCard2
-                  phase={this.phase}
-                  phaseData={this.phaseData}
-                  activeChallengeData={activeChallengeData}
-                  activeChallengeUserData={activeChallengeUserData}
-                  totalChallengeWorkoutsCompleted={
-                    this.totalChallengeWorkoutsCompleted
-                  }
-                  openLink={() => this.openLink(this.phaseData.pdfUrl)}
-                  currentDay={this.currentChallengeDay}
-              />
+              <>
+                <View style={{
+                  paddingVertical: 20,
+                  width: Dimensions.get("window").width,
+                  paddingHorizontal: 20
+                }}>
+                  <Progress />
+                </View>
+                {/*<ChallengeProgressCard2*/}
+                {/*    phase={this.phase}*/}
+                {/*    phaseData={this.phaseData}*/}
+                {/*    activeChallengeData={activeChallengeData}*/}
+                {/*    activeChallengeUserData={activeChallengeUserData}*/}
+                {/*    totalChallengeWorkoutsCompleted={*/}
+                {/*      this.totalChallengeWorkoutsCompleted*/}
+                {/*    }*/}
+                {/*    openLink={() => this.openLink(this.phaseData.pdfUrl)}*/}
+                {/*    currentDay={this.currentChallengeDay}*/}
+                {/*/>*/}
+              </>
           )}
           {workoutCard}
           {mealsList}

@@ -385,7 +385,7 @@ class TodayMealsList extends Component {
             onPress={() => this.props.filterPress(data)}
           >
             <View style={styles.opacityLayer1}>
-              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
+            <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
               <Text style={styles.cardTitle1}>Choose a recipe</Text>
             </View>
           </TouchableOpacity>
