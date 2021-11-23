@@ -46,6 +46,7 @@
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
     "@react-native-community/async-storage": "^1.11.0",
+    "@react-native-community/checkbox": "^0.5.9",
     "@react-native-community/datetimepicker": "2.2.2",
     "@react-native-community/netinfo": "^5.9.2",
     "@react-native-community/viewpager": "^4.1.3",

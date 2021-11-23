@@ -77,67 +77,67 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 
         const tagList1 = sortBy(item.tags).filter((tag) => {
 
-            if(tag === 'V'){
+            if (tag === 'V') {
                 color1.push({
                     name: tag,
                     color: '#00C520'
                 })
             }
-            if(tag === 'V+'){
+            if (tag === 'V+') {
                 color1.push({
                     name: tag.replace('V+', 'VEG'),
                     color: '#9403fc'
                 })
             }
-            if(tag === 'GF'){
+            if (tag === 'GF') {
                 color1.push({
                     name: tag,
                     color: '#469753'
                 })
             }
-            if(tag === 'DF'){
+            if (tag === 'DF') {
                 color1.push({
                     name: tag,
                     color: '#B7782B'
                 })
             }
-            if(tag === 'GH'){
+            if (tag === 'GH') {
                 color1.push({
                     name: tag,
                     color: '#965734'
                 })
             }
-            if(tag === 'L3'){
+            if (tag === 'L3') {
                 color1.push({
                     name: tag,
                     color: '#F89500'
                 })
             }
-            if(tag === 'L2'){
+            if (tag === 'L2') {
                 color1.push({
                     name: tag,
                     color: '#fc1403'
                 })
             }
-            if(tag === 'L1'){
+            if (tag === 'L1') {
                 color1.push({
                     name: tag,
                     color: '#03adfc'
                 })
             }
-            if(tag === 'P3'){
+            if (tag === 'P3') {
                 color1.push({
                     name: tag,
                     color: '#c203fc'
                 })
             }
-            if(tag === 'P2'){
+            if (tag === 'P2') {
                 color1.push({
                     name: tag,
                     color: '#fc0384'
                 })
             }
-            if(tag === 'P1'){
+            if (tag === 'P1') {
                 color1.push({
                     name: tag,
                     color: '#fc8403'
@@ -289,19 +289,18 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 2</Text>
                             <CheckBox
                                 boxType='square'
-                             />
+                            />
                         </View>
                         <View style={styles.tagContainer}>
                             <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 3</Text>
                             <CheckBox
-                             boxType='square'
-                              />
-                        </View> 
-                        <View style={{ marginVertical: 20 }}>
-                            <Button
-                                title="Apply"
-                                color='#4d4c4c'
+                                boxType='square'
                             />
+                        </View>
+                        <View style={{ marginVertical: 20 }}>
+                            <TouchableOpacity style={styles.button}>
+                                <Text style={{ color: 'white' }}>Apply</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </SafeAreaView>
@@ -318,7 +317,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                 onBackdropPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
             >
                 <SafeAreaView style={{ backgroundColor: 'white', }}>
-                    <View style={{paddingLeft: 10}}>
+                    <View style={{ paddingLeft: 10 }}>
                         <TouchableOpacity
                             style={styles.closeContainer}
                             onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
@@ -327,7 +326,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                 <Text></Text>
                             </View>
                         </TouchableOpacity>
-                        <View style={{ marginTop: 10,marginRight: 10,}}>
+                        <View style={{ marginTop: 10, marginRight: 10, }}>
                             <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter recipes to</Text>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
@@ -379,8 +378,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                     </View>
                                     <Text style={{ marginTop: 3, fontSize: 15 }}>Vegetarian</Text>
                                 </View>
-                                <CheckBox 
-                                  boxType='square'
+                                <CheckBox
+                                    boxType='square'
                                 />
                             </View>
                             <View style={styles.tagContainer}>
@@ -407,7 +406,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                     <Text style={{ marginTop: 3, fontSize: 15 }}>Gluta-Free</Text>
                                 </View>
                                 <CheckBox
-                                  boxType='square'
+                                    boxType='square'
                                 />
                             </View>
                             <View style={styles.tagContainer}>
@@ -461,7 +460,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                     <Text style={{ marginTop: 3, fontSize: 15 }}>Gut Health</Text>
                                 </View>
                                 <CheckBox
-                                     boxType='square'
+                                    boxType='square'
                                 />
                             </View>
                             <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select transform level</Text>
@@ -489,10 +488,10 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                     <Icon name="chevron-right" size={12} color={colors.black} />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ marginTop: 20,marginRight: 10 }}>
-                                 <TouchableOpacity style={styles.button}>
-                                    <Text style={{color:'white'}}>Apply</Text>
-                                 </TouchableOpacity>
+                            <View style={{ marginVertical: 20 }}>
+                                <TouchableOpacity style={styles.button}>
+                                    <Text style={{ color: 'white' }}>Apply</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </View>
@@ -518,8 +517,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                     </View>
 
                     {/* Filter Button */}
-                    <View style={{marginTop: 10,width: 100}}>
-                    {/*
+                    <View style={{ marginTop: 10, width: 100 }}>
+                        {/*
                              <CustomBtn
                             titleCapitalise={true}
                             Title='Filtah'
@@ -530,18 +529,18 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                         />
                          */}
                         <TouchableOpacity
-                         onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
+                            onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
 
-                        style={styles.oblongBtnStyle}>
+                            style={styles.oblongBtnStyle}>
 
                             <Text style=
-                            {{
-                                marginTop: 10,
-                                fontSize: 12, 
-                                fontFamily: fonts.bold,
-                                textTransform: 'uppercase',
-                            }}>
-                             Filter</Text>
+                                {{
+                                    marginTop: 10,
+                                    fontSize: 12,
+                                    fontFamily: fonts.bold,
+                                    textTransform: 'uppercase',
+                                }}>
+                                Filter</Text>
 
                         </TouchableOpacity>
 
@@ -709,5 +708,5 @@ const styles = StyleSheet.create({
         backgroundColor: '#4d4c4c',
         padding: 10,
     }
-    
+
 });
