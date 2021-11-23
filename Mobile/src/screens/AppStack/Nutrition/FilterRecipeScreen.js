@@ -30,6 +30,7 @@ import Modal from "react-native-modal";
 import { Card } from 'react-native-elements';
 import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
+import AsyncStorage from "@react-native-community/async-storage";
 
 const { width } = Dimensions.get("window");
 
@@ -43,7 +44,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             isFilterVisible: false,
             isClickVisible: false,
             meal: 'Breakfast',
+            initial: 1
         };
+        this.sheetRef = React.createRef();
     }
 
     onFocusFunction() {
@@ -252,7 +255,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     // tagName = ["Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2", "Phase 1", "Phase 2", "Phase 3"]
 
     render() {
-        const { recipes, loading } = this.state
+        const { recipes, loading, initial } = this.state
 
         const clickModal = (
             <Modal
@@ -489,78 +492,244 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         //     </Modal>
         // )
 
-        return (
-            <View style={globalStyle.container}>
-                <View
-                    style={styles.customContainerStyle}
-                >
-                    {/* BigHeadText */}
-                    <View>
-                        <BigHeadingWithBackButton
-                            isBackButton={true}
-                            onPress={this.handleBack}
-                            backButtonText="Back to Workout"
-                            isBackButton={true}
-                            customContainerStyle={{ bottom: 25 }}
-                        />
-                        <Text style={{ bottom: 60, fontSize: 30
-                            // , fontFamily: 'monospace'
-                        }}>Breakfast</Text>
-                    </View>
+        const renderContent = () => (
+            <View
+                style={{
+                    backgroundColor: 'black',
+                    padding: 16,
+                    height: 450
+                }}
+            >
+                <Text>Swipe down to close</Text>
+            </View>
+        );
 
-                    {/* Filter Button */}
-                    <View>
-                        <CustomBtn
-                            titleCapitalise={true}
-                            Title='Filter'
-                            style={styles.oblongBtnStyle}
-                            isRightIcon={true}
-                            customBtnTitleStyle={{ marginHorizontal: 10, fontSize: 12 }}
-                            // onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
-                        />
-                    </View>
-                </View>
-                <View
-                    style={{ flexDirection: 'row', marginVertical: 10, top: 10, marginBottom: 20 }}
-                >
+        return (
+            // <>
+            //     <View
+            //         style={{
+            //             flex: 1,
+            //             backgroundColor: 'papayawhip',
+            //             // alignItems: 'center',
+            //             // justifyContent: 'center',
+            //         }}
+            //     >
+            //          <Button
+            //              title="Open Bottom Sheet"
+            //              onPress={() => this.sheetRef.current.snapTo(0)}
+            //          />
+            //     </View>
+            //     <BottomSheet
+            //         initialSnap={1}
+            //         ref={this.sheetRef}
+            //         snapPoints={[450, 0, 0]}
+            //         borderRadius={25}
+            //         renderContent={renderContent}
+            //     />
+            // </>
+            // <View style={globalStyle.container}>
+            //     <View
+            //         style={styles.customContainerStyle}
+            //     >
+            //         {/* BigHeadText */}
+            //         <View>
+            //             <BigHeadingWithBackButton
+            //                 isBackButton={true}
+            //                 onPress={this.handleBack}
+            //                 backButtonText="Back to Workout"
+            //                 isBackButton={true}
+            //                 customContainerStyle={{ bottom: 25 }}
+            //             />
+            //             <Text style={{ bottom: 60, fontSize: 30
+            //                 // , fontFamily: 'monospace'
+            //             }}>Breakfast</Text>
+            //         </View>
+            //
+            //         {/* Filter Button */}
+            //         {/*<View>*/}
+            //         {/*    <CustomBtn*/}
+            //         {/*        titleCapitalise={true}*/}
+            //         {/*        Title='Filter'*/}
+            //         {/*        style={styles.oblongBtnStyle}*/}
+            //         {/*        isRightIcon={true}*/}
+            //         {/*        customBtnTitleStyle={{ marginHorizontal: 10, fontSize: 12 }}*/}
+            //         {/*        // onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}*/}
+            //         {/*    />*/}
+            //         {/*</View>*/}
+            //
+            //         <View
+            //             style={{
+            //                 flex: 1,
+            //                 backgroundColor: 'papayawhip',
+            //                 alignItems: 'center',
+            //                 justifyContent: 'center',
+            //             }}
+            //         >
+            //             <Button
+            //                 title="Open Bottom Sheet"
+            //                 onPress={() => this.sheetRef.current.snapTo(0)}
+            //             />
+            //         </View>
+            //     </View>
+            //     <View
+            //         style={{ flexDirection: 'row', marginVertical: 10, top: 10, marginBottom: 20 }}
+            //     >
+            //         <View
+            //             style={{
+            //                 flexDirection: 'row',
+            //                 alignItems: 'center',
+            //                 backgroundColor: '#e3e3e3',
+            //                 borderRadius: 50,
+            //                 marginRight: 7,
+            //             }}
+            //         >
+            //             <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>Vegan</Text>
+            //             <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+            //         </View>
+            //         <View
+            //             style={{
+            //                 flexDirection: 'row',
+            //                 alignItems: 'center',
+            //                 backgroundColor: '#e3e3e3',
+            //                 borderRadius: 50,
+            //                 marginRight: 7,
+            //             }}
+            //         >
+            //             <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>Vegetarian</Text>
+            //             <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+            //         </View>
+            //         <View
+            //             style={{
+            //                 flexDirection: 'row',
+            //                 alignItems: 'center',
+            //                 backgroundColor: '#e3e3e3',
+            //                 borderRadius: 50,
+            //                 marginRight: 7,
+            //             }}
+            //         >
+            //             <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>L1 - P1</Text>
+            //             <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+            //         </View>
+            //     </View>
+            //     {/* <FlatList
+            //         horizontal
+            //         showsHorizontalScrollIndicator={false}
+            //         data={recipes}
+            //         keyExtractor={(item) => item.id}
+            //         renderItem={(item) => this.renderItem1(item)}
+            //         style={{
+            //             paddingVertical: wp("4%"),
+            //         }}
+            //     /> */}
+            //     {loading ? (
+            //         skeleton
+            //     ) : (
+            //         <FlatList
+            //             contentContainerStyle={styles.scrollView}
+            //             data={recipes}
+            //             keyExtractor={(res) => res.id}
+            //             renderItem={(item) => this.renderItem(item)}
+            //             showsVerticalScrollIndicator={false}
+            //             removeClippedSubviews={false}
+            //         // maxToRenderPerBatch={20}
+            //         />
+            //     )}
+            //     {/*{filterModal}*/}
+            //     <BottomSheet
+            //          initialSnap={1}
+            //          ref={this.sheetRef}
+            //          snapPoints={[450, 0, 0]}
+            //          borderRadius={25}
+            //          renderContent={renderContent}
+            //      />
+            //     {clickModal}
+            // </View>
+            <>
+                <View style={globalStyle.container}>
                     <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            backgroundColor: '#e3e3e3',
-                            borderRadius: 50,
-                            marginRight: 7,
-                        }}
+                        style={styles.customContainerStyle}
                     >
-                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>Vegan</Text>
-                        <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+                        {/* BigHeadText */}
+                        <View>
+                            <BigHeadingWithBackButton
+                                isBackButton={true}
+                                onPress={this.handleBack}
+                                backButtonText="Back to Workout"
+                                isBackButton={true}
+                                customContainerStyle={{ bottom: 25 }}
+                            />
+                            <Text style={{ bottom: 60, fontSize: 30
+                                // , fontFamily: 'monospace'
+                            }}>Breakfast</Text>
+                        </View>
+
+                        {/* Filter Button */}
+                        {/*<View>*/}
+                        {/*    <CustomBtn*/}
+                        {/*        titleCapitalise={true}*/}
+                        {/*        Title='Filter'*/}
+                        {/*        style={styles.oblongBtnStyle}*/}
+                        {/*        isRightIcon={true}*/}
+                        {/*        customBtnTitleStyle={{ marginHorizontal: 10, fontSize: 12 }}*/}
+                        {/*        // onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}*/}
+                        {/*    />*/}
+                        {/*</View>*/}
+
+                        <View
+                            style={{
+                                flex: 1,
+                                backgroundColor: 'papayawhip',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Button
+                                title="Open Bottom Sheet"
+                                onPress={() => this.sheetRef.current.snapTo(0)}
+                            />
+                        </View>
                     </View>
                     <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            backgroundColor: '#e3e3e3',
-                            borderRadius: 50,
-                            marginRight: 7,
-                        }}
+                        style={{ flexDirection: 'row', marginVertical: 10, top: 10, marginBottom: 20 }}
                     >
-                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>Vegetarian</Text>
-                        <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                backgroundColor: '#e3e3e3',
+                                borderRadius: 50,
+                                marginRight: 7,
+                            }}
+                        >
+                            <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>Vegan</Text>
+                            <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                backgroundColor: '#e3e3e3',
+                                borderRadius: 50,
+                                marginRight: 7,
+                            }}
+                        >
+                            <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>Vegetarian</Text>
+                            <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                backgroundColor: '#e3e3e3',
+                                borderRadius: 50,
+                                marginRight: 7,
+                            }}
+                        >
+                            <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>L1 - P1</Text>
+                            <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+                        </View>
                     </View>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            backgroundColor: '#e3e3e3',
-                            borderRadius: 50,
-                            marginRight: 7,
-                        }}
-                    >
-                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>L1 - P1</Text>
-                        <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
-                    </View>
-                </View>
-                {/* <FlatList
+                    {/* <FlatList
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     data={recipes}
@@ -570,22 +739,30 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                         paddingVertical: wp("4%"),
                     }}
                 /> */}
-                {loading ? (
-                    skeleton
-                ) : (
-                    <FlatList
-                        contentContainerStyle={styles.scrollView}
-                        data={recipes}
-                        keyExtractor={(res) => res.id}
-                        renderItem={(item) => this.renderItem(item)}
-                        showsVerticalScrollIndicator={false}
-                        removeClippedSubviews={false}
-                    // maxToRenderPerBatch={20}
-                    />
-                )}
-                {/*{filterModal}*/}
-                {clickModal}
-            </View>
+                    {loading ? (
+                        skeleton
+                    ) : (
+                        <FlatList
+                            contentContainerStyle={styles.scrollView}
+                            data={recipes}
+                            keyExtractor={(res) => res.id}
+                            renderItem={(item) => this.renderItem(item)}
+                            showsVerticalScrollIndicator={false}
+                            removeClippedSubviews={false}
+                            // maxToRenderPerBatch={20}
+                        />
+                    )}
+                    {/*{filterModal}*/}
+                    {clickModal}
+                </View>
+                <BottomSheet
+                    initialSnap={initial}
+                    ref={this.sheetRef}
+                    snapPoints={[450, 0, 0]}
+                    borderRadius={25}
+                    renderContent={renderContent}
+                />
+            </>
         );
     }
 }
