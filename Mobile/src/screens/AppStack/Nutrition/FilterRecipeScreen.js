@@ -7,9 +7,9 @@ import {
     SafeAreaView,
     FlatList,
     Text,
-    CheckBox,
     Button,
 } from "react-native";
+import CheckBox from '@react-native-community/checkbox';
 import * as FileSystem from "expo-file-system";
 import sortBy from "lodash.sortby";
 import { db } from "../../../../config/firebase";
@@ -278,19 +278,25 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             <Icon name='chevron-left' size={13} color={colors.black} style={{ marginRight: 10 }} />
                             <Text style={{ fontSize: 15 }}>Back</Text>
                         </TouchableOpacity>
-                        <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginVertical: 20, fontWeight: 'bold', fontSize: 20 }}>Select Phase</Text>
+                        <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginVertical: 20, fontWeight: 'bold', fontSize: 20 }}>Select Phase</Text>
                         <View style={styles.tagContainer}>
                             <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 1</Text>
-                            <CheckBox />
+                            <CheckBox
+                                boxType='square'
+                            />
                         </View>
                         <View style={styles.tagContainer}>
                             <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 2</Text>
-                            <CheckBox />
+                            <CheckBox
+                                boxType='square'
+                             />
                         </View>
                         <View style={styles.tagContainer}>
                             <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 3</Text>
-                            <CheckBox />
-                        </View>
+                            <CheckBox
+                             boxType='square'
+                              />
+                        </View> 
                         <View style={{ marginVertical: 20 }}>
                             <Button
                                 title="Apply"
@@ -311,8 +317,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                 animationOut="fadeOutDownBig"
                 onBackdropPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
             >
-                <SafeAreaView style={{ backgroundColor: 'white', paddingHorizontal: 20 }}>
-                    <View>
+                <SafeAreaView style={{ backgroundColor: 'white', }}>
+                    <View style={{paddingLeft: 10}}>
                         <TouchableOpacity
                             style={styles.closeContainer}
                             onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
@@ -321,8 +327,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                 <Text></Text>
                             </View>
                         </TouchableOpacity>
-                        <View style={{ marginTop: 10 }}>
-                            <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter recipes to</Text>
+                        <View style={{ marginTop: 10,marginRight: 10,}}>
+                            <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter recipes to</Text>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
                                     <View style={{
@@ -346,7 +352,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                     </View>
                                     <Text style={{ marginTop: 3, fontSize: 15 }}>Vegan</Text>
                                 </View>
-                                <CheckBox />
+                                <CheckBox
+                                    boxType='square'
+                                />
                             </View>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
@@ -371,7 +379,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                     </View>
                                     <Text style={{ marginTop: 3, fontSize: 15 }}>Vegetarian</Text>
                                 </View>
-                                <CheckBox />
+                                <CheckBox 
+                                  boxType='square'
+                                />
                             </View>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
@@ -396,7 +406,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                     </View>
                                     <Text style={{ marginTop: 3, fontSize: 15 }}>Gluta-Free</Text>
                                 </View>
-                                <CheckBox />
+                                <CheckBox
+                                  boxType='square'
+                                />
                             </View>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
@@ -421,7 +433,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                     </View>
                                     <Text style={{ marginTop: 3, fontSize: 15 }}>Dairy-Free</Text>
                                 </View>
-                                <CheckBox />
+                                <CheckBox
+                                    boxType='square'
+                                />
                             </View>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
@@ -446,9 +460,11 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                     </View>
                                     <Text style={{ marginTop: 3, fontSize: 15 }}>Gut Health</Text>
                                 </View>
-                                <CheckBox />
+                                <CheckBox
+                                     boxType='square'
+                                />
                             </View>
-                            <Text style={{ fontFamily: 'monospace', marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select transform level</Text>
+                            <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select transform level</Text>
                             <View style={styles.tagContainer}>
                                 <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 1</Text>
                                 <TouchableOpacity
@@ -473,11 +489,10 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                                     <Icon name="chevron-right" size={12} color={colors.black} />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ marginVertical: 20 }}>
-                                <Button
-                                    title="Apply"
-                                    color='#4d4c4c'
-                                />
+                            <View style={{ marginTop: 20,marginRight: 10 }}>
+                                 <TouchableOpacity style={styles.button}>
+                                    <Text style={{color:'white'}}>Apply</Text>
+                                 </TouchableOpacity>
                             </View>
                         </View>
                     </View>
@@ -499,19 +514,37 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                             isBackButton={true}
                             customContainerStyle={{ bottom: 25 }}
                         />
-                        <Text style={{ bottom: 60, fontSize: 30, fontFamily: 'monospace' }}>Breakfast</Text>
+                        <Text style={{ bottom: 60, fontSize: 30, fontFamily: fonts.bold }}>Breakfast</Text>
                     </View>
 
                     {/* Filter Button */}
-                    <View>
-                        <CustomBtn
+                    <View style={{marginTop: 10,width: 100}}>
+                    {/*
+                             <CustomBtn
                             titleCapitalise={true}
-                            Title='Filter'
+                            Title='Filtah'
                             style={styles.oblongBtnStyle}
                             isRightIcon={true}
-                            customBtnTitleStyle={{ marginHorizontal: 10, fontSize: 12 }}
+                            customBtnTitleStyle={{ marginHorizontal: 10, fontSize: 12,paddingBottom: 16 }}
                             onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
                         />
+                         */}
+                        <TouchableOpacity
+                         onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
+
+                        style={styles.oblongBtnStyle}>
+
+                            <Text style=
+                            {{
+                                marginTop: 10,
+                                fontSize: 12, 
+                                fontFamily: fonts.bold,
+                                textTransform: 'uppercase',
+                            }}>
+                             Filter</Text>
+
+                        </TouchableOpacity>
+
                     </View>
                 </View>
                 <View
@@ -640,7 +673,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'grey',
-        marginHorizontal: wp('40%'),
+        marginHorizontal: wp('45%'),
         marginTop: 10,
         borderRadius: 50,
         height: 5,
@@ -671,4 +704,10 @@ const styles = StyleSheet.create({
         borderWidth: 0,
         elevation: 0,
     },
+    button: {
+        alignItems: "center",
+        backgroundColor: '#4d4c4c',
+        padding: 10,
+    }
+    
 });
