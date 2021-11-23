@@ -69,11 +69,11 @@ const TabStack = createBottomTabNavigator(
         }
         if (routeName === "Feed") {
           icon = (
-            <FeedSvg
-              width={hp("3%")}
-              height={hp("3%")}
-              fill={focused ? activeState : inactiveState}
-            />
+            // <FeedSvg
+            //   width={hp("3%")}
+            //   height={hp("3%")}
+            //   fill={focused ? activeState : inactiveState}
+            // />
             // <FeedSvg
             //   width={hp("2.5%")}
             //   height={hp("2.5%")}
@@ -88,11 +88,11 @@ const TabStack = createBottomTabNavigator(
           );
         } else if (routeName === "Lifestyle") {
           icon = (
-            <SubSVG
-              width={hp("2.5%")}
-              height={hp("2.5%")}
-              fill={focused ? activeState : inactiveState}
-            />
+            // <SubSVG
+            //   width={hp("2.5%")}
+            //   height={hp("2.5%")}
+            //   fill={focused ? activeState : inactiveState}
+            // />
             // <SubSVG
             //   width={hp("2.5%")}
             //   height={hp("2.5%")}
@@ -107,11 +107,11 @@ const TabStack = createBottomTabNavigator(
           );
         } else if (routeName === "Challenges") {
           icon = (
-            <ChallengeSvg
-              width={hp("2.5%")}
-              height={hp("2.5%")}
-              fill={focused ? activeState : inactiveState}
-            />
+            // <ChallengeSvg
+            //   width={hp("2.5%")}
+            //   height={hp("2.5%")}
+            //   fill={focused ? activeState : inactiveState}
+            // />
             // <ChallengeSvg
             //   width={hp("2.5%")}
             //   height={hp("2.5%")}
@@ -134,11 +134,11 @@ const TabStack = createBottomTabNavigator(
           );
         } else if (routeName === "Progress") {
           icon = (
-            <ProgressSvg
-              width={hp("2.5%")}
-              height={hp("2.5%")}
-              fill={focused ? activeState : inactiveState}
-            />
+            // <ProgressSvg
+            //   width={hp("2.5%")}
+            //   height={hp("2.5%")}
+            //   fill={focused ? activeState : inactiveState}
+            // />
             // <ProgressSvg
             //   width={hp("2.5%")}
             //   height={hp("2.5%")}
