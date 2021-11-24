@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StatusBar,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import CustomBtn from "../../../../components/Shared/CustomBtn";
 import colors from "../../../../styles/colors";
@@ -87,6 +88,8 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       fitnessLevel,
       extraProps,
       warmUp,
+      fromCalender,
+      extra
     } = this.props.navigation.state.params;
     if (warmUp) {
       this.props.navigation.replace("Exercise", {
@@ -97,6 +100,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
         workoutSubCategory,
         fitnessLevel,
         extraProps,
+        fromCalender,
       });
     } else {
       this.props.navigation.replace("WorkoutComplete", {
@@ -147,8 +151,41 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       exerciseInfoModalVisible: false,
     });
   };
+  handleQuitWorkout = async () => {
+    this.setState({ pauseModalVisible: false });
+
+    FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
+      (res) => {
+        Promise.all(
+          res.map(async (item, index) => {
+            if (item.includes("exercise-")) {
+              // console.log(`${FileSystem.cacheDirectory}${item}`)
+              FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
+                idempotent: true,
+              }).then(() => {
+                // console.log("deleted...",item)
+              });
+            }
+          })
+        );
+      }
+    );
+    this.props.navigation.navigate("CalendarHome");
+  };
+
   quitWorkout = () => {
-    this.goToExercise();
+    Alert.alert(
+      "Warning",
+      "Are you sure you want to quit this workout?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "OK",
+          onPress: this.handleQuitWorkout,
+        },
+      ],
+      { cancelable: false }
+    );
   };
   restartWorkout = () => {
     this.handleExerciseReplace(this.state.exerciseIndex);

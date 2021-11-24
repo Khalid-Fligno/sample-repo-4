@@ -83,7 +83,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     ) {
       totalDuration =
         currentExercise["restIntervalMap"][String(setCount)][
-          String(fitnessLevel - 1)
+        String(fitnessLevel - 1)
         ];
       rest = true;
     }
@@ -150,7 +150,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     const uid = await AsyncStorage.getItem("uid");
     const userRef = db.collection("users").doc(uid);
 
-    console.log('workoutworkout', workout['lifestyle'])
+    // console.log('workoutworkout', workout['lifestyle'])
 
     if (workout['lifestyle']) {
       return db.runTransaction((transaction) => {
@@ -240,9 +240,29 @@ export default class ExercisesScreenV2 extends React.PureComponent {
   }
 
   handleFinish = async (reps, resistanceCategoryId, currentExerciseIndex) => {
+    // console.log('diri musulod kung dili e skip')
     this.setState({ timerStart: false });
     let setCount = this.props.navigation.getParam("setCount", 1); //start from 1
     const { workout } = this.state;
+    // if (this.checkFinished(currentExerciseIndex, setCount)) {
+    //     // console.log("finished");
+    //     this.updateWeekly();
+    //     appsFlyer.trackEvent("complete_hiit_circuit_workout");
+
+    //     this.workoutComplete(reps, resistanceCategoryId);
+    //   } else if (currentExerciseIndex === this.state.exerciseList.length - 1) {
+    //     // console.log("Increase Count")
+    //     setCount += 1; //increase count when 1st,2nd... round finished
+    //     this.goToExercise(setCount, reps, resistanceCategoryId, 0);
+    //   } else {
+    //     // console.log("Go to next Exercise") //go to next exercise if round not finished
+    //     this.goToExercise(
+    //       setCount,
+    //       reps,
+    //       resistanceCategoryId,
+    //       currentExerciseIndex + 1
+    //     );
+    //   }
     if (workout.workoutProcessType === "oneByOne") {
       if (this.checkFinished(currentExerciseIndex, setCount)) {
         // console.log("update weekly targets")
@@ -475,17 +495,26 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       this.workoutComplete(reps, null);
     } else {
       let { workout } = this.state;
+      // first fixed issue  
+      // if (currentExerciseIndex < workout.exercises.length - 1)
+      //   this.goToExercise(1, reps, null, currentExerciseIndex + 1, false);
+      // else {
+      //   this.updateWeekly();
+      //   appsFlyer.trackEvent("resistance_workout_complete");
+      //   this.workoutComplete(reps, null);
+      // }
+
       if (workout.workoutProcessType === "oneByOne") {
-        if (currentExerciseIndex < workout.exercises.length - 1)
-          this.goToExercise(1, reps, null, currentExerciseIndex + 1, false);
-        else {
+        if (currentExerciseIndex < workout.exercises.length - 1) {
           this.goToExercise(
-            workout.workoutReps,
+            setCount,
             reps,
             null,
-            currentExerciseIndex,
+            currentExerciseIndex + 1,
             false
           );
+        } else if (currentExerciseIndex === workout.exercises.length - 1) {
+          this.goToExercise(setCount + 1, reps, null, 0, false);
         }
       } else if (workout.workoutProcessType === "circular") {
         if (currentExerciseIndex < workout.exercises.length - 1) {
@@ -566,9 +595,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       return (
         <View style={styles.invisibleView}>
           <View style={styles.setCounter}>
-            <Text style={styles.setCounterText}>{`Set ${setCount} of ${
-              workout.workoutReps
-            } - ${this.repsInterval} ${rest ? "sec" : ""}`}</Text>
+            <Text style={styles.setCounterText}>{`Set ${setCount} of ${workout.workoutReps
+              } - ${this.repsInterval} ${rest ? "sec" : ""}`}</Text>
           </View>
         </View>
       );
@@ -654,7 +682,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     ) {
       this.repsInterval =
         currentExercise["workIntervalMap"][String(setCount)][
-          String(fitnessLevel - 1)
+        String(fitnessLevel - 1)
         ];
     }
     if (
@@ -665,7 +693,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     ) {
       this.repsInterval =
         currentExercise["restIntervalMap"][String(setCount)][
-          String(fitnessLevel - 1)
+        String(fitnessLevel - 1)
         ];
     }
 
@@ -679,8 +707,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
 
     let showCT =
       currentExercise.coachingTip &&
-      currentExercise.coachingTip.length > 0 &&
-      !currentExercise.coachingTip.includes("none")
+        currentExercise.coachingTip.length > 0 &&
+        !currentExercise.coachingTip.includes("none")
         ? true
         : false;
 
@@ -780,9 +808,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
             {!rest && (
               <Video
                 source={{
-                  uri: `${FileSystem.cacheDirectory}exercise-${
-                    currentExerciseIndex + 1
-                  }.mp4`,
+                  uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex + 1
+                    }.mp4`,
                 }}
                 rate={1.0}
                 volume={1.0}
@@ -811,9 +838,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
 
           <View style={styles.currentExerciseTextContainer}>
             {workoutTimer()}
-            <Text style={styles.currentExerciseTextCount}>{`Exercise ${
-              currentExerciseIndex + 1
-            } of ${exerciseList.length}`}</Text>
+            <Text style={styles.currentExerciseTextCount}>{`Exercise ${currentExerciseIndex + 1
+              } of ${exerciseList.length}`}</Text>
             <View style={styles.currentExerciseNameTextContainer}>
               <TextTicker
                 style={styles.currentExerciseNameText}
@@ -850,12 +876,12 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 handleSkip
                   ? this.skipExercise
                   : () => {
-                      this.handleFinish(
-                        reps,
-                        resistanceCategoryId,
-                        currentExerciseIndex
-                      );
-                    }
+                    this.handleFinish(
+                      reps,
+                      resistanceCategoryId,
+                      currentExerciseIndex
+                    );
+                  }
               }
               onPlayPause={videoPaused ? this.handleUnpause : this.handlePause}
             />

@@ -244,7 +244,7 @@ export default class HomeScreen extends React.PureComponent {
             .collection("challenges")
             .doc(list[0].id);
           challengeRef.set(
-            { status: "Active", isSchedule: false },
+            { status: "Active", isSchedule: true },
             { merge: true }
           );
         }
@@ -343,8 +343,6 @@ export default class HomeScreen extends React.PureComponent {
               activeChallengeUserData.workouts.filter(
                 (res) => res.target === "strength"
               );
-
-            console.log('asdfasdfasdf', totalIntervalCompleted.length, totalCircuitCompleted.length, totalStrengthCompleted.length)  
 
             this.fetchHomeScreenData(
               activeChallengeUserData,
