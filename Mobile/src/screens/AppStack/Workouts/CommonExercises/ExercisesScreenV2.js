@@ -505,16 +505,49 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       // }
 
       if (workout.workoutProcessType === "oneByOne") {
-        if (currentExerciseIndex < workout.exercises.length - 1) {
+        // if (currentExerciseIndex < workout.exercises.length - 1) {
+        //   this.goToExercise(
+        //     setCount,
+        //     reps,
+        //     null,
+        //     currentExerciseIndex + 1,
+        //     false
+        //   );
+        // } else if (currentExerciseIndex === workout.exercises.length - 1) {
+        //   this.goToExercise(setCount + 1, reps, null, 0, false);
+        // }
+        if (this.checkFinished(currentExerciseIndex, setCount)) {
+          // console.log("update weekly targets")
+          this.updateWeekly();
+          appsFlyer.trackEvent("resistance_workout_complete");
+          this.workoutComplete(reps, this.state.resistanceCategoryId);
+        } else if (setCount === this.state.workout.workoutReps) {
+          // console.log("Go to next  exercise")
           this.goToExercise(
-            setCount,
-            reps,
-            null,
-            currentExerciseIndex + 1,
-            false
+              1,
+              reps,
+              this.state.resistanceCategoryId,
+              currentExerciseIndex + 1
           );
-        } else if (currentExerciseIndex === workout.exercises.length - 1) {
-          this.goToExercise(setCount + 1, reps, null, 0, false);
+        } else {
+          // console.log("Incresase count")
+          if (workout.rest && !this.state.rest) {
+            //for workout.rest === true
+            this.goToExercise(
+                setCount,
+                reps,
+                this.state.resistanceCategoryId,
+                currentExerciseIndex,
+                true
+            );
+          } else {
+            this.goToExercise(
+                setCount + 1,
+                reps,
+                this.state.resistanceCategoryId,
+                currentExerciseIndex
+            );
+          }
         }
       } else if (workout.workoutProcessType === "circular") {
         if (currentExerciseIndex < workout.exercises.length - 1) {
