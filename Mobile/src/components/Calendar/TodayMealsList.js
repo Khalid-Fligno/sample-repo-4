@@ -18,83 +18,11 @@ class TodayMealsList extends Component {
     super(props);
     this.state = {
       recipeData: this.props.data,
+      allRecipeData: this.props.recipe,
     };
   }
 
-  // sample = () => (
-  //   <TouchableOpacity
-  //     style={styles.cardContainer1}
-  //     onPress={() => this.props.filterPress()}
-  //   >
-  //     <View style={styles.opacityLayer1}>
-  //       <Icon name="add-circle" size={15} style={{ left: 50 }} />
-  //       <Text style={styles.cardTitle1}>Choose a recipe</Text>
-  //     </View>
-  //   </TouchableOpacity>
-
-  // )
-
-  // mealCard = ({ item: recipe }) =>
-  // (
-  //   <TouchableOpacity
-  //     style={styles.cardContainer}
-  //     // key={i}
-  //     onPress={() => this.props.onPress(recipe)}
-  //   >
-  //     <ImageBackground
-  //       // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
-  //       source={{ uri: recipe.coverImage, cache: "force-cache" }}
-  //       style={styles.image}
-  //       resizeMode="cover"
-  //     >
-  //       <View style={styles.opacityLayer}>
-  //         <Text style={styles.cardTitle}>{recipe.title}</Text>
-  //       </View>
-  //     </ImageBackground>
-  //   </TouchableOpacity>
-  // )
-
-  // carousel = (data, title) => {
-
-  //   return (
-  //     <View>
-  //       <View
-  //         style={{
-  //           flexDirection: "row",
-  //           justifyContent: "space-between",
-  //           paddingHorizontal: containerPadding,
-  //         }}
-  //       >
-  //         <Text style={styles.label}>{title} </Text>
-  //         {title === "Breakfast" && (
-  //           <TouchableOpacity
-  //             style={{ flexDirection: "row", alignItems: "center" }}
-  //             activeOpacity={1}
-  //           >
-  //             <Text style={styles.rLabel}>Scroll for more </Text>
-  //             <DoubleRightArrow height={wp("4%")} />
-  //           </TouchableOpacity>
-  //         )}
-  //       </View>
-  //       <FlatList
-  //         horizontal
-  //         // pagingEnabled={true}
-  //         showsHorizontalScrollIndicator={false}
-  //         legacyImplementation={false}
-  //         data={data}
-  //         renderItem={(item) => this.mealCard(item)}
-  //         ListFooterComponent={this.sample}
-  //         keyExtractor={(res) => res.id}
-  //         style={{
-  //           paddingHorizontal: containerPadding,
-  //           paddingVertical: wp("3%"),
-  //         }}
-  //       />
-  //     </View>
-  //   )
-  // }
-
-  carouselBreakfast = (data, title) => {
+  carouselBreakfast = (data, data1, title) => {
 
     return (
       <View>
@@ -118,11 +46,9 @@ class TodayMealsList extends Component {
           {data.map((recipe) => (
             <TouchableOpacity
               style={styles.cardContainer}
-              // key={i}
               onPress={() => this.props.onPress(recipe)}
             >
               <ImageBackground
-                // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
                 source={{ uri: recipe.coverImage, cache: "force-cache" }}
                 style={styles.image}
                 resizeMode="cover"
@@ -157,7 +83,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data)}
+            onPress={() => this.props.filterPress(data, data1)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -169,7 +95,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselLunch = (data, title) => {
+  carouselLunch = (data, data1, title) => {
 
     return (
       <View>
@@ -193,11 +119,9 @@ class TodayMealsList extends Component {
           {data.map((recipe) => (
             <TouchableOpacity
               style={styles.cardContainer}
-              // key={i}
               onPress={() => this.props.onPress(recipe)}
             >
               <ImageBackground
-                // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
                 source={{ uri: recipe.coverImage, cache: "force-cache" }}
                 style={styles.image}
                 resizeMode="cover"
@@ -232,7 +156,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data)}
+            onPress={() => this.props.filterPress(data, data1)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -244,7 +168,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselDinner = (data, title) => {
+  carouselDinner = (data, data1, title) => {
 
     return (
       <View>
@@ -268,11 +192,9 @@ class TodayMealsList extends Component {
           {data.map((recipe) => (
             <TouchableOpacity
               style={styles.cardContainer}
-              // key={i}
               onPress={() => this.props.onPress(recipe)}
             >
               <ImageBackground
-                // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
                 source={{ uri: recipe.coverImage, cache: "force-cache" }}
                 style={styles.image}
                 resizeMode="cover"
@@ -307,7 +229,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data)}
+            onPress={() => this.props.filterPress(data, data1)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -319,7 +241,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselSnack = (data, title) => {
+  carouselSnack = (data, data1, title) => {
 
     return (
       <View>
@@ -343,11 +265,9 @@ class TodayMealsList extends Component {
           {data.map((recipe) => (
             <TouchableOpacity
               style={styles.cardContainer}
-              // key={i}
               onPress={() => this.props.onPress(recipe)}
             >
               <ImageBackground
-                // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
                 source={{ uri: recipe.coverImage, cache: "force-cache" }}
                 style={styles.image}
                 resizeMode="cover"
@@ -382,10 +302,10 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data)}
+            onPress={() => this.props.filterPress(data, data1)}
           >
             <View style={styles.opacityLayer1}>
-            <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
+              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
               <Text style={styles.cardTitle1}>Choose a recipe</Text>
             </View>
           </TouchableOpacity>
@@ -394,7 +314,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselDrink = (data, title) => {
+  carouselDrink = (data, data1, title) => {
 
     return (
       <View>
@@ -418,11 +338,9 @@ class TodayMealsList extends Component {
           {data.map((recipe) => (
             <TouchableOpacity
               style={styles.cardContainer}
-              // key={i}
               onPress={() => this.props.onPress(recipe)}
             >
               <ImageBackground
-                // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
                 source={{ uri: recipe.coverImage, cache: "force-cache" }}
                 style={styles.image}
                 resizeMode="cover"
@@ -457,7 +375,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data)}
+            onPress={() => this.props.filterPress(data, data1)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -470,24 +388,15 @@ class TodayMealsList extends Component {
   }
 
   render() {
-    // const { data } = this.props;
-    const { recipeData } = this.state
-
+    const { recipeData, allRecipeData } = this.state
+    
     return (
       <View style={styles.container}>
-        {recipeData.breakfast.length > 0 && this.carouselBreakfast(recipeData.breakfast, "Breakfast")}
-        {/* {
-            data.snack.length >0 &&
-            this.carousel(data.snack,'Morning snack')
-        } */}
-        {recipeData.lunch.length > 0 && this.carouselLunch(recipeData.lunch, "Lunch")}
-        {/* {
-            data.snack.length >0 &&
-            this.carousel(data.snack,'Afternoon snack')
-        } */}
-        {recipeData.dinner.length > 0 && this.carouselDinner(recipeData.dinner, "Dinner")}
-        {recipeData.snack.length > 0 && this.carouselSnack(recipeData.snack, "Snack")}
-        {recipeData.drink.length > 0 && this.carouselDrink(recipeData.drink, "Post Workout")}
+        {recipeData.breakfast.length > 0 && this.carouselBreakfast(recipeData.breakfast, allRecipeData.breakfast, "Breakfast")}
+        {recipeData.lunch.length > 0 && this.carouselLunch(recipeData.lunch, allRecipeData.lunch, "Lunch")}
+        {recipeData.dinner.length > 0 && this.carouselDinner(recipeData.dinner, allRecipeData.dinner, "Dinner")}
+        {recipeData.snack.length > 0 && this.carouselSnack(recipeData.snack, allRecipeData.snack, "Snack")}
+        {recipeData.drink.length > 0 && this.carouselDrink(recipeData.drink, allRecipeData.drink, "Post Workout")}
       </View>
     );
   }
@@ -518,20 +427,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden",
     backgroundColor: colors.grey.light,
-    // borderRadius: 3,
     borderRadius: 10,
   },
   cardContainer: {
     height: wp("33%"),
     width: wp("65%"),
     marginRight: wp("3.5%"),
-    // paddingRight: 100
   },
   cardContainer1: {
     height: wp("33%"),
     width: wp("65%"),
     marginRight: wp("3.5%"),
-    // backgroundColor: '#ececec',
     borderStyle: "dashed",
     borderRadius: 10,
     borderWidth: 1,
@@ -566,10 +472,6 @@ const styles = StyleSheet.create({
   cardTitle1: {
     fontFamily: fonts.bold,
     color: colors.black,
-    // shadowColor: colors.grey.dark,
-    // shadowOpacity: 1,
-    // shadowOffset: { width: 0, height: 0 },
-    // shadowRadius: 5,
     width: "90%",
     fontSize: wp("3.5%"),
   },

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {ScrollView, View, Text, Alert, Linking, Dimensions,TextInput,TouchableOpacity} from "react-native";
+import { ScrollView, View, Text, Alert, Linking, Dimensions, TextInput, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
 import firebase from "firebase";
@@ -39,6 +39,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Icon from "react-native-vector-icons/FontAwesome";
+import sortBy from "lodash.sortby";
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -61,7 +62,9 @@ class CalendarHomeScreen extends React.PureComponent {
       loadingExercises: false,
       skipped: false,
       initialBurpeeTestCompleted: false,
-      width: 0
+      width: 0,
+      AllRecipe: [],
+      challengeRecipe: []
     };
     this.calendarStrip = React.createRef();
   }
@@ -83,6 +86,8 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async onFocusFunction() {
     console.log("On focus");
+    await this.fetchRecipe();
+    await this.fetchRecipeChallenge();
     await this.fetchCalendarEntries();
     await this.fetchActiveChallengeUserData();
     await this.fetchUserData();
@@ -97,9 +102,96 @@ class CalendarHomeScreen extends React.PureComponent {
 
   componentWillUnmount() {
     this.focusListener.remove();
+    if (this.unsubscribe) this.unsubscribe();
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
     if (this.unsubscribeSchedule) this.unsubscribeSchedule();
+    if (this.unsubscribeReC) this.unsubscribeReC();
+  }
+
+  fetchRecipeChallenge = async () => {
+    this.unsubscribeReC = await db
+      .collection("challenges")
+      .get()
+      .then(querySnapshot => {
+        const documents = querySnapshot.docs.map(doc => doc.data())
+
+        const level_1 = documents.filter((res) => {
+          if (res.id === '88969d13-fd11-4fde-966e-df1270fb97dd') {
+            return res.id
+          }
+        })
+        const level_2 = documents.filter((res) => {
+          if (res.id === '7798f53c-f613-435d-b94b-b67f1f43b51b') {
+            return res.id
+          }
+        })
+
+        const level_3 = documents.filter((res) => {
+          if (res.id === 'EilCVyb5eIPG7w0dGJDC') {
+            return res.id
+          }
+        })
+
+        const level_4 = documents.filter((res) => {
+          if (res.id === 'SIq81lNARaqxTqyyOH5a') {
+            return res.id
+          }
+        })
+
+        const challengeLevel = [{
+          level1: level_1,
+          level2: level_2,
+          level3: level_3,
+          level4: level_4
+        }]
+
+        this.setState({
+          challengeRecipe: challengeLevel
+        })
+      })
+  }
+
+  fetchRecipe = async () => {
+    this.setState({ loading: true });
+
+    const { challengeMealsFilterList } = this.state
+
+    this.unsubscribe = await db
+      .collection("recipes")
+      .onSnapshot(async (querySnapshot) => {
+        const recipes = [];
+        await querySnapshot.forEach(async (doc) => {
+          
+          if (doc.data().active) {
+            if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
+              if (challengeMealsFilterList.includes(doc.data().id))
+                await recipes.push(await doc.data())
+            } else {
+              await recipes.push(await doc.data());
+            }
+          }
+        })
+
+        const breakfastList = sortBy(recipes).filter((res) => res.breakfast)
+        const snackList = sortBy(recipes).filter((res) => res.lunch)
+        const lunchList = sortBy(recipes).filter((res) => res.dinner)
+        const dinnerList = sortBy(recipes).filter((res) => res.snack)
+        const drinkList = sortBy(recipes).filter((res) => res.drink)
+
+        const recommendedMeal = [{
+          breakfast: breakfastList,
+          snack: snackList,
+          lunch: lunchList,
+          dinner: dinnerList,
+          drink: drinkList
+        }]
+
+        this.setState({
+          AllRecipe: recommendedMeal
+        })
+
+      })
   }
 
   fetchCalendarEntries = async () => {
@@ -110,8 +202,8 @@ class CalendarHomeScreen extends React.PureComponent {
 
   resetActiveChallengeUserData = () => {
     this.props.navigation.reset(
-        [NavigationActions.navigate({ routeName: "CalendarHome" })],
-        0
+      [NavigationActions.navigate({ routeName: "CalendarHome" })],
+      0
     );
   };
 
@@ -121,13 +213,13 @@ class CalendarHomeScreen extends React.PureComponent {
     this.stringDate = date.format("YYYY-MM-DD").toString();
     //TODO:check the active challenge cndtns
     if (
-        activeChallengeData &&
-        activeChallengeUserData &&
-        activeChallengeUserData.status === "Active"  &&
-        new Date(activeChallengeUserData.startDate).getTime() <=
-        new Date(this.stringDate).getTime() &&
-        new Date(activeChallengeUserData.endDate).getTime() >=
-        new Date(this.stringDate).getTime()
+      activeChallengeData &&
+      activeChallengeUserData &&
+      activeChallengeUserData.status === "Active" &&
+      new Date(activeChallengeUserData.startDate).getTime() <=
+      new Date(this.stringDate).getTime() &&
+      new Date(activeChallengeUserData.endDate).getTime() >=
+      new Date(this.stringDate).getTime()
     ) {
       this.getCurrentPhaseInfo();
     } else {
@@ -135,10 +227,10 @@ class CalendarHomeScreen extends React.PureComponent {
         this.checkScheduleChallenge();
       else {
         const isBetween = moment(this.stringDate).isBetween(
-            this.state.ScheduleData.startDate,
-            this.state.ScheduleData.endDate,
-            undefined,
-            "[]"
+          this.state.ScheduleData.startDate,
+          this.state.ScheduleData.endDate,
+          undefined,
+          "[]"
         );
         if (isBetween) this.getCurrentPhaseInfo();
         else {
@@ -153,35 +245,35 @@ class CalendarHomeScreen extends React.PureComponent {
     const uid = await AsyncStorage.getItem("uid");
     const version = await checkVersion();
     const versionCodeRef = db
-        .collection("users")
-        .doc(uid)
-        .set({AppVersion: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
+      .collection("users")
+      .doc(uid)
+      .set({ AppVersion: Platform.OS === "ios" ? String(version.version) : String(getVersion()) }, { merge: true });
     const userRef = db.collection("users").doc(uid);
     userRef
-        .get()
-        .then((res) => {
-          const data = res.data();
-          if (res.data().weeklyTargets == null) {
-            const data = {
-              weeklyTargets: {
-                resistanceWeeklyComplete: 0,
-                hiitWeeklyComplete: 0,
-                strength: 0,
-                interval: 0,
-                circuit: 0,
-                currentWeekStartDate: moment()
-                    .startOf("week")
-                    .format("YYYY-MM-DD"),
-              },
-            };
-            userRef.set(data, { merge: true });
-          }
-          this.setState({
-            skipped: this.state.activeChallengeUserData.onBoardingInfo.skipped ?? false,
-            initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
-          });
-        })
-        .catch((reason) => console.log("Fetching user data error: ", reason));
+      .get()
+      .then((res) => {
+        const data = res.data();
+        if (res.data().weeklyTargets == null) {
+          const data = {
+            weeklyTargets: {
+              resistanceWeeklyComplete: 0,
+              hiitWeeklyComplete: 0,
+              strength: 0,
+              interval: 0,
+              circuit: 0,
+              currentWeekStartDate: moment()
+                .startOf("week")
+                .format("YYYY-MM-DD"),
+            },
+          };
+          userRef.set(data, { merge: true });
+        }
+        this.setState({
+          skipped: this.state.activeChallengeUserData.onBoardingInfo.skipped ?? false,
+          initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
+        });
+      })
+      .catch((reason) => console.log("Fetching user data error: ", reason));
   };
 
   async checkScheduleChallenge() {
@@ -191,20 +283,20 @@ class CalendarHomeScreen extends React.PureComponent {
       const todayDate = moment(new Date()).format("YYYY-MM-DD");
       if (res && moment(res.startDate).isSame(todayDate) && res.isSchedule) {
         const challengeRef = db
-            .collection("users")
-            .doc(uid)
-            .collection("challenges")
-            .doc(res.id);
+          .collection("users")
+          .doc(uid)
+          .collection("challenges")
+          .doc(res.id);
         challengeRef.set(
-            { status: "Active", isSchedule: false },
-            { merge: true }
+          { status: "Active", isSchedule: false },
+          { merge: true }
         );
       } else if (res && res.isSchedule) {
         const isBetween = moment(this.stringDate).isBetween(
-            res.startDate,
-            res.endDate,
-            undefined,
-            "[]"
+          res.startDate,
+          res.endDate,
+          undefined,
+          "[]"
         );
         if (!this.state.isSchedule) {
           this.setState({
@@ -243,17 +335,17 @@ class CalendarHomeScreen extends React.PureComponent {
     if (workout && workout.newWorkout) {
 
       const warmUpExercises = await downloadExerciseWC(
-          workout,
-          Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array")>-1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => {return warmUpExercise}),
-          workout.warmUpExerciseModel,
-          "warmUp"
+        workout,
+        Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array") > -1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => { return warmUpExercise }),
+        workout.warmUpExerciseModel,
+        "warmUp"
       );
       if (warmUpExercises.length > 0) {
         const coolDownExercises = await downloadExerciseWC(
-            workout,
-            workout.coolDownExercises,
-            workout.coolDownExerciseModel,
-            "coolDown"
+          workout,
+          workout.coolDownExercises,
+          workout.coolDownExerciseModel,
+          "coolDown"
         );
         if (coolDownExercises.length > 0) {
           const newWorkout = Object.assign({}, workout, {
@@ -280,12 +372,12 @@ class CalendarHomeScreen extends React.PureComponent {
   async goToNext(workout) {
     console.log(">>here");
     if (
-        this.currentChallengeDay === 1 &&
-        !this.state.initialBurpeeTestCompleted
+      this.currentChallengeDay === 1 &&
+      !this.state.initialBurpeeTestCompleted
     ) {
       await FileSystem.downloadAsync(
-          "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
-          `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+        "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+        `${FileSystem.cacheDirectory}exercise-burpees.mp4`
       );
     }
     const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
@@ -296,8 +388,8 @@ class CalendarHomeScreen extends React.PureComponent {
       });
     }
     if (
-        this.currentChallengeDay === 1 &&
-        !this.state.initialBurpeeTestCompleted
+      this.currentChallengeDay === 1 &&
+      !this.state.initialBurpeeTestCompleted
     ) {
       this.props.navigation.navigate("Burpee1", {
         fromScreen: "WorkoutInfo",
@@ -323,17 +415,17 @@ class CalendarHomeScreen extends React.PureComponent {
   deleteCalendarEntry = async (fieldToDelete) => {
     const uid = await AsyncStorage.getItem("uid");
     const stringDate = this.calendarStrip.current
-        .getSelectedDate()
-        .format("YYYY-MM-DD")
-        .toString();
+      .getSelectedDate()
+      .format("YYYY-MM-DD")
+      .toString();
     this.unsubscribe = await db
-        .collection("users")
-        .doc(uid)
-        .collection("calendarEntries")
-        .doc(stringDate)
-        .update({
-          [fieldToDelete]: firebase.firestore.FieldValue.delete(),
-        });
+      .collection("users")
+      .doc(uid)
+      .collection("calendarEntries")
+      .doc(stringDate)
+      .update({
+        [fieldToDelete]: firebase.firestore.FieldValue.delete(),
+      });
     this.setState({ isSwiping: false });
   };
 
@@ -343,50 +435,50 @@ class CalendarHomeScreen extends React.PureComponent {
       this.setState({ loading: true });
       const uid = await AsyncStorage.getItem("uid");
       this.unsubscribeFACUD = await db
-          .collection("users")
-          .doc(uid)
-          .collection("challenges")
-          .where("status", "in", ["Active"])
-          .onSnapshot(async (querySnapshot) => {
-            const list = [];
-            await querySnapshot.forEach(async (doc) => {
-              await list.push(await doc.data());
-            });
-            const activeChallengeEndDate = list[0] ? list[0].endDate : null;
-            const currentDate = moment().format("YYYY-MM-DD");
-            const isCompleted = moment(currentDate).isSameOrAfter(
-                activeChallengeEndDate
-            );
-            if (list[0] && !isCompleted) {
-              this.fetchActiveChallengeData(list[0]);
-            } else {
-              if (isCompleted) {
-                //TODO check challenge is Completed or not
-                const newData = createUserChallengeData(
-                    { ...list[0], status: "InActive" },
-                    new Date()
-                );
-                const challengeRef = db
-                    .collection("users")
-                    .doc(uid)
-                    .collection("challenges")
-                    .doc(list[0].id);
-                challengeRef.set(newData, { merge: true });
-                this.props.navigation.navigate("ChallengeSubscription");
-                Alert.alert(
-                    "Congratulations!",
-                    "You have completed your challenge",
-                    [{ text: "OK", onPress: () => {} }],
-                    { cancelable: false }
-                );
-              } else {
-                this.setState({
-                  activeChallengeUserData: undefined,
-                  loading: false,
-                });
-              }
-            }
+        .collection("users")
+        .doc(uid)
+        .collection("challenges")
+        .where("status", "in", ["Active"])
+        .onSnapshot(async (querySnapshot) => {
+          const list = [];
+          await querySnapshot.forEach(async (doc) => {
+            await list.push(await doc.data());
           });
+          const activeChallengeEndDate = list[0] ? list[0].endDate : null;
+          const currentDate = moment().format("YYYY-MM-DD");
+          const isCompleted = moment(currentDate).isSameOrAfter(
+            activeChallengeEndDate
+          );
+          if (list[0] && !isCompleted) {
+            this.fetchActiveChallengeData(list[0]);
+          } else {
+            if (isCompleted) {
+              //TODO check challenge is Completed or not
+              const newData = createUserChallengeData(
+                { ...list[0], status: "InActive" },
+                new Date()
+              );
+              const challengeRef = db
+                .collection("users")
+                .doc(uid)
+                .collection("challenges")
+                .doc(list[0].id);
+              challengeRef.set(newData, { merge: true });
+              this.props.navigation.navigate("ChallengeSubscription");
+              Alert.alert(
+                "Congratulations!",
+                "You have completed your challenge",
+                [{ text: "OK", onPress: () => { } }],
+                { cancelable: false }
+              );
+            } else {
+              this.setState({
+                activeChallengeUserData: undefined,
+                loading: false,
+              });
+            }
+          }
+        });
     } catch (err) {
       this.setState({ loading: false });
       console.log(err);
@@ -397,22 +489,22 @@ class CalendarHomeScreen extends React.PureComponent {
   fetchActiveChallengeData = async (activeChallengeUserData) => {
     try {
       this.unsubscribeFACD = await db
-          .collection("challenges")
-          .doc(activeChallengeUserData.id)
-          .onSnapshot(async (doc) => {
-            if (doc.exists) {
-              this.setState({
-                activeChallengeUserData,
-                activeChallengeData: doc.data(),
-                // loading:false
-              });
-              setTimeout(() => {
-                // this.setState({ loading: false });
-                // if(!doc.data().newChallenge)
-                this.getCurrentPhaseInfo();
-              }, 500);
-            }
-          });
+        .collection("challenges")
+        .doc(activeChallengeUserData.id)
+        .onSnapshot(async (doc) => {
+          if (doc.exists) {
+            this.setState({
+              activeChallengeUserData,
+              activeChallengeData: doc.data(),
+              // loading:false
+            });
+            setTimeout(() => {
+              // this.setState({ loading: false });
+              // if(!doc.data().newChallenge)
+              this.getCurrentPhaseInfo();
+            }, 500);
+          }
+        });
     } catch (err) {
       this.setState({ loading: false });
       console.log(err);
@@ -429,55 +521,55 @@ class CalendarHomeScreen extends React.PureComponent {
       /*
       if(this.stringDate != test){
         this.setState({loading :false})
-      } */if(this.stringDate >= test){
-        this.setState({loading :true})
+      } */if (this.stringDate >= test) {
+        this.setState({ loading: true })
       }
       // this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
       console.log("date=>", this.stringDate);
       //console.log(test);
       //TODO :getCurrent phase data
       this.phase = getCurrentPhase(
-          activeChallengeUserData.phases,
-          this.stringDate
+        activeChallengeUserData.phases,
+        this.stringDate
       );
 
       if (this.phase) {
         //TODO :fetch the current phase data from Challenges collection
         this.phaseData = activeChallengeData.phases.filter(
-            (res) => res.name === this.phase.name
+          (res) => res.name === this.phase.name
         )[0];
 
         //TODO :calculate the workout completed till selected date
         this.totalChallengeWorkoutsCompleted =
-            getTotalChallengeWorkoutsCompleted(
-                activeChallengeUserData,
-                this.stringDate
-            );
+          getTotalChallengeWorkoutsCompleted(
+            activeChallengeUserData,
+            this.stringDate
+          );
 
         //TODO calculate current challenge day
         this.currentChallengeDay = getCurrentChallengeDay(
-            activeChallengeUserData.startDate,
-            this.stringDate
+          activeChallengeUserData.startDate,
+          this.stringDate
         );
 
         //TODO getToday one recommended meal randomly
         getTodayRecommendedMeal(this.phaseData, activeChallengeData).then(
-            (res) => {
-              this.setState({
-                todayRecommendedMeal: res.recommendedMeal,
-                challengeMealsFilterList: res.challengeMealsFilterList,
-                loading: false,
-              });
-            }
+          (res) => {
+            this.setState({
+              todayRecommendedMeal: res.recommendedMeal,
+              challengeMealsFilterList: res.challengeMealsFilterList,
+              loading: false,
+            });
+          }
         );
 
         //TODO get recommended workout here
         const todayRcWorkout = (
-            await getTodayRecommendedWorkout(
-                activeChallengeData.workouts,
-                activeChallengeUserData,
-                this.stringDate
-            )
+          await getTodayRecommendedWorkout(
+            activeChallengeData.workouts,
+            activeChallengeUserData,
+            this.stringDate
+          )
         )[0];
         // console.log("TOfdayya",todayRcWorkout)
         if (todayRcWorkout) this.setState({ todayRcWorkout: todayRcWorkout });
@@ -492,21 +584,21 @@ class CalendarHomeScreen extends React.PureComponent {
     this.setState({ loading: true });
     const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
     await FileSystem.getInfoAsync(fileUri)
-        .then(async ({ exists }) => {
-          if (!exists) {
-            await FileSystem.downloadAsync(
-                recipeData.coverImage,
-                `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`
-            );
-            this.setState({ loading: false });
-          } else {
-            this.setState({ loading: false });
-          }
-        })
-        .catch(() => {
+      .then(async ({ exists }) => {
+        if (!exists) {
+          await FileSystem.downloadAsync(
+            recipeData.coverImage,
+            `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`
+          );
           this.setState({ loading: false });
-          Alert.alert("", "Image download error");
-        });
+        } else {
+          this.setState({ loading: false });
+        }
+      })
+      .catch(() => {
+        this.setState({ loading: false });
+        Alert.alert("", "Image download error");
+      });
     this.props.navigation.navigate("Recipe", {
       recipe: recipeData,
       backTitle: "challenge dashboard",
@@ -514,9 +606,12 @@ class CalendarHomeScreen extends React.PureComponent {
     });
   }
 
-  getToFilter(data) {
+  getToFilter(data, data1) {
+    const { challengeRecipe } = this.state
     this.props.navigation.navigate('FilterRecipe', {
+      challengeAllRecipe: challengeRecipe[0],
       recipes: data,
+      allRecipeData: data1
     })
   }
 
@@ -524,7 +619,6 @@ class CalendarHomeScreen extends React.PureComponent {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Linking.openURL(url);
   };
-  //-------**--------
 
   render() {
     const {
@@ -538,7 +632,8 @@ class CalendarHomeScreen extends React.PureComponent {
       todayRcWorkout,
       loadingExercises,
       skipped,
-      width
+      width,
+      AllRecipe,
     } = this.state;
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
@@ -546,364 +641,365 @@ class CalendarHomeScreen extends React.PureComponent {
       //check if selected date is between challenge start and end date
       // console.log("????,,,,",this.stringDate)
       const isBetween = moment(this.stringDate).isBetween(
-          activeChallengeUserData.startDate,
-          activeChallengeUserData.endDate,
-          undefined,
-          "[]"
+        activeChallengeUserData.startDate,
+        activeChallengeUserData.endDate,
+        undefined,
+        "[]"
       );
       if (this.calendarStrip.current) {
         if (
-            isBetween &&
-            todayRecommendedMeal &&
-            todayRecommendedMeal.length > 0
+          isBetween &&
+          todayRecommendedMeal &&
+          todayRecommendedMeal.length > 0
         )
-            //check if user has recommended meals
+          //check if user has recommended meals
           showRC = true;
         else showRC = false;
       }
     }
     const mealsList = showRC && (
-        <>
-          {/*<Text style={calendarStyles.headerText}>Today's Meals</Text>*/}
-          <Text style={{
-            fontFamily: fonts.bold,
-            fontSize: wp("6.5%"),
-            color: colors.charcoal.dark,
-            marginVertical: wp("4%"),
-            marginLeft: wp("8%"),
-            textAlign: "left",
-            width: '100%'
-          }}>Today's Meals</Text>
-          <TodayMealsList
-              data={todayRecommendedMeal[0]}
-              onPress={(res) => this.goToRecipe(res)}
-              filterPress={(res) => this.getToFilter(res)}
-          />
-        </>
+      <>
+        <Text style={{
+          fontFamily: fonts.bold,
+          fontSize: wp("6.5%"),
+          color: colors.charcoal.dark,
+          marginVertical: wp("4%"),
+          marginLeft: wp("8%"),
+          textAlign: "left",
+          width: '100%'
+        }}>Today's Meals</Text>
+        <TodayMealsList
+          recipe={AllRecipe[0]}
+          data={todayRecommendedMeal[0]}
+          onPress={(res) => this.goToRecipe(res)}
+          filterPress={(res, res1) => this.getToFilter(res, res1)}
+        />
+      </>
     );
     const workoutCard = todayRcWorkout && showRC && (
-        <>
-          <Text style={calendarStyles.headerText}>Today's Workout</Text>
-          <View style={calendarStyles.listContainer}>
-            <ChallengeWorkoutCard
-                onPress={() =>
-                    todayRcWorkout.name && todayRcWorkout.name !== "rest"
-                        ? this.loadExercises(todayRcWorkout, this.currentChallengeDay)
-                        : ""
-                }
-                res={todayRcWorkout}
-                currentDay={this.currentChallengeDay}
-                title={activeChallengeData.displayName}
-            />
-          </View>
-        </>
+      <>
+        <Text style={calendarStyles.headerText}>Today's Workout</Text>
+        <View style={calendarStyles.listContainer}>
+          <ChallengeWorkoutCard
+            onPress={() =>
+              todayRcWorkout.name && todayRcWorkout.name !== "rest"
+                ? this.loadExercises(todayRcWorkout, this.currentChallengeDay)
+                : ""
+            }
+            res={todayRcWorkout}
+            currentDay={this.currentChallengeDay}
+            title={activeChallengeData.displayName}
+          />
+        </View>
+      </>
     );
 
     const getPhase = (phaseData) => {
       return (phaseData.name.substring(0, 5)
-          + ' '
-          + phaseData.name.substring(5, phaseData.name.length)).charAt(0).toUpperCase()
-          + (phaseData.name.substring(0, 5)
+        + ' '
+        + phaseData.name.substring(5, phaseData.name.length)).charAt(0).toUpperCase()
+        + (phaseData.name.substring(0, 5)
           + ' '
           + phaseData.name.substring(5, phaseData.name.length)).slice(1);
     };
-    const onPress = () =>{
+    const onPress = () => {
       console.log("test")
     }
 
     const Progress = () => {
       return (
-          <>
-            <View
-              onLayout={e => {
-                const newWidth = e.nativeEvent.layout.width;
-                this.setState({ width: newWidth });
-              }}
-              style={{
-                height: 10,
-                backgroundColor: 'rgba(0,0,0,0.1)',
-                borderRadius: 10,
-                overflow: 'hidden'
-              }}>
-              <View style={{
-                height: 10,
-                width: (width * this.currentChallengeDay) / activeChallengeData.numberOfDays,
-                borderRadius: 10,
-                backgroundColor: colors.themeColor.color,
-                position: 'absolute',
-                left: 0,
-                top: 0
-              }}></View>
+        <>
+          <View
+            onLayout={e => {
+              const newWidth = e.nativeEvent.layout.width;
+              this.setState({ width: newWidth });
+            }}
+            style={{
+              height: 10,
+              backgroundColor: 'rgba(0,0,0,0.1)',
+              borderRadius: 10,
+              overflow: 'hidden'
+            }}>
+            <View style={{
+              height: 10,
+              width: (width * this.currentChallengeDay) / activeChallengeData.numberOfDays,
+              borderRadius: 10,
+              backgroundColor: colors.themeColor.color,
+              position: 'absolute',
+              left: 0,
+              top: 0
+            }}></View>
+          </View>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 15
+          }}>
+            <View style={{
+              borderRadius: 3,
+              backgroundColor: 'rgba(0,0,0,0.1)',
+              padding: 5,
+              borderBottomColor: 'rgba(0,0,0,0.1)',
+              borderBottomWidth: 2,
+            }}>
+              <Text style={{
+                fontFamily: fonts.bold,
+              }}>Day 1</Text>
             </View>
             <View style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: 15
+              borderRadius: 3,
+              backgroundColor: 'rgba(0,0,0,0.1)',
+              padding: 5,
+              borderBottomColor: 'rgba(0,0,0,0.1)',
+              borderBottomWidth: 2,
             }}>
-              <View style={{
-                borderRadius: 3,
-                backgroundColor: 'rgba(0,0,0,0.1)',
-                padding: 5,
-                borderBottomColor: 'rgba(0,0,0,0.1)',
-                borderBottomWidth: 2,
-              }}>
-                <Text style={{
-                  fontFamily: fonts.bold,
-                }}>Day 1</Text>
-              </View>
-              <View style={{
-                borderRadius: 3,
-                backgroundColor: 'rgba(0,0,0,0.1)',
-                padding: 5,
-                borderBottomColor: 'rgba(0,0,0,0.1)',
-                borderBottomWidth: 2,
-              }}>
-                <Text style={{
-                  fontFamily: fonts.bold
-                }}>Day {activeChallengeData.numberOfDays}</Text>
-              </View>
+              <Text style={{
+                fontFamily: fonts.bold
+              }}>Day {activeChallengeData.numberOfDays}</Text>
             </View>
+          </View>
+          <View style={{
+            flexDirection: 'row',
+            marginTop: 40
+          }}>
             <View style={{
-              flexDirection:'row',
-              marginTop: 40
+              backgroundColor: '#ffffff',
+              // width: 104,
+              borderRadius: 3,
+              borderBottomColor: 'rgba(0,0,0,0.1)',
+              borderBottomWidth: 1,
             }}>
-              <View style={{
-                backgroundColor: '#ffffff',
-                // width: 104,
-                borderRadius: 3,
-                borderBottomColor: 'rgba(0,0,0,0.1)',
-                borderBottomWidth: 1,
-              }}>
-                <Text style={{
-                  // fontSize: 18,
-                  fontFamily: fonts.bold
-                }}>
-                  Transform
-                </Text>
-              </View>
               <Text style={{
                 // fontSize: 18,
-                fontFamily: fonts.bold,
-                marginRight: 5,
-                marginLeft: 5
-              }}>{'>'}</Text>
-              <View style={{
-                backgroundColor: '#ffffff',
-                // width: 74,
-                borderRadius: 3,
-                borderBottomColor: 'rgba(0,0,0,0.1)',
-                borderBottomWidth: 1,
+                fontFamily: fonts.bold
               }}>
-                <Text style={{
-                  // fontSize: 18,
-                  fontFamily: fonts.bold
-                }}>
-                  {getPhase(this.phaseData)}
-                </Text>
-              </View>
+                Transform
+              </Text>
             </View>
+            <Text style={{
+              // fontSize: 18,
+              fontFamily: fonts.bold,
+              marginRight: 5,
+              marginLeft: 5
+            }}>{'>'}</Text>
             <View style={{
-              marginTop: hp("1%")
+              backgroundColor: '#ffffff',
+              // width: 74,
+              borderRadius: 3,
+              borderBottomColor: 'rgba(0,0,0,0.1)',
+              borderBottomWidth: 1,
             }}>
               <Text style={{
-                fontSize: 28,
+                // fontSize: 18,
                 fontFamily: fonts.bold
-              }}>{moment().format('dddd')}, {moment().format('MMMM')} {moment().day()}</Text>
+              }}>
+                {getPhase(this.phaseData)}
+              </Text>
             </View>
+          </View>
+          <View style={{
+            marginTop: hp("1%")
+          }}>
+            <Text style={{
+              fontSize: 28,
+              fontFamily: fonts.bold
+            }}>{moment().format('dddd')}, {moment().format('MMMM')} {moment().day()}</Text>
+          </View>
+          <View>
             <View>
-              <View>
-                <Icon name="glass" size={20} />
-              </View>
+              <Icon name="glass" size={20} />
             </View>
-              <View style={{marginTop: 20,flex: 1}}>
-              <TouchableOpacity phase={this.phase} onPress={() =>this.openLink(this.phase.pdfUrl)}>
+          </View>
+          <View style={{ marginTop: 20, flex: 1 }}>
+            <TouchableOpacity phase={this.phase} onPress={() => this.openLink(this.phase.pdfUrl)}>
 
-                <View style={{flex: 1}}>
-                <Icon 
-                name="file-text-o" 
-                size={20}/>
-                </View>
+              <View style={{ flex: 1 }}>
+                <Icon
+                  name="file-text-o"
+                  size={20} />
+              </View>
 
-                <View style={{marginTop: -20}}>
+              <View style={{ marginTop: -20 }}>
 
-                  <Text 
+                <Text
                   style=
                   {{
-                  fontSize: 15,
-                  fontFamily: fonts.bold,
-                  paddingLeft: 25,
-                  
+                    fontSize: 15,
+                    fontFamily: fonts.bold,
+                    paddingLeft: 25,
+
                   }}>
                   Phase guide doc
-                  </Text>
+                </Text>
+
+              </View>
+              <View style={{ marginTop: -20, }}>
+                <View style={{ paddingLeft: 20, alignItems: 'flex-end' }}>
+                  <Icon name="arrow-right" size={18} />
+                </View>
+              </View>
+              <View style={{ marginTop: 10 }}>
+                <View
+                  style=
+                  {{
+                    borderBottomColor: '#cccccc',
+                    borderBottomWidth: 1,
+                    width: '100%',
+                  }}
+                >
 
                 </View>
-                <View style={{marginTop: -20,}}>
-                  <View style={{paddingLeft: 20,alignItems:'flex-end'}}>
-                    <Icon name="arrow-right" size={18} />
-                  </View>
-                </View>
-                <View style={{marginTop: 10}}>
-                <View 
-                style=
-                {{
-                  borderBottomColor: '#cccccc',
-                  borderBottomWidth: 1,
-                  width:'100%',
-                  }}
-                 >
-                
-               </View>
-                </View>
-                </TouchableOpacity>
               </View>
-            <View elevation={5} style={{
-              position: 'absolute',
-              left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 11 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 12,
-              top: 29
-            }}>
-              <Svg
-                  id="prefix__Layer_1"
-                  viewBox="0 0 110 90"
-                  xmlSpace="preserve"
-                  width={hp("1.5%")}
-                  height={hp("1.5%")}
-                  fill={colors.themeColor.color}
-                  style={{
-                    strokeWidth: 50,
-                    stroke: colors.themeColor.color,
-                    strokeLinejoin: 'round',
-                    strokeLinecap: 'round',
-                    // shadowColor: '#171717',
-                    // shadowOffset: {width: 0, height: 0},
-                    // shadowOpacity: 0.2,
-                    // shadowRadius: 3,
-                  }}
-              >
-                <Path
-                    className="prefix__st0"
-                    d="M 55 46 L 87 90 L 22 90 z"
-                />
-              </Svg>
-            </View>
-            <View elevation={5} style={{
-              position: 'absolute',
-              left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7,
-              top: Platform.OS === "ios" ? 41 : 39,
-              backgroundColor: colors.themeColor.color,
-              width: 40,
-              height: 40,
-              justifyContent: 'center',
-              alignItems: 'center',
-              flex:1,
-              borderRadius: 8,
-              // shadowColor: '#171717',
-              // shadowOffset: {width: 0, height: 5},
-              // shadowOpacity: 0.2,
-              // shadowRadius: 3,
-            }}>
-              <Text style={{
-                fontFamily: fonts.GothamMedium,
-                fontSize: 25
-              }}>{this.currentChallengeDay}</Text>
-            </View>
-          </>
-    )};
+            </TouchableOpacity>
+          </View>
+          <View elevation={5} style={{
+            position: 'absolute',
+            left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 11 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 12,
+            top: 29
+          }}>
+            <Svg
+              id="prefix__Layer_1"
+              viewBox="0 0 110 90"
+              xmlSpace="preserve"
+              width={hp("1.5%")}
+              height={hp("1.5%")}
+              fill={colors.themeColor.color}
+              style={{
+                strokeWidth: 50,
+                stroke: colors.themeColor.color,
+                strokeLinejoin: 'round',
+                strokeLinecap: 'round',
+                // shadowColor: '#171717',
+                // shadowOffset: {width: 0, height: 0},
+                // shadowOpacity: 0.2,
+                // shadowRadius: 3,
+              }}
+            >
+              <Path
+                className="prefix__st0"
+                d="M 55 46 L 87 90 L 22 90 z"
+              />
+            </Svg>
+          </View>
+          <View elevation={5} style={{
+            position: 'absolute',
+            left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7,
+            top: Platform.OS === "ios" ? 41 : 39,
+            backgroundColor: colors.themeColor.color,
+            width: 40,
+            height: 40,
+            justifyContent: 'center',
+            alignItems: 'center',
+            flex: 1,
+            borderRadius: 8,
+            // shadowColor: '#171717',
+            // shadowOffset: {width: 0, height: 5},
+            // shadowOpacity: 0.2,
+            // shadowRadius: 3,
+          }}>
+            <Text style={{
+              fontFamily: fonts.GothamMedium,
+              fontSize: 25
+            }}>{this.currentChallengeDay}</Text>
+          </View>
+        </>
+      )
+    };
 
     const dayDisplay = (
-        <ScrollView
-            contentContainerStyle={calendarStyles.dayDisplayContainer}
-            scrollEnabled={!this.state.isSwiping}
-            showsVerticalScrollIndicator={false}
-        >
-          {this.phaseData && showRC && (
-              <>
-                <View style={{
-                  paddingVertical: 20,
-                  width: Dimensions.get("window").width,
-                  paddingHorizontal: 20
-                }}>
-                  <Progress />
-                </View>
-                {/*<ChallengeProgressCard2*/}
-                {/*    phase={this.phase}*/}
-                {/*    phaseData={this.phaseData}*/}
-                {/*    activeChallengeData={activeChallengeData}*/}
-                {/*    activeChallengeUserData={activeChallengeUserData}*/}
-                {/*    totalChallengeWorkoutsCompleted={*/}
-                {/*      this.totalChallengeWorkoutsCompleted*/}
-                {/*    }*/}
-                {/*    openLink={() => this.openLink(this.phaseData.pdfUrl)}*/}
-                {/*    currentDay={this.currentChallengeDay}*/}
-                {/*/>*/}
-              </>
-          )}
-          {workoutCard}
-          {mealsList}
-        </ScrollView>
+      <ScrollView
+        contentContainerStyle={calendarStyles.dayDisplayContainer}
+        scrollEnabled={!this.state.isSwiping}
+        showsVerticalScrollIndicator={false}
+      >
+        {this.phaseData && showRC && (
+          <>
+            <View style={{
+              paddingVertical: 20,
+              width: Dimensions.get("window").width,
+              paddingHorizontal: 20
+            }}>
+              <Progress />
+            </View>
+            {/*<ChallengeProgressCard2*/}
+            {/*    phase={this.phase}*/}
+            {/*    phaseData={this.phaseData}*/}
+            {/*    activeChallengeData={activeChallengeData}*/}
+            {/*    activeChallengeUserData={activeChallengeUserData}*/}
+            {/*    totalChallengeWorkoutsCompleted={*/}
+            {/*      this.totalChallengeWorkoutsCompleted*/}
+            {/*    }*/}
+            {/*    openLink={() => this.openLink(this.phaseData.pdfUrl)}*/}
+            {/*    currentDay={this.currentChallengeDay}*/}
+            {/*/>*/}
+          </>
+        )}
+        {workoutCard}
+        {mealsList}
+      </ScrollView>
     );
 
     const setting = (
-        <Modal
-            isVisible={this.state.isSettingVisible}
-            coverScreen={true}
-            style={{ margin: 0 }}
-            animationIn="fadeInLeft"
-            animationOut="fadeOutLeft"
-            onBackdropPress={() => this.toggleSetting()}
-            // useNativeDriver={true}
-        >
-          <ChallengeSetting
-              onToggle={() => this.toggleSetting()}
-              activeChallengeUserData={activeChallengeUserData}
-              activeChallengeData={activeChallengeData}
-              isSchedule={isSchedule}
-              ScheduleData={ScheduleData}
-              navigation={this.props.navigation}
-              fetchCalendarEntries={this.fetchCalendarEntries}
-              resetActiveChallengeUserData={this.resetActiveChallengeUserData}
-              navigation={this.props.navigation}
-          />
-        </Modal>
+      <Modal
+        isVisible={this.state.isSettingVisible}
+        coverScreen={true}
+        style={{ margin: 0 }}
+        animationIn="fadeInLeft"
+        animationOut="fadeOutLeft"
+        onBackdropPress={() => this.toggleSetting()}
+      // useNativeDriver={true}
+      >
+        <ChallengeSetting
+          onToggle={() => this.toggleSetting()}
+          activeChallengeUserData={activeChallengeUserData}
+          activeChallengeData={activeChallengeData}
+          isSchedule={isSchedule}
+          ScheduleData={ScheduleData}
+          navigation={this.props.navigation}
+          fetchCalendarEntries={this.fetchCalendarEntries}
+          resetActiveChallengeUserData={this.resetActiveChallengeUserData}
+          navigation={this.props.navigation}
+        />
+      </Modal>
     );
     return (
-        <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
-          <CustomCalendarStrip
-              ref1={this.calendarStrip}
-              onDateSelected={(date) => {
-                this.handleDateSelected(date);
-              }}
-              CalendarSelectedDate={CalendarSelectedDate}
-          />
+      <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
+        <CustomCalendarStrip
+          ref1={this.calendarStrip}
+          onDateSelected={(date) => {
+            this.handleDateSelected(date);
+          }}
+          CalendarSelectedDate={CalendarSelectedDate}
+        />
 
-          {isSchedule && !showRC && !loading && (
-              <View style={{ margin: wp("5%") }}>
-                <Text style={calendarStyles.scheduleTitleStyle}>
-                  {ScheduleData.displayName}
-                </Text>
-                <Text style={calendarStyles.scheduleTextStyle}>
-                  Your challenge will start from{" "}
-                  {moment(ScheduleData.startDate).format("DD MMM YYYY")}
-                </Text>
-                <Text style={calendarStyles.scheduleTextStyle}>
-                  You can change this in settings
-                </Text>
-              </View>
-          )}
-          {skipped && (
-              <OnBoardingNotification
-                  navigation={this.props.navigation}
-                  data={activeChallengeUserData}
-              />
-          )}
-          {dayDisplay}
-          {setting}
-          <Loader
-              loading={loading || loadingExercises}
-              color={colors.red.standard}
-              text={loadingExercises ? "Please wait we are loading workout" : null}
+        {isSchedule && !showRC && !loading && (
+          <View style={{ margin: wp("5%") }}>
+            <Text style={calendarStyles.scheduleTitleStyle}>
+              {ScheduleData.displayName}
+            </Text>
+            <Text style={calendarStyles.scheduleTextStyle}>
+              Your challenge will start from{" "}
+              {moment(ScheduleData.startDate).format("DD MMM YYYY")}
+            </Text>
+            <Text style={calendarStyles.scheduleTextStyle}>
+              You can change this in settings
+            </Text>
+          </View>
+        )}
+        {skipped && (
+          <OnBoardingNotification
+            navigation={this.props.navigation}
+            data={activeChallengeUserData}
           />
-        </View>
+        )}
+        {dayDisplay}
+        {setting}
+        <Loader
+          loading={loading || loadingExercises}
+          color={colors.red.standard}
+          text={loadingExercises ? "Please wait we are loading workout" : null}
+        />
+      </View>
     );
   }
 }
