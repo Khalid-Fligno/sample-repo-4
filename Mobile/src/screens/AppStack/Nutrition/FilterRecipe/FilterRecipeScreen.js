@@ -41,6 +41,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             phase1: false,
             phase2: false,
             phase3: false,
+            title: undefined,
             data: [],
             allData: [],
             challengeRecipe: [],
@@ -55,6 +56,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             data: this.props.navigation.getParam("allRecipeData", null),
             allData: this.props.navigation.getParam("recipes", null),
             recipes: this.props.navigation.getParam("recipes", null),
+            title: this.props.navigation.getParam("title", null),
             loading: false
         });
     }
@@ -409,7 +411,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
     keyExtractor = (index) => String(index);
 
     render() {
-        const { recipes, loading, data, allData, challengeRecipe, levelButtonData } = this.state
+        const { recipes, loading, data, allData, challengeRecipe, levelButtonData, title } = this.state
 
         const tagList = []
 
@@ -437,7 +439,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                             isBackButton={true}
                             customContainerStyle={{ bottom: 25 }}
                         />
-                        <Text style={{ bottom: 60, fontSize: 30, fontFamily: fonts.bold }}>Breakfast</Text>
+                        <Text style={{ bottom: 60, fontSize: 30, fontFamily: fonts.bold }}>{title}</Text>
                     </View>
 
                     {/* Filter Button */}

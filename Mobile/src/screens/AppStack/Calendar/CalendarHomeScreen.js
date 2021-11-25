@@ -155,42 +155,34 @@ class CalendarHomeScreen extends React.PureComponent {
   fetchRecipe = async () => {
     this.setState({ loading: true });
 
-    const { challengeMealsFilterList } = this.state
-
     this.unsubscribe = await db
       .collection("recipes")
-      .onSnapshot(async (querySnapshot) => {
-        const recipes = [];
-        await querySnapshot.forEach(async (doc) => {
-          
-          if (doc.data().active) {
-            if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
-              if (challengeMealsFilterList.includes(doc.data().id))
-                await recipes.push(await doc.data())
-            } else {
-              await recipes.push(await doc.data());
-            }
-          }
-        })
+      .get()
+      .then(querySnapshot => {
+        const breakfastActive = []
+        const lunchActive = []
+        const dinnerActive = []
+        const snackActive = []
+        const drinkActive = [] 
 
-        const breakfastList = sortBy(recipes).filter((res) => res.breakfast)
-        const snackList = sortBy(recipes).filter((res) => res.lunch)
-        const lunchList = sortBy(recipes).filter((res) => res.dinner)
-        const dinnerList = sortBy(recipes).filter((res) => res.snack)
-        const drinkList = sortBy(recipes).filter((res) => res.drink)
+        const documents = querySnapshot.docs.map(doc => doc.data())
+        documents.filter((res) => res.breakfast === true? breakfastActive.push(res) : null)
+        documents.filter((res) => res.lunch === true? lunchActive.push(res) : null)
+        documents.filter((res) => res.dinner === true? dinnerActive.push(res) : null)
+        documents.filter((res) => res.snack === true? snackActive.push(res) : null)
+        documents.filter((res) => res.drink === true? drinkActive.push(res) : null)
 
         const recommendedMeal = [{
-          breakfast: breakfastList,
-          snack: snackList,
-          lunch: lunchList,
-          dinner: dinnerList,
-          drink: drinkList
+          breakfast: breakfastActive,
+          snack: snackActive,
+          lunch: lunchActive,
+          dinner: dinnerActive,
+          drink: drinkActive
         }]
 
         this.setState({
           AllRecipe: recommendedMeal
         })
-
       })
   }
 
@@ -606,11 +598,15 @@ class CalendarHomeScreen extends React.PureComponent {
     });
   }
 
-  getToFilter(data, data1) {
+  getToFilter(data, data1, title) {
     const { challengeRecipe } = this.state
+
+    console.log('Title: ', title)
+
     this.props.navigation.navigate('FilterRecipe', {
       challengeAllRecipe: challengeRecipe[0],
       recipes: data,
+      title: title,
       allRecipeData: data1
     })
   }
@@ -672,7 +668,7 @@ class CalendarHomeScreen extends React.PureComponent {
           recipe={AllRecipe[0]}
           data={todayRecommendedMeal[0]}
           onPress={(res) => this.goToRecipe(res)}
-          filterPress={(res, res1) => this.getToFilter(res, res1)}
+          filterPress={(res, res1, title) => this.getToFilter(res, res1, title)}
         />
       </>
     );

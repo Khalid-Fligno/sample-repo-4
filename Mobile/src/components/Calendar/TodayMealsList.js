@@ -83,7 +83,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1)}
+            onPress={() => this.props.filterPress(data, data1, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -156,7 +156,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1)}
+            onPress={() => this.props.filterPress(data, data1, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -229,7 +229,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1)}
+            onPress={() => this.props.filterPress(data, data1, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -302,7 +302,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1)}
+            onPress={() => this.props.filterPress(data, data1, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -375,7 +375,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1)}
+            onPress={() => this.props.filterPress(data, data1, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -389,6 +389,8 @@ class TodayMealsList extends Component {
 
   render() {
     const { recipeData, allRecipeData } = this.state
+
+    // console.log('allRecipeData.breakfast', allRecipeData.lunch)
     
     return (
       <View style={styles.container}>
