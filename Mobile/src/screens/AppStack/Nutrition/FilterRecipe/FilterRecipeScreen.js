@@ -127,6 +127,30 @@ export default class FilterRecipeScreen extends React.PureComponent {
         })
     }
 
+    closeModal= () =>{
+        this.setState({isFilterVisible: false})
+    }
+
+    checkedBox = () => {
+        this.setState({veganChecked: !this.state.veganChecked})
+    }
+    checkVegetarian =() =>{
+        this.setState({vegetarianChecked: !this.state.vegetarianChecked})
+
+    }
+
+    checkGluta = () =>{
+        this.setState({glutaFree: !this.state.glutaFree})
+    }
+
+    checkDairy = () =>{
+        this.setState({dairyFree: !this.state.dairyFree})
+    }
+
+    checkGut = () =>{
+        this.setState({gutHealth: !this.state.gutHealth})
+    }
+
     applyButton = (phases, datas, recipes) => {
         // datas all recipe
 
@@ -258,8 +282,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         this.setState({
             allData: Array.isArray(recipeLists) && recipeLists.length > 0 ? recipeLists : recipes,
-            isFilterVisible: !this.state.isFilterVisible,
-            isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible
+            isFilterVisible: false,
+            isClickVisible: false
         })
     }
 
@@ -345,8 +369,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         return (
             <Modal
-                isVisible={this.state.isClickVisible}
-                // isVisible={this.state.isFilterVisible ? this.state.isClickVisible : this.state.isClickVisible}
+                //isVisible={this.state.isClickVisible}
+                 isVisible={this.state.isFilterVisible ? this.state.isClickVisible : this.state.isClickVisible}
                 coverScreen={true}
                 style={{ margin: 0, justifyContent: 'flex-end' }}
                 animationIn="fadeInRightBig"
@@ -370,11 +394,11 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
     filterModal = (challengeRecipeData) => {
-        
+        console.log(this.state.isClickVisible);
         return (
             <Modal
-                // isVisible={this.state.isClickVisible ? !this.state.isFilterVisible : this.state.isFilterVisible}
-                isVisible={this.state.isFilterVisible}
+                 isVisible={this.state.isClickVisible ? !this.state.isFilterVisible : this.state.isFilterVisible}
+                //isVisible={this.state.isFilterVisible}
                 coverScreen={true}
                 style={{ margin: 0, justifyContent: 'flex-end' }}
                 animationIn="fadeInUpBig"
@@ -410,6 +434,12 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     toggleGlutaFree={() => this.toggleGlutaFree()}
                     toggleDairyFree={() => this.toggleDairyFree()}
                     toggleGutHealth={() => this.toggleGutHealth()}
+                    closeModal={() => this.closeModal()}
+                    checkedBox={() =>this.checkedBox()}
+                    checkVegetarian={() =>this.checkVegetarian()}
+                    checkGluta={()=> this.checkGluta()}
+                    checkDairy={()  => this.checkDairy()}
+                    checkGut={() =>this.checkGut()}
                 />
             </Modal>
         )
