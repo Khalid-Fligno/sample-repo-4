@@ -6,6 +6,7 @@ import {
     Dimensions,
     SafeAreaView,
     Text,
+    Platform
 } from "react-native";
 import CheckBox from '@react-native-community/checkbox';
 import colors from "../../../../styles/colors";
@@ -29,7 +30,7 @@ export default class PhaseModal extends React.PureComponent {
 
         return (
             <SafeAreaView style={{ backgroundColor: 'white', paddingHorizontal: 20 }}>
-                <View>
+                <View style={{paddingLeft: Platform.OS === 'ios' ? 10 : 0, paddingRight: Platform.OS === 'ios' ? 10 : 0}}>
                     <TouchableOpacity
                         style={styles.closeContainer}
                         onPress={this.props.headerButton}

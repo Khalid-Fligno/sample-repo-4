@@ -345,7 +345,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         return (
             <Modal
-                isVisible={this.state.isFilterVisible ? this.state.isClickVisible : this.state.isClickVisible}
+                isVisible={this.state.isClickVisible}
+                // isVisible={this.state.isFilterVisible ? this.state.isClickVisible : this.state.isClickVisible}
                 coverScreen={true}
                 style={{ margin: 0, justifyContent: 'flex-end' }}
                 animationIn="fadeInRightBig"
@@ -361,7 +362,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     togglePhase3={() => this.togglePhase3()}
                     applyButton={() => this.applyButton(phase, data, recipes)}
                     headerButton={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
-                    backButton={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
+                    backButton={() => this.setState({isFilterVisible: true, isClickVisible: false })}
+                    // backButton={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
                 />
             </Modal>
         )
@@ -371,7 +373,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
         
         return (
             <Modal
-                isVisible={this.state.isClickVisible ? !this.state.isFilterVisible : this.state.isFilterVisible}
+                // isVisible={this.state.isClickVisible ? !this.state.isFilterVisible : this.state.isFilterVisible}
+                isVisible={this.state.isFilterVisible}
                 coverScreen={true}
                 style={{ margin: 0, justifyContent: 'flex-end' }}
                 animationIn="fadeInUpBig"
@@ -380,15 +383,21 @@ export default class FilterRecipeScreen extends React.PureComponent {
             >
                 <LevelModal
                     onPressLevel1={() => this.setState({
-                        isClickVisible: !this.state.isClickVisible,
+                        // isClickVisible: !this.state.isClickVisible,
+                        isFilterVisible: false,
+                        isClickVisible: true,
                         levelButtonData: challengeRecipeData.level1
                     })}
                     onPressLevel2={() => this.setState({
-                        isClickVisible: !this.state.isClickVisible,
+                        // isClickVisible: !this.state.isClickVisible,
+                        isFilterVisible: false,
+                        isClickVisible: true,
                         levelButtonData: challengeRecipeData.level2
                     })}
                     onPressLevel3={() => this.setState({
-                        isClickVisible: !this.state.isClickVisible,
+                        // isClickVisible: !this.state.isClickVisible,
+                        isFilterVisible: false,
+                        isClickVisible: true,
                         levelButtonData: challengeRecipeData.level3
                     })}
                     veganChecked={this.state.veganChecked}
@@ -431,6 +440,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     {/* BigHeadText */}
                     <View>
                         <BigHeadingWithBackButton
+                            isBigTitle={true}
                             isBackButton={true}
                             onPress={this.handleBack}
                             backButtonText="Back to Workout"
@@ -523,8 +533,18 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         removeClippedSubviews={false}
                     />
                 )}
-                {this.filterModal(challengeRecipe)}
-                {this.clickModal(phaseData, data, recipes)}
+                {
+                    this.state.isFilterVisible && (
+                        this.filterModal(challengeRecipe)
+                    )
+                }
+                {
+                    this.state.isClickVisible && (
+                        this.clickModal(phaseData, data, recipes)
+                    )
+                }
+                {/*{this.filterModal(challengeRecipe)}*/}
+                {/*{this.clickModal(phaseData, data, recipes)}*/}
             </View>
         );
     }
