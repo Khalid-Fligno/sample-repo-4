@@ -6,6 +6,7 @@ import {
     Dimensions,
     SafeAreaView,
     Text,
+    Platform,
 } from "react-native";
 import CheckBox from '@react-native-community/checkbox';
 import colors from "../../../../styles/colors";
@@ -27,13 +28,12 @@ export default class LevelModal extends React.PureComponent {
     }
 
     render() {
-        
         return (
             <SafeAreaView style={{ backgroundColor: 'white', }}>
                 <View style={{ paddingLeft: 10 }}>
                     <TouchableOpacity
                         style={styles.closeContainer}
-                        onPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
+                        onPress={this.props.closeModal}
                     >
                         <View>
                             <Text></Text>
@@ -41,6 +41,8 @@ export default class LevelModal extends React.PureComponent {
                     </TouchableOpacity>
                     <View style={{ marginTop: 10, marginRight: 10, }}>
                         <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter recipes to</Text>
+
+                        <TouchableOpacity onPress={this.props.checkedBox}>
                         <View style={styles.tagContainer}>
                             <View style={styles.tagContainer1}>
                                 <View style={{
@@ -63,12 +65,25 @@ export default class LevelModal extends React.PureComponent {
                                 </View>
                                 <Text style={{ marginTop: 3, fontSize: 15 }}>Vegan</Text>
                             </View>
-                            <CheckBox
+                            {Platform.OS =='ios' ? 
+                            (<CheckBox
+                                boxType='square'
+                                value={this.props.veganChecked}
+                            />
+                            ):(
+                                <CheckBox
                                 boxType='square'
                                 value={this.props.veganChecked}
                                 onValueChange={this.props.toggleVegan}
                             />
+                            )}
+                            
                         </View>
+                        </TouchableOpacity>
+                        <View> 
+                            
+                        </View>
+                        <TouchableOpacity onPress={this.props.checkVegetarian}>
                         <View style={styles.tagContainer}>
                             <View style={styles.tagContainer1}>
                                 <View style={{
@@ -91,12 +106,22 @@ export default class LevelModal extends React.PureComponent {
                                 </View>
                                 <Text style={{ marginTop: 3, fontSize: 15 }}>Vegetarian</Text>
                             </View>
-                            <CheckBox
+                            {Platform.OS =='ios' ? 
+                            (<CheckBox
+                                boxType='square'
+                                value={this.props.vegetarianChecked}
+                            />
+                            ):(
+                                <CheckBox
                                 boxType='square'
                                 value={this.props.vegetarianChecked}
                                 onValueChange={this.props.toggleVegetarian}
                             />
+                            )}
+
                         </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={this.props.checkGluta}>
                         <View style={styles.tagContainer}>
                             <View style={styles.tagContainer1}>
                                 <View style={{
@@ -119,12 +144,22 @@ export default class LevelModal extends React.PureComponent {
                                 </View>
                                 <Text style={{ marginTop: 3, fontSize: 15 }}>Gluta-Free</Text>
                             </View>
-                            <CheckBox
+                            {Platform.OS =='ios' ? 
+                            (<CheckBox
                                 boxType='square'
                                 value={this.props.glutaFreeChecked}
-                                onValueChange={this.props.toggleGlutaFree}
                             />
+                            ):(
+                                <CheckBox
+                                boxType='square'
+                                value={this.props.glutaFreeChecked}
+                                onChange={this.props.toggleGlutaFree}
+                            />
+                            )}
+
                         </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={this.props.checkDairy}>
                         <View style={styles.tagContainer}>
                             <View style={styles.tagContainer1}>
                                 <View style={{
@@ -147,12 +182,22 @@ export default class LevelModal extends React.PureComponent {
                                 </View>
                                 <Text style={{ marginTop: 3, fontSize: 15 }}>Dairy-Free</Text>
                             </View>
-                            <CheckBox
+                            {Platform.OS =='ios' ? 
+                            (<CheckBox
+                                boxType='square'
+                                value={this.props.dairyFreeChecked}
+                            />
+                            ):(
+                                <CheckBox
                                 boxType='square'
                                 value={this.props.dairyFreeChecked}
                                 onValueChange={this.props.toggleDairyFree}
                             />
+                            )}
+
                         </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={this.props.checkGut}>
                         <View style={styles.tagContainer}>
                             <View style={styles.tagContainer1}>
                                 <View style={{
@@ -175,38 +220,51 @@ export default class LevelModal extends React.PureComponent {
                                 </View>
                                 <Text style={{ marginTop: 3, fontSize: 15 }}>Gut Health</Text>
                             </View>
-                            <CheckBox
+                            {Platform.OS =='ios' ? 
+                            (<CheckBox
+                                boxType='square'
+                                value={this.props.gutHealthChecked}
+                            />
+                            ):(
+                                <CheckBox
                                 boxType='square'
                                 value={this.props.gutHealthChecked}
                                 onValueChange={this.props.toggleGutHealth}
                             />
+                            )}
+
                         </View>
+                        </TouchableOpacity>
                         <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select transform level</Text>
-                        <View style={styles.tagContainer}>
-                            <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 1</Text>
-                            <TouchableOpacity
+                        <TouchableOpacity
                                 onPress={this.props.onPressLevel1}
                                 // onPress={() => console.log('levelBUttonData: ', challengeRecipeData.level1)}
                             >
-                                <Icon name="chevron-right" size={12} color={colors.black} />
-                            </TouchableOpacity>
-                        </View>
+
                         <View style={styles.tagContainer}>
-                            <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 2</Text>
-                            <TouchableOpacity
+                            <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 1</Text>
+                                <Icon name="chevron-right" size={12} color={colors.black} />
+                        </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
                                 onPress={this.props.onPressLevel2}
                             >
-                                <Icon name="chevron-right" size={12} color={colors.black} />
-                            </TouchableOpacity>
-                        </View>
+
                         <View style={styles.tagContainer}>
-                            <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 3</Text>
-                            <TouchableOpacity
+                            <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 2</Text>
+                                <Icon name="chevron-right" size={12} color={colors.black} />
+                        </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
                                 onPress={this.props.onPressLevel3}
                             >
+
+                        <View style={styles.tagContainer}>
+                            <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 3</Text>
                                 <Icon name="chevron-right" size={12} color={colors.black} />
-                            </TouchableOpacity>
                         </View>
+                        </TouchableOpacity>
+
                         <View style={{ marginVertical: 20 }}>
                             <TouchableOpacity style={styles.button}>
                                 <Text style={{ color: 'white' }}>Apply</Text>
@@ -287,6 +345,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginTop: 2,
     },
+
     tagContainer1: {
         flexDirection: 'row',
     },
