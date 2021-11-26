@@ -265,8 +265,8 @@ export default class LevelModal extends React.PureComponent {
                         </View>
                         </TouchableOpacity>
 
-                        <View style={{ marginVertical: 20 }}>
-                            <TouchableOpacity style={styles.button}>
+                        <View style={{ marginVertical: 20 ,opacity: 0.7}}>
+                            <TouchableOpacity  disabled={false} style={styles.button}>
                                 <Text style={{ color: 'white',padding: 5,fontSize: 15 }}>Apply</Text>
                             </TouchableOpacity>
                         </View>
@@ -368,6 +368,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
         height: 50,
+        
     }
 
 })

@@ -132,6 +132,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
     closeModal= () =>{
         this.setState({isFilterVisible: false})
     }
+    closePhaseModal = () =>{
+        this.setState({isClickVisible: false})
+    }
 
     checkedBox = () => {
         this.setState({veganChecked: !this.state.veganChecked})
@@ -152,6 +155,34 @@ export default class FilterRecipeScreen extends React.PureComponent {
     checkGut = () =>{
         this.setState({gutHealth: !this.state.gutHealth})
     }
+    filterOnBackdrop = () =>{
+        this.setState({ isFilterVisible: !this.state.isFilterVisible })
+        this.setState({ veganChecked: false})
+        this.setState({vegetarianChecked: false})
+        this.setState({glutaFree: false})
+        this.setState({dairyFree: false})
+        this.setState({gutHealth: false})
+        this.setState({phase1: false})
+        this.setState({phase2: false})
+        this.setState({phase3: false})
+
+    }
+
+    phaseOnBackdrop = () =>{
+        this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: false })
+        this.setState({phase1: false})
+        this.setState({phase2: false})
+        this.setState({phase3: false})
+        this.setState({ veganChecked: false})
+        this.setState({vegetarianChecked: false})
+        this.setState({glutaFree: false})
+        this.setState({dairyFree: false})
+        this.setState({gutHealth: false})
+
+
+
+    }
+
 
     applyButton = (phases, datas, recipes) => {
         // datas all recipe
@@ -377,7 +408,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 style={{ margin: 0, justifyContent: 'flex-end' }}
                 animationIn="fadeInRightBig"
                 animationOut="fadeOutDownBig"
-                onBackdropPress={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: false })}
+                onBackdropPress={this.phaseOnBackdrop}
             >
                 <PhaseModal
                     phase1={this.state.phase1}
@@ -390,6 +421,10 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     headerButton={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
                     backButton={() => this.setState({isFilterVisible: true, isClickVisible: false })}
                     // backButton={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
+                    closePhaseModal={() => this.closePhaseModal()}
+
+                    
+
                 />
             </Modal>
         )
@@ -405,7 +440,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 style={{ margin: 0, justifyContent: 'flex-end' }}
                 animationIn="fadeInUpBig"
                 animationOut="fadeOutDownBig"
-                onBackdropPress={() => this.setState({ isFilterVisible: !this.state.isFilterVisible })}
+                onBackdropPress={this.filterOnBackdrop}
             >
                 <LevelModal
                     onPressLevel1={() => this.setState({
