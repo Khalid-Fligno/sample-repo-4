@@ -76,7 +76,7 @@ export default class PhaseModal extends React.PureComponent {
                             style={styles.button}
                             onPress={this.props.applyButton}
                         >
-                            <Text style={{ color: 'white' }}>Apply</Text>
+                            <Text style={{ color: 'white',padding: 5 , fontSize: 15}}>Apply</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -172,6 +172,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: '#4d4c4c',
         padding: 10,
+        borderRadius: 10,
+        height: 50,
+
     }
 
 })
