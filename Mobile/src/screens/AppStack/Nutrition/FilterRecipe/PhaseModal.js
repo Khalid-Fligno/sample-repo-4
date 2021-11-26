@@ -29,16 +29,19 @@ export default class PhaseModal extends React.PureComponent {
     render() {
 
         return (
-            <SafeAreaView style={{ backgroundColor: 'white', paddingHorizontal: 20 }}>
+            <SafeAreaView style={{ backgroundColor: 'white', padding: 10 }}>
                 <View style={{paddingLeft: Platform.OS === 'ios' ? 10 : 0, paddingRight: Platform.OS === 'ios' ? 10 : 0}}>
+                    <View>
                     <TouchableOpacity
                         style={styles.closeContainer}
-                        onPress={this.props.headerButton}
+                        onPress={this.props.closePhaseModal}
                     >
                         <View>
                             <Text></Text>
                         </View>
                     </TouchableOpacity>
+                    </View>
+
                     <TouchableOpacity
                         style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}
                         onPress={this.props.backButton}
@@ -47,30 +50,64 @@ export default class PhaseModal extends React.PureComponent {
                         <Text style={{ fontSize: 15 }}>Back</Text>
                     </TouchableOpacity>
                     <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginVertical: 20, fontWeight: 'bold', fontSize: 20 }}>Select Phase</Text>
+                    <TouchableOpacity onPress={this.props.togglePhase1}>
                     <View style={styles.tagContainer}>
                         <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 1</Text>
+                        {Platform.OS == 'ios' ?(
                         <CheckBox
+                        boxType='square'
+                        value={this.props.phase1}
+                    />
+
+                        ):(
+                            <CheckBox
                             boxType='square'
                             value={this.props.phase1}
                             onValueChange={this.props.togglePhase1}
                         />
+
+                        )} 
                     </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.props.togglePhase2}>
                     <View style={styles.tagContainer}>
                         <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 2</Text>
+                        {Platform.OS == 'ios' ?(
                         <CheckBox
+                        boxType='square'
+                        value={this.props.phase2}
+                    />
+
+                        ):(
+                            <CheckBox
                             boxType='square'
                             value={this.props.phase2}
                             onValueChange={this.props.togglePhase2}
                         />
+
+                        )} 
+
                     </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.props.togglePhase3}>
                     <View style={styles.tagContainer}>
                         <Text style={{ marginBottom: 10, fontSize: 15 }}>Phase 3</Text>
+                        {Platform.OS == 'ios' ?(
                         <CheckBox
+                        boxType='square'
+                        value={this.props.phase3}
+                    />
+
+                        ):(
+                            <CheckBox
                             boxType='square'
                             value={this.props.phase3}
                             onValueChange={this.props.togglePhase3}
                         />
+
+                        )} 
                     </View>
+                    </TouchableOpacity>
                     <View style={{ marginVertical: 20 }}>
                         <TouchableOpacity
                             style={styles.button}
@@ -145,6 +182,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderRadius: 50,
         height: 5,
+        width: 30,
     },
     tagContainer: {
         display: 'flex',
@@ -152,6 +190,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginTop: 2,
+        paddingBottom: 10,
     },
     tagContainer1: {
         flexDirection: 'row',
