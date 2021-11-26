@@ -127,6 +127,7 @@ export default class HomeScreenV2 extends React.PureComponent {
                             titleCapitalise={true}
                             Title='Explore a challenge'
                             customBtnStyle={styles.oblongBtnStyle}
+                            onPress={() => this.props.navigation.navigate("Calendar")}
                             // style={styles.oblongBtnStyle}
                             // isRightIcon={true}
                             // customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}
