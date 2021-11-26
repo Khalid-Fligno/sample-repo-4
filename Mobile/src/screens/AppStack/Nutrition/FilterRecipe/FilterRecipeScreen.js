@@ -372,12 +372,12 @@ export default class FilterRecipeScreen extends React.PureComponent {
         return (
             <Modal
                 //isVisible={this.state.isClickVisible}
-                 isVisible={this.state.isFilterVisible ? this.state.isClickVisible : this.state.isClickVisible}
+                isVisible={this.state.isFilterVisible ? this.state.isClickVisible : this.state.isClickVisible}
                 coverScreen={true}
                 style={{ margin: 0, justifyContent: 'flex-end' }}
                 animationIn="fadeInRightBig"
                 animationOut="fadeOutDownBig"
-                onBackdropPress={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
+                onBackdropPress={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: false })}
             >
                 <PhaseModal
                     phase1={this.state.phase1}

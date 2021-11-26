@@ -29,7 +29,7 @@ export default class LevelModal extends React.PureComponent {
 
     render() {
         return (
-            <SafeAreaView style={{ backgroundColor: 'white', }}>
+            <SafeAreaView style={{ backgroundColor: 'white',borderTopLeftRadius: 15,borderTopRightRadius: 15 }}>
                 <View style={{ paddingLeft: 10 }}>
                     <TouchableOpacity
                         style={styles.closeContainer}
@@ -267,7 +267,7 @@ export default class LevelModal extends React.PureComponent {
 
                         <View style={{ marginVertical: 20 }}>
                             <TouchableOpacity style={styles.button}>
-                                <Text style={{ color: 'white' }}>Apply</Text>
+                                <Text style={{ color: 'white',padding: 5,fontSize: 15 }}>Apply</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -344,6 +344,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginTop: 2,
+        marginBottom: 10,
     },
 
     tagContainer1: {
@@ -365,6 +366,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: '#4d4c4c',
         padding: 10,
+        borderRadius: 10,
+        height: 50,
     }
 
 })

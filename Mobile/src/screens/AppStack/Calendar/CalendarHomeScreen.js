@@ -760,7 +760,7 @@ class CalendarHomeScreen extends React.PureComponent {
               height: 10,
               width: (width * this.currentChallengeDay) / activeChallengeData.numberOfDays,
               borderRadius: 10,
-              backgroundColor: colors.themeColor.color,
+              backgroundColor: colors.themeColor.fill,
               position: 'absolute',
               left: 0,
               top: 0
@@ -779,6 +779,7 @@ class CalendarHomeScreen extends React.PureComponent {
               borderBottomWidth: 2,
             }}>
               <Text style={{
+                color: '#656565',
                 fontFamily: fonts.bold,
               }}>Day 1</Text>
             </View>
@@ -790,6 +791,7 @@ class CalendarHomeScreen extends React.PureComponent {
               borderBottomWidth: 2,
             }}>
               <Text style={{
+                color: '#656565',
                 fontFamily: fonts.bold
               }}>Day {activeChallengeData.numberOfDays}</Text>
             </View>
@@ -839,12 +841,9 @@ class CalendarHomeScreen extends React.PureComponent {
             <Text style={{
               fontSize: 28,
               fontFamily: fonts.bold
-            }}>{moment().format('dddd')}, {moment().format('MMMM')} {moment().day()}</Text>
+            }}>{moment().format('dddd')}, {moment().format('MMM')} {moment().day()}</Text>
           </View>
           <View>
-            <View>
-              <Icon name="glass" size={20} />
-            </View>
           </View>
           <View style={{ marginTop: 20, flex: 1 }}>
             <TouchableOpacity phase={this.phase} onPress={() => this.openLink(this.phase.pdfUrl)}>
@@ -899,10 +898,10 @@ class CalendarHomeScreen extends React.PureComponent {
               xmlSpace="preserve"
               width={hp("1.5%")}
               height={hp("1.5%")}
-              fill={colors.themeColor.color}
+              fill={colors.themeColor.fill}
               style={{
                 strokeWidth: 50,
-                stroke: colors.themeColor.color,
+                stroke: colors.themeColor.fill,
                 strokeLinejoin: 'round',
                 strokeLinecap: 'round',
                 // shadowColor: '#171717',
@@ -921,7 +920,7 @@ class CalendarHomeScreen extends React.PureComponent {
             position: 'absolute',
             left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7,
             top: Platform.OS === "ios" ? 41 : 39,
-            backgroundColor: colors.themeColor.color,
+            backgroundColor: '#F79400',
             width: 40,
             height: 40,
             justifyContent: 'center',
@@ -935,6 +934,7 @@ class CalendarHomeScreen extends React.PureComponent {
           }}>
             <Text style={{
               fontFamily: fonts.GothamMedium,
+              color: 'white',
               fontSize: 25
             }}>{this.currentChallengeDay}</Text>
           </View>
