@@ -29,7 +29,7 @@ export default class LevelModal extends React.PureComponent {
 
     render() {
         return (
-            <SafeAreaView style={{ backgroundColor: 'white',borderTopLeftRadius: 15,borderTopRightRadius: 15 }}>
+            <SafeAreaView style={{ backgroundColor: 'white', borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
                 <View style={{ paddingLeft: 10 }}>
                     <TouchableOpacity
                         style={styles.closeContainer}
@@ -42,232 +42,232 @@ export default class LevelModal extends React.PureComponent {
                     <View style={{ marginTop: 10, marginRight: 10, }}>
                         <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter recipes to</Text>
 
-                        <TouchableOpacity onPress={this.props.checkedBox}>
-                        <View style={styles.tagContainer}>
-                            <View style={styles.tagContainer1}>
-                                <View style={{
-                                    height: 25,
-                                    width: 25,
-                                    marginRight: 10,
-                                    borderWidth: 0,
-                                    borderRadius: 14,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    backgroundColor: '#00C520',
-                                }}>
-                                    <Text style={{
-                                        fontFamily: fonts.bold,
-                                        fontSize: 9,
-                                        color: colors.white,
+                        <TouchableOpacity onPress={this.props.toggleVegan} value={this.props.veganChecked}>
+                            <View style={styles.tagContainer}>
+                                <View style={styles.tagContainer1}>
+                                    <View style={{
+                                        height: 25,
+                                        width: 25,
+                                        marginRight: 10,
+                                        borderWidth: 0,
+                                        borderRadius: 14,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        backgroundColor: '#00C520',
                                     }}>
-                                        V
-                                    </Text>
+                                        <Text style={{
+                                            fontFamily: fonts.bold,
+                                            fontSize: 9,
+                                            color: colors.white,
+                                        }}>
+                                            V
+                                        </Text>
+                                    </View>
+                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Vegan</Text>
                                 </View>
-                                <Text style={{ marginTop: 3, fontSize: 15 }}>Vegan</Text>
+                                {Platform.OS == 'ios' ?
+                                    (<CheckBox
+                                        boxType='square'
+                                        value={this.props.veganChecked}
+                                    />
+                                    ) : (
+                                        <CheckBox
+                                            boxType='square'
+                                            value={this.props.veganChecked}
+                                            onValueChange={this.props.toggleVegan}
+                                        />
+                                    )}
+
                             </View>
-                            {Platform.OS =='ios' ? 
-                            (<CheckBox
-                                boxType='square'
-                                value={this.props.veganChecked}
-                            />
-                            ):(
-                                <CheckBox
-                                boxType='square'
-                                value={this.props.veganChecked}
-                                onValueChange={this.props.toggleVegan}
-                            />
-                            )}
-                            
-                        </View>
                         </TouchableOpacity>
-                        <View> 
-                            
-                        </View>
-                        <TouchableOpacity onPress={this.props.checkVegetarian}>
-                        <View style={styles.tagContainer}>
-                            <View style={styles.tagContainer1}>
-                                <View style={{
-                                    height: 25,
-                                    width: 25,
-                                    marginRight: 10,
-                                    borderWidth: 0,
-                                    borderRadius: 14,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    backgroundColor: '#469753',
-                                }}>
-                                    <Text style={{
-                                        fontFamily: fonts.bold,
-                                        fontSize: 9,
-                                        color: colors.white,
-                                    }}>
-                                        VEG
-                                    </Text>
-                                </View>
-                                <Text style={{ marginTop: 3, fontSize: 15 }}>Vegetarian</Text>
-                            </View>
-                            {Platform.OS =='ios' ? 
-                            (<CheckBox
-                                boxType='square'
-                                value={this.props.vegetarianChecked}
-                            />
-                            ):(
-                                <CheckBox
-                                boxType='square'
-                                value={this.props.vegetarianChecked}
-                                onValueChange={this.props.toggleVegetarian}
-                            />
-                            )}
+                        <View>
 
                         </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={this.props.checkGluta}>
-                        <View style={styles.tagContainer}>
-                            <View style={styles.tagContainer1}>
-                                <View style={{
-                                    height: 25,
-                                    width: 25,
-                                    marginRight: 10,
-                                    borderWidth: 0,
-                                    borderRadius: 14,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    backgroundColor: '#9403fc',
-                                }}>
-                                    <Text style={{
-                                        fontFamily: fonts.bold,
-                                        fontSize: 9,
-                                        color: colors.white,
+                        <TouchableOpacity onPress={this.props.toggleVegetarian} value={this.props.vegetarianChecked}>
+                            <View style={styles.tagContainer}>
+                                <View style={styles.tagContainer1}>
+                                    <View style={{
+                                        height: 25,
+                                        width: 25,
+                                        marginRight: 10,
+                                        borderWidth: 0,
+                                        borderRadius: 14,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        backgroundColor: '#469753',
                                     }}>
-                                        GF
-                                    </Text>
+                                        <Text style={{
+                                            fontFamily: fonts.bold,
+                                            fontSize: 9,
+                                            color: colors.white,
+                                        }}>
+                                            VEG
+                                        </Text>
+                                    </View>
+                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Vegetarian</Text>
                                 </View>
-                                <Text style={{ marginTop: 3, fontSize: 15 }}>Gluta-Free</Text>
-                            </View>
-                            {Platform.OS =='ios' ? 
-                            (<CheckBox
-                                boxType='square'
-                                value={this.props.glutaFreeChecked}
-                            />
-                            ):(
-                                <CheckBox
-                                boxType='square'
-                                value={this.props.glutaFreeChecked}
-                                onChange={this.props.toggleGlutaFree}
-                            />
-                            )}
+                                {Platform.OS == 'ios' ?
+                                    (<CheckBox
+                                        boxType='square'
+                                        value={this.props.vegetarianChecked}
+                                    />
+                                    ) : (
+                                        <CheckBox
+                                            boxType='square'
+                                            value={this.props.vegetarianChecked}
+                                            onValueChange={this.props.toggleVegetarian}
+                                        />
+                                    )}
 
-                        </View>
+                            </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.props.checkDairy}>
-                        <View style={styles.tagContainer}>
-                            <View style={styles.tagContainer1}>
-                                <View style={{
-                                    height: 25,
-                                    width: 25,
-                                    marginRight: 10,
-                                    borderWidth: 0,
-                                    borderRadius: 14,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    backgroundColor: '#B7782B',
-                                }}>
-                                    <Text style={{
-                                        fontFamily: fonts.bold,
-                                        fontSize: 9,
-                                        color: colors.white,
+                        <TouchableOpacity onPress={this.props.toggleGlutaFree} value={this.props.glutaFreeChecked}>
+                            <View style={styles.tagContainer}>
+                                <View style={styles.tagContainer1}>
+                                    <View style={{
+                                        height: 25,
+                                        width: 25,
+                                        marginRight: 10,
+                                        borderWidth: 0,
+                                        borderRadius: 14,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        backgroundColor: '#9403fc',
                                     }}>
-                                        DF
-                                    </Text>
+                                        <Text style={{
+                                            fontFamily: fonts.bold,
+                                            fontSize: 9,
+                                            color: colors.white,
+                                        }}>
+                                            GF
+                                        </Text>
+                                    </View>
+                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Gluta-Free</Text>
                                 </View>
-                                <Text style={{ marginTop: 3, fontSize: 15 }}>Dairy-Free</Text>
-                            </View>
-                            {Platform.OS =='ios' ? 
-                            (<CheckBox
-                                boxType='square'
-                                value={this.props.dairyFreeChecked}
-                            />
-                            ):(
-                                <CheckBox
-                                boxType='square'
-                                value={this.props.dairyFreeChecked}
-                                onValueChange={this.props.toggleDairyFree}
-                            />
-                            )}
+                                {Platform.OS == 'ios' ?
+                                    (<CheckBox
+                                        boxType='square'
+                                        value={this.props.glutaFreeChecked}
+                                    />
+                                    ) : (
+                                        <CheckBox
+                                            boxType='square'
+                                            value={this.props.glutaFreeChecked}
+                                            onChange={this.props.toggleGlutaFree}
+                                        />
+                                    )}
 
-                        </View>
+                            </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.props.checkGut}>
-                        <View style={styles.tagContainer}>
-                            <View style={styles.tagContainer1}>
-                                <View style={{
-                                    height: 25,
-                                    width: 25,
-                                    marginRight: 10,
-                                    borderWidth: 0,
-                                    borderRadius: 14,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    backgroundColor: '#965734',
-                                }}>
-                                    <Text style={{
-                                        fontFamily: fonts.bold,
-                                        fontSize: 9,
-                                        color: colors.white,
+                        <TouchableOpacity onPress={this.props.toggleDairyFree} value={this.props.dairyFreeChecked}>
+                            <View style={styles.tagContainer}>
+                                <View style={styles.tagContainer1}>
+                                    <View style={{
+                                        height: 25,
+                                        width: 25,
+                                        marginRight: 10,
+                                        borderWidth: 0,
+                                        borderRadius: 14,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        backgroundColor: '#B7782B',
                                     }}>
-                                        GH
-                                    </Text>
+                                        <Text style={{
+                                            fontFamily: fonts.bold,
+                                            fontSize: 9,
+                                            color: colors.white,
+                                        }}>
+                                            DF
+                                        </Text>
+                                    </View>
+                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Dairy-Free</Text>
                                 </View>
-                                <Text style={{ marginTop: 3, fontSize: 15 }}>Gut Health</Text>
-                            </View>
-                            {Platform.OS =='ios' ? 
-                            (<CheckBox
-                                boxType='square'
-                                value={this.props.gutHealthChecked}
-                            />
-                            ):(
-                                <CheckBox
-                                boxType='square'
-                                value={this.props.gutHealthChecked}
-                                onValueChange={this.props.toggleGutHealth}
-                            />
-                            )}
+                                {Platform.OS == 'ios' ?
+                                    (<CheckBox
+                                        boxType='square'
+                                        value={this.props.dairyFreeChecked}
+                                    />
+                                    ) : (
+                                        <CheckBox
+                                            boxType='square'
+                                            value={this.props.dairyFreeChecked}
+                                            onValueChange={this.props.toggleDairyFree}
+                                        />
+                                    )}
 
-                        </View>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={this.props.toggleGutHealth} value={this.props.gutHealthChecked}>
+                            <View style={styles.tagContainer}>
+                                <View style={styles.tagContainer1}>
+                                    <View style={{
+                                        height: 25,
+                                        width: 25,
+                                        marginRight: 10,
+                                        borderWidth: 0,
+                                        borderRadius: 14,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        backgroundColor: '#965734',
+                                    }}>
+                                        <Text style={{
+                                            fontFamily: fonts.bold,
+                                            fontSize: 9,
+                                            color: colors.white,
+                                        }}>
+                                            GH
+                                        </Text>
+                                    </View>
+                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Gut Health</Text>
+                                </View>
+                                {Platform.OS == 'ios' ?
+                                    (<CheckBox
+                                        boxType='square'
+                                        value={this.props.gutHealthChecked}
+                                    />
+                                    ) : (
+                                        <CheckBox
+                                            boxType='square'
+                                            value={this.props.gutHealthChecked}
+                                            onValueChange={this.props.toggleGutHealth}
+                                        />
+                                    )}
+
+                            </View>
                         </TouchableOpacity>
                         <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select transform level</Text>
                         <TouchableOpacity
-                                onPress={this.props.onPressLevel1}
-                                // onPress={() => console.log('levelBUttonData: ', challengeRecipeData.level1)}
-                            >
+                            onPress={this.props.onPressLevel1}
+                        // onPress={() => console.log('levelBUttonData: ', challengeRecipeData.level1)}
+                        >
 
-                        <View style={styles.tagContainer}>
-                            <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 1</Text>
+                            <View style={styles.tagContainer}>
+                                <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 1</Text>
                                 <Icon name="chevron-right" size={12} color={colors.black} />
-                        </View>
+                            </View>
                         </TouchableOpacity>
                         <TouchableOpacity
-                                onPress={this.props.onPressLevel2}
-                            >
+                            onPress={this.props.onPressLevel2}
+                        >
 
-                        <View style={styles.tagContainer}>
-                            <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 2</Text>
+                            <View style={styles.tagContainer}>
+                                <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 2</Text>
                                 <Icon name="chevron-right" size={12} color={colors.black} />
-                        </View>
+                            </View>
                         </TouchableOpacity>
                         <TouchableOpacity
-                                onPress={this.props.onPressLevel3}
-                            >
+                            onPress={this.props.onPressLevel3}
+                        >
 
-                        <View style={styles.tagContainer}>
-                            <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 3</Text>
+                            <View style={styles.tagContainer}>
+                                <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 3</Text>
                                 <Icon name="chevron-right" size={12} color={colors.black} />
-                        </View>
+                            </View>
                         </TouchableOpacity>
 
-                        <View style={{ marginVertical: 20 ,opacity: 0.7}}>
-                            <TouchableOpacity  disabled={false} style={styles.button}>
-                                <Text style={{ color: 'white',padding: 5,fontSize: 15 }}>Apply</Text>
+                        <View style={{ marginVertical: 20, opacity: 0.7 }}>
+                            <TouchableOpacity disabled={false} style={styles.button}>
+                                <Text style={{ color: 'white', padding: 5, fontSize: 15 }}>Apply</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
         height: 50,
-        
+
     }
 
 })
