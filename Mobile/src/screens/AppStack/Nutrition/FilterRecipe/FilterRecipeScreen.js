@@ -315,12 +315,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.setState({ category: [] })
     }
 
-    onClickRemove = (cat) => {
-        // state.tags.filter((tag) => tag.name !== name),
-        // console.log("Category Name", cat.name)
-        // this.setState({category: [...this.state.category ,this.state.category.filter((item) => item.name !== cat.name)]})
-    }
-
     renderItem = ({ item }) => {
 
         const color1 = []
