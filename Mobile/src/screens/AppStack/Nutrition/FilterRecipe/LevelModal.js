@@ -32,12 +32,14 @@ export default class LevelModal extends React.PureComponent {
             <SafeAreaView style={{ backgroundColor: 'white', borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
                 <View style={{ paddingLeft: 10 }}>
                     <TouchableOpacity
-                        style={styles.closeContainer}
                         onPress={this.props.closeModal}
                     >
-                        <View>
-                            <Text></Text>
+                      <View style={{height: 50}}>
+                            <View style={styles.closeContainer}>
+
+                            </View>
                         </View>
+
                     </TouchableOpacity>
                     <View style={{ marginTop: 10, marginRight: 10, }}>
                         <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter recipes to</Text>
