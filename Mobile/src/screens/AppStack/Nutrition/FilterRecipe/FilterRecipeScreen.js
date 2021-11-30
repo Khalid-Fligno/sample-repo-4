@@ -54,6 +54,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             tags: [],
             phase: [],
             category: [],
+            nameCat: [],
             levelText: "",
         };
         // this.clearPhase = this.clearPhase.bind(this);
@@ -305,14 +306,15 @@ export default class FilterRecipeScreen extends React.PureComponent {
             isFilterVisible: false,
             isClickVisible: false,
             tags: [{ level: this.state.levelText, phase: this.state.phase.join(', ') }],
-            phase: []
+            phase: [],
+            nameCat: this.state.category,
+            category: []
         })
-
     }
 
     onClickFilter = () => {
-        this.setState({ isFilterVisible: !this.state.isFilterVisible, phase1: false, phase2: false, phase3: false });
-        this.setState({ category: [] })
+        this.setState({ isFilterVisible: !this.state.isFilterVisible, phase1: false, phase2: false, phase3: false, category: [] });
+        
     }
 
     renderItem = ({ item }) => {
@@ -430,10 +432,11 @@ export default class FilterRecipeScreen extends React.PureComponent {
     keyExtractor = (index) => String(index);
 
     render() {
-        const { recipes, loading, data, allData, challengeRecipe, levelButtonData, title, tagDataList, tags, category } = this.state
+        const { recipes, data, allData, challengeRecipe, levelButtonData, title, tags, category, nameCat } = this.state
 
-        console.log('Tags: ', tags)
-        console.log('category: ', category)
+        // console.log('Tags: ', tags)
+        // console.log('category: ', category)
+        // console.log('name Cat: ', nameCat)
 
         const tagList = []
 
@@ -497,7 +500,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         style={{ flexDirection: 'row', marginVertical: 10, marginBottom: 20, top: 0, height: 20 }}
                     >
                         {
-                            category.map((cat) => (
+                            nameCat.map((cat, index) => (
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -506,10 +509,11 @@ export default class FilterRecipeScreen extends React.PureComponent {
                                         borderRadius: 50,
                                         marginRight: 7,
                                     }}
+                                    key={index}
                                 >
                                     <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>{cat.name}</Text>
                                     <TouchableOpacity
-                                        onPress={() => { this.setState({ category: this.state.category.filter((item) => item.name !== cat.name) }) }}
+                                        onPress={() => { this.setState({ nameCat: this.state.nameCat.filter((item) => item.name !== cat.name) }) }}
                                     >
                                         <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
                                     </TouchableOpacity>

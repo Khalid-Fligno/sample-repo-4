@@ -34,7 +34,7 @@ export default class LevelModal extends React.PureComponent {
                     <TouchableOpacity
                         onPress={this.props.closeModal}
                     >
-                      <View style={{height: 50}}>
+                        <View style={{ height: 50 }}>
                             <View style={styles.closeContainer}>
 
                             </View>
@@ -237,7 +237,7 @@ export default class LevelModal extends React.PureComponent {
 
                             </View>
                         </TouchableOpacity>
-                        <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select transform level</Text>
+                        <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select level</Text>
                         <TouchableOpacity
                             onPress={this.props.onPressLevel1}
                         // onPress={() => console.log('levelBUttonData: ', challengeRecipeData.level1)}
