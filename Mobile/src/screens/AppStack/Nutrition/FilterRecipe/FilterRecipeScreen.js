@@ -341,6 +341,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         return (
             <FilterScreen
+                navigation={this.props.navigation}
                 result={result}
                 item={item}
             />
@@ -542,14 +543,23 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         }
                     </View>
                 </ScrollView>
-                <FlatList
-                    contentContainerStyle={styles.scrollView}
-                    data={tagList}
-                    keyExtractor={(res) => res.id}
-                    renderItem={(item) => this.renderItem(item)}
-                    showsVerticalScrollIndicator={false}
-                    removeClippedSubviews={false}
-                />
+                {
+                    tagList.length > 0 ? <FlatList
+                        contentContainerStyle={styles.scrollView}
+                        data={tagList}
+                        keyExtractor={(res) => res.id}
+                        renderItem={(item) => this.renderItem(item)}
+                        showsVerticalScrollIndicator={false}
+                        removeClippedSubviews={false}
+                    /> : <View style={{height: hp('65%')}}>
+                        <Text style={{
+                            marginTop: 10,
+                            fontSize: 24,
+                            fontFamily: fonts.bold,
+                            textTransform: 'uppercase',
+                        }}>no recipes are available</Text>
+                    </View>
+                }
                 {
                     this.state.isFilterVisible && (
                         this.filterModal(challengeRecipe)

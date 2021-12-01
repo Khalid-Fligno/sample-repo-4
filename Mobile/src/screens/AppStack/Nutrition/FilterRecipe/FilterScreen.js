@@ -33,46 +33,55 @@ export default class FilterScreen extends React.PureComponent {
             <View
                 style={styles.cardContainer}
             >
-                <Card
-                    image={{ uri: item.coverImage }}
-                    containerStyle={styles.card}
+                <TouchableOpacity
+                    onPress={() =>
+                        this.props.navigation.push("Recipe", {
+                            recipe: item,
+                            backTitle: false,
+                        })
+                    }
                 >
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10 }}>
-                            <View style={{ maxWidth: '70%' }}>
-                                <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>
+                    <Card
+                        image={{ uri: item.coverImage }}
+                        containerStyle={styles.card}
+                    >
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10 }}>
+                                <View style={{ maxWidth: '70%' }}>
+                                    <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>
+                                </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                {
+                                    result && result.map((tag, index) => (
+                                        <View
+                                            style={{
+                                                height: 20,
+                                                width: 20,
+                                                marginRight: 4,
+                                                borderWidth: 0,
+                                                borderRadius: 14,
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                backgroundColor: tag.color,
+                                            }}
+                                            key={index}
+                                        >
+                                            <Text style={{
+                                                fontFamily: fonts.bold,
+                                                fontSize: 7,
+                                                color: colors.white,
+                                            }}>
+                                                {tag.name}
+                                            </Text>
+                                        </View>
+                                    ))
+                                }
+                                <Text style={{ fontSize: 9 }}>+ more</Text>
                             </View>
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            {
-                                result && result.map((tag, index) => (
-                                    <View
-                                        style={{
-                                            height: 20,
-                                            width: 20,
-                                            marginRight: 4,
-                                            borderWidth: 0,
-                                            borderRadius: 14,
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            backgroundColor: tag.color,
-                                        }}
-                                        key={index}
-                                    >
-                                        <Text style={{
-                                            fontFamily: fonts.bold,
-                                            fontSize: 7,
-                                            color: colors.white,
-                                        }}>
-                                            {tag.name}
-                                        </Text>
-                                    </View>
-                                ))
-                            }
-                            <Text style={{ fontSize: 9 }}>+ more</Text>
-                        </View>
-                    </View>
-                </Card>
+                    </Card>
+                </TouchableOpacity>
             </View>
         )
     }
