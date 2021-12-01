@@ -102,35 +102,75 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.setState({
             veganChecked: !this.state.veganChecked
         })
-        this.setState({ category: [...this.state.category, { name: "Vegan" }] })
+        if (this.state.veganChecked === false) {
+            this.setState({ category: [...this.state.category, { name: "Vegan" }] })
+        } else {
+            this.setState({
+                category: this.state.category.filter((item) => {
+                    return item.name !== "Vegan"
+                })
+            })
+        }
     }
 
     toggleVegetarian = () => {
         this.setState({
             vegetarianChecked: !this.state.vegetarianChecked
         })
-        this.setState({ category: [...this.state.category, { name: "Vegetarian" }] })
+        if (this.state.vegetarianChecked === false) {
+            this.setState({ category: [...this.state.category, { name: "Vegetarian" }] })
+        } else {
+            this.setState({
+                category: this.state.category.filter((item) => {
+                    return item.name !== "Vegetarian"
+                })
+            })
+        }
     }
 
     toggleGlutaFree = () => {
         this.setState({
             glutaFree: !this.state.glutaFree
         })
-        this.setState({ category: [...this.state.category, { name: "Gluta Free" }] })
+        if (this.state.glutaFree === false) {
+            this.setState({ category: [...this.state.category, { name: "Gluta Free" }] })
+        } else {
+            this.setState({
+                category: this.state.category.filter((item) => {
+                    return item.name !== "Gluta Free"
+                })
+            })
+        }
     }
 
     toggleDairyFree = () => {
         this.setState({
             dairyFree: !this.state.dairyFree
         })
-        this.setState({ category: [...this.state.category, { name: "Dairy Free" }] })
+        if (this.state.dairyFree === false) {
+            this.setState({ category: [...this.state.category, { name: "Dairy Free" }] })
+        } else {
+            this.setState({
+                category: this.state.category.filter((item) => {
+                    return item.name !== "Dairy Free"
+                })
+            })
+        }
     }
 
     toggleGutHealth = () => {
         this.setState({
             gutHealth: !this.state.gutHealth
         })
-        this.setState({ category: [...this.state.category, { name: "Gut Health" }] })
+        if (this.state.gutHealth === false) {
+            this.setState({ category: [...this.state.category, { name: "Gut Health" }] })
+        } else {
+            this.setState({
+                category: this.state.category.filter((item) => {
+                    return item.name !== "Gut Health"
+                })
+            })
+        }
     }
 
     togglePhase1 = () => {
@@ -297,9 +337,25 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         return recipe.tags[i]
                     }
                 }
+                if (this.state.phase1 === true) {
+                    if (recipe.tags[i] === 'P1') {
+                        return recipe.tags[i]
+                    }
+                }
+                if (this.state.phase2 === true) {
+                    if (recipe.tags[i] === 'P2') {
+                        return recipe.tags[i]
+                    }
+                }
+                if (this.state.phase3 === true) {
+                    if (recipe.tags[i] === 'P3') {
+                        return recipe.tags[i]
+                    }
+                }
             }
 
         });
+
 
         this.setState({
             allData: recipeLists,
@@ -308,13 +364,21 @@ export default class FilterRecipeScreen extends React.PureComponent {
             tags: [{ level: this.state.levelText, phase: this.state.phase.join(', ') }],
             phase: [],
             nameCat: this.state.category,
-            category: []
         })
     }
 
     onClickFilter = () => {
-        this.setState({ isFilterVisible: !this.state.isFilterVisible, phase1: false, phase2: false, phase3: false, category: [] });
-        
+        this.setState({
+            isFilterVisible: !this.state.isFilterVisible,
+            phase1: false,
+            phase2: false,
+            phase3: false,
+            veganChecked: false,
+            vegetarianChecked: false,
+            glutaFree: false,
+            dairyFree: false,
+            gutHealth: false
+        });
     }
 
     renderItem = ({ item }) => {
@@ -380,7 +444,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
     filterModal = (challengeRecipeData) => {
-        console.log(this.state.isClickVisible);
         return (
             <Modal
                 isVisible={this.state.isClickVisible ? !this.state.isFilterVisible : this.state.isFilterVisible}
@@ -436,7 +499,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         const { recipes, data, allData, challengeRecipe, levelButtonData, title, tags, category, nameCat } = this.state
 
         // console.log('Tags: ', tags)
-        // console.log('category: ', category)
+        console.log('category: ', category)
         // console.log('name Cat: ', nameCat)
 
         const tagList = []
