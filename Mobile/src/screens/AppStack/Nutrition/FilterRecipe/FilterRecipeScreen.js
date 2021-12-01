@@ -364,6 +364,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             tags: [{ level: this.state.levelText, phase: this.state.phase.join(', ') }],
             phase: [],
             nameCat: this.state.category,
+            category: []
         })
     }
 
