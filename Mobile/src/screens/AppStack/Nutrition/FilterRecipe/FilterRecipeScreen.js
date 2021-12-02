@@ -177,23 +177,45 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.setState({
             phase1: !this.state.phase1,
         })
-        this.setState({ phase: [...this.state.phase, 'P1'] })
+        if (this.state.phase1 === false) {
+            this.setState({ phase: [...this.state.phase, { phaseTag: "P1" }] })
+        } else {
+            this.setState({
+                phase: this.state.phase.filter((item) => {
+                    return item.phaseTag !== "P1"
+                })
+            })
+        }
     }
 
     togglePhase2 = () => {
         this.setState({
             phase2: !this.state.phase2,
         })
-        this.setState({ phase: [...this.state.phase, 'P2'] })
+        if (this.state.phase2 === false) {
+            this.setState({ phase: [...this.state.phase, { phaseTag: "P2" }] })
+        } else {
+            this.setState({
+                phase: this.state.phase.filter((item) => {
+                    return item.phaseTag !== "P2"
+                })
+            })
+        }
     }
 
     togglePhase3 = () => {
         this.setState({
             phase3: !this.state.phase3,
-
         })
-
-        this.setState({ phase: [...this.state.phase, 'P3'] })
+        if (this.state.phase3 === false) {
+            this.setState({ phase: [...this.state.phase, { phaseTag: "P3" }] })
+        } else {
+            this.setState({
+                phase: this.state.phase.filter((item) => {
+                    return item.phaseTag !== "P3"
+                })
+            })
+        }
     }
 
     closeModal = () => {
@@ -361,7 +383,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             allData: recipeLists,
             isFilterVisible: false,
             isClickVisible: false,
-            tags: [{ level: this.state.levelText, phase: this.state.phase.join(', ') }],
+            tags: [{ level: this.state.levelText, phase: this.state.phase }],
             phase: [],
             nameCat: this.state.category,
             category: []
@@ -444,7 +466,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         )
     }
 
-    filterModal = (challengeRecipeData) => {
+    filterModal = (challengeRecipeData, phase, data) => {
         return (
             <Modal
                 isVisible={this.state.isClickVisible ? !this.state.isFilterVisible : this.state.isFilterVisible}
@@ -483,12 +505,16 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     glutaFreeChecked={this.state.glutaFree}
                     dairyFreeChecked={this.state.dairyFree}
                     gutHealthChecked={this.state.gutHealth}
+                    phase1={this.state.phase1}
+                    phase2={this.state.phase2}
+                    phase3={this.state.phase3}
                     toggleVegan={() => this.toggleVegan()}
                     toggleVegetarian={() => this.toggleVegetarian()}
                     toggleGlutaFree={() => this.toggleGlutaFree()}
                     toggleDairyFree={() => this.toggleDairyFree()}
                     toggleGutHealth={() => this.toggleGutHealth()}
                     closeModal={() => this.closeModal()}
+                    applyButton={() => this.applyButton(phase, data)}
                 />
             </Modal>
         )
@@ -500,7 +526,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         const { recipes, data, allData, challengeRecipe, levelButtonData, title, tags, category, nameCat } = this.state
 
         // console.log('Tags: ', tags)
-        console.log('category: ', category)
+        // console.log('category: ', category)
         // console.log('name Cat: ', nameCat)
 
         const tagList = []
@@ -596,7 +622,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                                         marginRight: 7,
                                     }}
                                 >
-                                    <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>{item.level} - {item.phase}</Text>
+                                    <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>{item.level} - {item.phase.map((el) => el.phaseTag + ' ')}</Text>
                                     <TouchableOpacity
                                         onPress={() => { this.setState({ tags: this.state.tags.filter((item) => item.level !== item.level) }) }}
                                     >
@@ -608,25 +634,39 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     </View>
                 </ScrollView>
                 {
-                    tagList.length > 0 ? <FlatList
+                    tagList.length > 0 
+                    ? 
+                    <FlatList
                         contentContainerStyle={styles.scrollView}
                         data={tagList}
                         keyExtractor={(res) => res.id}
                         renderItem={(item) => this.renderItem(item)}
                         showsVerticalScrollIndicator={false}
                         removeClippedSubviews={false}
-                    /> : <View style={{height: hp('65%')}}>
-                        <Text style={{
-                            marginTop: 10,
-                            fontSize: 24,
-                            fontFamily: fonts.bold,
-                            textTransform: 'uppercase',
-                        }}>no recipes are available</Text>
+                    /> 
+                    : 
+                    <View 
+                        style={{
+                            height: hp('65%'), 
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                    }}
+                    >
+                        <Text 
+                            style={{           
+                                fontSize: 20,
+                                fontFamily: fonts.bold,
+                                textTransform: 'uppercase',
+                            }}
+                        >
+                            no recipes are available
+                        </Text>
                     </View>
                 }
                 {
                     this.state.isFilterVisible && (
-                        this.filterModal(challengeRecipe)
+                        this.filterModal(challengeRecipe, phaseData, data)
                     )
                 }
                 {
