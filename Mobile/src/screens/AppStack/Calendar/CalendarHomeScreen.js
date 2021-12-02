@@ -814,8 +814,19 @@ class CalendarHomeScreen extends React.PureComponent {
                 // fontSize: 18,
                 fontFamily: fonts.bold
               }}>
+                {this.transformLevel}
+
               </Text>
+
             </View>
+            <Text style={{
+              // fontSize: 18,
+              fontFamily: fonts.bold,
+              marginTop: 1,
+              marginRight: 5,
+              marginLeft: 5
+            }}>{'>'}</Text>
+
             <View style={{
               backgroundColor: '#ffffff',
               // width: 74,
@@ -827,7 +838,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 // fontSize: 18,
                 fontFamily: fonts.bold
               }}>
-                {this.transformLevel}
+                   {getPhase(this.phaseData)}
               </Text>
             </View>
           </View>
