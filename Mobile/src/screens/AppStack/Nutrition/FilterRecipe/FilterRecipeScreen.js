@@ -57,14 +57,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             nameCat: [],
             levelText: "",
         };
-        // this.clearPhase = this.clearPhase.bind(this);
     }
-
-    // clearPhase(newArr) {
-    //     this.setState({
-    //         phase: newArr,
-    //     }, () => { console.log(this.state.phase) });
-    // }
 
     onFocusFunction() {
         this.setState({ loading: true });
@@ -100,7 +93,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
     toggleVegan = () => {
         this.setState({
-            veganChecked: !this.state.veganChecked
+            veganChecked: !this.state.veganChecked,
         })
         if (this.state.veganChecked === false) {
             this.setState({ category: [...this.state.category, { name: "Vegan" }] })
@@ -359,6 +352,12 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         return recipe.tags[i]
                     }
                 }
+            }
+
+        });
+
+        const recipePhase = sortBy(tagList).filter((recipe) => {
+            for (let i = 0; i < recipe.tags.length; i++) {
                 if (this.state.phase1 === true) {
                     if (recipe.tags[i] === 'P1') {
                         return recipe.tags[i]
@@ -375,12 +374,10 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     }
                 }
             }
-
         });
 
-
         this.setState({
-            allData: recipeLists,
+            allData: this.state.gutHealth || this.state.veganChecked || this.state.vegetarianChecked || this.state.glutaFree || this.state.dairyFree ? recipeLists : recipePhase,
             isFilterVisible: false,
             isClickVisible: false,
             tags: [{ level: this.state.levelText, phase: this.state.phase }],
@@ -524,10 +521,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
     render() {
         const { recipes, data, allData, challengeRecipe, levelButtonData, title, tags, category, nameCat } = this.state
-
-        // console.log('Tags: ', tags)
-        // console.log('category: ', category)
-        // console.log('name Cat: ', nameCat)
 
         const tagList = []
 
