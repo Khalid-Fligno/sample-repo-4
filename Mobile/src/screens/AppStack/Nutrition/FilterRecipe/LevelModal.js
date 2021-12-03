@@ -32,12 +32,14 @@ export default class LevelModal extends React.PureComponent {
             <SafeAreaView style={{ backgroundColor: 'white', borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
                 <View style={{ paddingLeft: 10 }}>
                     <TouchableOpacity
-                        style={styles.closeContainer}
                         onPress={this.props.closeModal}
                     >
-                        <View>
-                            <Text></Text>
+                        <View style={{ height: 50 }}>
+                            <View style={styles.closeContainer}>
+
+                            </View>
                         </View>
+
                     </TouchableOpacity>
                     <View style={{ marginTop: 10, marginRight: 10, }}>
                         <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginTop: 10, fontWeight: 'bold', fontSize: 20 }}>Filter recipes to</Text>
@@ -235,7 +237,7 @@ export default class LevelModal extends React.PureComponent {
 
                             </View>
                         </TouchableOpacity>
-                        <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select transform level</Text>
+                        <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select Level</Text>
                         <TouchableOpacity
                             onPress={this.props.onPressLevel1}
                         // onPress={() => console.log('levelBUttonData: ', challengeRecipeData.level1)}
@@ -265,8 +267,12 @@ export default class LevelModal extends React.PureComponent {
                             </View>
                         </TouchableOpacity>
 
-                        <View style={{ marginVertical: 20, opacity: 0.7 }}>
-                            <TouchableOpacity disabled={false} style={styles.button}>
+                        <View style={{ marginVertical: 20 }, !this.props.phase3 && !this.props.phase2 && !this.props.phase1 ? {opacity: 0.7} : null}>
+                            <TouchableOpacity
+                                style={styles.button}
+                                onPress={this.props.applyButton}
+                                disabled={true ? !this.props.phase3 && !this.props.phase2 && !this.props.phase1 : true}
+                            >
                                 <Text style={{ color: 'white', padding: 5, fontSize: 15 }}>Apply</Text>
                             </TouchableOpacity>
                         </View>

@@ -57,28 +57,28 @@ class TodayMealsList extends Component {
                   <Text style={styles.cardTitle}>{recipe.title}</Text>
                 </View>
               </ImageBackground>
-              <View
-                style={{
-                  position: 'absolute',
-                  backgroundColor: 'rgba(0,0,0,0.5)',
-                  height: wp("33%"),
-                  width: wp("65%"),
-                  borderRadius: 10
-                }}
-              >
-                <View style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                  <FeatherIcon name="edit" size={25} color={'#ffffff'} />
-                  <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>
-                </View>
-              </View>
+              {/*<View*/}
+              {/*  style={{*/}
+              {/*    position: 'absolute',*/}
+              {/*    backgroundColor: 'rgba(0,0,0,0.5)',*/}
+              {/*    height: wp("33%"),*/}
+              {/*    width: wp("65%"),*/}
+              {/*    borderRadius: 10*/}
+              {/*  }}*/}
+              {/*>*/}
+              {/*  <View style={{*/}
+              {/*    position: 'absolute',*/}
+              {/*    top: 0,*/}
+              {/*    left: 0,*/}
+              {/*    right: 0,*/}
+              {/*    bottom: 0,*/}
+              {/*    justifyContent: 'center',*/}
+              {/*    alignItems: 'center'*/}
+              {/*  }}>*/}
+              {/*    <FeatherIcon name="edit" size={25} color={'#ffffff'} />*/}
+              {/*    <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>*/}
+              {/*  </View>*/}
+              {/*</View>*/}
             </TouchableOpacity>
           ))}
           <TouchableOpacity
@@ -130,28 +130,28 @@ class TodayMealsList extends Component {
                   <Text style={styles.cardTitle}>{recipe.title}</Text>
                 </View>
               </ImageBackground>
-              <View
-                style={{
-                  position: 'absolute',
-                  backgroundColor: 'rgba(0,0,0,0.5)',
-                  height: wp("33%"),
-                  width: wp("65%"),
-                  borderRadius: 10
-                }}
-              >
-                <View style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                  <FeatherIcon name="edit" size={25} color={'#ffffff'} />
-                  <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>
-                </View>
-              </View>
+              {/*<View*/}
+              {/*  style={{*/}
+              {/*    position: 'absolute',*/}
+              {/*    backgroundColor: 'rgba(0,0,0,0.5)',*/}
+              {/*    height: wp("33%"),*/}
+              {/*    width: wp("65%"),*/}
+              {/*    borderRadius: 10*/}
+              {/*  }}*/}
+              {/*>*/}
+              {/*  <View style={{*/}
+              {/*    position: 'absolute',*/}
+              {/*    top: 0,*/}
+              {/*    left: 0,*/}
+              {/*    right: 0,*/}
+              {/*    bottom: 0,*/}
+              {/*    justifyContent: 'center',*/}
+              {/*    alignItems: 'center'*/}
+              {/*  }}>*/}
+              {/*    <FeatherIcon name="edit" size={25} color={'#ffffff'} />*/}
+              {/*    <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>*/}
+              {/*  </View>*/}
+              {/*</View>*/}
             </TouchableOpacity>
           ))}
           <TouchableOpacity
@@ -203,28 +203,28 @@ class TodayMealsList extends Component {
                   <Text style={styles.cardTitle}>{recipe.title}</Text>
                 </View>
               </ImageBackground>
-              <View
-                style={{
-                  position: 'absolute',
-                  backgroundColor: 'rgba(0,0,0,0.5)',
-                  height: wp("33%"),
-                  width: wp("65%"),
-                  borderRadius: 10
-                }}
-              >
-                <View style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                  <FeatherIcon name="edit" size={25} color={'#ffffff'} />
-                  <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>
-                </View>
-              </View>
+              {/*<View*/}
+              {/*  style={{*/}
+              {/*    position: 'absolute',*/}
+              {/*    backgroundColor: 'rgba(0,0,0,0.5)',*/}
+              {/*    height: wp("33%"),*/}
+              {/*    width: wp("65%"),*/}
+              {/*    borderRadius: 10*/}
+              {/*  }}*/}
+              {/*>*/}
+              {/*  <View style={{*/}
+              {/*    position: 'absolute',*/}
+              {/*    top: 0,*/}
+              {/*    left: 0,*/}
+              {/*    right: 0,*/}
+              {/*    bottom: 0,*/}
+              {/*    justifyContent: 'center',*/}
+              {/*    alignItems: 'center'*/}
+              {/*  }}>*/}
+              {/*    <FeatherIcon name="edit" size={25} color={'#ffffff'} />*/}
+              {/*    <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>*/}
+              {/*  </View>*/}
+              {/*</View>*/}
             </TouchableOpacity>
           ))}
           <TouchableOpacity
@@ -276,28 +276,28 @@ class TodayMealsList extends Component {
                   <Text style={styles.cardTitle}>{recipe.title}</Text>
                 </View>
               </ImageBackground>
-              <View
-                style={{
-                  position: 'absolute',
-                  backgroundColor: 'rgba(0,0,0,0.5)',
-                  height: wp("33%"),
-                  width: wp("65%"),
-                  borderRadius: 10
-                }}
-              >
-                <View style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                  <FeatherIcon name="edit" size={25} color={'#ffffff'} />
-                  <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>
-                </View>
-              </View>
+              {/*<View*/}
+              {/*  style={{*/}
+              {/*    position: 'absolute',*/}
+              {/*    backgroundColor: 'rgba(0,0,0,0.5)',*/}
+              {/*    height: wp("33%"),*/}
+              {/*    width: wp("65%"),*/}
+              {/*    borderRadius: 10*/}
+              {/*  }}*/}
+              {/*>*/}
+              {/*  <View style={{*/}
+              {/*    position: 'absolute',*/}
+              {/*    top: 0,*/}
+              {/*    left: 0,*/}
+              {/*    right: 0,*/}
+              {/*    bottom: 0,*/}
+              {/*    justifyContent: 'center',*/}
+              {/*    alignItems: 'center'*/}
+              {/*  }}>*/}
+              {/*    <FeatherIcon name="edit" size={25} color={'#ffffff'} />*/}
+              {/*    <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>*/}
+              {/*  </View>*/}
+              {/*</View>*/}
             </TouchableOpacity>
           ))}
           <TouchableOpacity
@@ -349,28 +349,28 @@ class TodayMealsList extends Component {
                   <Text style={styles.cardTitle}>{recipe.title}</Text>
                 </View>
               </ImageBackground>
-              <View
-                style={{
-                  position: 'absolute',
-                  backgroundColor: 'rgba(0,0,0,0.5)',
-                  height: wp("33%"),
-                  width: wp("65%"),
-                  borderRadius: 10
-                }}
-              >
-                <View style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                  <FeatherIcon name="edit" size={25} color={'#ffffff'} />
-                  <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>
-                </View>
-              </View>
+              {/*<View*/}
+              {/*  style={{*/}
+              {/*    position: 'absolute',*/}
+              {/*    backgroundColor: 'rgba(0,0,0,0.5)',*/}
+              {/*    height: wp("33%"),*/}
+              {/*    width: wp("65%"),*/}
+              {/*    borderRadius: 10*/}
+              {/*  }}*/}
+              {/*>*/}
+              {/*  <View style={{*/}
+              {/*    position: 'absolute',*/}
+              {/*    top: 0,*/}
+              {/*    left: 0,*/}
+              {/*    right: 0,*/}
+              {/*    bottom: 0,*/}
+              {/*    justifyContent: 'center',*/}
+              {/*    alignItems: 'center'*/}
+              {/*  }}>*/}
+              {/*    <FeatherIcon name="edit" size={25} color={'#ffffff'} />*/}
+              {/*    <Text style={{ color: '#ffffff' }}>Build your own recipe</Text>*/}
+              {/*  </View>*/}
+              {/*</View>*/}
             </TouchableOpacity>
           ))}
           <TouchableOpacity

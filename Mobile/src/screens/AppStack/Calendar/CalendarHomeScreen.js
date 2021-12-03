@@ -64,7 +64,8 @@ class CalendarHomeScreen extends React.PureComponent {
       initialBurpeeTestCompleted: false,
       width: 0,
       AllRecipe: [],
-      challengeRecipe: []
+      challengeRecipe: [],
+      transformLevel: undefined,
     };
     this.calendarStrip = React.createRef();
   }
@@ -203,6 +204,9 @@ class CalendarHomeScreen extends React.PureComponent {
     const { activeChallengeData, activeChallengeUserData } = this.state;
     this.setState({ loading: false });
     this.stringDate = date.format("YYYY-MM-DD").toString();
+    this.day = date.format("dddd")
+    this.month = date.format("MMM")
+    this.date = date.format("D")
     //TODO:check the active challenge cndtns
     if (
       activeChallengeData &&
@@ -539,8 +543,10 @@ class CalendarHomeScreen extends React.PureComponent {
       this.setState({ loading: false });
       console.log(err);
       Alert.alert("Fetch active challenge data error!");
+
     }
   };
+
 
   async getCurrentPhaseInfo() {
     const { activeChallengeUserData, activeChallengeData } = this.state;
@@ -548,6 +554,7 @@ class CalendarHomeScreen extends React.PureComponent {
       this.setState({ loading: false });
       const data = activeChallengeUserData.phases;
       const test = activeChallengeUserData.startDate;
+      const transformLevel = activeChallengeUserData.displayName;
       /*
       if(this.stringDate != test){
         this.setState({loading :false})
@@ -562,7 +569,7 @@ class CalendarHomeScreen extends React.PureComponent {
         activeChallengeUserData.phases,
         this.stringDate
       );
-
+      this.transformLevel = transformLevel;
       if (this.phase) {
         //TODO :fetch the current phase data from Challenges collection
         this.phaseData = activeChallengeData.phases.filter(
@@ -729,8 +736,8 @@ class CalendarHomeScreen extends React.PureComponent {
         </View>
       </>
     );
-
     const getPhase = (phaseData) => {
+      console.log(this.state.transformLevel);
       return (phaseData.name.substring(0, 5)
         + ' '
         + phaseData.name.substring(5, phaseData.name.length)).charAt(0).toUpperCase()
@@ -738,10 +745,6 @@ class CalendarHomeScreen extends React.PureComponent {
           + ' '
           + phaseData.name.substring(5, phaseData.name.length)).slice(1);
     };
-    const onPress = () => {
-      console.log("test")
-    }
-
     const Progress = () => {
       return (
         <>
@@ -811,15 +814,19 @@ class CalendarHomeScreen extends React.PureComponent {
                 // fontSize: 18,
                 fontFamily: fonts.bold
               }}>
-                Transform
+                {this.transformLevel}
+
               </Text>
+
             </View>
             <Text style={{
               // fontSize: 18,
               fontFamily: fonts.bold,
+              marginTop: 1,
               marginRight: 5,
               marginLeft: 5
             }}>{'>'}</Text>
+
             <View style={{
               backgroundColor: '#ffffff',
               // width: 74,
@@ -831,7 +838,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 // fontSize: 18,
                 fontFamily: fonts.bold
               }}>
-                {getPhase(this.phaseData)}
+                   {getPhase(this.phaseData)}
               </Text>
             </View>
           </View>
@@ -841,7 +848,7 @@ class CalendarHomeScreen extends React.PureComponent {
             <Text style={{
               fontSize: 28,
               fontFamily: fonts.bold
-            }}>{moment().format('dddd')}, {moment().format('MMM')} {moment().day()}</Text>
+            }}>{this.day}, {this.month} {this.date}</Text>
           </View>
           <View>
           </View>

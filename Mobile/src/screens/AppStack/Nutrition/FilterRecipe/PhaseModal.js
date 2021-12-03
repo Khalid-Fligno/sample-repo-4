@@ -33,12 +33,14 @@ export default class PhaseModal extends React.PureComponent {
                 <View style={{paddingLeft: Platform.OS === 'ios' ? 10 : 0, paddingRight: Platform.OS === 'ios' ? 10 : 0}}>
                     <View>
                     <TouchableOpacity
-                        style={styles.closeContainer}
                         onPress={this.props.closePhaseModal}
                     >
-                        <View>
-                            <Text></Text>
+                        <View style={{height: 50}}>
+                            <View style={styles.closeContainer}>
+
+                            </View>
                         </View>
+
                     </TouchableOpacity>
                     </View>
 
