@@ -375,6 +375,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 }
             }
         });
+        
 
         this.setState({
             allData: this.state.gutHealth || this.state.veganChecked || this.state.vegetarianChecked || this.state.glutaFree || this.state.dairyFree ? recipeLists : recipePhase,
