@@ -165,6 +165,9 @@ class CalendarHomeScreen extends React.PureComponent {
         const dinnerActive = []
         const snackActive = []
         const drinkActive = [] 
+        const preworkoutActive =[]
+        const treatsActive=[]
+
 
         const documents = querySnapshot.docs.map(doc => doc.data())
         documents.filter((res) => res.breakfast === true? breakfastActive.push(res) : null)
@@ -172,13 +175,19 @@ class CalendarHomeScreen extends React.PureComponent {
         documents.filter((res) => res.dinner === true? dinnerActive.push(res) : null)
         documents.filter((res) => res.snack === true? snackActive.push(res) : null)
         documents.filter((res) => res.drink === true? drinkActive.push(res) : null)
+        documents.filter((res) => res.preworkout === true? preworkoutActive.push(res) : null)
+        documents.filter((res) => res.treats === true? treatsActive.push(res) : null)
+
 
         const recommendedMeal = [{
           breakfast: breakfastActive,
           snack: snackActive,
           lunch: lunchActive,
           dinner: dinnerActive,
-          drink: drinkActive
+          drink: drinkActive,
+          preworkout: preworkoutActive,
+          treats: treatsActive,
+
         }]
 
         this.setState({
@@ -618,6 +627,7 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   async goToRecipe(recipeData) {
+    
     this.setState({ loading: true });
     const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
     await FileSystem.getInfoAsync(fileUri)
@@ -645,7 +655,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   getToFilter(data, data1, title) {
     const { challengeRecipe } = this.state
-
     console.log('Title: ', title)
 
     this.props.navigation.navigate('FilterRecipe', {
@@ -678,7 +687,7 @@ class CalendarHomeScreen extends React.PureComponent {
     } = this.state;
     let showRC = false;
 
-    console.log('isSchedule: ', isSchedule)
+    // console.log('isSchedule: ', todayRecommendedMeal)
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
       //check if selected date is between challenge start and end date
@@ -737,7 +746,6 @@ class CalendarHomeScreen extends React.PureComponent {
       </>
     );
     const getPhase = (phaseData) => {
-      console.log(this.state.transformLevel);
       return (phaseData.name.substring(0, 5)
         + ' '
         + phaseData.name.substring(5, phaseData.name.length)).charAt(0).toUpperCase()

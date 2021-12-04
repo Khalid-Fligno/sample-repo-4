@@ -31,7 +31,7 @@ const NutritionList = [
     imageUrl:require('../../../../assets/images/nutrition-snack.jpg'),
   },
   {
-    title:"pre-workout",
+    title:"preworkout",
     nutritionTitle:"pre-workout",
     imageUrl:require('../../../../assets/images/nutrition-pre-workout.jpg'),
   },
