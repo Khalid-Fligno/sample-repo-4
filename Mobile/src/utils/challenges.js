@@ -124,13 +124,19 @@ export const getTodayRecommendedMeal = async(phaseData,activeChallengeData) =>{
   const dinnerList = phaseMeals.filter((res)=>res.dinner)
   const snackList = phaseMeals.filter((res)=>res.snack)
   const drinkList = phaseMeals.filter((res)=>res.drink)
+  const preworkoutList = phaseMeals.filter((res)=>res.preworkout)
+  const treatsList = phaseMeals.filter((res)=>res.treats)
+
+
 
   const recommendedMeal = [{
     breakfast:breakfastList,
     snack:snackList,
     lunch:lunchList,
     dinner:dinnerList,
-    drink:drinkList
+    drink:drinkList,
+    preworkout:preworkoutList,
+    treats:treatsList
   }]
   return {
     recommendedMeal,

@@ -35,6 +35,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       filterIndex: 0,
       meal: null,
     };
+    console.log(this.state.recipes);
   }
 
   onFocusFunction = async () => {
@@ -140,6 +141,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     this.setState({ filterIndex });
   };
 
+
+  
   keyExtractor = (item, index) => String(index);
 
   renderItem = ({ item }) => (
@@ -178,7 +181,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     ]
 
     // console.log("RecipeList: ", recipes)
-
+    console.log(loading)
     const renderItem1 = ({ item: items }) =>
     (
       <CustomButtonGroup
@@ -260,19 +263,57 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             paddingVertical: wp("4%"),
           }}
         />
+        
         {loading ? (
           skeleton
         ) : (
-          <FlatList
-            contentContainerStyle={styles.scrollView}
-            data={recipeList}
-            keyExtractor={this.keyExtractor}
-            renderItem={this.renderItem}
-            showsVerticalScrollIndicator={false}
-            removeClippedSubviews={false}
-          // maxToRenderPerBatch={20}
-          />
+          
+          // <FlatList
+          //   contentContainerStyle={styles.scrollView}
+          //   data={recipeList}
+          //   keyExtractor={this.keyExtractor}
+          //   renderItem={this.renderItem}
+          //   showsVerticalScrollIndicator={false}
+          //   removeClippedSubviews={false}
+          // // maxToRenderPerBatch={20}
+          // />
+          <View></View>
+          
         )}
+       
+
+        {recipeList.length > 0 ?
+           <FlatList
+             contentContainerStyle={styles.scrollView}
+             data={recipeList}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderItem}
+              showsVerticalScrollIndicator={false}
+              removeClippedSubviews={false}
+              // maxToRenderPerBatch={20}
+            />
+        
+        :
+        <View 
+        style={{
+            height: hp('65%'), 
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          >
+              <Text 
+                  style={{           
+                      fontSize: 20,
+                      fontFamily: fonts.bold,
+                      textTransform: 'uppercase',
+                  }}
+              >
+                  no recipes are available
+              </Text>
+          </View>
+
+        }
 
         {/* <Loader
           loading={loading}
