@@ -143,7 +143,7 @@ class ProgressHomeScreen extends React.PureComponent {
     const userRef = db.collection("users").doc(uid);
     this.unsubscribe = userRef.onSnapshot(async (doc) => {
       var data = await doc.data();
-      console.log("qwertyuiop", data.unitOfMeasurement)
+      // console.log("qwertyuiop", data.unitOfMeasurement)
       this.setState({
         profile: data,
         initialProgressInfo: data.initialProgressInfo,
@@ -893,7 +893,7 @@ class ProgressHomeScreen extends React.PureComponent {
                   <View>
                     <ProgressBar
                         // title=""
-                        completed={profile.totalWorkoutCompleted + countI + countC + countS}
+                        completed={profile.totalWorkoutCompleted}
                         total={totalS}
                         size={wp("38%")}
                     />

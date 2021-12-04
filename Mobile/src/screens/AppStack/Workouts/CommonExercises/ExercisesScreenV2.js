@@ -51,13 +51,13 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     super(props);
     const workout = props.navigation.getParam("workout", null);
     const currentExerciseIndex = props.navigation.getParam(
-        "currentExerciseIndex",
-        0
+      "currentExerciseIndex",
+      0
     );
     const currentExercise = workout["exercises"][currentExerciseIndex];
     const workoutSubCategory = props.navigation.getParam(
-        "workoutSubCategory",
-        null
+      "workoutSubCategory",
+      null
     );
     const fitnessLevel = props.navigation.getParam("fitnessLevel", null);
     let rest = props.navigation.getParam("rest", false);
@@ -76,24 +76,24 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     }
     //For count true workout Rest
     if (
-        workout.count &&
-        currentExercise &&
-        currentExercise.name === "rest" &&
-        currentExercise["restIntervalMap"]
+      workout.count &&
+      currentExercise &&
+      currentExercise.name === "rest" &&
+      currentExercise["restIntervalMap"]
     ) {
       totalDuration =
-          currentExercise["restIntervalMap"][String(setCount)][
-              String(fitnessLevel - 1)
-              ];
+        currentExercise["restIntervalMap"][String(setCount)][
+        String(fitnessLevel - 1)
+        ];
       rest = true;
     }
 
     //for count false and rest varible false in workoutProcessType === 'circular workout
     if (
-        workout.count === false &&
-        currentExercise &&
-        currentExercise.name === "rest" &&
-        workout["restIntervalMap"]
+      workout.count === false &&
+      currentExercise &&
+      currentExercise.name === "rest" &&
+      workout["restIntervalMap"]
     ) {
       totalDuration = workout["restIntervalMap"][String(fitnessLevel - 1)];
       rest = true;
@@ -105,8 +105,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       currentExercise: currentExercise,
       reps: props.navigation.getParam("reps", null),
       resistanceCategoryId: props.navigation.getParam(
-          "resistanceCategoryId",
-          null
+        "resistanceCategoryId",
+        null
       ),
       extraProps: props.navigation.getParam("extraProps", {}),
       fitnessLevel: fitnessLevel,
@@ -159,9 +159,9 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           const workoutCount = userDoc.data().totalWorkoutCompleted + 1;
           const oldWeeklyTargets = userDoc.data().weeklyTargets;
           const newWeeklyTargets = updateWeeklyTargets(
-              oldWeeklyTargets,
-              workoutName,
-              newWeeklyComplete
+            oldWeeklyTargets,
+            workoutName,
+            newWeeklyComplete
           );
           transaction.update(userRef, {
             weeklyTargets: newWeeklyTargets,
@@ -171,13 +171,21 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       });
     } else {
       isActiveChallenge().then((res) => {
+        db.runTransaction((transaction) => {
+          return transaction.get(userRef).then((userDoc) => {
+            const workoutCount = userDoc.data().totalWorkoutCompleted + 1;
+            transaction.update(userRef, {
+              totalWorkoutCompleted: workoutCount,
+            });
+          });
+        });
         if (res && res.status === "Active") {
           // const userRef = db.collection("users").doc(uid);
           var challengeRef = db
-              .collection("users")
-              .doc(uid)
-              .collection("challenges")
-              .doc(res.id);
+            .collection("users")
+            .doc(uid)
+            .collection("challenges")
+            .doc(res.id);
           // challengeRef.onSnapshot((doc) => {
           //   const totalIntervalCompleted =
           //     doc.data().workouts.filter(
@@ -187,7 +195,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           //     doc.data().workouts.filter(
           //       (res) => res.target === "circuit"
           //     );
-          //   const totalStrengthCompleted =
+          //   const totalStrengthCompleted 
           //     doc.data().workouts.filter(
           //       (res) => res.target === "strength"
           //     );
@@ -200,17 +208,17 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           // });
           // Atomically add a new region to the "regions" array field.
           var workouts = challengeRef
-              .update({
-                workouts: firebase.firestore.FieldValue.arrayUnion({
-                  date: moment(new Date()).format("YYYY-MM-DD"),
-                  id: workout.id,
-                  name: workout.name,
-                  displayName: workout.displayName,
-                  target: workoutName,
-                  time: new Date().getTime(),
-                }),
-              })
-              .then((res) => console.log("Adeed to challenge", res));
+            .update({ 
+              workouts: firebase.firestore.FieldValue.arrayUnion({
+                date: moment(new Date()).format("YYYY-MM-DD"),
+                id: workout.id,
+                name: workout.name,
+                displayName: workout.displayName,
+                target: workoutName,
+                time: new Date().getTime(),
+              }),
+            })
+            .then((res) => console.log("Adeed to challenge", res));
         }
       });
     }
@@ -234,8 +242,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       return setCount === this.state.workout.workoutReps;
     }
     return (
-        currentExerciseIndex === this.state.exerciseList.length - 1 &&
-        setCount === this.state.workout.workoutReps
+      currentExerciseIndex === this.state.exerciseList.length - 1 &&
+      setCount === this.state.workout.workoutReps
     );
   }
 
@@ -272,28 +280,28 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       } else if (setCount === this.state.workout.workoutReps) {
         // console.log("Go to next  exercise")
         this.goToExercise(
-            1,
-            reps,
-            resistanceCategoryId,
-            currentExerciseIndex + 1
+          1,
+          reps,
+          resistanceCategoryId,
+          currentExerciseIndex + 1
         );
       } else {
         // console.log("Incresase count")
         if (workout.rest && !this.state.rest) {
           //for workout.rest === true
           this.goToExercise(
-              setCount,
-              reps,
-              resistanceCategoryId,
-              currentExerciseIndex,
-              true
+            setCount,
+            reps,
+            resistanceCategoryId,
+            currentExerciseIndex,
+            true
           );
         } else {
           this.goToExercise(
-              setCount + 1,
-              reps,
-              resistanceCategoryId,
-              currentExerciseIndex
+            setCount + 1,
+            reps,
+            resistanceCategoryId,
+            currentExerciseIndex
           );
         }
       }
@@ -311,10 +319,10 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       } else {
         // console.log("Go to next Exercise") //go to next exercise if round not finished
         this.goToExercise(
-            setCount,
-            reps,
-            resistanceCategoryId,
-            currentExerciseIndex + 1
+          setCount,
+          reps,
+          resistanceCategoryId,
+          currentExerciseIndex + 1
         );
       }
     } else if (workout.workoutProcessType === "onlyOne") {
@@ -326,10 +334,10 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       } else {
         // console.log("Go to next round")
         this.goToExercise(
-            setCount + 1,
-            reps,
-            resistanceCategoryId,
-            currentExerciseIndex
+          setCount + 1,
+          reps,
+          resistanceCategoryId,
+          currentExerciseIndex
         );
       }
     }
@@ -359,11 +367,11 @@ export default class ExercisesScreenV2 extends React.PureComponent {
   }
 
   goToExercise(
-      setCount,
-      reps,
-      resistanceCategoryId,
-      currentExerciseIndex,
-      rest = false
+    setCount,
+    reps,
+    resistanceCategoryId,
+    currentExerciseIndex,
+    rest = false
   ) {
     let {
       workoutSubCategory,
@@ -394,20 +402,20 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     } else if (workout.workoutProcessType === "circular") {
       if (workout.rest === undefined)
         this.goToExercise(
-            setCount,
-            reps,
-            resistanceCategoryId,
-            currentExerciseIndex,
-            true
-        );
-      else this.handleFinish(reps, resistanceCategoryId, currentExerciseIndex);
-    } else if (workout.workoutProcessType === "onlyOne") {
-      this.goToExercise(
           setCount,
           reps,
           resistanceCategoryId,
           currentExerciseIndex,
           true
+        );
+      else this.handleFinish(reps, resistanceCategoryId, currentExerciseIndex);
+    } else if (workout.workoutProcessType === "onlyOne") {
+      this.goToExercise(
+        setCount,
+        reps,
+        resistanceCategoryId,
+        currentExerciseIndex,
+        true
       );
     }
   };
@@ -442,20 +450,20 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     this.setState({ pauseModalVisible: false });
 
     FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
-        (res) => {
-          Promise.all(
-              res.map(async (item, index) => {
-                if (item.includes("exercise-")) {
-                  // console.log(`${FileSystem.cacheDirectory}${item}`)
-                  FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
-                    idempotent: true,
-                  }).then(() => {
-                    // console.log("deleted...",item)
-                  });
-                }
-              })
-          );
-        }
+      (res) => {
+        Promise.all(
+          res.map(async (item, index) => {
+            if (item.includes("exercise-")) {
+              // console.log(`${FileSystem.cacheDirectory}${item}`)
+              FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
+                idempotent: true,
+              }).then(() => {
+                // console.log("deleted...",item)
+              });
+            }
+          })
+        );
+      }
     );
     if (this.state.extraProps["fromCalender"]) {
       this.props.navigation.navigate("CalendarHome");
@@ -466,16 +474,16 @@ export default class ExercisesScreenV2 extends React.PureComponent {
 
   quitWorkout = () => {
     Alert.alert(
-        "Warning",
-        "Are you sure you want to quit this workout?",
-        [
-          { text: "Cancel", style: "cancel" },
-          {
-            text: "OK",
-            onPress: this.handleQuitWorkout,
-          },
-        ],
-        { cancelable: false }
+      "Warning",
+      "Are you sure you want to quit this workout?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "OK",
+          onPress: this.handleQuitWorkout,
+        },
+      ],
+      { cancelable: false }
     );
   };
 
@@ -524,39 +532,39 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         } else if (setCount === this.state.workout.workoutReps) {
           // console.log("Go to next  exercise")
           this.goToExercise(
-              1,
-              reps,
-              this.state.resistanceCategoryId,
-              currentExerciseIndex + 1
+            1,
+            reps,
+            this.state.resistanceCategoryId,
+            currentExerciseIndex + 1
           );
         } else {
           // console.log("Incresase count")
           if (workout.rest && !this.state.rest) {
             //for workout.rest === true
             this.goToExercise(
-                setCount,
-                reps,
-                this.state.resistanceCategoryId,
-                currentExerciseIndex,
-                true
+              setCount,
+              reps,
+              this.state.resistanceCategoryId,
+              currentExerciseIndex,
+              true
             );
           } else {
             this.goToExercise(
-                setCount + 1,
-                reps,
-                this.state.resistanceCategoryId,
-                currentExerciseIndex
+              setCount + 1,
+              reps,
+              this.state.resistanceCategoryId,
+              currentExerciseIndex
             );
           }
         }
       } else if (workout.workoutProcessType === "circular") {
         if (currentExerciseIndex < workout.exercises.length - 1) {
           this.goToExercise(
-              setCount,
-              reps,
-              null,
-              currentExerciseIndex + 1,
-              false
+            setCount,
+            reps,
+            null,
+            currentExerciseIndex + 1,
+            false
           );
         } else if (currentExerciseIndex === workout.exercises.length - 1) {
           this.goToExercise(setCount + 1, reps, null, 0, false);
@@ -573,31 +581,31 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     if (workout.workoutProcessType === "oneByOne") {
       if (setCount > 1) {
         this.goToExercise(
-            setCount - 1,
-            reps,
-            null,
-            currentExerciseIndex,
-            false
+          setCount - 1,
+          reps,
+          null,
+          currentExerciseIndex,
+          false
         );
       } else if (currentExerciseIndex > 0)
         this.goToExercise(1, reps, null, currentExerciseIndex - 1, false);
       else {
         this.goToExercise(
-            workout.workoutReps,
-            reps,
-            null,
-            currentExerciseIndex,
-            false
+          workout.workoutReps,
+          reps,
+          null,
+          currentExerciseIndex,
+          false
         );
       }
     } else if (workout.workoutProcessType === "circular") {
       if (currentExerciseIndex > 0) {
         this.goToExercise(
-            setCount,
-            reps,
-            null,
-            currentExerciseIndex - 1,
-            false
+          setCount,
+          reps,
+          null,
+          currentExerciseIndex - 1,
+          false
         );
       } else if (currentExerciseIndex === 0 && setCount > 1) {
         this.goToExercise(setCount - 1, reps, null, 0, false);
@@ -626,53 +634,53 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     const { reps, workout, rest } = this.state;
     if (workout.count && this.repsInterval) {
       return (
-          <View style={styles.invisibleView}>
-            <View style={styles.setCounter}>
-              <Text style={styles.setCounterText}>{`Set ${setCount} of ${workout.workoutReps
+        <View style={styles.invisibleView}>
+          <View style={styles.setCounter}>
+            <Text style={styles.setCounterText}>{`Set ${setCount} of ${workout.workoutReps
               } - ${this.repsInterval} ${rest ? "sec" : ""}`}</Text>
-            </View>
           </View>
+        </View>
       );
     }
     if (this.state.workout.filters.includes("strength")) {
       return (
-          <View style={styles.invisibleView}>
-            <View style={styles.setCounter}>
-              <Text
-                  style={styles.setCounterText}
-              >{`Set ${setCount} of ${workout.workoutReps} - ${reps} Reps`}</Text>
-            </View>
+        <View style={styles.invisibleView}>
+          <View style={styles.setCounter}>
+            <Text
+              style={styles.setCounterText}
+            >{`Set ${setCount} of ${workout.workoutReps} - ${reps} Reps`}</Text>
           </View>
+        </View>
       );
     } else if (this.state.workout.filters.includes("interval")) {
       return (
-          <View style={styles.invisibleView}>
-            <View style={styles.setCounter}>
-              <Text style={styles.setCounterText}>
-                Non Stop Until Time Runs Out
-              </Text>
-            </View>
+        <View style={styles.invisibleView}>
+          <View style={styles.setCounter}>
+            <Text style={styles.setCounterText}>
+              Non Stop Until Time Runs Out
+            </Text>
           </View>
+        </View>
       );
     } else if (this.state.workout.filters.includes("circuit")) {
       return (
-          <View style={styles.invisibleView}>
-            <View style={styles.setCounter}>
-              <Text style={styles.setCounterText}>
-                Non Stop Until Time Runs Out
-              </Text>
-            </View>
+        <View style={styles.invisibleView}>
+          <View style={styles.setCounter}>
+            <Text style={styles.setCounterText}>
+              Non Stop Until Time Runs Out
+            </Text>
           </View>
+        </View>
       );
     } else {
       return (
-          <View style={styles.invisibleView}>
-            <View style={styles.setCounter}>
-              <Text
-                  style={styles.setCounterText}
-              >{`Set ${setCount} of ${workout.workoutReps}`}</Text>
-            </View>
+        <View style={styles.invisibleView}>
+          <View style={styles.setCounter}>
+            <Text
+              style={styles.setCounterText}
+            >{`Set ${setCount} of ${workout.workoutReps}`}</Text>
           </View>
+        </View>
       );
     }
   };
@@ -709,226 +717,226 @@ export default class ExercisesScreenV2 extends React.PureComponent {
 
     //TODO : calculate when count true
     if (
-        workout.count &&
-        currentExercise &&
-        currentExercise["workIntervalMap"]
+      workout.count &&
+      currentExercise &&
+      currentExercise["workIntervalMap"]
     ) {
       this.repsInterval =
-          currentExercise["workIntervalMap"][String(setCount)][
-              String(fitnessLevel - 1)
-              ];
+        currentExercise["workIntervalMap"][String(setCount)][
+        String(fitnessLevel - 1)
+        ];
     }
     if (
-        workout.count &&
-        currentExercise &&
-        currentExercise.name === "rest" &&
-        currentExercise["restIntervalMap"]
+      workout.count &&
+      currentExercise &&
+      currentExercise.name === "rest" &&
+      currentExercise["restIntervalMap"]
     ) {
       this.repsInterval =
-          currentExercise["restIntervalMap"][String(setCount)][
-              String(fitnessLevel - 1)
-              ];
+        currentExercise["restIntervalMap"][String(setCount)][
+        String(fitnessLevel - 1)
+        ];
     }
 
     //TODO : calculate flag to show last exercise
     let lastExercise = getLastExercise(
-        exerciseList,
-        currentExerciseIndex,
-        workout,
-        setCount
+      exerciseList,
+      currentExerciseIndex,
+      workout,
+      setCount
     );
 
     let showCT =
-        currentExercise.coachingTip &&
+      currentExercise.coachingTip &&
         currentExercise.coachingTip.length > 0 &&
         !currentExercise.coachingTip.includes("none")
-            ? true
-            : false;
+        ? true
+        : false;
 
     const workoutTimer = () => {
       if (!workout.count && !rest)
         return (
-            <WorkoutTimer
-                totalDuration={Number(totalDuration)}
-                start={timerStart}
-                handleFinish={() => {
-                  if (!rest)
-                    this.restControl(
-                        reps,
-                        resistanceCategoryId,
-                        currentExerciseIndex
-                    );
-                  else
-                    this.handleFinish(
-                        reps,
-                        resistanceCategoryId,
-                        currentExerciseIndex
-                    );
-                }}
-                customContainerStyle={{
-                  marginTop: 0,
-                  paddingTop: 5,
-                  height: 50,
-                  paddingBottom: 5,
-                  backgroundColor: colors.white,
-                }}
-                customTextStyle={{
-                  color: colors.black,
-                  fontFamily: fonts.bold,
-                }}
-            />
+          <WorkoutTimer
+            totalDuration={Number(totalDuration)}
+            start={timerStart}
+            handleFinish={() => {
+              if (!rest)
+                this.restControl(
+                  reps,
+                  resistanceCategoryId,
+                  currentExerciseIndex
+                );
+              else
+                this.handleFinish(
+                  reps,
+                  resistanceCategoryId,
+                  currentExerciseIndex
+                );
+            }}
+            customContainerStyle={{
+              marginTop: 0,
+              paddingTop: 5,
+              height: 50,
+              paddingBottom: 5,
+              backgroundColor: colors.white,
+            }}
+            customTextStyle={{
+              color: colors.black,
+              fontFamily: fonts.bold,
+            }}
+          />
         );
       else if (rest)
         return (
-            <WorkoutTimer
-                totalDuration={totalDuration}
-                start={timerStart}
-                handleFinish={() => {
-                  if (!rest)
-                    this.restControl(
-                        reps,
-                        resistanceCategoryId,
-                        currentExerciseIndex
-                    );
-                  else
-                    this.handleFinish(
-                        reps,
-                        resistanceCategoryId,
-                        currentExerciseIndex
-                    );
-                }}
-                customContainerStyle={{
-                  marginTop: 0,
-                  paddingTop: 10,
-                  height: 75,
-                  paddingBottom: 10,
-                  backgroundColor: colors.white,
-                }}
-                customTextStyle={{
-                  color: colors.black,
-                  fontFamily: fonts.bold,
-                }}
-            />
+          <WorkoutTimer
+            totalDuration={totalDuration}
+            start={timerStart}
+            handleFinish={() => {
+              if (!rest)
+                this.restControl(
+                  reps,
+                  resistanceCategoryId,
+                  currentExerciseIndex
+                );
+              else
+                this.handleFinish(
+                  reps,
+                  resistanceCategoryId,
+                  currentExerciseIndex
+                );
+            }}
+            customContainerStyle={{
+              marginTop: 0,
+              paddingTop: 10,
+              height: 75,
+              paddingBottom: 10,
+              backgroundColor: colors.white,
+            }}
+            customTextStyle={{
+              color: colors.black,
+              fontFamily: fonts.bold,
+            }}
+          />
         );
       else if (workout.count && !rest)
         return <View style={styles.containerEmptyBlackBox}></View>;
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-          <StatusBar barStyle="light-content" />
-          <FadeInView duration={1000} style={styles.flexContainer}>
-            <View>
-              <View style={styles.header}>
-                <View style={{ width: 25 }} />
-                <View>
-                  <Text style={styles.title}>Workout</Text>
-                </View>
-                <View style={{ alignItems: "center" }}>
-                  <TouchableOpacity
-                      style={styles.exitButton}
-                      onPress={this.quitWorkout}
-                  >
-                    <Icon name="close" size={25} />
-                    <Text
-                        style={{ fontSize: 10, fontFamily: fonts.StyreneAWebThin }}
-                    >
-                      Exit
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <FadeInView duration={1000} style={styles.flexContainer}>
+          <View>
+            <View style={styles.header}>
+              <View style={{ width: 25 }} />
+              <View>
+                <Text style={styles.title}>Workout</Text>
               </View>
-              {!rest && (
-                  <Video
-                      source={{
-                        uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex + 1
-                        }.mp4`,
-                      }}
-                      rate={1.0}
-                      volume={1.0}
-                      isMuted={false}
-                      resizeMode="cover"
-                      shouldPlay={!videoPaused}
-                      isLooping
-                      style={{
-                        width,
-                        height: width > height / 2 ? height / 2 : width,
-                      }}
-                  />
-              )}
-              {rest && (
-                  <FastImage
-                      // source={require('../../../../../assets/images/hiit-rest-placeholder.jpg')}
-                      source={{ uri: restRandomImage, cache: "immutable" }}
-                      style={{ width, height: width }}
-                  />
-              )}
-              {showCT && (
-                  <ExerciseInfoButtonV2 onPress={this.showExerciseInfoModal} />
-              )}
-              {this.setCounterView()}
-            </View>
-
-            <View style={styles.currentExerciseTextContainer}>
-              {workoutTimer()}
-              <Text style={styles.currentExerciseTextCount}>{`Exercise ${currentExerciseIndex + 1
-              } of ${exerciseList.length}`}</Text>
-              <View style={styles.currentExerciseNameTextContainer}>
-                <TextTicker
-                    style={styles.currentExerciseNameText}
-                    duration={6000}
-                    loop
-                    bounce
-                    bounceSpeed={10}
-                    repeatSpacer={50}
-                    marqueeDelay={1000}
+              <View style={{ alignItems: "center" }}>
+                <TouchableOpacity
+                  style={styles.exitButton}
+                  onPress={this.quitWorkout}
                 >
-                  {rest ? "Rest" : currentExercise.name.toUpperCase()}
-                </TextTicker>
+                  <Icon name="close" size={25} />
+                  <Text
+                    style={{ fontSize: 10, fontFamily: fonts.StyreneAWebThin }}
+                  >
+                    Exit
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
-
-            <View>
-              <WorkoutProgressControl
-                  currentExercise={currentExercise}
-                  currentExerciseIndex={currentExerciseIndex}
-                  currentSet={setCount}
-                  exerciseList={exerciseList}
-                  workoutReps={workout.workoutReps}
-                  rounds={workout.workoutReps}
-                  progressType={workout.workoutProcessType}
-                  rest={rest}
-                  reps={reps}
-                  currentRound={setCount}
-                  workout={workout}
-                  isPaused={videoPaused}
-                  onPrev={this.prevExercise}
-                  lastExercise={lastExercise}
-                  onRestart={this.restartWorkout}
-                  onNext={
-                    handleSkip
-                        ? this.skipExercise
-                        : () => {
-                          this.handleFinish(
-                              reps,
-                              resistanceCategoryId,
-                              currentExerciseIndex
-                          );
-                        }
-                  }
-                  onPlayPause={videoPaused ? this.handleUnpause : this.handlePause}
+            {!rest && (
+              <Video
+                source={{
+                  uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex + 1
+                    }.mp4`,
+                }}
+                rate={1.0}
+                volume={1.0}
+                isMuted={false}
+                resizeMode="cover"
+                shouldPlay={!videoPaused}
+                isLooping
+                style={{
+                  width,
+                  height: width > height / 2 ? height / 2 : width,
+                }}
               />
+            )}
+            {rest && (
+              <FastImage
+                // source={require('../../../../../assets/images/hiit-rest-placeholder.jpg')}
+                source={{ uri: restRandomImage, cache: "immutable" }}
+                style={{ width, height: width }}
+              />
+            )}
+            {showCT && (
+              <ExerciseInfoButtonV2 onPress={this.showExerciseInfoModal} />
+            )}
+            {this.setCounterView()}
+          </View>
+
+          <View style={styles.currentExerciseTextContainer}>
+            {workoutTimer()}
+            <Text style={styles.currentExerciseTextCount}>{`Exercise ${currentExerciseIndex + 1
+              } of ${exerciseList.length}`}</Text>
+            <View style={styles.currentExerciseNameTextContainer}>
+              <TextTicker
+                style={styles.currentExerciseNameText}
+                duration={6000}
+                loop
+                bounce
+                bounceSpeed={10}
+                repeatSpacer={50}
+                marqueeDelay={1000}
+              >
+                {rest ? "Rest" : currentExercise.name.toUpperCase()}
+              </TextTicker>
             </View>
+          </View>
 
-            <View />
-
-            <ExerciseInfoModal
-                exercise={currentExercise}
-                exerciseInfoModalVisible={exerciseInfoModalVisible}
-                hideExerciseInfoModal={this.hideExerciseInfoModal}
+          <View>
+            <WorkoutProgressControl
+              currentExercise={currentExercise}
+              currentExerciseIndex={currentExerciseIndex}
+              currentSet={setCount}
+              exerciseList={exerciseList}
+              workoutReps={workout.workoutReps}
+              rounds={workout.workoutReps}
+              progressType={workout.workoutProcessType}
+              rest={rest}
+              reps={reps}
+              currentRound={setCount}
+              workout={workout}
+              isPaused={videoPaused}
+              onPrev={this.prevExercise}
+              lastExercise={lastExercise}
+              onRestart={this.restartWorkout}
+              onNext={
+                handleSkip
+                  ? this.skipExercise
+                  : () => {
+                    this.handleFinish(
+                      reps,
+                      resistanceCategoryId,
+                      currentExerciseIndex
+                    );
+                  }
+              }
+              onPlayPause={videoPaused ? this.handleUnpause : this.handlePause}
             />
-          </FadeInView>
-        </SafeAreaView>
+          </View>
+
+          <View />
+
+          <ExerciseInfoModal
+            exercise={currentExercise}
+            exerciseInfoModalVisible={exerciseInfoModalVisible}
+            hideExerciseInfoModal={this.hideExerciseInfoModal}
+          />
+        </FadeInView>
+      </SafeAreaView>
     );
   }
 }
