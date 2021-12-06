@@ -189,12 +189,11 @@ const styles = StyleSheet.create({
     },
     oblongBtnStyle: {
         alignItems: 'center',
-        marginTop: hp('2%'),
+        marginVertical: hp('2%'),
         borderRadius: 8,
         borderWidth: 2,
         backgroundColor: colors.white,
         color: colors.black,
-        height: hp('6%'),
         marginHorizontal: hp('10%')
     },
 });
