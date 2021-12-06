@@ -1,6 +1,7 @@
 import React from "react";
 import {
   StyleSheet,
+  Image,
   View,
   Text,
   Dimensions,
@@ -12,7 +13,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import * as FileSystem from "expo-file-system";
 import Modal from "react-native-modal";
 import { Divider } from "react-native-elements";
-import Image from "react-native-scalable-image";
+// import Image from "react-native-scalable-image";
 import { DotIndicator } from "react-native-indicators";
 import ParallaxScrollView from "react-native-parallax-scroll-view";
 import { db } from "../../../../config/firebase";
@@ -189,7 +190,9 @@ export default class RecipeScreen extends React.PureComponent {
                   source={{
                     uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
                   }}
-                  width={width}
+                  // width={width}
+                  resizeMode='cover'
+                  style={{height: width, width: width}}
                 />
               </View>
             )}
