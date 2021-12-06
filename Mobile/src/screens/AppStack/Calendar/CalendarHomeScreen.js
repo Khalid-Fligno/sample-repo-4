@@ -63,8 +63,8 @@ class CalendarHomeScreen extends React.PureComponent {
       skipped: false,
       initialBurpeeTestCompleted: false,
       width: 0,
-      AllRecipe: [],
-      challengeRecipe: [],
+      // AllRecipe: [],
+      // challengeRecipe: [],
       transformLevel: undefined,
     };
     this.calendarStrip = React.createRef();
@@ -82,13 +82,10 @@ class CalendarHomeScreen extends React.PureComponent {
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     });
-    // this.onFocusFunction();
   };
 
   async onFocusFunction() {
-    console.log("On focus");
-    await this.fetchRecipe();
-    await this.fetchRecipeChallenge();
+    // await this.fetchRecipe();
     await this.fetchCalendarEntries();
     await this.fetchActiveChallengeUserData();
     await this.fetchUserData();
@@ -103,89 +100,42 @@ class CalendarHomeScreen extends React.PureComponent {
 
   componentWillUnmount() {
     this.focusListener.remove();
-    if (this.unsubscribe) this.unsubscribe();
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
-    if (this.unsubscribeSchedule) this.unsubscribeSchedule();
-    if (this.unsubscribeReC) this.unsubscribeReC();
   }
 
-  fetchRecipeChallenge = async () => {
-    this.unsubscribeReC = await db
-      .collection("challenges")
-      .get()
-      .then(querySnapshot => {
-        const documents = querySnapshot.docs.map(doc => doc.data())
+  // fetchRecipe = async () => {
+  //   this.setState({loading: true})
+  //   const recipeRef = await db
+  //     .collection("recipes")
+  //     .get()
+  //     .then(querySnapshot => {
+  //       const breakfastActive = []
+  //       const lunchActive = []
+  //       const dinnerActive = []
+  //       const snackActive = []
+  //       const drinkActive = [] 
 
-        const level_1 = documents.filter((res) => {
-          if (res.id === '88969d13-fd11-4fde-966e-df1270fb97dd') {
-            return res.id
-          }
-        })
-        const level_2 = documents.filter((res) => {
-          if (res.id === '7798f53c-f613-435d-b94b-b67f1f43b51b') {
-            return res.id
-          }
-        })
+  //       const documents = querySnapshot.docs.map(doc => doc.data())
+  //       documents.filter((res) => res.breakfast === true? breakfastActive.push(res) : null)
+  //       documents.filter((res) => res.lunch === true? lunchActive.push(res) : null)
+  //       documents.filter((res) => res.dinner === true? dinnerActive.push(res) : null)
+  //       documents.filter((res) => res.snack === true? snackActive.push(res) : null)
+  //       documents.filter((res) => res.drink === true? drinkActive.push(res) : null)
 
-        const level_3 = documents.filter((res) => {
-          if (res.id === 'EilCVyb5eIPG7w0dGJDC') {
-            return res.id
-          }
-        })
+  //       const recommendedMeal = [{
+  //         breakfast: breakfastActive,
+  //         snack: snackActive,
+  //         lunch: lunchActive,
+  //         dinner: dinnerActive,
+  //         drink: drinkActive
+  //       }]
 
-        const level_4 = documents.filter((res) => {
-          if (res.id === 'SIq81lNARaqxTqyyOH5a') {
-            return res.id
-          }
-        })
-
-        const challengeLevel = [{
-          level1: level_1,
-          level2: level_2,
-          level3: level_3,
-          level4: level_4
-        }]
-
-        this.setState({
-          challengeRecipe: challengeLevel
-        })
-      })
-  }
-
-  fetchRecipe = async () => {
-    this.setState({ loading: true });
-
-    this.unsubscribe = await db
-      .collection("recipes")
-      .get()
-      .then(querySnapshot => {
-        const breakfastActive = []
-        const lunchActive = []
-        const dinnerActive = []
-        const snackActive = []
-        const drinkActive = [] 
-
-        const documents = querySnapshot.docs.map(doc => doc.data())
-        documents.filter((res) => res.breakfast === true? breakfastActive.push(res) : null)
-        documents.filter((res) => res.lunch === true? lunchActive.push(res) : null)
-        documents.filter((res) => res.dinner === true? dinnerActive.push(res) : null)
-        documents.filter((res) => res.snack === true? snackActive.push(res) : null)
-        documents.filter((res) => res.drink === true? drinkActive.push(res) : null)
-
-        const recommendedMeal = [{
-          breakfast: breakfastActive,
-          snack: snackActive,
-          lunch: lunchActive,
-          dinner: dinnerActive,
-          drink: drinkActive
-        }]
-
-        this.setState({
-          AllRecipe: recommendedMeal
-        })
-      })
-  }
+  //       this.setState({
+  //         AllRecipe: recommendedMeal,
+  //       })
+  //     })
+  // }
 
   fetchCalendarEntries = async () => {
     const selectedDate = this.calendarStrip.current.getSelectedDate();
@@ -269,7 +219,6 @@ class CalendarHomeScreen extends React.PureComponent {
           initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
         });
       })
-      .catch((reason) => console.log("Fetching user data error: ", reason));
   };
 
   async checkScheduleChallenge() {
@@ -277,7 +226,6 @@ class CalendarHomeScreen extends React.PureComponent {
     //Checking if any schedule challenge is assign to user
     isActiveChallenge().then((res) => {
       const todayDate = moment(new Date()).format("YYYY-MM-DD");
-      console.log('res: ', res.isSchedule)
       if (res && moment(res.startDate).isSame(todayDate) && res.isSchedule) {
         const challengeRef = db
           .collection("users")
@@ -387,7 +335,6 @@ class CalendarHomeScreen extends React.PureComponent {
             coolDownExercises: coolDownExercises,
           });
           this.goToNext(newWorkout);
-          console.log(newWorkout);
         } else {
           this.setState({ loadingExercises: false });
           Alert.alert("Alert!", "Something went wrong!");
@@ -404,7 +351,6 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   async goToNext(workout) {
-    console.log(">>here");
     if (
       this.currentChallengeDay === 1 &&
       !this.state.initialBurpeeTestCompleted
@@ -515,7 +461,6 @@ class CalendarHomeScreen extends React.PureComponent {
         });
     } catch (err) {
       this.setState({ loading: false });
-      console.log(err);
       Alert.alert("Fetch active challenge user data error!");
     }
   };
@@ -541,7 +486,6 @@ class CalendarHomeScreen extends React.PureComponent {
         });
     } catch (err) {
       this.setState({ loading: false });
-      console.log(err);
       Alert.alert("Fetch active challenge data error!");
 
     }
@@ -562,7 +506,6 @@ class CalendarHomeScreen extends React.PureComponent {
         this.setState({ loading: true })
       }
       // this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
-      console.log("date=>", this.stringDate);
       //console.log(test);
       //TODO :getCurrent phase data
       this.phase = getCurrentPhase(
@@ -644,12 +587,10 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   getToFilter(data, data1, title) {
-    const { challengeRecipe } = this.state
-
-    console.log('Title: ', title)
+    // const { challengeRecipe } = this.state
 
     this.props.navigation.navigate('FilterRecipe', {
-      challengeAllRecipe: challengeRecipe[0],
+      // challengeAllRecipe: challengeRecipe[0],
       recipes: data,
       title: title,
       allRecipeData: data1
@@ -674,11 +615,12 @@ class CalendarHomeScreen extends React.PureComponent {
       loadingExercises,
       skipped,
       width,
-      AllRecipe,
+      // AllRecipe,
     } = this.state;
     let showRC = false;
 
-    console.log('isSchedule: ', isSchedule)
+    // console.log('Loading: ', !loading)
+
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
       //check if selected date is between challenge start and end date
@@ -712,7 +654,7 @@ class CalendarHomeScreen extends React.PureComponent {
           width: '100%'
         }}>Today's Meals</Text>
         <TodayMealsList
-          recipe={AllRecipe[0]}
+          // recipe={AllRecipe[0]}
           data={todayRecommendedMeal[0]}
           onPress={(res) => this.goToRecipe(res)}
           filterPress={(res, res1, title) => this.getToFilter(res, res1, title)}
@@ -737,7 +679,6 @@ class CalendarHomeScreen extends React.PureComponent {
       </>
     );
     const getPhase = (phaseData) => {
-      console.log(this.state.transformLevel);
       return (phaseData.name.substring(0, 5)
         + ' '
         + phaseData.name.substring(5, phaseData.name.length)).charAt(0).toUpperCase()

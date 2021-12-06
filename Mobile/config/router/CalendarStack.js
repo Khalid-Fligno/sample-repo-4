@@ -14,6 +14,7 @@ import {
 import RecipeScreen from "../../src/screens/AppStack/Nutrition/RecipeScreen";
 import RecipeStepsScreen from "../../src/screens/AppStack/Nutrition/RecipeStepsScreen";
 import FilterRecipeScreen from "../../src/screens/AppStack/Nutrition/FilterRecipe/FilterRecipeScreen";
+import TodayMealList from "../../src/components/Calendar/TodayMealsList"
 
 const CalendarStack = createStackNavigator(
   {
@@ -23,6 +24,7 @@ const CalendarStack = createStackNavigator(
     Recipe: RecipeScreen,
     RecipeSteps: RecipeStepsScreen,
     FilterRecipe: FilterRecipeScreen,
+    TodayMeal: TodayMealList
   },
   {
     initialRouteName: "CalendarHome",

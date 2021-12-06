@@ -22,6 +22,8 @@ import Modal from "react-native-modal";
 import LevelModal from "./LevelModal";
 import PhaseModal from "./PhaseModal";
 import FilterScreen from "./FilterScreen";
+import { db } from "../../../../../config/firebase";
+
 const { width } = Dimensions.get("window");
 
 export default class FilterRecipeScreen extends React.PureComponent {
@@ -59,10 +61,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
         };
     }
 
-    onFocusFunction() {
-        this.setState({ loading: true });
+    onFocusFunction = () => {
         this.setState({
-            challengeRecipe: this.props.navigation.getParam("challengeAllRecipe", null),
+            // challengeRecipe: this.props.navigation.getParam("challengeAllRecipe", null),
             data: this.props.navigation.getParam("allRecipeData", null),
             allData: this.props.navigation.getParam("recipes", null),
             recipes: this.props.navigation.getParam("recipes", null),
@@ -70,9 +71,102 @@ export default class FilterRecipeScreen extends React.PureComponent {
             loading: false
         });
     }
-    componentDidMount = async () => {
+    componentDidMount = () => {
         this.onFocusFunction();
+        this.fetchRecipeChallenge();
+        this.fetchRecipe();
     };
+
+    componentWillUnmount = async () => {
+        // this.focusListener.remove()
+        if (this.unsubscribeReC) await this.unsubscribeReC();
+        if (this.unsubscribes) this.unsubscribes();
+    };
+
+    fetchRecipeChallenge = async () => {
+
+        this.unsubscribeReC = await db
+            .collection("challenges")
+            .get()
+            .then(querySnapshot => {
+                const documents = querySnapshot.docs.map(doc => doc.data())
+
+                const level_1 = documents.filter((res) => {
+                    if (res.id === '88969d13-fd11-4fde-966e-df1270fb97dd') {
+                        return res.id
+                    }
+                })
+                const level_2 = documents.filter((res) => {
+                    if (res.id === '7798f53c-f613-435d-b94b-b67f1f43b51b') {
+                        return res.id
+                    }
+                })
+
+                const level_3 = documents.filter((res) => {
+                    if (res.id === 'EilCVyb5eIPG7w0dGJDC') {
+                        return res.id
+                    }
+                })
+
+                const level_4 = documents.filter((res) => {
+                    if (res.id === 'SIq81lNARaqxTqyyOH5a') {
+                        return res.id
+                    }
+                })
+
+                const challengeLevel = [{
+                    level1: level_1,
+                    level2: level_2,
+                    level3: level_3,
+                    level4: level_4
+                }]
+
+                // console.log('challengeLevel: ', challengeLevel)
+
+                this.setState({
+                    challengeRecipe: challengeLevel[0]
+                })
+            })
+    }
+
+    fetchRecipe = async () => {
+        this.setState({ loading: true })
+        this.unsubscribes = await db
+            .collection("recipes")
+            .get()
+            .then(querySnapshot => {
+                const breakfastActive = []
+                const lunchActive = []
+                const dinnerActive = []
+                const snackActive = []
+                const drinkActive = []
+
+                const documents = querySnapshot.docs.map(doc => doc.data())
+                documents.filter((res) => res.breakfast === true ? breakfastActive.push(res) : null)
+                documents.filter((res) => res.lunch === true ? lunchActive.push(res) : null)
+                documents.filter((res) => res.dinner === true ? dinnerActive.push(res) : null)
+                documents.filter((res) => res.snack === true ? snackActive.push(res) : null)
+                documents.filter((res) => res.drink === true ? drinkActive.push(res) : null)
+
+                const recommendedMeal = [{
+                    breakfast: breakfastActive,
+                    snack: snackActive,
+                    lunch: lunchActive,
+                    dinner: dinnerActive,
+                    drink: drinkActive
+                }]
+
+                this.props.navigation.navigate("TodayMeal", {
+                    AllRecipe: recommendedMeal[0]
+                })
+
+                // console.log('recommendedMeal: ', recommendedMeal)
+
+                // this.setState({
+                //     AllRecipe: recommendedMeal
+                // })
+            })
+    }
 
     handleBack = () => {
         const { navigation } = this.props;
@@ -520,7 +614,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
     keyExtractor = (index) => String(index);
 
     render() {
-        const { recipes, data, allData, challengeRecipe, levelButtonData, title, tags, category, nameCat } = this.state
+        const { recipes, data, allData, challengeRecipe, levelButtonData, title, tags, nameCat } = this.state
 
         const tagList = []
 
@@ -627,35 +721,35 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     </View>
                 </ScrollView>
                 {
-                    tagList.length > 0 
-                    ? 
-                    <FlatList
-                        contentContainerStyle={styles.scrollView}
-                        data={tagList}
-                        keyExtractor={(res) => res.id}
-                        renderItem={(item) => this.renderItem(item)}
-                        showsVerticalScrollIndicator={false}
-                        removeClippedSubviews={false}
-                    /> 
-                    : 
-                    <View 
-                        style={{
-                            height: hp('65%'), 
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                    }}
-                    >
-                        <Text 
-                            style={{           
-                                fontSize: 20,
-                                fontFamily: fonts.bold,
-                                textTransform: 'uppercase',
+                    tagList.length > 0
+                        ?
+                        <FlatList
+                            contentContainerStyle={styles.scrollView}
+                            data={tagList}
+                            keyExtractor={(res) => res.id}
+                            renderItem={(item) => this.renderItem(item)}
+                            showsVerticalScrollIndicator={false}
+                            removeClippedSubviews={false}
+                        />
+                        :
+                        <View
+                            style={{
+                                height: hp('65%'),
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                             }}
                         >
-                            no recipes are available
-                        </Text>
-                    </View>
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    fontFamily: fonts.bold,
+                                    textTransform: 'uppercase',
+                                }}
+                            >
+                                no recipes are available
+                            </Text>
+                        </View>
                 }
                 {
                     this.state.isFilterVisible && (
