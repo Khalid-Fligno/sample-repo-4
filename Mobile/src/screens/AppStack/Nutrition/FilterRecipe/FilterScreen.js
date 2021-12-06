@@ -27,7 +27,7 @@ export default class FilterScreen extends React.PureComponent {
 
     render() {
 
-        const { result, item } = this.props
+        const { result, item,title } = this.props
 
         return (
             <View
@@ -38,6 +38,8 @@ export default class FilterScreen extends React.PureComponent {
                         this.props.navigation.push("Recipe", {
                             recipe: item,
                             backTitle: false,
+                            title: title,
+
                         })
                     }
                 >

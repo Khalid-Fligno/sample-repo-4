@@ -422,12 +422,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
         })
 
         const result = color1.splice(0, 3)
+        const title = this.state.title
 
         return (
             <FilterScreen
                 navigation={this.props.navigation}
                 result={result}
                 item={item}
+                title={title}
             />
         )
     };
@@ -521,7 +523,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
     render() {
         const { recipes, data, allData, challengeRecipe, levelButtonData, title, tags, category, nameCat } = this.state
-
         const tagList = []
 
         for (var i = 0; i < allData.length; i++) {
