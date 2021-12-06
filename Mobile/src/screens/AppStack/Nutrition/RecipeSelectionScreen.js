@@ -35,7 +35,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       filterIndex: 0,
       meal: null,
     };
-    console.log(this.state.recipes);
+    //console.log(this.state.recipes);
   }
 
   onFocusFunction = async () => {
@@ -182,7 +182,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 
     // console.log("RecipeList: ", recipes)
     console.log(loading)
-    const renderItem1 = ({ item: items }) =>
+  const renderItem1 = ({ item: items }) =>
     (
       <CustomButtonGroup
         onPress={this.updateFilter}

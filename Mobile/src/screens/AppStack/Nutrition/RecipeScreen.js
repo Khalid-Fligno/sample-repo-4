@@ -50,6 +50,7 @@ export default class RecipeScreen extends React.PureComponent {
       calendarMeal: null,
       addingToCalendar: false,
       extraProps: undefined,
+      title: undefined,
     };
   }
   onFocusFunction() {
@@ -65,6 +66,7 @@ export default class RecipeScreen extends React.PureComponent {
       utensils: this.props.navigation.getParam("recipe", null).utensils,
       backTitle: this.props.navigation.getParam("backTitle", null),
       extraProps: this.props.navigation.getParam("extraProps", undefined),
+      title: this.props.navigation.getParam("title",null),
       loading: false,
     });
   }
@@ -128,11 +130,14 @@ export default class RecipeScreen extends React.PureComponent {
   };
 
   getBackTitle() {
+
     if (this.state.backTitle) {
       return this.state.backTitle;
     }
     return NutritionList.filter((res) => this.state.recipe[res])[0];
+
   }
+  
 
   render() {
     const {
@@ -145,8 +150,11 @@ export default class RecipeScreen extends React.PureComponent {
       calendarMeal,
       addingToCalendar,
       extraProps,
+      backTitle,
+      title
     } = this.state;
     // console.log("from calendar",extraProps)
+    //console.log(recipe)
     return (
       <View style={NutritionStyles.container}>
         {!loading && (
@@ -169,7 +177,7 @@ export default class RecipeScreen extends React.PureComponent {
                   <BigHeadingWithBackButton
                     isBackButton={true}
                     onPress={this.handleBack}
-                    backButtonText={`Back to ${this.getBackTitle()}`}
+                    backButtonText={`Back to ${this.state.title}`}
                     isBigTitle={false}
                     backButtonStyle={{ marginTop: 8 }}
                   />
@@ -452,7 +460,7 @@ export default class RecipeScreen extends React.PureComponent {
                 <BigHeadingWithBackButton
                   isBackButton={true}
                   onPress={this.handleBack}
-                  backButtonText={`Back to ${this.getBackTitle()}`}
+                  backButtonText={`Back to ${this.state.title}`}
                   isBigTitle={false}
                 />
               </View>
