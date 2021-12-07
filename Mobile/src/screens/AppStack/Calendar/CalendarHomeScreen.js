@@ -748,28 +748,7 @@ class CalendarHomeScreen extends React.PureComponent {
     const Progress = () => {
       return (
         <>
-          <View
-            onLayout={e => {
-              const newWidth = e.nativeEvent.layout.width;
-              this.setState({ width: newWidth });
-            }}
-            style={{
-              height: 10,
-              backgroundColor: 'rgba(0,0,0,0.1)',
-              borderRadius: 10,
-              overflow: 'hidden'
-            }}>
-            <View style={{
-              height: 10,
-              width: (width * this.currentChallengeDay) / activeChallengeData.numberOfDays,
-              borderRadius: 10,
-              backgroundColor: colors.themeColor.fill,
-              position: 'absolute',
-              left: 0,
-              top: 0
-            }}></View>
-          </View>
-          <View style={{
+         <View style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginTop: 15
@@ -799,9 +778,32 @@ class CalendarHomeScreen extends React.PureComponent {
               }}>Day {activeChallengeData.numberOfDays}</Text>
             </View>
           </View>
+
+          <View
+            onLayout={e => {
+              const newWidth = e.nativeEvent.layout.width;
+              this.setState({ width: newWidth });
+            }}
+            style={{
+              height: 10,
+              backgroundColor: 'rgba(0,0,0,0.1)',
+              borderRadius: 10,
+              overflow: 'hidden',
+              marginTop: 10
+            }}>
+            <View style={{
+              height: 10,
+              width: (width * this.currentChallengeDay) / activeChallengeData.numberOfDays,
+              borderRadius: 10,
+              backgroundColor: colors.themeColor.fill,
+              position: 'absolute',
+              left: 0,
+              top: 0
+            }}></View>
+          </View>
           <View style={{
             flexDirection: 'row',
-            marginTop: 40
+            marginTop: 60
           }}>
             <View style={{
               backgroundColor: '#ffffff',
@@ -899,7 +901,7 @@ class CalendarHomeScreen extends React.PureComponent {
           <View elevation={5} style={{
             position: 'absolute',
             left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 11 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 12,
-            top: 29
+            top: 85
           }}>
             <Svg
               id="prefix__Layer_1"
@@ -928,7 +930,7 @@ class CalendarHomeScreen extends React.PureComponent {
           <View elevation={5} style={{
             position: 'absolute',
             left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7,
-            top: Platform.OS === "ios" ? 41 : 39,
+            top: Platform.OS === "ios" ? 96 : 94,
             backgroundColor: '#F79400',
             width: 40,
             height: 40,
