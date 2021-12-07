@@ -25,6 +25,7 @@ class ChallengeSetting extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            choice: '',
             loading: false,
             calendarModalVisible: false,
             chosenDate: this.props.ScheduleData
@@ -87,7 +88,7 @@ class ChallengeSetting extends Component {
         this.resetChallenge(data, callBack);
     }
 
-    async  restartChallenge(data) {
+    async restartChallenge(data) {
         const callBack = (newData) => {
             this.props.navigation.navigate("ChallengeOnBoarding6", {
                 data: {
@@ -99,6 +100,10 @@ class ChallengeSetting extends Component {
     }
 
     showCalendarModal = () => {
+        this.setState({ calendarModalVisible: true, choice: 'Yes' });
+    };
+
+    showCalendarModalUno = () => {
         this.setState({ calendarModalVisible: true });
     };
 
@@ -180,52 +185,100 @@ class ChallengeSetting extends Component {
             // Object.assign(data, { isSchedule: true, status: "InActive" });
             Object.assign(data, { isSchedule: false, status: "Active" });
         }
-        userRef
-            .doc(activeChallengeData.id)
-            .set(data, { merge: true })
-            .then((res) => {
+        if (this.state.choice === 'Yes') {
+            userRef
+                .doc(activeChallengeData.id)
+                .get()
+                .then((res) => {
 
-                Alert.alert(
-                    "",
-                    `Your start date has been added to your challenge. Go to ${moment(
-                        selectedDate
-                    ).format(
-                        "DD-MM-YY"
-                    )} on the challenge dashboard to see what Day 1 looks like`,
-                    [
-                        {
-                            text: "OK",
-                            onPress: () => {
-                                // this.hideCalendarModal();
-                                /*
-                                this.props.navigation.reset(
-                                  [NavigationActions.navigate({ routeName: "CalendarHome" })],
-                                  0
-                                );
-                                */
+                    Alert.alert(
+                        "",
+                        `Your start date has been added to your challenge. Go to ${moment(
+                            selectedDate
+                        ).format(
+                            "DD-MM-YY"
+                        )} on the challenge dashboard to see what Day 1 looks like`,
+                        [
+                            {
+                                text: "OK",
+                                onPress: () => {
+                                    // this.hideCalendarModal();
+                                    /*
+                                    this.props.navigation.reset(
+                                      [NavigationActions.navigate({ routeName: "CalendarHome" })],
+                                      0
+                                    );
+                                    */
 
-                                const resetAction = StackActions.reset({
-                                    index: 0,
-                                    actions: [
-                                        NavigationActions.navigate({
-                                            routeName: "Tabs",
-                                            action: NavigationActions.navigate({
-                                                routeName: "CalendarHome",
+                                    const resetAction = StackActions.reset({
+                                        index: 0,
+                                        actions: [
+                                            NavigationActions.navigate({
+                                                routeName: "Tabs",
+                                                action: NavigationActions.navigate({
+                                                    routeName: "CalendarHome",
+                                                }),
                                             }),
-                                        }),
-                                    ],
-                                });
-                                this.props.navigation.dispatch(resetAction);
-
+                                        ],
+                                    });
+                                    this.props.navigation.dispatch(resetAction);
+                                    this.setState({ choice: '' })
+                                },
                             },
-                        },
-                    ],
-                    { cancelable: false }
-                );
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+                        ],
+                        { cancelable: false }
+                    );
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } else {
+            userRef
+                .doc(activeChallengeData.id)
+                .set(data, { merge: true })
+                .then((res) => {
+
+                    Alert.alert(
+                        "",
+                        `Your start date has been added to your challenge. Go to ${moment(
+                            selectedDate
+                        ).format(
+                            "DD-MM-YY"
+                        )} on the challenge dashboard to see what Day 1 looks like`,
+                        [
+                            {
+                                text: "OK",
+                                onPress: () => {
+                                    // this.hideCalendarModal();
+                                    /*
+                                    this.props.navigation.reset(
+                                      [NavigationActions.navigate({ routeName: "CalendarHome" })],
+                                      0
+                                    );
+                                    */
+
+                                    const resetAction = StackActions.reset({
+                                        index: 0,
+                                        actions: [
+                                            NavigationActions.navigate({
+                                                routeName: "Tabs",
+                                                action: NavigationActions.navigate({
+                                                    routeName: "CalendarHome",
+                                                }),
+                                            }),
+                                        ],
+                                    });
+                                    this.props.navigation.dispatch(resetAction);
+                                },
+                            },
+                        ],
+                        { cancelable: false }
+                    );
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
     }
 
 
@@ -353,30 +406,6 @@ class ChallengeSetting extends Component {
                         <Text style={styles.title}>Restart challenge</Text>
                         <DoubleRightArrow height={wp("3.5%")} />
                     </TouchableOpacity>
-
-                    {/* <TouchableOpacity
-            style={styles.btnContainer}
-            onPress={() => {
-              Alert.alert(
-                "Are you sure?",
-                "To choose another you need to quit current active challenge.",
-                [
-                  {
-                    text: "Cancel",
-                    style: "cancel",
-                  },
-                  {
-                    text: "Quit",
-                    onPress: () => this.quitChallenge(activeChallengeUserData),
-                  },
-                ],
-                { cancelable: false }
-              );
-            }}
-          >
-            <Text style={styles.title}>Choose another challenge</Text>
-            <DoubleRightArrow height={wp("3.5%")} />
-          </TouchableOpacity> */}
                 </View>
             </View>
         );
@@ -394,53 +423,6 @@ class ChallengeSetting extends Component {
                         borderTopColor: colors.grey.light,
                     }}
                 >
-                    {/* <TouchableOpacity
-            style={styles.btnContainer}
-            onPress={() => {
-              Alert.alert(
-                "Are you sure!",
-                "You want to reset your challenge start date?",
-                [
-                  {
-                    text: "Cancel",
-                    style: "cancel",
-                  },
-                  {
-                    text: "Reset",
-                    onPress: () => this.showCalendarModal(),
-                  },
-                ],
-                { cancelable: false }
-              );
-            }}
-          >
-            <Text style={styles.title}>Reset challenge start Date</Text>
-            <DoubleRightArrow height={wp("3.5%")} />
-          </TouchableOpacity> */}
-
-                    {/* <TouchableOpacity
-            style={styles.btnContainer}
-            onPress={() => {
-              Alert.alert(
-                "Are you sure !",
-                "you want to remove challenge from schedular?",
-                [
-                  {
-                    text: "Cancel",
-                    style: "cancel",
-                  },
-                  {
-                    text: "Remove",
-                    onPress: () => this.discardChallengeFromSchedular(),
-                  },
-                ],
-                { cancelable: false }
-              );
-            }}
-          >
-            <Text style={styles.title}>Remove challenge from schedule</Text>
-            <DoubleRightArrow height={wp("3.5%")} />
-          </TouchableOpacity> */}
                     <TouchableOpacity
                         style={styles.btnContainer}
                         onPress={() => {
@@ -469,16 +451,20 @@ class ChallengeSetting extends Component {
                         style={styles.btnContainer}
                         onPress={() => {
                             Alert.alert(
-                                "Are you sure!",
-                                "You want to change your challenge start date?",
+                                "",
+                                "Do you want to keep your Active Weekly Workout Progress Data?",
                                 [
                                     {
                                         text: "Cancel",
                                         style: "cancel",
                                     },
                                     {
-                                        text: "Change",
+                                        text: "YES",
                                         onPress: () => this.showCalendarModal(),
+                                    },
+                                    {
+                                        text: "NO",
+                                        onPress: () => this.showCalendarModalUno(),
                                     },
                                 ],
                                 { cancelable: false }
