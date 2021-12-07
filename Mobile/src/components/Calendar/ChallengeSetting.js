@@ -464,7 +464,7 @@ class ChallengeSetting extends Component {
                         <Text style={styles.title}>Quit challenge</Text>
                         <DoubleRightArrow height={wp("3.5%")} />
                     </TouchableOpacity>
-
+                    {/* WIP */}
                     <TouchableOpacity
                         style={styles.btnContainer}
                         onPress={() => {
