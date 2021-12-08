@@ -128,12 +128,14 @@ export default class HomeScreenV2 extends React.PureComponent {
                             titleCapitalise={true}
                             Title='Explore a challenge'
                             customBtnStyle={styles.oblongBtnStyle}
-                            onPress={() =>
-                            {
+                            onPress={() => {
                                 isActiveChallenge().then((res) => {
-
-                                });
-                            }
+                                    if (res) {
+                                        this.props.navigation.navigate("Calendar");
+                                    } else {
+                                        this.props.navigation.navigate("ChallengeSubscription");
+                                    }
+                                });}
                             }
                             // style={styles.oblongBtnStyle}
                             // isRightIcon={true}
