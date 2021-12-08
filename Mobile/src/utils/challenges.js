@@ -88,6 +88,55 @@ export const getTodayRecommendedWorkout = async(workouts,activeChallengeUserData
 
 }
 
+export const fetchRecipeData = async (challengeRecipe) => {
+  let recipeMeal = []
+  if(challengeRecipe){
+    const recipe = []
+    const level1 = challengeRecipe[0].level1[0].phases[0].meals
+    const level2 = challengeRecipe[0].level2[0].phases[0].meals
+    level1.forEach((el) => recipe.push(el))
+    level2.forEach((el) => recipe.push(el))
+    const recipeRef = db.collection('recipes');
+    const snapshot = await recipeRef.get();
+    if (snapshot.empty) {
+      return null
+    }else{
+      snapshot.forEach(res=>{
+        if(recipe.includes(res.data().id)){
+          recipeMeal.push(res.data());
+        }
+      })
+    }
+  }
+  
+  const challengeMealsFilterList = recipeMeal.map((res)=>res.id)
+
+  const breakfastList = recipeMeal.filter((res)=>res.breakfast)
+  const lunchList = recipeMeal.filter((res)=>res.lunch)
+  const dinnerList = recipeMeal.filter((res)=>res.dinner)
+  const snackList = recipeMeal.filter((res)=>res.snack)
+  const drinkList = recipeMeal.filter((res)=>res.drink)
+  const preworkoutList = recipeMeal.filter((res)=>res.preworkout)
+  const treatsList = recipeMeal.filter((res)=>res.treats)
+
+
+
+  const recommendedRecipe = [{
+    breakfast:breakfastList,
+    snack:snackList,
+    lunch:lunchList,
+    dinner:dinnerList,
+    drink:drinkList,
+    preworkout:preworkoutList,
+    treats:treatsList
+  }]
+  return {
+    recommendedRecipe,
+    challengeMealsFilterList
+  }
+
+}
+
 export const getTodayRecommendedMeal = async(phaseData,activeChallengeData) =>{
   // const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
   let phaseMeals = []

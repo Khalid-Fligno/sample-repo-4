@@ -12,6 +12,7 @@ import globalStyle, { containerPadding } from "../../../styles/globalStyles";
 import calendarStyles from "./calendarStyle";
 import * as Haptics from "expo-haptics";
 import {
+  fetchRecipeData,
   getCurrentPhase,
   getTotalChallengeWorkoutsCompleted,
   getCurrentChallengeDay,
@@ -146,6 +147,10 @@ class CalendarHomeScreen extends React.PureComponent {
           level3: level_3,
           level4: level_4
         }]
+        
+        fetchRecipeData(challengeLevel).then((res) => {
+          console.log('recommendedRecipe: ', res.recommendedRecipe)
+        })
 
         this.setState({
           challengeRecipe: challengeLevel
