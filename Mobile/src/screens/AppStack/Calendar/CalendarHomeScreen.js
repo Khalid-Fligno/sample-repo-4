@@ -12,6 +12,7 @@ import globalStyle, { containerPadding } from "../../../styles/globalStyles";
 import calendarStyles from "./calendarStyle";
 import * as Haptics from "expo-haptics";
 import {
+  fetchRecipeData,
   getCurrentPhase,
   getTotalChallengeWorkoutsCompleted,
   getCurrentChallengeDay,
@@ -87,7 +88,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async onFocusFunction() {
     console.log("On focus");
-    await this.fetchRecipe();
     await this.fetchRecipeChallenge();
     await this.fetchCalendarEntries();
     await this.fetchActiveChallengeUserData();
@@ -103,7 +103,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   componentWillUnmount() {
     this.focusListener.remove();
-    if (this.unsubscribe) this.unsubscribe();
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
     if (this.unsubscribeSchedule) this.unsubscribeSchedule();
@@ -147,42 +146,15 @@ class CalendarHomeScreen extends React.PureComponent {
           level4: level_4
         }]
 
+        fetchRecipeData(challengeLevel).then((res) => {
+          this.setState({
+            AllRecipe: res.recommendedRecipe,
+            loading: false,
+          })
+        })
+
         this.setState({
           challengeRecipe: challengeLevel
-        })
-      })
-  }
-
-  fetchRecipe = async () => {
-    this.setState({ loading: true });
-
-    this.unsubscribe = await db
-      .collection("recipes")
-      .get()
-      .then(querySnapshot => {
-        const breakfastActive = []
-        const lunchActive = []
-        const dinnerActive = []
-        const snackActive = []
-        const drinkActive = [] 
-
-        const documents = querySnapshot.docs.map(doc => doc.data())
-        documents.filter((res) => res.breakfast === true? breakfastActive.push(res) : null)
-        documents.filter((res) => res.lunch === true? lunchActive.push(res) : null)
-        documents.filter((res) => res.dinner === true? dinnerActive.push(res) : null)
-        documents.filter((res) => res.snack === true? snackActive.push(res) : null)
-        documents.filter((res) => res.drink === true? drinkActive.push(res) : null)
-
-        const recommendedMeal = [{
-          breakfast: breakfastActive,
-          snack: snackActive,
-          lunch: lunchActive,
-          dinner: dinnerActive,
-          drink: drinkActive
-        }]
-
-        this.setState({
-          AllRecipe: recommendedMeal
         })
       })
   }
@@ -555,15 +527,11 @@ class CalendarHomeScreen extends React.PureComponent {
       const data = activeChallengeUserData.phases;
       const test = activeChallengeUserData.startDate;
       const transformLevel = activeChallengeUserData.displayName;
-      /*
-      if(this.stringDate != test){
-        this.setState({loading :false})
-      } */if (this.stringDate >= test) {
-        this.setState({ loading: true })
+      
+      if (this.stringDate >= test) {
+        this.setState({ loading :true })
       }
-      // this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
-      console.log("date=>", this.stringDate);
-      //console.log(test);
+
       //TODO :getCurrent phase data
       this.phase = getCurrentPhase(
         activeChallengeUserData.phases,
@@ -571,6 +539,7 @@ class CalendarHomeScreen extends React.PureComponent {
       );
       this.transformLevel = transformLevel;
       if (this.phase) {
+
         //TODO :fetch the current phase data from Challenges collection
         this.phaseData = activeChallengeData.phases.filter(
           (res) => res.name === this.phase.name
@@ -608,7 +577,7 @@ class CalendarHomeScreen extends React.PureComponent {
             this.stringDate
           )
         )[0];
-        // console.log("TOfdayya",todayRcWorkout)
+        
         if (todayRcWorkout) this.setState({ todayRcWorkout: todayRcWorkout });
         else this.setState({ todayRcWorkout: undefined });
       }

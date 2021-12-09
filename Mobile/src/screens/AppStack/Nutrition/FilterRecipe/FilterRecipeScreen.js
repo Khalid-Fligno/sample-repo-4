@@ -244,7 +244,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
 
-    applyButton = (phases, datas, recipes) => {
+    applyButton = (phases, datas) => {
 
         const recipeList = []
         const tagList = []
@@ -520,7 +520,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
     keyExtractor = (index) => String(index);
 
     render() {
-        const { recipes, data, allData, challengeRecipe, levelButtonData, title, tags, category, nameCat } = this.state
+        const { recipes, data, allData, challengeRecipe, levelButtonData, title, tags, nameCat } = this.state
 
         const tagList = []
 
@@ -667,8 +667,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         this.clickModal(phaseData, data, recipes)
                     )
                 }
-                {/*{this.filterModal(challengeRecipe)}*/}
-                {/*{this.clickModal(phaseData, data, recipes)}*/}
             </View>
         );
     }
