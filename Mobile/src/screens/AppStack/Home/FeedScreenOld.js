@@ -31,8 +31,6 @@ import WorkOutCard from "../../../components/Home/WorkoutCard";
 import TimeSvg from "../../../../assets/icons/time";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
-import Carousel from 'react-native-carousel-view';
-
 import {
   getCurrentPhase,
   getCurrentChallengeDay,
@@ -248,134 +246,235 @@ export default class FeedScreen extends React.PureComponent {
         recommendedWorkout.push(`Day ${this.currentChallengeDay}`);
       }
     }
+
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={HomeScreenStyle.scrollView}
         // style={[globalStyle.container,{paddingHorizontal:0}]}
       >
-        
+        <View style={{ paddingHorizontal: containerPadding }}>
+          <BigHeadingWithBackButton
+            bigTitleText="FEED"
+            isBackButton={false}
+            isBigTitle={true}
+          />
+        </View>
 
-        <View style={{ marginBottom: wp("30%"),flex: 1 }}>
-            <View style={{flex: 1,alignItems: 'center'}}>
-                <Carousel
-                  height={hp("52%")}
-                  delay={3000}
-                  width={width+50}
-                  animate={true}
-                >
-                  <View style={{flex: 1,alignItems:'center'}}>
-                      <Image
-                        style={{overflow:'hidden',flex: 1}}
-                        source={require("../../../../assets/images/placeholder.png")}
-                        resizeMode='contain'
-                      />
-                  </View>
-                  <View style={{flex: 1,alignItems:'center'}}>
-                    <Image
-                      style={{overflow:'hidden',flex: 1,}}
-                      source={require("../../../../assets/images/placeholder.png")}
-                      resizeMode='contain'
-                    />
-                  </View>
-                  <View style={{flex: 1,alignItems:'center'}}>
-                      <Image
-                        style={{overflow:'hidden',flex: 1,}}
-                        source={require("../../../../assets/images/placeholder.png")}
-                        resizeMode='contain'
-                      />
-                  </View>
-                </Carousel>
-                <View style={{flex: 1,marginTop: 20}}>
-                    <View style={{flex: 1,alignItems: 'center'}}>
-                        <Text style=
-                        {{
-                          fontSize:wp('4.5%'),
-                          fontFamily: fonts.bold,
-                          fontWeight: '500'
-                        }}>
-                          Explore
-                        </Text>
-                    </View>
-                    <View style={{flex: 1,flexDirection:'row',marginTop: 10}}>
-                      <View style={{paddingRight: 10}}>
-                        <Image
-                            style=
-                            {{
-                              overflow:'hidden',
-                              width: 100,
-                              height: 100,
-                              borderRadius: 50
-                            }}
-                            source={require("../../../../assets/images/placeholder.png")}
-                            resizeMode='contain'
-                          />
-                       </View>
-                       <View style={{paddingRight: 10}}>
-                        <Image
-                            style=
-                            {{
-                              overflow:'hidden',
-                              width: 100,
-                              height: 100,
-                              borderRadius: 50
-                            }}
-                            source={require("../../../../assets/images/placeholder.png")}
-                            resizeMode='contain'
-                          />
-                       </View>
-                       <View style={{paddingRight: 10}}>
-                        <Image
-                            style=
-                            {{
-                              overflow:'hidden',
-                              width: 100,
-                              height: 100,
-                              borderRadius: 50
-                            }}
-                            source={require("../../../../assets/images/placeholder.png")}
-                            resizeMode='contain'
-                          />
-                       </View>
+        <View style={{ marginBottom: wp("30%") }}>
+          <WorkOutCard
+            image={require("../../../../assets/images/placeholder.png")}
+            title="TODAY'S WORKOUT"
+            recommendedWorkout={recommendedWorkout}
+            onPress={() => this.props.navigation.navigate("Calendar")}
+            // cardCustomStyle ={{marginTop:20}}
+          />
+          {/*            
+              <FeedCard 
+                // title ="COMMUNITY"
+                cardCustomStyle={{
+                  marginHorizontal:0,
+                  marginTop:wp('5%')
+                }}
+                cardImageStyle={{
+                  borderRadius:0
+                }}
+                btnTitle ="Find out more"
+                onPress={()=>console.log("Community Pressed")}
+                image={require('../../../../assets/images/Feed/community.jpg')}
+              /> */}
+          <FeedCard
+            cardCustomStyle={{
+              marginHorizontal: containerPadding,
+              marginTop: wp("7%"),
+            }}
+            cardImageStyle={{
+              borderRadius: 3,
+              backgroundColor: "#658dc3",
+            }}
+            customTitleStyle={{
+              fontSize: wp("4.5%"),
+              color: colors.offWhite,
+            }}
+            btnTitle="Connect with us"
+            customBtnStyle={{ backgroundColor: colors.themeColor.color }}
+            customBtnTitleStyle={{ color: colors.black }}
+            onPress={() =>
+              this.openLink(
+                "https://www.facebook.com/groups/180007149128432/?source_id=204363259589572"
+              )
+            }
+            image={require("../../../../assets/images/Feed/facebook.jpg")}
+          />
+          {blogs && blogs.length > 0 && (
+            <BlogCard
+              title="BLOG"
+              cardCustomStyle={{
+                marginHorizontal: 0,
+                marginTop: wp("7%"),
+              }}
+              cardImageStyle={{
+                borderRadius: 0,
+              }}
+              data={blogs}
+            />
+          )}
+          <FeedCard
+            // title ="Workouts"
+            cardCustomStyle={{
+              marginHorizontal: containerPadding,
+              marginTop: wp("7%"),
+            }}
+            cardImageStyle={{
+              borderRadius: 3,
+            }}
+            customTitleStyle={{
+              fontSize: wp("4.5%"),
+            }}
+            btnTitle="Find out more"
+            onPress={() => this.goToFitazfkEquipmentWorkouts()}
+            image={require("../../../../assets/images/Feed/workout.jpg")}
+          />
+          {Feeds.map((res, i) => (
+            <FeedCard
+              // title ="Workouts"
+              key={i}
+              cardCustomStyle={{
+                marginHorizontal: i % 2 === 0 ? containerPadding : 0,
+                marginTop: wp("7%"),
+              }}
+              cardImageStyle={{
+                borderRadius: i % 2 === 0 ? 3 : 0,
+              }}
+              customTitleStyle={{
+                fontSize: wp("4.5%"),
+              }}
+              btnTitle={res.btnTitle}
+              customBtnStyle={res.btnBg ? { backgroundColor: res.btnBg } : {}}
+              customBtnTitleStyle={
+                res.btnTitleColor ? { color: res.btnTitleColor } : {}
+              }
+              onPress={() => this.openLink(res.url)}
+              image={res.bgImage}
+            />
+          ))}
 
-                    </View>
-                    <View style={{flex: 1,flexDirection:'row'}}>
-                      <View style={{flex: 1,paddingLeft: 10}}>
-                        <Text style=
-                          {{
-                            fontSize:wp('3.5%'),
-                            fontFamily: fonts.bold,
-                            fontWeight: '100'
-                          }}>
-                            Community
-                          </Text>
-                      </View>
-                      <View style={{flex: 1,paddingLeft: 10}}>
-                        <Text style=
-                          {{
-                            fontSize:wp('3.5%'),
-                            fontFamily: fonts.bold,
-                            fontWeight: '100'
-                          }}>
-                            Activewear
-                          </Text>
-                      </View>
-                      <View style={{flex: 1,paddingLeft: 10}}>
-                        <Text style=
-                          {{
-                            fontSize:wp('3.5%'),
-                            fontFamily: fonts.bold,
-                            fontWeight: '100'
-                          }}>
-                            Equipment
-                          </Text>
-                      </View>
-                    </View>
+          {/* <FeedCard 
+                // title ="Workouts"
+                cardCustomStyle={{
+                  marginHorizontal:containerPadding,
+                  marginTop:wp('7%')
+                }}
+                cardImageStyle={{
+                  borderRadius:3
+                }}
+                customTitleStyle={{
+                  fontSize: wp('4.5%')
+                }}
+                btnTitle ="Find out more"
+                onPress={()=>console.log("Workouts Pressed")}
+                image={require('../../../../assets/images/Feed/workout.jpg')}
 
+              />
 
-                </View>
-            </View>
+              <FeedCard 
+                // title ="Out now"
+                cardCustomStyle={{
+                  marginHorizontal:0,
+                  marginTop:wp('7%')
+                }}
+                cardImageStyle={{
+                  borderRadius:0,
+                  backgroundColor:colors.charcoal.light
+                }}
+                customTitleStyle={{
+                  fontSize: wp('4.5%'),
+                  color:colors.offWhite
+                }}
+                btnTitle ="Find out more"
+                onPress={()=>console.log("Workouts Pressed")}
+                image={require('../../../../assets/images/Feed/activewear.jpg')}
+              />
 
+              <FeedCard 
+                cardCustomStyle={{
+                  marginHorizontal:containerPadding,
+                  marginTop:wp('7%')
+                }}
+                cardImageStyle={{
+                  borderRadius:3,
+                  backgroundColor:'#658dc3'
+                }}
+                customTitleStyle={{
+                  fontSize: wp('4.5%'),
+                  color:colors.offWhite
+                }}
+                btnTitle ="Connect with us"
+                customBtnStyle={{backgroundColor:colors.offWhite}}
+                customBtnTitleStyle={{color:'#658dc3'}}
+                onPress={()=>console.log("Workouts Pressed")}
+                image={require('../../../../assets/images/Feed/facebook.jpg')}
+              />
+
+               <FeedCard 
+                // title ="Available now"
+                cardCustomStyle={{
+                  marginHorizontal:0,
+                  marginTop:wp('7%')
+                }}
+                cardImageStyle={{
+                  borderRadius:0,
+                  backgroundColor:colors.grey.dark
+                }}
+                customTitleStyle={{
+                  fontSize: wp('4.5%'),
+                  color:colors.offWhite
+                }}
+                btnTitle ="Find out more"
+                onPress={()=>console.log("Workouts Pressed")}
+                image={require('../../../../assets/images/Feed/equipment.jpg')}
+              /> */}
+
+          {/* {
+                blogs && blogs.length > 0&&
+                blogs.map((res,index)=>
+                    <ChallengeBlogCard
+                    key={index}
+                    data={res}
+                    onPress={() => this.openLink(res.urlLink)}
+                    index = {index}
+                  />
+                )
+               
+              } */}
+
+          {/* <NewsFeedTile
+                image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
+                title="SHOP APPAREL"
+                onPress={() => this.openLink('https://fitazfk.com/collections/wear-fitazfk-apparel')}
+              />
+              <DoubleNewsFeedTile
+                imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-blog.jpg')}
+                imageRight={require('../../../../assets/images/hiit-rest-placeholder.jpg')}
+                titleLeft1="HOW TO USE THIS APP"
+                titleRight1="FAQ"
+                onPressLeft={() => this.props.navigation.navigate('HomeBlog')}
+                onPressRight={() => this.openLink('https://fitazfk.zendesk.com/hc/en-us')}
+              />
+              <NewsFeedTile
+                image={require('../../../../assets/images/shop-bundles.jpg')}
+                title="SHOP EQUIPMENT"
+                onPress={() => this.openLink('https://fitazfk.com/collections/equipment')}
+              />
+              <NewsFeedTile
+                image={require('../../../../assets/images/fitazfk-army.jpg')}
+                title="JOIN THE FITAZFK ARMY"
+                onPress={() => this.openLink('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
+              /> */}
+          {/* <Loader
+                loading={loading}
+                color={colors.charcoal.standard}
+              /> */}
           <Loader loading={loading} color={colors.themeColor.color} />
         </View>
       </ScrollView>

@@ -87,6 +87,7 @@
     "react-native-bouncy-checkbox": "^2.1.2",
     "react-native-calendar-strip": "^1.3.3",
     "react-native-carousel": "^0.12.0",
+    "react-native-carousel-view": "^0.5.1",
     "react-native-check-version": "^1.0.9",
     "react-native-circular-progress": "^1.3.6",
     "react-native-device-info": "^8.0.1",
