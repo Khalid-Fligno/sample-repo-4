@@ -109,7 +109,7 @@ export const fetchRecipeData = async (challengeRecipe) => {
     }
   }
   
-  const challengeMealsFilterList = recipeMeal.map((res)=>res.id)
+  const challengeAllMealsFilterList = recipeMeal.map((res)=>res.id)
 
   const breakfastList = recipeMeal.filter((res)=>res.breakfast)
   const lunchList = recipeMeal.filter((res)=>res.lunch)
@@ -132,7 +132,7 @@ export const fetchRecipeData = async (challengeRecipe) => {
   }]
   return {
     recommendedRecipe,
-    challengeMealsFilterList
+    challengeAllMealsFilterList
   }
 
 }
