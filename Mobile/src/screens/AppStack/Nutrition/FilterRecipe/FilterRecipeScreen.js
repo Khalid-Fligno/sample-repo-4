@@ -522,7 +522,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
     keyExtractor = (index) => String(index);
 
     render() {
-        const { recipes, data, allData, challengeRecipe, levelButtonData, tags, nameCat } = this.state
+        const { recipes, data, allData, challengeRecipe, levelButtonData, tags, nameCat, title } = this.state
 
         const tagList = []
 
