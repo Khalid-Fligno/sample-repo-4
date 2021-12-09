@@ -286,6 +286,8 @@ export default class FeedScreen extends React.PureComponent {
                       />
                   </View>
                 </Carousel>
+                </View>
+
                 <View style={{flex: 1,marginTop: 20}}>
                     <View style={{flex: 1,alignItems: 'center'}}>
                         <Text style=
@@ -297,84 +299,102 @@ export default class FeedScreen extends React.PureComponent {
                           Explore
                         </Text>
                     </View>
-                    <View style={{flex: 1,flexDirection:'row',marginTop: 10}}>
-                      <View style={{paddingRight: 10}}>
-                        <Image
-                            style=
+                    <View style={{flex: 1,alignItems:'center'}}>
+                      <View style={{flex: 1,flexDirection:'row',marginTop: 10,}}>
+                        <View style={{paddingRight: 10}}>
+                          <Image
+                              style=
+                              {{
+                                overflow:'hidden',
+                                width: 100,
+                                height: 100,
+                                borderRadius: 50
+                              }}
+                              source={require("../../../../assets/images/placeholder.png")}
+                              resizeMode='contain'
+                            />
+                        </View>
+                        <View style={{paddingRight: 10}}>
+                          <Image
+                              style=
+                              {{
+                                overflow:'hidden',
+                                width: 100,
+                                height: 100,
+                                borderRadius: 50
+                              }}
+                              source={require("../../../../assets/images/placeholder.png")}
+                              resizeMode='contain'
+                            />
+                        </View>
+                        <View style={{paddingRight: 10}}>
+                          <Image
+                              style=
+                              {{
+                                overflow:'hidden',
+                                width: 100,
+                                height: 100,
+                                borderRadius: 50
+                              }}
+                              source={require("../../../../assets/images/placeholder.png")}
+                              resizeMode='contain'
+                            />
+                        </View>
+
+                      </View>
+                    </View>
+                    <View style={{flex: 1,alignItems:'center'}}>
+                      <View style={{flex: 1,flexDirection:'row',marginBottom: 20,}}>
+                        <View style={{flex: 1,paddingLeft: 50,marginTop: 10}}>
+                          <Text style=
                             {{
-                              overflow:'hidden',
-                              width: 100,
-                              height: 100,
-                              borderRadius: 50
-                            }}
-                            source={require("../../../../assets/images/placeholder.png")}
-                            resizeMode='contain'
-                          />
-                       </View>
-                       <View style={{paddingRight: 10}}>
-                        <Image
-                            style=
+                              fontSize:wp('3.5%'),
+                              fontFamily: fonts.bold,
+                              fontWeight: '100'
+                            }}>
+                              Community
+                            </Text>
+                        </View>
+                        <View style={{flex: 1,paddingRight: 0,marginTop: 10}}>
+                          <Text style=
                             {{
-                              overflow:'hidden',
-                              width: 100,
-                              height: 100,
-                              borderRadius: 50
-                            }}
-                            source={require("../../../../assets/images/placeholder.png")}
-                            resizeMode='contain'
-                          />
-                       </View>
-                       <View style={{paddingRight: 10}}>
-                        <Image
-                            style=
+                              fontSize:wp('3.5%'),
+                              fontFamily: fonts.bold,
+                              fontWeight: '100'
+                            }}>
+                              Activewear
+                            </Text>
+                        </View>
+                        <View style={{flex: 1,paddingRight: 30,marginTop: 10}}>
+                          <Text style=
                             {{
-                              overflow:'hidden',
-                              width: 100,
-                              height: 100,
-                              borderRadius: 50
-                            }}
-                            source={require("../../../../assets/images/placeholder.png")}
-                            resizeMode='contain'
-                          />
-                       </View>
+                              fontSize:wp('3.5%'),
+                              fontFamily: fonts.bold,
+                              fontWeight: '100'
+                            }}>
+                              Equipment
+                            </Text>
+                        </View>
+                      </View>
 
                     </View>
-                    <View style={{flex: 1,flexDirection:'row'}}>
-                      <View style={{flex: 1,paddingLeft: 10}}>
-                        <Text style=
-                          {{
-                            fontSize:wp('3.5%'),
-                            fontFamily: fonts.bold,
-                            fontWeight: '100'
-                          }}>
-                            Community
-                          </Text>
-                      </View>
-                      <View style={{flex: 1,paddingLeft: 10}}>
-                        <Text style=
-                          {{
-                            fontSize:wp('3.5%'),
-                            fontFamily: fonts.bold,
-                            fontWeight: '100'
-                          }}>
-                            Activewear
-                          </Text>
-                      </View>
-                      <View style={{flex: 1,paddingLeft: 10}}>
-                        <Text style=
-                          {{
-                            fontSize:wp('3.5%'),
-                            fontFamily: fonts.bold,
-                            fontWeight: '100'
-                          }}>
-                            Equipment
-                          </Text>
-                      </View>
+
+                    <View style={{flex: 1,paddingTop: 10,backgroundColor:'#333333',height: hp('30%'),marginTop:20}}>
+                          <View style={{flex: 1,alignItems:'flex-start'}}>
+                              <Text style=
+                              {{
+                                fontSize:wp('3.5%'),
+                                fontFamily: fonts.bold,
+                                fontWeight: '100',
+                                color:'white'
+                              }}>
+                                Members Blog
+                              </Text>
+                          </View>
                     </View>
 
 
                 </View>
-            </View>
 
           <Loader loading={loading} color={colors.themeColor.color} />
         </View>
