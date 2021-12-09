@@ -95,6 +95,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       extraProps: this.props.navigation.getParam("extraProps", {}),
       loading: false,
       lifestyle: this.props.navigation.getParam("lifestyle"),
+      gym: this.props.navigation.getParam("workout", null).gym ? true : false
     });
   }
 
@@ -250,6 +251,12 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       this.setState({ expandedCooldown: !this.state.expandedCooldown });
     }
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  };
+
+  renderNoExercise = () => {
+    return (<View>
+      <Text>No Exercise</Text>
+    </View>);
   };
 
   renderItem = (render) => {
@@ -477,8 +484,14 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     this.setState({ modalShow: true });
   };
 
-  hideModal = () => {
+  hideModal = (workout, reps, workoutSubCategory, fitnessLevel) => {
     this.setState({ modalShow: false });
+    // this.props.navigation.replace("WorkoutInfo", {
+    //   workout,
+    //   reps,
+    //   workoutSubCategory,
+    //   fitnessLevel
+    // });
   };
 
   render() {
@@ -653,8 +666,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                                   <Picker
                                       selectedValue={gym ? 'GYM' : 'HOME'}
                                       onValueChange={(value) => {
-                                        this.setState({ gym: value === 'GYM' ? true : false })
-                                        console.log('qwer', workout, reps, workoutSubCategory, fitnessLevel);
+                                        this.setState({ gym: value === 'GYM' ? true : false });
                                       }}
                                   >
                                     <Picker.Item
@@ -670,7 +682,9 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                                   </Picker>
                                   <TouchableOpacity
                                       title="DONE"
-                                      onPress={() => this.hideModal()}
+                                      onPress={() => {
+                                          this.hideModal(workout, reps, workoutSubCategory, fitnessLevel, gym)
+                                      }}
                                       style={{
                                         justifyContent: "center",
                                         alignItems: "center",
@@ -692,62 +706,67 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                             </View>
                           </View>
                         </View>
+                        {
+                          gym && (
+                              <>
+                                <View style={WorkoutScreenStyle.workoutIconsRow}>
+                                  {!this.state.workout.filters.includes("strength") && (
+                                      <View style={WorkoutScreenStyle.workoutIconContainer}>
+                                        <Icon
+                                            name="workouts-hiit"
+                                            size={36}
+                                            color={colors.charcoal.standard}
+                                            style={WorkoutScreenStyle.hiitIcon}
+                                        />
+                                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                                          HIIT {findWorkoutType(workout)}
+                                        </Text>
+                                      </View>
+                                  )}
+                                  {!workout.count && (
+                                      <View style={WorkoutScreenStyle.workoutIconContainer}>
+                                        <TimeSvg width="40" height="40" />
+                                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                                          {workoutTime.toFixed(0)} Mins
+                                        </Text>
+                                      </View>
+                                  )}
 
-                        <View style={WorkoutScreenStyle.workoutIconsRow}>
-                          {!this.state.workout.filters.includes("strength") && (
-                              <View style={WorkoutScreenStyle.workoutIconContainer}>
-                                <Icon
-                                    name="workouts-hiit"
-                                    size={36}
-                                    color={colors.charcoal.standard}
-                                    style={WorkoutScreenStyle.hiitIcon}
-                                />
-                                <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                                  HIIT {findWorkoutType(workout)}
-                                </Text>
-                              </View>
-                          )}
-                          {!workout.count && (
-                              <View style={WorkoutScreenStyle.workoutIconContainer}>
-                                <TimeSvg width="40" height="40" />
-                                <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                                  {workoutTime.toFixed(0)} Mins
-                                </Text>
-                              </View>
-                          )}
-
-                          <View style={WorkoutScreenStyle.workoutIconContainer}>
-                            <Icon
-                                name="workouts-reps"
-                                size={40}
-                                color={colors.charcoal.standard}
-                            />
-                            <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                              {this.state.workout.filters.includes("strength")
-                                  ? `${reps * workoutTime} Reps`
-                                  : `${workout.workoutReps} Rounds`}
-                            </Text>
-                          </View>
-                          {this.state.workout.filters.includes("strength") && (
-                              <View style={WorkoutScreenStyle.workoutIconContainer}>
-                                <Icon
-                                    name={workout && findFocusIcon(workout)}
-                                    size={40}
-                                    color={colors.charcoal.standard}
-                                />
-                                <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                                  {workout && findFocus(workout)}
-                                </Text>
-                              </View>
-                          )}
-                        </View>
-                        <View
-                            style={WorkoutScreenStyle.workoutPreviewHeaderContainer}
-                        >
-                          <Text style={WorkoutScreenStyle.workoutPreviewHeaderText}>
-                            WORKOUT PREVIEW
-                          </Text>
-                        </View>
+                                  <View style={WorkoutScreenStyle.workoutIconContainer}>
+                                    <Icon
+                                        name="workouts-reps"
+                                        size={40}
+                                        color={colors.charcoal.standard}
+                                    />
+                                    <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                                      {this.state.workout.filters.includes("strength")
+                                          ? `${reps * workoutTime} Reps`
+                                          : `${workout.workoutReps} Rounds`}
+                                    </Text>
+                                  </View>
+                                  {this.state.workout.filters.includes("strength") && (
+                                      <View style={WorkoutScreenStyle.workoutIconContainer}>
+                                        <Icon
+                                            name={workout && findFocusIcon(workout)}
+                                            size={40}
+                                            color={colors.charcoal.standard}
+                                        />
+                                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                                          {workout && findFocus(workout)}
+                                        </Text>
+                                      </View>
+                                  )}
+                                </View>
+                                <View
+                                    style={WorkoutScreenStyle.workoutPreviewHeaderContainer}
+                                >
+                                  <Text style={WorkoutScreenStyle.workoutPreviewHeaderText}>
+                                    WORKOUT PREVIEW
+                                  </Text>
+                                </View>
+                              </>
+                          )
+                        }
                       </View>
                     }
                     renderSectionHeader={({ section }) => {
@@ -761,57 +780,65 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                             return cooldownInterval;
                         }
                       })();
-                      return (
-                          <View style={styles.sectionHeader}>
-                            <View style={{ marginLeft: 15 }}>
-                              <Text style={{ fontSize: 15, fontFamily: fonts.bold }}>
-                                {section.title}
-                              </Text>
-                              <Text
-                                  style={{ fontSize: 12, fontFamily: fonts.boldNarrow }}
-                              >{`${section.data.length} exercises - ${interval} min`}</Text>
-                            </View>
-                            <View style={{ marginRight: 15 }}>
-                              <TouchableOpacity
-                                  style={{ flexDirection: "row", alignItems: "center" }}
-                                  onPress={() => this.togglePreview(section)}
-                              >
-                                <Text
-                                    style={{
-                                      fontSize: 11,
-                                      fontFamily: fonts.boldNarrow,
-                                      textDecorationLine: "underline",
-                                      textDecorationColor: colors.black,
-                                    }}
-                                >
-                                  {"Tap to preview"}
-                                </Text>
-                                <MaterialIcon
-                                    name="chevron-down"
-                                    size={30}
-                                    color={colors.black}
-                                />
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                      );
+                      return (<>
+                        {
+                          gym && (
+                              <View style={styles.sectionHeader}>
+                                <View style={{ marginLeft: 15 }}>
+                                  <Text style={{ fontSize: 15, fontFamily: fonts.bold }}>
+                                    {section.title}
+                                  </Text>
+                                  <Text
+                                      style={{ fontSize: 12, fontFamily: fonts.boldNarrow }}
+                                  >{`${section.data.length} exercises - ${interval} min`}</Text>
+                                </View>
+                                <View style={{ marginRight: 15 }}>
+                                  <TouchableOpacity
+                                      style={{ flexDirection: "row", alignItems: "center" }}
+                                      onPress={() => this.togglePreview(section)}
+                                  >
+                                    <Text
+                                        style={{
+                                          fontSize: 11,
+                                          fontFamily: fonts.boldNarrow,
+                                          textDecorationLine: "underline",
+                                          textDecorationColor: colors.black,
+                                        }}
+                                    >
+                                      {"Tap to preview"}
+                                    </Text>
+                                    <MaterialIcon
+                                        name="chevron-down"
+                                        size={30}
+                                        color={colors.black}
+                                    />
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+                          )
+                        }
+                      </>);
                     }}
                     stickySectionHeadersEnabled={true}
                 />
               </View>
           )}
-          <TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
-            <Text
-                style={{
-                  color: colors.white,
-                  fontFamily: fonts.bold,
-                  fontSize: 20,
-                  alignSelf: "center",
-                }}
-            >
-              {"Start now"}
-            </Text>
-          </TouchableOpacity>
+          {
+            gym && (
+                <TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
+                  <Text
+                      style={{
+                        color: colors.white,
+                        fontFamily: fonts.bold,
+                        fontSize: 20,
+                        alignSelf: "center",
+                      }}
+                  >
+                    {"Start now"}
+                  </Text>
+                </TouchableOpacity>
+            )
+          }
         </View>
     );
   }
