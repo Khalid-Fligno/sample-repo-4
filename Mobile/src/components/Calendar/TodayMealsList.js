@@ -8,6 +8,7 @@ import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import { containerPadding } from "../../styles/globalStyles";
+// import Icon from "../Shared/Icon";
 import Icon from "react-native-vector-icons/AntDesign";
 class TodayMealsList extends Component {
   constructor(props) {
@@ -273,6 +274,108 @@ class TodayMealsList extends Component {
     )
   }
 
+  carouselPreworkout = (data, data1, title) => {
+
+    return (
+      <View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingHorizontal: containerPadding,
+          }}
+        >
+          <Text style={styles.label}>{title}</Text>
+        </View>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={{
+            paddingHorizontal: containerPadding,
+            paddingVertical: wp("3%"),
+          }}
+        >
+          {data.map((recipe) => (
+            <TouchableOpacity
+              style={styles.cardContainer}
+              onPress={() => this.props.onPress(recipe)}
+            >
+              <ImageBackground
+                source={{ uri: recipe.coverImage, cache: "force-cache" }}
+                style={styles.image}
+                resizeMode="cover"
+              >
+                <View style={styles.opacityLayer}>
+                  <Text style={styles.cardTitle}>{recipe.title}</Text>
+                </View>
+              </ImageBackground>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={styles.cardContainer1}
+            onPress={() => this.props.filterPress(data, data1, title)}
+          >
+            <View style={styles.opacityLayer1}>
+              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
+              <Text style={styles.cardTitle1}>Choose a recipe</Text>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    )
+  }
+
+  carouselTreats = (data, data1, title) => {
+
+    return (
+      <View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingHorizontal: containerPadding,
+          }}
+        >
+          <Text style={styles.label}>{title}</Text>
+        </View>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={{
+            paddingHorizontal: containerPadding,
+            paddingVertical: wp("3%"),
+          }}
+        >
+          {data.map((recipe) => (
+            <TouchableOpacity
+              style={styles.cardContainer}
+              onPress={() => this.props.onPress(recipe)}
+            >
+              <ImageBackground
+                source={{ uri: recipe.coverImage, cache: "force-cache" }}
+                style={styles.image}
+                resizeMode="cover"
+              >
+                <View style={styles.opacityLayer}>
+                  <Text style={styles.cardTitle}>{recipe.title}</Text>
+                </View>
+              </ImageBackground>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={styles.cardContainer1}
+            onPress={() => this.props.filterPress(data, data1, title)}
+          >
+            <View style={styles.opacityLayer1}>
+              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
+              <Text style={styles.cardTitle1}>Choose a recipe</Text>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    )
+  }
+
   render() {
     const { recipeData, allRecipeData } = this.state
     
@@ -283,6 +386,8 @@ class TodayMealsList extends Component {
         {recipeData.dinner.length > 0 && this.carouselDinner(recipeData.dinner, allRecipeData.dinner, "Dinner")}
         {recipeData.snack.length > 0 && this.carouselSnack(recipeData.snack, allRecipeData.snack, "Snack")}
         {recipeData.drink.length > 0 && this.carouselDrink(recipeData.drink, allRecipeData.drink, "Post Workout")}
+        {recipeData.preworkout.length > 0 && this.carouselPreworkout(recipeData.preworkout, allRecipeData.preworkout, "Pre Workout")}
+        {recipeData.treats.length > 0 && this.carouselTreats(recipeData.treats, allRecipeData.treats, "Treats")}
       </View>
     );
   }
