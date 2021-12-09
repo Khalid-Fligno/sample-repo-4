@@ -622,8 +622,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                           ]
                     }
                     keyExtractor={this.keyExtractor}
-                    renderItem={this.renderItem}
-                    ListHeaderComponent={
+                    renderItem={gym ? this.renderItem : this.renderNoExercise}                    ListHeaderComponent={
                       <View style={WorkoutScreenStyle.workoutInfoContainer}>
                         <View style={WorkoutScreenStyle.workoutNameContainer}>
                           <Text style={WorkoutScreenStyle.workoutName}>
