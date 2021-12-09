@@ -42,6 +42,7 @@ class ChallengeSubscriptionScreen extends Component {
       chosenDate: new Date(),
       selectedChallengeIndex: null,
       addingToCalendar: false,
+      quit: false
     };
   }
 
@@ -55,6 +56,8 @@ class ChallengeSubscriptionScreen extends Component {
         this.props.navigation.navigate("Calendar");
       }
     });
+    console.log('QuitSubscription: ', this.props.navigation.getParam("quit"))
+    this.setState({quit: this.props.navigation.getParam("quit")})
   }
 
   componentDidMount = () => {
@@ -122,7 +125,8 @@ class ChallengeSubscriptionScreen extends Component {
   };
 
   addChallengeToUser(index) {
-    let { userData, challengesList } = this.state;
+    let { userData, challengesList, quit } = this.state;
+    console.log('quit: ', quit)
     const userRef = db
       .collection("users")
       .doc(userData.id)
@@ -138,6 +142,7 @@ class ChallengeSubscriptionScreen extends Component {
           data: {
             challengeData: data,
           },
+          quit
         });
       })
       .catch((err) => {
@@ -271,6 +276,7 @@ class ChallengeSubscriptionScreen extends Component {
   };
 
   onBoarding(challengeData, btnTitle, btnDisabled) {
+    const {quit} = this.state;
     if (btnDisabled) {
       if (btnTitle === "Active") this.props.navigation.navigate("Calendar");
       else if (challengeData.isSchedule) {
@@ -294,7 +300,8 @@ class ChallengeSubscriptionScreen extends Component {
         data: {
           challengeData,
         },
-        challengeOnboard: true
+        challengeOnboard: true,
+        quit
       });
     }
   }
