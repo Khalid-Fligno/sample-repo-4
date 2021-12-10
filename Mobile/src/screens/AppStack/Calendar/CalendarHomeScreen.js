@@ -607,7 +607,7 @@ class CalendarHomeScreen extends React.PureComponent {
       });
     this.props.navigation.navigate("Recipe", {
       recipe: recipeData,
-      backTitle: "challenge dashboard",
+      title: "challenge dashboard",
       extraProps: { fromCalender: true },
     });
   }
