@@ -257,7 +257,7 @@ export default class FeedScreen extends React.PureComponent {
         
 
         <View style={{ marginBottom: wp("30%"),flex: 1 }}>
-            <View style={{flex: 1,alignItems: 'center'}}>
+            <View style={{flex: 1,alignItems:'center'}}>
                 <Carousel
                   height={hp("52%")}
                   delay={3000}
@@ -266,23 +266,23 @@ export default class FeedScreen extends React.PureComponent {
                 >
                   <View style={{flex: 1,alignItems:'center'}}>
                       <Image
-                        style={{overflow:'hidden',flex: 1}}
-                        source={require("../../../../assets/images/placeholder.png")}
-                        resizeMode='contain'
+                        style={{flex: 1,height:'100%',width:'90%'}}
+                        source={{uri:'https://images.pexels.com/photos/6456303/pexels-photo-6456303.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260'}}
+                        resizeMode='stretch'
                       />
                   </View>
                   <View style={{flex: 1,alignItems:'center'}}>
-                    <Image
-                      style={{overflow:'hidden',flex: 1,}}
-                      source={require("../../../../assets/images/placeholder.png")}
-                      resizeMode='contain'
-                    />
+                      <Image
+                        style={{flex: 1,height:'100%',width:'90%'}}
+                        source={{uri:'https://images.pexels.com/photos/6740056/pexels-photo-6740056.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
+                        resizeMode='stretch'
+                      />
                   </View>
                   <View style={{flex: 1,alignItems:'center'}}>
                       <Image
-                        style={{overflow:'hidden',flex: 1,}}
-                        source={require("../../../../assets/images/placeholder.png")}
-                        resizeMode='contain'
+                        style={{flex: 1,height:'100%',width:'90%'}}
+                        source={{uri:'https://images.pexels.com/photos/136405/pexels-photo-136405.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
+                        resizeMode='stretch'
                       />
                   </View>
                 </Carousel>
@@ -310,8 +310,8 @@ export default class FeedScreen extends React.PureComponent {
                                 height: 100,
                                 borderRadius: 50
                               }}
-                              source={require("../../../../assets/images/placeholder.png")}
-                              resizeMode='contain'
+                              source={{uri: 'https://images.pexels.com/photos/3280130/pexels-photo-3280130.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
+                              resizeMode='stretch'
                             />
                         </View>
                         <View style={{paddingRight: 10}}>
@@ -323,8 +323,8 @@ export default class FeedScreen extends React.PureComponent {
                                 height: 100,
                                 borderRadius: 50
                               }}
-                              source={require("../../../../assets/images/placeholder.png")}
-                              resizeMode='contain'
+                              source={{uri: 'https://images.pexels.com/photos/8520564/pexels-photo-8520564.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
+                              resizeMode='stretch'
                             />
                         </View>
                         <View style={{paddingRight: 10}}>
@@ -336,8 +336,8 @@ export default class FeedScreen extends React.PureComponent {
                                 height: 100,
                                 borderRadius: 50
                               }}
-                              source={require("../../../../assets/images/placeholder.png")}
-                              resizeMode='contain'
+                              source={{uri: 'https://images.pexels.com/photos/6740821/pexels-photo-6740821.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
+                              resizeMode='stretch'
                             />
                         </View>
 
