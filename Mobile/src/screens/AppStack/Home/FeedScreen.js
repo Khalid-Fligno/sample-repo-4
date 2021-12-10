@@ -6,6 +6,7 @@ import {
   Text,
   Dimensions,
   Image,
+  StyleSheet,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Button } from "react-native-elements";
@@ -256,39 +257,40 @@ export default class FeedScreen extends React.PureComponent {
       >
         
 
-        <View style={{ marginBottom: wp("30%"),flex: 1 }}>
+        <View style={{ marginBottom: wp("10%"),flex: 1 }}>
             <View style={{flex: 1,alignItems:'center'}}>
                 <Carousel
                   height={hp("52%")}
                   delay={3000}
                   width={width+50}
                   animate={true}
+                  indicatorColor={'white'}
                 >
                   <View style={{flex: 1,alignItems:'center'}}>
                       <Image
-                        style={{flex: 1,height:'100%',width:'90%'}}
+                        style={{flex: 1,height:'90%',width:'90%'}}
                         source={{uri:'https://images.pexels.com/photos/6456303/pexels-photo-6456303.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260'}}
-                        resizeMode='stretch'
+                        resizeMode='cover'
                       />
                   </View>
                   <View style={{flex: 1,alignItems:'center'}}>
                       <Image
-                        style={{flex: 1,height:'100%',width:'90%'}}
-                        source={{uri:'https://images.pexels.com/photos/6740056/pexels-photo-6740056.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
-                        resizeMode='stretch'
+                        style={{flex: 1,height:'90%',width:'90%'}}
+                        source={{uri:'https://images.pexels.com/photos/3912953/pexels-photo-3912953.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
+                        resizeMode='cover'
                       />
                   </View>
                   <View style={{flex: 1,alignItems:'center'}}>
                       <Image
-                        style={{flex: 1,height:'100%',width:'90%'}}
+                        style={{flex: 1,height:'90%',width:'90%'}}
                         source={{uri:'https://images.pexels.com/photos/136405/pexels-photo-136405.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
-                        resizeMode='stretch'
+                        resizeMode='cover'
                       />
                   </View>
                 </Carousel>
                 </View>
 
-                <View style={{flex: 1,marginTop: 20}}>
+                <View style={{flex: 1,marginTop: 20,}}>
                     <View style={{flex: 1,alignItems: 'center'}}>
                         <Text style=
                         {{
@@ -306,47 +308,15 @@ export default class FeedScreen extends React.PureComponent {
                               style=
                               {{
                                 overflow:'hidden',
-                                width: 100,
-                                height: 100,
-                                borderRadius: 50
+                                width: 90,
+                                height: 90,
+                                borderRadius: 100                         
                               }}
-                              source={{uri: 'https://images.pexels.com/photos/3280130/pexels-photo-3280130.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
-                              resizeMode='stretch'
+                                source={{uri: 'https://images.pexels.com/photos/3280130/pexels-photo-3280130.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
+                                resizeMode='cover'
                             />
-                        </View>
-                        <View style={{paddingRight: 10}}>
-                          <Image
-                              style=
-                              {{
-                                overflow:'hidden',
-                                width: 100,
-                                height: 100,
-                                borderRadius: 50
-                              }}
-                              source={{uri: 'https://images.pexels.com/photos/8520564/pexels-photo-8520564.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
-                              resizeMode='stretch'
-                            />
-                        </View>
-                        <View style={{paddingRight: 10}}>
-                          <Image
-                              style=
-                              {{
-                                overflow:'hidden',
-                                width: 100,
-                                height: 100,
-                                borderRadius: 50
-                              }}
-                              source={{uri: 'https://images.pexels.com/photos/6740821/pexels-photo-6740821.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
-                              resizeMode='stretch'
-                            />
-                        </View>
-
-                      </View>
-                    </View>
-                    <View style={{flex: 1,alignItems:'center'}}>
-                      <View style={{flex: 1,flexDirection:'row',marginBottom: 20,}}>
-                        <View style={{flex: 1,paddingLeft: 50,marginTop: 10}}>
-                          <Text style=
+                         <View style={{marginTop: 10,paddingLeft: 10}}>
+                           <Text style=
                             {{
                               fontSize:wp('3.5%'),
                               fontFamily: fonts.bold,
@@ -354,9 +324,22 @@ export default class FeedScreen extends React.PureComponent {
                             }}>
                               Community
                             </Text>
+                           </View>
                         </View>
-                        <View style={{flex: 1,paddingRight: 0,marginTop: 10}}>
-                          <Text style=
+                        <View style={{paddingRight: 10}}>
+                          <Image
+                              style=
+                              {{
+                                overflow:'hidden',
+                                width: 90,
+                                height: 90,
+                                borderRadius: 50
+                              }}
+                              source={{uri: 'https://images.pexels.com/photos/8520564/pexels-photo-8520564.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
+                              resizeMode='cover'
+                              />
+                          <View style={{marginTop: 10,paddingLeft: 10}}>
+                           <Text style=
                             {{
                               fontSize:wp('3.5%'),
                               fontFamily: fonts.bold,
@@ -364,9 +347,22 @@ export default class FeedScreen extends React.PureComponent {
                             }}>
                               Activewear
                             </Text>
+                            </View>
                         </View>
-                        <View style={{flex: 1,paddingRight: 30,marginTop: 10}}>
-                          <Text style=
+                        <View style={{paddingRight: 10}}>
+                          <Image
+                              style=
+                              {{
+                                overflow:'hidden',
+                                width: 90,
+                                height: 90,
+                                borderRadius: 50
+                              }}
+                              source={{uri: 'https://images.pexels.com/photos/6740821/pexels-photo-6740821.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
+                              resizeMode='cover'
+                              />
+                           <View style={{marginTop: 10,paddingLeft: 10}}>
+                            <Text style=
                             {{
                               fontSize:wp('3.5%'),
                               fontFamily: fonts.bold,
@@ -374,26 +370,76 @@ export default class FeedScreen extends React.PureComponent {
                             }}>
                               Equipment
                             </Text>
+                          </View>
                         </View>
+
                       </View>
-
                     </View>
-
-                    <View style={{flex: 1,paddingTop: 10,backgroundColor:'#333333',height: hp('30%'),marginTop:20}}>
-                          <View style={{flex: 1,alignItems:'flex-start'}}>
+                    <View style={{flex: 1,paddingTop: 10,backgroundColor:'#333333',height: hp('50%'),marginTop:20}}>
+                          <View style=
+                               {{flex: 1,
+                                 flexDirection:'row',
+                                 paddingLeft: 15,
+                                 paddingTop: 15,
+                                 paddingRight: 20
+                               }}>
                               <Text style=
                               {{
-                                fontSize:wp('3.5%'),
+                                fontSize:wp('4.5%'),
                                 fontFamily: fonts.bold,
-                                fontWeight: '100',
+                                fontWeight: '800',
                                 color:'white'
                               }}>
                                 Members Blog
                               </Text>
+                              <View style=
+                                  {{  flex: 1,
+                                      marginTop: 0,
+                                      alignItems:'flex-end',
+                                      }}>
+                                 <Text style=
+                                  {{
+                                    fontSize:wp('3.5%'),
+                                    fontFamily: fonts.bold,
+                                    fontWeight: '300',
+                                    color:'white'
+                                  }}>
+                                    View all
+                                  </Text>
+                                   <View
+                                      style=
+                                      {{
+                                        borderBottomColor: '#cccccc',
+                                        borderBottomWidth: 1,
+                                        width: '23%',
+                                        alignSelf:'flex-end'
+                                      }}
+                                    >
+                                    </View>
+                                  </View>
+
                           </View>
                     </View>
+                    <View style={{flex: 1}}>
+                      <View style={styles.lookContainer}>
+                          <Text style={styles.title1}>Looking for more?</Text>
+                          <Text style={{ fontFamily: fonts.StyreneAWebRegular }}>Start a challenge</Text>
+                      </View>
+
+                      <View>
+                          <CustomBtn
+                              titleCapitalise={true}
+                              Title='Explore workouts'
+                              customBtnStyle={styles.oblongBtnStyle}
+                              onPress={() => this.props.navigation.navigate("Calendar")}
+                              // style={styles.oblongBtnStyle}
+                              // isRightIcon={true}
+                              // customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}
+                          />
+                      </View>
 
 
+                    </View>
                 </View>
 
           <Loader loading={loading} color={colors.themeColor.color} />
@@ -402,3 +448,30 @@ export default class FeedScreen extends React.PureComponent {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  oblongBtnStyle: {
+    alignItems: 'center',
+    marginTop: hp('2%'),
+    borderRadius: 8,
+    borderWidth: 2,
+    backgroundColor: colors.white,
+    color: colors.black,
+    height: hp('8%'),
+    marginHorizontal: hp('10%')
+},
+  lookContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: hp('2%')
+  },
+  title1: {
+    fontFamily: fonts.StyreneAWebRegular,
+    fontWeight: '800',
+    fontSize: wp("5%"),
+    color: colors.black,
+  },
+
+
+})
