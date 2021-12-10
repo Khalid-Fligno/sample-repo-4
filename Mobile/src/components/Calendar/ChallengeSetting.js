@@ -44,7 +44,6 @@ class ChallengeSetting extends Component {
             .doc(data.id);
         Object.assign(activeChallengeData, { isSchedule: true, status: "InActive" });
         const newData = createUserChallengeData(activeChallengeData, new Date());
-        delete newData.workouts;
         userRef
             .set(newData, { merge: true })
             .then((res) => {
@@ -83,7 +82,7 @@ class ChallengeSetting extends Component {
 
     async quitChallenge(data) {
         const callBack = () => {
-            this.props.navigation.navigate("ChallengeSubscription", {quit: true});
+            this.props.navigation.navigate("ChallengeSubscription");
         };
         this.resetChallenge(data, callBack);
     }

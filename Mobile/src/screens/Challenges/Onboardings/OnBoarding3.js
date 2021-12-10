@@ -50,12 +50,10 @@ export default class OnBoarding3 extends Component {
       chosenUom: "metric",
       unitOfMeasurement: undefined,
       skipped: false,
-      quit: false
     };
   }
 
   onFocusFunction = () => {
-    console.log('QuitOnboard3: ', this.props.navigation.getParam("quit"))
     const data = this.props.navigation.getParam("data", {});
     const measurments = data["challengeData"]["onBoardingInfo"]["measurements"];
     console.log("asdfghjkl", measurments)
@@ -69,13 +67,11 @@ export default class OnBoarding3 extends Component {
         waist: measurments.waist,
         hip: measurments.hip,
         unitOfMeasurement: measurments.unit,
-        quit: this.props.navigation.getParam("quit")
       });
     } else {
       this.setState({
         challengeData: data["challengeData"],
         btnDisabled: false,
-        quit: this.props.navigation.getParam("quit")
       });
     }
     this.fetchDataMeasurement();
@@ -113,9 +109,8 @@ export default class OnBoarding3 extends Component {
   }
 
   goToScreen(type) {
-    let { challengeData, quit } = this.state;
+    let { challengeData } = this.state;
     let { goalWeight, hip, height, waist, weight } = this.state;
-    console.log('quit: ', quit)
     const skipped =
       weight == 0 && height == 0 && goalWeight == 0 && waist == 0 && hip == 0
         ? true
@@ -182,7 +177,6 @@ export default class OnBoarding3 extends Component {
 
     if (type === "next") {
       this.props.navigation.navigate("ChallengeOnBoarding4", {
-        quit,
         data: { challengeData: updatedChallengedata },
         onboardingProcessComplete:
           this.props.navigation.getParam("onboardingProcessComplete") !==

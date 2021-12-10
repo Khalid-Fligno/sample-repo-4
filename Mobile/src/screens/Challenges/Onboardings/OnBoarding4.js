@@ -75,7 +75,6 @@ export default class OnBoarding4 extends Component {
       loading: false,
       calendarModalVisible: false,
       chosenDate: new Date(),
-      quit: false,
     };
   }
 
@@ -112,7 +111,6 @@ export default class OnBoarding4 extends Component {
   };
 
   onFocusFunction = async () => {
-    console.log('QuitOnboard4: ', this.props.navigation.getParam("quit"))
     const data = this.props.navigation.getParam("data", {});
     console.log("OnBoarding4 data:", data);
     const image = data["challengeData"].image
@@ -125,7 +123,6 @@ export default class OnBoarding4 extends Component {
       image,
       imgUrl,
       btnDisabled: false,
-      quit: this.props.navigation.getParam("quit")
     });
   };
 
@@ -403,138 +400,72 @@ export default class OnBoarding4 extends Component {
   }
 
   addChallengeToCalendar = async (date) => {
-    if (this.state.quit) {
-      if (this.state.addingToCalendar) {
-        return;
-      }
-      this.setState({ addingToCalendar: true });
-      ////////////////////saving on calendar
-      let updatedChallengedata = this.state.challengeData;
-
-      console.log("Challenge data: ", updatedChallengedata);
-
-      let skipped = updatedChallengedata.onBoardingInfo.skipped;
-
-      if (!skipped) {
-        skipped = this.state.imgUrl == null ? true : false;
-      }
-
-      console.log("Skipped: ", skipped);
-      const onBoardingInfo = Object.assign(
-        {},
-        updatedChallengedata.onBoardingInfo,
-        {
-          skipped: skipped,
-        }
-      );
-
-      updatedChallengedata = Object.assign({}, updatedChallengedata, {
-        onBoardingInfo,
-      });
-
-      const data = createUserChallengeData(updatedChallengedata, new Date(date));
-      delete data.workouts
-      const progressData = {
-        photoURL: this.state.imgUrl,
-        height: updatedChallengedata.onBoardingInfo.measurements.height,
-        weight: updatedChallengedata.onBoardingInfo.measurements.weight,
-        goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
-        waist: updatedChallengedata.onBoardingInfo.measurements.waist,
-        hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-        burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
-        fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
-      };
-
-      // const stringDate = moment(date).format("YYYY-MM-DD").toString();
-      const stringDate2 = moment(date).format("DD-MM-YY").toString();
-      const TODAY = moment();
-
-      // if (
-      //   new Date(updatedChallengedata.startDate).getTime() <
-      //   new Date(stringDate).getTime()
-      // ) {
-      //   data.isSchedule = true;
-      //   data.status = "InActive";
-      // }
-
-      if (moment(date).isSame(TODAY, "d")) {
-        Object.assign(data, { status: "Active" });
-      } else {
-        // Object.assign(data, { isSchedule: true, status: "InActive" });
-        Object.assign(data, { isSchedule: false, status: "Active" });
-      }
-
-      await storeProgressInfo(progressData);
-      await this.saveOnBoardingInfo(data, stringDate2);
-    } else {
-      if (this.state.addingToCalendar) {
-        return;
-      }
-      this.setState({ addingToCalendar: true });
-      ////////////////////saving on calendar
-      let updatedChallengedata = this.state.challengeData;
-
-      console.log("Challenge data: ", updatedChallengedata);
-
-      let skipped = updatedChallengedata.onBoardingInfo.skipped;
-
-      if (!skipped) {
-        skipped = this.state.imgUrl == null ? true : false;
-      }
-
-      console.log("Skipped: ", skipped);
-      const onBoardingInfo = Object.assign(
-        {},
-        updatedChallengedata.onBoardingInfo,
-        {
-          skipped: skipped,
-        }
-      );
-
-      updatedChallengedata = Object.assign({}, updatedChallengedata, {
-        onBoardingInfo,
-      });
-
-      const data = createUserChallengeData(updatedChallengedata, new Date(date));
-      delete data.workouts
-      const progressData = {
-        photoURL: this.state.imgUrl,
-        height: updatedChallengedata.onBoardingInfo.measurements.height,
-        weight: updatedChallengedata.onBoardingInfo.measurements.weight,
-        goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
-        waist: updatedChallengedata.onBoardingInfo.measurements.waist,
-        hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-        burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
-        fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
-      };
-
-      // const stringDate = moment(date).format("YYYY-MM-DD").toString();
-      const stringDate2 = moment(date).format("DD-MM-YY").toString();
-      const TODAY = moment();
-
-      // if (
-      //   new Date(updatedChallengedata.startDate).getTime() <
-      //   new Date(stringDate).getTime()
-      // ) {
-      //   data.isSchedule = true;
-      //   data.status = "InActive";
-      // }
-
-      if (moment(date).isSame(TODAY, "d")) {
-        Object.assign(data, { status: "Active" });
-      } else {
-        // Object.assign(data, { isSchedule: true, status: "InActive" });
-        Object.assign(data, { isSchedule: false, status: "Active" });
-      }
-
-      await storeProgressInfo(progressData);
-      await this.saveOnBoardingInfo(data, stringDate2);
+    if (this.state.addingToCalendar) {
+      return;
     }
+    this.setState({ addingToCalendar: true });
+    ////////////////////saving on calendar
+    let updatedChallengedata = this.state.challengeData;
+
+    console.log("Challenge data: ", updatedChallengedata);
+
+    let skipped = updatedChallengedata.onBoardingInfo.skipped;
+
+    if (!skipped) {
+      skipped = this.state.imgUrl == null ? true : false;
+    }
+
+    console.log("Skipped: ", skipped);
+    const onBoardingInfo = Object.assign(
+      {},
+      updatedChallengedata.onBoardingInfo,
+      {
+        skipped: skipped,
+      }
+    );
+
+    updatedChallengedata = Object.assign({}, updatedChallengedata, {
+      onBoardingInfo,
+    });
+
+    const data = createUserChallengeData(updatedChallengedata, new Date(date));
+    const progressData = {
+      photoURL: this.state.imgUrl,
+      height: updatedChallengedata.onBoardingInfo.measurements.height,
+      weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+      goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
+      waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+      hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+      burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
+      fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
+    };
+
+    // const stringDate = moment(date).format("YYYY-MM-DD").toString();
+    const stringDate2 = moment(date).format("DD-MM-YY").toString();
+    const TODAY = moment();
+
+    // if (
+    //   new Date(updatedChallengedata.startDate).getTime() <
+    //   new Date(stringDate).getTime()
+    // ) {
+    //   data.isSchedule = true;
+    //   data.status = "InActive";
+    // }
+
+    if (moment(date).isSame(TODAY, "d")) {
+      Object.assign(data, { status: "Active" });
+    } else {
+      // Object.assign(data, { isSchedule: true, status: "InActive" });
+      Object.assign(data, { isSchedule: false, status: "Active" });
+    }
+
+    await storeProgressInfo(progressData);
+    await this.saveOnBoardingInfo(data, stringDate2);
+
   };
 
   async goToScreen(type) {
-    let { challengeData, image, imgUrl, quit } = this.state;
-    console.log('Quit: ', quit)
+    let { challengeData, image, imgUrl } = this.state;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
       // if (imgUrl !== null) {
