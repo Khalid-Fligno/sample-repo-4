@@ -26,20 +26,6 @@ const NutritionList = [
     title:"snack",
     imageUrl:require('../../../../assets/images/nutrition-snack.jpg'),
   },
-  ,
-  {
-    title:"post workout",
-    imageUrl:require('../../../../assets/images/homeScreenTiles/Post-Workout.jpg'),
-  },
-  ,
-  {
-    title:"pre workout",
-    imageUrl:require('../../../../assets/images/homeScreenTiles/Pre-Workout.jpg'),
-  },
-  {
-    title:"treats",
-    imageUrl:require('../../../../assets/images/homeScreenTiles/Treats.jpg'),
-  },
 ]
 
 export default function NutritionHomeScreen({ navigation }) {

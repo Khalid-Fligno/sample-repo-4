@@ -91,7 +91,7 @@ export default class HomeScreenV2 extends React.PureComponent {
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Nutrition")}>
                                 <ImageBackground
-                                    source={require("../../../../assets/images/homeScreenTiles/Lifestyle-Nutrition.jpg")}
+                                    source={require("../../../../assets/images/Calendar/phaseCardBg.png")}
                                     style={styles.image}
                                 >
                                     <View style={styles.opacityLayer}>
@@ -105,9 +105,8 @@ export default class HomeScreenV2 extends React.PureComponent {
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Workouts")}>
                                 <ImageBackground
-                                    source={require("../../../../assets/images/homeScreenTiles/Lifestyle-Workout.jpg")}
+                                    source={require("../../../../assets/images/Calendar/phaseCardBg.png")}
                                     style={styles.image}
-                                    resizeMode="cover"
                                 >
                                      <View style={styles.opacityLayer}>
                                         <View style={styles.titleContainer}>
@@ -181,9 +180,8 @@ const styles = StyleSheet.create({
         maxWidth: width / 1.8,
     },
     title: {
-        fontFamily: fonts.bold,
+        fontFamily: fonts.boldNarrow,
         fontSize: wp("6%"),
-        textTransform:'capitalize',
         color: colors.offWhite,
     },
     lookContainer: {
