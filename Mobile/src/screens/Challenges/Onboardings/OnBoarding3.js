@@ -111,7 +111,6 @@ export default class OnBoarding3 extends Component {
   goToScreen(type) {
     let { challengeData } = this.state;
     let { goalWeight, hip, height, waist, weight } = this.state;
-
     const skipped =
       weight == 0 && height == 0 && goalWeight == 0 && waist == 0 && hip == 0
         ? true

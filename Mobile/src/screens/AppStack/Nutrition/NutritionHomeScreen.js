@@ -12,44 +12,34 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-nati
 const NutritionList = [
   {
     title:"breakfast",
-    nutritionTitle:"breakfast",
     imageUrl:require('../../../../assets/images/nutrition-breakfast.jpg'),
   },
   {
     title:"lunch",
-    nutritionTitle:"lunch",
     imageUrl:require('../../../../assets/images/nutrition-lunch.jpg'),
   },
   {
     title:"dinner",
-    nutritionTitle:"dinner",
     imageUrl:require('../../../../assets/images/nutrition-dinner.jpg'),
   },
   {
     title:"snack",
-    nutritionTitle:"snack",
     imageUrl:require('../../../../assets/images/nutrition-snack.jpg'),
   },
+  ,
   {
-    title:"preworkout",
-    nutritionTitle:"pre-workout",
-    imageUrl:require('../../../../assets/images/nutrition-pre-workout.jpg'),
+    title:"post workout",
+    imageUrl:require('../../../../assets/images/homeScreenTiles/Post-Workout.jpg'),
   },
-
+  ,
   {
-    title:"drink",
-    nutritionTitle:"post-workout",
-    imageUrl:require('../../../../assets/images/nutrition-post-workout.jpg'),
+    title:"pre workout",
+    imageUrl:require('../../../../assets/images/homeScreenTiles/Pre-Workout.jpg'),
   },
   {
     title:"treats",
-    nutritionTitle:"treats",
-    imageUrl:require('../../../../assets/images/nutrition-treats.jpg'),
+    imageUrl:require('../../../../assets/images/homeScreenTiles/Treats.jpg'),
   },
-
-
-  
-
 ]
 
 export default function NutritionHomeScreen({ navigation }) {
@@ -75,7 +65,7 @@ export default function NutritionHomeScreen({ navigation }) {
           NutritionList.map((data,i)=>(
             <Tile
               key={i}
-              title1={data.nutritionTitle}
+              title1={data.title}
               image={data.imageUrl}
               onPress={() => navigation.navigate('RecipeSelection', { meal: data.title })}
               showTitle = {true}

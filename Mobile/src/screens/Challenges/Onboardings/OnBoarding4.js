@@ -429,7 +429,6 @@ export default class OnBoarding4 extends Component {
     });
 
     const data = createUserChallengeData(updatedChallengedata, new Date(date));
-
     const progressData = {
       photoURL: this.state.imgUrl,
       height: updatedChallengedata.onBoardingInfo.measurements.height,
@@ -445,16 +444,16 @@ export default class OnBoarding4 extends Component {
     const stringDate2 = moment(date).format("DD-MM-YY").toString();
     const TODAY = moment();
 
-     // if (
+    // if (
     //   new Date(updatedChallengedata.startDate).getTime() <
     //   new Date(stringDate).getTime()
     // ) {
     //   data.isSchedule = true;
     //   data.status = "InActive";
     // }
-    
+
     if (moment(date).isSame(TODAY, "d")) {
-      Object.assign(data, {  status: "Active" });
+      Object.assign(data, { status: "Active" });
     } else {
       // Object.assign(data, { isSchedule: true, status: "InActive" });
       Object.assign(data, { isSchedule: false, status: "Active" });
@@ -462,6 +461,7 @@ export default class OnBoarding4 extends Component {
 
     await storeProgressInfo(progressData);
     await this.saveOnBoardingInfo(data, stringDate2);
+
   };
 
   async goToScreen(type) {
@@ -587,7 +587,7 @@ export default class OnBoarding4 extends Component {
           },
           onboardingProcessComplete:
             this.props.navigation.getParam("onboardingProcessComplete") !==
-            undefined
+              undefined
               ? this.props.navigation.getParam("onboardingProcessComplete")
               : false,
         });

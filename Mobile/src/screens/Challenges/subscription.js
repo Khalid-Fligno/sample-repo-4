@@ -294,7 +294,7 @@ class ChallengeSubscriptionScreen extends Component {
         data: {
           challengeData,
         },
-        challengeOnboard: true
+        challengeOnboard: true,
       });
     }
   }
