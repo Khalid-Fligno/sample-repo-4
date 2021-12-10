@@ -46,6 +46,7 @@ import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import DoubleRightArrow from "../../../../assets/icons/DoubleRightArrow";
 import InputBox2 from "../../../components/Challenges/InputBox2";
 import {weightOptionsImperial, weightOptionsMetric} from "../../../utils";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 const moment = require("moment");
 
@@ -81,7 +82,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       expandedCooldown: false,
       lifestyle: false,
       modalShow: false,
-      gym: false
+      gym: false,
+      home: false
     };
   }
 
@@ -95,7 +97,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       extraProps: this.props.navigation.getParam("extraProps", {}),
       loading: false,
       lifestyle: this.props.navigation.getParam("lifestyle"),
-      gym: this.props.navigation.getParam("workout", null).gym ? true : false
+      gym: this.props.navigation.getParam("workout", null).gym,
+      home: this.props.navigation.getParam("workout", null).home
     });
   }
 
@@ -513,7 +516,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       expandedWarmup,
       expandedCooldown,
       modalShow,
-      gym
+      gym,
+      home
     } = this.state;
     let workoutTime = 0;
     let warmupInterval = 0;
@@ -593,7 +597,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
           )}
           {workout && !loading && (
               <View style={WorkoutScreenStyle.flatListContainer}>
-                <SectionList
+                {gym || home ? <SectionList
                     sections={
                       workout.warmUpExercises && workout.coolDownExercises
                           ? [
@@ -622,10 +626,18 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                           ]
                     }
                     keyExtractor={this.keyExtractor}
-                    renderItem={gym ? this.renderItem : this.renderNoExercise}                    ListHeaderComponent={
+                    renderItem={this.renderItem}
+                    ListHeaderComponent={
                       <View style={WorkoutScreenStyle.workoutInfoContainer}>
                         <View style={WorkoutScreenStyle.workoutNameContainer}>
-                          <Text style={WorkoutScreenStyle.workoutName}>
+                          <Text style={{
+                            marginTop: 6,
+                            marginRight: 10,
+                            fontFamily: fonts.StyreneAWebRegular,
+                            fontSize: 20,
+                            color: colors.black,
+                            width: wp('68%')
+                          }}>
                             {workout && workout.displayName.toUpperCase()}
                           </Text>
                           <View>
@@ -646,126 +658,67 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                                   fontSize: 14,
                                   color: colors.charcoal.dark
                                 }}>
-                                  {gym ? 'GYM' : 'HOME'}
+                                  {gym ? 'GYM' : home ? 'HOME' : 'GYM'}
                                 </Text>
                               </TouchableOpacity>
-                              <Modal
-                                  isVisible={modalShow}
-                                  onBackdropPress={() => this.hideModal()}
-                                  animationIn="fadeIn"
-                                  animationInTiming={600}
-                                  animationOut="fadeOut"
-                                  animationOutTiming={600}
-                              >
-                                <View style={{
-                                  backgroundColor: colors.white,
-                                  borderRadius: 4,
-                                  overflow: "hidden",
-                                }}>
-                                  <Picker
-                                      selectedValue={gym ? 'GYM' : 'HOME'}
-                                      onValueChange={(value) => {
-                                        this.setState({ gym: value === 'GYM' ? true : false });
-                                      }}
-                                  >
-                                    <Picker.Item
-                                        key={0}
-                                        label="HOME"
-                                        value="HOME"
-                                    />
-                                    <Picker.Item
-                                        key={1}
-                                        label="GYM"
-                                        value="GYM"
-                                    />
-                                  </Picker>
-                                  <TouchableOpacity
-                                      title="DONE"
-                                      onPress={() => {
-                                          this.hideModal(workout, reps, workoutSubCategory, fitnessLevel, gym)
-                                      }}
-                                      style={{
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        backgroundColor: colors.themeColor.color,
-                                        height: 50,
-                                        width: "100%",
-                                        marginBottom: 0
-                                      }}
-                                  >
-                                    <Text style={{
-                                      fontFamily: fonts.bold,
-                                      fontSize: 14,
-                                      color: colors.black,
-                                      marginTop: 3
-                                    }}>DONE</Text>
-                                  </TouchableOpacity>
-                                </View>
-                              </Modal>
                             </View>
                           </View>
                         </View>
-                        {
-                          gym && (
-                              <>
-                                <View style={WorkoutScreenStyle.workoutIconsRow}>
-                                  {!this.state.workout.filters.includes("strength") && (
-                                      <View style={WorkoutScreenStyle.workoutIconContainer}>
-                                        <Icon
-                                            name="workouts-hiit"
-                                            size={36}
-                                            color={colors.charcoal.standard}
-                                            style={WorkoutScreenStyle.hiitIcon}
-                                        />
-                                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                                          HIIT {findWorkoutType(workout)}
-                                        </Text>
-                                      </View>
-                                  )}
-                                  {!workout.count && (
-                                      <View style={WorkoutScreenStyle.workoutIconContainer}>
-                                        <TimeSvg width="40" height="40" />
-                                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                                          {workoutTime.toFixed(0)} Mins
-                                        </Text>
-                                      </View>
-                                  )}
+                        <View style={WorkoutScreenStyle.workoutIconsRow}>
+                          {!this.state.workout.filters.includes("strength") && (
+                              <View style={WorkoutScreenStyle.workoutIconContainer}>
+                                <Icon
+                                    name="workouts-hiit"
+                                    size={36}
+                                    color={colors.charcoal.standard}
+                                    style={WorkoutScreenStyle.hiitIcon}
+                                />
+                                <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                                  HIIT {findWorkoutType(workout)}
+                                </Text>
+                              </View>
+                          )}
+                          {!workout.count && (
+                              <View style={WorkoutScreenStyle.workoutIconContainer}>
+                                <TimeSvg width="40" height="40" />
+                                <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                                  {workoutTime.toFixed(0)} Mins
+                                </Text>
+                              </View>
+                          )}
 
-                                  <View style={WorkoutScreenStyle.workoutIconContainer}>
-                                    <Icon
-                                        name="workouts-reps"
-                                        size={40}
-                                        color={colors.charcoal.standard}
-                                    />
-                                    <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                                      {this.state.workout.filters.includes("strength")
-                                          ? `${reps * workoutTime} Reps`
-                                          : `${workout.workoutReps} Rounds`}
-                                    </Text>
-                                  </View>
-                                  {this.state.workout.filters.includes("strength") && (
-                                      <View style={WorkoutScreenStyle.workoutIconContainer}>
-                                        <Icon
-                                            name={workout && findFocusIcon(workout)}
-                                            size={40}
-                                            color={colors.charcoal.standard}
-                                        />
-                                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                                          {workout && findFocus(workout)}
-                                        </Text>
-                                      </View>
-                                  )}
-                                </View>
-                                <View
-                                    style={WorkoutScreenStyle.workoutPreviewHeaderContainer}
-                                >
-                                  <Text style={WorkoutScreenStyle.workoutPreviewHeaderText}>
-                                    WORKOUT PREVIEW
-                                  </Text>
-                                </View>
-                              </>
-                          )
-                        }
+                          <View style={WorkoutScreenStyle.workoutIconContainer}>
+                            <Icon
+                                name="workouts-reps"
+                                size={40}
+                                color={colors.charcoal.standard}
+                            />
+                            <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                              {this.state.workout.filters.includes("strength")
+                                  ? `${reps * workoutTime} Reps`
+                                  : `${workout.workoutReps} Rounds`}
+                            </Text>
+                          </View>
+                          {this.state.workout.filters.includes("strength") && (
+                              <View style={WorkoutScreenStyle.workoutIconContainer}>
+                                <Icon
+                                    name={workout && findFocusIcon(workout)}
+                                    size={40}
+                                    color={colors.charcoal.standard}
+                                />
+                                <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                                  {workout && findFocus(workout)}
+                                </Text>
+                              </View>
+                          )}
+                        </View>
+                        <View
+                            style={WorkoutScreenStyle.workoutPreviewHeaderContainer}
+                        >
+                          <Text style={WorkoutScreenStyle.workoutPreviewHeaderText}>
+                            WORKOUT PREVIEW
+                          </Text>
+                        </View>
                       </View>
                     }
                     renderSectionHeader={({ section }) => {
@@ -779,51 +732,45 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                             return cooldownInterval;
                         }
                       })();
-                      return (<>
-                        {
-                          gym && (
-                              <View style={styles.sectionHeader}>
-                                <View style={{ marginLeft: 15 }}>
-                                  <Text style={{ fontSize: 15, fontFamily: fonts.bold }}>
-                                    {section.title}
-                                  </Text>
-                                  <Text
-                                      style={{ fontSize: 12, fontFamily: fonts.boldNarrow }}
-                                  >{`${section.data.length} exercises - ${interval} min`}</Text>
-                                </View>
-                                <View style={{ marginRight: 15 }}>
-                                  <TouchableOpacity
-                                      style={{ flexDirection: "row", alignItems: "center" }}
-                                      onPress={() => this.togglePreview(section)}
-                                  >
-                                    <Text
-                                        style={{
-                                          fontSize: 11,
-                                          fontFamily: fonts.boldNarrow,
-                                          textDecorationLine: "underline",
-                                          textDecorationColor: colors.black,
-                                        }}
-                                    >
-                                      {"Tap to preview"}
-                                    </Text>
-                                    <MaterialIcon
-                                        name="chevron-down"
-                                        size={30}
-                                        color={colors.black}
-                                    />
-                                  </TouchableOpacity>
-                                </View>
-                              </View>
-                          )
-                        }
-                      </>);
+                      return (<View style={styles.sectionHeader}>
+                        <View style={{ marginLeft: 15 }}>
+                          <Text style={{ fontSize: 15, fontFamily: fonts.bold }}>
+                            {section.title}
+                          </Text>
+                          <Text
+                              style={{ fontSize: 12, fontFamily: fonts.boldNarrow }}
+                          >{`${section.data.length} exercises - ${interval} min`}</Text>
+                        </View>
+                        <View style={{ marginRight: 15 }}>
+                          <TouchableOpacity
+                              style={{ flexDirection: "row", alignItems: "center" }}
+                              onPress={() => this.togglePreview(section)}
+                          >
+                            <Text
+                                style={{
+                                  fontSize: 11,
+                                  fontFamily: fonts.boldNarrow,
+                                  textDecorationLine: "underline",
+                                  textDecorationColor: colors.black,
+                                }}
+                            >
+                              {"Tap to preview"}
+                            </Text>
+                            <MaterialIcon
+                                name="chevron-down"
+                                size={30}
+                                color={colors.black}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      </View>);
                     }}
                     stickySectionHeadersEnabled={true}
-                />
+                /> : <></>}
               </View>
           )}
           {
-            gym && (
+            gym || home ? (
                 <TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
                   <Text
                       style={{
@@ -836,8 +783,64 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                     {"Start now"}
                   </Text>
                 </TouchableOpacity>
-            )
+            ) : <></>
           }
+          <Modal
+              isVisible={modalShow}
+              onBackdropPress={() => this.hideModal()}
+              animationIn="fadeIn"
+              animationInTiming={600}
+              animationOut="fadeOut"
+              animationOutTiming={600}
+          >
+            <View style={{
+              backgroundColor: colors.white,
+              borderRadius: 4,
+              overflow: "hidden",
+            }}>
+              <Picker
+                  selectedValue={gym ? 'GYM' : home ? 'HOME' : 'GYM'}
+                  onValueChange={(value) => {
+                    if (value === 'GYM' || value === 'HOME') {
+                      this.setState({gym: workout.gym ? true : false});
+                      this.setState({home: workout.home ? true : false});
+                    }
+                  }}
+              >
+                <Picker.Item
+                    key={0}
+                    label="HOME"
+                    value="HOME"
+                />
+                <Picker.Item
+                    key={1}
+                    label="GYM"
+                    value="GYM"
+                />
+              </Picker>
+              <TouchableOpacity
+                  title="DONE"
+                  onPress={() => {
+                    this.hideModal(workout, reps, workoutSubCategory, fitnessLevel, gym)
+                  }}
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: colors.themeColor.color,
+                    height: 50,
+                    width: "100%",
+                    marginBottom: 0
+                  }}
+              >
+                <Text style={{
+                  fontFamily: fonts.bold,
+                  fontSize: 14,
+                  color: colors.black,
+                  marginTop: 3
+                }}>DONE</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
         </View>
     );
   }
