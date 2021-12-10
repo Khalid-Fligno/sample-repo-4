@@ -177,7 +177,7 @@ export default WorkoutProgressControl = ({
           size={50}
           color={true ? colors.black : colors.smoke}
         />
-        <Text style={styles.buttonTextTitle}>Next Exercise</Text>
+        <Text style={styles.buttonTextTitle}>Next Set</Text>
         {nextExerciseText()}
       </TouchableOpacity>
       <View />
