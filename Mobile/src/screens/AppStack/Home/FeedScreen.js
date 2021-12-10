@@ -225,6 +225,7 @@ export default class FeedScreen extends React.PureComponent {
     });
   }
 
+  
   render() {
     const {
       loading,
@@ -303,6 +304,7 @@ export default class FeedScreen extends React.PureComponent {
                     </View>
                     <View style={{flex: 1,alignItems:'center'}}>
                       <View style={{flex: 1,flexDirection:'row',marginTop: 10,}}>
+                        <TouchableOpacity onPress={()=>this.openLink('https://facebook.com/groups/180007149128432/?source_id=204363259589572')}>
                         <View style={{paddingRight: 10}}>
                           <Image
                               style=
@@ -326,6 +328,8 @@ export default class FeedScreen extends React.PureComponent {
                             </Text>
                            </View>
                         </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={()=>this.openLink('https://fitazfk.com/pages/clothing')}>
                         <View style={{paddingRight: 10}}>
                           <Image
                               style=
@@ -349,6 +353,8 @@ export default class FeedScreen extends React.PureComponent {
                             </Text>
                             </View>
                         </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={()=>this.openLink('https://fitazfk.com/collections/best-sellers')}>
                         <View style={{paddingRight: 10}}>
                           <Image
                               style=
@@ -372,7 +378,7 @@ export default class FeedScreen extends React.PureComponent {
                             </Text>
                           </View>
                         </View>
-
+                      </TouchableOpacity>
                       </View>
                     </View>
                     <View style={{flex: 1,paddingTop: 10,backgroundColor:'#333333',height: hp('50%'),marginTop:20}}>
