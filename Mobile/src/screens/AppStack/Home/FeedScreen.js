@@ -7,6 +7,7 @@ import {
   Dimensions,
   Image,
   StyleSheet,
+  FlatList,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Button } from "react-native-elements";
@@ -32,7 +33,7 @@ import WorkOutCard from "../../../components/Home/WorkoutCard";
 import TimeSvg from "../../../../assets/icons/time";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
-import Carousel from 'react-native-carousel-view';
+import Carousel from "react-native-carousel-view";
 
 import {
   getCurrentPhase,
@@ -53,6 +54,8 @@ import {
 } from "../../../utils/feedUtils";
 // import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
 const { width } = Dimensions.get("window");
+const {height} = Dimensions.get("window")
+
 
 const workoutTypeMap = {
   1: "Strength",
@@ -134,17 +137,19 @@ export default class FeedScreen extends React.PureComponent {
   //     });
   //   }
 
-  fetchBlogs = async (tag, currentDay) => {
+  fetchBlogs = async (tag, currentDay, phaseData) => {
     // console.log(tag,currentDay)
+    let data = phaseData.displayName;
+    let phase = data.toLowerCase();
     const snapshot = await db
       .collection("blogs")
-      .where("tags", "array-contains", tag)
+      .where("tags", "array-contains", phase)
       .get();
     let blogs = [];
     const cDay = currentDay === 1 ? 2 : currentDay;
     snapshot.forEach((doc) => {
-      if (doc.data().startDay <= cDay && doc.data().endDay >= cDay)
-        blogs.unshift(doc.data());
+      // if (doc.data().startDay <= cDay && doc.data().endDay >= cDay)
+      blogs.unshift(doc.data());
     });
     this.setState({ blogs, loading: false });
   };
@@ -202,7 +207,11 @@ export default class FeedScreen extends React.PureComponent {
         activeChallengeUserData.startDate,
         this.stringDate
       );
-      this.fetchBlogs(activeChallengeUserData.tag, this.currentChallengeDay);
+      this.fetchBlogs(
+        activeChallengeUserData.tag,
+        this.currentChallengeDay,
+        this.phaseData
+      );
       //TODO get recommended workout here
       // this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate )
       const todayRcWorkout = (
@@ -216,6 +225,7 @@ export default class FeedScreen extends React.PureComponent {
     } else {
       Alert.alert("Something went wrong please try again");
     }
+    // console.log(this.phaseData.displayName);
   }
 
   goToFitazfkEquipmentWorkouts() {
@@ -225,7 +235,6 @@ export default class FeedScreen extends React.PureComponent {
     });
   }
 
-  
   render() {
     const {
       loading,
@@ -236,7 +245,7 @@ export default class FeedScreen extends React.PureComponent {
       todayRcWorkout,
     } = this.state;
     let recommendedWorkout = [];
-
+    console.log(this.state.blogs);
     dayOfWeek > 0 && dayOfWeek < 6
       ? recommendedWorkout.push(workoutTypeMap[dayOfWeek])
       : recommendedWorkout.push(" Rest Day");
@@ -256,197 +265,285 @@ export default class FeedScreen extends React.PureComponent {
         contentContainerStyle={HomeScreenStyle.scrollView}
         // style={[globalStyle.container,{paddingHorizontal:0}]}
       >
-        
+        <View style={{ marginBottom: wp("10%"), flex: 1 }}>
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <Carousel
+              height={hp("52%")}
+              delay={3000}
+              width={width + 50}
+              animate={true}
+              indicatorColor={"white"}
+            >
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <Image
+                  style={{ flex: 1, height: "90%", width: "90%" }}
+                  source={{
+                    uri: "https://images.pexels.com/photos/6456303/pexels-photo-6456303.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+                  }}
+                  resizeMode="cover"
+                />
+              </View>
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <Image
+                  style={{ flex: 1, height: "90%", width: "90%" }}
+                  source={{
+                    uri: "https://images.pexels.com/photos/3912953/pexels-photo-3912953.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                  }}
+                  resizeMode="cover"
+                />
+              </View>
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <Image
+                  style={{ flex: 1, height: "90%", width: "90%" }}
+                  source={{
+                    uri: "https://images.pexels.com/photos/136405/pexels-photo-136405.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                  }}
+                  resizeMode="cover"
+                />
+              </View>
+            </Carousel>
+          </View>
 
-        <View style={{ marginBottom: wp("10%"),flex: 1 }}>
-            <View style={{flex: 1,alignItems:'center'}}>
-                <Carousel
-                  height={hp("52%")}
-                  delay={3000}
-                  width={width+50}
-                  animate={true}
-                  indicatorColor={'white'}
+          <View style={{ flex: 1, marginTop: 20 }}>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text
+                style={{
+                  fontSize: wp("4.5%"),
+                  fontFamily: fonts.bold,
+                  fontWeight: "500",
+                }}
+              >
+                Explore
+              </Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <View style={{ flexDirection: "row", marginTop: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.openLink(
+                      "https://facebook.com/groups/180007149128432/?source_id=204363259589572"
+                    )
+                  }
                 >
-                  <View style={{flex: 1,alignItems:'center'}}>
-                      <Image
-                        style={{flex: 1,height:'90%',width:'90%'}}
-                        source={{uri:'https://images.pexels.com/photos/6456303/pexels-photo-6456303.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260'}}
-                        resizeMode='cover'
-                      />
-                  </View>
-                  <View style={{flex: 1,alignItems:'center'}}>
-                      <Image
-                        style={{flex: 1,height:'90%',width:'90%'}}
-                        source={{uri:'https://images.pexels.com/photos/3912953/pexels-photo-3912953.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
-                        resizeMode='cover'
-                      />
-                  </View>
-                  <View style={{flex: 1,alignItems:'center'}}>
-                      <Image
-                        style={{flex: 1,height:'90%',width:'90%'}}
-                        source={{uri:'https://images.pexels.com/photos/136405/pexels-photo-136405.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
-                        resizeMode='cover'
-                      />
-                  </View>
-                </Carousel>
-                </View>
-
-                <View style={{flex: 1,marginTop: 20,}}>
-                    <View style={{flex: 1,alignItems: 'center'}}>
-                        <Text style=
-                        {{
-                          fontSize:wp('4.5%'),
+                  <View style={{ paddingRight: 10 }}>
+                    <Image
+                      style={{
+                        overflow: "hidden",
+                        width: 90,
+                        height: 90,
+                        borderRadius: 100,
+                      }}
+                      source={{
+                        uri: "https://images.pexels.com/photos/3280130/pexels-photo-3280130.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                      }}
+                      resizeMode="cover"
+                    />
+                    <View style={{ marginTop: 10, paddingLeft: 10 }}>
+                      <Text
+                        style={{
+                          fontSize: wp("3.5%"),
                           fontFamily: fonts.bold,
-                          fontWeight: '500'
-                        }}>
-                          Explore
-                        </Text>
+                          fontWeight: "100",
+                        }}
+                      >
+                        Community
+                      </Text>
                     </View>
-                    <View style={{flex: 1,alignItems:'center'}}>
-                      <View style={{flex: 1,flexDirection:'row',marginTop: 10,}}>
-                        <TouchableOpacity onPress={()=>this.openLink('https://facebook.com/groups/180007149128432/?source_id=204363259589572')}>
-                        <View style={{paddingRight: 10}}>
-                          <Image
-                              style=
-                              {{
-                                overflow:'hidden',
-                                width: 90,
-                                height: 90,
-                                borderRadius: 100                         
-                              }}
-                                source={{uri: 'https://images.pexels.com/photos/3280130/pexels-photo-3280130.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
-                                resizeMode='cover'
-                            />
-                         <View style={{marginTop: 10,paddingLeft: 10}}>
-                           <Text style=
-                            {{
-                              fontSize:wp('3.5%'),
-                              fontFamily: fonts.bold,
-                              fontWeight: '100'
-                            }}>
-                              Community
-                            </Text>
-                           </View>
-                        </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>this.openLink('https://fitazfk.com/pages/clothing')}>
-                        <View style={{paddingRight: 10}}>
-                          <Image
-                              style=
-                              {{
-                                overflow:'hidden',
-                                width: 90,
-                                height: 90,
-                                borderRadius: 50
-                              }}
-                              source={{uri: 'https://images.pexels.com/photos/8520564/pexels-photo-8520564.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
-                              resizeMode='cover'
-                              />
-                          <View style={{marginTop: 10,paddingLeft: 10}}>
-                           <Text style=
-                            {{
-                              fontSize:wp('3.5%'),
-                              fontFamily: fonts.bold,
-                              fontWeight: '100'
-                            }}>
-                              Activewear
-                            </Text>
-                            </View>
-                        </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>this.openLink('https://fitazfk.com/collections/best-sellers')}>
-                        <View style={{paddingRight: 10}}>
-                          <Image
-                              style=
-                              {{
-                                overflow:'hidden',
-                                width: 90,
-                                height: 90,
-                                borderRadius: 50
-                              }}
-                              source={{uri: 'https://images.pexels.com/photos/6740821/pexels-photo-6740821.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}}
-                              resizeMode='cover'
-                              />
-                           <View style={{marginTop: 10,paddingLeft: 10}}>
-                            <Text style=
-                            {{
-                              fontSize:wp('3.5%'),
-                              fontFamily: fonts.bold,
-                              fontWeight: '100'
-                            }}>
-                              Equipment
-                            </Text>
-                          </View>
-                        </View>
-                      </TouchableOpacity>
-                      </View>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.openLink("https://fitazfk.com/pages/clothing")
+                  }
+                >
+                  <View style={{ paddingRight: 10 }}>
+                    <Image
+                      style={{
+                        overflow: "hidden",
+                        width: 90,
+                        height: 90,
+                        borderRadius: 50,
+                      }}
+                      source={{
+                        uri: "https://images.pexels.com/photos/8520564/pexels-photo-8520564.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                      }}
+                      resizeMode="cover"
+                    />
+                    <View style={{ marginTop: 10, paddingLeft: 10 }}>
+                      <Text
+                        style={{
+                          fontSize: wp("3.5%"),
+                          fontFamily: fonts.bold,
+                          fontWeight: "100",
+                        }}
+                      >
+                        Activewear
+                      </Text>
                     </View>
-                    <View style={{flex: 1,paddingTop: 10,backgroundColor:'#333333',height: hp('50%'),marginTop:20}}>
-                          <View style=
-                               {{flex: 1,
-                                 flexDirection:'row',
-                                 paddingLeft: 15,
-                                 paddingTop: 15,
-                                 paddingRight: 20
-                               }}>
-                              <Text style=
-                              {{
-                                fontSize:wp('4.5%'),
-                                fontFamily: fonts.bold,
-                                fontWeight: '800',
-                                color:'white'
-                              }}>
-                                Members Blog
-                              </Text>
-                              <View style=
-                                  {{  flex: 1,
-                                      marginTop: 0,
-                                      alignItems:'flex-end',
-                                      }}>
-                                 <Text style=
-                                  {{
-                                    fontSize:wp('3.5%'),
-                                    fontFamily: fonts.bold,
-                                    fontWeight: '300',
-                                    color:'white'
-                                  }}>
-                                    View all
-                                  </Text>
-                                   <View
-                                      style=
-                                      {{
-                                        borderBottomColor: '#cccccc',
-                                        borderBottomWidth: 1,
-                                        width: '23%',
-                                        alignSelf:'flex-end'
-                                      }}
-                                    >
-                                    </View>
-                                  </View>
-
-                          </View>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.openLink(
+                      "https://fitazfk.com/collections/best-sellers"
+                    )
+                  }
+                >
+                  <View style={{ paddingRight: 10 }}>
+                    <Image
+                      style={{
+                        overflow: "hidden",
+                        width: 90,
+                        height: 90,
+                        borderRadius: 50,
+                      }}
+                      source={{
+                        uri: "https://images.pexels.com/photos/6740821/pexels-photo-6740821.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                      }}
+                      resizeMode="cover"
+                    />
+                    <View style={{ marginTop: 10, paddingLeft: 10 }}>
+                      <Text
+                        style={{
+                          fontSize: wp("3.5%"),
+                          fontFamily: fonts.bold,
+                          fontWeight: "100",
+                        }}
+                      >
+                        Equipment
+                      </Text>
                     </View>
-                    <View style={{flex: 1}}>
-                      <View style={styles.lookContainer}>
-                          <Text style={styles.title1}>Looking for more?</Text>
-                          <Text style={{ fontFamily: fonts.StyreneAWebRegular }}>Start a challenge</Text>
-                      </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                paddingTop: 10,
+                backgroundColor: "#333333",
+                height: 550,
+                marginTop: 20,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingLeft: 15,
+                  paddingTop: 15,
+                  paddingRight: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: wp("4.5%"),
+                    fontFamily: fonts.bold,
+                    fontWeight: "800",
+                    color: "white",
+                  }}
+                >
+                  Members Blog
+                </Text>
+                <View style={{ flex: 1, marginTop: 0, alignItems: "flex-end",}}>
+                  <TouchableOpacity onPress={()=> 
+                  this.props.navigation.navigate('AllBlogs',
+                  {
+                    data : blogs
+                  })
+                  }>
+                  <Text
+                    style={{
+                      fontSize: wp("3.5%"),
+                      fontFamily: fonts.bold,
+                      fontWeight: "300",
+                      color: "white",
+                    }}
+                  >
+                    View all
+                  </Text>
+                  </TouchableOpacity>
+                  
+                  <View
+                    style={{
+                      borderBottomColor: "#cccccc",
+                      borderBottomWidth: 1,
+                      width: "23%",
+                      alignSelf: "flex-end",
+                    }}
+                  >
 
-                      <View>
-                          <CustomBtn
-                              titleCapitalise={true}
-                              Title='Explore workouts'
-                              customBtnStyle={styles.oblongBtnStyle}
-                              onPress={() => this.props.navigation.navigate("Calendar")}
-                              // style={styles.oblongBtnStyle}
-                              // isRightIcon={true}
-                              // customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}
-                          />
-                      </View>
-
-
-                    </View>
+                  </View>
                 </View>
+              </View>
+              <View style={{ flex: 1, alignItems: "center", }}>
+                <View style={{}}>
+                  <FlatList
+                    horizontal
+                    data={blogs}
+                    style={{ flex: 1 }}
+                    renderItem={({item}) => {
+                      return (
+                        <TouchableOpacity delayPressOut={3} onPress={()=>this.openLink(item.urlLink)}>
+                        <View
+                          style={{
+                            marginTop: 20,
+                           
+                            paddingLeft: 20,
+                          }}
+                        >
+                          <Image
+                            style={{
+                              overflow: "hidden",
+                              width: 250,
+                              height: 350,
+                              borderRadius: 10,
+                            }}
+                            source={{
+                              uri: item.coverImage,
+                            }}
+                            resizeMode="cover"
+                          />
+                          <View style={{alignItems:'flex-start',paddingTop: 40}}>
+                          <Text
+                              style={{
+                                fontSize: wp("3.5%"),
+                                fontFamily: fonts.bold,
+                                fontWeight: "500",
+                                color:'white'
+                              }}
+                            >
+                              {item.title}
+                            </Text>
+                          </View>
+                        </View>
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={{ flex: 1 }}>
+              <View style={styles.lookContainer}>
+                <Text style={styles.title1}>Looking for more?</Text>
+                <Text style={{ fontFamily: fonts.StyreneAWebRegular }}>
+                  Start a challenge
+                </Text>
+              </View>
+
+              <View>
+                <CustomBtn
+                  titleCapitalise={true}
+                  Title="Explore workouts"
+                  customBtnStyle={styles.oblongBtnStyle}
+                  onPress={() => this.props.navigation.navigate("Lifestyle")}
+                  // style={styles.oblongBtnStyle}
+                  // isRightIcon={true}
+                  // customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}
+                />
+              </View>
+            </View>
+          </View>
 
           <Loader loading={loading} color={colors.themeColor.color} />
         </View>
@@ -457,27 +554,25 @@ export default class FeedScreen extends React.PureComponent {
 
 const styles = StyleSheet.create({
   oblongBtnStyle: {
-    alignItems: 'center',
-    marginTop: hp('2%'),
+    alignItems: "center",
+    marginTop: hp("2%"),
     borderRadius: 8,
     borderWidth: 2,
     backgroundColor: colors.white,
     color: colors.black,
-    height: hp('8%'),
-    marginHorizontal: hp('10%')
-},
+    height: hp("8%"),
+    marginHorizontal: hp("10%"),
+  },
   lookContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: hp('2%')
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: hp("2%"),
   },
   title1: {
     fontFamily: fonts.StyreneAWebRegular,
-    fontWeight: '800',
+    fontWeight: "800",
     fontSize: wp("5%"),
     color: colors.black,
   },
-
-
-})
+});
