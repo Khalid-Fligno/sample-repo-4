@@ -40,6 +40,8 @@ export default class OnBoarding6 extends Component {
       calendarModalVisible: false,
       addingToCalendar: false,
       chosenDate: new Date(),
+      quit: false,
+      completedChallenge: false,
     };
   }
 
@@ -57,6 +59,8 @@ export default class OnBoarding6 extends Component {
   };
 
   onFocusFunction = () => {
+    console.log('QuitOnboard6: ', this.props.navigation.getParam("quit"))
+    console.log('completedChallengeOnboard6: ', this.props.navigation.getParam("completedChallenge"))
     const data = this.props.navigation.getParam("data", {});
     const fitnessLevel =
       data["challengeData"]["onBoardingInfo"]["fitnessLevel"];
@@ -64,6 +68,8 @@ export default class OnBoarding6 extends Component {
       challengeData: data["challengeData"],
       btnDisabled: false,
       fitnessLevel: fitnessLevel ? fitnessLevel : 2,
+      quit: this.props.navigation.getParam("quit"),
+      completedChallenge: this.props.navigation.getParam("completedChallenge"),
     });
   };
 
@@ -81,7 +87,7 @@ export default class OnBoarding6 extends Component {
   }
 
   goToScreen(type) {
-    let { challengeData, fitnessLevel } = this.state;
+    let { challengeData, fitnessLevel, quit, completedChallenge } = this.state;
     let burpeeCount = 0;
     if (fitnessLevel === 1) burpeeCount = 10;
     else if (fitnessLevel === 2) burpeeCount = 15;
@@ -112,6 +118,8 @@ export default class OnBoarding6 extends Component {
           },
           onboardingProcessComplete: false,
           challengeOnboard: true,
+          quit,
+          completedChallenge
         });
       } else {
         this.setState({ challengeData: updatedChallengedata });

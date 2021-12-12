@@ -82,12 +82,12 @@ class ChallengeSetting extends Component {
 
     async quitChallenge(data) {
         const callBack = () => {
-            this.props.navigation.navigate("ChallengeSubscription");
+            this.props.navigation.navigate("ChallengeSubscription", { quit: true });
         };
         this.resetChallenge(data, callBack);
     }
 
-    async  restartChallenge(data) {
+    async restartChallenge(data) {
         const callBack = (newData) => {
             this.props.navigation.navigate("ChallengeOnBoarding6", {
                 data: {
@@ -203,20 +203,34 @@ class ChallengeSetting extends Component {
                                   0
                                 );
                                 */
-
-                                const resetAction = StackActions.reset({
-                                    index: 0,
-                                    actions: [
-                                        NavigationActions.navigate({
-                                            routeName: "Tabs",
-                                            action: NavigationActions.navigate({
-                                                routeName: "CalendarHome",
+                                if (this.props.completeCha) {
+                                    const resetAction = StackActions.reset({
+                                        index: 0,
+                                        actions: [
+                                            NavigationActions.navigate({
+                                                routeName: "Tabs",
+                                                action: NavigationActions.navigate({
+                                                    routeName: "ChallengeSubscription",
+                                                    params: {completedChallenge: true}
+                                                }),
                                             }),
-                                        }),
-                                    ],
-                                });
-                                this.props.navigation.dispatch(resetAction);
-
+                                        ],
+                                    });
+                                    this.props.navigation.dispatch(resetAction);
+                                } else {
+                                    const resetAction = StackActions.reset({
+                                        index: 0,
+                                        actions: [
+                                            NavigationActions.navigate({
+                                                routeName: "Tabs",
+                                                action: NavigationActions.navigate({
+                                                    routeName: "CalendarHome",
+                                                }),
+                                            }),
+                                        ],
+                                    });
+                                    this.props.navigation.dispatch(resetAction);
+                                }
                             },
                         },
                     ],
