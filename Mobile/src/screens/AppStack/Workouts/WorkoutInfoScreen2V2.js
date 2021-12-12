@@ -1069,68 +1069,30 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                   </View>
                 </View>)}
               </View>
-              // <View style={WorkoutScreenStyle.flatListContainer}>
-              //   <View>
-              //     <View style={WorkoutScreenStyle.workoutInfoContainer}>
-              //       <View style={WorkoutScreenStyle.workoutNameContainer}>
-              //         <Text style={{
-              //           marginTop: 6,
-              //           marginRight: 10,
-              //           fontFamily: fonts.StyreneAWebRegular,
-              //           fontSize: 20,
-              //           color: colors.black,
-              //           width: wp('68%')
-              //         }}>
-              //           {workout && workout.displayName.toUpperCase()}
-              //         </Text>
-              //         <View>
-              //           <View style={{
-              //           }}>
-              //             <TouchableOpacity
-              //                 onPress={() => this.showModal()}
-              //                 style={{
-              //                   padding: 15,
-              //                   backgroundColor: colors.white,
-              //                   borderWidth: 1,
-              //                   borderColor: colors.grey.light,
-              //                   borderRadius: 20
-              //                 }}
-              //             >
-              //               <Text style={{
-              //                 fontFamily: fonts.bold,
-              //                 fontSize: 14,
-              //                 color: colors.charcoal.dark
-              //               }}>
-              //                 {mode === 'GYM' ? 'GYM' : mode === 'HOME' ? 'HOME' : 'GYM'}
-              //               </Text>
-              //             </TouchableOpacity>
-              //           </View>
-              //         </View>
-              //       </View>
-              //     </View>
-              //     <Text>{mode === 'GYM' ? gym ? 'GYM' : 'WALA' : mode === 'HOME' ? home ? 'HOME' : 'WALA' : 'WALA'}</Text>
-              //     {/*<View style={{width: '100%', justifyContent: 'center', height: hp('65%')}}>*/}
-              //     {/*  <Text style={{textAlign: 'center', textAlignVertical: 'center'}}>No Workouts</Text>*/}
-              //     {/*</View>*/}
-              //   </View>
-              // </View>
           )}
-          {
-            gym || home ? (
-                <TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
-                  <Text
-                      style={{
-                        color: colors.white,
-                        fontFamily: fonts.bold,
-                        fontSize: 20,
-                        alignSelf: "center",
-                      }}
-                  >
-                    {"Start now"}
-                  </Text>
-                </TouchableOpacity>
-            ) : <></>
-          }
+          {mode === 'GYM' ? gym ? (<TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
+            <Text
+                style={{
+                  color: colors.white,
+                  fontFamily: fonts.bold,
+                  fontSize: 20,
+                  alignSelf: "center",
+                }}
+            >
+              {"Start now"}
+            </Text>
+          </TouchableOpacity>) : (<></>) : mode === 'HOME' ? home ? (<TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
+            <Text
+                style={{
+                  color: colors.white,
+                  fontFamily: fonts.bold,
+                  fontSize: 20,
+                  alignSelf: "center",
+                }}
+            >
+              {"Start now"}
+            </Text>
+          </TouchableOpacity>) : (<></>) : (<></>)}
           <Modal
               isVisible={modalShow}
               onBackdropPress={() => this.hideModal()}
