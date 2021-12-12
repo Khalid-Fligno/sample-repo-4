@@ -67,6 +67,7 @@ class CalendarHomeScreen extends React.PureComponent {
       AllRecipe: [],
       challengeRecipe: [],
       transformLevel: undefined,
+      completeCha: undefined,
     };
     this.calendarStrip = React.createRef();
   }
@@ -470,11 +471,12 @@ class CalendarHomeScreen extends React.PureComponent {
                 .collection("challenges")
                 .doc(list[0].id);
               challengeRef.set(newData, { merge: true });
-              this.props.navigation.navigate("ChallengeSubscription");
+              this.setState({completeCha: isCompleted})
+              this.props.navigation.navigate("ChallengeSubscription", {completedChallenge: true})
               Alert.alert(
                 "Congratulations!",
                 "You have completed your challenge",
-                [{ text: "OK", onPress: () => { } }],
+                [{ text: "OK", onPress: () => {} }],
                 { cancelable: false }
               );
             } else {
@@ -644,10 +646,10 @@ class CalendarHomeScreen extends React.PureComponent {
       skipped,
       width,
       AllRecipe,
+      completeCha
     } = this.state;
     let showRC = false;
 
-    console.log('isSchedule: ', isSchedule)
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
       //check if selected date is between challenge start and end date
@@ -975,6 +977,7 @@ class CalendarHomeScreen extends React.PureComponent {
           fetchCalendarEntries={this.fetchCalendarEntries}
           resetActiveChallengeUserData={this.resetActiveChallengeUserData}
           navigation={this.props.navigation}
+          completeCha={completeCha}
         />
       </Modal>
     );

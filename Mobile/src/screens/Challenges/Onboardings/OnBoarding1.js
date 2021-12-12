@@ -20,10 +20,14 @@ export default class OnBoarding1 extends Component {
       mentalHealth: 1,
       increaseFitness: 1,
       btnDisabled: true,
+      quit: false,
+      completedChallenge: false,
     };
   }
 
   onFocusFunction = () => {
+    console.log('QuitOnboard1: ', this.props.navigation.getParam("quit"))
+    console.log('completedChallengeOnboard1: ', this.props.navigation.getParam("completedChallenge"))
     const challengeData = this.props.navigation.getParam("data", {})[
       "challengeData"
     ];
@@ -38,6 +42,8 @@ export default class OnBoarding1 extends Component {
       mentalHealth: toAchieve ? toAchieve.mentalHealth : 1,
       increaseFitness: toAchieve ? toAchieve.increaseFitness : 1,
       btnDisabled: true,
+      quit: this.props.navigation.getParam("quit"),
+      completedChallenge: this.props.navigation.getParam("completedChallenge"),
     });
   };
 
@@ -64,6 +70,8 @@ export default class OnBoarding1 extends Component {
       toneUp,
       mentalHealth,
       increaseFitness,
+      quit,
+      completedChallenge,
     } = this.state;
     const onBoardingInfo = Object.assign({}, challengeData.onBoardingInfo, {
       toAchieve: {
@@ -81,6 +89,7 @@ export default class OnBoarding1 extends Component {
 
     let toAchieve = "";
 
+    console.log('quit: ', quit)
     for (var key in onBoardingInfo.toAchieve) {
       if (
         onBoardingInfo.toAchieve[key] !== undefined &&
@@ -94,6 +103,8 @@ export default class OnBoarding1 extends Component {
       this.props.navigation.navigate("ChallengeOnBoarding6");
     } else {
       this.props.navigation.navigate("ChallengeOnBoarding3", {
+        completedChallenge,
+        quit,
         data: {
           challengeData: updatedChallengedata,
         },

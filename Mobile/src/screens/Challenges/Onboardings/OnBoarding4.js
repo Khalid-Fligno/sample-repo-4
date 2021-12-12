@@ -52,7 +52,6 @@ const uriToBlob = (url) => {
       xhr.responseType = "blob"; // convert type
       xhr.send();
     } catch (err) {
-      console.log(err);
     }
   });
 };
@@ -75,6 +74,8 @@ export default class OnBoarding4 extends Component {
       loading: false,
       calendarModalVisible: false,
       chosenDate: new Date(),
+      quit: false,
+      completedChallenge: false
     };
   }
 
@@ -111,18 +112,21 @@ export default class OnBoarding4 extends Component {
   };
 
   onFocusFunction = async () => {
+    console.log('QuitOnboard4: ', this.props.navigation.getParam("quit"))
+    console.log('completedChallengeOnboard4: ', this.props.navigation.getParam("completedChallenge"))
     const data = this.props.navigation.getParam("data", {});
     console.log("OnBoarding4 data:", data);
     const image = data["challengeData"].image
       ? data["challengeData"].image
       : null;
     const imgUrl = await this.fetchUserImageUrl();
-    console.log("Challenge: ", data["challengeData"]);
     this.setState({
       challengeData: data["challengeData"],
       image,
       imgUrl,
       btnDisabled: false,
+      quit: this.props.navigation.getParam("quit"),
+      completedChallenge: this.props.navigation.getParam("completedChallenge")
     });
   };
 
@@ -148,13 +152,11 @@ export default class OnBoarding4 extends Component {
   getCameraPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === "granted" });
-    console.log("getCameraPermission");
   };
 
   getCameraRollPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     this.setState({ hasCameraRollPermission: status === "granted" });
-    console.log("getCameraRollPermission");
   };
 
   async requestAndroidPermissions() {
@@ -309,7 +311,6 @@ export default class OnBoarding4 extends Component {
       // console.log(url)
       this.setState({ imgUrl: url });
     } catch (err) {
-      console.log(err);
       Alert.alert("Image save error");
     }
   };
@@ -364,7 +365,6 @@ export default class OnBoarding4 extends Component {
         this.setState({ loading: false });
       })
       .catch((err) => {
-        console.log(err);
         this.setState({ loading: false });
       });
   }
@@ -394,74 +394,133 @@ export default class OnBoarding4 extends Component {
         this.addedToCalendarPopup(stringDate2);
       })
       .catch((err) => {
-        console.log(err);
         this.setState({ loading: false });
       });
   }
 
   addChallengeToCalendar = async (date) => {
-    if (this.state.addingToCalendar) {
-      return;
-    }
-    this.setState({ addingToCalendar: true });
-    ////////////////////saving on calendar
-    let updatedChallengedata = this.state.challengeData;
-
-    console.log("Challenge data: ", updatedChallengedata);
-
-    let skipped = updatedChallengedata.onBoardingInfo.skipped;
-
-    if (!skipped) {
-      skipped = this.state.imgUrl == null ? true : false;
-    }
-
-    console.log("Skipped: ", skipped);
-    const onBoardingInfo = Object.assign(
-      {},
-      updatedChallengedata.onBoardingInfo,
-      {
-        skipped: skipped,
+    const { quit, completedChallenge } = this.state
+    if (quit || completedChallenge) {
+      if (this.state.addingToCalendar) {
+        return;
       }
-    );
+      this.setState({ addingToCalendar: true });
+      ////////////////////saving on calendar
+      let updatedChallengedata = this.state.challengeData;
 
-    updatedChallengedata = Object.assign({}, updatedChallengedata, {
-      onBoardingInfo,
-    });
+      let skipped = updatedChallengedata.onBoardingInfo.skipped;
 
-    const data = createUserChallengeData(updatedChallengedata, new Date(date));
-    const progressData = {
-      photoURL: this.state.imgUrl,
-      height: updatedChallengedata.onBoardingInfo.measurements.height,
-      weight: updatedChallengedata.onBoardingInfo.measurements.weight,
-      goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
-      waist: updatedChallengedata.onBoardingInfo.measurements.waist,
-      hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-      burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
-      fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
-    };
+      if (!skipped) {
+        skipped = this.state.imgUrl == null ? true : false;
+      }
 
-    // const stringDate = moment(date).format("YYYY-MM-DD").toString();
-    const stringDate2 = moment(date).format("DD-MM-YY").toString();
-    const TODAY = moment();
+      const onBoardingInfo = Object.assign(
+        {},
+        updatedChallengedata.onBoardingInfo,
+        {
+          skipped: skipped,
+        }
+      );
 
-    // if (
-    //   new Date(updatedChallengedata.startDate).getTime() <
-    //   new Date(stringDate).getTime()
-    // ) {
-    //   data.isSchedule = true;
-    //   data.status = "InActive";
-    // }
+      updatedChallengedata = Object.assign({}, updatedChallengedata, {
+        onBoardingInfo,
+      });
 
-    if (moment(date).isSame(TODAY, "d")) {
-      Object.assign(data, { status: "Active" });
+      const data = createUserChallengeData(updatedChallengedata, new Date(date));
+      const progressData = {
+        photoURL: this.state.imgUrl,
+        height: updatedChallengedata.onBoardingInfo.measurements.height,
+        weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+        goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
+        waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+        hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+        burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
+        fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
+      };
+
+      // const stringDate = moment(date).format("YYYY-MM-DD").toString();
+      const stringDate2 = moment(date).format("DD-MM-YY").toString();
+      const TODAY = moment();
+
+      // if (
+      //   new Date(updatedChallengedata.startDate).getTime() <
+      //   new Date(stringDate).getTime()
+      // ) {
+      //   data.isSchedule = true;
+      //   data.status = "InActive";
+      // }
+
+      if (moment(date).isSame(TODAY, "d")) {
+        Object.assign(data, { status: "Active" });
+      } else {
+        // Object.assign(data, { isSchedule: true, status: "InActive" });
+        Object.assign(data, { isSchedule: false, status: "Active" });
+      }
+
+      console.log('Data111: ', progressData)
+      await storeProgressInfo(progressData, quit || completedChallenge);
+      await this.saveOnBoardingInfo(data, stringDate2);
     } else {
-      // Object.assign(data, { isSchedule: true, status: "InActive" });
-      Object.assign(data, { isSchedule: false, status: "Active" });
+      if (this.state.addingToCalendar) {
+        return;
+      }
+      this.setState({ addingToCalendar: true });
+      ////////////////////saving on calendar
+      let updatedChallengedata = this.state.challengeData;
+
+      let skipped = updatedChallengedata.onBoardingInfo.skipped;
+
+      if (!skipped) {
+        skipped = this.state.imgUrl == null ? true : false;
+      }
+
+      const onBoardingInfo = Object.assign(
+        {},
+        updatedChallengedata.onBoardingInfo,
+        {
+          skipped: skipped,
+        }
+      );
+
+      updatedChallengedata = Object.assign({}, updatedChallengedata, {
+        onBoardingInfo,
+      });
+
+      const data = createUserChallengeData(updatedChallengedata, new Date(date));
+      delete data.workouts
+      const progressData = {
+        photoURL: this.state.imgUrl,
+        height: updatedChallengedata.onBoardingInfo.measurements.height,
+        weight: updatedChallengedata.onBoardingInfo.measurements.weight,
+        goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
+        waist: updatedChallengedata.onBoardingInfo.measurements.waist,
+        hip: updatedChallengedata.onBoardingInfo.measurements.hip,
+        burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
+        fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
+      };
+
+      // const stringDate = moment(date).format("YYYY-MM-DD").toString();
+      const stringDate2 = moment(date).format("DD-MM-YY").toString();
+      const TODAY = moment();
+
+      // if (
+      //   new Date(updatedChallengedata.startDate).getTime() <
+      //   new Date(stringDate).getTime()
+      // ) {
+      //   data.isSchedule = true;
+      //   data.status = "InActive";
+      // }
+
+      if (moment(date).isSame(TODAY, "d")) {
+        Object.assign(data, { status: "Active" });
+      } else {
+        // Object.assign(data, { isSchedule: true, status: "InActive" });
+        Object.assign(data, { isSchedule: false, status: "Active" });
+      }
+
+      await storeProgressInfo(progressData);
+      await this.saveOnBoardingInfo(data, stringDate2);
     }
-
-    await storeProgressInfo(progressData);
-    await this.saveOnBoardingInfo(data, stringDate2);
-
   };
 
   async goToScreen(type) {
@@ -613,7 +672,6 @@ export default class OnBoarding4 extends Component {
         });
       }
     } catch (err) {
-      console.log(err);
       this.setState({
         error: "Problem uploading image, please try again",
         uploading: false,
@@ -649,7 +707,6 @@ export default class OnBoarding4 extends Component {
       addingToCalendar,
       chosenDate,
     } = this.state;
-    console.log("addingToCalendar: ", addingToCalendar)
     return (
       <SafeAreaView style={ChallengeStyle.container}>
         <View style={[globalStyle.container, { paddingVertical: 15 }]}>
