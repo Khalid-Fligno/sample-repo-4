@@ -104,12 +104,12 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     });
   }
 
-  // cloneWorkout = async () => {
-  //   this.unsubscribeCloneWorkout = await db
-  //       .collection("newWorkouts")
-  //       .doc('kH7UdjvxDU1dO5BqdFPj')
-  //       .set(this.props.navigation.getParam("workout", null), { merge: true });
-  // };
+  cloneWorkout = async () => {
+    this.unsubscribeCloneWorkout = await db
+        .collection("newWorkouts")
+        .doc('kH7UdjvxDU1dO5BqdFPj')
+        .set(this.props.navigation.getParam("workout", null), { merge: true });
+  };
 
   fetchProfile = async () => {
     const uid = await AsyncStorage.getItem("uid");
@@ -237,7 +237,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
 
   componentDidMount = async () => {
     this.fetchProfile();
-    // this.cloneWorkout();
+    this.cloneWorkout();
     this.setState({ loading: true });
     // this.focusListener = this.props.navigation.addListener('willFocus', () => {
     //   console.log("will focued call")
