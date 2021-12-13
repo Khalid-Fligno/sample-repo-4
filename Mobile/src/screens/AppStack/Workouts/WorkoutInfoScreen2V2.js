@@ -104,6 +104,13 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     });
   }
 
+  // cloneWorkout = async () => {
+  //   this.unsubscribeCloneWorkout = await db
+  //       .collection("newWorkouts")
+  //       .doc('kH7UdjvxDU1dO5BqdFPj')
+  //       .set(this.props.navigation.getParam("workout", null), { merge: true });
+  // };
+
   fetchProfile = async () => {
     const uid = await AsyncStorage.getItem("uid");
     try {
@@ -230,6 +237,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
 
   componentDidMount = async () => {
     this.fetchProfile();
+    // this.cloneWorkout();
     this.setState({ loading: true });
     // this.focusListener = this.props.navigation.addListener('willFocus', () => {
     //   console.log("will focued call")
@@ -1131,7 +1139,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                   style={{
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: colors.themeColor.color,
+                    backgroundColor: colors.black,
                     height: 50,
                     width: "100%",
                     marginBottom: 0
@@ -1140,7 +1148,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 <Text style={{
                   fontFamily: fonts.bold,
                   fontSize: 14,
-                  color: colors.black,
+                  color: colors.white,
                   marginTop: 3
                 }}>DONE</Text>
               </TouchableOpacity>
