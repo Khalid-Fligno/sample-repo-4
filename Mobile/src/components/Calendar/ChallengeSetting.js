@@ -100,10 +100,6 @@ class ChallengeSetting extends Component {
     }
 
     showCalendarModal = () => {
-        this.setState({ calendarModalVisible: true, choice: 'Yes' });
-    };
-
-    showCalendarModalUno = () => {
         this.setState({ calendarModalVisible: true });
     };
 
@@ -141,117 +137,134 @@ class ChallengeSetting extends Component {
             // Object.assign(data, { isSchedule: true, status: "InActive" });
             Object.assign(data, { isSchedule: false, status: "Active" });
         }
-        if (this.state.choice === 'Yes') {
-            userRef
-                .doc(activeChallengeData.id)
-                .set(data, { merge: true })
-                .then((res) => {
+        Alert.alert(
+            "",
+            "Do you want to keep your Active Challenge Progress Data?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                {
+                    text: "YES",
+                    onPress: () => {
+                        userRef
+                            .doc(activeChallengeData.id)
+                            .get()
+                            .then((res) => {
 
-                    Alert.alert(
-                        "",
-                        `Your start date has been added to your challenge. Go to ${moment(
-                            selectedDate
-                        ).format(
-                            "DD-MM-YY"
-                        )} on the challenge dashboard to see what Day 1 looks like`,
-                        [
-                            {
-                                text: "OK",
-                                onPress: () => {
-                                    if (this.props.completeCha) {
-                                        const resetAction = StackActions.reset({
-                                            index: 0,
-                                            actions: [
-                                                NavigationActions.navigate({
-                                                    routeName: "Tabs",
-                                                    action: NavigationActions.navigate({
-                                                        routeName: "ChallengeSubscription",
-                                                        params: { completedChallenge: true }
-                                                    }),
-                                                }),
-                                            ],
-                                        });
-                                        this.props.navigation.dispatch(resetAction);
-                                    } else {
-                                        const resetAction = StackActions.reset({
-                                            index: 0,
-                                            actions: [
-                                                NavigationActions.navigate({
-                                                    routeName: "Tabs",
-                                                    action: NavigationActions.navigate({
-                                                        routeName: "CalendarHome",
-                                                    }),
-                                                }),
-                                            ],
-                                        });
-                                        this.props.navigation.dispatch(resetAction);
-                                    }
-                                    this.setState({ choice: '' })
-                                },
-                            },
-                        ],
-                        { cancelable: false }
-                    );
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        } else {
-            userRef
-                .doc(activeChallengeData.id)
-                .set(data, { merge: true })
-                .then((res) => {
+                                Alert.alert(
+                                    "",
+                                    `Your start date has been added to your challenge. Go to ${moment(
+                                        selectedDate
+                                    ).format(
+                                        "DD-MM-YY"
+                                    )} on the challenge dashboard to see what Day 1 looks like`,
+                                    [
+                                        {
+                                            text: "OK",
+                                            onPress: () => {
+                                                if (this.props.completeCha) {
+                                                    const resetAction = StackActions.reset({
+                                                        index: 0,
+                                                        actions: [
+                                                            NavigationActions.navigate({
+                                                                routeName: "Tabs",
+                                                                action: NavigationActions.navigate({
+                                                                    routeName: "ChallengeSubscription",
+                                                                    params: { completedChallenge: true }
+                                                                }),
+                                                            }),
+                                                        ],
+                                                    });
+                                                    this.props.navigation.dispatch(resetAction);
+                                                } else {
+                                                    const resetAction = StackActions.reset({
+                                                        index: 0,
+                                                        actions: [
+                                                            NavigationActions.navigate({
+                                                                routeName: "Tabs",
+                                                                action: NavigationActions.navigate({
+                                                                    routeName: "CalendarHome",
+                                                                }),
+                                                            }),
+                                                        ],
+                                                    });
+                                                    this.props.navigation.dispatch(resetAction);
+                                                }
+                                                this.setState({ choice: '' })
+                                            },
+                                        },
+                                    ],
+                                    { cancelable: false }
+                                );
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
+                    }
+                },
+                {
+                    text: "NO",
+                    onPress: () => {
+                        userRef
+                            .doc(activeChallengeData.id)
+                            .set(data, { merge: true })
+                            .then((res) => {
 
-                    Alert.alert(
-                        "",
-                        `Your start date has been added to your challenge. Go to ${moment(
-                            selectedDate
-                        ).format(
-                            "DD-MM-YY"
-                        )} on the challenge dashboard to see what Day 1 looks like`,
-                        [
-                            {
-                                text: "OK",
-                                onPress: () => {
-                                    if (this.props.completeCha) {
-                                        const resetAction = StackActions.reset({
-                                            index: 0,
-                                            actions: [
-                                                NavigationActions.navigate({
-                                                    routeName: "Tabs",
-                                                    action: NavigationActions.navigate({
-                                                        routeName: "ChallengeSubscription",
-                                                        params: { completedChallenge: true }
-                                                    }),
-                                                }),
-                                            ],
-                                        });
-                                        this.props.navigation.dispatch(resetAction);
-                                    } else {
-                                        const resetAction = StackActions.reset({
-                                            index: 0,
-                                            actions: [
-                                                NavigationActions.navigate({
-                                                    routeName: "Tabs",
-                                                    action: NavigationActions.navigate({
-                                                        routeName: "CalendarHome",
-                                                    }),
-                                                }),
-                                            ],
-                                        });
-                                        this.props.navigation.dispatch(resetAction);
-                                    }
-                                },
-                            },
-                        ],
-                        { cancelable: false }
-                    );
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-
+                                Alert.alert(
+                                    "",
+                                    `Your start date has been added to your challenge. Go to ${moment(
+                                        selectedDate
+                                    ).format(
+                                        "DD-MM-YY"
+                                    )} on the challenge dashboard to see what Day 1 looks like`,
+                                    [
+                                        {
+                                            text: "OK",
+                                            onPress: () => {
+                                                if (this.props.completeCha) {
+                                                    const resetAction = StackActions.reset({
+                                                        index: 0,
+                                                        actions: [
+                                                            NavigationActions.navigate({
+                                                                routeName: "Tabs",
+                                                                action: NavigationActions.navigate({
+                                                                    routeName: "ChallengeSubscription",
+                                                                    params: { completedChallenge: true }
+                                                                }),
+                                                            }),
+                                                        ],
+                                                    });
+                                                    this.props.navigation.dispatch(resetAction);
+                                                } else {
+                                                    const resetAction = StackActions.reset({
+                                                        index: 0,
+                                                        actions: [
+                                                            NavigationActions.navigate({
+                                                                routeName: "Tabs",
+                                                                action: NavigationActions.navigate({
+                                                                    routeName: "CalendarHome",
+                                                                }),
+                                                            }),
+                                                        ],
+                                                    });
+                                                    this.props.navigation.dispatch(resetAction);
+                                                }
+                                            },
+                                        },
+                                    ],
+                                    { cancelable: false }
+                                );
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
+                    }
+                },
+            ],
+            { cancelable: false }
+        );
     }
 
 
@@ -420,20 +433,16 @@ class ChallengeSetting extends Component {
                         style={styles.btnContainer}
                         onPress={() => {
                             Alert.alert(
-                                "",
-                                "Do you want to keep your Active Weekly Workout Progress Data?",
+                                "Are you sure!",
+                                "You want to change your challenge start date?",
                                 [
                                     {
                                         text: "Cancel",
                                         style: "cancel",
                                     },
                                     {
-                                        text: "YES",
+                                        text: "Change",
                                         onPress: () => this.showCalendarModal(),
-                                    },
-                                    {
-                                        text: "NO",
-                                        onPress: () => this.showCalendarModalUno(),
                                     },
                                 ],
                                 { cancelable: false }
