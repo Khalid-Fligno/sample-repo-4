@@ -12,6 +12,7 @@ import globalStyle, { containerPadding } from "../../../styles/globalStyles";
 import calendarStyles from "./calendarStyle";
 import * as Haptics from "expo-haptics";
 import {
+  fetchRecipeData,
   getCurrentPhase,
   getTotalChallengeWorkoutsCompleted,
   getCurrentChallengeDay,
@@ -66,6 +67,7 @@ class CalendarHomeScreen extends React.PureComponent {
       AllRecipe: [],
       challengeRecipe: [],
       transformLevel: undefined,
+      completeCha: undefined,
     };
     this.calendarStrip = React.createRef();
   }
@@ -87,7 +89,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async onFocusFunction() {
     console.log("On focus");
-    await this.fetchRecipe();
     await this.fetchRecipeChallenge();
     await this.fetchCalendarEntries();
     await this.fetchActiveChallengeUserData();
@@ -103,7 +104,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   componentWillUnmount() {
     this.focusListener.remove();
-    if (this.unsubscribe) this.unsubscribe();
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
     if (this.unsubscribeSchedule) this.unsubscribeSchedule();
@@ -147,51 +147,15 @@ class CalendarHomeScreen extends React.PureComponent {
           level4: level_4
         }]
 
+        fetchRecipeData(challengeLevel).then((res) => {
+          this.setState({
+            AllRecipe: res.recommendedRecipe,
+            loading: false,
+          })
+        })
+
         this.setState({
           challengeRecipe: challengeLevel
-        })
-      })
-  }
-
-  fetchRecipe = async () => {
-    this.setState({ loading: true });
-
-    this.unsubscribe = await db
-      .collection("recipes")
-      .get()
-      .then(querySnapshot => {
-        const breakfastActive = []
-        const lunchActive = []
-        const dinnerActive = []
-        const snackActive = []
-        const drinkActive = [] 
-        const preworkoutActive =[]
-        const treatsActive=[]
-
-
-        const documents = querySnapshot.docs.map(doc => doc.data())
-        documents.filter((res) => res.breakfast === true? breakfastActive.push(res) : null)
-        documents.filter((res) => res.lunch === true? lunchActive.push(res) : null)
-        documents.filter((res) => res.dinner === true? dinnerActive.push(res) : null)
-        documents.filter((res) => res.snack === true? snackActive.push(res) : null)
-        documents.filter((res) => res.drink === true? drinkActive.push(res) : null)
-        documents.filter((res) => res.preworkout === true? preworkoutActive.push(res) : null)
-        documents.filter((res) => res.treats === true? treatsActive.push(res) : null)
-
-
-        const recommendedMeal = [{
-          breakfast: breakfastActive,
-          snack: snackActive,
-          lunch: lunchActive,
-          dinner: dinnerActive,
-          drink: drinkActive,
-          preworkout: preworkoutActive,
-          treats: treatsActive,
-
-        }]
-
-        this.setState({
-          AllRecipe: recommendedMeal
         })
       })
   }
@@ -507,11 +471,12 @@ class CalendarHomeScreen extends React.PureComponent {
                 .collection("challenges")
                 .doc(list[0].id);
               challengeRef.set(newData, { merge: true });
-              this.props.navigation.navigate("ChallengeSubscription");
+              this.setState({completeCha: isCompleted})
+              this.props.navigation.navigate("ChallengeSubscription", {completedChallenge: true})
               Alert.alert(
                 "Congratulations!",
                 "You have completed your challenge",
-                [{ text: "OK", onPress: () => { } }],
+                [{ text: "OK", onPress: () => {} }],
                 { cancelable: false }
               );
             } else {
@@ -564,15 +529,11 @@ class CalendarHomeScreen extends React.PureComponent {
       const data = activeChallengeUserData.phases;
       const test = activeChallengeUserData.startDate;
       const transformLevel = activeChallengeUserData.displayName;
-      /*
-      if(this.stringDate != test){
-        this.setState({loading :false})
-      } */if (this.stringDate >= test) {
-        this.setState({ loading: true })
+      
+      if (this.stringDate >= test) {
+        this.setState({ loading :true })
       }
-      // this.stringDate = this.calendarStrip.current.getSelectedDate().format('YYYY-MM-DD').toString();
-      console.log("date=>", this.stringDate);
-      //console.log(test);
+
       //TODO :getCurrent phase data
       this.phase = getCurrentPhase(
         activeChallengeUserData.phases,
@@ -580,6 +541,7 @@ class CalendarHomeScreen extends React.PureComponent {
       );
       this.transformLevel = transformLevel;
       if (this.phase) {
+
         //TODO :fetch the current phase data from Challenges collection
         this.phaseData = activeChallengeData.phases.filter(
           (res) => res.name === this.phase.name
@@ -617,7 +579,7 @@ class CalendarHomeScreen extends React.PureComponent {
             this.stringDate
           )
         )[0];
-        // console.log("TOfdayya",todayRcWorkout)
+        
         if (todayRcWorkout) this.setState({ todayRcWorkout: todayRcWorkout });
         else this.setState({ todayRcWorkout: undefined });
       }
@@ -627,7 +589,6 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   async goToRecipe(recipeData) {
-    
     this.setState({ loading: true });
     const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
     await FileSystem.getInfoAsync(fileUri)
@@ -648,13 +609,14 @@ class CalendarHomeScreen extends React.PureComponent {
       });
     this.props.navigation.navigate("Recipe", {
       recipe: recipeData,
-      backTitle: "challenge dashboard",
+      title: "challenge dashboard",
       extraProps: { fromCalender: true },
     });
   }
 
   getToFilter(data, data1, title) {
     const { challengeRecipe } = this.state
+
     console.log('Title: ', title)
 
     this.props.navigation.navigate('FilterRecipe', {
@@ -684,10 +646,10 @@ class CalendarHomeScreen extends React.PureComponent {
       skipped,
       width,
       AllRecipe,
+      completeCha
     } = this.state;
     let showRC = false;
 
-    // console.log('isSchedule: ', todayRecommendedMeal)
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
       //check if selected date is between challenge start and end date
@@ -746,6 +708,7 @@ class CalendarHomeScreen extends React.PureComponent {
       </>
     );
     const getPhase = (phaseData) => {
+      console.log(this.state.transformLevel);
       return (phaseData.name.substring(0, 5)
         + ' '
         + phaseData.name.substring(5, phaseData.name.length)).charAt(0).toUpperCase()
@@ -756,28 +719,7 @@ class CalendarHomeScreen extends React.PureComponent {
     const Progress = () => {
       return (
         <>
-          <View
-            onLayout={e => {
-              const newWidth = e.nativeEvent.layout.width;
-              this.setState({ width: newWidth });
-            }}
-            style={{
-              height: 10,
-              backgroundColor: 'rgba(0,0,0,0.1)',
-              borderRadius: 10,
-              overflow: 'hidden'
-            }}>
-            <View style={{
-              height: 10,
-              width: (width * this.currentChallengeDay) / activeChallengeData.numberOfDays,
-              borderRadius: 10,
-              backgroundColor: colors.themeColor.fill,
-              position: 'absolute',
-              left: 0,
-              top: 0
-            }}></View>
-          </View>
-          <View style={{
+         <View style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginTop: 15
@@ -807,9 +749,32 @@ class CalendarHomeScreen extends React.PureComponent {
               }}>Day {activeChallengeData.numberOfDays}</Text>
             </View>
           </View>
+
+          <View
+            onLayout={e => {
+              const newWidth = e.nativeEvent.layout.width;
+              this.setState({ width: newWidth });
+            }}
+            style={{
+              height: 10,
+              backgroundColor: 'rgba(0,0,0,0.1)',
+              borderRadius: 10,
+              overflow: 'hidden',
+              marginTop: 10
+            }}>
+            <View style={{
+              height: 10,
+              width: (width * this.currentChallengeDay) / activeChallengeData.numberOfDays,
+              borderRadius: 10,
+              backgroundColor: colors.themeColor.fill,
+              position: 'absolute',
+              left: 0,
+              top: 0
+            }}></View>
+          </View>
           <View style={{
             flexDirection: 'row',
-            marginTop: 40
+            marginTop: 60
           }}>
             <View style={{
               backgroundColor: '#ffffff',
@@ -850,14 +815,16 @@ class CalendarHomeScreen extends React.PureComponent {
               </Text>
             </View>
           </View>
-          <View style={{
+          {/* <View style={{
             marginTop: hp("1%")
           }}>
             <Text style={{
               fontSize: 28,
               fontFamily: fonts.bold
-            }}>{this.day}, {this.month} {this.date}</Text>
-          </View>
+            }}>
+              {this.day}, {this.month} {this.date}
+              </Text>
+          </View> */}
           <View>
           </View>
           <View style={{ marginTop: 20, flex: 1 }}>
@@ -905,7 +872,7 @@ class CalendarHomeScreen extends React.PureComponent {
           <View elevation={5} style={{
             position: 'absolute',
             left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 11 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) + 12,
-            top: 29
+            top: 85
           }}>
             <Svg
               id="prefix__Layer_1"
@@ -934,7 +901,7 @@ class CalendarHomeScreen extends React.PureComponent {
           <View elevation={5} style={{
             position: 'absolute',
             left: Platform.OS === "ios" ? ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7 : ((width * this.currentChallengeDay) / activeChallengeData.numberOfDays) - 7,
-            top: Platform.OS === "ios" ? 41 : 39,
+            top: Platform.OS === "ios" ? 96 : 94,
             backgroundColor: '#F79400',
             width: 40,
             height: 40,
@@ -1010,6 +977,7 @@ class CalendarHomeScreen extends React.PureComponent {
           fetchCalendarEntries={this.fetchCalendarEntries}
           resetActiveChallengeUserData={this.resetActiveChallengeUserData}
           navigation={this.props.navigation}
+          completeCha={completeCha}
         />
       </Modal>
     );
