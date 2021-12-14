@@ -163,7 +163,7 @@ class CalendarHomeScreen extends React.PureComponent {
         const lunchActive = []
         const dinnerActive = []
         const snackActive = []
-        const drinkActive = [] 
+        const drinkActive = []
 
         const documents = querySnapshot.docs.map(doc => doc.data())
         documents.filter((res) => res.breakfast === true? breakfastActive.push(res) : null)
@@ -439,6 +439,7 @@ class CalendarHomeScreen extends React.PureComponent {
       workoutSubCategory: workout.workoutSubCategory,
       fitnessLevel,
       extraProps: { fromCalender: true },
+      transformRoute: true
     });
   }
 
