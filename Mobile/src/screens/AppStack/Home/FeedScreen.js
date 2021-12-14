@@ -34,6 +34,8 @@ import TimeSvg from "../../../../assets/icons/time";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import Carousel from "react-native-carousel-view";
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
+
 
 import {
   getCurrentPhase,
@@ -115,6 +117,7 @@ export default class FeedScreen extends React.PureComponent {
             this.setState({ loading: true });
             this.fetchActiveChallengeData(res);
             this.fetchBlogs(res.tag, res.startDate);
+            this.fetchProfile();
           }
         }
       });
@@ -136,6 +139,18 @@ export default class FeedScreen extends React.PureComponent {
   //       });
   //     });
   //   }
+
+  fetchProfile = async () =>{
+    let trainers = []
+    const snapshot = await db
+      .collection('trainers')
+      .get();
+      snapshot.forEach((doc)=>{
+        trainers.unshift(doc.data())
+      })
+      this.setState({trainers, loading: false})
+
+  }
 
   fetchBlogs = async (tag, currentDay, phaseData) => {
     // console.log(tag,currentDay)
@@ -243,9 +258,12 @@ export default class FeedScreen extends React.PureComponent {
       activeChallengeUserData,
       blogs,
       todayRcWorkout,
+      trainers
     } = this.state;
+
+    let array = trainers;
+    console.log(array);
     let recommendedWorkout = [];
-    console.log(this.state.blogs);
     dayOfWeek > 0 && dayOfWeek < 6
       ? recommendedWorkout.push(workoutTypeMap[dayOfWeek])
       : recommendedWorkout.push(" Rest Day");
@@ -266,15 +284,30 @@ export default class FeedScreen extends React.PureComponent {
         // style={[globalStyle.container,{paddingHorizontal:0}]}
       >
         <View style={{ marginBottom: wp("10%"), flex: 1 }}>
-          <View style={{ flex: 1, alignItems: "center" }}>
-            <Carousel
-              height={hp("52%")}
-              delay={3000}
-              width={width + 50}
-              animate={true}
-              indicatorColor={"white"}
-            >
-              <View style={{ flex: 1, alignItems: "center" }}>
+          <View style={{ flex: 1, alignItems: "center" ,height:wp('100%')}}>
+           
+                  <SwiperFlatList
+                    showPagination
+                    autoplay
+                    autoplayLoop
+                    data={trainers}
+                    renderItem={({item}) => {
+                      return (
+                     <View style={{ flex: 1, alignItems: "center" }}>
+                          <Image
+                            style={{ flex: 1, height: '50%', width: wp('100%') }}
+                            source={{
+                              uri: item.image,
+                            }}
+                            resizeMode="cover"
+                          />
+                        </View> 
+
+                      );
+                    }}
+                  />
+              
+              {/* <View style={{ flex: 1, alignItems: "center" }}>
                 <Image
                   style={{ flex: 1, height: "90%", width: "90%" }}
                   source={{
@@ -282,8 +315,8 @@ export default class FeedScreen extends React.PureComponent {
                   }}
                   resizeMode="cover"
                 />
-              </View>
-              <View style={{ flex: 1, alignItems: "center" }}>
+              </View> */}
+              {/* <View style={{ flex: 1, alignItems: "center" }}>
                 <Image
                   style={{ flex: 1, height: "90%", width: "90%" }}
                   source={{
@@ -300,8 +333,7 @@ export default class FeedScreen extends React.PureComponent {
                   }}
                   resizeMode="cover"
                 />
-              </View>
-            </Carousel>
+              </View> */}
           </View>
 
           <View style={{ flex: 1, marginTop: 20 }}>
