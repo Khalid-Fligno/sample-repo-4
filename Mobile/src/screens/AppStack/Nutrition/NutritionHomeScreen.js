@@ -28,12 +28,12 @@ const NutritionList = [
   },
   ,
   {
-    title:"post workout",
+    title:"postworkout",
     imageUrl:require('../../../../assets/images/homeScreenTiles/Post-Workout.jpg'),
   },
   ,
   {
-    title:"pre workout",
+    title:"preworkout",
     imageUrl:require('../../../../assets/images/homeScreenTiles/Pre-Workout.jpg'),
   },
   {
