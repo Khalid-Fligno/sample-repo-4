@@ -303,6 +303,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
           }.mp4`;
         break;
     }
+    
     return (
       <View style={WorkoutScreenStyle.carouselContainer}>
         <Carousel
@@ -345,7 +346,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                   {this.state.workout.workoutProcessType === "onlyOne" &&
                     workIntervalTimeinSec <= 60 && (
                       <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {workIntervalTimeinSec}s
+                        {exercise.duration}s
                         {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec}s off`}
                       </Text>

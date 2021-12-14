@@ -65,6 +65,13 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     let restImage = "";
 
     let totalDuration = 0;
+    let interval = false
+
+    workout.filters.forEach((el) => {
+      if (el === 'interval') {
+        interval = true
+      }
+    })
 
     if (rest) {
       totalDuration = workout.restIntervalMap[fitnessLevel - 1];
@@ -121,6 +128,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       rest: rest,
       setCount: setCount,
       restRandomImage: "",
+      interval: interval
     };
   }
 
@@ -208,7 +216,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           // });
           // Atomically add a new region to the "regions" array field.
           var workouts = challengeRef
-            .update({ 
+            .update({
               workouts: firebase.firestore.FieldValue.arrayUnion({
                 date: moment(new Date()).format("YYYY-MM-DD"),
                 id: workout.id,
@@ -218,7 +226,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 time: new Date().getTime(),
               }),
             })
-            .then((res) => console.log("Adeed to challenge", res));
+            .then();
         }
       });
     }
@@ -702,8 +710,22 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       rest,
       workout,
       restRandomImage,
+      interval,
       // isRunning
     } = this.state;
+
+    console.log('currentExercise: ', currentExercise)
+    console.log('currentExerciseIndex: ', currentExerciseIndex)
+    console.log('totalDuration: ', totalDuration)
+    console.log('interval: ', interval)
+
+    // let interval = []
+
+    // workout.filters.forEach((el) => {
+    //   if(el === 'interval'){
+    //     interval.push({one: el})
+    //   }
+    // })
 
     const setCount = this.props.navigation.getParam("setCount", 1);
 
@@ -754,72 +776,141 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         : false;
 
     const workoutTimer = () => {
-      if (!workout.count && !rest)
-        return (
-          <WorkoutTimer
-            totalDuration={Number(totalDuration)}
-            start={timerStart}
-            handleFinish={() => {
-              if (!rest)
-                this.restControl(
-                  reps,
-                  resistanceCategoryId,
-                  currentExerciseIndex
-                );
-              else
-                this.handleFinish(
-                  reps,
-                  resistanceCategoryId,
-                  currentExerciseIndex
-                );
-            }}
-            customContainerStyle={{
-              marginTop: 0,
-              paddingTop: 5,
-              height: 50,
-              paddingBottom: 5,
-              backgroundColor: colors.white,
-            }}
-            customTextStyle={{
-              color: colors.black,
-              fontFamily: fonts.bold,
-            }}
-          />
-        );
-      else if (rest)
-        return (
-          <WorkoutTimer
-            totalDuration={totalDuration}
-            start={timerStart}
-            handleFinish={() => {
-              if (!rest)
-                this.restControl(
-                  reps,
-                  resistanceCategoryId,
-                  currentExerciseIndex
-                );
-              else
-                this.handleFinish(
-                  reps,
-                  resistanceCategoryId,
-                  currentExerciseIndex
-                );
-            }}
-            customContainerStyle={{
-              marginTop: 0,
-              paddingTop: 10,
-              height: 75,
-              paddingBottom: 10,
-              backgroundColor: colors.white,
-            }}
-            customTextStyle={{
-              color: colors.black,
-              fontFamily: fonts.bold,
-            }}
-          />
-        );
-      else if (workout.count && !rest)
-        return <View style={styles.containerEmptyBlackBox}></View>;
+      if (interval) {
+        if (!workout.count && !rest)
+          return (
+            <WorkoutTimer
+              totalDuration={Number(currentExercise.duration)}
+              start={timerStart}
+              handleFinish={() => {
+                if (!rest)
+                  this.restControl(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+                else
+                  this.handleFinish(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+              }}
+              customContainerStyle={{
+                marginTop: 0,
+                paddingTop: 5,
+                height: 50,
+                paddingBottom: 5,
+                backgroundColor: colors.white,
+              }}
+              customTextStyle={{
+                color: colors.black,
+                fontFamily: fonts.bold,
+              }}
+            />
+          );
+        else if (rest)
+          return (
+            <WorkoutTimer
+              totalDuration={currentExercise.duration}
+              start={timerStart}
+              handleFinish={() => {
+                if (!rest)
+                  this.restControl(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+                else
+                  this.handleFinish(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+              }}
+              customContainerStyle={{
+                marginTop: 0,
+                paddingTop: 10,
+                height: 75,
+                paddingBottom: 10,
+                backgroundColor: colors.white,
+              }}
+              customTextStyle={{
+                color: colors.black,
+                fontFamily: fonts.bold,
+              }}
+            />
+          );
+        else if (workout.count && !rest)
+          return <View style={styles.containerEmptyBlackBox}></View>;
+      } else {
+        if (!workout.count && !rest)
+          return (
+            <WorkoutTimer
+              totalDuration={Number(totalDuration)}
+              start={timerStart}
+              handleFinish={() => {
+                if (!rest)
+                  this.restControl(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+                else
+                  this.handleFinish(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+              }}
+              customContainerStyle={{
+                marginTop: 0,
+                paddingTop: 5,
+                height: 50,
+                paddingBottom: 5,
+                backgroundColor: colors.white,
+              }}
+              customTextStyle={{
+                color: colors.black,
+                fontFamily: fonts.bold,
+              }}
+            />
+          );
+        else if (rest)
+          return (
+            <WorkoutTimer
+              totalDuration={totalDuration}
+              start={timerStart}
+              handleFinish={() => {
+                if (!rest)
+                  this.restControl(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+                else
+                  this.handleFinish(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+              }}
+              customContainerStyle={{
+                marginTop: 0,
+                paddingTop: 10,
+                height: 75,
+                paddingBottom: 10,
+                backgroundColor: colors.white,
+              }}
+              customTextStyle={{
+                color: colors.black,
+                fontFamily: fonts.bold,
+              }}
+            />
+          );
+        else if (workout.count && !rest)
+          return <View style={styles.containerEmptyBlackBox}></View>;
+      }
     };
 
     return (
