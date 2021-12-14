@@ -379,8 +379,6 @@ class TodayMealsList extends Component {
   render() {
     const { recipeData, allRecipeData } = this.state
     
-    
-
     return (
       <View style={styles.container}>
         {recipeData.breakfast.length > 0 && this.carouselBreakfast(recipeData.breakfast, allRecipeData.breakfast, "Breakfast")}
