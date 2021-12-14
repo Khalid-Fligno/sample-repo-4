@@ -109,14 +109,14 @@ export default class FeedScreen extends React.PureComponent {
   }
   componentDidMount = () => {
     this.setDayOfWeek();
-    // this.fetchProfile();
+    this.fetchProfile();
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       isActiveChallenge().then((res) => {
         if (res) {
           if (res.status === "Active") {
             this.setState({ loading: true });
             this.fetchActiveChallengeData(res);
-            this.fetchBlogs(res.tag, res.startDate);
+            this.fetchBlogs();
             this.fetchProfile();
           }
         }
@@ -124,8 +124,8 @@ export default class FeedScreen extends React.PureComponent {
     });
   };
   componentWillUnmount = () => {
-    this.focusListener();
-    if (this.unsubscribeFACD) this.unsubscribeFACD();
+    // this.focusListener();
+    // if (this.unsubscribeFACD) this.unsubscribeFACD();
   };
 
   //   fetchProfile = async () => {
@@ -139,6 +139,8 @@ export default class FeedScreen extends React.PureComponent {
   //       });
   //     });
   //   }
+
+
 
   fetchProfile = async () =>{
     let trainers = []
@@ -166,6 +168,8 @@ export default class FeedScreen extends React.PureComponent {
       blogs.unshift(doc.data());
     });
     this.setState({ blogs, loading: false });
+    console.log(blogs);
+    console.log("test")
   };
   fetchActiveChallengeData = async (activeChallengeUserData) => {
     try {
@@ -294,7 +298,11 @@ export default class FeedScreen extends React.PureComponent {
                      <View style={{ flex: 1, alignItems: "center" }}>
                        <TouchableOpacity onPress={()=>
                           this.props.navigation.navigate('Trainers',{
-                            data: trainers
+                            name: item.name,
+                            title: item.title,
+                            about: item.about,
+                            profile: item.profile,
+                            id: item.id,
                           })
                         }>
                           <Image
@@ -396,10 +404,10 @@ export default class FeedScreen extends React.PureComponent {
                         height: 90,
                         borderRadius: 100,
                       }}
-                      source={{
-                        uri: "https://images.pexels.com/photos/3280130/pexels-photo-3280130.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-                      }}
-                      resizeMode="cover"
+                      source={
+                        require("../../../../assets/images/media/community.jpeg")
+                       }
+                          resizeMode="cover"
                     />
                     <View style={{ marginTop: 10, paddingLeft: 10 }}>
                       <Text
@@ -427,9 +435,9 @@ export default class FeedScreen extends React.PureComponent {
                         height: 90,
                         borderRadius: 50,
                       }}
-                      source={{
-                        uri: "https://images.pexels.com/photos/8520564/pexels-photo-8520564.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-                      }}
+                      source={
+                        require("../../../../assets/images/media/activewear.jpeg")
+                       }
                       resizeMode="cover"
                     />
                     <View style={{ marginTop: 10, paddingLeft: 10 }}>
@@ -460,9 +468,9 @@ export default class FeedScreen extends React.PureComponent {
                         height: 90,
                         borderRadius: 50,
                       }}
-                      source={{
-                        uri: "https://images.pexels.com/photos/6740821/pexels-photo-6740821.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-                      }}
+                      source={
+                        require("../../../../assets/images/media/equipment.jpeg")
+                       }
                       resizeMode="cover"
                     />
                     <View style={{ marginTop: 10, paddingLeft: 10 }}>
