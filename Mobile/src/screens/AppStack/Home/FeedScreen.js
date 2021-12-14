@@ -149,7 +149,6 @@ export default class FeedScreen extends React.PureComponent {
         trainers.unshift(doc.data())
       })
       this.setState({trainers, loading: false})
-
   }
 
   fetchBlogs = async (tag, currentDay, phaseData) => {
@@ -262,7 +261,6 @@ export default class FeedScreen extends React.PureComponent {
     } = this.state;
 
     let array = trainers;
-    console.log(array);
     let recommendedWorkout = [];
     dayOfWeek > 0 && dayOfWeek < 6
       ? recommendedWorkout.push(workoutTypeMap[dayOfWeek])
@@ -294,6 +292,11 @@ export default class FeedScreen extends React.PureComponent {
                     renderItem={({item}) => {
                       return (
                      <View style={{ flex: 1, alignItems: "center" }}>
+                       <TouchableOpacity onPress={()=>
+                          this.props.navigation.navigate('Trainers',{
+                            data: trainers
+                          })
+                        }>
                           <Image
                             style={{ flex: 1, height: '50%', width: wp('100%') }}
                             source={{
@@ -301,6 +304,34 @@ export default class FeedScreen extends React.PureComponent {
                             }}
                             resizeMode="cover"
                           />
+                          </TouchableOpacity>
+                          <View style={{
+                            position :'absolute',
+                            bottom: 40,
+                            left: 50
+                            }}>
+                                <Text
+                                style={{
+                                  fontSize: wp("3.5%"),
+                                  fontFamily: fonts.bold,
+                                  fontWeight: "800",
+                                  color: "white",
+                                }}
+                              >
+                              {item.name}
+                              </Text>
+                              <Text
+                            style={{
+                              fontSize: wp("5.5%"),
+                              fontFamily: fonts.bold,
+                              fontWeight: 'bold',
+                              color: "white",
+                            }}
+                          >
+                            {item.title}
+                            
+                            </Text>
+                          </View>
                         </View> 
 
                       );
