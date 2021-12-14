@@ -196,7 +196,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 time: new Date().getTime(),
               }),
             })
-            .then((res) => console.log("Adeed to challenge", res));
+            .then();
         }
       });
     }
@@ -508,7 +508,6 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           appsFlyer.trackEvent("resistance_workout_complete");
           this.workoutComplete(reps, this.state.resistanceCategoryId);
         } else if (setCount === this.state.workout.workoutReps) {
-          // console.log("Go to next  exercise")
           this.goToExercise(
             1,
             reps,
@@ -554,7 +553,6 @@ export default class ExercisesScreenV2 extends React.PureComponent {
   prevExercise = (exerciseList, reps, currentExerciseIndex) => {
     // console.log(exerciseList, reps,currentExerciseIndex)
     let setCount = this.props.navigation.getParam("setCount", 1);
-
     let { workout } = this.state;
     if (workout.workoutProcessType === "oneByOne") {
       if (setCount > 1) {
@@ -566,10 +564,10 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           false
         );
       } else if (currentExerciseIndex > 0)
-        this.goToExercise(1, reps, null, currentExerciseIndex - 1, false);
+        this.goToExercise(workout.workoutReps, reps, null, currentExerciseIndex - 1, false);
       else {
         this.goToExercise(
-          workout.workoutReps,
+          2,
           reps,
           null,
           currentExerciseIndex,
