@@ -339,14 +339,23 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         this.updateWeekly();
         appsFlyer.trackEvent("complete_hiit_workout");
         this.workoutComplete(reps, resistanceCategoryId);
-      } else {
-        // console.log("Go to next round")
-        this.goToExercise(
-          setCount + 1,
-          reps,
-          resistanceCategoryId,
-          currentExerciseIndex
-        );
+      } else if (workout.workoutProcessType === "onlyOne") {
+        if (this.checkFinished(currentExerciseIndex, setCount)) {
+          // console.log("Finished") //finished when all rounds are finished
+          this.updateWeekly();
+          appsFlyer.trackEvent("complete_hiit_workout");
+          this.workoutComplete(reps, resistanceCategoryId);
+        } else if (currentExerciseIndex < workout.exercises.length - 1) {
+          this.goToExercise(
+            setCount,
+            reps,
+            null,
+            currentExerciseIndex + 1,
+            false
+          );
+        } else if (currentExerciseIndex === workout.exercises.length - 1) {
+          this.goToExercise(setCount + 1, reps, null, 0, false);
+        }
       }
     }
   };
@@ -418,13 +427,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         );
       else this.handleFinish(reps, resistanceCategoryId, currentExerciseIndex);
     } else if (workout.workoutProcessType === "onlyOne") {
-      this.goToExercise(
-        setCount,
-        reps,
-        resistanceCategoryId,
-        currentExerciseIndex,
-        true
-      );
+      this.handleFinish(reps, resistanceCategoryId, currentExerciseIndex);
     }
   };
 
@@ -511,27 +514,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       this.workoutComplete(reps, null);
     } else {
       let { workout } = this.state;
-      // first fixed issue  
-      // if (currentExerciseIndex < workout.exercises.length - 1)
-      //   this.goToExercise(1, reps, null, currentExerciseIndex + 1, false);
-      // else {
-      //   this.updateWeekly();
-      //   appsFlyer.trackEvent("resistance_workout_complete");
-      //   this.workoutComplete(reps, null);
-      // }
-
       if (workout.workoutProcessType === "oneByOne") {
-        // if (currentExerciseIndex < workout.exercises.length - 1) {
-        //   this.goToExercise(
-        //     setCount,
-        //     reps,
-        //     null,
-        //     currentExerciseIndex + 1,
-        //     false
-        //   );
-        // } else if (currentExerciseIndex === workout.exercises.length - 1) {
-        //   this.goToExercise(setCount + 1, reps, null, 0, false);
-        // }
         if (this.checkFinished(currentExerciseIndex, setCount)) {
           // console.log("update weekly targets")
           this.updateWeekly();
@@ -576,6 +559,23 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           );
         } else if (currentExerciseIndex === workout.exercises.length - 1) {
           this.goToExercise(setCount + 1, reps, null, 0, false);
+        }
+      } else if (workout.workoutProcessType === "onlyOne") {
+        if (this.checkFinished(currentExerciseIndex, setCount)) {
+          // console.log("Finished") //finished when all rounds are finished
+          this.updateWeekly();
+          appsFlyer.trackEvent("complete_hiit_workout");
+          this.workoutComplete(reps, resistanceCategoryId);
+        } else if (currentExerciseIndex < workout.exercises.length - 1) {
+          this.goToExercise(
+            setCount,
+            reps,
+            null,
+            currentExerciseIndex + 1,
+            false
+          );
+        } else if (currentExerciseIndex === workout.exercises.length - 1) {
+          this.goToExercise(setCount + 1, reps, null, 1, false);
         }
       }
     }
@@ -665,7 +665,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         <View style={styles.invisibleView}>
           <View style={styles.setCounter}>
             <Text style={styles.setCounterText}>
-              Non Stop Until Time Runs Out
+              {`${setCount} / ${workout.workoutReps}`}
             </Text>
           </View>
         </View>
@@ -714,23 +714,17 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       // isRunning
     } = this.state;
 
-    console.log('currentExercise: ', currentExercise)
-    console.log('currentExerciseIndex: ', currentExerciseIndex)
-    console.log('totalDuration: ', totalDuration)
-    console.log('interval: ', interval)
+    // console.log('currentExercise: ', currentExercise)
+    // console.log('currentExerciseIndex: ', currentExerciseIndex)
+    // console.log('totalDuration: ', totalDuration)
+    // console.log('interval: ', interval)
+    // console.log('rest: ', rest)
 
-    // let interval = []
-
-    // workout.filters.forEach((el) => {
-    //   if(el === 'interval'){
-    //     interval.push({one: el})
-    //   }
-    // })
 
     const setCount = this.props.navigation.getParam("setCount", 1);
 
     let handleSkip = false;
-    if (workout.workoutProcessType !== "onlyOne" && !workout.count) {
+    if (!workout.count) {
       handleSkip = true;
     }
 
