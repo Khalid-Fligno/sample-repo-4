@@ -13,32 +13,39 @@ const NutritionList = [
   {
     title:"breakfast",
     imageUrl:require('../../../../assets/images/nutrition-breakfast.jpg'),
+    meal: 'breakfast'
   },
   {
     title:"lunch",
     imageUrl:require('../../../../assets/images/nutrition-lunch.jpg'),
+    meal: 'lunch'
   },
   {
     title:"dinner",
     imageUrl:require('../../../../assets/images/nutrition-dinner.jpg'),
+    meal: 'dinner'
   },
   {
     title:"snack",
     imageUrl:require('../../../../assets/images/nutrition-snack.jpg'),
+    meal: 'snack'
   },
   ,
   {
-    title:"post workout",
+    title:"Post Workout",
     imageUrl:require('../../../../assets/images/homeScreenTiles/Post-Workout.jpg'),
+    meal: 'drink'
   },
   ,
   {
-    title:"pre workout",
+    title:"Pre Workout",
     imageUrl:require('../../../../assets/images/homeScreenTiles/Pre-Workout.jpg'),
+    meal: 'preworkout'
   },
   {
     title:"treats",
     imageUrl:require('../../../../assets/images/homeScreenTiles/Treats.jpg'),
+    meal: 'treats'
   },
 ]
 
@@ -67,7 +74,7 @@ export default function NutritionHomeScreen({ navigation }) {
               key={i}
               title1={data.title}
               image={data.imageUrl}
-              onPress={() => navigation.navigate('RecipeSelection', { meal: data.title })}
+              onPress={() => navigation.navigate('RecipeSelection', { meal: data.meal, title:data.title })}
               showTitle = {true}
               overlayTitle = {false}
               customContainerStyle={{height:170}}
