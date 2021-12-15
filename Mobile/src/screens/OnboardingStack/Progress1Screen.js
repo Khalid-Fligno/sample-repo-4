@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Picker,
   TextInput,
+  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Haptics from "expo-haptics";
@@ -395,7 +396,8 @@ export default class Progress1Screen extends React.PureComponent {
     // console.log("weight:",this.state.weight);
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
-        <KeyboardAvoidingView keyboardVerticalOffset={-60} behavior="position">
+
+        <KeyboardAvoidingView keyboardVerticalOffset={90} behavior="padding">
           <View style={styles.container}>
             <View style={styles.textContainer}>
               <Text style={styles.headerText}>{this.props.navigation.getParam("isInitial") ? "Measurements" : "Progress Measurements"}</Text>
@@ -595,6 +597,7 @@ export default class Progress1Screen extends React.PureComponent {
             <Loader loading={loading} color={colors.themeColor.color} />
           </View>
         </KeyboardAvoidingView>
+
         <HelperModal
           helperModalVisible={helperModalVisible}
           hideHelperModal={this.hideHelperModal}

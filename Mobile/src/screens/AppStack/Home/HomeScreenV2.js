@@ -21,6 +21,7 @@ import {
     widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import CustomBtn from "../../../components/Shared/CustomBtn";
+import {isActiveChallenge} from "../../../utils/challenges";
 const { width } = Dimensions.get("window");
 
 export default class HomeScreenV2 extends React.PureComponent {
@@ -37,11 +38,11 @@ export default class HomeScreenV2 extends React.PureComponent {
           this.onFocus();
         });
       };
-    
+
       onFocus = () => {
         this.fetchProfile();
       };
-    
+
       componentWillUnmount = () => {
         this.unsubscribe();
       };
@@ -65,8 +66,9 @@ export default class HomeScreenV2 extends React.PureComponent {
         } = this.state;
 
         const bigHeadeingTitle =
-            (profile && profile.firstName ? profile.firstName : "").toString() + ', what do you need help with?'
-
+            (profile && profile.firstName ? profile.firstName : "").toString() 
+        const lineText  = 
+        'what do you need help with?'
         return (
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -77,6 +79,7 @@ export default class HomeScreenV2 extends React.PureComponent {
 
                     <BigHeadingWithBackButton
                         bigTitleText={bigHeadeingTitle}
+                        lineText={lineText}
                         isBackButton={false}
                         isBigTitle={true}
                         customContainerStyle={{ height: hp('15%') }}
@@ -90,7 +93,7 @@ export default class HomeScreenV2 extends React.PureComponent {
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Nutrition")}>
                                 <ImageBackground
-                                    source={require("../../../../assets/images/Calendar/phaseCardBg.png")}
+                                    source={require("../../../../assets/images/homeScreenTiles/Lifestyle-Nutrition.jpg")}
                                     style={styles.image}
                                 >
                                     <View style={styles.opacityLayer}>
@@ -104,8 +107,9 @@ export default class HomeScreenV2 extends React.PureComponent {
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Workouts")}>
                                 <ImageBackground
-                                    source={require("../../../../assets/images/Calendar/phaseCardBg.png")}
+                                    source={require("../../../../assets/images/homeScreenTiles/Lifestyle-Workout.jpg")}
                                     style={styles.image}
+                                    resizeMode="cover"
                                 >
                                      <View style={styles.opacityLayer}>
                                         <View style={styles.titleContainer}>
@@ -127,7 +131,15 @@ export default class HomeScreenV2 extends React.PureComponent {
                             titleCapitalise={true}
                             Title='Explore a challenge'
                             customBtnStyle={styles.oblongBtnStyle}
-                            onPress={() => this.props.navigation.navigate("Calendar")}
+                            onPress={() => {
+                                isActiveChallenge().then((res) => {
+                                    if (res) {
+                                        this.props.navigation.navigate("Calendar");
+                                    } else {
+                                        this.props.navigation.navigate("ChallengeSubscription");
+                                    }
+                                });}
+                            }
                             // style={styles.oblongBtnStyle}
                             // isRightIcon={true}
                             // customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}
@@ -171,8 +183,9 @@ const styles = StyleSheet.create({
         maxWidth: width / 1.8,
     },
     title: {
-        fontFamily: fonts.boldNarrow,
+        fontFamily: fonts.bold,
         fontSize: wp("6%"),
+        textTransform:'capitalize',
         color: colors.offWhite,
     },
     lookContainer: {
@@ -189,12 +202,11 @@ const styles = StyleSheet.create({
     },
     oblongBtnStyle: {
         alignItems: 'center',
-        marginTop: hp('2%'),
+        marginVertical: hp('2%'),
         borderRadius: 8,
         borderWidth: 2,
         backgroundColor: colors.white,
         color: colors.black,
-        height: hp('6%'),
         marginHorizontal: hp('10%')
     },
 });

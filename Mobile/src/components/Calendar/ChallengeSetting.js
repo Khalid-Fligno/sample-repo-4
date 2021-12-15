@@ -25,6 +25,7 @@ class ChallengeSetting extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            choice: false,
             loading: false,
             calendarModalVisible: false,
             chosenDate: this.props.ScheduleData
@@ -82,12 +83,12 @@ class ChallengeSetting extends Component {
 
     async quitChallenge(data) {
         const callBack = () => {
-            this.props.navigation.navigate("ChallengeSubscription");
+            this.props.navigation.navigate("ChallengeSubscription", { quit: true });
         };
         this.resetChallenge(data, callBack);
     }
 
-    async  restartChallenge(data) {
+    async restartChallenge(data) {
         const callBack = (newData) => {
             this.props.navigation.navigate("ChallengeOnBoarding6", {
                 data: {
@@ -122,110 +123,157 @@ class ChallengeSetting extends Component {
     resetChallengeDate(date) {
         this.setShedular(date);
     }
-    /*
-      async setShedular(selectedDate) {
-        const TODAY = moment();
-        this.setState({ loading: true });
-        const uid = await AsyncStorage.getItem("uid");
-        let { ScheduleData } = this.props;
-        const userRef = db.collection("users").doc(uid).collection("challenges");
-        const data = createUserChallengeData(ScheduleData, selectedDate);
-        if (moment(selectedDate).isSame(TODAY, "d")) {
-          Object.assign(data, { status: "Active" });
-        } else {
-          Object.assign(data, { isSchedule: true, status: "InActive" });
-        }
-        userRef
-          .doc(ScheduleData.id)
-          .set(data, { merge: true })
-          .then((res) => {
-            Alert.alert(
-              "",
-              `Your start date has been added to your challenge. Go to ${moment(
-                selectedDate
-              ).format(
-                "DD-MM-YY"
-              )} on the challenge dashboard to see what Day 1 looks like`,
-              [
-                {
-                  text: "OK",
-                  onPress: () => {
-                    // this.hideCalendarModal();
-                    this.props.navigation.reset(
-                      [NavigationActions.navigate({ routeName: "CalendarHome" })],
-                      0
-                    );
-                  },
-                },
-              ],
-              { cancelable: false }
-            );
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } */
-
 
     async setShedular(selectedDate) {
-        const TODAY = moment();
-        this.setState({ loading: true });
-        const uid = await AsyncStorage.getItem("uid");
-        const { activeChallengeData } = this.props;
-        const userRef = db.collection("users").doc(uid).collection("challenges");
-        const data = createUserChallengeData(activeChallengeData, selectedDate);
-        if (moment(selectedDate).isSame(TODAY, "d")) {
-            Object.assign(data, { status: "Active" });
-        } else {
-            // Object.assign(data, { isSchedule: true, status: "InActive" });
-            Object.assign(data, { isSchedule: false, status: "Active" });
-        }
-        userRef
-            .doc(activeChallengeData.id)
-            .set(data, { merge: true })
-            .then((res) => {
+        Alert.alert(
+            "",
+            "Do you want to keep your Active Challenge Progress Data?",
+            [
+                {
+                    text: "YES",
+                    onPress: async () => {
+                        const TODAY = moment();
+                        this.setState({ loading: true });
+                        const uid = await AsyncStorage.getItem("uid");
+                        const { activeChallengeData } = this.props;
+                        const userRef = db.collection("users").doc(uid).collection("challenges");
+                        const data = createUserChallengeData(activeChallengeData, selectedDate);
+                        delete data.workouts
+                        if (moment(selectedDate).isSame(TODAY, "d")) {
+                            Object.assign(data, { status: "Active" });
+                        } else {
+                            // Object.assign(data, { isSchedule: true, status: "InActive" });
+                            Object.assign(data, { isSchedule: false, status: "Active" });
+                        }
+                        userRef
+                            .doc(activeChallengeData.id)
+                            .set(data, { merge: true })
+                            .then((res) => {
 
-                Alert.alert(
-                    "",
-                    `Your start date has been added to your challenge. Go to ${moment(
-                        selectedDate
-                    ).format(
-                        "DD-MM-YY"
-                    )} on the challenge dashboard to see what Day 1 looks like`,
-                    [
-                        {
-                            text: "OK",
-                            onPress: () => {
-                                // this.hideCalendarModal();
-                                /*
-                                this.props.navigation.reset(
-                                  [NavigationActions.navigate({ routeName: "CalendarHome" })],
-                                  0
-                                );
-                                */
-
-                                const resetAction = StackActions.reset({
-                                    index: 0,
-                                    actions: [
-                                        NavigationActions.navigate({
-                                            routeName: "Tabs",
-                                            action: NavigationActions.navigate({
-                                                routeName: "CalendarHome",
-                                            }),
-                                        }),
+                                Alert.alert(
+                                    "",
+                                    `Your start date has been added to your challenge. Go to ${moment(
+                                        selectedDate
+                                    ).format(
+                                        "DD-MM-YY"
+                                    )} on the challenge dashboard to see what Day 1 looks like`,
+                                    [
+                                        {
+                                            text: "OK",
+                                            onPress: () => {
+                                                if (this.props.completeCha) {
+                                                    const resetAction = StackActions.reset({
+                                                        index: 0,
+                                                        actions: [
+                                                            NavigationActions.navigate({
+                                                                routeName: "Tabs",
+                                                                action: NavigationActions.navigate({
+                                                                    routeName: "ChallengeSubscription",
+                                                                    params: { completedChallenge: true }
+                                                                }),
+                                                            }),
+                                                        ],
+                                                    });
+                                                    this.props.navigation.dispatch(resetAction);
+                                                } else {
+                                                    const resetAction = StackActions.reset({
+                                                        index: 0,
+                                                        actions: [
+                                                            NavigationActions.navigate({
+                                                                routeName: "Tabs",
+                                                                action: NavigationActions.navigate({
+                                                                    routeName: "CalendarHome",
+                                                                }),
+                                                            }),
+                                                        ],
+                                                    });
+                                                    this.props.navigation.dispatch(resetAction);
+                                                }
+                                                this.setState({ choice: '' })
+                                            },
+                                        },
                                     ],
-                                });
-                                this.props.navigation.dispatch(resetAction);
+                                    { cancelable: false }
+                                );
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
+                    }
+                },
+                {
+                    text: "NO",
+                    onPress: async () => {
+                        const TODAY = moment();
+                        this.setState({ loading: true });
+                        const uid = await AsyncStorage.getItem("uid");
+                        const { activeChallengeData } = this.props;
+                        const userRef = db.collection("users").doc(uid).collection("challenges");
+                        const data = createUserChallengeData(activeChallengeData, selectedDate);
+                        if (moment(selectedDate).isSame(TODAY, "d")) {
+                            Object.assign(data, { status: "Active" });
+                        } else {
+                            // Object.assign(data, { isSchedule: true, status: "InActive" });
+                            Object.assign(data, { isSchedule: false, status: "Active" });
+                        }
+                        userRef
+                            .doc(activeChallengeData.id)
+                            .set(data, { merge: true })
+                            .then((res) => {
 
-                            },
-                        },
-                    ],
-                    { cancelable: false }
-                );
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+                                Alert.alert(
+                                    "",
+                                    `Your start date has been added to your challenge. Go to ${moment(
+                                        selectedDate
+                                    ).format(
+                                        "DD-MM-YY"
+                                    )} on the challenge dashboard to see what Day 1 looks like`,
+                                    [
+                                        {
+                                            text: "OK",
+                                            onPress: () => {
+                                                if (this.props.completeCha) {
+                                                    const resetAction = StackActions.reset({
+                                                        index: 0,
+                                                        actions: [
+                                                            NavigationActions.navigate({
+                                                                routeName: "Tabs",
+                                                                action: NavigationActions.navigate({
+                                                                    routeName: "ChallengeSubscription",
+                                                                    params: { completedChallenge: true }
+                                                                }),
+                                                            }),
+                                                        ],
+                                                    });
+                                                    this.props.navigation.dispatch(resetAction);
+                                                } else {
+                                                    const resetAction = StackActions.reset({
+                                                        index: 0,
+                                                        actions: [
+                                                            NavigationActions.navigate({
+                                                                routeName: "Tabs",
+                                                                action: NavigationActions.navigate({
+                                                                    routeName: "CalendarHome",
+                                                                }),
+                                                            }),
+                                                        ],
+                                                    });
+                                                    this.props.navigation.dispatch(resetAction);
+                                                }
+                                            },
+                                        },
+                                    ],
+                                    { cancelable: false }
+                                );
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
+                    }
+                },
+            ],
+            { cancelable: false }
+        );
     }
 
 
@@ -255,9 +303,6 @@ class ChallengeSetting extends Component {
                     ],
                 });
                 this.props.navigation.dispatch(resetAction);
-                // this.setState({loading:false})
-                // this.props.onToggle()
-                // setTimeout(()=>this.props.navigation.navigate('ChallengeSubscription'),100)
             })
             .catch((err) => {
                 console.log(err);
@@ -267,7 +312,6 @@ class ChallengeSetting extends Component {
     render() {
         const { activeChallengeUserData, isSchedule } = this.props;
         const { calendarModalVisible, chosenDate, loading } = this.state;
-        //   console.log("activeChallengeUserData",this.props.activeChallengeUserData)
         const activeChallengeSetting = (
             <View
                 style={{
@@ -353,30 +397,6 @@ class ChallengeSetting extends Component {
                         <Text style={styles.title}>Restart challenge</Text>
                         <DoubleRightArrow height={wp("3.5%")} />
                     </TouchableOpacity>
-
-                    {/* <TouchableOpacity
-            style={styles.btnContainer}
-            onPress={() => {
-              Alert.alert(
-                "Are you sure?",
-                "To choose another you need to quit current active challenge.",
-                [
-                  {
-                    text: "Cancel",
-                    style: "cancel",
-                  },
-                  {
-                    text: "Quit",
-                    onPress: () => this.quitChallenge(activeChallengeUserData),
-                  },
-                ],
-                { cancelable: false }
-              );
-            }}
-          >
-            <Text style={styles.title}>Choose another challenge</Text>
-            <DoubleRightArrow height={wp("3.5%")} />
-          </TouchableOpacity> */}
                 </View>
             </View>
         );
@@ -394,53 +414,6 @@ class ChallengeSetting extends Component {
                         borderTopColor: colors.grey.light,
                     }}
                 >
-                    {/* <TouchableOpacity
-            style={styles.btnContainer}
-            onPress={() => {
-              Alert.alert(
-                "Are you sure!",
-                "You want to reset your challenge start date?",
-                [
-                  {
-                    text: "Cancel",
-                    style: "cancel",
-                  },
-                  {
-                    text: "Reset",
-                    onPress: () => this.showCalendarModal(),
-                  },
-                ],
-                { cancelable: false }
-              );
-            }}
-          >
-            <Text style={styles.title}>Reset challenge start Date</Text>
-            <DoubleRightArrow height={wp("3.5%")} />
-          </TouchableOpacity> */}
-
-                    {/* <TouchableOpacity
-            style={styles.btnContainer}
-            onPress={() => {
-              Alert.alert(
-                "Are you sure !",
-                "you want to remove challenge from schedular?",
-                [
-                  {
-                    text: "Cancel",
-                    style: "cancel",
-                  },
-                  {
-                    text: "Remove",
-                    onPress: () => this.discardChallengeFromSchedular(),
-                  },
-                ],
-                { cancelable: false }
-              );
-            }}
-          >
-            <Text style={styles.title}>Remove challenge from schedule</Text>
-            <DoubleRightArrow height={wp("3.5%")} />
-          </TouchableOpacity> */}
                     <TouchableOpacity
                         style={styles.btnContainer}
                         onPress={() => {

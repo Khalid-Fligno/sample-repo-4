@@ -33,7 +33,7 @@ export default createUserChallengeData =(data,challengeDate)=>{
         "numberOfDays":data.numberOfDays,
         "numberOfWeeks":data.numberOfWeeks,
         "imageUrl":data.imageUrl,
-        "isSchedule":false
+        "isSchedule":false,
     }
     return challenge
 }

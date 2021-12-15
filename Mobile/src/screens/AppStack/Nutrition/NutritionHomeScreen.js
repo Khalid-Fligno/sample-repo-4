@@ -12,44 +12,41 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-nati
 const NutritionList = [
   {
     title:"breakfast",
-    nutritionTitle:"breakfast",
     imageUrl:require('../../../../assets/images/nutrition-breakfast.jpg'),
+    meal: 'breakfast'
   },
   {
     title:"lunch",
-    nutritionTitle:"lunch",
     imageUrl:require('../../../../assets/images/nutrition-lunch.jpg'),
+    meal: 'lunch'
   },
   {
     title:"dinner",
-    nutritionTitle:"dinner",
     imageUrl:require('../../../../assets/images/nutrition-dinner.jpg'),
+    meal: 'dinner'
   },
   {
     title:"snack",
-    nutritionTitle:"snack",
     imageUrl:require('../../../../assets/images/nutrition-snack.jpg'),
+    meal: 'snack'
   },
+  ,
   {
-    title:"preworkout",
-    nutritionTitle:"pre-workout",
-    imageUrl:require('../../../../assets/images/nutrition-pre-workout.jpg'),
+    title:"Post Workout",
+    imageUrl:require('../../../../assets/images/homeScreenTiles/Post-Workout.jpg'),
+    meal: 'drink'
   },
-
+  ,
   {
-    title:"drink",
-    nutritionTitle:"post-workout",
-    imageUrl:require('../../../../assets/images/nutrition-post-workout.jpg'),
+    title:"Pre Workout",
+    imageUrl:require('../../../../assets/images/homeScreenTiles/Pre-Workout.jpg'),
+    meal: 'preworkout'
   },
   {
     title:"treats",
-    nutritionTitle:"treats",
-    imageUrl:require('../../../../assets/images/nutrition-treats.jpg'),
+    imageUrl:require('../../../../assets/images/homeScreenTiles/Treats.jpg'),
+    meal: 'treats'
   },
-
-
-  
-
 ]
 
 export default function NutritionHomeScreen({ navigation }) {
@@ -75,9 +72,9 @@ export default function NutritionHomeScreen({ navigation }) {
           NutritionList.map((data,i)=>(
             <Tile
               key={i}
-              title1={data.nutritionTitle}
+              title1={data.title}
               image={data.imageUrl}
-              onPress={() => navigation.navigate('RecipeSelection', { meal: data.title })}
+              onPress={() => navigation.navigate('RecipeSelection', { meal: data.meal, title:data.title })}
               showTitle = {true}
               overlayTitle = {false}
               customContainerStyle={{height:170}}

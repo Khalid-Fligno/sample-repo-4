@@ -461,6 +461,8 @@ class ProgressHomeScreen extends React.PureComponent {
       initialProgressInfo &&
       currentProgressInfo &&
       diff(initialProgressInfo.weight, currentProgressInfo.weight);
+    const weightToDecimal = 
+      Number(weightDifference).toFixed(2);
     const hipDifference =
       initialProgressInfo &&
       currentProgressInfo &&
@@ -682,7 +684,7 @@ class ProgressHomeScreen extends React.PureComponent {
                   weightDifference >= 0 && styles.dataTextPositive,
                 ]}
               >
-                {weightDifference || "-"}{" "}
+                {weightToDecimal || "-"}{" "}
                 {weightDifference && unitsOfMeasurement === "metric" && "kg"}
                 {weightDifference && unitsOfMeasurement === "imperial" && "lbs"}
               </Text>
