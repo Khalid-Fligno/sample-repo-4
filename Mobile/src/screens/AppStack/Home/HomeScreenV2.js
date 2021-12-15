@@ -66,8 +66,9 @@ export default class HomeScreenV2 extends React.PureComponent {
         } = this.state;
 
         const bigHeadeingTitle =
-            (profile && profile.firstName ? profile.firstName : "").toString() + ', what do you need help with?'
-
+            (profile && profile.firstName ? profile.firstName : "").toString() 
+        const lineText  = 
+        'what do you need help with?'
         return (
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -78,6 +79,7 @@ export default class HomeScreenV2 extends React.PureComponent {
 
                     <BigHeadingWithBackButton
                         bigTitleText={bigHeadeingTitle}
+                        lineText={lineText}
                         isBackButton={false}
                         isBigTitle={true}
                         customContainerStyle={{ height: hp('15%') }}

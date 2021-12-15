@@ -5,6 +5,13 @@ import Icon from "../../components/Shared/Icon";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import colors from "../../styles/colors";
 import PropTypes from "prop-types";
+import fonts from "../../styles/fonts";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
+
+
 
 function BigHeadingWithBackButton(props) {
   return (
@@ -26,16 +33,30 @@ function BigHeadingWithBackButton(props) {
         </TouchableOpacity>
       )}
 
-      {props.isBigTitle && (
         <Text
           style={[
             globalStyle.bigHeadingTitleText,
             props.bigTitleStyle ? props.bigTitleStyle : {},
           ]}
         >
-          {props.bigTitleText}
+          {props.bigTitleText},
         </Text>
-      )}
+
+        <Text
+          style={{
+            fontFamily: fonts.SimplonMonoLight,
+            color: colors.black,
+            letterSpacing: 0.5,
+            textTransform: "uppercase",
+            fontSize: hp('2.0%')
+        
+          }}
+        >
+          {props.lineText}
+        </Text>
+
+        
+        
     </View>
   );
 }
