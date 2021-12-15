@@ -12,7 +12,6 @@ import globalStyle, { containerPadding } from "../../../styles/globalStyles";
 import calendarStyles from "./calendarStyle";
 import * as Haptics from "expo-haptics";
 import {
-  fetchRecipeData,
   getCurrentPhase,
   getTotalChallengeWorkoutsCompleted,
   getCurrentChallengeDay,
@@ -529,7 +528,7 @@ class CalendarHomeScreen extends React.PureComponent {
       const data = activeChallengeUserData.phases;
       const test = activeChallengeUserData.startDate;
       const transformLevel = activeChallengeUserData.displayName;
-      
+
       if (this.stringDate >= test) {
         this.setState({ loading :true })
       }
@@ -579,7 +578,7 @@ class CalendarHomeScreen extends React.PureComponent {
             this.stringDate
           )
         )[0];
-        
+
         if (todayRcWorkout) this.setState({ todayRcWorkout: todayRcWorkout });
         else this.setState({ todayRcWorkout: undefined });
       }
