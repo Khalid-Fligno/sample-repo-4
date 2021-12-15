@@ -257,7 +257,7 @@ const WorkoutScreenStyle = StyleSheet.create({
     borderBottomColor: colors.themeColor.themeBorderColor,
   },
   exerciseTileHeaderTextLeft: {
-    width: widthPercentageToDP("65%"),
+    width: widthPercentageToDP("55%"),
     fontFamily: fonts.StyreneAWebRegular,
     fontSize: 14,
     color: colors.transparentBlackDark,
