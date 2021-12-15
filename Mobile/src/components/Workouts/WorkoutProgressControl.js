@@ -56,11 +56,11 @@ export default WorkoutProgressControl = ({
     array = new Array(rounds).fill(undefined).map((val, idx) => idx);
   }
 
-  console.log("ExerciseList: ", exerciseList[currentExerciseIndex]);
-  console.log("Current Index: ", currentExerciseIndex);
-  console.log("Workout reps: ", workoutReps);
-  console.log("Workout process type: ", workout.workoutProcessType);
-  console.log("Last exercise: ", lastExercise);
+  // console.log("ExerciseList: ", exerciseList[currentExerciseIndex]);
+  // console.log("Current Index: ", currentExerciseIndex);
+  // console.log("Workout reps: ", workoutReps);
+  // console.log("Workout process type: ", workout.workoutProcessType);
+  // console.log("Last exercise: ", lastExercise);
 
   const nextExerciseText = () => {
     if (exerciseList && currentExerciseIndex < exerciseList.length - 1) {
