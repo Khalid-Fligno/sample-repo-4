@@ -241,6 +241,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     });
     // this.checkMusicAppAvailability();
   };
+  
 
   componentWillUnmount = async () => {
     console.log("unmount");
