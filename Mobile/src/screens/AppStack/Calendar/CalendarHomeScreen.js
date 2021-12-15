@@ -416,6 +416,7 @@ class CalendarHomeScreen extends React.PureComponent {
       workoutSubCategory: workout.workoutSubCategory,
       fitnessLevel,
       extraProps: { fromCalender: true },
+      transformRoute: true
     });
   }
 
