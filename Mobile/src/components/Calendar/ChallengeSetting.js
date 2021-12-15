@@ -125,10 +125,15 @@ class ChallengeSetting extends Component {
     }
 
     async setShedular(selectedDate) {
+        this.setState({loading: false})
         Alert.alert(
             "",
             "Do you want to keep your Active Challenge Progress Data?",
             [
+                {
+                    text: "Cancel",
+                    style: 'cancel'
+                },
                 {
                     text: "YES",
                     onPress: async () => {
@@ -272,7 +277,7 @@ class ChallengeSetting extends Component {
                     }
                 },
             ],
-            { cancelable: false }
+            { cancelable: true }
         );
     }
 
@@ -312,6 +317,7 @@ class ChallengeSetting extends Component {
     render() {
         const { activeChallengeUserData, isSchedule } = this.props;
         const { calendarModalVisible, chosenDate, loading } = this.state;
+        console.log('Date pick loading: ', loading)
         const activeChallengeSetting = (
             <View
                 style={{
