@@ -12,6 +12,7 @@ import globalStyle, { containerPadding } from "../../../styles/globalStyles";
 import calendarStyles from "./calendarStyle";
 import * as Haptics from "expo-haptics";
 import {
+  fetchRecipeData,
   getCurrentPhase,
   getTotalChallengeWorkoutsCompleted,
   getCurrentChallengeDay,
