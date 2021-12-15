@@ -25,7 +25,7 @@ class ChallengeSetting extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            choice: '',
+            choice: false,
             loading: false,
             calendarModalVisible: false,
             chosenDate: this.props.ScheduleData
@@ -125,32 +125,29 @@ class ChallengeSetting extends Component {
     }
 
     async setShedular(selectedDate) {
-        const TODAY = moment();
-        this.setState({ loading: true });
-        const uid = await AsyncStorage.getItem("uid");
-        const { activeChallengeData } = this.props;
-        const userRef = db.collection("users").doc(uid).collection("challenges");
-        const data = createUserChallengeData(activeChallengeData, selectedDate);
-        if (moment(selectedDate).isSame(TODAY, "d")) {
-            Object.assign(data, { status: "Active" });
-        } else {
-            // Object.assign(data, { isSchedule: true, status: "InActive" });
-            Object.assign(data, { isSchedule: false, status: "Active" });
-        }
         Alert.alert(
             "",
             "Do you want to keep your Active Challenge Progress Data?",
             [
                 {
-                    text: "Cancel",
-                    style: "cancel",
-                },
-                {
                     text: "YES",
-                    onPress: () => {
+                    onPress: async () => {
+                        const TODAY = moment();
+                        this.setState({ loading: true });
+                        const uid = await AsyncStorage.getItem("uid");
+                        const { activeChallengeData } = this.props;
+                        const userRef = db.collection("users").doc(uid).collection("challenges");
+                        const data = createUserChallengeData(activeChallengeData, selectedDate);
+                        delete data.workouts
+                        if (moment(selectedDate).isSame(TODAY, "d")) {
+                            Object.assign(data, { status: "Active" });
+                        } else {
+                            // Object.assign(data, { isSchedule: true, status: "InActive" });
+                            Object.assign(data, { isSchedule: false, status: "Active" });
+                        }
                         userRef
                             .doc(activeChallengeData.id)
-                            .get()
+                            .set(data, { merge: true })
                             .then((res) => {
 
                                 Alert.alert(
@@ -206,7 +203,19 @@ class ChallengeSetting extends Component {
                 },
                 {
                     text: "NO",
-                    onPress: () => {
+                    onPress: async () => {
+                        const TODAY = moment();
+                        this.setState({ loading: true });
+                        const uid = await AsyncStorage.getItem("uid");
+                        const { activeChallengeData } = this.props;
+                        const userRef = db.collection("users").doc(uid).collection("challenges");
+                        const data = createUserChallengeData(activeChallengeData, selectedDate);
+                        if (moment(selectedDate).isSame(TODAY, "d")) {
+                            Object.assign(data, { status: "Active" });
+                        } else {
+                            // Object.assign(data, { isSchedule: true, status: "InActive" });
+                            Object.assign(data, { isSchedule: false, status: "Active" });
+                        }
                         userRef
                             .doc(activeChallengeData.id)
                             .set(data, { merge: true })
