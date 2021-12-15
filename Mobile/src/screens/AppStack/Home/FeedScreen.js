@@ -289,6 +289,7 @@ export default class FeedScreen extends React.PureComponent {
           <View style={{ flex: 1, alignItems: "center" ,height:wp('100%')}}>
            
                   <SwiperFlatList
+                    paginationStyleItem={styles.bars}
                     showPagination
                     autoplay
                     autoplayLoop
@@ -598,7 +599,7 @@ export default class FeedScreen extends React.PureComponent {
               <View style={styles.lookContainer}>
                 <Text style={styles.title1}>Looking for more?</Text>
                 <Text style={{ fontFamily: fonts.StyreneAWebRegular }}>
-                  Start a challenge
+                  Start a workout
                 </Text>
               </View>
 
@@ -646,4 +647,13 @@ const styles = StyleSheet.create({
     fontSize: wp("5%"),
     color: colors.black,
   },
+  bars: {
+    borderRadius: 0,
+    width: 40,
+    height: 5,
+    right: wp('17%'),
+    bottom: hp('1%'),
+    top: wp('2%')
+
+  }
 });
