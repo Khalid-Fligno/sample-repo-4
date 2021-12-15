@@ -2,10 +2,19 @@ import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
 import Header from "../../src/components/Shared/Header";
 import FeedScreen from "../../src/screens/AppStack/Home/FeedScreen";
+import AllBlogs from "../../src/screens/AppStack/Home/blogs/AllBlogs"
+import Trainers from "../../src/screens/AppStack/Home/trainers/Trainers"
+
+const backButtonMap ={
+    AllBlogs:true,
+    Trainers:true,
+};
 
 const FeedStack = createStackNavigator(
   {
     FeedScreen: FeedScreen,
+    AllBlogs: AllBlogs,
+    Trainers: Trainers,
   },
   {
     initialRouteName: "FeedScreen",
@@ -17,6 +26,8 @@ const FeedStack = createStackNavigator(
             stack="home"
             navigation={navigation}
             withProfileButton={routeName === "FeedScreen"}
+            withBackButton={backButtonMap[routeName]}
+
             // withHomeButton={true}
           />
         );
