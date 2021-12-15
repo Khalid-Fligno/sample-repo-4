@@ -394,6 +394,7 @@ export default class Progress1Screen extends React.PureComponent {
       helperModalVisible
     } = this.state;
     // console.log("weight:",this.state.weight);
+    let weightData = weight.toString()
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
 
@@ -417,7 +418,7 @@ export default class Progress1Screen extends React.PureComponent {
                     keyboardType='numeric'
                     onChangeText={(value)=>
                       this.setState({weight: value})}
-                    value={weight}
+                    value={weightData}
                 />
 
                 :
@@ -426,7 +427,7 @@ export default class Progress1Screen extends React.PureComponent {
                     keyboardType='numeric'
                     onChangeText={(value)=>
                       this.setState({weight: value})}
-                    value={weight}
+                    value={weightData}
                 />
               }
                
