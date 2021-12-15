@@ -39,7 +39,7 @@ function BigHeadingWithBackButton(props) {
             props.bigTitleStyle ? props.bigTitleStyle : {},
           ]}
         >
-          {props.bigTitleText},
+          {props.bigTitleText}
         </Text>
 
         <Text
