@@ -148,7 +148,16 @@ return(
                             >
                             {name}'s favorite recipe
                           </Text>
-
+                          <View style={{alignItems:'flex-end'}}>
+                          <Text
+                            style={{
+                                fontSize: wp("3.2%"),
+                                fontFamily: fonts.bold,
+                                fontWeight: "bold",
+                                }}
+                          >Scroll for more {'>'}{'>'} </Text>
+                          </View>
+                                
                          </View>
                         </View>
                         <View style={{ flex: 1,width: wp('75%')}}>
@@ -162,7 +171,7 @@ return(
                                     return(
                                      <View style={{ 
                                           paddingRight: wp('10%'),
-                                          paddingTop: hp('5%')
+                                          paddingTop: hp('3%')
                                     }}>
                                        <Image
                                         style={{
