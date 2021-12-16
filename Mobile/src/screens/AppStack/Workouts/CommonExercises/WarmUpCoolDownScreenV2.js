@@ -54,7 +54,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
   }
 
   async loadExercise() {
-    const { warmUp, workout } = this.props.navigation.state.params;
+    const { warmUp, workout, fitnessLevel } = this.props.navigation.state.params;
     const { exerciseIndex } = this.state;
     const type = warmUp ? "warmUp" : "coolDown";
     // const exerciseIds =  warmUp?workout.warmUpExercises:workout.coolDownExercises;
@@ -72,8 +72,13 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       totalDuration:
         exerciseList[exerciseIndex - 1] &&
         exerciseList[exerciseIndex - 1].duration
-          ? exerciseList[exerciseIndex - 1].duration
+          ? workout.workIntervalMap[fitnessLevel - 1]
           : 30,
+      // totalDuration:
+      //   exerciseList[exerciseIndex - 1] &&
+      //   exerciseList[exerciseIndex - 1].duration
+      //     ? exerciseList[exerciseIndex - 1].duration
+      //     : 30,
     });
     setTimeout(() => this.setState({ timerStart: true }), 100);
   }
@@ -263,6 +268,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       exerciseList[exerciseIndex - 1].coachingTip &&
       exerciseList[exerciseIndex - 1].coachingTip.length > 0;
     const workoutTimer = () => {
+      console.log('totalDuration: ', totalDuration)
       return (
         <WorkoutTimer
           totalDuration={Number(totalDuration)}

@@ -244,7 +244,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   
 
   componentWillUnmount = async () => {
-    console.log("unmount");
     // this.focusListener.remove()
   };
 
@@ -529,7 +528,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     let cooldownInterval = 0;
     if (workout) {
       workoutTime = workout.workoutTime;
-      console.log("Workout: ", workout);
       if (workout.coolDownExercises) {
         let seconds = 0;
         workout.coolDownExercises.map((exercise) => {
@@ -549,7 +547,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
         workoutInterval =
             workout.workoutTime - (warmupInterval + cooldownInterval);
       }
-      console.log("Workout: ", workout);
       // workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
     }
 
