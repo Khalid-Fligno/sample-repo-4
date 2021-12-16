@@ -391,9 +391,20 @@ export default class Progress1Screen extends React.PureComponent {
       hipModalVisible,
       unitOfMeasurement,
       measurements,
-      helperModalVisible
+      helperModalVisible,
+      uom,
     } = this.state;
     // console.log("weight:",this.state.weight);
+       console.log(uom);
+    if(unitOfMeasurement =='metric'){
+      this.setState({
+        uom: 'kg'
+      })
+    }else{
+      this.setState({
+        uom: 'lbs'
+      })
+    }
     let weightData = weight.toString()
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
@@ -409,7 +420,7 @@ export default class Progress1Screen extends React.PureComponent {
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.inputFieldContainer}>
-                <Text style={styles.inputFieldTitle}>Weight</Text>
+                <Text style={styles.inputFieldTitle}>Weight({uom})</Text>
 
                 {unitOfMeasurement ==="metric"
                 ?
