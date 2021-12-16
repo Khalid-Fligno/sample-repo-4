@@ -138,7 +138,7 @@ export default class RecipeScreen extends React.PureComponent {
     return NutritionList.filter((res) => this.state.recipe[res])[0];
 
   }
-  
+
 
   render() {
     const {
@@ -187,9 +187,11 @@ export default class RecipeScreen extends React.PureComponent {
                         </View> */}
                 </View>
                 <Image
-                  source={{
-                    uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
-                  }}
+                  // source={{
+                  //   uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
+                  //   cache: "force-cache"
+                  // }}
+                  source={{ uri: recipe.coverImage, cache: "force-cache" }}
                   // width={width}
                   resizeMode='cover'
                   style={{height: width, width: width}}
