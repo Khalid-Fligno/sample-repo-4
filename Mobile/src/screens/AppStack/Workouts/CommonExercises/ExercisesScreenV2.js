@@ -303,8 +303,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           false
         );
       } else if (currentExerciseIndex === workout.exercises.length - 1) {
-        console.log('setCount ====================', setCount)
-        this.goToExercise(workout.workoutReps, reps, null, 0, false);
+        this.goToExercise(setCount + 1, reps, null, 0, false);
       }
     }
   };
@@ -520,7 +519,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
             false
           );
         } else if (currentExerciseIndex === workout.exercises.length - 1) {
-          this.goToExercise(workout.workoutReps, reps, null, 0, false);
+          this.goToExercise(setCount + 1, reps, null, 0, false);
         }
       }
     }
