@@ -290,6 +290,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   };
 
   renderExercise = ({ item: exercise, index, section }) => {
+    console.log('Expanden exercise: ', this.state.expandedExercise)
     let showRR =
         exercise.recommendedResistance &&
         !exercise.recommendedResistance.includes("N/A")
@@ -378,9 +379,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                     !this.state.workout.count && (
                         <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
                           {
-                            this.state.workout.workIntervalMap[
-                            this.state.fitnessLevel - 1
-                                ]
+                            this.state.expandedWarmup  || this.state.expandedCooldown ?
+                            exercise.duration : this.state.workout.workIntervalMap[this.state.fitnessLevel - 1]
                           }
                           s on/
                           {
