@@ -137,8 +137,6 @@ export const fetchRecipeData = async (challengeRecipe) => {
   recipeMeal.filter((res) => res.preworkout === true ? preworkoutActive.push(res) : null)
   recipeMeal.filter((res) => res.treats === true ? treatsActive.push(res) : null)
 
-  console.log('treatsActive: ', treatsActive)
-
   const recommendedRecipe = [{
     breakfast: breakfastActive,
     snack: snackActive,

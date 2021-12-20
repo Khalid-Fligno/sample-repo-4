@@ -139,7 +139,6 @@ export default class RecipeScreen extends React.PureComponent {
 
   }
 
-
   render() {
     const {
       recipe,
@@ -154,8 +153,7 @@ export default class RecipeScreen extends React.PureComponent {
       backTitle,
       title
     } = this.state;
-    // console.log("from calendar",extraProps)
-    //console.log(recipe)
+        
     return (
       <View style={NutritionStyles.container}>
         {!loading && (
