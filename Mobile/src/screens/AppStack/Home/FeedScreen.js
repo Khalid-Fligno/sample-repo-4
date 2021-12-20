@@ -304,6 +304,7 @@ export default class FeedScreen extends React.PureComponent {
                             about: item.about,
                             profile: item.profile,
                             id: item.id,
+                            coverImage: item.coverImage,
                           })
                         }>
                           <Image

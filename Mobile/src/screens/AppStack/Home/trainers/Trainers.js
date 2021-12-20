@@ -35,6 +35,7 @@ export default class Trainers extends React.PureComponent {
             title : this.props.navigation.getParam("title",null),
             about : this.props.navigation.getParam("about",null),
             profile: this.props.navigation.getParam("profile",null),
+            coverImage: this.props.navigation.getParam("coverImage",null)
 
 
         })
@@ -63,7 +64,7 @@ export default class Trainers extends React.PureComponent {
     }
 
 render(){
-    const {name,title,about,profile,recipe} = this.state;
+    const {name,title,about,profile,recipe,coverImage} = this.state;
 
 
 return(
@@ -73,8 +74,9 @@ return(
                 <Image
                 style={{height: wp('70%'),width: wp('100%')}}
                 resizeMode='cover'
-                source={
-                    require("../../../../../assets/images/cover.jpeg")
+                source={{
+                    uri: coverImage
+                }
                 }
                 />
                 <View style={{position: 'absolute'}}>
