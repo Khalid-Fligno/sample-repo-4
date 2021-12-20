@@ -649,8 +649,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     }}
                     >
                         <Text 
-                            style={{           
-                                fontSize: 20,
+                            style={{  
+                                textAlign: 'center',         
+                                fontSize: 15,
                                 fontFamily: fonts.bold,
                                 textTransform: 'uppercase',
                             }}
