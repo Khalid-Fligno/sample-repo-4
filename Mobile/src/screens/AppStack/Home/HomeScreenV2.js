@@ -21,7 +21,7 @@ import {
     widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import CustomBtn from "../../../components/Shared/CustomBtn";
-import {isActiveChallenge} from "../../../utils/challenges";
+import { isActiveChallenge } from "../../../utils/challenges";
 const { width } = Dimensions.get("window");
 
 export default class HomeScreenV2 extends React.PureComponent {
@@ -35,29 +35,29 @@ export default class HomeScreenV2 extends React.PureComponent {
 
     componentDidMount = () => {
         this.unsubscribe = this.props.navigation.addListener("didFocus", () => {
-          this.onFocus();
+            this.onFocus();
         });
-      };
+    };
 
-      onFocus = () => {
+    onFocus = () => {
         this.fetchProfile();
-      };
+    };
 
-      componentWillUnmount = () => {
+    componentWillUnmount = () => {
         this.unsubscribe();
-      };
+    };
 
     fetchProfile = async () => {
         this.setState({ loading: true });
         const uid = await AsyncStorage.getItem("uid");
         const userRef = db.collection("users").doc(uid);
         this.unsubscribe = userRef.onSnapshot(async (doc) => {
-          this.setState({
-            profile: doc.data(),
-            loading: false
-          });
+            this.setState({
+                profile: doc.data(),
+                loading: false
+            });
         });
-      };
+    };
 
     render() {
         const {
@@ -66,9 +66,9 @@ export default class HomeScreenV2 extends React.PureComponent {
         } = this.state;
 
         const bigHeadeingTitle =
-            (profile && profile.firstName ? profile.firstName : "").toString() 
-        const lineText  = 
-        'what do you need help with?'
+            (profile && profile.firstName ? profile.firstName : "").toString()
+        const lineText =
+            'what do you need help with?'
         return (
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -83,13 +83,13 @@ export default class HomeScreenV2 extends React.PureComponent {
                         isBackButton={false}
                         isBigTitle={true}
                         customContainerStyle={{ height: hp('15%') }}
-                        // customContainerStyle={{ height: hp("5%") }}
-                        // bigTitleStyle={{ textTransform: 'none', }}
+                    // customContainerStyle={{ height: hp("5%") }}
+                    // bigTitleStyle={{ textTransform: 'none', }}
                     />
 
                     <View
-                        // style={{ marginTop: hp('12%') }}
-                        >
+                    // style={{ marginTop: hp('12%') }}
+                    >
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Nutrition")}>
                                 <ImageBackground
@@ -111,7 +111,7 @@ export default class HomeScreenV2 extends React.PureComponent {
                                     style={styles.image}
                                     resizeMode="cover"
                                 >
-                                     <View style={styles.opacityLayer}>
+                                    <View style={styles.opacityLayer}>
                                         <View style={styles.titleContainer}>
                                             <Text style={styles.title}>Workout</Text>
                                         </View>
@@ -138,11 +138,12 @@ export default class HomeScreenV2 extends React.PureComponent {
                                     } else {
                                         this.props.navigation.navigate("ChallengeSubscription");
                                     }
-                                });}
+                                });
                             }
-                            // style={styles.oblongBtnStyle}
-                            // isRightIcon={true}
-                            // customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}
+                            }
+                        // style={styles.oblongBtnStyle}
+                        // isRightIcon={true}
+                        // customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}
                         />
                     </View>
 
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: fonts.bold,
         fontSize: wp("6%"),
-        textTransform:'capitalize',
+        textTransform: 'capitalize',
         color: colors.offWhite,
     },
     lookContainer: {

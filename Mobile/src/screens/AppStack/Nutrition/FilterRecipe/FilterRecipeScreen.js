@@ -578,9 +578,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 <ScrollView
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
-                    style={{
-                        paddingVertical: wp("3%"),
-                    }}
+                    // style={{
+                    //     paddingVertical: wp("3%"),
+                    // }}
                 >
                     <View
                         style={{ flexDirection: 'row', marginVertical: 10, marginBottom: 20, top: 0, height: 20 }}
