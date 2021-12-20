@@ -1214,7 +1214,19 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 }
               </View>
           )}
-          {mode === 'GYM' ? gym ? (<TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
+          <TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
+            <Text
+                style={{
+                  color: colors.white,
+                  fontFamily: fonts.bold,
+                  fontSize: 20,
+                  alignSelf: "center",
+                }}
+            >
+              {"Start now"}
+            </Text>
+          </TouchableOpacity>
+          {/* {mode === 'GYM' ? gym ? (<TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
             <Text
                 style={{
                   color: colors.white,
@@ -1236,7 +1248,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
             >
               {"Start now"}
             </Text>
-          </TouchableOpacity>) : (<></>) : (<></>)}
+          </TouchableOpacity>) : (<></>) : (<></>)} */}
           <Modal
               isVisible={modalShow}
               onBackdropPress={() => this.hideModal()}
