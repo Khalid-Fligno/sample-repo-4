@@ -650,7 +650,6 @@ class CalendarHomeScreen extends React.PureComponent {
       completeCha
     } = this.state;
     let showRC = false;
-
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
       //check if selected date is between challenge start and end date
