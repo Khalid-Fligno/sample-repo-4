@@ -168,8 +168,6 @@ export default class FeedScreen extends React.PureComponent {
       blogs.unshift(doc.data());
     });
     this.setState({ blogs, loading: false });
-    console.log(blogs);
-    console.log("test")
   };
   fetchActiveChallengeData = async (activeChallengeUserData) => {
     try {
@@ -291,8 +289,10 @@ export default class FeedScreen extends React.PureComponent {
                   <SwiperFlatList
                     paginationStyleItem={styles.bars}
                     showPagination
-                    autoplay
-                    autoplayLoop
+                    autoplay={true}
+                    autoplayDelay={6}
+                    autoplayLoop={true}
+                    autoplayLoopKeepAnimation={true}
                     data={trainers}
                     renderItem={({item}) => {
                       return (
@@ -650,9 +650,9 @@ const styles = StyleSheet.create({
   },
   bars: {
     borderRadius: 0,
-    width: 40,
+    width: wp('8%'),
     height: 5,
-    right: wp('17%'),
+    right: wp('10%'),
     bottom: hp('1%'),
     top: wp('2%')
 
