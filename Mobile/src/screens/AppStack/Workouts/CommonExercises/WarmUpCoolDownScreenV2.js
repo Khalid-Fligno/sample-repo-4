@@ -72,13 +72,8 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       totalDuration:
         exerciseList[exerciseIndex - 1] &&
         exerciseList[exerciseIndex - 1].duration
-          ? workout.workIntervalMap[fitnessLevel - 1]
+          ? exerciseList[exerciseIndex - 1].duration
           : 30,
-      // totalDuration:
-      //   exerciseList[exerciseIndex - 1] &&
-      //   exerciseList[exerciseIndex - 1].duration
-      //     ? exerciseList[exerciseIndex - 1].duration
-      //     : 30,
     });
     setTimeout(() => this.setState({ timerStart: true }), 100);
   }
