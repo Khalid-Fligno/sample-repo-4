@@ -250,7 +250,6 @@ class CalendarHomeScreen extends React.PureComponent {
     //Checking if any schedule challenge is assign to user
     isActiveChallenge().then((res) => {
       const todayDate = moment(new Date()).format("YYYY-MM-DD");
-      console.log('res: ', res.isSchedule)
       if (res && moment(res.startDate).isSame(todayDate) && res.isSchedule) {
         const challengeRef = db
           .collection("users")
@@ -331,10 +330,12 @@ class CalendarHomeScreen extends React.PureComponent {
   loadExercises = async (workoutData) => {
     this.setState({ loadingExercises: true });
 
-    let uniqueWarmUpExercises = [...new Set(workoutData.warmUpExercises)];
+    // console.log('workoutData.warmUpExercises: ', workoutData.warmUpExercises)
 
+    // let uniqueWarmUpExercises = [...new Set(workoutData.warmUpExercises)];
+    // console.log('uniqueWarmUpExercise:', uniqueWarmUpExercises)
     Object.assign(workoutData, {
-      warmUpExercises: uniqueWarmUpExercises
+      warmUpExercises: workoutData.warmUpExercises
     });
 
     const workout = await loadExercise(workoutData);
@@ -360,7 +361,6 @@ class CalendarHomeScreen extends React.PureComponent {
             coolDownExercises: coolDownExercises,
           });
           this.goToNext(newWorkout);
-          console.log(newWorkout);
         } else {
           this.setState({ loadingExercises: false });
           Alert.alert("Alert!", "Something went wrong!");
@@ -377,7 +377,6 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   async goToNext(workout) {
-    console.log(">>here");
     if (
       this.currentChallengeDay === 1 &&
       !this.state.initialBurpeeTestCompleted
@@ -618,8 +617,6 @@ class CalendarHomeScreen extends React.PureComponent {
   getToFilter(data, data1, title) {
     const { challengeRecipe } = this.state
 
-    console.log('Title: ', title)
-
     this.props.navigation.navigate('FilterRecipe', {
       challengeAllRecipe: challengeRecipe[0],
       recipes: data,
@@ -708,7 +705,6 @@ class CalendarHomeScreen extends React.PureComponent {
       </>
     );
     const getPhase = (phaseData) => {
-      console.log(this.state.transformLevel);
       return (phaseData.name.substring(0, 5)
         + ' '
         + phaseData.name.substring(5, phaseData.name.length)).charAt(0).toUpperCase()
