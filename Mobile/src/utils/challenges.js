@@ -86,8 +86,8 @@ export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserDa
     const programRef = db.collection('newWorkouts').where('id', '==', workoutData.id);
     const programRefTwo = db.collection('newWorkouts').where('id', 'in', workoutIds);
     const snapshot = await programRef.get();
-    // const snapshotTwo = await programRefTwo.get();
-    // snapshotTwo.docs.map((res) => todayRcWorkouts.push(res.data()));
+    const snapshotTwo = await programRefTwo.get();
+    snapshotTwo.docs.map((res) => todayRcWorkouts.push(res.data()));
     if (snapshot.docs.length === 0) {
       return [];
     } else {
