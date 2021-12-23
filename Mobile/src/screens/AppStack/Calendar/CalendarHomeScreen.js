@@ -129,13 +129,7 @@ class CalendarHomeScreen extends React.PureComponent {
         })
 
         const level_3 = documents.filter((res) => {
-          if (res.id === 'EilCVyb5eIPG7w0dGJDC') {
-            return res.id
-          }
-        })
-
-        const level_4 = documents.filter((res) => {
-          if (res.id === 'SIq81lNARaqxTqyyOH5a') {
+          if (res.id === '0d48d056-2623-4201-b25a-3f1d78083dba') {
             return res.id
           }
         })
@@ -144,7 +138,6 @@ class CalendarHomeScreen extends React.PureComponent {
           level1: level_1,
           level2: level_2,
           level3: level_3,
-          level4: level_4
         }]
 
         fetchRecipeData(challengeLevel).then((res) => {

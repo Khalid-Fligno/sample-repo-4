@@ -98,6 +98,9 @@ export const fetchRecipeData = async (challengeRecipe) => {
     const level2P1 = challengeRecipe[0].level2[0].phases[0].meals
     const level2P2 = challengeRecipe[0].level2[0].phases[1].meals
     const level2P3 = challengeRecipe[0].level2[0].phases[2].meals
+    const level3P1 = challengeRecipe[0].level3[0].phases[0].meals
+    const level3P2 = challengeRecipe[0].level3[0].phases[1].meals
+    const level3P3 = challengeRecipe[0].level3[0].phases[2].meals
 
     level1P1.forEach((el) => recipe.push(el))
     level1P2.forEach((el) => recipe.push(el))
@@ -105,6 +108,9 @@ export const fetchRecipeData = async (challengeRecipe) => {
     level2P1.forEach((el) => recipe.push(el))
     level2P2.forEach((el) => recipe.push(el))
     level2P3.forEach((el) => recipe.push(el))
+    level3P1.forEach((el) => recipe.push(el))
+    level3P2.forEach((el) => recipe.push(el))
+    level3P3.forEach((el) => recipe.push(el))
 
     const recipeRef = db.collection('recipes');
     const snapshot = await recipeRef.get();
