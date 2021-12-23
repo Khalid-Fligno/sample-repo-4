@@ -13,7 +13,7 @@ import {
 } from "./utils";
 import RecipeScreen from "../../src/screens/AppStack/Nutrition/RecipeScreen";
 import RecipeStepsScreen from "../../src/screens/AppStack/Nutrition/RecipeStepsScreen";
-import FilterRecipeScreen from "../../src/screens/AppStack/Nutrition/FilterRecipeScreen";
+import FilterRecipeScreen from "../../src/screens/AppStack/Nutrition/FilterRecipe/FilterRecipeScreen";
 
 const CalendarStack = createStackNavigator(
   {

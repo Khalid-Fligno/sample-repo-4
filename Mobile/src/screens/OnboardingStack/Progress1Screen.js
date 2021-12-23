@@ -9,6 +9,8 @@ import {
   Alert,
   TouchableOpacity,
   Picker,
+  TextInput,
+  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Haptics from "expo-haptics";
@@ -100,7 +102,7 @@ const storeProgressInfo = async (
         {
           [progressDataFieldName]: {
             // photoURL: url,
-            weight: parseInt(weight, 10),
+            weight: parseFloat(weight, 10),
             waist: parseInt(waist, 10),
             hip: parseInt(hip, 10),
             // burpeeCount,
@@ -342,6 +344,7 @@ export default class Progress1Screen extends React.PureComponent {
             0
           );
 
+            console.log(weight)
           // const fitnessLevel = findFitnessLevel(0);
           // AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
           // try {
@@ -388,11 +391,25 @@ export default class Progress1Screen extends React.PureComponent {
       hipModalVisible,
       unitOfMeasurement,
       measurements,
-      helperModalVisible
+      helperModalVisible,
+      uom,
     } = this.state;
+    // console.log("weight:",this.state.weight);
+       console.log(uom);
+    if(unitOfMeasurement =='metric'){
+      this.setState({
+        uom: 'kg'
+      })
+    }else{
+      this.setState({
+        uom: 'lbs'
+      })
+    }
+    let weightData = weight.toString()
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
-        <KeyboardAvoidingView keyboardVerticalOffset={-60} behavior="position">
+
+        <KeyboardAvoidingView keyboardVerticalOffset={90} behavior="padding">
           <View style={styles.container}>
             <View style={styles.textContainer}>
               <Text style={styles.headerText}>{this.props.navigation.getParam("isInitial") ? "Measurements" : "Progress Measurements"}</Text>
@@ -403,8 +420,29 @@ export default class Progress1Screen extends React.PureComponent {
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.inputFieldContainer}>
-                <Text style={styles.inputFieldTitle}>Weight</Text>
-                <TouchableOpacity
+                <Text style={styles.inputFieldTitle}>Weight({uom})</Text>
+
+                {unitOfMeasurement ==="metric"
+                ?
+                  <TextInput style={styles.inputButton} 
+                    placeholder="kg" 
+                    keyboardType='numeric'
+                    onChangeText={(value)=>
+                      this.setState({weight: value})}
+                    value={weightData}
+                />
+
+                :
+                  <TextInput style={styles.inputButton} 
+                    placeholder="lbs" 
+                    keyboardType='numeric'
+                    onChangeText={(value)=>
+                      this.setState({weight: value})}
+                    value={weightData}
+                />
+              }
+               
+                {/* <TouchableOpacity
                   onPress={() => this.showModal("weightModalVisible")}
                   style={styles.inputButton}
                 >
@@ -412,7 +450,7 @@ export default class Progress1Screen extends React.PureComponent {
                     {weight} {unitOfMeasurement === "metric" && "kg"}
                     {unitOfMeasurement === "imperial" && "lbs"}
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <Modal
                   isVisible={weightModalVisible}
                   onBackdropPress={() => this.hideModal("weightModalVisible")}
@@ -571,6 +609,7 @@ export default class Progress1Screen extends React.PureComponent {
             <Loader loading={loading} color={colors.themeColor.color} />
           </View>
         </KeyboardAvoidingView>
+
         <HelperModal
           helperModalVisible={helperModalVisible}
           hideHelperModal={this.hideHelperModal}

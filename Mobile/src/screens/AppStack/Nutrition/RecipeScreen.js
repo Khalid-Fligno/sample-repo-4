@@ -1,6 +1,7 @@
 import React from "react";
 import {
   StyleSheet,
+  Image,
   View,
   Text,
   Dimensions,
@@ -12,7 +13,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import * as FileSystem from "expo-file-system";
 import Modal from "react-native-modal";
 import { Divider } from "react-native-elements";
-import Image from "react-native-scalable-image";
+// import Image from "react-native-scalable-image";
 import { DotIndicator } from "react-native-indicators";
 import ParallaxScrollView from "react-native-parallax-scroll-view";
 import { db } from "../../../../config/firebase";
@@ -50,6 +51,7 @@ export default class RecipeScreen extends React.PureComponent {
       calendarMeal: null,
       addingToCalendar: false,
       extraProps: undefined,
+      title: undefined,
     };
   }
   onFocusFunction() {
@@ -63,8 +65,9 @@ export default class RecipeScreen extends React.PureComponent {
       recipe: this.props.navigation.getParam("recipe", null),
       ingredients: this.props.navigation.getParam("recipe", null).ingredients,
       utensils: this.props.navigation.getParam("recipe", null).utensils,
-      backTitle: this.props.navigation.getParam("backTitle", null),
+      title: this.props.navigation.getParam("title", null),
       extraProps: this.props.navigation.getParam("extraProps", undefined),
+      title: this.props.navigation.getParam("title",null),
       loading: false,
     });
   }
@@ -128,10 +131,12 @@ export default class RecipeScreen extends React.PureComponent {
   };
 
   getBackTitle() {
+
     if (this.state.backTitle) {
       return this.state.backTitle;
     }
     return NutritionList.filter((res) => this.state.recipe[res])[0];
+
   }
 
   render() {
@@ -145,8 +150,10 @@ export default class RecipeScreen extends React.PureComponent {
       calendarMeal,
       addingToCalendar,
       extraProps,
+      backTitle,
+      title
     } = this.state;
-    // console.log("from calendar",extraProps)
+        
     return (
       <View style={NutritionStyles.container}>
         {!loading && (
@@ -169,7 +176,7 @@ export default class RecipeScreen extends React.PureComponent {
                   <BigHeadingWithBackButton
                     isBackButton={true}
                     onPress={this.handleBack}
-                    backButtonText={`Back to ${this.getBackTitle()}`}
+                    backButtonText={`Back to ${this.state.title}`}
                     isBigTitle={false}
                     backButtonStyle={{ marginTop: 8 }}
                   />
@@ -178,10 +185,14 @@ export default class RecipeScreen extends React.PureComponent {
                         </View> */}
                 </View>
                 <Image
-                  source={{
-                    uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
-                  }}
-                  width={width}
+                  // source={{
+                  //   uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
+                  //   cache: "force-cache"
+                  // }}
+                  source={{ uri: recipe.coverImage, cache: "force-cache" }}
+                  // width={width}
+                  resizeMode='cover'
+                  style={{height: width, width: width}}
                 />
               </View>
             )}
@@ -452,7 +463,7 @@ export default class RecipeScreen extends React.PureComponent {
                 <BigHeadingWithBackButton
                   isBackButton={true}
                   onPress={this.handleBack}
-                  backButtonText={`Back to ${this.getBackTitle()}`}
+                  backButtonText={`Back to ${this.state.title}`}
                   isBigTitle={false}
                 />
               </View>

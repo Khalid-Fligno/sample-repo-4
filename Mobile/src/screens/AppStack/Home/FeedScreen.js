@@ -6,6 +6,8 @@ import {
   Text,
   Dimensions,
   Image,
+  StyleSheet,
+  FlatList,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Button } from "react-native-elements";
@@ -31,6 +33,10 @@ import WorkOutCard from "../../../components/Home/WorkoutCard";
 import TimeSvg from "../../../../assets/icons/time";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
+import Carousel from "react-native-carousel-view";
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
+
+
 import {
   getCurrentPhase,
   getCurrentChallengeDay,
@@ -50,6 +56,8 @@ import {
 } from "../../../utils/feedUtils";
 // import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
 const { width } = Dimensions.get("window");
+const {height} = Dimensions.get("window")
+
 
 const workoutTypeMap = {
   1: "Strength",
@@ -101,22 +109,23 @@ export default class FeedScreen extends React.PureComponent {
   }
   componentDidMount = () => {
     this.setDayOfWeek();
-    // this.fetchProfile();
+    this.fetchProfile();
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       isActiveChallenge().then((res) => {
         if (res) {
           if (res.status === "Active") {
             this.setState({ loading: true });
             this.fetchActiveChallengeData(res);
-            this.fetchBlogs(res.tag, res.startDate);
+            this.fetchBlogs();
+            this.fetchProfile();
           }
         }
       });
     });
   };
   componentWillUnmount = () => {
-    this.focusListener();
-    if (this.unsubscribeFACD) this.unsubscribeFACD();
+    // this.focusListener();
+    // if (this.unsubscribeFACD) this.unsubscribeFACD();
   };
 
   //   fetchProfile = async () => {
@@ -131,17 +140,32 @@ export default class FeedScreen extends React.PureComponent {
   //     });
   //   }
 
-  fetchBlogs = async (tag, currentDay) => {
-    // console.log(tag,currentDay)
+
+
+  fetchProfile = async () =>{
+    let trainers = []
+    const snapshot = await db
+      .collection('trainers')
+      .get();
+      snapshot.forEach((doc)=>{
+        trainers.unshift(doc.data())
+      })
+      this.setState({trainers, loading: false})
+  }
+
+  fetchBlogs = async (tag, currentDay, phaseData) => {
+    let data = phaseData.displayName;
+    let phase = data.toLowerCase();
+    let phaseTag = phase.concat("-",tag);
     const snapshot = await db
       .collection("blogs")
-      .where("tags", "array-contains", tag)
+      .where("tags","array-contains", phaseTag)
       .get();
     let blogs = [];
     const cDay = currentDay === 1 ? 2 : currentDay;
     snapshot.forEach((doc) => {
-      if (doc.data().startDay <= cDay && doc.data().endDay >= cDay)
-        blogs.unshift(doc.data());
+       if (doc.data().startDay <= cDay && doc.data().endDay >= cDay)
+      blogs.unshift(doc.data());
     });
     this.setState({ blogs, loading: false });
   };
@@ -199,7 +223,11 @@ export default class FeedScreen extends React.PureComponent {
         activeChallengeUserData.startDate,
         this.stringDate
       );
-      this.fetchBlogs(activeChallengeUserData.tag, this.currentChallengeDay);
+      this.fetchBlogs(
+        activeChallengeUserData.tag,
+        this.currentChallengeDay,
+        this.phaseData
+      );
       //TODO get recommended workout here
       // this.todayRcWorkout = getTodayRecommendedWorkout(activeChallengeData.workouts,activeChallengeUserData,this.stringDate )
       const todayRcWorkout = (
@@ -213,6 +241,7 @@ export default class FeedScreen extends React.PureComponent {
     } else {
       Alert.alert("Something went wrong please try again");
     }
+    // console.log(this.phaseData.displayName);
   }
 
   goToFitazfkEquipmentWorkouts() {
@@ -230,9 +259,10 @@ export default class FeedScreen extends React.PureComponent {
       activeChallengeUserData,
       blogs,
       todayRcWorkout,
+      trainers
     } = this.state;
+    let array = trainers;
     let recommendedWorkout = [];
-
     dayOfWeek > 0 && dayOfWeek < 6
       ? recommendedWorkout.push(workoutTypeMap[dayOfWeek])
       : recommendedWorkout.push(" Rest Day");
@@ -246,238 +276,387 @@ export default class FeedScreen extends React.PureComponent {
         recommendedWorkout.push(`Day ${this.currentChallengeDay}`);
       }
     }
-
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={HomeScreenStyle.scrollView}
         // style={[globalStyle.container,{paddingHorizontal:0}]}
       >
-        <View style={{ paddingHorizontal: containerPadding }}>
-          <BigHeadingWithBackButton
-            bigTitleText="FEED"
-            isBackButton={false}
-            isBigTitle={true}
-          />
-        </View>
+        <View style={{ marginBottom: wp("10%"), flex: 1 }}>
+          <View style={{ flex: 1, alignItems: "center" ,height:wp('100%')}}>
+           
+                  <SwiperFlatList
+                    paginationStyleItem={styles.bars}
+                    showPagination
+                    autoplay={true}
+                    autoplayDelay={6}
+                    autoplayLoop={true}
+                    autoplayLoopKeepAnimation={true}
+                    data={trainers}
+                    renderItem={({item}) => {
+                      return (
+                     <View style={{ flex: 1, alignItems: "center" }}>
+                       <TouchableOpacity onPress={()=>
+                          this.props.navigation.navigate('Trainers',{
+                            name: item.name,
+                            title: item.title,
+                            about: item.about,
+                            profile: item.profile,
+                            id: item.id,
+                            coverImage: item.coverImage,
+                          })
+                        }>
+                          <Image
+                            style={{ flex: 1, height: '50%', width: wp('100%') }}
+                            source={{
+                              uri: item.image,
+                            }}
+                            resizeMode="cover"
+                          />
+                          </TouchableOpacity>
+                          <View style={{
+                            position :'absolute',
+                            bottom: 40,
+                            left: 50
+                            }}>
+                                <Text
+                                style={{
+                                  fontSize: wp("3.5%"),
+                                  fontFamily: fonts.bold,
+                                  fontWeight: "800",
+                                  color: "white",
+                                }}
+                              >
+                              {item.name}
+                              </Text>
+                              <Text
+                            style={{
+                              fontSize: wp("5.5%"),
+                              fontFamily: fonts.bold,
+                              fontWeight: 'bold',
+                              color: "white",
+                            }}
+                          >
+                            {item.title}
+                            
+                            </Text>
+                          </View>
+                        </View> 
 
-        <View style={{ marginBottom: wp("30%") }}>
-          <WorkOutCard
-            image={require("../../../../assets/images/Feed/workoutCardBg.jpg")}
-            title="TODAY'S WORKOUT"
-            recommendedWorkout={recommendedWorkout}
-            onPress={() => this.props.navigation.navigate("Calendar")}
-            // cardCustomStyle ={{marginTop:20}}
-          />
-          {/*            
-              <FeedCard 
-                // title ="COMMUNITY"
-                cardCustomStyle={{
-                  marginHorizontal:0,
-                  marginTop:wp('5%')
-                }}
-                cardImageStyle={{
-                  borderRadius:0
-                }}
-                btnTitle ="Find out more"
-                onPress={()=>console.log("Community Pressed")}
-                image={require('../../../../assets/images/Feed/community.jpg')}
-              /> */}
-          <FeedCard
-            cardCustomStyle={{
-              marginHorizontal: containerPadding,
-              marginTop: wp("7%"),
-            }}
-            cardImageStyle={{
-              borderRadius: 3,
-              backgroundColor: "#658dc3",
-            }}
-            customTitleStyle={{
-              fontSize: wp("4.5%"),
-              color: colors.offWhite,
-            }}
-            btnTitle="Connect with us"
-            customBtnStyle={{ backgroundColor: colors.themeColor.color }}
-            customBtnTitleStyle={{ color: colors.black }}
-            onPress={() =>
-              this.openLink(
-                "https://www.facebook.com/groups/180007149128432/?source_id=204363259589572"
-              )
-            }
-            image={require("../../../../assets/images/Feed/facebook.jpg")}
-          />
-          {blogs && blogs.length > 0 && (
-            <BlogCard
-              title="BLOG"
-              cardCustomStyle={{
-                marginHorizontal: 0,
-                marginTop: wp("7%"),
-              }}
-              cardImageStyle={{
-                borderRadius: 0,
-              }}
-              data={blogs}
-            />
-          )}
-          <FeedCard
-            // title ="Workouts"
-            cardCustomStyle={{
-              marginHorizontal: containerPadding,
-              marginTop: wp("7%"),
-            }}
-            cardImageStyle={{
-              borderRadius: 3,
-            }}
-            customTitleStyle={{
-              fontSize: wp("4.5%"),
-            }}
-            btnTitle="Find out more"
-            onPress={() => this.goToFitazfkEquipmentWorkouts()}
-            image={require("../../../../assets/images/Feed/workout.jpg")}
-          />
-          {Feeds.map((res, i) => (
-            <FeedCard
-              // title ="Workouts"
-              key={i}
-              cardCustomStyle={{
-                marginHorizontal: i % 2 === 0 ? containerPadding : 0,
-                marginTop: wp("7%"),
-              }}
-              cardImageStyle={{
-                borderRadius: i % 2 === 0 ? 3 : 0,
-              }}
-              customTitleStyle={{
-                fontSize: wp("4.5%"),
-              }}
-              btnTitle={res.btnTitle}
-              customBtnStyle={res.btnBg ? { backgroundColor: res.btnBg } : {}}
-              customBtnTitleStyle={
-                res.btnTitleColor ? { color: res.btnTitleColor } : {}
-              }
-              onPress={() => this.openLink(res.url)}
-              image={res.bgImage}
-            />
-          ))}
-
-          {/* <FeedCard 
-                // title ="Workouts"
-                cardCustomStyle={{
-                  marginHorizontal:containerPadding,
-                  marginTop:wp('7%')
-                }}
-                cardImageStyle={{
-                  borderRadius:3
-                }}
-                customTitleStyle={{
-                  fontSize: wp('4.5%')
-                }}
-                btnTitle ="Find out more"
-                onPress={()=>console.log("Workouts Pressed")}
-                image={require('../../../../assets/images/Feed/workout.jpg')}
-
-              />
-
-              <FeedCard 
-                // title ="Out now"
-                cardCustomStyle={{
-                  marginHorizontal:0,
-                  marginTop:wp('7%')
-                }}
-                cardImageStyle={{
-                  borderRadius:0,
-                  backgroundColor:colors.charcoal.light
-                }}
-                customTitleStyle={{
-                  fontSize: wp('4.5%'),
-                  color:colors.offWhite
-                }}
-                btnTitle ="Find out more"
-                onPress={()=>console.log("Workouts Pressed")}
-                image={require('../../../../assets/images/Feed/activewear.jpg')}
-              />
-
-              <FeedCard 
-                cardCustomStyle={{
-                  marginHorizontal:containerPadding,
-                  marginTop:wp('7%')
-                }}
-                cardImageStyle={{
-                  borderRadius:3,
-                  backgroundColor:'#658dc3'
-                }}
-                customTitleStyle={{
-                  fontSize: wp('4.5%'),
-                  color:colors.offWhite
-                }}
-                btnTitle ="Connect with us"
-                customBtnStyle={{backgroundColor:colors.offWhite}}
-                customBtnTitleStyle={{color:'#658dc3'}}
-                onPress={()=>console.log("Workouts Pressed")}
-                image={require('../../../../assets/images/Feed/facebook.jpg')}
-              />
-
-               <FeedCard 
-                // title ="Available now"
-                cardCustomStyle={{
-                  marginHorizontal:0,
-                  marginTop:wp('7%')
-                }}
-                cardImageStyle={{
-                  borderRadius:0,
-                  backgroundColor:colors.grey.dark
-                }}
-                customTitleStyle={{
-                  fontSize: wp('4.5%'),
-                  color:colors.offWhite
-                }}
-                btnTitle ="Find out more"
-                onPress={()=>console.log("Workouts Pressed")}
-                image={require('../../../../assets/images/Feed/equipment.jpg')}
-              /> */}
-
-          {/* {
-                blogs && blogs.length > 0&&
-                blogs.map((res,index)=>
-                    <ChallengeBlogCard
-                    key={index}
-                    data={res}
-                    onPress={() => this.openLink(res.urlLink)}
-                    index = {index}
+                      );
+                    }}
                   />
-                )
-               
-              } */}
+              
+              {/* <View style={{ flex: 1, alignItems: "center" }}>
+                <Image
+                  style={{ flex: 1, height: "90%", width: "90%" }}
+                  source={{
+                    uri: "https://images.pexels.com/photos/6456303/pexels-photo-6456303.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+                  }}
+                  resizeMode="cover"
+                />
+              </View> */}
+              {/* <View style={{ flex: 1, alignItems: "center" }}>
+                <Image
+                  style={{ flex: 1, height: "90%", width: "90%" }}
+                  source={{
+                    uri: "https://images.pexels.com/photos/3912953/pexels-photo-3912953.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                  }}
+                  resizeMode="cover"
+                />
+              </View>
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <Image
+                  style={{ flex: 1, height: "90%", width: "90%" }}
+                  source={{
+                    uri: "https://images.pexels.com/photos/136405/pexels-photo-136405.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                  }}
+                  resizeMode="cover"
+                />
+              </View> */}
+          </View>
 
-          {/* <NewsFeedTile
-                image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
-                title="SHOP APPAREL"
-                onPress={() => this.openLink('https://fitazfk.com/collections/wear-fitazfk-apparel')}
-              />
-              <DoubleNewsFeedTile
-                imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-blog.jpg')}
-                imageRight={require('../../../../assets/images/hiit-rest-placeholder.jpg')}
-                titleLeft1="HOW TO USE THIS APP"
-                titleRight1="FAQ"
-                onPressLeft={() => this.props.navigation.navigate('HomeBlog')}
-                onPressRight={() => this.openLink('https://fitazfk.zendesk.com/hc/en-us')}
-              />
-              <NewsFeedTile
-                image={require('../../../../assets/images/shop-bundles.jpg')}
-                title="SHOP EQUIPMENT"
-                onPress={() => this.openLink('https://fitazfk.com/collections/equipment')}
-              />
-              <NewsFeedTile
-                image={require('../../../../assets/images/fitazfk-army.jpg')}
-                title="JOIN THE FITAZFK ARMY"
-                onPress={() => this.openLink('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
-              /> */}
-          {/* <Loader
-                loading={loading}
-                color={colors.charcoal.standard}
-              /> */}
+          <View style={{ flex: 1, marginTop: 20 }}>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text
+                style={{
+                  fontSize: wp("4.5%"),
+                  fontFamily: fonts.bold,
+                  fontWeight: "500",
+                }}
+              >
+                Explore
+              </Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <View style={{ flexDirection: "row", marginTop: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.openLink(
+                      "https://facebook.com/groups/180007149128432/?source_id=204363259589572"
+                    )
+                  }
+                >
+                  <View style={{ paddingRight: 10 }}>
+                    <Image
+                      style={{
+                        overflow: "hidden",
+                        width: 90,
+                        height: 90,
+                        borderRadius: 100,
+                      }}
+                      source={
+                        require("../../../../assets/images/media/community.jpeg")
+                       }
+                          resizeMode="cover"
+                    />
+                    <View style={{ marginTop: 10, paddingLeft: 10 }}>
+                      <Text
+                        style={{
+                          fontSize: wp("3.5%"),
+                          fontFamily: fonts.bold,
+                          fontWeight: "100",
+                        }}
+                      >
+                        Community
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.openLink("https://fitazfk.com/pages/clothing")
+                  }
+                >
+                  <View style={{ paddingRight: 10 }}>
+                    <Image
+                      style={{
+                        overflow: "hidden",
+                        width: 90,
+                        height: 90,
+                        borderRadius: 50,
+                      }}
+                      source={
+                        require("../../../../assets/images/media/activewear.jpeg")
+                       }
+                      resizeMode="cover"
+                    />
+                    <View style={{ marginTop: 10, paddingLeft: 10 }}>
+                      <Text
+                        style={{
+                          fontSize: wp("3.5%"),
+                          fontFamily: fonts.bold,
+                          fontWeight: "100",
+                        }}
+                      >
+                        Activewear
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.openLink(
+                      "https://fitazfk.com/collections/best-sellers"
+                    )
+                  }
+                >
+                  <View style={{ paddingRight: 10 }}>
+                    <Image
+                      style={{
+                        overflow: "hidden",
+                        width: 90,
+                        height: 90,
+                        borderRadius: 50,
+                      }}
+                      source={
+                        require("../../../../assets/images/media/equipment.jpeg")
+                       }
+                      resizeMode="cover"
+                    />
+                    <View style={{ marginTop: 10, paddingLeft: 10 }}>
+                      <Text
+                        style={{
+                          fontSize: wp("3.5%"),
+                          fontFamily: fonts.bold,
+                          fontWeight: "100",
+                        }}
+                      >
+                        Equipment
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                paddingTop: 10,
+                backgroundColor: "#333333",
+                height: 550,
+                marginTop: 20,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingLeft: 15,
+                  paddingTop: 15,
+                  paddingRight: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: wp("4.5%"),
+                    fontFamily: fonts.bold,
+                    fontWeight: "800",
+                    color: "white",
+                  }}
+                >
+                  Members Blog
+                </Text>
+                <View style={{ flex: 1, marginTop: 0, alignItems: "flex-end",}}>
+                  <TouchableOpacity onPress={()=> 
+                  this.props.navigation.navigate('AllBlogs',
+                  {
+                    data : blogs
+                  })
+                  }>
+                  <Text
+                    style={{
+                      fontSize: wp("3.5%"),
+                      fontFamily: fonts.bold,
+                      fontWeight: "300",
+                      color: "white",
+                    }}
+                  >
+                    View all
+                  </Text>
+                  </TouchableOpacity>
+                  
+                  <View
+                    style={{
+                      borderBottomColor: "#cccccc",
+                      borderBottomWidth: 1,
+                      width: "23%",
+                      alignSelf: "flex-end",
+                    }}
+                  >
+
+                  </View>
+                </View>
+              </View>
+              <View style={{ flex: 1, alignItems: "center", }}>
+                <View style={{}}>
+
+                  <FlatList
+                    horizontal
+                    data={blogs}
+                    style={{ flex: 1 }}
+                    renderItem={({item}) => {
+                      return (
+                        <TouchableOpacity delayPressOut={3} onPress={()=>this.openLink(item.urlLink)}>
+                        <View
+                          style={{
+                            marginTop: 20,
+                           
+                            paddingLeft: 20,
+                          }}
+                        >
+                          <Image
+                            style={{
+                              overflow:'hidden',
+                              width: 250,
+                              height: 350,
+                              borderRadius: 10,
+                            }}
+                            source={{
+                              uri: item.coverImage,
+                            }}
+                            resizeMode="cover"
+                          />
+                          <View style={{alignItems:'flex-start',paddingTop: 40,width: 250}}>
+                          <Text
+                              ellipsizeMode='tail'
+                              numberOfLines={2}
+                              style={{
+                                fontSize: wp("3.5%"),
+                                fontFamily: fonts.bold,
+                                fontWeight: "500",
+                                color:'white'
+                              }}
+                            >
+                              {item.title}
+                            </Text>
+                          </View>
+                        </View>
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={{ flex: 1 }}>
+              <View style={styles.lookContainer}>
+                <Text style={styles.title1}>Looking for more?</Text>
+                <Text style={{ fontFamily: fonts.StyreneAWebRegular }}>
+                  Start a workout
+                </Text>
+              </View>
+
+              <View>
+                <CustomBtn
+                  titleCapitalise={true}
+                  Title="Explore workouts"
+                  customBtnStyle={styles.oblongBtnStyle}
+                  onPress={() => this.props.navigation.navigate("Lifestyle")}
+                  // style={styles.oblongBtnStyle}
+                  // isRightIcon={true}
+                  // customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}
+                />
+              </View>
+            </View>
+          </View>
+
           <Loader loading={loading} color={colors.themeColor.color} />
         </View>
       </ScrollView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  oblongBtnStyle: {
+    alignItems: "center",
+    marginTop: hp("2%"),
+    borderRadius: 8,
+    borderWidth: 2,
+    backgroundColor: colors.white,
+    color: colors.black,
+    height: hp("8%"),
+    marginHorizontal: hp("10%"),
+  },
+  lookContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: hp("2%"),
+  },
+  title1: {
+    fontFamily: fonts.StyreneAWebRegular,
+    fontWeight: "800",
+    fontSize: wp("5%"),
+    color: colors.black,
+  },
+  bars: {
+    borderRadius: 0,
+    width: wp('8%'),
+    height: 5,
+    right: wp('10%'),
+    bottom: hp('1%'),
+    top: wp('2%')
+
+  }
+});

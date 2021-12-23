@@ -34,7 +34,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       loading: false,
       filterIndex: 0,
       meal: null,
+      title: null,
     };
+    //console.log(this.state.recipes);
   }
 
   onFocusFunction = async () => {
@@ -72,7 +74,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       .onSnapshot(async (querySnapshot) => {
         const recipes = [];
         await querySnapshot.forEach(async (doc) => {
-          console.log(doc.data().title)
+          // console.log(doc.data().title)
           if (doc.data().active) {
             if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
               if (challengeMealsFilterList.includes(doc.data().id))
@@ -140,6 +142,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     this.setState({ filterIndex });
   };
 
+
+  
   keyExtractor = (item, index) => String(index);
 
   renderItem = ({ item }) => (
@@ -147,7 +151,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       onPress={() =>
         this.props.navigation.push("Recipe", {
           recipe: item,
-          backTitle: this.props.navigation.getParam("meal", null),
+          title: this.props.navigation.getParam("title", null),
         })
       }
       // image={
@@ -168,7 +172,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   };
 
   render() {
-    const meal = this.props.navigation.getParam("meal", null);
+    const title = this.props.navigation.getParam("title", null);
     const { recipes, loading, filterIndex } = this.state;
     const filterButtons = [
       {
@@ -177,7 +181,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       }
     ]
 
-    const renderItem1 = ({ item: items }) =>
+    // console.log("RecipeList: ", recipes)
+    console.log(loading)
+  const renderItem1 = ({ item: items }) =>
     (
       <CustomButtonGroup
         onPress={this.updateFilter}
@@ -220,11 +226,13 @@ export default class RecipeSelectionScreen extends React.PureComponent {
         <RecipeTileSkeleton />
       </View>
     );
+
+    console.log('recipeList: ', recipeList)
     return (
       <View style={globalStyle.container}>
         <BigHeadingWithBackButton
           isBackButton={true}
-          bigTitleText={meal}
+          bigTitleText={title}
           onPress={this.handleBack}
           backButtonText="Back to nutrition"
           isBigTitle={true}
@@ -256,19 +264,57 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             paddingVertical: wp("4%"),
           }}
         />
+        
         {loading ? (
           skeleton
         ) : (
-          <FlatList
-            contentContainerStyle={styles.scrollView}
-            data={recipeList}
-            keyExtractor={this.keyExtractor}
-            renderItem={this.renderItem}
-            showsVerticalScrollIndicator={false}
-            removeClippedSubviews={false}
-          // maxToRenderPerBatch={20}
-          />
+          
+          // <FlatList
+          //   contentContainerStyle={styles.scrollView}
+          //   data={recipeList}
+          //   keyExtractor={this.keyExtractor}
+          //   renderItem={this.renderItem}
+          //   showsVerticalScrollIndicator={false}
+          //   removeClippedSubviews={false}
+          // // maxToRenderPerBatch={20}
+          // />
+          <View></View>
+          
         )}
+       
+
+        {recipeList.length > 0 ?
+           <FlatList
+             contentContainerStyle={styles.scrollView}
+             data={recipeList}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderItem}
+              showsVerticalScrollIndicator={false}
+              removeClippedSubviews={false}
+              // maxToRenderPerBatch={20}
+            />
+        
+        :
+        <View 
+        style={{
+            height: hp('65%'), 
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          >
+              <Text 
+                  style={{           
+                      fontSize: 20,
+                      fontFamily: fonts.bold,
+                      textTransform: 'uppercase',
+                  }}
+              >
+                  no recipes are available
+              </Text>
+          </View>
+
+        }
 
         {/* <Loader
           loading={loading}

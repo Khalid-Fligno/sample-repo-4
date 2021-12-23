@@ -143,7 +143,7 @@ class ProgressHomeScreen extends React.PureComponent {
     const userRef = db.collection("users").doc(uid);
     this.unsubscribe = userRef.onSnapshot(async (doc) => {
       var data = await doc.data();
-      console.log("qwertyuiop", data.unitOfMeasurement)
+      // console.log("qwertyuiop", data.unitOfMeasurement)
       this.setState({
         profile: data,
         initialProgressInfo: data.initialProgressInfo,
@@ -461,6 +461,8 @@ class ProgressHomeScreen extends React.PureComponent {
       initialProgressInfo &&
       currentProgressInfo &&
       diff(initialProgressInfo.weight, currentProgressInfo.weight);
+    const weightToDecimal = 
+      Number(weightDifference).toFixed(2);
     const hipDifference =
       initialProgressInfo &&
       currentProgressInfo &&
@@ -682,7 +684,7 @@ class ProgressHomeScreen extends React.PureComponent {
                   weightDifference >= 0 && styles.dataTextPositive,
                 ]}
               >
-                {weightDifference || "-"}{" "}
+                {weightToDecimal || "-"}{" "}
                 {weightDifference && unitsOfMeasurement === "metric" && "kg"}
                 {weightDifference && unitsOfMeasurement === "imperial" && "lbs"}
               </Text>
@@ -893,7 +895,7 @@ class ProgressHomeScreen extends React.PureComponent {
                   <View>
                     <ProgressBar
                         // title=""
-                        completed={profile.totalWorkoutCompleted + countI + countC + countS}
+                        completed={profile.totalWorkoutCompleted}
                         total={totalS}
                         size={wp("38%")}
                     />

@@ -65,6 +65,13 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     let restImage = "";
 
     let totalDuration = 0;
+    let interval = false
+
+    workout.filters.forEach((el) => {
+      if (el === 'interval') {
+        interval = true
+      }
+    })
 
     if (rest) {
       totalDuration = workout.restIntervalMap[fitnessLevel - 1];
@@ -83,7 +90,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     ) {
       totalDuration =
         currentExercise["restIntervalMap"][String(setCount)][
-          String(fitnessLevel - 1)
+        String(fitnessLevel - 1)
         ];
       rest = true;
     }
@@ -121,6 +128,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       rest: rest,
       setCount: setCount,
       restRandomImage: "",
+      interval: interval
     };
   }
 
@@ -150,7 +158,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     const uid = await AsyncStorage.getItem("uid");
     const userRef = db.collection("users").doc(uid);
 
-    console.log('workoutworkout', workout['lifestyle'])
+    // console.log('workoutworkout', workout['lifestyle'])
 
     if (workout['lifestyle']) {
       return db.runTransaction((transaction) => {
@@ -171,34 +179,20 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       });
     } else {
       isActiveChallenge().then((res) => {
+        db.runTransaction((transaction) => {
+          return transaction.get(userRef).then((userDoc) => {
+            const workoutCount = userDoc.data().totalWorkoutCompleted + 1;
+            transaction.update(userRef, {
+              totalWorkoutCompleted: workoutCount,
+            });
+          });
+        });
         if (res && res.status === "Active") {
-          // const userRef = db.collection("users").doc(uid);
           var challengeRef = db
             .collection("users")
             .doc(uid)
             .collection("challenges")
             .doc(res.id);
-          // challengeRef.onSnapshot((doc) => {
-          //   const totalIntervalCompleted =
-          //     doc.data().workouts.filter(
-          //       (res) => res.target === "interval"
-          //     );
-          //   const totalCircuitCompleted =
-          //     doc.data().workouts.filter(
-          //       (res) => res.target === "circuit"
-          //     );
-          //   const totalStrengthCompleted =
-          //     doc.data().workouts.filter(
-          //       (res) => res.target === "strength"
-          //     );
-          //   userRef.set({
-          //     "totalChallengeWorkoutCompleted": totalIntervalCompleted.length + totalCircuitCompleted.length + totalStrengthCompleted.length,
-          //     "challengeStrength": totalStrengthCompleted.length,
-          //     "challengeCircuit": totalCircuitCompleted.length,
-          //     "challengeInterval": totalIntervalCompleted.length,
-          //   }, {merge: true});
-          // });
-          // Atomically add a new region to the "regions" array field.
           var workouts = challengeRef
             .update({
               workouts: firebase.firestore.FieldValue.arrayUnion({
@@ -210,7 +204,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 time: new Date().getTime(),
               }),
             })
-            .then((res) => console.log("Adeed to challenge", res));
+            .then();
         }
       });
     }
@@ -229,10 +223,6 @@ export default class ExercisesScreenV2 extends React.PureComponent {
   };
 
   checkFinished(currentExerciseIndex, setCount) {
-    const { workout } = this.state;
-    if (workout.workoutProcessType === "onlyOne") {
-      return setCount === this.state.workout.workoutReps;
-    }
     return (
       currentExerciseIndex === this.state.exerciseList.length - 1 &&
       setCount === this.state.workout.workoutReps
@@ -240,6 +230,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
   }
 
   handleFinish = async (reps, resistanceCategoryId, currentExerciseIndex) => {
+    // console.log('diri musulod kung dili e skip')
     this.setState({ timerStart: false });
     let setCount = this.props.navigation.getParam("setCount", 1); //start from 1
     const { workout } = this.state;
@@ -297,20 +288,22 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           currentExerciseIndex + 1
         );
       }
-    } else if (workout.workoutProcessType === "onlyOne") {
+    }else if (workout.workoutProcessType === "onlyOne") {
       if (this.checkFinished(currentExerciseIndex, setCount)) {
-        // console.log("Finished") //finished when all rounds are finished
+        // console.log("finished");
         this.updateWeekly();
-        appsFlyer.trackEvent("complete_hiit_workout");
         this.workoutComplete(reps, resistanceCategoryId);
-      } else {
-        // console.log("Go to next round")
+      } else if (currentExerciseIndex < workout.exercises.length - 1) {
+        
         this.goToExercise(
-          setCount + 1,
+          setCount,
           reps,
-          resistanceCategoryId,
-          currentExerciseIndex
+          null,
+          currentExerciseIndex + 1,
+          false
         );
+      } else if (currentExerciseIndex === workout.exercises.length - 1) {
+        this.goToExercise(setCount + 1, reps, null, 0, false);
       }
     }
   };
@@ -345,6 +338,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     currentExerciseIndex,
     rest = false
   ) {
+    console.log('setCount: ',  setCount)
+    console.log('Reps: ',  reps)
     let {
       workoutSubCategory,
       fitnessLevel,
@@ -382,13 +377,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         );
       else this.handleFinish(reps, resistanceCategoryId, currentExerciseIndex);
     } else if (workout.workoutProcessType === "onlyOne") {
-      this.goToExercise(
-        setCount,
-        reps,
-        resistanceCategoryId,
-        currentExerciseIndex,
-        true
-      );
+      this.handleFinish(reps, resistanceCategoryId, currentExerciseIndex);
     }
   };
 
@@ -476,18 +465,51 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     } else {
       let { workout } = this.state;
       if (workout.workoutProcessType === "oneByOne") {
-        if (currentExerciseIndex < workout.exercises.length - 1)
-          this.goToExercise(1, reps, null, currentExerciseIndex + 1, false);
-        else {
+        if (this.checkFinished(currentExerciseIndex, setCount)) {
+          // console.log("update weekly targets")
+          this.updateWeekly();
+          appsFlyer.trackEvent("resistance_workout_complete");
+          this.workoutComplete(reps, this.state.resistanceCategoryId);
+        } else if (setCount === this.state.workout.workoutReps) {
           this.goToExercise(
-            workout.workoutReps,
+            1,
             reps,
-            null,
-            currentExerciseIndex,
-            false
+            this.state.resistanceCategoryId,
+            currentExerciseIndex + 1
           );
+        } else {
+          // console.log("Incresase count")
+          if (workout.rest && !this.state.rest) {
+            //for workout.rest === true
+            this.goToExercise(
+              setCount,
+              reps,
+              this.state.resistanceCategoryId,
+              currentExerciseIndex,
+              true
+            );
+          } else {
+            this.goToExercise(
+              setCount + 1,
+              reps,
+              this.state.resistanceCategoryId,
+              currentExerciseIndex
+            );
+          }
         }
       } else if (workout.workoutProcessType === "circular") {
+        if (currentExerciseIndex < workout.exercises.length - 1) {
+          this.goToExercise(
+            setCount,
+            reps,
+            null,
+            currentExerciseIndex + 1,
+            false
+          );
+        } else if (currentExerciseIndex === workout.exercises.length - 1) {
+          this.goToExercise(setCount + 1, reps, null, 0, false);
+        }
+      } else if (workout.workoutProcessType === "onlyOne") {
         if (currentExerciseIndex < workout.exercises.length - 1) {
           this.goToExercise(
             setCount,
@@ -506,7 +528,6 @@ export default class ExercisesScreenV2 extends React.PureComponent {
   prevExercise = (exerciseList, reps, currentExerciseIndex) => {
     // console.log(exerciseList, reps,currentExerciseIndex)
     let setCount = this.props.navigation.getParam("setCount", 1);
-
     let { workout } = this.state;
     if (workout.workoutProcessType === "oneByOne") {
       if (setCount > 1) {
@@ -518,10 +539,10 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           false
         );
       } else if (currentExerciseIndex > 0)
-        this.goToExercise(1, reps, null, currentExerciseIndex - 1, false);
+        this.goToExercise(workout.workoutReps, reps, null, currentExerciseIndex - 1, false);
       else {
         this.goToExercise(
-          workout.workoutReps,
+          2,
           reps,
           null,
           currentExerciseIndex,
@@ -529,6 +550,18 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         );
       }
     } else if (workout.workoutProcessType === "circular") {
+      if (currentExerciseIndex > 0) {
+        this.goToExercise(
+          setCount,
+          reps,
+          null,
+          currentExerciseIndex - 1,
+          false
+        );
+      } else if (currentExerciseIndex === 0 && setCount > 1) {
+        this.goToExercise(setCount - 1, reps, null, 0, false);
+      }
+    } else if (workout.workoutProcessType === "onlyOne") {
       if (currentExerciseIndex > 0) {
         this.goToExercise(
           setCount,
@@ -566,9 +599,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       return (
         <View style={styles.invisibleView}>
           <View style={styles.setCounter}>
-            <Text style={styles.setCounterText}>{`Set ${setCount} of ${
-              workout.workoutReps
-            } - ${this.repsInterval} ${rest ? "sec" : ""}`}</Text>
+            <Text style={styles.setCounterText}>{`Set ${setCount} of ${workout.workoutReps
+              } - ${this.repsInterval} ${rest ? "sec" : ""}`}</Text>
           </View>
         </View>
       );
@@ -588,7 +620,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         <View style={styles.invisibleView}>
           <View style={styles.setCounter}>
             <Text style={styles.setCounterText}>
-              Non Stop Until Time Runs Out
+              {`${setCount} / ${workout.workoutReps}`}
             </Text>
           </View>
         </View>
@@ -633,13 +665,21 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       rest,
       workout,
       restRandomImage,
+      interval,
       // isRunning
     } = this.state;
+
+    // console.log('currentExercise: ', currentExercise)
+    // console.log('currentExerciseIndex: ', currentExerciseIndex)
+    // console.log('totalDuration: ', totalDuration)
+    // console.log('interval: ', interval)
+    // console.log('rest: ', rest)
+
 
     const setCount = this.props.navigation.getParam("setCount", 1);
 
     let handleSkip = false;
-    if (workout.workoutProcessType !== "onlyOne" && !workout.count) {
+    if (!workout.count) {
       handleSkip = true;
     }
 
@@ -654,7 +694,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     ) {
       this.repsInterval =
         currentExercise["workIntervalMap"][String(setCount)][
-          String(fitnessLevel - 1)
+        String(fitnessLevel - 1)
         ];
     }
     if (
@@ -665,7 +705,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     ) {
       this.repsInterval =
         currentExercise["restIntervalMap"][String(setCount)][
-          String(fitnessLevel - 1)
+        String(fitnessLevel - 1)
         ];
     }
 
@@ -679,78 +719,147 @@ export default class ExercisesScreenV2 extends React.PureComponent {
 
     let showCT =
       currentExercise.coachingTip &&
-      currentExercise.coachingTip.length > 0 &&
-      !currentExercise.coachingTip.includes("none")
+        currentExercise.coachingTip.length > 0 &&
+        !currentExercise.coachingTip.includes("none")
         ? true
         : false;
 
     const workoutTimer = () => {
-      if (!workout.count && !rest)
-        return (
-          <WorkoutTimer
-            totalDuration={Number(totalDuration)}
-            start={timerStart}
-            handleFinish={() => {
-              if (!rest)
-                this.restControl(
-                  reps,
-                  resistanceCategoryId,
-                  currentExerciseIndex
-                );
-              else
-                this.handleFinish(
-                  reps,
-                  resistanceCategoryId,
-                  currentExerciseIndex
-                );
-            }}
-            customContainerStyle={{
-              marginTop: 0,
-              paddingTop: 5,
-              height: 50,
-              paddingBottom: 5,
-              backgroundColor: colors.white,
-            }}
-            customTextStyle={{
-              color: colors.black,
-              fontFamily: fonts.bold,
-            }}
-          />
-        );
-      else if (rest)
-        return (
-          <WorkoutTimer
-            totalDuration={totalDuration}
-            start={timerStart}
-            handleFinish={() => {
-              if (!rest)
-                this.restControl(
-                  reps,
-                  resistanceCategoryId,
-                  currentExerciseIndex
-                );
-              else
-                this.handleFinish(
-                  reps,
-                  resistanceCategoryId,
-                  currentExerciseIndex
-                );
-            }}
-            customContainerStyle={{
-              marginTop: 0,
-              paddingTop: 10,
-              height: 75,
-              paddingBottom: 10,
-              backgroundColor: colors.white,
-            }}
-            customTextStyle={{
-              color: colors.black,
-              fontFamily: fonts.bold,
-            }}
-          />
-        );
-      else if (workout.count && !rest)
-        return <View style={styles.containerEmptyBlackBox}></View>;
+      if (interval) {
+        if (!workout.count && !rest)
+          return (
+            <WorkoutTimer
+              totalDuration={Number(currentExercise.duration)}
+              start={timerStart}
+              handleFinish={() => {
+                if (!rest)
+                  this.restControl(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+                else
+                  this.handleFinish(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+              }}
+              customContainerStyle={{
+                marginTop: 0,
+                paddingTop: 5,
+                height: 50,
+                paddingBottom: 5,
+                backgroundColor: colors.white,
+              }}
+              customTextStyle={{
+                color: colors.black,
+                fontFamily: fonts.bold,
+              }}
+            />
+          );
+        else if (rest)
+          return (
+            <WorkoutTimer
+              totalDuration={currentExercise.duration}
+              start={timerStart}
+              handleFinish={() => {
+                if (!rest)
+                  this.restControl(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+                else
+                  this.handleFinish(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+              }}
+              customContainerStyle={{
+                marginTop: 0,
+                paddingTop: 10,
+                height: 75,
+                paddingBottom: 10,
+                backgroundColor: colors.white,
+              }}
+              customTextStyle={{
+                color: colors.black,
+                fontFamily: fonts.bold,
+              }}
+            />
+          );
+        else if (workout.count && !rest)
+          return <View style={styles.containerEmptyBlackBox}></View>;
+      } else {
+        if (!workout.count && !rest)
+          return (
+            <WorkoutTimer
+              totalDuration={Number(totalDuration)}
+              start={timerStart}
+              handleFinish={() => {
+                if (!rest)
+                  this.restControl(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+                else
+                  this.handleFinish(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+              }}
+              customContainerStyle={{
+                marginTop: 0,
+                paddingTop: 5,
+                height: 50,
+                paddingBottom: 5,
+                backgroundColor: colors.white,
+              }}
+              customTextStyle={{
+                color: colors.black,
+                fontFamily: fonts.bold,
+              }}
+            />
+          );
+        else if (rest)
+          return (
+            <WorkoutTimer
+              totalDuration={totalDuration}
+              start={timerStart}
+              handleFinish={() => {
+                if (!rest)
+                  this.restControl(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+                else
+                  this.handleFinish(
+                    reps,
+                    resistanceCategoryId,
+                    currentExerciseIndex
+                  );
+              }}
+              customContainerStyle={{
+                marginTop: 0,
+                paddingTop: 10,
+                height: 75,
+                paddingBottom: 10,
+                backgroundColor: colors.white,
+              }}
+              customTextStyle={{
+                color: colors.black,
+                fontFamily: fonts.bold,
+              }}
+            />
+          );
+        else if (workout.count && !rest)
+          return <View style={styles.containerEmptyBlackBox}></View>;
+      }
     };
 
     return (
@@ -780,9 +889,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
             {!rest && (
               <Video
                 source={{
-                  uri: `${FileSystem.cacheDirectory}exercise-${
-                    currentExerciseIndex + 1
-                  }.mp4`,
+                  uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex + 1
+                    }.mp4`,
                 }}
                 rate={1.0}
                 volume={1.0}
@@ -811,9 +919,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
 
           <View style={styles.currentExerciseTextContainer}>
             {workoutTimer()}
-            <Text style={styles.currentExerciseTextCount}>{`Exercise ${
-              currentExerciseIndex + 1
-            } of ${exerciseList.length}`}</Text>
+            <Text style={styles.currentExerciseTextCount}>{`Exercise ${currentExerciseIndex + 1
+              } of ${exerciseList.length}`}</Text>
             <View style={styles.currentExerciseNameTextContainer}>
               <TextTicker
                 style={styles.currentExerciseNameText}
@@ -850,12 +957,12 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 handleSkip
                   ? this.skipExercise
                   : () => {
-                      this.handleFinish(
-                        reps,
-                        resistanceCategoryId,
-                        currentExerciseIndex
-                      );
-                    }
+                    this.handleFinish(
+                      reps,
+                      resistanceCategoryId,
+                      currentExerciseIndex
+                    );
+                  }
               }
               onPlayPause={videoPaused ? this.handleUnpause : this.handlePause}
             />

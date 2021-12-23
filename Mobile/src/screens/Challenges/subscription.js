@@ -42,6 +42,8 @@ class ChallengeSubscriptionScreen extends Component {
       chosenDate: new Date(),
       selectedChallengeIndex: null,
       addingToCalendar: false,
+      quit: false,
+      completedChallenge: false
     };
   }
 
@@ -55,6 +57,9 @@ class ChallengeSubscriptionScreen extends Component {
         this.props.navigation.navigate("Calendar");
       }
     });
+    console.log('completedChallengeSubscription: ', this.props.navigation.getParam("completedChallenge"))
+    this.setState({quit: this.props.navigation.getParam("quit")})
+    this.setState({completedChallenge: this.props.navigation.getParam("completedChallenge")})
   }
 
   componentDidMount = () => {
@@ -122,7 +127,8 @@ class ChallengeSubscriptionScreen extends Component {
   };
 
   addChallengeToUser(index) {
-    let { userData, challengesList } = this.state;
+    let { userData, challengesList, quit, completedChallenge } = this.state;
+    console.log('quit: ', quit)
     const userRef = db
       .collection("users")
       .doc(userData.id)
@@ -271,6 +277,7 @@ class ChallengeSubscriptionScreen extends Component {
   };
 
   onBoarding(challengeData, btnTitle, btnDisabled) {
+    const {quit, completedChallenge} = this.state;
     if (btnDisabled) {
       if (btnTitle === "Active") this.props.navigation.navigate("Calendar");
       else if (challengeData.isSchedule) {
@@ -294,7 +301,9 @@ class ChallengeSubscriptionScreen extends Component {
         data: {
           challengeData,
         },
-        challengeOnboard: true
+        challengeOnboard: true,
+        quit,
+        completedChallenge,
       });
     }
   }
@@ -406,7 +415,7 @@ class ChallengeSubscriptionScreen extends Component {
     const data = createUserChallengeData(ChallengeData, new Date(selectedDate));
     // console.log(data.startDate , selectedDate);
     if (moment(selectedDate).isSame(TODAY, "d")) {
-      Object.assign(data, { status: "Active" });
+      Object.assign(data, { isSchedule: true, status: "Active" });
     } else {
       Object.assign(data, { isSchedule: true, status: "InActive" });
     }

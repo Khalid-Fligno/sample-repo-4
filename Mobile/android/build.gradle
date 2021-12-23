@@ -4,8 +4,8 @@ buildscript {
     ext {
         buildToolsVersion = "29.0.3"
         minSdkVersion = 21
-        compileSdkVersion = 29
-        targetSdkVersion = 29
+        compileSdkVersion = 30
+        targetSdkVersion = 30
         glideVersion = "4.11.0" 
         supportLibVersion = "29.0.0"
 		androidXAnnotation = "1.1.0"

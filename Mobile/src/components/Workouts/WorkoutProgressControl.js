@@ -56,12 +56,11 @@ export default WorkoutProgressControl = ({
     array = new Array(rounds).fill(undefined).map((val, idx) => idx);
   }
 
-  console.log("ExerciseList: ", exerciseList[currentExerciseIndex]);
-  console.log("Current Index: ", currentExerciseIndex);
-  console.log("Workout reps: ", workoutReps);
-  console.log("Workout process type: ", workout.workoutProcessType);
-  console.log("Last exercise: ", lastExercise);
-
+  // console.log("ExerciseList: ", exerciseList[currentExerciseIndex]);
+  // console.log("Current Index: ", currentExerciseIndex);
+  // console.log("Workout reps: ", workoutReps);
+  //  console.log("Workout process type: ", workout.workoutProcessType);
+  // console.log("Last exercise: ", lastExercise);
   const nextExerciseText = () => {
     if (exerciseList && currentExerciseIndex < exerciseList.length - 1) {
       return (
@@ -96,14 +95,16 @@ export default WorkoutProgressControl = ({
   };
 
   const prevExerciseText = () => {
-    if (currentSet > 1) {
+    if (currentSet > 1 && exerciseList[currentExerciseIndex].type ==='warmUp') {
       return (
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
           style={styles.buttonTextInfo}
         >
-          {exerciseList[currentExerciseIndex].displayName}
+          {willGoBack
+            ? exerciseList[currentExerciseIndex].displayName
+            : exerciseList[currentExerciseIndex - 1].displayName}
         </Text>
       );
     } else if (currentExerciseIndex > 0) {
@@ -114,8 +115,8 @@ export default WorkoutProgressControl = ({
           style={styles.buttonTextInfo}
         >
           {willGoBack
-            ? exerciseList[currentExerciseIndex - 1].displayName
-            : exerciseList[currentExerciseIndex].displayName}
+            ? exerciseList[currentExerciseIndex].displayName
+            : exerciseList[currentExerciseIndex - 1].displayName}
         </Text>
       );
     } else {
@@ -153,7 +154,13 @@ export default WorkoutProgressControl = ({
           size={50}
           color={!isPrevButtonDisabled() ? colors.black : colors.smoke}
         />
+        {workout.workoutProcessType =='circular' &&(
         <Text style={styles.buttonTextTitle}>Previous Exercise</Text>
+        )}
+        
+        {workout.workoutProcessType !='circular' &&(
+        <Text style={styles.buttonTextTitle}>Previous Set</Text>
+        )}
         {prevExerciseText()}
       </TouchableOpacity>
       <View style={{ width: "5%" }} />
@@ -177,7 +184,14 @@ export default WorkoutProgressControl = ({
           size={50}
           color={true ? colors.black : colors.smoke}
         />
+        {workout.workoutProcessType =='circular' &&(
         <Text style={styles.buttonTextTitle}>Next Exercise</Text>
+        )}
+
+        {workout.workoutProcessType !='circular' &&(
+        <Text style={styles.buttonTextTitle}>Next Set</Text>
+        )}
+
         {nextExerciseText()}
       </TouchableOpacity>
       <View />

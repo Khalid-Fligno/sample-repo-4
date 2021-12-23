@@ -41,7 +41,7 @@ const globalStyle = StyleSheet.create({
   bigHeadingWithBackButtonText: {
     fontSize: 12,
     fontFamily: fonts.StyreneAWebRegular,
-    color: colors.back,
+    color: colors.black,
     marginLeft: 5,
     textTransform: "uppercase",
   },
