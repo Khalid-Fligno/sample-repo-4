@@ -154,17 +154,17 @@ export default class FeedScreen extends React.PureComponent {
   }
 
   fetchBlogs = async (tag, currentDay, phaseData) => {
-    // console.log(tag,currentDay)
     let data = phaseData.displayName;
     let phase = data.toLowerCase();
+    let phaseTag = phase.concat("-",tag);
     const snapshot = await db
       .collection("blogs")
-      .where("tags", "array-contains", phase)
+      .where("tags","array-contains", phaseTag)
       .get();
     let blogs = [];
     const cDay = currentDay === 1 ? 2 : currentDay;
     snapshot.forEach((doc) => {
-      // if (doc.data().startDay <= cDay && doc.data().endDay >= cDay)
+       if (doc.data().startDay <= cDay && doc.data().endDay >= cDay)
       blogs.unshift(doc.data());
     });
     this.setState({ blogs, loading: false });
@@ -261,7 +261,6 @@ export default class FeedScreen extends React.PureComponent {
       todayRcWorkout,
       trainers
     } = this.state;
-
     let array = trainers;
     let recommendedWorkout = [];
     dayOfWeek > 0 && dayOfWeek < 6
@@ -550,6 +549,7 @@ export default class FeedScreen extends React.PureComponent {
               </View>
               <View style={{ flex: 1, alignItems: "center", }}>
                 <View style={{}}>
+
                   <FlatList
                     horizontal
                     data={blogs}
@@ -566,7 +566,7 @@ export default class FeedScreen extends React.PureComponent {
                         >
                           <Image
                             style={{
-                              overflow: "hidden",
+                              overflow:'hidden',
                               width: 250,
                               height: 350,
                               borderRadius: 10,
@@ -576,8 +576,10 @@ export default class FeedScreen extends React.PureComponent {
                             }}
                             resizeMode="cover"
                           />
-                          <View style={{alignItems:'flex-start',paddingTop: 40}}>
+                          <View style={{alignItems:'flex-start',paddingTop: 40,width: 250}}>
                           <Text
+                              ellipsizeMode='tail'
+                              numberOfLines={2}
                               style={{
                                 fontSize: wp("3.5%"),
                                 fontFamily: fonts.bold,

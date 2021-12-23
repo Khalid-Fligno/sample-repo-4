@@ -95,14 +95,16 @@ export default WorkoutProgressControl = ({
   };
 
   const prevExerciseText = () => {
-    if (currentSet > 1) {
+    if (currentSet > 1 && exerciseList[currentExerciseIndex].type ==='warmUp') {
       return (
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
           style={styles.buttonTextInfo}
         >
-          {exerciseList[currentExerciseIndex].displayName}
+          {willGoBack
+            ? exerciseList[currentExerciseIndex].displayName
+            : exerciseList[currentExerciseIndex - 1].displayName}
         </Text>
       );
     } else if (currentExerciseIndex > 0) {
@@ -113,8 +115,8 @@ export default WorkoutProgressControl = ({
           style={styles.buttonTextInfo}
         >
           {willGoBack
-            ? exerciseList[currentExerciseIndex - 1].displayName
-            : exerciseList[currentExerciseIndex].displayName}
+            ? exerciseList[currentExerciseIndex].displayName
+            : exerciseList[currentExerciseIndex - 1].displayName}
         </Text>
       );
     } else {
