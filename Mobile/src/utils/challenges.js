@@ -91,8 +91,8 @@ export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserDa
     if (snapshot.docs.length === 0) {
       return [];
     } else {
-      return snapshot.docs.map((res) => res.data());
-      // return todayRcWorkouts.length === 1 ? todayRcWorkouts[0] : todayRcWorkouts
+      // return snapshot.docs.map((res) => res.data());
+      return todayRcWorkouts.length === 1 ? todayRcWorkouts[0] : todayRcWorkouts
     }
   } else {
     console.log("????", workoutData)
