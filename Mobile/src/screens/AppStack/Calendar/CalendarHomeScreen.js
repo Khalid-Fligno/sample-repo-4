@@ -331,53 +331,62 @@ class CalendarHomeScreen extends React.PureComponent {
   loadExercises = async (workoutData) => {
     this.setState({ loadingExercises: true });
 
-    let workouts = [];
+      const functionThatReturnsAPromise = item => {
+          return Promise.resolve(item);
+      };
 
-    workoutData.map(async(dataWorkout, i) => {
-      let uniqueWarmUpExercises = [...new Set(dataWorkout.warmUpExercises)];
+      const doSomethingAsync = async item => {
+          let uniqueWarmUpExercises = [...new Set(item.warmUpExercises)];
 
-      Object.assign(dataWorkout, {
-        warmUpExercises: uniqueWarmUpExercises
-      });
+          Object.assign(item, {
+              warmUpExercises: uniqueWarmUpExercises
+          });
 
-      const workout = await loadExercise(dataWorkout);
+          const workout = await loadExercise(item);
 
-      if (workout && workout.newWorkout) {
+          if (workout && workout.newWorkout) {
 
-        const warmUpExercises = await downloadExerciseWC(
-            workout,
-            Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array") > -1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => { return warmUpExercise }),
-            workout.warmUpExerciseModel,
-            "warmUp"
-        );
-        if (warmUpExercises.length > 0) {
-          const coolDownExercises = await downloadExerciseWC(
-              workout,
-              workout.coolDownExercises,
-              workout.coolDownExerciseModel,
-              "coolDown"
-          );
-          if (coolDownExercises.length > 0) {
-            const newWorkout = Object.assign({}, workout, {
-              warmUpExercises: warmUpExercises,
-              coolDownExercises: coolDownExercises,
-            });
-            workouts.push(workout);
+              const warmUpExercises = await downloadExerciseWC(
+                  workout,
+                  Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array") > -1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => { return warmUpExercise }),
+                  workout.warmUpExerciseModel,
+                  "warmUp"
+              );
+              if (warmUpExercises.length > 0) {
+                  const coolDownExercises = await downloadExerciseWC(
+                      workout,
+                      workout.coolDownExercises,
+                      workout.coolDownExerciseModel,
+                      "coolDown"
+                  );
+                  if (coolDownExercises.length > 0) {
+                      const newWorkout = Object.assign({}, workout, {
+                          warmUpExercises: warmUpExercises,
+                          coolDownExercises: coolDownExercises,
+                      });
+                      return functionThatReturnsAPromise(newWorkout)
+                  } else {
+                      this.setState({ loadingExercises: false });
+                      Alert.alert("Alert!", "Something went wrong!");
+                  }
+              } else {
+                  this.setState({ loadingExercises: false });
+                  Alert.alert("Alert!", "Something went wrong!");
+              }
+          } else if (workout) {
+              return functionThatReturnsAPromise(workout)
           } else {
-            this.setState({ loadingExercises: false });
-            Alert.alert("Alert!", "Something went wrong!");
+              this.setState({ loadingExercises: false });
           }
-        } else {
-          this.setState({ loadingExercises: false });
-          Alert.alert("Alert!", "Something went wrong!");
-        }
-      } else if (workout) {
-        workouts.push(workout);
-      } else {
-        this.setState({ loadingExercises: false });
-      }
-      if (i === workoutData.length - 1) this.goToNext(workouts);
-    });
+      };
+
+      const getData = async () => {
+          return Promise.all(workoutData.map(item => doSomethingAsync(item)))
+      };
+
+      getData().then(data => {
+          this.goToNext(data);
+      });
 
     // let uniqueWarmUpExercises = [...new Set(workoutData.warmUpExercises)];
     //
@@ -426,17 +435,32 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async goToNext(workout) {
     console.log(">>here");
-    // if (
-    //   this.currentChallengeDay === 1 &&
-    //   !this.state.initialBurpeeTestCompleted
-    // ) {
-    //   await FileSystem.downloadAsync(
-    //     "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
-    //     `${FileSystem.cacheDirectory}exercise-burpees.mp4`
-    //   );
-    // }
-    // const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
-    // this.setState({ loadingExercises: false });
+    let newWrkouts = [];
+    if (
+      this.currentChallengeDay === 1 &&
+      !this.state.initialBurpeeTestCompleted
+    ) {
+      await FileSystem.downloadAsync(
+        "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+        `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+      );
+    }
+    const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
+    this.setState({ loadingExercises: false });
+    workout.map((wrkout) => {
+      if (this.currentChallengeDay > 0) {
+        Object.assign(wrkout, {
+          displayName: `${wrkout.displayName} - Day ${this.currentChallengeDay}`,
+        });
+        newWrkouts.push(wrkout);
+      }
+    });
+
+    this.props.navigation.navigate("WorkoutInfo", {
+      newWrkouts,
+      fitnessLevel,
+      extraProps: { fromCalender: true }
+    });
     // if (this.currentChallengeDay > 0) {
     //   Object.assign(workout, {
     //     displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
