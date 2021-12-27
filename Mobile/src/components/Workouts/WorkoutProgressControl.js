@@ -26,6 +26,7 @@ export default WorkoutProgressControl = ({
   onRestart,
   fitnessLevel,
   lastExercise,
+  
 }) => {
   const [willGoBack, setWillGoBack] = useState(true);
 
@@ -61,6 +62,7 @@ export default WorkoutProgressControl = ({
   // console.log("Workout reps: ", workoutReps);
   //  console.log("Workout process type: ", workout.workoutProcessType);
   // console.log("Last exercise: ", lastExercise);
+  console.log(currentSet)
   const nextExerciseText = () => {
     if (exerciseList && currentExerciseIndex < exerciseList.length - 1) {
       return (
@@ -154,13 +156,24 @@ export default WorkoutProgressControl = ({
           size={50}
           color={!isPrevButtonDisabled() ? colors.black : colors.smoke}
         />
-        {workout.workoutProcessType =='circular' &&(
+        {workout.workoutProcessType !='circular' && exerciseList[currentExerciseIndex].type ==='warmUp' &&(
         <Text style={styles.buttonTextTitle}>Previous Exercise</Text>
         )}
         
-        {workout.workoutProcessType !='circular' &&(
+        {workout.workoutProcessType !='circular' && exerciseList[currentExerciseIndex].type !='warmUp'
+        && exerciseList[currentExerciseIndex].type !='coolDown'
+        &&(
         <Text style={styles.buttonTextTitle}>Previous Set</Text>
         )}
+        {workout.workoutProcessType ==='circular' &&(
+        <Text style={styles.buttonTextTitle}>Previous Exercise</Text>
+        )}
+        {workout.workoutProcessType !='circular' && exerciseList[currentExerciseIndex].type ==='coolDown'
+        &&(
+        <Text style={styles.buttonTextTitle}>Previous Exercise</Text>
+        )}
+
+
         {prevExerciseText()}
       </TouchableOpacity>
       <View style={{ width: "5%" }} />
@@ -184,13 +197,31 @@ export default WorkoutProgressControl = ({
           size={50}
           color={true ? colors.black : colors.smoke}
         />
-        {workout.workoutProcessType =='circular' &&(
+        {workout.workoutProcessType !='circular' && exerciseList[currentExerciseIndex].type ==='warmUp' &&(
         <Text style={styles.buttonTextTitle}>Next Exercise</Text>
         )}
 
-        {workout.workoutProcessType !='circular' &&(
+        {workout.workoutProcessType !='circular' && exerciseList[currentExerciseIndex].type ==='coolDown'
+        &&(
+        <Text style={styles.buttonTextTitle}>Next Exercise</Text>
+        )}
+
+        {workout.workoutProcessType !='circular' && exerciseList[currentExerciseIndex].type !='warmUp'
+        && currentSet != 3 && exerciseList[currentExerciseIndex].type !='coolDown'
+        &&(
         <Text style={styles.buttonTextTitle}>Next Set</Text>
         )}
+
+       {workout.workoutProcessType !='circular' && exerciseList[currentExerciseIndex].type !='warmUp' 
+        && currentSet === 3 && exerciseList[currentExerciseIndex].type !='coolDown'
+       &&(
+        <Text style={styles.buttonTextTitle}>Next Exercise</Text>
+        )}
+
+        {workout.workoutProcessType ==='circular' &&(
+        <Text style={styles.buttonTextTitle}>Next Exercise</Text>
+        )}
+
 
         {nextExerciseText()}
       </TouchableOpacity>
