@@ -37,6 +37,7 @@ export const getCurrentPhase = (data, currentDate1) => {
     const isBetween = moment(currentDate).isBetween(el.startDate, el.endDate, undefined, '[]')
     // console.log("????/////",isBetween)
     if (isBetween) {
+      console.log('El: ', el)
       phase = el
     }
   });
@@ -98,9 +99,9 @@ export const fetchRecipeData = async (challengeRecipe) => {
     const level2P1 = challengeRecipe[0].level2[0].phases[0].meals
     const level2P2 = challengeRecipe[0].level2[0].phases[1].meals
     const level2P3 = challengeRecipe[0].level2[0].phases[2].meals
-    const level3P1 = challengeRecipe[0].level3[0].phases[0].meals
-    const level3P2 = challengeRecipe[0].level3[0].phases[1].meals
-    const level3P3 = challengeRecipe[0].level3[0].phases[2].meals
+    // const level3P1 = challengeRecipe[0].level3[0].phases[0].meals
+    // const level3P2 = challengeRecipe[0].level3[0].phases[1].meals
+    // const level3P3 = challengeRecipe[0].level3[0].phases[2].meals
 
     level1P1.forEach((el) => recipe.push(el))
     level1P2.forEach((el) => recipe.push(el))
@@ -108,9 +109,9 @@ export const fetchRecipeData = async (challengeRecipe) => {
     level2P1.forEach((el) => recipe.push(el))
     level2P2.forEach((el) => recipe.push(el))
     level2P3.forEach((el) => recipe.push(el))
-    level3P1.forEach((el) => recipe.push(el))
-    level3P2.forEach((el) => recipe.push(el))
-    level3P3.forEach((el) => recipe.push(el))
+    // level3P1.forEach((el) => recipe.push(el))
+    // level3P2.forEach((el) => recipe.push(el))
+    // level3P3.forEach((el) => recipe.push(el))
 
     const recipeRef = db.collection('recipes');
     const snapshot = await recipeRef.get();
@@ -165,10 +166,16 @@ export const fetchRecipeData = async (challengeRecipe) => {
 export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) => {
   // const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
   let phaseMeals = []
+  let resultPhaseMeal = []
+  let breakfastResult = []
+  let lunchResult = []
+
+  let phaseName = phaseData.displayName
+  let data = phaseData.meals;
+  const recipeRef = db.collection('recipes');
+  const snapshot = await recipeRef.get();
+
   if (activeChallengeData && activeChallengeData.newChallenge) {
-    let data = phaseData.meals;
-    const recipeRef = db.collection('recipes');
-    const snapshot = await recipeRef.get();
     if (snapshot.empty) {
       return null
     } else {
@@ -178,6 +185,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
         }
       })
     }
+
   }
   else {
     const recipeRef = db.collection('recipes')
@@ -190,6 +198,37 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
     });
   }
 
+  phaseMeals.forEach((resMeals) => {
+    resMeals.types.forEach((resType) => {
+      if (resType === 'breakfast') {
+        snapshot.forEach((res) => {
+          if (resMeals.breakfast === res.data().breakfast) {
+            res.data().tags.forEach((resTags) => {
+              if (phaseName === resTags) {
+                breakfastResult.push(res.data())
+                // console.log('Res: ', res.data())
+              }
+            })
+          }
+        })
+      }
+      if (resType === 'lunch') {
+        snapshot.forEach((res) => {
+          if (resMeals.lunch === res.data().lunch) {
+            res.data().tags.forEach((resTags) => {
+              if (phaseName === resTags) {
+                lunchResult.push(res.data())
+                // console.log('Res: ', res.data())
+              }
+            })
+          }
+        })
+      }
+    })
+  })
+
+  // console.log('Final Result: ', phaseMeals)
+
   const challengeMealsFilterList = phaseMeals.map((res) => res.id)
 
   // const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
@@ -201,8 +240,6 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
   const preworkoutList = phaseMeals.filter((res) => res.preworkout)
   const treatsList = phaseMeals.filter((res) => res.treats)
 
-
-
   const recommendedMeal = [{
     breakfast: breakfastList,
     snack: snackList,
@@ -212,7 +249,14 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
     preworkout: preworkoutList,
     treats: treatsList
   }]
+
+  const recommendedRecipe = [{
+    breakfast: breakfastResult,
+    lunch: lunchResult,
+  }]
+
   return {
+    recommendedRecipe,
     recommendedMeal,
     challengeMealsFilterList
   }

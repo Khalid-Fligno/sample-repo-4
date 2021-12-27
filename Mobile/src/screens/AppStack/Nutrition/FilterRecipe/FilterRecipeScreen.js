@@ -56,12 +56,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
             category: [],
             nameCat: [],
             levelText: "",
+            todayRecommendedRecipe: []
         };
     }
 
     onFocusFunction() {
         this.setState({ loading: true });
         this.setState({
+            todayRecommendedRecipe: this.props.navigation.getParam("todayRecommendedRecipe", null),
             challengeRecipe: this.props.navigation.getParam("challengeAllRecipe", null),
             data: this.props.navigation.getParam("allRecipeData", null),
             allData: this.props.navigation.getParam("recipes", null),
@@ -78,6 +80,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
         const { navigation } = this.props;
         navigation.pop();
     };
+
+
 
     toggleModal = () => {
         this.setState({ isClickVisible: !this.state.isClickVisible });
@@ -255,7 +259,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         const phaseList = sortBy(phases).filter((phase) => {
             if (this.state.phase1 === true) {
-                if (phase.displayName === 'Phase1') {
+                if (phase.displayName === 'P1') {
                     var resList = []
                     recipeList.forEach((el) => {
                         resList.push(el.id)
@@ -278,7 +282,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 }
             }
             if (this.state.phase2 === true) {
-                if (phase.displayName === 'Phase2') {
+                if (phase.displayName === 'P2') {
                     var resList = []
                     recipeList.forEach((el) => {
                         resList.push(el.id)
@@ -301,7 +305,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 }
             }
             if (this.state.phase3 === true) {
-                if (phase.displayName === 'Phase3') {
+                if (phase.displayName === 'P3') {
                     var resList = []
                     recipeList.forEach((el) => {
                         resList.push(el.id)
@@ -522,9 +526,21 @@ export default class FilterRecipeScreen extends React.PureComponent {
     keyExtractor = (index) => String(index);
 
     render() {
-        const { recipes, data, allData, challengeRecipe, levelButtonData, tags, nameCat, title } = this.state
+        const {
+            recipes,
+            data,
+            allData,
+            challengeRecipe,
+            levelButtonData,
+            tags,
+            nameCat,
+            title,
+            todayRecommendedRecipe
+        } = this.state
+
 
         const tagList = []
+        const tagger = []
 
         for (var i = 0; i < allData.length; i++) {
             data.map(list => {
@@ -533,6 +549,32 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 }
             })
         }
+        const tagss = []
+
+        todayRecommendedRecipe.forEach((res) => {
+            res.tags.forEach((tag) => {
+                if (tag === 'L1') tagss.push(tag)
+                if (tag === 'L2') tagss.push(tag)
+                if (tag === 'L3') tagss.push(tag)
+                if (tag === 'P1') tagss.push(tag)
+                if (tag === 'P2') tagss.push(tag)
+                if (tag === 'P3') tagss.push(tag)
+
+            })
+        })
+
+        var arr = tagss.concat()
+        var sorted_arr = tagss.sort();
+        var results = [];
+        for (var i = 0; i < arr.length; i++) {
+            if (sorted_arr[i + 1] == sorted_arr[i]) {
+                results.push(sorted_arr[i])
+            }
+        }
+
+        const uniq = [...new Set(results)]
+
+        console.log('Uniq: ', uniq)
 
         const phaseData = levelButtonData[0]
 
@@ -578,9 +620,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 <ScrollView
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
-                    // style={{
-                    //     paddingVertical: wp("3%"),
-                    // }}
+                // style={{
+                //     paddingVertical: wp("3%"),
+                // }}
                 >
                     <View
                         style={{ flexDirection: 'row', marginVertical: 10, marginBottom: 20, top: 0, height: 20 }}
@@ -629,36 +671,36 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     </View>
                 </ScrollView>
                 {
-                    tagList.length > 0 
-                    ? 
-                    <FlatList
-                        contentContainerStyle={styles.scrollView}
-                        data={tagList}
-                        keyExtractor={(res) => res.id}
-                        renderItem={(item) => this.renderItem(item)}
-                        showsVerticalScrollIndicator={false}
-                        removeClippedSubviews={false}
-                    /> 
-                    : 
-                    <View 
-                        style={{
-                            height: hp('65%'), 
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                    }}
-                    >
-                        <Text 
-                            style={{  
-                                textAlign: 'center',         
-                                fontSize: 15,
-                                fontFamily: fonts.bold,
-                                textTransform: 'uppercase',
+                    todayRecommendedRecipe.length > 0
+                        ?
+                        <FlatList
+                            contentContainerStyle={styles.scrollView}
+                            data={todayRecommendedRecipe}
+                            keyExtractor={(res) => res.id}
+                            renderItem={(item) => this.renderItem(item)}
+                            showsVerticalScrollIndicator={false}
+                            removeClippedSubviews={false}
+                        />
+                        :
+                        <View
+                            style={{
+                                height: hp('65%'),
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                             }}
                         >
-                            no recipes are available
-                        </Text>
-                    </View>
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    fontSize: 15,
+                                    fontFamily: fonts.bold,
+                                    textTransform: 'uppercase',
+                                }}
+                            >
+                                no recipes are available
+                            </Text>
+                        </View>
                 }
                 {
                     this.state.isFilterVisible && (
