@@ -55,7 +55,7 @@ export const getCurrentChallengeDay = (startDate, currentDate) => {
   // let startTime = new Date(startDate).getTime();
   // let currentTime = new Date(currentDate).getTime();
   // let currentDay = Math.round(( currentTime - startTime) / (1000 * 3600 * 24))+1
-  // return currentDay; 
+  // return currentDay;
 
   var b = moment(startDate);
   var a = moment(currentDate);
@@ -64,22 +64,35 @@ export const getCurrentChallengeDay = (startDate, currentDate) => {
 
 export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserData, selectedDate) => {
 
-  // let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime(); 
-  // // To calculate the no. of days between two dates 
+  // let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime();
+  // // To calculate the no. of days between two dates
   // let currentDay = Math.round(Difference_In_Time / (1000 * 3600 * 24))+1;
   // // console.log("???....",currentDay)
   var b = moment(activeChallengeUserData.startDate);
   var a = moment(selectedDate);
   let currentDay = a.diff(b, 'days') + 1;
+  let workoutIds = [];
+  let todayRcWorkouts = []
 
   const workoutData = workouts.find((res) => res.days.includes(currentDay));
+  workouts.map((workout) => {
+    workout.days.map((day) => {
+      if (day === currentDay) {
+        workoutIds.push(workout.id);
+      }
+    });
+  });
   if (workoutData && workoutData.id) {
     const programRef = db.collection('newWorkouts').where('id', '==', workoutData.id);
+    const programRefTwo = db.collection('newWorkouts').where('id', 'in', workoutIds);
     const snapshot = await programRef.get();
+    const snapshotTwo = await programRefTwo.get();
+    snapshotTwo.docs.map((res) => todayRcWorkouts.push(res.data()));
     if (snapshot.docs.length === 0) {
       return [];
     } else {
-      return snapshot.docs.map((res) => res.data());
+      // return snapshot.docs.map((res) => res.data());
+      return todayRcWorkouts.length === 1 ? todayRcWorkouts[0] : todayRcWorkouts
     }
   } else {
     console.log("????", workoutData)
@@ -98,9 +111,6 @@ export const fetchRecipeData = async (challengeRecipe) => {
     const level2P1 = challengeRecipe[0].level2[0].phases[0].meals
     const level2P2 = challengeRecipe[0].level2[0].phases[1].meals
     const level2P3 = challengeRecipe[0].level2[0].phases[2].meals
-    const level3P1 = challengeRecipe[0].level3[0].phases[0].meals
-    const level3P2 = challengeRecipe[0].level3[0].phases[1].meals
-    const level3P3 = challengeRecipe[0].level3[0].phases[2].meals
 
     level1P1.forEach((el) => recipe.push(el))
     level1P2.forEach((el) => recipe.push(el))
@@ -108,9 +118,6 @@ export const fetchRecipeData = async (challengeRecipe) => {
     level2P1.forEach((el) => recipe.push(el))
     level2P2.forEach((el) => recipe.push(el))
     level2P3.forEach((el) => recipe.push(el))
-    level3P1.forEach((el) => recipe.push(el))
-    level3P2.forEach((el) => recipe.push(el))
-    level3P3.forEach((el) => recipe.push(el))
 
     const recipeRef = db.collection('recipes');
     const snapshot = await recipeRef.get();
@@ -142,6 +149,8 @@ export const fetchRecipeData = async (challengeRecipe) => {
   recipeMeal.filter((res) => res.drink === true ? drinkActive.push(res) : null)
   recipeMeal.filter((res) => res.preworkout === true ? preworkoutActive.push(res) : null)
   recipeMeal.filter((res) => res.treats === true ? treatsActive.push(res) : null)
+
+  console.log('treatsActive: ', treatsActive)
 
   const recommendedRecipe = [{
     breakfast: breakfastActive,
@@ -181,7 +190,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
   }
   else {
     const recipeRef = db.collection('recipes')
-      .where("accessFilter", "array-contains", activeChallengeData.tag)
+        .where("accessFilter", "array-contains", activeChallengeData.tag)
     const snapshot = await recipeRef.get();
 
     snapshot.forEach(doc => {
@@ -366,10 +375,10 @@ export const subYearly = {
 //                           {mealTitle:'afternoon Snack',meal:'snack'}
 //                         ):{mealTitle:'afternoon Snack',meal:'snack'};
 
-  // const recommendedMeal = [
-  //     breakfast,
-  //     morningSnack,
-  //     lunch,
-  //     afternoonSnack,
-  //     dinner
-  // ]
+// const recommendedMeal = [
+//     breakfast,
+//     morningSnack,
+//     lunch,
+//     afternoonSnack,
+//     dinner
+// ]
