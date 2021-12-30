@@ -697,13 +697,6 @@ class CalendarHomeScreen extends React.PureComponent {
               loading: false,
             });
           }
-            (res) => {
-              this.setState({
-                todayRecommendedMeal: res.recommendedMeal,
-                challengeMealsFilterList: res.challengeMealsFilterList,
-                loading: false,
-              });
-            }
         );
 
         //TODO get recommended workout here
@@ -840,23 +833,6 @@ class CalendarHomeScreen extends React.PureComponent {
           filterPress={(res, res1, res2, title) => this.getToFilter(res, res1, res2, title)}
         />
       </>
-        <>
-          <Text style={{
-            fontFamily: fonts.bold,
-            fontSize: wp("6.5%"),
-            color: colors.charcoal.dark,
-            marginVertical: wp("4%"),
-            marginLeft: wp("8%"),
-            textAlign: "left",
-            width: '100%'
-          }}>Today's Meals</Text>
-          <TodayMealsList
-              recipe={AllRecipe[0]}
-              data={todayRecommendedMeal[0]}
-              onPress={(res) => this.goToRecipe(res)}
-              filterPress={(res, res1, title) => this.getToFilter(res, res1, title)}
-          />
-        </>
     );
     const workoutCard = todayRcWorkout && showRC && (
         <>

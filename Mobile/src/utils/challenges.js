@@ -113,21 +113,6 @@ export const fetchRecipeData = async (challengeRecipe) => {
   // const treatsActive = []
 
   if (challengeRecipe) {
-    const recipe = []
-    const level1P1 = challengeRecipe[0].level1[0].phases[0].meals
-    const level1P2 = challengeRecipe[0].level1[0].phases[1].meals
-    const level1P3 = challengeRecipe[0].level1[0].phases[2].meals
-    const level2P1 = challengeRecipe[0].level2[0].phases[0].meals
-    const level2P2 = challengeRecipe[0].level2[0].phases[1].meals
-    const level2P3 = challengeRecipe[0].level2[0].phases[2].meals
-
-    level1P1.forEach((el) => recipe.push(el))
-    level1P2.forEach((el) => recipe.push(el))
-    level1P3.forEach((el) => recipe.push(el))
-    level2P1.forEach((el) => recipe.push(el))
-    level2P2.forEach((el) => recipe.push(el))
-    level2P3.forEach((el) => recipe.push(el))
-
     const recipeRef = db.collection('recipes');
     const snapshot = await recipeRef.get();
     const mealsId = challengeRecipe[0].level2[0].phases[0].meals
@@ -188,8 +173,6 @@ export const fetchRecipeData = async (challengeRecipe) => {
     })
   }
 
-  console.log('treatsActive: ', treatsActive)
-
   const recommendedRecipe = [{
     breakfast: breakfastActive,
     snack: snackActive,
@@ -202,10 +185,10 @@ export const fetchRecipeData = async (challengeRecipe) => {
 
   return {
     recommendedRecipe,
-    challengeAllMealsFilterList
   }
 
 }
+
 
 
 export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) => {
