@@ -69,6 +69,7 @@ class CalendarHomeScreen extends React.PureComponent {
       transformLevel: undefined,
       completeCha: undefined,
       todayRecommendedRecipe: undefined,
+      phaseDefaultTags: undefined,
     };
     this.calendarStrip = React.createRef();
   }
@@ -515,7 +516,6 @@ class CalendarHomeScreen extends React.PureComponent {
     }
   };
 
-
   async getCurrentPhaseInfo() {
     const { activeChallengeUserData, activeChallengeData } = this.state;
     if (activeChallengeUserData && activeChallengeData) {
@@ -541,8 +541,6 @@ class CalendarHomeScreen extends React.PureComponent {
           (res) => res.name === this.phase.name
         )[0];
 
-        console.log('PhaseData: ', this.phaseData)
-
         //TODO :calculate the workout completed till selected date
         this.totalChallengeWorkoutsCompleted =
           getTotalChallengeWorkoutsCompleted(
@@ -563,6 +561,7 @@ class CalendarHomeScreen extends React.PureComponent {
               todayRecommendedRecipe: res.recommendedRecipe,
               todayRecommendedMeal: res.recommendedMeal,
               challengeMealsFilterList: res.challengeMealsFilterList,
+              phaseDefaultTags: res.phaseDefaultTags,
               loading: false,
             });
           }
@@ -612,11 +611,13 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   getToFilter(data, data1, data2, title) {
-    const { challengeRecipe } = this.state
+    const { challengeRecipe, activeChallengeData, phaseDefaultTags } = this.state
 
-    console.log('todayRecommendedRecipe: ', data2)
+    // console.log('phaseDefaultTags: ', phaseDefaultTags.displayName)
 
     this.props.navigation.navigate('FilterRecipe', {
+      phaseDefaultTags: phaseDefaultTags.displayName,
+      defaultLevelTags: activeChallengeData.levelTags,
       todayRecommendedRecipe: data2,
       challengeAllRecipe: challengeRecipe[0],
       recipes: data,

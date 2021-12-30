@@ -56,14 +56,20 @@ export default class FilterRecipeScreen extends React.PureComponent {
             category: [],
             nameCat: [],
             levelText: "",
-            todayRecommendedRecipe: []
+            phaseText: "",
+            todayRecommendedRecipe: [],
+            defaultLevelTags: "",
+            phaseDefaultTags: "",
+            categoryName: []
         };
     }
 
     onFocusFunction() {
         this.setState({ loading: true });
+        this.getDefaultCategoryTags()
         this.setState({
-            todayRecommendedRecipe: this.props.navigation.getParam("todayRecommendedRecipe", null),
+            phaseDefaultTags: this.props.navigation.getParam('phaseDefaultTags', null),
+            defaultLevelTags: this.props.navigation.getParam("defaultLevelTags", null),
             challengeRecipe: this.props.navigation.getParam("challengeAllRecipe", null),
             data: this.props.navigation.getParam("allRecipeData", null),
             allData: this.props.navigation.getParam("recipes", null),
@@ -81,7 +87,32 @@ export default class FilterRecipeScreen extends React.PureComponent {
         navigation.pop();
     };
 
+    getDefaultCategoryTags = () => {
+        const recipeData = this.props.navigation.getParam("todayRecommendedRecipe", null)
+        const categoryName = []
 
+        recipeData.forEach((res) => {
+            res.tags.filter((item) => {
+                if (item === 'V') categoryName.push(item.replace('V', 'Vegan'))
+                if (item === 'V+') categoryName.push(item.replace('V+', 'Vegetarian'))
+                if (item === 'GF') categoryName.push(item.replace('GF', 'Gluta Free'))
+                if (item === 'DF') categoryName.push(item.replace('DF', 'Dairy Free'))
+                if (item === 'GH') categoryName.push(item.replace('GH', 'Gut Health'))
+            })
+        })
+
+        const uniq = [...new Set(categoryName)]
+
+        const result = []
+        uniq.forEach((res) => {
+            result.push({ name: res })
+        })
+
+        this.setState({
+            todayRecommendedRecipe: recipeData,
+            categoryName: result
+        })
+    }
 
     toggleModal = () => {
         this.setState({ isClickVisible: !this.state.isClickVisible });
@@ -175,7 +206,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             phase1: !this.state.phase1,
         })
         if (this.state.phase1 === false) {
-            this.setState({ phase: [...this.state.phase, { phaseTag: "P1" }] })
+            this.setState({ phase: [...this.state.phase, { phaseTag: "P1" }], phaseText: 'P1' })
         } else {
             this.setState({
                 phase: this.state.phase.filter((item) => {
@@ -190,7 +221,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             phase2: !this.state.phase2,
         })
         if (this.state.phase2 === false) {
-            this.setState({ phase: [...this.state.phase, { phaseTag: "P2" }] })
+            this.setState({ phase: [...this.state.phase, { phaseTag: "P2" }], phaseText: 'P2' })
         } else {
             this.setState({
                 phase: this.state.phase.filter((item) => {
@@ -205,7 +236,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             phase3: !this.state.phase3,
         })
         if (this.state.phase3 === false) {
-            this.setState({ phase: [...this.state.phase, { phaseTag: "P3" }] })
+            this.setState({ phase: [...this.state.phase, { phaseTag: "P3" }], phaseText: 'P3' })
         } else {
             this.setState({
                 phase: this.state.phase.filter((item) => {
@@ -247,87 +278,44 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.setState({ gutHealth: false })
     }
 
+    applyButton = (phases, data) => {
 
-    applyButton = (phases, datas) => {
-
-        const recipeList = []
+        const allData = []
         const tagList = []
 
-        datas.forEach(element => {
-            recipeList.push({ id: element.id, tags: element.tags })
-        });
 
-        const phaseList = sortBy(phases).filter((phase) => {
-            if (this.state.phase1 === true) {
-                if (phase.displayName === 'P1') {
-                    var resList = []
-                    recipeList.forEach((el) => {
-                        resList.push(el.id)
-                    })
-                    var arr = resList.concat(phase.meals);
-                    var sorted_arr = arr.sort();
-                    var results = [];
-                    for (var i = 0; i < arr.length; i++) {
-                        if (sorted_arr[i + 1] == sorted_arr[i]) {
-                            results.push({ id: sorted_arr[i] });
-                        }
-                    }
-                    for (var i = 0; i < results.length; i++) {
-                        recipeList.map(list => {
-                            if (list.id === results[i].id) {
-                                tagList.push(list)
-                            }
-                        })
+        phases.forEach((res) => {
+            res.tags.filter((resTags) => {
+                if (this.state.phase1 === true) {
+                    if (resTags === this.state.phaseText) {
+                        allData.push(res.id)
                     }
                 }
-            }
-            if (this.state.phase2 === true) {
-                if (phase.displayName === 'P2') {
-                    var resList = []
-                    recipeList.forEach((el) => {
-                        resList.push(el.id)
-                    })
-                    var arr = resList.concat(phase.meals);
-                    var sorted_arr = arr.sort();
-                    var results = [];
-                    for (var i = 0; i < arr.length; i++) {
-                        if (sorted_arr[i + 1] == sorted_arr[i]) {
-                            results.push({ id: sorted_arr[i] });
-                        }
-                    }
-                    for (var i = 0; i < results.length; i++) {
-                        recipeList.map(list => {
-                            if (list.id === results[i].id) {
-                                tagList.push(list)
-                            }
-                        })
+                if (this.state.phase2 === true) {
+                    if (resTags === this.state.phaseText) {
+                        allData.push(res.id)
                     }
                 }
-            }
-            if (this.state.phase3 === true) {
-                if (phase.displayName === 'P3') {
-                    var resList = []
-                    recipeList.forEach((el) => {
-                        resList.push(el.id)
-                    })
-                    var arr = resList.concat(phase.meals);
-                    var sorted_arr = arr.sort();
-                    var results = [];
-                    for (var i = 0; i < arr.length; i++) {
-                        if (sorted_arr[i + 1] == sorted_arr[i]) {
-                            results.push({ id: sorted_arr[i] });
-                        }
-                    }
-                    for (var i = 0; i < results.length; i++) {
-                        recipeList.map(list => {
-                            if (list.id === results[i].id) {
-                                tagList.push(list)
-                            }
-                        })
+                if (this.state.phase3 === true) {
+                    if (resTags === this.state.phaseText) {
+                        allData.push(res.id)
                     }
                 }
-            }
+            })
         })
+
+        const uniq = [...new Set(allData)]
+
+        for (var i = 0; i < uniq.length; i++) {
+            data.map(list => {
+                if (list.id === uniq[i]) {
+                    tagList.push(list)
+                }
+            })
+        }
+
+        console.log('Res: ', tagList)
+
 
         const recipeLists = sortBy(tagList).filter((recipe) => {
             for (let i = 0; i < recipe.tags.length; i++) {
@@ -357,7 +345,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     }
                 }
             }
-
         });
 
         const recipePhase = sortBy(tagList).filter((recipe) => {
@@ -381,7 +368,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         });
 
         this.setState({
-            allData: this.state.gutHealth || this.state.veganChecked || this.state.vegetarianChecked || this.state.glutaFree || this.state.dairyFree ? recipeLists : recipePhase,
+            todayRecommendedRecipe: this.state.gutHealth || this.state.veganChecked || this.state.vegetarianChecked || this.state.glutaFree || this.state.dairyFree ? recipeLists : recipePhase,
             isFilterVisible: false,
             isClickVisible: false,
             tags: [{ level: this.state.levelText, phase: this.state.phase }],
@@ -438,9 +425,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         )
     };
 
-    clickModal = (datas, data, recipes) => {
-
-        const phase = Object(datas).phases
+    clickModal = (datas, data) => {
 
         return (
             <Modal
@@ -459,7 +444,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     togglePhase1={() => this.togglePhase1()}
                     togglePhase2={() => this.togglePhase2()}
                     togglePhase3={() => this.togglePhase3()}
-                    applyButton={() => this.applyButton(phase, data, recipes)}
+                    applyButton={() => this.applyButton(datas, data)}
                     headerButton={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
                     backButton={() => this.setState({ isFilterVisible: true, isClickVisible: false })}
                     // backButton={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
@@ -469,7 +454,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
         )
     }
 
-    filterModal = (challengeRecipeData, phase, data) => {
+    filterModal = (challengeRecipeData, datas, data) => {
+
         return (
             <Modal
                 isVisible={this.state.isClickVisible ? !this.state.isFilterVisible : this.state.isFilterVisible}
@@ -517,7 +503,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     toggleDairyFree={() => this.toggleDairyFree()}
                     toggleGutHealth={() => this.toggleGutHealth()}
                     closeModal={() => this.closeModal()}
-                    applyButton={() => this.applyButton(phase, data)}
+                    applyButton={() => this.applyButton(datas, data)}
                 />
             </Modal>
         )
@@ -535,48 +521,27 @@ export default class FilterRecipeScreen extends React.PureComponent {
             tags,
             nameCat,
             title,
-            todayRecommendedRecipe
+            todayRecommendedRecipe,
+            defaultLevelTags,
+            phaseDefaultTags,
+            categoryName
         } = this.state
 
+        const phaseData = []
 
-        const tagList = []
-        const tagger = []
+        levelButtonData.forEach(res => {
+            data.forEach((resTags) => {
+                try {
+                    resTags.tags.filter((resId) => {
+                        if (res.levelTags === resId) {
+                            phaseData.push(resTags)
+                        }
+                    })
+                } catch (err) {
 
-        for (var i = 0; i < allData.length; i++) {
-            data.map(list => {
-                if (list.id === allData[i].id) {
-                    tagList.push(list)
                 }
             })
-        }
-        const tagss = []
-
-        todayRecommendedRecipe.forEach((res) => {
-            res.tags.forEach((tag) => {
-                if (tag === 'L1') tagss.push(tag)
-                if (tag === 'L2') tagss.push(tag)
-                if (tag === 'L3') tagss.push(tag)
-                if (tag === 'P1') tagss.push(tag)
-                if (tag === 'P2') tagss.push(tag)
-                if (tag === 'P3') tagss.push(tag)
-
-            })
         })
-
-        var arr = tagss.concat()
-        var sorted_arr = tagss.sort();
-        var results = [];
-        for (var i = 0; i < arr.length; i++) {
-            if (sorted_arr[i + 1] == sorted_arr[i]) {
-                results.push(sorted_arr[i])
-            }
-        }
-
-        const uniq = [...new Set(results)]
-
-        console.log('Uniq: ', uniq)
-
-        const phaseData = levelButtonData[0]
 
         return (
             <View style={globalStyle.container}>
@@ -628,7 +593,26 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         style={{ flexDirection: 'row', marginVertical: 10, marginBottom: 20, top: 0, height: 20 }}
                     >
                         {
-                            nameCat.map((cat, index) => (
+                            tags.length ?
+                                tags.map((item) => (
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            backgroundColor: '#e3e3e3',
+                                            borderRadius: 50,
+                                            marginRight: 7,
+                                        }}
+                                    >
+                                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>{item.level} - {item.phase.map((el) => el.phaseTag + ' ')}</Text>
+                                        <TouchableOpacity
+                                            onPress={() => { this.setState({ tags: this.state.tags.filter((item) => item.level !== item.level) }) }}
+                                        >
+                                            <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                ))
+                                :
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -637,36 +621,46 @@ export default class FilterRecipeScreen extends React.PureComponent {
                                         borderRadius: 50,
                                         marginRight: 7,
                                     }}
-                                    key={index}
                                 >
-                                    <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>{cat.name}</Text>
-                                    <TouchableOpacity
-                                        onPress={() => { this.setState({ nameCat: this.state.nameCat.filter((item) => item.name !== cat.name) }) }}
-                                    >
-                                        <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
-                                    </TouchableOpacity>
+                                    <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>{defaultLevelTags} - {phaseDefaultTags}</Text>
                                 </View>
-                            ))
                         }
                         {
-                            tags.map((item) => (
-                                <View
-                                    style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        backgroundColor: '#e3e3e3',
-                                        borderRadius: 50,
-                                        marginRight: 7,
-                                    }}
-                                >
-                                    <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>{item.level} - {item.phase.map((el) => el.phaseTag + ' ')}</Text>
-                                    <TouchableOpacity
-                                        onPress={() => { this.setState({ tags: this.state.tags.filter((item) => item.level !== item.level) }) }}
+                            nameCat.length ?
+                                nameCat.map((cat, index) => (
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            backgroundColor: '#e3e3e3',
+                                            borderRadius: 50,
+                                            marginRight: 7,
+                                        }}
+                                        key={index}
                                     >
-                                        <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
-                                    </TouchableOpacity>
-                                </View>
-                            ))
+                                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>{cat.name}</Text>
+                                        <TouchableOpacity
+                                            onPress={() => { this.setState({ nameCat: this.state.nameCat.filter((item) => item.name !== cat.name) }) }}
+                                        >
+                                            <Icon name='cross' size={8} color={colors.black} style={{ marginRight: 10 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                ))
+                                :
+                                categoryName.map((cat, index) => (
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            backgroundColor: '#e3e3e3',
+                                            borderRadius: 50,
+                                            marginRight: 7,
+                                        }}
+                                        key={index}
+                                    >
+                                        <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>{cat.name}</Text>
+                                    </View>
+                                ))
                         }
                     </View>
                 </ScrollView>
@@ -709,7 +703,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 }
                 {
                     this.state.isClickVisible && (
-                        this.clickModal(phaseData, data, recipes)
+                        this.clickModal(phaseData, data)
                     )
                 }
             </View>

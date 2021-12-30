@@ -118,7 +118,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselDinner = (data, data1, title) => {
+  carouselDinner = (data, data1, data2, title) => {
 
     return (
       <View>
@@ -157,7 +157,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, title)}
+            onPress={() => this.props.filterPress(data, data1, data2, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -169,7 +169,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselSnack = (data, data1, title) => {
+  carouselSnack = (data, data1, data2, title) => {
 
     return (
       <View>
@@ -208,7 +208,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, title)}
+            onPress={() => this.props.filterPress(data, data1, data2, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -220,8 +220,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselDrink = (data, data1, title) => {
-
+  carouselDrink = (data, data1, data2, title) => {
     return (
       <View>
         <View
@@ -259,7 +258,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, title)}
+            onPress={() => this.props.filterPress(data, data1, data2, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -272,7 +271,6 @@ class TodayMealsList extends Component {
   }
 
   carouselPreworkout = (data, data1, title) => {
-
     return (
       <View>
         <View
@@ -376,15 +374,15 @@ class TodayMealsList extends Component {
   render() {
     const { data, recipe, todayRecommendedRecipe } = this.props
 
-    // console.log('Today meals: ', todayRecommendedRecipe.lunch)
+    // console.log('recipe.breakfast: ', recipe.breakfast)
     
     return (
       <View style={styles.container}>
         {data.breakfast.length > 0 && this.carouselBreakfast(data.breakfast, recipe.breakfast, todayRecommendedRecipe.breakfast, "Breakfast")}
-        {data.lunch.length > 0 && this.carouselLunch(data.lunch, recipe.breakfast, todayRecommendedRecipe.lunch, "Lunch")}
-        {data.dinner.length > 0 && this.carouselDinner(data.dinner, recipe.dinner, "Dinner")}
-        {data.snack.length > 0 && this.carouselSnack(data.snack, recipe.snack, "Snack")}
-        {data.drink.length > 0 && this.carouselDrink(data.drink, recipe.drink, "Post Workout")}
+        {data.lunch.length > 0 && this.carouselLunch(data.lunch, recipe.lunch, todayRecommendedRecipe.lunch, "Lunch")}
+        {data.dinner.length > 0 && this.carouselDinner(data.dinner, recipe.dinner, todayRecommendedRecipe.dinner, "Dinner")}
+        {data.snack.length > 0 && this.carouselSnack(data.snack, recipe.snack, todayRecommendedRecipe.snack, "Snack")}
+        {data.drink.length > 0 && this.carouselDrink(data.drink, recipe.drink, todayRecommendedRecipe.drink, "Post Workout")}
         {data.preworkout.length > 0 && this.carouselPreworkout(data.preworkout, recipe.preworkout, "Pre Workout")}
         {data.treats.length > 0 && this.carouselTreats(data.treats, recipe.treats, "Treats")}
       </View>
