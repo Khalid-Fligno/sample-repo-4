@@ -1,0 +1,88 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.3.2 (swiftlang-1200.0.45 clang-1200.0.32.28)
+// swift-module-flags: -target i386-apple-ios10.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name LogRocket
+import Foundation
+@_exported import LogRocket
+import Swift
+import SwiftProtobuf
+import UIKit
+@objc(LRORequestSanitizer) public protocol RequestSanitizer {
+  @objc func sanitize(request: LogRocket.Request) -> LogRocket.Request?
+}
+final public class AtomicInteger {
+  public init(value initialValue: Swift.Int = 0)
+  final public var value: Swift.Int {
+    get
+    set
+  }
+  final public func decrementAndGet() -> Swift.Int
+  final public func getAndIncrement() -> Swift.Int
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(LROSDK) public class SDK : ObjectiveC.NSObject {
+  @objc public static func initialize(configuration: LogRocket.Configuration) -> Swift.Bool
+  @objc public static func shutdown()
+  @objc public static func getSessionURL(_ completion: @escaping (Swift.String) -> Swift.Void)
+  @objc deinit
+}
+@objc(LROResponseSanitizer) public protocol ResponseSanitizer {
+  @objc func sanitize(response: LogRocket.Response) -> LogRocket.Response?
+}
+final public class AtomicBool {
+  public init(value initialValue: Swift.Bool = false)
+  final public var value: Swift.Bool {
+    get
+    set
+  }
+  final public func compareAndSet(expect: Swift.Bool, update: Swift.Bool) -> Swift.Bool
+  @objc deinit
+}
+@objc(LROConfiguration) public class Configuration : ObjectiveC.NSObject {
+  final public let appID: Swift.String
+  @objc public var serverURL: Swift.String
+  @objc public var redactionTags: Swift.Set<Swift.String>
+  @objc public var viewScanningEnabled: Swift.Bool
+  @objc public var networkCaptureEnabled: Swift.Bool
+  @objc public var logCaptureEnabled: Swift.Bool
+  @objc public var requestSanitizer: LogRocket.RequestSanitizer?
+  @objc public var responseSanitizer: LogRocket.ResponseSanitizer?
+  @objc public var registerTouchHandlers: Swift.Bool
+  @objc public init(appID: Swift.String)
+  convenience public init(appID: Swift.String, serverURL: Swift.String = "https://r.lr-in.com/i", redactionTags: Swift.Set<Swift.String> = [], viewScanningEnabled: Swift.Bool = true, networkCaptureEnabled: Swift.Bool = true, logCaptureEnabled: Swift.Bool = true, requestSanitizer: LogRocket.RequestSanitizer? = nil, responseSanitizer: LogRocket.ResponseSanitizer? = nil, registerTouchHandlers: Swift.Bool = true)
+  @objc deinit
+  @objc override dynamic public init()
+}
+@_hasMissingDesignatedInitializers @objc(LRORequest) public class Request : ObjectiveC.NSObject {
+  public var body: Foundation.Data?
+  public var headers: [Swift.String : Swift.String]?
+  final public let method: Swift.String
+  final public let reqID: Swift.Int
+  public var url: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(LROResponse) public class Response : ObjectiveC.NSObject {
+  public var body: Foundation.Data?
+  public var headers: [Swift.String : Swift.String]?
+  final public let method: Swift.String
+  final public let reqID: Swift.Int
+  final public let status: Swift.UInt32
+  public var url: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(LROTouchShim) public class TouchShim : UIKit.UIGestureRecognizer, UIKit.UIGestureRecognizerDelegate {
+  @objc override dynamic public func canBePrevented(by _: UIKit.UIGestureRecognizer) -> Swift.Bool
+  @objc override dynamic public func canPrevent(_: UIKit.UIGestureRecognizer) -> Swift.Bool
+  @objc override dynamic public func ignore(_: UIKit.UITouch, for _: UIKit.UIEvent)
+  @objc override dynamic public func ignore(_: UIKit.UIPress, for _: UIKit.UIPressesEvent)
+  @objc override dynamic public func shouldRequireFailure(of _: UIKit.UIGestureRecognizer) -> Swift.Bool
+  @objc override dynamic public func shouldBeRequiredToFail(by _: UIKit.UIGestureRecognizer) -> Swift.Bool
+  @objc override dynamic public func touchesBegan(_ touches: Swift.Set<UIKit.UITouch>, with _: UIKit.UIEvent)
+  @objc override dynamic public func touchesCancelled(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent)
+  @objc override dynamic public func touchesEnded(_ touches: Swift.Set<UIKit.UITouch>, with _: UIKit.UIEvent)
+  @objc override dynamic public func touchesMoved(_ touches: Swift.Set<UIKit.UITouch>, with _: UIKit.UIEvent)
+  @objc public func gestureRecognizer(_: UIKit.UIGestureRecognizer, shouldRecognizeSimultaneouslyWith _: UIKit.UIGestureRecognizer) -> Swift.Bool
+  @objc override dynamic public init(target: Any?, action: ObjectiveC.Selector?)
+  @objc deinit
+}
