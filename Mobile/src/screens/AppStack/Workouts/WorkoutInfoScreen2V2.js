@@ -166,7 +166,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
 
   handleStart = () => {
     // this.toggleMusicModal();
-    // this.handleWorkoutStart();
+    this.handleWorkoutStart();
   };
 
   openApp = (url) => {
@@ -224,21 +224,21 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     // }
   };
 
-  // handleWorkoutStart = () => {
-  //   const { workout, reps, extraProps, lifestyle } = this.state;
-  //   this.setState({ musicModalVisible: false });
-  //   // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
-  //   this.props.navigation.navigate("Countdown", {
-  //     lifestyle,
-  //     workout: workout,
-  //     reps,
-  //     resistanceCategoryId: workout.id,
-  //     workoutSubCategory: this.state.workoutSubCategory,
-  //     fitnessLevel: this.state.fitnessLevel,
-  //     extraProps,
-  //   });
-  // };
-  //
+  handleWorkoutStart = () => {
+    const { mode, gymWorkout, homeWorkout, workout, reps, extraProps, lifestyle } = this.state;
+    this.setState({ musicModalVisible: false });
+    // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
+    this.props.navigation.navigate("Countdown", {
+      lifestyle,
+      workout: mode === 'GYM' ? gymWorkout : mode === 'HOME' ? homeWorkout : workout,
+      reps,
+      resistanceCategoryId: mode === 'GYM' ? gymWorkout.id : mode === 'HOME' ? homeWorkout.id : workout.id,
+      workoutSubCategory: this.state.workoutSubCategory,
+      fitnessLevel: this.state.fitnessLevel,
+      extraProps,
+    });
+  };
+
   // keyExtractor = (exercise, index) => String(index);
 
   componentDidMount = async () => {
@@ -1329,18 +1329,18 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
             )
           }
 
-          {/*<TouchableOpacity style={styles.startButton} onPress={this.handleStart}>*/}
-          {/*  <Text*/}
-          {/*    style={{*/}
-          {/*      color: colors.white,*/}
-          {/*      fontFamily: fonts.bold,*/}
-          {/*      fontSize: 20,*/}
-          {/*      alignSelf: "center",*/}
-          {/*    }}*/}
-          {/*  >*/}
-          {/*    {"Start now"}*/}
-          {/*  </Text>*/}
-          {/*</TouchableOpacity>*/}
+          <TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
+            <Text
+              style={{
+                color: colors.white,
+                fontFamily: fonts.bold,
+                fontSize: 20,
+                alignSelf: "center",
+              }}
+            >
+              {"Start now"}
+            </Text>
+          </TouchableOpacity>
 
           <Modal
               isVisible={showGymPickerModal}
