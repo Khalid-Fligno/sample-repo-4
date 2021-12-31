@@ -82,12 +82,17 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
       target = "rest";
     } else {
       if (res.length) {
-        if (res[0].gym === this.props.gymSetting) {
-          target = res[0] && res[0].filters ? getTarget(res[0].filters) : "";
-          focus = res[0] && res[0].filters ? getFocus(res[0].filters) : "";
+        if (res[0] !== undefined) {
+          if (res[0].gym === this.props.gymSetting) {
+            target = res[0] && res[0].filters ? getTarget(res[0].filters) : "";
+            focus = res[0] && res[0].filters ? getFocus(res[0].filters) : "";
+          } else {
+            target = res[1] && res[1].filters ? getTarget(res[1].filters) : "";
+            focus = res[1] && res[1].filters ? getFocus(res[1].filters) : "";
+          }
         } else {
-          target = res[1] && res[1].filters ? getTarget(res[1].filters) : "";
-          focus = res[1] && res[1].filters ? getFocus(res[1].filters) : "";
+          target = "";
+          focus = "";
         }
       } else {
         target = res && res.filters ? getTarget(res.filters) : "";
