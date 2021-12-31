@@ -273,7 +273,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     return <View />;
   };
 
-  renderExercise = ({ item: exercise, index, section }) => {
+  renderExercise = ({ item: exercise, index, section , }) => {
+    // console.log("Workout: ", this.state.workout.exercises[0].duration);
     let showRR =
       exercise.recommendedResistance &&
         !exercise.recommendedResistance.includes("N/A")
@@ -287,6 +288,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
         : false;
     const workIntervalTimeinSec =
       this.state.workout.workIntervalMap[this.state.fitnessLevel - 1];
+      console.log('interval',workIntervalTimeinSec)
     const restIntervalTimeinSec =
       this.state.workout.restIntervalMap[this.state.fitnessLevel - 1];
     let videoUrl = "";
@@ -364,18 +366,18 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                         {workIntervalTimeinSec}s on/{restIntervalTimeinSec}s off
                       </Text>
                     )}
-                  {/* {this.state.workout.workoutProcessType === "onlyOne" &&
+                  {this.state.workout.workoutProcessType === "onlyOne" && section.title ==='Workout' &&
                     workIntervalTimeinSec <= 60 && (
                         <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
                           {exercise.duration}s
                           {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec}s off`}
                         </Text>
-                    )} */}
+                    )}
                   {this.state.workout.workoutProcessType === "onlyOne" && section.title ==='Workout' &&
                     workIntervalTimeinSec > 60 && (
                       <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {workIntervalTimeinSec / 60} mins
+                        {this.state.workout.exercises[0].duration / 60} mins
                         {/* {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec / 60}m off`} */}
                       </Text>
@@ -516,7 +518,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     let cooldownInterval = 0;
     if (workout) {
       workoutTime = workout.workoutTime;
-      console.log("Workout: ", workout);
       if (workout.coolDownExercises) {
         let seconds = 0;
         workout.coolDownExercises.map((exercise) => {
@@ -536,7 +537,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
         workoutInterval =
           workout.workoutTime - (warmupInterval + cooldownInterval);
       }
-      console.log("Workout: ", workout);
       // workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
     }
 
