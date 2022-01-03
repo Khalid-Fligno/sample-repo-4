@@ -102,6 +102,29 @@ export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserDa
 
 }
 
+export const convertRecipeData = async (recipeId) => {
+
+  const recipeResult = []
+  const recipeRef = db.collection('recipes');
+  const snapshot = await recipeRef.get();
+  if(recipeId){
+    if (snapshot.empty) {
+      return null
+    } else {
+      snapshot.forEach(res => {
+        if (recipeId.includes(res.data().id)) {
+          recipeResult.push(res.data());
+        }
+      })
+    }
+  }
+
+  return {
+    recipeResult
+  }  
+
+}
+
 export const fetchRecipeData = async (challengeRecipe) => {
   let phaseMeals = []
   const breakfastActive = []
@@ -237,7 +260,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
               res.data().tags.forEach((resLevel) => {
                 if (levelName === resLevel) {
                   res.data().tags.forEach((resPhase) => {
-                    if (phaseName === resPhase) {
+                    if (phaseName === resPhase) { 
                       breakfastResult.push(res.data())
                     } else {
                       return null
@@ -367,6 +390,8 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
     snack: snackResult,
     drink: drinkResult
   }]
+
+  // console.log('Recipe Data: ', recommendedRecipe.breakfast)
 
   const phaseDefaultTags = phaseData
 

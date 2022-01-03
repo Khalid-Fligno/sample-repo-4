@@ -22,6 +22,7 @@ import Modal from "react-native-modal";
 import LevelModal from "./LevelModal";
 import PhaseModal from "./PhaseModal";
 import FilterScreen from "./FilterScreen";
+import { convertRecipeData } from "../../../../utils/challenges";
 const { width } = Dimensions.get("window");
 
 export default class FilterRecipeScreen extends React.PureComponent {
@@ -67,11 +68,11 @@ export default class FilterRecipeScreen extends React.PureComponent {
     onFocusFunction() {
         this.setState({ loading: true });
         this.getDefaultCategoryTags()
+        this.getAllRecipeData()
         this.setState({
             phaseDefaultTags: this.props.navigation.getParam('phaseDefaultTags', null),
             defaultLevelTags: this.props.navigation.getParam("defaultLevelTags", null),
             challengeRecipe: this.props.navigation.getParam("challengeAllRecipe", null),
-            data: this.props.navigation.getParam("allRecipeData", null),
             allData: this.props.navigation.getParam("recipes", null),
             recipes: this.props.navigation.getParam("recipes", null),
             title: this.props.navigation.getParam("title", null),
@@ -87,29 +88,59 @@ export default class FilterRecipeScreen extends React.PureComponent {
         navigation.pop();
     };
 
+    getAllRecipeData = () => {
+        const allRecipeData = this.props.navigation.getParam("allRecipeData", null)
+        const dupId = []
+
+        allRecipeData.forEach((res) => {
+            dupId.push(res.id)
+        })
+
+        const uniqId = [...new Set(dupId)]
+
+        convertRecipeData(uniqId).then(res => {
+            this.setState({
+                data: res.recipeResult,
+            })
+        })
+    }
+
     getDefaultCategoryTags = () => {
         const recipeData = this.props.navigation.getParam("todayRecommendedRecipe", null)
         const categoryName = []
+        const dupId = []
+        const finalRecipeData = []
+        
 
         recipeData.forEach((res) => {
-            res.tags.filter((item) => {
-                if (item === 'V') categoryName.push(item.replace('V', 'Vegan'))
-                if (item === 'V+') categoryName.push(item.replace('V+', 'Vegetarian'))
-                if (item === 'GF') categoryName.push(item.replace('GF', 'Gluta Free'))
-                if (item === 'DF') categoryName.push(item.replace('DF', 'Dairy Free'))
-                if (item === 'GH') categoryName.push(item.replace('GH', 'Gut Health'))
+            if(res.tags){
+                res.tags.filter((item) => {
+                    if (item === 'V') categoryName.push(item.replace('V', 'Vegan'))
+                    if (item === 'V+') categoryName.push(item.replace('V+', 'Vegetarian'))
+                    if (item === 'GF') categoryName.push(item.replace('GF', 'Gluta Free'))
+                    if (item === 'DF') categoryName.push(item.replace('DF', 'Dairy Free'))
+                    if (item === 'GH') categoryName.push(item.replace('GH', 'Gut Health'))
+                })
+            }
+
+            dupId.push(res.id)
+        })
+
+        const uniqId = [...new Set(dupId)]
+        
+        convertRecipeData(uniqId).then(res => {
+            this.setState({
+                todayRecommendedRecipe: res.recipeResult,
             })
         })
 
         const uniq = [...new Set(categoryName)]
-
         const result = []
         uniq.forEach((res) => {
             result.push({ name: res })
         })
 
         this.setState({
-            todayRecommendedRecipe: recipeData,
             categoryName: result
         })
     }
@@ -314,9 +345,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
             })
         }
 
-        console.log('Res: ', tagList)
-
-
         const recipeLists = sortBy(tagList).filter((recipe) => {
             for (let i = 0; i < recipe.tags.length; i++) {
                 if (this.state.veganChecked === true) {
@@ -403,13 +431,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
             if (tag === 'GF') color1.push({ name: tag, color: '#469753' })
             if (tag === 'DF') color1.push({ name: tag, color: '#B7782B' })
             if (tag === 'GH') color1.push({ name: tag, color: '#965734' })
-            if (tag === 'L3') color1.push({ name: tag, color: '#F89500' })
-            if (tag === 'L2') color1.push({ name: tag, color: '#fc1403' })
-            if (tag === 'L1') color1.push({ name: tag, color: '#03adfc' })
-            if (tag === 'P3') color1.push({ name: tag, color: '#c203fc' })
-            if (tag === 'P2') color1.push({ name: tag, color: '#fc0384' })
-            if (tag === 'P1') color1.push({ name: tag, color: '#fc8403' })
-
         })
 
         const result = color1.splice(0, 3)
