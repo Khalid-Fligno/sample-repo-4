@@ -30,7 +30,7 @@ export default class PhaseModal extends React.PureComponent {
 
         return (
             <SafeAreaView style={{ backgroundColor: 'white', padding: 10 }}>
-                <View style={{paddingLeft: Platform.OS === 'ios' ? 10 : 0, paddingRight: Platform.OS === 'ios' ? 10 : 0}}>
+                <View style={{paddingLeft: Platform.OS === 'ios' ? 10 : 0, paddingRight: Platform.OS === 'ios' ? 10 : 0, marginBottom: Platform.OS === 'ios' ? 20 : 0}}>
                     <View>
                     <TouchableOpacity
                         onPress={this.props.closePhaseModal}

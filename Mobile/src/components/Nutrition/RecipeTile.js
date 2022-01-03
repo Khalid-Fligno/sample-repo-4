@@ -60,8 +60,9 @@ export default class RecipeTile extends React.PureComponent {
         return tag
       } else if (tag === 'V+') {
         return tag
-      }
-      if (tag === 'GF') {
+      } if (tag === 'GF') {
+        return tag
+      } if (tag === 'GH') {
         return tag
       }
     })
@@ -128,7 +129,7 @@ export default class RecipeTile extends React.PureComponent {
                   </Text>
                 </View>
               </View>
-              <View
+              {/* <View
                 style={{ flexDirection: 'row', bottom: 12 }}
               >
                 <View style={styles.recipeInfoSection}>
@@ -138,7 +139,7 @@ export default class RecipeTile extends React.PureComponent {
                     ))
                   }
                 </View>
-              </View>
+              </View> */}
             </View>
           </Card>
         </Animated.View>

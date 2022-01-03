@@ -342,13 +342,13 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
   const challengeMealsFilterList = phaseMeals.map((res) => res.id)
 
   // const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
-  const breakfastList = phaseMeals.filter((res) => res.breakfast)
-  const lunchList = phaseMeals.filter((res) => res.lunch)
-  const dinnerList = phaseMeals.filter((res) => res.dinner)
-  const snackList = phaseMeals.filter((res) => res.snack)
-  const drinkList = phaseMeals.filter((res) => res.drink)
-  const preworkoutList = phaseMeals.filter((res) => res.preworkout)
-  const treatsList = phaseMeals.filter((res) => res.treats)
+  const breakfastList = phaseMeals.filter((res) => res.breakfastVisible)
+  const lunchList = phaseMeals.filter((res) => res.lunchVisible)
+  const dinnerList = phaseMeals.filter((res) => res.dinnerVisible)
+  const snackList = phaseMeals.filter((res) => res.snackVisible)
+  const drinkList = phaseMeals.filter((res) => res.drinkVisible)
+  const preworkoutList = phaseMeals.filter((res) => res.preworkoutVisible)
+  const treatsList = phaseMeals.filter((res) => res.treatsVisible)
 
   const recommendedMeal = [{
     breakfast: breakfastList,
