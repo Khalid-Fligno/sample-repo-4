@@ -257,7 +257,7 @@ export default class FeedScreen extends React.PureComponent {
       dayOfWeek,
       activeChallengeData,
       activeChallengeUserData,
-      blogs,
+      blogs=[],
       todayRcWorkout,
       trainers
     } = this.state;
@@ -549,6 +549,7 @@ export default class FeedScreen extends React.PureComponent {
               </View>
               <View style={{ flex: 1, alignItems: "center", }}>
                 <View style={{}}>
+                {blogs.length > 0 ?
 
                   <FlatList
                     horizontal
@@ -595,6 +596,21 @@ export default class FeedScreen extends React.PureComponent {
                       );
                     }}
                   />
+                  :
+                  <View style={{paddingTop: hp('23%')}}>
+                      <Text 
+                          style={{           
+                              fontSize: 20,
+                              fontFamily: fonts.bold,
+                              textTransform: 'uppercase',
+                              color: 'white'
+                          }}
+                      >
+                          no blogs are available
+                      </Text>
+                  </View>
+                  }
+
                 </View>
               </View>
             </View>

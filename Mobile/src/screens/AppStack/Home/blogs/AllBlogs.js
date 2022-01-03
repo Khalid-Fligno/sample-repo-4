@@ -42,14 +42,16 @@ export default class AllBlogs extends React.PureComponent {
     
 
 render(){
-    const {blogs} = this.state;
-    console.log(blogs);
+    const {
+        blogs =[]
+    } = this.state;
 
 return(
     <ScrollView style={{backgroundColor: "#333333",}}>
         <View style={{ marginBottom: wp("10%"), flex: 1,alignItems:'center' }}>
             <View style={{alignContent:'center',flex: 1}}>
-                
+            {blogs.length > 0 ? 
+
                 <FlatList
                         data={blogs}
                         style={{ flex: 1 }}
@@ -92,6 +94,21 @@ return(
                         );
                         }}
                     />
+                    :
+                    <View style={{paddingTop: hp('40%')}}>
+                    <Text 
+                        style={{           
+                            fontSize: 20,
+                            fontFamily: fonts.bold,
+                            textTransform: 'uppercase',
+                            color: 'white'
+                        }}
+                    >
+                        no blogs are available
+                    </Text>
+                </View>
+              }
+
 
             </View>
         </View>
