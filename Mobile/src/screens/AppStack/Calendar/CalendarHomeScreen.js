@@ -512,8 +512,7 @@ class CalendarHomeScreen extends React.PureComponent {
     this.props.navigation.navigate("WorkoutInfo", {
       newWrkouts,
       fitnessLevel,
-      extraProps: { fromCalender: true },
-      reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
+      extraProps: { fromCalender: true }
     });
 
     // if (this.currentChallengeDay > 0) {
