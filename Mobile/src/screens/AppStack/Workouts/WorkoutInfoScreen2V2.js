@@ -288,7 +288,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
         : false;
     const workIntervalTimeinSec =
       this.state.workout.workIntervalMap[this.state.fitnessLevel - 1];
-      console.log('interval',workIntervalTimeinSec)
     const restIntervalTimeinSec =
       this.state.workout.restIntervalMap[this.state.fitnessLevel - 1];
     let videoUrl = "";
@@ -367,6 +366,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                       </Text>
                     )}
                   {this.state.workout.workoutProcessType === "onlyOne" && section.title ==='Workout' &&
+                 this.state.lifestyle != true &&
                     workIntervalTimeinSec <= 60 && (
                         <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
                           {exercise.duration}s
@@ -374,6 +374,16 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                           `/${restIntervalTimeinSec}s off`}
                         </Text>
                     )}
+                  {this.state.workout.workoutProcessType === "onlyOne" && section.title ==='Workout' &&
+                    this.state.lifestyle === true &&
+                    workIntervalTimeinSec <= 60 && (
+                        <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                          {workIntervalTimeinSec}s                          
+                          {restIntervalTimeinSec > 0 &&
+                          `/${restIntervalTimeinSec}s off`}
+                        </Text>
+                    )}
+
                   {this.state.workout.workoutProcessType === "onlyOne" && section.title ==='Workout' &&
                     workIntervalTimeinSec > 60 && (
                       <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>

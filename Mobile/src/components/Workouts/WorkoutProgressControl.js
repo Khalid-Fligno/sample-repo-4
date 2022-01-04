@@ -207,13 +207,13 @@ export default WorkoutProgressControl = ({
         )}
 
         {workout.workoutProcessType !='circular' && exerciseList[currentExerciseIndex].type !='warmUp'
-        && currentSet != 3 && exerciseList[currentExerciseIndex].type !='coolDown'
+        && currentSet != workoutReps && exerciseList[currentExerciseIndex].type !='coolDown'
         &&(
         <Text style={styles.buttonTextTitle}>Next Set</Text>
         )}
 
        {workout.workoutProcessType !='circular' && exerciseList[currentExerciseIndex].type !='warmUp' 
-        && currentSet === 3 && exerciseList[currentExerciseIndex].type !='coolDown'
+        && currentSet === workoutReps && exerciseList[currentExerciseIndex].type !='coolDown'
        &&(
         <Text style={styles.buttonTextTitle}>Next Exercise</Text>
         )}
