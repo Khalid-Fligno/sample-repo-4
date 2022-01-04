@@ -674,8 +674,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     // console.log('totalDuration: ', totalDuration)
     // console.log('interval: ', interval)
     // console.log('rest: ', rest)
-
-
+      // console.log('currentexercise',currentExercise)
     const setCount = this.props.navigation.getParam("setCount", 1);
 
     let handleSkip = false;
@@ -729,7 +728,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         if (!workout.count && !rest)
           return (
             <WorkoutTimer
-              totalDuration={Number(currentExercise.duration)}
+              totalDuration={Number(totalDuration)}
               start={timerStart}
               handleFinish={() => {
                 if (!rest)
