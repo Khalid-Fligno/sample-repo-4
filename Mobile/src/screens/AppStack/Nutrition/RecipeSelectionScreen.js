@@ -2,28 +2,20 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  Dimensions,
   Alert,
   FlatList,
   Text,
 } from 'react-native';
-import { ButtonGroup } from 'react-native-elements';
 import * as FileSystem from 'expo-file-system';
 import sortBy from 'lodash.sortby';
 import { db } from '../../../../config/firebase';
 import RecipeTile from '../../../components/Nutrition/RecipeTile';
 import RecipeTileSkeleton from '../../../components/Nutrition/RecipeTileSkeleton';
-import Loader from '../../../components/Shared/Loader';
-import colors from '../../../styles/colors';
-// import fonts from '../../../styles/fonts';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import Icon from '../../../components/Shared/Icon';
 import globalStyle from '../../../styles/globalStyles';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 import CustomButtonGroup from '../../../components/Shared/CustomButtonGroup';
-import { heightPercentageToDP as hp ,widthPercentageToDP as wp} from 'react-native-responsive-screen';
-
-const { width } = Dimensions.get('window');
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import fonts from '../../../styles/fonts';
 
 export default class RecipeSelectionScreen extends React.PureComponent {
   constructor(props) {
@@ -32,32 +24,27 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       recipes: [],
       loading: false,
       filterIndex: 0,
-      meal:null
+      meal: null
     };
   }
 
-  onFocusFunction = async () =>{
-    const {meal} = this.state
+  onFocusFunction = async () => {
+    const { meal } = this.state
     const newMeal = this.props.navigation.getParam('meal', null);
-    // if(meal && meal !== newMeal || !meal){
-      this.setState({meal:newMeal})
-      await this.fetchRecipes();
+    this.setState({ meal: newMeal })
+    await this.fetchRecipes();
     // }
-      
+
   }
 
   componentDidMount = async () => {
-    // this.setState({ loading: true });
-    // this.focusListener = this.props.navigation.addListener('willFocus', async () => {
-    //     this.onFocusFunction()
-    // })
     await this.fetchRecipes();
   }
 
   componentWillUnmount = async () => {
     // this.focusListener.remove()
-      if(this.unsubscribe)
-    await this.unsubscribe();
+    if (this.unsubscribe)
+      await this.unsubscribe();
   }
 
   fetchRecipes = async () => {
@@ -69,13 +56,13 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       .onSnapshot(async (querySnapshot) => {
         const recipes = [];
         await querySnapshot.forEach(async (doc) => {
-          if(challengeMealsFilterList && challengeMealsFilterList.length >0){
-              if(challengeMealsFilterList.includes(doc.data().id))
-                await recipes.push(await doc.data());
-          }else{
+          if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
+            if (challengeMealsFilterList.includes(doc.data().id))
+              await recipes.push(await doc.data());
+          } else {
             await recipes.push(await doc.data());
           }
-         
+
         });
 
         await Promise.all(recipes.map(async (recipe) => {
@@ -93,13 +80,6 @@ export default class RecipeSelectionScreen extends React.PureComponent {
               Alert.alert('', 'Image download error');
             });
         }));
-        // OLD CODE - DOWNLOADING ALL IMAGES EVERY TIME
-        // await Promise.all(recipes.map(async (recipe) => {
-        //   await FileSystem.downloadAsync(
-        //     recipe.coverImage,
-        //     `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
-        //   );
-        // }));
         this.setState({ recipes: sortBy(recipes, 'title'), loading: false });
       });
   }
@@ -108,15 +88,15 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     this.setState({ filterIndex });
   }
 
-  keyExtractor = (item,index) => String(index);
-  
+  keyExtractor = (item, index) => String(index);
+
   renderItem = ({ item }) => (
     <RecipeTile
-      onPress={() => this.props.navigation.push('Recipe', 
-      {
-        recipe: item,
-        backTitle : this.props.navigation.getParam('meal', null)
-      })}
+      onPress={() => this.props.navigation.push('Recipe',
+        {
+          recipe: item,
+          backTitle: this.props.navigation.getParam('meal', null)
+        })}
       image={`${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage}
       title={item.title.toUpperCase()}
       tags={item.tags}
@@ -134,25 +114,27 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   render() {
     const meal = this.props.navigation.getParam('meal', null);
     const { recipes, loading, filterIndex } = this.state;
-    const filterButtons = ['All', 'Vegetarian', 'Vegan', 'Gluten-Free', 'Gut-Health'];
-    
+    const filterButtons = ['All', 'V', 'V+', 'GF', 'GH', 'DF'];
+
     const recipeList = sortBy(recipes, 'newBadge')
       .filter((recipe) => {
         // console.log(recipe.title)
-        if(recipe.tags === undefined) return recipes
+        if (recipe.tags === undefined) return recipes
         if (filterIndex === 1) {
           return recipe.tags.includes('V');
         } else if (filterIndex === 2) {
           return recipe.tags.includes('V+');
         } if (filterIndex === 3) {
           return recipe.tags.includes('GF');
-        } if (filterIndex === 3) {
+        } if (filterIndex === 4) {
           return recipe.tags.includes('GH');
+        } if (filterIndex === 5) {
+          return recipe.tags.includes('DF');
         }
-        
+
         return recipes;
       });
-      
+
     const skeleton = (
       <View style={styles.recipeTileSkeletonContainer}>
         <RecipeTileSkeleton />
@@ -161,38 +143,57 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       </View>
     );
     return (
-       <View style={globalStyle.container}>
-          <BigHeadingWithBackButton isBackButton = {true} 
-            bigTitleText = {meal} 
-            onPress={this.handleBack} 
-            backButtonText="Back to nutrition" 
-            isBigTitle={true}
-            isBackButton ={true}
-            customContainerStyle={{marginTop:10,marginBottom:hp('2.5%')}}
-          />
-          <CustomButtonGroup  
-            onPress={this.updateFilter}
-            selectedIndex={filterIndex}
-            buttons={filterButtons}
-          />
+      <View style={globalStyle.container}>
+        <BigHeadingWithBackButton isBackButton={true}
+          bigTitleText={meal}
+          onPress={this.handleBack}
+          backButtonText="Back to nutrition"
+          isBigTitle={true}
+          isBackButton={true}
+          customContainerStyle={{ marginTop: 10, marginBottom: hp('2.5%') }}
+        />
+        <CustomButtonGroup
+          onPress={this.updateFilter}
+          selectedIndex={filterIndex}
+          buttons={filterButtons}
+        />
         {
-          loading ? skeleton : (
-            <FlatList
-              contentContainerStyle={styles.scrollView}
-              data={recipeList}
-              keyExtractor={this.keyExtractor}
-              renderItem={this.renderItem}
-              showsVerticalScrollIndicator={false}
-              removeClippedSubviews={false}
-              maxToRenderPerBatch={20}
-            />
-          )
+          loading ?
+            skeleton
+            :
+            recipeList.length > 0 ?
+              (
+                <FlatList
+                  contentContainerStyle={styles.scrollView}
+                  data={recipeList}
+                  keyExtractor={this.keyExtractor}
+                  renderItem={this.renderItem}
+                  showsVerticalScrollIndicator={false}
+                  removeClippedSubviews={false}
+                  maxToRenderPerBatch={20}
+                />
+              )
+              :
+              <View
+                style={{
+                  height: hp('65%'),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontSize: 15,
+                    fontFamily: fonts.bold,
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  no recipes are available
+                </Text>
+              </View>
         }
-       
-        {/* <Loader
-          loading={loading}
-          color={colors.violet.standard}
-        /> */}
       </View>
     );
   }
