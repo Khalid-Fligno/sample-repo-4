@@ -80,63 +80,47 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
     let focus = "";
     if (res && res.target === "rest") {
       target = "rest";
+      console.log('target',target);
     } else {
-      if (res.length) {
-        if (res[0] !== undefined) {
-          if (res[0].gym === this.props.gymSetting) {
-            target = res[0] && res[0].filters ? getTarget(res[0].filters) : "";
-            focus = res[0] && res[0].filters ? getFocus(res[0].filters) : "";
-          } else {
-            target = res[1] && res[1].filters ? getTarget(res[1].filters) : "";
-            focus = res[1] && res[1].filters ? getFocus(res[1].filters) : "";
-          }
-        } else {
-          target = "";
-          focus = "";
-        }
-      } else {
-        target = res && res.filters ? getTarget(res.filters) : "";
-        focus = res && res.filters ? getFocus(res.filters) : "";
-      }
+      target = res && res.filters ? getTarget(res.filters) : "";
+      focus = res && res.filters ? getFocus(res.filters) : "";
     }
     return (
-        <View style={[styles.cardContainer, cardCustomStyle]}>
-          <TouchableOpacity style={styles.cardContainer} onPress={onPress}>
-            <ImageBackground
-                source={require("../../../assets/images/Calendar/challengeWorkoutCardBg.png")}
-                style={styles.image}
-            >
-              <View style={styles.opacityLayer}>
-                <View style={styles.innerViewContainer}>
-                  <Text
-                      key={res}
-                      style={[
-                        styles.recTextLabel,
-                        { color: colors.themeColor.color },
-                      ]}
-                  >
-                    Today's Workout
-                  </Text>
-                </View>
-                <View style={styles.titleContainer}>
-                  <Text style={styles.target}>
-                    {target}
-                    {focus ? " - " + focus : ""}</Text>
-                </View>
-                <View style={styles.innerViewContainer}>
-                  {target !== "rest" && (
-                      <Text key={res} style={styles.recTextLabel}>
+      <View style={[styles.cardContainer, cardCustomStyle]}>
+        <TouchableOpacity style={styles.cardContainer} onPress={onPress}>
+        <ImageBackground
+          source={require("../../../assets/images/Calendar/challengeWorkoutCardBg.png")}
+          style={styles.image}
+        >
+          <View style={styles.opacityLayer}>
+            <View style={styles.innerViewContainer}>
+              <Text
+                key={res}
+                style={[
+                  styles.recTextLabel,
+                  { color: colors.themeColor.color },
+                ]}
+              >
+                Today's Workout
+              </Text>
+            </View>
+            <View style={styles.titleContainer}>
+              {target !== "rest" && (
+                <Text key={res} style={styles.target}>
+                  {target}
+                  {focus ? " - " + focus : ""}
+                </Text>
+              )}
+            </View>
+            <View style={styles.innerViewContainer}>
+              {target === '' && (
+                <Text key={res} style={styles.target}>
+                  Today is your rest day
+                </Text>
+              )}
+            </View>
 
-                      </Text>
-                  )}
-                  {target === "rest" && (
-                      <Text key={res} style={styles.recTextLabel}>
-                        Today is your rest day
-                      </Text>
-                  )}
-                </View>
-
-                {/*
+            {/* 
             <CustomBtn
               Title="View Workout"
               customBtnStyle={{
@@ -155,35 +139,35 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
               disabled={target === "rest"}
             />
              */}
-                <View style={{flex: 1,paddingTop: 10,}}>
-                  <TouchableOpacity onPress={onPress} disabled={target === "rest"}>
-                    <Text
-                        style={styles.startButton}
-                    >
-                      Start
-                    </Text>
-                    <View
-                        style=
-                            {{
-                              borderBottomColor: 'white',
-                              borderBottomWidth: 1,
-                              width:57,
-                              paddingTop: 3,
-                            }}
-                    >
-                      <View style={{flex: 1,marginTop: -19,paddingLeft: 45,alignItems: 'flex-start'}}>
-                        <Icon name="arrow-right" size={13} style={{ color: 'white'}}/>
-                      </View>
+             <View style={{flex: 1,paddingTop: 10,}}>
+               <TouchableOpacity onPress={onPress} disabled={target === "rest"}>
+               <Text 
+               style={styles.startButton}
+               >
+                 Start
+               </Text>
+               <View 
+               style=
+               {{
+                 borderBottomColor: 'white',
+                 borderBottomWidth: 1,
+                 width:57,
+                 paddingTop: 3,
+                }}
+                 >
+               <View style={{flex: 1,marginTop: -19,paddingLeft: 45,alignItems: 'flex-start'}}>
+                   <Icon name="arrow-right" size={13} style={{ color: 'white'}}/>  
+               </View>
 
-                    </View>
-                  </TouchableOpacity>
+               </View>
+               </TouchableOpacity>
 
-                </View>
+             </View>
 
-              </View>
-            </ImageBackground>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </ImageBackground>
+        </TouchableOpacity>
+      </View>
     );
   }
 }
@@ -221,7 +205,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     maxWidth: width / 1.8,
-
+    
   },
   title: {
     fontFamily: fonts.boldNarrow,
@@ -233,7 +217,7 @@ const styles = StyleSheet.create({
   innerViewContainer: {
     maxWidth: width / 1.8,
     flexDirection: "row",
-
+    
   },
   recTextLabel: {
     color: colors.offWhite,
@@ -253,5 +237,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.StyreneAWebRegular,
     fontSize: 14,
   }
-
+  
 });
