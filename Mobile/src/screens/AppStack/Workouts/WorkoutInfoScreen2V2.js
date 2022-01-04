@@ -84,7 +84,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       homeWorkout: undefined,
       gymSetting: false,
       mode: undefined,
-      showGymPickerModal: false
+      showGymPickerModal: false,
+      transformLevel: undefined
     };
   }
 
@@ -102,6 +103,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     this.setState({
       fitnessLevel: this.props.navigation.getParam("fitnessLevel", null),
       extraProps: this.props.navigation.getParam("extraProps", {}),
+      transformLevel: this.props.navigation.getParam("transformLevel", {}),
       mode: this.state.gymSetting ? 'GYM' : 'HOME',
       loading: false
     });
@@ -597,8 +599,11 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       gymWorkout,
       homeWorkout,
       mode,
-      showGymPickerModal
+      showGymPickerModal,
+      transformLevel
     } = this.state;
+
+    console.log('transformLevel ', transformLevel);
 
     let workoutTime = 0;
     let warmupInterval = 0;
