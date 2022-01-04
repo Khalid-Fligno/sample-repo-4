@@ -648,7 +648,7 @@ class CalendarHomeScreen extends React.PureComponent {
       completeCha,
       todayRecommendedRecipe
     } = this.state;
-
+    
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');

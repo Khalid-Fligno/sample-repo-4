@@ -23,6 +23,7 @@ import LevelModal from "./LevelModal";
 import PhaseModal from "./PhaseModal";
 import FilterScreen from "./FilterScreen";
 import { convertRecipeData } from "../../../../utils/challenges";
+import RecipeTileSkeleton from "../../../../components/Nutrition/RecipeTileSkeleton";
 const { width } = Dimensions.get("window");
 
 export default class FilterRecipeScreen extends React.PureComponent {
@@ -61,12 +62,12 @@ export default class FilterRecipeScreen extends React.PureComponent {
             todayRecommendedRecipe: [],
             defaultLevelTags: "",
             phaseDefaultTags: "",
-            categoryName: []
+            categoryName: [],
+            loading: false
         };
     }
 
     onFocusFunction() {
-        this.setState({ loading: true });
         this.getDefaultCategoryTags()
         this.getAllRecipeData()
         this.setState({
@@ -76,7 +77,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
             allData: this.props.navigation.getParam("recipes", null),
             recipes: this.props.navigation.getParam("recipes", null),
             title: this.props.navigation.getParam("title", null),
-            loading: false
         });
     }
     componentDidMount = async () => {
@@ -106,14 +106,15 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
     getDefaultCategoryTags = () => {
+        this.setState({ loading: true })
         const recipeData = this.props.navigation.getParam("todayRecommendedRecipe", null)
         const categoryName = []
         const dupId = []
         const finalRecipeData = []
-        
+
 
         recipeData.forEach((res) => {
-            if(res.tags){
+            if (res.tags) {
                 res.tags.filter((item) => {
                     if (item === 'V') categoryName.push(item.replace('V', 'Vegan'))
                     if (item === 'V+') categoryName.push(item.replace('V+', 'Vegetarian'))
@@ -127,10 +128,11 @@ export default class FilterRecipeScreen extends React.PureComponent {
         })
 
         const uniqId = [...new Set(dupId)]
-        
+
         convertRecipeData(uniqId).then(res => {
             this.setState({
                 todayRecommendedRecipe: res.recipeResult,
+                loading: false
             })
         })
 
@@ -545,7 +547,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
             todayRecommendedRecipe,
             defaultLevelTags,
             phaseDefaultTags,
-            categoryName
+            categoryName,
+            loading
         } = this.state
 
         const phaseData = []
@@ -563,6 +566,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 }
             })
         })
+
+        const skeleton = (
+            <View style={styles.recipeTileSkeletonContainer}>
+                <RecipeTileSkeleton />
+                <RecipeTileSkeleton />
+                <RecipeTileSkeleton />
+            </View>
+        );
 
         return (
             <View style={globalStyle.container}>
@@ -686,36 +697,39 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     </View>
                 </ScrollView>
                 {
-                    todayRecommendedRecipe.length > 0
-                        ?
-                        <FlatList
-                            contentContainerStyle={styles.scrollView}
-                            data={todayRecommendedRecipe}
-                            keyExtractor={(res) => res.id}
-                            renderItem={(item) => this.renderItem(item)}
-                            showsVerticalScrollIndicator={false}
-                            removeClippedSubviews={false}
-                        />
+                    loading ?
+                        skeleton
                         :
-                        <View
-                            style={{
-                                height: hp('65%'),
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <Text
+                        todayRecommendedRecipe.length > 0
+                            ?
+                            <FlatList
+                                contentContainerStyle={styles.scrollView}
+                                data={todayRecommendedRecipe}
+                                keyExtractor={(res) => res.id}
+                                renderItem={(item) => this.renderItem(item)}
+                                showsVerticalScrollIndicator={false}
+                                removeClippedSubviews={false}
+                            />
+                            :
+                            <View
                                 style={{
-                                    textAlign: 'center',
-                                    fontSize: 15,
-                                    fontFamily: fonts.bold,
-                                    textTransform: 'uppercase',
+                                    height: hp('65%'),
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
                                 }}
                             >
-                                no recipes are available
-                            </Text>
-                        </View>
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        fontSize: 15,
+                                        fontFamily: fonts.bold,
+                                        textTransform: 'uppercase',
+                                    }}
+                                >
+                                    no recipes are available
+                                </Text>
+                            </View>
                 }
                 {
                     this.state.isFilterVisible && (
