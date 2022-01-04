@@ -483,68 +483,46 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   async goToNext(workout) {
-    console.log(">>here");
-    let newWrkouts = [];
     if (
-        this.currentChallengeDay === 1 &&
-        !this.state.initialBurpeeTestCompleted
+      this.currentChallengeDay === 1 &&
+      !this.state.initialBurpeeTestCompleted
     ) {
       await FileSystem.downloadAsync(
-          "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
-          `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+        "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+        `${FileSystem.cacheDirectory}exercise-burpees.mp4`
       );
     }
     const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
     this.setState({ loadingExercises: false });
-    if (workout.length) {
-      workout.map((wrkout) => {
-        if (this.currentChallengeDay > 0) {
-          Object.assign(wrkout, {
-            displayName: `${wrkout.displayName} - Day ${this.currentChallengeDay}`,
-          });
-          newWrkouts.push(wrkout);
-        }
+    if (this.currentChallengeDay > 0) {
+      Object.assign(workout, {
+        displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
       });
-    } else {
-      newWrkouts.push(workout);
     }
-
+    if (
+      this.currentChallengeDay === 1 &&
+      !this.state.initialBurpeeTestCompleted
+    ) {
+      this.props.navigation.navigate("Burpee1", {
+        fromScreen: "WorkoutInfo",
+        screenReturnParams: {
+          workout,
+          reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
+          workoutSubCategory: workout.workoutSubCategory,
+          fitnessLevel,
+          extraProps: { fromCalender: true },
+        },
+      });
+      return;
+    }
     this.props.navigation.navigate("WorkoutInfo", {
-      newWrkouts,
+      workout,
+      reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
+      workoutSubCategory: workout.workoutSubCategory,
       fitnessLevel,
       extraProps: { fromCalender: true },
-      reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
+      transformRoute: true
     });
-
-    // if (this.currentChallengeDay > 0) {
-    //   Object.assign(workout, {
-    //     displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
-    //   });
-    // }
-    // if (
-    //   this.currentChallengeDay === 1 &&
-    //   !this.state.initialBurpeeTestCompleted
-    // ) {
-    //   this.props.navigation.navigate("Burpee1", {
-    //     fromScreen: "WorkoutInfo",
-    //     screenReturnParams: {
-    //       workout,
-    //       reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
-    //       workoutSubCategory: workout.workoutSubCategory,
-    //       fitnessLevel,
-    //       extraProps: { fromCalender: true },
-    //     },
-    //   });
-    //   return;
-    // }
-    // this.props.navigation.navigate("WorkoutInfo", {
-    //   workout,
-    //   reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
-    //   workoutSubCategory: workout.workoutSubCategory,
-    //   fitnessLevel,
-    //   extraProps: { fromCalender: true },
-    //   transformRoute: true
-    // });
   }
 
   deleteCalendarEntry = async (fieldToDelete) => {
@@ -841,15 +819,16 @@ class CalendarHomeScreen extends React.PureComponent {
           <View style={calendarStyles.listContainer}>
             <ChallengeWorkoutCard
                 onPress={() => {
-                  if (todayRcWorkout.length) {
-                    this.loadExercises(todayRcWorkout, this.currentChallengeDay)
-                  } else {
-                    this.loadExercisesE(todayRcWorkout, this.currentChallengeDay)
-                  }
+                  // if (todayRcWorkout.length) {
+                  //   this.loadExercises(todayRcWorkout, this.currentChallengeDay)
+                  // } else {
+                  //   this.loadExercisesE(todayRcWorkout, this.currentChallengeDay)
+                  // }
+                  todayRcWorkout.name && todayRcWorkout.name !== "rest"
+                  ? this.loadExercisesE(todayRcWorkout, this.currentChallengeDay)
+                  : ""
+
                 }
-                  // todayRcWorkout.name && todayRcWorkout.name !== "rest"
-                  //   ? this.loadExercises(todayRcWorkout, this.currentChallengeDay)
-                  //   : ""
                 }
                 gymSetting={false}
                 res={todayRcWorkout}
