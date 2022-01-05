@@ -95,7 +95,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       onPress={() => this.props.navigation.push('Recipe',
         {
           recipe: item,
-          backTitle: this.props.navigation.getParam('meal', null)
+          title: this.props.navigation.getParam('meal', null)
         })}
       image={`${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage}
       title={item.title.toUpperCase()}

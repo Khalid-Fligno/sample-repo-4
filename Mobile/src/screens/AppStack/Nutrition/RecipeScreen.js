@@ -67,7 +67,6 @@ export default class RecipeScreen extends React.PureComponent {
       utensils: this.props.navigation.getParam("recipe", null).utensils,
       title: this.props.navigation.getParam("title", null),
       extraProps: this.props.navigation.getParam("extraProps", undefined),
-      title: this.props.navigation.getParam("title",null),
       loading: false,
     });
   }
