@@ -512,7 +512,9 @@ class CalendarHomeScreen extends React.PureComponent {
     this.props.navigation.navigate("WorkoutInfo", {
       newWrkouts,
       fitnessLevel,
-      extraProps: { fromCalender: true }
+      extraProps: { fromCalender: true },
+      transformLevel: this.transformLevel,
+      transform: true
     });
 
     // if (this.currentChallengeDay > 0) {
@@ -712,7 +714,9 @@ class CalendarHomeScreen extends React.PureComponent {
             await getTodayRecommendedWorkout(
                 activeChallengeData.workouts,
                 activeChallengeUserData,
-                this.stringDate
+                this.stringDate,
+                this.transformLevel,
+                this.state.transform
             )
         );
 

@@ -84,28 +84,38 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       homeWorkout: undefined,
       gymSetting: false,
       mode: undefined,
-      showGymPickerModal: false
+      showGymPickerModal: false,
+      transformLevel: undefined,
+      transform: false
     };
   }
 
   onFocusFunction() {
     // this.setState({ loading: true });
-    this.props.navigation.getParam("newWrkouts").forEach((workout) => {
-      if (workout.gym) {
-        this.setState({gymWorkout: workout});
-      } else if (workout.home) {
-        this.setState({homeWorkout: workout});
-      } else {
-        this.setState({workout: workout});
-      }
-    });
     this.setState({
       fitnessLevel: this.props.navigation.getParam("fitnessLevel", null),
       extraProps: this.props.navigation.getParam("extraProps", {}),
+      transformLevel: this.props.navigation.getParam("transformLevel", {}),
       mode: this.state.gymSetting ? 'GYM' : 'HOME',
-      loading: false,
-      reps: this.props.navigation.getParam("reps", null),
+      transform: this.props.navigation.getParam("transform"),
+      loading: false
     });
+
+    if (this.props.navigation.getParam("transform")) {
+      this.props.navigation.getParam("newWrkouts").forEach((workout) => {
+        if (workout.gym) {
+          this.setState({gymWorkout: workout});
+        } else if (workout.home) {
+          this.setState({homeWorkout: workout});
+        } else {
+          this.setState({workout: workout});
+        }
+      });
+    } else {
+      this.setState({
+        workout: this.props.navigation.getParam("workout", null)
+      });
+    }
     // this.setState({
     //   workout: this.props.navigation.getParam("workout", null),
     //   reps: this.props.navigation.getParam("reps", null),
@@ -225,14 +235,14 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   };
 
   handleWorkoutStart = () => {
-    const { mode, gymWorkout, homeWorkout, workout, reps, extraProps, lifestyle } = this.state;
+    const { mode, gymWorkout, homeWorkout, workout, reps, extraProps, lifestyle, transform } = this.state;
     this.setState({ musicModalVisible: false });
     // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
     this.props.navigation.navigate("Countdown", {
       lifestyle,
-      workout: mode === 'GYM' ? gymWorkout : mode === 'HOME' ? homeWorkout : workout,
+      workout: transform ? mode === 'GYM' ? gymWorkout : mode === 'HOME' ? homeWorkout : workout : workout,
       reps,
-      resistanceCategoryId: mode === 'GYM' ? gymWorkout.id : mode === 'HOME' ? homeWorkout.id : workout.id,
+      resistanceCategoryId: transform ? mode === 'GYM' ? gymWorkout.id : mode === 'HOME' ? homeWorkout.id : workout.id : workout.id,
       workoutSubCategory: this.state.workoutSubCategory,
       fitnessLevel: this.state.fitnessLevel,
       extraProps,
@@ -664,7 +674,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       gymWorkout,
       homeWorkout,
       mode,
-      showGymPickerModal
+      showGymPickerModal,
+      transformLevel
     } = this.state;
 
     let workoutTime = 0;

@@ -63,7 +63,7 @@ export const getCurrentChallengeDay = (startDate, currentDate) => {
   return a.diff(b, 'days') + 1
 }
 
-export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserData, selectedDate) => {
+export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserData, selectedDate, transformLevel) => {
 
   // let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime();
   // // To calculate the no. of days between two dates
@@ -93,7 +93,9 @@ export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserDa
       return [];
     } else {
       // return snapshot.docs.map((res) => res.data());
-      return todayRcWorkouts.length === 1 ? todayRcWorkouts[0] : todayRcWorkouts
+      return transformLevel.slice(-1) === '2'
+          ? todayRcWorkouts.length === 1 ? todayRcWorkouts[0] : todayRcWorkouts
+          : snapshot.docs.map((res) => res.data());
     }
   } else {
     console.log("????", workoutData)
