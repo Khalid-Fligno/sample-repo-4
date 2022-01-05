@@ -92,7 +92,7 @@ export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserDa
       return [];
     } else {
       // return snapshot.docs.map((res) => res.data());
-      return transformLevel.slice(-1) === '3'
+      return transformLevel.slice(-1) === '2'
           ? todayRcWorkouts.length === 1 ? todayRcWorkouts[0] : todayRcWorkouts
           : snapshot.docs.map((res) => res.data());
     }

@@ -512,7 +512,8 @@ class CalendarHomeScreen extends React.PureComponent {
       newWrkouts,
       fitnessLevel,
       extraProps: { fromCalender: true },
-      transformLevel: this.transformLevel
+      transformLevel: this.transformLevel,
+      transform: true
     });
 
     // if (this.currentChallengeDay > 0) {
@@ -712,7 +713,8 @@ class CalendarHomeScreen extends React.PureComponent {
                 activeChallengeData.workouts,
                 activeChallengeUserData,
                 this.stringDate,
-                this.transformLevel
+                this.transformLevel,
+                this.state.transform
             )
         );
 
@@ -832,12 +834,11 @@ class CalendarHomeScreen extends React.PureComponent {
           <View style={calendarStyles.listContainer}>
             <ChallengeWorkoutCard
                 onPress={() => {
-                  console.log(todayRcWorkout.length)
-                  // if (todayRcWorkout.length) {
-                  //   this.loadExercises(todayRcWorkout, this.currentChallengeDay)
-                  // } else {
-                  //   this.loadExercisesE(todayRcWorkout, this.currentChallengeDay)
-                  // }
+                  if (todayRcWorkout.length) {
+                    this.loadExercises(todayRcWorkout, this.currentChallengeDay)
+                  } else {
+                    this.loadExercisesE(todayRcWorkout, this.currentChallengeDay)
+                  }
                 }
                   // todayRcWorkout.name && todayRcWorkout.name !== "rest"
                   //   ? this.loadExercises(todayRcWorkout, this.currentChallengeDay)
