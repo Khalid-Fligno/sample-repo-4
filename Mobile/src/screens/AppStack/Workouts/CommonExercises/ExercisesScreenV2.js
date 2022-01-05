@@ -728,7 +728,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         if (!workout.count && !rest)
           return (
             <WorkoutTimer
-              totalDuration={Number(totalDuration)}
+              totalDuration={Number(currentExercise.duration)}
               start={timerStart}
               handleFinish={() => {
                 if (!rest)
