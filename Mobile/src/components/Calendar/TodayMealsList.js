@@ -383,8 +383,8 @@ class TodayMealsList extends Component {
         {data.dinner.length > 0 && this.carouselDinner(data.dinner, recipe.dinner, todayRecommendedRecipe.dinner, "Dinner")}
         {data.snack.length > 0 && this.carouselSnack(data.snack, recipe.snack, todayRecommendedRecipe.snack, "Snack")}
         {data.drink.length > 0 && this.carouselDrink(data.drink, recipe.drink, todayRecommendedRecipe.drink, "Post Workout")}
-        {data.preworkout.length > 0 && this.carouselPreworkout(data.preworkout, recipe.preworkout, "Pre Workout")}
-        {data.treats.length > 0 && this.carouselTreats(data.treats, recipe.treats, "Treats")}
+        {data.preworkout.length > 0 && this.carouselPreworkout(data.preworkout, recipe.preworkout, todayRecommendedRecipe.preworkout, "Pre Workout")}
+        {data.treats.length > 0 && this.carouselTreats(data.treats, recipe.treats, todayRecommendedRecipe.treats, "Treats")}
       </View>
     );
   }

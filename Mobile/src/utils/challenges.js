@@ -209,9 +209,11 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
   let dinnerResult = []
   let snackResult = []
   let drinkResult = []
+  let preworkoutResult = []
+  let treatsResult = []
 
   let levelName = activeChallengeData.levelTags
-  let phaseName = phaseData.displayName
+  let phaseName = phaseData.phaseTags
   let data = phaseData.meals;
   const recipeRef = db.collection('recipes');
   const snapshot = await recipeRef.get();
@@ -303,6 +305,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
           }
         })
       }
+      
       if (resType === 'snack') {
         snapshot.forEach((res) => {
           if (resMeals.snack === res.data().snack) {
@@ -346,6 +349,50 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
           }
         })
       }
+
+      if (resType === 'preworkout') {
+        snapshot.forEach((res) => {
+          if (resMeals.drink === res.data().drink) {
+            try {
+              res.data().tags.forEach((resLevel) => {
+                if (levelName === resLevel) {
+                  res.data().tags.forEach((resPhase) => {
+                    if (phaseName === resPhase) {
+                      preworkoutResult.push(res.data())
+                    } else {
+                      return null
+                    }
+                  })
+                }
+              })
+            } catch (err) {
+              // console.log('error: ', err)
+            }
+          }
+        })
+      }
+
+      if (resType === 'treats') {
+        snapshot.forEach((res) => {
+          if (resMeals.drink === res.data().drink) {
+            try {
+              res.data().tags.forEach((resLevel) => {
+                if (levelName === resLevel) {
+                  res.data().tags.forEach((resPhase) => {
+                    if (phaseName === resPhase) {
+                      treatsResult.push(res.data())
+                    } else {
+                      return null
+                    }
+                  })
+                }
+              })
+            } catch (err) {
+              // console.log('error: ', err)
+            }
+          }
+        })
+      }
     })
   })
 
@@ -375,7 +422,9 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
     lunch: lunchResult,
     dinner: dinnerResult,
     snack: snackResult,
-    drink: drinkResult
+    drink: drinkResult,
+    preworkout: preworkoutResult,
+    treats: treatsResult
   }]
 
   // console.log('Recipe Data: ', recommendedRecipe.breakfast)
