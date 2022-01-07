@@ -76,8 +76,8 @@ export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserDa
   let todayRcWorkouts = []
 
   const workoutData = workouts.find((res) => res.days.includes(currentDay));
-  workouts.map((workout) => {
-    workout.days.map((day) => {
+  workouts?.map((workout) => {
+    workout.days?.map((day) => {
       if (day === currentDay) {
         workoutIds.push(workout.id);
       }
@@ -101,7 +101,6 @@ export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserDa
     console.log("????", workoutData)
     return [workoutData]
   }
-
 }
 
 export const fetchRecipeData = async (challengeRecipe) => {
