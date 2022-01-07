@@ -90,11 +90,11 @@ export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserDa
 }
 
 export const convertRecipeData = async (recipeId) => {
-  
+
   const recipeResult = []
   const recipeRef = db.collection('recipes');
   const snapshot = await recipeRef.get();
-  if(recipeId){
+  if (recipeId) {
     if (snapshot.empty) {
       return null
     } else {
@@ -108,7 +108,7 @@ export const convertRecipeData = async (recipeId) => {
 
   return {
     recipeResult
-  }  
+  }
 
 }
 
@@ -231,7 +231,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
   }
   else {
     const recipeRef = db.collection('recipes')
-        .where("accessFilter", "array-contains", activeChallengeData.tag)
+      .where("accessFilter", "array-contains", activeChallengeData.tag)
     const snapshot = await recipeRef.get();
 
     snapshot.forEach(doc => {
@@ -246,16 +246,14 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
         snapshot.forEach((res) => {
           if (resMeals.breakfast === res.data().breakfast) {
             try {
-              res.data().tags.forEach((resLevel) => {
-                if (levelName === resLevel) {
-                  res.data().tags.forEach((resPhase) => {
-                    if (phaseName === resPhase) { 
-                      breakfastResult.push(res.data())
-                    } else {
-                      return null
-                    }
-                  })
-                }
+              res.data().tags.forEach(resTag => {
+                if (resTag === levelName) {
+                  if (res.data().tags.includes(phaseName)) {
+                    breakfastResult.push(res.data())
+                  } else {
+                    breakfastResult.push(res.data())
+                  }
+                }       
               })
             } catch (err) {
               // console.log('error: ', err)
@@ -267,16 +265,14 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
         snapshot.forEach((res) => {
           if (resMeals.lunch === res.data().lunch) {
             try {
-              res.data().tags.forEach((resLevel) => {
-                if (levelName === resLevel) {
-                  res.data().tags.forEach((resPhase) => {
-                    if (phaseName === resPhase) {
-                      lunchResult.push(res.data())
-                    } else {
-                      return null
-                    }
-                  })
-                }
+              res.data().tags.forEach(resTag => {
+                if (resTag === levelName) {
+                  if (res.data().tags.includes(phaseName)) {
+                    lunchResult.push(res.data())
+                  } else {
+                    lunchResult.push(res.data())
+                  }
+                }       
               })
             } catch (err) {
               // console.log('error: ', err)
@@ -288,16 +284,14 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
         snapshot.forEach((res) => {
           if (resMeals.dinner === res.data().dinner) {
             try {
-              res.data().tags.forEach((resLevel) => {
-                if (levelName === resLevel) {
-                  res.data().tags.forEach((resPhase) => {
-                    if (phaseName === resPhase) {
-                      dinnerResult.push(res.data())
-                    } else {
-                      return null
-                    }
-                  })
-                }
+              res.data().tags.forEach(resTag => {
+                if (resTag === levelName) {
+                  if (res.data().tags.includes(phaseName)) {
+                    dinnerResult.push(res.data())
+                  } else {
+                    dinnerResult.push(res.data())
+                  }
+                }       
               })
             } catch (err) {
               // console.log('error: ', err)
@@ -305,21 +299,19 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
           }
         })
       }
-      
+
       if (resType === 'snack') {
         snapshot.forEach((res) => {
           if (resMeals.snack === res.data().snack) {
             try {
-              res.data().tags.forEach((resLevel) => {
-                if (levelName === resLevel) {
-                  res.data().tags.forEach((resPhase) => {
-                    if (phaseName === resPhase) {
-                      snackResult.push(res.data())
-                    } else {
-                      return null
-                    }
-                  })
-                }
+              res.data().tags.forEach(resTag => {
+                if (resTag === levelName) {
+                  if (res.data().tags.includes(phaseName)) {
+                    snackResult.push(res.data())
+                  } else {
+                    snackResult.push(res.data())
+                  }
+                }       
               })
             } catch (err) {
               // console.log('error: ', err)
@@ -332,16 +324,14 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
         snapshot.forEach((res) => {
           if (resMeals.drink === res.data().drink) {
             try {
-              res.data().tags.forEach((resLevel) => {
-                if (levelName === resLevel) {
-                  res.data().tags.forEach((resPhase) => {
-                    if (phaseName === resPhase) {
-                      drinkResult.push(res.data())
-                    } else {
-                      return null
-                    }
-                  })
-                }
+              res.data().tags.forEach(resTag => {
+                if (resTag === levelName) {
+                  if (res.data().tags.includes(phaseName)) {
+                    drinkResult.push(res.data())
+                  } else {
+                    drinkResult.push(res.data())
+                  }
+                }       
               })
             } catch (err) {
               // console.log('error: ', err)
@@ -354,16 +344,14 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
         snapshot.forEach((res) => {
           if (resMeals.drink === res.data().drink) {
             try {
-              res.data().tags.forEach((resLevel) => {
-                if (levelName === resLevel) {
-                  res.data().tags.forEach((resPhase) => {
-                    if (phaseName === resPhase) {
-                      preworkoutResult.push(res.data())
-                    } else {
-                      return null
-                    }
-                  })
-                }
+              res.data().tags.forEach(resTag => {
+                if (resTag === levelName) {
+                  if (res.data().tags.includes(phaseName)) {
+                    preworkoutResult.push(res.data())
+                  } else {
+                    preworkoutResult.push(res.data())
+                  }
+                }       
               })
             } catch (err) {
               // console.log('error: ', err)
@@ -376,16 +364,14 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
         snapshot.forEach((res) => {
           if (resMeals.drink === res.data().drink) {
             try {
-              res.data().tags.forEach((resLevel) => {
-                if (levelName === resLevel) {
-                  res.data().tags.forEach((resPhase) => {
-                    if (phaseName === resPhase) {
-                      treatsResult.push(res.data())
-                    } else {
-                      return null
-                    }
-                  })
-                }
+              res.data().tags.forEach(resTag => {
+                if (resTag === levelName) {
+                  if (res.data().tags.includes(phaseName)) {
+                    treatsResult.push(res.data())
+                  } else {
+                    treatsResult.push(res.data())
+                  }
+                }       
               })
             } catch (err) {
               // console.log('error: ', err)
