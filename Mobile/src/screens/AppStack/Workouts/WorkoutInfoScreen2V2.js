@@ -32,7 +32,7 @@ import {
   findFocus,
   findLocation,
   findFocusIcon,
-  findWorkoutType,
+  findWorkoutType, loadExercise, downloadExerciseWC,
 } from "../../../utils/workouts";
 import colors from "../../../styles/colors";
 // import fonts from '../../../styles/fonts';
@@ -653,6 +653,83 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     this.setState({ showGymPickerModal: false });
   };
 
+  loadExercises = async (workoutData) => {
+    this.setState({ loading: true });
+
+    let uniqueWarmUpExercises = [...new Set(workoutData.warmUpExercises)];
+
+    Object.assign(workoutData, {
+      warmUpExercises: uniqueWarmUpExercises
+    });
+
+    const workout = await loadExercise(workoutData);
+
+    if (workout && workout.newWorkout) {
+
+      const warmUpExercises = await downloadExerciseWC(
+          workout,
+          Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array") > -1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => { return warmUpExercise }),
+          workout.warmUpExerciseModel,
+          "warmUp"
+      );
+      if (warmUpExercises.length > 0) {
+        const coolDownExercises = await downloadExerciseWC(
+            workout,
+            workout.coolDownExercises,
+            workout.coolDownExerciseModel,
+            "coolDown"
+        );
+        if (coolDownExercises.length > 0) {
+          const newWorkout = Object.assign({}, workout, {
+            warmUpExercises: warmUpExercises,
+            coolDownExercises: coolDownExercises,
+          });
+          this.goToNext(newWorkout);
+        } else {
+          this.setState({ loadingExercises: false });
+          Alert.alert("Alert!", "Something went wrong!");
+        }
+      } else {
+        this.setState({ loadingExercises: false });
+        Alert.alert("Alert!", "Something went wrong!");
+      }
+    } else if (workout) {
+      this.goToNext(workout);
+    } else {
+      this.setState({ loadingExercises: false });
+    }
+  };
+
+  async goToNext(workout) {
+    console.log(">>here");
+    let newWrkouts = [];
+    if (
+        this.currentChallengeDay === 1 &&
+        !this.state.initialBurpeeTestCompleted
+    ) {
+      await FileSystem.downloadAsync(
+          "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+          `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+      );
+    }
+    const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
+    this.setState({ loading: false });
+    if (workout.length) {
+      workout.map((wrkout) => {
+        if (this.currentChallengeDay > 0) {
+          Object.assign(wrkout, {
+            displayName: `${wrkout.displayName} - Day ${this.currentChallengeDay}`,
+          });
+          newWrkouts.push(wrkout);
+        }
+      });
+    } else {
+      newWrkouts.push(workout);
+    }
+
+    console.log(newWrkouts);
+  }
+
   render() {
     const {
       loading,
@@ -671,6 +748,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       expandedExercise,
       expandedWarmup,
       expandedCooldown,
+      gymSetting,
       gymWorkout,
       homeWorkout,
       mode,
@@ -1342,12 +1420,12 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
 
           <TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
             <Text
-              style={{
-                color: colors.white,
-                fontFamily: fonts.bold,
-                fontSize: 20,
-                alignSelf: "center",
-              }}
+                style={{
+                  color: colors.white,
+                  fontFamily: fonts.bold,
+                  fontSize: 20,
+                  alignSelf: "center",
+                }}
             >
               {"Start now"}
             </Text>
@@ -1369,7 +1447,10 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
               <Picker
                   selectedValue={mode === 'GYM' ? 'GYM' : 'HOME'}
                   onValueChange={(value) => {
-                    this.setState({mode: value === 'GYM' ? 'GYM' : 'HOME'});
+                    gymSetting
+                        ? this.loadExercises(homeWorkout, this.currentChallengeDay)
+                        : this.loadExercises(gymWorkout, this.currentChallengeDay)
+                    // this.setState({mode: value === 'GYM' ? 'GYM' : 'HOME'});
                   }}
               >
                 <Picker.Item
