@@ -119,8 +119,8 @@ export const fetchRecipeData = async (challengeRecipe) => {
   const dinnerActive = []
   const snackActive = []
   const drinkActive = []
-  // const preworkoutActive = []
-  // const treatsActive = []
+  const preworkoutActive = []
+  const treatsActive = []
 
   if (challengeRecipe) {
     const recipeRef = db.collection('recipes');
@@ -176,6 +176,20 @@ export const fetchRecipeData = async (challengeRecipe) => {
               }
             })
           }
+          if (resType === 'preworkout') {
+            snapshot.forEach((res) => {
+              if (resMeals.preworkout === res.data().preworkout) {
+                preworkoutActive.push(res.data())
+              }
+            })
+          }
+          if (resType === 'treats') {
+            snapshot.forEach((res) => {
+              if (resMeals.treats === res.data().treats) {
+                treatsActive.push(res.data())
+              }
+            })
+          }
         })
       } catch (err) {
 
@@ -189,8 +203,8 @@ export const fetchRecipeData = async (challengeRecipe) => {
     lunch: lunchActive,
     dinner: dinnerActive,
     drink: drinkActive,
-    // preworkout: preworkoutActive,
-    // treats: treatsActive,
+    preworkout: preworkoutActive,
+    treats: treatsActive,
   }]
 
   return {
@@ -342,7 +356,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
 
       if (resType === 'preworkout') {
         snapshot.forEach((res) => {
-          if (resMeals.drink === res.data().drink) {
+          if (resMeals.preworkout === res.data().preworkout) {
             try {
               res.data().tags.forEach(resTag => {
                 if (resTag === levelName) {
@@ -362,7 +376,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
 
       if (resType === 'treats') {
         snapshot.forEach((res) => {
-          if (resMeals.drink === res.data().drink) {
+          if (resMeals.treats === res.data().treats) {
             try {
               res.data().tags.forEach(resTag => {
                 if (resTag === levelName) {

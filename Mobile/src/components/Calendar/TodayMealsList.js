@@ -270,7 +270,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselPreworkout = (data, data1, title) => {
+  carouselPreworkout = (data, data1, data2, title) => {
     return (
       <View>
         <View
@@ -308,7 +308,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, title)}
+            onPress={() => this.props.filterPress(data, data1, data2, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -320,7 +320,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselTreats = (data, data1, title) => {
+  carouselTreats = (data, data1, data2, title) => {
 
     return (
       <View>
@@ -359,7 +359,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, title)}
+            onPress={() => this.props.filterPress(data, data1, data2, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
