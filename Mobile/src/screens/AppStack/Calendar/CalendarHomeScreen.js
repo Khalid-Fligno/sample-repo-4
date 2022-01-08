@@ -70,6 +70,7 @@ class CalendarHomeScreen extends React.PureComponent {
       completeCha: undefined,
       todayRecommendedRecipe: undefined,
       phaseDefaultTags: undefined,
+      gymSetting: false
     };
     this.calendarStrip = React.createRef();
   }
@@ -330,109 +331,134 @@ class CalendarHomeScreen extends React.PureComponent {
     });
   }
 
-  loadExercises = async (workoutData) => {
+  loadExercises = async (gymSetting, workoutData) => {
     this.setState({ loadingExercises: true });
 
-    const functionThatReturnsAPromise = item => {
-      return Promise.resolve(item);
-    };
-
-    const doSomethingAsync = async item => {
-      let uniqueWarmUpExercises = [...new Set(item.warmUpExercises)];
-
-      Object.assign(item, {
-        warmUpExercises: uniqueWarmUpExercises
-      });
-
-      const workout = await loadExercise(item);
-
-      if (workout && workout.newWorkout) {
-
-        const warmUpExercises = await downloadExerciseWC(
-            workout,
-            Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array") > -1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => { return warmUpExercise }),
-            workout.warmUpExerciseModel,
-            "warmUp"
-        );
-        if (warmUpExercises.length > 0) {
-          const coolDownExercises = await downloadExerciseWC(
-              workout,
-              workout.coolDownExercises,
-              workout.coolDownExerciseModel,
-              "coolDown"
-          );
-          if (coolDownExercises.length > 0) {
-            const newWorkout = Object.assign({}, workout, {
-              warmUpExercises: warmUpExercises,
-              coolDownExercises: coolDownExercises,
-            });
-            return functionThatReturnsAPromise(newWorkout)
-          } else {
-            this.setState({ loadingExercises: false });
-            Alert.alert("Alert!", "Something went wrong!");
-          }
-        } else {
-          this.setState({ loadingExercises: false });
-          Alert.alert("Alert!", "Something went wrong!");
-        }
-      } else if (workout) {
-        return functionThatReturnsAPromise(workout)
-      } else {
-        this.setState({ loadingExercises: false });
-      }
-    };
-
-    const getData = async () => {
-      return Promise.all(workoutData.map(item => doSomethingAsync(item)))
-    };
-
-    getData().then(data => {
-      this.goToNext(data);
-    });
-
-    // let uniqueWarmUpExercises = [...new Set(workoutData.warmUpExercises)];
+    // const functionThatReturnsAPromise = item => {
+    //   return Promise.resolve(item);
+    // };
     //
-    // Object.assign(workoutData, {
-    //   warmUpExercises: uniqueWarmUpExercises
-    // });
+    // const doSomethingAsync = async item => {
+    //   let uniqueWarmUpExercises = [...new Set(item.warmUpExercises)];
     //
-    // const workout = await loadExercise(workoutData);
+    //   Object.assign(item, {
+    //     warmUpExercises: uniqueWarmUpExercises
+    //   });
     //
-    // if (workout && workout.newWorkout) {
+    //   const workout = await loadExercise(item);
     //
-    //   const warmUpExercises = await downloadExerciseWC(
-    //     workout,
-    //     Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array") > -1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => { return warmUpExercise }),
-    //     workout.warmUpExerciseModel,
-    //     "warmUp"
-    //   );
-    //   if (warmUpExercises.length > 0) {
-    //     const coolDownExercises = await downloadExerciseWC(
-    //       workout,
-    //       workout.coolDownExercises,
-    //       workout.coolDownExerciseModel,
-    //       "coolDown"
+    //   if (workout && workout.newWorkout) {
+    //
+    //     const warmUpExercises = await downloadExerciseWC(
+    //         workout,
+    //         Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array") > -1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => { return warmUpExercise }),
+    //         workout.warmUpExerciseModel,
+    //         "warmUp"
     //     );
-    //     if (coolDownExercises.length > 0) {
-    //       const newWorkout = Object.assign({}, workout, {
-    //         warmUpExercises: warmUpExercises,
-    //         coolDownExercises: coolDownExercises,
-    //       });
-    //       this.goToNext(newWorkout);
-    //       console.log(newWorkout);
+    //     if (warmUpExercises.length > 0) {
+    //       const coolDownExercises = await downloadExerciseWC(
+    //           workout,
+    //           workout.coolDownExercises,
+    //           workout.coolDownExerciseModel,
+    //           "coolDown"
+    //       );
+    //       if (coolDownExercises.length > 0) {
+    //         const newWorkout = Object.assign({}, workout, {
+    //           warmUpExercises: warmUpExercises,
+    //           coolDownExercises: coolDownExercises,
+    //         });
+    //         return functionThatReturnsAPromise(newWorkout)
+    //       } else {
+    //         this.setState({ loadingExercises: false });
+    //         Alert.alert("Alert!", "Something went wrong!");
+    //       }
     //     } else {
     //       this.setState({ loadingExercises: false });
     //       Alert.alert("Alert!", "Something went wrong!");
     //     }
+    //   } else if (workout) {
+    //     return functionThatReturnsAPromise(workout)
     //   } else {
     //     this.setState({ loadingExercises: false });
-    //     Alert.alert("Alert!", "Something went wrong!");
     //   }
-    // } else if (workout) {
-    //   this.goToNext(workout);
-    // } else {
-    //   this.setState({ loadingExercises: false });
-    // }
+    // };
+    //
+    // const getData = async () => {
+    //   return Promise.all(workoutData.map(item => doSomethingAsync(item)))
+    // };
+    //
+    // getData().then(data => {
+    //   this.goToNext(data);
+    // });
+
+    let homeGymWorkouts = [];
+    let workoutDatas = [];
+
+    if (gymSetting) {
+      if (workoutData[0].gym) {
+        homeGymWorkouts.push(workoutData[0]);
+        homeGymWorkouts.push(workoutData[1]);
+      }
+      else if (workoutData[0].home) {
+        homeGymWorkouts.push(workoutData[1]);
+        homeGymWorkouts.push(workoutData[0]);
+      }
+    } else {
+      if (workoutData[0].gym) {
+        homeGymWorkouts.push(workoutData[1]);
+        homeGymWorkouts.push(workoutData[0]);
+      }
+      else if (workoutData[0].home) {
+        homeGymWorkouts.push(workoutData[0]);
+        homeGymWorkouts.push(workoutData[1]);
+      }
+    }
+
+    let uniqueWarmUpExercises = [...new Set(homeGymWorkouts[0].warmUpExercises)];
+
+    Object.assign(homeGymWorkouts[0], {
+      warmUpExercises: uniqueWarmUpExercises
+    });
+
+    const workout = await loadExercise(homeGymWorkouts[0]);
+
+    if (workout && workout.newWorkout) {
+
+      const warmUpExercises = await downloadExerciseWC(
+        workout,
+        Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array") > -1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => { return warmUpExercise }),
+        workout.warmUpExerciseModel,
+        "warmUp"
+      );
+      if (warmUpExercises.length > 0) {
+        const coolDownExercises = await downloadExerciseWC(
+          workout,
+          workout.coolDownExercises,
+          workout.coolDownExerciseModel,
+          "coolDown"
+        );
+        if (coolDownExercises.length > 0) {
+          const newWorkout = Object.assign({}, workout, {
+            warmUpExercises: warmUpExercises,
+            coolDownExercises: coolDownExercises,
+          });
+          workoutDatas.push(newWorkout);
+          workoutDatas.push(homeGymWorkouts[1]);
+          console.log(workoutDatas);
+          this.goToNext(workoutDatas);
+        } else {
+          this.setState({ loadingExercises: false });
+          Alert.alert("Alert!", "Something went wrong!");
+        }
+      } else {
+        this.setState({ loadingExercises: false });
+        Alert.alert("Alert!", "Something went wrong!");
+      }
+    } else if (workout) {
+      this.goToNext(workout);
+    } else {
+      this.setState({ loadingExercises: false });
+    }
   };
 
   loadExercisesE = async (workoutData) => {
@@ -792,7 +818,8 @@ class CalendarHomeScreen extends React.PureComponent {
       width,
       AllRecipe,
       completeCha,
-      todayRecommendedRecipe
+      todayRecommendedRecipe,
+        gymSetting,
     } = this.state;
 
     let showRC = false;
@@ -845,7 +872,7 @@ class CalendarHomeScreen extends React.PureComponent {
             <ChallengeWorkoutCard
                 onPress={() => {
                   if (todayRcWorkout.length) {
-                    this.loadExercises(todayRcWorkout, this.currentChallengeDay)
+                    this.loadExercises(gymSetting, todayRcWorkout, this.currentChallengeDay)
                   } else {
                     this.loadExercisesE(todayRcWorkout, this.currentChallengeDay)
                   }
