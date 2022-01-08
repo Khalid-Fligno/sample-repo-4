@@ -30,6 +30,7 @@ import CustomButton from "../../../components/Shared/CustomButton";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import TimeSvg from "../../../../assets/icons/time";
 import fonts from "../../../styles/fonts";
+import sortBy from "lodash.sortby";
 
 const moment = require("moment");
 
@@ -152,7 +153,23 @@ export default class RecipeScreen extends React.PureComponent {
       backTitle,
       title
     } = this.state;
-        
+
+    const tagList = Object(recipe).tags
+
+    const tagsV = sortBy(tagList).filter((tag) => {
+      if (tag === 'V') {
+        return tag
+      } else if (tag === 'V+') {
+        return tag
+      } if (tag === 'GF') {
+        return tag
+      } if (tag === 'GH') {
+        return tag
+      } if (tag === 'DF') {
+        return tag
+      }
+    }) 
+    
     return (
       <View style={NutritionStyles.container}>
         {!loading && (
@@ -338,10 +355,10 @@ export default class RecipeScreen extends React.PureComponent {
             </Modal>
             <View style={{ paddingHorizontal: containerPadding }}>
               <View style={NutritionStyles.infoBar}>
-                {recipe.tags.length > 0 && (
+                {tagsV.length > 0 && (
                   <View style={NutritionStyles.infoFieldContainer}>
-                    {recipe.tags.length > 0 &&
-                      recipe.tags.map((tag, index) => (
+                    {tagsV.length > 0 &&
+                      tagsV.map((tag, index) => (
                         <Tag tag={tag} key={index} />
                       ))}
                   </View>
