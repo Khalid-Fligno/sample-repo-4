@@ -86,7 +86,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       mode: undefined,
       showGymPickerModal: false,
       transformLevel: undefined,
-      transform: false
+      transform: false,
+      exerciseDownloaded: false
     };
   }
 
@@ -653,7 +654,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     this.setState({ showGymPickerModal: false });
   };
 
-  loadExercises = async (workoutData) => {
+  loadExercises = async (gymSetting, workoutData) => {
     this.setState({ loading: true });
 
     let uniqueWarmUpExercises = [...new Set(workoutData.warmUpExercises)];
@@ -684,7 +685,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
             warmUpExercises: warmUpExercises,
             coolDownExercises: coolDownExercises,
           });
-          this.goToNext(newWorkout);
+          this.goToNext(gymSetting, newWorkout);
         } else {
           this.setState({ loadingExercises: false });
           Alert.alert("Alert!", "Something went wrong!");
@@ -700,7 +701,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     }
   };
 
-  async goToNext(workout) {
+  async goToNext(gymSetting, workout) {
     console.log(">>here");
     let newWrkouts = [];
     if (
@@ -713,7 +714,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       );
     }
     const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
-    this.setState({ loading: false });
     if (workout.length) {
       workout.map((wrkout) => {
         if (this.currentChallengeDay > 0) {
@@ -727,7 +727,12 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       newWrkouts.push(workout);
     }
 
-    console.log(newWrkouts);
+    gymSetting
+        ? this.setState({ homeWorkout: newWrkouts[0] })
+        : this.setState({ gymWorkout: newWrkouts[0] });
+    this.setState({ loading: false });
+    this.setState({ showGymPickerModal: false });
+    this.setState({ exerciseDownloaded: true });
   }
 
   render() {
@@ -753,7 +758,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       homeWorkout,
       mode,
       showGymPickerModal,
-      transformLevel
+      transformLevel,
+      exerciseDownloaded
     } = this.state;
 
     let workoutTime = 0;
@@ -857,57 +863,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
               { paddingHorizontal: 0, backgroundColor: colors.smoke },
             ]}
         >
-          {/*{*/}
-          {/*  gymWorkout && (*/}
-          {/*      <GymWorkout*/}
-          {/*          workout={gymWorkout}*/}
-          {/*          reps={reps}*/}
-          {/*          workoutSubCategory={workoutSubCategory}*/}
-          {/*          fitnessLevel={fitnessLevel}*/}
-          {/*          extraProps={extraProps}*/}
-          {/*      />*/}
-          {/*  )*/}
-          {/*}*/}
-          {/*{Platform.OS === "ios" && (*/}
-          {/*  <Modal*/}
-          {/*    isVisible={calendarModalVisible}*/}
-          {/*    animationIn="fadeIn"*/}
-          {/*    animationInTiming={600}*/}
-          {/*    animationOut="fadeOut"*/}
-          {/*    animationOutTiming={600}*/}
-          {/*    onBackdropPress={this.hideCalendarModal}*/}
-          {/*  >*/}
-          {/*    <View style={globalStyle.modalContainer}>*/}
-          {/*      <DateTimePicker*/}
-          {/*        mode="date"*/}
-          {/*        value={chosenDate}*/}
-          {/*        onChange={this.setDate}*/}
-          {/*        minimumDate={new Date()}*/}
-          {/*      />*/}
-          {/*      <TouchableOpacity*/}
-          {/*        onPress={() => this.addWorkoutToCalendar(chosenDate)}*/}
-          {/*        style={globalStyle.modalButton}*/}
-          {/*      >*/}
-          {/*        {addingToCalendar ? (*/}
-          {/*          <DotIndicator color={colors.white} count={3} size={6} />*/}
-          {/*        ) : (*/}
-          {/*          <Text style={globalStyle.modalButtonText}>*/}
-          {/*            ADD TO CALENDAR*/}
-          {/*          </Text>*/}
-          {/*        )}*/}
-          {/*      </TouchableOpacity>*/}
-          {/*    </View>*/}
-          {/*  </Modal>*/}
-          {/*)}*/}
-          {/*{Platform.OS === "android" && calendarModalVisible && !loading && (*/}
-          {/*  <DateTimePicker*/}
-          {/*    mode="date"*/}
-          {/*    value={chosenDate}*/}
-          {/*    onChange={this.setDate}*/}
-          {/*    minimumDate={new Date()}*/}
-          {/*  />*/}
-          {/*)}*/}
-
           {
             mode === 'GYM'
                 ?
@@ -1417,7 +1372,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 </View>
             )
           }
-
           <TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
             <Text
                 style={{
@@ -1430,7 +1384,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
               {"Start now"}
             </Text>
           </TouchableOpacity>
-
           <Modal
               isVisible={showGymPickerModal}
               onBackdropPress={() => this.hideGymPickerModal()}
@@ -1447,10 +1400,27 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
               <Picker
                   selectedValue={mode === 'GYM' ? 'GYM' : 'HOME'}
                   onValueChange={(value) => {
-                    gymSetting
-                        ? this.loadExercises(homeWorkout, this.currentChallengeDay)
-                        : this.loadExercises(gymWorkout, this.currentChallengeDay)
-                    // this.setState({mode: value === 'GYM' ? 'GYM' : 'HOME'});
+                    if (gymSetting) {
+                      if (value === 'HOME') {
+                        if (exerciseDownloaded) this.setState({mode: value === 'GYM' ? 'GYM' : 'HOME'});
+                        else {
+                          this.setState({mode: value === 'GYM' ? 'GYM' : 'HOME'});
+                          this.loadExercises(gymSetting, homeWorkout, this.currentChallengeDay);
+                        }
+                      } else {
+                        this.setState({mode: value === 'GYM' ? 'GYM' : 'HOME'})
+                      }
+                    } else {
+                      if (value === 'GYM') {
+                        if (exerciseDownloaded) this.setState({mode: value === 'GYM' ? 'GYM' : 'HOME'});
+                        else {
+                          this.setState({mode: value === 'GYM' ? 'GYM' : 'HOME'});
+                          this.loadExercises(gymSetting, gymWorkout, this.currentChallengeDay);
+                        }
+                      } else {
+                        this.setState({mode: value === 'GYM' ? 'GYM' : 'HOME'})
+                      }
+                    }
                   }}
               >
                 <Picker.Item
@@ -1484,6 +1454,22 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 }}>DONE</Text>
               </TouchableOpacity>
             </View>
+            <Loader
+                loading={loading}
+                color={colors.red.standard}
+                text={loading ? "Please wait we are loading workout" : null}
+            />
+            {/*{*/}
+            {/*  loading && (*/}
+            {/*      <>*/}
+            {/*        <Loader*/}
+            {/*            loading={loading}*/}
+            {/*            color={colors.red.standard}*/}
+            {/*            text={loading ? "Please wait we are loading workout" : null}*/}
+            {/*        />*/}
+            {/*      </>*/}
+            {/*  )*/}
+            {/*}*/}
           </Modal>
         </View>
     );
