@@ -311,26 +311,46 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.setState({ gutHealth: false })
     }
 
-    applyButton = (phases, data) => {
+    applyButton = (data, levelButtonData) => {
 
         const allData = []
         const tagList = []
+        const phaseData = []
 
+        levelButtonData.forEach(res => {
+            data.forEach((resTags) => {
+                try {
+                    resTags.tags.filter((resId) => {
+                        if (res.levelTags === resId) {
+                            phaseData.push(resTags)
+                        }
+                    })
+                } catch (err) {
 
-        phases.forEach((res) => {
+                }
+            })
+        })
+
+        phaseData.forEach((res) => {
             res.tags.filter((resTags) => {
                 if (this.state.phase1 === true) {
                     if (resTags === this.state.phaseText) {
+                        allData.push(res.id)
+                    } else {
                         allData.push(res.id)
                     }
                 }
                 if (this.state.phase2 === true) {
                     if (resTags === this.state.phaseText) {
                         allData.push(res.id)
+                    } else {
+                        allData.push(res.id)
                     }
                 }
                 if (this.state.phase3 === true) {
                     if (resTags === this.state.phaseText) {
+                        allData.push(res.id)
+                    } else {
                         allData.push(res.id)
                     }
                 }
@@ -346,6 +366,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 }
             })
         }
+
+        console.log('taglist:', tagList)
 
         const recipeLists = sortBy(tagList).filter((recipe) => {
             for (let i = 0; i < recipe.tags.length; i++) {
@@ -382,15 +404,21 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 if (this.state.phase1 === true) {
                     if (recipe.tags[i] === 'P1') {
                         return recipe.tags[i]
+                    } else {
+                        return recipe.tags[i]
                     }
                 }
                 if (this.state.phase2 === true) {
                     if (recipe.tags[i] === 'P2') {
                         return recipe.tags[i]
+                    } else {
+                        return recipe.tags[i]
                     }
                 }
                 if (this.state.phase3 === true) {
                     if (recipe.tags[i] === 'P3') {
+                        return recipe.tags[i]
+                    } else {
                         return recipe.tags[i]
                     }
                 }
@@ -448,7 +476,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         )
     };
 
-    clickModal = (datas, data) => {
+    clickModal = (data, levelButtonData) => {
 
         return (
             <Modal
@@ -467,7 +495,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     togglePhase1={() => this.togglePhase1()}
                     togglePhase2={() => this.togglePhase2()}
                     togglePhase3={() => this.togglePhase3()}
-                    applyButton={() => this.applyButton(datas, data)}
+                    applyButton={() => this.applyButton(data, levelButtonData)}
                     headerButton={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
                     backButton={() => this.setState({ isFilterVisible: true, isClickVisible: false })}
                     // backButton={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
@@ -477,7 +505,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         )
     }
 
-    filterModal = (challengeRecipeData, datas, data) => {
+    filterModal = (challengeRecipeData, data) => {
 
         return (
             <Modal
@@ -526,7 +554,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     toggleDairyFree={() => this.toggleDairyFree()}
                     toggleGutHealth={() => this.toggleGutHealth()}
                     closeModal={() => this.closeModal()}
-                    applyButton={() => this.applyButton(datas, data)}
+                    applyButton={() => this.applyButton(data)}
                 />
             </Modal>
         )
@@ -550,22 +578,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
             categoryName,
             loading
         } = this.state
-
-        const phaseData = []
-
-        levelButtonData.forEach(res => {
-            data.forEach((resTags) => {
-                try {
-                    resTags.tags.filter((resId) => {
-                        if (res.levelTags === resId) {
-                            phaseData.push(resTags)
-                        }
-                    })
-                } catch (err) {
-
-                }
-            })
-        })
 
         const skeleton = (
             <View style={styles.recipeTileSkeletonContainer}>
@@ -654,7 +666,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                                         marginRight: 7,
                                     }}
                                 >
-                                    <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>{defaultLevelTags} - {phaseDefaultTags}</Text>
+                                    <Text style={{ marginHorizontal: 10, marginVertical: 5, fontSize: 9, }}>{defaultLevelTags}{defaultLevelTags === 'L1' ? ' - ' + phaseDefaultTags : null}</Text>
                                 </View>
                         }
                         {
@@ -733,12 +745,12 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 }
                 {
                     this.state.isFilterVisible && (
-                        this.filterModal(challengeRecipe, phaseData, data)
+                        this.filterModal(challengeRecipe, data)
                     )
                 }
                 {
                     this.state.isClickVisible && (
-                        this.clickModal(phaseData, data)
+                        this.clickModal(data, levelButtonData)
                     )
                 }
             </View>
