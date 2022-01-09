@@ -1415,7 +1415,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                         if (exerciseDownloaded) this.setState({mode: value === 'GYM' ? 'GYM' : 'HOME'});
                         else {
                           this.setState({mode: value === 'GYM' ? 'GYM' : 'HOME'});
-                          this.loadExercises(gymSetting, gymWorkout, this.currentChallengeDay);
+                          // this.loadExercises(gymSetting, gymWorkout, this.currentChallengeDay);
                         }
                       } else {
                         this.setState({mode: value === 'GYM' ? 'GYM' : 'HOME'})
