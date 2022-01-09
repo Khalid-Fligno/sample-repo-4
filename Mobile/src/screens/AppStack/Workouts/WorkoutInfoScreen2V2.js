@@ -290,6 +290,10 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       this.state.workout.workIntervalMap[this.state.fitnessLevel - 1];
     const restIntervalTimeinSec =
       this.state.workout.restIntervalMap[this.state.fitnessLevel - 1];
+    const exerciseDuration = 
+      exercise.duration / 60
+    const exerciseDecimal = 
+      Number(exerciseDuration).toFixed(2)
     let videoUrl = "";
     switch (section.key) {
       case 0:
@@ -378,7 +382,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                  this.state.lifestyle != true &&
                     exercise.duration > 60 && (
                         <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                          {exercise.duration / 60}mins
+                          {exerciseDecimal}mins
                           {/* {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec}s off`} */}
                         </Text>
