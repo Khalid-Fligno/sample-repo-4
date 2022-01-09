@@ -6,12 +6,10 @@ import {
   StyleSheet,
   View,
   Animated,
-  Image,
 } from 'react-native';
 import { Card } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import NewRecipeBadge from './NewRecipeBadge';
-import Icon from '../../components/Shared/Icon';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import Tag from './Tag';
@@ -44,7 +42,6 @@ export default class RecipeTile extends React.PureComponent {
     const {
       onPress,
       title,
-      subTitle,
       image,
       tags,
       time,
@@ -53,30 +50,17 @@ export default class RecipeTile extends React.PureComponent {
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
-    // console.log("qwertyuio", tags)
 
     const tagsV = sortBy(tags).filter((tag) => {
       if (tag === 'V') {
         return tag
       } else if (tag === 'V+') {
         return tag
-      }
-      if (tag === 'GF') {
+      } if (tag === 'GF') {
         return tag
-      }
-    })
-
-    const tagsP = sortBy(tags).filter((tag) => {
-      if (tag === 'L1') {
+      } if (tag === 'GH') {
         return tag
-      } else if (tag === 'L2') {
-        return tag
-      }
-      if (tag === 'P1') {
-        return tag
-      } else if (tag === 'P2') {
-        return tag
-      } else if (tag === 'P3') {
+      } if (tag === 'DF') {
         return tag
       }
     })
@@ -128,17 +112,6 @@ export default class RecipeTile extends React.PureComponent {
                   </Text>
                 </View>
               </View>
-              <View
-                style={{ flexDirection: 'row', bottom: 12 }}
-              >
-                <View style={styles.recipeInfoSection}>
-                  {
-                    tagsP && tagsP.map((tagP, index) => (
-                      <Tag tag={tagP} key={index} />
-                    ))
-                  }
-                </View>
-              </View>
             </View>
           </Card>
         </Animated.View>
@@ -150,7 +123,6 @@ export default class RecipeTile extends React.PureComponent {
 RecipeTile.propTypes = {
   onPress: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  // subTitle: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string),
   time: PropTypes.string.isRequired,
@@ -167,10 +139,6 @@ const styles = StyleSheet.create({
     margin: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    // shadowColor: colors.charcoal.standard,
-    // shadowOpacity: 0.5,
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowRadius: 4,
   },
   flexContainer: {
     flex: 1,
@@ -199,7 +167,6 @@ const styles = StyleSheet.create({
   recipeInfoContainer: {
     flexDirection: 'row',
     marginBottom: 5,
-    // justifyContent: 'space-between',
   },
   recipeInfoSection: {
     flexDirection: 'row',

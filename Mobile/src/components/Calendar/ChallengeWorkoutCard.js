@@ -80,7 +80,7 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
     let focus = "";
     if (res && res.target === "rest") {
       target = "rest";
-      console.log(target);
+      console.log('target',target);
     } else {
       target = res && res.filters ? getTarget(res.filters) : "";
       focus = res && res.filters ? getFocus(res.filters) : "";
@@ -105,18 +105,16 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
               </Text>
             </View>
             <View style={styles.titleContainer}>
-              <Text style={styles.target}>
-                {target}
-                {focus ? " - " + focus : ""}</Text>
-            </View>
-            <View style={styles.innerViewContainer}>
               {target !== "rest" && (
-                <Text key={res} style={styles.recTextLabel}>
-                  
+                <Text key={res} style={styles.target}>
+                  {target}
+                  {focus ? " - " + focus : ""}
                 </Text>
               )}
-              {target === "rest" && (
-                <Text key={res} style={styles.recTextLabel}>
+            </View>
+            <View style={styles.innerViewContainer}>
+              {target === '' && (
+                <Text key={res} style={styles.target}>
                   Today is your rest day
                 </Text>
               )}

@@ -30,7 +30,7 @@ export default class LevelModal extends React.PureComponent {
     render() {
         return (
             <SafeAreaView style={{ backgroundColor: 'white', borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
-                <View style={{ paddingLeft: 10 }}>
+                <View style={{ paddingLeft: 10, marginBottom: 20 }}>
                     <TouchableOpacity
                         onPress={this.props.closeModal}
                     >

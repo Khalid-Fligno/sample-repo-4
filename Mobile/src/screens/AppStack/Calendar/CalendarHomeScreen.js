@@ -68,6 +68,8 @@ class CalendarHomeScreen extends React.PureComponent {
       challengeRecipe: [],
       transformLevel: undefined,
       completeCha: undefined,
+      todayRecommendedRecipe: undefined,
+      phaseDefaultTags: undefined,
     };
     this.calendarStrip = React.createRef();
   }
@@ -514,7 +516,6 @@ class CalendarHomeScreen extends React.PureComponent {
     }
   };
 
-
   async getCurrentPhaseInfo() {
     const { activeChallengeUserData, activeChallengeData } = this.state;
     if (activeChallengeUserData && activeChallengeData) {
@@ -557,8 +558,10 @@ class CalendarHomeScreen extends React.PureComponent {
         getTodayRecommendedMeal(this.phaseData, activeChallengeData).then(
           (res) => {
             this.setState({
+              todayRecommendedRecipe: res.recommendedRecipe,
               todayRecommendedMeal: res.recommendedMeal,
               challengeMealsFilterList: res.challengeMealsFilterList,
+              phaseDefaultTags: res.phaseDefaultTags,
               loading: false,
             });
           }
@@ -607,10 +610,15 @@ class CalendarHomeScreen extends React.PureComponent {
     });
   }
 
-  getToFilter(data, data1, title) {
-    const { challengeRecipe } = this.state
+  getToFilter(data, data1, data2, title) {
+    const { challengeRecipe, activeChallengeData, phaseDefaultTags } = this.state
+
+    // console.log('phaseDefaultTags: ', phaseDefaultTags.displayName)
 
     this.props.navigation.navigate('FilterRecipe', {
+      phaseDefaultTags: phaseDefaultTags.phaseTags,
+      defaultLevelTags: activeChallengeData.levelTags,
+      todayRecommendedRecipe: data2,
       challengeAllRecipe: challengeRecipe[0],
       recipes: data,
       title: title,
@@ -637,8 +645,10 @@ class CalendarHomeScreen extends React.PureComponent {
       skipped,
       width,
       AllRecipe,
-      completeCha
+      completeCha,
+      todayRecommendedRecipe
     } = this.state;
+    
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
@@ -674,9 +684,10 @@ class CalendarHomeScreen extends React.PureComponent {
         }}>Today's Meals</Text>
         <TodayMealsList
           recipe={AllRecipe[0]}
+          todayRecommendedRecipe={todayRecommendedRecipe[0]}
           data={todayRecommendedMeal[0]}
           onPress={(res) => this.goToRecipe(res)}
-          filterPress={(res, res1, title) => this.getToFilter(res, res1, title)}
+          filterPress={(res, res1, res2, title) => this.getToFilter(res, res1, res2, title)}
         />
       </>
     );

@@ -83,7 +83,7 @@ const globalStyle = StyleSheet.create({
   },
   filterButtonText: {
     fontFamily: fonts.standard,
-    fontSize: wp("2.5%"),
+    fontSize: wp("2.3%"),
     color: colors.grey.standard,
     marginTop: 2,
     fontWeight: "bold",
