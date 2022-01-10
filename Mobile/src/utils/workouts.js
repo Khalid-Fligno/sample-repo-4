@@ -211,26 +211,23 @@ export const loadExercise = async (workoutData) => {
           })
         });
       } else {
-
         exerciseRef.forEach((exercise) => {
-          if (workoutData.exercises.includes(exercise.id)) {
-            tempExerciseData.push(exercise.data());
-          }
+          workoutData.exercises.forEach(resExercise => {
+            if (resExercise === exercise.id) {
+              tempExerciseData.push(exercise.data())
+            }
+          })
         });
       }
     })
 
-    workoutData.filters.forEach(resType => {
-      if (resType === 'interval') {
-        exercises = tempExerciseData
+    exercises = workoutData.exercises.map((id) => {
+      if(id.id){
+        return tempExerciseData.find((res) => res.id === id.id);
       } else {
-        exercises = workoutData.exercises.map((id) => {
-          return tempExerciseData.find((res) => res.id === id);
-        });
+        return tempExerciseData.find((res) => res.id === id);
       }
-    })
-
-    console.log('Exercise: ', exercises)
+    });
 
     if (exercises.length > 0) {
       workoutData = Object.assign({}, workoutData, { exercises: exercises });
