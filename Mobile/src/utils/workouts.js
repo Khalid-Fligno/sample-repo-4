@@ -223,8 +223,6 @@ export const loadExercise = async (workoutData) => {
             workoutExercises = workoutData.exercises.map((id) =>{
               return tempExerciseData.find((res) => res.id === id);
             })
-
-            
           })
         });
       }
