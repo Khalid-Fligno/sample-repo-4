@@ -192,6 +192,7 @@ export const loadExercise = async (workoutData) => {
   if (workoutData.newWorkout) {
     let exercises = [];
     let tempExerciseData = [];
+    let workoutExercises =[];
 
     const exerciseRef = (
       await db
@@ -208,6 +209,9 @@ export const loadExercise = async (workoutData) => {
               const exerciseDuration = Object.assign({}, exercise.data(), { duration: resExercise.duration })
               tempExerciseData.push(exerciseDuration)
             }
+            workoutExercises = workoutData.exercises.map((id) =>{
+              return tempExerciseData.find((res) => res.id === id);
+            })
           })
         });
       } else {
@@ -216,6 +220,11 @@ export const loadExercise = async (workoutData) => {
             if (resExercise === exercise.id) {
               tempExerciseData.push(exercise.data())
             }
+            workoutExercises = workoutData.exercises.map((id) =>{
+              return tempExerciseData.find((res) => res.id === id);
+            })
+
+            
           })
         });
       }
