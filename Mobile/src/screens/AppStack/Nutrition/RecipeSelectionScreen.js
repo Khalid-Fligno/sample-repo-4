@@ -134,7 +134,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 
         return recipes;
       });
-
+      
+    //Recipe Loading
     const skeleton = (
       <View style={styles.recipeTileSkeletonContainer}>
         <RecipeTileSkeleton />
