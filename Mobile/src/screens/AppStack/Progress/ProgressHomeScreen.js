@@ -240,6 +240,12 @@ class ProgressHomeScreen extends React.PureComponent {
               (res) => res.target === "strength"
             );
 
+            console.log('zzzzzzzzzzz');
+            console.log(totalInterval);
+            console.log(totalCircuit);
+            console.log(totalStrength);
+            console.log('zzzzzzzzzzz');
+
             const totalIntervalCompleted =
               activeChallengeUserData.workouts.filter(
                 (res) => res.target === "interval"
