@@ -53,6 +53,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     const challengeMealsFilterList = this.props.navigation.getParam('challengeMealsFilterList', null);
     this.unsubscribe = await db.collection('recipes')
       .where(meal, '==', true)
+      .where('showLifestyle','==',true)
       .onSnapshot(async (querySnapshot) => {
         const recipes = [];
         await querySnapshot.forEach(async (doc) => {
