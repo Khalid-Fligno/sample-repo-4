@@ -63,30 +63,44 @@ export const getCurrentChallengeDay = (startDate, currentDate) => {
   return a.diff(b, 'days') + 1
 }
 
-export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserData, selectedDate) => {
+export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserData, selectedDate, transformLevel) => {
 
-  // let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime(); 
-  // // To calculate the no. of days between two dates 
+  // let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime();
+  // // To calculate the no. of days between two dates
   // let currentDay = Math.round(Difference_In_Time / (1000 * 3600 * 24))+1;
   // // console.log("???....",currentDay)
   var b = moment(activeChallengeUserData.startDate);
   var a = moment(selectedDate);
   let currentDay = a.diff(b, 'days') + 1;
+  let workoutIds = [];
+  let todayRcWorkouts = []
 
   const workoutData = workouts.find((res) => res.days.includes(currentDay));
+  workouts?.map((workout) => {
+    workout.days?.map((day) => {
+      if (day === currentDay) {
+        workoutIds.push(workout.id);
+      }
+    });
+  });
   if (workoutData && workoutData.id) {
     const programRef = db.collection('newWorkouts').where('id', '==', workoutData.id);
+    const programRefTwo = db.collection('newWorkouts').where('id', 'in', workoutIds);
     const snapshot = await programRef.get();
+    const snapshotTwo = await programRefTwo.get();
+    snapshotTwo.docs.map((res) => todayRcWorkouts.push(res.data()));
     if (snapshot.docs.length === 0) {
       return [];
     } else {
-      return snapshot.docs.map((res) => res.data());
+      // return snapshot.docs.map((res) => res.data());
+      return transformLevel.slice(-1) === '2'
+          ? todayRcWorkouts.length === 1 ? todayRcWorkouts[0] : todayRcWorkouts
+          : snapshot.docs.map((res) => res.data());
     }
   } else {
     console.log("????", workoutData)
     return [workoutData]
   }
-
 }
 
 export const convertRecipeData = async (recipeId) => {

@@ -14,6 +14,7 @@ import {
   UIManager,
   LayoutAnimation,
   SectionList,
+  Picker
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
@@ -31,7 +32,7 @@ import {
   findFocus,
   findLocation,
   findFocusIcon,
-  findWorkoutType,
+  findWorkoutType, loadExercise, downloadExerciseWC,
 } from "../../../utils/workouts";
 import colors from "../../../styles/colors";
 // import fonts from '../../../styles/fonts';
@@ -44,6 +45,7 @@ import NutritionStyles from "../Nutrition/NutritionStyles";
 import { StackActions } from "react-navigation";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import DoubleRightArrow from "../../../../assets/icons/DoubleRightArrow";
+import ChallengeWorkoutCard from "../../../components/Calendar/ChallengeWorkoutCard";
 
 const moment = require("moment");
 
@@ -77,68 +79,91 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       expandedExercise: true,
       expandedWarmup: false,
       expandedCooldown: false,
-      lifestyle: false
+      lifestyle: false,
+      gymWorkout: undefined,
+      homeWorkout: undefined,
+      gymSetting: false,
+      mode: undefined,
+      showGymPickerModal: false,
+      transformLevel: undefined,
+      transform: false,
+      exerciseDownloaded: false
     };
   }
 
   onFocusFunction() {
-    this.setState({ loading: true });
+    // this.setState({ loading: true });
     this.setState({
-      workout: this.props.navigation.getParam("workout", null),
-      reps: this.props.navigation.getParam("reps", null),
-      workoutSubCategory: this.props.navigation.getParam("workoutSubCategory"),
       fitnessLevel: this.props.navigation.getParam("fitnessLevel", null),
       extraProps: this.props.navigation.getParam("extraProps", {}),
-      loading: false,
-      lifestyle: this.props.navigation.getParam("lifestyle"),
+      transformLevel: this.props.navigation.getParam("transformLevel", {}),
+      mode: this.state.gymSetting ? 'GYM' : 'HOME',
+      transform: this.props.navigation.getParam("transform"),
+      loading: false
     });
+
+    if (this.props.navigation.getParam("transform")) {
+      this.props.navigation.getParam("newWrkouts").forEach((workout) => {
+        if (workout.gym) {
+          this.setState({ gymWorkout: workout });
+        } else if (workout.home) {
+          this.setState({ homeWorkout: workout });
+        } else {
+          this.setState({ workout: workout });
+        }
+      });
+    } else {
+      this.setState({
+        workout: this.props.navigation.getParam("workout", null)
+      });
+    }
   }
 
   fetchProfile = async () => {
-    const uid = await AsyncStorage.getItem("uid");
-    try {
-      this.unsubscribeUserChallenges = db
-        .collection("users")
-        .doc(uid)
-        .collection("challenges")
-        .onSnapshot(async (querySnapshot) => {
-          const userChallengesList = [];
-          await querySnapshot.forEach(async (doc) => {
-            await userChallengesList.push(await doc.data());
-          });
-          this.setState({ userChallengesList });
-          this.fetchChallenges();
-        });
-    } catch (err) {
-      Alert.alert("Something went wrong");
-    }
+    // const uid = await AsyncStorage.getItem("uid");
+    // try {
+    //   this.unsubscribeUserChallenges = db
+    //     .collection("users")
+    //     .doc(uid)
+    //     .collection("challenges")
+    //     .onSnapshot(async (querySnapshot) => {
+    //       const userChallengesList = [];
+    //       await querySnapshot.forEach(async (doc) => {
+    //         await userChallengesList.push(await doc.data());
+    //       });
+    //       this.setState({ userChallengesList });
+    //       this.fetchChallenges();
+    //     });
+    // } catch (err) {
+    //   Alert.alert("Something went wrong");
+    // }
   };
 
   fetchChallenges = async () => {
-    let { userChallengesList } = this.state;
-    this.unsubscribeChallenges = await db
-      .collection("challenges")
-      .onSnapshot(async (querySnapshot) => {
-        const challengesList = [];
-        await querySnapshot.forEach(async (doc) => {
-          const check = userChallengesList.findIndex((challenge) => {
-            return doc.id === challenge.id;
-          });
-          if (check === -1) await challengesList.push(await doc.data());
-        });
-        this.setState({ challengesList });
-      });
+    // let { userChallengesList } = this.state;
+    // this.unsubscribeChallenges = await db
+    //   .collection("challenges")
+    //   .onSnapshot(async (querySnapshot) => {
+    //     const challengesList = [];
+    //     await querySnapshot.forEach(async (doc) => {
+    //       const check = userChallengesList.findIndex((challenge) => {
+    //         return doc.id === challenge.id;
+    //       });
+    //       if (check === -1) await challengesList.push(await doc.data());
+    //     });
+    //     this.setState({ challengesList });
+    //   });
   };
 
   setDate = async (event, selectedDate) => {
-    if (selectedDate && Platform.OS === "android") {
-      this.setState({ loading: true });
-      this.addWorkoutToCalendar(selectedDate);
-    }
-    if (selectedDate && Platform.OS === "ios") {
-      const currentDate = selectedDate;
-      this.setState({ chosenDate: currentDate });
-    }
+    // if (selectedDate && Platform.OS === "android") {
+    //   this.setState({ loading: true });
+    //   this.addWorkoutToCalendar(selectedDate);
+    // }
+    // if (selectedDate && Platform.OS === "ios") {
+    //   const currentDate = selectedDate;
+    //   this.setState({ chosenDate: currentDate });
+    // }
   };
 
   handleStart = () => {
@@ -147,94 +172,93 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   };
 
   openApp = (url) => {
-    Linking.canOpenURL(url)
-      .then((supported) => {
-        if (supported) {
-          Linking.openURL(url);
-        } else {
-          Alert.alert("Cannot open this app");
-        }
-      })
-      .catch((err) => Alert.alert("An error occurred", err));
+    // Linking.canOpenURL(url)
+    //   .then((supported) => {
+    //     if (supported) {
+    //       Linking.openURL(url);
+    //     } else {
+    //       Alert.alert("Cannot open this app");
+    //     }
+    //   })
+    //   .catch((err) => Alert.alert("An error occurred", err));
   };
 
   showCalendarModal = () => {
-    this.setState({ calendarModalVisible: true });
+    // this.setState({ calendarModalVisible: true });
   };
 
   hideCalendarModal = () => {
-    this.setState({ calendarModalVisible: false, loading: false });
+    // this.setState({ calendarModalVisible: false, loading: false });
   };
 
   addWorkoutToCalendar = async (date) => {
-    if (this.state.addingToCalendar) {
-      return;
-    }
-    this.setState({ addingToCalendar: true });
-    const formattedDate = moment(date).format("YYYY-MM-DD");
-    const { workoutSubCategory } = this.state;
-    const uid = await AsyncStorage.getItem("uid");
-    const calendarRef = db
-      .collection("users")
-      .doc(uid)
-      .collection("calendarEntries")
-      .doc(formattedDate);
-    let workout = Object.assign({}, this.state.workout, { workoutSubCategory });
-    const data = {
-      workout,
-    };
-    await calendarRef.set(data, { merge: true });
+    // if (this.state.addingToCalendar) {
+    //   return;
+    // }
+    // this.setState({ addingToCalendar: true });
+    // const formattedDate = moment(date).format("YYYY-MM-DD");
+    // const { workoutSubCategory } = this.state;
+    // const uid = await AsyncStorage.getItem("uid");
+    // const calendarRef = db
+    //   .collection("users")
+    //   .doc(uid)
+    //   .collection("calendarEntries")
+    //   .doc(formattedDate);
+    // let workout = Object.assign({}, this.state.workout, { workoutSubCategory });
+    // const data = {
+    //   workout,
+    // };
+    // await calendarRef.set(data, { merge: true });
 
-    if (Platform.OS === "android") {
-      this.hideCalendarModal();
-      Alert.alert("", "Added to calendar!", [{ text: "OK", style: "cancel" }], {
-        cancelable: false,
-      });
-    } else {
-      this.setState({ addingToCalendar: false });
-      Alert.alert(
-        "",
-        "Added to calendar!",
-        [{ text: "OK", onPress: this.hideCalendarModal, style: "cancel" }],
-        { cancelable: false }
-      );
-    }
+    // if (Platform.OS === "android") {
+    //   this.hideCalendarModal();
+    //   Alert.alert("", "Added to calendar!", [{ text: "OK", style: "cancel" }], {
+    //     cancelable: false,
+    //   });
+    // } else {
+    //   this.setState({ addingToCalendar: false });
+    //   Alert.alert(
+    //     "",
+    //     "Added to calendar!",
+    //     [{ text: "OK", onPress: this.hideCalendarModal, style: "cancel" }],
+    //     { cancelable: false }
+    //   );
+    // }
   };
 
   handleWorkoutStart = () => {
-    const { workout, reps, extraProps, lifestyle } = this.state;
+    const { mode, gymWorkout, homeWorkout, workout, reps, extraProps, lifestyle, transform } = this.state;
     this.setState({ musicModalVisible: false });
     // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
     this.props.navigation.navigate("Countdown", {
       lifestyle,
-      workout: workout,
+      workout: transform ? mode === 'GYM' ? gymWorkout : mode === 'HOME' ? homeWorkout : workout : workout,
       reps,
-      resistanceCategoryId: workout.id,
+      resistanceCategoryId: transform ? mode === 'GYM' ? gymWorkout.id : mode === 'HOME' ? homeWorkout.id : workout.id : workout.id,
       workoutSubCategory: this.state.workoutSubCategory,
       fitnessLevel: this.state.fitnessLevel,
       extraProps,
     });
   };
 
-  keyExtractor = (exercise, index) => String(index);
+  // keyExtractor = (exercise, index) => String(index);
 
   componentDidMount = async () => {
-    this.fetchProfile();
+    // this.fetchProfile();
     this.setState({ loading: true });
-    // this.focusListener = this.props.navigation.addListener('willFocus', () => {
-    //   console.log("will focued call")
-    //   this.onFocusFunction()
-    // })
-    this.onFocusFunction();
-    await this.props.navigation.setParams({
-      handleStart: () => this.handleStart(),
-    });
-    // this.checkMusicAppAvailability();
+    this.focusListener = this.props.navigation.addListener('willFocus', () => {
+      this.onFocusFunction()
+    })
+    // this.onFocusFunction();
+    // await this.props.navigation.setParams({
+    //   handleStart: () => this.handleStart(),
+    // });
+    // // this.checkMusicAppAvailability();
   };
 
   componentWillUnmount = async () => {
-    console.log("unmount");
-    // this.focusListener.remove()
+    // console.log("unmount");
+    this.focusListener.remove()
   };
 
   togglePreview = (section) => {
@@ -273,7 +297,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     return <View />;
   };
 
-  renderExercise = ({ item: exercise, index, section, }) => {
+  renderExercise = ({ item: exercise, index, section }) => {
     // console.log("Workout: ", this.state.workout.exercises[0].duration);
     let showRR =
       exercise.recommendedResistance &&
@@ -287,14 +311,22 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
         ? true
         : false;
     const workIntervalTimeinSec =
-      this.state.workout.workIntervalMap[this.state.fitnessLevel - 1];
+      this.state.gymWorkout
+        ? this.state.gymWorkout.workIntervalMap[this.state.fitnessLevel - 1]
+        : this.state.homeWorkout
+          ? this.state.homeWorkout.workIntervalMap[this.state.fitnessLevel - 1]
+          : this.state.workout.workIntervalMap[this.state.fitnessLevel - 1];
     const restIntervalTimeinSec =
-      this.state.workout.restIntervalMap[this.state.fitnessLevel - 1];
+      this.state.gymWorkout
+        ? this.state.gymWorkout.restIntervalMap[this.state.fitnessLevel - 1]
+        : this.state.homeWorkout
+          ? this.state.homeWorkout.restIntervalMap[this.state.fitnessLevel - 1]
+          : this.state.workout.restIntervalMap[this.state.fitnessLevel - 1];
 
     const convert = (exerciseDur) => {
       var mins = Math.trunc(exerciseDur / 60);
       var sec = exerciseDur % 60;
-      return mins+"min "+ sec + "s"
+      return mins + "min " + sec + "s"
     }
 
     let videoUrl = "";
@@ -338,104 +370,171 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                   </Text>
                 </View>
                 <View>
-                  {this.state.workout.workoutProcessType === "oneByOne" && section.title != 'Workout' &&
-                    !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration} {'secs'}
-                      </Text>
-                    )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title != 'Workout' &&
-                    !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration} {'secs'}
-                      </Text>
-                    )}
-
-                  {this.state.workout.workoutProcessType === "circular" && section.title != 'Workout' &&
-                    !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration} {'secs'}
-                      </Text>
-                    )}
-
-
-                  {this.state.workout.workoutProcessType === "oneByOne" && section.title === 'Workout' &&
-                    !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {this.state.workout["workoutReps"]} x {this.state.reps}
-                      </Text>
-                    )}
-
-                  {this.state.workout.workoutProcessType === "oneByOne" &&
-                    this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {workIntervalTimeinSec}s on/{restIntervalTimeinSec}s off
-                      </Text>
-                    )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
-                    this.state.lifestyle != true &&
-                    exercise.duration <= 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration}s
-                        {/* {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec}s off`} */}
-                      </Text>
-                    )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
-                    this.state.lifestyle != true &&
-                    exercise.duration > 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {convert(exercise.duration)}
-                        {/* {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec}s off`} */}
-                      </Text>
-                    )}
-
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
-                    this.state.lifestyle === true &&
-                    workIntervalTimeinSec <= 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {workIntervalTimeinSec}s
-                        {/* {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec}s off`} */}
-                      </Text>
-                    )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
-                    this.state.lifestyle === true &&
-                    workIntervalTimeinSec > 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {workIntervalTimeinSec / 60}mins
-                        {/* {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec}s off`} */}
-                      </Text>
-                    )}
+                  {
+                    this.state.gymWorkout
+                      ? this.state.gymWorkout.workoutProcessType === "oneByOne" && section.title === 'Workout' &&
+                      !this.state.gymWorkout.rest && (
+                        <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                          {this.state.gymWorkout["workoutReps"]} x {this.state.reps}
+                        </Text>
+                      ) : this.state.homeWorkout
+                        ? this.state.homeWorkout.workoutProcessType === "oneByOne" && section.title === 'Workout' &&
+                        !this.state.homeWorkout.rest && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {this.state.homeWorkout["workoutReps"]} x {this.state.reps}
+                          </Text>
+                        ) : this.state.workout.workoutProcessType === "oneByOne" && section.title === 'Workout' &&
+                        !this.state.workout.rest && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {this.state.workout["workoutReps"]} x {this.state.reps}
+                          </Text>
+                        )
+                  }
+                  {
+                    this.state.gymWorkout
+                      ? this.state.gymWorkout.workoutProcessType === "oneByOne" && section.title != 'Workout' &&
+                      !this.state.gymWorkout.rest && (
+                        <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                          {exercise.duration} {'secs'}
+                        </Text>
+                      ) : this.state.homeWorkout
+                        ? this.state.homeWorkout.workoutProcessType === "oneByOne" && section.title != 'Workout' &&
+                        !this.state.homeWorkout.rest && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {exercise.duration} {'secs'}
+                          </Text>
+                        ) : this.state.workout.workoutProcessType === "oneByOne" && section.title != 'Workout' &&
+                        !this.state.workout.rest && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {exercise.duration} {'secs'}
+                          </Text>
+                        )
+                  }
 
 
-                  {/* {this.state.workout.workoutProcessType === "onlyOne" && section.title ==='Workout' &&
-                    workIntervalTimeinSec > 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {this.state.workout.exercises[0].duration / 60} mins
-                        {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec / 60}m off`}
-                      </Text>
-                    )} */}
-                  {this.state.workout.workoutProcessType === "circular" && section.title === 'Workout' &&
-                    !this.state.workout.count && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {
-                          this.state.workout.workIntervalMap[
-                          this.state.fitnessLevel - 1
-                          ]
-                        }
-                        s on/
-                        {
-                          this.state.workout.restIntervalMap[
-                          this.state.fitnessLevel - 1
-                          ]
-                        }
-                        s off
-                      </Text>
-                    )}
+
+                  {
+                    this.state.gymWorkout
+                      ? this.state.gymWorkout.workoutProcessType === "oneByOne" &&
+                      this.state.gymWorkout.rest && (
+                        <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                          {workIntervalTimeinSec}s on/{restIntervalTimeinSec}s off
+                        </Text>
+                      ) : this.state.homeWorkout
+                        ? this.state.homeWorkout.workoutProcessType === "oneByOne" &&
+                        this.state.homeWorkout.rest && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {workIntervalTimeinSec}s on/{restIntervalTimeinSec}s off
+                          </Text>
+                        ) : this.state.workout.workoutProcessType === "oneByOne" &&
+                        this.state.workout.rest && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {workIntervalTimeinSec}s on/{restIntervalTimeinSec}s off
+                          </Text>
+                        )
+                  }
+                  {
+                    this.state.gymWorkout
+                      ? this.state.gymWorkout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
+                      workIntervalTimeinSec <= 60 && (
+                        <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                          {exercise.duration}s
+                        </Text>
+                      ) : this.state.homeWorkout
+                        ? this.state.homeWorkout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
+                        workIntervalTimeinSec <= 60 && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {exercise.duration}s
+                          </Text>
+                        ) : this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
+                        workIntervalTimeinSec <= 60 && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {exercise.duration}s
+                          </Text>
+                        )
+                  }
+
+                  {
+                    this.state.gymWorkout
+                      ? this.state.gymWorkout.workoutProcessType === "onlyOne" && section.title != 'Workout' &&
+                      workIntervalTimeinSec <= 60 && (
+                        <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                          {convert(exercise.duration)}
+                        </Text>
+                      ) : this.state.homeWorkout
+                        ? this.state.homeWorkout.workoutProcessType === "onlyOne" && section.title != 'Workout' &&
+                        workIntervalTimeinSec <= 60 && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {convert(exercise.duration)}
+                          </Text>
+                        ) : this.state.workout.workoutProcessType === "onlyOne" && section.title != 'Workout' &&
+                        workIntervalTimeinSec <= 60 && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {convert(exercise.duration)}
+                          </Text>
+                        )
+                  }
+                  {
+                    this.state.gymWorkout
+                      ? this.state.gymWorkout.workoutProcessType === "circular" && section.title === 'Workout' &&
+                      !this.state.gymWorkout.count && (
+                        <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                          {
+                            this.state.gymWorkout.workIntervalMap[this.state.fitnessLevel - 1]
+                          }
+                          s on/
+                          {
+                            this.state.gymWorkout.restIntervalMap[this.state.fitnessLevel - 1]
+                          }
+                          s off
+                        </Text>
+                      ) : this.state.homeWorkout
+                        ? this.state.homeWorkout.workoutProcessType === "circular" && section.title === 'Workout' &&
+                        !this.state.homeWorkout.count && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {
+                              this.state.homeWorkout.workIntervalMap[this.state.fitnessLevel - 1]
+                            }
+                            s on/
+                            {
+                              this.state.homeWorkout.restIntervalMap[this.state.fitnessLevel - 1]
+                            }
+                            s off
+                          </Text>
+                        ) : this.state.workout.workoutProcessType === "circular" && section.title === 'Workout' &&
+                        !this.state.workout.count && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {
+                              this.state.workout.workIntervalMap[this.state.fitnessLevel - 1]
+                            }
+                            s on/
+                            {
+                              this.state.workout.restIntervalMap[this.state.fitnessLevel - 1]
+                            }
+                            s off
+                          </Text>
+                        )
+                  }
+                  {
+                    this.state.gymWorkout
+                      ? this.state.gymWorkout.workoutProcessType === "circular" && section.title != 'Workout' &&
+                      !this.state.gymWorkout.count && (
+                        <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                          {exercise.duration} {'secs'}
+                        </Text>
+                      ) : this.state.homeWorkout
+                        ? this.state.homeWorkout.workoutProcessType === "circular" && section.title != 'Workout' &&
+                        !this.state.homeWorkout.count && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {exercise.duration} {'secs'}
+                          </Text>
+                        ) : this.state.workout.workoutProcessType === "circular" && section.title != 'Workout' &&
+                        !this.state.workout.count && (
+                          <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                            {exercise.duration} {'secs'}
+                          </Text>
+                        )
+                  }
                 </View>
               </View>
               <Video
@@ -530,6 +629,95 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     );
   };
 
+  showGymPickerModal = () => {
+    this.setState({ showGymPickerModal: true });
+  };
+
+  hideGymPickerModal = () => {
+    this.setState({ showGymPickerModal: false });
+  };
+
+  loadExercises = async (gymSetting, workoutData) => {
+    this.setState({ loading: true });
+
+    let uniqueWarmUpExercises = [...new Set(workoutData.warmUpExercises)];
+
+    Object.assign(workoutData, {
+      warmUpExercises: uniqueWarmUpExercises
+    });
+
+    const workout = await loadExercise(workoutData);
+
+    if (workout && workout.newWorkout) {
+
+      const warmUpExercises = await downloadExerciseWC(
+        workout,
+        Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array") > -1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => { return warmUpExercise }),
+        workout.warmUpExerciseModel,
+        "warmUp"
+      );
+      if (warmUpExercises.length > 0) {
+        const coolDownExercises = await downloadExerciseWC(
+          workout,
+          workout.coolDownExercises,
+          workout.coolDownExerciseModel,
+          "coolDown"
+        );
+        if (coolDownExercises.length > 0) {
+          const newWorkout = Object.assign({}, workout, {
+            warmUpExercises: warmUpExercises,
+            coolDownExercises: coolDownExercises,
+          });
+          this.goToNext(gymSetting, newWorkout);
+        } else {
+          this.setState({ loadingExercises: false });
+          Alert.alert("Alert!", "Something went wrong!");
+        }
+      } else {
+        this.setState({ loadingExercises: false });
+        Alert.alert("Alert!", "Something went wrong!");
+      }
+    } else if (workout) {
+      this.goToNext(workout);
+    } else {
+      this.setState({ loadingExercises: false });
+    }
+  };
+
+  async goToNext(gymSetting, workout) {
+    console.log(">>here");
+    let newWrkouts = [];
+    if (
+      this.currentChallengeDay === 1 &&
+      !this.state.initialBurpeeTestCompleted
+    ) {
+      await FileSystem.downloadAsync(
+        "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+        `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+      );
+    }
+    const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
+    if (workout.length) {
+      workout.map((wrkout) => {
+        if (this.currentChallengeDay > 0) {
+          Object.assign(wrkout, {
+            displayName: `${wrkout.displayName} - Day ${this.currentChallengeDay}`,
+          });
+          newWrkouts.push(wrkout);
+        }
+      });
+    } else {
+      newWrkouts.push(workout);
+    }
+
+    gymSetting
+      ? this.setState({ homeWorkout: newWrkouts[0] })
+      : this.setState({ gymWorkout: newWrkouts[0] });
+    this.setState({ loading: false });
+    this.setState({ showGymPickerModal: false });
+    this.setState({ exerciseDownloaded: true });
+  }
+
   render() {
     const {
       loading,
@@ -548,13 +736,85 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       expandedExercise,
       expandedWarmup,
       expandedCooldown,
+      gymSetting,
+      gymWorkout,
+      homeWorkout,
+      mode,
+      showGymPickerModal,
+      transformLevel,
+      exerciseDownloaded
     } = this.state;
+
     let workoutTime = 0;
     let warmupInterval = 0;
     let workoutInterval = 0;
     let cooldownInterval = 0;
+    let gymWorkoutTime = 0;
+    let gymWarmupInterval = 0;
+    let gymWorkoutInterval = 0;
+    let gymCooldownInterval = 0;
+    let homeWorkoutTime = 0;
+    let homeWarmupInterval = 0;
+    let homeWorkoutInterval = 0;
+    let homeCooldownInterval = 0;
+
+    if (gymWorkout) {
+      gymWorkoutTime = gymWorkout.workoutTime;
+
+      if (gymWorkout.coolDownExercises) {
+        let seconds = 0;
+        gymWorkout.coolDownExercises.map((exercise) => {
+          seconds += exercise.duration;
+        });
+        gymCooldownInterval = Math.floor(seconds / 60);
+      }
+
+      if (gymWorkout.warmUpExercises) {
+        let seconds = 0;
+        gymWorkout.warmUpExercises.map((exercise) => {
+          seconds += exercise.duration;
+        });
+        gymWarmupInterval = Math.floor(seconds / 60);
+      }
+
+      if (gymWorkout.exercises) {
+        gymWorkoutInterval =
+          gymWorkout.workoutTime - (gymWarmupInterval + gymCooldownInterval);
+      }
+
+      // workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
+    }
+
+    if (homeWorkout) {
+      homeWorkoutTime = homeWorkout.workoutTime;
+
+      if (homeWorkout.coolDownExercises) {
+        let seconds = 0;
+        homeWorkout.coolDownExercises.map((exercise) => {
+          seconds += exercise.duration;
+        });
+        homeCooldownInterval = Math.floor(seconds / 60);
+      }
+
+      if (homeWorkout.warmUpExercises) {
+        let seconds = 0;
+        homeWorkout.warmUpExercises.map((exercise) => {
+          seconds += exercise.duration;
+        });
+        homeWarmupInterval = Math.floor(seconds / 60);
+      }
+
+      if (homeWorkout.exercises) {
+        homeWorkoutInterval =
+          homeWorkout.workoutTime - (homeWorkoutInterval + homeCooldownInterval);
+      }
+
+      // workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
+    }
+
     if (workout) {
       workoutTime = workout.workoutTime;
+
       if (workout.coolDownExercises) {
         let seconds = 0;
         workout.coolDownExercises.map((exercise) => {
@@ -584,192 +844,515 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
           { paddingHorizontal: 0, backgroundColor: colors.smoke },
         ]}
       >
-        {Platform.OS === "ios" && (
-          <Modal
-            isVisible={calendarModalVisible}
-            animationIn="fadeIn"
-            animationInTiming={600}
-            animationOut="fadeOut"
-            animationOutTiming={600}
-            onBackdropPress={this.hideCalendarModal}
-          >
-            <View style={globalStyle.modalContainer}>
-              <DateTimePicker
-                mode="date"
-                value={chosenDate}
-                onChange={this.setDate}
-                minimumDate={new Date()}
-              />
-              <TouchableOpacity
-                onPress={() => this.addWorkoutToCalendar(chosenDate)}
-                style={globalStyle.modalButton}
-              >
-                {addingToCalendar ? (
-                  <DotIndicator color={colors.white} count={3} size={6} />
-                ) : (
-                  <Text style={globalStyle.modalButtonText}>
-                    ADD TO CALENDAR
-                  </Text>
-                )}
-              </TouchableOpacity>
-            </View>
-          </Modal>
-        )}
-        {Platform.OS === "android" && calendarModalVisible && !loading && (
-          <DateTimePicker
-            mode="date"
-            value={chosenDate}
-            onChange={this.setDate}
-            minimumDate={new Date()}
-          />
-        )}
-        {workout && !loading && (
-          <View style={WorkoutScreenStyle.flatListContainer}>
-            <SectionList
-              sections={
-                workout.warmUpExercises && workout.coolDownExercises
-                  ? [
-                    {
-                      data: workout.warmUpExercises,
-                      title: "Warmup",
-                      key: 0,
-                    },
-                    {
-                      data: workout.exercises,
-                      title: "Workout",
-                      key: 1,
-                    },
-                    {
-                      data: workout.coolDownExercises,
-                      title: "Cooldown",
-                      key: 2,
-                    },
-                  ]
-                  : [
-                    {
-                      data: workout.exercises,
-                      title: "Workout",
-                      key: 1,
-                    },
-                  ]
-              }
-              keyExtractor={this.keyExtractor}
-              renderItem={this.renderItem}
-              ListHeaderComponent={
-                <View style={WorkoutScreenStyle.workoutInfoContainer}>
-                  <View style={WorkoutScreenStyle.workoutNameContainer}>
-                    <Text style={WorkoutScreenStyle.workoutName}>
-                      {workout && workout.displayName.toUpperCase()}
-                    </Text>
-                  </View>
+        {
+          mode === 'GYM'
+            ?
+            gymWorkout && !loading && (
+              <View style={WorkoutScreenStyle.flatListContainer}>
+                <SectionList
+                  sections={
+                    gymWorkout.warmUpExercises && gymWorkout.coolDownExercises
+                      ? [
+                        {
+                          data: gymWorkout.warmUpExercises,
+                          title: "Warmup",
+                          key: 0,
+                        },
+                        {
+                          data: gymWorkout.exercises,
+                          title: "Workout",
+                          key: 1,
+                        },
+                        {
+                          data: gymWorkout.coolDownExercises,
+                          title: "Cooldown",
+                          key: 2,
+                        },
+                      ]
+                      : [
+                        {
+                          data: gymWorkout.exercises,
+                          title: "Workout",
+                          key: 1,
+                        },
+                      ]
+                  }
+                  keyExtractor={this.keyExtractor}
+                  renderItem={this.renderItem}
+                  ListHeaderComponent={
+                    <View style={WorkoutScreenStyle.workoutInfoContainer}>
+                      <View style={WorkoutScreenStyle.workoutNameContainer}>
+                        <Text style={{
+                          marginTop: 6,
+                          marginRight: 10,
+                          fontFamily: fonts.StyreneAWebRegular,
+                          fontSize: 20,
+                          color: colors.black,
+                          width: wp('68%')
+                        }}>
+                          {gymWorkout && gymWorkout.displayName.toUpperCase()}
+                        </Text>
+                        <View>
+                          <View style={{
+                          }}>
+                            <TouchableOpacity
+                              onPress={() => this.showGymPickerModal()}
+                              style={{
+                                padding: 15,
+                                backgroundColor: colors.white,
+                                borderWidth: 1,
+                                borderColor: colors.grey.light,
+                                borderRadius: 20
+                              }}
+                            >
+                              <Text style={{
+                                fontFamily: fonts.bold,
+                                fontSize: 14,
+                                color: colors.charcoal.dark
+                              }}>
+                                {mode === 'GYM' ? 'GYM' : 'HOME'}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </View>
 
-                  <View style={WorkoutScreenStyle.workoutIconsRow}>
-                    {!this.state.workout.filters.includes("strength") && (
-                      <View style={WorkoutScreenStyle.workoutIconContainer}>
-                        <Icon
-                          name="workouts-hiit"
-                          size={36}
-                          color={colors.charcoal.standard}
-                          style={WorkoutScreenStyle.hiitIcon}
-                        />
-                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                          HIIT {findWorkoutType(workout)}
+                      <View style={WorkoutScreenStyle.workoutIconsRow}>
+                        {!this.state.gymWorkout.filters.includes("strength") && (
+                          <View style={WorkoutScreenStyle.workoutIconContainer}>
+                            <Icon
+                              name="workouts-hiit"
+                              size={36}
+                              color={colors.charcoal.standard}
+                              style={WorkoutScreenStyle.hiitIcon}
+                            />
+                            <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                              HIIT {findWorkoutType(gymWorkout)}
+                            </Text>
+                          </View>
+                        )}
+                        {!gymWorkout.count && (
+                          <View style={WorkoutScreenStyle.workoutIconContainer}>
+                            <TimeSvg width="40" height="40" />
+                            <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                              {gymWorkoutTime.toFixed(0)} Mins
+                            </Text>
+                          </View>
+                        )}
+
+                        <View style={WorkoutScreenStyle.workoutIconContainer}>
+                          <Icon
+                            name="workouts-reps"
+                            size={40}
+                            color={colors.charcoal.standard}
+                          />
+                          <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                            {this.state.gymWorkout.filters.includes("strength")
+                              ? `${reps * gymWorkoutTime} Reps`
+                              : `${gymWorkout.workoutReps} Rounds`}
+                          </Text>
+                        </View>
+                        {this.state.gymWorkout.filters.includes("strength") && (
+                          <View style={WorkoutScreenStyle.workoutIconContainer}>
+                            <Icon
+                              name={gymWorkout && findFocusIcon(gymWorkout)}
+                              size={40}
+                              color={colors.charcoal.standard}
+                            />
+                            <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                              {gymWorkout && findFocus(gymWorkout)}
+                            </Text>
+                          </View>
+                        )}
+                      </View>
+                      <View
+                        style={WorkoutScreenStyle.workoutPreviewHeaderContainer}
+                      >
+                        <Text style={WorkoutScreenStyle.workoutPreviewHeaderText}>
+                          WORKOUT PREVIEW
                         </Text>
                       </View>
-                    )}
-                    {!workout.count && (
-                      <View style={WorkoutScreenStyle.workoutIconContainer}>
-                        <TimeSvg width="40" height="40" />
-                        <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                          {workoutTime.toFixed(0)} Mins
+                    </View>
+                  }
+                  renderSectionHeader={({ section }) => {
+                    const interval = (() => {
+                      switch (section.key) {
+                        case 0:
+                          return gymWarmupInterval;
+                        case 1:
+                          return gymWorkoutInterval;
+                        case 2:
+                          return gymCooldownInterval;
+                      }
+                    })();
+                    return (
+                      <View style={styles.sectionHeader}>
+                        <View style={{ marginLeft: 15 }}>
+                          <Text style={{ fontSize: 15, fontFamily: fonts.bold }}>
+                            {section.title}
+                          </Text>
+                          <Text
+                            style={{ fontSize: 12, fontFamily: fonts.boldNarrow }}
+                          >{`${section.data.length} exercises - ${interval} min`}</Text>
+                        </View>
+                        <View style={{ marginRight: 15 }}>
+                          <TouchableOpacity
+                            style={{ flexDirection: "row", alignItems: "center" }}
+                            onPress={() => this.togglePreview(section)}
+                          >
+                            <Text
+                              style={{
+                                fontSize: 11,
+                                fontFamily: fonts.boldNarrow,
+                                textDecorationLine: "underline",
+                                textDecorationColor: colors.black,
+                              }}
+                            >
+                              {"Tap to preview"}
+                            </Text>
+                            <MaterialIcon
+                              name="chevron-down"
+                              size={30}
+                              color={colors.black}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    );
+                  }}
+                  stickySectionHeadersEnabled={true}
+                />
+              </View>
+            )
+            :
+            homeWorkout && !loading && (
+              <View style={WorkoutScreenStyle.flatListContainer}>
+                <SectionList
+                  sections={
+                    homeWorkout.warmUpExercises && homeWorkout.coolDownExercises
+                      ? [
+                        {
+                          data: homeWorkout.warmUpExercises,
+                          title: "Warmup",
+                          key: 0,
+                        },
+                        {
+                          data: homeWorkout.exercises,
+                          title: "Workout",
+                          key: 1,
+                        },
+                        {
+                          data: homeWorkout.coolDownExercises,
+                          title: "Cooldown",
+                          key: 2,
+                        },
+                      ]
+                      : [
+                        {
+                          data: homeWorkout.exercises,
+                          title: "Workout",
+                          key: 1,
+                        },
+                      ]
+                  }
+                  keyExtractor={this.keyExtractor}
+                  renderItem={this.renderItem}
+                  ListHeaderComponent={
+                    <View style={WorkoutScreenStyle.workoutInfoContainer}>
+                      <View style={WorkoutScreenStyle.workoutNameContainer}>
+                        <Text style={{
+                          marginTop: 6,
+                          marginRight: 10,
+                          fontFamily: fonts.StyreneAWebRegular,
+                          fontSize: 20,
+                          color: colors.black,
+                          width: wp('68%')
+                        }}>
+                          {homeWorkout && homeWorkout.displayName.toUpperCase()}
+                        </Text>
+                        <View>
+                          <View style={{
+                          }}>
+                            <TouchableOpacity
+                              onPress={() => this.showGymPickerModal()}
+                              style={{
+                                padding: 15,
+                                backgroundColor: colors.white,
+                                borderWidth: 1,
+                                borderColor: colors.grey.light,
+                                borderRadius: 20
+                              }}
+                            >
+                              <Text style={{
+                                fontFamily: fonts.bold,
+                                fontSize: 14,
+                                color: colors.charcoal.dark
+                              }}>
+                                {mode === 'GYM' ? 'GYM' : 'HOME'}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </View>
+
+                      <View style={WorkoutScreenStyle.workoutIconsRow}>
+                        {!this.state.homeWorkout.filters.includes("strength") && (
+                          <View style={WorkoutScreenStyle.workoutIconContainer}>
+                            <Icon
+                              name="workouts-hiit"
+                              size={36}
+                              color={colors.charcoal.standard}
+                              style={WorkoutScreenStyle.hiitIcon}
+                            />
+                            <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                              HIIT {findWorkoutType(homeWorkout)}
+                            </Text>
+                          </View>
+                        )}
+                        {!homeWorkout.count && (
+                          <View style={WorkoutScreenStyle.workoutIconContainer}>
+                            <TimeSvg width="40" height="40" />
+                            <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                              {homeWorkoutTime.toFixed(0)} Mins
+                            </Text>
+                          </View>
+                        )}
+
+                        <View style={WorkoutScreenStyle.workoutIconContainer}>
+                          <Icon
+                            name="workouts-reps"
+                            size={40}
+                            color={colors.charcoal.standard}
+                          />
+                          <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                            {this.state.homeWorkout.filters.includes("strength")
+                              ? `${reps * homeWorkoutTime} Reps`
+                              : `${homeWorkout.workoutReps} Rounds`}
+                          </Text>
+                        </View>
+                        {this.state.homeWorkout.filters.includes("strength") && (
+                          <View style={WorkoutScreenStyle.workoutIconContainer}>
+                            <Icon
+                              name={homeWorkout && findFocusIcon(homeWorkout)}
+                              size={40}
+                              color={colors.charcoal.standard}
+                            />
+                            <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                              {homeWorkout && findFocus(homeWorkout)}
+                            </Text>
+                          </View>
+                        )}
+                      </View>
+                      <View
+                        style={WorkoutScreenStyle.workoutPreviewHeaderContainer}
+                      >
+                        <Text style={WorkoutScreenStyle.workoutPreviewHeaderText}>
+                          WORKOUT PREVIEW
                         </Text>
                       </View>
-                    )}
+                    </View>
+                  }
+                  renderSectionHeader={({ section }) => {
+                    const interval = (() => {
+                      switch (section.key) {
+                        case 0:
+                          return homeWarmupInterval;
+                        case 1:
+                          return homeWorkoutInterval;
+                        case 2:
+                          return homeCooldownInterval;
+                      }
+                    })();
+                    return (
+                      <View style={styles.sectionHeader}>
+                        <View style={{ marginLeft: 15 }}>
+                          <Text style={{ fontSize: 15, fontFamily: fonts.bold }}>
+                            {section.title}
+                          </Text>
+                          <Text
+                            style={{ fontSize: 12, fontFamily: fonts.boldNarrow }}
+                          >{`${section.data.length} exercises - ${interval} min`}</Text>
+                        </View>
+                        <View style={{ marginRight: 15 }}>
+                          <TouchableOpacity
+                            style={{ flexDirection: "row", alignItems: "center" }}
+                            onPress={() => this.togglePreview(section)}
+                          >
+                            <Text
+                              style={{
+                                fontSize: 11,
+                                fontFamily: fonts.boldNarrow,
+                                textDecorationLine: "underline",
+                                textDecorationColor: colors.black,
+                              }}
+                            >
+                              {"Tap to preview"}
+                            </Text>
+                            <MaterialIcon
+                              name="chevron-down"
+                              size={30}
+                              color={colors.black}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    );
+                  }}
+                  stickySectionHeadersEnabled={true}
+                />
+              </View>
+            )
+        }
 
-                    <View style={WorkoutScreenStyle.workoutIconContainer}>
-                      <Icon
-                        name="workouts-reps"
-                        size={40}
-                        color={colors.charcoal.standard}
-                      />
-                      <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                        {this.state.workout.filters.includes("strength")
-                          ? `${reps * workoutTime} Reps`
-                          : `${workout.workoutReps} Rounds`}
+        {
+          workout && !loading && (
+            <View style={WorkoutScreenStyle.flatListContainer}>
+              <SectionList
+                sections={
+                  workout.warmUpExercises && workout.coolDownExercises
+                    ? [
+                      {
+                        data: workout.warmUpExercises,
+                        title: "Warmup",
+                        key: 0,
+                      },
+                      {
+                        data: workout.exercises,
+                        title: "Workout",
+                        key: 1,
+                      },
+                      {
+                        data: workout.coolDownExercises,
+                        title: "Cooldown",
+                        key: 2,
+                      },
+                    ]
+                    : [
+                      {
+                        data: workout.exercises,
+                        title: "Workout",
+                        key: 1,
+                      },
+                    ]
+                }
+                keyExtractor={this.keyExtractor}
+                renderItem={this.renderItem}
+                ListHeaderComponent={
+                  <View style={WorkoutScreenStyle.workoutInfoContainer}>
+                    <View style={WorkoutScreenStyle.workoutNameContainer}>
+                      <Text style={WorkoutScreenStyle.workoutName}>
+                        {workout && workout.displayName.toUpperCase()}
                       </Text>
                     </View>
-                    {this.state.workout.filters.includes("strength") && (
+
+                    <View style={WorkoutScreenStyle.workoutIconsRow}>
+                      {!this.state.workout.filters.includes("strength") && (
+                        <View style={WorkoutScreenStyle.workoutIconContainer}>
+                          <Icon
+                            name="workouts-hiit"
+                            size={36}
+                            color={colors.charcoal.standard}
+                            style={WorkoutScreenStyle.hiitIcon}
+                          />
+                          <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                            HIIT {findWorkoutType(workout)}
+                          </Text>
+                        </View>
+                      )}
+                      {!workout.count && (
+                        <View style={WorkoutScreenStyle.workoutIconContainer}>
+                          <TimeSvg width="40" height="40" />
+                          <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                            {workoutTime.toFixed(0)} Mins
+                          </Text>
+                        </View>
+                      )}
+
                       <View style={WorkoutScreenStyle.workoutIconContainer}>
                         <Icon
-                          name={workout && findFocusIcon(workout)}
+                          name="workouts-reps"
                           size={40}
                           color={colors.charcoal.standard}
                         />
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
-                          {workout && findFocus(workout)}
+                          {this.state.workout.filters.includes("strength")
+                            ? `${reps * workoutTime} Reps`
+                            : `${workout.workoutReps} Rounds`}
                         </Text>
                       </View>
-                    )}
-                  </View>
-                  <View
-                    style={WorkoutScreenStyle.workoutPreviewHeaderContainer}
-                  >
-                    <Text style={WorkoutScreenStyle.workoutPreviewHeaderText}>
-                      WORKOUT PREVIEW
-                    </Text>
-                  </View>
-                </View>
-              }
-              renderSectionHeader={({ section }) => {
-                const interval = (() => {
-                  switch (section.key) {
-                    case 0:
-                      return warmupInterval;
-                    case 1:
-                      return workoutInterval;
-                    case 2:
-                      return cooldownInterval;
-                  }
-                })();
-                return (
-                  <View style={styles.sectionHeader}>
-                    <View style={{ marginLeft: 15 }}>
-                      <Text style={{ fontSize: 15, fontFamily: fonts.bold }}>
-                        {section.title}
+                      {this.state.workout.filters.includes("strength") && (
+                        <View style={WorkoutScreenStyle.workoutIconContainer}>
+                          <Icon
+                            name={workout && findFocusIcon(workout)}
+                            size={40}
+                            color={colors.charcoal.standard}
+                          />
+                          <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
+                            {workout && findFocus(workout)}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                    <View
+                      style={WorkoutScreenStyle.workoutPreviewHeaderContainer}
+                    >
+                      <Text style={WorkoutScreenStyle.workoutPreviewHeaderText}>
+                        WORKOUT PREVIEW
                       </Text>
-                      <Text
-                        style={{ fontSize: 12, fontFamily: fonts.boldNarrow }}
-                      >{`${section.data.length} exercises - ${interval} min`}</Text>
-                    </View>
-                    <View style={{ marginRight: 15 }}>
-                      <TouchableOpacity
-                        style={{ flexDirection: "row", alignItems: "center" }}
-                        onPress={() => this.togglePreview(section)}
-                      >
-                        <Text
-                          style={{
-                            fontSize: 11,
-                            fontFamily: fonts.boldNarrow,
-                            textDecorationLine: "underline",
-                            textDecorationColor: colors.black,
-                          }}
-                        >
-                          {"Tap to preview"}
-                        </Text>
-                        <MaterialIcon
-                          name="chevron-down"
-                          size={30}
-                          color={colors.black}
-                        />
-                      </TouchableOpacity>
                     </View>
                   </View>
-                );
-              }}
-              stickySectionHeadersEnabled={true}
-            />
-          </View>
-        )}
+                }
+                renderSectionHeader={({ section }) => {
+                  const interval = (() => {
+                    switch (section.key) {
+                      case 0:
+                        return warmupInterval;
+                      case 1:
+                        return workoutInterval;
+                      case 2:
+                        return cooldownInterval;
+                    }
+                  })();
+                  return (
+                    <View style={styles.sectionHeader}>
+                      <View style={{ marginLeft: 15 }}>
+                        <Text style={{ fontSize: 15, fontFamily: fonts.bold }}>
+                          {section.title}
+                        </Text>
+                        <Text
+                          style={{ fontSize: 12, fontFamily: fonts.boldNarrow }}
+                        >{`${section.data.length} exercises - ${interval} min`}</Text>
+                      </View>
+                      <View style={{ marginRight: 15 }}>
+                        <TouchableOpacity
+                          style={{ flexDirection: "row", alignItems: "center" }}
+                          onPress={() => this.togglePreview(section)}
+                        >
+                          <Text
+                            style={{
+                              fontSize: 11,
+                              fontFamily: fonts.boldNarrow,
+                              textDecorationLine: "underline",
+                              textDecorationColor: colors.black,
+                            }}
+                          >
+                            {"Tap to preview"}
+                          </Text>
+                          <MaterialIcon
+                            name="chevron-down"
+                            size={30}
+                            color={colors.black}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  );
+                }}
+                stickySectionHeadersEnabled={true}
+              />
+            </View>
+          )
+        }
         <TouchableOpacity style={styles.startButton} onPress={this.handleStart}>
           <Text
             style={{
@@ -782,6 +1365,93 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
             {"Start now"}
           </Text>
         </TouchableOpacity>
+        <Modal
+          isVisible={showGymPickerModal}
+          onBackdropPress={() => this.hideGymPickerModal()}
+          animationIn="fadeIn"
+          animationInTiming={600}
+          animationOut="fadeOut"
+          animationOutTiming={600}
+        >
+          <View style={{
+            backgroundColor: colors.white,
+            borderRadius: 4,
+            overflow: "hidden",
+          }}>
+            <Picker
+              selectedValue={mode === 'GYM' ? 'GYM' : 'HOME'}
+              onValueChange={(value) => {
+                if (gymSetting) {
+                  if (value === 'HOME') {
+                    if (exerciseDownloaded) this.setState({ mode: value === 'GYM' ? 'GYM' : 'HOME' });
+                    else {
+                      this.setState({ mode: value === 'GYM' ? 'GYM' : 'HOME' });
+                      this.loadExercises(gymSetting, homeWorkout, this.currentChallengeDay);
+                    }
+                  } else {
+                    this.setState({ mode: value === 'GYM' ? 'GYM' : 'HOME' })
+                  }
+                } else {
+                  if (value === 'GYM') {
+                    if (exerciseDownloaded) this.setState({ mode: value === 'GYM' ? 'GYM' : 'HOME' });
+                    else {
+                      this.setState({ mode: value === 'GYM' ? 'GYM' : 'HOME' });
+                      this.loadExercises(gymSetting, gymWorkout, this.currentChallengeDay);
+                    }
+                  } else {
+                    this.setState({ mode: value === 'GYM' ? 'GYM' : 'HOME' })
+                  }
+                }
+              }}
+            >
+              <Picker.Item
+                key={0}
+                label="HOME"
+                value="HOME"
+              />
+              <Picker.Item
+                key={1}
+                label="GYM"
+                value="GYM"
+              />
+            </Picker>
+            <TouchableOpacity
+              title="DONE"
+              onPress={() => this.hideGymPickerModal()}
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: colors.black,
+                height: 50,
+                width: "100%",
+                marginBottom: 0
+              }}
+            >
+              <Text style={{
+                fontFamily: fonts.bold,
+                fontSize: 14,
+                color: colors.white,
+                marginTop: 3
+              }}>DONE</Text>
+            </TouchableOpacity>
+          </View>
+          <Loader
+            loading={loading}
+            color={colors.red.standard}
+            text={loading ? "Please wait we are loading workout" : null}
+          />
+          {/*{*/}
+          {/*  loading && (*/}
+          {/*      <>*/}
+          {/*        <Loader*/}
+          {/*            loading={loading}*/}
+          {/*            color={colors.red.standard}*/}
+          {/*            text={loading ? "Please wait we are loading workout" : null}*/}
+          {/*        />*/}
+          {/*      </>*/}
+          {/*  )*/}
+          {/*}*/}
+        </Modal>
       </View>
     );
   }

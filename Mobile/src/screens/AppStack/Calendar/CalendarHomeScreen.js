@@ -70,6 +70,7 @@ class CalendarHomeScreen extends React.PureComponent {
       completeCha: undefined,
       todayRecommendedRecipe: undefined,
       phaseDefaultTags: undefined,
+      gymSetting: false
     };
     this.calendarStrip = React.createRef();
   }
@@ -322,13 +323,83 @@ class CalendarHomeScreen extends React.PureComponent {
     });
   }
 
-  loadExercises = async (workoutData) => {
+  loadExercises = async (gymSetting, workoutData) => {
+    this.setState({ loadingExercises: true });
+    let homeGymWorkouts = [];
+    let workoutDatas = [];
+
+    if (gymSetting) {
+      if (workoutData[0].gym) {
+        homeGymWorkouts.push(workoutData[0]);
+        homeGymWorkouts.push(workoutData[1]);
+      }
+      else if (workoutData[0].home) {
+        homeGymWorkouts.push(workoutData[1]);
+        homeGymWorkouts.push(workoutData[0]);
+      }
+    } else {
+      if (workoutData[0].gym) {
+        homeGymWorkouts.push(workoutData[1]);
+        homeGymWorkouts.push(workoutData[0]);
+      }
+      else if (workoutData[0].home) {
+        homeGymWorkouts.push(workoutData[0]);
+        homeGymWorkouts.push(workoutData[1]);
+      }
+    }
+
+    let uniqueWarmUpExercises = [...new Set(homeGymWorkouts[0].warmUpExercises)];
+
+    Object.assign(homeGymWorkouts[0], {
+      warmUpExercises: uniqueWarmUpExercises
+    });
+
+    const workout = await loadExercise(homeGymWorkouts[0]);
+
+    if (workout && workout.newWorkout) {
+
+      const warmUpExercises = await downloadExerciseWC(
+        workout,
+        Object.prototype.toString.call(workout.warmUpExercises).indexOf("Array") > -1 ? workout.warmUpExercises : workout.warmUpExercises.filter((warmUpExercise) => { return warmUpExercise }),
+        workout.warmUpExerciseModel,
+        "warmUp"
+      );
+      if (warmUpExercises.length > 0) {
+        const coolDownExercises = await downloadExerciseWC(
+          workout,
+          workout.coolDownExercises,
+          workout.coolDownExerciseModel,
+          "coolDown"
+        );
+        if (coolDownExercises.length > 0) {
+          const newWorkout = Object.assign({}, workout, {
+            warmUpExercises: warmUpExercises,
+            coolDownExercises: coolDownExercises,
+          });
+          workoutDatas.push(newWorkout);
+          workoutDatas.push(homeGymWorkouts[1]);
+          console.log(workoutDatas);
+          this.goToNext(workoutDatas);
+        } else {
+          this.setState({ loadingExercises: false });
+          Alert.alert("Alert!", "Something went wrong!");
+        }
+      } else {
+        this.setState({ loadingExercises: false });
+        Alert.alert("Alert!", "Something went wrong!");
+      }
+    } else if (workout) {
+      this.goToNext(workout);
+    } else {
+      this.setState({ loadingExercises: false });
+    }
+  };
+
+  loadExercisesE = async (workoutData) => {
     this.setState({ loadingExercises: true });
 
-    // console.log('workoutData.warmUpExercises: ', workoutData.warmUpExercises)
+    console.log('workoutData: ', workoutData)
 
-    // let uniqueWarmUpExercises = [...new Set(workoutData.warmUpExercises)];
-    // console.log('uniqueWarmUpExercise:', uniqueWarmUpExercises)
     Object.assign(workoutData, {
       warmUpExercises: workoutData.warmUpExercises
     });
@@ -372,6 +443,8 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   async goToNext(workout) {
+    let newWrkouts = [];
+
     if (
       this.currentChallengeDay === 1 &&
       !this.state.initialBurpeeTestCompleted
@@ -383,34 +456,25 @@ class CalendarHomeScreen extends React.PureComponent {
     }
     const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
     this.setState({ loadingExercises: false });
-    if (this.currentChallengeDay > 0) {
-      Object.assign(workout, {
-        displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
+    if (workout.length) {
+      workout.map((wrkout) => {
+        if (this.currentChallengeDay > 0) {
+          Object.assign(wrkout, {
+            displayName: `${wrkout.displayName} - Day ${this.currentChallengeDay}`,
+          });
+          newWrkouts.push(wrkout);
+        }
       });
+    } else {
+      newWrkouts.push(workout);
     }
-    if (
-      this.currentChallengeDay === 1 &&
-      !this.state.initialBurpeeTestCompleted
-    ) {
-      this.props.navigation.navigate("Burpee1", {
-        fromScreen: "WorkoutInfo",
-        screenReturnParams: {
-          workout,
-          reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
-          workoutSubCategory: workout.workoutSubCategory,
-          fitnessLevel,
-          extraProps: { fromCalender: true },
-        },
-      });
-      return;
-    }
+
     this.props.navigation.navigate("WorkoutInfo", {
-      workout,
-      reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
-      workoutSubCategory: workout.workoutSubCategory,
+      newWrkouts,
       fitnessLevel,
       extraProps: { fromCalender: true },
-      transformRoute: true
+      transformLevel: this.transformLevel,
+      transform: true
     });
   }
 
@@ -466,12 +530,12 @@ class CalendarHomeScreen extends React.PureComponent {
                 .collection("challenges")
                 .doc(list[0].id);
               challengeRef.set(newData, { merge: true });
-              this.setState({completeCha: isCompleted})
-              this.props.navigation.navigate("ChallengeSubscription", {completedChallenge: true})
+              this.setState({ completeCha: isCompleted })
+              this.props.navigation.navigate("ChallengeSubscription", { completedChallenge: true })
               Alert.alert(
                 "Congratulations!",
                 "You have completed your challenge",
-                [{ text: "OK", onPress: () => {} }],
+                [{ text: "OK", onPress: () => { } }],
                 { cancelable: false }
               );
             } else {
@@ -523,9 +587,9 @@ class CalendarHomeScreen extends React.PureComponent {
       const data = activeChallengeUserData.phases;
       const test = activeChallengeUserData.startDate;
       const transformLevel = activeChallengeUserData.displayName;
-      
+
       if (this.stringDate >= test) {
-        this.setState({ loading :true })
+        this.setState({ loading: true })
       }
 
       //TODO :getCurrent phase data
@@ -572,10 +636,12 @@ class CalendarHomeScreen extends React.PureComponent {
           await getTodayRecommendedWorkout(
             activeChallengeData.workouts,
             activeChallengeUserData,
-            this.stringDate
+            this.stringDate,
+            this.transformLevel,
+            this.state.transform
           )
-        )[0];
-        
+        );
+
         if (todayRcWorkout) this.setState({ todayRcWorkout: todayRcWorkout });
         else this.setState({ todayRcWorkout: undefined });
       }
@@ -646,9 +712,10 @@ class CalendarHomeScreen extends React.PureComponent {
       width,
       AllRecipe,
       completeCha,
-      todayRecommendedRecipe
+      todayRecommendedRecipe,
+      gymSetting,
     } = this.state;
-    
+
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
@@ -696,11 +763,15 @@ class CalendarHomeScreen extends React.PureComponent {
         <Text style={calendarStyles.headerText}>Today's Workout</Text>
         <View style={calendarStyles.listContainer}>
           <ChallengeWorkoutCard
-            onPress={() =>
-              todayRcWorkout.name && todayRcWorkout.name !== "rest"
-                ? this.loadExercises(todayRcWorkout, this.currentChallengeDay)
-                : ""
+            onPress={() => {
+              if (todayRcWorkout.length) {
+                this.loadExercises(gymSetting, todayRcWorkout, this.currentChallengeDay)
+              } else {
+                this.loadExercisesE(todayRcWorkout, this.currentChallengeDay)
+              }
             }
+            }
+            gymSetting={false}
             res={todayRcWorkout}
             currentDay={this.currentChallengeDay}
             title={activeChallengeData.displayName}
@@ -719,7 +790,7 @@ class CalendarHomeScreen extends React.PureComponent {
     const Progress = () => {
       return (
         <>
-         <View style={{
+          <View style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginTop: 15
@@ -811,7 +882,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 // fontSize: 18,
                 fontFamily: fonts.bold
               }}>
-                   {getPhase(this.phaseData)}
+                {getPhase(this.phaseData)}
               </Text>
             </View>
           </View>
