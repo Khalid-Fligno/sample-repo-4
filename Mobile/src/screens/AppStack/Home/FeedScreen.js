@@ -163,6 +163,7 @@ export default class FeedScreen extends React.PureComponent {
     } catch (err) {
       this.setState({ loading: false });
       console.log(err);
+      console.log('test')
       Alert.alert("Fetch active challenge data error!");
     }
   };
