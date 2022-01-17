@@ -33,7 +33,7 @@ export default class OnBoarding2 extends Component {
         selected:false
       },
       {
-        name:'Gluta Free',
+        name:'Gluten Free',
         tag:'GF',
         selected:false
       }

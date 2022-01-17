@@ -35,7 +35,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             isClickVisible: false,
             veganChecked: false,
             vegetarianChecked: false,
-            glutaFree: false,
+            glutenFree: false,
             dairyFree: false,
             gutHealth: false,
             phase1: false,
@@ -107,7 +107,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 res.tags.filter((item) => {
                     if (item === 'V') categoryName.push(item.replace('V', 'Vegan'))
                     if (item === 'V+') categoryName.push(item.replace('V+', 'Vegetarian'))
-                    if (item === 'GF') categoryName.push(item.replace('GF', 'Gluta Free'))
+                    if (item === 'GF') categoryName.push(item.replace('GF', 'Gluten Free'))
                     if (item === 'DF') categoryName.push(item.replace('DF', 'Dairy Free'))
                     if (item === 'GH') categoryName.push(item.replace('GH', 'Gut Health'))
                 })
@@ -170,16 +170,16 @@ export default class FilterRecipeScreen extends React.PureComponent {
         }
     }
 
-    toggleGlutaFree = () => {
+    toggleGlutenFree = () => {
         this.setState({
-            glutaFree: !this.state.glutaFree
+            glutenFree: !this.state.glutenFree
         })
-        if (this.state.glutaFree === false) {
-            this.setState({ category: [...this.state.category, { name: "Gluta Free" }] })
+        if (this.state.glutenFree === false) {
+            this.setState({ category: [...this.state.category, { name: "Gluten Free" }] })
         } else {
             this.setState({
                 category: this.state.category.filter((item) => {
-                    return item.name !== "Gluta Free"
+                    return item.name !== "Gluten Free"
                 })
             })
         }
@@ -272,7 +272,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.setState({ isFilterVisible: !this.state.isFilterVisible })
         this.setState({ veganChecked: false })
         this.setState({ vegetarianChecked: false })
-        this.setState({ glutaFree: false })
+        this.setState({ glutenFree: false })
         this.setState({ dairyFree: false })
         this.setState({ gutHealth: false })
         this.setState({ phase1: false })
@@ -287,7 +287,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.setState({ phase3: false })
         this.setState({ veganChecked: false })
         this.setState({ vegetarianChecked: false })
-        this.setState({ glutaFree: false })
+        this.setState({ glutenFree: false })
         this.setState({ dairyFree: false })
         this.setState({ gutHealth: false })
     }
@@ -341,7 +341,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                             tagList.push(recipe)
                         }
                     }
-                    if (this.state.glutaFree === true) {
+                    if (this.state.glutenFree === true) {
                         if (recipe.tags[i] === 'GF') {
                             tagList.push(recipe)
                         }
@@ -420,7 +420,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                             tagList.push(recipe)
                         }
                     }
-                    if (this.state.glutaFree === true) {
+                    if (this.state.glutenFree === true) {
                         if (recipe.tags[i] === 'GF') {
                             tagList.push(recipe)
                         }
@@ -479,7 +479,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                             tagList.push(recipe)
                         }
                     }
-                    if (this.state.glutaFree === true) {
+                    if (this.state.glutenFree === true) {
                         if (recipe.tags[i] === 'GF') {
                             tagList.push(recipe)
                         }
@@ -502,7 +502,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         const uniqCat = [...new Set(tagList)]
 
         this.setState({
-            todayRecommendedRecipe: this.state.gutHealth || this.state.veganChecked || this.state.vegetarianChecked || this.state.glutaFree || this.state.dairyFree ? uniqCat : uniqPhase,
+            todayRecommendedRecipe: this.state.gutHealth || this.state.veganChecked || this.state.vegetarianChecked || this.state.glutenFree || this.state.dairyFree ? uniqCat : uniqPhase,
             isFilterVisible: false,
             isClickVisible: false,
             tags: [{ level: this.state.levelText, phase: this.state.phase }],
@@ -520,7 +520,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             phase3: false,
             veganChecked: false,
             vegetarianChecked: false,
-            glutaFree: false,
+            glutenFree: false,
             dairyFree: false,
             gutHealth: false,
             levelText: "",
@@ -613,7 +613,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     })}
                     veganChecked={this.state.veganChecked}
                     vegetarianChecked={this.state.vegetarianChecked}
-                    glutaFreeChecked={this.state.glutaFree}
+                    glutenFreeChecked={this.state.glutenFree}
                     dairyFreeChecked={this.state.dairyFree}
                     gutHealthChecked={this.state.gutHealth}
                     phase1={this.state.phase1}
@@ -621,7 +621,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     phase3={this.state.phase3}
                     toggleVegan={() => this.toggleVegan()}
                     toggleVegetarian={() => this.toggleVegetarian()}
-                    toggleGlutaFree={() => this.toggleGlutaFree()}
+                    toggleGlutenFree={() => this.toggleGlutenFree()}
                     toggleDairyFree={() => this.toggleDairyFree()}
                     toggleGutHealth={() => this.toggleGutHealth()}
                     closeModal={() => this.closeModal()}
