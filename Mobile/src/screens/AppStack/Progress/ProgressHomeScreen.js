@@ -895,11 +895,7 @@ class ProgressHomeScreen extends React.PureComponent {
                   <View>
                     <ProgressBar
                         // title=""
-                        completed={
-                          (countS + countI + countC) === 0
-                            ? profile.totalWorkoutCompleted
-                            : countS + countI + countC
-                        }
+                        completed={profile.totalWorkoutCompleted}
                         total={totalS}
                         size={wp("38%")}
                     />
