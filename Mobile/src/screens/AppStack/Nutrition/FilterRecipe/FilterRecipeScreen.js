@@ -666,7 +666,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                             isBigTitle={true}
                             isBackButton={true}
                             onPress={this.handleBack}
-                            backButtonText="Back to Workout"
+                            backButtonText="Back to Challenge"
                             isBackButton={true}
                             customContainerStyle={{ bottom: 25 }}
                         />
