@@ -162,9 +162,9 @@ export default class FeedScreen extends React.PureComponent {
       .where("tags","array-contains", phaseTag)
       .get();
     let blogs = [];
-    const cDay = currentDay === 1 ? 2 : currentDay;
+    // const cDay = currentDay === 1 ? 2 : currentDay;
     snapshot.forEach((doc) => {
-       if (doc.data().startDay <= cDay && doc.data().endDay >= cDay)
+      //  if (doc.data().startDay <= cDay && doc.data().endDay >= cDay)
       blogs.unshift(doc.data());
     });
     this.setState({ blogs, loading: false });
