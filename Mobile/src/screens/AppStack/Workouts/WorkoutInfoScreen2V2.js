@@ -230,15 +230,15 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     const { mode, gymWorkout, homeWorkout, workout, reps, extraProps, lifestyle, transform } = this.state;
     this.setState({ musicModalVisible: false });
     // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
-    // this.props.navigation.navigate("Countdown", {
-    //   lifestyle,
-    //   workout: transform ? mode === 'GYM' ? gymWorkout : mode === 'HOME' ? homeWorkout : workout : workout,
-    //   reps,
-    //   resistanceCategoryId: transform ? mode === 'GYM' ? gymWorkout.id : mode === 'HOME' ? homeWorkout.id : workout.id : workout.id,
-    //   workoutSubCategory: this.state.workoutSubCategory,
-    //   fitnessLevel: this.state.fitnessLevel,
-    //   extraProps,
-    // });
+    this.props.navigation.navigate("Countdown", {
+      lifestyle,
+      workout: transform ? mode === 'GYM' ? gymWorkout : mode === 'HOME' ? homeWorkout : workout : workout,
+      reps,
+      resistanceCategoryId: transform ? mode === 'GYM' ? gymWorkout.id : mode === 'HOME' ? homeWorkout.id : workout.id : workout.id,
+      workoutSubCategory: this.state.workoutSubCategory,
+      fitnessLevel: this.state.fitnessLevel,
+      extraProps,
+    });
   };
 
   // keyExtractor = (exercise, index) => String(index);
