@@ -19,6 +19,8 @@ import SwitchNavigator from "./config/router/index";
 import colors from "./src/styles/colors";
 import { YellowBox } from "react-native";
 import _ from "lodash";
+import LogRocket from '@logrocket/react-native';
+
 
 YellowBox.ignoreWarnings(["Setting a timer"]);
 const _console = _.clone(console);
@@ -71,6 +73,7 @@ export default class App extends React.PureComponent {
     // this.unsubscribe = NetInfo.addEventListener((state) => {
     //   this.handleConnectivityChange(state);
     // });
+    LogRocket.init('ybsf6y/fitazfk-app');
     Linking.addEventListener("url", this.handleOpenURL);
     AppState.addEventListener("change", this.handleAppStateChange);
   };
