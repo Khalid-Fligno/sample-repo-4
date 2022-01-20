@@ -3,7 +3,11 @@
   "version": "4.2.4",
   "summary": "React Native wrapper for Android and iOS ViewPager",
   "license": "MIT",
-  "authors": "troZee <hello@callstack.com> (https://github.com/callstack)",
+  "authors": {
+    "name": "troZee",
+    "email": "hello@callstack.com",
+    "url": "https://github.com/callstack"
+  },
   "homepage": "https://github.com/callstack/react-native-viewpager#readme",
   "platforms": {
     "ios": "9.0"
