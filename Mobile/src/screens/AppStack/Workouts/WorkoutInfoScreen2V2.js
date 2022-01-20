@@ -233,9 +233,9 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
     this.props.navigation.navigate("Countdown", {
       lifestyle,
-      workout: transform ? mode === 'GYM' ? gymWorkout : mode === 'HOME' ? homeWorkout : workout : workout,
+      workout: transform ? mode === 'GYM' ? gymWorkout : mode === 'HOME' ? homeWorkout ? homeWorkout : workout : workout : workout,
       reps,
-      resistanceCategoryId: transform ? mode === 'GYM' ? gymWorkout.id : mode === 'HOME' ? homeWorkout.id : workout.id : workout.id,
+      resistanceCategoryId: transform ? mode === 'GYM' ? gymWorkout : mode === 'HOME' ? homeWorkout ? homeWorkout.id : workout.id : workout.id : workout.id,
       workoutSubCategory: this.state.workoutSubCategory,
       fitnessLevel: this.state.fitnessLevel,
       extraProps,
