@@ -611,7 +611,7 @@ export default class FeedScreen extends React.PureComponent {
                   titleCapitalise={true}
                   Title="Explore workouts"
                   customBtnStyle={styles.oblongBtnStyle}
-                  onPress={() => this.props.navigation.navigate("Lifestyle")}
+                  onPress={() => this.props.navigation.navigate("Workouts")}
                   // style={styles.oblongBtnStyle}
                   // isRightIcon={true}
                   // customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}

@@ -895,8 +895,8 @@ class ProgressHomeScreen extends React.PureComponent {
                   <View>
                     <ProgressBar
                         // title=""
-                        // completed={profile.totalWorkoutCompleted}
-                        completed={profile.totalWorkoutCompleted + countI + countC + countS}
+                        completed={profile.totalWorkoutCompleted}
+                        // completed={profile.totalWorkoutCompleted + countI + countC + countS}
                         total={totalS}
                         size={wp("38%")}
                     />
