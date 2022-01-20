@@ -474,6 +474,7 @@ class CalendarHomeScreen extends React.PureComponent {
       fitnessLevel,
       extraProps: { fromCalender: true },
       transformLevel: this.transformLevel,
+      reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
       transform: true
     });
   }

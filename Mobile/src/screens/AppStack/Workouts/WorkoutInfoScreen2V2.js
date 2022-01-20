@@ -99,7 +99,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       transformLevel: this.props.navigation.getParam("transformLevel", {}),
       mode: this.state.gymSetting ? 'GYM' : 'HOME',
       transform: this.props.navigation.getParam("transform"),
-      loading: false
+      loading: false,
+      reps: this.props.navigation.getParam("reps", null),
     });
 
     if (this.props.navigation.getParam("transform")) {
