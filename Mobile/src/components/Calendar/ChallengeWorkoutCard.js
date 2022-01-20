@@ -74,7 +74,7 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
       title,
     } = this.props;
 
-    const resx = res[0]
+    const resx = res.length > 1 ? res[0] : res;
 
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
