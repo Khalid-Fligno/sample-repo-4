@@ -1,0 +1,128 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.5.2 (swiftlang-1300.0.47.5 clang-1300.0.29.30)
+// swift-module-flags: -target x86_64-apple-ios12.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name LogRocket
+import Foundation
+@_exported import LogRocket
+import Swift
+import UIKit
+import _Concurrency
+@objc(LRORequestSanitizer) public protocol RequestSanitizer {
+  @objc func sanitize(request: LogRocket.Request) -> LogRocket.Request?
+}
+@_hasMissingDesignatedInitializers @objc(LROResponseBuilder) public class ResponseBuilder : ObjectiveC.NSObject {
+  @objc public var arsonBody: Swift.String?
+  @objc public var body: Foundation.Data?
+  @objc public var headers: [Swift.String : Swift.String]?
+  @objc public var method: Swift.String
+  @objc final public let reqID: Swift.Int
+  @objc public var status: Swift.Int
+  @objc public var url: Swift.String
+  @objc public func capture()
+  @objc deinit
+}
+final public class AtomicInteger {
+  public init(value initialValue: Swift.Int = 0)
+  final public var value: Swift.Int {
+    get
+    set
+  }
+  final public func decrementAndGet() -> Swift.Int
+  final public func getAndIncrement() -> Swift.Int
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(LROSDK) public class SDK : ObjectiveC.NSObject {
+  @objc public static func initialize(configuration: LogRocket.Configuration) -> Swift.Bool
+  @objc public static func addLog(level: Swift.String, args: [Swift.String])
+  @objc public static func captureException(errorMessage: Swift.String, errorType: Swift.String, exceptionType: Swift.String, stackTrace: Swift.String)
+  @objc public static func getSessionURL(_ completion: @escaping (Swift.String) -> Swift.Void)
+  @objc public static func identify(userID: Swift.String, userInfo: [Swift.String : Swift.String]? = nil)
+  @objc public static func identifyAsAnonymous(userID: Swift.String, userInfo: [Swift.String : Swift.String]? = nil)
+  @objc public static func newRequestBuilder() -> LogRocket.RequestBuilder?
+  @objc public static func shutdown()
+  @objc public static func track(_ builder: LogRocket.CustomEventBuilder)
+  @objc deinit
+}
+@objc(LROCustomEventBuilder) public class CustomEventBuilder : ObjectiveC.NSObject {
+  @objc public init(name: Swift.String)
+  @objc public func putRevenue(_ value: Swift.Double)
+  @objc public func putString(key: Swift.String, value: Swift.String)
+  @objc public func putStringArray(key: Swift.String, value: [Swift.String])
+  @objc public func putDouble(key: Swift.String, value: Swift.Double)
+  @objc public func putDoubleArray(key: Swift.String, value: [Swift.Double])
+  @objc public func putBool(key: Swift.String, value: Swift.Bool)
+  @objc public func putBoolArray(key: Swift.String, value: [Swift.Bool])
+  @objc deinit
+}
+@objc(LROResponseSanitizer) public protocol ResponseSanitizer {
+  @objc func sanitize(response: LogRocket.Response) -> LogRocket.Response?
+}
+final public class AtomicBool {
+  public init(value initialValue: Swift.Bool = false)
+  final public var value: Swift.Bool {
+    get
+    set
+  }
+  final public func compareAndSet(expect: Swift.Bool, update: Swift.Bool) -> Swift.Bool
+  @objc deinit
+}
+@objc(LROConfiguration) public class Configuration : ObjectiveC.NSObject {
+  final public let appID: Swift.String
+  @objc public var serverURL: Swift.String
+  @objc public var redactionTags: Swift.Set<Swift.String>
+  @objc public var viewScanningEnabled: Swift.Bool
+  @objc public var networkCaptureEnabled: Swift.Bool
+  @objc public var logCaptureEnabled: Swift.Bool
+  @objc public var requestSanitizer: LogRocket.RequestSanitizer?
+  @objc public var responseSanitizer: LogRocket.ResponseSanitizer?
+  @objc public var registerTouchHandlers: Swift.Bool
+  @objc public var scaleFactor: CoreGraphics.CGFloat
+  @objc public init(appID: Swift.String)
+  convenience public init(appID: Swift.String, serverURL: Swift.String = "https://r.lr-in.com/i", redactionTags: Swift.Set<Swift.String> = [], viewScanningEnabled: Swift.Bool = true, networkCaptureEnabled: Swift.Bool = true, logCaptureEnabled: Swift.Bool = true, requestSanitizer: LogRocket.RequestSanitizer? = nil, responseSanitizer: LogRocket.ResponseSanitizer? = nil, registerTouchHandlers: Swift.Bool = true, scaleFactor: CoreGraphics.CGFloat = UIScreen.main.scale)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(LRORequest) public class Request : ObjectiveC.NSObject {
+  @objc public var arsonBody: Swift.String?
+  @objc public var body: Foundation.Data?
+  @objc public var headers: [Swift.String : Swift.String]?
+  @objc final public let method: Swift.String
+  @objc final public let reqID: Swift.Int
+  @objc public var url: Swift.String?
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(LROCustomEvent) public class CustomEvent : ObjectiveC.NSObject {
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(LROResponse) public class Response : ObjectiveC.NSObject {
+  @objc public var arsonBody: Swift.String?
+  @objc public var body: Foundation.Data?
+  @objc public var headers: [Swift.String : Swift.String]?
+  @objc final public let method: Swift.String
+  @objc final public let reqID: Swift.Int
+  @objc final public let status: Swift.UInt32
+  @objc public var url: Swift.String?
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(LRORequestBuilder) public class RequestBuilder : ObjectiveC.NSObject {
+  @objc public var arsonBody: Swift.String?
+  @objc public var body: Foundation.Data?
+  @objc public var headers: [Swift.String : Swift.String]?
+  @objc public var method: Swift.String?
+  @objc final public let reqID: Swift.Int
+  @objc public var url: Swift.String?
+  @objc public func capture() -> LogRocket.ResponseBuilder?
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(LROTouchShim) @_Concurrency.MainActor(unsafe) public class TouchShim : UIKit.UIGestureRecognizer, UIKit.UIGestureRecognizerDelegate {
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func canBePrevented(by _: UIKit.UIGestureRecognizer) -> Swift.Bool
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func canPrevent(_: UIKit.UIGestureRecognizer) -> Swift.Bool
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func ignore(_: UIKit.UITouch, for _: UIKit.UIEvent)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func ignore(_: UIKit.UIPress, for _: UIKit.UIPressesEvent)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func shouldRequireFailure(of _: UIKit.UIGestureRecognizer) -> Swift.Bool
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func shouldBeRequiredToFail(by _: UIKit.UIGestureRecognizer) -> Swift.Bool
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func touchesBegan(_ touches: Swift.Set<UIKit.UITouch>, with _: UIKit.UIEvent)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func touchesCancelled(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func touchesEnded(_ touches: Swift.Set<UIKit.UITouch>, with _: UIKit.UIEvent)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func touchesMoved(_ touches: Swift.Set<UIKit.UITouch>, with _: UIKit.UIEvent)
+  @_Concurrency.MainActor(unsafe) @objc public func gestureRecognizer(_: UIKit.UIGestureRecognizer, shouldRecognizeSimultaneouslyWith _: UIKit.UIGestureRecognizer) -> Swift.Bool
+  @objc deinit
+}

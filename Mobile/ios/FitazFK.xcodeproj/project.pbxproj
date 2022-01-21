@@ -136,6 +136,7 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				074B1E5D5EC5780CA12BDA41 /* [CP] Copy Pods Resources */,
+				34F1399804984FC2D3C49CAC /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -197,7 +198,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -259,6 +260,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FitazFK/Pods-FitazFK-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		34F1399804984FC2D3C49CAC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FitazFK/Pods-FitazFK-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/LogRocket/LogRocket.framework/LogRocket",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LogRocket.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FitazFK/Pods-FitazFK-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A940AC1DA6987A99FC61FECF /* [CP] Check Pods Manifest.lock */ = {

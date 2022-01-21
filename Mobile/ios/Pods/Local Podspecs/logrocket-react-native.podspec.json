@@ -1,0 +1,27 @@
+{
+  "name": "logrocket-react-native",
+  "version": "0.23.1",
+  "summary": "LogRocket SDK for react-native",
+  "license": "MIT",
+  "authors": {
+    "name": "AppHub",
+    "email": "support@apphub.io"
+  },
+  "platforms": {
+    "ios": "10.0"
+  },
+  "homepage": "https://github.com/AppHub/logrocket",
+  "source": {
+    "git": "https://github.com/AppHub/LogRocket.git"
+  },
+  "source_files": "ios/**/*.{h,c,m,swift}",
+  "requires_arc": true,
+  "dependencies": {
+    "LogRocket": [
+      "0.23.1"
+    ],
+    "React": [
+
+    ]
+  }
+}
