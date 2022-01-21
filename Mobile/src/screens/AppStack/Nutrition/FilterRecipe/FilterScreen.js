@@ -27,7 +27,7 @@ export default class FilterScreen extends React.PureComponent {
 
     render() {
 
-        const { result, item,title } = this.props
+        const { result, item, title } = this.props
 
         return (
             <View
@@ -48,10 +48,8 @@ export default class FilterScreen extends React.PureComponent {
                         containerStyle={styles.card}
                     >
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10 }}>
-                                <View style={{ maxWidth: '70%' }}>
-                                    <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>
-                                </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10, maxWidth: '50%' }}>
+                                <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 {
