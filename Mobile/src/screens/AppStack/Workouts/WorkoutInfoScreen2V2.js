@@ -1278,7 +1278,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                         />
                         <Text style={WorkoutScreenStyle.workoutInfoFieldData}>
                           {this.state.workout.filters.includes("strength")
-                            ? `${reps * workoutTime} Reps`
+                            ? `${workout.workoutReps * workoutTime} Reps`
                             : `${workout.workoutReps} Rounds`}
                         </Text>
                       </View>

@@ -458,7 +458,7 @@ class CalendarHomeScreen extends React.PureComponent {
     this.setState({ loadingExercises: false });
     if (workout.length) {
       workout.map((wrkout) => {
-        if (this.currentChallengeDay > 0) {
+        if (wrkout && this.currentChallengeDay > 0) {
           Object.assign(wrkout, {
             displayName: `${wrkout.displayName} - Day ${this.currentChallengeDay}`,
           });
@@ -474,7 +474,6 @@ class CalendarHomeScreen extends React.PureComponent {
       fitnessLevel,
       extraProps: { fromCalender: true },
       transformLevel: this.transformLevel,
-      reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
       transform: true
     });
   }
