@@ -54,6 +54,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             defaultLevelTags: "",
             phaseDefaultTags: "",
             categoryName: [],
+            activeChallengeUserData: undefined
         };
     }
 
@@ -61,6 +62,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.getDefaultCategoryTags()
         this.getAllRecipeData()
         this.setState({
+            activeChallengeUserData: this.props.navigation.getParam('activeChallengeUserData', null),
             phaseDefaultTags: this.props.navigation.getParam('phaseDefaultTags', null),
             defaultLevelTags: this.props.navigation.getParam("defaultLevelTags", null),
             challengeRecipe: this.props.navigation.getParam("challengeAllRecipe", null),
@@ -529,6 +531,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
     renderItem = ({ item }) => {
+        const { activeChallengeUserData } = this.state
 
         const color1 = []
 
@@ -546,6 +549,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         return (
             <FilterScreen
+                activeChallengeUserData={activeChallengeUserData}
                 navigation={this.props.navigation}
                 result={result}
                 item={item}
@@ -644,7 +648,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
             defaultLevelTags,
             phaseDefaultTags,
             categoryName,
-            loading
+            loading,
+            activeChallengeUserData
         } = this.state
 
         const skeleton = (

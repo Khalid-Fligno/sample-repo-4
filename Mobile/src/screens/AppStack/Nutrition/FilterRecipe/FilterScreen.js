@@ -15,6 +15,9 @@ import {
     widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { Card } from 'react-native-elements';
+import { db } from "../../../../../config/firebase";
+import AsyncStorage from "@react-native-community/async-storage";
+import Icon from "react-native-vector-icons/AntDesign";
 
 const { width } = Dimensions.get("window");
 
@@ -22,13 +25,69 @@ export default class FilterScreen extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            favoriteList: []
+        }
+    }
+
+    onFavorite = async (item, activeChallengeUserData) => {
+        this.setState({ favoriteList: [...this.state.favoriteList, item.id] })
+
+        const id = activeChallengeUserData.id
+        const uid = await AsyncStorage.getItem("uid");
+        const activeChallengeUserRef = db
+            .collection("users")
+            .doc(uid)
+            .collection("challenges")
+            .doc(id)
+
+        activeChallengeUserRef.get()
+            .then(querySnapshot => {
+                const data = querySnapshot.data()
+                if (data.faveRecipe) {
+                    activeChallengeUserRef.set({ "faveRecipe": [...data.faveRecipe, item.id] }, { merge: true })
+                } else {
+                    activeChallengeUserRef.set({ "faveRecipe": [item.id] }, { merge: true })
+                }
+            })
+    }
+
+    onRemoveFavorite = async (item, activeChallengeUserData) => {
+        const filteredList = this.state.favoriteList.filter(
+            id => id !== item.id
+        );
+        this.setState({ favoriteList: filteredList })
+
+        const id = activeChallengeUserData.id
+        const uid = await AsyncStorage.getItem("uid");
+        const activeChallengeUserRef = db
+            .collection("users")
+            .doc(uid)
+            .collection("challenges")
+            .doc(id)
+
+        activeChallengeUserRef.get()
+            .then(querySnapshot => {
+                const data = querySnapshot.data()
+                const filter = data.faveRecipe.filter(
+                    id => id !== item.id
+                )
+                activeChallengeUserRef.update({ "faveRecipe": filter })
+            })
+
+    }
+
+    ifExist(item) {
+        if (this.state.favoriteList.filter(id => id === item.id).length > 0) {
+            return true;
+        }
+        return false
     }
 
     render() {
-
-        const { result, item, title } = this.props
-
+        const { result, item, title, activeChallengeUserData } = this.props
+        const { favoriteList } = this.state
+        console.log('favoriteList: ', favoriteList)
         return (
             <View
                 style={styles.cardContainer}
@@ -47,6 +106,22 @@ export default class FilterScreen extends React.PureComponent {
                         image={{ uri: item.coverImage }}
                         containerStyle={styles.card}
                     >
+                        <TouchableOpacity
+                            style={{
+                                position: 'absolute',
+                                bottom: 160,
+                                left: 320
+                            }}
+                            onPress={() =>
+                                this.ifExist(item) ?
+                                    this.onRemoveFavorite(item, activeChallengeUserData)
+                                    :
+                                    this.onFavorite(item, activeChallengeUserData)
+                            }
+
+                        >
+                            <Icon name={this.ifExist(item) ? 'heart' : 'hearto'} size={30} color={'red'} />
+                        </TouchableOpacity>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10, maxWidth: '50%' }}>
                                 <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>

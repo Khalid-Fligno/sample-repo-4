@@ -677,11 +677,12 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   getToFilter(data, data1, data2, title) {
-    const { challengeRecipe, activeChallengeData, phaseDefaultTags } = this.state
+    const { challengeRecipe, activeChallengeData, phaseDefaultTags, activeChallengeUserData } = this.state
 
     // console.log('phaseDefaultTags: ', phaseDefaultTags.displayName)
 
     this.props.navigation.navigate('FilterRecipe', {
+      activeChallengeUserData: activeChallengeUserData,
       phaseDefaultTags: phaseDefaultTags.phaseTags,
       defaultLevelTags: activeChallengeData.levelTags,
       todayRecommendedRecipe: data2,
