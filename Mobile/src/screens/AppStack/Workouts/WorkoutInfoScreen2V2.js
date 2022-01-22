@@ -11,6 +11,7 @@ import {
   UIManager,
   LayoutAnimation,
   SectionList,
+  Picker,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
@@ -34,6 +35,11 @@ import WorkoutScreenStyle from "./WorkoutScreenStyle";
 import TimeSvg from "../../../../assets/icons/time";
 import fonts from "../../../styles/fonts";
 import NutritionStyles from "../Nutrition/NutritionStyles";
+import Loader from "../../../components/Shared/Loader";
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from "react-native-responsive-screen";
 const moment = require("moment");
 
 const { width } = Dimensions.get("window");
@@ -68,6 +74,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       expandedCooldown: false,
       lifestyle: false,
       mode: "home",
+      showPickerMode: false,
     };
   }
 
@@ -569,9 +576,12 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       expandedExercise,
       expandedWarmup,
       expandedCooldown,
+      mode,
     } = this.state;
 
-    console.log(workout[this.state.mode], "workout");
+    if (workout) {
+      console.log(workout, "workout");
+    }
 
     let workoutTime = 0;
     let warmupInterval = 0;
@@ -647,6 +657,39 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
             minimumDate={new Date()}
           />
         )}
+        <View
+          style={{
+            width: widthPercentageToDP(50),
+            padding: heightPercentageToDP(1),
+          }}
+        >
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({
+                  showPickerMode: true,
+                });
+              }}
+              style={{
+                padding: 15,
+                backgroundColor: colors.white,
+                borderWidth: 1,
+                borderColor: colors.grey.light,
+                borderRadius: 20,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: fonts.bold,
+                  fontSize: 14,
+                  color: colors.charcoal.dark,
+                }}
+              >
+                {mode === "GYM" ? "GYM" : "HOME"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         {workout && workout[this.state.mode] && !loading && (
           <View style={WorkoutScreenStyle.flatListContainer}>
             <SectionList
@@ -806,6 +849,75 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
             {"Start now"}
           </Text>
         </TouchableOpacity>
+
+        <Modal
+          isVisible={this.state.showPickerMode}
+          onBackdropPress={() => {
+            this.setState({
+              showPickerMode: false,
+            });
+          }}
+          animationIn="fadeIn"
+          animationInTiming={600}
+          animationOut="fadeOut"
+          animationOutTiming={600}
+        >
+          <View
+            style={{
+              backgroundColor: colors.white,
+              borderRadius: 4,
+              overflow: "hidden",
+            }}
+          >
+            <Picker
+              selectedValue={mode === "gym" ? "GYM" : "HOME"}
+              onValueChange={(value) => {
+                value === "GYM"
+                  ? this.setState({
+                      mode: "gym",
+                    })
+                  : this.setState({
+                      mode: "home",
+                    });
+              }}
+            >
+              <Picker.Item key={0} label="HOME" value="HOME" />
+              <Picker.Item key={1} label="GYM" value="GYM" />
+            </Picker>
+            <TouchableOpacity
+              title="DONE"
+              onPress={() => {
+                this.setState({
+                  showPickerMode: false,
+                });
+              }}
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: colors.black,
+                height: 50,
+                width: "100%",
+                marginBottom: 0,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: fonts.bold,
+                  fontSize: 14,
+                  color: colors.white,
+                  marginTop: 3,
+                }}
+              >
+                DONE
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Loader
+            loading={loading}
+            color={colors.red.standard}
+            text={loading ? "Please wait we are loading workout" : null}
+          />
+        </Modal>
       </View>
     );
   }
