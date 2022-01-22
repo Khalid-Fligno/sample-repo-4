@@ -341,7 +341,6 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   loadExercises = async (workoutData) => {
-    console.log(workoutData, "workoutData");
     this.setState({ loadingExercises: true });
 
     // console.log('workoutData.warmUpExercises: ', workoutData.warmUpExercises)
