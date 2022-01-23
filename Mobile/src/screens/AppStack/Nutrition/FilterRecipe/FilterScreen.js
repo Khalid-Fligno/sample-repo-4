@@ -15,6 +15,10 @@ import {
     widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { Card } from 'react-native-elements';
+import { db } from "../../../../../config/firebase";
+import AsyncStorage from "@react-native-community/async-storage";
+import Icon from "react-native-vector-icons/AntDesign";
+import { convertRecipeData } from "../../../../utils/challenges";
 
 const { width } = Dimensions.get("window");
 
@@ -22,13 +26,127 @@ export default class FilterScreen extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            favoriteList: [],
+            recipeIsExist: false
+        }
+    }
+
+    componentDidMount = () => {
+        this.ifExist(this.props.item, this.props.activeChallengeUserData, this.props.title)
+    }
+
+    onFavorite = async (item, activeChallengeUserData, title) => {
+        this.setState({ favoriteList: [...this.state.favoriteList, item.id] })
+
+        const id = activeChallengeUserData.id
+        const uid = await AsyncStorage.getItem("uid");
+        const activeChallengeUserRef = db
+            .collection("users")
+            .doc(uid)
+            .collection("challenges")
+            .doc(id)
+
+        if (item.types.filter(name => name === title.toLowerCase())) {
+            if (title.toLowerCase() === 'breakfast') {
+                activeChallengeUserRef.set({ "faveRecipe": { 'breakfast': [item.id] } }, { merge: true })
+            }
+            if (title.toLowerCase() === 'lunch') {
+                activeChallengeUserRef.set({ "faveRecipe": { 'lunch': [item.id] } }, { merge: true })
+            }
+            if (title.toLowerCase() === 'dinner') {
+                activeChallengeUserRef.set({ "faveRecipe": { 'dinner': [item.id] } }, { merge: true })
+            }
+        }
+
+    }
+
+    onRemoveFavorite = async (item, activeChallengeUserData, title) => {
+        const filteredList = this.state.favoriteList.filter(
+            id => id !== item.id
+        );
+        this.setState({ favoriteList: filteredList })
+
+        const id = activeChallengeUserData.id
+        const uid = await AsyncStorage.getItem("uid");
+        const activeChallengeUserRef = db
+            .collection("users")
+            .doc(uid)
+            .collection("challenges")
+            .doc(id)
+
+        if (item.types.filter(name => name === title.toLowerCase())) {
+            if (title.toLowerCase() === 'breakfast') {
+                activeChallengeUserRef.set({ "faveRecipe": { 'breakfast': [] } }, { merge: true })
+            }
+            if (title.toLowerCase() === 'lunch') {
+                activeChallengeUserRef.set({ "faveRecipe": { 'lunch': [] } }, { merge: true })
+            }
+            if (title.toLowerCase() === 'dinner') {
+                activeChallengeUserRef.set({ "faveRecipe": { 'dinner': [] } }, { merge: true })
+            }
+        }
+
+    }
+
+    ifExist = async (item, activeChallengeUserData, title) => {
+        let result = false
+
+        const id = activeChallengeUserData.id
+        const uid = await AsyncStorage.getItem("uid");
+        const activeChallengeUserRef = db
+            .collection("users")
+            .doc(uid)
+            .collection("challenges")
+            .doc(id)
+
+        const query = await activeChallengeUserRef.get()
+        const data = query.data().faveRecipe
+
+        if (item.types.filter(name => name === title.toLowerCase())) {
+            try{
+                if (title.toLowerCase() === 'breakfast') {
+                    if(data.breakfast.includes(item.id)){
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            }catch(err){}
+
+            try{
+                if (title.toLowerCase() === 'lunch') {
+                    if(data.lunch.includes(item.id)){
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            }catch(err){}
+
+            try{
+                if (title.toLowerCase() === 'dinner') {
+                    if(data.dinner.includes(item.id)){
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            }catch(err){} 
+        }
+
+        console.log('Result: ', result)
+
+        this.setState({
+            recipeIsExist: result
+        })
+
     }
 
     render() {
-
-        const { result, item, title } = this.props
-
+        const { result, item, title, activeChallengeUserData } = this.props
+        const { favoriteList } = this.state
+        console.log('this.state.recipeIsExist: ', this.state.recipeIsExist)
         return (
             <View
                 style={styles.cardContainer}
@@ -47,6 +165,30 @@ export default class FilterScreen extends React.PureComponent {
                         image={{ uri: item.coverImage }}
                         containerStyle={styles.card}
                     >
+                        <TouchableOpacity
+                            style={{
+                                position: 'absolute',
+                                bottom: 160,
+                                left: 320
+                            }}
+                            onPress={() => {
+                                if (this.state.recipeIsExist) {
+                                    this.onRemoveFavorite(item, activeChallengeUserData, title)
+                                } else {
+                                    this.onFavorite(item, activeChallengeUserData, title)
+                                }
+                                this.ifExist(item, activeChallengeUserData, this.props.title)
+                            }
+
+                                // this.state.recipeIsExist ?
+                                //     this.onRemoveFavorite(item, activeChallengeUserData, title)
+                                //     :
+                                //     this.onFavorite(item, activeChallengeUserData, title)
+                            }
+
+                        >
+                            <Icon name={this.state.recipeIsExist ? 'heart' : 'hearto'} size={30} color={'red'} />
+                        </TouchableOpacity>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10, maxWidth: '50%' }}>
                                 <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>

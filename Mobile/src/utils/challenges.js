@@ -37,7 +37,6 @@ export const getCurrentPhase = (data, currentDate1) => {
     const isBetween = moment(currentDate).isBetween(el.startDate, el.endDate, undefined, '[]')
     // console.log("????/////",isBetween)
     if (isBetween) {
-      console.log('El: ', el)
       phase = el
     }
   });
@@ -87,6 +86,23 @@ export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserDa
     return [workoutData]
   }
 
+}
+
+export const fetchActiveRecipe = async () => {
+  //Fetch all recipe ID
+  const data = []
+  this.unsubscribeFACD = await db
+  .collection("recipes")
+  .get()
+  .then(snapshot => {
+    snapshot.forEach(res => {
+      data.push(res.data().id)
+    })
+  })
+
+  console.log('Data Recipe: ', data)
+
+  // this.setState({recipeId: data})
 }
 
 export const convertRecipeData = async (recipeId) => {
@@ -232,6 +248,12 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
   const recipeRef = db.collection('recipes')
   const snapshot = await recipeRef.get();
 
+  // snapshot.forEach(res => {
+  //   // console.log('res: ', res.data().id)
+  //   const datass = recipeRef.doc(res.data().id)
+  //   datass.set({showTransform: true}, {merge: true})
+  // })
+
   if (activeChallengeData && activeChallengeData.newChallenge) {
     if (snapshot.empty) {
       return null
@@ -258,27 +280,27 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
     resMeals.types.forEach((resType) => {
       if (resType === 'breakfast') {
         snapshot.forEach((res) => {
-          if(res.data().showTransform === true){
+          if (res.data().showTransform === true) {
             if (resMeals.breakfast === res.data().breakfast) {
               try {
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
-                    if(resTag === levelName){
+                    if (resTag === levelName) {
                       if (res.data().tags.includes(phaseName)) {
                         breakfastResult.push(res.data())
-                      } 
+                      }
                     }
                   }
-                  if('L2' === levelName){
-                    if(resTag === levelName){
+                  if ('L2' === levelName) {
+                    if (resTag === levelName) {
                       breakfastResult.push(res.data())
                     }
-                  } 
-                  if('L3' === levelName){
-                    if(resTag === levelName){
+                  }
+                  if ('L3' === levelName) {
+                    if (resTag === levelName) {
                       breakfastResult.push(res.data())
                     }
-                  }        
+                  }
                 })
               } catch (err) {
                 // console.log('error: ', err)
@@ -289,27 +311,27 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
       }
       if (resType === 'lunch') {
         snapshot.forEach((res) => {
-          if(res.data().showTransform === true){
+          if (res.data().showTransform === true) {
             if (resMeals.lunch === res.data().lunch) {
               try {
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
-                    if(resTag === levelName){
+                    if (resTag === levelName) {
                       if (res.data().tags.includes(phaseName)) {
                         lunchResult.push(res.data())
-                      } 
+                      }
                     }
                   }
-                  if('L2' === levelName){
-                    if(resTag === levelName){
+                  if ('L2' === levelName) {
+                    if (resTag === levelName) {
                       lunchResult.push(res.data())
                     }
-                  } 
-                  if('L3' === levelName){
-                    if(resTag === levelName){
+                  }
+                  if ('L3' === levelName) {
+                    if (resTag === levelName) {
                       lunchResult.push(res.data())
                     }
-                  }       
+                  }
                 })
               } catch (err) {
                 // console.log('error: ', err)
@@ -320,27 +342,27 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
       }
       if (resType === 'dinner') {
         snapshot.forEach((res) => {
-          if(res.data().showTransform === true){
+          if (res.data().showTransform === true) {
             if (resMeals.dinner === res.data().dinner) {
               try {
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
-                    if(resTag === levelName){
+                    if (resTag === levelName) {
                       if (res.data().tags.includes(phaseName)) {
                         dinnerResult.push(res.data())
-                      } 
+                      }
                     }
                   }
-                  if('L2' === levelName){
-                    if(resTag === levelName){
+                  if ('L2' === levelName) {
+                    if (resTag === levelName) {
                       dinnerResult.push(res.data())
                     }
-                  } 
-                  if('L3' === levelName){
-                    if(resTag === levelName){
+                  }
+                  if ('L3' === levelName) {
+                    if (resTag === levelName) {
                       dinnerResult.push(res.data())
                     }
-                  }       
+                  }
                 })
               } catch (err) {
                 // console.log('error: ', err)
@@ -352,27 +374,27 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
 
       if (resType === 'snack') {
         snapshot.forEach((res) => {
-          if(res.data().showTransform === true){
+          if (res.data().showTransform === true) {
             if (resMeals.snack === res.data().snack) {
               try {
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
-                    if(resTag === levelName){
+                    if (resTag === levelName) {
                       if (res.data().tags.includes(phaseName)) {
                         snackResult.push(res.data())
-                      } 
+                      }
                     }
                   }
-                  if('L2' === levelName){
-                    if(resTag === levelName){
+                  if ('L2' === levelName) {
+                    if (resTag === levelName) {
                       snackResult.push(res.data())
                     }
-                  } 
-                  if('L3' === levelName){
-                    if(resTag === levelName){
+                  }
+                  if ('L3' === levelName) {
+                    if (resTag === levelName) {
                       snackResult.push(res.data())
                     }
-                  }       
+                  }
                 })
               } catch (err) {
                 // console.log('error: ', err)
@@ -384,27 +406,27 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
       }
       if (resType === 'drink') {
         snapshot.forEach((res) => {
-          if(res.data().showTransform === true){
+          if (res.data().showTransform === true) {
             if (resMeals.drink === res.data().drink) {
               try {
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
-                    if(resTag === levelName){
+                    if (resTag === levelName) {
                       if (res.data().tags.includes(phaseName)) {
                         drinkResult.push(res.data())
-                      } 
+                      }
                     }
                   }
-                  if('L2' === levelName){
-                    if(resTag === levelName){
+                  if ('L2' === levelName) {
+                    if (resTag === levelName) {
                       drinkResult.push(res.data())
                     }
-                  } 
-                  if('L3' === levelName){
-                    if(resTag === levelName){
+                  }
+                  if ('L3' === levelName) {
+                    if (resTag === levelName) {
                       drinkResult.push(res.data())
                     }
-                  }       
+                  }
                 })
               } catch (err) {
                 // console.log('error: ', err)
@@ -416,27 +438,27 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
 
       if (resType === 'preworkout') {
         snapshot.forEach((res) => {
-          if(res.data().showTransform === true){
+          if (res.data().showTransform === true) {
             if (resMeals.preworkout === res.data().preworkout) {
               try {
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
-                    if(resTag === levelName){
+                    if (resTag === levelName) {
                       if (res.data().tags.includes(phaseName)) {
                         preworkoutResult.push(res.data())
-                      } 
+                      }
                     }
                   }
-                  if('L2' === levelName){
-                    if(resTag === levelName){
+                  if ('L2' === levelName) {
+                    if (resTag === levelName) {
                       preworkoutResult.push(res.data())
                     }
-                  } 
-                  if('L3' === levelName){
-                    if(resTag === levelName){
+                  }
+                  if ('L3' === levelName) {
+                    if (resTag === levelName) {
                       preworkoutResult.push(res.data())
                     }
-                  }        
+                  }
                 })
               } catch (err) {
                 // console.log('error: ', err)
@@ -448,27 +470,27 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
 
       if (resType === 'treats') {
         snapshot.forEach((res) => {
-          if(res.data().showTransform === true){
+          if (res.data().showTransform === true) {
             if (resMeals.treats === res.data().treats) {
               try {
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
-                    if(resTag === levelName){
+                    if (resTag === levelName) {
                       if (res.data().tags.includes(phaseName)) {
                         treatsResult.push(res.data())
-                      } 
+                      }
                     }
                   }
-                  if('L2' === levelName){
-                    if(resTag === levelName){
+                  if ('L2' === levelName) {
+                    if (resTag === levelName) {
                       treatsResult.push(res.data())
                     }
-                  } 
-                  if('L3' === levelName){
-                    if(resTag === levelName){
+                  }
+                  if ('L3' === levelName) {
+                    if (resTag === levelName) {
                       treatsResult.push(res.data())
                     }
-                  }        
+                  }
                 })
               } catch (err) {
                 // console.log('error: ', err)

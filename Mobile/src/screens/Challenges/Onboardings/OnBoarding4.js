@@ -75,7 +75,8 @@ export default class OnBoarding4 extends Component {
       calendarModalVisible: false,
       chosenDate: new Date(),
       quit: false,
-      completedChallenge: false
+      completedChallenge: false,
+      recipeId: []
     };
   }
 
@@ -140,6 +141,7 @@ export default class OnBoarding4 extends Component {
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     });
+    this.fetchRecipeData()
     // if (Platform.OS === 'android') {
     //   await this.requestAndroidPermissions();
 
@@ -147,6 +149,23 @@ export default class OnBoarding4 extends Component {
     // this.getCameraPermission();
     // this.getCameraRollPermission();
     // }
+  }
+
+  fetchRecipeData = async () => {
+    //Fetch all recipe ID
+    const recipeResult = []
+    const recipeRef = db.collection('recipes');
+    const snapshot = await recipeRef.get();
+    if (snapshot.empty) {
+      return null
+    } else {
+      snapshot.forEach(res => {
+        recipeResult.push(res.data().id)
+      })
+    }
+    console.log('recipeResult: ', recipeResult)
+    this.setState({ recipeId: recipeResult })
+
   }
 
   getCameraPermission = async () => {
@@ -288,6 +307,7 @@ export default class OnBoarding4 extends Component {
   // and don't forget to remove the listener
   componentWillUnmount() {
     this.focusListener.remove();
+    if (this.unsubscribeFACD) this.unsubscribeFACD();
   }
 
   saveImage = async (uri, blob) => {
@@ -400,6 +420,9 @@ export default class OnBoarding4 extends Component {
 
   addChallengeToCalendar = async (date) => {
     const { quit, completedChallenge } = this.state
+    const TODAY1 = moment().format("YYYY-MM-DD").toString();
+    const stringDate3 = moment(date).format("YYYY-MM-DD").toString();
+
     if (quit || completedChallenge) {
       if (this.state.addingToCalendar) {
         return;
@@ -426,7 +449,9 @@ export default class OnBoarding4 extends Component {
         onBoardingInfo,
       });
 
-      const data = createUserChallengeData(updatedChallengedata, new Date(date));
+      const data = createUserChallengeData(updatedChallengedata, new Date(date), stringDate3, TODAY1, this.state.recipeId);
+      console.log('Data data: ', data)
+
       const progressData = {
         photoURL: this.state.imgUrl,
         height: updatedChallengedata.onBoardingInfo.measurements.height,
@@ -486,7 +511,9 @@ export default class OnBoarding4 extends Component {
         onBoardingInfo,
       });
 
-      const data = createUserChallengeData(updatedChallengedata, new Date(date));
+      const data = createUserChallengeData(updatedChallengedata, new Date(date), stringDate3, TODAY1, this.state.recipeId);
+      console.log('Data data1: ', data)
+
       delete data.workouts
       const progressData = {
         photoURL: this.state.imgUrl,
