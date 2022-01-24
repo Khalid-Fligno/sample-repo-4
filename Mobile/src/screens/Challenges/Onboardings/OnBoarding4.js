@@ -157,13 +157,15 @@ export default class OnBoarding4 extends Component {
     const recipeRef = db.collection('recipes');
     const snapshot = await recipeRef.get();
     if (snapshot.empty) {
+      console.log('Empty: ', snapshot.empty)
       return null
     } else {
       snapshot.forEach(res => {
-        recipeResult.push(res.data().id)
+        if(res.data().id){
+          recipeResult.push(res.data().id)
+        }
       })
     }
-    console.log('recipeResult: ', recipeResult)
     this.setState({ recipeId: recipeResult })
 
   }
@@ -391,31 +393,34 @@ export default class OnBoarding4 extends Component {
 
   async saveOnBoardingInfo(data, stringDate2) {
     this.setState({ loading: true });
+
     {
       this.props.navigation.getParam("challengeOnboard")
         ? this.setState({ loading: false })
         : this.setState({ loading: true });
     }
     const uid = await AsyncStorage.getItem("uid");
-    const userRef = db
-      .collection("users")
-      .doc(uid)
-      .collection("challenges")
-      .doc(data.id);
-    userRef
-      .set(data, { merge: true })
-      .then(async (res) => {
-        if (data.onBoardingInfo.fitnessLevel)
-          await AsyncStorage.setItem(
-            "fitnessLevel",
-            data.onBoardingInfo.fitnessLevel.toString()
-          );
-        this.setState({ loading: false });
-        this.addedToCalendarPopup(stringDate2);
-      })
-      .catch((err) => {
-        this.setState({ loading: false });
-      });
+    if (data) {
+      const userRef = db
+        .collection("users")
+        .doc(uid)
+        .collection("challenges")
+        .doc(data.id);
+      userRef
+        .set(data, { merge: true })
+        .then(async (res) => {
+          if (data.onBoardingInfo.fitnessLevel)
+            await AsyncStorage.setItem(
+              "fitnessLevel",
+              data.onBoardingInfo.fitnessLevel.toString()
+            );
+          this.setState({ loading: false });
+          this.addedToCalendarPopup(stringDate2);
+        })
+        .catch((err) => {
+          this.setState({ loading: false });
+        });
+    }
   }
 
   addChallengeToCalendar = async (date) => {
@@ -450,7 +455,6 @@ export default class OnBoarding4 extends Component {
       });
 
       const data = createUserChallengeData(updatedChallengedata, new Date(date), stringDate3, TODAY1, this.state.recipeId);
-      console.log('Data data: ', data)
 
       const progressData = {
         photoURL: this.state.imgUrl,
@@ -512,7 +516,6 @@ export default class OnBoarding4 extends Component {
       });
 
       const data = createUserChallengeData(updatedChallengedata, new Date(date), stringDate3, TODAY1, this.state.recipeId);
-      console.log('Data data1: ', data)
 
       delete data.workouts
       const progressData = {

@@ -169,10 +169,6 @@ class CalendarHomeScreen extends React.PureComponent {
       0
     );
   };
-  
-  selectedDateRecipe = async () => {
-    
-  }
 
   handleDateSelected = async (date) => {
     const { activeChallengeData, activeChallengeUserData } = this.state;
@@ -181,7 +177,36 @@ class CalendarHomeScreen extends React.PureComponent {
     this.day = date.format("dddd")
     this.month = date.format("MMM")
     this.date = date.format("D")
-    // console.log('Sting date: ', this.stringDate)
+
+    // const data = activeChallengeUserData.faveRecipe
+
+    // const id = activeChallengeUserData.id
+    // const uid = await AsyncStorage.getItem("uid");
+    // const activeChallengeUserRef = db
+    //   .collection("users")
+    //   .doc(uid)
+    //   .collection("challenges")
+    //   .doc(id)
+
+    // const currentDate = getCurrentChallengeDay(
+    //   activeChallengeUserData.startDate,
+    //   this.stringDate
+    // );
+    
+    // data.forEach(res => {
+    //   if(res.day === currentDate){
+    //     return true
+    //   }else{
+    //     activeChallengeUserRef.set({
+    //       "faveRecipe": [...data,
+    //       {
+    //         'day': currentDate,
+    //         'recipeMeal': []
+    //       }]
+    //     }, { merge: true })
+    //   }
+    // })
+
     //TODO:check the active challenge cndtns
     if (
       activeChallengeData &&
@@ -530,13 +555,13 @@ class CalendarHomeScreen extends React.PureComponent {
     }
 
     try {
-      if(data.lunch){
+      if (data.lunch) {
         data.lunch.filter(res => recipe.push(res))
-      } 
-      if (data.breakfast){
+      }
+      if (data.breakfast) {
         data.breakfast.filter(res => recipe.push(res))
       }
-      if (data.dinner){
+      if (data.dinner) {
         data.dinner.filter(res => recipe.push(res))
       }
     } catch (err) { }
@@ -566,11 +591,14 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async getCurrentPhaseInfo() {
     const { activeChallengeUserData, activeChallengeData } = this.state;
+
     if (activeChallengeUserData && activeChallengeData) {
       this.setState({ loading: false });
-      const data = activeChallengeUserData.phases;
+      const data = activeChallengeUserData.faveRecipe;
       const test = activeChallengeUserData.startDate;
       const transformLevel = activeChallengeUserData.displayName;
+
+      console.log('faveRecipe:', data)
 
       if (this.stringDate >= test) {
         this.setState({ loading: true })
@@ -601,12 +629,23 @@ class CalendarHomeScreen extends React.PureComponent {
           activeChallengeUserData.startDate,
           this.stringDate
         );
+
+        const id = activeChallengeUserData.id
+        const uid = await AsyncStorage.getItem("uid");
+        const activeChallengeUserRef = db
+          .collection("users")
+          .doc(uid)
+          .collection("challenges")
+          .doc(id)
+
+        activeChallengeUserRef.set({ "recipes": { "days": this.currentChallengeDay } }, { merge: true })
+
         console.log('currentChallengeDay1111: ', this.currentChallengeDay)
         console.log('activeChallengeUserData.startDate: ', activeChallengeUserData.startDate)
         console.log('this.stringDate111: ', this.stringDate)
 
         //TODO getToday one recommended meal randomly
-        getTodayRecommendedMeal(this.phaseData, activeChallengeData).then(
+        getTodayRecommendedMeal(this.phaseData, activeChallengeData, activeChallengeUserData).then(
           (res) => {
             this.setState({
               todayRecommendedRecipe: res.recommendedRecipe,
@@ -667,6 +706,7 @@ class CalendarHomeScreen extends React.PureComponent {
     // console.log('phaseDefaultTags: ', phaseDefaultTags.displayName)
 
     this.props.navigation.navigate('FilterRecipe', {
+      currentChallengeDay: this.currentChallengeDay,
       activeChallengeUserData: activeChallengeUserData,
       phaseDefaultTags: phaseDefaultTags.phaseTags,
       defaultLevelTags: activeChallengeData.levelTags,
@@ -1043,6 +1083,7 @@ class CalendarHomeScreen extends React.PureComponent {
         <CustomCalendarStrip
           ref1={this.calendarStrip}
           onDateSelected={(date) => {
+            console.log('DATE: ', date)
             this.handleDateSelected(date);
           }}
           CalendarSelectedDate={CalendarSelectedDate}
