@@ -6,6 +6,7 @@ import {
     Dimensions,
     Text,
     Alert,
+    Platform,
 } from "react-native";
 import colors from "../../../../styles/colors";
 import fonts from '../../../../styles/fonts';
@@ -15,7 +16,9 @@ import {
 } from "react-native-responsive-screen";
 import { Card } from 'react-native-elements';
 import Icon from "react-native-vector-icons/AntDesign";
-import { number } from "prop-types";
+import AsyncStorage from "@react-native-community/async-storage";
+import { db } from "../../../../../config/firebase";
+
 
 const { width } = Dimensions.get("window");
 
@@ -53,29 +56,23 @@ export default class FilterScreen extends React.PureComponent {
                     >
                         {
                             this.props.faveRecipeItem === undefined ?
-                                Alert.alert(
-                                    "New Feature",
-                                    "Click OK to update",
-                                    [
-                                        {
-                                            text: "Cancel",
-                                            onPress: () => console.log("Cancel Pressed"),
-                                            style: "cancel"
-                                        },
-                                        { text: "OK", onPress: this.props.updateFeature}
-                                    ]
-                                )
-                        :
-                        <TouchableOpacity
-                            style={{
-                                position: 'absolute',
-                                bottom: 160,
-                                left: 320
-                            }}
-                            onPress={this.props.onSelectHeart}
-                        >
-                            <Icon name={this.props.ifExistRecipe() ? 'heart' : 'hearto'} size={30} color={'red'} />
-                        </TouchableOpacity>
+                                this.props.alertFunc()
+                                :
+                                <TouchableOpacity
+                                    style={{
+                                        position: 'absolute',
+                                        bottom: 160,
+                                        left: 320
+                                    }}
+                                    onPress={this.props.onSelectHeart}
+                                >
+                                    {
+                                        Platform.OS === "ios" ?
+                                            <Icon name={this.props.ifExistRecipe() ? 'heart' : 'hearto'} size={30} color={'red'} />
+                                            :
+                                            <Icon name={this.props.ifExistRecipe() ? 'heart' : 'hearto'} size={30} color={'red'} />
+                                    }
+                                </TouchableOpacity>
                         }
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10, maxWidth: '50%' }}>

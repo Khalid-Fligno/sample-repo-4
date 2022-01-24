@@ -500,10 +500,7 @@ class CalendarHomeScreen extends React.PureComponent {
   fetchActiveChallengeData = async (activeChallengeUserData) => {
     const {currentDay} = this.state
     let data = activeChallengeUserData.faveRecipe
-    let breakfast = []
     let recipe = []
-    let lunch = []
-    let dinner = []
 
     const currentChallengeDay = getCurrentChallengeDay(
       activeChallengeUserData.startDate,

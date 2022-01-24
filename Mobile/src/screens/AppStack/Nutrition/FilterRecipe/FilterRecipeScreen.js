@@ -7,6 +7,7 @@ import {
     FlatList,
     Text,
     ScrollView,
+    Alert,
 } from "react-native";
 import sortBy from "lodash.sortby";
 import colors from "../../../../styles/colors";
@@ -75,7 +76,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         });
     }
 
-    
+
     componentDidMount = async () => {
         this.onFocusFunction();
     };
@@ -540,7 +541,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         const recipeMeal = activeChallengeUserData.faveRecipe
 
         if (item.types.filter(name => name === title.toLowerCase())) {
-            try{
+            try {
                 if (title.toLowerCase() === 'breakfast') {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast = item.id
                 }
@@ -549,25 +550,25 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 }
                 if (title.toLowerCase() === 'dinner') {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.dinner = item.id
-    
+
                 }
                 if (title.toLowerCase() === 'snack') {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.snack = item.id
-    
+
                 }
                 if (title.toLowerCase() === 'drink') {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.drink = item.id
-    
+
                 }
                 if (title.toLowerCase() === 'preworkout') {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout = item.id
-    
+
                 }
                 if (title.toLowerCase() === 'treats') {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.treats = item.id
-    
+
                 }
-            }catch(err){
+            } catch (err) {
 
             }
         }
@@ -581,7 +582,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             .doc(id)
 
         if (item.types.filter(name => name === title.toLowerCase())) {
-            try{
+            try {
                 if (title.toLowerCase() === 'breakfast') {
                     activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
                 }
@@ -603,10 +604,10 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 if (title.toLowerCase() === 'treats') {
                     activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
                 }
-            }catch(err){
+            } catch (err) {
 
             }
-            
+
         }
 
     }
@@ -616,7 +617,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         const recipeMeal = activeChallengeUserData.faveRecipe
 
         if (item.types.filter(name => name === title.toLowerCase())) {
-            try{
+            try {
                 if (title.toLowerCase() === 'breakfast') {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast = ""
                 }
@@ -628,24 +629,24 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 }
                 if (title.toLowerCase() === 'snack') {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.snack = ""
-    
+
                 }
                 if (title.toLowerCase() === 'drink') {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.drink = ""
-    
+
                 }
                 if (title.toLowerCase() === 'preworkout') {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout = ""
-    
+
                 }
                 if (title.toLowerCase() === 'treats') {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.treats = ""
-    
+
                 }
-            }catch(err){
+            } catch (err) {
 
             }
-            
+
         }
 
         const id = activeChallengeUserData.id
@@ -657,7 +658,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             .doc(id)
 
         if (item.types.filter(name => name === title.toLowerCase())) {
-            try{
+            try {
                 if (title.toLowerCase() === 'breakfast') {
                     activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
                 }
@@ -679,10 +680,10 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 if (title.toLowerCase() === 'treats') {
                     activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
                 }
-            }catch(err){
+            } catch (err) {
 
             }
-            
+
         }
 
     }
@@ -879,38 +880,57 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.ifExist(item, activeChallengeUserData, title, currentChallengeDay)
     }
 
-    updateFeature = async (activeChallengeUserData) => {
-        const number = 60
-        const currentNumber = []
+    alertFunc = () => {
+        return (
+            Alert.alert(
+                "New Feature",
+                "Favourite Recipe feature is now available.",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    {
+                        text: "OK",
+                        onPress: async () => {
+                            
+                            const number = 60
+                            const currentNumber = []
     
-        for (let i = 1; i <= number; i++) {
-            // console.log(i);
-            const data = {
-                "day": i,
-                "recipeMeal": {
-                    "breakfast": "",
-                    "lunch": "",
-                    "dinner": "",
-                    "snack": "",
-                    "drink": "",
-                    "preworkout": "",
-                    "treats": "",
-                }
-            }
-            currentNumber.push(data)
-        }
-
-        const id = activeChallengeUserData.id
-        const uid = await AsyncStorage.getItem("uid");
-        const activeChallengeUserRef = db
-            .collection("users")
-            .doc(uid)
-            .collection("challenges")
-            .doc(id)
-
-        activeChallengeUserRef.set({"faveRecipe": currentNumber}, {merge: true})
-
-        this.handleBack()
+                            for (let i = 1; i <= number; i++) {
+                                // console.log(i);
+                                const data = {
+                                    "day": i,
+                                    "recipeMeal": {
+                                        "breakfast": "",
+                                        "lunch": "",
+                                        "dinner": "",
+                                        "snack": "",
+                                        "drink": "",
+                                        "preworkout": "",
+                                        "treats": "",
+                                    }
+                                }
+                                currentNumber.push(data)
+                            }
+    
+                            const id = this.state.activeChallengeUserData.id
+                            const uid = await AsyncStorage.getItem("uid");
+                            const activeChallengeUserRef = db
+                                .collection("users")
+                                .doc(uid)
+                                .collection("challenges")
+                                .doc(id)
+    
+                            activeChallengeUserRef.set({ "faveRecipe": currentNumber }, { merge: true })
+    
+                            this.handleBack()
+                        }
+                    }
+    
+                ]
+            )
+        )
     }
 
     renderItem = ({ item }) => {
@@ -934,6 +954,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         return (
             <FilterScreen
+                alertFunc={() => this.alertFunc()}
                 updateFeature={() => this.updateFeature(activeChallengeUserData)}
                 faveRecipeItem={faveRecipeItem}
                 ifExistRecipe={() => this.ifExistRecipe(item, activeChallengeUserData, title, currentChallengeDay)}
