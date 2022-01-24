@@ -4,9 +4,8 @@ import {
     StyleSheet,
     View,
     Dimensions,
-    SafeAreaView,
-    FlatList,
     Text,
+    Alert,
 } from "react-native";
 import colors from "../../../../styles/colors";
 import fonts from '../../../../styles/fonts';
@@ -15,10 +14,8 @@ import {
     widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { Card } from 'react-native-elements';
-import { db } from "../../../../../config/firebase";
-import AsyncStorage from "@react-native-community/async-storage";
 import Icon from "react-native-vector-icons/AntDesign";
-import { convertRecipeData } from "../../../../utils/challenges";
+import { number } from "prop-types";
 
 const { width } = Dimensions.get("window");
 
@@ -27,195 +24,15 @@ export default class FilterScreen extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            recipeIsExist: false
+            recipeIsExist: false,
+            recipeIds: []
         }
     }
 
-    componentDidMount = () => {
-        this.ifExist(this.props.item, this.props.activeChallengeUserData, this.props.title)
-    }
-
-    onFavorite = async (item, activeChallengeUserData, title, currentChallengeDay) => {
-
-        const recipeMeal = activeChallengeUserData.faveRecipe
-
-        const favoriteClone = [...recipeMeal]
-        const datasss = favoriteClone[currentChallengeDay - 1].recipeMeal.breakfast
-        console.log('recipeMeal: ', recipeMeal)
-
-
-        const id = activeChallengeUserData.id
-        const uid = await AsyncStorage.getItem("uid");
-        const activeChallengeUserRef = db
-            .collection("users")
-            .doc(uid)
-            .collection("challenges")
-            .doc(id)
-
-        if (item.types.filter(name => name === title.toLowerCase())) {
-            if (title.toLowerCase() === 'breakfast') {
-                // recipeMeal.forEach(res => {
-                //     activeChallengeUserRef.set({ "faveRecipe": [{ "day": currentChallengeDay, "recipeMeal": [{ 'breakfast': item.id }] }] }, { merge: true })
-                // })
-                activeChallengeUserRef.update({
-                    ...recipeMeal,
-                    faveRecipe: [favoriteClone]
-                 })
-            }
-            if (title.toLowerCase() === 'lunch') {
-                recipeMeal.forEach(res => {
-                    activeChallengeUserRef.set({ "faveRecipe": [{ "day": currentChallengeDay, "recipeMeal": { 'lunch': item.id } }] }, { merge: true })
-                })            }
-            if (title.toLowerCase() === 'dinner') {
-                recipeMeal.forEach(res => {
-                    activeChallengeUserRef.set({ "faveRecipe": [{ "day": currentChallengeDay, "recipeMeal": { 'dinner': item.id } }] }, { merge: true })
-                })            }
-        }
-
-    }
-
-    onRemoveFavorite = async (item, activeChallengeUserData, title, currentChallengeDay) => {
-
-        const recipeMeal = activeChallengeUserData.faveRecipe
-
-        const id = activeChallengeUserData.id
-        const uid = await AsyncStorage.getItem("uid");
-        const activeChallengeUserRef = db
-            .collection("users")
-            .doc(uid)
-            .collection("challenges")
-            .doc(id)
-
-        if (item.types.filter(name => name === title.toLowerCase())) {
-            if (title.toLowerCase() === 'breakfast') {
-                recipeMeal.forEach(res => {
-                    activeChallengeUserRef.update({
-                        faveRecipe: [{
-                            day: currentChallengeDay,
-                            recipeMeal: [
-                            {
-                                breakfast: ''
-                            }]
-                        }
-                        ]
-                    })
-                })
-            }
-            if (title.toLowerCase() === 'lunch') {
-                recipeMeal.forEach(res => {
-                    activeChallengeUserRef.update({
-                        faveRecipe: [{
-                            day: currentChallengeDay,
-                            recipeMeal: [...res.recipeMeal,
-                            {
-                                lunch: ''
-                            }]
-                        }
-                        ]
-                    })
-                })
-            }
-            if (title.toLowerCase() === 'dinner') {
-                recipeMeal.forEach(res => {
-                    activeChallengeUserRef.update({
-                        faveRecipe: [{
-                            day: currentChallengeDay,
-                            recipeMeal: [...res.recipeMeal,
-                            {
-                                dinner: ''
-                            }]
-                        }
-                        ]
-                    })
-                })
-            }
-        }
-
-    }
-
-    ifExist = async (item, activeChallengeUserData, title) => {
-        let result = false
-        let resultItem = []
-
-        const id = activeChallengeUserData.id
-        const uid = await AsyncStorage.getItem("uid");
-        const activeChallengeUserRef = db
-            .collection("users")
-            .doc(uid)
-            .collection("challenges")
-            .doc(id)
-
-        const query = await activeChallengeUserRef.get()
-        const data = query.data().faveRecipe
-
-        data.forEach(res => {
-            try {
-                if (item.types.filter(name => name === title.toLowerCase())) {
-                    try {
-                        if (title.toLowerCase() === 'breakfast') {
-                            // res.recipeMeal.forEach(meal => {
-                            //     if (meal.breakfast === item.id) {
-                            //         result = true
-                            //     } else {
-                            //         result = false
-                            //     }
-                            // })
-                            if (res.recipeMeal.breakfast === item.id) {
-                                result = true
-                            } else {
-                                result = false
-                            }
-                        }
-                    } catch (err) { }
-    
-                    try {
-                        if (title.toLowerCase() === 'lunch') {
-                            // res.recipeMeal.forEach(meal => {
-                            //     if (meal.lunch === item.id) {
-                            //         result = true
-                            //     } else {
-                            //         result = false
-                            //     }
-                            // })
-                            if (res.recipeMeal.lunch === item.id) {
-                                result = true
-                            } else {
-                                result = false
-                            }
-                        }
-                    } catch (err) { }
-    
-                    try {
-                        if (title.toLowerCase() === 'dinner') {
-                            // res.recipeMeal.forEach(meal => {
-                            //     if (meal.dinner === item.id) {
-                            //         result = true
-                            //     } else {
-                            //         result = false
-                            //     }
-                            // })
-                            if (res.recipeMeal.dinner === item.id) {
-                                result = true
-                            } else {
-                                result = false
-                            }
-                        }
-                    } catch (err) { }
-                }
-            } catch (err) {
-    
-            }
-        })
-        
-
-        this.setState({
-            recipeIsExist: result
-        })
-
-    }
 
     render() {
-        const { result, item, title, activeChallengeUserData, currentChallengeDay } = this.props
+        const { result, item, title } = this.props
+
         return (
             <View
                 style={styles.cardContainer}
@@ -234,30 +51,32 @@ export default class FilterScreen extends React.PureComponent {
                         image={{ uri: item.coverImage }}
                         containerStyle={styles.card}
                     >
+                        {
+                            this.props.faveRecipeItem === undefined ?
+                                Alert.alert(
+                                    "New Feature",
+                                    "Click OK to update",
+                                    [
+                                        {
+                                            text: "Cancel",
+                                            onPress: () => console.log("Cancel Pressed"),
+                                            style: "cancel"
+                                        },
+                                        { text: "OK", onPress: this.props.updateFeature}
+                                    ]
+                                )
+                        :
                         <TouchableOpacity
                             style={{
                                 position: 'absolute',
                                 bottom: 160,
                                 left: 320
                             }}
-                            onPress={() => {
-                                if (this.state.recipeIsExist) {
-                                    this.onRemoveFavorite(item, activeChallengeUserData, title, currentChallengeDay)
-                                } else {
-                                    this.onFavorite(item, activeChallengeUserData, title, currentChallengeDay)
-                                }
-                                this.ifExist(item, activeChallengeUserData, this.props.title)
-                            }
-
-                                // this.state.recipeIsExist ?
-                                //     this.onRemoveFavorite(item, activeChallengeUserData, title)
-                                //     :
-                                //     this.onFavorite(item, activeChallengeUserData, title)
-                            }
-
+                            onPress={this.props.onSelectHeart}
                         >
-                            <Icon name={this.state.recipeIsExist ? 'heart' : 'hearto'} size={30} color={'red'} />
+                            <Icon name={this.props.ifExistRecipe() ? 'heart' : 'hearto'} size={30} color={'red'} />
                         </TouchableOpacity>
+                        }
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10, maxWidth: '50%' }}>
                                 <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>

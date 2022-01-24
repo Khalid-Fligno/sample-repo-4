@@ -1,8 +1,7 @@
 import moment from 'moment';
-import momentTimezone from 'moment-timezone';
-import { getCurrentChallengeDay, getCurrentDay } from '../../utils/challenges';
+import { getCurrentChallengeDay } from '../../utils/challenges';
 
-export default createUserChallengeData = (data, challengeDate, stringDate3, TODAY1, recipeId) => {
+export default createUserChallengeData = (data, challengeDate, stringDate3, TODAY1) => {
 
     //TODO calculate current challenge day
     const currentChallengeDay = getCurrentChallengeDay(
@@ -20,7 +19,11 @@ export default createUserChallengeData = (data, challengeDate, stringDate3, TODA
             "recipeMeal": {
                 "breakfast": "",
                 "lunch": "",
-                "dinner": ""
+                "dinner": "",
+                "snack": "",
+                "drink": "",
+                "preworkout": "",
+                "treats": "",
             }
         }
         currentNumber.push(data)
@@ -60,7 +63,7 @@ export default createUserChallengeData = (data, challengeDate, stringDate3, TODA
         "numberOfWeeks": data.numberOfWeeks,
         "imageUrl": data.imageUrl,
         "isSchedule": false,
-        "recipes": { "days": currentChallengeDay, "recipeId": recipeId },
+        "recipes": { "days": currentChallengeDay },
         "faveRecipe": currentNumber
     }
     return challenge

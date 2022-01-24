@@ -141,33 +141,13 @@ export default class OnBoarding4 extends Component {
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     });
-    this.fetchRecipeData()
-    // if (Platform.OS === 'android') {
+   // if (Platform.OS === 'android') {
     //   await this.requestAndroidPermissions();
 
     // }else{
     // this.getCameraPermission();
     // this.getCameraRollPermission();
     // }
-  }
-
-  fetchRecipeData = async () => {
-    //Fetch all recipe ID
-    const recipeResult = []
-    const recipeRef = db.collection('recipes');
-    const snapshot = await recipeRef.get();
-    if (snapshot.empty) {
-      console.log('Empty: ', snapshot.empty)
-      return null
-    } else {
-      snapshot.forEach(res => {
-        if(res.data().id){
-          recipeResult.push(res.data().id)
-        }
-      })
-    }
-    this.setState({ recipeId: recipeResult })
-
   }
 
   getCameraPermission = async () => {
@@ -454,7 +434,7 @@ export default class OnBoarding4 extends Component {
         onBoardingInfo,
       });
 
-      const data = createUserChallengeData(updatedChallengedata, new Date(date), stringDate3, TODAY1, this.state.recipeId);
+      const data = createUserChallengeData(updatedChallengedata, new Date(date), stringDate3, TODAY1);
 
       const progressData = {
         photoURL: this.state.imgUrl,
@@ -515,7 +495,7 @@ export default class OnBoarding4 extends Component {
         onBoardingInfo,
       });
 
-      const data = createUserChallengeData(updatedChallengedata, new Date(date), stringDate3, TODAY1, this.state.recipeId);
+      const data = createUserChallengeData(updatedChallengedata, new Date(date), stringDate3, TODAY1);
 
       delete data.workouts
       const progressData = {

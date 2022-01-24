@@ -52,10 +52,6 @@ export const getTotalChallengeWorkoutsCompleted = (data, stringDate) => {
   return totalworkoutCompleted
 }
 export const getCurrentChallengeDay = (startDate, currentDate) => {
-  // let startTime = new Date(startDate).getTime();
-  // let currentTime = new Date(currentDate).getTime();
-  // let currentDay = Math.round(( currentTime - startTime) / (1000 * 3600 * 24))+1
-  // return currentDay;
 
   var b = moment(startDate);
   var a = moment(currentDate);
@@ -64,7 +60,6 @@ export const getCurrentChallengeDay = (startDate, currentDate) => {
 
 export const getCurrentDay = (number) => {
   for (let i = 1; i <= number; i++) {
-    // console.log(i);
     const data = {
       "day": i,
       "recipeMeal": []
@@ -76,10 +71,6 @@ export const getCurrentDay = (number) => {
 
 export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserData, selectedDate) => {
 
-  // let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime(); 
-  // // To calculate the no. of days between two dates 
-  // let currentDay = Math.round(Difference_In_Time / (1000 * 3600 * 24))+1;
-  // // console.log("???....",currentDay)
   var b = moment(activeChallengeUserData.startDate);
   var a = moment(selectedDate);
   let currentDay = a.diff(b, 'days') + 1;
@@ -243,7 +234,7 @@ export const fetchRecipeData = async (challengeRecipe) => {
 
 
 
-export const getTodayRecommendedMeal = async (phaseData, activeChallengeData, activeChallengeUserData) => {
+export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) => {
   // const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
   let phaseMeals = []
   let breakfastResult = []
@@ -254,29 +245,23 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData, ac
   let preworkoutResult = []
   let treatsResult = []
   let userRecipeResult = []
+  let recipeItem = []
 
-  let userRecipeData = activeChallengeUserData.recipes.recipeId
   let levelName = activeChallengeData.levelTags
   let phaseName = phaseData.phaseTags
   let data = phaseData.meals;
   const recipeRef = db.collection('recipes')
   const snapshot = await recipeRef.get();
 
-  // snapshot.forEach(res => {
-  //   // console.log('res: ', res.data().id)
-  //   const datass = recipeRef.doc(res.data().id)
-  //   datass.set({showTransform: true}, {merge: true})
-  // })
-
-
   if (activeChallengeData && activeChallengeData.newChallenge) {
     if (snapshot.empty) {
       return null
     } else {
       snapshot.forEach(res => {
-        if (userRecipeData.includes(res.data().id)) {
-          userRecipeResult.push(res.data());
-        }
+          if (data.includes(res.data().id)) {
+            phaseMeals.push(res.data());
+          }
+        
       })
     }
   } else {
@@ -290,243 +275,233 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData, ac
     });
   }
 
-  if (activeChallengeData && activeChallengeData.newChallenge) {
-    if (snapshot.empty) {
-      return null
-    } else {
-      userRecipeResult.forEach(res => {
-        if (data.includes(res.id)) {
-          phaseMeals.push(res);
+  if (phaseMeals) {
+    phaseMeals.forEach((resMeals) => {
+      resMeals.types.forEach((resType) => {
+        if (resType === 'breakfast') {
+          snapshot.forEach((res) => {
+            if(res.data().showTransform === true){
+              if (resMeals.breakfast === res.data().breakfast) {
+                try {
+                  res.data().tags.forEach(resTag => {
+                    if ('L1' === levelName) {
+                      if(resTag === levelName){
+                        if (res.data().tags.includes(phaseName)) {
+                          breakfastResult.push(res.data())
+                        } 
+                      }
+                    }
+                    if('L2' === levelName){
+                      if(resTag === levelName){
+                        breakfastResult.push(res.data())
+                      }
+                    } 
+                    if('L3' === levelName){
+                      if(resTag === levelName){
+                        breakfastResult.push(res.data())
+                      }
+                    }        
+                  })
+                } catch (err) {
+                  // console.log('error: ', err)
+                }
+              }
+            }
+          })
+        }
+        if (resType === 'lunch') {
+          snapshot.forEach((res) => {
+            if(res.data().showTransform === true){
+              if (resMeals.lunch === res.data().lunch) {
+                try {
+                  res.data().tags.forEach(resTag => {
+                    if ('L1' === levelName) {
+                      if(resTag === levelName){
+                        if (res.data().tags.includes(phaseName)) {
+                          lunchResult.push(res.data())
+                        } 
+                      }
+                    }
+                    if('L2' === levelName){
+                      if(resTag === levelName){
+                        lunchResult.push(res.data())
+                      }
+                    } 
+                    if('L3' === levelName){
+                      if(resTag === levelName){
+                        lunchResult.push(res.data())
+                      }
+                    }       
+                  })
+                } catch (err) {
+                  // console.log('error: ', err)
+                }
+              }
+            }
+          })
+        }
+        if (resType === 'dinner') {
+          snapshot.forEach((res) => {
+            if(res.data().showTransform === true){
+              if (resMeals.dinner === res.data().dinner) {
+                try {
+                  res.data().tags.forEach(resTag => {
+                    if ('L1' === levelName) {
+                      if(resTag === levelName){
+                        if (res.data().tags.includes(phaseName)) {
+                          dinnerResult.push(res.data())
+                        } 
+                      }
+                    }
+                    if('L2' === levelName){
+                      if(resTag === levelName){
+                        dinnerResult.push(res.data())
+                      }
+                    } 
+                    if('L3' === levelName){
+                      if(resTag === levelName){
+                        dinnerResult.push(res.data())
+                      }
+                    }       
+                  })
+                } catch (err) {
+                  // console.log('error: ', err)
+                }
+              }
+            }
+          })
+        }
+  
+        if (resType === 'snack') {
+          snapshot.forEach((res) => {
+            if(res.data().showTransform === true){
+              if (resMeals.snack === res.data().snack) {
+                try {
+                  res.data().tags.forEach(resTag => {
+                    if ('L1' === levelName) {
+                      if(resTag === levelName){
+                        if (res.data().tags.includes(phaseName)) {
+                          snackResult.push(res.data())
+                        } 
+                      }
+                    }
+                    if('L2' === levelName){
+                      if(resTag === levelName){
+                        snackResult.push(res.data())
+                      }
+                    } 
+                    if('L3' === levelName){
+                      if(resTag === levelName){
+                        snackResult.push(res.data())
+                      }
+                    }       
+                  })
+                } catch (err) {
+                  // console.log('error: ', err)
+                }
+              }
+            }
+          })
+  
+        }
+        if (resType === 'drink') {
+          snapshot.forEach((res) => {
+            if(res.data().showTransform === true){
+              if (resMeals.drink === res.data().drink) {
+                try {
+                  res.data().tags.forEach(resTag => {
+                    if ('L1' === levelName) {
+                      if(resTag === levelName){
+                        if (res.data().tags.includes(phaseName)) {
+                          drinkResult.push(res.data())
+                        } 
+                      }
+                    }
+                    if('L2' === levelName){
+                      if(resTag === levelName){
+                        drinkResult.push(res.data())
+                      }
+                    } 
+                    if('L3' === levelName){
+                      if(resTag === levelName){
+                        drinkResult.push(res.data())
+                      }
+                    }       
+                  })
+                } catch (err) {
+                  // console.log('error: ', err)
+                }
+              }
+            }
+          })
+        }
+  
+        if (resType === 'preworkout') {
+          snapshot.forEach((res) => {
+            if(res.data().showTransform === true){
+              if (resMeals.preworkout === res.data().preworkout) {
+                try {
+                  res.data().tags.forEach(resTag => {
+                    if ('L1' === levelName) {
+                      if(resTag === levelName){
+                        if (res.data().tags.includes(phaseName)) {
+                          preworkoutResult.push(res.data())
+                        } 
+                      }
+                    }
+                    if('L2' === levelName){
+                      if(resTag === levelName){
+                        preworkoutResult.push(res.data())
+                      }
+                    } 
+                    if('L3' === levelName){
+                      if(resTag === levelName){
+                        preworkoutResult.push(res.data())
+                      }
+                    }        
+                  })
+                } catch (err) {
+                  // console.log('error: ', err)
+                }
+              }
+            }
+          })
+        }
+  
+        if (resType === 'treats') {
+          snapshot.forEach((res) => {
+            if(res.data().showTransform === true){
+              if (resMeals.treats === res.data().treats) {
+                try {
+                  res.data().tags.forEach(resTag => {
+                    if ('L1' === levelName) {
+                      if(resTag === levelName){
+                        if (res.data().tags.includes(phaseName)) {
+                          treatsResult.push(res.data())
+                        } 
+                      }
+                    }
+                    if('L2' === levelName){
+                      if(resTag === levelName){
+                        treatsResult.push(res.data())
+                      }
+                    } 
+                    if('L3' === levelName){
+                      if(resTag === levelName){
+                        treatsResult.push(res.data())
+                      }
+                    }        
+                  })
+                } catch (err) {
+                  // console.log('error: ', err)
+                }
+              }
+            }
+          })
         }
       })
-    }
-  }
-
-  phaseMeals.forEach((resMeals) => {
-    resMeals.types.forEach((resType) => {
-      if (resType === 'breakfast') {
-        userRecipeResult.forEach((res) => {
-          if (res.showTransform === true) {
-            if (resMeals.breakfast === res.breakfast) {
-              try {
-                res.tags.forEach(resTag => {
-                  if ('L1' === levelName) {
-                    if (resTag === levelName) {
-                      if (res.tags.includes(phaseName)) {
-                        breakfastResult.push(res)
-                      }
-                    }
-                  }
-                  if ('L2' === levelName) {
-                    if (resTag === levelName) {
-                      breakfastResult.push(res)
-                    }
-                  }
-                  if ('L3' === levelName) {
-                    if (resTag === levelName) {
-                      breakfastResult.push(res)
-                    }
-                  }
-                })
-              } catch (err) {
-                // console.log('error: ', err)
-              }
-            }
-          }
-        })
-      }
-      if (resType === 'lunch') {
-        userRecipeResult.forEach((res) => {
-          if (res.showTransform === true) {
-            if (resMeals.lunch === res.lunch) {
-              try {
-                res.tags.forEach(resTag => {
-                  if ('L1' === levelName) {
-                    if (resTag === levelName) {
-                      if (res.tags.includes(phaseName)) {
-                        lunchResult.push(res)
-                      }
-                    }
-                  }
-                  if ('L2' === levelName) {
-                    if (resTag === levelName) {
-                      lunchResult.push(res)
-                    }
-                  }
-                  if ('L3' === levelName) {
-                    if (resTag === levelName) {
-                      lunchResult.push(res)
-                    }
-                  }
-                })
-              } catch (err) {
-                // console.log('error: ', err)
-              }
-            }
-          }
-        })
-      }
-      if (resType === 'dinner') {
-        userRecipeResult.forEach((res) => {
-          if (res.showTransform === true) {
-            if (resMeals.dinner === res.dinner) {
-              try {
-                res.tags.forEach(resTag => {
-                  if ('L1' === levelName) {
-                    if (resTag === levelName) {
-                      if (res.tags.includes(phaseName)) {
-                        dinnerResult.push(res)
-                      }
-                    }
-                  }
-                  if ('L2' === levelName) {
-                    if (resTag === levelName) {
-                      dinnerResult.push(res)
-                    }
-                  }
-                  if ('L3' === levelName) {
-                    if (resTag === levelName) {
-                      dinnerResult.push(res)
-                    }
-                  }
-                })
-              } catch (err) {
-                // console.log('error: ', err)
-              }
-            }
-          }
-        })
-      }
-
-      if (resType === 'snack') {
-        userRecipeResult.forEach((res) => {
-          if (res.showTransform === true) {
-            if (resMeals.snack === res.snack) {
-              try {
-                res.tags.forEach(resTag => {
-                  if ('L1' === levelName) {
-                    if (resTag === levelName) {
-                      if (res.tags.includes(phaseName)) {
-                        snackResult.push(res)
-                      }
-                    }
-                  }
-                  if ('L2' === levelName) {
-                    if (resTag === levelName) {
-                      snackResult.push(res)
-                    }
-                  }
-                  if ('L3' === levelName) {
-                    if (resTag === levelName) {
-                      snackResult.push(res)
-                    }
-                  }
-                })
-              } catch (err) {
-                // console.log('error: ', err)
-              }
-            }
-          }
-        })
-
-      }
-      if (resType === 'drink') {
-        userRecipeResult.forEach((res) => {
-          if (res.showTransform === true) {
-            if (resMeals.drink === res.drink) {
-              try {
-                res.tags.forEach(resTag => {
-                  if ('L1' === levelName) {
-                    if (resTag === levelName) {
-                      if (res.tags.includes(phaseName)) {
-                        drinkResult.push(res)
-                      }
-                    }
-                  }
-                  if ('L2' === levelName) {
-                    if (resTag === levelName) {
-                      drinkResult.push(res)
-                    }
-                  }
-                  if ('L3' === levelName) {
-                    if (resTag === levelName) {
-                      drinkResult.push(res)
-                    }
-                  }
-                })
-              } catch (err) {
-                // console.log('error: ', err)
-              }
-            }
-          }
-        })
-      }
-
-      if (resType === 'preworkout') {
-        userRecipeResult.forEach((res) => {
-          if (res.showTransform === true) {
-            if (resMeals.preworkout === res.preworkout) {
-              try {
-                res.tags.forEach(resTag => {
-                  if ('L1' === levelName) {
-                    if (resTag === levelName) {
-                      if (res.tags.includes(phaseName)) {
-                        preworkoutResult.push(res)
-                      }
-                    }
-                  }
-                  if ('L2' === levelName) {
-                    if (resTag === levelName) {
-                      preworkoutResult.push(res)
-                    }
-                  }
-                  if ('L3' === levelName) {
-                    if (resTag === levelName) {
-                      preworkoutResult.push(res)
-                    }
-                  }
-                })
-              } catch (err) {
-                // console.log('error: ', err)
-              }
-            }
-          }
-        })
-      }
-
-      if (resType === 'treats') {
-        userRecipeResult.forEach((res) => {
-          if (res.showTransform === true) {
-            if (resMeals.treats === res.treats) {
-              try {
-                res.tags.forEach(resTag => {
-                  if ('L1' === levelName) {
-                    if (resTag === levelName) {
-                      if (res.tags.includes(phaseName)) {
-                        treatsResult.push(res)
-                      }
-                    }
-                  }
-                  if ('L2' === levelName) {
-                    if (resTag === levelName) {
-                      treatsResult.push(res)
-                    }
-                  }
-                  if ('L3' === levelName) {
-                    if (resTag === levelName) {
-                      treatsResult.push(res)
-                    }
-                  }
-                })
-              } catch (err) {
-                // console.log('error: ', err)
-              }
-            }
-          }
-        })
-      }
     })
-  })
+  }
 
   const challengeMealsFilterList = phaseMeals.map((res) => res.id)
 
@@ -678,51 +653,3 @@ export const subYearly = {
     "title": "App (12 Month Subscription)"
   }
 }
-
-
-
-
-
-
-//------no use ---now
-//   const breakfast =  getRandomNumber(breakfastList.length-1) >=0?
-//                       Object.assign(
-//                         {},
-//                         breakfastList[getRandomNumber(breakfastList.length-1)],
-//                         {mealTitle:'breakfast',meal:'breakfast'}
-//                       ):{mealTitle:'breakfast',meal:'breakfast'};
-
-//        const lunch = getRandomNumber(lunchList.length-1) >=0?
-//                         Object.assign(
-//                           {},
-//                           lunchList[getRandomNumber(lunchList.length-1)],
-//                           {mealTitle:'lunch',meal:'lunch'}
-//                         ):{mealTitle:'lunch',meal:'lunch'};
-
-//       const dinner = getRandomNumber(dinnerList.length-1) >=0?
-//                       Object.assign(
-//                         {},
-//                         dinnerList[getRandomNumber(dinnerList.length-1)],
-//                         {mealTitle:'dinner',meal:'dinner'}
-//                       ):{mealTitle:'dinner',meal:'dinner'};
-
-// const morningSnack = getRandomNumber(snackList.length-1) >=0?
-//                       Object.assign(
-//                         {},
-//                         snackList[getRandomNumber(snackList.length-1)],
-//                         {mealTitle:'morning Snack',meal:'snack'}
-//                       ):{mealTitle:'morning Snack',meal:'snack'};
-
-// const afternoonSnack = getRandomNumber(snackList.length-1) >=0?
-//                         Object.assign(
-//                           {},snackList[getRandomNumber(snackList.length-1)],
-//                           {mealTitle:'afternoon Snack',meal:'snack'}
-//                         ):{mealTitle:'afternoon Snack',meal:'snack'};
-
-// const recommendedMeal = [
-//     breakfast,
-//     morningSnack,
-//     lunch,
-//     afternoonSnack,
-//     dinner
-// ]

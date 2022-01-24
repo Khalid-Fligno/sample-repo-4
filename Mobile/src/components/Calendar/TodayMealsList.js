@@ -437,7 +437,7 @@ class TodayMealsList extends Component {
   render() {
     const { data, recipe, todayRecommendedRecipe, favoriteRecipe } = this.props
 
-    // console.log('favoriteRecipe: ', favoriteRecipe.breakfast)
+    // console.log('favoriteRecipe: ', favoriteRecipe.lunch)
 
     if (favoriteRecipe === undefined) {
       return (
