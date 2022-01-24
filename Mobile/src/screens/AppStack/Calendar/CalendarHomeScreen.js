@@ -434,6 +434,7 @@ class CalendarHomeScreen extends React.PureComponent {
       fitnessLevel,
       extraProps: { fromCalender: true },
       transformRoute: true,
+      transformLevel: this.state.activeChallengeUserData.displayName,
     });
   }
 
@@ -547,7 +548,6 @@ class CalendarHomeScreen extends React.PureComponent {
       const data = activeChallengeUserData.phases;
       const test = activeChallengeUserData.startDate;
       const transformLevel = activeChallengeUserData.displayName;
-
       if (this.stringDate >= test) {
         this.setState({ loading: true });
       }
