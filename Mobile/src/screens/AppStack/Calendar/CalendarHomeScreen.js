@@ -569,11 +569,26 @@ class CalendarHomeScreen extends React.PureComponent {
 
         //TODO get recommended workout here
         const todayRcWorkout = (
-          await getTodayRecommendedWorkout(
-            activeChallengeData.workouts,
-            activeChallengeUserData,
-            this.stringDate
-          )
+            await getTodayRecommendedWorkout(
+                activeChallengeData,
+                activeChallengeData.workouts,
+                activeChallengeUserData,
+                this.stringDate
+            )
+        ).length > 1 ? (
+            await getTodayRecommendedWorkout(
+                activeChallengeData,
+                activeChallengeData.workouts,
+                activeChallengeUserData,
+                this.stringDate
+            )
+        ) : (
+            await getTodayRecommendedWorkout(
+                activeChallengeData,
+                activeChallengeData.workouts,
+                activeChallengeUserData,
+                this.stringDate
+            )
         )[0];
         
         if (todayRcWorkout) this.setState({ todayRcWorkout: todayRcWorkout });
@@ -696,10 +711,12 @@ class CalendarHomeScreen extends React.PureComponent {
         <Text style={calendarStyles.headerText}>Today's Workout</Text>
         <View style={calendarStyles.listContainer}>
           <ChallengeWorkoutCard
-            onPress={() =>
-              todayRcWorkout.name && todayRcWorkout.name !== "rest"
-                ? this.loadExercises(todayRcWorkout, this.currentChallengeDay)
-                : ""
+            onPress={() => {
+                if (todayRcWorkout.length > 1) this.loadExercises(todayRcWorkout, this.currentChallengeDay)
+                else this.loadExercises(todayRcWorkout, this.currentChallengeDay)}
+              // todayRcWorkout.name && todayRcWorkout.name !== "rest"
+              //   ? this.loadExercises(todayRcWorkout, this.currentChallengeDay)
+              //   : ""
             }
             res={todayRcWorkout}
             currentDay={this.currentChallengeDay}

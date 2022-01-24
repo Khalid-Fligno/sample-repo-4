@@ -63,7 +63,7 @@ export const getCurrentChallengeDay = (startDate, currentDate) => {
   return a.diff(b, 'days') + 1
 }
 
-export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserData, selectedDate) => {
+export const getTodayRecommendedWorkout = async (activeChallengeData, workouts, activeChallengeUserData, selectedDate) => {
 
   // let Difference_In_Time = new Date(selectedDate).getTime() - new Date(activeChallengeUserData.startDate).getTime(); 
   // // To calculate the no. of days between two dates 
@@ -74,13 +74,53 @@ export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserDa
   let currentDay = a.diff(b, 'days') + 1;
 
   const workoutData = workouts.find((res) => res.days.includes(currentDay));
+  let workoutGymHomeData = workouts.filter((res) => res.days.includes(currentDay));
+  let workoutGymHomeDataIds = workoutGymHomeData.map(a => a.id);
+
   if (workoutData && workoutData.id) {
     const programRef = db.collection('newWorkouts').where('id', '==', workoutData.id);
+    const programRefs = db.collection('newWorkouts').where('id', 'in', workoutGymHomeDataIds);
     const snapshot = await programRef.get();
+    const snapshots = await programRefs.get();
     if (snapshot.docs.length === 0) {
       return [];
     } else {
-      return snapshot.docs.map((res) => res.data());
+      let workoutGymHomeData = [];
+      let homeCount = 0;
+      let gymCount = 0;
+
+      for(let i = 0; i < snapshots.docs.map((res) => res.data()).length; i++) {
+        if (snapshots.docs.map((res) => res.data())[i].home) {
+          if (homeCount < 1) {
+            workoutGymHomeData.push(snapshots.docs.map((res) => res.data())[i]);
+            homeCount++;
+          } else break;
+        } else if (snapshots.docs.map((res) => res.data())[i].gym) {
+          if (gymCount < 1) {
+            workoutGymHomeData.push(snapshots.docs.map((res) => res.data())[i]);
+            gymCount++;
+          } else break;
+        } else {
+          if (!homeCount > 0 && !gymCount > 0) {
+            workoutGymHomeData.push(snapshots.docs.map((res) => res.data())[i]);
+            break;
+          }
+        }
+      }
+
+      if (activeChallengeData.displayName.slice(-1) === '1' && workoutGymHomeData.length > 1) {
+        let workoutHomeData = workoutGymHomeData[0];
+        let workoutGymData = workoutGymHomeData[1];
+        if (workoutGymHomeData[0].home === true) {
+          workoutGymHomeData[0] = workoutHomeData;
+          workoutGymHomeData[1] = workoutGymData
+        } else {
+          workoutGymHomeData[0] = workoutGymData;
+          workoutGymHomeData[1] = workoutHomeData
+        }
+        return workoutGymHomeData;
+      }
+      else return snapshot.docs.map((res) => res.data());
     }
   } else {
     console.log("????", workoutData)
