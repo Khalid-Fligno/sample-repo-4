@@ -17,7 +17,6 @@ class TodayMealsList extends Component {
   }
 
   carouselBreakfast = (data, data1, data2, title) => {
-
     return (
       <View>
         <View
@@ -37,8 +36,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -64,11 +64,10 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   carouselLunch = (data, data1, data2, title) => {
-
     return (
       <View>
         <View
@@ -88,8 +87,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -115,11 +115,10 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   carouselDinner = (data, data1, data2, title) => {
-
     return (
       <View>
         <View
@@ -139,8 +138,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -166,11 +166,10 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   carouselSnack = (data, data1, data2, title) => {
-
     return (
       <View>
         <View
@@ -190,8 +189,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -217,8 +217,8 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   carouselDrink = (data, data1, data2, title) => {
     return (
@@ -240,8 +240,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -267,8 +268,8 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   carouselPreworkout = (data, data1, data2, title) => {
     return (
@@ -290,8 +291,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -317,11 +319,10 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   carouselTreats = (data, data1, data2, title) => {
-
     return (
       <View>
         <View
@@ -341,8 +342,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -368,23 +370,65 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   render() {
-    const { data, recipe, todayRecommendedRecipe } = this.props
+    const { data, recipe, todayRecommendedRecipe } = this.props;
 
     // console.log('recipe.breakfast: ', recipe.breakfast)
-    
+
     return (
       <View style={styles.container}>
-        {data.breakfast.length > 0 && this.carouselBreakfast(data.breakfast, recipe.breakfast, todayRecommendedRecipe.breakfast, "Breakfast")}
-        {data.lunch.length > 0 && this.carouselLunch(data.lunch, recipe.lunch, todayRecommendedRecipe.lunch, "Lunch")}
-        {data.dinner.length > 0 && this.carouselDinner(data.dinner, recipe.dinner, todayRecommendedRecipe.dinner, "Dinner")}
-        {data.snack.length > 0 && this.carouselSnack(data.snack, recipe.snack, todayRecommendedRecipe.snack, "Snack")}
-        {data.drink.length > 0 && this.carouselDrink(data.drink, recipe.drink, todayRecommendedRecipe.drink, "Post Workout")}
-        {data.preworkout.length > 0 && this.carouselPreworkout(data.preworkout, recipe.preworkout, todayRecommendedRecipe.preworkout, "Pre Workout")}
-        {data.treats.length > 0 && this.carouselTreats(data.treats, recipe.treats, todayRecommendedRecipe.treats, "Treats")}
+        {data.breakfast.length > 0 &&
+          this.carouselBreakfast(
+            data.breakfast,
+            recipe.breakfast,
+            todayRecommendedRecipe.breakfast,
+            "Breakfast"
+          )}
+        {data.lunch.length > 0 &&
+          this.carouselLunch(
+            data.lunch,
+            recipe.lunch,
+            todayRecommendedRecipe.lunch,
+            "Lunch"
+          )}
+        {data.dinner.length > 0 &&
+          this.carouselDinner(
+            data.dinner,
+            recipe.dinner,
+            todayRecommendedRecipe.dinner,
+            "Dinner"
+          )}
+        {data.snack.length > 0 &&
+          this.carouselSnack(
+            data.snack,
+            recipe.snack,
+            todayRecommendedRecipe.snack,
+            "Snack"
+          )}
+        {data.drink.length > 0 &&
+          this.carouselDrink(
+            data.drink,
+            recipe.drink,
+            todayRecommendedRecipe.drink,
+            "Post Workout"
+          )}
+        {data.preworkout.length > 0 &&
+          this.carouselPreworkout(
+            data.preworkout,
+            recipe.preworkout,
+            todayRecommendedRecipe.preworkout,
+            "Pre Workout"
+          )}
+        {data.treats.length > 0 &&
+          this.carouselTreats(
+            data.treats,
+            recipe.treats,
+            todayRecommendedRecipe.treats,
+            "Treats"
+          )}
       </View>
     );
   }
@@ -430,7 +474,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#000000",
-    borderTopColor: "#000000"
+    borderTopColor: "#000000",
   },
   opacityLayer: {
     flex: 1,
@@ -440,11 +484,11 @@ const styles = StyleSheet.create({
     padding: wp("5%"),
   },
   opacityLayer1: {
-    flexDirection: 'column',
+    flexDirection: "column",
     width: "100%",
     justifyContent: "center",
     padding: 50,
-    left: 15
+    left: 15,
   },
   cardTitle: {
     fontFamily: fonts.bold,
