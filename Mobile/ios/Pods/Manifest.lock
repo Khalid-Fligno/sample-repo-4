@@ -118,6 +118,10 @@ PODS:
   - libwebp/mux (1.2.1):
     - libwebp/demux
   - libwebp/webp (1.2.1)
+  - LogRocket (0.23.1)
+  - logrocket-react-native (0.23.1):
+    - LogRocket (= 0.23.1)
+    - React
   - OneSignal (2.16.5)
   - RCTRequired (0.63.2)
   - RCTTypeSafety (0.63.2):
@@ -447,6 +451,7 @@ DEPENDENCIES:
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - "logrocket-react-native (from `../node_modules/@logrocket/react-native`)"
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -510,6 +515,7 @@ SPEC REPOS:
     - FBSDKCoreKit
     - FBSDKLoginKit
     - libwebp
+    - LogRocket
     - OneSignal
     - SDWebImage
     - SDWebImageWebPCoder
@@ -577,6 +583,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  logrocket-react-native:
+    :path: "../node_modules/@logrocket/react-native"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -721,6 +729,8 @@ SPEC CHECKSUMS:
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
+  LogRocket: 5fbfa579378d2770d03469a552b4fd6a89139fc3
+  logrocket-react-native: 388c7f3490096447c83808dafd6dbbac07048b8c
   OneSignal: b72068b06b359f22e27404edee87338f4b68e783
   RCTRequired: f13f25e7b12f925f1f6a6a8c69d929a03c0129fe
   RCTTypeSafety: 44982c5c8e43ff4141eb519a8ddc88059acd1f3a
