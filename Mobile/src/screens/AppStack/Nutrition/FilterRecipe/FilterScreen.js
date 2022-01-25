@@ -57,7 +57,7 @@ export default class FilterScreen extends React.PureComponent {
                     >
                         {
                             this.props.faveRecipeItem === undefined ?
-                                this.props.alertFunc()
+                                null
                                 :
                                 <View style={{
                                     // position: 'absolute',

@@ -498,7 +498,7 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   fetchActiveChallengeData = async (activeChallengeUserData) => {
-    const {currentDay} = this.state
+    const { currentDay } = this.state
     let data = activeChallengeUserData.faveRecipe
     let recipe = []
 
@@ -531,29 +531,29 @@ class CalendarHomeScreen extends React.PureComponent {
       Alert.alert("Fetch active challenge data error!");
     }
 
-    if(data){
+    if (data) {
       data.forEach(res => {
         try {
           if (res.day === currentChallengeDay) {
-            if(res.recipeMeal.breakfast){
+            if (res.recipeMeal.breakfast) {
               recipe.push(res.recipeMeal.breakfast)
             }
-            if(res.recipeMeal.lunch){
+            if (res.recipeMeal.lunch) {
               recipe.push(res.recipeMeal.lunch)
             }
-            if(res.recipeMeal.dinner){
+            if (res.recipeMeal.dinner) {
               recipe.push(res.recipeMeal.dinner)
             }
-            if(res.recipeMeal.snack){
+            if (res.recipeMeal.snack) {
               recipe.push(res.recipeMeal.dinner)
             }
-            if(res.recipeMeal.drink){
+            if (res.recipeMeal.drink) {
               recipe.push(res.recipeMeal.dinner)
             }
-            if(res.recipeMeal.preworkout){
+            if (res.recipeMeal.preworkout) {
               recipe.push(res.recipeMeal.dinner)
             }
-            if(res.recipeMeal.treats){
+            if (res.recipeMeal.treats) {
               recipe.push(res.recipeMeal.dinner)
             }
           }
@@ -586,7 +586,7 @@ class CalendarHomeScreen extends React.PureComponent {
     const { activeChallengeUserData, activeChallengeData, currentDay } = this.state;
 
     if (activeChallengeUserData && activeChallengeData) {
-      this.setState({ loading: false });      
+      this.setState({ loading: false });
       // const data = activeChallengeUserData.faveRecipe;
       const test = activeChallengeUserData.startDate;
       const transformLevel = activeChallengeUserData.displayName;
@@ -688,10 +688,67 @@ class CalendarHomeScreen extends React.PureComponent {
     });
   }
 
+  handleBack = () => {
+    const { navigation } = this.props;
+    navigation.pop();
+  };
+  
   getToFilter(data, data1, data2, title) {
     const { challengeRecipe, activeChallengeData, phaseDefaultTags, activeChallengeUserData } = this.state
 
     // console.log('phaseDefaultTags: ', phaseDefaultTags.displayName)
+    const datas = activeChallengeUserData.faveRecipe
+
+    if (datas === undefined) {
+      Alert.alert(
+        "New Feature",
+        "Favourite Recipe feature is now available.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel"
+          },
+          {
+            text: "OK",
+            onPress: async () => {
+
+              const number = 60
+              const currentNumber = []
+
+              for (let i = 1; i <= number; i++) {
+                // console.log(i);
+                const data = {
+                  "day": i,
+                  "recipeMeal": {
+                    "breakfast": "",
+                    "lunch": "",
+                    "dinner": "",
+                    "snack": "",
+                    "drink": "",
+                    "preworkout": "",
+                    "treats": "",
+                  }
+                }
+                currentNumber.push(data)
+              }
+
+              const id = this.state.activeChallengeUserData.id
+              const uid = await AsyncStorage.getItem("uid");
+              const activeChallengeUserRef = db
+                .collection("users")
+                .doc(uid)
+                .collection("challenges")
+                .doc(id)
+
+              activeChallengeUserRef.set({ "faveRecipe": currentNumber }, { merge: true })
+
+              this.handleBack()
+            }
+          }
+
+        ]
+      )
+    }
 
     this.props.navigation.navigate('FilterRecipe', {
       currentChallengeDay: this.currentChallengeDay,
