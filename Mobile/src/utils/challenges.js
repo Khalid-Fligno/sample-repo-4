@@ -131,109 +131,6 @@ export const convertRecipeData = async (recipeId) => {
 
 }
 
-export const fetchRecipeData = async (challengeRecipe) => {
-  let phaseMeals = []
-  const breakfastActive = []
-  const lunchActive = []
-  const dinnerActive = []
-  const snackActive = []
-  const drinkActive = []
-  const preworkoutActive = []
-  const treatsActive = []
-
-  if (challengeRecipe) {
-    const recipeRef = db.collection('recipes');
-    const snapshot = await recipeRef.get();
-    const mealsId = challengeRecipe[0].level2[0].phases[0].meals
-
-    if (snapshot.empty) {
-      return null
-    } else {
-      snapshot.forEach(res => {
-        if (mealsId.includes(res.data().id)) {
-          phaseMeals.push(res.data());
-        }
-      })
-    }
-
-    phaseMeals.forEach((resMeals) => {
-      try {
-        resMeals.types.forEach((resType) => {
-          if (resType === 'breakfast') {
-            snapshot.forEach((res) => {
-              if (resMeals.breakfast === res.data().breakfast) {
-                breakfastActive.push(res.data())
-              }
-            })
-          }
-          if (resType === 'lunch') {
-            snapshot.forEach((res) => {
-              if (resMeals.lunch === res.data().lunch) {
-                lunchActive.push(res.data())
-              }
-            })
-          }
-          if (resType === 'dinner') {
-            snapshot.forEach((res) => {
-              if (resMeals.dinner === res.data().dinner) {
-                dinnerActive.push(res.data())
-              }
-            })
-          }
-          if (resType === 'snack') {
-            snapshot.forEach((res) => {
-              if (resMeals.snack === res.data().snack) {
-                snackActive.push(res.data())
-              }
-            })
-
-          }
-          if (resType === 'drink') {
-            snapshot.forEach((res) => {
-              if (resMeals.drink === res.data().drink) {
-                drinkActive.push(res.data())
-              }
-            })
-          }
-          if (resType === 'preworkout') {
-            snapshot.forEach((res) => {
-              if (resMeals.preworkout === res.data().preworkout) {
-                preworkoutActive.push(res.data())
-              }
-            })
-          }
-          if (resType === 'treats') {
-            snapshot.forEach((res) => {
-              if (resMeals.treats === res.data().treats) {
-                treatsActive.push(res.data())
-              }
-            })
-          }
-        })
-      } catch (err) {
-
-      }
-    })
-  }
-
-  const recommendedRecipe = [{
-    breakfast: breakfastActive,
-    snack: snackActive,
-    lunch: lunchActive,
-    dinner: dinnerActive,
-    drink: drinkActive,
-    preworkout: preworkoutActive,
-    treats: treatsActive,
-  }]
-
-  return {
-    recommendedRecipe,
-  }
-
-}
-
-
-
 export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) => {
   // const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
   let phaseMeals = []
@@ -244,8 +141,6 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
   let drinkResult = []
   let preworkoutResult = []
   let treatsResult = []
-  let userRecipeResult = []
-  let recipeItem = []
 
   let levelName = activeChallengeData.levelTags
   let phaseName = phaseData.phaseTags

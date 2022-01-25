@@ -87,7 +87,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
     };
 
     getAllRecipeData = () => {
-        const allRecipeData = this.props.navigation.getParam("allRecipeData", null)
+        const allRecipeData = this.props.navigation.getParam("todayRecommendedRecipe", null)
         const dupId = []
 
         allRecipeData.forEach((res) => {
@@ -106,6 +106,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
     getDefaultCategoryTags = () => {
         this.setState({ loading: true })
         const recipeData = this.props.navigation.getParam("todayRecommendedRecipe", null)
+
         const categoryName = []
         const dupId = []
 
@@ -679,7 +680,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         }
     }
 
-    ifExist = async (item, activeChallengeUserData, title, currentChallengeDay) => {
+    ifExist = (item, activeChallengeUserData, title, currentChallengeDay) => {
         let result = false
         const recipeMeal = activeChallengeUserData.faveRecipe
 

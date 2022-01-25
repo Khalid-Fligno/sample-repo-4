@@ -145,12 +145,12 @@ class CalendarHomeScreen extends React.PureComponent {
           level3: level_3,
         }]
 
-        fetchRecipeData(challengeLevel).then((res) => {
-          this.setState({
-            AllRecipe: res.recommendedRecipe,
-            loading: false,
-          })
-        })
+        // fetchRecipeData(challengeLevel).then((res) => {
+        //   this.setState({
+        //     AllRecipe: res.recommendedRecipe,
+        //     loading: false,
+        //   })
+        // })
 
         this.setState({
           challengeRecipe: challengeLevel
@@ -508,7 +508,7 @@ class CalendarHomeScreen extends React.PureComponent {
     );
 
     try {
-      this.unsubscribeFACD = await db
+      this.unsubscribeFACD = db
         .collection("challenges")
         .doc(activeChallengeUserData.id)
         .onSnapshot(async (doc) => {
@@ -693,7 +693,7 @@ class CalendarHomeScreen extends React.PureComponent {
     navigation.pop();
   };
   
-  getToFilter(data, data1, data2, title) {
+  getToFilter(data, data2, title) {
     const { challengeRecipe, activeChallengeData, phaseDefaultTags, activeChallengeUserData } = this.state
 
     // console.log('phaseDefaultTags: ', phaseDefaultTags.displayName)
@@ -759,7 +759,6 @@ class CalendarHomeScreen extends React.PureComponent {
       challengeAllRecipe: challengeRecipe[0],
       recipes: data,
       title: title,
-      allRecipeData: data1
     })
   }
 
@@ -781,7 +780,6 @@ class CalendarHomeScreen extends React.PureComponent {
       loadingExercises,
       skipped,
       width,
-      AllRecipe,
       completeCha,
       todayRecommendedRecipe,
       favoriteRecipe
@@ -825,11 +823,10 @@ class CalendarHomeScreen extends React.PureComponent {
         }}>Today's Meals</Text>
         <TodayMealsList
           favoriteRecipe={favoriteRecipe[0]}
-          recipe={AllRecipe[0]}
           todayRecommendedRecipe={todayRecommendedRecipe[0]}
           data={todayRecommendedMeal[0]}
           onPress={(res) => this.goToRecipe(res)}
-          filterPress={(res, res1, res2, title) => this.getToFilter(res, res1, res2, title)}
+          filterPress={(res, res2, title) => this.getToFilter(res, res2, title)}
         />
       </>
     );

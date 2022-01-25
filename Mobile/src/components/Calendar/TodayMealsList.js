@@ -16,7 +16,7 @@ class TodayMealsList extends Component {
     this.state = {};
   }
 
-  carouselBreakfast = (data, data1, data2, title, favoriteRecipe) => {
+  carouselBreakfast = (data, data2, title, favoriteRecipe) => {
 
     return (
       <View>
@@ -76,7 +76,7 @@ class TodayMealsList extends Component {
           }
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
+            onPress={() => this.props.filterPress(data, data2, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -88,7 +88,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselLunch = (data, data1, data2, title, favoriteRecipe) => {
+  carouselLunch = (data, data2, title, favoriteRecipe) => {
 
     return (
       <View>
@@ -148,7 +148,7 @@ class TodayMealsList extends Component {
           }
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
+            onPress={() => this.props.filterPress(data, data2, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -160,7 +160,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselDinner = (data, data1, data2, title, favoriteRecipe) => {
+  carouselDinner = (data, data2, title, favoriteRecipe) => {
 
     return (
       <View>
@@ -220,7 +220,7 @@ class TodayMealsList extends Component {
           }
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
+            onPress={() => this.props.filterPress(data, data2, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -232,7 +232,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselSnack = (data, data1, data2, title) => {
+  carouselSnack = (data, data2, title) => {
 
     return (
       <View>
@@ -271,7 +271,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
+            onPress={() => this.props.filterPress(data, data2, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -283,7 +283,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselDrink = (data, data1, data2, title) => {
+  carouselDrink = (data, data2, title) => {
     return (
       <View>
         <View
@@ -321,7 +321,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
+            onPress={() => this.props.filterPress(data, data2, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -333,7 +333,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselPreworkout = (data, data1, data2, title) => {
+  carouselPreworkout = (data, data2, title) => {
     return (
       <View>
         <View
@@ -371,7 +371,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
+            onPress={() => this.props.filterPress(data, data2, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -383,7 +383,7 @@ class TodayMealsList extends Component {
     )
   }
 
-  carouselTreats = (data, data1, data2, title) => {
+  carouselTreats = (data, data2, title) => {
 
     return (
       <View>
@@ -422,7 +422,7 @@ class TodayMealsList extends Component {
           ))}
           <TouchableOpacity
             style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
+            onPress={() => this.props.filterPress(data, data2, title)}
           >
             <View style={styles.opacityLayer1}>
               <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -435,32 +435,32 @@ class TodayMealsList extends Component {
   }
 
   render() {
-    const { data, recipe, todayRecommendedRecipe, favoriteRecipe } = this.props
+    const { data, todayRecommendedRecipe, favoriteRecipe } = this.props
 
     // console.log('favoriteRecipe: ', favoriteRecipe.lunch)
 
     if (favoriteRecipe === undefined) {
       return (
         <View style={styles.container}>
-          {data.breakfast.length > 0 && this.carouselBreakfast(data.breakfast, recipe.breakfast, todayRecommendedRecipe.breakfast, "Breakfast")}
-          {data.lunch.length > 0 && this.carouselLunch(data.lunch, recipe.lunch, todayRecommendedRecipe.lunch, "Lunch")}
-          {data.dinner.length > 0 && this.carouselDinner(data.dinner, recipe.dinner, todayRecommendedRecipe.dinner, "Dinner")}
-          {data.snack.length > 0 && this.carouselSnack(data.snack, recipe.snack, todayRecommendedRecipe.snack, "Snack")}
-          {data.drink.length > 0 && this.carouselDrink(data.drink, recipe.drink, todayRecommendedRecipe.drink, "Post Workout")}
-          {data.preworkout.length > 0 && this.carouselPreworkout(data.preworkout, recipe.preworkout, todayRecommendedRecipe.preworkout, "Pre Workout")}
-          {data.treats.length > 0 && this.carouselTreats(data.treats, recipe.treats, todayRecommendedRecipe.treats, "Treats")}
+          {data.breakfast.length > 0 && this.carouselBreakfast(data.breakfast, todayRecommendedRecipe.breakfast, "Breakfast")}
+          {data.lunch.length > 0 && this.carouselLunch(data.lunch, todayRecommendedRecipe.lunch, "Lunch")}
+          {data.dinner.length > 0 && this.carouselDinner(data.dinner, todayRecommendedRecipe.dinner, "Dinner")}
+          {data.snack.length > 0 && this.carouselSnack(data.snack, todayRecommendedRecipe.snack, "Snack")}
+          {data.drink.length > 0 && this.carouselDrink(data.drink, todayRecommendedRecipe.drink, "Post Workout")}
+          {data.preworkout.length > 0 && this.carouselPreworkout(data.preworkout, todayRecommendedRecipe.preworkout, "Pre Workout")}
+          {data.treats.length > 0 && this.carouselTreats(data.treats, todayRecommendedRecipe.treats, "Treats")}
         </View>
       );
     } else {
       return (
         <View style={styles.container}>
-          {data.breakfast.length > 0 && this.carouselBreakfast(data.breakfast, recipe.breakfast, todayRecommendedRecipe.breakfast, "Breakfast", favoriteRecipe.breakfast)}
-          {data.lunch.length > 0 && this.carouselLunch(data.lunch, recipe.lunch, todayRecommendedRecipe.lunch, "Lunch", favoriteRecipe.lunch)}
-          {data.dinner.length > 0 && this.carouselDinner(data.dinner, recipe.dinner, todayRecommendedRecipe.dinner, "Dinner", favoriteRecipe.dinner)}
-          {data.snack.length > 0 && this.carouselSnack(data.snack, recipe.snack, todayRecommendedRecipe.snack, "Snack")}
-          {data.drink.length > 0 && this.carouselDrink(data.drink, recipe.drink, todayRecommendedRecipe.drink, "Post Workout")}
-          {data.preworkout.length > 0 && this.carouselPreworkout(data.preworkout, recipe.preworkout, todayRecommendedRecipe.preworkout, "Pre Workout")}
-          {data.treats.length > 0 && this.carouselTreats(data.treats, recipe.treats, todayRecommendedRecipe.treats, "Treats")}
+          {data.breakfast.length > 0 && this.carouselBreakfast(data.breakfast, todayRecommendedRecipe.breakfast, "Breakfast", favoriteRecipe.breakfast)}
+          {data.lunch.length > 0 && this.carouselLunch(data.lunch, todayRecommendedRecipe.lunch, "Lunch", favoriteRecipe.lunch)}
+          {data.dinner.length > 0 && this.carouselDinner(data.dinner, todayRecommendedRecipe.dinner, "Dinner", favoriteRecipe.dinner)}
+          {data.snack.length > 0 && this.carouselSnack(data.snack, todayRecommendedRecipe.snack, "Snack")}
+          {data.drink.length > 0 && this.carouselDrink(data.drink, todayRecommendedRecipe.drink, "Post Workout")}
+          {data.preworkout.length > 0 && this.carouselPreworkout(data.preworkout, todayRecommendedRecipe.preworkout, "Pre Workout")}
+          {data.treats.length > 0 && this.carouselTreats(data.treats, todayRecommendedRecipe.treats, "Treats")}
         </View>
       );
     }
