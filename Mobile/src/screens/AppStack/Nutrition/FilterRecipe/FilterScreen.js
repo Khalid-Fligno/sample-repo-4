@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { db } from "../../../../../config/firebase";
 
 
+
 const { width } = Dimensions.get("window");
 
 export default class FilterScreen extends React.PureComponent {
@@ -58,12 +59,13 @@ export default class FilterScreen extends React.PureComponent {
                             this.props.faveRecipeItem === undefined ?
                                 this.props.alertFunc()
                                 :
+                                <View style={{
+                                    // position: 'absolute',
+                                    bottom: hp('15%'),
+                                    left: wp('75%')
+                                }}>
                                 <TouchableOpacity
-                                    style={{
-                                        position: 'absolute',
-                                        bottom: 160,
-                                        left: 320
-                                    }}
+                                   
                                     onPress={this.props.onSelectHeart}
                                 >
                                     {
@@ -73,6 +75,7 @@ export default class FilterScreen extends React.PureComponent {
                                             <Icon name={this.props.ifExistRecipe() ? 'heart' : 'hearto'} size={30} color={'red'} />
                                     }
                                 </TouchableOpacity>
+                                </View>
                         }
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10, maxWidth: '50%' }}>
