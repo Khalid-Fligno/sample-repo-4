@@ -82,15 +82,26 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   componentDidMount = async () => {
+    this._isMounted = true;
+
     this.props.navigation.setParams({
       toggleHelperModal: this.showHelperModal,
     });
-
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
-      this.onFocusFunction();
-    });
-    // this.onFocusFunction();
+    if (this._isMounted) {
+      this.focusListener = this.props.navigation.addListener("didFocus", () => {
+        this.onFocusFunction();
+      });
+    }
   };
+
+  componentWillUnmount() {
+    this._isMounted = false
+    this.focusListener.remove();
+    if (this.unsubscribeFACUD) this.unsubscribeFACUD();
+    if (this.unsubscribeFACD) this.unsubscribeFACD();
+    if (this.unsubscribeSchedule) this.unsubscribeSchedule();
+    if (this.unsubscribeReC) this.unsubscribeReC();
+  }
 
   async onFocusFunction() {
     console.log("On focus");
@@ -101,18 +112,11 @@ class CalendarHomeScreen extends React.PureComponent {
     await this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting(),
     });
+    this.setState({ favoriteRecipeItem: this.props.navigation.getParam('favoriteRecipe', null) })
   }
 
   handleActiveChallengeSetting() {
     this.toggleSetting();
-  }
-
-  componentWillUnmount() {
-    this.focusListener.remove();
-    if (this.unsubscribeFACUD) this.unsubscribeFACUD();
-    if (this.unsubscribeFACD) this.unsubscribeFACD();
-    if (this.unsubscribeSchedule) this.unsubscribeSchedule();
-    if (this.unsubscribeReC) this.unsubscribeReC();
   }
 
   fetchRecipeChallenge = async () => {

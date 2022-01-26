@@ -58,7 +58,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             phaseDefaultTags: "",
             categoryName: [],
             activeChallengeUserData: undefined,
-            currentChallengeDay: undefined
+            currentChallengeDay: undefined,
         };
     }
 
