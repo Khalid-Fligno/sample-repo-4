@@ -545,16 +545,16 @@ class CalendarHomeScreen extends React.PureComponent {
               recipe.push(res.recipeMeal.dinner)
             }
             if (res.recipeMeal.snack) {
-              recipe.push(res.recipeMeal.dinner)
+              recipe.push(res.recipeMeal.snack)
             }
             if (res.recipeMeal.drink) {
-              recipe.push(res.recipeMeal.dinner)
+              recipe.push(res.recipeMeal.drink)
             }
             if (res.recipeMeal.preworkout) {
-              recipe.push(res.recipeMeal.dinner)
+              recipe.push(res.recipeMeal.preworkout)
             }
             if (res.recipeMeal.treats) {
-              recipe.push(res.recipeMeal.dinner)
+              recipe.push(res.recipeMeal.treats)
             }
           }
         } catch (err) { }
@@ -567,11 +567,19 @@ class CalendarHomeScreen extends React.PureComponent {
       const breakfastList = resx.filter((res) => res.breakfast === true)
       const lunchList = resx.filter((res) => res.lunch === true)
       const dinnerList = resx.filter((res) => res.dinner === true)
+      const snackList = resx.filter((res) => res.snack === true)
+      const drinkList = resx.filter((res) => res.drink === true)
+      const preworkoutList = resx.filter((res) => res.preworkout === true)
+      const treatsList = resx.filter((res) => res.treats === true)
 
       const recommendedMeal = [{
         breakfast: breakfastList,
         lunch: lunchList,
         dinner: dinnerList,
+        snack: snackList,
+        drink: drinkList,
+        preworkout: preworkoutList,
+        treats: treatsList,
       }]
 
       this.setState({
@@ -583,7 +591,7 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   async getCurrentPhaseInfo() {
-    const { activeChallengeUserData, activeChallengeData, currentDay } = this.state;
+    const { activeChallengeUserData, activeChallengeData } = this.state;
 
     if (activeChallengeUserData && activeChallengeData) {
       this.setState({ loading: false });

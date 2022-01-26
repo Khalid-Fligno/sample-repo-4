@@ -5,7 +5,6 @@ import {
     View,
     Dimensions,
     Text,
-    Alert,
     Platform,
 } from "react-native";
 import colors from "../../../../styles/colors";
@@ -16,8 +15,7 @@ import {
 } from "react-native-responsive-screen";
 import { Card } from 'react-native-elements';
 import Icon from "react-native-vector-icons/AntDesign";
-import AsyncStorage from "@react-native-community/async-storage";
-import { db } from "../../../../../config/firebase";
+
 
 
 
