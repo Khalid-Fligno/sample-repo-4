@@ -538,8 +538,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
     onFavorite = async (item, activeChallengeUserData, title, currentChallengeDay) => {
         const recipeMeal = activeChallengeUserData.faveRecipe
-        console.log('Title: ', title.toLowerCase())
-
 
         try {
             if (title.toLowerCase() === 'breakfast') {
@@ -604,7 +602,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
             }
         } catch (err) {
-            
+
         }
 
 

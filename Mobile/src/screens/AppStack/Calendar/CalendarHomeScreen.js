@@ -444,15 +444,15 @@ class CalendarHomeScreen extends React.PureComponent {
     try {
       this.setState({ loading: true });
       const uid = await AsyncStorage.getItem("uid");
-      this.unsubscribeFACUD = await db
+      this.unsubscribeFACUD = db
         .collection("users")
         .doc(uid)
         .collection("challenges")
         .where("status", "in", ["Active"])
         .onSnapshot(async (querySnapshot) => {
           const list = [];
-          await querySnapshot.forEach(async (doc) => {
-            await list.push(await doc.data());
+          querySnapshot.forEach(async (doc) => {
+            list.push(doc.data());
           });
           const activeChallengeEndDate = list[0] ? list[0].endDate : null;
           const currentDate = moment().format("YYYY-MM-DD");
@@ -474,8 +474,8 @@ class CalendarHomeScreen extends React.PureComponent {
                 .collection("challenges")
                 .doc(list[0].id);
               challengeRef.set(newData, { merge: true });
-              this.setState({ completeCha: isCompleted })
-              this.props.navigation.navigate("ChallengeSubscription", { completedChallenge: true })
+              this.setState({ completeCha: isCompleted });
+              this.props.navigation.navigate("ChallengeSubscription", { completedChallenge: true });
               Alert.alert(
                 "Congratulations!",
                 "You have completed your challenge",
@@ -501,6 +501,13 @@ class CalendarHomeScreen extends React.PureComponent {
     const { currentDay } = this.state
     let data = activeChallengeUserData.faveRecipe
     let recipe = []
+    let breakfastId = []
+    let lunchId = []
+    let dinnerId = []
+    let snackId = []
+    let drinkId = []
+    let preworkoutId = []
+    let treatsId = []
 
     const currentChallengeDay = getCurrentChallengeDay(
       activeChallengeUserData.startDate,
@@ -510,8 +517,8 @@ class CalendarHomeScreen extends React.PureComponent {
     try {
       this.unsubscribeFACD = db
         .collection("challenges")
-        .doc(activeChallengeUserData.id)
-        .onSnapshot(async (doc) => {
+        .doc(await activeChallengeUserData.id)
+        .onSnapshot((doc) => {
           if (doc.exists) {
             this.setState({
               activeChallengeUserData,
@@ -537,24 +544,31 @@ class CalendarHomeScreen extends React.PureComponent {
           if (res.day === currentChallengeDay) {
             if (res.recipeMeal.breakfast) {
               recipe.push(res.recipeMeal.breakfast)
+              breakfastId.push(res.recipeMeal.breakfast)
             }
             if (res.recipeMeal.lunch) {
               recipe.push(res.recipeMeal.lunch)
+              lunchId.push(res.recipeMeal.lunch)
             }
             if (res.recipeMeal.dinner) {
               recipe.push(res.recipeMeal.dinner)
+              dinnerId.push(res.recipeMeal.dinner)
             }
             if (res.recipeMeal.snack) {
               recipe.push(res.recipeMeal.snack)
+              snackId.push(res.recipeMeal.snack)
             }
             if (res.recipeMeal.drink) {
               recipe.push(res.recipeMeal.drink)
+              drinkId.push(res.recipeMeal.drink)
             }
             if (res.recipeMeal.preworkout) {
               recipe.push(res.recipeMeal.preworkout)
+              preworkoutId.push(res.recipeMeal.preworkout)
             }
             if (res.recipeMeal.treats) {
               recipe.push(res.recipeMeal.treats)
+              treatsId.push(res.recipeMeal.treats)
             }
           }
         } catch (err) { }
@@ -564,13 +578,13 @@ class CalendarHomeScreen extends React.PureComponent {
     convertRecipeData(recipe).then(res => {
       const resx = res.recipeResult
 
-      const breakfastList = resx.filter((res) => res.breakfast === true)
-      const lunchList = resx.filter((res) => res.lunch === true)
-      const dinnerList = resx.filter((res) => res.dinner === true)
-      const snackList = resx.filter((res) => res.snack === true)
-      const drinkList = resx.filter((res) => res.drink === true)
-      const preworkoutList = resx.filter((res) => res.preworkout === true)
-      const treatsList = resx.filter((res) => res.treats === true)
+      const breakfastList = resx.filter((res) => res.id === breakfastId[0])
+      const lunchList = resx.filter((res) => res.id === lunchId[0])
+      const dinnerList = resx.filter((res) => res.id === dinnerId[0])
+      const snackList = resx.filter((res) => res.id === snackId[0])
+      const drinkList = resx.filter((res) => res.id === drinkId[0])
+      const preworkoutList = resx.filter((res) => res.id === preworkoutId[0])
+      const treatsList = resx.filter((res) => res.id === treatsId[0])
 
       const recommendedMeal = [{
         breakfast: breakfastList,
@@ -691,7 +705,7 @@ class CalendarHomeScreen extends React.PureComponent {
       });
     this.props.navigation.navigate("Recipe", {
       recipe: recipeData,
-      title: "challenge dashboard",
+      title: "challenge",
       extraProps: { fromCalender: true },
     });
   }
@@ -700,7 +714,7 @@ class CalendarHomeScreen extends React.PureComponent {
     const { navigation } = this.props;
     navigation.pop();
   };
-  
+
   getToFilter(data, data2, title) {
     const { challengeRecipe, activeChallengeData, phaseDefaultTags, activeChallengeUserData } = this.state
 
@@ -790,14 +804,14 @@ class CalendarHomeScreen extends React.PureComponent {
       width,
       completeCha,
       todayRecommendedRecipe,
-      favoriteRecipe
+      favoriteRecipe,
     } = this.state;
 
     let showRC = false;
 
-    // console.log('favoriteRecipe: ', favoriteRecipe[0])
 
     if (activeChallengeData && activeChallengeUserData) {
+
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
       //check if selected date is between challenge start and end date
       // console.log("????,,,,",this.stringDate)

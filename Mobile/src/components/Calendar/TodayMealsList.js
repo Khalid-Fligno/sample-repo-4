@@ -519,7 +519,7 @@ class TodayMealsList extends Component {
   }
 
   render() {
-    const { data, todayRecommendedRecipe, favoriteRecipe } = this.props
+    const { data, todayRecommendedRecipe, favoriteRecipe, title1 } = this.props
 
     // console.log('favoriteRecipe: ', favoriteRecipe.lunch)
 
