@@ -62,7 +62,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         };
     }
 
-    onFocusFunction() {
+    componentDidMount = () => {
         this.getDefaultCategoryTags()
         this.getAllRecipeData()
         this.setState({
@@ -74,11 +74,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
             recipes: this.props.navigation.getParam("recipes", null),
             title: this.props.navigation.getParam("title", null),
         });
-    }
-
-
-    componentDidMount = () => {
-        this.onFocusFunction();
     };
 
     handleBack = () => {

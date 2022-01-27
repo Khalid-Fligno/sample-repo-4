@@ -29,9 +29,6 @@ export default createUserChallengeData = (data, challengeDate, stringDate3, TODA
         currentNumber.push(data)
     }
 
-    // const uniq = Object.assign({}, currentNumber)
-    // var newObj = {...currentNumber}
-
     const phases = data.phases.map((res) => {
         return (
             {
@@ -64,7 +61,7 @@ export default createUserChallengeData = (data, challengeDate, stringDate3, TODA
         "imageUrl": data.imageUrl,
         "isSchedule": false,
         "recipes": { "days": currentChallengeDay },
-        "faveRecipe": currentNumber
+        "faveRecipe": data.faveRecipe ? data.faveRecipe : currentNumber
     }
     return challenge
 }

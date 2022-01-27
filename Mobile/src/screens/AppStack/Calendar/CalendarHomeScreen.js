@@ -82,37 +82,22 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   componentDidMount = async () => {
-    this._isMounted = true;
-
     this.props.navigation.setParams({
       toggleHelperModal: this.showHelperModal,
     });
-    if (this._isMounted) {
-      this.focusListener = this.props.navigation.addListener("didFocus", () => {
-        this.onFocusFunction();
-      });
-    }
+    this.props.navigation.setParams({
+      activeChallengeSetting: () => this.handleActiveChallengeSetting(),
+    });
+    this.fetchRecipeChallenge();
+    this.fetchActiveChallengeUserData();
+    this.fetchUserData();
   };
 
   componentWillUnmount() {
-    this._isMounted = false
-    this.focusListener.remove();
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
     if (this.unsubscribeSchedule) this.unsubscribeSchedule();
     if (this.unsubscribeReC) this.unsubscribeReC();
-  }
-
-  async onFocusFunction() {
-    console.log("On focus");
-    await this.fetchRecipeChallenge();
-    await this.fetchCalendarEntries();
-    await this.fetchActiveChallengeUserData();
-    await this.fetchUserData();
-    await this.props.navigation.setParams({
-      activeChallengeSetting: () => this.handleActiveChallengeSetting(),
-    });
-    this.setState({ favoriteRecipeItem: this.props.navigation.getParam('favoriteRecipe', null) })
   }
 
   handleActiveChallengeSetting() {
@@ -149,20 +134,13 @@ class CalendarHomeScreen extends React.PureComponent {
           level3: level_3,
         }]
 
-        // fetchRecipeData(challengeLevel).then((res) => {
-        //   this.setState({
-        //     AllRecipe: res.recommendedRecipe,
-        //     loading: false,
-        //   })
-        // })
-
         this.setState({
           challengeRecipe: challengeLevel
         })
       })
   }
 
-  fetchCalendarEntries = async () => {
+  fetchCalendarEntries = () => {
     const selectedDate = this.calendarStrip.current.getSelectedDate();
     //Todo :call the function to get the data of current date
     this.handleDateSelected(selectedDate);
@@ -175,7 +153,7 @@ class CalendarHomeScreen extends React.PureComponent {
     );
   };
 
-  handleDateSelected = async (date) => {
+  handleDateSelected = (date) => {
     const { activeChallengeData, activeChallengeUserData } = this.state;
     this.setState({ loading: false });
     this.stringDate = date.format("YYYY-MM-DD").toString();
@@ -245,7 +223,6 @@ class CalendarHomeScreen extends React.PureComponent {
           userRef.set(data, { merge: true });
         }
         this.setState({
-          skipped: this.state.activeChallengeUserData.onBoardingInfo.skipped ?? false,
           initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
         });
       })
@@ -577,6 +554,10 @@ class CalendarHomeScreen extends React.PureComponent {
           }
         } catch (err) { }
       })
+
+      this.setState({
+        skipped: activeChallengeUserData.onBoardingInfo.skipped ?? false,
+      })
     }
 
     convertRecipeData(recipe).then(res => {
@@ -812,7 +793,6 @@ class CalendarHomeScreen extends React.PureComponent {
     } = this.state;
 
     let showRC = false;
-
 
     if (activeChallengeData && activeChallengeUserData) {
 

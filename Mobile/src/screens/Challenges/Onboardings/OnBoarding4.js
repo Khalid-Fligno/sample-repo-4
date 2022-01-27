@@ -552,7 +552,6 @@ export default class OnBoarding4 extends Component {
           if (!skipped) {
             skipped = this.state.imgUrl == null ? true : false;
           }
-          console.log("Skipped: ", skipped);
           const onBoardingInfo = Object.assign(
             {},
             updatedChallengedata.onBoardingInfo,
