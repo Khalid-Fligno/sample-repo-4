@@ -504,8 +504,8 @@ export default class LoginScreen extends React.PureComponent {
                     });
                   }
                 } else if (subscriptionInfo.expiry < Date.now()) {
-                  console.log("check has challenge", uid);
                   if (await hasChallenges(uid)) {
+                    console.log("check has challenge", uid);
                     await this.goToAppScreen(doc);
                   } else {
                     // EXPIRED
@@ -513,6 +513,7 @@ export default class LoginScreen extends React.PureComponent {
                   }
                 } else {
                   //go to app
+                  console.log("check has challenge1111");
                   await this.goToAppScreen(doc);
                 }
               });
