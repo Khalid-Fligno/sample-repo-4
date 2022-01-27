@@ -37,8 +37,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -85,8 +86,8 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   carouselLunch = (data, data2, title, favoriteRecipe) => {
 
@@ -109,8 +110,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -157,8 +159,8 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   carouselDinner = (data, data2, title, favoriteRecipe) => {
 
@@ -181,8 +183,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -229,8 +232,8 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   carouselSnack = (data, data2, title, favoriteRecipe) => {
 
@@ -253,8 +256,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -301,8 +305,8 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   carouselDrink = (data, data2, title, favoriteRecipe) => {
     return (
@@ -324,8 +328,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -372,8 +377,8 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   carouselPreworkout = (data, data2, title, favoriteRecipe) => {
     return (
@@ -395,8 +400,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -443,8 +449,8 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   carouselTreats = (data, data2, title, favoriteRecipe) => {
 
@@ -467,8 +473,9 @@ class TodayMealsList extends Component {
             paddingVertical: wp("3%"),
           }}
         >
-          {data.map((recipe) => (
+          {data.map((recipe, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.cardContainer}
               onPress={() => this.props.onPress(recipe)}
             >
@@ -515,8 +522,8 @@ class TodayMealsList extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
 
   render() {
     const { data, todayRecommendedRecipe, favoriteRecipe, title1 } = this.props
@@ -591,7 +598,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#000000",
-    borderTopColor: "#000000"
+    borderTopColor: "#000000",
   },
   opacityLayer: {
     flex: 1,
@@ -601,11 +608,11 @@ const styles = StyleSheet.create({
     padding: wp("5%"),
   },
   opacityLayer1: {
-    flexDirection: 'column',
+    flexDirection: "column",
     width: "100%",
     justifyContent: "center",
     padding: 50,
-    left: 15
+    left: 15,
   },
   cardTitle: {
     fontFamily: fonts.bold,
