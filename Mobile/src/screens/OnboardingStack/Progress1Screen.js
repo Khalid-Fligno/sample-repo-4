@@ -344,7 +344,6 @@ export default class Progress1Screen extends React.PureComponent {
             0
           );
 
-            console.log(weight)
           // const fitnessLevel = findFitnessLevel(0);
           // AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
           // try {
@@ -395,7 +394,6 @@ export default class Progress1Screen extends React.PureComponent {
       uom,
     } = this.state;
     // console.log("weight:",this.state.weight);
-       console.log(uom);
     if(unitOfMeasurement =='metric'){
       this.setState({
         uom: 'kg'

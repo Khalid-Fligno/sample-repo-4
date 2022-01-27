@@ -475,7 +475,6 @@ class ProgressHomeScreen extends React.PureComponent {
       initialProgressInfo &&
       currentProgressInfo &&
       diff(initialProgressInfo.burpeeCount, currentProgressInfo.burpeeCount);
-
     const editBeforeBtn = (onPress) => (
       <CustomBtn
         // Title="Update"
@@ -896,7 +895,10 @@ class ProgressHomeScreen extends React.PureComponent {
                     <ProgressBar
                         // title=""
                         completed={profile.totalWorkoutCompleted}
+<<<<<<< HEAD
                         // completed={profile.totalWorkoutCompleted + countI + countC + countS}
+=======
+>>>>>>> 78e315a25c00e8080c7cae8041760dc8320a15a1
                         total={totalS}
                         size={wp("38%")}
                     />
