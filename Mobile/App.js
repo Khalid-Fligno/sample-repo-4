@@ -19,6 +19,8 @@ import SwitchNavigator from "./config/router/index";
 import colors from "./src/styles/colors";
 import { YellowBox } from "react-native";
 import _ from "lodash";
+import * as Sentry from "@sentry/react-native";
+
 
 YellowBox.ignoreWarnings(["Setting a timer"]);
 const _console = _.clone(console);
@@ -48,11 +50,11 @@ function navigate(routeName, params) {
 export default class App extends React.PureComponent {
   constructor(props) {
     super(props);
-    // Sentry.init({
-    //   dsn: 'https://ad25f20f55644584bd7ef1ffd7dfe1f1@sentry.io/1342308',
-    //   enableInExpoDevelopment: true,
-    //   debug: false,
-    // });
+    Sentry.init({
+      dsn: 'https://ad25f20f55644584bd7ef1ffd7dfe1f1@sentry.io/1342308',
+      enableInExpoDevelopment: true,
+      debug: false,
+    });
     OneSignal.init("7078b922-5fed-4cc4-9bf4-2bd718e8b548", {
       kOSSettingsKeyAutoPrompt: true,
       kOSSettingsKeyInAppLaunchURL: false,
