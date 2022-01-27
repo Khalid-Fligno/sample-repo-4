@@ -751,9 +751,7 @@ class CalendarHomeScreen extends React.PureComponent {
           await getTodayRecommendedWorkout(
             activeChallengeData.workouts,
             activeChallengeUserData,
-            this.stringDate,
-            this.transformLevel,
-            this.state.transform
+            this.stringDate
           )
         )[0];
 
