@@ -295,8 +295,6 @@ PODS:
   - react-native-onesignal (3.9.4):
     - OneSignal (= 2.16.5)
     - React (< 1.0.0, >= 0.13.0)
-  - react-native-pager-view (5.4.9):
-    - React-Core
   - react-native-splash-screen (3.2.0):
     - React
   - react-native-video (5.1.1):
@@ -471,7 +469,6 @@ DEPENDENCIES:
   - react-native-in-app-utils (from `../node_modules/react-native-in-app-utils`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
-  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-video (from `../node_modules/react-native-video`)
   - "react-native-viewpager (from `../node_modules/@react-native-community/viewpager`)"
@@ -616,8 +613,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-onesignal:
     :path: "../node_modules/react-native-onesignal"
-  react-native-pager-view:
-    :path: "../node_modules/react-native-pager-view"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
   react-native-video:
@@ -751,7 +746,6 @@ SPEC CHECKSUMS:
   react-native-in-app-utils: 96cdefc90ad74a79a95d19239a183995a6face0b
   react-native-netinfo: 52cf0ee8342548a485e28f4b09e56b477567244d
   react-native-onesignal: b6cdb41fdf4b4e48d0db1246ecf0d29ab590eca7
-  react-native-pager-view: 311c10a4eead1be627cad59062aa059d8108b943
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-video: 1574074179ecaf6a9dd067116c8f31bf9fec15c8
   react-native-viewpager: 2bd854c85a76bfe6f75dc232f3889301bcb3a720
