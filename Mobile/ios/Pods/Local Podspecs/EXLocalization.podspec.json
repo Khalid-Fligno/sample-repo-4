@@ -4,7 +4,9 @@
   "summary": "Provides an interface for native user localization information.",
   "description": "Provides an interface for native user localization information.",
   "license": "MIT",
-  "authors": "650 Industries, Inc.",
+  "authors": {
+    "name": "650 Industries, Inc."
+  },
   "homepage": "https://docs.expo.io/versions/latest/sdk/localization/",
   "platforms": {
     "ios": "10.0"
