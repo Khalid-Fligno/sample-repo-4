@@ -460,7 +460,6 @@ class ProgressHomeScreen extends React.PureComponent {
       initialProgressInfo &&
       currentProgressInfo &&
       diff(initialProgressInfo.burpeeCount, currentProgressInfo.burpeeCount);
-
     const editBeforeBtn = (onPress) => (
       <CustomBtn
         // Title="Update"
