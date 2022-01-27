@@ -73,17 +73,19 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
       cardCustomStyle,
       title,
     } = this.props;
+
+    const resx = title.slice(-1) === '3' ? res.length > 1 ? res[0] : res : res[0];
+
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
     let target = "";
     let focus = "";
-    if (res && res.target === "rest") {
+    if (resx && resx.target === "rest") {
       target = "rest";
-      console.log('target',target);
     } else {
-      target = res && res.filters ? getTarget(res.filters) : "";
-      focus = res && res.filters ? getFocus(res.filters) : "";
+      target = resx && resx.filters ? getTarget(resx.filters) : "";
+      focus = resx && resx.filters ? getFocus(resx.filters) : "";
     }
     return (
       <View style={[styles.cardContainer, cardCustomStyle]}>
@@ -95,7 +97,7 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
           <View style={styles.opacityLayer}>
             <View style={styles.innerViewContainer}>
               <Text
-                key={res}
+                key={resx}
                 style={[
                   styles.recTextLabel,
                   { color: colors.themeColor.color },
@@ -106,7 +108,7 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
             </View>
             <View style={styles.titleContainer}>
               {target !== "rest" && (
-                <Text key={res} style={styles.target}>
+                <Text key={resx} style={styles.target}>
                   {target}
                   {focus ? " - " + focus : ""}
                 </Text>
@@ -114,7 +116,7 @@ export default class ChallengeWorkoutCard extends React.PureComponent {
             </View>
             <View style={styles.innerViewContainer}>
               {target === '' && (
-                <Text key={res} style={styles.target}>
+                <Text key={resx} style={styles.target}>
                   Today is your rest day
                 </Text>
               )}

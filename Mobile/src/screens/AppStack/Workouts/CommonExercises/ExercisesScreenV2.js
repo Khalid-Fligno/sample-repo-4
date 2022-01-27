@@ -179,14 +179,14 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       });
     } else {
       isActiveChallenge().then((res) => {
-        db.runTransaction((transaction) => {
-          return transaction.get(userRef).then((userDoc) => {
-            const workoutCount = userDoc.data().totalWorkoutCompleted + 1;
-            transaction.update(userRef, {
-              totalWorkoutCompleted: workoutCount,
-            });
-          });
-        });
+        // db.runTransaction((transaction) => {
+        //   return transaction.get(userRef).then((userDoc) => {
+        //     const workoutCount = userDoc.data().totalWorkoutCompleted + 1;
+        //     transaction.update(userRef, {
+        //       totalWorkoutCompleted: workoutCount,
+        //     });
+        //   });
+        // });
         if (res && res.status === "Active") {
           var challengeRef = db
             .collection("users")

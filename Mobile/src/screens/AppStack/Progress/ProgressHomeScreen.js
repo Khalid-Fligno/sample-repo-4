@@ -446,8 +446,7 @@ class ProgressHomeScreen extends React.PureComponent {
       initialProgressInfo &&
       currentProgressInfo &&
       diff(initialProgressInfo.weight, currentProgressInfo.weight);
-    const weightToDecimal = 
-      Number(weightDifference).toFixed(2);
+    const weightToDecimal = Number(weightDifference).toFixed(2);
     const hipDifference =
       initialProgressInfo &&
       currentProgressInfo &&
@@ -864,26 +863,25 @@ class ProgressHomeScreen extends React.PureComponent {
           } */}
           <View style={styles.workoutProgressContainer}>
             <View style={styles.sectionHeader}>
-              <Text style={styles.bodyText}>
-                Total workout complete
-              </Text>
+              <Text style={styles.bodyText}>Total workout complete</Text>
             </View>
             <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  width: "100%",
-                }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                width: "100%",
+              }}
             >
               {profile && (
-                  <View>
-                    <ProgressBar
-                        // title=""
-                        completed={profile.totalWorkoutCompleted}
-                        total={totalS}
-                        size={wp("38%")}
-                    />
-                  </View>
+                <View>
+                  <ProgressBar
+                    // title=""
+                    completed={profile.totalWorkoutCompleted}
+                    // completed={profile.totalWorkoutCompleted + countI + countC + countS}
+                    total={totalS}
+                    size={wp("38%")}
+                  />
+                </View>
               )}
             </View>
           </View>
