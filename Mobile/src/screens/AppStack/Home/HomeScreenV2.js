@@ -34,17 +34,11 @@ export default class HomeScreenV2 extends React.PureComponent {
     }
 
     componentDidMount = () => {
-        this.unsubscribe = this.props.navigation.addListener("didFocus", () => {
-            this.onFocus();
-        });
-    };
-
-    onFocus = () => {
-        this.fetchProfile();
+        this.fetchProfile()
     };
 
     componentWillUnmount = () => {
-        this.unsubscribe();
+        if(this.unsubscribe) this.unsubscribe();
     };
 
     fetchProfile = async () => {
