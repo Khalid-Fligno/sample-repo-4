@@ -44,25 +44,29 @@ function navigate(routeName, params) {
   );
 }
 
+const routingInstrumentation = new Sentry.ReactNavigationV4Instrumentation();
+
 // Facebook.initializeAsync({ appId: '1825444707513470' });
 
 class App extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    Sentry.init({
-      dsn: "https://6076eaacf11a425d853b018449b53abb@o1127833.ingest.sentry.io/6170067",
-      integrations: [
-        new Sentry.ReactNativeTracing({
-          routingInstrumentation,
-          tracingOrigins: ["localhost", /^\//, /^https:\/\//],
-        }),
-      ],
-      // To set a uniform sample rate
-      tracesSampleRate: 0.2,
-      enableNative: false,
-      debug: true,
-    });
+    if (!__DEV__) {
+      Sentry.init({
+        dsn: "https://6076eaacf11a425d853b018449b53abb@o1127833.ingest.sentry.io/6170067",
+        integrations: [
+          new Sentry.ReactNativeTracing({
+            routingInstrumentation,
+            tracingOrigins: ["localhost", /^\//, /^https:\/\//],
+          }),
+        ],
+        // To set a uniform sample rate
+        tracesSampleRate: 0.2,
+        enableNative: true,
+        debug: true,
+      });
+    }
 
     OneSignal.init("7078b922-5fed-4cc4-9bf4-2bd718e8b548", {
       kOSSettingsKeyAutoPrompt: true,
@@ -84,7 +88,6 @@ class App extends React.PureComponent {
     // });
     Linking.addEventListener("url", this.handleOpenURL);
     AppState.addEventListener("change", this.handleAppStateChange);
-    throw new Error("My first Sentry error!");
   };
   componentWillUnmount = () => {
     // this.unsubscribe();
@@ -102,6 +105,7 @@ class App extends React.PureComponent {
       await Audio.setIsEnabledAsync(true);
     }
     this.setState({ appState: nextAppState });
+    throw new Error("My first Sentry error!");
   };
   handleOpenURL = (event) => {
     if (event.url === "fitazfk://special-offer") {
