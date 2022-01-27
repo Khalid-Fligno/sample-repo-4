@@ -5,13 +5,16 @@
   "homepage": "https://github.com/OneSignal/react-native-onesignal",
   "license": "MIT",
   "authors": {
-    "OneSignal <https://www.onesignal.com>, Geektime <http://www.geektime.co.il>": "OneSignal <https://www.onesignal.com>, Geektime <http://www.geektime.co.il>"
+    "{\"name\"=>\"OneSignal\", \"email\"=>\"https://www.onesignal.com\"}": {
+      "name": "OneSignal",
+      "email": "https://www.onesignal.com"
+    }
   },
   "platforms": {
     "ios": "8.0"
   },
   "source": {
-    "git": "https://github.com/OneSignal/react-native-onesignal.git",
+    "git": "git+https://github.com/OneSignal/react-native-onesignal.git.git",
     "tag": "3.9.4"
   },
   "source_files": "ios/RCTOneSignal/*.{h,m}",
