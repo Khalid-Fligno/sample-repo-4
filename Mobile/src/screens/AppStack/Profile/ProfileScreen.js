@@ -201,6 +201,10 @@ export default class ProfileHomeScreen extends React.PureComponent {
                               profile && (
                                 <View>
                                   <ProgressBar
+<<<<<<< HEAD
+                                    // completed={profile.totalWorkoutCompleted + strength + cicuit + interval}
+=======
+>>>>>>> 78e315a25c00e8080c7cae8041760dc8320a15a1
                                     completed={profile.totalWorkoutCompleted}
                                     total = {0}
                                     size ={wp('38%')}

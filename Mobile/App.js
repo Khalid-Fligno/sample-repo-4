@@ -19,6 +19,7 @@ import SwitchNavigator from "./config/router/index";
 import colors from "./src/styles/colors";
 import { YellowBox } from "react-native";
 import _ from "lodash";
+import * as Sentry from "@sentry/react-native";
 
 YellowBox.ignoreWarnings(["Setting a timer"]);
 const _console = _.clone(console);
@@ -43,16 +44,30 @@ function navigate(routeName, params) {
   );
 }
 
+const routingInstrumentation = new Sentry.ReactNavigationV4Instrumentation();
+
 // Facebook.initializeAsync({ appId: '1825444707513470' });
 
-export default class App extends React.PureComponent {
+class App extends React.PureComponent {
   constructor(props) {
     super(props);
-    // Sentry.init({
-    //   dsn: 'https://ad25f20f55644584bd7ef1ffd7dfe1f1@sentry.io/1342308',
-    //   enableInExpoDevelopment: true,
-    //   debug: false,
-    // });
+
+    if (!__DEV__) {
+      Sentry.init({
+        dsn: "https://6076eaacf11a425d853b018449b53abb@o1127833.ingest.sentry.io/6170067",
+        integrations: [
+          new Sentry.ReactNativeTracing({
+            routingInstrumentation,
+            tracingOrigins: ["localhost", /^\//, /^https:\/\//],
+          }),
+        ],
+        // To set a uniform sample rate
+        tracesSampleRate: 0.2,
+        enableNative: true,
+        debug: true,
+      });
+    }
+
     OneSignal.init("7078b922-5fed-4cc4-9bf4-2bd718e8b548", {
       kOSSettingsKeyAutoPrompt: true,
       kOSSettingsKeyInAppLaunchURL: false,
@@ -90,6 +105,7 @@ export default class App extends React.PureComponent {
       await Audio.setIsEnabledAsync(true);
     }
     this.setState({ appState: nextAppState });
+    throw new Error("My first Sentry error!");
   };
   handleOpenURL = (event) => {
     if (event.url === "fitazfk://special-offer") {
@@ -122,3 +138,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
   },
 });
+
+export default Sentry.wrap(App);

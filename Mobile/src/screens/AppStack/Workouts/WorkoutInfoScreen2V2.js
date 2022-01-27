@@ -27,6 +27,8 @@ import {
   findFocus,
   findFocusIcon,
   findWorkoutType,
+  loadExercise,
+  downloadExerciseWC,
 } from "../../../utils/workouts";
 import colors from "../../../styles/colors";
 // import fonts from '../../../styles/fonts';
@@ -79,63 +81,80 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   }
 
   onFocusFunction() {
-    this.setState({ loading: true });
+    // this.setState({ loading: true });
     this.setState({
-      workout: this.props.navigation.getParam("workout", null),
-      reps: this.props.navigation.getParam("reps", null),
-      workoutSubCategory: this.props.navigation.getParam("workoutSubCategory"),
       fitnessLevel: this.props.navigation.getParam("fitnessLevel", null),
       extraProps: this.props.navigation.getParam("extraProps", {}),
+      transformLevel: this.props.navigation.getParam("transformLevel", {}),
+      mode: this.state.gymSetting ? "GYM" : "HOME",
+      transform: this.props.navigation.getParam("transform"),
       loading: false,
+      reps: this.props.navigation.getParam("reps", null),
       lifestyle: this.props.navigation.getParam("lifestyle"),
     });
+
+    if (this.props.navigation.getParam("transform")) {
+      this.props.navigation.getParam("newWrkouts").forEach((workout) => {
+        if (workout.gym) {
+          this.setState({ gymWorkout: workout });
+        } else if (workout.home) {
+          this.setState({ homeWorkout: workout });
+        } else {
+          this.setState({ workout: workout });
+        }
+      });
+    } else {
+      this.setState({
+        workout: this.props.navigation.getParam("workout", null),
+      });
+    }
   }
 
   fetchProfile = async () => {
-    const uid = await AsyncStorage.getItem("uid");
-    try {
-      this.unsubscribeUserChallenges = db
-        .collection("users")
-        .doc(uid)
-        .collection("challenges")
-        .onSnapshot(async (querySnapshot) => {
-          const userChallengesList = [];
-          await querySnapshot.forEach(async (doc) => {
-            await userChallengesList.push(await doc.data());
-          });
-          this.setState({ userChallengesList });
-          this.fetchChallenges();
-        });
-    } catch (err) {
-      Alert.alert("Something went wrong");
-    }
+    // const uid = await AsyncStorage.getItem("uid");
+    // try {
+    //   this.unsubscribeUserChallenges = db
+    //     .collection("users")
+    //     .doc(uid)
+    //     .collection("challenges")
+    //     .onSnapshot(async (querySnapshot) => {
+    //       const userChallengesList = [];
+    //       await querySnapshot.forEach(async (doc) => {
+    //         await userChallengesList.push(await doc.data());
+    //       });
+    //       this.setState({ userChallengesList });
+    //       this.fetchChallenges();
+    //     });
+    // } catch (err) {
+    //   Alert.alert("Something went wrong");
+    // }
   };
 
   fetchChallenges = async () => {
-    let { userChallengesList } = this.state;
-    this.unsubscribeChallenges = await db
-      .collection("challenges")
-      .onSnapshot(async (querySnapshot) => {
-        const challengesList = [];
-        await querySnapshot.forEach(async (doc) => {
-          const check = userChallengesList.findIndex((challenge) => {
-            return doc.id === challenge.id;
-          });
-          if (check === -1) await challengesList.push(await doc.data());
-        });
-        this.setState({ challengesList });
-      });
+    // let { userChallengesList } = this.state;
+    // this.unsubscribeChallenges = await db
+    //   .collection("challenges")
+    //   .onSnapshot(async (querySnapshot) => {
+    //     const challengesList = [];
+    //     await querySnapshot.forEach(async (doc) => {
+    //       const check = userChallengesList.findIndex((challenge) => {
+    //         return doc.id === challenge.id;
+    //       });
+    //       if (check === -1) await challengesList.push(await doc.data());
+    //     });
+    //     this.setState({ challengesList });
+    //   });
   };
 
   setDate = async (event, selectedDate) => {
-    if (selectedDate && Platform.OS === "android") {
-      this.setState({ loading: true });
-      this.addWorkoutToCalendar(selectedDate);
-    }
-    if (selectedDate && Platform.OS === "ios") {
-      const currentDate = selectedDate;
-      this.setState({ chosenDate: currentDate });
-    }
+    // if (selectedDate && Platform.OS === "android") {
+    //   this.setState({ loading: true });
+    //   this.addWorkoutToCalendar(selectedDate);
+    // }
+    // if (selectedDate && Platform.OS === "ios") {
+    //   const currentDate = selectedDate;
+    //   this.setState({ chosenDate: currentDate });
+    // }
   };
 
   handleStart = () => {
@@ -144,94 +163,117 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   };
 
   openApp = (url) => {
-    Linking.canOpenURL(url)
-      .then((supported) => {
-        if (supported) {
-          Linking.openURL(url);
-        } else {
-          Alert.alert("Cannot open this app");
-        }
-      })
-      .catch((err) => Alert.alert("An error occurred", err));
+    // Linking.canOpenURL(url)
+    //   .then((supported) => {
+    //     if (supported) {
+    //       Linking.openURL(url);
+    //     } else {
+    //       Alert.alert("Cannot open this app");
+    //     }
+    //   })
+    //   .catch((err) => Alert.alert("An error occurred", err));
   };
 
   showCalendarModal = () => {
-    this.setState({ calendarModalVisible: true });
+    // this.setState({ calendarModalVisible: true });
   };
 
   hideCalendarModal = () => {
-    this.setState({ calendarModalVisible: false, loading: false });
+    // this.setState({ calendarModalVisible: false, loading: false });
   };
 
   addWorkoutToCalendar = async (date) => {
-    if (this.state.addingToCalendar) {
-      return;
-    }
-    this.setState({ addingToCalendar: true });
-    const formattedDate = moment(date).format("YYYY-MM-DD");
-    const { workoutSubCategory } = this.state;
-    const uid = await AsyncStorage.getItem("uid");
-    const calendarRef = db
-      .collection("users")
-      .doc(uid)
-      .collection("calendarEntries")
-      .doc(formattedDate);
-    let workout = Object.assign({}, this.state.workout, { workoutSubCategory });
-    const data = {
-      workout,
-    };
-    await calendarRef.set(data, { merge: true });
-
-    if (Platform.OS === "android") {
-      this.hideCalendarModal();
-      Alert.alert("", "Added to calendar!", [{ text: "OK", style: "cancel" }], {
-        cancelable: false,
-      });
-    } else {
-      this.setState({ addingToCalendar: false });
-      Alert.alert(
-        "",
-        "Added to calendar!",
-        [{ text: "OK", onPress: this.hideCalendarModal, style: "cancel" }],
-        { cancelable: false }
-      );
-    }
+    // if (this.state.addingToCalendar) {
+    //   return;
+    // }
+    // this.setState({ addingToCalendar: true });
+    // const formattedDate = moment(date).format("YYYY-MM-DD");
+    // const { workoutSubCategory } = this.state;
+    // const uid = await AsyncStorage.getItem("uid");
+    // const calendarRef = db
+    //   .collection("users")
+    //   .doc(uid)
+    //   .collection("calendarEntries")
+    //   .doc(formattedDate);
+    // let workout = Object.assign({}, this.state.workout, { workoutSubCategory });
+    // const data = {
+    //   workout,
+    // };
+    // await calendarRef.set(data, { merge: true });
+    // if (Platform.OS === "android") {
+    //   this.hideCalendarModal();
+    //   Alert.alert("", "Added to calendar!", [{ text: "OK", style: "cancel" }], {
+    //     cancelable: false,
+    //   });
+    // } else {
+    //   this.setState({ addingToCalendar: false });
+    //   Alert.alert(
+    //     "",
+    //     "Added to calendar!",
+    //     [{ text: "OK", onPress: this.hideCalendarModal, style: "cancel" }],
+    //     { cancelable: false }
+    //   );
+    // }
   };
 
   handleWorkoutStart = () => {
-    const { workout, reps, extraProps, lifestyle } = this.state;
+    const {
+      mode,
+      gymWorkout,
+      homeWorkout,
+      workout,
+      reps,
+      extraProps,
+      lifestyle,
+      transform,
+    } = this.state;
     this.setState({ musicModalVisible: false });
     // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
     this.props.navigation.navigate("Countdown", {
       lifestyle,
-      workout: workout,
+      workout: transform
+        ? mode === "GYM"
+          ? gymWorkout
+          : mode === "HOME"
+          ? homeWorkout
+            ? homeWorkout
+            : workout
+          : workout
+        : workout,
       reps,
-      resistanceCategoryId: workout.id,
+      resistanceCategoryId: transform
+        ? mode === "GYM"
+          ? gymWorkout
+          : mode === "HOME"
+          ? homeWorkout
+            ? homeWorkout.id
+            : workout.id
+          : workout.id
+        : workout.id,
       workoutSubCategory: this.state.workoutSubCategory,
       fitnessLevel: this.state.fitnessLevel,
       extraProps,
     });
   };
 
-  keyExtractor = (exercise, index) => String(index);
+  // keyExtractor = (exercise, index) => String(index);
 
   componentDidMount = async () => {
-    this.fetchProfile();
+    // this.fetchProfile();
     this.setState({ loading: true });
-    // this.focusListener = this.props.navigation.addListener('willFocus', () => {
-    //   console.log("will focued call")
-    //   this.onFocusFunction()
-    // })
-    this.onFocusFunction();
-    await this.props.navigation.setParams({
-      handleStart: () => this.handleStart(),
+    this.focusListener = this.props.navigation.addListener("willFocus", () => {
+      this.onFocusFunction();
     });
-    // this.checkMusicAppAvailability();
+    // this.onFocusFunction();
+    // await this.props.navigation.setParams({
+    //   handleStart: () => this.handleStart(),
+    // });
+    // // this.checkMusicAppAvailability();
   };
 
   componentWillUnmount = async () => {
-    console.log("unmount");
-    // this.focusListener.remove()
+    // console.log("unmount");
+    this.focusListener.remove();
   };
 
   togglePreview = (section) => {
@@ -283,10 +325,16 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       !exercise.coachingTip.includes("none")
         ? true
         : false;
-    const workIntervalTimeinSec =
-      this.state.workout.workIntervalMap[this.state.fitnessLevel - 1];
-    const restIntervalTimeinSec =
-      this.state.workout.restIntervalMap[this.state.fitnessLevel - 1];
+    const workIntervalTimeinSec = this.state.gymWorkout
+      ? this.state.gymWorkout.workIntervalMap[this.state.fitnessLevel - 1]
+      : this.state.homeWorkout
+      ? this.state.homeWorkout.workIntervalMap[this.state.fitnessLevel - 1]
+      : this.state.workout.workIntervalMap[this.state.fitnessLevel - 1];
+    const restIntervalTimeinSec = this.state.gymWorkout
+      ? this.state.gymWorkout.restIntervalMap[this.state.fitnessLevel - 1]
+      : this.state.homeWorkout
+      ? this.state.homeWorkout.restIntervalMap[this.state.fitnessLevel - 1]
+      : this.state.workout.restIntervalMap[this.state.fitnessLevel - 1];
 
     const convert = (exerciseDur) => {
       var mins = Math.trunc(exerciseDur / 60);
@@ -558,6 +606,100 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     );
   };
 
+  showGymPickerModal = () => {
+    this.setState({ showGymPickerModal: true });
+  };
+
+  hideGymPickerModal = () => {
+    this.setState({ showGymPickerModal: false });
+  };
+
+  loadExercises = async (gymSetting, workoutData) => {
+    this.setState({ loading: true });
+
+    let uniqueWarmUpExercises = [...new Set(workoutData.warmUpExercises)];
+
+    Object.assign(workoutData, {
+      warmUpExercises: uniqueWarmUpExercises,
+    });
+
+    const workout = await loadExercise(workoutData);
+
+    if (workout && workout.newWorkout) {
+      const warmUpExercises = await downloadExerciseWC(
+        workout,
+        Object.prototype.toString
+          .call(workout.warmUpExercises)
+          .indexOf("Array") > -1
+          ? workout.warmUpExercises
+          : workout.warmUpExercises.filter((warmUpExercise) => {
+              return warmUpExercise;
+            }),
+        workout.warmUpExerciseModel,
+        "warmUp"
+      );
+      if (warmUpExercises.length > 0) {
+        const coolDownExercises = await downloadExerciseWC(
+          workout,
+          workout.coolDownExercises,
+          workout.coolDownExerciseModel,
+          "coolDown"
+        );
+        if (coolDownExercises.length > 0) {
+          const newWorkout = Object.assign({}, workout, {
+            warmUpExercises: warmUpExercises,
+            coolDownExercises: coolDownExercises,
+          });
+          this.goToNext(gymSetting, newWorkout);
+        } else {
+          this.setState({ loadingExercises: false });
+          Alert.alert("Alert!", "Something went wrong!");
+        }
+      } else {
+        this.setState({ loadingExercises: false });
+        Alert.alert("Alert!", "Something went wrong!");
+      }
+    } else if (workout) {
+      this.goToNext(workout);
+    } else {
+      this.setState({ loadingExercises: false });
+    }
+  };
+
+  async goToNext(gymSetting, workout) {
+    console.log(">>here");
+    let newWrkouts = [];
+    if (
+      this.currentChallengeDay === 1 &&
+      !this.state.initialBurpeeTestCompleted
+    ) {
+      await FileSystem.downloadAsync(
+        "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+        `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+      );
+    }
+    const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
+    if (workout.length) {
+      workout.map((wrkout) => {
+        if (this.currentChallengeDay > 0) {
+          Object.assign(wrkout, {
+            displayName: `${wrkout.displayName} - Day ${this.currentChallengeDay}`,
+          });
+          newWrkouts.push(wrkout);
+        }
+      });
+    } else {
+      newWrkouts.push(workout);
+    }
+
+    gymSetting
+      ? this.setState({ homeWorkout: newWrkouts[0] })
+      : this.setState({ gymWorkout: newWrkouts[0] });
+    this.setState({ loading: false });
+    this.setState({ showGymPickerModal: false });
+    this.setState({ exerciseDownloaded: true });
+  }
+
   render() {
     const {
       loading,
@@ -573,8 +715,73 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     let warmupInterval = 0;
     let workoutInterval = 0;
     let cooldownInterval = 0;
+    let gymWorkoutTime = 0;
+    let gymWarmupInterval = 0;
+    let gymWorkoutInterval = 0;
+    let gymCooldownInterval = 0;
+    let homeWorkoutTime = 0;
+    let homeWarmupInterval = 0;
+    let homeWorkoutInterval = 0;
+    let homeCooldownInterval = 0;
+
+    if (gymWorkout) {
+      gymWorkoutTime = gymWorkout.workoutTime;
+
+      if (gymWorkout.coolDownExercises) {
+        let seconds = 0;
+        gymWorkout.coolDownExercises.map((exercise) => {
+          seconds += exercise.duration;
+        });
+        gymCooldownInterval = Math.floor(seconds / 60);
+      }
+
+      if (gymWorkout.warmUpExercises) {
+        let seconds = 0;
+        gymWorkout.warmUpExercises.map((exercise) => {
+          seconds += exercise.duration;
+        });
+        gymWarmupInterval = Math.floor(seconds / 60);
+      }
+
+      if (gymWorkout.exercises) {
+        gymWorkoutInterval =
+          gymWorkout.workoutTime - (gymWarmupInterval + gymCooldownInterval);
+      }
+
+      // workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
+    }
+
+    if (homeWorkout) {
+      homeWorkoutTime = homeWorkout.workoutTime;
+
+      if (homeWorkout.coolDownExercises) {
+        let seconds = 0;
+        homeWorkout.coolDownExercises.map((exercise) => {
+          seconds += exercise.duration;
+        });
+        homeCooldownInterval = Math.floor(seconds / 60);
+      }
+
+      if (homeWorkout.warmUpExercises) {
+        let seconds = 0;
+        homeWorkout.warmUpExercises.map((exercise) => {
+          seconds += exercise.duration;
+        });
+        homeWarmupInterval = Math.floor(seconds / 60);
+      }
+
+      if (homeWorkout.exercises) {
+        homeWorkoutInterval =
+          homeWorkout.workoutTime -
+          (homeWorkoutInterval + homeCooldownInterval);
+      }
+
+      // workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
+    }
+
     if (workout) {
       workoutTime = workout.workoutTime;
+
       if (workout.coolDownExercises) {
         let seconds = 0;
         workout.coolDownExercises.map((exercise) => {
