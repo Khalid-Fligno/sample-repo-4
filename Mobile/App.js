@@ -105,7 +105,6 @@ class App extends React.PureComponent {
       await Audio.setIsEnabledAsync(true);
     }
     this.setState({ appState: nextAppState });
-    throw new Error("My first Sentry error!");
   };
   handleOpenURL = (event) => {
     if (event.url === "fitazfk://special-offer") {
