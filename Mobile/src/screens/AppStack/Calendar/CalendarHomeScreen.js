@@ -996,7 +996,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   fontFamily: fonts.bold,
                 }}
               >
-                {this.transformLevel}
+                {this.transformLevel + ' '}
               </Text>
             </View>
             <Text
