@@ -1009,16 +1009,6 @@ class CalendarHomeScreen extends React.PureComponent {
             </Text>
           </View>
 
-          {/* <View style={{
-            marginTop: hp("1%")
-          }}>
-            <Text style={{
-              fontSize: 28,
-              fontFamily: fonts.bold
-            }}>
-              {this.day}, {this.month} {this.date}
-              </Text>
-          </View> */}
           <View style={{ marginTop: 20, flex: 1 }}>
             <TouchableOpacity
               phase={this.phase}
