@@ -35,7 +35,7 @@ class ChallengeSetting extends Component {
     }
 
     async resetChallenge(data, callBack) {
-        const { activeChallengeData } = this.props;
+        const { activeChallengeData, activeChallengeUserData, currentDay } = this.props;
         this.setState({ loading: true });
         const uid = await AsyncStorage.getItem("uid");
         const userRef = db
@@ -44,7 +44,7 @@ class ChallengeSetting extends Component {
             .collection("challenges")
             .doc(data.id);
         Object.assign(activeChallengeData, { isSchedule: true, status: "InActive" });
-        const newData = createUserChallengeData(activeChallengeData, new Date());
+        const newData = createUserChallengeData(activeChallengeData, new Date(), activeChallengeUserData, currentDay);
         userRef
             .set(newData, { merge: true })
             .then((res) => {
@@ -59,7 +59,7 @@ class ChallengeSetting extends Component {
     }
 
     async challengeRestart(data, callBack) {
-        const { activeChallengeData } = this.props;
+        const { activeChallengeData, activeChallengeUserData, currentDay } = this.props;
         this.setState({ loading: true });
         const uid = await AsyncStorage.getItem("uid");
         const userRef = db
@@ -67,7 +67,7 @@ class ChallengeSetting extends Component {
             .doc(uid)
             .collection("challenges")
             .doc(data.id);
-        const newData = createUserChallengeData(activeChallengeData, new Date());
+        const newData = createUserChallengeData(activeChallengeData, new Date(), activeChallengeUserData, currentDay);
         userRef
             .set(newData, { merge: true })
             .then((res) => {
@@ -125,7 +125,8 @@ class ChallengeSetting extends Component {
     }
 
     async setShedular(selectedDate) {
-        this.setState({loading: false})
+        const { activeChallengeUserData, currentDay } = this.props
+        this.setState({ loading: false })
         Alert.alert(
             "",
             "Do you want to keep your Active Challenge Progress Data?",
@@ -142,7 +143,7 @@ class ChallengeSetting extends Component {
                         const uid = await AsyncStorage.getItem("uid");
                         const { activeChallengeData } = this.props;
                         const userRef = db.collection("users").doc(uid).collection("challenges");
-                        const data = createUserChallengeData(activeChallengeData, selectedDate);
+                        const data = createUserChallengeData(activeChallengeData, selectedDate, activeChallengeUserData, currentDay);
                         delete data.workouts
                         if (moment(selectedDate).isSame(TODAY, "d")) {
                             Object.assign(data, { status: "Active" });
@@ -214,7 +215,7 @@ class ChallengeSetting extends Component {
                         const uid = await AsyncStorage.getItem("uid");
                         const { activeChallengeData } = this.props;
                         const userRef = db.collection("users").doc(uid).collection("challenges");
-                        const data = createUserChallengeData(activeChallengeData, selectedDate);
+                        const data = createUserChallengeData(activeChallengeData, selectedDate, activeChallengeUserData, currentDay);
                         if (moment(selectedDate).isSame(TODAY, "d")) {
                             Object.assign(data, { status: "Active" });
                         } else {
@@ -283,7 +284,7 @@ class ChallengeSetting extends Component {
 
 
     async discardChallengeFromSchedular() {
-        const { ScheduleData } = this.props;
+        const { ScheduleData, activeChallengeUserData, currentDay } = this.props;
         this.setState({ loading: true });
         const uid = await AsyncStorage.getItem("uid");
         const userRef = db
@@ -291,7 +292,7 @@ class ChallengeSetting extends Component {
             .doc(uid)
             .collection("challenges")
             .doc(ScheduleData.id);
-        const newData = createUserChallengeData(ScheduleData, new Date());
+        const newData = createUserChallengeData(ScheduleData, new Date(), activeChallengeUserData, currentDay);
         // console.log(newData)
         userRef
             .set(newData, { merge: true })
