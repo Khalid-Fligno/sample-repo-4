@@ -647,36 +647,38 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
           "Transform Level 3" && (
           <View
             style={{
-              width: widthPercentageToDP(50),
+              width: widthPercentageToDP(25),
               padding: heightPercentageToDP(1),
+              alignSelf: "flex-end",
+              position: "absolute",
+              zIndex: 99,
             }}
           >
-            <View>
-              <TouchableOpacity
-                onPress={() => {
-                  this.setState({
-                    showPickerMode: true,
-                  });
-                }}
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({
+                  showPickerMode: true,
+                });
+              }}
+              style={{
+                padding: 15,
+                backgroundColor: colors.white,
+                borderWidth: 1,
+                borderColor: colors.grey.light,
+                borderRadius: 20,
+                alignSelf: "center",
+              }}
+            >
+              <Text
                 style={{
-                  padding: 15,
-                  backgroundColor: colors.white,
-                  borderWidth: 1,
-                  borderColor: colors.grey.light,
-                  borderRadius: 20,
+                  fontFamily: fonts.bold,
+                  fontSize: 12,
+                  color: colors.charcoal.dark,
                 }}
               >
-                <Text
-                  style={{
-                    fontFamily: fonts.bold,
-                    fontSize: 14,
-                    color: colors.charcoal.dark,
-                  }}
-                >
-                  {mode === "gym" ? "GYM" : "HOME"}
-                </Text>
-              </TouchableOpacity>
-            </View>
+                {mode === "gym" ? "GYM" : "HOME"}
+              </Text>
+            </TouchableOpacity>
           </View>
         )}
 
