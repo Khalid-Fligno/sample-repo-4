@@ -59,7 +59,7 @@ export default class FilterScreen extends React.PureComponent {
                                 :
                                 <View style={{
                                     // position: 'absolute',
-                                    bottom: hp('20%'),
+                                    bottom: hp('16%'),
                                     left: wp('75%')
                                 }}>
                                 <TouchableOpacity
