@@ -55,6 +55,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      workouts: null,
       loading: false,
       workout: undefined,
       reps: undefined,
@@ -81,7 +82,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   onFocusFunction() {
     this.setState({ loading: true });
     this.setState({
-      workout: this.props.navigation.getParam("workout", null),
+      workouts: this.props.navigation.getParam("workout", null),
+      // workout: this.props.navigation.getParam("workout", null),
       reps: this.props.navigation.getParam("reps", null),
       workoutSubCategory: this.props.navigation.getParam("workoutSubCategory"),
       fitnessLevel: this.props.navigation.getParam("fitnessLevel", null),
@@ -89,6 +91,51 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       loading: false,
       lifestyle: this.props.navigation.getParam("lifestyle"),
     });
+    const workouts =  this.props.navigation.getParam("workout", null);
+    const homeWorkout =
+      workouts && workouts.filter((item) => item?.home && item.home === true);
+
+    const gymWorkout =
+      workouts && workouts.filter((item) => item?.gym && item.gym === true);
+    if(homeWorkout.length){
+      this.setState({
+        workout: homeWorkout[0],
+      });
+    }else{
+       this.setState({
+         workout: gymWorkout[0],
+       });
+    }
+  }
+
+  onChangePicker = (value) => {
+    {
+      value === "GYM"
+        ? this.setState({
+            mode: "gym",
+          })
+        : this.setState({
+            mode: "home",
+          });
+    }
+
+    if(value === 'GYM'){
+      const gymWorkout =
+      this.state.workouts &&
+      this.state.workouts.filter((item) => item?.gym && item.gym === true);
+      this.setState({
+        mode: "gym",
+        workout: gymWorkout[0],
+      });
+    }else{
+       const homeWorkout =
+         this.state.workouts &&
+         this.state.workouts.filter((item) => item?.home && item.home === true);
+       this.setState({
+         mode: "home",
+         workout: homeWorkout[0],
+       });
+    }
   }
 
   fetchProfile = async () => {
@@ -1069,15 +1116,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
           >
             <Picker
               selectedValue={mode === "gym" ? "GYM" : "HOME"}
-              onValueChange={(value) => {
-                value === "GYM"
-                  ? this.setState({
-                      mode: "gym",
-                    })
-                  : this.setState({
-                      mode: "home",
-                    });
-              }}
+              onValueChange={(value) => this.onChangePicker(value)}
             >
               <Picker.Item key={0} label="HOME" value="HOME" />
               <Picker.Item key={1} label="GYM" value="GYM" />

@@ -88,8 +88,32 @@ export const getTodayRecommendedWorkout = async (workouts, activeChallengeUserDa
     console.log("????", workoutData)
     return [workoutData]
   }
-
 }
+
+export const getTodayRecommendedWorkoutV2 = async (
+  workouts,
+  activeChallengeUserData,
+  selectedDate
+) => {
+  var b = moment(activeChallengeUserData.startDate);
+  var a = moment(selectedDate);
+  let currentDay = a.diff(b, "days") + 1;
+
+  const workoutData = workouts.filter((res) => res.days.includes(currentDay));
+  let resultWorkOutData = [];
+  for( let index = 0; index < workoutData.length; index++){
+      if (workoutData[index] && workoutData[index].id) {
+        const programRef = db
+          .collection("newWorkouts")
+          .where("id", "==", workoutData[index].id);
+        const snapshot = await programRef.get();
+        if (snapshot.docs.length !== 0) {
+          snapshot.docs.map((res) => resultWorkOutData.push(res.data()))
+        } 
+      } 
+  }
+  return resultWorkOutData;
+};
 
 export const fetchActiveRecipe = async () => {
   //Fetch all recipe ID
