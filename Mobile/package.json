@@ -50,7 +50,6 @@
     "@react-native-community/datetimepicker": "2.2.2",
     "@react-native-community/netinfo": "^5.9.2",
     "@react-native-community/viewpager": "^4.2.4",
-    "@sentry/react-native": "^3.2.13",
     "expo": "^37.0.2",
     "expo-apple-authentication": "~2.1.0",
     "expo-asset": "~8.1.5",
