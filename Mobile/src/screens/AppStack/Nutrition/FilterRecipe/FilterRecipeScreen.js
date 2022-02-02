@@ -82,7 +82,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
     };
 
     getAllRecipeData = () => {
-        const allRecipeData = this.props.navigation.getParam("todayRecommendedRecipe", null)
+        const allRecipeData = this.props.navigation.getParam("allRecipeData", null)
         const dupId = []
 
         allRecipeData.forEach((res) => {

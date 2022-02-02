@@ -145,6 +145,13 @@ class CalendarHomeScreen extends React.PureComponent {
           },
         ];
 
+        fetchRecipeData(challengeLevel).then((res) => {
+          this.setState({
+            AllRecipe: res.recommendedRecipe,
+            loading: false,
+          })
+        })
+
         this.setState({
           challengeRecipe: challengeLevel,
         });
@@ -727,7 +734,7 @@ class CalendarHomeScreen extends React.PureComponent {
     navigation.pop();
   };
 
-  getToFilter(data, data2, title) {
+  getToFilter(data, data1, data2, title) {
     const {
       challengeRecipe,
       activeChallengeData,
@@ -795,6 +802,7 @@ class CalendarHomeScreen extends React.PureComponent {
       challengeAllRecipe: challengeRecipe[0],
       recipes: data,
       title: title,
+      allRecipeData: data1
     });
   }
 
@@ -816,6 +824,7 @@ class CalendarHomeScreen extends React.PureComponent {
       loadingExercises,
       skipped,
       width,
+      AllRecipe,
       completeCha,
       todayRecommendedRecipe,
       favoriteRecipe,
@@ -860,11 +869,12 @@ class CalendarHomeScreen extends React.PureComponent {
           Today's Meals
         </Text>
         <TodayMealsList
+          recipe={AllRecipe[0]}
           favoriteRecipe={favoriteRecipe[0]}
           todayRecommendedRecipe={todayRecommendedRecipe[0]}
           data={todayRecommendedMeal[0]}
           onPress={(res) => this.goToRecipe(res)}
-          filterPress={(res, res2, title) => this.getToFilter(res, res2, title)}
+          filterPress={(res, res1, res2, title) => this.getToFilter(res, res1, res2, title)}
         />
       </>
     );
