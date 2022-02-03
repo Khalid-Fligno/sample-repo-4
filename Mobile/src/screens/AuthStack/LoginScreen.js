@@ -433,6 +433,7 @@ export default class LoginScreen extends React.PureComponent {
     this.props.navigation.navigate("App");
   };
   login = async (email, password) => {
+
     // const users = db.collection('users');
     // const snapshot = await users.where('email', '==', this.state.email).get();
     
