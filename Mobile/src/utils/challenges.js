@@ -242,12 +242,23 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
   let drinkResult = []
   let preworkoutResult = []
   let treatsResult = []
+  let phaseNames = []
 
   let levelName = activeChallengeData.levelTags
-  let phaseName = phaseData.phaseTags
+  let phaseTag = phaseData.name
   let data = phaseData.meals;
   const recipeRef = db.collection('recipes')
   const snapshot = await recipeRef.get();
+
+  if(phaseTag === 'Phase1'){
+    phaseNames.push('P1')
+  }
+  if(phaseTag === 'Phase2'){
+    phaseNames.push('P2')
+  }
+  if(phaseTag === 'Phase3'){
+    phaseNames.push('P3')
+  }
 
   if (activeChallengeData && activeChallengeData.newChallenge) {
     if (snapshot.empty) {
@@ -281,7 +292,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
                     if (resTag === levelName) {
-                      if (res.data().tags.includes(phaseName)) {
+                      if (res.data().tags.includes(phaseNames[0])) {
                         breakfastResult.push(res.data())
                       }
                     }
@@ -312,7 +323,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
                     if (resTag === levelName) {
-                      if (res.data().tags.includes(phaseName)) {
+                      if (res.data().tags.includes(phaseNames[0])) {
                         lunchResult.push(res.data())
                       }
                     }
@@ -343,7 +354,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
                     if (resTag === levelName) {
-                      if (res.data().tags.includes(phaseName)) {
+                      if (res.data().tags.includes(phaseNames[0])) {
                         dinnerResult.push(res.data())
                       }
                     }
@@ -375,7 +386,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
                     if (resTag === levelName) {
-                      if (res.data().tags.includes(phaseName)) {
+                      if (res.data().tags.includes(phaseNames[0])) {
                         snackResult.push(res.data())
                       }
                     }
@@ -407,7 +418,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
                     if (resTag === levelName) {
-                      if (res.data().tags.includes(phaseName)) {
+                      if (res.data().tags.includes(phaseNames[0])) {
                         drinkResult.push(res.data())
                       }
                     }
@@ -439,7 +450,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
                     if (resTag === levelName) {
-                      if (res.data().tags.includes(phaseName)) {
+                      if (res.data().tags.includes(phaseNames[0])) {
                         preworkoutResult.push(res.data())
                       }
                     }
@@ -471,7 +482,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
                 res.data().tags.forEach(resTag => {
                   if ('L1' === levelName) {
                     if (resTag === levelName) {
-                      if (res.data().tags.includes(phaseName)) {
+                      if (res.data().tags.includes(phaseNames[0])) {
                         treatsResult.push(res.data())
                       }
                     }
@@ -530,7 +541,7 @@ export const getTodayRecommendedMeal = async (phaseData, activeChallengeData) =>
 
   // console.log('Recipe Data: ', recommendedRecipe.breakfast)
 
-  const phaseDefaultTags = phaseData
+  const phaseDefaultTags = phaseNames[0]
 
   return {
     recommendedRecipe,

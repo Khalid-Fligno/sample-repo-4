@@ -796,7 +796,7 @@ class CalendarHomeScreen extends React.PureComponent {
     this.props.navigation.navigate("FilterRecipe", {
       currentChallengeDay: this.currentChallengeDay,
       activeChallengeUserData: activeChallengeUserData,
-      phaseDefaultTags: phaseDefaultTags.phaseTags,
+      phaseDefaultTags: phaseDefaultTags,
       defaultLevelTags: activeChallengeData.levelTags,
       todayRecommendedRecipe: data2,
       challengeAllRecipe: challengeRecipe[0],
