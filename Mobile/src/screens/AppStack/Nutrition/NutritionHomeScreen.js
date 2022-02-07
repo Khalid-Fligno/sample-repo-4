@@ -39,7 +39,7 @@ const NutritionList = [
   ,
   {
     title:"Pre Workout",
-    imageUrl:require('../../../../assets/images/homeScreenTiles/Pre-Workout.jpg'),
+    imageUrl:require('../../../../assets/images/homeScreenTiles/new_pre_workout.jpg'),
     meal: 'preworkout'
   },
   {
