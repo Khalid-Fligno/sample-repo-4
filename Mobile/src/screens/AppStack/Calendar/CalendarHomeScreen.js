@@ -171,7 +171,7 @@ class CalendarHomeScreen extends React.PureComponent {
     );
   };
 
-  handleDateSelected = (date) => {
+  handleDateSelected = async (date) => {
     const { activeChallengeData, activeChallengeUserData } = this.state;
     this.setState({ loading: false });
     this.stringDate = date.format("YYYY-MM-DD").toString();
@@ -182,6 +182,24 @@ class CalendarHomeScreen extends React.PureComponent {
     this.setState({
       currentDay: (this.stringDate = date.format("YYYY-MM-DD").toString()),
     });
+
+    this.currentChallengeDay = getCurrentChallengeDay(
+      activeChallengeUserData.startDate,
+      this.stringDate
+    );
+
+    const id = activeChallengeUserData.id;
+    const uid = await AsyncStorage.getItem("uid");
+    const activeChallengeUserRef = db
+      .collection("users")
+      .doc(uid)
+      .collection("challenges")
+      .doc(id);
+
+    activeChallengeUserRef.set(
+      { recipes: { days: this.currentChallengeDay } },
+      { merge: true }
+    );
 
     //TODO:check the active challenge cndtns
     if (
@@ -487,13 +505,13 @@ class CalendarHomeScreen extends React.PureComponent {
                 .doc(list[0].id);
               challengeRef.set(newData, { merge: true });
               this.setState({ completeCha: isCompleted });
-              this.props.navigation.navigate("ChallengeSubscription", { 
+              this.props.navigation.navigate("ChallengeSubscription", {
                 completedChallenge: true,
               });
               Alert.alert(
                 "Congratulations!",
                 "You have completed your challenge",
-                [{ text: "OK", onPress: () => {} }],
+                [{ text: "OK", onPress: () => { } }],
                 { cancelable: false }
               );
             } else {
@@ -585,7 +603,7 @@ class CalendarHomeScreen extends React.PureComponent {
               treatsId.push(res.recipeMeal.treats);
             }
           }
-        } catch (err) {}
+        } catch (err) { }
       });
 
       this.setState({
@@ -659,19 +677,6 @@ class CalendarHomeScreen extends React.PureComponent {
           activeChallengeUserData.startDate,
           this.stringDate
         );
-
-        const id = activeChallengeUserData.id;
-        const uid = await AsyncStorage.getItem("uid");
-        const activeChallengeUserRef = db
-          .collection("users")
-          .doc(uid)
-          .collection("challenges")
-          .doc(id);
-
-          activeChallengeUserRef.set(
-            { recipes: { days: this.currentChallengeDay } },
-            { merge: true }
-          );
 
         // TODO getToday one recommended meal randomly
         getTodayRecommendedMeal(this.phaseData, activeChallengeData).then(
@@ -1063,11 +1068,11 @@ class CalendarHomeScreen extends React.PureComponent {
               left:
                 Platform.OS === "ios"
                   ? (width * this.currentChallengeDay) /
-                      activeChallengeData.numberOfDays +
-                    11
+                  activeChallengeData.numberOfDays +
+                  11
                   : (width * this.currentChallengeDay) /
-                      activeChallengeData.numberOfDays +
-                    12,
+                  activeChallengeData.numberOfDays +
+                  12,
               top: 85,
             }}
           >
@@ -1099,11 +1104,11 @@ class CalendarHomeScreen extends React.PureComponent {
               left:
                 Platform.OS === "ios"
                   ? (width * this.currentChallengeDay) /
-                      activeChallengeData.numberOfDays -
-                    7
+                  activeChallengeData.numberOfDays -
+                  7
                   : (width * this.currentChallengeDay) /
-                      activeChallengeData.numberOfDays -
-                    7,
+                  activeChallengeData.numberOfDays -
+                  7,
               top: Platform.OS === "ios" ? 96 : 94,
               backgroundColor: "#F79400",
               width: 40,
