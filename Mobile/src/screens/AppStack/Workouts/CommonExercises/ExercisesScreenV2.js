@@ -889,11 +889,19 @@ export default class ExercisesScreenV2 extends React.PureComponent {
             {!rest && (
               <WebView
                 source={{
-                  html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${
+                  html: `<video playsinline controls autoplay src=${
                     currentExercise.videoUrls[0] &&
                     currentExercise.videoUrls[0].url
-                  } sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
+                  } ></video>`,
                 }}
+                useWebKit={true}
+                allowsInlineMediaPlayback={true}
+                // source={{
+                //   html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${
+                //     currentExercise.videoUrls[0] &&
+                //     currentExercise.videoUrls[0].url
+                //   } sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
+                // }}
                 allowsFullscreenVideo={false}
                 style={{
                   width,

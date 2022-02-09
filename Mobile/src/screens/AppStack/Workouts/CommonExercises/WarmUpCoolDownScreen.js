@@ -239,8 +239,13 @@ export default class WarmUpCoolDownScreen extends Component {
             {exerciseList.length > 0 && (
               <WebView
                 source={{
-                  html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${"https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/Exercises%2F000e5ada-9669-4bda-8800-24e93b3c9321%2FVideo1?alt=media&token=ca76f506-0a80-487f-9d7f-056cf2fd47c5"} sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
+                  html: `<video playsinline controls autoplay src=${"https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/Exercises%2F000e5ada-9669-4bda-8800-24e93b3c9321%2FVideo1?alt=media&token=ca76f506-0a80-487f-9d7f-056cf2fd47c5"} ></video>`,
                 }}
+                useWebKit={true}
+                allowsInlineMediaPlayback={true}
+                // source={{
+                //   html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${"https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/Exercises%2F000e5ada-9669-4bda-8800-24e93b3c9321%2FVideo1?alt=media&token=ca76f506-0a80-487f-9d7f-056cf2fd47c5"} sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
+                // }}
                 // source={{
                 //   uri: "https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/Exercises%2F000e5ada-9669-4bda-8800-24e93b3c9321%2FVideo1?alt=media&token=ca76f506-0a80-487f-9d7f-056cf2fd47c5",
                 // }}

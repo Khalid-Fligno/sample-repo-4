@@ -470,16 +470,23 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
               </View>
               <WebView
                 source={{
-                  html: `
-                  <video width='100%' height: '100%' controls>
-                      <source src=${
-                        exercise.videoUrls[0] && exercise.videoUrls[0].url
-                      } type="video/mp4" allowfullscreen="0">
-                  </video>`,
-                  // html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${
-                  //   exercise.videoUrls[0] && exercise.videoUrls[0].url
-                  // } sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
+                  html: `<video playsinline controls autoplay src=${
+                    exercise.videoUrls[0] && exercise.videoUrls[0].url
+                  }  allowfullscreen="0" ></video>`,
                 }}
+                // source={{
+                //   html: `
+                //   <video width='100%' height: '100%' controls>
+                //       <source src=${
+                //         exercise.videoUrls[0] && exercise.videoUrls[0].url
+                //       } type="video/mp4" allowfullscreen="0">
+                //   </video>`,
+                //   // html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${
+                //   //   exercise.videoUrls[0] && exercise.videoUrls[0].url
+                //   // } sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
+                // }}
+                useWebKit={true}
+                allowsInlineMediaPlayback={true}
                 allowsFullscreenVideo={false}
                 style={{
                   width: width - 30,
@@ -489,15 +496,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 }}
                 javaScriptEnabled={true}
                 cacheEnabled={true}
-                mediaPlaybackRequiresUserAction={
-                  Platform.OS !== "android" || Platform.Version >= 17
-                    ? false
-                    : undefined
-                }
                 javaScriptEnabled={true}
                 allowFileAccess={false}
-                injectedJavaScript={`document.getElementsByTagName("video")[0].removeAttribute("autoplay"); `}
-                userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
               />
               {/*<Video
                 key={exercise.name.toUpperCase()}

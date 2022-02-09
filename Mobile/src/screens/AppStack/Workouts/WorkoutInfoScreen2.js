@@ -356,16 +356,23 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
               </View>
               <WebView
                 source={{
-                  html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${
-                   exercise.videoUrls[0] && exercise.videoUrls[0].url
-                  } sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
+                  html: `<video playsinline controls autoplay src=${
+                    exercise.videoUrls[0] && exercise.videoUrls[0].url
+                  } ></video>`,
                 }}
-
+                // source={{
+                //   html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${
+                //     exercise.videoUrls[0] && exercise.videoUrls[0].url
+                //   } sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
+                // }}
+                useWebKit={true}
+                allowsInlineMediaPlayback={true}
                 allowsFullscreenVideo={false}
                 style={{
                   width: width - 30,
                   height: width - 30,
                 }}
+                originWhitelist={["*"]}
                 javaScriptEnabled={true}
                 cacheEnabled={true}
                 mediaPlaybackRequiresUserAction={
