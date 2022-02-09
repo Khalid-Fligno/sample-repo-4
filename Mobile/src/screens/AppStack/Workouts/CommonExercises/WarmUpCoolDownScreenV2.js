@@ -31,6 +31,7 @@ import WorkoutPauseModal from "../../../../components/Workouts/WorkoutPauseModal
 import WorkoutProgressControl from "../../../../components/Workouts/WorkoutProgressControl";
 import TextTicker from "react-native-text-ticker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import {WebView} from "react-native-webview";
 export default class WarmUpCoolDownScreenV2 extends Component {
   constructor(props) {
     super(props);
@@ -322,15 +323,10 @@ export default class WarmUpCoolDownScreenV2 extends Component {
             </View>
             <View>
               {exerciseList.length > 0 && (
-                <Video
+                <WebView
                   source={{
-                    uri: `${FileSystem.cacheDirectory}exercise-${type}-${exerciseIndex}.mp4`,
+                    uri: 'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/Exercises%2F000e5ada-9669-4bda-8800-24e93b3c9321%2FVideo1?alt=media&token=ca76f506-0a80-487f-9d7f-056cf2fd47c5',
                   }}
-                  rate={1.0}
-                  volume={1.0}
-                  isMuted={false}
-                  resizeMode="cover"
-                  shouldPlay={!videoPaused}
                   isLooping
                   style={{ width, height: width }}
                 />
