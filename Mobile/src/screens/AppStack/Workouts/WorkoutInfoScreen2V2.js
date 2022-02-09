@@ -44,6 +44,7 @@ import NutritionStyles from "../Nutrition/NutritionStyles";
 import { StackActions } from "react-navigation";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import DoubleRightArrow from "../../../../assets/icons/DoubleRightArrow";
+import { WebView } from "react-native-webview";
 
 const moment = require("moment");
 
@@ -311,6 +312,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
           }.mp4`;
         break;
     }
+
+    console.log(exercise, "exercise");
     return (
       <View style={WorkoutScreenStyle.carouselContainer}>
         <Carousel
@@ -338,78 +341,102 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                   </Text>
                 </View>
                 <View>
-                  {this.state.workout.workoutProcessType === "oneByOne" && section.title != 'Workout' &&
+                  {this.state.workout.workoutProcessType === "oneByOne" &&
+                    section.title != "Workout" &&
                     !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration} {'secs'}
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
+                        {exercise.duration} {"secs"}
                       </Text>
                     )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title != 'Workout' &&
+                  {this.state.workout.workoutProcessType === "onlyOne" &&
+                    section.title != "Workout" &&
                     !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration} {'secs'}
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
+                        {exercise.duration} {"secs"}
                       </Text>
                     )}
 
-                  {this.state.workout.workoutProcessType === "circular" && section.title != 'Workout' &&
+                  {this.state.workout.workoutProcessType === "circular" &&
+                    section.title != "Workout" &&
                     !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration} {'secs'}
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
+                        {exercise.duration} {"secs"}
                       </Text>
                     )}
 
-
-                  {this.state.workout.workoutProcessType === "oneByOne" && section.title === 'Workout' &&
+                  {this.state.workout.workoutProcessType === "oneByOne" &&
+                    section.title === "Workout" &&
                     !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {this.state.workout["workoutReps"]} x {this.state.reps}
                       </Text>
                     )}
 
                   {this.state.workout.workoutProcessType === "oneByOne" &&
                     this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {workIntervalTimeinSec}s on/{restIntervalTimeinSec}s off
                       </Text>
                     )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
+                  {this.state.workout.workoutProcessType === "onlyOne" &&
+                    section.title === "Workout" &&
                     this.state.lifestyle != true &&
                     exercise.duration <= 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {exercise.duration}s
                         {/* {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec}s off`} */}
                       </Text>
                     )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
+                  {this.state.workout.workoutProcessType === "onlyOne" &&
+                    section.title === "Workout" &&
                     this.state.lifestyle != true &&
                     exercise.duration > 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {convert(exercise.duration)}
                         {/* {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec}s off`} */}
                       </Text>
                     )}
 
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
+                  {this.state.workout.workoutProcessType === "onlyOne" &&
+                    section.title === "Workout" &&
                     this.state.lifestyle === true &&
                     workIntervalTimeinSec <= 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {workIntervalTimeinSec}s
                         {/* {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec}s off`} */}
                       </Text>
                     )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
+                  {this.state.workout.workoutProcessType === "onlyOne" &&
+                    section.title === "Workout" &&
                     this.state.lifestyle === true &&
                     workIntervalTimeinSec > 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {workIntervalTimeinSec / 60}mins
                         {/* {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec}s off`} */}
                       </Text>
                     )}
-
 
                   {/* {this.state.workout.workoutProcessType === "onlyOne" && section.title ==='Workout' &&
                     workIntervalTimeinSec > 60 && (
@@ -419,18 +446,21 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                           `/${restIntervalTimeinSec / 60}m off`}
                       </Text>
                     )} */}
-                  {this.state.workout.workoutProcessType === "circular" && section.title === 'Workout' &&
+                  {this.state.workout.workoutProcessType === "circular" &&
+                    section.title === "Workout" &&
                     !this.state.workout.count && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {
                           this.state.workout.workIntervalMap[
-                          this.state.fitnessLevel - 1
+                            this.state.fitnessLevel - 1
                           ]
                         }
                         s on/
                         {
                           this.state.workout.restIntervalMap[
-                          this.state.fitnessLevel - 1
+                            this.state.fitnessLevel - 1
                           ]
                         }
                         s off
@@ -438,7 +468,38 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                     )}
                 </View>
               </View>
-              <Video
+              <WebView
+                source={{
+                  html: `
+                  <video width='100%' height: '100%' controls>
+                      <source src=${
+                        exercise.videoUrls[0] && exercise.videoUrls[0].url
+                      } type="video/mp4" allowfullscreen="0">
+                  </video>`,
+                  // html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${
+                  //   exercise.videoUrls[0] && exercise.videoUrls[0].url
+                  // } sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
+                }}
+                allowsFullscreenVideo={false}
+                style={{
+                  width: width - 30,
+                  height: width - 30,
+                  position: "relative",
+                  zIndex: 0,
+                }}
+                javaScriptEnabled={true}
+                cacheEnabled={true}
+                mediaPlaybackRequiresUserAction={
+                  Platform.OS !== "android" || Platform.Version >= 17
+                    ? false
+                    : undefined
+                }
+                javaScriptEnabled={true}
+                allowFileAccess={false}
+                injectedJavaScript={`document.getElementsByTagName("video")[0].removeAttribute("autoplay"); `}
+                userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
+              />
+              {/*<Video
                 key={exercise.name.toUpperCase()}
                 ref={(ref) => (this.videoRef = ref)}
                 source={{
@@ -452,14 +513,16 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 selectedAudioTrack={{
                   type: "disabled",
                 }}
-                style={{ width: width - 30, height: width - 30, position: "relative", zIndex: 0 }}
-
-              />
+                style={{
+                  width: width - 30,
+                  height: width - 30,
+                  position: "relative",
+                  zIndex: 0,
+                }}
+              />*/}
             </View>
             <View style={styles.invisibleView}>
-              <View
-                style={styles.setCounter}
-              >
+              <View style={styles.setCounter}>
                 <Text style={styles.setCounterText}>Swipe for more info</Text>
                 <Icon name="chevron-right" size={10} style={styles.icon} />
               </View>

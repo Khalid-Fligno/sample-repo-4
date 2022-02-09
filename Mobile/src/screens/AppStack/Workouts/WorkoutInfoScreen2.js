@@ -37,6 +37,7 @@ import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import NutritionStyles from "../Nutrition/NutritionStyles";
 import { StackActions } from "react-navigation";
+import {WebView} from 'react-native-webview'
 
 const moment = require("moment");
 
@@ -298,19 +299,25 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                 <View>
                   {this.state.workout.workoutProcessType === "oneByOne" &&
                     !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {this.state.workout["workoutReps"]} x {this.state.reps}
                       </Text>
                     )}
                   {this.state.workout.workoutProcessType === "oneByOne" &&
                     this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {workIntervalTimeinSec}s on/{restIntervalTimeinSec}s off
                       </Text>
                     )}
                   {this.state.workout.workoutProcessType === "onlyOne" &&
                     workIntervalTimeinSec <= 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {workIntervalTimeinSec}s
                         {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec}s off`}
@@ -318,7 +325,9 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                     )}
                   {this.state.workout.workoutProcessType === "onlyOne" &&
                     workIntervalTimeinSec > 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {workIntervalTimeinSec / 60}m on
                         {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec / 60}m off`}
@@ -326,16 +335,18 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                     )}
                   {this.state.workout.workoutProcessType === "circular" &&
                     !this.state.workout.count && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {
                           this.state.workout.workIntervalMap[
-                          this.state.fitnessLevel - 1
+                            this.state.fitnessLevel - 1
                           ]
                         }
                         s on/
                         {
                           this.state.workout.restIntervalMap[
-                          this.state.fitnessLevel - 1
+                            this.state.fitnessLevel - 1
                           ]
                         }
                         s off
@@ -343,7 +354,31 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                     )}
                 </View>
               </View>
-              <Video
+              <WebView
+                source={{
+                  html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${
+                   exercise.videoUrls[0] && exercise.videoUrls[0].url
+                  } sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
+                }}
+
+                allowsFullscreenVideo={false}
+                style={{
+                  width: width - 30,
+                  height: width - 30,
+                }}
+                javaScriptEnabled={true}
+                cacheEnabled={true}
+                mediaPlaybackRequiresUserAction={
+                  Platform.OS !== "android" || Platform.Version >= 17
+                    ? false
+                    : undefined
+                }
+                javaScriptEnabled={true}
+                allowFileAccess={false}
+                injectedJavaScript={`document.getElementsByTagName("video")[0].removeAttribute("autoplay"); `}
+                userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
+              />
+              {/*<Video
                 key={exercise.name.toUpperCase()}
                 ref={(ref) => (this.videoRef = ref)}
                 source={{
@@ -358,18 +393,20 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                 }}
                 style={{
                   width: width - 30,
-                  height: width - 30
+                  height: width - 30,
                 }}
-              />
+              />*/}
             </View>
-            <View 
+            <View
               style={{
                 flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <Text style={{fontFamily: fonts.StyreneAWebRegular}}>swipe for more info</Text>
+              <Text style={{ fontFamily: fonts.StyreneAWebRegular }}>
+                swipe for more info
+              </Text>
             </View>
           </View>
           {showCT && (
@@ -432,7 +469,6 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
             </View>
           )}
         </Carousel>
-
       </View>
     );
   };

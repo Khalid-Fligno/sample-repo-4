@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, SafeAreaView, StatusBar } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, StatusBar, Platform } from "react-native";
 import CustomBtn from "../../../../components/Shared/CustomBtn";
 import colors from "../../../../styles/colors";
 import fonts from "../../../../styles/fonts";
@@ -20,6 +20,8 @@ import Loader from "../../../../components/Shared/Loader";
 import WorkoutProgressBar from "../../../../components/Workouts/WorkoutProgressBar";
 import PauseButtonRow from "../../../../components/Workouts/PauseButtonRow";
 import WorkoutPauseModal from "../../../../components/Workouts/WorkoutPauseModal";
+import { WebView } from "react-native-webview";
+
 export default class WarmUpCoolDownScreen extends Component {
   constructor(props) {
     super(props);
@@ -235,18 +237,33 @@ export default class WarmUpCoolDownScreen extends Component {
         <FadeInView duration={1000} style={styles.flexContainer}>
           <View>
             {exerciseList.length > 0 && (
-              <Video
+              <WebView
                 source={{
-                  uri: `${FileSystem.cacheDirectory}exercise-${type}-${exerciseIndex}.mp4`,
+                  html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${"https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/Exercises%2F000e5ada-9669-4bda-8800-24e93b3c9321%2FVideo1?alt=media&token=ca76f506-0a80-487f-9d7f-056cf2fd47c5"} sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
                 }}
-                rate={1.0}
-                volume={1.0}
-                isMuted={false}
-                resizeMode="cover"
-                shouldPlay={!videoPaused}
-                isLooping
+                // source={{
+                //   uri: "https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/Exercises%2F000e5ada-9669-4bda-8800-24e93b3c9321%2FVideo1?alt=media&token=ca76f506-0a80-487f-9d7f-056cf2fd47c5",
+                // }}
                 style={{ width, height: width }}
+                mediaPlaybackRequiresUserAction={
+                  Platform.OS !== "android" || Platform.Version >= 17
+                    ? false
+                    : undefined
+                }
+                userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
               />
+              // <Video
+              //   source={{
+              //     uri: `${FileSystem.cacheDirectory}exercise-${type}-${exerciseIndex}.mp4`,
+              //   }}
+              //   rate={1.0}
+              //   volume={1.0}
+              //   isMuted={false}
+              //   resizeMode="cover"
+              //   shouldPlay={!videoPaused}
+              //   isLooping
+              //   style={{ width, height: width }}
+              // />
             )}
             {showInfoBtn && (
               <ExerciseInfoButton onPress={this.showExerciseInfoModal} />

@@ -41,6 +41,7 @@ import ExerciseInfoButtonV2 from "../../../../components/Workouts/ExerciseInfoBu
 import WorkoutProgressControl from "../../../../components/Workouts/WorkoutProgressControl";
 import { Platform } from "react-native";
 import TextTicker from "react-native-text-ticker";
+import { WebView } from "react-native-webview";
 
 const updateWeeklyTargets = (obj, field, newTally) => {
   return Object.assign({}, obj, { [field]: newTally });
@@ -886,22 +887,45 @@ export default class ExercisesScreenV2 extends React.PureComponent {
               </View>
             </View>
             {!rest && (
-              <Video
+              <WebView
                 source={{
-                  uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex + 1
-                    }.mp4`,
+                  html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${
+                    currentExercise.videoUrls[0] &&
+                    currentExercise.videoUrls[0].url
+                  } sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
                 }}
-                rate={1.0}
-                volume={1.0}
-                isMuted={false}
-                resizeMode="cover"
-                shouldPlay={!videoPaused}
-                isLooping
+                allowsFullscreenVideo={false}
                 style={{
                   width,
                   height: width > height / 2 ? height / 2 : width,
                 }}
+                cacheEnabled={true}
+                mediaPlaybackRequiresUserAction={
+                  Platform.OS !== "android" || Platform.Version >= 17
+                    ? false
+                    : undefined
+                }
+                javaScriptEnabled={true}
+                allowFileAccess={false}
+                injectedJavaScript={`document.getElementsByTagName("video")[0].removeAttribute("autoplay"); `}
+                userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
               />
+              // <Video
+              //   source={{
+              //     uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex + 1
+              //       }.mp4`,
+              //   }}
+              //   rate={1.0}
+              //   volume={1.0}
+              //   isMuted={false}
+              //   resizeMode="cover"
+              //   shouldPlay={!videoPaused}
+              //   isLooping
+              //   style={{
+              //     width,
+              //     height: width > height / 2 ? height / 2 : width,
+              //   }}
+              // />
             )}
             {rest && (
               <FastImage
@@ -918,8 +942,9 @@ export default class ExercisesScreenV2 extends React.PureComponent {
 
           <View style={styles.currentExerciseTextContainer}>
             {workoutTimer()}
-            <Text style={styles.currentExerciseTextCount}>{`Exercise ${currentExerciseIndex + 1
-              } of ${exerciseList.length}`}</Text>
+            <Text style={styles.currentExerciseTextCount}>{`Exercise ${
+              currentExerciseIndex + 1
+            } of ${exerciseList.length}`}</Text>
             <View style={styles.currentExerciseNameTextContainer}>
               <TextTicker
                 style={styles.currentExerciseNameText}
@@ -956,12 +981,12 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 handleSkip
                   ? this.skipExercise
                   : () => {
-                    this.handleFinish(
-                      reps,
-                      resistanceCategoryId,
-                      currentExerciseIndex
-                    );
-                  }
+                      this.handleFinish(
+                        reps,
+                        resistanceCategoryId,
+                        currentExerciseIndex
+                      );
+                    }
               }
               onPlayPause={videoPaused ? this.handleUnpause : this.handlePause}
             />

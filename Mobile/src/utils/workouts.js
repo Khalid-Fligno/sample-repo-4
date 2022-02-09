@@ -175,19 +175,19 @@ export const getRandomRestImages = async () => {
 
 export const loadExercise = async (workoutData) => {
   const type = 'interval'
-  FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res) => {
-    Promise.all(
-      res.map(async (item, index) => {
-        if (item.includes("exercise-")) {
-          FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
-            idempotent: true,
-          }).then(() => {
-            // console.log(item,"deleted...")
-          });
-        }
-      })
-    );
-  });
+  // FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res) => {
+  //   Promise.all(
+  //     res.map(async (item, index) => {
+  //       if (item.includes("exercise-")) {
+  //         FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
+  //           idempotent: true,
+  //         }).then(() => {
+  //           // console.log(item,"deleted...")
+  //         });
+  //       }
+  //     })
+  //   );
+  // });
   // console.log("Workout data: ", workoutData);
   if (workoutData.newWorkout) {
     let exercises = [];
@@ -238,18 +238,20 @@ export const loadExercise = async (workoutData) => {
 
     if (exercises.length > 0) {
       workoutData = Object.assign({}, workoutData, { exercises: exercises });
-      const res = await downloadExercise(workoutData);
+      // const res = await downloadExercise(workoutData);
       // console.log(">>>", res);
-      if (res) return workoutData;
-      else return false;
+      // if (res) return workoutData;
+      // else return false;
+      return workoutData;
     } else {
       return false;
     }
   } else {
-    const res = await downloadExercise(workoutData);
-    // console.log("....", res);
-    if (res) return workoutData;
-    else return false;
+    // const res = await downloadExercise(workoutData);
+    // // console.log("....", res);
+    // if (res) return workoutData;
+    // else return false;
+    return workoutData;
   }
 };
 
@@ -389,29 +391,31 @@ export const downloadExerciseWC = async (
     exercises = exerciseIds.map((id) => {
       return tempExerciseData.find((res) => res.id === id);
     });
+
+    return exercises;
     // console.log("kkkk",exercises)
-    return Promise.all(
-      exercises.map(async (exercise, index) => {
-        return new Promise(async (resolve, reject) => {
-          let videoIndex = 0;
-          if (workout.newWorkout)
-            videoIndex = exercise.videoUrls.findIndex(
-              (res) => res.model === exerciseModel
-            );
-          if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-            await FileSystem.downloadAsync(
-              exercise.videoUrls[videoIndex].url,
-              `${FileSystem.cacheDirectory}exercise-${type}-${index + 1}.mp4`
-            )
-              .then(() => {
-                resolve(exercise);
-                // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
-              })
-              .catch((err) => resolve("Download failed"));
-          }
-        });
-      })
-    );
+    // return Promise.all(
+    //   exercises.map(async (exercise, index) => {
+    //     return new Promise(async (resolve, reject) => {
+    //       let videoIndex = 0;
+    //       if (workout.newWorkout)
+    //         videoIndex = exercise.videoUrls.findIndex(
+    //           (res) => res.model === exerciseModel
+    //         );
+    //       if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+    //         await FileSystem.downloadAsync(
+    //           exercise.videoUrls[videoIndex].url,
+    //           `${FileSystem.cacheDirectory}exercise-${type}-${index + 1}.mp4`
+    //         )
+    //           .then(() => {
+    //             resolve(exercise);
+    //             // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+    //           })
+    //           .catch((err) => resolve("Download failed"));
+    //       }
+    //     });
+    //   })
+    // );
   } catch (err) {
     console.log(err);
     Alert.alert("Something went wrong", "Workout Not Available");
