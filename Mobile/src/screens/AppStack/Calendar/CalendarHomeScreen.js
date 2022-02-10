@@ -82,7 +82,6 @@ class CalendarHomeScreen extends React.PureComponent {
       phaseDefaultTags: undefined,
       favoriteRecipe: [],
       currentDay: undefined,
-      downloaded:0
     };
     this.calendarStrip = React.createRef();
   }
@@ -102,7 +101,6 @@ class CalendarHomeScreen extends React.PureComponent {
     this.fetchActiveChallengeUserData();
     this.fetchUserData();
   };
- 
 
   componentWillUnmount() {
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
@@ -371,7 +369,6 @@ class CalendarHomeScreen extends React.PureComponent {
     const workout = await loadExercise(workoutData);
 
     if (workout && workout.newWorkout) {
-      this.setState({downloaded: 30})
       const warmUpExercises = await downloadExerciseWC(
         workout,
         Object.prototype.toString
@@ -385,7 +382,6 @@ class CalendarHomeScreen extends React.PureComponent {
         "warmUp"
       );
       if (warmUpExercises.length > 0) {
-        this.setState({downloaded: 60})
         const coolDownExercises = await downloadExerciseWC(
           workout,
           workout.coolDownExercises,
@@ -393,7 +389,6 @@ class CalendarHomeScreen extends React.PureComponent {
           "coolDown"
         );
         if (coolDownExercises.length > 0) {
-          this.setState({downloaded: 100})
           const newWorkout = Object.assign({}, workout, {
             warmUpExercises: warmUpExercises,
             coolDownExercises: coolDownExercises,
@@ -426,7 +421,6 @@ class CalendarHomeScreen extends React.PureComponent {
     }
     const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
     this.setState({ loadingExercises: false });
-    this.setState({downloaded: 0})
     if (this.currentChallengeDay > 0) {
       Object.assign(workout, {
         displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
@@ -839,7 +833,6 @@ class CalendarHomeScreen extends React.PureComponent {
       completeCha,
       todayRecommendedRecipe,
       favoriteRecipe,
-      downloaded
     } = this.state;
 
     let showRC = false;
@@ -1237,15 +1230,9 @@ class CalendarHomeScreen extends React.PureComponent {
         {dayDisplay}
         {setting}
         <Loader
-          loading={loading}
+          loading={loading || loadingExercises}
           color={colors.red.standard}
-        />
-         <Loader
-          progressive={true}
-          loading={loadingExercises}
-          downloaded={downloaded}
-          color={colors.red.standard}
-          text={`Loading ${downloaded}%`}
+          text={loadingExercises ? "Please wait we are loading workout" : null}
         />
       </View>
     );
