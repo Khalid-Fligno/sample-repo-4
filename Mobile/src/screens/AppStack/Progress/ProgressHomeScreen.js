@@ -60,31 +60,16 @@ class ProgressHomeScreen extends React.PureComponent {
   }
 
   componentDidMount = () => {
-    this.unsubscribe = this.props.navigation.addListener("didFocus", () => {
-      this.onFocus();
-    });
-  };
-
-  onFocus = () => {
     this.props.navigation.setParams({
       toggleHelperModal: this.showHelperModal,
     });
     this.fetchProgressInfo();
     this.showHelperOnFirstOpen();
     this.fetchActiveChallengeUserData();
-    // this.fetchDataMeasurement();
   };
 
-  // componentDidMount() {
-  //   this.props.navigation.setParams({
-  //     toggleHelperModal: this.showHelperModal,
-  //   });
-  //   this.fetchProgressInfo();
-  //   this.showHelperOnFirstOpen();
-  //   this.fetchActiveChallengeUserData();
-  // }
   componentWillUnmount() {
-    this.unsubscribe();
+    if (this.unsubscribe) this.unsubscribe();
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
   }
@@ -895,7 +880,7 @@ class ProgressHomeScreen extends React.PureComponent {
                   <View>
                     <ProgressBar
                         // title=""
-                        completed={profile.totalWorkoutCompleted + countS + countI + countC}
+                        completed={profile.totalWorkoutCompleted}
                         total={totalS}
                         size={wp("38%")}
                     />

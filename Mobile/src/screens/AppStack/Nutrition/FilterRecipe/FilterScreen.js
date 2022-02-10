@@ -4,9 +4,8 @@ import {
     StyleSheet,
     View,
     Dimensions,
-    SafeAreaView,
-    FlatList,
     Text,
+    Platform,
 } from "react-native";
 import colors from "../../../../styles/colors";
 import fonts from '../../../../styles/fonts';
@@ -15,6 +14,10 @@ import {
     widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { Card } from 'react-native-elements';
+import Icon from "react-native-vector-icons/AntDesign";
+
+
+
 
 const { width } = Dimensions.get("window");
 
@@ -22,12 +25,15 @@ export default class FilterScreen extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            recipeIsExist: false,
+            recipeIds: []
+        }
     }
 
-    render() {
 
-        const { result, item,title } = this.props
+    render() {
+        const { result, item, title } = this.props
 
         return (
             <View
@@ -47,11 +53,31 @@ export default class FilterScreen extends React.PureComponent {
                         image={{ uri: item.coverImage }}
                         containerStyle={styles.card}
                     >
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10 }}>
-                                <View style={{ maxWidth: '70%' }}>
-                                    <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>
+                        {
+                            this.props.faveRecipeItem === undefined ?
+                                null
+                                :
+                                <View style={{
+                                    position: 'relative',
+                                    bottom: 150,
+                                    alignItems:'flex-end'
+                                }}>
+                                <TouchableOpacity
+                                   
+                                    onPress={this.props.onSelectHeart}
+                                >
+                                    {
+                                        Platform.OS === "ios" ?
+                                            <Icon name={this.props.ifExistRecipe() ? 'heart' : 'hearto'} size={30} color={'red'} />
+                                            :
+                                            <Icon name={this.props.ifExistRecipe() ? 'heart' : 'hearto'} size={30} color={'red'} />
+                                    }
+                                </TouchableOpacity>
                                 </View>
+                        }
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10, maxWidth: '50%' }}>
+                                <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 {

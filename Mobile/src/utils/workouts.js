@@ -192,6 +192,7 @@ export const loadExercise = async (workoutData) => {
   if (workoutData.newWorkout) {
     let exercises = [];
     let tempExerciseData = [];
+    let workoutExercises =[];
 
     const exerciseRef = (
       await db
@@ -199,17 +200,6 @@ export const loadExercise = async (workoutData) => {
         // .where("id", "in", workoutData.exercises)
         .get()
     ).docs;
-
-    // if(workoutData.filters && workoutData.filters.indexOf('interval') > -1){
-    //   exerciseRef.forEach((exercise) => {
-    //     workoutData.exercises.forEach(resExercise => {
-    //       if (resExercise.id === exercise.id) {
-    //         const exerciseDuration = Object.assign({}, exercise.data(), { duration: resExercise.duration })
-    //         tempExerciseData.push(exerciseDuration)
-    //       }
-    //     })
-    //   });
-    // }
 
     workoutData.filters.forEach(resType => {
       if (resType === 'interval') {
@@ -219,54 +209,33 @@ export const loadExercise = async (workoutData) => {
               const exerciseDuration = Object.assign({}, exercise.data(), { duration: resExercise.duration })
               tempExerciseData.push(exerciseDuration)
             }
+            workoutExercises = workoutData.exercises.map((id) =>{
+              return tempExerciseData.find((res) => res.id === id);
+            })
           })
         });
       } else {
         exerciseRef.forEach((exercise) => {
-          if (workoutData.exercises.includes(exercise.id)) {
-            tempExerciseData.push(exercise.data());
-          }
+          workoutData.exercises.forEach(resExercise => {
+            if (resExercise === exercise.id) {
+              tempExerciseData.push(exercise.data())
+            }
+            workoutExercises = workoutData.exercises.map((id) =>{
+              return tempExerciseData.find((res) => res.id === id);
+            })
+          })
         });
       }
     })
 
-    // if (type === 'interval') {
-    //   exerciseRef.forEach((exercise) => {
-    //     workoutData.exercises.forEach(resExercise => {
-    // if(resExercise.id === exercise.id){
-    //   tempExerciseData.push(exercise.data());
-    //       }
-    //     })
-    //   });
-    // }else{
-    //   exerciseRef.forEach((exercise) => {
-    //     if (workoutData.exercises.includes(exercise.id)) {
-    //       tempExerciseData.push(exercise.data());
-    //     }
-    //   });
-    // }
+    exercises = workoutData.exercises.map((id) => {
+      if(id.id){
+        return tempExerciseData.find((res) => res.id === id.id);
+      } else {
+        return tempExerciseData.find((res) => res.id === id);
+      }
+    });
 
-    // exerciseRef.forEach((exercise) => {
-    //   if (workoutData.exercises.includes(exercise.id)) {
-    //     tempExerciseData.push(exercise.data());
-    //   }
-    // });
-
-    // workoutData.filters.forEach(resType => {
-    //   if (resType === 'interval') {
-    //     exercises = workoutData.exercises.map(res => {
-    //       return tempExerciseData.find((resId => resId.id === res.id))
-    //     })
-    //   } else {
-    //     exercises = workoutData.exercises.map((id) => {
-    //       return tempExerciseData.find((res) => res.id === id);
-    //     });
-    //   }
-    // })
-
-    exercises = tempExerciseData
-
-    console.log('Exercise: ', exercises)
     if (exercises.length > 0) {
       workoutData = Object.assign({}, workoutData, { exercises: exercises });
       const res = await downloadExercise(workoutData);
@@ -383,7 +352,7 @@ const downloadExercise = async (workout) => {
             )
               .then(() => {
                 resolve("Downloaded");
-                console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+                console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` + "downloaded")
               })
               .catch((err) => resolve("Download failed"));
           } else {

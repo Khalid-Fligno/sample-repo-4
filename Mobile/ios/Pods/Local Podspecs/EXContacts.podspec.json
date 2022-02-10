@@ -4,7 +4,9 @@
   "summary": "Provides access to the phone's system contacts.",
   "description": "Provides access to the phone's system contacts.",
   "license": "MIT",
-  "authors": "650 Industries, Inc.",
+  "authors": {
+    "name": "650 Industries, Inc."
+  },
   "homepage": "https://docs.expo.io/versions/latest/sdk/contacts/",
   "platforms": {
     "ios": "10.0"

@@ -75,7 +75,8 @@ export default class OnBoarding4 extends Component {
       calendarModalVisible: false,
       chosenDate: new Date(),
       quit: false,
-      completedChallenge: false
+      completedChallenge: false,
+      recipeId: []
     };
   }
 
@@ -140,7 +141,7 @@ export default class OnBoarding4 extends Component {
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     });
-    // if (Platform.OS === 'android') {
+   // if (Platform.OS === 'android') {
     //   await this.requestAndroidPermissions();
 
     // }else{
@@ -288,6 +289,7 @@ export default class OnBoarding4 extends Component {
   // and don't forget to remove the listener
   componentWillUnmount() {
     this.focusListener.remove();
+    if (this.unsubscribeFACD) this.unsubscribeFACD();
   }
 
   saveImage = async (uri, blob) => {
@@ -371,35 +373,41 @@ export default class OnBoarding4 extends Component {
 
   async saveOnBoardingInfo(data, stringDate2) {
     this.setState({ loading: true });
+
     {
       this.props.navigation.getParam("challengeOnboard")
         ? this.setState({ loading: false })
         : this.setState({ loading: true });
     }
     const uid = await AsyncStorage.getItem("uid");
-    const userRef = db
-      .collection("users")
-      .doc(uid)
-      .collection("challenges")
-      .doc(data.id);
-    userRef
-      .set(data, { merge: true })
-      .then(async (res) => {
-        if (data.onBoardingInfo.fitnessLevel)
-          await AsyncStorage.setItem(
-            "fitnessLevel",
-            data.onBoardingInfo.fitnessLevel.toString()
-          );
-        this.setState({ loading: false });
-        this.addedToCalendarPopup(stringDate2);
-      })
-      .catch((err) => {
-        this.setState({ loading: false });
-      });
+    if (data) {
+      const userRef = db
+        .collection("users")
+        .doc(uid)
+        .collection("challenges")
+        .doc(data.id);
+      userRef
+        .set(data, { merge: true })
+        .then(async (res) => {
+          if (data.onBoardingInfo.fitnessLevel)
+            await AsyncStorage.setItem(
+              "fitnessLevel",
+              data.onBoardingInfo.fitnessLevel.toString()
+            );
+          this.setState({ loading: false });
+          this.addedToCalendarPopup(stringDate2);
+        })
+        .catch((err) => {
+          this.setState({ loading: false });
+        });
+    }
   }
 
   addChallengeToCalendar = async (date) => {
     const { quit, completedChallenge } = this.state
+    const TODAY1 = moment().format("YYYY-MM-DD").toString();
+    const stringDate3 = moment(date).format("YYYY-MM-DD").toString();
+
     if (quit || completedChallenge) {
       if (this.state.addingToCalendar) {
         return;
@@ -426,7 +434,8 @@ export default class OnBoarding4 extends Component {
         onBoardingInfo,
       });
 
-      const data = createUserChallengeData(updatedChallengedata, new Date(date));
+      const data = createUserChallengeData(updatedChallengedata, new Date(date), stringDate3, TODAY1);
+
       const progressData = {
         photoURL: this.state.imgUrl,
         height: updatedChallengedata.onBoardingInfo.measurements.height,
@@ -486,7 +495,8 @@ export default class OnBoarding4 extends Component {
         onBoardingInfo,
       });
 
-      const data = createUserChallengeData(updatedChallengedata, new Date(date));
+      const data = createUserChallengeData(updatedChallengedata, new Date(date), stringDate3, TODAY1);
+
       delete data.workouts
       const progressData = {
         photoURL: this.state.imgUrl,
@@ -542,7 +552,6 @@ export default class OnBoarding4 extends Component {
           if (!skipped) {
             skipped = this.state.imgUrl == null ? true : false;
           }
-          console.log("Skipped: ", skipped);
           const onBoardingInfo = Object.assign(
             {},
             updatedChallengedata.onBoardingInfo,

@@ -123,7 +123,7 @@ export default class LevelModal extends React.PureComponent {
 
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.props.toggleGlutaFree} value={this.props.glutaFreeChecked}>
+                        <TouchableOpacity onPress={this.props.toggleGlutenFree} value={this.props.glutenFreeChecked}>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
                                     <View style={{
@@ -144,18 +144,18 @@ export default class LevelModal extends React.PureComponent {
                                             GF
                                         </Text>
                                     </View>
-                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Gluta-Free</Text>
+                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Gluten-Free</Text>
                                 </View>
                                 {Platform.OS == 'ios' ?
                                     (<CheckBox
                                         boxType='square'
-                                        value={this.props.glutaFreeChecked}
+                                        value={this.props.glutenFreeChecked}
                                     />
                                     ) : (
                                         <CheckBox
                                             boxType='square'
-                                            value={this.props.glutaFreeChecked}
-                                            onChange={this.props.toggleGlutaFree}
+                                            value={this.props.glutenFreeChecked}
+                                            onChange={this.props.toggleGlutenFree}
                                         />
                                     )}
 

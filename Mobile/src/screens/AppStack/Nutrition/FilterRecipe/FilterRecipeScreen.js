@@ -7,6 +7,7 @@ import {
     FlatList,
     Text,
     ScrollView,
+    Alert,
 } from "react-native";
 import sortBy from "lodash.sortby";
 import colors from "../../../../styles/colors";
@@ -24,35 +25,28 @@ import PhaseModal from "./PhaseModal";
 import FilterScreen from "./FilterScreen";
 import { convertRecipeData } from "../../../../utils/challenges";
 import RecipeTileSkeleton from "../../../../components/Nutrition/RecipeTileSkeleton";
+import { db } from "../../../../../config/firebase";
+import AsyncStorage from "@react-native-community/async-storage";
 const { width } = Dimensions.get("window");
 
 export default class FilterRecipeScreen extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            recipes: [],
             loading: false,
-            filterIndex: 0,
             isFilterVisible: false,
             isClickVisible: false,
             veganChecked: false,
             vegetarianChecked: false,
-            glutaFree: false,
+            glutenFree: false,
             dairyFree: false,
             gutHealth: false,
             phase1: false,
             phase2: false,
             phase3: false,
-            level1: false,
-            level2: false,
-            level3: false,
             title: undefined,
             data: [],
-            allData: [],
             challengeRecipe: [],
-            levelButtonData: [],
-            tagDataList: [],
-            key: 0,
             tags: [],
             phase: [],
             category: [],
@@ -63,24 +57,23 @@ export default class FilterRecipeScreen extends React.PureComponent {
             defaultLevelTags: "",
             phaseDefaultTags: "",
             categoryName: [],
-            loading: false
+            activeChallengeUserData: undefined,
+            currentChallengeDay: undefined,
         };
     }
 
-    onFocusFunction() {
+    componentDidMount = () => {
         this.getDefaultCategoryTags()
         this.getAllRecipeData()
         this.setState({
+            currentChallengeDay: this.props.navigation.getParam('currentChallengeDay', null),
+            activeChallengeUserData: this.props.navigation.getParam('activeChallengeUserData', null),
             phaseDefaultTags: this.props.navigation.getParam('phaseDefaultTags', null),
             defaultLevelTags: this.props.navigation.getParam("defaultLevelTags", null),
             challengeRecipe: this.props.navigation.getParam("challengeAllRecipe", null),
-            allData: this.props.navigation.getParam("recipes", null),
             recipes: this.props.navigation.getParam("recipes", null),
             title: this.props.navigation.getParam("title", null),
         });
-    }
-    componentDidMount = async () => {
-        this.onFocusFunction();
     };
 
     handleBack = () => {
@@ -108,17 +101,16 @@ export default class FilterRecipeScreen extends React.PureComponent {
     getDefaultCategoryTags = () => {
         this.setState({ loading: true })
         const recipeData = this.props.navigation.getParam("todayRecommendedRecipe", null)
+
         const categoryName = []
         const dupId = []
-        const finalRecipeData = []
-
 
         recipeData.forEach((res) => {
             if (res.tags) {
                 res.tags.filter((item) => {
                     if (item === 'V') categoryName.push(item.replace('V', 'Vegan'))
                     if (item === 'V+') categoryName.push(item.replace('V+', 'Vegetarian'))
-                    if (item === 'GF') categoryName.push(item.replace('GF', 'Gluta Free'))
+                    if (item === 'GF') categoryName.push(item.replace('GF', 'Gluten Free'))
                     if (item === 'DF') categoryName.push(item.replace('DF', 'Dairy Free'))
                     if (item === 'GH') categoryName.push(item.replace('GH', 'Gut Health'))
                 })
@@ -151,14 +143,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.setState({ isClickVisible: !this.state.isClickVisible });
     }
 
-    toggleLevelChallengeData = () => {
-        const { challengeRecipe } = this.state
-
-        this.setState({
-            levelButtonData: challengeRecipe.level1
-        })
-    }
-
     toggleVegan = () => {
         this.setState({
             veganChecked: !this.state.veganChecked,
@@ -189,16 +173,16 @@ export default class FilterRecipeScreen extends React.PureComponent {
         }
     }
 
-    toggleGlutaFree = () => {
+    toggleGlutenFree = () => {
         this.setState({
-            glutaFree: !this.state.glutaFree
+            glutenFree: !this.state.glutenFree
         })
-        if (this.state.glutaFree === false) {
-            this.setState({ category: [...this.state.category, { name: "Gluta Free" }] })
+        if (this.state.glutenFree === false) {
+            this.setState({ category: [...this.state.category, { name: "Gluten Free" }] })
         } else {
             this.setState({
                 category: this.state.category.filter((item) => {
-                    return item.name !== "Gluta Free"
+                    return item.name !== "Gluten Free"
                 })
             })
         }
@@ -291,7 +275,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.setState({ isFilterVisible: !this.state.isFilterVisible })
         this.setState({ veganChecked: false })
         this.setState({ vegetarianChecked: false })
-        this.setState({ glutaFree: false })
+        this.setState({ glutenFree: false })
         this.setState({ dairyFree: false })
         this.setState({ gutHealth: false })
         this.setState({ phase1: false })
@@ -306,127 +290,222 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.setState({ phase3: false })
         this.setState({ veganChecked: false })
         this.setState({ vegetarianChecked: false })
-        this.setState({ glutaFree: false })
+        this.setState({ glutenFree: false })
         this.setState({ dairyFree: false })
         this.setState({ gutHealth: false })
     }
 
-    applyButton = (data, levelButtonData) => {
+    applyButton = (data, challengeRecipeData) => {
 
-        const allData = []
+        const { levelText } = this.state
         const tagList = []
-        const phaseData = []
+        const recipePhases = []
+        const recipePhaseResult = []
 
-        levelButtonData.forEach(res => {
-            data.forEach((resTags) => {
-                try {
-                    resTags.tags.filter((resId) => {
-                        if (res.levelTags === resId) {
-                            phaseData.push(resTags)
+        if (levelText === 'L1') {
+            let recipePhase = []
+            challengeRecipeData.level1.forEach(res => {
+                data.forEach((resTags) => {
+                    try {
+                        resTags.tags.filter((resTag) => {
+                            if (res.levelTags === resTag) {
+                                if (this.state.phase1 === true) {
+                                    if (resTags.tags.includes(this.state.phaseText)) {
+                                        recipePhase.push(resTags)
+                                    }
+                                }
+                                if (this.state.phase2 === true) {
+                                    if (resTags.tags.includes(this.state.phaseText)) {
+                                        recipePhase.push(resTags)
+                                    }
+                                }
+                                if (this.state.phase3 === true) {
+                                    if (resTags.tags.includes(this.state.phaseText)) {
+                                        recipePhase.push(resTags)
+                                    }
+                                }
+                            }
+                        })
+                    } catch (err) {
+
+                    }
+                })
+            })
+
+            sortBy(recipePhase).filter((recipe) => {
+                for (let i = 0; i < recipe.tags.length; i++) {
+                    if (this.state.veganChecked === true) {
+                        if (recipe.tags[i] === 'V') {
+                            tagList.push(recipe)
                         }
-                    })
-                } catch (err) {
-
-                }
-            })
-        })
-
-        phaseData.forEach((res) => {
-            res.tags.filter((resTags) => {
-                if (this.state.phase1 === true) {
-                    if (resTags === this.state.phaseText) {
-                        allData.push(res.id)
-                    } else {
-                        allData.push(res.id)
+                    }
+                    if (this.state.vegetarianChecked === true) {
+                        if (recipe.tags[i] === 'V+') {
+                            tagList.push(recipe)
+                        }
+                    }
+                    if (this.state.glutenFree === true) {
+                        if (recipe.tags[i] === 'GF') {
+                            tagList.push(recipe)
+                        }
+                    }
+                    if (this.state.dairyFree === true) {
+                        if (recipe.tags[i] === 'DF') {
+                            tagList.push(recipe)
+                        }
+                    }
+                    if (this.state.gutHealth === true) {
+                        if (recipe.tags[i] === 'GH') {
+                            tagList.push(recipe)
+                        }
                     }
                 }
-                if (this.state.phase2 === true) {
-                    if (resTags === this.state.phaseText) {
-                        allData.push(res.id)
-                    } else {
-                        allData.push(res.id)
+            });
+
+            sortBy(recipePhase).filter((recipe) => {
+                for (let i = 0; i < recipe.tags.length; i++) {
+                    if (this.state.phase1 === true) {
+                        if (recipe.tags[i] === this.state.phaseText) {
+                            recipePhases.push(recipe)
+                        }
+                    }
+                    if (this.state.phase2 === true) {
+                        if (recipe.tags[i] === this.state.phaseText) {
+                            recipePhases.push(recipe)
+                        }
+                    }
+                    if (this.state.phase3 === true) {
+                        if (recipe.tags[i] === this.state.phaseText) {
+                            recipePhases.push(recipe)
+                        }
                     }
                 }
-                if (this.state.phase3 === true) {
-                    if (resTags === this.state.phaseText) {
-                        allData.push(res.id)
-                    } else {
-                        allData.push(res.id)
-                    }
-                }
-            })
-        })
+            });
 
-        const uniq = [...new Set(allData)]
-
-        for (var i = 0; i < uniq.length; i++) {
-            data.map(list => {
-                if (list.id === uniq[i]) {
-                    tagList.push(list)
-                }
-            })
         }
 
-        console.log('taglist:', tagList)
+        if (levelText === 'L2') {
+            let recipePhase = []
+            challengeRecipeData.level2.forEach(res => {
+                data.forEach((resTags) => {
+                    try {
+                        resTags.tags.filter((resTag) => {
+                            if (res.levelTags === resTag) {
+                                if (this.state.phase1 === true) {
+                                    recipePhase.push(resTags)
+                                    recipePhases.push(resTags)
+                                }
+                                if (this.state.phase2 === true) {
+                                    recipePhase.push(resTags)
+                                    recipePhases.push(resTags)
+                                }
+                                if (this.state.phase3 === true) {
+                                    recipePhase.push(resTags)
+                                    recipePhases.push(resTags)
+                                }
+                            }
+                        })
+                    } catch (err) {
 
-        const recipeLists = sortBy(tagList).filter((recipe) => {
-            for (let i = 0; i < recipe.tags.length; i++) {
-                if (this.state.veganChecked === true) {
-                    if (recipe.tags[i] === 'V') {
-                        return recipe.tags[i]
                     }
-                }
-                if (this.state.vegetarianChecked === true) {
-                    if (recipe.tags[i] === 'V+') {
-                        return recipe.tags[i]
-                    }
-                }
-                if (this.state.glutaFree === true) {
-                    if (recipe.tags[i] === 'GF') {
-                        return recipe.tags[i]
-                    }
-                }
-                if (this.state.dairyFree === true) {
-                    if (recipe.tags[i] === 'DF') {
-                        return recipe.tags[i]
-                    }
-                }
-                if (this.state.gutHealth === true) {
-                    if (recipe.tags[i] === 'GH') {
-                        return recipe.tags[i]
-                    }
-                }
-            }
-        });
+                })
+            })
 
-        const recipePhase = sortBy(tagList).filter((recipe) => {
-            for (let i = 0; i < recipe.tags.length; i++) {
-                if (this.state.phase1 === true) {
-                    if (recipe.tags[i] === 'P1') {
-                        return recipe.tags[i]
-                    } else {
-                        return recipe.tags[i]
+            sortBy(recipePhase).filter((recipe) => {
+                for (let i = 0; i < recipe.tags.length; i++) {
+                    if (this.state.veganChecked === true) {
+                        if (recipe.tags[i] === 'V') {
+                            tagList.push(recipe)
+                        }
+                    }
+                    if (this.state.vegetarianChecked === true) {
+                        if (recipe.tags[i] === 'V+') {
+                            tagList.push(recipe)
+                        }
+                    }
+                    if (this.state.glutenFree === true) {
+                        if (recipe.tags[i] === 'GF') {
+                            tagList.push(recipe)
+                        }
+                    }
+                    if (this.state.dairyFree === true) {
+                        if (recipe.tags[i] === 'DF') {
+                            tagList.push(recipe)
+                        }
+                    }
+                    if (this.state.gutHealth === true) {
+                        if (recipe.tags[i] === 'GH') {
+                            tagList.push(recipe)
+                        }
                     }
                 }
-                if (this.state.phase2 === true) {
-                    if (recipe.tags[i] === 'P2') {
-                        return recipe.tags[i]
-                    } else {
-                        return recipe.tags[i]
+            });
+        }
+
+        if (levelText === 'L3') {
+            let recipePhase = []
+
+            challengeRecipeData.level3.forEach(res => {
+                data.forEach((resTags) => {
+                    try {
+                        resTags.tags.filter((resTag) => {
+                            if (res.levelTags === resTag) {
+                                if (this.state.phase1 === true) {
+                                    recipePhase.push(resTags)
+                                    recipePhases.push(resTags)
+                                }
+                                if (this.state.phase2 === true) {
+                                    recipePhase.push(resTags)
+                                    recipePhases.push(resTags)
+                                }
+                                if (this.state.phase3 === true) {
+                                    recipePhase.push(resTags)
+                                    recipePhases.push(resTags)
+                                }
+                            }
+                        })
+                    } catch (err) {
+
+                    }
+                })
+            })
+
+            sortBy(recipePhase).filter((recipe) => {
+                for (let i = 0; i < recipe.tags.length; i++) {
+                    if (this.state.veganChecked === true) {
+                        if (recipe.tags[i] === 'V') {
+                            tagList.push(recipe)
+                        }
+                    }
+                    if (this.state.vegetarianChecked === true) {
+                        if (recipe.tags[i] === 'V+') {
+                            tagList.push(recipe)
+                        }
+                    }
+                    if (this.state.glutenFree === true) {
+                        if (recipe.tags[i] === 'GF') {
+                            tagList.push(recipe)
+                        }
+                    }
+                    if (this.state.dairyFree === true) {
+                        if (recipe.tags[i] === 'DF') {
+                            tagList.push(recipe)
+                        }
+                    }
+                    if (this.state.gutHealth === true) {
+                        if (recipe.tags[i] === 'GH') {
+                            tagList.push(recipe)
+                        }
                     }
                 }
-                if (this.state.phase3 === true) {
-                    if (recipe.tags[i] === 'P3') {
-                        return recipe.tags[i]
-                    } else {
-                        return recipe.tags[i]
-                    }
-                }
-            }
-        });
+            });
+        }
+
+        const uniqPhase = [...new Set(recipePhases)]
+        const uniqCat = [...new Set(tagList)]
 
         this.setState({
-            todayRecommendedRecipe: this.state.gutHealth || this.state.veganChecked || this.state.vegetarianChecked || this.state.glutaFree || this.state.dairyFree ? recipeLists : recipePhase,
+            todayRecommendedRecipe: this.state.gutHealth || this.state.veganChecked || this.state.vegetarianChecked || this.state.glutenFree || this.state.dairyFree ? uniqCat : uniqPhase,
             isFilterVisible: false,
             isClickVisible: false,
             tags: [{ level: this.state.levelText, phase: this.state.phase }],
@@ -444,13 +523,350 @@ export default class FilterRecipeScreen extends React.PureComponent {
             phase3: false,
             veganChecked: false,
             vegetarianChecked: false,
-            glutaFree: false,
+            glutenFree: false,
             dairyFree: false,
-            gutHealth: false
+            gutHealth: false,
+            levelText: "",
+            phaseText: "",
         });
     }
 
+    onFavorite = async (item, activeChallengeUserData, title, currentChallengeDay) => {
+        const recipeMeal = activeChallengeUserData.faveRecipe
+
+        try {
+            if (title.toLowerCase() === 'breakfast') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast = item.id
+            }
+            if (title.toLowerCase() === 'lunch') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.lunch = item.id
+            }
+            if (title.toLowerCase() === 'dinner') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.dinner = item.id
+
+            }
+            if (title.toLowerCase() === 'snack') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.snack = item.id
+
+            }
+            if (title.toLowerCase() === 'post workout') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.drink = item.id
+
+            }
+            if (title.toLowerCase() === 'preworkout') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout = item.id
+
+            }
+            if (title.toLowerCase() === 'treats') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.treats = item.id
+
+            }
+        } catch (err) {
+
+        }
+
+
+        const id = activeChallengeUserData.id
+        const uid = await AsyncStorage.getItem("uid");
+        const activeChallengeUserRef = db
+            .collection("users")
+            .doc(uid)
+            .collection("challenges")
+            .doc(id)
+
+        try {
+            if (title.toLowerCase() === 'breakfast') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+            if (title.toLowerCase() === 'lunch') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+            if (title.toLowerCase() === 'dinner') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+            if (title.toLowerCase() === 'snack') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+            if (title.toLowerCase() === 'post workout') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+            if (title.toLowerCase() === 'preworkout') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+            if (title.toLowerCase() === 'treats') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+        } catch (err) {
+
+        }
+
+
+    }
+
+    onRemoveFavorite = async (item, activeChallengeUserData, title, currentChallengeDay) => {
+
+        const recipeMeal = activeChallengeUserData.faveRecipe
+
+        try {
+            if (title.toLowerCase() === 'breakfast') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast = ""
+            }
+            if (title.toLowerCase() === 'lunch') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.lunch = ""
+            }
+            if (title.toLowerCase() === 'dinner') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.dinner = ""
+            }
+            if (title.toLowerCase() === 'snack') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.snack = ""
+
+            }
+            if (title.toLowerCase() === 'drink') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.drink = ""
+
+            }
+            if (title.toLowerCase() === 'preworkout') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout = ""
+
+            }
+            if (title.toLowerCase() === 'treats') {
+                recipeMeal[currentChallengeDay - 1].recipeMeal.treats = ""
+
+            }
+        } catch (err) {
+
+        }
+
+
+        const id = activeChallengeUserData.id
+        const uid = await AsyncStorage.getItem("uid");
+        const activeChallengeUserRef = db
+            .collection("users")
+            .doc(uid)
+            .collection("challenges")
+            .doc(id)
+
+        try {
+            if (title.toLowerCase() === 'breakfast') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+            if (title.toLowerCase() === 'lunch') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+            if (title.toLowerCase() === 'dinner') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+            if (title.toLowerCase() === 'snack') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+            if (title.toLowerCase() === 'drink') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+            if (title.toLowerCase() === 'preworkout') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+            if (title.toLowerCase() === 'treats') {
+                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
+            }
+        } catch (err) {
+
+        }
+    }
+
+    ifExist = (item, activeChallengeUserData, title, currentChallengeDay) => {
+        let result = false
+        const recipeMeal = activeChallengeUserData.faveRecipe
+
+        try {
+            try {
+                if (title.toLowerCase() === 'breakfast') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+            try {
+                if (title.toLowerCase() === 'lunch') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.lunch
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+            try {
+                if (title.toLowerCase() === 'dinner') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.dinner
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+            try {
+                if (title.toLowerCase() === 'snack') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.snack
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+            try {
+                if (title.toLowerCase() === 'post workout') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.drink
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+            try {
+                if (title.toLowerCase() === 'preworkout') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+            try {
+                if (title.toLowerCase() === 'treats') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.treats
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+        } catch (err) {
+
+        }
+
+        this.setState({
+            recipeIsExist: result
+        })
+
+    }
+
+    ifExistRecipe = (item, activeChallengeUserData, title, currentChallengeDay) => {
+        let result = false
+        const recipeMeal = activeChallengeUserData.faveRecipe
+
+        try {
+            try {
+                if (title.toLowerCase() === 'breakfast') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+            try {
+                if (title.toLowerCase() === 'lunch') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.lunch
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+            try {
+                if (title.toLowerCase() === 'dinner') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.dinner
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+            try {
+                if (title.toLowerCase() === 'snack') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.snack
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+            try {
+                if (title.toLowerCase() === 'post workout') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.drink
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+            try {
+                if (title.toLowerCase() === 'preworkout') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+            try {
+                if (title.toLowerCase() === 'treats') {
+                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.treats
+                    if (res === item.id) {
+                        result = true
+                    } else {
+                        result = false
+                    }
+                }
+            } catch (err) { }
+
+        } catch (err) {
+
+        }
+
+        return result
+    }
+
+    onSelectHeart = (item, activeChallengeUserData, title, currentChallengeDay) => {
+        if (this.state.recipeIsExist) {
+            this.onRemoveFavorite(item, activeChallengeUserData, title, currentChallengeDay)
+        } else {
+            this.onFavorite(item, activeChallengeUserData, title, currentChallengeDay)
+        }
+        this.ifExist(item, activeChallengeUserData, title, currentChallengeDay)
+    }
+
     renderItem = ({ item }) => {
+        const { activeChallengeUserData, currentChallengeDay } = this.state
+
+        const faveRecipeItem = activeChallengeUserData.faveRecipe
 
         const color1 = []
 
@@ -468,6 +884,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         return (
             <FilterScreen
+                faveRecipeItem={faveRecipeItem}
+                ifExistRecipe={() => this.ifExistRecipe(item, activeChallengeUserData, title, currentChallengeDay)}
+                onSelectHeart={() => this.onSelectHeart(item, activeChallengeUserData, title, currentChallengeDay)}
                 navigation={this.props.navigation}
                 result={result}
                 item={item}
@@ -476,7 +895,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
         )
     };
 
-    clickModal = (data, levelButtonData) => {
+    clickModal = (data, challengeRecipeData) => {
 
         return (
             <Modal
@@ -495,7 +914,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     togglePhase1={() => this.togglePhase1()}
                     togglePhase2={() => this.togglePhase2()}
                     togglePhase3={() => this.togglePhase3()}
-                    applyButton={() => this.applyButton(data, levelButtonData)}
+                    applyButton={() => this.applyButton(data, challengeRecipeData)}
                     headerButton={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
                     backButton={() => this.setState({ isFilterVisible: true, isClickVisible: false })}
                     // backButton={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
@@ -519,30 +938,23 @@ export default class FilterRecipeScreen extends React.PureComponent {
             >
                 <LevelModal
                     onPressLevel1={() => this.setState({
-                        // isClickVisible: !this.state.isClickVisible,
                         isFilterVisible: false,
                         isClickVisible: true,
-                        levelButtonData: challengeRecipeData.level1,
-                        level1: !this.state.level1,
                         levelText: "L1"
                     })}
                     onPressLevel2={() => this.setState({
-                        // isClickVisible: !this.state.isClickVisible,
                         isFilterVisible: false,
                         isClickVisible: true,
-                        levelButtonData: challengeRecipeData.level2,
                         levelText: "L2"
                     })}
                     onPressLevel3={() => this.setState({
-                        // isClickVisible: !this.state.isClickVisible,
                         isFilterVisible: false,
                         isClickVisible: true,
-                        levelButtonData: challengeRecipeData.level3,
                         levelText: "L3"
                     })}
                     veganChecked={this.state.veganChecked}
                     vegetarianChecked={this.state.vegetarianChecked}
-                    glutaFreeChecked={this.state.glutaFree}
+                    glutenFreeChecked={this.state.glutenFree}
                     dairyFreeChecked={this.state.dairyFree}
                     gutHealthChecked={this.state.gutHealth}
                     phase1={this.state.phase1}
@@ -550,11 +962,11 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     phase3={this.state.phase3}
                     toggleVegan={() => this.toggleVegan()}
                     toggleVegetarian={() => this.toggleVegetarian()}
-                    toggleGlutaFree={() => this.toggleGlutaFree()}
+                    toggleGlutenFree={() => this.toggleGlutenFree()}
                     toggleDairyFree={() => this.toggleDairyFree()}
                     toggleGutHealth={() => this.toggleGutHealth()}
                     closeModal={() => this.closeModal()}
-                    applyButton={() => this.applyButton(data)}
+                    applyButton={() => this.applyButton(data, challengeRecipeData)}
                 />
             </Modal>
         )
@@ -564,11 +976,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
     render() {
         const {
-            recipes,
             data,
-            allData,
             challengeRecipe,
-            levelButtonData,
             tags,
             nameCat,
             title,
@@ -576,7 +985,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             defaultLevelTags,
             phaseDefaultTags,
             categoryName,
-            loading
+            loading,
         } = this.state
 
         const skeleton = (
@@ -598,7 +1007,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                             isBigTitle={true}
                             isBackButton={true}
                             onPress={this.handleBack}
-                            backButtonText="Back to Workout"
+                            backButtonText="Back to Challenge"
                             isBackButton={true}
                             customContainerStyle={{ bottom: 25 }}
                         />
@@ -750,7 +1159,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 }
                 {
                     this.state.isClickVisible && (
-                        this.clickModal(data, levelButtonData)
+                        this.clickModal(data, challengeRecipe)
                     )
                 }
             </View>
