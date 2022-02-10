@@ -1,15 +1,18 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React,{useEffect,useState, useRef} from 'react';
+import { View, StyleSheet, Text, Animated } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { DotIndicator } from 'react-native-indicators';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts'; 
+import progressBar from '../../styles/progressBar';
 const Loader = ({
   loading,
   color,
   overlayColor,
   text,
+  progressive,
+  downloaded
 }) => {
   if (loading) {
     return (
@@ -21,6 +24,11 @@ const Loader = ({
           overlayColor={overlayColor}
         >
           <View style={styles.contentContainer}>
+            {progressive?
+            <View style={progressBar.bar}>
+              <Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: "#d69354", borderRadius: 5, width:`${downloaded}%`}}/>
+            </View>
+            :
             <View style={styles.dotIndicatorContainer}>
               <DotIndicator
                 color={colors.themeColor.color}
@@ -28,6 +36,7 @@ const Loader = ({
                 size={10}
               />
             </View>
+            }
             {
               text && (
                 <Text style={styles.loaderText}>
