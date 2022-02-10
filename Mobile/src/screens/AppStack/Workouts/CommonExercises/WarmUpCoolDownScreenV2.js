@@ -7,8 +7,8 @@ import {
   StatusBar,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
-import CustomBtn from "../../../../components/Shared/CustomBtn";
 import colors from "../../../../styles/colors";
 import fonts from "../../../../styles/fonts";
 import { getLastExercise, getLastExerciseWC } from "../../../../utils/workouts";
@@ -25,13 +25,10 @@ import WorkoutTimer from "../../../../components/Workouts/WorkoutTimer";
 import ExerciseInfoButtonV2 from "../../../../components/Workouts/ExerciseInfoButtonV2";
 import ExerciseInfoModal from "../../../../components/Workouts/ExerciseInfoModal";
 import Loader from "../../../../components/Shared/Loader";
-import WorkoutProgressBar from "../../../../components/Workouts/WorkoutProgressBar";
-import PauseButtonRow from "../../../../components/Workouts/PauseButtonRow";
-import WorkoutPauseModal from "../../../../components/Workouts/WorkoutPauseModal";
 import WorkoutProgressControl from "../../../../components/Workouts/WorkoutProgressControl";
 import TextTicker from "react-native-text-ticker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import {WebView} from "react-native-webview";
+
 export default class WarmUpCoolDownScreenV2 extends Component {
   constructor(props) {
     super(props);
@@ -47,6 +44,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       exerciseInfoModalVisible: false,
       pauseModalVisible: false,
       restart: false,
+      preLoading: false,
     };
   }
   componentDidMount() {
@@ -55,7 +53,8 @@ export default class WarmUpCoolDownScreenV2 extends Component {
   }
 
   async loadExercise() {
-    const { warmUp, workout, fitnessLevel } = this.props.navigation.state.params;
+    const { warmUp, workout, fitnessLevel } =
+      this.props.navigation.state.params;
     const { exerciseIndex } = this.state;
     const type = warmUp ? "warmUp" : "coolDown";
     // const exerciseIds =  warmUp?workout.warmUpExercises:workout.coolDownExercises;
@@ -76,7 +75,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
           ? exerciseList[exerciseIndex - 1].duration
           : 30,
     });
-    setTimeout(() => this.setState({ timerStart: true }), 100);
+    // setTimeout(() => this.setState({ timerStart: true }), 100);
   }
 
   goToExercise() {
@@ -90,7 +89,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       extraProps,
       warmUp,
       fromCalender,
-      extra
+      extra,
     } = this.props.navigation.state.params;
     if (warmUp) {
       this.props.navigation.replace("Exercise", {
@@ -264,7 +263,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       exerciseList[exerciseIndex - 1].coachingTip &&
       exerciseList[exerciseIndex - 1].coachingTip.length > 0;
     const workoutTimer = () => {
-      console.log('totalDuration: ', totalDuration)
+      console.log("totalDuration: ", totalDuration);
       return (
         <WorkoutTimer
           totalDuration={Number(totalDuration)}
@@ -289,7 +288,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
     };
 
     let currentExercise = exerciseList[exerciseIndex - 1];
-
+    console.log(currentExercise, "currentExercise");
     let lastExercise =
       exerciseList.length > 0
         ? getLastExerciseWC(exerciseList, exerciseIndex - 1, workout, 1)
@@ -323,13 +322,41 @@ export default class WarmUpCoolDownScreenV2 extends Component {
             </View>
             <View>
               {exerciseList.length > 0 && (
-                <WebView
-                  source={{
-                    uri: 'https://firebasestorage.googleapis.com/v0/b/fitazfk-app.appspot.com/o/Exercises%2F000e5ada-9669-4bda-8800-24e93b3c9321%2FVideo1?alt=media&token=ca76f506-0a80-487f-9d7f-056cf2fd47c5',
-                  }}
-                  isLooping
-                  style={{ width, height: width }}
-                />
+                <View>
+                  {this.state.preLoading && (
+                    <ActivityIndicator
+                      animating
+                      color={"gray"}
+                      size="large"
+                      style={{
+                        flex: 1,
+                        position: "absolute",
+                        top: "50%",
+                        left: "45%",
+                      }}
+                    />
+                  )}
+                  <Video
+                    source={{
+                      uri: `${
+                        currentExercise.videoUrls[0] &&
+                        currentExercise.videoUrls[0].url
+                      }`,
+                    }}
+                    rate={1.0}
+                    volume={1.0}
+                    isMuted={false}
+                    resizeMode="cover"
+                    shouldPlay={!videoPaused}
+                    isLooping
+                    style={{ width, height: width }}
+                    onLoadStart={() => this.setState({ preLoading: true })}
+                    onReadyForDisplay={() => {
+                      this.setState({ preLoading: false });
+                      this.setState({ timerStart: true });
+                    }}
+                  />
+                </View>
               )}
               {showInfoBtn && (
                 <ExerciseInfoButtonV2 onPress={this.showExerciseInfoModal} />

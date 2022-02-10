@@ -7,7 +7,6 @@ import {
   Alert,
   Linking,
   Dimensions,
-  TextInput,
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -17,7 +16,7 @@ import ReactTimeout from "react-timeout";
 import { db } from "../../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
-import globalStyle, { containerPadding } from "../../../styles/globalStyles";
+import globalStyle from "../../../styles/globalStyles";
 import calendarStyles from "./calendarStyle";
 import * as Haptics from "expo-haptics";
 import {
@@ -31,7 +30,6 @@ import {
   convertRecipeData,
 } from "../../../utils/challenges";
 import CustomCalendarStrip from "../../../components/Calendar/CustomCalendarStrip";
-import ChallengeProgressCard2 from "../../../components/Calendar/ChallengeProgressCard2";
 import ChallengeWorkoutCard from "../../../components/Calendar/ChallengeWorkoutCard";
 import TodayMealsList from "../../../components/Calendar/TodayMealsList";
 import Modal from "react-native-modal";
@@ -45,12 +43,9 @@ import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
 import { checkVersion } from "react-native-check-version";
 import { getVersion } from "react-native-device-info";
 import fonts from "../../../styles/fonts";
-import Svg, { Path } from "react-native-svg"
-import {
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import Svg, { Path } from "react-native-svg";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Icon from "react-native-vector-icons/FontAwesome";
-import sortBy from "lodash.sortby";
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -149,8 +144,8 @@ class CalendarHomeScreen extends React.PureComponent {
           this.setState({
             AllRecipe: res.recommendedRecipe,
             loading: false,
-          })
-        })
+          });
+        });
 
         this.setState({
           challengeRecipe: challengeLevel,
@@ -207,9 +202,9 @@ class CalendarHomeScreen extends React.PureComponent {
       activeChallengeUserData &&
       activeChallengeUserData.status === "Active" &&
       new Date(activeChallengeUserData.startDate).getTime() <=
-      new Date(this.stringDate).getTime() &&
+        new Date(this.stringDate).getTime() &&
       new Date(activeChallengeUserData.endDate).getTime() >=
-      new Date(this.stringDate).getTime()
+        new Date(this.stringDate).getTime()
     ) {
       this.getCurrentPhaseInfo();
     } else {
@@ -376,8 +371,8 @@ class CalendarHomeScreen extends React.PureComponent {
           .indexOf("Array") > -1
           ? workout.warmUpExercises
           : workout.warmUpExercises.filter((warmUpExercise) => {
-            return warmUpExercise;
-          }),
+              return warmUpExercise;
+            }),
         workout.warmUpExerciseModel,
         "warmUp"
       );
@@ -511,7 +506,7 @@ class CalendarHomeScreen extends React.PureComponent {
               Alert.alert(
                 "Congratulations!",
                 "You have completed your challenge",
-                [{ text: "OK", onPress: () => { } }],
+                [{ text: "OK", onPress: () => {} }],
                 { cancelable: false }
               );
             } else {
@@ -603,7 +598,7 @@ class CalendarHomeScreen extends React.PureComponent {
               treatsId.push(res.recipeMeal.treats);
             }
           }
-        } catch (err) { }
+        } catch (err) {}
       });
 
       this.setState({
@@ -807,7 +802,7 @@ class CalendarHomeScreen extends React.PureComponent {
       challengeAllRecipe: challengeRecipe[0],
       recipes: data,
       title: title,
-      allRecipeData: data1
+      allRecipeData: data1,
     });
   }
 
@@ -879,7 +874,9 @@ class CalendarHomeScreen extends React.PureComponent {
           todayRecommendedRecipe={todayRecommendedRecipe[0]}
           data={todayRecommendedMeal[0]}
           onPress={(res) => this.goToRecipe(res)}
-          filterPress={(res, res1, res2, title) => this.getToFilter(res, res1, res2, title)}
+          filterPress={(res, res1, res2, title) =>
+            this.getToFilter(res, res1, res2, title)
+          }
         />
       </>
     );
@@ -1012,7 +1009,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   fontFamily: fonts.bold,
                 }}
               >
-                {this.transformLevel + ' '}
+                {this.transformLevel + " "}
               </Text>
             </View>
             <Text
@@ -1068,11 +1065,11 @@ class CalendarHomeScreen extends React.PureComponent {
               left:
                 Platform.OS === "ios"
                   ? (width * this.currentChallengeDay) /
-                  activeChallengeData.numberOfDays +
-                  11
+                      activeChallengeData.numberOfDays +
+                    11
                   : (width * this.currentChallengeDay) /
-                  activeChallengeData.numberOfDays +
-                  12,
+                      activeChallengeData.numberOfDays +
+                    12,
               top: 85,
             }}
           >
@@ -1104,11 +1101,11 @@ class CalendarHomeScreen extends React.PureComponent {
               left:
                 Platform.OS === "ios"
                   ? (width * this.currentChallengeDay) /
-                  activeChallengeData.numberOfDays -
-                  7
+                      activeChallengeData.numberOfDays -
+                    7
                   : (width * this.currentChallengeDay) /
-                  activeChallengeData.numberOfDays -
-                  7,
+                      activeChallengeData.numberOfDays -
+                    7,
               top: Platform.OS === "ios" ? 96 : 94,
               backgroundColor: "#F79400",
               width: 40,
@@ -1180,7 +1177,7 @@ class CalendarHomeScreen extends React.PureComponent {
         animationIn="fadeInLeft"
         animationOut="fadeOutLeft"
         onBackdropPress={() => this.toggleSetting()}
-      // useNativeDriver={true}
+        // useNativeDriver={true}
       >
         <ChallengeSetting
           onToggle={() => this.toggleSetting()}

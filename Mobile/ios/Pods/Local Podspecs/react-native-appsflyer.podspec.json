@@ -8,9 +8,11 @@
     "url": "https://github.com/AppsFlyerSDK/react-native-appsflyer/blob/master/LICENSE"
   },
   "homepage": "https://github.com/AppsFlyerSDK/react-native-appsflyer#readme",
-  "authors": "Appsflyer / Maxim Shoustin",
+  "authors": {
+    "name": "Appsflyer / Maxim Shoustin"
+  },
   "source": {
-    "git": "https://github.com/AppsFlyerSDK/react-native-appsflyer.git"
+    "git": "git+https://github.com/AppsFlyerSDK/react-native-appsflyer.git"
   },
   "source_files": "ios/**/*.{h,m}",
   "platforms": {

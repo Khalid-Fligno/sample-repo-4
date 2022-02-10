@@ -7,13 +7,11 @@ import {
   TouchableOpacity,
   Alert,
   Linking,
-  Image,
-  StatusBar,
-  FlatList,
   Platform,
   UIManager,
   LayoutAnimation,
   SectionList,
+  ActivityIndicator,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
@@ -23,28 +21,19 @@ import Modal from "react-native-modal";
 import Carousel from "react-native-carousel";
 import { DotIndicator } from "react-native-indicators";
 import { db } from "../../../../config/firebase";
-import Loader from "../../../components/Shared/Loader";
 import Icon from "../../../components/Shared/Icon";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import AddToCalendarButton from "../../../components/Shared/AddToCalendarButton";
 import {
   findFocus,
-  findLocation,
   findFocusIcon,
   findWorkoutType,
 } from "../../../utils/workouts";
 import colors from "../../../styles/colors";
-// import fonts from '../../../styles/fonts';
 import globalStyle from "../../../styles/globalStyles";
 import WorkoutScreenStyle from "./WorkoutScreenStyle";
 import TimeSvg from "../../../../assets/icons/time";
-import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import NutritionStyles from "../Nutrition/NutritionStyles";
-import { StackActions } from "react-navigation";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import DoubleRightArrow from "../../../../assets/icons/DoubleRightArrow";
-import { WebView } from "react-native-webview";
 
 const moment = require("moment");
 
@@ -78,7 +67,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       expandedExercise: true,
       expandedWarmup: false,
       expandedCooldown: false,
-      lifestyle: false
+      lifestyle: false,
+      preLoading: false,
     };
   }
 
@@ -274,17 +264,17 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     return <View />;
   };
 
-  renderExercise = ({ item: exercise, index, section, }) => {
+  renderExercise = ({ item: exercise, index, section }) => {
     // console.log("Workout: ", this.state.workout.exercises[0].duration);
     let showRR =
       exercise.recommendedResistance &&
-        !exercise.recommendedResistance.includes("N/A")
+      !exercise.recommendedResistance.includes("N/A")
         ? true
         : false;
     let showCT =
       exercise.coachingTip &&
-        exercise.coachingTip.length > 0 &&
-        !exercise.coachingTip.includes("none")
+      exercise.coachingTip.length > 0 &&
+      !exercise.coachingTip.includes("none")
         ? true
         : false;
     const workIntervalTimeinSec =
@@ -295,21 +285,23 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     const convert = (exerciseDur) => {
       var mins = Math.trunc(exerciseDur / 60);
       var sec = exerciseDur % 60;
-      return mins+"min "+ sec + "s"
-    }
+      return mins + "min " + sec + "s";
+    };
 
     let videoUrl = "";
     switch (section.key) {
       case 0:
-        videoUrl = `${FileSystem.cacheDirectory}warmUpExercise-${index + 1
-          }.mp4`;
+        videoUrl = `${FileSystem.cacheDirectory}warmUpExercise-${
+          index + 1
+        }.mp4`;
         break;
       case 1:
         videoUrl = `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`;
         break;
       case 2:
-        videoUrl = `${FileSystem.cacheDirectory}coolDownExercise-${index + 1
-          }.mp4`;
+        videoUrl = `${FileSystem.cacheDirectory}coolDownExercise-${
+          index + 1
+        }.mp4`;
         break;
     }
 
@@ -468,43 +460,25 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                     )}
                 </View>
               </View>
-              <WebView
-                source={{
-                  html: `<video playsinline controls autoplay src=${
-                    exercise.videoUrls[0] && exercise.videoUrls[0].url
-                  }  allowfullscreen="0" ></video>`,
-                }}
-                // source={{
-                //   html: `
-                //   <video width='100%' height: '100%' controls>
-                //       <source src=${
-                //         exercise.videoUrls[0] && exercise.videoUrls[0].url
-                //       } type="video/mp4" allowfullscreen="0">
-                //   </video>`,
-                //   // html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${
-                //   //   exercise.videoUrls[0] && exercise.videoUrls[0].url
-                //   // } sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
-                // }}
-                useWebKit={true}
-                allowsInlineMediaPlayback={true}
-                allowsFullscreenVideo={false}
-                style={{
-                  width: width - 30,
-                  height: width - 30,
-                  position: "relative",
-                  zIndex: 0,
-                }}
-                javaScriptEnabled={true}
-                cacheEnabled={true}
-                javaScriptEnabled={true}
-                allowFileAccess={false}
-              />
-              {/*<Video
+              {this.state.preLoading && (
+                <ActivityIndicator
+                  animating
+                  color={"gray"}
+                  size="large"
+                  style={{
+                    flex: 1,
+                    position: "absolute",
+                    top: "50%",
+                    left: "45%",
+                  }}
+                />
+              )}
+
+              <Video
                 key={exercise.name.toUpperCase()}
                 ref={(ref) => (this.videoRef = ref)}
                 source={{
-                  // uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-                  uri: videoUrl,
+                  uri: `${exercise.videoUrls[0] && exercise.videoUrls[0].url}`,
                 }}
                 playWhenInactive
                 resizeMode="contain"
@@ -519,7 +493,9 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                   position: "relative",
                   zIndex: 0,
                 }}
-              />*/}
+                onLoadStart={() => this.setState({ preLoading: true })}
+                onReadyForDisplay={() => this.setState({ preLoading: false })}
+              />
             </View>
             <View style={styles.invisibleView}>
               <View style={styles.setCounter}>
@@ -692,29 +668,29 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
               sections={
                 workout.warmUpExercises && workout.coolDownExercises
                   ? [
-                    {
-                      data: workout.warmUpExercises,
-                      title: "Warmup",
-                      key: 0,
-                    },
-                    {
-                      data: workout.exercises,
-                      title: "Workout",
-                      key: 1,
-                    },
-                    {
-                      data: workout.coolDownExercises,
-                      title: "Cooldown",
-                      key: 2,
-                    },
-                  ]
+                      {
+                        data: workout.warmUpExercises,
+                        title: "Warmup",
+                        key: 0,
+                      },
+                      {
+                        data: workout.exercises,
+                        title: "Workout",
+                        key: 1,
+                      },
+                      {
+                        data: workout.coolDownExercises,
+                        title: "Cooldown",
+                        key: 2,
+                      },
+                    ]
                   : [
-                    {
-                      data: workout.exercises,
-                      title: "Workout",
-                      key: 1,
-                    },
-                  ]
+                      {
+                        data: workout.exercises,
+                        title: "Workout",
+                        key: 1,
+                      },
+                    ]
               }
               keyExtractor={this.keyExtractor}
               renderItem={this.renderItem}

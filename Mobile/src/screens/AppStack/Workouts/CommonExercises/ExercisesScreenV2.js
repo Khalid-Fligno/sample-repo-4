@@ -8,15 +8,13 @@ import {
   StatusBar,
   Alert,
   AppState,
+  ActivityIndicator,
 } from "react-native";
 import * as FileSystem from "expo-file-system";
 import { Video } from "expo-av";
 import FadeInView from "react-native-fade-in-view";
 import WorkoutTimer from "../../../../components/Workouts/WorkoutTimer";
-import WorkoutPauseModal from "../../../../components/Workouts/WorkoutPauseModal";
 import ExerciseInfoModal from "../../../../components/Workouts/ExerciseInfoModal";
-import ExerciseInfoButton from "../../../../components/Workouts/ExerciseInfoButton";
-import PauseButtonRow from "../../../../components/Workouts/PauseButtonRow";
 import colors from "../../../../styles/colors";
 import fonts from "../../../../styles/fonts";
 import appsFlyer from "react-native-appsflyer";
@@ -24,7 +22,6 @@ import { db } from "../../../../../config/firebase";
 import AsyncStorage from "@react-native-community/async-storage";
 import FastImage from "react-native-fast-image";
 import {
-  findWorkoutType,
   getLastExercise,
   getRandomRestImages,
   showNextExerciseFlag,
@@ -33,7 +30,6 @@ import { isActiveChallenge } from "../../../../utils/challenges";
 import firebase from "firebase";
 import moment from "moment";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { object } from "prop-types";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 const { width, height } = Dimensions.get("window");
@@ -41,7 +37,6 @@ import ExerciseInfoButtonV2 from "../../../../components/Workouts/ExerciseInfoBu
 import WorkoutProgressControl from "../../../../components/Workouts/WorkoutProgressControl";
 import { Platform } from "react-native";
 import TextTicker from "react-native-text-ticker";
-import { WebView } from "react-native-webview";
 
 const updateWeeklyTargets = (obj, field, newTally) => {
   return Object.assign({}, obj, { [field]: newTally });
@@ -66,13 +61,13 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     let restImage = "";
 
     let totalDuration = 0;
-    let interval = false
+    let interval = false;
 
     workout.filters.forEach((el) => {
-      if (el === 'interval') {
-        interval = true
+      if (el === "interval") {
+        interval = true;
       }
-    })
+    });
 
     if (rest) {
       totalDuration = workout.restIntervalMap[fitnessLevel - 1];
@@ -91,7 +86,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     ) {
       totalDuration =
         currentExercise["restIntervalMap"][String(setCount)][
-        String(fitnessLevel - 1)
+          String(fitnessLevel - 1)
         ];
       rest = true;
     }
@@ -129,12 +124,13 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       rest: rest,
       setCount: setCount,
       restRandomImage: "",
-      interval: interval
+      interval: interval,
+      preLoading: false,
     };
   }
 
   componentDidMount() {
-    this.startTimer();
+    // this.startTimer();
 
     AppState.addEventListener("change", this.handleAppStateChange);
   }
@@ -161,10 +157,11 @@ export default class ExercisesScreenV2 extends React.PureComponent {
 
     // console.log('workoutworkout', workout['lifestyle'])
 
-    if (workout['lifestyle']) {
+    if (workout["lifestyle"]) {
       return db.runTransaction((transaction) => {
         return transaction.get(userRef).then((userDoc) => {
-          const newWeeklyComplete = userDoc.data().weeklyTargets[workoutName] + 1;
+          const newWeeklyComplete =
+            userDoc.data().weeklyTargets[workoutName] + 1;
           const workoutCount = userDoc.data().totalWorkoutCompleted + 1;
           const oldWeeklyTargets = userDoc.data().weeklyTargets;
           const newWeeklyTargets = updateWeeklyTargets(
@@ -289,13 +286,12 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           currentExerciseIndex + 1
         );
       }
-    }else if (workout.workoutProcessType === "onlyOne") {
+    } else if (workout.workoutProcessType === "onlyOne") {
       if (this.checkFinished(currentExerciseIndex, setCount)) {
         // console.log("finished");
         this.updateWeekly();
         this.workoutComplete(reps, resistanceCategoryId);
       } else if (currentExerciseIndex < workout.exercises.length - 1) {
-        
         this.goToExercise(
           setCount,
           reps,
@@ -339,8 +335,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     currentExerciseIndex,
     rest = false
   ) {
-    console.log('setCount: ',  setCount)
-    console.log('Reps: ',  reps)
+    console.log("setCount: ", setCount);
+    console.log("Reps: ", reps);
     let {
       workoutSubCategory,
       fitnessLevel,
@@ -540,15 +536,15 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           false
         );
       } else if (currentExerciseIndex > 0)
-        this.goToExercise(workout.workoutReps, reps, null, currentExerciseIndex - 1, false);
-      else {
         this.goToExercise(
-          2,
+          workout.workoutReps,
           reps,
           null,
-          currentExerciseIndex,
+          currentExerciseIndex - 1,
           false
         );
+      else {
+        this.goToExercise(2, reps, null, currentExerciseIndex, false);
       }
     } else if (workout.workoutProcessType === "circular") {
       if (currentExerciseIndex > 0) {
@@ -600,8 +596,9 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       return (
         <View style={styles.invisibleView}>
           <View style={styles.setCounter}>
-            <Text style={styles.setCounterText}>{`Set ${setCount} of ${workout.workoutReps
-              } - ${this.repsInterval} ${rest ? "sec" : ""}`}</Text>
+            <Text style={styles.setCounterText}>{`Set ${setCount} of ${
+              workout.workoutReps
+            } - ${this.repsInterval} ${rest ? "sec" : ""}`}</Text>
           </View>
         </View>
       );
@@ -675,7 +672,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     // console.log('totalDuration: ', totalDuration)
     // console.log('interval: ', interval)
     // console.log('rest: ', rest)
-      // console.log('currentexercise',currentExercise)
+    // console.log('currentexercise',currentExercise)
     const setCount = this.props.navigation.getParam("setCount", 1);
 
     let handleSkip = false;
@@ -694,7 +691,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     ) {
       this.repsInterval =
         currentExercise["workIntervalMap"][String(setCount)][
-        String(fitnessLevel - 1)
+          String(fitnessLevel - 1)
         ];
     }
     if (
@@ -705,7 +702,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     ) {
       this.repsInterval =
         currentExercise["restIntervalMap"][String(setCount)][
-        String(fitnessLevel - 1)
+          String(fitnessLevel - 1)
         ];
     }
 
@@ -719,8 +716,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
 
     let showCT =
       currentExercise.coachingTip &&
-        currentExercise.coachingTip.length > 0 &&
-        !currentExercise.coachingTip.includes("none")
+      currentExercise.coachingTip.length > 0 &&
+      !currentExercise.coachingTip.includes("none")
         ? true
         : false;
 
@@ -729,7 +726,9 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         if (!workout.count && !rest)
           return (
             <WorkoutTimer
-              totalDuration={ Number(currentExercise.duration) || Number(totalDuration) }
+              totalDuration={
+                Number(currentExercise.duration) || Number(totalDuration)
+              }
               start={timerStart}
               handleFinish={() => {
                 if (!rest)
@@ -887,53 +886,44 @@ export default class ExercisesScreenV2 extends React.PureComponent {
               </View>
             </View>
             {!rest && (
-              <WebView
-                source={{
-                  html: `<video playsinline controls autoplay src=${
-                    currentExercise.videoUrls[0] &&
-                    currentExercise.videoUrls[0].url
-                  } ></video>`,
-                }}
-                useWebKit={true}
-                allowsInlineMediaPlayback={true}
-                // source={{
-                //   html: `<iframe width='100%' height: '100%' style='position:absolute; top:0; left:0; bottom:0; right:0 width:100%; height:100%' src=${
-                //     currentExercise.videoUrls[0] &&
-                //     currentExercise.videoUrls[0].url
-                //   } sandbox  frameborder='0' allowfullscreen="0"></iframe>`,
-                // }}
-                allowsFullscreenVideo={false}
-                style={{
-                  width,
-                  height: width > height / 2 ? height / 2 : width,
-                }}
-                cacheEnabled={true}
-                mediaPlaybackRequiresUserAction={
-                  Platform.OS !== "android" || Platform.Version >= 17
-                    ? false
-                    : undefined
-                }
-                javaScriptEnabled={true}
-                allowFileAccess={false}
-                injectedJavaScript={`document.getElementsByTagName("video")[0].removeAttribute("autoplay"); `}
-                userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
-              />
-              // <Video
-              //   source={{
-              //     uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex + 1
-              //       }.mp4`,
-              //   }}
-              //   rate={1.0}
-              //   volume={1.0}
-              //   isMuted={false}
-              //   resizeMode="cover"
-              //   shouldPlay={!videoPaused}
-              //   isLooping
-              //   style={{
-              //     width,
-              //     height: width > height / 2 ? height / 2 : width,
-              //   }}
-              // />
+              <View>
+                {this.state.preLoading && (
+                  <ActivityIndicator
+                    animating
+                    color={"gray"}
+                    size="large"
+                    style={{
+                      flex: 1,
+                      position: "absolute",
+                      top: "50%",
+                      left: "45%",
+                    }}
+                  />
+                )}
+                <Video
+                  source={{
+                    uri: `${
+                      currentExercise.videoUrls[0] &&
+                      currentExercise.videoUrls[0].url
+                    }`,
+                  }}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={false}
+                  resizeMode="cover"
+                  shouldPlay={!videoPaused}
+                  isLooping
+                  style={{
+                    width,
+                    height: width > height / 2 ? height / 2 : width,
+                  }}
+                  onLoadStart={() => this.setState({ preLoading: true })}
+                  onReadyForDisplay={() => {
+                    this.setState({ preLoading: false });
+                    this.startTimer();
+                  }}
+                />
+              </View>
             )}
             {rest && (
               <FastImage
