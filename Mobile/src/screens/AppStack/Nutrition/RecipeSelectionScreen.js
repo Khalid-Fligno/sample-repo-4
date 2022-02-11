@@ -5,6 +5,8 @@ import {
   Alert,
   FlatList,
   Text,
+  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import sortBy from 'lodash.sortby';
@@ -24,7 +26,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       recipes: [],
       loading: false,
       filterIndex: 0,
-      meal: null
+      meal: null,
+      onLoad: 1,
     };
   }
 
@@ -48,14 +51,17 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   }
 
   fetchRecipes = async () => {
+    console.log('onload: ', this.state.onLoad)
     this.setState({ loading: true });
     const meal = this.props.navigation.getParam('meal', null);
     const challengeMealsFilterList = this.props.navigation.getParam('challengeMealsFilterList', null);
     this.unsubscribe = await db.collection('recipes')
       .where(meal, '==', true)
       .where("showLifestyle", '==', true)
+      .limit(this.state.onLoad)
       .onSnapshot(async (querySnapshot) => {
         const recipes = [];
+        
         await querySnapshot.forEach(async (doc) => {
           if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
             if (challengeMealsFilterList.includes(doc.data().id))
@@ -81,7 +87,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
               Alert.alert('', 'Image download error');
             });
         }));
-        this.setState({ recipes: sortBy(recipes, 'title'), loading: false });
+        this.setState({ recipes: recipes.sort(), loading: false, onLoad: this.state.onLoad + 1 });
       });
   }
 
@@ -111,6 +117,26 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     const { navigation } = this.props;
     navigation.pop();
   }
+
+  renderFooter = () => {
+    console.log(this.state.onLoad)
+    console.log('Loading: ', this.state.loading)
+    return (
+      //Footer View with Load More button
+      <View style={styles.footer}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={this.fetchRecipes}
+          //On Click of button calling getData function to load more data
+          style={styles.loadMoreBtn}>
+          <Text style={styles.btnText}>Load More</Text>
+          {this.state.loading ? (
+            <ActivityIndicator color="white" style={{ marginLeft: 8 }} />
+          ) : null}
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   render() {
     const meal = this.props.navigation.getParam('meal', null);
@@ -159,9 +185,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           buttons={filterButtons}
         />
         {
-          loading ?
-            skeleton
-            :
+
             recipeList.length > 0 ?
               (
                 <FlatList
@@ -172,6 +196,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                   showsVerticalScrollIndicator={false}
                   removeClippedSubviews={false}
                   maxToRenderPerBatch={20}
+                  ListFooterComponent={this.renderFooter}
                 />
               )
               :
@@ -207,5 +232,23 @@ const styles = StyleSheet.create({
   recipeTileSkeletonContainer: {
     // paddingTop: 35,
   },
-
+  footer: {
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  loadMoreBtn: {
+    padding: 10,
+    backgroundColor: '#800000',
+    borderRadius: 4,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnText: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'center',
+  },
 });
