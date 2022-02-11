@@ -97,6 +97,7 @@ class CalendarHomeScreen extends React.PureComponent {
     this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting(),
     });
+    this.checkScheduleChallenge();
     this.fetchRecipeChallenge();
     this.fetchActiveChallengeUserData();
     this.fetchUserData();
@@ -345,6 +346,7 @@ class CalendarHomeScreen extends React.PureComponent {
             this.getCurrentPhaseInfo();
           }
         } else {
+
           this.setState({
             isSchedule: true,
             ScheduleData: res,
@@ -836,7 +838,7 @@ class CalendarHomeScreen extends React.PureComponent {
     } = this.state;
 
     let showRC = false;
-
+   
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
       //check if selected date is between challenge start and end date
@@ -1207,7 +1209,7 @@ class CalendarHomeScreen extends React.PureComponent {
           CalendarSelectedDate={CalendarSelectedDate}
         />
 
-        {isSchedule && !showRC && !loading && (
+        {isSchedule && !showRC && !loading &&(
           <View style={{ margin: wp("5%") }}>
             <Text style={calendarStyles.scheduleTitleStyle}>
               {ScheduleData.displayName}
@@ -1219,8 +1221,9 @@ class CalendarHomeScreen extends React.PureComponent {
             <Text style={calendarStyles.scheduleTextStyle}>
               You can change this in settings
             </Text>
-          </View>
+          </View> 
         )}
+       
         {skipped && (
           <OnBoardingNotification
             navigation={this.props.navigation}
