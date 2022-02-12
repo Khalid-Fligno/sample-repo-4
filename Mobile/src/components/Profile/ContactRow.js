@@ -1,21 +1,16 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
-import { Icon } from 'react-native-elements';
-import fonts from '../../styles/fonts';
-import colors from '../../styles/colors';
+import React from "react";
+import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { Icon } from "react-native-elements";
+import fonts from "../../styles/fonts";
+import colors from "../../styles/colors";
 
-const ContactRow = React.memo(({
-  onPress, name, emailOrNumber, selected,
-}) => {
+const ContactRow = React.memo(({ onPress, name, emailOrNumber, selected }) => {
   return (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      onPress={onPress}
-    >
+    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
       <View style={styles.contactRowContainer}>
         <View style={styles.iconContainer}>
           <Icon
-            name={selected ? 'check-circle' : 'circle-o'}
+            name={selected ? "check-circle" : "circle-o"}
             type="font-awesome"
             color={selected ? colors.green.forest : colors.grey.light}
           />
@@ -23,9 +18,7 @@ const ContactRow = React.memo(({
         <View style={styles.contactInformationContainer}>
           <Text style={styles.contactName}>{name || emailOrNumber}</Text>
           {name.length > 0 && (
-            <Text style={styles.contactInformation}>
-              {emailOrNumber}
-            </Text>
+            <Text style={styles.contactInformation}>{emailOrNumber}</Text>
           )}
         </View>
       </View>
@@ -36,8 +29,8 @@ const ContactRow = React.memo(({
 const styles = StyleSheet.create({
   contactRowContainer: {
     padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.white,
   },
   iconContainer: {

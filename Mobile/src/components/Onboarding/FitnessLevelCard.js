@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -14,6 +14,61 @@ import RoundTick from "../../../assets/icons/RoundTick";
 
 const { width } = Dimensions.get("window");
 const containerPadding = 20;
+
+const FitnessLevelCard = (props) => {
+  const { isCardColored, onPress, showTick, title, helpText, source } = props;
+
+  if (isCardColored) {
+    return (
+      <View
+        style={(styles.container, { backgroundColor: this.props.cardColor })}
+      >
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={styles.container}
+          onPress={onPress}
+        >
+          {showTick && (
+            <View style={{ marginStart: 15 }}>
+              <RoundTick />
+            </View>
+          )}
+          {!showTick && <View style={{ marginStart: 15 }}></View>}
+          <View>
+            <Text style={styles.title}>{title} </Text>
+            <Text style={styles.paragraph}>{helpText}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+  return (
+    <ImageBackground
+      source={source}
+      style={globalStyle.FT_ImageContainer}
+      imageStyle={{ borderRadius: 5 }}
+    >
+      <TouchableOpacity
+        activeOpacity={0.9}
+        style={globalStyle.FT_InnerContainer}
+        onPress={onPress}
+      >
+        {props.showTick && (
+          <View style={{ marginStart: 15 }}>
+            <RoundTick />
+          </View>
+        )}
+        {!showTick && <View style={{ marginStart: 15 }}></View>}
+        <View>
+          <Text style={globalStyle.FT_Title}>{title} </Text>
+          <Text style={globalStyle.FT_Paragraph}>{helpText}</Text>
+        </View>
+      </TouchableOpacity>
+    </ImageBackground>
+  );
+};
+
+export default FitnessLevelCard;
 
 const styles = StyleSheet.create({
   title: {
@@ -42,63 +97,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-
-class FitnessLevelCard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    if (this.props.isCardColored) {
-      return (
-        <View
-          style={(styles.container, { backgroundColor: this.props.cardColor })}
-        >
-          <TouchableOpacity
-            activeOpacity={0.9}
-            style={styles.container}
-            onPress={this.props.onPress}
-          >
-            {this.props.showTick && (
-              <View style={{ marginStart: 15 }}>
-                <RoundTick />
-              </View>
-            )}
-            {!this.props.showTick && <View style={{ marginStart: 15 }}></View>}
-            <View>
-              <Text style={styles.title}>{this.props.title} </Text>
-              <Text style={styles.paragraph}>{this.props.helpText}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-    return (
-      <ImageBackground
-        source={this.props.source}
-        style={globalStyle.FT_ImageContainer}
-        imageStyle={{ borderRadius: 5 }}
-      >
-        <TouchableOpacity
-          activeOpacity={0.9}
-          style={globalStyle.FT_InnerContainer}
-          onPress={this.props.onPress}
-        >
-          {this.props.showTick && (
-            <View style={{ marginStart: 15 }}>
-              <RoundTick />
-            </View>
-          )}
-          {!this.props.showTick && <View style={{ marginStart: 15 }}></View>}
-          <View>
-            <Text style={globalStyle.FT_Title}>{this.props.title} </Text>
-            <Text style={globalStyle.FT_Paragraph}>{this.props.helpText}</Text>
-          </View>
-        </TouchableOpacity>
-      </ImageBackground>
-    );
-  }
-}
-
-export default FitnessLevelCard;

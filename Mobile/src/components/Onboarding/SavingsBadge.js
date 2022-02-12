@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, View, Text } from 'react-native';
-import fonts from '../../styles/fonts';
-import colors from '../../styles/colors';
+import React from "react";
+import PropTypes from "prop-types";
+import { StyleSheet, View, Text } from "react-native";
+import fonts from "../../styles/fonts";
+import colors from "../../styles/colors";
 
 const SavingsBadge = ({ text }) => (
   <View style={styles.newRecipeBadgeContainer}>
@@ -19,11 +19,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.themeColor.color,
     borderRadius: 15,
     padding: 5,
-    paddingHorizontal:15,
-    // paddingBottom: 0,
-    // marginLeft: 8,
-    // marginBottom: 6,
-    alignItems:'center'
+    paddingHorizontal: 15,
+    alignItems: "center",
   },
   newRecipeBadgeText: {
     fontFamily: fonts.bold,
