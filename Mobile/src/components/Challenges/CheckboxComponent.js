@@ -1,7 +1,6 @@
 import React, { createRef, useState } from "react";
 import PropTypes from "prop-types";
 import { View, Text } from "react-native";
-// import BouncyCheckbox from "react-native-bouncy-checkbox";
 import BouncyCheckbox from "./../../../node_modules/react-native-bouncy-checkbox/lib/BouncyCheckbox";
 import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
