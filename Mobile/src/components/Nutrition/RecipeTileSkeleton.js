@@ -1,41 +1,30 @@
-import React from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import { Card } from 'react-native-elements';
-import colors from '../../styles/colors';
+import React from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { Card } from "react-native-elements";
+import { IMAGE } from "../../library/images";
+import colors from "../../styles/colors";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
-export default class RecipeTileSkeleton extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-  render() {
-    return (
-      <View
-        style={styles.cardContainer}
-      >
-        <Card
-          image={require('../../../assets/images/recipe-tile-skeleton.png')}
-          containerStyle={styles.card}
-        >
-          <View style={styles.skeletonTextContainer}>
-            {/* <View style={styles.skeletonTitle} /> */}
-            {/* <View style={styles.skeletonSubtitle} /> */}
-            <View style={styles.skeletonTags} />
-          </View>
-        </Card>
-      </View>
-    );
-  }
-}
+const RecipeTileSkeleton = () => {
+  return (
+    <View style={styles.cardContainer}>
+      <Card image={IMAGE.RECIPE_TILE_SKELETON} containerStyle={styles.card}>
+        <View style={styles.skeletonTextContainer}>
+          <View style={styles.skeletonTags} />
+        </View>
+      </Card>
+    </View>
+  );
+};
+
+export default RecipeTileSkeleton;
 
 const styles = StyleSheet.create({
   cardContainer: {
     margin: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     shadowColor: colors.charcoal.standard,
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 2 },
@@ -44,7 +33,7 @@ const styles = StyleSheet.create({
   card: {
     width: width - 40,
     borderRadius: 3,
-    overflow: 'hidden',
+    overflow: "hidden",
     borderWidth: 0,
   },
   skeletonTextContainer: {
