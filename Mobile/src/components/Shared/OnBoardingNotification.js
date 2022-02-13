@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
-import { db } from "../../../config/firebase";
-import AsyncStorage from "@react-native-community/async-storage";
 
 export default function OnBoardingNotification({ navigation, data }) {
   return (
