@@ -1,8 +1,8 @@
-import React from 'react';
-import { View, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
-import colors from '../../styles/colors';
+import React from "react";
+import { View, StyleSheet, ActivityIndicator, Dimensions } from "react-native";
+import colors from "../../styles/colors";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const Loader = () => {
   return (
@@ -17,7 +17,7 @@ const Loader = () => {
 const styles = StyleSheet.create({
   loaderContainer: {
     width,
-    position: 'absolute',
+    position: "absolute",
     flex: 1,
     top: 0,
     bottom: 0,
@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.transparentLight,
   },
 });

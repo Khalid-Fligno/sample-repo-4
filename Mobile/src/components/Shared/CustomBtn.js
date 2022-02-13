@@ -4,7 +4,6 @@ import { Text, Image } from "react-native";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import PropTypes from "prop-types";
-import { propTypes } from "react-native-carousel";
 import Icon from "./Icon";
 import { DotIndicator } from "react-native-indicators";
 import {
@@ -15,7 +14,9 @@ import {
 const CustomBtn = (props) => {
   const customBtnStyle = {
     flexDirection: "row",
-    backgroundColor: props.workoutComplete ? colors.charcoal.light : colors.themeColor.color,
+    backgroundColor: props.workoutComplete
+      ? colors.charcoal.light
+      : colors.themeColor.color,
     padding: hp("2%"),
     justifyContent: "center",
   };
