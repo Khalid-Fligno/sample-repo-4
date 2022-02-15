@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Alert, FlatList, Text } from "react-native";
+import { StyleSheet, View, Alert, FlatList, Text, ActivityIndicator, } from "react-native";
 import * as FileSystem from "expo-file-system";
 import sortBy from "lodash.sortby";
 import { db } from "../../../../config/firebase";
@@ -8,22 +8,6 @@ import RecipeTileSkeleton from "../../../components/Nutrition/RecipeTileSkeleton
 import globalStyle from "../../../styles/globalStyles";
 import BigHeadingWithBackButton from "../../../components/Shared/BigHeadingWithBackButton";
 import CustomButtonGroup from "../../../components/Shared/CustomButtonGroup";
-import {
-  StyleSheet,
-  View,
-  Alert,
-  FlatList,
-  Text,
-  ActivityIndicator,
-} from 'react-native';
-import * as FileSystem from 'expo-file-system';
-import sortBy from 'lodash.sortby';
-import { db } from '../../../../config/firebase';
-import RecipeTile from '../../../components/Nutrition/RecipeTile';
-import RecipeTileSkeleton from '../../../components/Nutrition/RecipeTileSkeleton';
-import globalStyle from '../../../styles/globalStyles';
-import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
-import CustomButtonGroup from '../../../components/Shared/CustomButtonGroup';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import fonts from '../../../styles/fonts';
 
@@ -36,7 +20,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       filterIndex: 0,
       meal: null,
       indicator: false,
-      limit: 5,
+      limit: 6,
+      refreshing: false,
+      data: [],
     };
   }
 
@@ -50,6 +36,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 
   componentDidMount = async () => {
     await this.fetchRecipes();
+
   };
 
   componentWillUnmount = async () => {
@@ -58,7 +45,6 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   };
 
   fetchRecipes = async () => {
-    this.setState({indicator: false})
     this.setState({ loading: true });
     const meal = this.props.navigation.getParam('meal', null);
     const challengeMealsFilterList = this.props.navigation.getParam('challengeMealsFilterList', null);
@@ -78,6 +64,25 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           }
         });
 
+         //get expected data
+         this.data = await db.collection('recipes')
+         .where(meal, '==', true)
+         .where("showLifestyle", '==', true)
+         .orderBy('title')
+         .onSnapshot(async (querySnapshot) => {
+           const data = [];
+           await querySnapshot.forEach(async (doc) => {
+             if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
+               if (challengeMealsFilterList.includes(doc.data().id))
+                 await data.push(await doc.data());
+             } else {
+               await data.push(await doc.data());
+             }
+           });
+             this.setState({data: data})
+         });
+ 
+
         await Promise.all(recipes.map(async (recipe) => {
           const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
           await FileSystem.getInfoAsync(fileUri)
@@ -93,16 +98,14 @@ export default class RecipeSelectionScreen extends React.PureComponent {
               Alert.alert('', 'Image download error');
             });
         }));
-        this.setState({ recipes: recipes, loading: false,limit : this.state.limit + 5});
-        // console.log('test',this.state.recipes)
-
+        this.setState({ recipes: recipes, loading: false});
         
       });
   };
 
   retrieveMore = async() =>{
     try {  
-      this.setState({indicator: true})
+      this.setState({refreshing: true,});
       const meal = this.props.navigation.getParam('meal', null);
       const challengeMealsFilterList = this.props.navigation.getParam('challengeMealsFilterList', null);
       this.unsubscribe = await db.collection('recipes')
@@ -119,9 +122,9 @@ export default class RecipeSelectionScreen extends React.PureComponent {
             } else {
               await recipes.push(await doc.data());
             }
-            console.log('test',doc.data().id)
           });
-  
+          
+       
           await Promise.all(recipes.map(async (recipe) => {
             const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
             await FileSystem.getInfoAsync(fileUri)
@@ -136,10 +139,15 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                 Alert.alert('', 'Image download error');
               });
           }));
-          this.setState({ recipes: recipes,limit: this.state.limit + 5});
-          if (recipes.length === recipes.length) {
-              console.log('success',recipes)
-          }     
+          this.setState({ recipes: recipes,limit: this.state.limit + 6});
+          this.setState({refreshing: false}); 
+          let allData = this.state.data;
+          if (recipes.length === allData.length) {
+            this.setState({indicator: false})
+          }
+          if (recipes.length != allData.length) {
+            this.setState({indicator: true})
+          }
         });
     } catch (error) {
       
@@ -154,11 +162,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           <ActivityIndicator/>
         )
       } else {
-        return(
-          <Text>
-            No more recipes to show
-          </Text>
-        )
+        return null;
       }
       
             
@@ -198,6 +202,8 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     const { navigation } = this.props;
     navigation.pop();
   };
+
+  
 
   render() {
     const meal = this.props.navigation.getParam('meal', null);
@@ -263,6 +269,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                   onEndReached={this.retrieveMore}
                   ListFooterComponent={this.renderFooter}
                   onEndReachedThreshold={0.2}
+                  refreshing={this.state.refreshing}
 
                 />
               )
