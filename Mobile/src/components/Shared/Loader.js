@@ -12,8 +12,15 @@ const Loader = ({
   overlayColor,
   text,
   progressive,
-  downloaded
+  downloaded,
+  totalToDownload
 }) => {
+  const[percentage,setParcentage]=useState(0)
+  useEffect(()=>{
+    console.log(downloaded)
+    setParcentage(Math.floor((downloaded/totalToDownload)*100));
+  },[downloaded,totalToDownload])
+
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -25,9 +32,12 @@ const Loader = ({
         >
           <View style={styles.contentContainer}>
             {progressive?
-            <View style={progressBar.bar}>
-              <Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: "#d69354", borderRadius: 5, width:`${downloaded}%`}}/>
-            </View>
+              <>
+              <View style={progressBar.bar}>
+                <Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: "#d69354", borderRadius: 5, width:`${percentage}%`}}/>
+              </View>
+              <Text style={styles.loaderText}>Loading {percentage}%</Text>
+              </>
             :
             <View style={styles.dotIndicatorContainer}>
               <DotIndicator
