@@ -21,7 +21,7 @@ const FitnessLevelCard = (props) => {
   if (isCardColored) {
     return (
       <View
-        style={(styles.container, { backgroundColor: this.props.cardColor })}
+        style={(styles.container, { backgroundColor: colors.coolIce })}
       >
         <TouchableOpacity
           activeOpacity={0.9}

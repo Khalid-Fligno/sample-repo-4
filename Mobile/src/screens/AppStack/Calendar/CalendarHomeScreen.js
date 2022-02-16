@@ -216,6 +216,7 @@ class CalendarHomeScreen extends React.PureComponent {
     } else {
       if (!this.state.isSchedule && !this.state.ScheduleData)
         this.checkScheduleChallenge();
+        
       else {
         const isBetween = moment(this.stringDate).isBetween(
           this.state.ScheduleData.startDate,
@@ -275,11 +276,14 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   async checkScheduleChallenge() {
+    console.log('test1')
     const uid = await AsyncStorage.getItem("uid");
     //Checking if any schedule challenge is assign to user
     isActiveChallenge().then((res) => {
       const todayDate = moment(new Date()).format("YYYY-MM-DD");
       if (res && moment(res.startDate).isSame(todayDate) && res.isSchedule) {
+        console.log('test2')
+
         const challengeRef = db
           .collection("users")
           .doc(uid)
@@ -290,6 +294,8 @@ class CalendarHomeScreen extends React.PureComponent {
           { merge: true }
         );
       } else if (res && res.isSchedule) {
+        console.log('test3')
+
         const isBetween = moment(this.stringDate).isBetween(
           res.startDate,
           res.endDate,
@@ -307,6 +313,8 @@ class CalendarHomeScreen extends React.PureComponent {
         );
 
         if (!this.state.isSchedule) {
+          console.log('test4')
+
           this.setState({
             CalendarSelectedDate: moment(res.startDate),
             isSchedule: true,
@@ -317,13 +325,21 @@ class CalendarHomeScreen extends React.PureComponent {
           this.fetchActiveChallengeData(res);
         }
         if (isBetween) {
+          console.log('test5')
+
           this.setState({ isSchedule: true, ScheduleData: res });
           if (!this.state.activeChallengeData) {
+            console.log('test6')
+
             this.fetchActiveChallengeData(res);
           } else {
+            console.log('test7')
+
             this.getCurrentPhaseInfo();
           }
         } else {
+          console.log('test8')
+
           this.setState({
             isSchedule: true,
             ScheduleData: res,
@@ -331,6 +347,8 @@ class CalendarHomeScreen extends React.PureComponent {
           });
         }
       } else {
+        console.log('test9')
+
         this.setState({ loading: false });
         const isBetween = moment(this.stringDate).isBetween(
           res.startDate,
@@ -339,19 +357,28 @@ class CalendarHomeScreen extends React.PureComponent {
           "[]"
         );
         if (isBetween) {
+          console.log('test10')
+
           this.setState({ isSchedule: true, ScheduleData: res });
           if (!this.state.activeChallengeData) {
+            console.log('test11')
+
             this.fetchActiveChallengeData(res);
           } else {
+            console.log('test12')
+
             this.getCurrentPhaseInfo();
           }
         } else {
+          console.log('test13')
 
           this.setState({
             isSchedule: true,
             ScheduleData: res,
             loading: false,
           });
+          console.log('test14')
+
         }
       }
     });
@@ -527,7 +554,7 @@ class CalendarHomeScreen extends React.PureComponent {
     } catch (err) {
       this.setState({ loading: false });
       console.log(err);
-      Alert.alert("Fetch active challenge user data error!");
+      console.log("Fetch active challenge user data error!");
     }
   };
 
@@ -569,7 +596,7 @@ class CalendarHomeScreen extends React.PureComponent {
     } catch (err) {
       this.setState({ loading: false });
       console.log(err);
-      Alert.alert("Fetch active challenge data error!");
+      console.log("Fetch active challenge data error!");
     }
 
     if (data) {
@@ -838,7 +865,9 @@ class CalendarHomeScreen extends React.PureComponent {
     } = this.state;
 
     let showRC = false;
-   
+    // console.log('scheulde',this.state.isSchedule)
+    // console.log('loading',this.state.loading)
+    // console.log('rc',this.state.showRC)
     if (activeChallengeData && activeChallengeUserData) {
       // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
       //check if selected date is between challenge start and end date

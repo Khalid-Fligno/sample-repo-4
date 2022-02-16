@@ -379,7 +379,7 @@ class ChallengeSubscriptionScreen extends Component {
     } catch (err) {
       this.setState({ loading: false });
       console.log(err);
-      Alert.alert("Fetch active challenge data error!");
+      console.log("Fetch active challenge data error!");
     }
   };
 
