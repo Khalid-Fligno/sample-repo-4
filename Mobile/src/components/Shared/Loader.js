@@ -17,8 +17,14 @@ const Loader = ({
 }) => {
   const[percentage,setParcentage]=useState(0)
   useEffect(()=>{
-    console.log(downloaded)
-    setParcentage(Math.floor((downloaded/totalToDownload)*100));
+    if(downloaded&&totalToDownload>0){
+      setParcentage(Math.floor((downloaded/totalToDownload)*100))
+    }
+   if(totalToDownload===downloaded){
+     totalToDownload=0
+     downloaded=0
+     setParcentage(0)
+   }
   },[downloaded,totalToDownload])
 
   if (loading) {

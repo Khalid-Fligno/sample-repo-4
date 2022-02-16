@@ -105,11 +105,14 @@ class CalendarHomeScreen extends React.PureComponent {
   };
   componentDidUpdate=()=>{
     if(this.state.files===undefined){
-      console.log(this.state.downloaded,"UNDEFINED")
+      
     }else{
       this.state.downloaded++
-      if(this.state.downloaded===this.state.totalToDownload){
-        this.setState({downloaded:0,totalToDownload:0})
+      console.log(this.state.downloaded,"/",this.state.totalToDownload); 
+      if(this.state.totalToDownload===this.state.downloaded){
+        console.log("completed");
+        this.setState({downloaded:0,totalToDownload:0,files:undefined})
+      
       }
     }
     
@@ -415,12 +418,9 @@ class CalendarHomeScreen extends React.PureComponent {
       
       if (exercises.length > 0) {
         console.log(exercises.length,"# of Exercises");
-        workoutData = Object.assign({}, workoutData, { exercises: exercises });
-        const res = await this.downloadExercise(workoutData);
-        console.log(res, "Downloaded Exercises");
-        // console.log(">>>", res);
-        if (res) return workoutData;
-        else return false;
+        workoutData = Object.assign({}, workoutData, { exercises: exercises });       
+        console.log(">>>", workoutData);
+        return workoutData;
       } else {
         return false;
       }
@@ -428,145 +428,10 @@ class CalendarHomeScreen extends React.PureComponent {
       console.log(workoutData, "Old Workout");
       const res = await this.downloadExercise(workoutData);
       console.log(res,"Downloaded Old Workout");
-      // console.log("....", res);
-      if (res) return workoutData;
-      else return false;
+      return workoutData;
     }
   };
   
-  downloadExercise = async (workout) => {
-    try {
-      const exercises = workout.exercises;
-      let warmUpExercises = [];
-      let coolDownExercises = [];
-  
-      if (workout.warmUpExercises) {
-        let tempExerciseData = [];
-        const exerciseRef = (
-          await db
-            .collection("WarmUpCoolDownExercises")
-            .where("id", "in", workout.warmUpExercises)
-            .get()
-        ).docs;
-  
-        exerciseRef.forEach((exercise) => {
-          tempExerciseData.push(exercise.data());
-        });
-        warmUpExercises = workout.warmUpExercises.map((id) => {
-          return tempExerciseData.find((res) => res.id === id);
-        });
-      }
-      if (workout.coolDownExercises) {
-        let tempExerciseData = [];
-        const exerciseRef = (
-          await db
-            .collection("WarmUpCoolDownExercises")
-            .where("id", "in", workout.coolDownExercises)
-            .get()
-        ).docs;
-  
-        exerciseRef.forEach((exercise) => {
-          tempExerciseData.push(exercise.data());
-        });
-        coolDownExercises = workout.coolDownExercises.map((id) => {
-          return tempExerciseData.find((res) => res.id === id);
-        });
-      }
-      console.log(exercises.length,"# of Exercises");
-      console.log(warmUpExercises.length,"# of Warmup");
-      console.log(coolDownExercises.length,"# of Cooldown");
-      this.setState({totalToDownload:exercises.length+warmUpExercises.length+coolDownExercises.length});
-      console.log(this.state.totalToDownload,"total to downloads");
-      return Promise.all(
-        exercises.map(async (exercise, index) => {
-          return new Promise(async (resolve, reject) => {
-            let videoIndex = 0;
-            if (workout.newWorkout)
-              videoIndex = exercise.videoUrls.findIndex(
-                (res) => res.model === workout.exerciseModel
-              );
-            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") { 
-              const downloadResumableExercise = FileSystem.createDownloadResumable(
-                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-                `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-                {},
-                
-              );
-              await downloadResumableExercise.downloadAsync()
-                .then(() => {
-                  resolve("Downloaded");
-                    this.setState(prevState => ({
-                      files:!prevState.files
-                    }))  
-                })
-                .catch((err) => resolve("Download failed"));
-            } else {
-              resolve("no video found");
-            }
-          });
-        }),
-        warmUpExercises.map(async (exercise, index) => {
-          return new Promise(async (resolve, reject) => {
-            let videoIndex = 0;
-            if (workout.newWorkout)
-              videoIndex = exercise.videoUrls.findIndex(
-                (res) => res.model === workout.exerciseModel
-              );
-            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-              const downloadResumableWarmUp = FileSystem.createDownloadResumable(
-                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-                `${FileSystem.cacheDirectory}warmUpExercise-${index + 1}.mp4`,
-                {},
-                
-              );
-              await downloadResumableWarmUp.downloadAsync()
-                .then(() => {
-                   resolve("Downloaded");
-                    this.setState(prevState => ({
-                      files:!prevState.files
-                    }))
-                })
-                .catch((err) => resolve("Download failed"));
-            } else {
-              resolve("no video found");
-            }
-          });
-        }),
-        coolDownExercises.map(async (exercise, index) => {
-          return new Promise(async (resolve, reject) => {
-            let videoIndex = 0;
-            if (workout.newWorkout)
-              videoIndex = exercise.videoUrls.findIndex(
-                (res) => res.model === workout.exerciseModel
-              );
-            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-              const downloadResumableCoolDown = FileSystem.createDownloadResumable(
-                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-                `${FileSystem.cacheDirectory}coolDownExercise-${index + 1}.mp4`,
-                {},
-                
-              );
-              await downloadResumableCoolDown.downloadAsync()
-                .then(() => {
-                  resolve("Downloaded");
-                    this.setState(prevState => ({
-                      files:!prevState.files
-                    }))
-                })
-                .catch((err) => resolve("Download failed"));
-            } else {
-              resolve("no video found");
-            }
-          });
-        })
-      );
-      
-    } catch (err) {
-      console.log(err);
-      Alert.alert("Something went wrong", "Workout Not Available");
-      return "false";
-    }
-  };
   
   downloadExerciseWC = async (
     workout,
@@ -589,9 +454,8 @@ class CalendarHomeScreen extends React.PureComponent {
       exercises = exerciseIds.map((id) => {
         return tempExerciseData.find((res) => res.id === id);
       });
-      console.log(exercises.length,"WC")
-      // this.setState({totalToDownload:this.state.totalToDownload+exercises.length})
-      // console.log(this.state.totalToDownload,"Total");
+        this.setState({totalToDownload:this.state.totalToDownload+exercises.length})
+      //  console.log(this.state.totalToDownload,"Total");
       return Promise.all(
         exercises.map(async (exercise, index) => {
           return new Promise(async (resolve, reject) => {
@@ -605,11 +469,15 @@ class CalendarHomeScreen extends React.PureComponent {
                 exercise.videoUrls[videoIndex].url,
                 `${FileSystem.cacheDirectory}exercise-${type}-${index + 1}.mp4`,
                 {},
-                
               );
+
               await downloadResumable.downloadAsync()
                 .then(() => {
                   resolve(exercise);
+                  this.setState(prevState => ({
+                    files:!prevState.files
+                  }))
+                  //this.setState({downloaded:0,totalToDownload:0})
                    //console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"Downloaded WC")
                 })
                 .catch((err) => resolve("Download failed"));
@@ -637,8 +505,9 @@ class CalendarHomeScreen extends React.PureComponent {
     });
 
     const workout = await this.loadExercise(workoutData);
-
+    
     if (workout && workout.newWorkout) {
+      console.log(workout,"workout downloaded")
       const warmUpExercises = await this.downloadExerciseWC(
         workout,
         Object.prototype.toString
@@ -1520,7 +1389,7 @@ class CalendarHomeScreen extends React.PureComponent {
          <Loader
           progressive={true}
           loading={loadingExercises}
-          downloaded={downloaded}
+          downloaded={this.state.downloaded}
           totalToDownload={this.state.totalToDownload}
           color={colors.red.standard}
         />
