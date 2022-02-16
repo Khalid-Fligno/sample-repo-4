@@ -97,7 +97,8 @@ class CalendarHomeScreen extends React.PureComponent {
     this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting(),
     });
-    this.checkScheduleChallenge();
+    // this.checkScheduleChallenge();
+    this.checkSchedule();
     this.fetchRecipeChallenge();
     this.fetchActiveChallengeUserData();
     this.fetchUserData();
@@ -275,6 +276,23 @@ class CalendarHomeScreen extends React.PureComponent {
       .catch((reason) => console.log("Fetching user data error: ", reason));
   };
 
+  checkSchedule = async()=>{
+    isActiveChallenge().then((res)=>{
+      const isBetween = moment(this.stringDate).isBetween(
+        res.startDate,
+        res.endDate,
+        undefined,
+        "[]"
+      )
+      if (!isBetween) {
+          this.setState({
+            isSchedule: true,
+            ScheduleData: res,
+            loading: false,
+          });
+      }
+    })
+  }
   async checkScheduleChallenge() {
     console.log('test1')
     const uid = await AsyncStorage.getItem("uid");
@@ -283,7 +301,6 @@ class CalendarHomeScreen extends React.PureComponent {
       const todayDate = moment(new Date()).format("YYYY-MM-DD");
       if (res && moment(res.startDate).isSame(todayDate) && res.isSchedule) {
         console.log('test2')
-
         const challengeRef = db
           .collection("users")
           .doc(uid)
@@ -865,7 +882,7 @@ class CalendarHomeScreen extends React.PureComponent {
     } = this.state;
 
     let showRC = false;
-    // console.log('scheulde',this.state.isSchedule)
+     console.log('scheulde',this.state.isSchedule)
     // console.log('loading',this.state.loading)
     // console.log('rc',this.state.showRC)
     if (activeChallengeData && activeChallengeUserData) {
@@ -1238,7 +1255,7 @@ class CalendarHomeScreen extends React.PureComponent {
           CalendarSelectedDate={CalendarSelectedDate}
         />
 
-        {isSchedule && !showRC && !loading &&(
+        {this.state.isSchedule && !showRC && !loading &&(
           <View style={{ margin: wp("5%") }}>
             <Text style={calendarStyles.scheduleTitleStyle}>
               {ScheduleData.displayName}
