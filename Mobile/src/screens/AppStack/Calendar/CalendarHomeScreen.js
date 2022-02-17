@@ -294,13 +294,11 @@ class CalendarHomeScreen extends React.PureComponent {
     })
   }
   async checkScheduleChallenge() {
-    console.log('test1')
     const uid = await AsyncStorage.getItem("uid");
     //Checking if any schedule challenge is assign to user
     isActiveChallenge().then((res) => {
       const todayDate = moment(new Date()).format("YYYY-MM-DD");
       if (res && moment(res.startDate).isSame(todayDate) && res.isSchedule) {
-        console.log('test2')
         const challengeRef = db
           .collection("users")
           .doc(uid)
@@ -311,7 +309,6 @@ class CalendarHomeScreen extends React.PureComponent {
           { merge: true }
         );
       } else if (res && res.isSchedule) {
-        console.log('test3')
 
         const isBetween = moment(this.stringDate).isBetween(
           res.startDate,
@@ -330,7 +327,6 @@ class CalendarHomeScreen extends React.PureComponent {
         );
 
         if (!this.state.isSchedule) {
-          console.log('test4')
 
           this.setState({
             CalendarSelectedDate: moment(res.startDate),
@@ -342,21 +338,16 @@ class CalendarHomeScreen extends React.PureComponent {
           this.fetchActiveChallengeData(res);
         }
         if (isBetween) {
-          console.log('test5')
 
           this.setState({ isSchedule: true, ScheduleData: res });
           if (!this.state.activeChallengeData) {
-            console.log('test6')
 
             this.fetchActiveChallengeData(res);
           } else {
-            console.log('test7')
 
             this.getCurrentPhaseInfo();
           }
         } else {
-          console.log('test8')
-
           this.setState({
             isSchedule: true,
             ScheduleData: res,
