@@ -34,8 +34,7 @@ import TimeSvg from "../../../../assets/icons/time";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import Carousel from "react-native-carousel-view";
-import { SwiperFlatList } from 'react-native-swiper-flatlist';
-
+import { SwiperFlatList } from "react-native-swiper-flatlist";
 
 import {
   getCurrentPhase,
@@ -43,8 +42,6 @@ import {
   getTodayRecommendedWorkout,
   isActiveChallenge,
 } from "../../../utils/challenges";
-import ChallengeBlogCard from "../../../components/Home/ChallengeBlogCard";
-import FeedCard from "../../../components/Home/FeedCard";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -56,8 +53,7 @@ import {
 } from "../../../utils/feedUtils";
 // import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
 const { width } = Dimensions.get("window");
-const {height} = Dimensions.get("window")
-
+const { height } = Dimensions.get("window");
 
 const workoutTypeMap = {
   1: "Strength",
@@ -140,33 +136,32 @@ export default class FeedScreen extends React.PureComponent {
   //     });
   //   }
 
-
-
-  fetchProfile = async () =>{
-    let trainers = []
-    const snapshot = await db
-      .collection('trainers')
-      .get();
-      snapshot.forEach((doc)=>{
-        trainers.unshift(doc.data())
-      })
-      this.setState({trainers, loading: false})
-  }
+  fetchProfile = async () => {
+    let trainers = [];
+    const snapshot = await db.collection("trainers").get();
+    snapshot.forEach((doc) => {
+      trainers.unshift(doc.data());
+    });
+    this.setState({ trainers, loading: false });
+  };
 
   fetchBlogs = async (tag, currentDay, phaseData) => {
-    let data = phaseData.displayName;
-    let phase = data.toLowerCase();
-    let phaseTag = phase.concat("-",tag);
-    const snapshot = await db
-      .collection("blogs")
-      .where("tags","array-contains", phaseTag)
-      .get();
     let blogs = [];
-    // const cDay = currentDay === 1 ? 2 : currentDay;
-    snapshot.forEach((doc) => {
-      //  if (doc.data().startDay <= cDay && doc.data().endDay >= cDay)
-      blogs.unshift(doc.data());
-    });
+    if (phaseData) {
+      let data = phaseData.displayName;
+      let phase = data.toLowerCase();
+      let phaseTag = phase.concat("-", tag);
+      const snapshot = await db
+        .collection("blogs")
+        .where("tags", "array-contains", phaseTag)
+        .get();
+
+      // const cDay = currentDay === 1 ? 2 : currentDay;
+      snapshot.forEach((doc) => {
+        //  if (doc.data().startDay <= cDay && doc.data().endDay >= cDay)
+        blogs.unshift(doc.data());
+      });
+    }
     this.setState({ blogs, loading: false });
   };
   fetchActiveChallengeData = async (activeChallengeUserData) => {
@@ -259,7 +254,7 @@ export default class FeedScreen extends React.PureComponent {
       activeChallengeUserData,
       blogs,
       todayRcWorkout,
-      trainers
+      trainers,
     } = this.state;
     let array = trainers;
     let recommendedWorkout = [];
@@ -283,71 +278,72 @@ export default class FeedScreen extends React.PureComponent {
         // style={[globalStyle.container,{paddingHorizontal:0}]}
       >
         <View style={{ marginBottom: wp("10%"), flex: 1 }}>
-          <View style={{ flex: 1, alignItems: "center" ,height:wp('100%')}}>
-           
-                  <SwiperFlatList
-                    paginationStyleItem={styles.bars}
-                    showPagination
-                    autoplay={true}
-                    autoplayDelay={6}
-                    autoplayLoop={true}
-                    autoplayLoopKeepAnimation={true}
-                    data={trainers}
-                    renderItem={({item}) => {
-                      return (
-                     <View style={{ flex: 1, alignItems: "center" }}>
-                       <TouchableOpacity onPress={()=>
-                          this.props.navigation.navigate('Trainers',{
-                            name: item.name,
-                            title: item.title,
-                            about: item.about,
-                            profile: item.profile,
-                            id: item.id,
-                            coverImage: item.coverImage,
-                          })
-                        }>
-                          <Image
-                            style={{ flex: 1, height: '50%', width: wp('100%') }}
-                            source={{
-                              uri: item.image,
-                            }}
-                            resizeMode="cover"
-                          />
-                          </TouchableOpacity>
-                          <View style={{
-                            position :'absolute',
-                            bottom: 40,
-                            left: 50
-                            }}>
-                                <Text
-                                style={{
-                                  fontSize: wp("3.5%"),
-                                  fontFamily: fonts.bold,
-                                  fontWeight: "800",
-                                  color: "white",
-                                }}
-                              >
-                              {item.name}
-                              </Text>
-                              <Text
-                            style={{
-                              fontSize: wp("5.5%"),
-                              fontFamily: fonts.bold,
-                              fontWeight: 'bold',
-                              color: "white",
-                            }}
-                          >
-                            {item.title}
-                            
-                            </Text>
-                          </View>
-                        </View> 
+          <View style={{ flex: 1, alignItems: "center", height: wp("100%") }}>
+            <SwiperFlatList
+              paginationStyleItem={styles.bars}
+              showPagination
+              autoplay={true}
+              autoplayDelay={6}
+              autoplayLoop={true}
+              autoplayLoopKeepAnimation={true}
+              data={trainers}
+              renderItem={({ item }) => {
+                return (
+                  <View style={{ flex: 1, alignItems: "center" }}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        this.props.navigation.navigate("Trainers", {
+                          name: item.name,
+                          title: item.title,
+                          about: item.about,
+                          profile: item.profile,
+                          id: item.id,
+                          coverImage: item.coverImage,
+                        })
+                      }
+                    >
+                      <Image
+                        style={{ flex: 1, height: "50%", width: wp("100%") }}
+                        source={{
+                          uri: item.image,
+                        }}
+                        resizeMode="cover"
+                      />
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        position: "absolute",
+                        bottom: 40,
+                        left: 50,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: wp("3.5%"),
+                          fontFamily: fonts.bold,
+                          fontWeight: "800",
+                          color: "white",
+                        }}
+                      >
+                        {item.name}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: wp("5.5%"),
+                          fontFamily: fonts.bold,
+                          fontWeight: "bold",
+                          color: "white",
+                        }}
+                      >
+                        {item.title}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              }}
+            />
 
-                      );
-                    }}
-                  />
-              
-              {/* <View style={{ flex: 1, alignItems: "center" }}>
+            {/* <View style={{ flex: 1, alignItems: "center" }}>
                 <Image
                   style={{ flex: 1, height: "90%", width: "90%" }}
                   source={{
@@ -356,7 +352,7 @@ export default class FeedScreen extends React.PureComponent {
                   resizeMode="cover"
                 />
               </View> */}
-              {/* <View style={{ flex: 1, alignItems: "center" }}>
+            {/* <View style={{ flex: 1, alignItems: "center" }}>
                 <Image
                   style={{ flex: 1, height: "90%", width: "90%" }}
                   source={{
@@ -405,10 +401,8 @@ export default class FeedScreen extends React.PureComponent {
                         height: 90,
                         borderRadius: 100,
                       }}
-                      source={
-                        require("../../../../assets/images/media/community.jpeg")
-                       }
-                          resizeMode="cover"
+                      source={require("../../../../assets/images/media/community.jpeg")}
+                      resizeMode="cover"
                     />
                     <View style={{ marginTop: 10, paddingLeft: 10 }}>
                       <Text
@@ -436,9 +430,7 @@ export default class FeedScreen extends React.PureComponent {
                         height: 90,
                         borderRadius: 50,
                       }}
-                      source={
-                        require("../../../../assets/images/media/activewear.jpeg")
-                       }
+                      source={require("../../../../assets/images/media/activewear.jpeg")}
                       resizeMode="cover"
                     />
                     <View style={{ marginTop: 10, paddingLeft: 10 }}>
@@ -469,9 +461,7 @@ export default class FeedScreen extends React.PureComponent {
                         height: 90,
                         borderRadius: 50,
                       }}
-                      source={
-                        require("../../../../assets/images/media/equipment.jpeg")
-                       }
+                      source={require("../../../../assets/images/media/equipment.jpeg")}
                       resizeMode="cover"
                     />
                     <View style={{ marginTop: 10, paddingLeft: 10 }}>
@@ -516,25 +506,26 @@ export default class FeedScreen extends React.PureComponent {
                 >
                   Members Blog
                 </Text>
-                <View style={{ flex: 1, marginTop: 0, alignItems: "flex-end",}}>
-                  <TouchableOpacity onPress={()=> 
-                  this.props.navigation.navigate('AllBlogs',
-                  {
-                    data : blogs
-                  })
-                  }>
-                  <Text
-                    style={{
-                      fontSize: wp("3.5%"),
-                      fontFamily: fonts.bold,
-                      fontWeight: "300",
-                      color: "white",
-                    }}
+                <View style={{ flex: 1, marginTop: 0, alignItems: "flex-end" }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate("AllBlogs", {
+                        data: blogs,
+                      })
+                    }
                   >
-                    View all
-                  </Text>
+                    <Text
+                      style={{
+                        fontSize: wp("3.5%"),
+                        fontFamily: fonts.bold,
+                        fontWeight: "300",
+                        color: "white",
+                      }}
+                    >
+                      View all
+                    </Text>
                   </TouchableOpacity>
-                  
+
                   <View
                     style={{
                       borderBottomColor: "#cccccc",
@@ -542,55 +533,61 @@ export default class FeedScreen extends React.PureComponent {
                       width: "23%",
                       alignSelf: "flex-end",
                     }}
-                  >
-
-                  </View>
+                  ></View>
                 </View>
               </View>
-              <View style={{ flex: 1, alignItems: "center", }}>
+              <View style={{ flex: 1, alignItems: "center" }}>
                 <View style={{}}>
-
                   <FlatList
                     horizontal
                     data={blogs}
                     style={{ flex: 1 }}
-                    renderItem={({item}) => {
+                    renderItem={({ item }) => {
                       return (
-                        <TouchableOpacity delayPressOut={3} onPress={()=>this.openLink(item.urlLink)}>
-                        <View
-                          style={{
-                            marginTop: 20,
-                           
-                            paddingLeft: 20,
-                          }}
+                        <TouchableOpacity
+                          delayPressOut={3}
+                          onPress={() => this.openLink(item.urlLink)}
                         >
-                          <Image
+                          <View
                             style={{
-                              overflow:'hidden',
-                              width: 250,
-                              height: 350,
-                              borderRadius: 10,
+                              marginTop: 20,
+
+                              paddingLeft: 20,
                             }}
-                            source={{
-                              uri: item.coverImage,
-                            }}
-                            resizeMode="cover"
-                          />
-                          <View style={{alignItems:'flex-start',paddingTop: 40,width: 250}}>
-                          <Text
-                              ellipsizeMode='tail'
-                              numberOfLines={2}
+                          >
+                            <Image
                               style={{
-                                fontSize: wp("3.5%"),
-                                fontFamily: fonts.bold,
-                                fontWeight: "500",
-                                color:'white'
+                                overflow: "hidden",
+                                width: 250,
+                                height: 350,
+                                borderRadius: 10,
+                              }}
+                              source={{
+                                uri: item.coverImage,
+                              }}
+                              resizeMode="cover"
+                            />
+                            <View
+                              style={{
+                                alignItems: "flex-start",
+                                paddingTop: 40,
+                                width: 250,
                               }}
                             >
-                              {item.title}
-                            </Text>
+                              <Text
+                                ellipsizeMode="tail"
+                                numberOfLines={2}
+                                style={{
+                                  fontSize: wp("3.5%"),
+                                  fontFamily: fonts.bold,
+                                  fontWeight: "500",
+                                  color: "white",
+                                }}
+                              >
+                                {item.title}
+                              </Text>
+                            </View>
                           </View>
-                        </View>
                         </TouchableOpacity>
                       );
                     }}
@@ -652,11 +649,10 @@ const styles = StyleSheet.create({
   },
   bars: {
     borderRadius: 0,
-    width: wp('8%'),
+    width: wp("8%"),
     height: 5,
-    right: wp('10%'),
-    bottom: hp('1%'),
-    top: wp('2%')
-
-  }
+    right: wp("10%"),
+    bottom: hp("1%"),
+    top: wp("2%"),
+  },
 });
