@@ -355,7 +355,6 @@ class CalendarHomeScreen extends React.PureComponent {
           });
         }
       } else {
-        console.log('test9')
 
         this.setState({ loading: false });
         const isBetween = moment(this.stringDate).isBetween(
@@ -365,27 +364,22 @@ class CalendarHomeScreen extends React.PureComponent {
           "[]"
         );
         if (isBetween) {
-          console.log('test10')
 
           this.setState({ isSchedule: true, ScheduleData: res });
           if (!this.state.activeChallengeData) {
-            console.log('test11')
 
             this.fetchActiveChallengeData(res);
           } else {
-            console.log('test12')
 
             this.getCurrentPhaseInfo();
           }
         } else {
-          console.log('test13')
 
           this.setState({
             isSchedule: true,
             ScheduleData: res,
             loading: false,
           });
-          console.log('test14')
 
         }
       }
@@ -873,7 +867,7 @@ class CalendarHomeScreen extends React.PureComponent {
     } = this.state;
 
     let showRC = false;
-     console.log('scheulde',this.state.isSchedule)
+    //  console.log('scheulde',this.state.isSchedule)
     // console.log('loading',this.state.loading)
     // console.log('rc',this.state.showRC)
     if (activeChallengeData && activeChallengeUserData) {
