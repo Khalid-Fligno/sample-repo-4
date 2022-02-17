@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 import {
   StyleSheet,
   SafeAreaView,
@@ -9,24 +9,22 @@ import {
   Alert,
   Dimensions,
   Linking,
-} from 'react-native';
-import { Button } from 'react-native-elements';
-import * as Permissions from 'expo-permissions';
-import * as MailComposer from 'expo-mail-composer';
-import * as SMS from 'expo-sms';
-import * as Contacts from 'expo-contacts';
-import * as Haptics from 'expo-haptics';
-import groupBy from 'lodash.groupby';
-import appsFlyer from 'react-native-appsflyer';
-import ContactRow from './ContactRow';
-import Loader from '../../components/Shared/Loader';
-import CustomButton from '../../components/Shared/CustomButton';
-import fonts from '../../styles/fonts';
-import colors from '../../styles/colors';
-import CustomBtn from '../Shared/CustomBtn';
-import { containerPadding } from '../../styles/globalStyles';
+} from "react-native";
+import { Button } from "react-native-elements";
+import * as Permissions from "expo-permissions";
+import * as MailComposer from "expo-mail-composer";
+import * as SMS from "expo-sms";
+import * as Contacts from "expo-contacts";
+import * as Haptics from "expo-haptics";
+import groupBy from "lodash.groupby";
+import appsFlyer from "react-native-appsflyer";
+import ContactRow from "./ContactRow";
+import Loader from "../../components/Shared/Loader";
+import CustomButton from "../../components/Shared/CustomButton";
+import fonts from "../../styles/fonts";
+import colors from "../../styles/colors";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 function useContacts() {
   const [contacts, setContacts] = React.useState({
@@ -68,15 +66,15 @@ export default function InviteFriends({ recordInvites }) {
 
   const [selectedContacts, setSelectedContacts] = React.useState([]);
   const sections = React.useMemo(() => {
-    return Object.entries(groupBy(
-      // Create one contact per phone number and email.
-      contacts.data.reduce(
-        (res, cur) => {
+    return Object.entries(
+      groupBy(
+        // Create one contact per phone number and email.
+        contacts.data.reduce((res, cur) => {
           if (cur.phoneNumbers != null) {
             cur.phoneNumbers.forEach((p) => {
               res.push({
                 id: cur.id + p.number,
-                name: cur.name || '',
+                name: cur.name || "",
                 phoneNumber: p.number,
               });
             });
@@ -85,23 +83,24 @@ export default function InviteFriends({ recordInvites }) {
             cur.emails.forEach((e) => {
               res.push({
                 id: cur.id + e.email,
-                name: cur.name || '',
+                name: cur.name || "",
                 email: e.email,
               });
             });
           }
           return res;
-        },
-        [],
-      ),
-      (c) => {
-        const firstChar = (c.name.charAt(0) || '#').toLowerCase();
-        return firstChar.match(/[a-z]/) ? firstChar : '#';
-      },
-    ))
+        }, []),
+        (c) => {
+          const firstChar = (c.name.charAt(0) || "#").toLowerCase();
+          return firstChar.match(/[a-z]/) ? firstChar : "#";
+        }
+      )
+    )
       .map(([key, value]) => ({
         key,
-        data: value.sort((a, b) => ((a.name || a.name || '') < (b.name || b.name || '') ? -1 : 1)),
+        data: value.sort((a, b) =>
+          (a.name || a.name || "") < (b.name || b.name || "") ? -1 : 1
+        ),
       }))
       .sort((a, b) => (a.key < b.key ? -1 : 1));
   }, [contacts.data]);
@@ -110,8 +109,11 @@ export default function InviteFriends({ recordInvites }) {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     let didShare = false;
     let inviteCount = 0;
-    const appStoreLink = 'https://apps.apple.com/au/app/fitazfk-fitness-nutrition/id1438373600';
-    appStoreLink.link('https://apps.apple.com/au/app/fitazfk-fitness-nutrition/id1438373600');
+    const appStoreLink =
+      "https://apps.apple.com/au/app/fitazfk-fitness-nutrition/id1438373600";
+    appStoreLink.link(
+      "https://apps.apple.com/au/app/fitazfk-fitness-nutrition/id1438373600"
+    );
     const message = `I thought you might like this app, take a look!\n\n${appStoreLink}`;
     const emails = selectedContacts
       .filter((c) => c.email != null)
@@ -123,12 +125,12 @@ export default function InviteFriends({ recordInvites }) {
       try {
         const result = await MailComposer.composeAsync({
           recipients: emails,
-          subject: 'FitazFK Fitness & Nutrition on the App Store',
+          subject: "FitazFK Fitness & Nutrition on the App Store",
           body: message,
           isHtml: false,
         });
-        didShare = didShare || result.status === 'sent';
-        if (result.status === 'sent') {
+        didShare = didShare || result.status === "sent";
+        if (result.status === "sent") {
           inviteCount = emails.length;
         }
       } catch (ex) {
@@ -138,8 +140,8 @@ export default function InviteFriends({ recordInvites }) {
     if (phoneNumbers.length > 0 && (await SMS.isAvailableAsync())) {
       try {
         const result = await SMS.sendSMSAsync(phoneNumbers, message);
-        didShare = didShare || result.result === 'sent';
-        if (result.result === 'sent') {
+        didShare = didShare || result.result === "sent";
+        if (result.result === "sent") {
           inviteCount += phoneNumbers.length;
         }
       } catch (ex) {
@@ -147,22 +149,24 @@ export default function InviteFriends({ recordInvites }) {
       }
     }
     if (didShare) {
-      Alert.alert('', 'Thanks for sharing!');
+      Alert.alert("", "Thanks for sharing!");
       recordInvites(inviteCount);
-      appsFlyer.trackEvent('invite_friends', { invite_count: inviteCount });
+      appsFlyer.trackEvent("invite_friends", { invite_count: inviteCount });
     }
   };
 
   if (contacts.error != null) {
-    if (contacts.error.code === 'E_MISSING_PERMISSION') {
+    if (contacts.error.code === "E_MISSING_PERMISSION") {
       return (
         <View style={styles.permissionsContainer}>
-          <Text style={styles.permissionsText}>To continue, FitazFK needs permission to access your contacts</Text>
+          <Text style={styles.permissionsText}>
+            To continue, FitazFK needs permission to access your contacts
+          </Text>
           <Button
             title="OPEN SETTINGS"
             buttonStyle={styles.settingsButton}
             titleStyle={styles.settingsButtonTitle}
-            onPress={() => Linking.openURL('app-settings:')}
+            onPress={() => Linking.openURL("app-settings:")}
           />
         </View>
       );
@@ -173,7 +177,7 @@ export default function InviteFriends({ recordInvites }) {
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.screenContainer}>
         <SectionList
-          ref={(s) => this.sectionList = s}
+          ref={(s) => (this.sectionList = s)}
           keyExtractor={(item, index) => item + index}
           sections={sections}
           renderSectionHeader={({ section }) => (
@@ -182,7 +186,9 @@ export default function InviteFriends({ recordInvites }) {
             </Text>
           )}
           renderItem={({ item }) => {
-            const selectedIndex = selectedContacts.findIndex((i) => i.id === item.id);
+            const selectedIndex = selectedContacts.findIndex(
+              (i) => i.id === item.id
+            );
             const onPress = () => {
               Haptics.selectionAsync();
               const newContacts = [...selectedContacts];
@@ -196,7 +202,7 @@ export default function InviteFriends({ recordInvites }) {
             return (
               <ContactRow
                 name={item.name}
-                emailOrNumber={(item.email || item.phoneNumber)}
+                emailOrNumber={item.email || item.phoneNumber}
                 selected={selectedIndex >= 0}
                 onPress={onPress}
               />
@@ -218,10 +224,7 @@ export default function InviteFriends({ recordInvites }) {
             green
           />
         </View>
-        <Loader
-          loading={contacts.loading}
-          color={colors.charcoal.standard}
-        />
+        <Loader loading={contacts.loading} color={colors.charcoal.standard} />
       </View>
     </SafeAreaView>
   );
@@ -251,25 +254,25 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
   },
   buttonContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 10,
-    alignItems: 'center',
+    alignItems: "center",
     width,
   },
   permissionsContainer: {
     flex: 1,
     backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   permissionsText: {
     fontFamily: fonts.standardNarrow,
     padding: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   settingsButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     height: 45,
     borderRadius: 4,
     shadowOpacity: 0.8,

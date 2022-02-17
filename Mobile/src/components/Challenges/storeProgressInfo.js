@@ -2,10 +2,10 @@ const { db } = require("../../../config/firebase");
 import AsyncStorage from "@react-native-community/async-storage";
 import { Alert } from "react-native";
 import moment from "moment";
-import momentTimezone from "moment-timezone";
+
 const storeProgressInfo = async (data, bool) => {
+  const uid = await AsyncStorage.getItem("uid");
   if (bool) {
-    const uid = await AsyncStorage.getItem("uid");
     try {
       await db
         .collection("users")
@@ -31,7 +31,6 @@ const storeProgressInfo = async (data, bool) => {
       Alert.alert("Something went wrong ", "error in store progress info ");
     }
   } else {
-    const uid = await AsyncStorage.getItem("uid");
     try {
       await db
         .collection("users")

@@ -536,33 +536,42 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         try {
             if (title.toLowerCase() === 'breakfast') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast = item.id
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast = item.id
+                }
             }
             if (title.toLowerCase() === 'lunch') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.lunch = item.id
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.lunch = item.id
+                }
             }
             if (title.toLowerCase() === 'dinner') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.dinner = item.id
-
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.dinner = item.id
+                }
             }
             if (title.toLowerCase() === 'snack') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.snack = item.id
-
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.snack = item.id
+                }
             }
             if (title.toLowerCase() === 'post workout') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.drink = item.id
-
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.drink = item.id
+                }
             }
             if (title.toLowerCase() === 'preworkout') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout = item.id
-
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout = item.id
+                }
             }
             if (title.toLowerCase() === 'treats') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.treats = item.id
-
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.treats = item.id
+                }
             }
         } catch (err) {
-
+            console.log('Error: ', err)
         }
 
 
@@ -609,32 +618,42 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         try {
             if (title.toLowerCase() === 'breakfast') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast = ""
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast = ""
+                }
             }
             if (title.toLowerCase() === 'lunch') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.lunch = ""
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.lunch = ""
+                }
             }
             if (title.toLowerCase() === 'dinner') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.dinner = ""
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.dinner = ""
+                }
             }
             if (title.toLowerCase() === 'snack') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.snack = ""
-
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.snack = ""
+                }
             }
             if (title.toLowerCase() === 'drink') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.drink = ""
-
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.drink = ""
+                }
             }
             if (title.toLowerCase() === 'preworkout') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout = ""
-
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout = ""
+                }
             }
             if (title.toLowerCase() === 'treats') {
-                recipeMeal[currentChallengeDay - 1].recipeMeal.treats = ""
-
+                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                    recipeMeal[currentChallengeDay - 1].recipeMeal.treats = ""
+                }
             }
         } catch (err) {
-
+            console.log('Error1: ', err)
         }
 
 

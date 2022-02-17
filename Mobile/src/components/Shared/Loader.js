@@ -72,21 +72,21 @@ Loader.propTypes = {
 };
 
 Loader.defaultProps = {
-  overlayColor: 'rgba(0, 0, 0, 0.6)',
+  overlayColor: "rgba(0, 0, 0, 0.6)",
   color: colors.white,
   text: undefined,
 };
 
 const styles = StyleSheet.create({
   loaderContainer: {
-    position: 'absolute',
+    position: "absolute",
     flex: 1,
     backgroundColor: colors.white,
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   dotIndicatorContainer: {
     height: 50,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 16,
     fontFamily: fonts.bold,
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
   },
 });
 

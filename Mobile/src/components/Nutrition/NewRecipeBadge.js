@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import fonts from '../../styles/fonts';
-import colors from '../../styles/colors';
+import React from "react";
+import { StyleSheet, View, Text } from "react-native";
+import fonts from "../../styles/fonts";
+import colors from "../../styles/colors";
 
 const NewRecipeBadge = () => (
   <View style={styles.newRecipeBadgeContainer}>

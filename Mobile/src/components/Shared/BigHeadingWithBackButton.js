@@ -11,9 +11,7 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 
-
-
-function BigHeadingWithBackButton(props) {
+const BigHeadingWithBackButton = (props) => {
   return (
     <View
       style={[globalStyle.bigHeadingTitleContainer, props.customContainerStyle]}
@@ -33,33 +31,29 @@ function BigHeadingWithBackButton(props) {
         </TouchableOpacity>
       )}
 
-        <Text
-          style={[
-            globalStyle.bigHeadingTitleText,
-            props.bigTitleStyle ? props.bigTitleStyle : {},
-          ]}
-        >
-          {props.bigTitleText}
-        </Text>
+      <Text
+        style={[
+          globalStyle.bigHeadingTitleText,
+          props.bigTitleStyle ? props.bigTitleStyle : {},
+        ]}
+      >
+        {props.bigTitleText}
+      </Text>
 
-        <Text
-          style={{
-            fontFamily: fonts.SimplonMonoLight,
-            color: colors.black,
-            letterSpacing: 0.5,
-            textTransform: "uppercase",
-            fontSize: hp('2.0%')
-        
-          }}
-        >
-          {props.lineText}
-        </Text>
-
-        
-        
+      <Text
+        style={{
+          fontFamily: fonts.SimplonMonoLight,
+          color: colors.black,
+          letterSpacing: 0.5,
+          textTransform: "uppercase",
+          fontSize: hp("2.0%"),
+        }}
+      >
+        {props.lineText}
+      </Text>
     </View>
   );
-}
+};
 
 BigHeadingWithBackButton.propTypes = {
   bigTitleStyle: PropTypes.object,

@@ -21,8 +21,6 @@ import {
   short_months,
   full_months,
 } from "../../utils/challenges";
-import ChallengeBlogCard from "../../components/Home/ChallengeBlogCard";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import CalendarModal from "../../components/Shared/CalendarModal";
 
 class ChallengeSubscriptionScreen extends Component {
@@ -43,7 +41,7 @@ class ChallengeSubscriptionScreen extends Component {
       selectedChallengeIndex: null,
       addingToCalendar: false,
       quit: false,
-      completedChallenge: false
+      completedChallenge: false,
     };
   }
 
@@ -57,9 +55,14 @@ class ChallengeSubscriptionScreen extends Component {
         this.props.navigation.navigate("Calendar");
       }
     });
-    console.log('completedChallengeSubscription: ', this.props.navigation.getParam("completedChallenge"))
-    this.setState({quit: this.props.navigation.getParam("quit")})
-    this.setState({completedChallenge: this.props.navigation.getParam("completedChallenge")})
+    console.log(
+      "completedChallengeSubscription: ",
+      this.props.navigation.getParam("completedChallenge")
+    );
+    this.setState({ quit: this.props.navigation.getParam("quit") });
+    this.setState({
+      completedChallenge: this.props.navigation.getParam("completedChallenge"),
+    });
   }
 
   componentDidMount = () => {
@@ -128,7 +131,7 @@ class ChallengeSubscriptionScreen extends Component {
 
   addChallengeToUser(index) {
     let { userData, challengesList, quit, completedChallenge } = this.state;
-    console.log('quit: ', quit)
+    console.log("quit: ", quit);
     const userRef = db
       .collection("users")
       .doc(userData.id)
@@ -277,7 +280,7 @@ class ChallengeSubscriptionScreen extends Component {
   };
 
   onBoarding(challengeData, btnTitle, btnDisabled) {
-    const {quit, completedChallenge} = this.state;
+    const { quit, completedChallenge } = this.state;
     if (btnDisabled) {
       if (btnTitle === "Active") this.props.navigation.navigate("Calendar");
       else if (challengeData.isSchedule) {
@@ -376,7 +379,7 @@ class ChallengeSubscriptionScreen extends Component {
     } catch (err) {
       this.setState({ loading: false });
       console.log(err);
-      Alert.alert("Fetch active challenge data error!");
+      console.log("Fetch active challenge data error!");
     }
   };
 
