@@ -1534,8 +1534,8 @@ class CalendarHomeScreen extends React.PureComponent {
           totalToDownload={this.state.totalToDownload}
           text={
              this.state.additionalDL===true?
-            `Downloading Additional files ${this.state.downloaded}/${this.state.totalToDownload}`:
-            `Downloading Workouts${this.state.downloaded}/${this.state.totalToDownload}`
+            `Downloading other resources ${this.state.downloaded}/${this.state.totalToDownload}`:
+            `Downloading workouts ${this.state.downloaded}/${this.state.totalToDownload}`
           }
           color={colors.red.standard}
         />
