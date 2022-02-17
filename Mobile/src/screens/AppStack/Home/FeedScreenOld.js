@@ -37,7 +37,6 @@ import {
   getTodayRecommendedWorkout,
   isActiveChallenge,
 } from "../../../utils/challenges";
-import ChallengeBlogCard from "../../../components/Home/ChallengeBlogCard";
 import FeedCard from "../../../components/Home/FeedCard";
 import {
   widthPercentageToDP as wp,

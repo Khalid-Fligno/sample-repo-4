@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Dimensions,
   TouchableOpacity,
@@ -7,134 +7,113 @@ import {
   ImageBackground,
   View,
   Animated,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import colors from '../../styles/colors';
-import fonts from '../../styles/fonts';
+} from "react-native";
+import PropTypes from "prop-types";
+import colors from "../../styles/colors";
+import fonts from "../../styles/fonts";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
-export default class DoubleNewsFeedTile extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.animatedValueLeft = new Animated.Value(1);
-    this.animatedValueRight = new Animated.Value(1);
-  }
-  handlePressIn = () => {
-    Animated.spring(this.animatedValueLeft, {
+const DoubleNewsFeedTile = (props) => {
+  const {
+    imageLeft,
+    imageRight,
+    titleLeft1,
+    titleLeft2,
+    titleRight1,
+    titleRight2,
+    onPressLeft,
+    onPressRight,
+  } = props;
+  const animatedValueLeft = new Animated.Value(1);
+  const animatedValueRight = new Animated.Value(1);
+
+  const animatedStyleLeft = {
+    transform: [{ scale: animatedValueLeft }],
+  };
+  const animatedStyleRight = {
+    transform: [{ scale: animatedValueRight }],
+  };
+  const handlePressIn = () => {
+    Animated.spring(animatedValueLeft, {
       toValue: 0.92,
-      useNativeDriver:true
+      useNativeDriver: true,
     }).start();
-  }
-  handlePressOut = () => {
-    Animated.spring(this.animatedValueLeft, {
+  };
+  const handlePressOut = () => {
+    Animated.spring(animatedValueLeft, {
       toValue: 1,
       friction: 3,
       tension: 40,
-      useNativeDriver:true
+      useNativeDriver: true,
     }).start();
-  }
-  handlePressInRight = () => {
-    Animated.spring(this.animatedValueRight, {
+  };
+  const handlePressInRight = () => {
+    Animated.spring(animatedValueRight, {
       toValue: 0.92,
-      useNativeDriver:true
+      useNativeDriver: true,
     }).start();
-  }
-  handlePressOutRight = () => {
-    Animated.spring(this.animatedValueRight, {
+  };
+  const handlePressOutRight = () => {
+    Animated.spring(animatedValueRight, {
       toValue: 1,
       friction: 3,
       tension: 40,
-      useNativeDriver:true
+      useNativeDriver: true,
     }).start();
-  }
-  render() {
-    const {
-      imageLeft,
-      imageRight,
-      titleLeft1,
-      titleLeft2,
-      titleRight1,
-      titleRight2,
-      onPressLeft,
-      onPressRight,
-    } = this.props;
-    const animatedStyleLeft = {
-      transform: [{ scale: this.animatedValueLeft }],
-    };
-    const animatedStyleRight = {
-      transform: [{ scale: this.animatedValueRight }],
-    };
-    return (
-      <View style={styles.doubleTileContainer}>
-        <TouchableOpacity
-          delayPressIn={50}
-          onPress={onPressLeft}
-          style={styles.cardContainer}
-          onPressIn={this.handlePressIn}
-          onPressOut={this.handlePressOut}
-        >
-          <Animated.View
-            style={[styles.flexContainer, animatedStyleLeft]}
+  };
+
+  return (
+    <View style={styles.doubleTileContainer}>
+      <TouchableOpacity
+        delayPressIn={50}
+        onPress={onPressLeft}
+        style={styles.cardContainer}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+      >
+        <Animated.View style={[styles.flexContainer, animatedStyleLeft]}>
+          <ImageBackground
+            resizeMode="cover"
+            source={imageLeft}
+            style={styles.image}
           >
-            <ImageBackground
-              resizeMode="cover"
-              source={imageLeft}
-              style={styles.image}
-            >
-              <View style={styles.opacityLayer}>
-                <View style={styles.titleContainer}>
-                  <Text style={styles.title}>
-                    {titleLeft1}
-                  </Text>
-                  {
-                    titleLeft2 && (
-                      <Text style={styles.title}>
-                        {titleLeft2}
-                      </Text>
-                    )
-                  }
-                </View>
+            <View style={styles.opacityLayer}>
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>{titleLeft1}</Text>
+                {titleLeft2 && <Text style={styles.title}>{titleLeft2}</Text>}
               </View>
-            </ImageBackground>
-          </Animated.View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          delayPressIn={60}
-          onPress={onPressRight}
-          style={styles.cardContainer}
-          onPressIn={this.handlePressInRight}
-          onPressOut={this.handlePressOutRight}
-        >
-          <Animated.View
-            style={[styles.flexContainer, animatedStyleRight]}
+            </View>
+          </ImageBackground>
+        </Animated.View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        delayPressIn={60}
+        onPress={onPressRight}
+        style={styles.cardContainer}
+        onPressIn={handlePressInRight}
+        onPressOut={handlePressOutRight}
+      >
+        <Animated.View style={[styles.flexContainer, animatedStyleRight]}>
+          <ImageBackground
+            resizeMode="cover"
+            source={imageRight}
+            style={styles.image}
           >
-            <ImageBackground
-              resizeMode="cover"
-              source={imageRight}
-              style={styles.image}
-            >
-              <View style={styles.opacityLayer}>
-                <View style={styles.titleContainer}>
-                  <Text style={styles.title}>
-                    {titleRight1}
-                  </Text>
-                  {
-                    titleRight2 && (
-                      <Text style={styles.title}>
-                        {titleRight2}
-                      </Text>
-                    )
-                  }
-                </View>
+            <View style={styles.opacityLayer}>
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>{titleRight1}</Text>
+                {titleRight2 && <Text style={styles.title}>{titleRight2}</Text>}
               </View>
-            </ImageBackground>
-          </Animated.View>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-}
+            </View>
+          </ImageBackground>
+        </Animated.View>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default DoubleNewsFeedTile;
 
 DoubleNewsFeedTile.propTypes = {
   imageLeft: PropTypes.number.isRequired,
@@ -156,7 +135,7 @@ const styles = StyleSheet.create({
   doubleTileContainer: {
     flex: 1,
     height: (width - 30) / 2,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   cardContainer: {
     flex: 1,
@@ -171,16 +150,16 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
     borderRadius: 1,
   },
   opacityLayer: {
     flex: 1,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.transparentBlackLight,
   },
   titleContainer: {
@@ -190,7 +169,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 16,
     color: colors.white,
-    textAlign: 'center',
+    textAlign: "center",
     shadowColor: colors.black,
     shadowOpacity: 1,
     shadowOffset: { width: 0, height: 0 },

@@ -1,18 +1,16 @@
 import React, { useState } from "react";
-import { View, Image, StyleSheet, Text, Dimensions } from "react-native";
+import { View, StyleSheet, Text, Dimensions } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "../../components/Shared/Icon";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
-import { NavigationContainer } from "@react-navigation/native";
 import { containerPadding } from "../../styles/globalStyles";
 
 const { width } = Dimensions.get("window");
-export default function RoundButton(props) {
+const RoundButton = (props) => {
   const [BorderColor, setBorderColor] = useState({
     borderColor: colors.grey.medium,
   });
-  let leftIconUrl = "";
 
   let onPressIn = () => {
     setBorderColor({
@@ -32,16 +30,8 @@ export default function RoundButton(props) {
         onPressIn={onPressIn}
         onPressOut={onPressOut}
         activeOpacity={1}
-        // onPress={(e)=> {
-        //     press(e);
-        //     props.onPress();
-        // }}
       >
         <View style={styles.roundButtonInnerContainer}>
-          {/* <Image
-                        source={leftIconUrl}
-                        style={{width:25,height:25,alignSelf:'center'}}
-                    /> */}
           <Text style={styles.btnText}>{props.title}</Text>
           <Icon
             name={props.rightIcon}
@@ -53,12 +43,13 @@ export default function RoundButton(props) {
       </TouchableOpacity>
     </View>
   );
-}
+};
+
+export default RoundButton;
 
 const styles = StyleSheet.create({
   Container: {
     width: (width - containerPadding * 2) / 2,
-    // height: 50,
   },
   btnContainer: {
     alignItems: "center",

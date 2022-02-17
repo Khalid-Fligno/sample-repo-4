@@ -1,11 +1,11 @@
-import React from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
-import { Button } from 'react-native-elements';
-import PropTypes from 'prop-types';
-import fonts from '../../styles/fonts';
-import colors from '../../styles/colors';
+import React from "react";
+import { Dimensions, StyleSheet } from "react-native";
+import { Button } from "react-native-elements";
+import PropTypes from "prop-types";
+import fonts from "../../styles/fonts";
+import colors from "../../styles/colors";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const CustomButton = ({
   onPress,
@@ -19,7 +19,7 @@ const CustomButton = ({
   outline,
   loading,
   round,
-  workoutComplete
+  workoutComplete,
 }) => (
   <Button
     title={title}
@@ -49,7 +49,7 @@ const CustomButton = ({
       green && styles.whiteText,
       green && outline && styles.greenOutlineText,
       blue && styles.whiteText,
-      workoutComplete && styles.citrusText
+      workoutComplete && styles.citrusText,
     ]}
     disabledStyle={[
       styles.defaultDisabled,
@@ -90,8 +90,8 @@ CustomButton.defaultProps = {
 const common = {
   button: {
     solid: {
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       height: 45,
       width: width - 20,
       borderRadius: 4,
@@ -100,19 +100,19 @@ const common = {
       shadowRadius: 2,
     },
     round: {
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       height: 45,
-      width:"100%",
+      width: "100%",
       borderRadius: 50,
       shadowOpacity: 0.8,
       shadowOffset: { width: 0, height: 2 },
       shadowRadius: 2,
-      padding:30
+      padding: 30,
     },
     outline: {
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       height: 45,
       width: width - 20,
       borderRadius: 2,
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   },
   orangeRound: {
     ...common.button.round,
-    backgroundColor:colors.coral.standard,
+    backgroundColor: colors.coral.standard,
     shadowColor: colors.grey.dark,
   },
   secondaryDisabled: {
@@ -236,13 +236,11 @@ const styles = StyleSheet.create({
     ...common.button.solid,
     backgroundColor: colors.blue.dark,
     shadowColor: colors.grey.dark,
-
   },
   red: {
     ...common.button.solid,
     backgroundColor: colors.themeColor.color,
     shadowColor: colors.themeColor.color,
-
   },
 });
 
