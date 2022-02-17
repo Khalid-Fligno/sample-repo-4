@@ -288,13 +288,13 @@ export default class ExercisesScreenV2 extends React.PureComponent {
           currentExerciseIndex + 1
         );
       }
-    }else if (workout.workoutProcessType === "onlyOne") {
+    } else if (workout.workoutProcessType === "onlyOne") {
       if (this.checkFinished(currentExerciseIndex, setCount)) {
         // console.log("finished");
         this.updateWeekly();
         this.workoutComplete(reps, resistanceCategoryId);
       } else if (currentExerciseIndex < workout.exercises.length - 1) {
-        
+
         this.goToExercise(
           setCount,
           reps,
@@ -338,8 +338,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     currentExerciseIndex,
     rest = false
   ) {
-    console.log('setCount: ',  setCount)
-    console.log('Reps: ',  reps)
+    console.log('setCount: ', setCount)
+    console.log('Reps: ', reps)
     let {
       workoutSubCategory,
       fitnessLevel,
@@ -630,7 +630,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         <View style={styles.invisibleView}>
           <View style={styles.setCounter}>
             <Text style={styles.setCounterText}>
-              Non Stop Until Time Runs Out
+              {`${setCount} / ${workout.workoutReps}`}
             </Text>
           </View>
         </View>
@@ -674,7 +674,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     // console.log('totalDuration: ', totalDuration)
     // console.log('interval: ', interval)
     // console.log('rest: ', rest)
-      // console.log('currentexercise',currentExercise)
+    // console.log('currentexercise',currentExercise)
     const setCount = this.props.navigation.getParam("setCount", 1);
 
     let handleSkip = false;
@@ -728,7 +728,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
         if (!workout.count && !rest)
           return (
             <WorkoutTimer
-              totalDuration={ Number(currentExercise.duration) || Number(totalDuration) }
+              totalDuration={Number(currentExercise.duration) || Number(totalDuration)}
               start={timerStart}
               handleFinish={() => {
                 if (!rest)
