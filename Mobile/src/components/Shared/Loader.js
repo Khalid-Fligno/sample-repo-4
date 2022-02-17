@@ -15,15 +15,15 @@ const Loader = ({
   downloaded,
   totalToDownload
 }) => {
-  const[percentage,setParcentage]=useState(0)
+  const[percentage,setPercentage]=useState(0)
   useEffect(()=>{
     if(downloaded&&totalToDownload>0){
-      setParcentage(Math.floor((downloaded/totalToDownload)*100))
+      setPercentage(Math.floor((downloaded/totalToDownload)*100))
     }
    if(totalToDownload===downloaded){
      totalToDownload=0
      downloaded=0
-     setParcentage(0)
+     setPercentage(0)
    }
   },[downloaded,totalToDownload])
 
@@ -40,9 +40,9 @@ const Loader = ({
             {progressive?
               <>
               <View style={progressBar.bar}>
-                <Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: "#d69354", borderRadius: 5, width:`${percentage}%`}}/>
+                <Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: "#e8f1c8", borderRadius: 20, width:`${percentage}%`}}/>
               </View>
-              <Text style={styles.loaderText}>Loading {percentage}%</Text>
+              <Text style={styles.loaderText}>{text}</Text>
               </>
             :
             <View style={styles.dotIndicatorContainer}>
@@ -51,14 +51,10 @@ const Loader = ({
                 count={3}
                 size={10}
               />
-            </View>
-            }
-            {
-              text && (
-                <Text style={styles.loaderText}>
+              <Text style={styles.loaderText}>
                   {text}
                 </Text>
-              )
+            </View>
             }
           </View>
         </Spinner>
