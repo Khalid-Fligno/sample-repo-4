@@ -645,11 +645,7 @@ class CalendarHomeScreen extends React.PureComponent {
     });
 
     const workout = await this.loadExercise(workoutData);
-    //  download all files before proceed to next download
     if (workout&& workout.newWorkout) {
-      console.log(">>>",this.state.downloaded,"/",this.state.totalToDownload)
-    if(this.state.totalToDownload===this.state.downloaded){
-      console.log(true);
       const warmUpExercises = await this.downloadExerciseWC(
         workout,
         Object.prototype.toString
@@ -684,7 +680,6 @@ class CalendarHomeScreen extends React.PureComponent {
         this.setState({ loadingExercises: false });
         Alert.alert("Alert!", "Something went wrong!");
       }
-    } 
     } else if (workout) {
       this.goToNext(workout);
     } else {
