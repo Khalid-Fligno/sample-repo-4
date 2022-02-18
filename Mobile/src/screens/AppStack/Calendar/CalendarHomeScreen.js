@@ -694,8 +694,9 @@ class CalendarHomeScreen extends React.PureComponent {
     });
 
     const workout = await this.loadExercise(workoutData);
-    
-    if (workout && workout.newWorkout) {
+    // must download all files before proceed to next download
+    if (this.state.downloaded===this.state.totalToDownload && workout.newWorkout) {
+      console.log(true);
       const warmUpExercises = await this.downloadExerciseWC(
         workout,
         Object.prototype.toString
