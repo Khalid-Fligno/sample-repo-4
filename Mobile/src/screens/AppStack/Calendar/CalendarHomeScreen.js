@@ -537,7 +537,7 @@ class CalendarHomeScreen extends React.PureComponent {
       // console.log("WarmUp exercises: ", warmUpExercises);
       // console.log("Cooldown exercises: ", coolDownExercises);
       this.setState({totalToDownload:
-        exercises.length+warmUpExercises.length+coolDownExercises.length
+        exercises.length
       })
       return Promise.all(
         exercises.map(async (exercise, index) => {
@@ -558,55 +558,6 @@ class CalendarHomeScreen extends React.PureComponent {
                     files:!prevState.files
                   }))
                   // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
-                })
-                .catch((err) => resolve("Download failed"));
-            } else {
-              resolve("no video found");
-            }
-          });
-        }),
-        warmUpExercises.map(async (exercise, index) => {
-          return new Promise(async (resolve, reject) => {
-            let videoIndex = 0;
-            if (workout.newWorkout)
-              videoIndex = exercise.videoUrls.findIndex(
-                (res) => res.model === workout.exerciseModel
-              );
-            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-              await FileSystem.downloadAsync(
-                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-                `${FileSystem.cacheDirectory}warmUpExercise-${index + 1}.mp4`
-              )
-                .then(() => {
-                  resolve("Downloaded");
-                  this.setState(prevState => ({
-                    files:!prevState.files
-                  }))
-                  // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
-                })
-                .catch((err) => resolve("Download failed"));
-            } else {
-              resolve("no video found");
-            }
-          });
-        }),
-        coolDownExercises.map(async (exercise, index) => {
-          return new Promise(async (resolve, reject) => {
-            let videoIndex = 0;
-            if (workout.newWorkout)
-              videoIndex = exercise.videoUrls.findIndex(
-                (res) => res.model === workout.exerciseModel
-              );
-            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-              await FileSystem.downloadAsync(
-                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-                `${FileSystem.cacheDirectory}coolDownExercise-${index + 1}.mp4`
-              )
-                .then(() => {
-                  resolve("Downloaded");
-                  this.setState(prevState => ({
-                    files:!prevState.files
-                  }))
                 })
                 .catch((err) => resolve("Download failed"));
             } else {
@@ -694,8 +645,10 @@ class CalendarHomeScreen extends React.PureComponent {
     });
 
     const workout = await this.loadExercise(workoutData);
-    // must download all files before proceed to next download
-    if (this.state.downloaded===this.state.totalToDownload && workout.newWorkout) {
+    //  download all files before proceed to next download
+    if (workout&& workout.newWorkout) {
+      console.log(">>>",this.state.downloaded,"/",this.state.totalToDownload)
+    if(this.state.totalToDownload===this.state.downloaded){
       console.log(true);
       const warmUpExercises = await this.downloadExerciseWC(
         workout,
@@ -731,6 +684,7 @@ class CalendarHomeScreen extends React.PureComponent {
         this.setState({ loadingExercises: false });
         Alert.alert("Alert!", "Something went wrong!");
       }
+    } 
     } else if (workout) {
       this.goToNext(workout);
     } else {
@@ -749,8 +703,6 @@ class CalendarHomeScreen extends React.PureComponent {
       );
     }
     const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
-    this.setState({ loadingExercises: false });
-    this.setState({additionalDL:false})
     if (this.currentChallengeDay > 0) {
       Object.assign(workout, {
         displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
@@ -780,6 +732,8 @@ class CalendarHomeScreen extends React.PureComponent {
       extraProps: { fromCalender: true },
       transformRoute: true,
     });
+    this.setState({ loadingExercises: false });
+    this.setState({additionalDL:false})
   }
 
   deleteCalendarEntry = async (fieldToDelete) => {
