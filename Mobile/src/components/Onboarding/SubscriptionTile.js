@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import SavingsBadge from "./SavingsBadge";
 import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
@@ -175,3 +175,5 @@ const styles = StyleSheet.create({
     color: colors.grey.dark,
   },
 });
+
+export default SubscriptionTile;

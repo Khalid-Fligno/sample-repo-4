@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   View,
@@ -13,78 +13,78 @@ import colors from "../../styles/colors";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const { width } = Dimensions.get("window");
-export default class PauseButtonRow extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-  render() {
-    const {
-      nextExerciseName,
-      handlePause,
-      lastExercise,
-      showNextExercise,
-      isNextButton,
-      handleNextButton,
-    } = this.props;
-    let exerciseTitle = "";
-    if (!lastExercise && nextExerciseName.toLowerCase() === "rest") {
-      exerciseTitle = "";
-    } else if (!lastExercise) {
-      exerciseTitle = "NEXT EXERCISE:";
-    } else {
-      exerciseTitle = "LAST EXERCISE";
-    }
 
-    console.log(showNextExercise, "<><><>");
-    return (
-      <View style={styles.pauseButtonRow}>
+const PauseButtonRow = (props) => {
+  const {
+    nextExerciseName,
+    handlePause,
+    lastExercise,
+    showNextExercise,
+    isNextButton,
+    handleNextButton,
+  } = props;
+
+  const [exerciseTitle, setExerciseTitle] = useState("");
+
+  useEffect(() => {
+    if (!lastExercise && nextExerciseName.toLowerCase() === "rest") {
+      setExerciseTitle("");
+    } else if (!lastExercise) {
+      setExerciseTitle("NEXT EXERCISE:");
+    } else {
+      setExerciseTitle("LAST EXERCISE");
+    }
+  }, [lastExercise, nextExerciseName]);
+
+  return (
+    <View style={styles.pauseButtonRow}>
+      <View style={styles.pauseButtonContainer}>
+        <TouchableOpacity onPress={handlePause} style={styles.pauseButton}>
+          <Icon name="pause" size={15} color={colors.black} />
+          <Text style={styles.pauseButtonText}>PAUSE</Text>
+        </TouchableOpacity>
+      </View>
+      {showNextExercise && (
+        <View
+          style={[
+            styles.nextExerciseContainer,
+            { width: isNextButton ? width / 3 : width / 1.5 },
+          ]}
+        >
+          {exerciseTitle !== "" && (
+            <Text style={styles.nextExercise}>{exerciseTitle}</Text>
+          )}
+
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.nextExerciseName}
+          >
+            {nextExerciseName.toLowerCase() === "rest" && "NEXT"}{" "}
+            {nextExerciseName.toUpperCase()}
+          </Text>
+        </View>
+      )}
+      {isNextButton && (
         <View style={styles.pauseButtonContainer}>
-          <TouchableOpacity onPress={handlePause} style={styles.pauseButton}>
-            <Icon name="pause" size={15} color={colors.black} />
-            <Text style={styles.pauseButtonText}>PAUSE</Text>
+          <TouchableOpacity
+            onPress={handleNextButton}
+            style={styles.pauseButton}
+          >
+            <Text style={styles.pauseButtonText}>NEXT</Text>
+            <Icon
+              name="chevron-right"
+              size={15}
+              color={colors.themeColor.color}
+            />
           </TouchableOpacity>
         </View>
-        {showNextExercise && (
-          <View
-            style={[
-              styles.nextExerciseContainer,
-              { width: isNextButton ? width / 3 : width / 1.5 },
-            ]}
-          >
-            {exerciseTitle !== "" && (
-              <Text style={styles.nextExercise}>{exerciseTitle}</Text>
-            )}
+      )}
+    </View>
+  );
+};
 
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.nextExerciseName}
-            >
-              {nextExerciseName.toLowerCase() === "rest" && "NEXT"}{" "}
-              {nextExerciseName.toUpperCase()}
-            </Text>
-          </View>
-        )}
-        {isNextButton && (
-          <View style={styles.pauseButtonContainer}>
-            <TouchableOpacity
-              onPress={handleNextButton}
-              style={styles.pauseButton}
-            >
-              <Text style={styles.pauseButtonText}>NEXT</Text>
-              <Icon
-                name="chevron-right"
-                size={15}
-                color={colors.themeColor.color}
-              />
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
-    );
-  }
-}
+export default PauseButtonRow;
 
 PauseButtonRow.propTypes = {
   nextExerciseName: PropTypes.string.isRequired,
@@ -105,7 +105,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: colors.grey.light,
     padding: 5,
-    // paddingTop: 0,
   },
   pauseButtonContainer: {
     width: 117.5,
