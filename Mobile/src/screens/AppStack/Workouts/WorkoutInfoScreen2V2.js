@@ -77,7 +77,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       expandedExercise: true,
       expandedWarmup: false,
       expandedCooldown: false,
-      lifestyle: false
+      lifestyle: false,
     };
   }
 
@@ -233,7 +233,8 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   };
 
   componentWillUnmount = async () => {
-    console.log("unmount");
+    if (this.unsubscribeUserChallenges) this.unsubscribeUserChallenges();
+    if (this.unsubscribeChallenges) this.unsubscribeChallenges();
     // this.focusListener.remove()
   };
 
@@ -273,17 +274,17 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     return <View />;
   };
 
-  renderExercise = ({ item: exercise, index, section, }) => {
+  renderExercise = ({ item: exercise, index, section }) => {
     // console.log("Workout: ", this.state.workout.exercises[0].duration);
     let showRR =
       exercise.recommendedResistance &&
-        !exercise.recommendedResistance.includes("N/A")
+      !exercise.recommendedResistance.includes("N/A")
         ? true
         : false;
     let showCT =
       exercise.coachingTip &&
-        exercise.coachingTip.length > 0 &&
-        !exercise.coachingTip.includes("none")
+      exercise.coachingTip.length > 0 &&
+      !exercise.coachingTip.includes("none")
         ? true
         : false;
     const workIntervalTimeinSec =
@@ -294,21 +295,23 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     const convert = (exerciseDur) => {
       var mins = Math.trunc(exerciseDur / 60);
       var sec = exerciseDur % 60;
-      return mins+"min "+ sec + "s"
-    }
+      return mins + "min " + sec + "s";
+    };
 
     let videoUrl = "";
     switch (section.key) {
       case 0:
-        videoUrl = `${FileSystem.cacheDirectory}warmUpExercise-${index + 1
-          }.mp4`;
+        videoUrl = `${FileSystem.cacheDirectory}warmUpExercise-${
+          index + 1
+        }.mp4`;
         break;
       case 1:
         videoUrl = `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`;
         break;
       case 2:
-        videoUrl = `${FileSystem.cacheDirectory}coolDownExercise-${index + 1
-          }.mp4`;
+        videoUrl = `${FileSystem.cacheDirectory}coolDownExercise-${
+          index + 1
+        }.mp4`;
         break;
     }
     return (
@@ -338,78 +341,102 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                   </Text>
                 </View>
                 <View>
-                  {this.state.workout.workoutProcessType === "oneByOne" && section.title != 'Workout' &&
+                  {this.state.workout.workoutProcessType === "oneByOne" &&
+                    section.title != "Workout" &&
                     !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration} {'secs'}
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
+                        {exercise.duration} {"secs"}
                       </Text>
                     )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title != 'Workout' &&
+                  {this.state.workout.workoutProcessType === "onlyOne" &&
+                    section.title != "Workout" &&
                     !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration} {'secs'}
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
+                        {exercise.duration} {"secs"}
                       </Text>
                     )}
 
-                  {this.state.workout.workoutProcessType === "circular" && section.title != 'Workout' &&
+                  {this.state.workout.workoutProcessType === "circular" &&
+                    section.title != "Workout" &&
                     !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration} {'secs'}
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
+                        {exercise.duration} {"secs"}
                       </Text>
                     )}
 
-
-                  {this.state.workout.workoutProcessType === "oneByOne" && section.title === 'Workout' &&
+                  {this.state.workout.workoutProcessType === "oneByOne" &&
+                    section.title === "Workout" &&
                     !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {this.state.workout["workoutReps"]} x {this.state.reps}
                       </Text>
                     )}
 
                   {this.state.workout.workoutProcessType === "oneByOne" &&
                     this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {workIntervalTimeinSec}s on/{restIntervalTimeinSec}s off
                       </Text>
                     )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
+                  {this.state.workout.workoutProcessType === "onlyOne" &&
+                    section.title === "Workout" &&
                     this.state.lifestyle != true &&
                     exercise.duration <= 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {exercise.duration}s
                         {/* {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec}s off`} */}
                       </Text>
                     )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
+                  {this.state.workout.workoutProcessType === "onlyOne" &&
+                    section.title === "Workout" &&
                     this.state.lifestyle != true &&
                     exercise.duration > 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {convert(exercise.duration)}
                         {/* {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec}s off`} */}
                       </Text>
                     )}
 
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
+                  {this.state.workout.workoutProcessType === "onlyOne" &&
+                    section.title === "Workout" &&
                     this.state.lifestyle === true &&
                     workIntervalTimeinSec <= 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {workIntervalTimeinSec}s
                         {/* {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec}s off`} */}
                       </Text>
                     )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
+                  {this.state.workout.workoutProcessType === "onlyOne" &&
+                    section.title === "Workout" &&
                     this.state.lifestyle === true &&
                     workIntervalTimeinSec > 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {workIntervalTimeinSec / 60}mins
                         {/* {restIntervalTimeinSec > 0 &&
                           `/${restIntervalTimeinSec}s off`} */}
                       </Text>
                     )}
-
 
                   {/* {this.state.workout.workoutProcessType === "onlyOne" && section.title ==='Workout' &&
                     workIntervalTimeinSec > 60 && (
@@ -419,18 +446,21 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                           `/${restIntervalTimeinSec / 60}m off`}
                       </Text>
                     )} */}
-                  {this.state.workout.workoutProcessType === "circular" && section.title === 'Workout' &&
+                  {this.state.workout.workoutProcessType === "circular" &&
+                    section.title === "Workout" &&
                     !this.state.workout.count && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
+                      <Text
+                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
+                      >
                         {
                           this.state.workout.workIntervalMap[
-                          this.state.fitnessLevel - 1
+                            this.state.fitnessLevel - 1
                           ]
                         }
                         s on/
                         {
                           this.state.workout.restIntervalMap[
-                          this.state.fitnessLevel - 1
+                            this.state.fitnessLevel - 1
                           ]
                         }
                         s off
@@ -452,14 +482,16 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 selectedAudioTrack={{
                   type: "disabled",
                 }}
-                style={{ width: width - 30, height: width - 30, position: "relative", zIndex: 0 }}
-
+                style={{
+                  width: width - 30,
+                  height: width - 30,
+                  position: "relative",
+                  zIndex: 0,
+                }}
               />
             </View>
             <View style={styles.invisibleView}>
-              <View
-                style={styles.setCounter}
-              >
+              <View style={styles.setCounter}>
                 <Text style={styles.setCounterText}>Swipe for more info</Text>
                 <Icon name="chevron-right" size={10} style={styles.icon} />
               </View>
@@ -629,29 +661,29 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
               sections={
                 workout.warmUpExercises && workout.coolDownExercises
                   ? [
-                    {
-                      data: workout.warmUpExercises,
-                      title: "Warmup",
-                      key: 0,
-                    },
-                    {
-                      data: workout.exercises,
-                      title: "Workout",
-                      key: 1,
-                    },
-                    {
-                      data: workout.coolDownExercises,
-                      title: "Cooldown",
-                      key: 2,
-                    },
-                  ]
+                      {
+                        data: workout.warmUpExercises,
+                        title: "Warmup",
+                        key: 0,
+                      },
+                      {
+                        data: workout.exercises,
+                        title: "Workout",
+                        key: 1,
+                      },
+                      {
+                        data: workout.coolDownExercises,
+                        title: "Cooldown",
+                        key: 2,
+                      },
+                    ]
                   : [
-                    {
-                      data: workout.exercises,
-                      title: "Workout",
-                      key: 1,
-                    },
-                  ]
+                      {
+                        data: workout.exercises,
+                        title: "Workout",
+                        key: 1,
+                      },
+                    ]
               }
               keyExtractor={this.keyExtractor}
               renderItem={this.renderItem}
