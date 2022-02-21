@@ -7,9 +7,6 @@ import {
   TouchableOpacity,
   Alert,
   Linking,
-  Image,
-  StatusBar,
-  FlatList,
   Platform,
   UIManager,
   LayoutAnimation,
@@ -23,29 +20,21 @@ import Modal from "react-native-modal";
 import Carousel from "react-native-carousel";
 import { DotIndicator } from "react-native-indicators";
 import { db } from "../../../../config/firebase";
-import Loader from "../../../components/Shared/Loader";
 import Icon from "../../../components/Shared/Icon";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import AddToCalendarButton from "../../../components/Shared/AddToCalendarButton";
 import {
   findFocus,
-  findLocation,
   findFocusIcon,
   findWorkoutType,
 } from "../../../utils/workouts";
 import colors from "../../../styles/colors";
-// import fonts from '../../../styles/fonts';
 import globalStyle from "../../../styles/globalStyles";
 import WorkoutScreenStyle from "./WorkoutScreenStyle";
 import TimeSvg from "../../../../assets/icons/time";
-import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import NutritionStyles from "../Nutrition/NutritionStyles";
-import { StackActions } from "react-navigation";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import DoubleRightArrow from "../../../../assets/icons/DoubleRightArrow";
-
-const moment = require("moment");
+("react-native-responsive-screen");
+import moment from "moment";
 
 const { width } = Dimensions.get("window");
 
@@ -142,7 +131,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   };
 
   handleStart = () => {
-    // this.toggleMusicModal();
     this.handleWorkoutStart();
   };
 
@@ -204,7 +192,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   handleWorkoutStart = () => {
     const { workout, reps, extraProps, lifestyle } = this.state;
     this.setState({ musicModalVisible: false });
-    // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
     this.props.navigation.navigate("Countdown", {
       lifestyle,
       workout: workout,
@@ -221,21 +208,15 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   componentDidMount = async () => {
     this.fetchProfile();
     this.setState({ loading: true });
-    // this.focusListener = this.props.navigation.addListener('willFocus', () => {
-    //   console.log("will focued call")
-    //   this.onFocusFunction()
-    // })
     this.onFocusFunction();
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
     });
-    // this.checkMusicAppAvailability();
   };
 
   componentWillUnmount = async () => {
     if (this.unsubscribeUserChallenges) this.unsubscribeUserChallenges();
     if (this.unsubscribeChallenges) this.unsubscribeChallenges();
-    // this.focusListener.remove()
   };
 
   togglePreview = (section) => {
@@ -275,7 +256,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   };
 
   renderExercise = ({ item: exercise, index, section }) => {
-    // console.log("Workout: ", this.state.workout.exercises[0].duration);
     let showRR =
       exercise.recommendedResistance &&
       !exercise.recommendedResistance.includes("N/A")
@@ -396,8 +376,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                         style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
                       >
                         {exercise.duration}s
-                        {/* {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec}s off`} */}
                       </Text>
                     )}
                   {this.state.workout.workoutProcessType === "onlyOne" &&
@@ -408,8 +386,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                         style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
                       >
                         {convert(exercise.duration)}
-                        {/* {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec}s off`} */}
                       </Text>
                     )}
 
@@ -433,19 +409,9 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                         style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
                       >
                         {workIntervalTimeinSec / 60}mins
-                        {/* {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec}s off`} */}
                       </Text>
                     )}
 
-                  {/* {this.state.workout.workoutProcessType === "onlyOne" && section.title ==='Workout' &&
-                    workIntervalTimeinSec > 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {this.state.workout.exercises[0].duration / 60} mins
-                        {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec / 60}m off`}
-                      </Text>
-                    )} */}
                   {this.state.workout.workoutProcessType === "circular" &&
                     section.title === "Workout" &&
                     !this.state.workout.count && (
@@ -606,7 +572,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
         workoutInterval =
           workout.workoutTime - (warmupInterval + cooldownInterval);
       }
-      // workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
     }
 
     return (
@@ -873,8 +838,6 @@ const styles = StyleSheet.create({
   startButton: {
     height: 55,
     width: "100%",
-    // position: "absolute",
-    // bottom: 20,
     backgroundColor: colors.black,
     alignSelf: "center",
     alignContent: "center",
