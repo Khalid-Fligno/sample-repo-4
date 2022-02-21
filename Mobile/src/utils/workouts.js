@@ -396,10 +396,6 @@ const downloadExercise = async (workout) => {
             )
               .then(() => {
                 resolve("Downloaded");
-                console.log(
-                  `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +
-                    "downloaded"
-                );
               })
               .catch((err) => resolve("Download failed"));
           } else {
