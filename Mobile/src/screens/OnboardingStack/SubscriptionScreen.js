@@ -380,7 +380,7 @@ export default class SubscriptionScreen extends React.PureComponent {
 
       }).catch(error => {
         this.setState({ loading: false });
-        Alert.alert('Unable to connect to the App Store', 'Please try again later');
+        Alert.alert('Unable to connect to the Play Store', 'Please try again later');
       });
 
     } catch (err) {
