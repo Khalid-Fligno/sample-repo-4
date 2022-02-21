@@ -122,6 +122,12 @@ PODS:
   - logrocket-react-native (0.23.2):
     - LogRocket (= 0.23.2)
     - React
+  - Mixpanel-swift (3.1.2):
+    - Mixpanel-swift/Complete (= 3.1.2)
+  - Mixpanel-swift/Complete (3.1.2)
+  - MixpanelReactNative (1.3.7):
+    - Mixpanel-swift (= 3.1.2)
+    - React
   - OneSignal (2.16.5)
   - RCTRequired (0.63.2)
   - RCTTypeSafety (0.63.2):
@@ -455,6 +461,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - LogRocket (= 0.23.2)
   - "logrocket-react-native (from `../node_modules/@logrocket/react-native`)"
+  - MixpanelReactNative (from `../node_modules/mixpanel-react-native`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -520,6 +527,7 @@ SPEC REPOS:
     - FBSDKLoginKit
     - libwebp
     - LogRocket
+    - Mixpanel-swift
     - OneSignal
     - SDWebImage
     - SDWebImageWebPCoder
@@ -589,6 +597,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   logrocket-react-native:
     :path: "../node_modules/@logrocket/react-native"
+  MixpanelReactNative:
+    :path: "../node_modules/mixpanel-react-native"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -737,6 +747,8 @@ SPEC CHECKSUMS:
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   LogRocket: 532223e831d2781dea5394a0305e7b17ffda504f
   logrocket-react-native: 2c907235fea8a83e41123dee8f99d7e102e9a92b
+  Mixpanel-swift: fda407112b9e908f20550ab6ceaa4d05b09141d7
+  MixpanelReactNative: 8b805c04ec10bdc26eb072e95f8d01a6b6132868
   OneSignal: b72068b06b359f22e27404edee87338f4b68e783
   RCTRequired: f13f25e7b12f925f1f6a6a8c69d929a03c0129fe
   RCTTypeSafety: 44982c5c8e43ff4141eb519a8ddc88059acd1f3a

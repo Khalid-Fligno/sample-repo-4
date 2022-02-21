@@ -20,6 +20,8 @@ import colors from "./src/styles/colors";
 import { YellowBox } from "react-native";
 import _ from "lodash";
 import LogRocket from '@logrocket/react-native';
+// import { Mixpanel } from 'mixpanel-react-native';
+
 
 YellowBox.ignoreWarnings(["Setting a timer"]);
 const _console = _.clone(console);
@@ -43,6 +45,7 @@ function navigate(routeName, params) {
     })
   );
 }
+// const mixpanel = new Mixpanel("109211293f4830a3355672d9b84aae74");
 
 // Facebook.initializeAsync({ appId: '1825444707513470' });
 
@@ -68,6 +71,7 @@ export default class App extends React.PureComponent {
       appState: AppState.currentState,
     };
   }
+
   componentDidMount = () => {
     // this.unsubscribe = NetInfo.addEventListener((state) => {
     //   this.handleConnectivityChange(state);
@@ -75,6 +79,11 @@ export default class App extends React.PureComponent {
     Linking.addEventListener("url", this.handleOpenURL);
     AppState.addEventListener("change", this.handleAppStateChange);
     // LogRocket.init('mwh1f2/fitaz-app-v3')
+    // mixpanel.init();
+    // // Track with event-name
+    // mixpanel.track('Sent Message');
+    // // Track with event-name and property
+    // mixpanel.track('Plan Selected', {'Plan': 'Premium'});
 
     
 
