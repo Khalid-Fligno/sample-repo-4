@@ -116,21 +116,15 @@ class CalendarHomeScreen extends React.PureComponent {
       
     }else{
       this.state.downloaded++
-      console.log(this.state.downloaded,"/",this.state.totalToDownload); 
       if(this.state.totalToDownload===this.state.downloaded){
-        console.log("completed");
         this.setState({
           downloaded:0,
           totalToDownload:0,
           files:undefined,
-          additionalDL:true
-        })
+          loadingExercises:false
+        }) 
       }
     }
-    
-      this.props.navigation.addListener('focus', () => {
-        this.setState({additionalDL:false})
-      });
   }
  
 
@@ -424,13 +418,13 @@ class CalendarHomeScreen extends React.PureComponent {
             FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
               idempotent: true,
             }).then(() => {
-              // console.log(item,"deleted...")
+             
             });
           }
         })
       );
     });
-    // console.log("Workout data: ", workoutData);
+   
     if (workoutData.newWorkout) {
       let exercises = [];
       let tempExerciseData = [];
@@ -439,7 +433,7 @@ class CalendarHomeScreen extends React.PureComponent {
       const exerciseRef = (
         await db
           .collection("Exercises")
-          // .where("id", "in", workoutData.exercises)
+          
           .get()
       ).docs;
       
@@ -482,16 +476,13 @@ class CalendarHomeScreen extends React.PureComponent {
         console.log(exercises.length,"# of Exercises");
         workoutData = Object.assign({}, workoutData, { exercises: exercises });
         const res = await this.downloadExercise(workoutData);
-        //console.log(">>>", workoutData);
         if(res) return workoutData;
         else return false
       } else {
         return false;
       }
     } else {
-      console.log(workoutData, "Old Workout");
       const res = await this.downloadExercise(workoutData);
-      console.log(res,"Downloaded Old Workout");
       return workoutData;
     }
   };
@@ -534,11 +525,7 @@ class CalendarHomeScreen extends React.PureComponent {
           return tempExerciseData.find((res) => res.id === id);
         });
       }
-      // console.log("WarmUp exercises: ", warmUpExercises);
-      // console.log("Cooldown exercises: ", coolDownExercises);
-      this.setState({totalToDownload:
-        exercises.length
-      })
+     
       return Promise.all(
         exercises.map(async (exercise, index) => {
           return new Promise(async (resolve, reject) => {
@@ -548,18 +535,22 @@ class CalendarHomeScreen extends React.PureComponent {
                 (res) => res.model === workout.exerciseModel
               );
             if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-              await FileSystem.downloadAsync(
+              const downloadResumable = FileSystem.createDownloadResumable(
                 exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
                 `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`
               )
-                .then(() => {
+              await downloadResumable.downloadAsync().then(() => {
                   resolve("Downloaded");
                   this.setState(prevState => ({
                     files:!prevState.files
                   }))
-                  // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+                  
                 })
-                .catch((err) => resolve("Download failed"));
+                .catch(() => 
+                    // AsyncStorage.setItem('pausedDownload', 
+                    // JSON.stringify(downloadResumable.savable()))
+                    resolve("Error Download")
+                )
             } else {
               resolve("no video found");
             }
@@ -595,8 +586,7 @@ class CalendarHomeScreen extends React.PureComponent {
       exercises = exerciseIds.map((id) => {
         return tempExerciseData.find((res) => res.id === id);
       });
-        this.setState({totalToDownload:exercises.length})
-      //  console.log(this.state.totalToDownload,"Total");
+     
       return Promise.all(
         exercises.map(async (exercise, index) => {
           return new Promise(async (resolve, reject) => {
@@ -617,10 +607,15 @@ class CalendarHomeScreen extends React.PureComponent {
                   this.setState(prevState => ({
                     files:!prevState.files
                   }))
-                  //this.setState({downloaded:0,totalToDownload:0})
-                   //console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"Downloaded WC")
                 })
-                .catch((err) => resolve("Download failed"));
+                .catch(() => 
+                  // AsyncStorage.setItem('pausedDownload', 
+                  //   JSON.stringify(downloadResumable.savable())
+                  resolve("Error Download")
+                );
+              // const downloadSnapshotJson = await AsyncStorage.getItem('pausedDownload');
+              // const downloadSnapshot = JSON.parse(downloadSnapshotJson);
+              // console.log(">>",downloadSnapshot);                
             }
           });
         })
@@ -636,14 +631,14 @@ class CalendarHomeScreen extends React.PureComponent {
   loadExercises = async (workoutData) => {
     this.setState({ loadingExercises: true });
 
-    // console.log('workoutData.warmUpExercises: ', workoutData.warmUpExercises)
-
-    // let uniqueWarmUpExercises = [...new Set(workoutData.warmUpExercises)];
-    // console.log('uniqueWarmUpExercise:', uniqueWarmUpExercises)
     Object.assign(workoutData, {
       warmUpExercises: workoutData.warmUpExercises,
     });
-
+    this.setState({totalToDownload:
+      workoutData.exercises.length+
+      workoutData.warmUpExercises.length+
+      workoutData.coolDownExercises.length
+    })
     const workout = await this.loadExercise(workoutData);
     if (workout&& workout.newWorkout) {
       const warmUpExercises = await this.downloadExerciseWC(
@@ -727,8 +722,6 @@ class CalendarHomeScreen extends React.PureComponent {
       extraProps: { fromCalender: true },
       transformRoute: true,
     });
-    this.setState({ loadingExercises: false });
-    this.setState({additionalDL:false})
   }
 
   deleteCalendarEntry = async (fieldToDelete) => {
@@ -804,7 +797,7 @@ class CalendarHomeScreen extends React.PureComponent {
     } catch (err) {
       this.setState({ loading: false });
       console.log(err);
-      console.log("Fetch active challenge user data error!");
+     
     }
   };
 
@@ -1026,7 +1019,6 @@ class CalendarHomeScreen extends React.PureComponent {
       activeChallengeUserData,
     } = this.state;
 
-    // console.log('phaseDefaultTags: ', phaseDefaultTags.displayName)
     const datas = activeChallengeUserData.faveRecipe;
 
     if (datas === undefined) {
@@ -1042,7 +1034,6 @@ class CalendarHomeScreen extends React.PureComponent {
             const currentNumber = [];
 
             for (let i = 1; i <= number; i++) {
-              // console.log(i);
               const data = {
                 day: i,
                 recipeMeal: {
@@ -1116,13 +1107,8 @@ class CalendarHomeScreen extends React.PureComponent {
     } = this.state;
 
     let showRC = false;
-    //  console.log('scheulde',this.state.isSchedule)
-    // console.log('loading',this.state.loading)
-    // console.log('rc',this.state.showRC)
     if (activeChallengeData && activeChallengeUserData) {
-      // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
-      //check if selected date is between challenge start and end date
-      // console.log("????,,,,",this.stringDate)
+      
       const isBetween = moment(this.stringDate).isBetween(
         activeChallengeUserData.startDate,
         activeChallengeUserData.endDate,
@@ -1521,11 +1507,6 @@ class CalendarHomeScreen extends React.PureComponent {
           loading={loadingExercises}
           downloaded={this.state.downloaded}
           totalToDownload={this.state.totalToDownload}
-          text={
-             this.state.additionalDL===true?
-            `Downloading other resources ${this.state.downloaded}/${this.state.totalToDownload}`:
-            `Downloading workouts ${this.state.downloaded}/${this.state.totalToDownload}`
-          }
           color={colors.red.standard}
         />
       </View>

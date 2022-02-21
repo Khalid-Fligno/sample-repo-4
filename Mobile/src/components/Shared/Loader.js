@@ -17,14 +17,10 @@ const Loader = ({
 }) => {
   const[percentage,setPercentage]=useState(0)
   useEffect(()=>{
-    if(downloaded&&totalToDownload>0){
+    
       setPercentage(Math.floor((downloaded/totalToDownload)*100))
-    }
-   if(totalToDownload===downloaded){
-     totalToDownload=0
-     downloaded=0
-     setPercentage(0)
-   }
+    
+  
   },[downloaded,totalToDownload])
 
   if (loading) {
@@ -42,7 +38,7 @@ const Loader = ({
               <View style={progressBar.bar}>
                 <Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: "#e8f1c8", borderRadius: 20, width:`${percentage}%`}}/>
               </View>
-              <Text style={styles.loaderText}>{text}</Text>
+              <Text style={styles.loaderText}>Downloading {percentage}%</Text>
               </>
             :
             <View style={styles.dotIndicatorContainer}>
