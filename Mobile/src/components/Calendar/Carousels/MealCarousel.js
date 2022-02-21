@@ -42,7 +42,7 @@ const MealCarousel = ({
           <TouchableOpacity
             key={index}
             style={styles.cardContainer}
-            onPress={() => this.props.onPress(recipe)}
+            onPress={() => onPress(recipe)}
           >
             <ImageBackground
               source={{ uri: recipe.coverImage, cache: "force-cache" }}
