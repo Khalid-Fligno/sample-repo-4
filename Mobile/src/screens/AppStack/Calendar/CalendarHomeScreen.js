@@ -1,15 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  ScrollView,
-  View,
-  Text,
-  Alert,
-  Linking,
-  Dimensions,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, Alert } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
 import firebase from "firebase";
@@ -17,9 +8,8 @@ import ReactTimeout from "react-timeout";
 import { db } from "../../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
-import globalStyle, { containerPadding } from "../../../styles/globalStyles";
+import globalStyle from "../../../styles/globalStyles";
 import calendarStyles from "./calendarStyle";
-import * as Haptics from "expo-haptics";
 import {
   fetchRecipeData,
   getCurrentPhase,
@@ -31,9 +21,6 @@ import {
   convertRecipeData,
 } from "../../../utils/challenges";
 import CustomCalendarStrip from "../../../components/Calendar/CustomCalendarStrip";
-import ChallengeProgressCard2 from "../../../components/Calendar/ChallengeProgressCard2";
-import ChallengeWorkoutCard from "../../../components/Calendar/ChallengeWorkoutCard";
-import TodayMealsList from "../../../components/Calendar/TodayMealsList";
 import Modal from "react-native-modal";
 import ChallengeSetting from "../../../components/Calendar/ChallengeSetting";
 import moment from "moment";
@@ -42,15 +29,13 @@ import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { NavigationActions } from "react-navigation";
 import OnBoardingNotification from "../../../components/Shared/OnBoardingNotification";
 import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
-import { checkVersion } from "react-native-check-version";
-import { getVersion } from "react-native-device-info";
-import fonts from "../../../styles/fonts";
-import Svg, { Path } from "react-native-svg"
+import DayDisplay from "./DayDisplay";
 import {
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
-import Icon from "react-native-vector-icons/FontAwesome";
-import sortBy from "lodash.sortby";
+  downloadRecipeCoverImage,
+  fetchChallengeLevels,
+  fetchUserDataAndBurpees,
+  promptUser,
+} from "../../../utils/calendarHome";
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -108,7 +93,6 @@ class CalendarHomeScreen extends React.PureComponent {
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
     if (this.unsubscribeSchedule) this.unsubscribeSchedule();
-    if (this.unsubscribeReC) this.unsubscribeReC();
   }
 
   handleActiveChallengeSetting() {
@@ -116,48 +100,18 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   fetchRecipeChallenge = async () => {
-    this.unsubscribeReC = await db
-      .collection("challenges")
-      .get()
-      .then((querySnapshot) => {
-        const documents = querySnapshot.docs.map((doc) => doc.data());
-
-        const level_1 = documents.filter((res) => {
-          if (res.id === "88969d13-fd11-4fde-966e-df1270fb97dd") {
-            return res.id;
-          }
-        });
-        const level_2 = documents.filter((res) => {
-          if (res.id === "7798f53c-f613-435d-b94b-b67f1f43b51b") {
-            return res.id;
-          }
-        });
-
-        const level_3 = documents.filter((res) => {
-          if (res.id === "0d48d056-2623-4201-b25a-3f1d78083dba") {
-            return res.id;
-          }
-        });
-
-        const challengeLevel = [
-          {
-            level1: level_1,
-            level2: level_2,
-            level3: level_3,
-          },
-        ];
-
-        fetchRecipeData(challengeLevel).then((res) => {
-          this.setState({
-            AllRecipe: res.recommendedRecipe,
-            loading: false,
-          })
-        })
-
+    const challengeLevels = await fetchChallengeLevels();
+    if (challengeLevels.length)
+      fetchRecipeData(challengeLevels).then((res) => {
         this.setState({
-          challengeRecipe: challengeLevel,
+          AllRecipe: res.recommendedRecipe,
+          loading: false,
         });
       });
+
+    this.setState({
+      challengeRecipe: challengeLevels,
+    });
   };
 
   fetchCalendarEntries = () => {
@@ -209,15 +163,14 @@ class CalendarHomeScreen extends React.PureComponent {
       activeChallengeUserData &&
       activeChallengeUserData.status === "Active" &&
       new Date(activeChallengeUserData.startDate).getTime() <=
-      new Date(this.stringDate).getTime() &&
+        new Date(this.stringDate).getTime() &&
       new Date(activeChallengeUserData.endDate).getTime() >=
-      new Date(this.stringDate).getTime()
+        new Date(this.stringDate).getTime()
     ) {
       this.getCurrentPhaseInfo();
     } else {
       if (!this.state.isSchedule && !this.state.ScheduleData)
         this.checkScheduleChallenge();
-        
       else {
         const isBetween = moment(this.stringDate).isBetween(
           this.state.ScheduleData.startDate,
@@ -235,64 +188,31 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   fetchUserData = async () => {
-    const uid = await AsyncStorage.getItem("uid");
-    const version = await checkVersion();
-    const versionCodeRef = db
-      .collection("users")
-      .doc(uid)
-      .set(
-        {
-          AppVersion:
-            Platform.OS === "ios"
-              ? String(version.version)
-              : String(getVersion()),
-        },
-        { merge: true }
-      );
-    const userRef = db.collection("users").doc(uid);
-    userRef
-      .get()
-      .then((res) => {
-        const data = res.data();
-        if (res.data().weeklyTargets == null) {
-          const data = {
-            weeklyTargets: {
-              resistanceWeeklyComplete: 0,
-              hiitWeeklyComplete: 0,
-              strength: 0,
-              interval: 0,
-              circuit: 0,
-              currentWeekStartDate: moment()
-                .startOf("week")
-                .format("YYYY-MM-DD"),
-            },
-          };
-          userRef.set(data, { merge: true });
-        }
-        this.setState({
-          initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
-        });
-      })
-      .catch((reason) => console.log("Fetching user data error: ", reason));
+    const result = await fetchUserDataAndBurpees();
+    if (typeof result === Boolean) {
+      this.setState({
+        initialBurpeeTestCompleted: result || false,
+      });
+    }
   };
 
-  checkSchedule = async()=>{
-    isActiveChallenge().then((res)=>{
+  checkSchedule = async () => {
+    isActiveChallenge().then((res) => {
       const isBetween = moment(this.stringDate).isBetween(
         res.startDate,
         res.endDate,
         undefined,
         "[]"
-      )
+      );
       if (!isBetween) {
-          this.setState({
-            isSchedule: true,
-            ScheduleData: res,
-            loading: false,
-          });
+        this.setState({
+          isSchedule: true,
+          ScheduleData: res,
+          loading: false,
+        });
       }
-    })
-  }
+    });
+  };
   async checkScheduleChallenge() {
     const uid = await AsyncStorage.getItem("uid");
     //Checking if any schedule challenge is assign to user
@@ -309,7 +229,6 @@ class CalendarHomeScreen extends React.PureComponent {
           { merge: true }
         );
       } else if (res && res.isSchedule) {
-
         const isBetween = moment(this.stringDate).isBetween(
           res.startDate,
           res.endDate,
@@ -327,7 +246,6 @@ class CalendarHomeScreen extends React.PureComponent {
         );
 
         if (!this.state.isSchedule) {
-
           this.setState({
             CalendarSelectedDate: moment(res.startDate),
             isSchedule: true,
@@ -338,13 +256,10 @@ class CalendarHomeScreen extends React.PureComponent {
           this.fetchActiveChallengeData(res);
         }
         if (isBetween) {
-
           this.setState({ isSchedule: true, ScheduleData: res });
           if (!this.state.activeChallengeData) {
-
             this.fetchActiveChallengeData(res);
           } else {
-
             this.getCurrentPhaseInfo();
           }
         } else {
@@ -355,7 +270,6 @@ class CalendarHomeScreen extends React.PureComponent {
           });
         }
       } else {
-
         this.setState({ loading: false });
         const isBetween = moment(this.stringDate).isBetween(
           res.startDate,
@@ -364,23 +278,18 @@ class CalendarHomeScreen extends React.PureComponent {
           "[]"
         );
         if (isBetween) {
-
           this.setState({ isSchedule: true, ScheduleData: res });
           if (!this.state.activeChallengeData) {
-
             this.fetchActiveChallengeData(res);
           } else {
-
             this.getCurrentPhaseInfo();
           }
         } else {
-
           this.setState({
             isSchedule: true,
             ScheduleData: res,
             loading: false,
           });
-
         }
       }
     });
@@ -388,11 +297,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   loadExercises = async (workoutData) => {
     this.setState({ loadingExercises: true });
-
-    // console.log('workoutData.warmUpExercises: ', workoutData.warmUpExercises)
-
-    // let uniqueWarmUpExercises = [...new Set(workoutData.warmUpExercises)];
-    // console.log('uniqueWarmUpExercise:', uniqueWarmUpExercises)
     Object.assign(workoutData, {
       warmUpExercises: workoutData.warmUpExercises,
     });
@@ -407,8 +311,8 @@ class CalendarHomeScreen extends React.PureComponent {
           .indexOf("Array") > -1
           ? workout.warmUpExercises
           : workout.warmUpExercises.filter((warmUpExercise) => {
-            return warmUpExercise;
-          }),
+              return warmUpExercise;
+            }),
         workout.warmUpExerciseModel,
         "warmUp"
       );
@@ -542,7 +446,7 @@ class CalendarHomeScreen extends React.PureComponent {
               Alert.alert(
                 "Congratulations!",
                 "You have completed your challenge",
-                [{ text: "OK", onPress: () => { } }],
+                [{ text: "OK", onPress: () => {} }],
                 { cancelable: false }
               );
             } else {
@@ -586,11 +490,8 @@ class CalendarHomeScreen extends React.PureComponent {
             this.setState({
               activeChallengeUserData,
               activeChallengeData: doc.data(),
-              // loading:false
             });
             setTimeout(() => {
-              // this.setState({ loading: false });
-              // if(!doc.data().newChallenge)
               this.getCurrentPhaseInfo();
             }, 500);
           }
@@ -634,7 +535,7 @@ class CalendarHomeScreen extends React.PureComponent {
               treatsId.push(res.recipeMeal.treats);
             }
           }
-        } catch (err) { }
+        } catch (err) {}
       });
 
       this.setState({
@@ -741,34 +642,14 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async goToRecipe(recipeData) {
     this.setState({ loading: true });
-    const fileUri = `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`;
-    await FileSystem.getInfoAsync(fileUri)
-      .then(async ({ exists }) => {
-        if (!exists) {
-          await FileSystem.downloadAsync(
-            recipeData.coverImage,
-            `${FileSystem.cacheDirectory}recipe-${recipeData.id}.jpg`
-          );
-          this.setState({ loading: false });
-        } else {
-          this.setState({ loading: false });
-        }
-      })
-      .catch(() => {
-        this.setState({ loading: false });
-        Alert.alert("", "Image download error");
-      });
+    const result = await downloadRecipeCoverImage(recipeData);
+    this.setState({ loading: false });
     this.props.navigation.navigate("Recipe", {
       recipe: recipeData,
       title: "challenge",
       extraProps: { fromCalender: true },
     });
   }
-
-  handleBack = () => {
-    const { navigation } = this.props;
-    navigation.pop();
-  };
 
   getToFilter(data, data1, data2, title) {
     const {
@@ -778,55 +659,10 @@ class CalendarHomeScreen extends React.PureComponent {
       activeChallengeUserData,
     } = this.state;
 
-    // console.log('phaseDefaultTags: ', phaseDefaultTags.displayName)
     const datas = activeChallengeUserData.faveRecipe;
 
     if (datas === undefined) {
-      Alert.alert("New Feature", "Favourite Recipe feature is now available.", [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "OK",
-          onPress: async () => {
-            const number = 60;
-            const currentNumber = [];
-
-            for (let i = 1; i <= number; i++) {
-              // console.log(i);
-              const data = {
-                day: i,
-                recipeMeal: {
-                  breakfast: "",
-                  lunch: "",
-                  dinner: "",
-                  snack: "",
-                  drink: "",
-                  preworkout: "",
-                  treats: "",
-                },
-              };
-              currentNumber.push(data);
-            }
-
-            const id = this.state.activeChallengeUserData.id;
-            const uid = await AsyncStorage.getItem("uid");
-            const activeChallengeUserRef = db
-              .collection("users")
-              .doc(uid)
-              .collection("challenges")
-              .doc(id);
-
-            activeChallengeUserRef.set(
-              { faveRecipe: currentNumber },
-              { merge: true }
-            );
-
-            this.handleBack();
-          },
-        },
-      ]);
+      promptUser(activeChallengeUserData, datas, this.props.navigation);
     }
 
     this.props.navigation.navigate("FilterRecipe", {
@@ -838,14 +674,9 @@ class CalendarHomeScreen extends React.PureComponent {
       challengeAllRecipe: challengeRecipe[0],
       recipes: data,
       title: title,
-      allRecipeData: data1
+      allRecipeData: data1,
     });
   }
-
-  openLink = (url) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Linking.openURL(url);
-  };
 
   render() {
     const {
@@ -865,15 +696,9 @@ class CalendarHomeScreen extends React.PureComponent {
       todayRecommendedRecipe,
       favoriteRecipe,
     } = this.state;
-
+    console.log(CalendarSelectedDate, "CalendarSelectedDate");
     let showRC = false;
-    //  console.log('scheulde',this.state.isSchedule)
-    // console.log('loading',this.state.loading)
-    // console.log('rc',this.state.showRC)
     if (activeChallengeData && activeChallengeUserData) {
-      // let currentDate = moment(this.calendarStrip.current.getSelectedDate()).format('YYYY-MM-DD');
-      //check if selected date is between challenge start and end date
-      // console.log("????,,,,",this.stringDate)
       const isBetween = moment(this.stringDate).isBetween(
         activeChallengeUserData.startDate,
         activeChallengeUserData.endDate,
@@ -891,319 +716,6 @@ class CalendarHomeScreen extends React.PureComponent {
         else showRC = false;
       }
     }
-    const mealsList = showRC && (
-      <>
-        <Text
-          style={{
-            fontFamily: fonts.bold,
-            fontSize: wp("6.5%"),
-            color: colors.charcoal.dark,
-            marginVertical: wp("4%"),
-            marginLeft: wp("8%"),
-            textAlign: "left",
-            width: "100%",
-          }}
-        >
-          Today's Meals
-        </Text>
-        <TodayMealsList
-          recipe={AllRecipe[0]}
-          favoriteRecipe={favoriteRecipe[0]}
-          todayRecommendedRecipe={todayRecommendedRecipe[0]}
-          data={todayRecommendedMeal[0]}
-          onPress={(res) => this.goToRecipe(res)}
-          filterPress={(res, res1, res2, title) => this.getToFilter(res, res1, res2, title)}
-        />
-      </>
-    );
-    const workoutCard = todayRcWorkout && showRC && (
-      <>
-        <Text style={calendarStyles.headerText}>Today's Workout</Text>
-        <View style={calendarStyles.listContainer}>
-          <ChallengeWorkoutCard
-            onPress={() =>
-              todayRcWorkout.name && todayRcWorkout.name !== "rest"
-                ? this.loadExercises(todayRcWorkout, this.currentChallengeDay)
-                : ""
-            }
-            res={todayRcWorkout}
-            currentDay={this.currentChallengeDay}
-            title={activeChallengeData.displayName}
-          />
-        </View>
-      </>
-    );
-    const getPhase = (phaseData) => {
-      return (
-        (
-          phaseData.name.substring(0, 5) +
-          " " +
-          phaseData.name.substring(5, phaseData.name.length)
-        )
-          .charAt(0)
-          .toUpperCase() +
-        (
-          phaseData.name.substring(0, 5) +
-          " " +
-          phaseData.name.substring(5, phaseData.name.length)
-        ).slice(1)
-      );
-    };
-    const Progress = () => {
-      return (
-        <>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 15,
-            }}
-          >
-            <View
-              style={{
-                borderRadius: 3,
-                backgroundColor: "rgba(0,0,0,0.1)",
-                padding: 5,
-                borderBottomColor: "rgba(0,0,0,0.1)",
-                borderBottomWidth: 2,
-              }}
-            >
-              <Text
-                style={{
-                  color: "#656565",
-                  fontFamily: fonts.bold,
-                }}
-              >
-                Day 1
-              </Text>
-            </View>
-            <View
-              style={{
-                borderRadius: 3,
-                backgroundColor: "rgba(0,0,0,0.1)",
-                padding: 5,
-                borderBottomColor: "rgba(0,0,0,0.1)",
-                borderBottomWidth: 2,
-              }}
-            >
-              <Text
-                style={{
-                  color: "#656565",
-                  fontFamily: fonts.bold,
-                }}
-              >
-                Day {activeChallengeData.numberOfDays}
-              </Text>
-            </View>
-          </View>
-
-          <View
-            onLayout={(e) => {
-              const newWidth = e.nativeEvent.layout.width;
-              this.setState({ width: newWidth });
-            }}
-            style={{
-              height: 10,
-              backgroundColor: "rgba(0,0,0,0.1)",
-              borderRadius: 10,
-              overflow: "hidden",
-              marginTop: 10,
-            }}
-          >
-            <View
-              style={{
-                height: 10,
-                width:
-                  (width * this.currentChallengeDay) /
-                  activeChallengeData.numberOfDays,
-                borderRadius: 10,
-                backgroundColor: colors.themeColor.fill,
-                position: "absolute",
-                left: 0,
-                top: 0,
-              }}
-            ></View>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              marginTop: 60,
-            }}
-          >
-            <View
-              style={{
-                backgroundColor: "#ffffff",
-                // width: 104,
-                borderRadius: 3,
-                borderBottomColor: "rgba(0,0,0,0.1)",
-                borderBottomWidth: 1,
-              }}
-            >
-              <Text
-                style={{
-                  // fontSize: 18,
-                  fontFamily: fonts.bold,
-                }}
-              >
-                {this.transformLevel + ' '}
-              </Text>
-            </View>
-            <Text
-              style={{
-                // fontSize: 18,
-                fontFamily: fonts.bold,
-              }}
-            >
-              {getPhase(this.phaseData)}
-            </Text>
-          </View>
-
-          <View style={{ marginTop: 20, flex: 1 }}>
-            <TouchableOpacity
-              phase={this.phase}
-              onPress={() => this.openLink(this.phase.pdfUrl)}
-            >
-              <View style={{ flex: 1 }}>
-                <Icon name="file-text-o" size={20} />
-              </View>
-
-              <View style={{ marginTop: -20 }}>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontFamily: fonts.bold,
-                    paddingLeft: 25,
-                  }}
-                >
-                  Phase guide doc
-                </Text>
-              </View>
-              <View style={{ marginTop: -20 }}>
-                <View style={{ paddingLeft: 20, alignItems: "flex-end" }}>
-                  <Icon name="arrow-right" size={18} />
-                </View>
-              </View>
-              <View style={{ marginTop: 10 }}>
-                <View
-                  style={{
-                    borderBottomColor: "#cccccc",
-                    borderBottomWidth: 1,
-                    width: "100%",
-                  }}
-                ></View>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View
-            elevation={5}
-            style={{
-              position: "absolute",
-              left:
-                Platform.OS === "ios"
-                  ? (width * this.currentChallengeDay) /
-                  activeChallengeData.numberOfDays +
-                  11
-                  : (width * this.currentChallengeDay) /
-                  activeChallengeData.numberOfDays +
-                  12,
-              top: 85,
-            }}
-          >
-            <Svg
-              id="prefix__Layer_1"
-              viewBox="0 0 110 90"
-              xmlSpace="preserve"
-              width={hp("1.5%")}
-              height={hp("1.5%")}
-              fill={colors.themeColor.fill}
-              style={{
-                strokeWidth: 50,
-                stroke: colors.themeColor.fill,
-                strokeLinejoin: "round",
-                strokeLinecap: "round",
-                // shadowColor: '#171717',
-                // shadowOffset: {width: 0, height: 0},
-                // shadowOpacity: 0.2,
-                // shadowRadius: 3,
-              }}
-            >
-              <Path className="prefix__st0" d="M 55 46 L 87 90 L 22 90 z" />
-            </Svg>
-          </View>
-          <View
-            elevation={5}
-            style={{
-              position: "absolute",
-              left:
-                Platform.OS === "ios"
-                  ? (width * this.currentChallengeDay) /
-                  activeChallengeData.numberOfDays -
-                  7
-                  : (width * this.currentChallengeDay) /
-                  activeChallengeData.numberOfDays -
-                  7,
-              top: Platform.OS === "ios" ? 96 : 94,
-              backgroundColor: "#F79400",
-              width: 40,
-              height: 40,
-              justifyContent: "center",
-              alignItems: "center",
-              flex: 1,
-              borderRadius: 8,
-              // shadowColor: '#171717',
-              // shadowOffset: {width: 0, height: 5},
-              // shadowOpacity: 0.2,
-              // shadowRadius: 3,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: fonts.GothamMedium,
-                color: "white",
-                fontSize: 25,
-              }}
-            >
-              {this.currentChallengeDay}
-            </Text>
-          </View>
-        </>
-      );
-    };
-
-    const dayDisplay = (
-      <ScrollView
-        contentContainerStyle={calendarStyles.dayDisplayContainer}
-        scrollEnabled={!this.state.isSwiping}
-        showsVerticalScrollIndicator={false}
-      >
-        {this.phaseData && showRC && (
-          <>
-            <View
-              style={{
-                paddingVertical: 20,
-                width: Dimensions.get("window").width,
-                paddingHorizontal: 20,
-              }}
-            >
-              <Progress />
-            </View>
-            {/*<ChallengeProgressCard2*/}
-            {/*    phase={this.phase}*/}
-            {/*    phaseData={this.phaseData}*/}
-            {/*    activeChallengeData={activeChallengeData}*/}
-            {/*    activeChallengeUserData={activeChallengeUserData}*/}
-            {/*    totalChallengeWorkoutsCompleted={*/}
-            {/*      this.totalChallengeWorkoutsCompleted*/}
-            {/*    }*/}
-            {/*    openLink={() => this.openLink(this.phaseData.pdfUrl)}*/}
-            {/*    currentDay={this.currentChallengeDay}*/}
-            {/*/>*/}
-          </>
-        )}
-        {workoutCard}
-        {mealsList}
-      </ScrollView>
-    );
 
     const setting = (
       <Modal
@@ -1213,7 +725,6 @@ class CalendarHomeScreen extends React.PureComponent {
         animationIn="fadeInLeft"
         animationOut="fadeOutLeft"
         onBackdropPress={() => this.toggleSetting()}
-      // useNativeDriver={true}
       >
         <ChallengeSetting
           onToggle={() => this.toggleSetting()}
@@ -1240,7 +751,7 @@ class CalendarHomeScreen extends React.PureComponent {
           CalendarSelectedDate={CalendarSelectedDate}
         />
 
-        {this.state.isSchedule && !showRC && !loading &&(
+        {this.state.isSchedule && !showRC && !loading && (
           <View style={{ margin: wp("5%") }}>
             <Text style={calendarStyles.scheduleTitleStyle}>
               {ScheduleData.displayName}
@@ -1252,16 +763,35 @@ class CalendarHomeScreen extends React.PureComponent {
             <Text style={calendarStyles.scheduleTextStyle}>
               You can change this in settings
             </Text>
-          </View> 
+          </View>
         )}
-       
+
         {skipped && (
           <OnBoardingNotification
             navigation={this.props.navigation}
             data={activeChallengeUserData}
           />
         )}
-        {dayDisplay}
+        <DayDisplay
+          showRC={showRC}
+          phaseData={this.phaseData}
+          isSwiping={this.state.isSwiping}
+          activeChallengeData={activeChallengeData}
+          setState={this.setState}
+          currentChallengeDay={this.currentChallengeDay}
+          width={width}
+          phase={this.phase}
+          transformLevel={this.transformLevel}
+          todayRcWorkout={todayRcWorkout}
+          loadExercises={this.loadExercises}
+          AllRecipe={AllRecipe}
+          favoriteRecipe={favoriteRecipe}
+          todayRecommendedRecipe={todayRecommendedRecipe}
+          todayRecommendedMeal={todayRecommendedMeal}
+          goToRecipe={this.goToRecipe}
+          getToFilter={this.getToFilter}
+        />
+
         {setting}
         <Loader
           loading={loading || loadingExercises}

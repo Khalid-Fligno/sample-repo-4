@@ -48,21 +48,23 @@ const DayDisplay = ({
         />
       </View>
     )}
-    <WorkOutCard
-      showRC={showRC}
-      todayRcWorkout={todayRcWorkout}
-      loadExercises={loadExercises}
-      currentChallengeDay={currentChallengeDay}
-      activeChallengeData={activeChallengeData}
-    />
-    <MealsList
-      AllRecipe={AllRecipe}
-      favoriteRecipe={favoriteRecipe}
-      todayRecommendedRecipe={todayRecommendedRecipe}
-      todayRecommendedMeal={todayRecommendedMeal}
-      goToRecipe={goToRecipe}
-      getToFilter={getToFilter}
-    />
+    {todayRcWorkout && showRC && (
+      <WorkOutCard
+        loadExercises={loadExercises}
+        currentChallengeDay={currentChallengeDay}
+        activeChallengeData={activeChallengeData}
+      />
+    )}
+    {showRC && (
+      <MealsList
+        AllRecipe={AllRecipe}
+        favoriteRecipe={favoriteRecipe}
+        todayRecommendedRecipe={todayRecommendedRecipe}
+        todayRecommendedMeal={todayRecommendedMeal}
+        goToRecipe={goToRecipe}
+        getToFilter={getToFilter}
+      />
+    )}
   </ScrollView>
 );
 

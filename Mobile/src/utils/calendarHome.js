@@ -72,7 +72,7 @@ export const downloadRecipeCoverImage = async (recipeData) => {
 };
 
 export const fetchChallengeLevels = async () => {
-  await db
+  return await db
     .collection("challenges")
     .get()
     .then((querySnapshot) => {
@@ -124,7 +124,7 @@ export const fetchUserDataAndBurpees = async () => {
       { merge: true }
     );
   const userRef = db.collection("users").doc(uid);
-  userRef
+  return userRef
     .get()
     .then((res) => {
       const data = res.data();

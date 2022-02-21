@@ -22,7 +22,7 @@ const TodayMealsList = (props) => {
         {data.breakfast.length > 0 && (
           <MealCarousel
             data={data.breakfast}
-            data1={recipe.breakfast}
+            data1={recipe?.breakfast || []}
             data2={todayRecommendedRecipe.breakfast}
             title={"Breakfast"}
             onPress={onPress}
@@ -97,7 +97,7 @@ const TodayMealsList = (props) => {
         {data.breakfast.length > 0 && (
           <MealCarousel
             data={data.breakfast}
-            data1={recipe.breakfast}
+            data1={recipe?.breakfast || []}
             data2={todayRecommendedRecipe.breakfast}
             title={"Breakfast"}
             onPress={onPress}
@@ -108,7 +108,7 @@ const TodayMealsList = (props) => {
         {data.lunch.length > 0 && (
           <MealCarousel
             data={data.lunch}
-            data1={recipe.lunch}
+            data1={recipe?.lunch || []}
             data2={todayRecommendedRecipe.lunch}
             title={"Lunch"}
             onPress={onPress}
@@ -119,7 +119,7 @@ const TodayMealsList = (props) => {
         {data.dinner.length > 0 && (
           <MealCarousel
             data={data.dinner}
-            data1={recipe.dinner}
+            data1={recipe?.dinner || []}
             data2={todayRecommendedRecipe.dinner}
             title={"Dinner"}
             onPress={onPress}
@@ -130,7 +130,7 @@ const TodayMealsList = (props) => {
         {data.snack.length > 0 && (
           <MealCarousel
             data={data.snack}
-            data1={recipe.snack}
+            data1={recipe?.snack || []}
             data2={todayRecommendedRecipe.snack}
             title={"Snack"}
             onPress={onPress}
@@ -141,7 +141,7 @@ const TodayMealsList = (props) => {
         {data.drink.length > 0 && (
           <MealCarousel
             data={data.drink}
-            data1={recipe.drink}
+            data1={recipe?.drink || []}
             data2={todayRecommendedRecipe.drink}
             title={"Post Workout"}
             onPress={onPress}
@@ -152,7 +152,7 @@ const TodayMealsList = (props) => {
         {data.preworkout.length > 0 && (
           <MealCarousel
             data={data.preworkout}
-            data1={recipe.preworkout}
+            data1={recipe?.preworkout || []}
             data2={todayRecommendedRecipe.preworkout}
             title={"Pre Workout"}
             onPress={onPress}
@@ -163,7 +163,7 @@ const TodayMealsList = (props) => {
         {data.treats.length > 0 && (
           <MealCarousel
             data={data.treats}
-            data1={recipe.treats}
+            data1={recipe?.treats || []}
             data2={todayRecommendedRecipe.treats}
             title={"Treats"}
             onPress={onPress}

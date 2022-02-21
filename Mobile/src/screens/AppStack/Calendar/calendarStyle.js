@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
-import globalStyle, { containerPadding } from "../../../styles/globalStyles";
+import { containerPadding } from "../../../styles/globalStyles";
 const { width } = Dimensions.get("window");
 import {
   heightPercentageToDP as hp,
@@ -14,10 +14,6 @@ const calendarStyles = StyleSheet.create({
     backgroundColor: colors.offWhite,
   },
   calendarStripContainer: {
-    // shadowColor: colors.grey.dark,
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.2,
-    // shadowRadius: 2,
     borderBottomWidth: 2,
     borderBottomColor: colors.grey.light,
     paddingBottom: 10,
@@ -42,17 +38,9 @@ const calendarStyles = StyleSheet.create({
     fontSize: wp("4.5%"),
     color: colors.charcoal.dark,
     marginVertical: wp("4%"),
-    // marginBottom: -10,
   },
   listContainer: {
     width,
-    // marginTop: 10,
-    // borderWidth: 0,
-    // borderTopColor: colors.grey.light,
-    // shadowColor: colors.grey.standard,
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.3,
-    // shadowRadius: 3,
     paddingHorizontal: 20,
   },
   listContainerBottom: {
@@ -67,7 +55,6 @@ const calendarStyles = StyleSheet.create({
   },
   listItemContainer: {
     width: "100%",
-    // height: 80,
     justifyContent: "center",
     backgroundColor: "transparent",
     borderBottomWidth: 2,
@@ -95,7 +82,6 @@ const calendarStyles = StyleSheet.create({
   },
   workoutSubtitleContainer: {
     flexDirection: "row",
-    // marginLeft: 8,
   },
   workoutSubtitleText: {
     fontFamily: fonts.GothamMedium,
@@ -119,7 +105,6 @@ const calendarStyles = StyleSheet.create({
   },
   deleteButton: {
     width: 80,
-    //height: 65,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.themeColor.color,
