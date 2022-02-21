@@ -220,12 +220,19 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   };
 
   togglePreview = (section) => {
-    if (section.key === 0) {
-      this.setState({ expandedWarmup: !this.state.expandedWarmup });
-    } else if (section.key === 1) {
-      this.setState({ expandedExercise: !this.state.expandedExercise });
-    } else if (section.key === 2) {
-      this.setState({ expandedCooldown: !this.state.expandedCooldown });
+    const { key } = section;
+    switch (key) {
+      case 0:
+        this.setState({ expandedWarmup: !this.state.expandedWarmup });
+        break;
+      case 1:
+        this.setState({ expandedExercise: !this.state.expandedExercise });
+      case 2:
+        this.setState({ expandedCooldown: !this.state.expandedCooldown });
+        break;
+
+      default:
+        break;
     }
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
