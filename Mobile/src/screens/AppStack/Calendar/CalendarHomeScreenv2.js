@@ -90,12 +90,25 @@ const CalendarHomeScreen = (props) => {
   const [phaseDefaultTags, setPhaseDefaultTags] = useState(null);
   const [favoriteRecipe, setFavoriteRecipe] = useState([]);
   const [currentDay, setCurrentDay] = useState(null);
+  const [activeChallengeEndDate, setActiveChallengeEndDate] = useState(null);
 
   const calendarStrip = useRef();
 
   const toggleSetting = () => {
     setIsSettingVisible((prev) => !prev);
   };
+
+  useEffect(() => {
+    (async () => {
+      if (activeChallengeEndDate) {
+        await fetchActiveChallengeData(activeChallengeEndDate);
+
+        return () => {
+          fetchActiveChallengeData(activeChallengeEndDate);
+        };
+      }
+    })();
+  }, [activeChallengeEndDate]);
 
   useEffect(() => {
     navigation.setParams({
@@ -178,7 +191,8 @@ const CalendarHomeScreen = (props) => {
           const isCompleted = isDateSameorAfterCurrent(activeChallengeEndDate);
 
           if (list[0] && !isCompleted) {
-            this.fetchActiveChallengeData(list[0]);
+            setActiveChallengeEndDate(activeChallengeEndDate);
+            // fetchActiveChallengeData(list[0]);
           } else {
             if (isCompleted) {
               //TODO check challenge is Completed or not
@@ -302,6 +316,71 @@ const CalendarHomeScreen = (props) => {
       setLoading(false);
       console.log(err);
       console.log("Fetch active challenge data error!");
+    }
+  };
+
+  const getCurrentPhaseInfo = async () => {
+    if (activeChallengeUserData && activeChallengeData) {
+      setLoading(false);
+      const test = activeChallengeUserData.startDate;
+      const transformLevel = activeChallengeUserData.displayName;
+
+      if (this.stringDate >= test) {
+        setLoading(true);
+      }
+
+      //TODO :getCurrent phase data
+      this.phase = getCurrentPhase(
+        activeChallengeUserData.phases,
+        this.stringDate
+      );
+      this.transformLevel = transformLevel;
+      if (this.phase) {
+        //TODO :fetch the current phase data from Challenges collection
+        this.phaseData = activeChallengeData.phases.filter(
+          (res) => res.name === this.phase.name
+        )[0];
+
+        //TODO :calculate the workout completed till selected date
+        this.totalChallengeWorkoutsCompleted =
+          getTotalChallengeWorkoutsCompleted(
+            activeChallengeUserData,
+            this.stringDate
+          );
+
+        //TODO calculate current challenge day
+        this.currentChallengeDay = getCurrentChallengeDay(
+          activeChallengeUserData.startDate,
+          this.stringDate
+        );
+
+        // TODO getToday one recommended meal randomly
+        getTodayRecommendedMeal(this.phaseData, activeChallengeData).then(
+          (res) => {
+            this.setState({
+              todayRecommendedRecipe: res.recommendedRecipe,
+              todayRecommendedMeal: res.recommendedMeal,
+              challengeMealsFilterList: res.challengeMealsFilterList,
+              phaseDefaultTags: res.phaseDefaultTags,
+              loading: false,
+            });
+          }
+        );
+
+        //TODO get recommended workout here
+        const todayRcWorkout = (
+          await getTodayRecommendedWorkout(
+            activeChallengeData.workouts,
+            activeChallengeUserData,
+            this.stringDate
+          )
+        )[0];
+
+        if (todayRcWorkout) this.setState({ todayRcWorkout: todayRcWorkout });
+        else this.setState({ todayRcWorkout: undefined });
+      }
+    } else {
+      // Alert.alert('Something went wrong please try again')
     }
   };
 };
