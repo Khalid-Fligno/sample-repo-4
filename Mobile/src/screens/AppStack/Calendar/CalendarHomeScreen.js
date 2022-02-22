@@ -85,10 +85,6 @@ class CalendarHomeScreen extends React.PureComponent {
       downloaded:0,
       totalToDownload:0,
       files:undefined,
-      filtered:0,
-      totalTofiltered:0,
-      cache:undefined,
-      additionalDL:false
     };
     this.calendarStrip = React.createRef();
   }
@@ -98,7 +94,6 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   componentDidMount = async () => {
-    this.setState({additionalDL:false})
     this.props.navigation.setParams({
       toggleHelperModal: this.showHelperModal,
     });
