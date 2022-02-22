@@ -14,6 +14,9 @@ const WorkOutDuration = ({
   count,
   workout,
   reps,
+  workIntervalMap,
+  fitnessLevel,
+  restIntervalMap,
 }) => {
   renderByCondition = () => {
     switch (type) {
