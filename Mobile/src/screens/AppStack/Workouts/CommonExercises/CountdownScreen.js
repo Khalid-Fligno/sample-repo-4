@@ -1,130 +1,158 @@
-import React from 'react';
-import { StyleSheet, SafeAreaView, View, Text, AppState, Alert } from 'react-native';
-import * as FileSystem from 'expo-file-system';
-import { Audio } from 'expo-av';
-import CountdownTimer from '../../../../components/Workouts/CountdownTimer';
-import CountdownPauseModal from '../../../../components/Workouts/CountdownPauseModal';
-import colors from '../../../../styles/colors';
-import fonts from '../../../../styles/fonts';
+import React from "react";
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Text,
+  AppState,
+  Alert,
+} from "react-native";
+import * as FileSystem from "expo-file-system";
+import { Audio } from "expo-av";
+import CountdownTimer from "../../../../components/Workouts/CountdownTimer";
+import CountdownPauseModal from "../../../../components/Workouts/CountdownPauseModal";
+import colors from "../../../../styles/colors";
+import fonts from "../../../../styles/fonts";
 
 export default class CountdownScreen2 extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      exerciseList: this.props.navigation.getParam('workout', null)['exercises'],
-      workout: this.props.navigation.getParam('workout', null),
-      reps: this.props.navigation.getParam('reps', null),
-      resistanceCategoryId: this.props.navigation.getParam('resistanceCategoryId', null),
-      workoutSubCategory : this.props.navigation.getParam('workoutSubCategory', null),
-      fitnessLevel: this.props.navigation.getParam('fitnessLevel', null),
-      extraProps: this.props.navigation.getParam('extraProps', {}),
+      exerciseList: this.props.navigation.getParam("workout", null)[
+        "exercises"
+      ],
+      workout: this.props.navigation.getParam("workout", null),
+      reps: this.props.navigation.getParam("reps", null),
+      resistanceCategoryId: this.props.navigation.getParam(
+        "resistanceCategoryId",
+        null
+      ),
+      workoutSubCategory: this.props.navigation.getParam(
+        "workoutSubCategory",
+        null
+      ),
+      fitnessLevel: this.props.navigation.getParam("fitnessLevel", null),
+      extraProps: this.props.navigation.getParam("extraProps", {}),
       countdownDuration: 3,
       timerStart: false,
       pauseModalVisible: false,
       appState: AppState.currentState,
-      lifestyle: this.props.navigation.getParam('lifestyle')
+      lifestyle: this.props.navigation.getParam("lifestyle"),
     };
   }
   componentDidMount() {
     this.startTimer();
     this.checkVideoCache();
-    AppState.addEventListener('change', this.handleAppStateChange);
+    AppState.addEventListener("change", this.handleAppStateChange);
   }
   componentWillUnmount() {
-    AppState.removeEventListener('change', this.handleAppStateChange);
+    AppState.removeEventListener("change", this.handleAppStateChange);
   }
   handleAppStateChange = async (nextAppState) => {
     const { appState } = this.state;
-    if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+    if (appState === "active" && nextAppState.match(/inactive|background/)) {
       this.handlePause();
       await Audio.setIsEnabledAsync(true);
     }
     this.setState({ appState: nextAppState });
-  }
+  };
   startTimer = () => {
     this.setState({ timerStart: true });
-  }
+  };
   handlePause = () => {
     this.setState({
       timerStart: false,
       pauseModalVisible: true,
     });
-  }
+  };
   handleUnpause = () => {
     this.setState({
       timerStart: true,
       pauseModalVisible: false,
     });
-  }
+  };
   handleQuitWorkout = () => {
     this.setState({ pauseModalVisible: false });
-    this.props.navigation.navigate('WorkoutsSelection');
-    FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
-      console.log(res)
-        Promise.all(res.map(async (item,index) => {
+    this.props.navigation.navigate("WorkoutsSelection");
+    FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
+      (res) => {
+        Promise.all(
+          res.map(async (item, index) => {
             if (item.includes("exercise-")) {
-              console.log(`${FileSystem.cacheDirectory}${item}`)
-              FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
-                // console.log("deleted...",item)
-              })
+              try {
+                await FileSystem.deleteAsync(
+                  `${FileSystem.cacheDirectory}${item}`,
+                  {
+                    idempotent: true,
+                  }
+                );
+              } catch (err) {
+                console.log(err);
+              }
             }
-        }))
-    })
-  }
+          })
+        );
+      }
+    );
+  };
   quitWorkout = () => {
     Alert.alert(
-      'Warning',
-      'Are you sure you want to quit this workout?',
+      "Warning",
+      "Are you sure you want to quit this workout?",
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: "Cancel", style: "cancel" },
         {
-          text: 'OK',
+          text: "OK",
           onPress: this.handleQuitWorkout,
         },
       ],
-      { cancelable: false },
+      { cancelable: false }
     );
-  }
+  };
   checkVideoCache = async () => {
     const { exerciseList } = this.state;
-    const video1 = await FileSystem.getInfoAsync(`${FileSystem.cacheDirectory}exercise-1.mp4`);
+    const video1 = await FileSystem.getInfoAsync(
+      `${FileSystem.cacheDirectory}exercise-1.mp4`
+    );
     if (!video1.exists) {
-      Promise.all(exerciseList.map(async (exercise, index) => {
-        FileSystem.downloadAsync(
-          exercise.videoURL,
-          `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
-        );
-      }));
+      Promise.all(
+        exerciseList.map(async (exercise, index) => {
+          await FileSystem.downloadAsync(
+            exercise.videoURL,
+            `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`
+          );
+        })
+      );
     }
-  }
+  };
   finishCountdown = (test, workout, reps, resistanceCategoryId) => {
-    let {workoutSubCategory,fitnessLevel,extraProps, lifestyle} = this.state;
-    workout['lifestyle'] = lifestyle
-    if(workout.newWorkout){
-      this.props.navigation.replace('ExerciseWC', {
+    let { workoutSubCategory, fitnessLevel, extraProps, lifestyle } =
+      this.state;
+    workout["lifestyle"] = lifestyle;
+    if (workout.newWorkout) {
+      this.props.navigation.replace("ExerciseWC", {
         workout,
         reps,
         resistanceCategoryId,
-        currentExerciseIndex:0,
+        currentExerciseIndex: 0,
         workoutSubCategory,
         fitnessLevel,
         extraProps,
-        warmUp:true
+        warmUp: true,
       });
-    }else{
-      this.props.navigation.replace('Exercise', {
+    } else {
+      this.props.navigation.replace("Exercise", {
         workout,
         reps,
         resistanceCategoryId,
-        currentExerciseIndex:0,
+        currentExerciseIndex: 0,
         workoutSubCategory,
         fitnessLevel,
         extraProps,
-        test
+        test,
       });
     }
-
-  }
+  };
   render() {
     const {
       countdownDuration,
@@ -132,20 +160,20 @@ export default class CountdownScreen2 extends React.PureComponent {
       resistanceCategoryId,
       timerStart,
       pauseModalVisible,
-      workout
+      workout,
     } = this.state;
-    console.log(this.state.extraProps)
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.countdownContainer}>
           <CountdownTimer
             totalDuration={countdownDuration}
             start={timerStart}
-            handleFinish={() => this.finishCountdown('test', workout, reps, resistanceCategoryId)}
+            handleFinish={() =>
+              this.finishCountdown("test", workout, reps, resistanceCategoryId)
+            }
           />
-          <Text style={styles.countdownText}>
-            GET READY!
-          </Text>
+          <Text style={styles.countdownText}>GET READY!</Text>
           <CountdownPauseModal
             isVisible={pauseModalVisible}
             handleQuit={this.quitWorkout}
@@ -165,8 +193,8 @@ const styles = StyleSheet.create({
   countdownContainer: {
     flex: 1,
     backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   countdownText: {
     fontFamily: fonts.bold,
