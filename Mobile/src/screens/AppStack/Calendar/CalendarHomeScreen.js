@@ -111,6 +111,7 @@ class CalendarHomeScreen extends React.PureComponent {
       
     }else{
       this.state.downloaded++
+      console.log(this.state.downloaded,"/",this.state.totalToDownload);
       if(this.state.totalToDownload===this.state.downloaded){
         this.setState({
           downloaded:0,
@@ -468,7 +469,6 @@ class CalendarHomeScreen extends React.PureComponent {
       });
       
       if (exercises.length > 0) {
-        console.log(exercises.length,"# of Exercises");
         workoutData = Object.assign({}, workoutData, { exercises: exercises });
         const res = await this.downloadExercise(workoutData);
         if(res) return workoutData;
