@@ -550,6 +550,63 @@ class CalendarHomeScreen extends React.PureComponent {
               resolve("no video found");
             }
           });
+        }),
+        warmUpExercises.map(async (exercise, index) => {
+          return new Promise(async (resolve, reject) => {
+            let videoIndex = 0;
+            if (workout.newWorkout) {
+              if (exercise.videoUrls && exercise.videoUrls?.length > 0) {
+                videoIndex = exercise.videoUrls.findIndex(
+                  (res) => res.model === workout.exerciseModel
+                );
+              }
+            }
+            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+             const warmUP = FileSystem.createDownloadResumable(
+                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
+                `${FileSystem.cacheDirectory}warmUpExercise-${index + 1}.mp4`
+             )
+              await warmUP.downloadAsync().then(() => {
+                resolve("Downloaded");
+                this.setState(prevState => ({
+                  files:!prevState.files
+                }))
+                
+              })
+                .catch((err) => resolve("Download failed"));
+            } else {
+              resolve("no video found");
+            }
+          });
+        }),
+        coolDownExercises.map(async (exercise, index) => {
+          return new Promise(async (resolve, reject) => {
+            let videoIndex = 0;
+            if (workout.newWorkout) {
+              if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+                videoIndex = exercise.videoUrls.findIndex(
+                  (res) => res.model === workout.exerciseModel
+                );
+              }
+            }
+  
+            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+              const coolDown= FileSystem.createDownloadResumable(
+                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
+                `${FileSystem.cacheDirectory}coolDownExercise-${index + 1}.mp4`
+              )
+              await coolDown.downloadAsync().then(() => {
+                resolve("Downloaded");
+                this.setState(prevState => ({
+                  files:!prevState.files
+                }))
+                
+              })
+                .catch((err) => resolve("Download failed"));
+            } else {
+              resolve("no video found");
+            }
+          });
         })
       );
     } catch (err) {
@@ -631,6 +688,8 @@ class CalendarHomeScreen extends React.PureComponent {
     });
     this.setState({totalToDownload:
       workoutData.exercises.length+
+      workoutData.warmUpExercises.length+
+      workoutData.coolDownExercises.length+
       workoutData.warmUpExercises.length+
       workoutData.coolDownExercises.length
     })
