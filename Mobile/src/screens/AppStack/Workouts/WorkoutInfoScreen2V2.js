@@ -317,6 +317,9 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                     count={this.state.workout.count}
                     workout={this.state.workout["workoutReps"]}
                     reps={this.state.reps}
+                    workIntervalMap={this.state.workout.workIntervalMap}
+                    fitnessLevel={this.state.fitnessLevel}
+                    restIntervalMap={this.state.workout.restIntervalMap}
                   />
                 </View>
               </View>
