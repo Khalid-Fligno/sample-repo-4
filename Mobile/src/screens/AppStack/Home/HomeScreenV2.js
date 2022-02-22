@@ -22,6 +22,8 @@ import {
 } from "react-native-responsive-screen";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import { isActiveChallenge } from "../../../utils/challenges";
+import LogRocket from '@logrocket/react-native';
+
 const { width } = Dimensions.get("window");
 
 export default class HomeScreenV2 extends React.PureComponent {
@@ -30,6 +32,7 @@ export default class HomeScreenV2 extends React.PureComponent {
         this.state = {
             loading: false,
             profile: undefined,
+            email : [],
         };
     }
 
@@ -48,17 +51,23 @@ export default class HomeScreenV2 extends React.PureComponent {
         this.unsubscribe = userRef.onSnapshot(async (doc) => {
             this.setState({
                 profile: doc.data(),
-                loading: false
+                loading: false,
+                email: doc.data()
             });
         });
+        
     };
 
     render() {
         const {
             loading,
             profile,
+            email
         } = this.state;
-
+        LogRocket.identify(email.id, {
+            name: email.name,
+            email: email.email,
+          });
         const bigHeadeingTitle =
             (profile && profile.firstName ? profile.firstName : "").toString()
         const lineText =

@@ -74,7 +74,7 @@ export default class App extends React.PureComponent {
     // });
     Linking.addEventListener("url", this.handleOpenURL);
     AppState.addEventListener("change", this.handleAppStateChange);
-    // LogRocket.init('mwh1f2/fitaz-app-v3')
+    LogRocket.init('mwh1f2/fitaz-app-v3')
 
     
 

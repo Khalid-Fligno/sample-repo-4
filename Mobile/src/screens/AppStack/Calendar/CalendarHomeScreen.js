@@ -51,6 +51,7 @@ import {
 } from "react-native-responsive-screen";
 import Icon from "react-native-vector-icons/FontAwesome";
 import sortBy from "lodash.sortby";
+import LogRocket from '@logrocket/react-native';
 
 class CalendarHomeScreen extends React.PureComponent {
   constructor(props) {
@@ -235,6 +236,7 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   fetchUserData = async () => {
+    console.log('test')
     const uid = await AsyncStorage.getItem("uid");
     const version = await checkVersion();
     const versionCodeRef = db
@@ -254,7 +256,10 @@ class CalendarHomeScreen extends React.PureComponent {
       .get()
       .then((res) => {
         const data = res.data();
-        if (res.data().weeklyTargets == null) {
+        LogRocket.identify(data.id, {
+          name: data.name,
+          email: data.email,
+        });        if (res.data().weeklyTargets == null) {
           const data = {
             weeklyTargets: {
               resistanceWeeklyComplete: 0,
