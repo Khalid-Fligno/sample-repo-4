@@ -29,17 +29,6 @@ export const findFocus = (workoutObject) => {
   return null;
 };
 
-// export const findFocus = (workoutObject) => {
-//   if (workoutObject.upperBody) {
-//     return 'Upper';
-//   } else if (workoutObject.lowerBody) {
-//     return 'A, B & T';
-//   } else if (workoutObject.fullBody) {
-//     return 'Full';
-//   }
-//   return null;
-// };
-
 export const findLocation = (workoutObject) => {
   if (workoutObject.gym) {
     return "Gym";
@@ -396,10 +385,6 @@ const downloadExercise = async (workout) => {
             )
               .then(() => {
                 resolve("Downloaded");
-                console.log(
-                  `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +
-                    "downloaded"
-                );
               })
               .catch((err) => resolve("Download failed"));
           } else {
@@ -466,17 +451,8 @@ export const downloadExerciseWC = async (
   }
 };
 
-// export const getRegisteredWebHooks = () => {
-//   return async () => {
-//     const options = {
-//       method: 'GET',
-//       headers: {
-//           'Content-Type': 'application/json',
-//           'x-recharge-access-token' : RECHARGE_API_KEY
-//         },
-//       };
-//     const res = await fetch("https://api.cloudconvert.com/v2/thumbnail", options);
-//     const body = await res.json();
-//     return body;
-//   };
-// }
+export const convertDuration = (exerciseDur) => {
+  var mins = Math.trunc(exerciseDur / 60);
+  var sec = exerciseDur % 60;
+  return mins + "min " + sec + "s";
+};

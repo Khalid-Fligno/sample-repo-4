@@ -159,7 +159,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     try {
       if (this.state.indicator) {
         return(
-          <ActivityIndicator/>
+          <ActivityIndicator color="#999999"/>
         )
       } else {
         return null;

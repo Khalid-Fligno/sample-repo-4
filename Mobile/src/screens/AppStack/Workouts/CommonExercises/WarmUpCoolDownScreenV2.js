@@ -8,14 +8,10 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import CustomBtn from "../../../../components/Shared/CustomBtn";
 import colors from "../../../../styles/colors";
 import fonts from "../../../../styles/fonts";
-import { getLastExercise, getLastExerciseWC } from "../../../../utils/workouts";
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
+import { getLastExerciseWC } from "../../../../utils/workouts";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { Dimensions } from "react-native";
 const { width, height } = Dimensions.get("window");
 import { Video } from "expo-av";
@@ -25,9 +21,6 @@ import WorkoutTimer from "../../../../components/Workouts/WorkoutTimer";
 import ExerciseInfoButtonV2 from "../../../../components/Workouts/ExerciseInfoButtonV2";
 import ExerciseInfoModal from "../../../../components/Workouts/ExerciseInfoModal";
 import Loader from "../../../../components/Shared/Loader";
-import WorkoutProgressBar from "../../../../components/Workouts/WorkoutProgressBar";
-import PauseButtonRow from "../../../../components/Workouts/PauseButtonRow";
-import WorkoutPauseModal from "../../../../components/Workouts/WorkoutPauseModal";
 import WorkoutProgressControl from "../../../../components/Workouts/WorkoutProgressControl";
 import TextTicker from "react-native-text-ticker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -49,21 +42,17 @@ export default class WarmUpCoolDownScreenV2 extends Component {
     };
   }
   componentDidMount() {
-    // console.log("COmpoent call")
     this.loadExercise();
   }
 
   async loadExercise() {
-    const { warmUp, workout, fitnessLevel } = this.props.navigation.state.params;
+    const { warmUp, workout, fitnessLevel } =
+      this.props.navigation.state.params;
     const { exerciseIndex } = this.state;
     const type = warmUp ? "warmUp" : "coolDown";
-    // const exerciseIds =  warmUp?workout.warmUpExercises:workout.coolDownExercises;
-    // const exerciseModel =  warmUp?workout.warmUpExerciseModel:workout.coolDownExerciseModel;
-    // const data = await downloadExerciseWC(workout,exerciseIds,exerciseModel,type);
+
     const exerciseList =
       type === "warmUp" ? workout.warmUpExercises : workout.coolDownExercises;
-    console.log("Exercise list: ", exerciseList);
-    // console.log("workout",workout,exerciseList,type);
     this.setState({
       exerciseList: exerciseList,
       timerStart: false,
@@ -89,7 +78,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       extraProps,
       warmUp,
       fromCalender,
-      extra
+      extra,
     } = this.props.navigation.state.params;
     if (warmUp) {
       this.props.navigation.replace("Exercise", {
@@ -133,13 +122,10 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       });
       setTimeout(() => this.setState({ timerStart: true }), 100);
     }
-
-    // console.log("habdle finish")
   }
 
   showExerciseInfoModal = () => {
     this.setState({
-      // videoPaused: true,
       timerStart: false,
       exerciseInfoModalVisible: true,
     });
@@ -194,13 +180,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
     this.handleExerciseReplace(this.state.exerciseIndex - 1);
   };
   skipExercise = () => {
-    const { exerciseIndex, totalExercise, exerciseList } = this.state;
-    const nextExerciseIndex = this.state.exerciseIndex + 1;
-    const totalDuration =
-      exerciseList[nextExerciseIndex - 1] &&
-      exerciseList[nextExerciseIndex - 1].duration
-        ? exerciseList[nextExerciseIndex - 1].duration
-        : 30;
+    const { exerciseIndex, totalExercise } = this.state;
     if (totalExercise <= exerciseIndex) {
       this.goToExercise();
     } else {
@@ -254,16 +234,13 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       totalDuration,
       videoPaused,
       exerciseInfoModalVisible,
-      pauseModalVisible,
     } = this.state;
     const { warmUp, workout } = this.props.navigation.state.params;
-    // console.log("???",exerciseList)
     const showInfoBtn =
       exerciseList.length > 0 &&
       exerciseList[exerciseIndex - 1].coachingTip &&
       exerciseList[exerciseIndex - 1].coachingTip.length > 0;
     const workoutTimer = () => {
-      console.log('totalDuration: ', totalDuration)
       return (
         <WorkoutTimer
           totalDuration={Number(totalDuration)}
@@ -293,7 +270,6 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       exerciseList.length > 0
         ? getLastExerciseWC(exerciseList, exerciseIndex - 1, workout, 1)
         : {};
-    console.log("Exercise list: ", lastExercise);
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -376,7 +352,6 @@ export default class WarmUpCoolDownScreenV2 extends Component {
           {exerciseList.length > 0 && (
             <View>
               <WorkoutProgressControl
-                //   currentExercise={exerciseIndex}
                 currentExerciseIndex={exerciseIndex - 1}
                 currentSet={exerciseIndex - 1}
                 exerciseList={exerciseList}
@@ -388,7 +363,6 @@ export default class WarmUpCoolDownScreenV2 extends Component {
                 currentRound={1}
                 workout={workout}
                 isPaused={videoPaused}
-                //   onPrev={this.prevExercise}
                 lastExercise={lastExercise}
                 onPrev={this.prevExercise}
                 onRestart={this.restartWorkout}
@@ -410,26 +384,6 @@ export default class WarmUpCoolDownScreenV2 extends Component {
             hideExerciseInfoModal={this.hideExerciseInfoModal}
           />
         )}
-        {/* {lastExercise && exerciseList.length > 0 && (
-          <PauseButtonRow
-            handlePause={this.handlePause}
-            nextExerciseName={lastExercise.nextExerciseName}
-            lastExercise={lastExercise.isLastExercise}
-            showNextExercise={true}
-            isNextButton={false}
-          />
-        )} */}
-
-        {/* <WorkoutPauseModal
-          isVisible={pauseModalVisible}
-          handleQuit={this.quitWorkout}
-          handleRestart={this.restartWorkout}
-          handleSkip={this.skipExercise}
-          handleUnpause={this.handleUnpause}
-          exerciseList={exerciseList}
-          reps={"1"}
-          currentExerciseIndex={exerciseIndex}
-        /> */}
         <Loader
           loading={exerciseList.length === 0}
           color={colors.coral.standard}
@@ -501,7 +455,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   currentExerciseNameTextContainer: {
-    // width: width - 50,
     alignItems: "flex-start",
     justifyContent: "center",
   },
@@ -519,7 +472,6 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   currentExerciseRepsTextContainer: {
-    // width: 30,
     alignItems: "flex-end",
     justifyContent: "center",
   },
