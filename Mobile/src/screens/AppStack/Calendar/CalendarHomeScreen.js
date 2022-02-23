@@ -111,7 +111,6 @@ class CalendarHomeScreen extends React.PureComponent {
       
     }else{
       this.state.downloaded++
-      console.log(this.state.downloaded,"/",this.state.totalToDownload);
       if(this.state.totalToDownload===this.state.downloaded){
         this.setState({
           downloaded:0,
@@ -407,7 +406,7 @@ class CalendarHomeScreen extends React.PureComponent {
   }
   loadExercise = async (workoutData) => {
     const type = 'interval'
-    FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res) => {
+    await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res) => {
       Promise.all(
         res.map(async (item, index) => {
           if (item.includes("exercise-")) {
