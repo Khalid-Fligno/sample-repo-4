@@ -1,12 +1,28 @@
-import React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import Spinner from "react-native-loading-spinner-overlay";
-import { DotIndicator } from "react-native-indicators";
-import PropTypes from "prop-types";
-import colors from "../../styles/colors";
-import fonts from "../../styles/fonts";
+import React,{useEffect,useState, useRef} from 'react';
+import { View, StyleSheet, Text, Animated } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { DotIndicator } from 'react-native-indicators';
+import PropTypes from 'prop-types';
+import colors from '../../styles/colors';
+import fonts from '../../styles/fonts'; 
+import progressBar from '../../styles/progressBar';
+const Loader = ({
+  loading,
+  color,
+  overlayColor,
+  text,
+  progressive,
+  downloaded,
+  totalToDownload
+}) => {
+  const[percentage,setPercentage]=useState(0)
+  useEffect(()=>{
+    
+      setPercentage(Math.floor((downloaded/totalToDownload)*100))
+    
+  
+  },[downloaded,totalToDownload])
 
-const Loader = ({ loading, color, overlayColor, text }) => {
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -17,14 +33,25 @@ const Loader = ({ loading, color, overlayColor, text }) => {
           overlayColor={overlayColor}
         >
           <View style={styles.contentContainer}>
+            {progressive?
+              <>
+              <View style={progressBar.bar}>
+                <Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: "#e8f1c8", borderRadius: 20, width:`${percentage}%`}}/>
+              </View>
+              <Text style={styles.loaderText}>Downloading {percentage}%</Text>
+              </>
+            :
             <View style={styles.dotIndicatorContainer}>
               <DotIndicator
                 color={colors.themeColor.color}
                 count={3}
                 size={10}
               />
+              <Text style={styles.loaderText}>
+                  {text}
+                </Text>
             </View>
-            {text && <Text style={styles.loaderText}>{text}</Text>}
+            }
           </View>
         </Spinner>
       </View>
