@@ -7,7 +7,9 @@ require_relative '../node_modules/react-native/scripts/react_native_pods'
 target 'FitazFK' do
   rnPrefix = "../node_modules/react-native"
   pod 'LogRocket', '0.23.2'
-
+  pod 'Mixpanel'
+  pod 'Mixpanel-swift'
+  
   # React Native and its dependencies
   pod 'FBLazyVector', :path => "#{rnPrefix}/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "#{rnPrefix}/Libraries/FBReactNativeSpec"
@@ -39,6 +41,14 @@ target 'FitazFK' do
   pod 'Folly', :podspec => "#{rnPrefix}/third-party-podspecs/Folly.podspec"
 
   # Other native modules
+  use_flipper!({ 'Flipper' => '0.90.0', 'Flipper-Folly' => '2.6.7', 'Flipper-RSocket' => '1.4.3' })
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+     target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
+     end
+    end
+  end
 
   # Automatically detect installed unimodules
   use_unimodules!
