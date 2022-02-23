@@ -32,7 +32,9 @@ export default class HomeScreenV2 extends React.PureComponent {
         this.state = {
             loading: false,
             profile: undefined,
-            email : [],
+            email: undefined,
+            id: undefined,
+            name: undefined
         };
     }
 
@@ -52,22 +54,27 @@ export default class HomeScreenV2 extends React.PureComponent {
             this.setState({
                 profile: doc.data(),
                 loading: false,
-                email: doc.data()
+                email: doc.data().email,
+                id: doc.data().id,
+                name: doc.data().name
             });
         });
-        
-    };
 
+      
+    };
     render() {
         const {
             loading,
             profile,
-            email
+            email,
+            name,
+            id
         } = this.state;
-        LogRocket.identify(email.id, {
-            name: email.name,
-            email: email.email,
+        LogRocket.identify(id, {
+            name: name,
+            email: email,
           });
+        
         const bigHeadeingTitle =
             (profile && profile.firstName ? profile.firstName : "").toString()
         const lineText =
