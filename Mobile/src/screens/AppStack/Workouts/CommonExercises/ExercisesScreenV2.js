@@ -124,10 +124,12 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       setCount: setCount,
       restRandomImage: "",
       interval: interval,
+      isDisabled: false,
     };
   }
 
   componentDidMount() {
+    this.setState({ isDisabled: false });
     this.startTimer();
 
     this.subscribed = AppState.addEventListener(
@@ -138,6 +140,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
 
   componentWillUnmount() {
     if (this.subscribed) this.subscribed.remove();
+    this.setState({ isDisabled: true });
     // AppState.removeEventListener("change", this.handleAppStateChange);
   }
 
@@ -905,6 +908,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                 bounceSpeed={10}
                 repeatSpacer={50}
                 marqueeDelay={1000}
+                disabled={this.state.isDisabled}
               >
                 {rest ? "Rest" : currentExercise.name.toUpperCase()}
               </TextTicker>

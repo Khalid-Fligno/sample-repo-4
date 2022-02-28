@@ -20,7 +20,7 @@ import _ from "lodash";
 import { Mixpanel } from "mixpanel-react-native";
 
 const App = () => {
-  const [appState, setAppState] = useState(null);
+  const [appState, setAppState] = useState(AppState.currentState);
   let navigator;
 
   const setTopLevelNavigator = (navigatorRef) => {
@@ -81,8 +81,12 @@ const App = () => {
     setAppState(AppState.currentState);
 
     return () => {
-      linkinListener.remove();
-      appStateListener.remove();
+      if (linkinListener) {
+        linkinListener.remove();
+      }
+      if (appStateListener) {
+        appStateListener.remove();
+      }
     };
   }, []);
 
