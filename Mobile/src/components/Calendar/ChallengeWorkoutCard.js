@@ -92,35 +92,40 @@ const ChallengeWorkoutCard = (props) => {
                 </Text>
               )}
             </View>
-
-            <View style={{ flex: 1, paddingTop: 10 }}>
-              <TouchableOpacity onPress={onPress} disabled={target === "rest"}>
-                <Text style={styles.startButton}>Start</Text>
-                <View
-                  style={{
-                    borderBottomColor: "white",
-                    borderBottomWidth: 1,
-                    width: 57,
-                    paddingTop: 3,
-                  }}
-                >
-                  <View
-                    style={{
-                      flex: 1,
-                      marginTop: -19,
-                      paddingLeft: 45,
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <Icon
-                      name="arrow-right"
-                      size={13}
-                      style={{ color: "white" }}
-                    />
-                  </View>
+            {
+              target === "" ?
+                <View style={{ flex: 1, paddingTop: 10 }}>
                 </View>
-              </TouchableOpacity>
-            </View>
+                :
+                <View style={{ flex: 1, paddingTop: 10 }}>
+                  <TouchableOpacity onPress={onPress} disabled={target === "rest"}>
+                    <Text style={styles.startButton}>Start</Text>
+                    <View
+                      style={{
+                        borderBottomColor: "white",
+                        borderBottomWidth: 1,
+                        width: 57,
+                        paddingTop: 3,
+                      }}
+                    >
+                      <View
+                        style={{
+                          flex: 1,
+                          marginTop: -19,
+                          paddingLeft: 45,
+                          alignItems: "flex-start",
+                        }}
+                      >
+                        <Icon
+                          name="arrow-right"
+                          size={13}
+                          style={{ color: "white" }}
+                        />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+            }
           </View>
         </ImageBackground>
       </TouchableOpacity>
