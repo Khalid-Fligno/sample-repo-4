@@ -206,7 +206,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   
 
   render() {
-    const meal = this.props.navigation.getParam('meal', null);
+    const title = this.props.navigation.getParam('title', null);
     const { recipes, loading, filterIndex,indicator } = this.state;
     // console.log('indicator',this.state.indicator);
     // console.log('recipes',this.state.recipes);
@@ -241,7 +241,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       <View style={globalStyle.container}>
         <BigHeadingWithBackButton
           isBackButton={true}
-          bigTitleText={meal}
+          bigTitleText={title}
           onPress={this.handleBack}
           backButtonText="Back to nutrition"
           isBigTitle={true}
