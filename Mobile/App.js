@@ -43,7 +43,7 @@ const App = () => {
       }
       await Audio.setIsEnabledAsync(true);
     }
-    this.setState({ appState: nextAppState });
+    setAppState(nextAppState);
   };
   const handleOpenURL = (event) => {
     if (event.url === "fitazfk://special-offer") {
