@@ -690,7 +690,6 @@ class CalendarHomeScreen extends React.PureComponent {
       warmUpExercises: workoutData.warmUpExercises,
     });
     if (workoutData.newWorkout) {
-      console.log(">>>New Workout");
       this.setState({totalToDownload:
         workoutData.exercises.length+
         workoutData.warmUpExercises.length+
