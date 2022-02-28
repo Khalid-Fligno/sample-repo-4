@@ -273,10 +273,10 @@ class CalendarHomeScreen extends React.PureComponent {
       .get()
       .then((res) => {
         const data = res.data();
-          LogRocket.identify(data.id, {
-            name: data.name,
-            email: data.email,
-          });       
+          // LogRocket.identify(data.id, {
+          //   name: data.name,
+          //   email: data.email,
+          // });       
          if (res.data().weeklyTargets == null) {
           const data = {
             weeklyTargets: {
@@ -689,13 +689,23 @@ class CalendarHomeScreen extends React.PureComponent {
     Object.assign(workoutData, {
       warmUpExercises: workoutData.warmUpExercises,
     });
-    this.setState({totalToDownload:
-      workoutData.exercises.length+
-      workoutData.warmUpExercises.length+
-      workoutData.coolDownExercises.length+
-      workoutData.warmUpExercises.length+
-      workoutData.coolDownExercises.length
-    })
+    if (workoutData.newWorkout) {
+      console.log(">>>New Workout");
+      this.setState({totalToDownload:
+        workoutData.exercises.length+
+        workoutData.warmUpExercises.length+
+        workoutData.coolDownExercises.length+
+        workoutData.warmUpExercises.length+
+        workoutData.coolDownExercises.length
+      })
+    }else{
+      this.setState({totalToDownload:
+        workoutData.exercises.length+
+        workoutData.warmUpExercises.length+
+        workoutData.coolDownExercises.length
+      })
+    }
+    
     const workout = await this.loadExercise(workoutData);
     if (workout&& workout.newWorkout) {
       const warmUpExercises = await this.downloadExerciseWC(
@@ -723,7 +733,9 @@ class CalendarHomeScreen extends React.PureComponent {
             warmUpExercises: warmUpExercises,
             coolDownExercises: coolDownExercises,
           });
-          this.goToNext(newWorkout);
+          if(this.state.totalToDownload===this.state.downloaded){
+            this.goToNext(newWorkout);
+          }
         } else {
           this.setState({ loadingExercises: false });
           Alert.alert("Alert!", "Something went wrong!");
@@ -733,7 +745,9 @@ class CalendarHomeScreen extends React.PureComponent {
         Alert.alert("Alert!", "Something went wrong!");
       }
     } else if (workout) {
-      this.goToNext(workout);
+      if(this.state.totalToDownload===this.state.downloaded){
+        this.goToNext(workout);
+      }
     } else {
       this.setState({ loadingExercises: false });
     }
