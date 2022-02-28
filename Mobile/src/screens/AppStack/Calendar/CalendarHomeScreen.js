@@ -1208,7 +1208,7 @@ class CalendarHomeScreen extends React.PureComponent {
         />
       </>
     );
-    const workoutCard = todayRcWorkout && showRC && (
+    const workoutCard = todayRcWorkout && showRC ? (
       <>
         <Text style={calendarStyles.headerText}>Today's Workout</Text>
         <View style={calendarStyles.listContainer}>
@@ -1224,7 +1224,21 @@ class CalendarHomeScreen extends React.PureComponent {
           />
         </View>
       </>
-    );
+    )
+    :
+    showRC ? 
+    <>
+      <Text style={calendarStyles.headerText}>Today's Workout</Text>
+      <View style={calendarStyles.listContainer}>
+        <ChallengeWorkoutCard
+          res={""}
+          currentDay={this.currentChallengeDay}
+          title={activeChallengeData.displayName}
+        />
+      </View>
+    </>
+    :
+    null
     const getPhase = (phaseData) => {
       return (
         (
