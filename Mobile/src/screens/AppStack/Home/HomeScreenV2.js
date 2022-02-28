@@ -70,10 +70,10 @@ export default class HomeScreenV2 extends React.PureComponent {
             name,
             id
         } = this.state;
-        LogRocket.identify(id, {
-            name: name,
-            email: email,
-          });
+        // LogRocket.identify(id, {
+        //     name: name,
+        //     email: email,
+        //   });
         
         const bigHeadeingTitle =
             (profile && profile.firstName ? profile.firstName : "").toString()

@@ -273,10 +273,10 @@ class CalendarHomeScreen extends React.PureComponent {
       .get()
       .then((res) => {
         const data = res.data();
-          LogRocket.identify(data.id, {
-            name: data.name,
-            email: data.email,
-          });       
+          // LogRocket.identify(data.id, {
+          //   name: data.name,
+          //   email: data.email,
+          // });       
          if (res.data().weeklyTargets == null) {
           const data = {
             weeklyTargets: {
