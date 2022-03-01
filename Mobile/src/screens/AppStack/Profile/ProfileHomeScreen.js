@@ -261,8 +261,8 @@ export default class ProfileHomeScreen extends React.PureComponent {
   logOut = async () => {
     try {
       this.setState({ loading: true });
-      AsyncStorage.removeItem("uid");
       await this.unsubscribe();
+      await AsyncStorage.removeItem("uid");
       auth.signOut();
       this.setState({ loading: false });
       this.props.navigation.navigate("Auth");
