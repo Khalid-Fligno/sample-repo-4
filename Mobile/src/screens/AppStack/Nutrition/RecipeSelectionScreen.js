@@ -46,6 +46,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 
   fetchRecipes = async () => {
     this.setState({ loading: true });
+    
     const meal = this.props.navigation.getParam('meal', null);
     const challengeMealsFilterList = this.props.navigation.getParam('challengeMealsFilterList', null);
     this.unsubscribe = await db.collection('recipes')
@@ -53,6 +54,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       .where("showLifestyle", '==', true)
       .orderBy('title')
       .limit(this.state.limit)
+      
       .onSnapshot(async (querySnapshot) => {
         const recipes = [];
         await querySnapshot.forEach(async (doc) => {
@@ -64,7 +66,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           }
         });
 
-         //get expected data
+      // get expected data
          this.data = await db.collection('recipes')
          .where(meal, '==', true)
          .where("showLifestyle", '==', true)
@@ -106,23 +108,24 @@ export default class RecipeSelectionScreen extends React.PureComponent {
   retrieveMore = async() =>{
     try {  
       this.setState({refreshing: true,});
+      const recipes =[];
       const meal = this.props.navigation.getParam('meal', null);
       const challengeMealsFilterList = this.props.navigation.getParam('challengeMealsFilterList', null);
-      this.unsubscribe = await db.collection('recipes')
+      const recipeMeal = await db.collection('recipes')
         .where(meal, '==', true)
         .where("showLifestyle", '==', true)
         .orderBy('title')
         .limit(this.state.limit)
-        .onSnapshot(async (querySnapshot) => {
-          const recipes = [];
-          await querySnapshot.forEach(async (doc) => {
-            if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
-              if (challengeMealsFilterList.includes(doc.data().id))
-                await recipes.push(await doc.data());
-            } else {
-              await recipes.push(await doc.data());
-            }
-          });
+        .get()
+
+        recipeMeal.forEach(async(doc) =>{
+          if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
+                if (challengeMealsFilterList.includes(doc.data().id))
+                   await recipes.push(doc.data());
+                } else {
+                   await recipes.push(doc.data());
+                }
+          })
           
        
           await Promise.all(recipes.map(async (recipe) => {
@@ -148,7 +151,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           if (recipes.length != allData.length) {
             this.setState({indicator: true})
           }
-        });
+      
     } catch (error) {
       
     }
