@@ -3,27 +3,21 @@ import {
   StyleSheet,
   SafeAreaView,
   View,
-  Text,
   Dimensions,
-  TouchableOpacity,
   StatusBar,
   ImageBackground,
-  Platform
+  Platform,
 } from "react-native";
-import Carousel from "react-native-carousel";
 import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
 import CustomBtn from "../../components/Shared/CustomBtn";
-import globalStyle, { containerPadding } from "../../styles/globalStyles";
+import { containerPadding } from "../../styles/globalStyles";
 import { db } from "../../../config/firebase";
 const { width, height } = Dimensions.get("window");
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
-import { getBuildNumber, getVersion } from "react-native-device-info";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { getVersion } from "react-native-device-info";
 import { checkVersion } from "react-native-check-version";
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from "@react-native-community/async-storage";
 export default class LandingScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -37,12 +31,22 @@ export default class LandingScreen extends React.PureComponent {
   };
 
   async checkAppVersion() {
-    const uid = await AsyncStorage.getItem('uid');
-    const version = await checkVersion();
-    const versionCodeRef = db
-      .collection("users")
-      .doc(uid)
-      .set({AppVersionUse: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
+    const uid = await AsyncStorage.getItem("uid");
+    if (uid) {
+      const version = await checkVersion();
+      const versionCodeRef = db
+        .collection("users")
+        .doc(uid)
+        .set(
+          {
+            AppVersionUse:
+              Platform.OS === "ios"
+                ? String(version.version)
+                : String(getVersion()),
+          },
+          { merge: true }
+        );
+    }
   }
 
   render() {
@@ -51,50 +55,7 @@ export default class LandingScreen extends React.PureComponent {
       <SafeAreaView style={styles.safeAreaContainer}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" />
-          {/* <Carousel
-            width={width}
-            inactiveIndicatorColor={colors.black}
-            indicatorColor={colors.themeColor.color}
-            indicatorOffset={hp("23%")}
-            indicatorSize={20}
-            inactiveIndicatorText="○"
-            indicatorText="●"
-            animate={false}
-          >
-            <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require("../../../assets/images/OnBoardindImg/OB_1.jpg")}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayTransparent} />
-              </ImageBackground>
-            </View>
-            <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require("../../../assets/images/OnBoardindImg/OB_2.jpg")}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayTransparent} />
-              </ImageBackground>
-            </View>
-            <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require("../../../assets/images/OnBoardindImg/OB_3.jpg")}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayTransparent} />
-              </ImageBackground>
-            </View>
-            
-            <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require("../../../assets/images/OnBoardindImg/OB_5.jpg")}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayTransparent} />
-              </ImageBackground>
-            </View>
-          </Carousel> */}
+
           <View style={styles.carouselCardContainer}>
             <ImageBackground
               source={require("../../../assets/images/OnBoardindImg/Thessy238.jpeg")}
@@ -129,24 +90,6 @@ export default class LandingScreen extends React.PureComponent {
                   this.props.navigation.navigate("Signup", { specialOffer })
                 }
               />
-              {/* <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Signup', { specialOffer })}
-                activeOpacity={0.6}
-                style={styles.signupButton}
-              >
-                <Text style={styles.signupButtonText}>
-                  START FREE TRIAL
-                </Text>
-              </TouchableOpacity> */}
-              {/* <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("Login", { specialOffer })
-                }
-                activeOpacity={0.6}
-                style={styles.haveAAccountBtnStyle}
-              >
-                <Text style={styles.haveAAccountTitleStyle}>Sign In</Text>
-              </TouchableOpacity> */}
               <CustomBtn
                 customBtnStyle={{
                   padding: 12,
@@ -215,38 +158,10 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingHorizontal: containerPadding,
   },
-  // signupButton: {
-  //   width: width - 20,
-  //   height: 45,
-  //   marginTop: 5,
-  //   marginBottom: 5,
-  //   backgroundColor: colors.coral.standard,
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   shadowColor: colors.charcoal.dark,
-  //   borderRadius: 2,
-  //   shadowOpacity: 0.5,
-  //   shadowOffset: { width: 0, height: 2 },
-  //   shadowRadius: 2,
-  // },
-  // signupButtonText: {
-  //   marginTop: 4,
-  //   color: colors.white,
-  //   fontFamily: fonts.bold,
-  //   fontSize: 14,
-  // },
   loginButton: {
-    // width: width - 20,
-    // height: 45,
     marginTop: 5,
-    // backgroundColor: colors.transparentCoral,
     alignItems: "center",
     justifyContent: "center",
-    // shadowColor: colors.charcoal.dark,
-    // borderRadius: 2,
-    // shadowOpacity: 0.5,
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowRadius: 2,
   },
   loginButtonText: {
     marginTop: 4,
@@ -257,7 +172,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   haveAAccountBtnStyle: {
-    //flexDirection:"row",
     padding: hp("2%"),
     justifyContent: "center",
     borderRadius: 50,

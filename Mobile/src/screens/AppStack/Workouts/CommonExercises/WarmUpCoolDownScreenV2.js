@@ -39,10 +39,16 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       exerciseInfoModalVisible: false,
       pauseModalVisible: false,
       restart: false,
+      isDisabled: false,
     };
   }
   componentDidMount() {
+    this.setState({ isDisabled: false });
     this.loadExercise();
+  }
+
+  componentWillUnmount() {
+    this.setState({ isDisabled: true });
   }
 
   async loadExercise() {
@@ -342,6 +348,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
                   bounceSpeed={10}
                   repeatSpacer={50}
                   marqueeDelay={1000}
+                  disabled={this.state.isDisabled}
                 >
                   {currentExercise.name.toUpperCase()}
                 </TextTicker>

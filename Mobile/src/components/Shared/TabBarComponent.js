@@ -16,7 +16,7 @@ const TouchableWithoutFeedbackWrapper = ({
   accessibilityLabel,
   ...props
 }) => {
-  const routeKey = accessibilityLabel.split(",")[0];
+  const routeKey = accessibilityLabel?.split(",")[0] || null;
   const onPress1 = () => {
     if (routeKey === "Lifestyle") navigation.navigate("Home");
     else if (routeKey === "Transform") {
@@ -26,7 +26,9 @@ const TouchableWithoutFeedbackWrapper = ({
       });
     } else if (routeKey === "You") {
       navigation.navigate("Progress");
-    } else navigation.navigate(routeKey);
+    } else if (routeKey) {
+      navigation.navigate(routeKey);
+    }
   };
   return (
     <TouchableWithoutFeedback
