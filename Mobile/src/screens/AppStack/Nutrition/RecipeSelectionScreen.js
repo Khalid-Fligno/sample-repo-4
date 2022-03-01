@@ -49,7 +49,7 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     
     const meal = this.props.navigation.getParam('meal', null);
     const challengeMealsFilterList = this.props.navigation.getParam('challengeMealsFilterList', null);
-    const recipeMeal = await db.collection('recipes')
+    this.unsubscribe = await db.collection('recipes')
       .where(meal, '==', true)
       .where("showLifestyle", '==', true)
       .orderBy('title')
