@@ -26,16 +26,20 @@ export default WorkoutProgressControl = ({
   const [willGoBack, setWillGoBack] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setWillGoBack(false);
     }, 3000);
+
+    return () => clearTimeout(timer);
   });
 
   useEffect(() => {
     if (willGoBack) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setWillGoBack(false);
       }, 3000);
+
+      return () => clearTimeout(timer);
     }
   }, [willGoBack]);
 
