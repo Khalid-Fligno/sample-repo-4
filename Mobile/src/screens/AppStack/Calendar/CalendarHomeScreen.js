@@ -1244,6 +1244,7 @@ class CalendarHomeScreen extends React.PureComponent {
       <Text style={calendarStyles.headerText}>Today's Workout</Text>
       <View style={calendarStyles.listContainer}>
         <ChallengeWorkoutCard
+          onPress={() => null}
           res={""}
           currentDay={this.currentChallengeDay}
           title={activeChallengeData.displayName}
