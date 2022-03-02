@@ -25,7 +25,10 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       loading: true,
       filterIndex: 0,
       location: props.navigation.getParam('workoutLocation', null),
-      loadingExercises:false
+      loadingExercises:false,
+      downloaded:0,
+      totalToDownload:0,
+      files:undefined,
     };
   }
   componentDidMount = async () => {
@@ -33,6 +36,21 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
     this.selectedSubCategory = this.props.navigation.getParam('selectedSubCategory', null);
     // console.log(this.selectedMainCategory,this.selectedSubCategory.name)
     await this.fetchWorkouts();
+  }
+  componentDidUpdate=()=>{
+    if(this.state.files===undefined){
+      
+    }else{
+      this.state.downloaded++
+      if(this.state.totalToDownload===this.state.downloaded){
+        this.setState({
+          downloaded:0,
+          totalToDownload:0,
+          files:undefined,
+          loadingExercises:false
+        }) 
+      }
+    }
   }
   componentWillUnmount = async () => {
     this.unsubscribe();
@@ -56,18 +74,306 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
         this.setState({ workouts, loading: false });
       });
   }
+  //DOWNLOAD FUNCTION START
+  loadExercise =  async (workoutData) => {
+    const type = 'interval'
+    await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res) => {
+      Promise.all(
+        res.map(async (item, index) => {
+          if (item.includes("exercise-")) {
+            FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
+              idempotent: true,
+            }).then(() => {
+             
+            });
+          }
+        })
+      );
+    });
+   
+    if (workoutData.newWorkout) {
+      let exercises = [];
+      let tempExerciseData = [];
+      let workoutExercises =[];
+  
+      const exerciseRef = (
+        await db
+          .collection("Exercises")
+          
+          .get()
+      ).docs;
+      
+      workoutData.filters.forEach(resType => {
+        if (resType === 'interval') {
+          exerciseRef.forEach((exercise) => {
+            workoutData.exercises.forEach(resExercise => {
+              if (resExercise.id === exercise.id) {
+                const exerciseDuration = Object.assign({}, exercise.data(), { duration: resExercise.duration })
+                tempExerciseData.push(exerciseDuration)
+              }
+              workoutExercises = workoutData.exercises.map((id) =>{
+                return tempExerciseData.find((res) => res.id === id);
+              })
+            })
+          });
+        } else {
+          exerciseRef.forEach((exercise) => {
+            workoutData.exercises.forEach(resExercise => {
+              if (resExercise === exercise.id) {
+                tempExerciseData.push(exercise.data())
+              }
+              workoutExercises = workoutData.exercises.map((id) =>{
+                return tempExerciseData.find((res) => res.id === id);
+              })
+            })
+          });
+        }
+      })
+  
+      exercises = workoutData.exercises.map((id) => {
+        if(id.id){
+          return tempExerciseData.find((res) => res.id === id.id);
+        } else {
+          return tempExerciseData.find((res) => res.id === id);
+        }
+      });
+      
+      if (exercises.length > 0) {
+        workoutData = Object.assign({}, workoutData, { exercises: exercises });
+        const res = await this.downloadExercise(workoutData);
+        if(res) return workoutData;
+        else return false
+      } else {
+        return false;
+      }
+    } else {
+      const res = await this.downloadExercise(workoutData);
+      return workoutData;
+    }
+  };
+
+  downloadExercise = async (workout) => {
+    try {
+      const exercises = workout.exercises;
+      let warmUpExercises = [];
+      let coolDownExercises = [];
+  
+      if (workout.warmUpExercises) {
+        let tempExerciseData = [];
+        const exerciseRef = (
+          await db
+            .collection("WarmUpCoolDownExercises")
+            .where("id", "in", workout.warmUpExercises)
+            .get()
+        ).docs;
+  
+        exerciseRef.forEach((exercise) => {
+          tempExerciseData.push(exercise.data());
+        });
+        warmUpExercises = workout.warmUpExercises.map((id) => {
+          return tempExerciseData.find((res) => res.id === id);
+        });
+      }
+      if (workout.coolDownExercises) {
+        let tempExerciseData = [];
+        const exerciseRef = (
+          await db
+            .collection("WarmUpCoolDownExercises")
+            .where("id", "in", workout.coolDownExercises)
+            .get()
+        ).docs;
+  
+        exerciseRef.forEach((exercise) => {
+          tempExerciseData.push(exercise.data());
+        });
+        coolDownExercises = workout.coolDownExercises.map((id) => {
+          return tempExerciseData.find((res) => res.id === id);
+        });
+      }
+      return Promise.all(
+        exercises.map(async (exercise, index) => {
+          return new Promise(async (resolve, reject) => {
+            let videoIndex = 0;
+            if (workout.newWorkout)
+              videoIndex = exercise.videoUrls.findIndex(
+                (res) => res.model === workout.exerciseModel
+              );
+            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+              const downloadResumable = FileSystem.createDownloadResumable(
+                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
+                `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`
+              )
+              await downloadResumable.downloadAsync().then(() => {
+                  resolve("Downloaded");
+                  this.setState(prevState => ({
+                    files:!prevState.files
+                  }))
+                  
+                })
+                .catch(() => 
+                    // AsyncStorage.setItem('pausedDownload', 
+                    // JSON.stringify(downloadResumable.savable()))
+                    resolve("Error Download")
+                )
+            } else {
+              resolve("no video found");
+            }
+          });
+        }),
+        warmUpExercises.map(async (exercise, index) => {
+          return new Promise(async (resolve, reject) => {
+            let videoIndex = 0;
+            if (workout.newWorkout) {
+              if (exercise.videoUrls && exercise.videoUrls?.length > 0) {
+                videoIndex = exercise.videoUrls.findIndex(
+                  (res) => res.model === workout.exerciseModel
+                );
+              }
+            }
+            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+             const warmUP = FileSystem.createDownloadResumable(
+                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
+                `${FileSystem.cacheDirectory}warmUpExercise-${index + 1}.mp4`
+             )
+              await warmUP.downloadAsync().then(() => {
+                resolve("Downloaded");
+                this.setState(prevState => ({
+                  files:!prevState.files
+                }))
+                
+              })
+                .catch((err) => resolve("Download failed"));
+            } else {
+              resolve("no video found");
+            }
+          });
+        }),
+        coolDownExercises.map(async (exercise, index) => {
+          return new Promise(async (resolve, reject) => {
+            let videoIndex = 0;
+            if (workout.newWorkout) {
+              if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+                videoIndex = exercise.videoUrls.findIndex(
+                  (res) => res.model === workout.exerciseModel
+                );
+              }
+            }
+  
+            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+              const coolDown= FileSystem.createDownloadResumable(
+                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
+                `${FileSystem.cacheDirectory}coolDownExercise-${index + 1}.mp4`
+              )
+              await coolDown.downloadAsync().then(() => {
+                resolve("Downloaded");
+                this.setState(prevState => ({
+                  files:!prevState.files
+                }))
+                
+              })
+                .catch((err) => resolve("Download failed"));
+            } else {
+              resolve("no video found");
+            }
+          });
+        })
+      );
+    } catch (err) {
+      console.log(err);
+      Alert.alert("Something went wrong", "Workout Not Available");
+      return "false";
+    }
+  };
+  
+  
+  downloadExerciseWC = async (
+    workout,
+    exerciseIds,
+    exerciseModel,
+    type
+  ) => {
+    try {
+      const tempExerciseData = [];
+      let exercises = [];
+      const exerciseRef = (
+        await db
+          .collection("WarmUpCoolDownExercises")
+          .where("id", "in", exerciseIds)
+          .get()
+      ).docs;
+      exerciseRef.forEach((exercise) => {
+        tempExerciseData.push(exercise.data());
+      });
+      exercises = exerciseIds.map((id) => {
+        return tempExerciseData.find((res) => res.id === id);
+      });
+     
+      return Promise.all(
+        exercises.map(async (exercise, index) => {
+          return new Promise(async (resolve, reject) => {
+            let videoIndex = 0;
+            if (workout.newWorkout)
+              videoIndex = exercise.videoUrls.findIndex(
+                (res) => res.model === exerciseModel
+              );
+            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+              const downloadResumable = FileSystem.createDownloadResumable(
+                exercise.videoUrls[videoIndex].url,
+                `${FileSystem.cacheDirectory}exercise-${type}-${index + 1}.mp4`,
+                {},
+              );
+              await downloadResumable.downloadAsync()
+                .then(() => {
+                  resolve(exercise);
+                  this.setState(prevState => ({
+                    files:!prevState.files
+                  }))
+                })
+                .catch(() => 
+                  // AsyncStorage.setItem('pausedDownload', 
+                  //   JSON.stringify(downloadResumable.savable())
+                  resolve("Error Download")
+                );
+              // const downloadSnapshotJson = await AsyncStorage.getItem('pausedDownload');
+              // const downloadSnapshot = JSON.parse(downloadSnapshotJson);
+              // console.log(">>",downloadSnapshot);                
+            }
+          });
+        })
+      );
+    } catch (err) {
+      console.log(err);
+      Alert.alert("Something went wrong", "Workout Not Available");
+      return "false";
+    }
+  };
+  //DOWNLOAD FUNCTION ENDS
   loadExercises = async (workoutData) => {
     this.setState({ loadingExercises: true });
-    const workout = await loadExercise(workoutData);
-    // console.log(workout)
+    if (workoutData.newWorkout) {
+      this.setState({totalToDownload:
+        workoutData.exercises.length+
+        workoutData.warmUpExercises.length+
+        workoutData.coolDownExercises.length+
+        workoutData.warmUpExercises.length+
+        workoutData.coolDownExercises.length
+      })
+    }else{
+      this.setState({totalToDownload:
+        workoutData.exercises.length
+      })
+    }
+    const workout = await this.loadExercise(workoutData);
     if(workout && workout.newWorkout){
       // console.log('Here....')
-      const warmUpExercises = await downloadExerciseWC(workout,workout.warmUpExercises,workout.warmUpExerciseModel,'warmUp');
+      const warmUpExercises = await this.downloadExerciseWC(workout,workout.warmUpExercises,workout.warmUpExerciseModel,'warmUp');
       if(warmUpExercises.length > 0){
-        const coolDownExercises = await downloadExerciseWC(workout,workout.coolDownExercises,workout.coolDownExerciseModel,'coolDown');
+        const coolDownExercises = await this.downloadExerciseWC(workout,workout.coolDownExercises,workout.coolDownExerciseModel,'coolDown');
         if(coolDownExercises.length > 0){
             const newWorkout = Object.assign({},workout,{warmUpExercises:warmUpExercises,coolDownExercises:coolDownExercises});
-            this.goToNext(newWorkout);
+              if(this.state.totalToDownload===this.state.downloaded){
+                this.goToNext(newWorkout);
+              }
             // console.log(newWorkout)
         }else{
           this.setState({loadingExercises:false});
@@ -79,7 +385,9 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       }
     }
     else if(workout){
-      this.goToNext(workout);
+      if(this.state.totalToDownload===this.state.downloaded){
+        this.goToNext(workout);
+      }
     }else{
       this.setState({loadingExercises:false});
     }
@@ -175,9 +483,15 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
           )
         }
         <Loader
-          loading={loading || loadingExercises}
-          text={loadingExercises?'Please wait we are loading workout':null}
-          color={colors.coral.standard}
+          loading={loading}
+          color={colors.red.standard}
+        />
+         <Loader
+          progressive={true}
+          loading={loadingExercises}
+          downloaded={this.state.downloaded}
+          totalToDownload={this.state.totalToDownload}
+          color={colors.red.standard}
         />
       </View>
     );
