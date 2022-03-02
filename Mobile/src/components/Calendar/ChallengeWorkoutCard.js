@@ -62,21 +62,26 @@ const ChallengeWorkoutCard = (props) => {
     <View style={[styles.cardContainer, cardCustomStyle]}>
       <TouchableOpacity style={styles.cardContainer} onPress={onPress}>
         <ImageBackground
-          source={IMAGE.CHALLENG_WORKOUT_CARD_BG}
+          source={target ? IMAGE.CHALLENG_WORKOUT_CARD_BG : IMAGE.REST_COVER_IMAGE}
           style={styles.image}
         >
-          <View style={styles.opacityLayer}>
-            <View style={styles.innerViewContainer}>
-              <Text
-                key={res}
-                style={[
-                  styles.recTextLabel,
-                  { color: colors.themeColor.color },
-                ]}
-              >
-                Today's Workout
-              </Text>
-            </View>
+          <View style={target ? styles.opacityLayer : styles.opacityLayerRest}>
+            {
+              target === "" ?
+              null
+              :
+              <View style={styles.innerViewContainer}>
+                <Text
+                  key={res}
+                  style={[
+                    styles.recTextLabel,
+                    { color: colors.themeColor.color },
+                  ]}
+                >
+                  Today's Workout
+                </Text>
+              </View>
+            }
             <View style={styles.titleContainer}>
               {target !== "rest" && (
                 <Text key={res} style={styles.target}>
@@ -85,16 +90,18 @@ const ChallengeWorkoutCard = (props) => {
                 </Text>
               )}
             </View>
-            <View style={styles.innerViewContainer}>
-              {target === "" && (
-                <Text key={res} style={styles.target}>
-                  Today is your rest day
-                </Text>
-              )}
-            </View>
+            {
+              target === "" && (
+                <View style={styles.innerViewContainer}>
+                    <Text key={res} style={styles.targetRest}>
+                      Today is a rest day
+                    </Text>
+                </View>
+            )}
             {
               target === "" ?
                 <View style={{ flex: 1, paddingTop: 10 }}>
+                  <Text style={styles.startButtonRest}>(no workout)</Text>  
                 </View>
                 :
                 <View style={{ flex: 1, paddingTop: 10 }}>
@@ -163,6 +170,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp("5%"),
     paddingVertical: wp("4%"),
   },
+  opacityLayerRest: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    paddingHorizontal: wp("5%"),
+    paddingVertical: wp("4%"),
+  },
   titleContainer: {
     maxWidth: width / 1.8,
   },
@@ -189,9 +203,26 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
     fontSize: wp("4%"),
   },
+  targetRest: {
+    color: colors.offWhite,
+    fontFamily: fonts.StyreneAWebRegular,
+    textTransform: "capitalize",
+    fontSize: wp("4%"),
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 10,
+  },
   startButton: {
     color: colors.offWhite,
     fontFamily: fonts.StyreneAWebRegular,
     fontSize: 14,
+  },
+  startButtonRest: {
+    color: colors.offWhite,
+    fontFamily: fonts.StyreneAWebRegular,
+    fontSize: 14,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 10,
   },
 });
