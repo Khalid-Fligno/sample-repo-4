@@ -190,9 +190,6 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
           return tempExerciseData.find((res) => res.id === id);
         });
       }
-     console.log(">>Workout:",exercises.length);
-     console.log(">>WarmUP:",warmUpExercises.length);
-     console.log(">>CoolDown:",coolDownExercises.length);
       return Promise.all(
         exercises.map(async (exercise, index) => {
           return new Promise(async (resolve, reject) => {
@@ -208,7 +205,6 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
               )
               await downloadResumable.downloadAsync().then(() => {
                   resolve("Downloaded");
-                  console.log(">>>workout");
                   this.setState(prevState => ({
                     files:!prevState.files
                   }))
@@ -241,7 +237,6 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
              )
               await warmUP.downloadAsync().then(() => {
                 resolve("Downloaded");
-                console.log(">>>warmUp");
                 this.setState(prevState => ({
                   files:!prevState.files
                 }))
@@ -271,7 +266,6 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
               )
               await coolDown.downloadAsync().then(() => {
                 resolve("Downloaded");
-                console.log(">>>cooldown");
                 this.setState(prevState => ({
                   files:!prevState.files
                 }))
@@ -355,8 +349,6 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
   };
   //DOWNLOAD FUNCTION ENDS
   loadExercises = async (workoutData) => {
-    console.log(workoutData);
-    console.log(">>New Workout",workoutData.newWorkout)
     this.setState({ loadingExercises: true });
     if (workoutData.newWorkout) {
       this.setState({totalToDownload:
