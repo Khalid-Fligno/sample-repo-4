@@ -93,7 +93,7 @@ const ChallengeWorkoutCard = (props) => {
             {
               target === "" && (
                 <View style={styles.innerViewContainer}>
-                    <Text key={res} style={styles.targetRest}>
+                    <Text key={res} style={styles.target}>
                       Today is a rest day
                     </Text>
                 </View>
@@ -101,7 +101,7 @@ const ChallengeWorkoutCard = (props) => {
             {
               target === "" ?
                 <View style={{ flex: 1, paddingTop: 10 }}>
-                  <Text style={styles.startButtonRest}>(no workout)</Text>  
+                  <Text style={styles.startButton}>(no workout)</Text>  
                 </View>
                 :
                 <View style={{ flex: 1, paddingTop: 10 }}>
@@ -203,26 +203,9 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
     fontSize: wp("4%"),
   },
-  targetRest: {
-    color: colors.offWhite,
-    fontFamily: fonts.StyreneAWebRegular,
-    textTransform: "capitalize",
-    fontSize: wp("4%"),
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: {width: -1, height: 1},
-    textShadowRadius: 10,
-  },
   startButton: {
     color: colors.offWhite,
     fontFamily: fonts.StyreneAWebRegular,
     fontSize: 14,
-  },
-  startButtonRest: {
-    color: colors.offWhite,
-    fontFamily: fonts.StyreneAWebRegular,
-    fontSize: 14,
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: {width: -1, height: 1},
-    textShadowRadius: 10,
   },
 });
