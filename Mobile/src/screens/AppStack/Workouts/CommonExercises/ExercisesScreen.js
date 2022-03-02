@@ -130,10 +130,14 @@ export default class ExercisesScreen extends React.PureComponent {
     // else if (this.state.workout && this.state.workout.count){
     //   this.setState({isRunning:true})
     // }
-    AppState.addEventListener("change", this.handleAppStateChange);
+    this.subscribed = AppState.addEventListener(
+      "change",
+      this.handleAppStateChange
+    );
   }
   componentWillUnmount() {
-    AppState.removeEventListener("change", this.handleAppStateChange);
+    if(this.subscribed) this.subscribed.remove();
+    //AppState.removeEventListener("change", this.handleAppStateChange);
   }
 
   async updateWeekly() {

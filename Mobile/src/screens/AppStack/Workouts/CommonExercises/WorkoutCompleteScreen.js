@@ -47,7 +47,10 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     this.backButtonClick = this.backButtonClick.bind(this);
   }
   componentDidMount = async () => {
-    BackHandler.addEventListener("hardwareBackPress", this.backButtonClick);
+    this.subscribed = BackHandler.addEventListener(
+      "hardwareBackPress", 
+      this.backButtonClick
+    );
     this.manageVideoCache();
     if (Platform.OS === "ios") this.showRatePopup();
     if (Platform.OS === "android") {
@@ -56,7 +59,8 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
   };
 
   componentWillUnmount = () => {
-    BackHandler.removeEventListener("hardwareBackPress", this.backButtonClick);
+    if(this.subscribed) this.subscribed.remove();
+    //BackHandler.removeEventListener("hardwareBackPress", this.backButtonClick);
   };
 
   backButtonClick() {

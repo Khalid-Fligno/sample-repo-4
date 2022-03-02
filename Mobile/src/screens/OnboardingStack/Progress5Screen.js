@@ -49,10 +49,15 @@ export default class Progress5Screen extends React.PureComponent {
     this.props.navigation.setParams({ handleSkip: this.handlePause });
     this.startTimer();
     this.videoRef.current.playAsync();
-    AppState.addEventListener("change", this.handleAppStateChange);
+    //AppState.addEventListener("change", this.handleAppStateChange);
+    this.subscribed = AppState.addEventListener(
+      "change", 
+      this.handleAppStateChange
+    );
   }
   componentWillUnmount() {
-    AppState.removeEventListener("change", this.handleAppStateChange);
+    if(this.subscribed) this.subscribed.remove();
+    //AppState.removeEventListener("change", this.handleAppStateChange);
   }
   handleAppStateChange = async (nextAppState) => {
     const { appState } = this.state;

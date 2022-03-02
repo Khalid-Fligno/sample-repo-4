@@ -43,10 +43,14 @@ export default class CountdownScreen2 extends React.PureComponent {
   componentDidMount() {
     this.startTimer();
     this.checkVideoCache();
-    AppState.addEventListener("change", this.handleAppStateChange);
+    this.subscribed = AppState.addEventListener(
+      "change", 
+      this.handleAppStateChange
+    );
   }
   componentWillUnmount() {
-    AppState.removeEventListener("change", this.handleAppStateChange);
+    if(this.subscribed) this.subscribed.remove();
+    //AppState.removeEventListener("change", this.handleAppStateChange);
   }
   handleAppStateChange = async (nextAppState) => {
     const { appState } = this.state;
