@@ -42,13 +42,15 @@ export default class ProgressEditScreen extends React.PureComponent {
     this.backButtonClick = this.backButtonClick.bind(this);
   }
   componentDidMount = () => {
-    BackHandler.addEventListener('hardwareBackPress',this.backButtonClick)
-
+    //BackHandler.addEventListener('hardwareBackPress',this.backButtonClick)
+    this.subscribed = BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.backButtonClick
+    );
   };
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress',this.backButtonClick)
-
-
+    if(this.subscribed) this.subscribed.remove();
+    //BackHandler.removeEventListener('hardwareBackPress',this.backButtonClick)
   }
 
   backButtonClick(){

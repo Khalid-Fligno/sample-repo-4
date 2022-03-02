@@ -135,7 +135,7 @@ export default class Progress1Screen extends React.PureComponent {
     };
   }
   componentDidMount = () => {
-    BackHandler.addEventListener("hardwareBackPress", () => true);
+    this.subscribed = BackHandler.addEventListener("hardwareBackPress", () => true);
     this.props.navigation.setParams({
       handleSkip: this.handleSkip,
       toggleHelperModal: this.showHelperModal,
@@ -148,7 +148,8 @@ export default class Progress1Screen extends React.PureComponent {
     }
   };
   componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackPress", () => true);
+    if(this.subscribed) this.subscribed.remove();
+    //BackHandler.removeEventListener("hardwareBackPress", () => true);
   }
 
   toggleHelperModal = () => {
