@@ -36,7 +36,11 @@ const pieDataComplete = [100, 0].map((value, index) => ({
   },
   key: `pie-${index}`,
 }));
-
+const options = {
+  AppleAppID: "1438373600",
+  preferInApp: true,
+  openAppStoreIfInAppFails: false, 
+}
 export default class WorkoutCompleteScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -66,12 +70,17 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
   backButtonClick() {
     this.setState({ popUp: false });
   }
-
+ 
   showRatePopup = async () => {
-    Rate.rate({
-      AppleAppID: "1438373600",
-      preferInApp: true,
-      openAppStoreIfInAppFails: false,
+    Rate.rate(options,(success,error)=>{
+      if (success) {
+        // this technically only tells us if the user successfully went to the Review Page. Whether they actually did anything, we do not know.
+
+      }
+      if(error){
+        // errorMessage comes from the native code. Useful for debugging, but probably not for users to view
+
+      }
     });
   };
   manageVideoCache = async () => {
