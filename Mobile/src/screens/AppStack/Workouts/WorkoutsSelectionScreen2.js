@@ -38,9 +38,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
     await this.fetchWorkouts();
   }
   componentDidUpdate=()=>{
-    if(this.state.files===undefined){
-      
-    }else{
+    if(this.state.files!==undefined){
       this.state.downloaded++
       if(this.state.totalToDownload===this.state.downloaded){
         this.setState({

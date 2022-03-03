@@ -107,17 +107,17 @@ class CalendarHomeScreen extends React.PureComponent {
     this.fetchUserData();
   };
   componentDidUpdate=()=>{
-    if(this.state.files===undefined){
-      
-    }else{
+    if(this.state.files!==undefined){
       this.state.downloaded++
       if(this.state.totalToDownload===this.state.downloaded){
-        this.setState({
+        this.setState(
+          {
           downloaded:0,
           totalToDownload:0,
           files:undefined,
           loadingExercises:false
-        }) 
+          }
+        ) 
       }
     }
   }
