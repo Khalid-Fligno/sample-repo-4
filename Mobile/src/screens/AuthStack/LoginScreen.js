@@ -117,7 +117,7 @@ export default class LoginScreen extends React.PureComponent {
         nonce: nonceSHA256,
       });
       // Signed in to Apple
-      console.log("LLLL", credential);
+
       if (credential.user) {
         this.signInWithApple({
           identityToken: credential.identityToken,
@@ -330,7 +330,11 @@ export default class LoginScreen extends React.PureComponent {
           "An account already exists with the same email address but different sign-in credentials."
         );
       }
-      this.setState({ error: "The account entered doesn't match any account. Signup for an account", loading: false });
+      this.setState({
+        error:
+          "The account entered doesn't match any account. Signup for an account",
+        loading: false,
+      });
     }
   };
 
@@ -433,14 +437,13 @@ export default class LoginScreen extends React.PureComponent {
     this.props.navigation.navigate("App");
   };
   login = async (email, password) => {
-
     // const users = db.collection('users');
     // const snapshot = await users.where('email', '==', this.state.email).get();
-    
+
     // if (snapshot.empty) {
     //   console.log('No matching documents.');
     //   return;
-    // }  
+    // }
 
     // snapshot.forEach(doc => {
     //   console.log(doc.id, ' ', doc.data())
@@ -456,8 +459,8 @@ export default class LoginScreen extends React.PureComponent {
     //         });
     //       });
     //     });
-    //   }); 
-    // });  
+    //   });
+    // });
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
     this.setState({ loading: true });
@@ -471,15 +474,16 @@ export default class LoginScreen extends React.PureComponent {
         const { uid } = authResponse.user;
         await AsyncStorage.setItem("uid", uid);
         appsFlyer.trackEvent("af_login");
-        const users = db.collection('users');
-        const snapshot = await users.where('email', '==', authResponse.user.email).get();
-        
-        if (snapshot.empty) {
-          console.log('No matching documents.');
-          return;
-        }  
+        const users = db.collection("users");
+        const snapshot = await users
+          .where("email", "==", authResponse.user.email)
+          .get();
 
-        snapshot.forEach(doc => {
+        if (snapshot.empty) {
+          return;
+        }
+
+        snapshot.forEach((doc) => {
           if (doc.id === uid) {
             db.collection("users")
               .doc(uid)
@@ -494,7 +498,6 @@ export default class LoginScreen extends React.PureComponent {
                 const { subscriptionInfo = undefined, onboarded = false } =
                   await doc.data();
                 if (subscriptionInfo === undefined) {
-                  console.log("check has challenge", uid);
                   if (await hasChallenges(uid)) {
                     await this.goToAppScreen(doc);
                   } else {
@@ -506,7 +509,6 @@ export default class LoginScreen extends React.PureComponent {
                   }
                 } else if (subscriptionInfo.expiry < Date.now()) {
                   if (await hasChallenges(uid)) {
-                    console.log("check has challenge", uid);
                     await this.goToAppScreen(doc);
                   } else {
                     // EXPIRED
@@ -514,32 +516,35 @@ export default class LoginScreen extends React.PureComponent {
                   }
                 } else {
                   //go to app
-                  console.log("check has challenge1111");
+
                   await this.goToAppScreen(doc);
                 }
               });
           } else {
-            db.collection("users")
-              .doc(uid)
-              .set(doc.data());
-            db.collection("users")
-              .doc(uid)
-              .update({
-                 "id": uid,
-              });
+            db.collection("users").doc(uid).set(doc.data());
+            db.collection("users").doc(uid).update({
+              id: uid,
+            });
             var query = db.collection("users").where("id", "==", uid);
             query.get().then((querySnapshot) => {
               querySnapshot.forEach((document) => {
-                document.ref.collection("challenges").get().then((querySnapshot) => {
-                  querySnapshot.forEach(doc => {
-                    if (doc.data()) {
-                      db.collection('users').doc(uid).collection('challenges').doc(doc.id).set(doc.data());
-                    }
+                document.ref
+                  .collection("challenges")
+                  .get()
+                  .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                      if (doc.data()) {
+                        db.collection("users")
+                          .doc(uid)
+                          .collection("challenges")
+                          .doc(doc.id)
+                          .set(doc.data());
+                      }
+                    });
                   });
-                });
               });
-            });              
-            // doc.ref.delete(); 
+            });
+            // doc.ref.delete();
             db.collection("users")
               .doc(uid)
               .get()
@@ -553,7 +558,6 @@ export default class LoginScreen extends React.PureComponent {
                 const { subscriptionInfo = undefined, onboarded = false } =
                   await doc.data();
                 if (subscriptionInfo === undefined) {
-                  console.log("check has challenge", uid);
                   if (await hasChallenges(uid)) {
                     await this.goToAppScreen(doc);
                   } else {
@@ -564,7 +568,6 @@ export default class LoginScreen extends React.PureComponent {
                     });
                   }
                 } else if (subscriptionInfo.expiry < Date.now()) {
-                  console.log("check has challenge", uid);
                   if (await hasChallenges(uid)) {
                     await this.goToAppScreen(doc);
                   } else {
@@ -575,7 +578,7 @@ export default class LoginScreen extends React.PureComponent {
                   //go to app
                   await this.goToAppScreen(doc);
                 }
-              }); 
+              });
           }
         });
       }

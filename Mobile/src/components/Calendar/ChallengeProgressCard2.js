@@ -49,7 +49,9 @@ const ChallengeProgressCard2 = (props) => {
         </View>
       </View>
       <PhaseCard
-        onPress={() => console.log(">>>>")}
+        onPress={() => {
+          return null;
+        }}
         image={phaseData.thumbnail}
         phase={phase}
         phaseData={phaseData}

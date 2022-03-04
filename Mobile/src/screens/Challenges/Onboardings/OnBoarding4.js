@@ -51,8 +51,7 @@ const uriToBlob = (url) => {
       xhr.open("GET", url);
       xhr.responseType = "blob"; // convert type
       xhr.send();
-    } catch (err) {
-    }
+    } catch (err) {}
   });
 };
 
@@ -76,7 +75,7 @@ export default class OnBoarding4 extends Component {
       chosenDate: new Date(),
       quit: false,
       completedChallenge: false,
-      recipeId: []
+      recipeId: [],
     };
   }
 
@@ -113,10 +112,8 @@ export default class OnBoarding4 extends Component {
   };
 
   onFocusFunction = async () => {
-    console.log('QuitOnboard4: ', this.props.navigation.getParam("quit"))
-    console.log('completedChallengeOnboard4: ', this.props.navigation.getParam("completedChallenge"))
     const data = this.props.navigation.getParam("data", {});
-    console.log("OnBoarding4 data:", data);
+
     const image = data["challengeData"].image
       ? data["challengeData"].image
       : null;
@@ -127,7 +124,7 @@ export default class OnBoarding4 extends Component {
       imgUrl,
       btnDisabled: false,
       quit: this.props.navigation.getParam("quit"),
-      completedChallenge: this.props.navigation.getParam("completedChallenge")
+      completedChallenge: this.props.navigation.getParam("completedChallenge"),
     });
   };
 
@@ -141,7 +138,7 @@ export default class OnBoarding4 extends Component {
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     });
-   // if (Platform.OS === 'android') {
+    // if (Platform.OS === 'android') {
     //   await this.requestAndroidPermissions();
 
     // }else{
@@ -264,7 +261,7 @@ export default class OnBoarding4 extends Component {
         const manipResult = await ImageManipulator.manipulateAsync(
           result.uri,
           [
-            { resize: { height: 800, width: 600, } },
+            { resize: { height: 800, width: 600 } },
             // {
             //   crop: {
             //     originX: originXValue,
@@ -404,7 +401,7 @@ export default class OnBoarding4 extends Component {
   }
 
   addChallengeToCalendar = async (date) => {
-    const { quit, completedChallenge } = this.state
+    const { quit, completedChallenge } = this.state;
     const TODAY1 = moment().format("YYYY-MM-DD").toString();
     const stringDate3 = moment(date).format("YYYY-MM-DD").toString();
 
@@ -434,7 +431,12 @@ export default class OnBoarding4 extends Component {
         onBoardingInfo,
       });
 
-      const data = createUserChallengeData(updatedChallengedata, new Date(date), stringDate3, TODAY1);
+      const data = createUserChallengeData(
+        updatedChallengedata,
+        new Date(date),
+        stringDate3,
+        TODAY1
+      );
 
       const progressData = {
         photoURL: this.state.imgUrl,
@@ -466,7 +468,6 @@ export default class OnBoarding4 extends Component {
         Object.assign(data, { isSchedule: false, status: "Active" });
       }
 
-      console.log('Data111: ', progressData)
       await storeProgressInfo(progressData, quit || completedChallenge);
       await this.saveOnBoardingInfo(data, stringDate2);
     } else {
@@ -495,9 +496,14 @@ export default class OnBoarding4 extends Component {
         onBoardingInfo,
       });
 
-      const data = createUserChallengeData(updatedChallengedata, new Date(date), stringDate3, TODAY1);
+      const data = createUserChallengeData(
+        updatedChallengedata,
+        new Date(date),
+        stringDate3,
+        TODAY1
+      );
 
-      delete data.workouts
+      delete data.workouts;
       const progressData = {
         photoURL: this.state.imgUrl,
         height: updatedChallengedata.onBoardingInfo.measurements.height,
@@ -655,7 +661,7 @@ export default class OnBoarding4 extends Component {
           },
           onboardingProcessComplete:
             this.props.navigation.getParam("onboardingProcessComplete") !==
-              undefined
+            undefined
               ? this.props.navigation.getParam("onboardingProcessComplete")
               : false,
         });

@@ -55,10 +55,7 @@ class ChallengeSubscriptionScreen extends Component {
         this.props.navigation.navigate("Calendar");
       }
     });
-    console.log(
-      "completedChallengeSubscription: ",
-      this.props.navigation.getParam("completedChallenge")
-    );
+
     this.setState({ quit: this.props.navigation.getParam("quit") });
     this.setState({
       completedChallenge: this.props.navigation.getParam("completedChallenge"),
@@ -131,7 +128,7 @@ class ChallengeSubscriptionScreen extends Component {
 
   addChallengeToUser(index) {
     let { userData, challengesList, quit, completedChallenge } = this.state;
-    console.log("quit: ", quit);
+
     const userRef = db
       .collection("users")
       .doc(userData.id)

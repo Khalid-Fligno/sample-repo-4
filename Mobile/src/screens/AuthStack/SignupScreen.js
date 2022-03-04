@@ -81,7 +81,6 @@ export default class SignupScreen extends React.PureComponent {
     this.setState({ appleSignInAvailable });
   };
   onSignInWithApple = async () => {
-    console.log("???step 1-->");
     const nonce = getRandomString(32);
     let nonceSHA256 = "";
     try {
@@ -374,7 +373,6 @@ export default class SignupScreen extends React.PureComponent {
       return;
     }
     try {
-      console.log("step1");
       const response = await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password);
@@ -562,7 +560,7 @@ export default class SignupScreen extends React.PureComponent {
                   <Text style={authScreenStyle.dividerOverlayText}>OR</Text>
                   */}
                 </View>
-                  {/* 
+                {/* 
                 <CustomBtn
                   customBtnStyle={{
                     borderColor: colors.grey.standard,

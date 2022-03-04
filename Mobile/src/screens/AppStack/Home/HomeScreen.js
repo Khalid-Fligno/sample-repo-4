@@ -35,7 +35,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import firebase from 'firebase';
+import firebase from "firebase";
 import StopWatch from "../../../components/Workouts/WorkoutStopwatch";
 const { width } = Dimensions.get("window");
 // const workoutTypeMap = {
@@ -179,28 +179,6 @@ export default class HomeScreen extends React.PureComponent {
         await userRef.set(data, { merge: true });
       }
     });
-    // const citiesRef = db.collection('recipes');
-
-    // // const snapshot = await citiesRef.where('active', '==', true).get();
-    // const snapshot = await citiesRef.get();
-    // if (snapshot.empty) {
-    //   console.log('No matching documents.');
-    //   return;
-    // }  
-    
-    // snapshot.forEach(async doc => {
-    //   console.log(doc.id)
-    //   // const batch = db.batch();
-    //   // batch.set(citiesRef.doc(doc.id), {active: true}, { merge: true })
-    //   // batch.commit()
-    //   const recipeRef = await db
-    //     .collection("recipes")
-    //     .doc(doc.id)
-    //     .set({order: 0}, { merge: true })
-    //   // const removeActive = recipeRef.update({
-    //   //     ['active']: firebase.firestore.FieldValue.delete(),
-    //   //   }) 
-    // });
   };
   openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -208,12 +186,12 @@ export default class HomeScreen extends React.PureComponent {
   };
   goToBurpeeTest = async () => {
     this.setState({ loading: true });
-    // console.log('downloading....');
+
     await FileSystem.downloadAsync(
       "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
       `${FileSystem.cacheDirectory}exercise-burpees.mp4`
     );
-    // console.log(`downloading complete${FileSystem.cacheDirectory}`);
+
     this.setState({ loading: false });
     this.props.navigation.navigate("Burpee1");
   };
@@ -545,7 +523,7 @@ export default class HomeScreen extends React.PureComponent {
                   flexDirection: "row",
                   // justifyContent: "space-between",
                   width: "100%",
-                  justifyContent: "center"
+                  justifyContent: "center",
                 }}
               >
                 {profile && (
@@ -555,7 +533,11 @@ export default class HomeScreen extends React.PureComponent {
                       completed={profile.totalWorkoutCompleted}
                       total={totalC}
                       size={wp("38%")}
-                      customProgessTotalStyle ={{marginLeft:0,marginTop:0,marginBottom:0}}
+                      customProgessTotalStyle={{
+                        marginLeft: 0,
+                        marginTop: 0,
+                        marginBottom: 0,
+                      }}
                     />
                   </View>
                 )}

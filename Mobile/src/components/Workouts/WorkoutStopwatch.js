@@ -35,7 +35,6 @@ export default class StopWatch extends Component {
     if (this.state.isRunning) {
       this.start();
     } else {
-      console.log("stop");
       this.stop();
     }
   };
