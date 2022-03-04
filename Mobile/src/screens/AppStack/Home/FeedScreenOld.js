@@ -113,10 +113,10 @@ export default class FeedScreen extends React.PureComponent {
       });
     });
   };
-  componentWillUnmount = () => {
-    this.focusListener();
+  componentWillUnmount() {
+    if (this.focusListener) this.focusListener.remove();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
-  };
+  }
 
   //   fetchProfile = async () => {
   //     this.setState({ loading: true });

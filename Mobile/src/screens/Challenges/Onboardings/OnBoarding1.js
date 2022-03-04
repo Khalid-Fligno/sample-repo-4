@@ -57,9 +57,9 @@ export default class OnBoarding1 extends Component {
   }
 
   // and don't forget to remove the listener
-  componentWillUnmount = async () => {
-    this.focusListener.remove();
-  };
+  componentWillUnmount() {
+    if (this.focusListener) this.focusListener.remove();
+  }
   goToNextScreen(type) {
     let {
       challengeData,

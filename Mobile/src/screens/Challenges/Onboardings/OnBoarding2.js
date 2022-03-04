@@ -59,7 +59,7 @@ export default class OnBoarding2 extends Component {
   };
 
   // add a focus listener onDidMount
-  async componentDidMount() {
+  componentDidMount() {
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     });
@@ -67,7 +67,7 @@ export default class OnBoarding2 extends Component {
 
   // and don't forget to remove the listener
   componentWillUnmount() {
-    this.focusListener.remove();
+    if (this.focusListener) this.focusListener.remove();
   }
   goToScreen(type) {
     let { dietryPreferences, challengeData } = this.state;

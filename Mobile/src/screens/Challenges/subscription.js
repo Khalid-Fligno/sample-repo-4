@@ -64,17 +64,20 @@ class ChallengeSubscriptionScreen extends Component {
 
   componentDidMount = () => {
     this.fetchProfile();
-    this.focusListener = this.props.navigation.addListener("willFocus", () => {
-      this.onFocusFunction();
-    });
+    this.focusListener = this.props.navigation.addListener(
+      "didFocus",
+      async () => {
+        this.onFocusFunction();
+      }
+    );
   };
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     if (this.unsubscribeUserChallenges) this.unsubscribeUserChallenges();
     if (this.unsubscribeUserData) this.unsubscribeUserData();
     if (this.unsubscribeChallenges) this.unsubscribeChallenges();
-    this.focusListener.remove();
-  };
+    if (this.focusListener) this.focusListener.remove();
+  }
 
   fetchProfile = async () => {
     this.setState({ loading: true });

@@ -89,7 +89,7 @@ export default class OnBoarding3 extends Component {
   };
 
   // add a focus listener onDidMount
-  async componentDidMount() {
+  componentDidMount() {
     this.props.navigation.setParams({
       handleSkip: () => {
         this.goToScreen("next");
@@ -102,7 +102,8 @@ export default class OnBoarding3 extends Component {
 
   // and don't forget to remove the listener
   componentWillUnmount() {
-    this.focusListener.remove();
+    console.log(this.focusListener, "this.focusListener");
+    // if (this.focusListener) this.focusListener.remove();
   }
 
   goToScreen(type) {

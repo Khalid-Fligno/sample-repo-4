@@ -92,7 +92,7 @@ export default class HomeScreen extends React.PureComponent {
   }
 
   componentDidMount = () => {
-    this.unsubscribe = this.props.navigation.addListener("didFocus", () => {
+    this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocus();
     });
   };
@@ -105,12 +105,12 @@ export default class HomeScreen extends React.PureComponent {
     this.fetchActiveChallengeUserData();
   };
 
-  componentWillUnmount = () => {
-    this.unsubscribe();
+  componentWillUnmount() {
+    if (this.focusListener) this.focusListener.remove();
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
     if (this.unsubscribeSche) this.unsubscribeSche();
-  };
+  }
   setDayOfWeek = async () => {
     const timezone = await Localization.timezone;
     const dayOfWeek = momentTimezone.tz(timezone).day();
