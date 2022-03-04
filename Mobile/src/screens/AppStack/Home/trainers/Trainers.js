@@ -17,6 +17,7 @@ import {
 import fonts from "../../../../styles/fonts";
 import * as Haptics from "expo-haptics";
 import TimeSvg from "../../../../../assets/icons/time";
+import * as FileSystem from "expo-file-system";
 
 
 
@@ -171,10 +172,24 @@ return(
                                 data={recipe}
                                 renderItem={({item})=>{
                                     return(
+                                  <TouchableOpacity  onPress={() =>
+                                        this.props.navigation.push("Recipe", {
+                                        recipe: item,
+                                        title: this.props.navigation.getParam("meal", null),
+                                        })
+                                    }
+                                    image={
+                                        `${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage
+                                    }
+                                    title={item.title.toUpperCase()}
+                                    tags={item.tags}
+                                    subTitle={item.subtitle}
+                                    time={item.time}
+                                    newBadge={item.newBadge}>
                                      <View style={{ 
                                           paddingRight: wp('10%'),
                                           paddingTop: hp('3%')
-                                    }}>
+                                     }}>
                                        <Image
                                         style={{
                                             overflow:'hidden',
@@ -198,7 +213,7 @@ return(
 
                                         </Text>
 
-                                    </View>
+                                     </View>
                                     <View style={{flexDirection:'row',paddingTop: hp('1%')}}>
                                         <View> 
                                              <TimeSvg width="22" height="22" />
@@ -208,16 +223,12 @@ return(
                                         </View>
                                     </View>
                                     </View>
-
-
+                                    </TouchableOpacity>
                                     );
                                 }}
                                 /> 
                          </View>
-
-                    
                  </View>
-
             </View>
         </View>
 
