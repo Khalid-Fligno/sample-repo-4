@@ -173,7 +173,7 @@ return(
                                 renderItem={({item})=>{
                                     return(
                                   <TouchableOpacity  onPress={() =>
-                                        this.props.navigation.push("Recipe", {
+                                        this.props.navigation.push("RecipeTrainer", {
                                         recipe: item,
                                         title: this.props.navigation.getParam("meal", null),
                                         })
@@ -231,18 +231,8 @@ return(
                  </View>
             </View>
         </View>
-
-
     </ScrollView>
-
 )
-
-
-
-
-
-
-
 }
 
 
