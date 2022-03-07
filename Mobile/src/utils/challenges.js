@@ -120,13 +120,6 @@ export const convertRecipeData = async (recipeId) => {
 
 export const fetchRecipeData = async (challengeRecipe) => {
   let phaseMeals = [];
-  const breakfastActive = [];
-  const lunchActive = [];
-  const dinnerActive = [];
-  const snackActive = [];
-  const drinkActive = [];
-  const preworkoutActive = [];
-  const treatsActive = [];
   const recipes = [];
 
   if (challengeRecipe) {
