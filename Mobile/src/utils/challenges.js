@@ -98,21 +98,6 @@ export const getTodayRecommendedWorkout = async (
   }
 };
 
-export const fetchActiveRecipe = async () => {
-  //Fetch all recipe ID
-  const data = [];
-  this.unsubscribeFACD = await db
-    .collection("recipes")
-    .get()
-    .then((snapshot) => {
-      snapshot.forEach((res) => {
-        data.push(res.data().id);
-      });
-    });
-
-  // this.setState({recipeId: data})
-};
-
 export const convertRecipeData = async (recipeId) => {
   const recipeResult = [];
   const recipeRef = db.collection("recipes");
