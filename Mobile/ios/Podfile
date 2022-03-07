@@ -9,7 +9,7 @@ target 'FitazFK' do
   pod 'LogRocket', '0.23.2'
   pod 'Mixpanel'
   pod 'Mixpanel-swift'
-  
+  pod 'RNSentry', :podspec => '../node_modules/@sentry/react-native/RNSentry.podspec'
   # React Native and its dependencies
   pod 'FBLazyVector', :path => "#{rnPrefix}/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "#{rnPrefix}/Libraries/FBReactNativeSpec"

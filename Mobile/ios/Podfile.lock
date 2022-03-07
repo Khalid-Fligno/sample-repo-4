@@ -462,6 +462,9 @@ PODS:
     - React
   - RNScreens (2.2.0):
     - React
+  - RNSentry (3.3.0):
+    - React-Core
+    - Sentry (= 7.10.0)
   - RNSVG (11.0.1):
     - React
   - RNVectorIcons (6.7.0):
@@ -472,6 +475,9 @@ PODS:
   - SDWebImageWebPCoder (0.6.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.7)
+  - Sentry (7.10.0):
+    - Sentry/Core (= 7.10.0)
+  - Sentry/Core (7.10.0)
   - UMAppLoader (1.0.2)
   - UMBarCodeScannerInterface (5.1.0)
   - UMCameraInterface (5.1.0)
@@ -589,6 +595,7 @@ DEPENDENCIES:
   - RNRate (from `../node_modules/react-native-rate`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native/RNSentry.podspec`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
@@ -631,6 +638,7 @@ SPEC REPOS:
     - OpenSSL-Universal
     - SDWebImage
     - SDWebImageWebPCoder
+    - Sentry
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -776,6 +784,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :podspec: "../node_modules/@sentry/react-native/RNSentry.podspec"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -902,10 +912,12 @@ SPEC CHECKSUMS:
   RNRate: 622db602051b6abf6ec467cdcc3c5e3112076745
   RNReanimated: 4e102df74a9674fa943e05f97f3362b6e44d0b48
   RNScreens: 812b79d384e2bea7eebc4ec981469160d4948fd5
+  RNSentry: 143980f2f98320eaaf10ccf7235dfc7f68b5ffa5
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
   SDWebImage: 53179a2dba77246efa8a9b85f5c5b21f8f43e38f
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
+  Sentry: 6ff0eac197e699126c024993eba40a7462e92941
   UMAppLoader: ae5eaee9f3c8cc847c631a579fed20d217de5913
   UMBarCodeScannerInterface: aa3409ab9d108866e55c09ad0292e4a6c08a7775
   UMCameraInterface: 9d5da92c521e0af7815afbf77ea19bd0312b4928
@@ -922,6 +934,6 @@ SPEC CHECKSUMS:
   Yoga: 7740b94929bbacbddda59bf115b5317e9a161598
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 0184e118d4a6ecea2103ca82937bae8c572d44a9
+PODFILE CHECKSUM: 10399c391dc8ebfdf1e6ba5dcb8eb1c4ce0ac1a6
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.10.2
