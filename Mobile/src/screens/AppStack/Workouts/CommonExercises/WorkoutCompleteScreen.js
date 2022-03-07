@@ -26,6 +26,7 @@ import Dialog, {
   DialogFooter,
   DialogButton,
 } from "react-native-popup-dialog";
+import AsyncStorage from "@react-native-community/async-storage";
 
 const { width } = Dimensions.get("window");
 
@@ -60,6 +61,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     if (Platform.OS === "android") {
       this.setState({ popUp: true });
     }
+
   };
 
   componentWillUnmount = () => {
@@ -130,9 +132,12 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
         </View>
       </View>
     );
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
+          {AsyncStorage.getItem('later')?
+          <></>:
           <Dialog
             visible={popUp}
             onTouchOutside={() => {
@@ -145,8 +150,9 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
               <DialogFooter>
                 <DialogButton
                   text="DO THIS LATER"
-                  onPress={() => {
+                  onPress={async() => {
                     this.setState({ popUp: false });
+                    await AsyncStorage.setItem('later',true)
                   }}
                 />
                 <DialogButton
@@ -171,6 +177,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
             //   this.setState({ visible: false });
             // }}
           >
+          
             <DialogContent>
               <TouchableOpacity
                 onPress={() => {
@@ -208,6 +215,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
               </Text>
             </DialogContent>
           </Dialog>
+          }
           {/* <View style={styles.textContainer}>
             <Text style={styles.headerText}>
               WORKOUT
