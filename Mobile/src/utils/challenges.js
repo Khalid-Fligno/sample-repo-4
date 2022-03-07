@@ -113,7 +113,6 @@ export const convertRecipeData = async (recipeId) => {
       });
     }
   }
-
   return {
     recipeResult,
   };
@@ -128,15 +127,21 @@ export const fetchRecipeData = async (challengeRecipe) => {
   const drinkActive = [];
   const preworkoutActive = [];
   const treatsActive = [];
+  const recipes = [];
 
   if (challengeRecipe) {
     const recipeRef = db.collection("recipes");
     const snapshot = await recipeRef.get();
+
     const mealsId = challengeRecipe[0]?.level2[0]?.phases[0]?.meals;
 
     if (snapshot.empty) {
       return null;
     } else {
+      recipes = snapshot.map((res) => {
+        return res.data();
+      });
+
       snapshot.forEach((res) => {
         if (mealsId && mealsId.includes(res.data().id)) {
           phaseMeals.push(res.data());
@@ -144,72 +149,74 @@ export const fetchRecipeData = async (challengeRecipe) => {
       });
     }
 
-    phaseMeals.forEach((resMeals) => {
-      try {
-        resMeals.types.forEach((resType) => {
-          if (resType === "breakfast") {
-            snapshot.forEach((res) => {
-              if (resMeals.breakfast === res.data().breakfast) {
-                breakfastActive.push(res.data());
-              }
-            });
-          }
-          if (resType === "lunch") {
-            snapshot.forEach((res) => {
-              if (resMeals.lunch === res.data().lunch) {
-                lunchActive.push(res.data());
-              }
-            });
-          }
-          if (resType === "dinner") {
-            snapshot.forEach((res) => {
-              if (resMeals.dinner === res.data().dinner) {
-                dinnerActive.push(res.data());
-              }
-            });
-          }
-          if (resType === "snack") {
-            snapshot.forEach((res) => {
-              if (resMeals.snack === res.data().snack) {
-                snackActive.push(res.data());
-              }
-            });
-          }
-          if (resType === "drink") {
-            snapshot.forEach((res) => {
-              if (resMeals.drink === res.data().drink) {
-                drinkActive.push(res.data());
-              }
-            });
-          }
-          if (resType === "preworkout") {
-            snapshot.forEach((res) => {
-              if (resMeals.preworkout === res.data().preworkout) {
-                preworkoutActive.push(res.data());
-              }
-            });
-          }
-          if (resType === "treats") {
-            snapshot.forEach((res) => {
-              if (resMeals.treats === res.data().treats) {
-                treatsActive.push(res.data());
-              }
-            });
-          }
-        });
-      } catch (err) {}
-    });
+    // BREAKFAST
+    const breakFastMeals =
+      phaseMeals.filter(
+        (meal) =>
+          meal.types.includes("breakfast") &&
+          recipes.filter((recipe) => recipe.breakfast === meal.breakfast)
+            .length > 0
+      ) || [];
+
+    // LUNCH
+    const lunchMeals =
+      phaseMeals.filter(
+        (meal) =>
+          meal.types.includes("lunch") &&
+          recipes.filter((recipe) => recipe.lunch === meal.lunch).length > 0
+      ) || [];
+
+    // DINNER
+    const dinnerMeals =
+      phaseMeals.filter(
+        (meal) =>
+          meal.types.includes("dinner") &&
+          recipes.filter((recipe) => recipe.dinner === meal.dinner).length > 0
+      ) || [];
+
+    // SNACK
+    const snackMeals =
+      phaseMeals.filter(
+        (meal) =>
+          meal.types.includes("snack") &&
+          recipes.filter((recipe) => recipe.snack === meal.snack).length > 0
+      ) || [];
+
+    // DRINK
+    const drinkMeals =
+      phaseMeals.filter(
+        (meal) =>
+          meal.types.includes("drink") &&
+          recipes.filter((recipe) => recipe.drink === meal.drink).length > 0
+      ) || [];
+
+    // PREWORKOUT
+    const preworkoutMeals =
+      phaseMeals.filter(
+        (meal) =>
+          meal.types.includes("preworkout") &&
+          recipes.filter((recipe) => recipe.preworkout === meal.preworkout)
+            .length > 0
+      ) || [];
+
+    //  TREATS
+    const treats =
+      phaseMeals.filter(
+        (meal) =>
+          meal.types.includes("treats") &&
+          recipes.filter((recipe) => recipe.treats === meal.treats).length > 0
+      ) || [];
   }
 
   const recommendedRecipe = [
     {
-      breakfast: breakfastActive,
-      snack: snackActive,
-      lunch: lunchActive,
-      dinner: dinnerActive,
-      drink: drinkActive,
-      preworkout: preworkoutActive,
-      treats: treatsActive,
+      breakfast: breakFastMeals,
+      snack: snackMeals,
+      lunch: lunchMeals,
+      dinner: dinnerMeals,
+      drink: drinkMeals,
+      preworkout: preworkoutMeals,
+      treats: treats,
     },
   ];
 
@@ -222,7 +229,6 @@ export const getTodayRecommendedMeal = async (
   phaseData,
   activeChallengeData
 ) => {
-  // const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
   let phaseMeals = [];
   let breakfastResult = [];
   let lunchResult = [];
