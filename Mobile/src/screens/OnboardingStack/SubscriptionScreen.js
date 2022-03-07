@@ -118,8 +118,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     };
   }
   componentDidMount = async () => {
-    this.props.navigation.setParams({ handleRestore: this.restore });
-    this.props.navigation.setParams({ handleLogout: this.logout });
+     this.props.navigation.setParams({ handleLogout: this.logout });
     await RNIap.initConnection();
     this.androidSubscriptions();
     if (this.state.specialOffer) {
@@ -168,7 +167,7 @@ export default class SubscriptionScreen extends React.PureComponent {
   };
   androidSubscriptions = () => {
     purchaseUpdateSubscription = purchaseUpdatedListener(
-      async (purchase: InAppPurchase | SubscriptionPurchase) => {
+      async (purchase) => {
         const receipt = purchase.transactionReceipt;
 
         if (receipt) {
@@ -187,7 +186,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     );
 
     purchaseErrorSubscription = purchaseErrorListener(
-      (error: PurchaseError) => {
+      (error) => {
         Alert.alert("purchase error", error.message);
       }
     );
