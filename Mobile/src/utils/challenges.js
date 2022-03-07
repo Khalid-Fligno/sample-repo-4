@@ -14,7 +14,6 @@ export const isActiveChallenge = async () => {
     if (scheduleSnapshot.empty) {
       return false;
     } else {
-      // console.log('scheduleSnapshot: ', scheduleSnapshot)
       let list = [];
       scheduleSnapshot.forEach((doc) => {
         list.push(doc.data());
@@ -34,19 +33,19 @@ export const getCurrentPhase = (data, currentDate1) => {
   let phase = undefined;
   data.forEach((el) => {
     let currentDate = moment(currentDate1).format("YYYY-MM-DD");
-    // console.log(el.startDate, el.endDate,currentDate)
+
     const isBetween = moment(currentDate).isBetween(
       el.startDate,
       el.endDate,
       undefined,
       "[]"
     );
-    // console.log("????/////",isBetween)
+
     if (isBetween) {
       phase = el;
     }
   });
-  // console.log("Current Phase",phase )
+
   return phase;
 };
 export const getTotalChallengeWorkoutsCompleted = (data, stringDate) => {
@@ -69,7 +68,7 @@ export const getCurrentDay = (number) => {
       day: i,
       recipeMeal: [],
     };
-    console.log(data);
+
     return data;
   }
 };
@@ -95,7 +94,6 @@ export const getTodayRecommendedWorkout = async (
       return snapshot.docs.map((res) => res.data());
     }
   } else {
-    console.log("????", workoutData);
     return [workoutData];
   }
 };
@@ -111,8 +109,6 @@ export const fetchActiveRecipe = async () => {
         data.push(res.data().id);
       });
     });
-
-  console.log("Data Recipe: ", data);
 
   // this.setState({recipeId: data})
 };
@@ -151,13 +147,13 @@ export const fetchRecipeData = async (challengeRecipe) => {
   if (challengeRecipe) {
     const recipeRef = db.collection("recipes");
     const snapshot = await recipeRef.get();
-    const mealsId = challengeRecipe[0].level2[0].phases[0].meals;
+    const mealsId = challengeRecipe[0]?.level2[0]?.phases[0]?.meals;
 
     if (snapshot.empty) {
       return null;
     } else {
       snapshot.forEach((res) => {
-        if (mealsId.includes(res.data().id)) {
+        if (mealsId && mealsId.includes(res.data().id)) {
           phaseMeals.push(res.data());
         }
       });
@@ -316,9 +312,7 @@ export const getTodayRecommendedMeal = async (
                     }
                   }
                 });
-              } catch (err) {
-                // console.log('error: ', err)
-              }
+              } catch (err) {}
             }
           }
         });
@@ -348,7 +342,7 @@ export const getTodayRecommendedMeal = async (
                   }
                 });
               } catch (err) {
-                // console.log('error: ', err)
+                console.log("error: ", err);
               }
             }
           }
@@ -379,7 +373,7 @@ export const getTodayRecommendedMeal = async (
                   }
                 });
               } catch (err) {
-                // console.log('error: ', err)
+                console.log("error: ", err);
               }
             }
           }
@@ -411,7 +405,7 @@ export const getTodayRecommendedMeal = async (
                   }
                 });
               } catch (err) {
-                // console.log('error: ', err)
+                console.log("error: ", err);
               }
             }
           }
@@ -442,7 +436,7 @@ export const getTodayRecommendedMeal = async (
                   }
                 });
               } catch (err) {
-                // console.log('error: ', err)
+                console.log("error: ", err);
               }
             }
           }
@@ -474,7 +468,7 @@ export const getTodayRecommendedMeal = async (
                   }
                 });
               } catch (err) {
-                // console.log('error: ', err)
+                console.log("error: ", err);
               }
             }
           }
@@ -506,7 +500,7 @@ export const getTodayRecommendedMeal = async (
                   }
                 });
               } catch (err) {
-                // console.log('error: ', err)
+                console.log("error: ", err);
               }
             }
           }
@@ -549,8 +543,6 @@ export const getTodayRecommendedMeal = async (
       treats: treatsResult,
     },
   ];
-
-  // console.log('Recipe Data: ', recommendedRecipe.breakfast)
 
   const phaseDefaultTags = phaseNames[0];
 
@@ -621,7 +613,6 @@ export const getLatestChallenge = (challenges) => {
 export const hasChallenges = async (uid) => {
   const userChallenges = await getChallengeDetails(uid);
 
-  // console.log("getActive challneg",userChallenges)
   if (userChallenges !== undefined && userChallenges.length > 0) {
     let isChallengeValidStatus = [];
     isChallengeValidStatus = userChallenges.map((challenge) => {
@@ -632,8 +623,6 @@ export const hasChallenges = async (uid) => {
       let currentDate = moment();
       let isChallengeValid =
         moment(currentDate).isSameOrBefore(challengeEndDate);
-      // console.log("Is challenge valid",isChallengeValid);
-      // console.log("Created On date=>",challenge.createdOn,challengeEndDate,currentDate);
       if (!isChallengeValid) {
         Alert.alert("Alert!", `Your ${challenge.displayName} has expired.`);
         removeChallengeFromUser(uid, challenge.id);
@@ -642,7 +631,6 @@ export const hasChallenges = async (uid) => {
     });
 
     if (isChallengeValidStatus.includes(true)) {
-      // console.log("Challenge is still valid")
       return true;
     } else {
       Alert.alert("Alert!", "Your challenge has expired.");
@@ -664,7 +652,6 @@ export const removeChallengeFromUser = async (uid, challengeId) => {
 //---------------------for login subscription---------------
 
 export const updateUserSubscription = async (subscriptionData, userId) => {
-  //console.log("subscriptionData",subscriptionData);
   const user = await db.collection("users").doc(userId);
   user.set(subscriptionData, { merge: true });
 };
