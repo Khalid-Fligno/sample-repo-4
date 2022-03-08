@@ -27,6 +27,7 @@ import { getBuildNumber, getVersion } from "react-native-device-info";
 import { Platform } from "react-native";
 import { Linking } from "react-native";
 import { setRestImages } from "../utils/workouts";
+import * as Sentry from "@sentry/react-native";
 
 const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get("window");
@@ -237,8 +238,10 @@ export default class AuthLoadingScreen extends React.PureComponent {
         const { uid } = user;
         await AsyncStorage.setItem("uid", uid);
         const userRef = db.collection("users").doc(uid);
+
         userRef.get().then(async (doc) => {
           if (doc.exists) {
+            Sentry.setUser({ email: doc.email });
             if (await !doc.data().fitnessLevel) {
               await AsyncStorage.setItem("fitnessLevel", "1");
             } else {
@@ -281,6 +284,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
         });
       } else {
         unsubscribe();
+        Sentry.configureScope((scope) => scope.setUser(null));
         this.props.navigation.navigate("Auth");
       }
     });
