@@ -12,7 +12,7 @@ import {
 import { ListItem } from "react-native-elements";
 import * as FileSystem from "expo-file-system";
 import { PieChart } from "react-native-svg-charts";
-import Rate from "react-native-rate";
+import Rate, { AndroidMarket } from "react-native-rate";
 import Loader from "../../../../components/Shared/Loader";
 import Icon from "../../../../components/Shared/Icon";
 import CustomBtn from "../../../../components/Shared/CustomBtn";
@@ -59,7 +59,13 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     this.manageVideoCache();
     if (Platform.OS === "ios") this.showRatePopup();
     if (Platform.OS === "android") {
-      this.setState({ popUp: true });
+      const later = AsyncStorage.getItem('later')
+      if (later==='true') {
+        this.setState({ popUp: false });
+      }else{
+        this.setState({ popUp: true });
+      }
+      
     }
 
   };
@@ -136,8 +142,6 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
-          {AsyncStorage.getItem('later')?
-          <></>:
           <Dialog
             visible={popUp}
             onTouchOutside={() => {
@@ -152,7 +156,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
                   text="DO THIS LATER"
                   onPress={async() => {
                     this.setState({ popUp: false });
-                    await AsyncStorage.setItem('later',true)
+                    await AsyncStorage.setItem('later','true')
                   }}
                 />
                 <DialogButton
@@ -160,6 +164,8 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
                   onPress={() => {
                     const options = {
                       GooglePackageName: "com.fitazfk.fitazfkapp",
+                      preferredAndroidMarket: AndroidMarket.Google,
+                      preferInApp:true,
                     };
                     Rate.rate(options, (success, errorMessage) => {
                       if (success) {
@@ -169,7 +175,8 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
                         console.log("ANDROID RATE REVIEW ", errorMessage);
                       }
                     });
-                  }}
+                   }
+                  }
                 />
               </DialogFooter>
             }
@@ -215,7 +222,6 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
               </Text>
             </DialogContent>
           </Dialog>
-          }
           {/* <View style={styles.textContainer}>
             <Text style={styles.headerText}>
               WORKOUT
