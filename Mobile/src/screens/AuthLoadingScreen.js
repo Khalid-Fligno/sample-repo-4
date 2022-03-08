@@ -241,7 +241,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
 
         userRef.get().then(async (doc) => {
           if (doc.exists) {
-            Sentry.setUser({ email: doc.email });
+            Sentry.setUser({ email: doc.data().email });
             if (await !doc.data().fitnessLevel) {
               await AsyncStorage.setItem("fitnessLevel", "1");
             } else {
