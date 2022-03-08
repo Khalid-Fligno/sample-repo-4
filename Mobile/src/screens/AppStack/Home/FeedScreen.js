@@ -287,6 +287,7 @@ export default class FeedScreen extends React.PureComponent {
               autoplayLoop={true}
               autoplayLoopKeepAnimation={true}
               data={trainers}
+              keyExtractor={(item) => item.id}
               renderItem={({ item }) => {
                 return (
                   <View style={{ flex: 1, alignItems: "center" }}>
@@ -542,6 +543,7 @@ export default class FeedScreen extends React.PureComponent {
                     horizontal
                     data={blogs}
                     style={{ flex: 1 }}
+                    keyExtractor={(item) => item.id}
                     renderItem={({ item }) => {
                       return (
                         <TouchableOpacity
