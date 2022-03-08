@@ -25,7 +25,6 @@ import { timerSound } from "../../config/audio";
 import { hasChallenges, isActiveChallenge } from "../utils/challenges";
 import { getBuildNumber, getVersion } from "react-native-device-info";
 import { Platform } from "react-native";
-import { Linking } from "react-native";
 import { setRestImages } from "../utils/workouts";
 import * as Sentry from "@sentry/react-native";
 
@@ -231,16 +230,16 @@ export default class AuthLoadingScreen extends React.PureComponent {
         userRef.get().then(async (doc) => {
           if (doc.exists) {
             Sentry.setUser({ email: doc.data().email });
-            if (await !doc.data().fitnessLevel) {
+            if (!doc.data().fitnessLevel) {
               await AsyncStorage.setItem("fitnessLevel", "1");
             } else {
               await AsyncStorage.setItem(
                 "fitnessLevel",
-                await doc.data().fitnessLevel.toString()
+                doc.data().fitnessLevel.toString()
               );
             }
             const { subscriptionInfo = undefined, onboarded = false } =
-              await doc.data();
+              doc.data();
 
             if (subscriptionInfo === undefined) {
               // console.log("uid",uid);
