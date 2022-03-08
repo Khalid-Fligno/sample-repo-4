@@ -245,78 +245,6 @@ export default class LoginScreen extends React.PureComponent {
         );
       });
   };
-  loginWithFacebook = async () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    try {
-      const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-        "1825444707513470",
-        {
-          permissions: ["public_profile", "email"],
-        }
-      );
-      if (type === "success") {
-        this.setState({ loading: true });
-        appsFlyer.trackEvent("af_login");
-        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-        const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        const authResponse = await firebase
-          .auth()
-          .signInWithCredential(credential);
-        const { uid } = authResponse.user;
-        await AsyncStorage.setItem("uid", uid);
-        db.collection("users")
-          .doc(uid)
-          .get()
-          .then(async (doc) => {
-            if ((await doc.data().fitnessLevel) !== undefined) {
-              await AsyncStorage.setItem(
-                "fitnessLevel",
-                await doc.data().fitnessLevel.toString()
-              );
-            }
-            const { subscriptionInfo = undefined } = await doc.data();
-            if (subscriptionInfo === undefined) {
-              if (await hasChallenges(uid)) {
-                await this.goToAppScreen(doc);
-              } else {
-                // NO PURCHASE INFORMATION SAVED
-                // this.setState({ loading: false });
-                this.props.navigation.navigate("Subscription", {
-                  specialOffer: this.state.specialOffer,
-                });
-              }
-            } else if (subscriptionInfo.expiry < Date.now()) {
-              // EXPIRED
-            } else {
-              // RECEIPT STILL VALID
-              this.setState({ loading: false });
-              if (await !doc.data().onboarded) {
-                this.props.navigation.navigate("Onboarding1");
-                return;
-              }
-              this.props.navigation.navigate("App");
-            }
-          });
-      }
-    } catch (err) {
-      if (
-        err.message &&
-        err.message.includes(
-          "An account already exists with the same email address"
-        )
-      ) {
-        Alert.alert(
-          "Facebook signup failed",
-          "An account already exists with the same email address but different sign-in credentials."
-        );
-      }
-      this.setState({
-        error:
-          "The account entered doesn't match any account. Signup for an account",
-        loading: false,
-      });
-    }
-  };
 
   storePurchase = async (subscriptionInfo, onboarded) => {
     const restoreSubscriptions = new RestoreSubscriptions(this.props);
@@ -630,18 +558,7 @@ export default class LoginScreen extends React.PureComponent {
                 <View style={authScreenStyle.dividerOverlay}>
                   <Text style={authScreenStyle.dividerOverlayText}>OR</Text>
                 </View>
-
-                <CustomBtn
-                  customBtnStyle={{
-                    borderColor: colors.grey.standard,
-                  }}
-                  outline={true}
-                  Title="Sign in with Facebook"
-                  customBtnTitleStyle={{ color: colors.transparentBlackDark }}
-                  onPress={this.loginWithFacebook}
-                  leftIcon={true}
-                  leftIconUrl={require("../../../assets/icons/facebook.png")}
-                />
+                
                 {appleSignInAvailable && (
                   <AppleAuthentication.AppleAuthenticationButton
                     onPress={this.onSignInWithApple}
