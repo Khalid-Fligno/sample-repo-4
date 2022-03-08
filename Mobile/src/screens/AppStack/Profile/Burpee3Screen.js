@@ -68,7 +68,7 @@ export default class Progress5Screen extends React.PureComponent {
     // setTimeout(() => this.setState({ videoPaused: false }), 1500);
   };
   handlePause = () => {
-    this.video.current.pauseAsync();
+    if (this.video && this.video.current) this.video.current.pauseAsync();
     this.setState({
       videoPaused: true,
       timerStart: false,
