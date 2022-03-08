@@ -18,33 +18,16 @@ import {
   compare,
   compareInApp,
 } from "../../config/apple";
-import {
-  restoreAndroidPurchases,
-  replaceTestAndroidProduct,
-} from "../../config/android";
+import { restoreAndroidPurchases } from "../../config/android";
 import { RestoreSubscriptions } from "../utils/subscription";
 import { auth, db } from "../../config/firebase";
 import { timerSound } from "../../config/audio";
-import {
-  getChallengeDetails,
-  getLatestChallenge,
-  hasChallenges,
-  isActiveChallenge,
-} from "../utils/challenges";
+import { hasChallenges, isActiveChallenge } from "../utils/challenges";
 import { getBuildNumber, getVersion } from "react-native-device-info";
-import moment from "moment";
-import momentTimezone from "moment-timezone";
-import RNIap, {
-  Product,
-  ProductPurchase,
-  PurchaseError,
-  acknowledgePurchaseAndroid,
-  purchaseErrorListener,
-  purchaseUpdatedListener,
-} from "react-native-iap";
 import { Platform } from "react-native";
 import { Linking } from "react-native";
 import { setRestImages } from "../utils/workouts";
+import * as Sentry from "@sentry/react-native";
 
 const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get("window");
@@ -111,20 +94,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
             );
           }
         };
-        // Alert.alert(
-        //   "New Update Available!",
-        //   "You have older version of app please update.",
-        //   [
-        //     {
-        //       text: "Cancel",
-        //       onPress: async () => await this.loadAssetsAsync(),
-        //     },
-        //     {
-        //       text: "Update",
-        //       onPress: updateApp,
-        //     },
-        //   ]
-        // );
         await this.loadAssetsAsync();
       }
     }
@@ -269,8 +238,10 @@ export default class AuthLoadingScreen extends React.PureComponent {
         const { uid } = user;
         await AsyncStorage.setItem("uid", uid);
         const userRef = db.collection("users").doc(uid);
+
         userRef.get().then(async (doc) => {
           if (doc.exists) {
+            Sentry.setUser({ email: doc.email });
             if (await !doc.data().fitnessLevel) {
               await AsyncStorage.setItem("fitnessLevel", "1");
             } else {
@@ -305,11 +276,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
               // RECEIPT STILL VALID
               await hasChallenges(uid);
               await this.goToAppScreen(doc);
-              // if (onboarded) {
-              //   this.props.navigation.navigate('App');
-              // } else {
-              //   this.props.navigation.navigate('Onboarding1');
-              // }
             }
           } else {
             Alert.alert("Account data could not be found");
@@ -318,6 +284,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
         });
       } else {
         unsubscribe();
+        Sentry.configureScope((scope) => scope.setUser(null));
         this.props.navigation.navigate("Auth");
       }
     });
@@ -338,16 +305,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
         await restoreAndroidPurchases(this.props);
       }
     }
-    // if (Platform.OS !== subscriptionInfo.platform) {
-    //   await restoreSubscriptions.restore(subscriptionInfo, onboarded);
-    // }
-    // else if (Platform.OS === 'ios') {
-    //   await this.restorePurchaseIOS(onboarded);
-    // }
-    // else if (Platform.OS === 'android') {
-    //   //  await restoreSubscriptions.restore(subscriptionInfo, onboarded);
-    //   await restoreAndroidPurchases(this.props);
-    // }
   };
 
   restorePurchaseIOS = async (onboarded) => {
@@ -408,89 +365,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
       }
     });
   };
-  // cachingComplete = async () => {
-  //   const unsubscribe = auth.onAuthStateChanged(async (user) => {
-  //     if (user) {
-  //       unsubscribe();
-  //       const { uid } = user;
-  //       db.collection('users').doc(uid)
-  //         .get()
-  //         .then(async (doc) => {
-  //           if (doc.exists) {
-  //             if (await doc.data().fitnessLevel !== undefined) {
-  //               await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
-  //             } else {
-  //               await AsyncStorage.setItem('fitnessLevel', '1');
-  //             }
-  //             const { subscriptionInfo, onboarded } = await doc.data();
-  //             if (subscriptionInfo === undefined) {
-  //               // NO PURCHASE INFORMATION SAVED
-  //               this.props.navigation.navigate('Subscription');
-  //             } else if (subscriptionInfo.expiry < Date.now()) {
-  //               // EXPIRED
-  //               InAppUtils.restorePurchases(async (error, response) => {
-  //                 if (error) {
-  //                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
-  //                   AsyncStorage.removeItem('uid');
-  //                   auth.signOut();
-  //                   this.props.navigation.navigate('Auth');
-  //                 } else {
-  //                   if (response.length === 0) {
-  //                     this.props.navigation.navigate('Subscription');
-  //                     return;
-  //                   }
-  //                   const sortedPurchases = response.slice().sort(compare);
-  //                   try {
-  //                     const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
-  //                     if (validationData === undefined) {
-  //                       Alert.alert('Receipt validation error');
-  //                       return;
-  //                     }
-  //                     if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
-  //                       Alert.alert('Your subscription has been auto-renewed');
-  //                       const userRef = db.collection('users').doc(uid);
-  //                       const data = {
-  //                         subscriptionInfo: {
-  //                           receipt: sortedPurchases[0].transactionReceipt,
-  //                           expiry: validationData.latest_receipt_info.expires_date,
-  //                         },
-  //                       };
-  //                       await userRef.set(data, { merge: true });
-  //                       if (onboarded) {
-  //                         this.props.navigation.navigate('App');
-  //                       } else {
-  //                         this.props.navigation.navigate('Onboarding1');
-  //                       }
-  //                     } else {
-  //                       Alert.alert('Something went wrong');
-  //                       this.props.navigation.navigate('Subscription');
-  //                     }
-  //                   } catch (err) {
-  //                     // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
-  //                     Alert.alert('Your subscription has expired');
-  //                     this.props.navigation.navigate('Subscription');
-  //                   }
-  //                 }
-  //               });
-  //             } else if (subscriptionInfo.expiry > Date.now()) {
-  //               // RECEIPT STILL VALID
-  //               if (onboarded) {
-  //                 this.props.navigation.navigate('App');
-  //               } else {
-  //                 this.props.navigation.navigate('Onboarding1');
-  //               }
-  //             }
-  //           } else {
-  //             Alert.alert('Account data could not be found');
-  //             this.props.navigation.navigate('Auth');
-  //           }
-  //         });
-  //     } else {
-  //       unsubscribe();
-  //       this.props.navigation.navigate('Auth');
-  //     }
-  //   });
-  // }
+
   validate = async (receiptData) => {
     const validationData = await validateReceiptProduction(receiptData).catch(
       async (error) => {

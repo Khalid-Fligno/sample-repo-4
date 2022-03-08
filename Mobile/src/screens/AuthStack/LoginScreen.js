@@ -11,14 +11,11 @@ import {
   Alert,
   NativeModules,
   Keyboard,
-  ImageBackground,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { StackActions, NavigationActions } from "react-navigation";
-import { Button, Divider, Input } from "react-native-elements";
 import * as Haptics from "expo-haptics";
 import * as Facebook from "expo-facebook";
-// import * as Sentry from 'sentry-expo';
 import firebase from "firebase";
 import appsFlyer from "react-native-appsflyer";
 import * as Crypto from "expo-crypto";
@@ -34,33 +31,17 @@ import { restoreAndroidPurchases } from "../../../config/android";
 import { RestoreSubscriptions } from "../../utils/subscription";
 import NativeLoader from "../../components/Shared/NativeLoader";
 import Icon from "../../components/Shared/Icon";
-import FacebookButton from "../../components/Auth/FacebookButton";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import errors from "../../utils/errors";
-import RNIap, {
-  Product,
-  ProductPurchase,
-  PurchaseError,
-  acknowledgePurchaseAndroid,
-  purchaseErrorListener,
-  purchaseUpdatedListener,
-} from "react-native-iap";
 import CustomBtn from "../../components/Shared/CustomBtn";
-import globalStyle, { containerPadding } from "../../styles/globalStyles";
 import InputBox from "../../components/Shared/inputBox";
 import BigHeadingWithBackButton from "../../components/Shared/BigHeadingWithBackButton";
 import authScreenStyle from "./authScreenStyle";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import {
-  getChallengeDetails,
-  getLatestChallenge,
-  hasChallenges,
-} from "../../utils/challenges";
-import moment from "moment";
-import momentTimezone from "moment-timezone";
+import { hasChallenges } from "../../utils/challenges";
 const { InAppUtils } = NativeModules;
-const { width } = Dimensions.get("window");
+
 const getRandomString = (length) => {
   let result = "";
   const characters =
@@ -79,7 +60,6 @@ const styles = StyleSheet.create({
   },
 });
 
-let isFocused = false;
 export default class LoginScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -265,78 +245,6 @@ export default class LoginScreen extends React.PureComponent {
         );
       });
   };
-  loginWithFacebook = async () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    try {
-      const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-        "1825444707513470",
-        {
-          permissions: ["public_profile", "email"],
-        }
-      );
-      if (type === "success") {
-        this.setState({ loading: true });
-        appsFlyer.trackEvent("af_login");
-        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-        const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        const authResponse = await firebase
-          .auth()
-          .signInWithCredential(credential);
-        const { uid } = authResponse.user;
-        await AsyncStorage.setItem("uid", uid);
-        db.collection("users")
-          .doc(uid)
-          .get()
-          .then(async (doc) => {
-            if ((await doc.data().fitnessLevel) !== undefined) {
-              await AsyncStorage.setItem(
-                "fitnessLevel",
-                await doc.data().fitnessLevel.toString()
-              );
-            }
-            const { subscriptionInfo = undefined } = await doc.data();
-            if (subscriptionInfo === undefined) {
-              if (await hasChallenges(uid)) {
-                await this.goToAppScreen(doc);
-              } else {
-                // NO PURCHASE INFORMATION SAVED
-                // this.setState({ loading: false });
-                this.props.navigation.navigate("Subscription", {
-                  specialOffer: this.state.specialOffer,
-                });
-              }
-            } else if (subscriptionInfo.expiry < Date.now()) {
-              // EXPIRED
-            } else {
-              // RECEIPT STILL VALID
-              this.setState({ loading: false });
-              if (await !doc.data().onboarded) {
-                this.props.navigation.navigate("Onboarding1");
-                return;
-              }
-              this.props.navigation.navigate("App");
-            }
-          });
-      }
-    } catch (err) {
-      if (
-        err.message &&
-        err.message.includes(
-          "An account already exists with the same email address"
-        )
-      ) {
-        Alert.alert(
-          "Facebook signup failed",
-          "An account already exists with the same email address but different sign-in credentials."
-        );
-      }
-      this.setState({
-        error:
-          "The account entered doesn't match any account. Signup for an account",
-        loading: false,
-      });
-    }
-  };
 
   storePurchase = async (subscriptionInfo, onboarded) => {
     const restoreSubscriptions = new RestoreSubscriptions(this.props);
@@ -349,7 +257,6 @@ export default class LoginScreen extends React.PureComponent {
       if (Platform.OS === "ios") {
         await this.iOSStorePurchases(onboarded);
       } else if (Platform.OS === "android") {
-        //await restoreSubscriptions.restore(subscriptionInfo, onboarded);
         await restoreAndroidPurchases(this.props);
       }
     }
@@ -381,7 +288,6 @@ export default class LoginScreen extends React.PureComponent {
             .slice()
             .sort(compareInApp);
           if (sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now()) {
-            // Alert.alert('Your subscription has been auto-renewed');
             const userRef = db.collection("users").doc(uid);
             const data = {
               subscriptionInfo: {
@@ -437,30 +343,6 @@ export default class LoginScreen extends React.PureComponent {
     this.props.navigation.navigate("App");
   };
   login = async (email, password) => {
-    // const users = db.collection('users');
-    // const snapshot = await users.where('email', '==', this.state.email).get();
-
-    // if (snapshot.empty) {
-    //   console.log('No matching documents.');
-    //   return;
-    // }
-
-    // snapshot.forEach(doc => {
-    //   console.log(doc.id, ' ', doc.data())
-    //   var query = db.collection("users").where("id", "==", doc.id);
-    //   query.get().then((querySnapshot) => {
-    //     querySnapshot.forEach((document) => {
-    //       document.ref.collection("challenges").get().then((querySnapshot) => {
-    //         querySnapshot.forEach(docs => {
-    //           console.log(docs.data())
-    //           // if (docs.data()) {
-    //           //   db.collection('users').doc(uid).collection('challenges').doc(docs.id).set(docs.data());
-    //           // }
-    //         });
-    //       });
-    //     });
-    //   });
-    // });
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
     this.setState({ loading: true });
@@ -620,10 +502,6 @@ export default class LoginScreen extends React.PureComponent {
         <SafeAreaView style={authScreenStyle.safeAreaContainer}>
           <StatusBar barStyle="light-content" />
           <View style={authScreenStyle.container}>
-            {/* <ImageBackground
-              source={require('../../../assets/images/signup-screen-background.jpg')}
-              style={styles.imageBackground}
-            > */}
             <ScrollView contentContainerStyle={authScreenStyle.scrollView}>
               <View style={authScreenStyle.closeIconContainer}>
                 <TouchableOpacity
@@ -642,7 +520,6 @@ export default class LoginScreen extends React.PureComponent {
                   isBackButton={false}
                   bigTitleText="Sign in"
                   isBigTitle={true}
-                  // bigTitleStyle={{width:width-containerPadding*2}}
                 />
                 <InputBox
                   placeholder="Email address"
@@ -652,7 +529,6 @@ export default class LoginScreen extends React.PureComponent {
                     this.setState({ email: text });
                   }}
                   inputStyle={styles.inputText}
-                  //  onSubmitEditing={() => {this.passwordInput.focus()}}
                 />
                 <HelperText
                   type="info"
@@ -671,8 +547,6 @@ export default class LoginScreen extends React.PureComponent {
                   onSubmitEditing={() => this.login(email, password)}
                   secureTextEntry
                   returnKeyType="go"
-                  // inputStyle={styles.inputText}
-                  //  ref={(input) => this.passwordInput = input}
                 />
 
                 <CustomBtn
@@ -680,33 +554,11 @@ export default class LoginScreen extends React.PureComponent {
                   Title="Sign in"
                   onPress={() => this.login(email, password)}
                 />
-                {/* <Button
-                    title="SIGN IN"
-                    onPress={() => this.login(email, password)}
-                    containerStyle={styles.loginButtonContainer}
-                    buttonStyle={styles.loginButton}
-                    titleStyle={styles.loginButtonText}
-                    fontFamily={fonts.bold}
-                  /> */}
-                {/* <Divider style={styles.divider} /> */}
+
                 <View style={authScreenStyle.dividerOverlay}>
                   <Text style={authScreenStyle.dividerOverlayText}>OR</Text>
                 </View>
-                {/* <FacebookButton
-                    title="SIGN IN WITH FACEBOOK"
-                    onPress={this.loginWithFacebook}
-                  /> */}
-                <CustomBtn
-                  customBtnStyle={{
-                    borderColor: colors.grey.standard,
-                  }}
-                  outline={true}
-                  Title="Sign in with Facebook"
-                  customBtnTitleStyle={{ color: colors.transparentBlackDark }}
-                  onPress={this.loginWithFacebook}
-                  leftIcon={true}
-                  leftIconUrl={require("../../../assets/icons/facebook.png")}
-                />
+                
                 {appleSignInAvailable && (
                   <AppleAuthentication.AppleAuthenticationButton
                     onPress={this.onSignInWithApple}
@@ -734,7 +586,6 @@ export default class LoginScreen extends React.PureComponent {
                 </Text>
               </View>
             </ScrollView>
-            {/* </ImageBackground> */}
           </View>
         </SafeAreaView>
         {loading && <NativeLoader />}
