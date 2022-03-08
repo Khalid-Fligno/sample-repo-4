@@ -154,9 +154,9 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
               <DialogFooter>
                 <DialogButton
                   text="DO THIS LATER"
-                  onPress={async() => {
-                    this.setState({ popUp: false });
-                    await AsyncStorage.setItem('later','true')
+                  onPress={() => {
+                    this.setState({ popUp: false })
+                    AsyncStorage.setItem('later','true')
                   }}
                 />
                 <DialogButton
