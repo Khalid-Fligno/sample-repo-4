@@ -42,7 +42,6 @@ const Header = (props) => {
     withRightHelpButton,
     withSkipButton,
     withCancelButton,
-    withRestoreButton,
     withStartButton,
     withProfileButton,
     headerTitleParams,
@@ -94,11 +93,7 @@ const Header = (props) => {
   const handleProfileButton = () => {
     navigation.navigate("ProfileHome");
   };
-  const handleRestore = () => {
-    if (navigation.state.params.handleRestore) {
-      navigation.state.params.handleRestore();
-    }
-  };
+
   const handleStart = () => {
     if (navigation.state.params.handleStart) {
       navigation.state.params.handleStart();
@@ -211,14 +206,6 @@ const Header = (props) => {
             <Text style={globalStyle.skipButton}>Cancel</Text>
           </TouchableOpacity>
         )}
-        {withRestoreButton && (
-          <TouchableOpacity
-            style={globalStyle.headerContentContainerRight}
-            onPress={handleRestore}
-          >
-            <Text style={globalStyle.skipButton}>Restore</Text>
-          </TouchableOpacity>
-        )}
         {withStartButton && navigation.state.params.handleStart && (
           <TouchableOpacity
             style={globalStyle.headerContentContainerRight}
@@ -248,8 +235,7 @@ const Header = (props) => {
           !withSkipButton &&
           !withCancelButton &&
           !withProfileButton &&
-          !withRightHelpButton &&
-          !withRestoreButton && (
+          !withRightHelpButton && (
             <View style={globalStyle.headerContentContainerRight} />
           )}
       </View>
@@ -266,7 +252,6 @@ Header.propTypes = {
   withHelpButton: PropTypes.bool,
   withSkipButton: PropTypes.bool,
   withCancelButton: PropTypes.bool,
-  withRestoreButton: PropTypes.bool,
   withStartButton: PropTypes.bool,
   withProfileButton: PropTypes.bool,
   stack: PropTypes.string,
@@ -280,7 +265,6 @@ Header.defaultProps = {
   withHelpButton: false,
   withSkipButton: false,
   withCancelButton: false,
-  withRestoreButton: false,
   withStartButton: false,
   withProfileButton: false,
   stack: null,
