@@ -25,7 +25,6 @@ import { timerSound } from "../../config/audio";
 import { hasChallenges, isActiveChallenge } from "../utils/challenges";
 import { getBuildNumber, getVersion } from "react-native-device-info";
 import { Platform } from "react-native";
-import { Linking } from "react-native";
 import { setRestImages } from "../utils/workouts";
 import * as Sentry from "@sentry/react-native";
 
@@ -83,17 +82,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
       } else {
         SplashScreen.hide();
 
-        const updateApp = () => {
-          if (Platform.OS === "ios") {
-            Linking.openURL(
-              "https://apps.apple.com/in/app/fitazfk-fitness-nutrition/id1438373600"
-            );
-          } else {
-            Linking.openURL(
-              "https://play.google.com/store/apps/details?id=com.fitazfk.fitazfkapp"
-            );
-          }
-        };
         await this.loadAssetsAsync();
       }
     }
@@ -221,7 +209,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
   goToAppScreen = async (doc) => {
     // RECEIPT STILL VALID
     // this.setState({ loading: false });
-    if (await !doc.data().onboarded) {
+    if (!doc.data().onboarded) {
       this.props.navigation.navigate("Onboarding1");
       return;
     }
@@ -242,16 +230,16 @@ export default class AuthLoadingScreen extends React.PureComponent {
         userRef.get().then(async (doc) => {
           if (doc.exists) {
             Sentry.setUser({ email: doc.data().email });
-            if (await !doc.data().fitnessLevel) {
+            if (!doc.data().fitnessLevel) {
               await AsyncStorage.setItem("fitnessLevel", "1");
             } else {
               await AsyncStorage.setItem(
                 "fitnessLevel",
-                await doc.data().fitnessLevel.toString()
+                doc.data().fitnessLevel.toString()
               );
             }
             const { subscriptionInfo = undefined, onboarded = false } =
-              await doc.data();
+              doc.data();
 
             if (subscriptionInfo === undefined) {
               // console.log("uid",uid);
