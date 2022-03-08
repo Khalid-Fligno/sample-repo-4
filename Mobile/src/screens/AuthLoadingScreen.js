@@ -83,17 +83,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
       } else {
         SplashScreen.hide();
 
-        const updateApp = () => {
-          if (Platform.OS === "ios") {
-            Linking.openURL(
-              "https://apps.apple.com/in/app/fitazfk-fitness-nutrition/id1438373600"
-            );
-          } else {
-            Linking.openURL(
-              "https://play.google.com/store/apps/details?id=com.fitazfk.fitazfkapp"
-            );
-          }
-        };
         await this.loadAssetsAsync();
       }
     }
