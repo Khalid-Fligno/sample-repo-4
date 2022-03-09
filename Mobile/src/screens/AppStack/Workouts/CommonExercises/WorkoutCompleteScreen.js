@@ -61,7 +61,6 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     if (Platform.OS === "android") {
       const later =await AsyncStorage.getItem('later')
       const successreview = await AsyncStorage.getItem('success')
-      console.log(later,successreview);
       if (later==='true'||successreview==='true') {
         this.setState({ popUp: false });
       }else{
