@@ -113,10 +113,10 @@ export default class FeedScreen extends React.PureComponent {
       });
     });
   };
-  componentWillUnmount = () => {
-    this.focusListener();
+  componentWillUnmount() {
+    if (this.focusListener) this.focusListener.remove();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
-  };
+  }
 
   //   fetchProfile = async () => {
   //     this.setState({ loading: true });
@@ -268,20 +268,7 @@ export default class FeedScreen extends React.PureComponent {
             onPress={() => this.props.navigation.navigate("Calendar")}
             // cardCustomStyle ={{marginTop:20}}
           />
-          {/*            
-              <FeedCard 
-                // title ="COMMUNITY"
-                cardCustomStyle={{
-                  marginHorizontal:0,
-                  marginTop:wp('5%')
-                }}
-                cardImageStyle={{
-                  borderRadius:0
-                }}
-                btnTitle ="Find out more"
-                onPress={()=>console.log("Community Pressed")}
-                image={require('../../../../assets/images/Feed/community.jpg')}
-              /> */}
+
           <FeedCard
             cardCustomStyle={{
               marginHorizontal: containerPadding,
@@ -358,122 +345,6 @@ export default class FeedScreen extends React.PureComponent {
             />
           ))}
 
-          {/* <FeedCard 
-                // title ="Workouts"
-                cardCustomStyle={{
-                  marginHorizontal:containerPadding,
-                  marginTop:wp('7%')
-                }}
-                cardImageStyle={{
-                  borderRadius:3
-                }}
-                customTitleStyle={{
-                  fontSize: wp('4.5%')
-                }}
-                btnTitle ="Find out more"
-                onPress={()=>console.log("Workouts Pressed")}
-                image={require('../../../../assets/images/Feed/workout.jpg')}
-
-              />
-
-              <FeedCard 
-                // title ="Out now"
-                cardCustomStyle={{
-                  marginHorizontal:0,
-                  marginTop:wp('7%')
-                }}
-                cardImageStyle={{
-                  borderRadius:0,
-                  backgroundColor:colors.charcoal.light
-                }}
-                customTitleStyle={{
-                  fontSize: wp('4.5%'),
-                  color:colors.offWhite
-                }}
-                btnTitle ="Find out more"
-                onPress={()=>console.log("Workouts Pressed")}
-                image={require('../../../../assets/images/Feed/activewear.jpg')}
-              />
-
-              <FeedCard 
-                cardCustomStyle={{
-                  marginHorizontal:containerPadding,
-                  marginTop:wp('7%')
-                }}
-                cardImageStyle={{
-                  borderRadius:3,
-                  backgroundColor:'#658dc3'
-                }}
-                customTitleStyle={{
-                  fontSize: wp('4.5%'),
-                  color:colors.offWhite
-                }}
-                btnTitle ="Connect with us"
-                customBtnStyle={{backgroundColor:colors.offWhite}}
-                customBtnTitleStyle={{color:'#658dc3'}}
-                onPress={()=>console.log("Workouts Pressed")}
-                image={require('../../../../assets/images/Feed/facebook.jpg')}
-              />
-
-               <FeedCard 
-                // title ="Available now"
-                cardCustomStyle={{
-                  marginHorizontal:0,
-                  marginTop:wp('7%')
-                }}
-                cardImageStyle={{
-                  borderRadius:0,
-                  backgroundColor:colors.grey.dark
-                }}
-                customTitleStyle={{
-                  fontSize: wp('4.5%'),
-                  color:colors.offWhite
-                }}
-                btnTitle ="Find out more"
-                onPress={()=>console.log("Workouts Pressed")}
-                image={require('../../../../assets/images/Feed/equipment.jpg')}
-              /> */}
-
-          {/* {
-                blogs && blogs.length > 0&&
-                blogs.map((res,index)=>
-                    <ChallengeBlogCard
-                    key={index}
-                    data={res}
-                    onPress={() => this.openLink(res.urlLink)}
-                    index = {index}
-                  />
-                )
-               
-              } */}
-
-          {/* <NewsFeedTile
-                image={require('../../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg')}
-                title="SHOP APPAREL"
-                onPress={() => this.openLink('https://fitazfk.com/collections/wear-fitazfk-apparel')}
-              />
-              <DoubleNewsFeedTile
-                imageLeft={require('../../../../assets/images/homeScreenTiles/home-screen-blog.jpg')}
-                imageRight={require('../../../../assets/images/hiit-rest-placeholder.jpg')}
-                titleLeft1="HOW TO USE THIS APP"
-                titleRight1="FAQ"
-                onPressLeft={() => this.props.navigation.navigate('HomeBlog')}
-                onPressRight={() => this.openLink('https://fitazfk.zendesk.com/hc/en-us')}
-              />
-              <NewsFeedTile
-                image={require('../../../../assets/images/shop-bundles.jpg')}
-                title="SHOP EQUIPMENT"
-                onPress={() => this.openLink('https://fitazfk.com/collections/equipment')}
-              />
-              <NewsFeedTile
-                image={require('../../../../assets/images/fitazfk-army.jpg')}
-                title="JOIN THE FITAZFK ARMY"
-                onPress={() => this.openLink('https://www.facebook.com/groups/180007149128432/?source_id=204363259589572')}
-              /> */}
-          {/* <Loader
-                loading={loading}
-                color={colors.charcoal.standard}
-              /> */}
           <Loader loading={loading} color={colors.themeColor.color} />
         </View>
       </ScrollView>

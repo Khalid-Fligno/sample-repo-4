@@ -26,8 +26,6 @@ export default class OnBoarding1 extends Component {
   }
 
   onFocusFunction = () => {
-    console.log('QuitOnboard1: ', this.props.navigation.getParam("quit"))
-    console.log('completedChallengeOnboard1: ', this.props.navigation.getParam("completedChallenge"))
     const challengeData = this.props.navigation.getParam("data", {})[
       "challengeData"
     ];
@@ -59,9 +57,9 @@ export default class OnBoarding1 extends Component {
   }
 
   // and don't forget to remove the listener
-  componentWillUnmount = async () => {
-    this.focusListener.remove();
-  };
+  componentWillUnmount() {
+    if (this.focusListener) this.focusListener.remove();
+  }
   goToNextScreen(type) {
     let {
       challengeData,
@@ -89,7 +87,6 @@ export default class OnBoarding1 extends Component {
 
     let toAchieve = "";
 
-    console.log('quit: ', quit)
     for (var key in onBoardingInfo.toAchieve) {
       if (
         onBoardingInfo.toAchieve[key] !== undefined &&

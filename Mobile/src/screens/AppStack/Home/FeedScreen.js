@@ -9,31 +9,17 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
-import AsyncStorage from "@react-native-community/async-storage";
-import { Button } from "react-native-elements";
 import * as Haptics from "expo-haptics";
 import * as Localization from "expo-localization";
-import * as FileSystem from "expo-file-system";
 import moment from "moment";
 import momentTimezone from "moment-timezone";
-import NewsFeedTile from "../../../components/Home/NewsFeedTile";
-import DoubleNewsFeedTile from "../../../components/Home/DoubleNewsFeedTile";
 import Loader from "../../../components/Shared/Loader";
-import ProgressBar from "../../../components/Progress/ProgressBar";
 import { db } from "../../../../config/firebase";
-import Icon from "../../../components/Shared/Icon";
-// import fonts from '../../../styles/fonts';
 import colors from "../../../styles/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import globalStyle, { containerPadding } from "../../../styles/globalStyles";
-import RoundButton from "../../../components/Home/RoundButton";
 import HomeScreenStyle from "./HomeScreenStyle";
-import BigHeadingWithBackButton from "../../../components/Shared/BigHeadingWithBackButton";
-import WorkOutCard from "../../../components/Home/WorkoutCard";
-import TimeSvg from "../../../../assets/icons/time";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
-import Carousel from "react-native-carousel-view";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 
 import {
@@ -46,12 +32,10 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import BlogCard from "../../../components/Home/BlogCard";
 import {
   EquipmentMainCategory,
   EquipmentSubCategory,
 } from "../../../utils/feedUtils";
-// import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
 const { width } = Dimensions.get("window");
 const { height } = Dimensions.get("window");
 
@@ -68,26 +52,6 @@ const resistanceFocusMap = {
   3: "Upper Body",
   5: "Abs, Butt & Thighs",
 };
-
-const Feeds = [
-  {
-    bgImage: require("../../../../assets/images/Feed/activewear.jpg"),
-    url: "https://fitazfk.com/collections/wear-fitazfk-apparel",
-    btnTitle: "Find out more",
-  },
-  // {
-  //   bgImage:require('../../../../assets/images/Feed/facebook.jpg'),
-  //   url:'https://www.facebook.com/groups/180007149128432/?source_id=204363259589572',
-  //   btnTitle:'Connect with us',
-  //   btnBg:colors.offWhite,
-  //   btnTitleColor:'#658dc3'
-  // },
-  {
-    bgImage: require("../../../../assets/images/Feed/equipment.jpg"),
-    url: "https://fitazfk.com/collections/equipment",
-    btnTitle: "Find out more",
-  },
-];
 
 export default class FeedScreen extends React.PureComponent {
   constructor(props) {
@@ -119,22 +83,10 @@ export default class FeedScreen extends React.PureComponent {
       });
     });
   };
-  componentWillUnmount = () => {
-    // this.focusListener();
+  componentWillUnmount() {
+    if (this.focusListener) this.focusListener.remove();
     // if (this.unsubscribeFACD) this.unsubscribeFACD();
-  };
-
-  //   fetchProfile = async () => {
-  //     this.setState({ loading: true });
-  //     const uid = await AsyncStorage.getItem('uid');
-  //     const userRef = db.collection('users').doc(uid);
-  //     this.unsubscribe = userRef.onSnapshot(async (doc) => {
-  //       this.setState({
-  //         profile: await doc.data(),
-  //         loading: false,
-  //       });
-  //     });
-  //   }
+  }
 
   fetchProfile = async () => {
     let trainers = [];
@@ -256,7 +208,6 @@ export default class FeedScreen extends React.PureComponent {
       todayRcWorkout,
       trainers,
     } = this.state;
-    let array = trainers;
     let recommendedWorkout = [];
     dayOfWeek > 0 && dayOfWeek < 6
       ? recommendedWorkout.push(workoutTypeMap[dayOfWeek])
@@ -271,6 +222,7 @@ export default class FeedScreen extends React.PureComponent {
         recommendedWorkout.push(`Day ${this.currentChallengeDay}`);
       }
     }
+
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -287,6 +239,7 @@ export default class FeedScreen extends React.PureComponent {
               autoplayLoop={true}
               autoplayLoopKeepAnimation={true}
               data={trainers}
+              keyExtractor={(item) => item.id}
               renderItem={({ item }) => {
                 return (
                   <View style={{ flex: 1, alignItems: "center" }}>
@@ -342,34 +295,6 @@ export default class FeedScreen extends React.PureComponent {
                 );
               }}
             />
-
-            {/* <View style={{ flex: 1, alignItems: "center" }}>
-                <Image
-                  style={{ flex: 1, height: "90%", width: "90%" }}
-                  source={{
-                    uri: "https://images.pexels.com/photos/6456303/pexels-photo-6456303.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
-                  }}
-                  resizeMode="cover"
-                />
-              </View> */}
-            {/* <View style={{ flex: 1, alignItems: "center" }}>
-                <Image
-                  style={{ flex: 1, height: "90%", width: "90%" }}
-                  source={{
-                    uri: "https://images.pexels.com/photos/3912953/pexels-photo-3912953.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-                  }}
-                  resizeMode="cover"
-                />
-              </View>
-              <View style={{ flex: 1, alignItems: "center" }}>
-                <Image
-                  style={{ flex: 1, height: "90%", width: "90%" }}
-                  source={{
-                    uri: "https://images.pexels.com/photos/136405/pexels-photo-136405.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-                  }}
-                  resizeMode="cover"
-                />
-              </View> */}
           </View>
 
           <View style={{ flex: 1, marginTop: 20 }}>
@@ -542,6 +467,7 @@ export default class FeedScreen extends React.PureComponent {
                     horizontal
                     data={blogs}
                     style={{ flex: 1 }}
+                    keyExtractor={(item) => item.title}
                     renderItem={({ item }) => {
                       return (
                         <TouchableOpacity
@@ -609,9 +535,6 @@ export default class FeedScreen extends React.PureComponent {
                   Title="Explore workouts"
                   customBtnStyle={styles.oblongBtnStyle}
                   onPress={() => this.props.navigation.navigate("Workouts")}
-                  // style={styles.oblongBtnStyle}
-                  // isRightIcon={true}
-                  // customBtnTitleStyle={{ marginHorizontal: hp('1%'), fontSize: wp("3%"), marginVertical: hp('20%') }}
                 />
               </View>
             </View>

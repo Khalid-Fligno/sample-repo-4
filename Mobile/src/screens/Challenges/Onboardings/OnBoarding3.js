@@ -1,29 +1,17 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  Picker,
-  Alert,
-} from "react-native";
-import { number, any } from "prop-types";
+import { View, Text, SafeAreaView } from "react-native";
+import { any } from "prop-types";
 import ChallengeStyle from "../chellengeStyle";
 import globalStyle from "../../../styles/globalStyles";
 import CustomBtn from "../../../components/Shared/CustomBtn";
-import { CheckBox } from "react-native-elements";
+
 import colors from "../../../styles/colors";
-import fonts from "../../../styles/fonts";
-import authScreenStyle from "../../AuthStack/authScreenStyle";
-import Modal from "react-native-modal";
+
 import {
   weightOptionsMetric,
   waistOptionsMetric,
-  hipOptionsMetric,
   weightOptionsImperial,
   waistOptionsImperial,
-  hipOptionsImperial,
-  hipOptionsFt,
 } from "../../../utils/index";
 import PickerModal from "../../../components/Challenges/PickerModal";
 import InputBox2 from "../../../components/Challenges/InputBox2";
@@ -51,16 +39,14 @@ export default class OnBoarding3 extends Component {
       unitOfMeasurement: undefined,
       skipped: false,
       quit: false,
-      completedChallenge: false
+      completedChallenge: false,
     };
   }
 
   onFocusFunction = () => {
-    console.log('QuitOnboard3: ', this.props.navigation.getParam("quit"))
-    console.log('completedChallengeOnboard3: ', this.props.navigation.getParam("completedChallenge"))
     const data = this.props.navigation.getParam("data", {});
     const measurments = data["challengeData"]["onBoardingInfo"]["measurements"];
-    console.log("asdfghjkl", measurments)
+
     if (measurments) {
       this.setState({
         challengeData: data["challengeData"],
@@ -72,14 +58,16 @@ export default class OnBoarding3 extends Component {
         hip: measurments.hip,
         unitOfMeasurement: measurments.unit,
         quit: this.props.navigation.getParam("quit"),
-        completedChallenge: this.props.navigation.getParam("completedChallenge"),
+        completedChallenge:
+          this.props.navigation.getParam("completedChallenge"),
       });
     } else {
       this.setState({
         challengeData: data["challengeData"],
         btnDisabled: false,
         quit: this.props.navigation.getParam("quit"),
-        completedChallenge: this.props.navigation.getParam("completedChallenge")
+        completedChallenge:
+          this.props.navigation.getParam("completedChallenge"),
       });
     }
     this.fetchDataMeasurement();
@@ -88,19 +76,20 @@ export default class OnBoarding3 extends Component {
   fetchDataMeasurement = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem("uid");
-    this.focusListener = await db.collection("users")
+    this.focusListener = await db
+      .collection("users")
       .doc(uid)
       .onSnapshot(async (doc) => {
         var data = await doc.data();
 
         this.setState({
-          unitOfMeasurement: data.unitsOfMeasurement
-        })
-      })
-  }
+          unitOfMeasurement: data.unitsOfMeasurement,
+        });
+      });
+  };
 
   // add a focus listener onDidMount
-  async componentDidMount() {
+  componentDidMount() {
     this.props.navigation.setParams({
       handleSkip: () => {
         this.goToScreen("next");
@@ -113,13 +102,14 @@ export default class OnBoarding3 extends Component {
 
   // and don't forget to remove the listener
   componentWillUnmount() {
-    // this.focusListener.remove();
+    console.log(this.focusListener, "this.focusListener");
+    // if (this.focusListener) this.focusListener.remove();
   }
 
   goToScreen(type) {
     let { challengeData, quit, completedChallenge } = this.state;
     let { goalWeight, hip, height, waist, weight } = this.state;
-    console.log('quit: ', quit)
+
     const skipped =
       weight == 0 && height == 0 && goalWeight == 0 && waist == 0 && hip == 0
         ? true
@@ -191,7 +181,7 @@ export default class OnBoarding3 extends Component {
         data: { challengeData: updatedChallengedata },
         onboardingProcessComplete:
           this.props.navigation.getParam("onboardingProcessComplete") !==
-            undefined
+          undefined
             ? this.props.navigation.getParam("onboardingProcessComplete")
             : false,
         challengeOnboard:
@@ -199,21 +189,6 @@ export default class OnBoarding3 extends Component {
             ? this.props.navigation.getParam("challengeOnboard")
             : false,
       });
-      // Alert.alert('',
-      //   `Measurements ${measurements.length === 0 ? 'Default' : measurements.substring(0, measurements.length - 2)}`,
-      //   [
-      //     {
-      //       text: 'OK', onPress:()=>{
-      //         this.props.navigation.navigate('ChallengeOnBoarding4',{
-      //           data:{ challengeData:updatedChallengedata },
-      //           onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
-      //           challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
-      //         });
-      //       }
-      //     },
-      //   ],
-      //   { cancelable: false }
-      // );
     } else {
       this.props.navigation.navigate("ChallengeOnBoarding1", {
         data: {
@@ -221,22 +196,26 @@ export default class OnBoarding3 extends Component {
         },
         onboardingProcessComplete:
           this.props.navigation.getParam("onboardingProcessComplete") !==
-            undefined
+          undefined
             ? this.props.navigation.getParam("onboardingProcessComplete")
             : false,
       });
     }
   }
   showModal = (inputType) => {
-    let { modalVisible, unitOfMeasurement } = this.state;
+    let { unitOfMeasurement } = this.state;
     let dataList = [];
     if (inputType === "weight" || inputType === "goalWeight")
       dataList =
-        unitOfMeasurement === "metric" ? weightOptionsMetric : weightOptionsImperial;
+        unitOfMeasurement === "metric"
+          ? weightOptionsMetric
+          : weightOptionsImperial;
 
     if (inputType === "waist" || inputType === "hip" || inputType === "height")
       dataList =
-        unitOfMeasurement === "metric" ? waistOptionsMetric : waistOptionsImperial;
+        unitOfMeasurement === "metric"
+          ? waistOptionsMetric
+          : waistOptionsImperial;
 
     this.setState({
       modalVisible: true,
@@ -269,8 +248,6 @@ export default class OnBoarding3 extends Component {
     if (!challengeData["onBoardingInfo"]) {
       this.onFocusFunction();
     }
-    console.log("Listing dos", unitOfMeasurement)
-    console.log("Listing tres", challengeData)
     return (
       <SafeAreaView style={ChallengeStyle.container}>
         <View style={[globalStyle.container]}>
@@ -287,61 +264,7 @@ export default class OnBoarding3 extends Component {
             <View>
               <Text style={[ChallengeStyle.onBoardingTitle]}>Measurements</Text>
             </View>
-            <View style={ChallengeStyle.checkBox}>
-              {/* <CustomBtn
-              Title="Metric"
-              outline={unitOfMeasurement != "metric"}
-              customBtnStyle={{
-                padding: 5,
-                width: "46%",
-                backgroundColor:
-                unitOfMeasurement === "metric"
-                    ? colors.themeColor.color
-                    : colors.transparent,
-                borderColor:
-                unitOfMeasurement === "metric"
-                    ? colors.themeColor.color
-                    : colors.black,
-              }}
-              onPress={() => this.setState({ unitOfMeasurement: "metric" })}
-              customBtnTitleStyle={{
-                fontSize: 15,
-                marginLeft: 5,
-                color: unitOfMeasurement === "metric" ? colors.black : colors.black,
-              }}
-              leftIconColor={colors.black}
-              leftIconSize={15}
-              isLeftIcon={unitOfMeasurement === "metric" ? true : false}
-              leftIconName="tick"
-            />
-
-            <CustomBtn
-              Title="Imperial"
-              outline={unitOfMeasurement != "imperial"}
-              customBtnStyle={{
-                padding: 5,
-                width: "46%",
-                backgroundColor:
-                  chosenUom === "imperial"
-                    ? colors.themeColor.color
-                    : colors.transparent,
-                borderColor:
-                  chosenUom === "imperial"
-                    ? colors.themeColor.color
-                    : colors.black,
-              }}
-              onPress={() => this.setState({ chosenUom: "imperial" })}
-              customBtnTitleStyle={{
-                fontSize: 15,
-                marginLeft: 5,
-                color: chosenUom === "imperial" ? colors.black : colors.black,
-              }}
-              leftIconColor={colors.black}
-              leftIconSize={15}
-              isLeftIcon={chosenUom === "imperial" ? true : false}
-              leftIconName="tick"
-            /> */}
-            </View>
+            <View style={ChallengeStyle.checkBox}></View>
             <InputBox2
               onPress={() => this.showModal("height")}
               title="Height"
@@ -389,10 +312,10 @@ export default class OnBoarding3 extends Component {
               <CustomBtn
                 Title={
                   weight == 0 &&
-                    height == 0 &&
-                    goalWeight == 0 &&
-                    waist == 0 &&
-                    hip == 0
+                  height == 0 &&
+                  goalWeight == 0 &&
+                  waist == 0 &&
+                  hip == 0
                     ? "Skip"
                     : "Next"
                 }

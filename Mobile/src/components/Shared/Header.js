@@ -93,6 +93,7 @@ const Header = (props) => {
   const handleProfileButton = () => {
     navigation.navigate("ProfileHome");
   };
+
   const handleStart = () => {
     if (navigation.state.params.handleStart) {
       navigation.state.params.handleStart();

@@ -81,12 +81,10 @@ export default class OnBoarding5 extends Component {
         btnDisabled: false,
       });
     }
-
-    console.log(data["challengeData"], "<><><><><");
   };
 
   // add a focus listener onDidMount
-  async componentDidMount() {
+  componentDidMount() {
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     });
@@ -94,7 +92,7 @@ export default class OnBoarding5 extends Component {
 
   // and don't forget to remove the listener
   componentWillUnmount() {
-    // this.focusListener.remove();
+    if (this.focusListener) this.focusListener.remove();
   }
 
   goToScreen(type) {
@@ -377,7 +375,7 @@ export default class OnBoarding5 extends Component {
       addingToCalendar,
       chosenDate,
     } = this.state;
-    console.log("addingToCalendar", addingToCalendar);
+
     if (!challengeData.onBoardingInfo) {
       this.onFocusFunction();
     }

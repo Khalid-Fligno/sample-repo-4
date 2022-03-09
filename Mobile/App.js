@@ -18,8 +18,26 @@ import colors from "./src/styles/colors";
 import _ from "lodash";
 // import LogRocket from "@logrocket/react-native";
 import { Mixpanel } from "mixpanel-react-native";
+import * as Sentry from "@sentry/react-native";
 
 const App = () => {
+  const routingInstrumentation = new Sentry.ReactNavigationV4Instrumentation();
+  if (!__DEV__) {
+    Sentry.init({
+      dsn: "https://12437c0b082140d5af62eff3a442ecd8@o1160693.ingest.sentry.io/6245334",
+      integrations: [
+        new Sentry.ReactNativeTracing({
+          routingInstrumentation,
+          tracingOrigins: ["localhost", /^\//, /^https:\/\//],
+        }),
+      ],
+      // To set a uniform sample rate
+      tracesSampleRate: 0.2,
+      enableNative: true,
+      debug: true,
+    });
+  }
+
   const [appState, setAppState] = useState(AppState.currentState);
   let navigator;
 
@@ -100,7 +118,7 @@ const App = () => {
   );
 };
 
-export default App;
+export default Sentry.wrap(App);
 
 const styles = StyleSheet.create({
   appContainer: {

@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-  Picker,
   TouchableOpacity,
   Dimensions,
   Alert,
@@ -16,10 +15,8 @@ import * as Haptics from "expo-haptics";
 import * as Localization from "expo-localization";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
-import CustomButton from "../../components/Shared/CustomButton";
 import Loader from "../../components/Shared/Loader";
 import { db } from "../../../config/firebase";
-import { uomMap } from "../../utils/index";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import CustomBtn from "../../components/Shared/CustomBtn";
@@ -133,10 +130,7 @@ export default class Onboarding1Screen extends React.PureComponent {
                 },
               ]}
             >
-              <Text style={styles.headerText}>
-                {/* Welcome{name !== null && `, ${name}`} */}
-                Welcome
-              </Text>
+              <Text style={styles.headerText}>Welcome</Text>
               <Text style={styles.bodyText}>
                 It’s time to start your FitazFK journey! Just a few questions
                 before we can start.
@@ -146,10 +140,6 @@ export default class Onboarding1Screen extends React.PureComponent {
 
           <View style={styles.contentContainer}>
             <View style={styles.inputFieldContainer}>
-              {/* <Text style={styles.inputFieldTitle}>
-                Date of Birth
-              </Text> */}
-
               <TouchableOpacity
                 onPress={this.toggleDobModal}
                 style={styles.inputButton}

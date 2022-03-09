@@ -55,10 +55,7 @@ class ChallengeSubscriptionScreen extends Component {
         this.props.navigation.navigate("Calendar");
       }
     });
-    console.log(
-      "completedChallengeSubscription: ",
-      this.props.navigation.getParam("completedChallenge")
-    );
+
     this.setState({ quit: this.props.navigation.getParam("quit") });
     this.setState({
       completedChallenge: this.props.navigation.getParam("completedChallenge"),
@@ -67,17 +64,20 @@ class ChallengeSubscriptionScreen extends Component {
 
   componentDidMount = () => {
     this.fetchProfile();
-    this.focusListener = this.props.navigation.addListener("willFocus", () => {
-      this.onFocusFunction();
-    });
+    this.focusListener = this.props.navigation.addListener(
+      "didFocus",
+      async () => {
+        this.onFocusFunction();
+      }
+    );
   };
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     if (this.unsubscribeUserChallenges) this.unsubscribeUserChallenges();
     if (this.unsubscribeUserData) this.unsubscribeUserData();
     if (this.unsubscribeChallenges) this.unsubscribeChallenges();
-    this.focusListener.remove();
-  };
+    if (this.focusListener) this.focusListener.remove();
+  }
 
   fetchProfile = async () => {
     this.setState({ loading: true });
@@ -131,7 +131,7 @@ class ChallengeSubscriptionScreen extends Component {
 
   addChallengeToUser(index) {
     let { userData, challengesList, quit, completedChallenge } = this.state;
-    console.log("quit: ", quit);
+
     const userRef = db
       .collection("users")
       .doc(userData.id)
