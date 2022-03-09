@@ -1,13 +1,5 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import { number } from "prop-types";
+import { View, Text, SafeAreaView, ScrollView, Alert } from "react-native";
 import ChallengeStyle from "../chellengeStyle";
 import globalStyle from "../../../styles/globalStyles";
 import CustomBtn from "../../../components/Shared/CustomBtn";
@@ -20,11 +12,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import FitnessLevelCard from "../../../components/Onboarding/FitnessLevelCard";
 import BigHeadingWithBackButton from "../../../components/Shared/BigHeadingWithBackButton";
 import storeProgressInfo from "../../../components/Challenges/storeProgressInfo";
-import Modal from "react-native-modal";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { DotIndicator } from "react-native-indicators";
 import moment from "moment";
-import momentTimezone from "moment-timezone";
 import CalendarModal from "../../../components/Shared/CalendarModal";
 import { NavigationActions, StackActions } from "react-navigation";
 const levelOfFiness = ["Begineer", "Intermediate", "Advanced"];
@@ -101,15 +89,6 @@ export default class OnBoarding6 extends Component {
     });
     if (type === "next") {
       if (this.props.navigation.getParam("challengeOnboard", {})) {
-        // this.props.navigation.navigate("ChallengeOnBoarding1", {
-        //   data: {
-        //     challengeData: this.props.navigation.getParam("data", {})[
-        //       "challengeData"
-        //     ],
-        //   },
-        //   onboardingProcessComplete: false,
-        //   challengeOnboard: true,
-        // });
         this.props.navigation.navigate("ChallengeOnBoarding1", {
           data: {
             challengeData: updatedChallengedata,
@@ -121,8 +100,6 @@ export default class OnBoarding6 extends Component {
         });
       } else {
         this.setState({ challengeData: updatedChallengedata });
-        // calendarModalVisible true calendar popup
-        // this.setState({ calendarModalVisible: true });
         this.addChallengeToCalendar(moment().set("date", 26));
       }
     } else {
@@ -257,14 +234,12 @@ export default class OnBoarding6 extends Component {
     let {
       fitnessLevel,
       loading,
-      challengeData,
       btnDisabled,
       calendarModalVisible,
       addingToCalendar,
       chosenDate,
     } = this.state;
 
-    // console.log(challengeData)
     return (
       <SafeAreaView style={ChallengeStyle.container}>
         <View style={globalStyle.container}>
@@ -297,16 +272,6 @@ export default class OnBoarding6 extends Component {
               {/* Select your intensity level below. */}
               How often do you currently train.
             </Text>
-            {/* <Text style={{ fontFamily: fonts.standard, fontSize: 15 }}>
-                Beginner: train once a week,
-            </Text>
-            <Text style={{ fontFamily: fonts.standard, fontSize: 15 }}>
-                Intermediate: train 2 to 3 times a week,
-            </Text>
-            <Text style={{ fontFamily: fonts.standard, fontSize: 15 }}>
-                Expert: train 4+ times a week
-            </Text> */}
-
             <FitnessLevelCard
               source={require("../../../../assets/images/OnBoardindImg/FL_1.png")}
               onPress={() => this.setState({ fitnessLevel: 1 })}
