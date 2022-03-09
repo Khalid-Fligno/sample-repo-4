@@ -95,15 +95,19 @@ export default class OnBoarding3 extends Component {
         this.goToScreen("next");
       },
     });
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
-      this.onFocusFunction();
-    });
+    this.listeners = [
+      this.props.navigation.addListener("didFocus", () => {
+        this.onFocusFunction();
+      }),
+    ];
   }
 
   // and don't forget to remove the listener
   componentWillUnmount() {
-    console.log(this.focusListener, "this.focusListener");
-    // if (this.focusListener) this.focusListener.remove();
+    this.listeners.forEach((item) => item.remove());
+    if (this.focusListener) {
+      this.focusListener();
+    }
   }
 
   goToScreen(type) {

@@ -373,14 +373,14 @@ export default class LoginScreen extends React.PureComponent {
               .get()
               .then(async (doc) => {
                 Sentry.setUser({ email: doc.data().email });
-                if ((await doc.data().fitnessLevel) !== undefined) {
+                if (doc.data().fitnessLevel !== undefined) {
                   await AsyncStorage.setItem(
                     "fitnessLevel",
-                    await doc.data().fitnessLevel.toString()
+                    doc.data().fitnessLevel.toString()
                   );
                 }
                 const { subscriptionInfo = undefined, onboarded = false } =
-                  await doc.data();
+                  doc.data();
                 if (subscriptionInfo === undefined) {
                   if (await hasChallenges(uid)) {
                     await this.goToAppScreen(doc);
@@ -433,14 +433,14 @@ export default class LoginScreen extends React.PureComponent {
               .doc(uid)
               .get()
               .then(async (doc) => {
-                if ((await doc.data().fitnessLevel) !== undefined) {
+                if (doc.data().fitnessLevel !== undefined) {
                   await AsyncStorage.setItem(
                     "fitnessLevel",
                     await doc.data().fitnessLevel.toString()
                   );
                 }
                 const { subscriptionInfo = undefined, onboarded = false } =
-                  await doc.data();
+                  doc.data();
                 if (subscriptionInfo === undefined) {
                   if (await hasChallenges(uid)) {
                     await this.goToAppScreen(doc);

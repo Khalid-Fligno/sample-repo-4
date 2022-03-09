@@ -175,9 +175,12 @@ export const loadExercise = async (workoutData) => {
       Promise.all(
         res.map(async (item, index) => {
           if (item.includes("exercise-")) {
-            FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
-              idempotent: true,
-            })
+            await FileSystem.deleteAsync(
+              `${FileSystem.cacheDirectory}${item}`,
+              {
+                idempotent: true,
+              }
+            )
               .then(() => {
                 // console.log(item,"deleted...")
               })

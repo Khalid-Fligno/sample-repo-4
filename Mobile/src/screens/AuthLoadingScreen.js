@@ -55,7 +55,7 @@ const cacheSound = async (sounds) => {
 
 export default class AuthLoadingScreen extends React.PureComponent {
   componentDidMount = async () => {
-    this.checkAppVersion();
+    await this.checkAppVersion();
     await setRestImages();
   };
 
@@ -80,9 +80,8 @@ export default class AuthLoadingScreen extends React.PureComponent {
         // console.log("app up to date");
         await this.loadAssetsAsync();
       } else {
-        SplashScreen.hide();
-
         await this.loadAssetsAsync();
+        SplashScreen.hide();
       }
     }
   }
