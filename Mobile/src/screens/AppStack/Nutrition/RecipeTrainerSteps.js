@@ -37,12 +37,7 @@ export default class RecipeTrainerSteps extends React.PureComponent {
   componentWillUnmount = () => {
     deactivateKeepAwake();
   }
-  // showPrevious = () => {
-  //   this.carousel.snapToPrev();
-  // }
-  // showNext = (index) => {
-  //   this.carousel.snapToItem(index + 1);
-  // }
+ 
   renderItem = ({ item, index }) => {
     const { steps } = this.state;
     return (
@@ -50,66 +45,16 @@ export default class RecipeTrainerSteps extends React.PureComponent {
         <View style={NutritionStyles.carouselHeaderContainer}>
           <View style={NutritionStyles.carouselHeaderContentContainer}>
             <View style={NutritionStyles.carouselHeaderButton} />
-            {/* {
-              index === 0 ? (
-                <View
-                  onPress={() => this.props.navigation.goBack()}
-                  style={styles.carouselHeaderButton}
-                >
-                  <Icon
-                    name="cross"
-                    size={16}
-                    color={colors.violet.standard}
-                  />
-                </View>
-              ) : (
-                <View
-                  onPress={this.showPrevious}
-                  style={styles.carouselHeaderButton}
-                >
-                  <Icon
-                    name="arrow-left"
-                    size={20}
-                    color={colors.violet.standard}
-                  />
-                </View>
-              )
-            } */}
             <Text style={NutritionStyles.carouselHeaderText}>
               STEP {index + 1} OF {steps.length}
             </Text>
             <View style={NutritionStyles.carouselHeaderButton} />
-            {/* {
-              index + 1 === steps.length ? (
-                <TouchableOpacity
-                  onPress={() => this.props.navigation.goBack()}
-                  style={styles.carouselHeaderButton}
-                >
-                  <Icon
-                    name="tick"
-                    size={22}
-                    color={colors.violet.standard}
-                  />
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  // onPress={() => this.showNext(index)}
-                  style={styles.carouselHeaderButton}
-                >
-                  <Icon
-                    name="arrow-right"
-                    size={20}
-                    color={colors.violet.standard}
-                  />
-                </TouchableOpacity>
-              )
-            } */}
+            
           </View>
         </View>
         <View style={NutritionStyles.carouselContentContainer}>
           <ScrollView>
             <Image
-              // source={{ uri: this.state.stepsImages[index] }}
               source={{ uri: item.image}}
               indicator={DotIndicator}
               indicatorProps={{
@@ -125,9 +70,6 @@ export default class RecipeTrainerSteps extends React.PureComponent {
             />
             <View style={NutritionStyles.carouselBottomContainer}>
               <View style={NutritionStyles.carouselTextContainer}>
-                {/* <Text style={NutritionStyles.carouselText}>
-                  {item.description}
-                </Text> */}
                 <HtmlText html={`${item.description}`}></HtmlText>
               </View>
             </View>

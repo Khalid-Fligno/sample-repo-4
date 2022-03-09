@@ -191,17 +191,10 @@ export default class RecipeTrainer extends React.PureComponent {
                     isBigTitle={false}
                     backButtonStyle={{ marginTop: 8 }}
                   />
-                  {/* <View >
-                          <AddToCalendarButton onPress={() => this.showModal()} />
-                        </View> */}
+             
                 </View>
                 <Image
-                  // source={{
-                  //   uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
-                  //   cache: "force-cache"
-                  // }}
                   source={{ uri: recipe.coverImage, cache: "force-cache" }}
-                  // width={width}
                   resizeMode='cover'
                   style={{height: width, width: width}}
                 />
@@ -374,11 +367,7 @@ export default class RecipeTrainer extends React.PureComponent {
                       { marginLeft: 10 },
                     ]}
                   >
-                    {/* <Icon
-                          name="portions"
-                          size={20}
-                          color={colors.black}
-                        /> */}
+                   
                     <Text style={NutritionStyles.infoText}>
                       {recipe.portions}
                     </Text>
@@ -388,13 +377,7 @@ export default class RecipeTrainer extends React.PureComponent {
               <Divider style={NutritionStyles.divider} />
               <View style={NutritionStyles.recipeInfoContainer}>
                 <Text style={NutritionStyles.recipeTitle}>{recipe.title}</Text>
-                {/* <Text style={NutritionStyles.recipeSubTitle}>
-                  {recipe.subtitle}
-                </Text> */}
-                {/* <View style={styles.addToCalendarButtonContainer}>
-                  <AddToCalendarButton onPress={() => this.showModal()} />
-                </View> */}
-                {/* <Divider style={NutritionStyles.divider} /> */}
+               
 
                 <Text
                   style={[
@@ -455,12 +438,7 @@ export default class RecipeTrainer extends React.PureComponent {
                             {utensil.replace("-", "").trim()}
                           </Text>
                         </View>
-                        // <Text
-                        //   key={utensil}
-                        //   style={NutritionStyles.ingredientsText}
-                        // >
-                        //   • {utensil}
-                        // </Text>
+                        
                       );
                   })}
                 </View>
