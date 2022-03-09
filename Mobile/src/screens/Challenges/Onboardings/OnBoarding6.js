@@ -61,15 +61,17 @@ export default class OnBoarding6 extends Component {
 
   // add a focus listener onDidMount
   componentDidMount() {
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
-      this.onFocusFunction();
-      this.fetchFitnessLevel();
-    });
+    this.listeners = [
+      this.props.navigation.addListener("didFocus", () => {
+        this.onFocusFunction();
+        this.fetchFitnessLevel();
+      }),
+    ];
   }
 
   // and don't forget to remove the listener
   componentWillUnmount() {
-    // if (this.focusListener) this.focusListener.remove();
+    this.listeners.forEach((item) => item.remove());
   }
 
   goToScreen(type) {

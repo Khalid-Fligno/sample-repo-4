@@ -77,14 +77,16 @@ export default class OnBoarding5 extends Component {
 
   // add a focus listener onDidMount
   componentDidMount() {
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
-      this.onFocusFunction();
-    });
+    this.listeners = [
+      this.props.navigation.addListener("didFocus", () => {
+        this.onFocusFunction();
+      }),
+    ];
   }
 
   // and don't forget to remove the listener
   componentWillUnmount() {
-    if (this.focusListener) this.focusListener.remove();
+    this.listeners.forEach((item) => item.remove());
   }
 
   goToScreen(type) {
