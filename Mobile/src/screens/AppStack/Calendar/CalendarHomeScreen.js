@@ -1184,16 +1184,18 @@ class CalendarHomeScreen extends React.PureComponent {
         >
           Today's Meals
         </Text>
-        <TodayMealsList
-          recipe={AllRecipe[0]}
-          favoriteRecipe={favoriteRecipe[0]}
-          todayRecommendedRecipe={todayRecommendedRecipe[0]}
-          data={todayRecommendedMeal[0]}
-          onPress={(res) => this.goToRecipe(res)}
-          filterPress={(res, res1, res2, title) =>
-            this.getToFilter(res, res1, res2, title)
-          }
-        />
+        {AllRecipe[0] && (
+          <TodayMealsList
+            recipe={AllRecipe[0]}
+            favoriteRecipe={favoriteRecipe[0]}
+            todayRecommendedRecipe={todayRecommendedRecipe[0]}
+            data={todayRecommendedMeal[0]}
+            onPress={(res) => this.goToRecipe(res)}
+            filterPress={(res, res1, res2, title) =>
+              this.getToFilter(res, res1, res2, title)
+            }
+          />
+        )}
       </>
     );
     const workoutCard =
@@ -1518,7 +1520,6 @@ class CalendarHomeScreen extends React.PureComponent {
           navigation={this.props.navigation}
           fetchCalendarEntries={this.fetchCalendarEntries}
           resetActiveChallengeUserData={this.resetActiveChallengeUserData}
-          navigation={this.props.navigation}
           completeCha={completeCha}
         />
       </Modal>
