@@ -21,6 +21,7 @@ import appsFlyer from "react-native-appsflyer";
 import * as Crypto from "expo-crypto";
 import * as AppleAuthentication from "expo-apple-authentication";
 import { db, auth } from "../../../config/firebase";
+import * as Sentry from "@sentry/react-native";
 import {
   compare,
   compareInApp,
@@ -371,6 +372,7 @@ export default class LoginScreen extends React.PureComponent {
               .doc(uid)
               .get()
               .then(async (doc) => {
+                Sentry.setUser({ email: doc.data().email });
                 if ((await doc.data().fitnessLevel) !== undefined) {
                   await AsyncStorage.setItem(
                     "fitnessLevel",
@@ -558,7 +560,7 @@ export default class LoginScreen extends React.PureComponent {
                 <View style={authScreenStyle.dividerOverlay}>
                   <Text style={authScreenStyle.dividerOverlayText}>OR</Text>
                 </View>
-                
+
                 {appleSignInAvailable && (
                   <AppleAuthentication.AppleAuthenticationButton
                     onPress={this.onSignInWithApple}

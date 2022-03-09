@@ -19,7 +19,7 @@ const TodayMealsList = (props) => {
   if (favoriteRecipe === undefined) {
     return (
       <View style={styles.container}>
-        {data.breakfast.length > 0 && (
+        {data.breakfast && data.breakfast.length > 0 && (
           <MealCarousel
             data={data.breakfast}
             data1={recipe.breakfast}
@@ -29,7 +29,7 @@ const TodayMealsList = (props) => {
             filterPress={filterPress}
           />
         )}
-        {data.lunch.length > 0 && (
+        {data.lunch && data.lunch.length > 0 && (
           <MealCarousel
             data={data.lunch}
             data1={recipe.lunch}
@@ -39,7 +39,7 @@ const TodayMealsList = (props) => {
             filterPress={filterPress}
           />
         )}
-        {data.dinner.length > 0 && (
+        {data.dinner && data.dinner.length > 0 && (
           <MealCarousel
             data={data.dinner}
             data1={recipe.dinner}
@@ -49,7 +49,7 @@ const TodayMealsList = (props) => {
             filterPress={filterPress}
           />
         )}
-        {data.snack.length > 0 && (
+        {data.snack && data.snack.length > 0 && (
           <MealCarousel
             data={data.snack}
             data1={recipe.snack}
@@ -59,7 +59,7 @@ const TodayMealsList = (props) => {
             filterPress={filterPress}
           />
         )}
-        {data.drink.length > 0 && (
+        {data.drink && data.drink.length > 0 && (
           <MealCarousel
             data={data.drink}
             data1={recipe.drink}
@@ -69,7 +69,7 @@ const TodayMealsList = (props) => {
             filterPress={filterPress}
           />
         )}
-        {data.preworkout.length > 0 && (
+        {data.preworkout && data.preworkout.length > 0 && (
           <MealCarousel
             data={data.preworkout}
             data1={recipe.preworkout}
@@ -79,7 +79,7 @@ const TodayMealsList = (props) => {
             filterPress={filterPress}
           />
         )}
-        {data.treats.length > 0 && (
+        {data.treats && data.treats.length > 0 && (
           <MealCarousel
             data={data.treats}
             data1={recipe.treats}
@@ -94,7 +94,7 @@ const TodayMealsList = (props) => {
   } else {
     return (
       <View style={styles.container}>
-        {data.breakfast.length > 0 && (
+        {data.breakfast && data.breakfast.length > 0 && (
           <MealCarousel
             data={data.breakfast}
             data1={recipe.breakfast}
@@ -105,7 +105,7 @@ const TodayMealsList = (props) => {
             favoriteRecipe={favoriteRecipe.breakfast}
           />
         )}
-        {data.lunch.length > 0 && (
+        {data.lunch && data.lunch.length > 0 && (
           <MealCarousel
             data={data.lunch}
             data1={recipe.lunch}
@@ -116,7 +116,7 @@ const TodayMealsList = (props) => {
             favoriteRecipe={favoriteRecipe.lunch}
           />
         )}
-        {data.dinner.length > 0 && (
+        {data.dinner && data.dinner.length > 0 && (
           <MealCarousel
             data={data.dinner}
             data1={recipe.dinner}
@@ -127,7 +127,7 @@ const TodayMealsList = (props) => {
             favoriteRecipe={favoriteRecipe.dinner}
           />
         )}
-        {data.snack.length > 0 && (
+        {data.snack && data.snack.length > 0 && (
           <MealCarousel
             data={data.snack}
             data1={recipe.snack}
@@ -138,7 +138,7 @@ const TodayMealsList = (props) => {
             favoriteRecipe={favoriteRecipe.snack}
           />
         )}
-        {data.drink.length > 0 && (
+        {data.drink && data.drink.length > 0 && (
           <MealCarousel
             data={data.drink}
             data1={recipe.drink}
@@ -149,7 +149,7 @@ const TodayMealsList = (props) => {
             favoriteRecipe={favoriteRecipe.drink}
           />
         )}
-        {data.preworkout.length > 0 && (
+        {data.preworkout && data.preworkout.length > 0 && (
           <MealCarousel
             data={data.preworkout}
             data1={recipe.preworkout}
@@ -160,7 +160,7 @@ const TodayMealsList = (props) => {
             favoriteRecipe={favoriteRecipe.preworkout}
           />
         )}
-        {data.treats.length > 0 && (
+        {data.treats && data.treats.length > 0 && (
           <MealCarousel
             data={data.treats}
             data1={recipe.treats}
