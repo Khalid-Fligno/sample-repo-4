@@ -197,6 +197,7 @@ export default class FeedScreen extends React.PureComponent {
       selectedSubCategory: EquipmentSubCategory(),
     });
   }
+  keyExtractor = (item, index) => String(index);
 
   render() {
     const {
@@ -465,6 +466,7 @@ export default class FeedScreen extends React.PureComponent {
                 <View style={{}}>
                   <FlatList
                     horizontal
+                    keyExtractor={this.keyExtractor}
                     data={blogs}
                     style={{ flex: 1 }}
                     keyExtractor={(item) => item.title}
