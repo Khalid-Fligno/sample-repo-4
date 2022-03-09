@@ -1,43 +1,50 @@
-import React from 'react';
-import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
-import{ createImageProgress } from 'react-native-image-progress';
-import { DotIndicator } from 'react-native-indicators';
-import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
-// import Icon from '../../../components/Shared/Icon';
-import colors from '../../../styles/colors';
-// import fonts from '../../../styles/fonts';
-import globalStyle from '../../../styles/globalStyles';
-import NutritionStyles from './NutritionStyles';
-import Loader from '../../../components/Shared/Loader';
-const { width } = Dimensions.get('window');
-import FastImage from 'react-native-fast-image';
-import HtmlText from 'react-native-html-to-text';
- 
+import React from "react";
+import { StyleSheet, View, Text, Dimensions, ScrollView } from "react-native";
+import Carousel from "react-native-snap-carousel";
+import { createImageProgress } from "react-native-image-progress";
+import { DotIndicator } from "react-native-indicators";
+import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
+import colors from "../../../styles/colors";
+import globalStyle from "../../../styles/globalStyles";
+import NutritionStyles from "./NutritionStyles";
+import Loader from "../../../components/Shared/Loader";
+const { width } = Dimensions.get("window");
+import FastImage from "react-native-fast-image";
+import HtmlText from "react-native-html-to-text";
+
 const Image = createImageProgress(FastImage);
 
 export default class RecipeTrainerSteps extends React.PureComponent {
   constructor(props) {
     super(props);
-    const data = this.props.navigation.getParam('recipe', null);
-    const stepsImages = this.props.navigation.getParam('recipe', null).stepsImages
-    const steps = data && data.newRecipe?data.steps:data.steps.map((res,i)=>{return{image:stepsImages[i],description:res}} )
+    const data = this.props.navigation.getParam("recipe", null);
+    const stepsImages = this.props.navigation.getParam(
+      "recipe",
+      null
+    ).stepsImages;
+    const steps =
+      data && data.newRecipe
+        ? data.steps
+        : data.steps.map((res, i) => {
+            return { image: stepsImages[i], description: res };
+          });
     this.state = {
-      loading: true ,
-      steps:steps,
-      stepsImages:stepsImages,
+      loading: true,
+      steps: steps,
+      stepsImages: stepsImages,
     };
   }
   componentDidMount = () => {
-    setTimeout(() => {
+    this.timer = setTimeout(() => {
       this.setState({ loading: false });
     }, 500);
     activateKeepAwake();
-  }
+  };
   componentWillUnmount = () => {
     deactivateKeepAwake();
-  }
- 
+    if (this.timer) clearTimeout(this.timer);
+  };
+
   renderItem = ({ item, index }) => {
     const { steps } = this.state;
     return (
@@ -49,13 +56,12 @@ export default class RecipeTrainerSteps extends React.PureComponent {
               STEP {index + 1} OF {steps.length}
             </Text>
             <View style={NutritionStyles.carouselHeaderButton} />
-            
           </View>
         </View>
         <View style={NutritionStyles.carouselContentContainer}>
           <ScrollView>
             <Image
-              source={{ uri: item.image}}
+              source={{ uri: item.image }}
               indicator={DotIndicator}
               indicatorProps={{
                 color: colors.themeColor.color,
@@ -66,7 +72,7 @@ export default class RecipeTrainerSteps extends React.PureComponent {
                 width: width - 52,
                 height: width - 52,
               }}
-              resizeMode='cover'
+              resizeMode="cover"
             />
             <View style={NutritionStyles.carouselBottomContainer}>
               <View style={NutritionStyles.carouselTextContainer}>
@@ -77,20 +83,20 @@ export default class RecipeTrainerSteps extends React.PureComponent {
         </View>
       </View>
     );
-  }
+  };
   render() {
-    const { steps ,loading} = this.state;
-    if(loading)
-      return(
-                <Loader
-                  loading={loading}
-                  color={colors.red.standard}
-                />
-      )
+    const { steps, loading } = this.state;
+    if (loading)
+      return <Loader loading={loading} color={colors.red.standard} />;
     return (
-      <View style={[globalStyle.container,{paddingHorizontal:0,alignItems: 'center'}]}>
+      <View
+        style={[
+          globalStyle.container,
+          { paddingHorizontal: 0, alignItems: "center" },
+        ]}
+      >
         <Carousel
-          ref={(c) => this.carousel = c}
+          ref={(c) => (this.carousel = c)}
           data={steps}
           renderItem={this.renderItem}
           sliderWidth={width}
@@ -100,4 +106,3 @@ export default class RecipeTrainerSteps extends React.PureComponent {
     );
   }
 }
-
