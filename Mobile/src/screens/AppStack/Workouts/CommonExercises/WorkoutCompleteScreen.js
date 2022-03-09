@@ -12,7 +12,7 @@ import {
 import { ListItem } from "react-native-elements";
 import * as FileSystem from "expo-file-system";
 import { PieChart } from "react-native-svg-charts";
-import Rate from "react-native-rate";
+import Rate, { AndroidMarket } from "react-native-rate";
 import Loader from "../../../../components/Shared/Loader";
 import Icon from "../../../../components/Shared/Icon";
 import CustomBtn from "../../../../components/Shared/CustomBtn";
@@ -26,6 +26,7 @@ import Dialog, {
   DialogFooter,
   DialogButton,
 } from "react-native-popup-dialog";
+import AsyncStorage from "@react-native-community/async-storage";
 
 const { width } = Dimensions.get("window");
 
@@ -36,7 +37,11 @@ const pieDataComplete = [100, 0].map((value, index) => ({
   },
   key: `pie-${index}`,
 }));
-
+const options = {
+  AppleAppID: "1438373600",
+  preferInApp: true,
+  openAppStoreIfInAppFails: false, 
+}
 export default class WorkoutCompleteScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -54,8 +59,16 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     this.manageVideoCache();
     if (Platform.OS === "ios") this.showRatePopup();
     if (Platform.OS === "android") {
-      this.setState({ popUp: true });
+      const later =await AsyncStorage.getItem('later')
+      const successreview = await AsyncStorage.getItem('success')
+      if (later==='true'||successreview==='true') {
+        this.setState({ popUp: false });
+      }else{
+        this.setState({ popUp: true });
+      }
+      
     }
+
   };
 
   componentWillUnmount = () => {
@@ -66,12 +79,17 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
   backButtonClick() {
     this.setState({ popUp: false });
   }
-
+ 
   showRatePopup = async () => {
-    Rate.rate({
-      AppleAppID: "1438373600",
-      preferInApp: true,
-      openAppStoreIfInAppFails: false,
+    Rate.rate(options,(success,error)=>{
+      if (success) {
+        // this technically only tells us if the user successfully went to the Review Page. Whether they actually did anything, we do not know.
+
+      }
+      if(error){
+        // errorMessage comes from the native code. Useful for debugging, but probably not for users to view
+
+      }
     });
   };
   manageVideoCache = async () => {
@@ -121,6 +139,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
         </View>
       </View>
     );
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
@@ -137,7 +156,8 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
                 <DialogButton
                   text="DO THIS LATER"
                   onPress={() => {
-                    this.setState({ popUp: false });
+                    this.setState({ popUp: false })
+                    AsyncStorage.setItem('later','true')
                   }}
                 />
                 <DialogButton
@@ -145,16 +165,16 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
                   onPress={() => {
                     const options = {
                       GooglePackageName: "com.fitazfk.fitazfkapp",
+                      preferredAndroidMarket: AndroidMarket.Google,
+                      preferInApp:true,
                     };
-                    Rate.rate(options, (success, errorMessage) => {
+                    Rate.rate(options, (success) => {
                       if (success) {
-                        console.log("ANDROID RATE REVIEW ", success);
-                      }
-                      if (errorMessage) {
-                        console.log("ANDROID RATE REVIEW ", errorMessage);
+                        AsyncStorage.setItem('success','true')
                       }
                     });
-                  }}
+                   }
+                  }
                 />
               </DialogFooter>
             }
@@ -162,36 +182,8 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
             //   this.setState({ visible: false });
             // }}
           >
+          
             <DialogContent>
-              <TouchableOpacity
-                onPress={() => {
-                  const options = {
-                    GooglePackageName: "com.fitazfk.fitazfkapp",
-                  };
-                  Rate.rate(options, (success, errorMessage) => {
-                    if (success) {
-                      console.log("ANDROID RATE REVIEW ", success);
-                    }
-                    if (errorMessage) {
-                      console.log("ANDROID RATE REVIEW ", errorMessage);
-                    }
-                  });
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    paddingBottom: 10,
-                  }}
-                >
-                  <Icon name="star-outline" size={50} />
-                  <Icon name="star-outline" size={50} />
-                  <Icon name="star-outline" size={50} />
-                  <Icon name="star-outline" size={50} />
-                  <Icon name="star-outline" size={50} />
-                </View>
-              </TouchableOpacity>
               <Text>
                 If you enjoy using this app, would you mind{"\n"}taking a moment
                 to rate it? It won't take more{"\n"}than a minute. Thank you for
