@@ -59,8 +59,10 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     this.manageVideoCache();
     if (Platform.OS === "ios") this.showRatePopup();
     if (Platform.OS === "android") {
-      const later = AsyncStorage.getItem('later')
-      if (later==='true') {
+      const later =await AsyncStorage.getItem('later')
+      const successreview = await AsyncStorage.getItem('success')
+      console.log(later,successreview);
+      if (later==='true'||successreview==='true') {
         this.setState({ popUp: false });
       }else{
         this.setState({ popUp: true });
@@ -167,12 +169,9 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
                       preferredAndroidMarket: AndroidMarket.Google,
                       preferInApp:true,
                     };
-                    Rate.rate(options, (success, errorMessage) => {
+                    Rate.rate(options, (success) => {
                       if (success) {
-                        console.log("ANDROID RATE REVIEW ", success);
-                      }
-                      if (errorMessage) {
-                        console.log("ANDROID RATE REVIEW ", errorMessage);
+                        AsyncStorage.setItem('success','true')
                       }
                     });
                    }
@@ -186,35 +185,6 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
           >
           
             <DialogContent>
-              <TouchableOpacity
-                onPress={() => {
-                  const options = {
-                    GooglePackageName: "com.fitazfk.fitazfkapp",
-                  };
-                  Rate.rate(options, (success, errorMessage) => {
-                    if (success) {
-                      console.log("ANDROID RATE REVIEW ", success);
-                    }
-                    if (errorMessage) {
-                      console.log("ANDROID RATE REVIEW ", errorMessage);
-                    }
-                  });
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    paddingBottom: 10,
-                  }}
-                >
-                  <Icon name="star-outline" size={50} />
-                  <Icon name="star-outline" size={50} />
-                  <Icon name="star-outline" size={50} />
-                  <Icon name="star-outline" size={50} />
-                  <Icon name="star-outline" size={50} />
-                </View>
-              </TouchableOpacity>
               <Text>
                 If you enjoy using this app, would you mind{"\n"}taking a moment
                 to rate it? It won't take more{"\n"}than a minute. Thank you for
