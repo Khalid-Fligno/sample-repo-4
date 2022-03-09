@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import * as FileSystem from "expo-file-system";
 import Modal from "react-native-modal";
 import { Divider } from "react-native-elements";
 // import Image from "react-native-scalable-image";
@@ -18,18 +17,14 @@ import { DotIndicator } from "react-native-indicators";
 import ParallaxScrollView from "react-native-parallax-scroll-view";
 import { db } from "../../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
-import Icon from "../../../components/Shared/Icon";
-import AddToCalendarButton from "../../../components/Shared/AddToCalendarButton";
 import colors from "../../../styles/colors";
 // import fonts from '../../../styles/fonts';
 import BigHeadingWithBackButton from "../../../components/Shared/BigHeadingWithBackButton";
-import globalStyle, { containerPadding } from "../../../styles/globalStyles";
+import  { containerPadding } from "../../../styles/globalStyles";
 import NutritionStyles from "./NutritionStyles";
 import Tag from "../../../components/Nutrition/Tag";
-import CustomButton from "../../../components/Shared/CustomButton";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import TimeSvg from "../../../../assets/icons/time";
-import fonts from "../../../styles/fonts";
 import sortBy from "lodash.sortby";
 
 const moment = require("moment");
