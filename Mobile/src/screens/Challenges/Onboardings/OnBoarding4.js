@@ -10,19 +10,16 @@ import {
   Alert,
   Platform,
   ActionSheetIOS,
-  PermissionsAndroid,
 } from "react-native";
 import ActionSheet from "react-native-actionsheet";
 import { Linking } from "expo";
 import * as Haptics from "expo-haptics";
-import * as FileSystem from "expo-file-system";
 import * as Permissions from "expo-permissions";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import Icon from "../../../components/Shared/Icon";
 import Loader from "../../../components/Shared/Loader";
-import { number } from "prop-types";
 import ChallengeStyle from "../chellengeStyle";
 import globalStyle, { containerPadding } from "../../../styles/globalStyles";
 import CustomBtn from "../../../components/Shared/CustomBtn";
@@ -135,16 +132,15 @@ export default class OnBoarding4 extends Component {
         this.goToScreen("next");
       },
     });
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
+    this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     });
-    // if (Platform.OS === 'android') {
-    //   await this.requestAndroidPermissions();
+  }
 
-    // }else{
-    // this.getCameraPermission();
-    // this.getCameraRollPermission();
-    // }
+  // and don't forget to remove the listener
+  componentWillUnmount() {
+    if (this.focusListener) this.focusListener.remove();
+    if (this.unsubscribeFACD) this.unsubscribeFACD();
   }
 
   getCameraPermission = async () => {
@@ -260,17 +256,7 @@ export default class OnBoarding4 extends Component {
       try {
         const manipResult = await ImageManipulator.manipulateAsync(
           result.uri,
-          [
-            { resize: { height: 800, width: 600 } },
-            // {
-            //   crop: {
-            //     originX: originXValue,
-            //     originY: 0,
-            //     width: 600,
-            //     height: 800,
-            //   },
-            // },
-          ],
+          [{ resize: { height: 800, width: 600 } }],
           { format: "jpeg", compress: 0.7, base64: true }
         );
         this.uploading(manipResult);
@@ -282,12 +268,6 @@ export default class OnBoarding4 extends Component {
       }
     }
   };
-
-  // and don't forget to remove the listener
-  componentWillUnmount() {
-    if (this.focusListener) this.focusListener.remove();
-    if (this.unsubscribeFACD) this.unsubscribeFACD();
-  }
 
   saveImage = async (uri, blob) => {
     try {
@@ -371,11 +351,10 @@ export default class OnBoarding4 extends Component {
   async saveOnBoardingInfo(data, stringDate2) {
     this.setState({ loading: true });
 
-    {
-      this.props.navigation.getParam("challengeOnboard")
-        ? this.setState({ loading: false })
-        : this.setState({ loading: true });
-    }
+    this.props.navigation.getParam("challengeOnboard")
+      ? this.setState({ loading: false })
+      : this.setState({ loading: true });
+
     const uid = await AsyncStorage.getItem("uid");
     if (data) {
       const userRef = db
@@ -453,14 +432,6 @@ export default class OnBoarding4 extends Component {
       const stringDate2 = moment(date).format("DD-MM-YY").toString();
       const TODAY = moment();
 
-      // if (
-      //   new Date(updatedChallengedata.startDate).getTime() <
-      //   new Date(stringDate).getTime()
-      // ) {
-      //   data.isSchedule = true;
-      //   data.status = "InActive";
-      // }
-
       if (moment(date).isSame(TODAY, "d")) {
         Object.assign(data, { status: "Active" });
       } else {
@@ -518,14 +489,6 @@ export default class OnBoarding4 extends Component {
       // const stringDate = moment(date).format("YYYY-MM-DD").toString();
       const stringDate2 = moment(date).format("DD-MM-YY").toString();
       const TODAY = moment();
-
-      // if (
-      //   new Date(updatedChallengedata.startDate).getTime() <
-      //   new Date(stringDate).getTime()
-      // ) {
-      //   data.isSchedule = true;
-      //   data.status = "InActive";
-      // }
 
       if (moment(date).isSame(TODAY, "d")) {
         Object.assign(data, { status: "Active" });
@@ -603,57 +566,8 @@ export default class OnBoarding4 extends Component {
           });
           this.props.navigation.dispatch(resetAction);
         } else {
-          // this.props.navigation.navigate("ChallengeOnBoarding5", {
-          //   data: {
-          //     challengeData: updatedChallengedata,
-          //   },
-          //   onboardingProcessComplete:
-          //     this.props.navigation.getParam("onboardingProcessComplete") !==
-          //     undefined
-          //       ? this.props.navigation.getParam("onboardingProcessComplete")
-          //       : false,
-          //   challengeOnboard:
-          //     this.props.navigation.getParam("challengeOnboard") !== undefined
-          //       ? this.props.navigation.getParam("challengeOnboard")
-          //       : false,
-          // });
-
-          // this.addChallengeToCalendar(moment().set("date", 26));
           this.showCalendarModal();
         }
-        // Alert.alert('',
-        //   `Before Picture ${onBoardingInfo.beforePhotoUrl === "" ? 'None' : onBoardingInfo.beforePhotoUrl.toString()}`,
-        //   [
-        //     {
-        //       text: 'OK', onPress:()=>{
-        //         if (this.props.navigation.getParam('onboardingProcessComplete')) {
-        //           const progressData = {
-        //             photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
-        //             height: updatedChallengedata.onBoardingInfo.measurements.height,
-        //             goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
-        //             weight: updatedChallengedata.onBoardingInfo.measurements.weight,
-        //             waist: updatedChallengedata.onBoardingInfo.measurements.waist,
-        //             hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-        //             burpeeCount: 1,
-        //             fitnessLevel: 1
-        //           }
-        //           storeProgressInfo(progressData);
-        //           this.props.navigation.navigate('WorkoutInfo');
-        //         } else {
-        //           this.props.navigation.navigate('ChallengeOnBoarding5',{
-        //             data:{
-        //                    challengeData:updatedChallengedata
-        //                  },
-        //                  onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
-        //                  challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
-        //           })
-        //         }
-
-        //       }
-        //     },
-        //   ],
-        //   { cancelable: false }
-        // );
       } else {
         this.props.navigation.navigate("ChallengeOnBoarding3", {
           data: {
@@ -667,13 +581,6 @@ export default class OnBoarding4 extends Component {
         });
       }
       if (type === "next") {
-        // if(type === 'next'){
-        //   this.props.navigation.navigate('ChallengeOnBoarding5',{
-        //     data:{
-        //            challengeData:updatedChallengedata
-        //          }
-        //   })
-        // }
       } else if (type === "previous") {
         this.props.navigation.navigate("ChallengeOnBoarding3", {
           data: {
