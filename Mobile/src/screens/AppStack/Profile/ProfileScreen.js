@@ -1,26 +1,19 @@
 import React from "react";
 import {
-  StyleSheet,
   SafeAreaView,
   View,
   ScrollView,
-  Dimensions,
   Clipboard,
   Alert,
-  TouchableOpacity,
   Text,
   Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Localization from "expo-localization";
 import { ListItem } from "react-native-elements";
-import Modal from "react-native-modal";
-import DateTimePicker from "@react-native-community/datetimepicker";
-
 import { db } from "../../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
-import fonts from "../../../styles/fonts";
 import globalStyle from "../../../styles/globalStyles";
 import ProfileStyles from "./ProfileStyles";
 import HomeScreenStyle from "../Home/HomeScreenStyle";
@@ -29,6 +22,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import CalendarModal from "../../../components/Shared/CalendarModal";
 
 const moment = require("moment-timezone");
 
@@ -118,16 +112,17 @@ export default class ProfileHomeScreen extends React.PureComponent {
   };
 
   toggleDobModal = () => {
-    console.log('open modal')
     this.setState({ dobModalVisible: true })
   };
 
   closeDobModal = () => {
-    console.log('profile dob: ', this.state.profile.dob)
     this.setState({ dobModalVisible: false });
   };
 
   setDate = async (event, selectedDate) => {
+    if (Platform.OS === 'android') {
+      this.closeDobModal();
+    }
     const currentDate = selectedDate;
     const timezone = await Localization.timezone;
     const dob = moment.tz(currentDate, timezone).format("YYYY-MM-DD");
@@ -165,6 +160,15 @@ export default class ProfileHomeScreen extends React.PureComponent {
     return (
       <SafeAreaView style={globalStyle.safeContainer}>
         <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
+          <CalendarModal
+            isVisible={dobModalVisible}
+            onBackdropPress={this.closeDobModal}
+            value={chosenDate ? chosenDate : new Date(1990, 0, 1)}
+            onChange={this.setDate}
+            onPress={this.saveNewDob}
+            addingToCalendar={false}
+            title="DONE"
+          />
           <ScrollView contentContainerStyle={globalStyle.scrollView}>
             <View style={ProfileStyles.listContainer}>
               <ListItem
@@ -240,38 +244,6 @@ export default class ProfileHomeScreen extends React.PureComponent {
             <Loader loading={loading} color={colors.charcoal.standard} />
           </ScrollView>
         </View>
-        <Modal
-          isVisible={dobModalVisible}
-          onBackdropPress={this.closeDobModal}
-          animationIn="fadeIn"
-          animationInTiming={600}
-          animationOut="fadeOut"
-          animationOutTiming={600}
-        >
-          <View style={globalStyle.modalContainer}>
-            <DateTimePicker
-              mode="date"
-              value={chosenDate ? chosenDate : new Date(1990, 0, 1)}
-              onChange={this.setDate}
-              minimumDate={new Date(1940, 0, 1)}
-              itemStyle={{
-                fontFamily: fonts.standard,
-              }}
-            />
-            {
-              Platform.OS === 'ios' ?
-                <TouchableOpacity
-                  title="DONE"
-                  onPress={this.saveNewDob}
-                  style={globalStyle.modalButton}
-                >
-                  <Text style={globalStyle.modalButtonText}>DONE</Text>
-                </TouchableOpacity>
-                :
-                null
-            }
-          </View>
-        </Modal>
       </SafeAreaView>
     );
   }
