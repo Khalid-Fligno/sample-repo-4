@@ -19,6 +19,7 @@ import _ from "lodash";
 // import LogRocket from "@logrocket/react-native";
 import { Mixpanel } from "mixpanel-react-native";
 import * as Sentry from "@sentry/react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 
 const App = () => {
   const routingInstrumentation = new Sentry.ReactNavigationV4Instrumentation();
@@ -107,7 +108,15 @@ const App = () => {
       }
     };
   }, []);
-
+  useEffect(()=>{
+    const Review =async()=>{
+      const res = await AsyncStorage.getItem("later")
+      if (res==='true') {
+        await AsyncStorage.removeItem("later")
+      }
+    }
+    Review()
+  },[])
   return (
     <View style={styles.appContainer}>
       <StatusBar barStyle="light-content" />

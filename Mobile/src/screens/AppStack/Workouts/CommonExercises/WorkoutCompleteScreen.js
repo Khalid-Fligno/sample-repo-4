@@ -171,6 +171,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
                     Rate.rate(options, (success) => {
                       if (success) {
                         AsyncStorage.setItem('success','true')
+                        this.setState({ popUp: false })
                       }
                     });
                    }
