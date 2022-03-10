@@ -641,6 +641,7 @@ export default class OnBoarding4 extends Component {
             onPress={() => this.addChallengeToCalendar(chosenDate)}
             addingToCalendar={addingToCalendar}
             loading={loading}
+            title=""
           />
           <View>
             <Text style={[ChallengeStyle.onBoardingTitle]}>

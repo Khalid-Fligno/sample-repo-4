@@ -19,6 +19,7 @@ const CalendarModal = (props) => {
     onPress,
     addingToCalendar,
     loading,
+    title
   } = props;
 
   return (
@@ -44,7 +45,7 @@ const CalendarModal = (props) => {
               {addingToCalendar ? (
                 <DotIndicator color={colors.white} count={3} size={6} />
               ) : (
-                <Text style={globalStyle.modalButtonText}>ADD TO CALENDAR</Text>
+                <Text style={globalStyle.modalButtonText}>{title}</Text>
               )}
             </TouchableOpacity>
           </View>
