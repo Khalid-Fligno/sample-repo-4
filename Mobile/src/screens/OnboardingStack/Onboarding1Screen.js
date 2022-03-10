@@ -32,7 +32,7 @@ export default class Onboarding1Screen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
-      chosenDate: "1990-01-01T16:00:00.000Z",
+      chosenDate: "",
       dobModalVisible: false,
       chosenUom: "metric",
       timezone: null,
@@ -58,8 +58,10 @@ export default class Onboarding1Screen extends React.PureComponent {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     try {
+      const resChosenDate = chosenDate ?
+        chosenDate : new Date(1990, 0, 1)
       const timezone = await Localization.timezone;
-      const dob = moment.tz(chosenDate, timezone).format("YYYY-MM-DD");
+      const dob = moment.tz(resChosenDate, timezone).format("YYYY-MM-DD");
       const uid = await AsyncStorage.getItem("uid");
       const userRef = db.collection("users").doc(uid);
       const data = {
