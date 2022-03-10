@@ -20,6 +20,9 @@ import colors from '../../../styles/colors';
 import CustomBtn from '../../../components/Shared/CustomBtn';
 import { containerPadding } from '../../../styles/globalStyles';
 
+// images
+import { IMAGE } from '../../../library/images';
+
 const { width } = Dimensions.get('window');
 
 export default class InviteFriendsScreen extends React.PureComponent {
@@ -73,7 +76,7 @@ export default class InviteFriendsScreen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.safeContainer}>
         <ImageBackground
-          source={require('../../../../assets/images/special-offer-screen-background.jpg')}
+          source={IMAGE.SPECIAL_OFFER_SCREEN_BACKGROUND}
           style={styles.rewardsContainer}
         >
           <ScrollView contentContainerStyle={styles.scrollView}>
