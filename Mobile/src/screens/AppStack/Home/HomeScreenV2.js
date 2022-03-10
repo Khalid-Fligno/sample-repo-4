@@ -24,6 +24,9 @@ import CustomBtn from "../../../components/Shared/CustomBtn";
 import { isActiveChallenge } from "../../../utils/challenges";
 import LogRocket from '@logrocket/react-native';
 
+// images
+import { IMAGE } from "../../../library/images";
+
 const { width } = Dimensions.get("window");
 
 export default class HomeScreenV2 extends React.PureComponent {
@@ -103,7 +106,7 @@ export default class HomeScreenV2 extends React.PureComponent {
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Nutrition")}>
                                 <ImageBackground
-                                    source={require("../../../../assets/images/homeScreenTiles/Lifestyle-Nutrition.jpg")}
+                                    source={IMAGE.LIFESTYLE_NUTRITION}
                                     style={styles.image}
                                 >
                                     <View style={styles.opacityLayer}>
@@ -117,7 +120,7 @@ export default class HomeScreenV2 extends React.PureComponent {
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Workouts")}>
                                 <ImageBackground
-                                    source={require("../../../../assets/images/homeScreenTiles/Lifestyle-Workout.jpg")}
+                                    source={IMAGE.LIFESTYLE_WORKOUT}
                                     style={styles.image}
                                     resizeMode="cover"
                                 >
