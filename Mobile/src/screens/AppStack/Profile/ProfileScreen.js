@@ -9,6 +9,7 @@ import {
   Alert,
   TouchableOpacity,
   Text,
+  Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Localization from "expo-localization";
@@ -31,8 +32,6 @@ import {
 
 const moment = require("moment-timezone");
 
-const { width } = Dimensions.get("window");
-
 export default class ProfileHomeScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -47,18 +46,17 @@ export default class ProfileHomeScreen extends React.PureComponent {
       interval: 0,
     };
   }
+
   componentDidMount = async () => {
     this.fetchProfile();
     this.fetchActiveChallengeUserData();
   };
+
   componentWillUnmount() {
     this.unsubscribe();
     this.unsubscribeFACUD();
   }
-  setDate = async (event, selectedDate) => {
-    const currentDate = selectedDate;
-    this.setState({ chosenDate: currentDate });
-  };
+
   fetchProfile = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem("uid");
@@ -73,8 +71,6 @@ export default class ProfileHomeScreen extends React.PureComponent {
               (await doc.data().weeklyTargets.circuit) +
               (await doc.data().weeklyTargets.interval) +
               (await doc.data().weeklyTargets.strength),
-          });
-          this.setState({
             profile: await doc.data(),
             timezone,
             loading: false,
@@ -122,13 +118,28 @@ export default class ProfileHomeScreen extends React.PureComponent {
   };
 
   toggleDobModal = () => {
-    this.setState((prevState) => ({
-      dobModalVisible: !prevState.dobModalVisible,
-    }));
+    console.log('open modal')
+    this.setState({ dobModalVisible: true })
   };
+
   closeDobModal = () => {
+    console.log('profile dob: ', this.state.profile.dob)
     this.setState({ dobModalVisible: false });
   };
+
+  setDate = async (event, selectedDate) => {
+    const currentDate = selectedDate;
+    const timezone = await Localization.timezone;
+    const dob = moment.tz(currentDate, timezone).format("YYYY-MM-DD");
+    const uid = await AsyncStorage.getItem("uid");
+    const userRef = db.collection("users").doc(uid);
+    const data = {
+      dob,
+    };
+    await userRef.set(data, { merge: true });
+    this.setState({ chosenDate: currentDate });
+  };
+
   saveNewDob = async () => {
     this.closeDobModal();
     const { chosenDate } = this.state;
@@ -141,6 +152,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
     };
     await userRef.set(data, { merge: true });
   };
+
   render() {
     const {
       profile,
@@ -148,11 +160,8 @@ export default class ProfileHomeScreen extends React.PureComponent {
       loading,
       dobModalVisible,
       chosenDate,
-      totalWorkoutCompleted,
-      strength,
-      cicuit,
-      interval,
     } = this.state;
+
     return (
       <SafeAreaView style={globalStyle.safeContainer}>
         <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
@@ -161,9 +170,8 @@ export default class ProfileHomeScreen extends React.PureComponent {
               <ListItem
                 title="Name"
                 titleStyle={ProfileStyles.listItemTitleStyle}
-                subtitle={`${profile && profile.firstName} ${
-                  profile && profile.lastName
-                }`}
+                subtitle={`${profile && profile.firstName} ${profile && profile.lastName
+                  }`}
                 subtitleStyle={ProfileStyles.listItemSubtitleStyle}
                 containerStyle={ProfileStyles.listItemContainer}
                 hideChevron
@@ -243,21 +251,25 @@ export default class ProfileHomeScreen extends React.PureComponent {
           <View style={globalStyle.modalContainer}>
             <DateTimePicker
               mode="date"
-              value={chosenDate}
+              value={chosenDate ? chosenDate : new Date(1990, 0, 1)}
               onChange={this.setDate}
               minimumDate={new Date(1940, 0, 1)}
-              maximumDate={new Date(2008, 0, 1)}
               itemStyle={{
                 fontFamily: fonts.standard,
               }}
             />
-            <TouchableOpacity
-              title="DONE"
-              onPress={this.saveNewDob}
-              style={globalStyle.modalButton}
-            >
-              <Text style={globalStyle.modalButtonText}>DONE</Text>
-            </TouchableOpacity>
+            {
+              Platform.OS === 'ios' ?
+                <TouchableOpacity
+                  title="DONE"
+                  onPress={this.saveNewDob}
+                  style={globalStyle.modalButton}
+                >
+                  <Text style={globalStyle.modalButtonText}>DONE</Text>
+                </TouchableOpacity>
+                :
+                null
+            }
           </View>
         </Modal>
       </SafeAreaView>

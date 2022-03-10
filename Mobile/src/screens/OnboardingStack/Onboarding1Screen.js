@@ -32,25 +32,27 @@ export default class Onboarding1Screen extends React.PureComponent {
     super(props);
     this.state = {
       loading: false,
-      chosenDate: "",
+      chosenDate: "1990-01-01T16:00:00.000Z",
       dobModalVisible: false,
       chosenUom: "metric",
-      uomModalVisible: false,
       timezone: null,
       name: props.navigation.getParam("name", null),
       specialOffer: props.navigation.getParam("specialOffer", undefined),
     };
   }
+
   componentDidMount = async () => {
     const timezone = await Localization.timezone;
     this.setState({ timezone });
   };
+
   setDate = async (event, selectedDate) => {
     const currentDate = selectedDate;
     this.setState({
       chosenDate: currentDate ? currentDate : new Date(1990, 0, 1),
     });
   };
+
   handleSubmit = async (chosenDate, chosenUom) => {
     const { name, specialOffer } = this.state;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -74,6 +76,7 @@ export default class Onboarding1Screen extends React.PureComponent {
           interval: 0,
         },
       };
+
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
       this.props.navigation.navigate("Onboarding2", {
@@ -86,33 +89,24 @@ export default class Onboarding1Screen extends React.PureComponent {
       this.setState({ loading: false });
     }
   };
+
   toggleDobModal = () => {
-    this.setState((prevState) => ({
-      dobModalVisible: !prevState.dobModalVisible,
-    }));
+    this.setState({ dobModalVisible: true })
   };
+
   closeDobModal = () => {
     this.setState({ dobModalVisible: false });
   };
-  toggleUomModal = () => {
-    this.setState((prevState) => ({
-      uomModalVisible: !prevState.uomModalVisible,
-    }));
-  };
-  closeUomModal = () => {
-    this.setState({ uomModalVisible: false });
-  };
+
   render() {
     const {
       loading,
       chosenDate,
       dobModalVisible,
       chosenUom,
-      uomModalVisible,
       timezone,
-      name,
-      specialOffer,
     } = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
