@@ -110,6 +110,12 @@ export default class OnBoarding3 extends Component {
     }
   }
 
+  componentDidUpdate() {
+    if (!this.state.challengeData["onBoardingInfo"]) {
+      this.onFocusFunction();
+    }
+  }
+
   goToScreen(type) {
     let { challengeData, quit, completedChallenge } = this.state;
     let { goalWeight, hip, height, waist, weight } = this.state;
@@ -249,9 +255,7 @@ export default class OnBoarding3 extends Component {
       waist,
       unitOfMeasurement,
     } = this.state;
-    if (!challengeData["onBoardingInfo"]) {
-      this.onFocusFunction();
-    }
+
     return (
       <SafeAreaView style={ChallengeStyle.container}>
         <View style={[globalStyle.container]}>
