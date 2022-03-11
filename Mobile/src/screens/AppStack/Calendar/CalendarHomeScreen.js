@@ -211,7 +211,7 @@ class CalendarHomeScreen extends React.PureComponent {
       .collection("challenges")
       .doc(id);
 
-    activeChallengeUserRef.set(
+    await activeChallengeUserRef.set(
       { recipes: { days: this.currentChallengeDay } },
       { merge: true }
     );
@@ -266,11 +266,8 @@ class CalendarHomeScreen extends React.PureComponent {
       .get()
       .then((res) => {
         const data = res.data();
-        // LogRocket.identify(data.id, {
-        //   name: data.name,
-        //   email: data.email,
-        // });
-        if (res.data().weeklyTargets == null) {
+
+        if (res.data()?.weeklyTargets === null) {
           const data = {
             weeklyTargets: {
               resistanceWeeklyComplete: 0,
@@ -312,7 +309,7 @@ class CalendarHomeScreen extends React.PureComponent {
   async checkScheduleChallenge() {
     const uid = await AsyncStorage.getItem("uid");
     //Checking if any schedule challenge is assign to user
-    isActiveChallenge().then((res) => {
+    isActiveChallenge().then(async (res) => {
       const todayDate = moment(new Date()).format("YYYY-MM-DD");
       if (res && moment(res.startDate).isSame(todayDate) && res.isSchedule) {
         const challengeRef = db
@@ -320,7 +317,8 @@ class CalendarHomeScreen extends React.PureComponent {
           .doc(uid)
           .collection("challenges")
           .doc(res.id);
-        challengeRef.set(
+
+        await challengeRef.set(
           { status: "Active", isSchedule: true },
           { merge: true }
         );
@@ -1184,16 +1182,18 @@ class CalendarHomeScreen extends React.PureComponent {
         >
           Today's Meals
         </Text>
-        <TodayMealsList
-          recipe={AllRecipe[0]}
-          favoriteRecipe={favoriteRecipe[0]}
-          todayRecommendedRecipe={todayRecommendedRecipe[0]}
-          data={todayRecommendedMeal[0]}
-          onPress={(res) => this.goToRecipe(res)}
-          filterPress={(res, res1, res2, title) =>
-            this.getToFilter(res, res1, res2, title)
-          }
-        />
+        {AllRecipe[0] && (
+          <TodayMealsList
+            recipe={AllRecipe[0]}
+            favoriteRecipe={favoriteRecipe[0]}
+            todayRecommendedRecipe={todayRecommendedRecipe[0]}
+            data={todayRecommendedMeal[0]}
+            onPress={(res) => this.goToRecipe(res)}
+            filterPress={(res, res1, res2, title) =>
+              this.getToFilter(res, res1, res2, title)
+            }
+          />
+        )}
       </>
     );
     const workoutCard =
@@ -1518,7 +1518,6 @@ class CalendarHomeScreen extends React.PureComponent {
           navigation={this.props.navigation}
           fetchCalendarEntries={this.fetchCalendarEntries}
           resetActiveChallengeUserData={this.resetActiveChallengeUserData}
-          navigation={this.props.navigation}
           completeCha={completeCha}
         />
       </Modal>

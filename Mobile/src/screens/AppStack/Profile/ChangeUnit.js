@@ -41,9 +41,11 @@ export default class ChangeUnitScreen extends React.PureComponent {
   // };
 
   componentDidMount() {
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
-      this.onFocusFunction();
-    });
+    this.listeners = [
+      this.props.navigation.addListener("didFocus", () => {
+        this.onFocusFunction();
+      }),
+    ];
   }
 
   fetchDataMeasurement = async () => {
@@ -65,7 +67,7 @@ export default class ChangeUnitScreen extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    if (this.focusListener) this.focusListener.remove();
+    this.listeners.forEach((item) => item.remove());
     if (this.unsubscribed) this.unsubscribed();
   }
 

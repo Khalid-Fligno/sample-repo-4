@@ -92,9 +92,11 @@ export default class HomeScreen extends React.PureComponent {
   }
 
   componentDidMount = () => {
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
-      this.onFocus();
-    });
+    this.listeners = [
+      this.props.navigation.addListener("didFocus", () => {
+        this.onFocus();
+      }),
+    ];
   };
 
   onFocus = () => {
@@ -106,7 +108,8 @@ export default class HomeScreen extends React.PureComponent {
   };
 
   componentWillUnmount() {
-    if (this.focusListener) this.focusListener.remove();
+    this.listeners.forEach((item) => item.remove());
+
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
     if (this.unsubscribeSche) this.unsubscribeSche();
