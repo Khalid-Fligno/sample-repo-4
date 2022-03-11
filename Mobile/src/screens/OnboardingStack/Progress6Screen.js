@@ -225,9 +225,8 @@ export default class Progress6Screen extends React.PureComponent {
                   <CustomBtn
                     Title="DONE"
                     titleCapitalise={true}
-                    outline={true}
+                    outline={false}
                     customBtnStyle={{
-                      borderRadius: 50,
                       margin: 10,
                       marginTop: 0,
                     }}
