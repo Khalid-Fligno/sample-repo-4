@@ -33,7 +33,9 @@ const ProfileButton = (props) => {
             setAvatar(profile.avatar);
           });
 
-        return unsubscribe;
+        return () => {
+          unsubscribe();
+        };
       }
     })();
   }, []);
