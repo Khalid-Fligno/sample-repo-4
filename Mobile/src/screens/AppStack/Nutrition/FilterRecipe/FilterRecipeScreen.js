@@ -1066,8 +1066,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     >
                         {
                             tags.length ?
-                                tags.map((item) => (
+                                tags.map((item, index) => (
                                     <View
+                                        key={index}
                                         style={{
                                             flexDirection: 'row',
                                             alignItems: 'center',
