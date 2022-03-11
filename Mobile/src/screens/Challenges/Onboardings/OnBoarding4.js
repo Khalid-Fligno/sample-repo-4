@@ -164,9 +164,9 @@ export default class OnBoarding4 extends Component {
     }
   }
 
-  chooseUploadType = () => {
+  chooseUploadType = async () => {
     if (Platform.OS === "android") {
-      this.requestAndroidPermissions();
+      await this.requestAndroidPermissions();
       this.showActionSheet();
     } else {
       this.getCameraPermission();
@@ -552,7 +552,7 @@ export default class OnBoarding4 extends Component {
             burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
             fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
           };
-          storeProgressInfo(progressData);
+          await storeProgressInfo(progressData);
           // this.props.navigation.navigate("WorkoutInfo");
           const resetAction = StackActions.reset({
             index: 0,
