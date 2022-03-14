@@ -344,7 +344,7 @@ export default class Progress2Screen extends React.PureComponent {
           0,
           0,
           0,
-          (0).burpeeCount ?? 0
+          0
         );
 
         navigation.state.params.progressEdit !== undefined
