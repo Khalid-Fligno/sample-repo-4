@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ImageBackground,
   View,
+  TouchableWithoutFeedback
 } from "react-native";
 import PropTypes from "prop-types";
 import colors from "../../styles/colors";
@@ -60,7 +61,7 @@ const ChallengeWorkoutCard = (props) => {
 
   return (
     <View style={[styles.cardContainer, cardCustomStyle]}>
-      <TouchableOpacity style={styles.cardContainer} onPress={onPress}>
+      <TouchableWithoutFeedback style={styles.cardContainer} onPress={onPress}>
         <ImageBackground
           source={target ? IMAGE.CHALLENG_WORKOUT_CARD_BG : IMAGE.REST_COVER_IMAGE}
           style={styles.image}
@@ -135,7 +136,7 @@ const ChallengeWorkoutCard = (props) => {
             }
           </View>
         </ImageBackground>
-      </TouchableOpacity>
+      </TouchableWithoutFeedback>
     </View>
   );
 };

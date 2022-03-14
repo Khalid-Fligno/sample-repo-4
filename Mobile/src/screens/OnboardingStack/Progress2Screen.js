@@ -329,8 +329,6 @@ export default class Progress2Screen extends React.PureComponent {
     this.setState({ uploading: true });
     try {
       if (this.state.image !== null) {
-        const { weight, waist, hip, isInitial, navigateTo } =
-          this.props.navigation.state.params;
         await FileSystem.downloadAsync(
           "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
           `${FileSystem.cacheDirectory}exercise-burpees.mp4`
@@ -357,7 +355,7 @@ export default class Progress2Screen extends React.PureComponent {
         });
       }
     } catch (err) {
-      console.log(err);
+      console.log('image upload: ', err);
       this.setState({
         error: "Problem uploading image, please try again",
         uploading: false,
