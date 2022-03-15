@@ -17,7 +17,7 @@ import SwitchNavigator from "./config/router/index";
 import colors from "./src/styles/colors";
 import _ from "lodash";
 // import LogRocket from "@logrocket/react-native";
-// import { Mixpanel } from "mixpanel-react-native";
+import { Mixpanel } from "mixpanel-react-native";
 import * as Sentry from "@sentry/react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 
@@ -35,7 +35,7 @@ const App = () => {
       // To set a uniform sample rate
       tracesSampleRate: 0.2,
       enableNative: true,
-      debug: true,
+      debug: false,
     });
   }
 
@@ -94,7 +94,7 @@ const App = () => {
       "change",
       handleAppStateChange
     );
-    // Mixpanel.init("109211293f4830a3355672d9b84aae74");
+    Mixpanel.init("109211293f4830a3355672d9b84aae74");
 
     setAppState(AppState.currentState);
 
