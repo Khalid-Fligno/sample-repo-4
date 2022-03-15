@@ -22,7 +22,7 @@ import {
 } from "react-native-responsive-screen";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import { isActiveChallenge } from "../../../utils/challenges";
-import LogRocket from '@logrocket/react-native';
+// import LogRocket from '@logrocket/react-native';
 
 const { width } = Dimensions.get("window");
 

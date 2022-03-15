@@ -180,10 +180,6 @@ PODS:
   - libwebp/mux (1.2.1):
     - libwebp/demux
   - libwebp/webp (1.2.1)
-  - LogRocket (0.23.2)
-  - logrocket-react-native (0.23.2):
-    - LogRocket (= 0.23.2)
-    - React
   - Mixpanel (4.1.3)
   - Mixpanel-swift (3.1.2):
     - Mixpanel-swift/Complete (= 3.1.2)
@@ -550,8 +546,6 @@ DEPENDENCIES:
   - FlipperKit/SKIOSNetworkPlugin (= 0.90.0)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - LogRocket (= 0.23.2)
-  - "logrocket-react-native (from `../node_modules/@logrocket/react-native`)"
   - Mixpanel
   - Mixpanel-swift
   - MixpanelReactNative (from `../node_modules/mixpanel-react-native`)
@@ -631,7 +625,6 @@ SPEC REPOS:
     - FlipperKit
     - libevent
     - libwebp
-    - LogRocket
     - Mixpanel
     - Mixpanel-swift
     - OneSignal
@@ -704,8 +697,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
-  logrocket-react-native:
-    :path: "../node_modules/@logrocket/react-native"
   MixpanelReactNative:
     :path: "../node_modules/mixpanel-react-native"
   RCTRequired:
@@ -824,32 +815,32 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cde416483dac037923206447da6e1454df403714
-  EXAppleAuthentication: 046c76335343eaa97f6ed8d35a9cf493a2c4d351
-  EXAV: e32adf44c10a82f723172d5b01d5693890888dd6
-  EXBlur: b622dc0f8a8fe74f05fb437cfb1c5ee16259dab1
-  EXConstants: 54d0bf04319d1692c6c7bc03ca151ef7a71705a4
-  EXContacts: b24026570adb4dc8c4db0f12b90d608978f72561
-  EXCrypto: c4ade2e300874e9175dbf0015734f411fe165d50
-  EXErrorRecovery: 8f4c21ab2f51bf75defe4536f841a37de59b0661
-  EXFacebook: 74d53d9da75d1a953f1821dd417594ed18d7a72f
-  EXFileSystem: cf4232ba7c62dc49b78c2d36005f97b6fddf0b01
-  EXFont: b60f7a8900e3a12e7be3b2a40e19b22c7b5f89ba
-  EXHaptics: 013b5065946d4dd7b46ea547b58072d45a206dbd
-  EXImageLoader: 5ad6896fa1ef2ee814b551873cbf7a7baccc694a
-  EXImageManipulator: 97f61d14c292714d66884e83697e794f8cefe0b0
-  EXImagePicker: 36f2bba7d6367ecb2b1340c5db5a676b3b19a26a
-  EXKeepAwake: d045bc2cf1ad5a04f0323cc7c894b95b414042e0
-  EXLinearGradient: 97d8095d1e4ad96f7893e010e564796ed8aeea42
-  EXLocalization: 1997068470bdfb7601fd58dbbf85ba1cde36fb82
-  EXLocation: bbd487fd96a18a3ad9725389bbb94c4a5f78edf3
-  EXMailComposer: 8efe254989ceace18681b98c049c6c0209d4ae56
-  EXMediaLibrary: bf749aeca17e781733d9fe2d8063b4bf2c106e1f
-  EXPermissions: 9daf039546113d8f2f0a62db1c75d2d9206e5e4e
-  EXSMS: f58e5d194cc931ab503780d1063f2c40232af582
-  EXSplashScreen: 1ef82f56e6bcb714d218c3278495d6ab5dc95c88
-  EXSQLite: 877ad6c8eb169353a2f94d5ad26510ffadd46a1f
-  EXUpdates: f3c4943abb6ab28cc55cbeac4ff4612701f82725
-  EXWebBrowser: 5902f99ac5ac551e5c82ff46f13a337b323aa9ea
+  EXAppleAuthentication: 6cb27bf3d48e69da0ca7a3a135c4838a9e34fdd7
+  EXAV: 4ffb487c2b58d41553edcb30cede0df1b56a7d15
+  EXBlur: 5b7a7344c97f448fa88e40df58a755f84084e292
+  EXConstants: 5874c3bf65601ce96049412e6e5f43d198c1cdaf
+  EXContacts: 1d080edad7fe1b84eca6f2b97c80dc170d38a77d
+  EXCrypto: e925582b93c5fcea7ac52640db71c214bfa6f4ee
+  EXErrorRecovery: 88541714d9bbf8a823f4ee0b7078a92d3e0e42d2
+  EXFacebook: 984dafeac3dcd01a38ba38176b2afe53114d985f
+  EXFileSystem: b82693d78de152efe10a77d4aac781f782e10916
+  EXFont: af4c3281cac0bf6ccd8b8a534e9bce6437cc2e17
+  EXHaptics: 3e6a4a40d87b230ffe1fafe298393ab6f3b8e10d
+  EXImageLoader: 5c9d1bf408443ac4d4f44463eaf3b0d03bc70425
+  EXImageManipulator: 76857c4c37f983313cb7a8a2c0109e50d1005eb9
+  EXImagePicker: 0ddacf50173316ecb1770725a831401ea17f36dc
+  EXKeepAwake: 4b53df0b4e87aa9f38bf57461e07fc167716a760
+  EXLinearGradient: 8189387e3a65c2a9ba5507432e3a099ea8f7ea86
+  EXLocalization: 74aefb246a9760c0839f6744feea0c325b475f9d
+  EXLocation: 0397e4f11666d6ceb026b6424fdf66995c604964
+  EXMailComposer: 8b50b7940fe7122954cd0eee2f47681f2539ee05
+  EXMediaLibrary: bce8a3ca36e452d79a2cdd7a62f5aa278a68009f
+  EXPermissions: 9804d7ec7399e7b24e3d9dea2b3db976a7f6b5de
+  EXSMS: 15d62c93625fa3f35ea9eee02fcd220c44d817be
+  EXSplashScreen: 2290058b9a3760ea3906ac552baff24d5d33b725
+  EXSQLite: 15268ec49f859e4594fe5b0a1c7a47913da0b67e
+  EXUpdates: 8c4570807f9435337769850d9976d63a407cecfc
+  EXWebBrowser: 6364e9e1ea73f6c3c2e6e3cc0ac17259a260e3a8
   FBLazyVector: 3ef4a7f62e7db01092f9d517d2ebc0d0677c4a37
   FBReactNativeSpec: dc7fa9088f0f2a998503a352b0554d69a4391c5a
   FBSDKCoreKit: e7dcac0aabcfb09d0166998edd95fe3b05a0ce5d
@@ -867,8 +858,6 @@ SPEC CHECKSUMS:
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
-  LogRocket: 532223e831d2781dea5394a0305e7b17ffda504f
-  logrocket-react-native: 2c907235fea8a83e41123dee8f99d7e102e9a92b
   Mixpanel: e1946068db90518aa5abc05deb63176c109b7e00
   Mixpanel-swift: fda407112b9e908f20550ab6ceaa4d05b09141d7
   MixpanelReactNative: 8b805c04ec10bdc26eb072e95f8d01a6b6132868
@@ -884,13 +873,13 @@ SPEC CHECKSUMS:
   React-jsi: 54245e1d5f4b690dec614a73a3795964eeef13a8
   React-jsiexecutor: 8ca588cc921e70590820ce72b8789b02c67cce38
   React-jsinspector: b14e62ebe7a66e9231e9581279909f2fc3db6606
-  react-native-appsflyer: 230a933e888b2a324a8fc2e31018f70cabedf8e0
+  react-native-appsflyer: 0825f29df0e244ad487a84e55a16ba53cee7793d
   react-native-in-app-utils: 96cdefc90ad74a79a95d19239a183995a6face0b
-  react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
-  react-native-onesignal: 5187b12401c959102a64bde48fbca39c5e3b8136
+  react-native-netinfo: 52cf0ee8342548a485e28f4b09e56b477567244d
+  react-native-onesignal: b6cdb41fdf4b4e48d0db1246ecf0d29ab590eca7
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-video: 0bb76b6d6b77da3009611586c7dbf817b947f30e
-  react-native-viewpager: 32259f9d01874abdf42b25cf81a1d78d1aa55582
+  react-native-video: 1574074179ecaf6a9dd067116c8f31bf9fec15c8
+  react-native-viewpager: 2bd854c85a76bfe6f75dc232f3889301bcb3a720
   React-RCTActionSheet: 910163b6b09685a35c4ebbc52b66d1bfbbe39fc5
   React-RCTAnimation: 9a883bbe1e9d2e158d4fb53765ed64c8dc2200c6
   React-RCTBlob: 39cf0ece1927996c4466510e25d2105f67010e13
@@ -901,15 +890,15 @@ SPEC CHECKSUMS:
   React-RCTText: 1b6773e776e4b33f90468c20fe3b16ca3e224bb8
   React-RCTVibration: 4d2e726957f4087449739b595f107c0d4b6c2d2d
   ReactCommon: a0a1edbebcac5e91338371b72ffc66aa822792ce
-  RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
-  RNCCheckbox: 6369808337432cdbd5025d62ceced2480b4c51df
+  RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
+  RNCCheckbox: 7e2cd6ea8e200210c36fe0898bbe200826bdaf56
   RNCPicker: cb57c823d5ce8d2d0b5dfb45ad97b737260dc59e
-  RNDateTimePicker: 65eadfa62b069b415a6ac1d20a81cacfa26cb37a
-  RNDeviceInfo: cc7de0772378f85d8f36ae439df20f05c590a651
+  RNDateTimePicker: 501ab152e78882c183607e05074c37ce19ace5bf
+  RNDeviceInfo: 0d6865ab0a57d9192bdd4e4f5894340b846c3e53
   RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
-  RNIap: 66b83af54a855b6314a243a200081a64d7f64c2e
-  RNRate: 94f57c773e155ca0d0aeeba9c10a32bce9030daf
+  RNIap: 091b98e143440e580e51d08b43a3196ae788e87b
+  RNRate: 622db602051b6abf6ec467cdcc3c5e3112076745
   RNReanimated: 4e102df74a9674fa943e05f97f3362b6e44d0b48
   RNScreens: 812b79d384e2bea7eebc4ec981469160d4948fd5
   RNSentry: 143980f2f98320eaaf10ccf7235dfc7f68b5ffa5
@@ -918,22 +907,22 @@ SPEC CHECKSUMS:
   SDWebImage: 53179a2dba77246efa8a9b85f5c5b21f8f43e38f
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   Sentry: 6ff0eac197e699126c024993eba40a7462e92941
-  UMAppLoader: ee77a072f9e15128f777ccd6d2d00f52ab4387e6
-  UMBarCodeScannerInterface: 9dc692b87e5f20fe277fa57aa47f45d418c3cc6c
-  UMCameraInterface: 625878bbf2ba188a8548675e1d1d2e438a653e6d
-  UMConstantsInterface: 64060cf86587bcd90b1dbd804cceb6d377a308c1
-  UMCore: eb200e882eadafcd31ead290770835fd648c0945
-  UMFaceDetectorInterface: d6677d6ddc9ab95a0ca857aa7f8ba76656cc770f
-  UMFileSystemInterface: c70ea7147198b9807080f3597f26236be49b0165
-  UMFontInterface: d9d3b27af698c5389ae9e20b99ef56a083f491fb
-  UMImageLoaderInterface: 14dd2c46c67167491effc9e91250e9510f12709e
-  UMPermissionsInterface: 5e83a9167c177e4a0f0a3539345983cc749efb3e
-  UMReactNativeAdapter: 126da3486c1a1f11945b649d557d6c2ebb9407b2
-  UMSensorsInterface: 48941f70175e2975af1a9386c6d6cb16d8126805
-  UMTaskManagerInterface: cb890c79c63885504ddc0efd7a7d01481760aca2
+  UMAppLoader: ae5eaee9f3c8cc847c631a579fed20d217de5913
+  UMBarCodeScannerInterface: aa3409ab9d108866e55c09ad0292e4a6c08a7775
+  UMCameraInterface: 9d5da92c521e0af7815afbf77ea19bd0312b4928
+  UMConstantsInterface: 4a1d3062a89421d3290bbe8f75efabd849935bea
+  UMCore: cb544737bc72ecfccae9dd476e4d647468b4ebd0
+  UMFaceDetectorInterface: c6d69c914426fc29f5a2442411a575e887adb823
+  UMFileSystemInterface: bee6c9ca4f3d70da5f7c9752efc8b3f3a7f47b61
+  UMFontInterface: 884955c5fd329095e2072d16de9b5bf1bce93005
+  UMImageLoaderInterface: 3781f05d7e0be1c5b00dd3cc9c390b94d8484300
+  UMPermissionsInterface: a3c5910e28a5ec31810dbfd1936e4948a4439310
+  UMReactNativeAdapter: e936c48fd15114cd1d5b06310797198a06f72ca0
+  UMSensorsInterface: fc92b1f92202166284ca0f95e0acc1daab5d16a8
+  UMTaskManagerInterface: 4e6c4c34a89512e2225d336154df1cb689226a29
   Yoga: 7740b94929bbacbddda59bf115b5317e9a161598
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 10399c391dc8ebfdf1e6ba5dcb8eb1c4ce0ac1a6
+PODFILE CHECKSUM: 882eb6515f1200173997e76119dc5efd65d6712f
 
 COCOAPODS: 1.11.2
