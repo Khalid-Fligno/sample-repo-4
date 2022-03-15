@@ -48,7 +48,7 @@ const uriToBlob = (url) => {
       xhr.open("GET", url);
       xhr.responseType = "blob"; // convert type
       xhr.send();
-    } catch (err) {}
+    } catch (err) { }
   });
 };
 
@@ -252,7 +252,6 @@ export default class OnBoarding4 extends Component {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
     // console.log(result);
-    const originXValue = result.width > result.height ? 130 : 0;
     if (!result.cancelled) {
       try {
         const manipResult = await ImageManipulator.manipulateAsync(
@@ -270,7 +269,7 @@ export default class OnBoarding4 extends Component {
     }
   };
 
-  saveImage = async (uri, blob) => {
+  saveImage = async (blob) => {
     try {
       const uid = await AsyncStorage.getItem("uid");
       const firebase = require("firebase");
@@ -576,7 +575,7 @@ export default class OnBoarding4 extends Component {
           },
           onboardingProcessComplete:
             this.props.navigation.getParam("onboardingProcessComplete") !==
-            undefined
+              undefined
               ? this.props.navigation.getParam("onboardingProcessComplete")
               : false,
         });
@@ -613,14 +612,13 @@ export default class OnBoarding4 extends Component {
     }
     if (Platform.OS === "android") blob = await uriToBlob(result.uri);
 
-    await this.saveImage(result.uri, blob);
+    await this.saveImage(blob);
 
     this.setState({ uploading: false });
   };
 
   render() {
     const {
-      image,
       uploading,
       error,
       btnDisabled,
