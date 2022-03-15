@@ -16,7 +16,6 @@
 		99EC63CFB4B549BBAF093D10 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3ABB89D1E68496EB7D95742 /* SplashScreen.storyboard */; };
 		9E13B4732493D63000473ED1 /* shell-app.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9E13B4712493D62F00473ED1 /* shell-app.bundle */; };
 		9E13B4742493D63000473ED1 /* shell-app-manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E13B4722493D62F00473ED1 /* shell-app-manifest.json */; };
-		C0D08D4927E04D58009E5F21 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		E88C6C1E26F32484000E08A7 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E4B6C4A249248F7002092B2 /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -185,7 +184,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C0D08D4927E04D58009E5F21 /* main.jsbundle in Resources */,
 				9E13B4732493D63000473ED1 /* shell-app.bundle in Resources */,
 				9E13B4742493D63000473ED1 /* shell-app-manifest.json in Resources */,
 				0731D3B824204D62009CAE85 /* Expo.plist in Resources */,
