@@ -107,15 +107,15 @@ const App = () => {
       }
     };
   }, []);
-  useEffect(()=>{
-    const Review =async()=>{
-      const res = await AsyncStorage.getItem("later")
-      if (res==='true') {
-        await AsyncStorage.removeItem("later")
+  useEffect(() => {
+    const Review = async () => {
+      const res = await AsyncStorage.getItem("later");
+      if (res === "true") {
+        await AsyncStorage.removeItem("later");
       }
-    }
-    Review()
-  },[])
+    };
+    Review();
+  }, []);
   return (
     <View style={styles.appContainer}>
       <StatusBar barStyle="light-content" />

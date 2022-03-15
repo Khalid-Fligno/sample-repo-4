@@ -251,7 +251,6 @@ export default class OnBoarding4 extends Component {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
-    // console.log(result);
     const originXValue = result.width > result.height ? 130 : 0;
     if (!result.cancelled) {
       try {
@@ -288,10 +287,10 @@ export default class OnBoarding4 extends Component {
       // console.log(blob)
       const snapshot = await avatarStorageRef.put(blob, metadata);
       const url = await snapshot.ref.getDownloadURL();
-      // console.log(url)
       this.setState({ imgUrl: url });
     } catch (err) {
-      Alert.alert("Image save error");
+      console.log(err);
+      // Alert.alert("Image save error");
     }
   };
 
@@ -610,6 +609,21 @@ export default class OnBoarding4 extends Component {
         `data:image/jpeg;base64,${result.base64}`
       );
       blob = base64Response.blob()._W;
+
+      if (!blob) {
+        const base64Response = await fetch(
+          `data:image/jpeg;base64,${result.base64}`
+        );
+
+        blob = await base64Response.blob();
+        if (!blob) {
+          const base64Response = await fetch(
+            `data:image/jpeg;base64,${result.base64}`
+          );
+
+          blob = await base64Response.blob();
+        }
+      }
     }
     if (Platform.OS === "android") blob = await uriToBlob(result.uri);
 

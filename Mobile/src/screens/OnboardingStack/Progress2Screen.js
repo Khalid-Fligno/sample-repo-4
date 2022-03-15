@@ -66,6 +66,13 @@ const storeProgressInfo = async (
       `data:image/jpeg;base64,${image.base64}`
     );
     blob = base64Response.blob()._W;
+    if (!blob) {
+      const base64Response = await fetch(
+        `data:image/jpeg;base64,${image.base64}`
+      );
+
+      blob = await base64Response.blob();
+    }
   }
   if (Platform.OS === "android") blob = await uriToBlob(image.uri);
 
@@ -342,7 +349,7 @@ export default class Progress2Screen extends React.PureComponent {
           0,
           0,
           0,
-          (0).burpeeCount ?? 0
+          0
         );
 
         navigation.state.params.progressEdit !== undefined
@@ -355,7 +362,7 @@ export default class Progress2Screen extends React.PureComponent {
         });
       }
     } catch (err) {
-      console.log('image upload: ', err);
+      console.log("image upload: ", err);
       this.setState({
         error: "Problem uploading image, please try again",
         uploading: false,

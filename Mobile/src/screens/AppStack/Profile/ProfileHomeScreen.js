@@ -222,6 +222,14 @@ export default class ProfileHomeScreen extends React.PureComponent {
         `data:image/jpeg;base64,${result.base64}`
       );
       blob = base64Response.blob()._W;
+
+      if (!blob) {
+        const base64Response = await fetch(
+          `data:image/jpeg;base64,${result.base64}`
+        );
+
+        blob = await base64Response.blob();
+      }
     }
 
     if (Platform.OS === "android") blob = await uriToBlob(result.uri);
