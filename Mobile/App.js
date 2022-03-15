@@ -18,7 +18,7 @@ import colors from "./src/styles/colors";
 import _ from "lodash";
 // import LogRocket from "@logrocket/react-native";
 // import { Mixpanel } from "mixpanel-react-native";
-import * as Sentry from "@sentry/react-native";
+// import * as Sentry from "@sentry/react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 
 const App = () => {
