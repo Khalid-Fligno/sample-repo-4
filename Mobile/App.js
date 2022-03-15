@@ -34,7 +34,7 @@ const App = () => {
       ],
       // To set a uniform sample rate
       tracesSampleRate: 0.2,
-      enableNative: true,
+      enableNative: false,
       debug: false,
     });
   }
