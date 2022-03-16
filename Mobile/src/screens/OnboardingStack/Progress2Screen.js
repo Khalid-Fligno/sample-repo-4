@@ -66,6 +66,13 @@ const storeProgressInfo = async (
       `data:image/jpeg;base64,${image.base64}`
     );
     blob = base64Response.blob()._W;
+    if (!blob) {
+      const base64Response = await fetch(
+        `data:image/jpeg;base64,${image.base64}`
+      );
+
+      blob = await base64Response.blob();
+    }
   }
   if (Platform.OS === "android") blob = await uriToBlob(image.uri);
 
@@ -329,8 +336,6 @@ export default class Progress2Screen extends React.PureComponent {
     this.setState({ uploading: true });
     try {
       if (this.state.image !== null) {
-        const { weight, waist, hip, isInitial, navigateTo } =
-          this.props.navigation.state.params;
         await FileSystem.downloadAsync(
           "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
           `${FileSystem.cacheDirectory}exercise-burpees.mp4`
@@ -344,7 +349,7 @@ export default class Progress2Screen extends React.PureComponent {
           0,
           0,
           0,
-          (0).burpeeCount ?? 0
+          0
         );
 
         navigation.state.params.progressEdit !== undefined
@@ -357,7 +362,7 @@ export default class Progress2Screen extends React.PureComponent {
         });
       }
     } catch (err) {
-      console.log(err);
+      console.log("image upload: ", err);
       this.setState({
         error: "Problem uploading image, please try again",
         uploading: false,
