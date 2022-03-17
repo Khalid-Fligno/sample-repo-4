@@ -3,4 +3,18 @@ export const IMAGE = {
   CHALLENG_WORKOUT_CARD_BG: require("../../../assets/images/Calendar/challengeWorkoutCardBg.png"),
   RECIPE_TILE_SKELETON: require("../../../assets/images/recipe-tile-skeleton.png"),
   BRAND_MARK: require("../../../assets/icons/FITAZ_BrandMark.png"),
+  NUTRITION_BREAKFAST: require('@lib/images/nutrition-breakfast.png'),
+  NUTRITION_LUNCH: require('@lib/images/nutrition-lunch.png'),
+  NUTRITION_DINNER: require('@lib/images/nutrition-dinner.png'),
+  NUTRITION_SNACK: require('@lib/images/nutrition-snack.png'),
+  POST_WORKOUT: require('@lib/images/homeScreenTiles/Post-Workout.png'),
+  PRE_WORKOUT: require('@lib/images/homeScreenTiles/new_pre_workout.png'),
+  TREATS: require('@lib/images/homeScreenTiles/Treats.png'),
+  LIFESTYLE_NUTRITION: require('@lib/images/homeScreenTiles/Lifestyle-Nutrition.png'),
+  LIFESTYLE_WORKOUT: require('@lib/images/homeScreenTiles/Lifestyle-Workout.png'),
+  SPECIAL_OFFER_SCREEN_BACKGROUND: require('@lib/images/special-offer-screen-background.png'),
+  FEED_COMMUNITY: require("@lib/images/media/community.png"),
+  FEED_ACTIVEWEAR: require("@lib/images/media/activewear.png"),
+  FEED_EQUIPMENT: require("@lib/images/media/equipment.png"),
+
 };

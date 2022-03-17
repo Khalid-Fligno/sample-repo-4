@@ -8,43 +8,51 @@ import globalStyle from '../../../styles/globalStyles';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 import fonts from '../../../styles/fonts';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import { IMAGE } from '../../../library/images';
 
 const NutritionList = [
   {
     title:"breakfast",
-    imageUrl:require('../../../../assets/images/nutrition-breakfast.jpg'),
+    //imageUrl:require('../../../../assets/images/nutrition-breakfast.jpg'),
+    imageUrl: IMAGE.NUTRITION_BREAKFAST,
     meal: 'breakfast'
   },
   {
     title:"lunch",
-    imageUrl:require('../../../../assets/images/nutrition-lunch.jpg'),
+    //imageUrl:require('../../../../assets/images/nutrition-lunch.jpg'),
+    imageUrl: IMAGE.NUTRITION_LUNCH,
     meal: 'lunch'
   },
   {
     title:"dinner",
-    imageUrl:require('../../../../assets/images/nutrition-dinner.jpg'),
+    //imageUrl:require('../../../../assets/images/nutrition-dinner.jpg'),
+    imageUrl: IMAGE.NUTRITION_DINNER,
     meal: 'dinner'
   },
   {
     title:"snack",
-    imageUrl:require('../../../../assets/images/nutrition-snack.jpg'),
+    //imageUrl:require('../../../../assets/images/nutrition-snack.jpg'),
+    imageUrl: IMAGE.NUTRITION_SNACK,
     meal: 'snack'
   },
   ,
   {
     title:"Post Workout",
-    imageUrl:require('../../../../assets/images/homeScreenTiles/Post-Workout.jpg'),
+    //imageUrl:require('../../../../assets/images/homeScreenTiles/Post-Workout.jpg'),
+    imageUrl: IMAGE.POST_WORKOUT,
     meal: 'drink'
   },
   ,
   {
     title:"Pre Workout",
-    imageUrl:require('../../../../assets/images/homeScreenTiles/new_pre_workout.jpg'),
+    //imageUrl:require('../../../../assets/images/homeScreenTiles/new_pre_workout.jpg'),
+    imageUrl: IMAGE.PRE_WORKOUT,
     meal: 'preworkout'
   },
   {
     title:"treats",
-    imageUrl:require('../../../../assets/images/homeScreenTiles/Treats.jpg'),
+    //imageUrl:require('../../../../assets/images/homeScreenTiles/Treats.jpg'),
+    imageUrl: IMAGE.TREATS,
     meal: 'treats'
   },
 ]
