@@ -276,102 +276,230 @@ export const getTodayRecommendedMeal = async (
     });
   }
 
-  breakfastResult = phaseMeals
-    .filter(
-      (meal) =>
-        meal.types.includes("breakfast") && meal.showTransform && meal.breakfast
-    )
-    .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
+  phaseMeals.forEach((resMeals) => {
+    resMeals.types.forEach((resType) => {
+      if (resType === "breakfast") {
+        snapshot.forEach((res) => {
+          if (res.data().showTransform === true) {
+            if (resMeals.breakfast === res.data().breakfast) {
+              try {
+                res.data().tags.forEach((resTag) => {
+                  if ("L1" === levelName) {
+                    if (resTag === levelName) {
+                      if (res.data().tags.includes(phaseNames[0])) {
+                        breakfastResult.push(res.data());
+                      }
+                    }
+                  }
+                  if ("L2" === levelName) {
+                    if (resTag === levelName) {
+                      breakfastResult.push(res.data());
+                    }
+                  }
+                  if ("L3" === levelName) {
+                    if (resTag === levelName) {
+                      breakfastResult.push(res.data());
+                    }
+                  }
+                });
+              } catch (err) {
+                // console.log('error: ', err)
+              }
+            }
+          }
+        });
+      }
+      if (resType === "lunch") {
+        snapshot.forEach((res) => {
+          if (res.data().showTransform === true) {
+            if (resMeals.lunch === res.data().lunch) {
+              try {
+                res.data().tags.forEach((resTag) => {
+                  if ("L1" === levelName) {
+                    if (resTag === levelName) {
+                      if (res.data().tags.includes(phaseNames[0])) {
+                        lunchResult.push(res.data());
+                      }
+                    }
+                  }
+                  if ("L2" === levelName) {
+                    if (resTag === levelName) {
+                      lunchResult.push(res.data());
+                    }
+                  }
+                  if ("L3" === levelName) {
+                    if (resTag === levelName) {
+                      lunchResult.push(res.data());
+                    }
+                  }
+                });
+              } catch (err) {
+                // console.log('error: ', err)
+              }
+            }
+          }
+        });
+      }
+      if (resType === "dinner") {
+        snapshot.forEach((res) => {
+          if (res.data().showTransform === true) {
+            if (resMeals.dinner === res.data().dinner) {
+              try {
+                res.data().tags.forEach((resTag) => {
+                  if ("L1" === levelName) {
+                    if (resTag === levelName) {
+                      if (res.data().tags.includes(phaseNames[0])) {
+                        dinnerResult.push(res.data());
+                      }
+                    }
+                  }
+                  if ("L2" === levelName) {
+                    if (resTag === levelName) {
+                      dinnerResult.push(res.data());
+                    }
+                  }
+                  if ("L3" === levelName) {
+                    if (resTag === levelName) {
+                      dinnerResult.push(res.data());
+                    }
+                  }
+                });
+              } catch (err) {
+                // console.log('error: ', err)
+              }
+            }
+          }
+        });
+      }
 
-      if (item.tags.includes(levelName)) return [...accum, item];
+      if (resType === "snack") {
+        snapshot.forEach((res) => {
+          if (res.data().showTransform === true) {
+            if (resMeals.snack === res.data().snack) {
+              try {
+                res.data().tags.forEach((resTag) => {
+                  if ("L1" === levelName) {
+                    if (resTag === levelName) {
+                      if (res.data().tags.includes(phaseNames[0])) {
+                        snackResult.push(res.data());
+                      }
+                    }
+                  }
+                  if ("L2" === levelName) {
+                    if (resTag === levelName) {
+                      snackResult.push(res.data());
+                    }
+                  }
+                  if ("L3" === levelName) {
+                    if (resTag === levelName) {
+                      snackResult.push(res.data());
+                    }
+                  }
+                });
+              } catch (err) {
+                // console.log('error: ', err)
+              }
+            }
+          }
+        });
+      }
+      if (resType === "drink") {
+        snapshot.forEach((res) => {
+          if (res.data().showTransform === true) {
+            if (resMeals.drink === res.data().drink) {
+              try {
+                res.data().tags.forEach((resTag) => {
+                  if ("L1" === levelName) {
+                    if (resTag === levelName) {
+                      if (res.data().tags.includes(phaseNames[0])) {
+                        drinkResult.push(res.data());
+                      }
+                    }
+                  }
+                  if ("L2" === levelName) {
+                    if (resTag === levelName) {
+                      drinkResult.push(res.data());
+                    }
+                  }
+                  if ("L3" === levelName) {
+                    if (resTag === levelName) {
+                      drinkResult.push(res.data());
+                    }
+                  }
+                });
+              } catch (err) {
+                // console.log('error: ', err)
+              }
+            }
+          }
+        });
+      }
 
-      return [...accum];
-    }, []);
+      if (resType === "preworkout") {
+        snapshot.forEach((res) => {
+          if (res.data().showTransform === true) {
+            if (resMeals.preworkout === res.data().preworkout) {
+              try {
+                res.data().tags.forEach((resTag) => {
+                  if ("L1" === levelName) {
+                    if (resTag === levelName) {
+                      if (res.data().tags.includes(phaseNames[0])) {
+                        preworkoutResult.push(res.data());
+                      }
+                    }
+                  }
+                  if ("L2" === levelName) {
+                    if (resTag === levelName) {
+                      preworkoutResult.push(res.data());
+                    }
+                  }
+                  if ("L3" === levelName) {
+                    if (resTag === levelName) {
+                      preworkoutResult.push(res.data());
+                    }
+                  }
+                });
+              } catch (err) {
+                // console.log('error: ', err)
+              }
+            }
+          }
+        });
+      }
 
-  lunchResult = phaseMeals
-    .filter(
-      (meal) => meal.types.includes("lunch") && meal.showTransform && meal.lunch
-    )
-    .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
-    }, []);
-
-  dinnerResult = phaseMeals
-    .filter(
-      (meal) =>
-        meal.types.includes("dinner") && meal.showTransform && meal.dinner
-    )
-    .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
-    }, []);
-
-  snackResult = phaseMeals
-    .filter(
-      (meal) => meal.types.includes("snack") && meal.showTransform && meal.snack
-    )
-    .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
-    }, []);
-
-  drinkResult = phaseMeals
-    .filter(
-      (meal) => meal.types.includes("drink") && meal.showTransform && meal.drink
-    )
-    .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
-    }, []);
-
-  preworkoutResult = phaseMeals
-    .filter(
-      (meal) =>
-        meal.types.includes("preworkout") &&
-        meal.showTransform &&
-        meal.preworkout
-    )
-    .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
-    }, []);
-
-  treatsResult = phaseMeals
-    .filter(
-      (meal) =>
-        meal.types.includes("treats") && meal.showTransform && meal.treats
-    )
-    .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
-    }, []);
+      if (resType === "treats") {
+        snapshot.forEach((res) => {
+          if (res.data().showTransform === true) {
+            if (resMeals.treats === res.data().treats) {
+              try {
+                res.data().tags.forEach((resTag) => {
+                  if ("L1" === levelName) {
+                    if (resTag === levelName) {
+                      if (res.data().tags.includes(phaseNames[0])) {
+                        treatsResult.push(res.data());
+                      }
+                    }
+                  }
+                  if ("L2" === levelName) {
+                    if (resTag === levelName) {
+                      treatsResult.push(res.data());
+                    }
+                  }
+                  if ("L3" === levelName) {
+                    if (resTag === levelName) {
+                      treatsResult.push(res.data());
+                    }
+                  }
+                });
+              } catch (err) {
+                // console.log('error: ', err)
+              }
+            }
+          }
+        });
+      }
+    });
+  });
 
   const challengeMealsFilterList = phaseMeals.map((res) => res.id);
 
