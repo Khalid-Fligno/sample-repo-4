@@ -328,7 +328,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
                   videoAspectRatio="16:9"
                   onBuffering={()=>console.log("buffering")}
                   source={{
-                    uri: `${exerciseList[exerciseIndex].videoUrls[0].url}`,
+                    uri: `${exerciseList[exerciseIndex-1].videoUrls[0].url}`,
                   }}
                   paused={videoPaused}
                   repeat={true}
