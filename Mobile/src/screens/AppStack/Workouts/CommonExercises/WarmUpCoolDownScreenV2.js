@@ -15,6 +15,7 @@ import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { Dimensions } from "react-native";
 const { width, height } = Dimensions.get("window");
 import { Video } from "expo-av";
+import VideoReact from "react-native-video";
 import { FileSystem } from "react-native-unimodules";
 import FadeInView from "react-native-fade-in-view";
 import WorkoutTimer from "../../../../components/Workouts/WorkoutTimer";
@@ -24,6 +25,7 @@ import Loader from "../../../../components/Shared/Loader";
 import WorkoutProgressControl from "../../../../components/Workouts/WorkoutProgressControl";
 import TextTicker from "react-native-text-ticker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { VLCPlayer, VlCPlayerView } from 'react-native-vlc-media-player';
 export default class WarmUpCoolDownScreenV2 extends Component {
   constructor(props) {
     super(props);
@@ -40,6 +42,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       pauseModalVisible: false,
       restart: false,
       isDisabled: false,
+      videoError: false
     };
   }
   componentDidMount() {
@@ -230,6 +233,11 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       pauseModalVisible: true,
     });
   };
+  handleVideoError = ()=>{
+    this.setState({
+      videoError:true
+    })
+  }
 
   render() {
     const {
@@ -304,6 +312,33 @@ export default class WarmUpCoolDownScreenV2 extends Component {
             </View>
             <View>
               {exerciseList.length > 0 && (
+                this.state.videoError?
+                // <View style={{
+                //   width, height: width,
+                //   justifyContent:'center'
+                // }}>
+                //   <Text style={{
+                //     fontSize: 10, fontFamily: fonts.StyreneAWebThin,textAlign:"center"
+                //   }}>
+                //     YOUR DEVICE DOES NOT SUPPORT THIS VIDEO YET. PLEASE TELL US YOUR DEVICE INFO SO THAT WE'LL FIX THE ISSUE SOON.
+                //   </Text>
+                // </View>
+                <VLCPlayer
+                  style={{ width, height: width }}
+                  videoAspectRatio="16:9"
+                  onBuffering={()=>console.log("buffering")}
+                  source={{
+                    uri: `${exerciseList[exerciseIndex].videoUrls[0].url}`,
+                  }}
+                  paused={videoPaused}
+                  repeat={true}
+                  seek={0}
+                  volume={1.0}
+                  muted={false}
+                  rate={1.0}
+                  onError={()=>console.log(exerciseList[exerciseIndex].videoUrls[0].url)}
+                />
+                :
                 <Video
                   source={{
                     uri: `${FileSystem.cacheDirectory}exercise-${type}-${exerciseIndex}.mp4`,
@@ -313,8 +348,9 @@ export default class WarmUpCoolDownScreenV2 extends Component {
                   isMuted={false}
                   resizeMode="cover"
                   shouldPlay={!videoPaused}
-                  isLooping
+                  isLooping={true}
                   style={{ width, height: width }}
+                  onError={this.handleVideoError}
                 />
               )}
               {showInfoBtn && (

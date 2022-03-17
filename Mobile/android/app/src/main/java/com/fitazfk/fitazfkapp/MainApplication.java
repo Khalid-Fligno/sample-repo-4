@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.yuanzhou.vlc.ReactVlcPlayerPackage;
 import com.dooboolab.RNIap.RNIapPackage;
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
 import com.facebook.react.ReactNativeHost;
