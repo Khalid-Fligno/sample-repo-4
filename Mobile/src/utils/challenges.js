@@ -297,15 +297,30 @@ export const getTodayRecommendedMeal = async (
     })
     .reduce((accum, item) => {
       if (
-        item.tags?.includes(phaseNames[0]) &&
-        item.tags?.includes(levelName) &&
-        item.breakfast
+        item.breakfast && 
+        item.showTransform
       ) {
-        return [...accum, item];
+        switch(levelName){
+          case 'L1':
+            if(
+              item.tags?.includes(levelName) &&
+              item.tags?.includes(phaseNames[0])
+            ){
+              return [...accum, item];
+            }
+          case 'L2':
+            if(item.tags?.includes(levelName)){
+              return [...accum, item];
+            }
+          case 'L3':
+            if(item.tags?.includes(levelName)){
+              return [...accum, item];
+            }
+        }
       }
       return [...accum];
     }, []);
-
+  console.log('breakfastResult: ', breakfastResult)
   lunchResult = snapshotDocs
     .filter((snapshotDoc) => {
       const filteredPhaseMeals = phaseMeals.filter(
