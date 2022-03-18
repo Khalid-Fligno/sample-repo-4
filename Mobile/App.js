@@ -94,7 +94,6 @@ const App = () => {
       "change",
       handleAppStateChange
     );
-    // LogRocket.init('mwh1f2/fitaz-app-v3')
     Mixpanel.init("109211293f4830a3355672d9b84aae74");
 
     setAppState(AppState.currentState);
@@ -108,15 +107,15 @@ const App = () => {
       }
     };
   }, []);
-  useEffect(()=>{
-    const Review =async()=>{
-      const res = await AsyncStorage.getItem("later")
-      if (res==='true') {
-        await AsyncStorage.removeItem("later")
+  useEffect(() => {
+    const Review = async () => {
+      const res = await AsyncStorage.getItem("later");
+      if (res === "true") {
+        await AsyncStorage.removeItem("later");
       }
-    }
-    Review()
-  },[])
+    };
+    Review();
+  }, []);
   return (
     <View style={styles.appContainer}>
       <StatusBar barStyle="light-content" />

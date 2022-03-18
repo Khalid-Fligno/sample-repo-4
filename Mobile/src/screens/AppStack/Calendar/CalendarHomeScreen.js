@@ -80,6 +80,8 @@ class CalendarHomeScreen extends React.PureComponent {
       downloaded: 0,
       totalToDownload: 0,
       files: undefined,
+      newWorkoutParams:undefined,
+      finishdownloaded:false
     };
     this.calendarStrip = React.createRef();
   }
@@ -104,18 +106,26 @@ class CalendarHomeScreen extends React.PureComponent {
   componentDidUpdate = () => {
     if (this.state.files !== undefined) {
       this.state.downloaded++;
-      if (this.state.totalToDownload === this.state.downloaded) {
+      if (this.state.totalToDownload === this.state.downloaded ) {
         this.setState({
-          downloaded: 0,
-          totalToDownload: 0,
-          files: undefined,
-          loadingExercises: false,
+          finishdownloaded:true,
+          files:undefined
         });
       }
+    }
+    if (this.state.newWorkoutParams !== undefined && this.state.finishdownloaded===true) {
+      this.goToNext(this.state.newWorkoutParams)
     }
   };
 
   componentWillUnmount() {
+    this.setState({
+      downloaded: 0,
+      totalToDownload: 0,
+      files: undefined,
+      loadingExercises: false,
+      finishdownloaded:false
+    });
     if (this.unsubscribeFACUD) {
       this.unsubscribeFACUD();
     }
@@ -705,9 +715,10 @@ class CalendarHomeScreen extends React.PureComponent {
             warmUpExercises: warmUpExercises,
             coolDownExercises: coolDownExercises,
           });
-          if (this.state.totalToDownload === this.state.downloaded) {
-            this.goToNext(newWorkout);
-          }
+          // if (this.state.totalToDownload === this.state.downloaded) {
+          //   this.goToNext(newWorkout);
+          // }
+            this.setState({newWorkoutParams:newWorkout})
         } else {
           this.setState({ loadingExercises: false });
           Alert.alert("Alert!", "Something went wrong!");
@@ -765,6 +776,13 @@ class CalendarHomeScreen extends React.PureComponent {
       extraProps: { fromCalender: true },
       transformRoute: true,
     });
+    this.setState({
+      downloaded: 0,
+      totalToDownload: 0,
+      files: undefined,
+      loadingExercises: false,
+      finishdownloaded:false
+    })
   }
 
   deleteCalendarEntry = async (fieldToDelete) => {

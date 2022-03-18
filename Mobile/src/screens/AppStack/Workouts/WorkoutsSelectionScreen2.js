@@ -29,6 +29,8 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       downloaded:0,
       totalToDownload:0,
       files:undefined,
+      newWorkoutParams:undefined,
+      finishdownloaded:undefined
     };
   }
   componentDidMount = async () => {
@@ -42,12 +44,13 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
       this.state.downloaded++
       if(this.state.totalToDownload===this.state.downloaded){
         this.setState({
-          downloaded:0,
-          totalToDownload:0,
+          finishdownloaded:true,
           files:undefined,
-          loadingExercises:false
         }) 
       }
+    }
+    if (this.state.newWorkoutParams !== undefined && this.state.finishdownloaded===true) {
+      this.goToNext(this.state.newWorkoutParams)
     }
   }
   componentWillUnmount = async () => {
@@ -369,9 +372,7 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
         const coolDownExercises = await this.downloadExerciseWC(workout,workout.coolDownExercises,workout.coolDownExerciseModel,'coolDown');
         if(coolDownExercises.length > 0){
             const newWorkout = Object.assign({},workout,{warmUpExercises:warmUpExercises,coolDownExercises:coolDownExercises});
-              if(this.state.totalToDownload===this.state.downloaded){
-                this.goToNext(newWorkout);
-              }
+              this.setState({newWorkoutParams:newWorkout})
             // console.log(newWorkout)
         }else{
           this.setState({loadingExercises:false});
@@ -402,6 +403,13 @@ export default class WorkoutsSelectionScreen2 extends React.PureComponent {
               fitnessLevel,
             }
         )
+    this.setState({
+      downloaded: 0,
+      totalToDownload: 0,
+      files: undefined,
+      loadingExercises: false,
+      finishdownloaded:false
+    })
   }
 //************************New Code*********************** */
 

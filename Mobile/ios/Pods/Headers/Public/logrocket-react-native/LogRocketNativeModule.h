@@ -1,1 +1,0 @@
-../../../../../node_modules/@logrocket/react-native/ios/LogRocketNativeModule.h
