@@ -283,23 +283,21 @@ export const getTodayRecommendedMeal = async (
 
   breakfastResult = snapshotDocs
     .filter((snapshotDoc) => {
-      const filteredPhaseMeals = phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("breakfast") &&
-          meal.showTransform &&
-          meal.breakfast
-      );
-      const isValid = filteredPhaseMeals.filter((phaseMeal) => {
-        return phaseMeal.id === snapshotDoc.id;
-      });
-
-      return isValid ? snapshotDoc : false;
+      const filteredPhaseMeals =
+        phaseMeals.filter(
+          (meal) =>
+            meal.types.includes("breakfast") &&
+            // meal.showTransform &&
+            meal.breakfast
+        ) || [];
+      return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
       if (
         item.tags?.includes(phaseNames[0]) &&
         item.tags?.includes(levelName) &&
-        item.breakfast
+        item.breakfast &&
+        item.showTransform
       ) {
         return [...accum, item];
       }
@@ -308,20 +306,19 @@ export const getTodayRecommendedMeal = async (
 
   lunchResult = snapshotDocs
     .filter((snapshotDoc) => {
-      const filteredPhaseMeals = phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("lunch") && meal.showTransform && meal.lunch
-      );
-      const isValid = filteredPhaseMeals.filter((phaseMeal) => {
-        return phaseMeal.id === snapshotDoc.id;
-      });
-      return isValid ? snapshotDoc : false;
+      const filteredPhaseMeals =
+        phaseMeals.filter(
+          (meal) => meal.types.includes("lunch") && meal.lunch
+        ) || [];
+
+      return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
       if (
         item.tags?.includes(phaseNames[0]) &&
         item.tags?.includes(levelName) &&
-        item.lunch
+        item.lunch &&
+        item.showTransform
       ) {
         return [...accum, item];
       }
@@ -331,20 +328,19 @@ export const getTodayRecommendedMeal = async (
 
   dinnerResult = snapshotDocs
     .filter((snapshotDoc) => {
-      const filteredPhaseMeals = phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("dinner") && meal.showTransform && meal.dinner
-      );
-      const isValid = filteredPhaseMeals.filter((phaseMeal) => {
-        return phaseMeal.id === snapshotDoc.id;
-      });
-      return isValid ? snapshotDoc : false;
+      const filteredPhaseMeals =
+        phaseMeals.filter(
+          (meal) => meal.types.includes("dinner") && meal.dinner
+        ) || [];
+
+      return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
       if (
         item.tags?.includes(phaseNames[0]) &&
         item.tags?.includes(levelName) &&
-        item.dinner
+        item.dinner &&
+        item.showTransform
       ) {
         return [...accum, item];
       }
@@ -354,20 +350,19 @@ export const getTodayRecommendedMeal = async (
 
   snackResult = snapshotDocs
     .filter((snapshotDoc) => {
-      const filteredPhaseMeals = phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("snack") && meal.showTransform && meal.snack
-      );
-      const isValid = filteredPhaseMeals.filter((phaseMeal) => {
-        return phaseMeal.id === snapshotDoc.id;
-      });
-      return isValid ? snapshotDoc : false;
+      const filteredPhaseMeals =
+        phaseMeals.filter(
+          (meal) => meal.types.includes("snack") && meal.snack
+        ) || [];
+
+      return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
       if (
         item.tags?.includes(phaseNames[0]) &&
         item.tags?.includes(levelName) &&
-        item.snack
+        item.snack &&
+        item.showTransform
       ) {
         return [...accum, item];
       }
@@ -377,20 +372,19 @@ export const getTodayRecommendedMeal = async (
 
   drinkResult = snapshotDocs
     .filter((snapshotDoc) => {
-      const filteredPhaseMeals = phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("drink") && meal.showTransform && meal.drink
-      );
-      const isValid = filteredPhaseMeals.filter((phaseMeal) => {
-        return phaseMeal.id === snapshotDoc.id;
-      });
-      return isValid ? snapshotDoc : false;
+      const filteredPhaseMeals =
+        phaseMeals.filter(
+          (meal) => meal.types.includes("drink") && meal.drink
+        ) || [];
+
+      return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
       if (
         item.tags?.includes(phaseNames[0]) &&
         item.tags?.includes(levelName) &&
-        item.drink
+        item.drink &&
+        item.showTransform
       ) {
         return [...accum, item];
       }
@@ -399,22 +393,19 @@ export const getTodayRecommendedMeal = async (
 
   preworkoutResult = snapshotDocs
     .filter((snapshotDoc) => {
-      const filteredPhaseMeals = phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("preworkout") &&
-          meal.showTransform &&
-          meal.preworkout
-      );
-      const isValid = filteredPhaseMeals.filter((phaseMeal) => {
-        return phaseMeal.id === snapshotDoc.id;
-      });
-      return isValid ? snapshotDoc : false;
+      const filteredPhaseMeals =
+        phaseMeals.filter(
+          (meal) => meal.types.includes("preworkout") && meal.preworkout
+        ) || [];
+
+      return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
       if (
         item.tags?.includes(phaseNames[0]) &&
         item.tags?.includes(levelName) &&
-        item.preworkout
+        item.preworkout &&
+        item.showTransform
       ) {
         return [...accum, item];
       }
@@ -425,20 +416,18 @@ export const getTodayRecommendedMeal = async (
   treatsResult = snapshotDocs
     .filter((snapshotDoc) => {
       const filteredPhaseMeals = phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("treats") && meal.showTransform && meal.treats
+        (meal) => meal.types.includes("treats") && meal.treats
       );
-      const isValid = filteredPhaseMeals.filter((phaseMeal) => {
-        return phaseMeal.id === snapshotDoc.id;
-      });
-      return isValid ? snapshotDoc : false;
+
+      return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
       if (levelName === "L1")
         if (
           item.tags?.includes(phaseNames[0]) &&
           item.tags?.includes(levelName) &&
-          item.treats
+          item.treats &&
+          item.showTransform
         ) {
           return [...accum, item];
         }
