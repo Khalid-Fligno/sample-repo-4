@@ -14,6 +14,7 @@ export const isActiveChallenge = async () => {
     if (scheduleSnapshot.empty) {
       return false;
     } else {
+      // console.log('scheduleSnapshot: ', scheduleSnapshot)
       let list = [];
       scheduleSnapshot.forEach((doc) => {
         list.push(doc.data());
@@ -33,19 +34,19 @@ export const getCurrentPhase = (data, currentDate1) => {
   let phase = undefined;
   data.forEach((el) => {
     let currentDate = moment(currentDate1).format("YYYY-MM-DD");
-
+    // console.log(el.startDate, el.endDate,currentDate)
     const isBetween = moment(currentDate).isBetween(
       el.startDate,
       el.endDate,
       undefined,
       "[]"
     );
-
+    // console.log("????/////",isBetween)
     if (isBetween) {
       phase = el;
     }
   });
-
+  // console.log("Current Phase",phase )
   return phase;
 };
 export const getTotalChallengeWorkoutsCompleted = (data, stringDate) => {
@@ -68,7 +69,7 @@ export const getCurrentDay = (number) => {
       day: i,
       recipeMeal: [],
     };
-
+    console.log(data);
     return data;
   }
 };
@@ -94,8 +95,26 @@ export const getTodayRecommendedWorkout = async (
       return snapshot.docs.map((res) => res.data());
     }
   } else {
+    console.log("????", workoutData);
     return [workoutData];
   }
+};
+
+export const fetchActiveRecipe = async () => {
+  //Fetch all recipe ID
+  const data = [];
+  this.unsubscribeFACD = await db
+    .collection("recipes")
+    .get()
+    .then((snapshot) => {
+      snapshot.forEach((res) => {
+        data.push(res.data().id);
+      });
+    });
+
+  console.log("Data Recipe: ", data);
+
+  // this.setState({recipeId: data})
 };
 
 export const convertRecipeData = async (recipeId) => {
@@ -113,6 +132,7 @@ export const convertRecipeData = async (recipeId) => {
       });
     }
   }
+
   return {
     recipeResult,
   };
@@ -120,102 +140,95 @@ export const convertRecipeData = async (recipeId) => {
 
 export const fetchRecipeData = async (challengeRecipe) => {
   let phaseMeals = [];
-  let recipes = [];
-  let breakFastMeals = [];
-  let lunchMeals = [];
-  let dinnerMeals = [];
-  let snackMeals = [];
-  let drinkMeals = [];
-  let preworkoutMeals = [];
-  let treats = [];
+  const breakfastActive = [];
+  const lunchActive = [];
+  const dinnerActive = [];
+  const snackActive = [];
+  const drinkActive = [];
+  const preworkoutActive = [];
+  const treatsActive = [];
+
   if (challengeRecipe) {
     const recipeRef = db.collection("recipes");
     const snapshot = await recipeRef.get();
-
-    const mealsId = challengeRecipe[0]?.level2[0]?.phases[0]?.meals;
+    const mealsId = challengeRecipe[0].level2[0].phases[0].meals;
 
     if (snapshot.empty) {
       return null;
     } else {
       snapshot.forEach((res) => {
-        recipes.push(res.data());
-      });
-
-      snapshot.forEach((res) => {
-        if (mealsId && mealsId.includes(res.data().id)) {
+        if (mealsId.includes(res.data().id)) {
           phaseMeals.push(res.data());
         }
       });
     }
 
-    // BREAKFAST
-    breakFastMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("breakfast") &&
-          recipes.filter((recipe) => recipe.breakfast === meal.breakfast)
-            .length > 0
-      ) || [];
-
-    // LUNCH
-    lunchMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("lunch") &&
-          recipes.filter((recipe) => recipe.lunch === meal.lunch).length > 0
-      ) || [];
-
-    // DINNER
-    dinnerMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("dinner") &&
-          recipes.filter((recipe) => recipe.dinner === meal.dinner).length > 0
-      ) || [];
-
-    // SNACK
-    snackMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("snack") &&
-          recipes.filter((recipe) => recipe.snack === meal.snack).length > 0
-      ) || [];
-
-    // DRINK
-    drinkMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("drink") &&
-          recipes.filter((recipe) => recipe.drink === meal.drink).length > 0
-      ) || [];
-
-    // PREWORKOUT
-    preworkoutMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("preworkout") &&
-          recipes.filter((recipe) => recipe.preworkout === meal.preworkout)
-            .length > 0
-      ) || [];
-
-    //  TREATS
-    treats =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("treats") &&
-          recipes.filter((recipe) => recipe.treats === meal.treats).length > 0
-      ) || [];
+    phaseMeals.forEach((resMeals) => {
+      try {
+        resMeals.types.forEach((resType) => {
+          if (resType === "breakfast") {
+            snapshot.forEach((res) => {
+              if (resMeals.breakfast === res.data().breakfast) {
+                breakfastActive.push(res.data());
+              }
+            });
+          }
+          if (resType === "lunch") {
+            snapshot.forEach((res) => {
+              if (resMeals.lunch === res.data().lunch) {
+                lunchActive.push(res.data());
+              }
+            });
+          }
+          if (resType === "dinner") {
+            snapshot.forEach((res) => {
+              if (resMeals.dinner === res.data().dinner) {
+                dinnerActive.push(res.data());
+              }
+            });
+          }
+          if (resType === "snack") {
+            snapshot.forEach((res) => {
+              if (resMeals.snack === res.data().snack) {
+                snackActive.push(res.data());
+              }
+            });
+          }
+          if (resType === "drink") {
+            snapshot.forEach((res) => {
+              if (resMeals.drink === res.data().drink) {
+                drinkActive.push(res.data());
+              }
+            });
+          }
+          if (resType === "preworkout") {
+            snapshot.forEach((res) => {
+              if (resMeals.preworkout === res.data().preworkout) {
+                preworkoutActive.push(res.data());
+              }
+            });
+          }
+          if (resType === "treats") {
+            snapshot.forEach((res) => {
+              if (resMeals.treats === res.data().treats) {
+                treatsActive.push(res.data());
+              }
+            });
+          }
+        });
+      } catch (err) {}
+    });
   }
 
-  recommendedRecipe = [
+  const recommendedRecipe = [
     {
-      breakfast: breakFastMeals,
-      snack: snackMeals,
-      lunch: lunchMeals,
-      dinner: dinnerMeals,
-      drink: drinkMeals,
-      preworkout: preworkoutMeals,
-      treats: treats,
+      breakfast: breakfastActive,
+      snack: snackActive,
+      lunch: lunchActive,
+      dinner: dinnerActive,
+      drink: drinkActive,
+      preworkout: preworkoutActive,
+      treats: treatsActive,
     },
   ];
 
@@ -228,6 +241,7 @@ export const getTodayRecommendedMeal = async (
   phaseData,
   activeChallengeData
 ) => {
+  // const dietryPreferences = activeChallengeUserData.onBoardingInfo.dietryPreferences
   let phaseMeals = [];
   let breakfastResult = [];
   let lunchResult = [];
@@ -536,6 +550,8 @@ export const getTodayRecommendedMeal = async (
     },
   ];
 
+  // console.log('Recipe Data: ', recommendedRecipe.breakfast)
+
   const phaseDefaultTags = phaseNames[0];
 
   return {
@@ -605,6 +621,7 @@ export const getLatestChallenge = (challenges) => {
 export const hasChallenges = async (uid) => {
   const userChallenges = await getChallengeDetails(uid);
 
+  // console.log("getActive challneg",userChallenges)
   if (userChallenges !== undefined && userChallenges.length > 0) {
     let isChallengeValidStatus = [];
     isChallengeValidStatus = userChallenges.map((challenge) => {
@@ -615,6 +632,8 @@ export const hasChallenges = async (uid) => {
       let currentDate = moment();
       let isChallengeValid =
         moment(currentDate).isSameOrBefore(challengeEndDate);
+      // console.log("Is challenge valid",isChallengeValid);
+      // console.log("Created On date=>",challenge.createdOn,challengeEndDate,currentDate);
       if (!isChallengeValid) {
         Alert.alert("Alert!", `Your ${challenge.displayName} has expired.`);
         removeChallengeFromUser(uid, challenge.id);
@@ -623,6 +642,7 @@ export const hasChallenges = async (uid) => {
     });
 
     if (isChallengeValidStatus.includes(true)) {
+      // console.log("Challenge is still valid")
       return true;
     } else {
       Alert.alert("Alert!", "Your challenge has expired.");
@@ -644,6 +664,7 @@ export const removeChallengeFromUser = async (uid, challengeId) => {
 //---------------------for login subscription---------------
 
 export const updateUserSubscription = async (subscriptionData, userId) => {
+  //console.log("subscriptionData",subscriptionData);
   const user = await db.collection("users").doc(userId);
   user.set(subscriptionData, { merge: true });
 };
