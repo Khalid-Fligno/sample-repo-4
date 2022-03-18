@@ -36,6 +36,7 @@ import ExerciseInfoButtonV2 from "../../../../components/Workouts/ExerciseInfoBu
 import WorkoutProgressControl from "../../../../components/Workouts/WorkoutProgressControl";
 import { Platform } from "react-native";
 import TextTicker from "react-native-text-ticker";
+import { ActivityIndicator } from "react-native";
 
 const updateWeeklyTargets = (obj, field, newTally) => {
   return Object.assign({}, obj, { [field]: newTally });
@@ -125,6 +126,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       restRandomImage: "",
       interval: interval,
       isDisabled: false,
+      videoError: false,
+      loading:false
     };
   }
 
@@ -629,6 +632,11 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       );
     }
   };
+  handleVideoError = ()=>{
+    this.setState({
+      videoError:true
+    })
+  }
 
   render() {
     const {
@@ -863,12 +871,43 @@ export default class ExercisesScreenV2 extends React.PureComponent {
               </View>
             </View>
             {!rest && (
+               this.state.loading &&(   
+                <View style={{
+                  alignItems:"center", 
+                  justifyContent:'center',
+                  width, 
+                  height: 
+                  width}}
+                >
+                  <ActivityIndicator size="large" color="black"/>
+                </View>
+                ),
+                this.state.videoError?
+                <VLCPlayer
+                  style={{ width, height: width }}
+                  videoAspectRatio="16:9"
+                  onBuffering={()=>{this.setState({loading:true})}}
+                  onPlaying={()=>{this.setState({loading:false})}}
+                  source={{
+                    uri: `${exerciseList[exerciseIndex-1].videoUrls[0].url}`,
+                  }}
+                  paused={videoPaused}
+                  repeat={true}
+                  seek={0}
+                  volume={1.0}
+                  muted={false}
+                  rate={1.0}
+                  onError={()=>console.log(exerciseList[exerciseIndex].videoUrls[0].url)}
+                />
+              :
               <Video
                 source={{
                   uri: `${FileSystem.cacheDirectory}exercise-${
                     currentExerciseIndex + 1
                   }.mp4`,
                 }}
+                onLoadStart={()=>{this.setState({loading:true})}}
+                onReadyForDisplay={()=>{this.setState({loading:false})}}
                 rate={1.0}
                 volume={1.0}
                 isMuted={false}
@@ -879,6 +918,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                   width,
                   height: width > height / 2 ? height / 2 : width,
                 }}
+                onError={this.handleVideoError}
               />
             )}
             {rest && (

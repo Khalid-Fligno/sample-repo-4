@@ -26,6 +26,7 @@ import WorkoutProgressControl from "../../../../components/Workouts/WorkoutProgr
 import TextTicker from "react-native-text-ticker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { VLCPlayer, VlCPlayerView } from 'react-native-vlc-media-player';
+import { ActivityIndicator } from "react-native";
 export default class WarmUpCoolDownScreenV2 extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +43,8 @@ export default class WarmUpCoolDownScreenV2 extends Component {
       pauseModalVisible: false,
       restart: false,
       isDisabled: false,
-      videoError: false
+      videoError: false,
+      loading:false
     };
   }
   componentDidMount() {
@@ -312,21 +314,24 @@ export default class WarmUpCoolDownScreenV2 extends Component {
             </View>
             <View>
               {exerciseList.length > 0 && (
+                this.state.loading &&(   
+                <View style={{
+                  alignItems:"center", 
+                  justifyContent:'center',
+                  width, 
+                  height: 
+                  width}}
+                >
+                  <ActivityIndicator size="large" color="black"/>
+                </View>
+                ),
                 this.state.videoError?
-                // <View style={{
-                //   width, height: width,
-                //   justifyContent:'center'
-                // }}>
-                //   <Text style={{
-                //     fontSize: 10, fontFamily: fonts.StyreneAWebThin,textAlign:"center"
-                //   }}>
-                //     YOUR DEVICE DOES NOT SUPPORT THIS VIDEO YET. PLEASE TELL US YOUR DEVICE INFO SO THAT WE'LL FIX THE ISSUE SOON.
-                //   </Text>
-                // </View>
                 <VLCPlayer
                   style={{ width, height: width }}
                   videoAspectRatio="16:9"
-                  onBuffering={()=>console.log("buffering")}
+                  // onBuffering={()=>{this.setState({loading:true})}}
+                  // onPlaying={()=>{this.setState({loading:false})}}
+                  onPl
                   source={{
                     uri: `${exerciseList[exerciseIndex-1].videoUrls[0].url}`,
                   }}
@@ -343,6 +348,8 @@ export default class WarmUpCoolDownScreenV2 extends Component {
                   source={{
                     uri: `${FileSystem.cacheDirectory}exercise-${type}-${exerciseIndex}.mp4`,
                   }}
+                  onLoadStart={()=>{this.setState({loading:true})}}
+                  onReadyForDisplay={()=>{this.setState({loading:false})}}
                   rate={1.0}
                   volume={1.0}
                   isMuted={false}
@@ -352,6 +359,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
                   style={{ width, height: width }}
                   onError={this.handleVideoError}
                 />
+                
               )}
               {showInfoBtn && (
                 <ExerciseInfoButtonV2 onPress={this.showExerciseInfoModal} />

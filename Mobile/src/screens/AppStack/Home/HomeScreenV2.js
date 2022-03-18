@@ -27,8 +27,6 @@ import { isActiveChallenge } from "../../../utils/challenges";
 // images
 import { IMAGE } from "../../../library/images";
 
-// images
-import { IMAGE } from "../../../library/images";
 
 const { width } = Dimensions.get("window");
 
