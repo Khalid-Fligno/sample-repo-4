@@ -109,7 +109,7 @@ class CalendarHomeScreen extends React.PureComponent {
       if (this.state.totalToDownload === this.state.downloaded ) {
         this.setState({
           finishdownloaded:true,
-          files:undefined
+          files:undefined,
         });
       }
     }
@@ -766,6 +766,13 @@ class CalendarHomeScreen extends React.PureComponent {
           extraProps: { fromCalender: true },
         },
       });
+      this.setState({
+        downloaded: 0,
+        totalToDownload: 0,
+        files: undefined,
+        loadingExercises: false,
+        finishdownloaded:false
+      })
       return;
     }
     this.props.navigation.navigate("WorkoutInfo", {
