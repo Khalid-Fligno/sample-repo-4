@@ -207,7 +207,7 @@ export const fetchRecipeData = async (challengeRecipe) => {
       ) || [];
   }
 
-  recommendedRecipe = [
+  const recommendedRecipe = [
     {
       breakfast: breakFastMeals,
       snack: snackMeals,
