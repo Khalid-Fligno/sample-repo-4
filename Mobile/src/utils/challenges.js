@@ -149,62 +149,25 @@ export const fetchRecipeData = async (challengeRecipe) => {
     }
 
     // BREAKFAST
-    breakFastMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("breakfast") &&
-          recipes.filter((recipe) => recipe.breakfast === meal.breakfast)
-            .length > 0
-      ) || [];
+    breakFastMeals = recipes.filter((item) => item.breakfast) || [];
 
     // LUNCH
-    lunchMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("lunch") &&
-          recipes.filter((recipe) => recipe.lunch === meal.lunch).length > 0
-      ) || [];
+    lunchMeals = recipes.filter((item) => item.lunch) || [];
 
     // DINNER
-    dinnerMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("dinner") &&
-          recipes.filter((recipe) => recipe.dinner === meal.dinner).length > 0
-      ) || [];
+    dinnerMeals = recipes.filter((item) => item.dinner) || [];
 
     // SNACK
-    snackMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("snack") &&
-          recipes.filter((recipe) => recipe.snack === meal.snack).length > 0
-      ) || [];
+    snackMeals = recipes.filter((item) => item.snack) || [];
 
     // DRINK
-    drinkMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("drink") &&
-          recipes.filter((recipe) => recipe.drink === meal.drink).length > 0
-      ) || [];
+    drinkMeals = recipes.filter((item) => item.drink) || [];
 
     // PREWORKOUT
-    preworkoutMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("preworkout") &&
-          recipes.filter((recipe) => recipe.preworkout === meal.preworkout)
-            .length > 0
-      ) || [];
+    preworkoutMeals = recipes.filter((item) => item.preworkout) || [];
 
     //  TREATS
-    treats =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("treats") &&
-          recipes.filter((recipe) => recipe.treats === meal.treats).length > 0
-      ) || [];
+    treats = recipes.filter((item) => item.treats) || [];
   }
 
   const recommendedRecipe = [
@@ -547,8 +510,6 @@ export const getTodayRecommendedMeal = async (
       treats: treatsResult,
     },
   ];
-
-  console.log("recommendedRecipe: ", recommendedRecipe);
 
   const phaseDefaultTags = phaseNames[0];
 
