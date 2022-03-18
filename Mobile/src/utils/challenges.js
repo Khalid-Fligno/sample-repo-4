@@ -207,7 +207,7 @@ export const fetchRecipeData = async (challengeRecipe) => {
       ) || [];
   }
 
-  recommendedRecipe = [
+  const recommendedRecipe = [
     {
       breakfast: breakFastMeals,
       snack: snackMeals,
@@ -293,15 +293,27 @@ export const getTodayRecommendedMeal = async (
       return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
-      if (
-        item.tags?.includes(phaseNames[0]) &&
-        item.tags?.includes(levelName) &&
-        item.breakfast &&
-        item.showTransform
-      ) {
-        return [...accum, item];
+      if (item.breakfast && item.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              item.tags?.includes(levelName) &&
+              item.tags?.includes(phaseNames[0])
+            ) {
+              return [...accum, item];
+            }
+          case "L2":
+          case "L3":
+            if (item.tags?.includes(levelName)) {
+              return [...accum, item];
+            }
+
+          default:
+            return [...accum];
+        }
+      } else {
+        return [...accum];
       }
-      return [...accum];
     }, []);
 
   lunchResult = snapshotDocs
@@ -314,16 +326,27 @@ export const getTodayRecommendedMeal = async (
       return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
-      if (
-        item.tags?.includes(phaseNames[0]) &&
-        item.tags?.includes(levelName) &&
-        item.lunch &&
-        item.showTransform
-      ) {
-        return [...accum, item];
-      }
+      if (item.lunch && item.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              item.tags?.includes(levelName) &&
+              item.tags?.includes(phaseNames[0])
+            ) {
+              return [...accum, item];
+            }
+          case "L2":
+          case "L3":
+            if (item.tags?.includes(levelName)) {
+              return [...accum, item];
+            }
 
-      return [...accum];
+          default:
+            return [...accum];
+        }
+      } else {
+        return [...accum];
+      }
     }, []);
 
   dinnerResult = snapshotDocs
@@ -336,16 +359,27 @@ export const getTodayRecommendedMeal = async (
       return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
-      if (
-        item.tags?.includes(phaseNames[0]) &&
-        item.tags?.includes(levelName) &&
-        item.dinner &&
-        item.showTransform
-      ) {
-        return [...accum, item];
-      }
+      if (item.dinner && item.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              item.tags?.includes(levelName) &&
+              item.tags?.includes(phaseNames[0])
+            ) {
+              return [...accum, item];
+            }
+          case "L2":
+          case "L3":
+            if (item.tags?.includes(levelName)) {
+              return [...accum, item];
+            }
 
-      return [...accum];
+          default:
+            return [...accum];
+        }
+      } else {
+        return [...accum];
+      }
     }, []);
 
   snackResult = snapshotDocs
@@ -358,16 +392,27 @@ export const getTodayRecommendedMeal = async (
       return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
-      if (
-        item.tags?.includes(phaseNames[0]) &&
-        item.tags?.includes(levelName) &&
-        item.snack &&
-        item.showTransform
-      ) {
-        return [...accum, item];
-      }
+      if (item.snack && item.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              item.tags?.includes(levelName) &&
+              item.tags?.includes(phaseNames[0])
+            ) {
+              return [...accum, item];
+            }
+          case "L2":
+          case "L3":
+            if (item.tags?.includes(levelName)) {
+              return [...accum, item];
+            }
 
-      return [...accum];
+          default:
+            return [...accum];
+        }
+      } else {
+        return [...accum];
+      }
     }, []);
 
   drinkResult = snapshotDocs
@@ -380,15 +425,27 @@ export const getTodayRecommendedMeal = async (
       return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
-      if (
-        item.tags?.includes(phaseNames[0]) &&
-        item.tags?.includes(levelName) &&
-        item.drink &&
-        item.showTransform
-      ) {
-        return [...accum, item];
+      if (item.drink && item.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              item.tags?.includes(levelName) &&
+              item.tags?.includes(phaseNames[0])
+            ) {
+              return [...accum, item];
+            }
+          case "L2":
+          case "L3":
+            if (item.tags?.includes(levelName)) {
+              return [...accum, item];
+            }
+
+          default:
+            return [...accum];
+        }
+      } else {
+        return [...accum];
       }
-      return [...accum];
     }, []);
 
   preworkoutResult = snapshotDocs
@@ -401,16 +458,27 @@ export const getTodayRecommendedMeal = async (
       return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
-      if (
-        item.tags?.includes(phaseNames[0]) &&
-        item.tags?.includes(levelName) &&
-        item.preworkout &&
-        item.showTransform
-      ) {
-        return [...accum, item];
-      }
+      if (item.preworkout && item.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              item.tags?.includes(levelName) &&
+              item.tags?.includes(phaseNames[0])
+            ) {
+              return [...accum, item];
+            }
+          case "L2":
+          case "L3":
+            if (item.tags?.includes(levelName)) {
+              return [...accum, item];
+            }
 
-      return [...accum];
+          default:
+            return [...accum];
+        }
+      } else {
+        return [...accum];
+      }
     }, []);
 
   treatsResult = snapshotDocs
@@ -422,17 +490,27 @@ export const getTodayRecommendedMeal = async (
       return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
     })
     .reduce((accum, item) => {
-      if (levelName === "L1")
-        if (
-          item.tags?.includes(phaseNames[0]) &&
-          item.tags?.includes(levelName) &&
-          item.treats &&
-          item.showTransform
-        ) {
-          return [...accum, item];
-        }
+      if (item.treats && item.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              item.tags?.includes(levelName) &&
+              item.tags?.includes(phaseNames[0])
+            ) {
+              return [...accum, item];
+            }
+          case "L2":
+          case "L3":
+            if (item.tags?.includes(levelName)) {
+              return [...accum, item];
+            }
 
-      return [...accum];
+          default:
+            return [...accum];
+        }
+      } else {
+        return [...accum];
+      }
     }, []);
 
   const challengeMealsFilterList = phaseMeals.map((res) => res.id);
@@ -469,6 +547,8 @@ export const getTodayRecommendedMeal = async (
       treats: treatsResult,
     },
   ];
+
+  console.log("recommendedRecipe: ", recommendedRecipe);
 
   const phaseDefaultTags = phaseNames[0];
 
