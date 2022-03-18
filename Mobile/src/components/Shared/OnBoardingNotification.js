@@ -5,7 +5,6 @@ import fonts from "../../styles/fonts";
 
 export default function OnBoardingNotification({ navigation, data }) {
   const screenWidth = Dimensions.get('window').width;
-  console.log(screenWidth);
   return (
     <View style={{ backgroundColor: colors.white }}>
       <View
