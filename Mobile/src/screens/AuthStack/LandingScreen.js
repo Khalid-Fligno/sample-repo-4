@@ -7,6 +7,7 @@ import {
   StatusBar,
   ImageBackground,
   Platform,
+  Text
 } from "react-native";
 import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
@@ -15,9 +16,13 @@ import { containerPadding } from "../../styles/globalStyles";
 import { db } from "../../../config/firebase";
 const { width, height } = Dimensions.get("window");
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { getVersion } from "react-native-device-info";
 import { checkVersion } from "react-native-check-version";
 import AsyncStorage from "@react-native-community/async-storage";
+import { withProfiler } from "@sentry/react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import Icon from "react-native-vector-icons/FontAwesome";
 export default class LandingScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -57,26 +62,56 @@ export default class LandingScreen extends React.PureComponent {
           <StatusBar barStyle="light-content" />
 
           <View style={styles.carouselCardContainer}>
+            
+            <View style={styles.padding}>
             <ImageBackground
-              source={require("../../../assets/images/OnBoardindImg/Thessy238.jpeg")}
+              source={require("../../../assets/icons/FITAZ_BrandMark.png")}
               style={styles.carouselImageBackground}
             >
-              <View style={styles.opacityOverlayTransparent} />
             </ImageBackground>
+            <View style={styles.textPadding}>
+              <Text style={styles.fontText}>em 
+              <Text style={styles.underline}>powered</Text>
+              </Text>
+              <Text style={styles.fontText}>by you.</Text>
+            </View>
+            </View>
+
+            <View style={{paddingBottom: hp("2%")}}>
+            <TouchableOpacity onPress={() =>
+              this.props.navigation.navigate("FindAccount")}
+            >
+              <View style={styles.transformProgram}>
+                <View style={{padding: 15}}>
+                   <Text style={styles.Text}>I have just purchased my {"\n"}1st Transform Program</Text>
+                </View>
+                <View style={{paddingTop: hp("1.5%"),paddingLeft: wp("20%")}}>
+                   <Icon name="angle-right" size={45} />
+                </View>
+              </View>
+            </TouchableOpacity>
+            </View>
+
+            <View>
+            <TouchableOpacity onPress={() =>
+              this.props.navigation.navigate("Signup", { specialOffer })}
+             >
+              <View style={styles.transformProgram}>
+                <View style={{padding: 15}}>
+                   <Text style={styles.Text}>I want to do a 7 day free {"\n"}trial of the Fitaz App </Text>
+                </View>
+                <View style={{paddingTop: hp("1.5%"),paddingLeft: wp("20%")}}>
+                   <Icon name="angle-right" size={45} />
+                </View>
+              </View>
+            </TouchableOpacity>
+            </View>
+           
           </View>
           <View style={styles.absoluteButtonContainer}>
             <View style={styles.buttonContainer}>
-              <CustomBtn
-                customBtnStyle={{
-                  padding: 16,
-                  marginBottom: 5,
-                }}
-                Title="Start 7 Day Free Trial"
-                onPress={() =>
-                  this.props.navigation.navigate("Signup", { specialOffer })
-                }
-              />
-              <CustomBtn
+            
+              {/* <CustomBtn
                 customBtnStyle={{
                   padding: 12,
                   margin: 5,
@@ -89,7 +124,14 @@ export default class LandingScreen extends React.PureComponent {
                 onPress={() =>
                   this.props.navigation.navigate("Signup", { specialOffer })
                 }
-              />
+              /> */}
+              <View style={{
+                paddingTop: hp("2%"),
+                paddingBottom: hp("2%"),
+                alignItems:'center'
+                }}>
+                <Text style={{fontSize: hp("1.9%")}}>Already have an account?</Text>
+              </View>
               <CustomBtn
                 customBtnStyle={{
                   padding: 12,
@@ -97,7 +139,7 @@ export default class LandingScreen extends React.PureComponent {
                   borderColor: colors.themeColor.color,
                 }}
                 outline={false}
-                Title="Sign In"
+                Title="SIGN IN"
                 customBtnTitleStyle={{ color: colors.black }}
                 onPress={() =>
                   this.props.navigation.navigate("Login", { specialOffer })
@@ -125,12 +167,11 @@ const styles = StyleSheet.create({
     width,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.transparent,
+    backgroundColor: colors.citrus,
   },
   carouselImageBackground: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
+    width: 95,
+    height: 80,
   },
   opacityOverlayLight: {
     width,
@@ -151,6 +192,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     backgroundColor: colors.themeColor.themeBackgroundColor,
+    height: hp("18%") 
   },
   buttonContainer: {
     width,
@@ -190,4 +232,30 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: colors.black,
   },
+  padding: {
+    paddingBottom: hp("20%"),
+    flexDirection: 'row',
+  },
+  textPadding:{
+    paddingLeft: wp("5%")
+  },
+  fontText:{
+    fontSize:  hp('3%'),
+    fontWeight: "300",
+  },
+  underline:{
+    fontSize:  hp('3%'),
+    fontWeight: "300",
+    textDecorationLine: 'underline'
+
+  },
+  transformProgram:{
+    borderWidth: 1,
+    width: wp("90%"),
+    height: hp("9%"),
+    flexDirection: 'row'
+  },
+  Text:{
+    fontSize: hp('2%'),
+  }
 });

@@ -6,6 +6,7 @@ import EmailVerificationScreen from '../../src/screens/AuthStack/EmailVerificati
 import ForgottenPasswordScreen from '../../src/screens/AuthStack/ForgottenPasswordScreen';
 import SpecialOfferScreen from '../../src/screens/AuthStack/SpecialOfferScreen';
 import { fadeSpec, fade } from './utils';
+import FindAccountScreen from '../../src/screens/AuthStack/FindAccountScreen';
 
 const AuthStack = createStackNavigator(
   {
@@ -15,6 +16,7 @@ const AuthStack = createStackNavigator(
     EmailVerification: EmailVerificationScreen,
     ForgottenPassword: ForgottenPasswordScreen,
     SpecialOffer: SpecialOfferScreen,
+    FindAccount: FindAccountScreen,
   },
   {
     initialRouteName: 'Landing',
