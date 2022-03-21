@@ -149,65 +149,28 @@ export const fetchRecipeData = async (challengeRecipe) => {
     }
 
     // BREAKFAST
-    breakFastMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("breakfast") &&
-          recipes.filter((recipe) => recipe.breakfast === meal.breakfast)
-            .length > 0
-      ) || [];
+    breakFastMeals = recipes.filter((item) => item.breakfast) || [];
 
     // LUNCH
-    lunchMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("lunch") &&
-          recipes.filter((recipe) => recipe.lunch === meal.lunch).length > 0
-      ) || [];
+    lunchMeals = recipes.filter((item) => item.lunch) || [];
 
     // DINNER
-    dinnerMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("dinner") &&
-          recipes.filter((recipe) => recipe.dinner === meal.dinner).length > 0
-      ) || [];
+    dinnerMeals = recipes.filter((item) => item.dinner) || [];
 
     // SNACK
-    snackMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("snack") &&
-          recipes.filter((recipe) => recipe.snack === meal.snack).length > 0
-      ) || [];
+    snackMeals = recipes.filter((item) => item.snack) || [];
 
     // DRINK
-    drinkMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("drink") &&
-          recipes.filter((recipe) => recipe.drink === meal.drink).length > 0
-      ) || [];
+    drinkMeals = recipes.filter((item) => item.drink) || [];
 
     // PREWORKOUT
-    preworkoutMeals =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("preworkout") &&
-          recipes.filter((recipe) => recipe.preworkout === meal.preworkout)
-            .length > 0
-      ) || [];
+    preworkoutMeals = recipes.filter((item) => item.preworkout) || [];
 
     //  TREATS
-    treats =
-      phaseMeals.filter(
-        (meal) =>
-          meal.types.includes("treats") &&
-          recipes.filter((recipe) => recipe.treats === meal.treats).length > 0
-      ) || [];
+    treats = recipes.filter((item) => item.treats) || [];
   }
 
-  recommendedRecipe = [
+  const recommendedRecipe = [
     {
       breakfast: breakFastMeals,
       snack: snackMeals,
@@ -237,6 +200,7 @@ export const getTodayRecommendedMeal = async (
   let preworkoutResult = [];
   let treatsResult = [];
   let phaseNames = [];
+  let snapshotDocs = [];
 
   let levelName = activeChallengeData.levelTags;
   let phaseTag = phaseData.name;
@@ -253,6 +217,10 @@ export const getTodayRecommendedMeal = async (
   if (phaseTag === "Phase3") {
     phaseNames.push("P3");
   }
+
+  snapshot.forEach((res) => {
+    snapshotDocs.push(res.data());
+  });
 
   if (activeChallengeData && activeChallengeData.newChallenge) {
     if (snapshot.empty) {
@@ -276,101 +244,209 @@ export const getTodayRecommendedMeal = async (
     });
   }
 
-  breakfastResult = phaseMeals
-    .filter(
-      (meal) =>
-        meal.types.includes("breakfast") && meal.showTransform && meal.breakfast
-    )
+  breakfastResult = snapshotDocs
+    .filter((snapshotDoc) => {
+      const filteredPhaseMeals =
+        phaseMeals.filter(
+          (meal) =>
+            meal.types.includes("breakfast") &&
+            // meal.showTransform &&
+            meal.breakfast
+        ) || [];
+
+      if (snapshotDoc.breakfast && snapshotDoc.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              snapshotDoc.tags?.includes(phaseNames[0])
+            ) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+          case "L2":
+          case "L3":
+            if (snapshotDoc.tags?.includes(levelName)) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+        }
+      }
+    })
     .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
+      return [...accum, item];
     }, []);
 
-  lunchResult = phaseMeals
-    .filter(
-      (meal) => meal.types.includes("lunch") && meal.showTransform && meal.lunch
-    )
+  lunchResult = snapshotDocs
+    .filter((snapshotDoc) => {
+      const filteredPhaseMeals =
+        phaseMeals.filter(
+          (meal) => meal.types.includes("lunch") && meal.lunch
+        ) || [];
+
+      if (snapshotDoc.lunch && snapshotDoc.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              snapshotDoc.tags?.includes(phaseNames[0])
+            ) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+          case "L2":
+          case "L3":
+            if (snapshotDoc.tags?.includes(levelName)) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+        }
+      }
+    })
     .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
+      return [...accum, item];
     }, []);
 
-  dinnerResult = phaseMeals
-    .filter(
-      (meal) =>
-        meal.types.includes("dinner") && meal.showTransform && meal.dinner
-    )
+  dinnerResult = snapshotDocs
+    .filter((snapshotDoc) => {
+      const filteredPhaseMeals =
+        phaseMeals.filter(
+          (meal) => meal.types.includes("dinner") && meal.dinner
+        ) || [];
+
+      if (snapshotDoc.dinner && snapshotDoc.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              snapshotDoc.tags?.includes(phaseNames[0])
+            ) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+          case "L2":
+          case "L3":
+            if (snapshotDoc.tags?.includes(levelName)) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+        }
+      }
+    })
     .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
+      return [...accum, item];
     }, []);
 
-  snackResult = phaseMeals
-    .filter(
-      (meal) => meal.types.includes("snack") && meal.showTransform && meal.snack
-    )
+  snackResult = snapshotDocs
+    .filter((snapshotDoc) => {
+      const filteredPhaseMeals =
+        phaseMeals.filter(
+          (meal) => meal.types.includes("snack") && meal.snack
+        ) || [];
+
+      if (snapshotDoc.snack && snapshotDoc.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              snapshotDoc.tags?.includes(phaseNames[0])
+            ) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+          case "L2":
+          case "L3":
+            if (snapshotDoc.tags?.includes(levelName)) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+        }
+      }
+    })
     .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
+      return [...accum, item];
     }, []);
 
-  drinkResult = phaseMeals
-    .filter(
-      (meal) => meal.types.includes("drink") && meal.showTransform && meal.drink
-    )
+  drinkResult = snapshotDocs
+    .filter((snapshotDoc) => {
+      const filteredPhaseMeals =
+        phaseMeals.filter(
+          (meal) => meal.types.includes("drink") && meal.drink
+        ) || [];
+
+      if (snapshotDoc.drink && snapshotDoc.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              snapshotDoc.tags?.includes(phaseNames[0])
+            ) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+          case "L2":
+          case "L3":
+            if (snapshotDoc.tags?.includes(levelName)) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+        }
+      }
+    })
     .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
+      return [...accum, item];
     }, []);
 
-  preworkoutResult = phaseMeals
-    .filter(
-      (meal) =>
-        meal.types.includes("preworkout") &&
-        meal.showTransform &&
-        meal.preworkout
-    )
+  preworkoutResult = snapshotDocs
+    .filter((snapshotDoc) => {
+      const filteredPhaseMeals =
+        phaseMeals.filter(
+          (meal) => meal.types.includes("preworkout") && meal.preworkout
+        ) || [];
+
+      if (snapshotDoc.preworkout && snapshotDoc.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              snapshotDoc.tags?.includes(phaseNames[0])
+            ) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+          case "L2":
+          case "L3":
+            if (snapshotDoc.tags?.includes(levelName)) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+        }
+      }
+    })
     .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
+      return [...accum, item];
     }, []);
 
-  treatsResult = phaseMeals
-    .filter(
-      (meal) =>
-        meal.types.includes("treats") && meal.showTransform && meal.treats
-    )
+  treatsResult = snapshotDocs
+    .filter((snapshotDoc) => {
+      const filteredPhaseMeals = phaseMeals.filter(
+        (meal) => meal.types.includes("treats") && meal.treats
+      );
+
+      if (snapshotDoc.treats && snapshotDoc.showTransform) {
+        switch (levelName) {
+          case "L1":
+            if (
+              snapshotDoc.tags?.includes(phaseNames[0])
+            ) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+          case "L2":
+          case "L3":
+            if (snapshotDoc.tags?.includes(levelName)) {
+              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
+            }
+            break;
+        }
+      }
+    })
     .reduce((accum, item) => {
-      if (item.tags.includes(phaseNames[0]) && item.tags.includes(levelName))
-        return [...accum, item];
-
-      if (item.tags.includes(levelName)) return [...accum, item];
-
-      return [...accum];
+      return [...accum, item];
     }, []);
 
   const challengeMealsFilterList = phaseMeals.map((res) => res.id);
@@ -407,6 +483,8 @@ export const getTodayRecommendedMeal = async (
       treats: treatsResult,
     },
   ];
+
+  console.log('recommendedRecipe: ', recommendedRecipe)
 
   const phaseDefaultTags = phaseNames[0];
 
