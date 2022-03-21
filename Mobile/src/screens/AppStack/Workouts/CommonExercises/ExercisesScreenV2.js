@@ -37,6 +37,7 @@ import WorkoutProgressControl from "../../../../components/Workouts/WorkoutProgr
 import { Platform } from "react-native";
 import TextTicker from "react-native-text-ticker";
 import { ActivityIndicator } from "react-native";
+import { VLCPlayer, VlCPlayerView } from 'react-native-vlc-media-player';
 
 const updateWeeklyTargets = (obj, field, newTally) => {
   return Object.assign({}, obj, { [field]: newTally });
@@ -633,6 +634,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
     }
   };
   handleVideoError = ()=>{
+    console.log("Played by VLC player");
     this.setState({
       videoError:true
     })
@@ -889,7 +891,7 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                   onBuffering={()=>{this.setState({loading:true})}}
                   onPlaying={()=>{this.setState({loading:false})}}
                   source={{
-                    uri: `${exerciseList[exerciseIndex-1].videoUrls[0].url}`,
+                    uri: `${exerciseList[currentExerciseIndex].videoUrls[0].url}`,
                   }}
                   paused={videoPaused}
                   repeat={true}
@@ -897,7 +899,6 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                   volume={1.0}
                   muted={false}
                   rate={1.0}
-                  onError={()=>console.log(exerciseList[exerciseIndex].videoUrls[0].url)}
                 />
               :
               <Video
@@ -906,8 +907,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
                     currentExerciseIndex + 1
                   }.mp4`,
                 }}
-                onLoadStart={()=>{this.setState({loading:true})}}
-                onReadyForDisplay={()=>{this.setState({loading:false})}}
+                onLoadStart={()=>this.setState({loading:true})}
+                onReadyForDisplay={()=>this.setState({loading:false})}
                 rate={1.0}
                 volume={1.0}
                 isMuted={false}
