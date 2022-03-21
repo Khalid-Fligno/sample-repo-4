@@ -46,8 +46,12 @@ const FindAccountScreen =({navigation}) =>{
                     customBtnTitleStyle={{ color: colors.black }}
                 
                 />
-                <View>
-                    <Text>Already have an Account? Sign In</Text>
+                <View style={{paddingLeft: wp("9%"),paddingTop: hp("10%")}}>
+                    <TouchableOpacity onPress={()=> navigation.navigate('Login')}>
+                        <Text style={styles.SignInText}>
+                            Already have an Account? Sign In
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </View>
           </View>
@@ -74,6 +78,9 @@ const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 1,
         fontSize: hp('2%')
+    },
+    SignInText:{
+        fontSize: hp('1.9%')
     }
 })
 

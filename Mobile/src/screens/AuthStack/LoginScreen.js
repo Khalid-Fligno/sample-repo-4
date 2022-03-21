@@ -557,11 +557,11 @@ export default class LoginScreen extends React.PureComponent {
                   onPress={() => this.login(email, password)}
                 />
 
-                <View style={authScreenStyle.dividerOverlay}>
+                {/* <View style={authScreenStyle.dividerOverlay}>
                   <Text style={authScreenStyle.dividerOverlayText}>OR</Text>
-                </View>
+                </View> */}
 
-                {appleSignInAvailable && (
+                {/* {appleSignInAvailable && (
                   <AppleAuthentication.AppleAuthenticationButton
                     onPress={this.onSignInWithApple}
                     buttonType={
@@ -573,7 +573,7 @@ export default class LoginScreen extends React.PureComponent {
                     cornerRadius={hp("3.5%")}
                     style={authScreenStyle.appleButton}
                   />
-                )}
+                )} */}
                 <Text
                   onPress={this.navigateToForgottenPassword}
                   style={authScreenStyle.navigateToButton}
