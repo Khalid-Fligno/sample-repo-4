@@ -15,77 +15,29 @@ import Modal from "react-native-modal";
 import moment from "moment";
 import { db } from "../../../config/firebase";
 import { burpeeOptions, findFitnessLevel } from "../../utils";
-import CustomButton from "../../components/Shared/CustomButton";
 import Loader from "../../components/Shared/Loader";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import CustomBtn from "../../components/Shared/CustomBtn";
 import { containerPadding } from "../../styles/globalStyles";
-import { Platform } from "react-native";
 
 const { width } = Dimensions.get("window");
 
-const uriToBlob = (url) => {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.onerror = reject;
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        resolve(xhr.response);
-      }
-    };
-    xhr.open("GET", url);
-    xhr.responseType = "blob"; // convert type
-    xhr.send();
-  });
-};
-
 const storeProgressInfo = async (
-  image,
   isInitial,
-  weight,
-  waist,
-  hip,
   burpeeCount
 ) => {
   const uid = await AsyncStorage.getItem("uid");
-  // const firebase = require("firebase");
-
-  // let blob = "";
-  // if (Platform.OS === "ios") {
-  //   const base64Response = await fetch(
-  //     `data:image/jpeg;base64,${image.base64}`
-  //   );
-  //   blob = base64Response.blob()._W;
-  // }
-  // if (Platform.OS === "android") blob = await uriToBlob(image.uri);
-
-  // const storageRef = firebase.storage().ref();
-  // const userPhotosStorageRef = storageRef.child("user-photos");
-  // const userStorageRef = userPhotosStorageRef.child(uid);
   const progressDataFieldName = isInitial
     ? "initialProgressInfo"
     : "currentProgressInfo";
-  const progressPhotoFilename = isInitial
-    ? "initial-progress-photo.jpeg"
-    : "current-progress-photo.jpeg";
-  // const progressPhotoStorageRef = userStorageRef.child(progressPhotoFilename);
-  // const metadata = {
-  //   contentType: "image/jpeg",
-  //   cacheControl: "public",
-  // };
-  // const snapshot = await progressPhotoStorageRef.put(blob, metadata);
-  // const url = await snapshot.ref.getDownloadURL();
+
   await db
     .collection("users")
     .doc(uid)
     .set(
       {
         [progressDataFieldName]: {
-          // photoURL: url,
-          // weight: parseInt(weight, 10),
-          // waist: parseInt(waist, 10),
-          // hip: parseInt(hip, 10),
           burpeeCount,
           date: moment().format("YYYY-MM-DD"),
         },
@@ -103,9 +55,11 @@ export default class Progress6Screen extends React.PureComponent {
       loading: false,
     };
   }
+  
   componentDidMount = () => {
     this.props.navigation.setParams({ handleSkip: this.handleSkip });
   };
+
   handleSkip = () => {
     if (this.props.navigation.getParam("isInitial", false)) {
       Alert.alert(
@@ -141,16 +95,21 @@ export default class Progress6Screen extends React.PureComponent {
       );
     }
   };
+
   handleSubmit = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     const { burpeeCount } = this.state;
     const uid = await AsyncStorage.getItem("uid");
     const userRef = db.collection("users").doc(uid);
-    const { weight, waist, hip, isInitial, image, navigateTo } =
-      this.props.navigation.state.params;
-    await storeProgressInfo(image, isInitial, weight, waist, hip, burpeeCount);
+    const { 
+      isInitial, 
+      navigateTo 
+    } = this.props.navigation.state.params;
     const fitnessLevel = findFitnessLevel(burpeeCount);
+
+    await storeProgressInfo(isInitial, burpeeCount);
+
     AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
     try {
       await userRef.set(
@@ -160,27 +119,31 @@ export default class Progress6Screen extends React.PureComponent {
         },
         { merge: true }
       );
+
       this.setState({ loading: false });
       if (navigateTo === "Progress") {
-        // this.props.navigation.navigate("ProgressHome");
         this.props.navigation.navigate("ProgressEdit");
-      } else if (isInitial) {
-        this.props.navigation.navigate("App");
-      } else {
-        this.props.navigation.navigate("ProgressHome");
-      }
+      } 
+
     } catch (err) {
       Alert.alert("Database write error", `${err}`);
       this.setState({ loading: false });
     }
   };
+
   toggleBurpeeModal = () => {
     this.setState((prevState) => ({
       burpeeModalVisible: !prevState.burpeeModalVisible,
     }));
   };
+
   render() {
-    const { burpeeCount, burpeeModalVisible, loading } = this.state;
+    const { 
+      burpeeCount, 
+      burpeeModalVisible, 
+      loading 
+    } = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>

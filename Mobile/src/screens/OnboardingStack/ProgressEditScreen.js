@@ -62,7 +62,12 @@ export default class ProgressEditScreen extends React.PureComponent {
     return false;
   }
   render() {
-    const { initialProgressInfo, currentProgressInfo, isInitial } = this.props.navigation.state.params;
+    const { 
+      initialProgressInfo, 
+      currentProgressInfo, 
+      isInitial 
+    } = this.props.navigation.state.params;
+    
     return (
       <View style={[{
         flex: 1,
@@ -168,10 +173,7 @@ export default class ProgressEditScreen extends React.PureComponent {
             borderColor: colors.grey.light,
           }} onPress={() => {
             this.props.navigation.navigate("Progress3", {
-              initialProgressInfo: initialProgressInfo,
-              currentProgressInfo: currentProgressInfo,
               isInitial: this.props.navigation.getParam('isInitial'),
-              progressEdit: true
             });
           }}>
             <View style={{

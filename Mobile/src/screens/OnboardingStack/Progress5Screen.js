@@ -45,17 +45,18 @@ export default class Progress5Screen extends React.PureComponent {
     };
     this.videoRef = createRef();
   }
+
   componentDidMount() {
     this.props.navigation.setParams({ handleSkip: this.handlePause });
     this.startTimer();
     this.videoRef.current.playAsync();
-    //AppState.addEventListener("change", this.handleAppStateChange);
     AppState.addEventListener("change", this.handleAppStateChange);
   }
+
   componentWillUnmount() {
     AppState.addEventListener("change", this.handleAppStateChange);
-    //AppState.removeEventListener("change", this.handleAppStateChange);
   }
+
   handleAppStateChange = async (nextAppState) => {
     const { appState } = this.state;
     if (appState === "active" && nextAppState.match(/inactive|background/)) {
@@ -63,9 +64,11 @@ export default class Progress5Screen extends React.PureComponent {
     }
     this.setState({ appState: nextAppState });
   };
+
   startTimer = () => {
     this.setState({ timerStart: true });
   };
+
   handlePause = () => {
     if (this.video && this.video.current) this.videoRef.current.pauseAsync();
     this.setState({
@@ -74,6 +77,7 @@ export default class Progress5Screen extends React.PureComponent {
       pauseModalVisible: true,
     });
   };
+
   handleUnpause = () => {
     this.videoRef.current.playAsync();
     this.setState({
@@ -82,6 +86,7 @@ export default class Progress5Screen extends React.PureComponent {
       pauseModalVisible: false,
     });
   };
+
   handleQuitWorkout = () => {
     this.setState({ pauseModalVisible: false }, () => {
       this.props.navigation.navigate("Progress");
@@ -90,6 +95,7 @@ export default class Progress5Screen extends React.PureComponent {
       idempotent: true,
     });
   };
+
   quitWorkout = () => {
     Alert.alert(
       "Stop burpee test?",
@@ -104,22 +110,26 @@ export default class Progress5Screen extends React.PureComponent {
       { cancelable: false }
     );
   };
+
   handleFinish = () => {
     this.setState({ timerStart: false });
-    const { image, weight, waist, hip, isInitial, navigateTo } =
+    const { isInitial, navigateTo } =
       this.props.navigation.state.params;
+
     this.props.navigation.replace("Progress6", {
-      image,
-      weight,
-      waist,
-      hip,
       isInitial,
       navigateTo,
     });
   };
+
   render() {
-    const { timerStart, totalDuration, pauseModalVisible, videoPaused } =
-      this.state;
+    const { 
+      timerStart, 
+      totalDuration, 
+      pauseModalVisible, 
+      videoPaused 
+    } = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
         <FadeInView duration={1000} style={styles.flexContainer}>

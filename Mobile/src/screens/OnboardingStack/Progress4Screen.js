@@ -23,6 +23,7 @@ export default class Progress4Screen extends React.PureComponent {
       appState: AppState.currentState,
     };
   }
+
   componentDidMount() {
     this.startTimer();
     this.subscribed = AppState.addEventListener(
@@ -30,10 +31,12 @@ export default class Progress4Screen extends React.PureComponent {
       this.handleAppStateChange
     );
   }
+
   componentWillUnmount() {
     if(this.subscribed) this.subscribed.remove();
     //AppState.removeEventListener("change", this.handleAppStateChange);
   }
+
   handleAppStateChange = async (nextAppState) => {
     const { appState } = this.state;
     if (appState === "active" && nextAppState.match(/inactive|background/)) {
@@ -41,21 +44,25 @@ export default class Progress4Screen extends React.PureComponent {
     }
     this.setState({ appState: nextAppState });
   };
+
   startTimer = () => {
     this.setState({ timerStart: true });
   };
+
   handlePause = () => {
     this.setState({
       timerStart: false,
       pauseModalVisible: true,
     });
   };
+
   handleUnpause = () => {
     this.setState({
       timerStart: true,
       pauseModalVisible: false,
     });
   };
+
   handleQuitWorkout = () => {
     this.setState({ pauseModalVisible: false }, () => {
       this.props.navigation.navigate("Progress");
@@ -64,6 +71,7 @@ export default class Progress4Screen extends React.PureComponent {
       idempotent: true,
     });
   };
+
   quitWorkout = () => {
     Alert.alert(
       "Stop burpee test?",
@@ -78,20 +86,24 @@ export default class Progress4Screen extends React.PureComponent {
       { cancelable: false }
     );
   };
+
   finishCountdown = () => {
-    const { image, weight, waist, hip, isInitial, navigateTo } =
+    const { isInitial, navigateTo } =
       this.props.navigation.state.params;
+      
     this.props.navigation.replace("Progress5", {
-      image,
-      weight,
-      waist,
-      hip,
       isInitial,
       navigateTo,
     });
   };
+
   render() {
-    const { countdownDuration, timerStart, pauseModalVisible } = this.state;
+    const { 
+      countdownDuration, 
+      timerStart, 
+      pauseModalVisible 
+    } = this.state;
+    
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
