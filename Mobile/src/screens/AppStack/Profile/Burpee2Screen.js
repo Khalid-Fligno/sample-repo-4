@@ -5,15 +5,12 @@ import {
   StyleSheet,
   SafeAreaView,
   AppState,
-  Alert,
 } from "react-native";
-import * as FileSystem from "expo-file-system";
-import CountdownPauseModal from "../../../components/Workouts/CountdownPauseModal";
 import CountdownTimer from "../../../components/Workouts/CountdownTimer";
 import colors from "../../../styles/colors";
 import fonts from "../../../styles/fonts";
 
-export default class Progress4Screen extends React.PureComponent {
+export default class Burpee2Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,68 +20,26 @@ export default class Progress4Screen extends React.PureComponent {
       appState: AppState.currentState,
     };
   }
+
   componentDidMount() {
     this.startTimer();
-    this.subscribed = AppState.addEventListener(
-      "change",
-      this.handleAppStateChange
-    );
   }
+
   componentWillUnmount = async () => {
-    if(this.subscribed) this.subscribed.remove();
-    //await AppState.removeEventListener("change", this.handleAppStateChange);
+    if (this.subscribed) this.subscribed.remove();
   };
-  handleAppStateChange = async (nextAppState) => {
-    const { appState } = this.state;
-    if (appState === "active" && nextAppState.match(/inactive|background/)) {
-      this.handlePause();
-    }
-    this.setState({ appState: nextAppState });
-  };
+
   startTimer = () => {
     this.setState({ timerStart: true });
   };
-  handlePause = () => {
-    this.setState({
-      timerStart: false,
-      pauseModalVisible: true,
-    });
-  };
-  handleUnpause = () => {
-    this.setState({
-      timerStart: true,
-      pauseModalVisible: false,
-    });
-  };
-  handleQuitWorkout = () => {
-    this.setState({ pauseModalVisible: false }, () => {
-      if (this.props.navigation.getParam("fromScreen")) {
-        const screen = this.props.navigation.getParam("fromScreen");
-        const params = this.props.navigation.getParam("screenReturnParams");
-        this.props.navigation.navigate(screen, params);
-        return;
-      }
-      this.props.navigation.navigate("Home");
-    });
-    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, {
-      idempotent: true,
-    });
-  };
-  quitWorkout = () => {
-    Alert.alert(
-      "Stop burpee test?",
-      "",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "OK",
-          onPress: this.handleQuitWorkout,
-        },
-      ],
-      { cancelable: false }
-    );
-  };
+
   finishCountdown = () => {
+    const {
+      isInitial,
+      navigateTo,
+      updateBurpees
+    } = this.props.navigation.state.params;
+
     if (this.props.navigation.getParam("fromScreen")) {
       const screen = this.props.navigation.getParam("fromScreen");
       const params = this.props.navigation.getParam("screenReturnParams");
@@ -94,10 +49,20 @@ export default class Progress4Screen extends React.PureComponent {
       });
       return;
     }
-    this.props.navigation.replace("Burpee3");
+
+    this.props.navigation.replace("Burpee3", {
+      isInitial: isInitial,
+      navigateTo: navigateTo,
+      updateBurpees: updateBurpees,
+    });
   };
+
   render() {
-    const { countdownDuration, timerStart, pauseModalVisible } = this.state;
+    const {
+      countdownDuration,
+      timerStart,
+    } = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
@@ -109,11 +74,6 @@ export default class Progress4Screen extends React.PureComponent {
             />
             <Text style={styles.countdownText}>GET READY!</Text>
           </View>
-          <CountdownPauseModal
-            isVisible={pauseModalVisible}
-            handleQuit={this.quitWorkout}
-            handleUnpause={this.handleUnpause}
-          />
         </View>
       </SafeAreaView>
     );

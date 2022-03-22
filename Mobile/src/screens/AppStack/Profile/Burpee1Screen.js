@@ -12,7 +12,6 @@ import * as Haptics from "expo-haptics";
 import * as FileSystem from "expo-file-system";
 import Video from "react-native-video";
 import Carousel from "react-native-carousel";
-import CustomButton from "../../../components/Shared/CustomButton";
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
 import fonts from "../../../styles/fonts";
@@ -20,9 +19,8 @@ import WorkoutScreenStyle from "../Workouts/WorkoutScreenStyle";
 import NutritionStyles from "../Nutrition/NutritionStyles";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import { containerPadding } from "../../../styles/globalStyles";
-import { throwIfAudioIsDisabled } from "expo-av/build/Audio/AudioAvailability";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 const coachingTip = [
   "Land with your feet flat on the ground just outside your hands.",
@@ -30,18 +28,26 @@ const coachingTip = [
   "Don’t let your hips drop as you land into your push-up.",
 ];
 
-export default class Progress3Screen extends React.PureComponent {
+export default class Burpee1Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
     };
   }
+
   componentDidMount() {
     this.props.navigation.setParams({ handleCancel: this.handleCancel });
   }
+
   handleNext = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const {
+      isInitial,
+      navigateTo,
+      updateBurpees
+    } = this.props.navigation.state.params;
+
     if (this.props.navigation.getParam("fromScreen")) {
       const screen = this.props.navigation.getParam("fromScreen");
       const params = this.props.navigation.getParam("screenReturnParams");
@@ -51,9 +57,20 @@ export default class Progress3Screen extends React.PureComponent {
       });
       return;
     }
-    this.props.navigation.navigate("Burpee2");
+
+    this.props.navigation.navigate("Burpee2", {
+      isInitial: isInitial,
+      navigateTo: navigateTo,
+      updateBurpees: updateBurpees,
+    });
   };
+
   handleCancel = () => {
+    const {
+      isInitial,
+      updateBurpees
+    } = this.props.navigation.state.params;
+
     Alert.alert(
       "Stop burpee test?",
       "",
@@ -72,15 +89,24 @@ export default class Progress3Screen extends React.PureComponent {
               this.props.navigation.navigate(screen, params);
               return;
             }
-            this.props.navigation.navigate("Home");
+
+            if (updateBurpees) {
+              this.props.navigation.navigate("ProgressEdit", {
+                isInitial: isInitial
+              });
+            } else {
+              this.props.navigation.navigate("Settings")
+            }
           },
         },
       ],
       { cancelable: false }
     );
   };
+
   render() {
     const { loading } = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
@@ -162,16 +188,12 @@ export default class Progress3Screen extends React.PureComponent {
           </View>
           <View style={styles.buttonContainer}>
             <CustomBtn
+              // Title={this.props.navigation.getParam("progressEdit") !== undefined ? "Re-take Burpee Test" : "READY!"}
               Title="READY!"
               onPress={this.handleNext}
               outline={false}
               customBtnTitleStyle={{ fontSize: 14, fontFamily: fonts.bold }}
             />
-            {/* <CustomButton
-              title="READY!"
-              onPress={this.handleNext}
-              primary
-            /> */}
           </View>
           <Loader color={colors.coral.standard} loading={loading} />
         </View>

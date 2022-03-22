@@ -15,8 +15,7 @@ import CountdownPauseModal from "../../../components/Workouts/CountdownPauseModa
 import WorkoutTimer from "../../../components/Workouts/WorkoutTimer";
 import colors from "../../../styles/colors";
 import fonts from "../../../styles/fonts";
-import { Video, AVPlaybackStatus } from "expo-av";
-import { useRef } from "react";
+import { Video } from "expo-av";
 
 const { width } = Dimensions.get("window");
 
@@ -35,7 +34,7 @@ export const workoutTimerStyle = {
   },
 };
 
-export default class Progress5Screen extends React.PureComponent {
+export default class Burpee3Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,14 +46,17 @@ export default class Progress5Screen extends React.PureComponent {
     };
     this.video = createRef();
   }
+
   componentDidMount() {
     this.props.navigation.setParams({ handleCancel: this.handlePause });
     this.startTimer();
     AppState.addEventListener("change", this.handleAppStateChange);
   }
+
   componentWillUnmount() {
     AppState.removeEventListener("change", this.handleAppStateChange);
   }
+
   handleAppStateChange = async (nextAppState) => {
     const { appState } = this.state;
     if (appState === "active" && nextAppState.match(/inactive|background/)) {
@@ -62,11 +64,13 @@ export default class Progress5Screen extends React.PureComponent {
     }
     this.setState({ appState: nextAppState });
   };
+
   startTimer = () => {
     this.setState({ timerStart: true });
     this.video.current.playAsync();
     // setTimeout(() => this.setState({ videoPaused: false }), 1500);
   };
+
   handlePause = () => {
     if (this.video && this.video.current) this.video.current.pauseAsync();
     this.setState({
@@ -75,6 +79,7 @@ export default class Progress5Screen extends React.PureComponent {
       pauseModalVisible: true,
     });
   };
+
   handleUnpause = () => {
     this.video.current.playAsync();
     this.setState({
@@ -83,7 +88,13 @@ export default class Progress5Screen extends React.PureComponent {
       pauseModalVisible: false,
     });
   };
+
   handleQuitWorkout = () => {
+    const {
+      isInitial,
+      updateBurpees
+    } = this.props.navigation.state.params;
+
     this.setState({ pauseModalVisible: false }, () => {
       if (this.props.navigation.getParam("fromScreen")) {
         const screen = this.props.navigation.getParam("fromScreen");
@@ -91,12 +102,21 @@ export default class Progress5Screen extends React.PureComponent {
         this.props.navigation.navigate(screen, params);
         return;
       }
-      this.props.navigation.navigate("Home");
+
+      if (updateBurpees) {
+        this.props.navigation.navigate("ProgressEdit", {
+          isInitial: isInitial
+        });
+      } else {
+        this.props.navigation.navigate("Settings")
+      }
     });
+
     FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, {
       idempotent: true,
     });
   };
+
   quitWorkout = () => {
     Alert.alert(
       "Stop burpee test?",
@@ -111,32 +131,39 @@ export default class Progress5Screen extends React.PureComponent {
       { cancelable: false }
     );
   };
+
   handleFinish = () => {
     this.setState({ timerStart: false });
-    const { image, weight, waist, hip } = this.props.navigation.state.params;
+    const {
+      isInitial,
+      navigateTo,
+      updateBurpees
+    } = this.props.navigation.state.params;
+
     if (this.props.navigation.getParam("fromScreen")) {
       const screen = this.props.navigation.getParam("fromScreen");
       const params = this.props.navigation.getParam("screenReturnParams");
       this.props.navigation.replace("Burpee4", {
-        image,
-        weight,
-        waist,
-        hip,
         fromScreen: screen,
         screenReturnParams: params,
       });
       return;
     }
+
     this.props.navigation.replace("Burpee4", {
-      image,
-      weight,
-      waist,
-      hip,
+      isInitial: isInitial,
+      navigateTo: navigateTo,
+      updateBurpees: updateBurpees,
     });
   };
+
   render() {
-    const { timerStart, totalDuration, pauseModalVisible, videoPaused } =
-      this.state;
+    const {
+      timerStart,
+      totalDuration,
+      pauseModalVisible,
+    } = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
         <FadeInView duration={1000} style={styles.flexContainer}>

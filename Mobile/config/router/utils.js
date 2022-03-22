@@ -28,10 +28,6 @@ export const tabColorMap = {
   Workouts: colors.coral.standard,
   Calendar: colors.green.standard,
   Progress: colors.blue.standard,
-  // FEED: colors.charcoal.standard,
-  // SUBSCRIPTION: colors.violet.standard,
-  // CALENDER: colors.green.standard,
-  // PROGRESS: colors.blue.standard,
 };
 
 export const workoutsBackButtonMap = {
@@ -58,7 +54,6 @@ export const calendarBackButtonMap = {
   Recipe: false,
   RecipeSteps: true,
   WorkoutInfo: true,
-  // CalendarHome:true
 };
 export const calendarProfileButtonMap = {
   Recipe: true,
@@ -78,10 +73,6 @@ export const onboardingBackButtonMap = {
   Onboarding1: false,
   Progress1: true,
   Progress2: true,
-  Progress3: true,
-  Progress4: false,
-  Progress5: false,
-  Progress6: false,
   ProgressEdit: true
 };
 
@@ -89,10 +80,6 @@ export const onboardingSkipButtonMap = {
   Onboarding1: false,
   Progress1: true,
   Progress2: true,
-  Progress3: true,
-  Progress4: false,
-  Progress5: true,
-  Progress6: true,
 };
 
 export const mealNameMap = {

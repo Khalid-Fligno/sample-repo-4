@@ -3,32 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   Dimensions,
-  KeyboardAvoidingView,
-  Alert,
   TouchableOpacity,
-  Picker,
 } from "react-native";
-import AsyncStorage from "@react-native-community/async-storage";
-import * as Haptics from "expo-haptics";
-import Modal from "react-native-modal";
-import HelperModal from "../../components/Shared/HelperModal";
-import CustomButton from "../../components/Shared/CustomButton";
-import CustomBtn from "../../components/Shared/CustomBtn";
-import Loader from "../../components/Shared/Loader";
-import {
-  weightOptionsMetric,
-  waistOptionsMetric,
-  hipOptionsMetric,
-  weightOptionsImperial,
-  waistOptionsImperial,
-  hipOptionsImperial,
-} from "../../utils/index";
-import { db } from "../../../config/firebase";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
-import globalStyle, { containerPadding } from "../../styles/globalStyles";
+import { containerPadding } from "../../styles/globalStyles";
 import { BackHandler } from "react-native";
 import { Icon } from 'react-native-elements'
 
@@ -41,45 +21,98 @@ export default class ProgressEditScreen extends React.PureComponent {
     };
     this.backButtonClick = this.backButtonClick.bind(this);
   }
+
   componentDidMount = () => {
-    //BackHandler.addEventListener('hardwareBackPress',this.backButtonClick)
     this.subscribed = BackHandler.addEventListener(
       'hardwareBackPress',
       this.backButtonClick
     );
   };
+
   componentWillUnmount() {
-    if(this.subscribed) this.subscribed.remove();
-    //BackHandler.removeEventListener('hardwareBackPress',this.backButtonClick)
+    if (this.subscribed) this.subscribed.remove();
   }
 
-  backButtonClick(){
-    if(this.props.navigation && this.props.navigation.goBack){
+  backButtonClick() {
+    if (this.props.navigation && this.props.navigation.goBack) {
       this.props.navigation.navigate('ProgressHome')
       return true;
 
     }
     return false;
   }
+
   render() {
-    const { 
-      initialProgressInfo, 
-      currentProgressInfo, 
-      isInitial 
-    } = this.props.navigation.state.params;
-    
+    const { isInitial } = this.props.navigation.state.params
+    console.log('isInitial: ', isInitial)
     return (
-      <View style={[{
-        flex: 1,
-        flexDirection: "column"
-      }]}>
-        <View style={{flex: 1}}>
+      <View
+        style={[{ flex: 1, flexDirection: "column" }]}
+      >
+        <View style={{ flex: 1 }}>
           <View style={styles.textContainer}>
-            <Text style={styles.headerText}>{isInitial ? 'Edit Before' : 'Progress'}</Text>
+            <Text style={styles.headerText}>
+              {isInitial ?
+                'Edit Before' :
+                'Progress'
+              }
+            </Text>
           </View>
         </View>
-        <View style={{flex: 2, flexDirection: "column"}}>
+        <View
+          style={{ flex: 2, flexDirection: "column" }}
+        >
           <TouchableOpacity style={{
+            flex: 1,
+            width,
+            padding: 10,
+            paddingHorizontal: containerPadding,
+            justifyContent: 'center',
+            borderTopWidth: 1,
+            borderColor: colors.grey.light,
+          }} onPress={() => {
+            this.props.navigation.navigate("Progress2", {
+              initialProgressInfo: initialProgressInfo,
+              currentProgressInfo: currentProgressInfo,
+              isInitial: isInitial,
+              progressEdit: true
+            });
+          }}>
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+            >
+              <View style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                alignItems: 'center'
+              }}>
+                <Text
+                  style={{
+                    fontFamily: fonts.bold,
+                    fontSize: 22,
+                    color: colors.charcoal.light,
+                    marginBottom: 5,
+                  }}
+                >
+                  {isInitial ?
+                    "Before Photo" :
+                    "Progress Photo"
+                  }
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center'
+                }}
+              >
+                <Icon name="chevron-right" size={36} color={colors.coolIce} type="entypo" />
+              </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
               flex: 1,
               width,
               padding: 10,
@@ -87,122 +120,108 @@ export default class ProgressEditScreen extends React.PureComponent {
               justifyContent: 'center',
               borderTopWidth: 1,
               borderColor: colors.grey.light,
-            }} onPress={() => {
-              this.props.navigation.navigate("Progress2", {
+            }}
+            onPress={() => {
+              this.props.navigation.navigate("Progress1", {
                 initialProgressInfo: initialProgressInfo,
                 currentProgressInfo: currentProgressInfo,
-                isInitial: this.props.navigation.getParam('isInitial'),
-                progressEdit: true
+                isInitial: isInitial,
+                progressEdit: true,
+                measurements: true
               });
-            }}>
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'center'
-                }}>
-                <Text style={{
-                  fontFamily: fonts.bold,
-                  fontSize: 22,
-                  color: colors.charcoal.light,
-                  marginBottom: 5,
-                }}>{isInitial ? "Before Photo" : "Progress Photo"}</Text>
+            }}
+          >
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-between', }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center'
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: fonts.bold,
+                    fontSize: 22,
+                    color: colors.charcoal.light,
+                    marginBottom: 5,
+                  }}
+                >
+                  {isInitial ?
+                    "Measurements" :
+                    "Progress Measurements"
+                  }
+                </Text>
               </View>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
-                alignItems: 'center'
-                }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center'
+                }}
+              >
                 <Icon name="chevron-right" size={36} color={colors.coolIce} type="entypo" />
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={{
-            flex: 1,
-            width,
-            padding: 10,
-            paddingHorizontal: containerPadding,
-            justifyContent: 'center',
-            borderTopWidth: 1,
-            borderColor: colors.grey.light,
-          }} onPress={() => {
-            this.props.navigation.navigate("Progress1", {
-              initialProgressInfo: initialProgressInfo,
-              currentProgressInfo: currentProgressInfo,
-              isInitial: this.props.navigation.getParam('isInitial'),
-              progressEdit: true,
-              measurements: true
-            });
-          }}>
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'center'
-                }}>
-                <Text style={{
-                  fontFamily: fonts.bold,
-                  fontSize: 22,
-                  color: colors.charcoal.light,
-                  marginBottom: 5,
-                }}>{isInitial ? "Measurements" : "Progress Measurements"}</Text>
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              width,
+              padding: 10,
+              paddingHorizontal: containerPadding,
+              justifyContent: 'center',
+              borderTopWidth: 1,
+              borderBottomWidth: 1,
+              borderColor: colors.grey.light,
+            }}
+            onPress={() => {
+              this.props.navigation.navigate("Burpee1", {
+                isInitial: isInitial,
+                navigateTo: "Progress",
+                updateBurpees: true
+              });
+            }}
+          >
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center'
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: fonts.bold,
+                    fontSize: 22,
+                    color: colors.charcoal.light,
+                    marginBottom: 5,
+                  }}
+                >
+                  {isInitial ?
+                    "Retake Burpee Test" :
+                    "Update Burpee Test"
+                  }
+                </Text>
               </View>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
-                alignItems: 'center'
-                }}>
-                <Icon name="chevron-right" size={36} color={colors.coolIce} type="entypo" />
-              </View>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={{
-            flex: 1,
-            width,
-            padding: 10,
-            paddingHorizontal: containerPadding,
-            justifyContent: 'center',
-            borderTopWidth: 1,
-            borderBottomWidth: 1,
-            borderColor: colors.grey.light,
-          }} onPress={() => {
-            this.props.navigation.navigate("Progress3", {
-              isInitial: this.props.navigation.getParam('isInitial'),
-            });
-          }}>
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'center'
-                }}>
-                <Text style={{
-                  fontFamily: fonts.bold,
-                  fontSize: 22,
-                  color: colors.charcoal.light,
-                  marginBottom: 5,
-                }}>{isInitial ? "Retake Burpee Test" : "Update Burpee Test"}</Text>
-              </View>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
-                alignItems: 'center'
-                }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center'
+                }}
+              >
                 <Icon name="chevron-right" size={36} color={colors.coolIce} type="entypo" />
               </View>
             </View>
           </TouchableOpacity>
         </View>
-        <View style={{flex: 3}} />
+        <View style={{ flex: 3 }} />
       </View>
     );
   }
