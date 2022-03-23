@@ -20,7 +20,6 @@ import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { getVersion } from "react-native-device-info";
 import { checkVersion } from "react-native-check-version";
 import AsyncStorage from "@react-native-community/async-storage";
-import { withProfiler } from "@sentry/react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome";
 export default class LandingScreen extends React.PureComponent {
@@ -39,7 +38,7 @@ export default class LandingScreen extends React.PureComponent {
     const uid = await AsyncStorage.getItem("uid");
     if (uid) {
       const version = await checkVersion();
-      const versionCodeRef = db
+      await db
         .collection("users")
         .doc(uid)
         .set(
@@ -62,75 +61,62 @@ export default class LandingScreen extends React.PureComponent {
           <StatusBar barStyle="light-content" />
 
           <View style={styles.carouselCardContainer}>
-            
+
             <View style={styles.padding}>
-            <ImageBackground
-              source={require("../../../assets/icons/FITAZ_BrandMark.png")}
-              style={styles.carouselImageBackground}
-            >
-            </ImageBackground>
-            <View style={styles.textPadding}>
-              <Text style={styles.fontText}>em 
-              <Text style={styles.underline}>powered</Text>
-              </Text>
-              <Text style={styles.fontText}>by you.</Text>
-            </View>
+              <ImageBackground
+                source={require("../../../assets/icons/FITAZ_BrandMark.png")}
+                style={styles.carouselImageBackground}
+              >
+              </ImageBackground>
+              <View style={styles.textPadding}>
+                <Text style={styles.fontText}>em
+                  <Text style={styles.underline}>powered</Text>
+                </Text>
+                <Text style={styles.fontText}>by you.</Text>
+              </View>
             </View>
 
-            <View style={{paddingBottom: hp("2%")}}>
-            <TouchableOpacity onPress={() =>
-              this.props.navigation.navigate("FindAccount")}
-            >
-              <View style={styles.transformProgram}>
-                <View style={{padding: 15}}>
-                   <Text style={styles.Text}>I have just purchased my {"\n"}1st Transform Program</Text>
+            <View style={{ paddingBottom: hp("2%") }}>
+              <TouchableOpacity onPress={() =>
+                this.props.navigation.navigate("FindAccount")}
+              >
+                <View style={styles.transformProgram}>
+                  <View style={{ marginLeft: 10 }}>
+                    <Text style={styles.Text}>I have just purchased my {"\n"}1st Transform Program</Text>
+                  </View>
+                  <View style={{ marginRight: 10 }}>
+                    <Icon name="angle-right" size={45} />
+                  </View>
                 </View>
-                <View style={{paddingTop: hp("1.5%"),paddingLeft: wp("20%")}}>
-                   <Icon name="angle-right" size={45} />
-                </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
             </View>
 
             <View>
-            <TouchableOpacity onPress={() =>
-              this.props.navigation.navigate("Signup", { specialOffer })}
-             >
-              <View style={styles.transformProgram}>
-                <View style={{padding: 15}}>
-                   <Text style={styles.Text}>I want to do a 7 day free {"\n"}trial of the Fitaz App </Text>
+              <TouchableOpacity onPress={() =>
+                this.props.navigation.navigate("Signup", { specialOffer })}
+              >
+                <View style={styles.transformProgram}>
+                  <View style={{ marginLeft: 10 }}>
+                    <Text style={styles.Text}>I want to do a 7 day free {"\n"}trial of the Fitaz App </Text>
+                  </View>
+                  <View style={{ marginRight: 10 }}>
+                    <Icon name="angle-right" size={45} />
+                  </View>
                 </View>
-                <View style={{paddingTop: hp("1.5%"),paddingLeft: wp("20%")}}>
-                   <Icon name="angle-right" size={45} />
-                </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
             </View>
-           
+
           </View>
           <View style={styles.absoluteButtonContainer}>
             <View style={styles.buttonContainer}>
-            
-              {/* <CustomBtn
-                customBtnStyle={{
-                  padding: 12,
-                  margin: 5,
-                  borderColor: colors.black,
-                  backgroundColor: colors.black,
-                }}
-                outline={false}
-                Title="TRANSFORM"
-                customBtnTitleStyle={{ color: colors.white }}
-                onPress={() =>
-                  this.props.navigation.navigate("Signup", { specialOffer })
-                }
-              /> */}
               <View style={{
                 paddingTop: hp("2%"),
                 paddingBottom: hp("2%"),
-                alignItems:'center'
-                }}>
-                <Text style={{fontSize: hp("1.9%")}}>Already have an account?</Text>
+                alignItems: 'center'
+              }}>
+                <Text
+                  style={{ fontSize: hp("1.9%"), fontFamily: fonts.SimplonMonoMedium, }}
+                >Already have an account?</Text>
               </View>
               <CustomBtn
                 customBtnStyle={{
@@ -192,7 +178,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     backgroundColor: colors.themeColor.themeBackgroundColor,
-    height: hp("18%") 
+    height: hp("18%")
   },
   buttonContainer: {
     width,
@@ -236,26 +222,31 @@ const styles = StyleSheet.create({
     paddingBottom: hp("20%"),
     flexDirection: 'row',
   },
-  textPadding:{
+  textPadding: {
     paddingLeft: wp("5%")
   },
-  fontText:{
-    fontSize:  hp('3%'),
+  fontText: {
+    fontSize: hp('3%'),
     fontWeight: "300",
+    fontFamily: fonts.SimplonMonoMedium,
   },
-  underline:{
-    fontSize:  hp('3%'),
+  underline: {
+    fontSize: hp('3%'),
     fontWeight: "300",
-    textDecorationLine: 'underline'
-
+    textDecorationLine: 'underline',
+    fontFamily: fonts.SimplonMonoMedium,
   },
-  transformProgram:{
+  transformProgram: {
+    flexDirection: 'row',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     borderWidth: 1,
     width: wp("90%"),
-    height: hp("9%"),
-    flexDirection: 'row'
+    height: hp("10%"),
   },
-  Text:{
+  Text: {
     fontSize: hp('2%'),
+    fontFamily: fonts.SimplonMonoMedium,
   }
 });

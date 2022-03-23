@@ -4,7 +4,6 @@ import {
   ScrollView,
   View,
   Text,
-  Dimensions,
   StatusBar,
   TouchableOpacity,
   SafeAreaView,
@@ -15,7 +14,6 @@ import {
 import AsyncStorage from "@react-native-community/async-storage";
 import { StackActions, NavigationActions } from "react-navigation";
 import * as Haptics from "expo-haptics";
-import * as Facebook from "expo-facebook";
 import firebase from "firebase";
 import appsFlyer from "react-native-appsflyer";
 import * as Crypto from "expo-crypto";
@@ -39,10 +37,10 @@ import CustomBtn from "../../components/Shared/CustomBtn";
 import InputBox from "../../components/Shared/inputBox";
 import BigHeadingWithBackButton from "../../components/Shared/BigHeadingWithBackButton";
 import authScreenStyle from "./authScreenStyle";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { hasChallenges } from "../../utils/challenges";
-const { InAppUtils } = NativeModules;
+import { HelperText } from "react-native-paper";
 
+const { InAppUtils } = NativeModules;
 const getRandomString = (length) => {
   let result = "";
   const characters =
@@ -53,8 +51,6 @@ const getRandomString = (length) => {
   }
   return result;
 };
-import { HelperText } from "react-native-paper";
-
 const styles = StyleSheet.create({
   inputText: {
     fontFamily: fonts.bold,
@@ -73,10 +69,12 @@ export default class LoginScreen extends React.PureComponent {
       appleSignInAvailable: undefined,
     };
   }
+
   componentDidMount = async () => {
     const appleSignInAvailable = await AppleAuthentication.isAvailableAsync();
     this.setState({ appleSignInAvailable });
   };
+
   onSignInWithApple = async () => {
     const nonce = getRandomString(32);
     let nonceSHA256 = "";
@@ -97,8 +95,8 @@ export default class LoginScreen extends React.PureComponent {
         ],
         nonce: nonceSHA256,
       });
-      // Signed in to Apple
 
+      // Signed in to Apple
       if (credential.user) {
         this.signInWithApple({
           identityToken: credential.identityToken,
@@ -108,6 +106,7 @@ export default class LoginScreen extends React.PureComponent {
       }
     } catch (e) {
       this.setState({ loading: false });
+
       if (e.code === "ERR_CANCELED") {
         Alert.alert("Login cancelled");
       } else {
@@ -121,11 +120,12 @@ export default class LoginScreen extends React.PureComponent {
       idToken: identityToken,
       rawNonce: nonce,
     });
+
+    // Signed in to Firebase Auth
     await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     firebase
       .auth()
       .signInWithCredential(credential)
-      // Signed in to Firebase Auth
       .then(async (appleuser) => {
         const { uid } = appleuser.user;
         appsFlyer.trackEvent("af_login");
@@ -146,7 +146,6 @@ export default class LoginScreen extends React.PureComponent {
                 await goToAppScreen(doc);
               } else {
                 // NO PURCHASE INFORMATION SAVED
-                // this.setState({ loading: false });
                 this.props.navigation.navigate("Subscription", {
                   specialOffer: this.state.specialOffer,
                 });
@@ -158,7 +157,6 @@ export default class LoginScreen extends React.PureComponent {
                 // EXPIRED
                 InAppUtils.restorePurchases(async (error, response) => {
                   if (error) {
-                    // Sentry.captureException(error);
                     this.setState({ loading: false });
                     Alert.alert(
                       "iTunes Error",
@@ -266,7 +264,6 @@ export default class LoginScreen extends React.PureComponent {
   iOSStorePurchases = async (onboarded) => {
     InAppUtils.restorePurchases(async (error, response) => {
       if (error) {
-        // Sentry.captureException(error);
         this.setState({ loading: false });
         Alert.alert("iTunes Error", "Could not connect to iTunes store.");
       } else {
@@ -325,6 +322,7 @@ export default class LoginScreen extends React.PureComponent {
       }
     });
   };
+
   getUserRegisterdFromShopify = async (emailId) => {
     const userRef = await db
       .collection("users")
@@ -334,6 +332,7 @@ export default class LoginScreen extends React.PureComponent {
       return userRef.docs[0].data();
     }
   };
+
   goToAppScreen = async (doc) => {
     // RECEIPT STILL VALID
     this.setState({ loading: false });
@@ -343,6 +342,7 @@ export default class LoginScreen extends React.PureComponent {
     }
     this.props.navigation.navigate("App");
   };
+
   login = async (email, password) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
@@ -400,7 +400,6 @@ export default class LoginScreen extends React.PureComponent {
                   }
                 } else {
                   //go to app
-
                   await this.goToAppScreen(doc);
                 }
               });
@@ -428,7 +427,6 @@ export default class LoginScreen extends React.PureComponent {
                   });
               });
             });
-            // doc.ref.delete();
             db.collection("users")
               .doc(uid)
               .get()
@@ -471,6 +469,7 @@ export default class LoginScreen extends React.PureComponent {
       this.setState({ error: errors.login[errorCode], loading: false });
     }
   };
+
   validate = async (receiptData) => {
     const validationData = await validateReceiptProduction(receiptData).catch(
       async () => {
@@ -483,6 +482,7 @@ export default class LoginScreen extends React.PureComponent {
     }
     return undefined;
   };
+
   navigateToSignup = () => {
     const resetAction = StackActions.reset({
       index: 1,
@@ -493,12 +493,19 @@ export default class LoginScreen extends React.PureComponent {
     });
     this.props.navigation.dispatch(resetAction);
   };
+
   navigateToForgottenPassword = () => {
     this.props.navigation.navigate("ForgottenPassword");
   };
+
   render() {
-    const { email, password, error, loading, appleSignInAvailable } =
-      this.state;
+    const { 
+      email, 
+      password, 
+      error, 
+      loading, 
+    } = this.state;
+
     return (
       <React.Fragment>
         <SafeAreaView style={authScreenStyle.safeAreaContainer}>
@@ -550,30 +557,11 @@ export default class LoginScreen extends React.PureComponent {
                   secureTextEntry
                   returnKeyType="go"
                 />
-
                 <CustomBtn
                   customBtnStyle={{ marginTop: 20 }}
                   Title="Sign in"
                   onPress={() => this.login(email, password)}
                 />
-
-                {/* <View style={authScreenStyle.dividerOverlay}>
-                  <Text style={authScreenStyle.dividerOverlayText}>OR</Text>
-                </View> */}
-
-                {/* {appleSignInAvailable && (
-                  <AppleAuthentication.AppleAuthenticationButton
-                    onPress={this.onSignInWithApple}
-                    buttonType={
-                      AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
-                    }
-                    buttonStyle={
-                      AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
-                    }
-                    cornerRadius={hp("3.5%")}
-                    style={authScreenStyle.appleButton}
-                  />
-                )} */}
                 <Text
                   onPress={this.navigateToForgottenPassword}
                   style={authScreenStyle.navigateToButton}

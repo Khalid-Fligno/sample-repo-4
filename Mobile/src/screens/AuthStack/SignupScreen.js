@@ -3,19 +3,16 @@ import {
   StyleSheet,
   View,
   Text,
-  Dimensions,
   TouchableOpacity,
   StatusBar,
   ScrollView,
   SafeAreaView,
   Alert,
   Keyboard,
-  ImageBackground,
   KeyboardAvoidingView,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { StackActions, NavigationActions } from "react-navigation";
-import { Button, Divider, Input } from "react-native-elements";
 import * as Localization from "expo-localization";
 import * as Haptics from "expo-haptics";
 import * as Facebook from "expo-facebook";
@@ -26,11 +23,9 @@ import * as AppleAuthentication from "expo-apple-authentication";
 import { db, auth } from "../../../config/firebase";
 import NativeLoader from "../../components/Shared/NativeLoader";
 import Icon from "../../components/Shared/Icon";
-import FacebookButton from "../../components/Auth/FacebookButton";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import errors from "../../utils/errors";
-import { containerPadding } from "../../styles/globalStyles";
 import BigHeadingWithBackButton from "../../components/Shared/BigHeadingWithBackButton";
 import InputBox from "../../components/Shared/inputBox";
 import CustomBtn from "../../components/Shared/CustomBtn";
@@ -42,7 +37,6 @@ import {
   sub3Monthly,
   subYearly,
 } from "../../utils/challenges";
-const { width } = Dimensions.get("window");
 import { HelperText } from "react-native-paper";
 
 const getRandomString = (length) => {
@@ -76,10 +70,12 @@ export default class SignupScreen extends React.PureComponent {
       appleSignInAvailable: undefined,
     };
   }
+
   componentDidMount = async () => {
     const appleSignInAvailable = await AppleAuthentication.isAvailableAsync();
     this.setState({ appleSignInAvailable });
   };
+
   onSignInWithApple = async () => {
     const nonce = getRandomString(32);
     let nonceSHA256 = "";
@@ -120,6 +116,7 @@ export default class SignupScreen extends React.PureComponent {
       }
     }
   };
+
   signInWithApple = async ({ identityToken, nonce, fullName }) => {
     const provider = new firebase.auth.OAuthProvider("apple.com");
     const credential = provider.credential({
@@ -144,20 +141,15 @@ export default class SignupScreen extends React.PureComponent {
           signUpDate: new Date(),
           fitnessLevel: 1,
         };
-        //Alert.alert('userid', uid);
-        //Alert.alert('useremailid1', data.email);
         await AsyncStorage.setItem("uid", uid);
         db.collection("users")
           .doc(uid)
           .set(data)
           .then(async () => {
             this.setState({ loading: false });
-            //Alert.alert('userid2', uid);
-            //Alert.alert('useremailid', data.email);
             appsFlyer.trackEvent("af_complete_registration", {
               af_registration_method: "Apple",
             });
-            // this.props.navigation.navigate('Subscription', { name: givenName, specialOffer: this.state.specialOffer });
             await this.addChallengesAfterSignUp(email, uid);
             this.props.navigation.navigate("Onboarding1", {
               name: givenName,
@@ -178,8 +170,7 @@ export default class SignupScreen extends React.PureComponent {
             );
           });
       })
-      .catch((error) => {
-        //Alert.alert('error', error);
+      .catch(() => {
         this.setState({ loading: false });
         Alert.alert(
           "Could not authenticate with Apple",
@@ -187,6 +178,7 @@ export default class SignupScreen extends React.PureComponent {
         );
       });
   };
+
   signupWithFacebook = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
@@ -285,6 +277,7 @@ export default class SignupScreen extends React.PureComponent {
       this.setState({ error: "Something went wrong", loading: false });
     }
   };
+
   addChallengesAfterSignUp = async (email, uid) => {
     const shopifyRegisteredUser = await this.getUserChallengeFromShopify(email);
     const subscriptionFromShopify = await this.getUserSubscriptionFromShopify(
@@ -332,6 +325,7 @@ export default class SignupScreen extends React.PureComponent {
       await db.collection("users").doc(subscriptionFromShopify.id).delete();
     }
   };
+
   getUserChallengeFromShopify = async (emailId) => {
     const userRef = await db
       .collection("users")
@@ -342,6 +336,7 @@ export default class SignupScreen extends React.PureComponent {
       return userRef.docs[0].data();
     }
   };
+
   getUserSubscriptionFromShopify = async (emailId) => {
     const userRef = await db
       .collection("users")
@@ -352,6 +347,7 @@ export default class SignupScreen extends React.PureComponent {
       return userRef.docs[0].data();
     }
   };
+
   getChallengeDetails = async (user) => {
     let challenges = [];
     const challengeRef = await db
@@ -364,6 +360,7 @@ export default class SignupScreen extends React.PureComponent {
     }
     //return challenges;
   };
+
   signup = async (firstName, lastName, email, password) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
@@ -426,6 +423,7 @@ export default class SignupScreen extends React.PureComponent {
       this.setState({ error: errors.createUser[errorCode], loading: false });
     }
   };
+
   navigateToLogin = () => {
     const resetAction = StackActions.reset({
       index: 1,
@@ -436,6 +434,7 @@ export default class SignupScreen extends React.PureComponent {
     });
     this.props.navigation.dispatch(resetAction);
   };
+
   render() {
     const {
       firstName,
@@ -446,16 +445,12 @@ export default class SignupScreen extends React.PureComponent {
       loading,
       appleSignInAvailable,
     } = this.state;
+
     return (
       <React.Fragment>
         <SafeAreaView style={authScreenStyle.safeAreaContainer}>
           <View style={authScreenStyle.container}>
             <StatusBar barStyle="light-content" />
-
-            {/* <ImageBackground
-              source={require('../../../assets/images/signup-screen-background.jpg')}
-              style={styles.imageBackground}
-            > */}
             <ScrollView contentContainerStyle={authScreenStyle.scrollView}>
               <View style={authScreenStyle.closeIconContainer}>
                 <TouchableOpacity
@@ -469,23 +464,11 @@ export default class SignupScreen extends React.PureComponent {
                   />
                 </TouchableOpacity>
               </View>
-              {/* <Text style={styles.headerText1}>
-                  CREATE YOUR
-                </Text>
-                <Text style={styles.headerText1}>
-                  ACCOUNT TO
-                </Text>
-                <Text style={styles.headerText2}>
-                  get started
-                </Text> */}
-
               <View>
-                {/* */}
                 <BigHeadingWithBackButton
                   isBackButton={false}
                   bigTitleText="Create account"
                   isBigTitle={true}
-                  // bigTitleStyle={{width:width-containerPadding*2}}
                 />
                 <KeyboardAvoidingView
                   keyboardVerticalOffset={40}
@@ -524,7 +507,6 @@ export default class SignupScreen extends React.PureComponent {
                     errorMessage={error && error}
                     placeholder="Create Password"
                     value={password}
-                    // inputStyle={styles.inputText}
                     onChangeText={(text) => this.setState({ password: text })}
                     onSubmitEditing={() =>
                       this.signup(
@@ -554,28 +536,8 @@ export default class SignupScreen extends React.PureComponent {
                     )
                   }
                 />
-
                 <View style={authScreenStyle.dividerOverlay}>
-                  {/*
-                  <Text style={authScreenStyle.dividerOverlayText}>OR</Text>
-                  */}
                 </View>
-                {/* 
-                <CustomBtn
-                  customBtnStyle={{
-                    borderColor: colors.grey.standard,
-                  }}
-                  outline={true}
-                  Title="Create account with Facebook"
-                  customBtnTitleStyle={{
-                    fontWeight: "500",
-                    letterSpacing: 0.7,
-                    color: colors.transparentBlackDark,
-                  }}
-                  onPress={this.signupWithFacebook}
-                  leftIcon={true}
-                  leftIconUrl={require("../../../assets/icons/facebook.png")}
-                /> */}
                 {appleSignInAvailable && (
                   <AppleAuthentication.AppleAuthenticationButton
                     onPress={this.onSignInWithApple}
@@ -600,7 +562,6 @@ export default class SignupScreen extends React.PureComponent {
                 </Text>
               </View>
             </ScrollView>
-            {/* </ImageBackground> */}
           </View>
         </SafeAreaView>
         {loading && <NativeLoader />}
