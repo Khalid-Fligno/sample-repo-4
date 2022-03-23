@@ -155,6 +155,10 @@ export default class Burpee3Screen extends React.PureComponent {
       navigateTo: navigateTo,
       updateBurpees: updateBurpees,
     });
+
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, {
+      idempotent: true,
+    });
   };
 
   render() {

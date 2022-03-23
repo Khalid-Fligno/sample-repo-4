@@ -188,8 +188,14 @@ export default class Burpee1Screen extends React.PureComponent {
           </View>
           <View style={styles.buttonContainer}>
             <CustomBtn
-              // Title={this.props.navigation.getParam("progressEdit") !== undefined ? "Re-take Burpee Test" : "READY!"}
-              Title="READY!"
+              Title={
+                this.props.navigation.getParam("updateBurpees") ?
+                this.props.navigation.getParam("isInitial") ?
+                    "Re-take Burpee Test" :
+                    "Update Burpee count"
+                  :
+                  "READY!"
+              }
               onPress={this.handleNext}
               outline={false}
               customBtnTitleStyle={{ fontSize: 14, fontFamily: fonts.bold }}

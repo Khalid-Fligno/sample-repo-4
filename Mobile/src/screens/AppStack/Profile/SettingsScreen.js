@@ -1,25 +1,19 @@
 import React from "react";
 import {
-  StyleSheet,
   SafeAreaView,
   View,
   ScrollView,
-  Dimensions,
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
 import { ListItem } from "react-native-elements";
-import firebase from "firebase";
 import { db, auth } from "../../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
-// import fonts from '../../../styles/fonts';
 import globalStyle from "../../../styles/globalStyles";
 import ProfileStyles from "./ProfileStyles";
 import moment from "moment";
-
-const { width } = Dimensions.get("window");
 
 export default class SettingsScreen extends React.PureComponent {
   constructor(props) {
@@ -30,6 +24,7 @@ export default class SettingsScreen extends React.PureComponent {
       isPasswordAccount: false,
     };
   }
+
   componentDidMount = async () => {
     this.fetchProfile();
     const { providerData } = auth.currentUser;
@@ -79,6 +74,7 @@ export default class SettingsScreen extends React.PureComponent {
       { cancelable: false }
     );
   };
+
   sendPasswordResetEmail = () => {
     const { email } = this.state.profile;
     auth
@@ -90,6 +86,7 @@ export default class SettingsScreen extends React.PureComponent {
         Alert.alert(error);
       });
   };
+
   resetProgressAlert = () => {
     Alert.alert(
       "Reset Progress Info",
@@ -120,36 +117,18 @@ export default class SettingsScreen extends React.PureComponent {
         weight: null ?? 0,
         waist: null ?? 0,
         hip: null ?? 0,
-        // height: null ?? 0,
-        // goalWeight: null ?? 0,
-        // burpeeCount: null ?? 0,
       },
-      // initialProgressInfo: firebase.firestore.FieldValue.delete(),
+
       currentProgressInfo: {
         date: moment().format("YYYY-MM-DD"),
         weight: null,
         waist: null,
         hip: null,
-        // height: null,
-        // goalWeight: null,
-        // burpeeCount: null,
       }
     });
     Alert.alert("Your progress info has been reset");
     this.setState({ loading: false });
   };
-
-  // resetInitialProgress = async () => {
-  //   this.setState({ loading: true });
-  //   const uid = await AsyncStorage.getItem("uid");
-  //   const userRef = db.collection("users").doc(uid);
-  //   await userRef.update({
-  //     initialProgressInfo: firebase.firestore.FieldValue.delete(),
-  //     currentProgressInfo: firebase.firestore.FieldValue.delete(),
-  //   });
-  //   Alert.alert("Your progress info has been reset");
-  //   this.setState({ loading: false });
-  // };
 
   retakeBurpeeTest = async () => {
     this.setState({ loading: true });
@@ -164,14 +143,12 @@ export default class SettingsScreen extends React.PureComponent {
   render() {
     const { isPasswordAccount, profile, loading } = this.state;
 
-
     return (
       <SafeAreaView style={globalStyle.safeContainer}>
         <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
           <ScrollView contentContainerStyle={globalStyle.scrollView}>
             <View style={ProfileStyles.listContainer}>
               {
-                // Only show password change if an email/password account is present
                 isPasswordAccount && (
                   <ListItem
                     title="Change Password"
@@ -186,7 +163,6 @@ export default class SettingsScreen extends React.PureComponent {
                 )
               }
               {
-                // Only show password change if an email/password account is present
                 profile && (
                   <ListItem
                     title="Reset initial progress info"

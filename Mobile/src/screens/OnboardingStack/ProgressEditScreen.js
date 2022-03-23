@@ -11,6 +11,8 @@ import fonts from "../../styles/fonts";
 import { containerPadding } from "../../styles/globalStyles";
 import { BackHandler } from "react-native";
 import { Icon } from 'react-native-elements'
+import * as FileSystem from "expo-file-system";
+import Loader from "../../components/Shared/Loader";
 
 const { width } = Dimensions.get("window");
 
@@ -41,6 +43,21 @@ export default class ProgressEditScreen extends React.PureComponent {
     }
     return false;
   }
+
+  retakeBurpeeTest = async (isInitial) => {
+    this.setState({ loading: true });
+    await FileSystem.downloadAsync(
+      "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+      `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+    );
+
+    this.setState({ loading: false });
+    this.props.navigation.navigate("Burpee1", {
+      isInitial: isInitial,
+      navigateTo: "Progress",
+      updateBurpees: true
+    });
+  };
 
   render() {
     const { isInitial } = this.props.navigation.state.params
@@ -177,13 +194,7 @@ export default class ProgressEditScreen extends React.PureComponent {
               borderBottomWidth: 1,
               borderColor: colors.grey.light,
             }}
-            onPress={() => {
-              this.props.navigation.navigate("Burpee1", {
-                isInitial: isInitial,
-                navigateTo: "Progress",
-                updateBurpees: true
-              });
-            }}
+            onPress={() => this.retakeBurpeeTest(isInitial)}
           >
             <View
               style={{ flexDirection: 'row', justifyContent: 'space-between' }}
@@ -221,6 +232,7 @@ export default class ProgressEditScreen extends React.PureComponent {
             </View>
           </TouchableOpacity>
         </View>
+        <Loader loading={this.state.loading} color={colors.charcoal.standard} />
         <View style={{ flex: 3 }} />
       </View>
     );
