@@ -445,6 +445,9 @@ export default class SignupScreen extends React.PureComponent {
       loading,
       appleSignInAvailable,
     } = this.state;
+    const {
+      userData
+    } = this.props.navigation.state.params
 
     return (
       <React.Fragment>
@@ -477,32 +480,37 @@ export default class SignupScreen extends React.PureComponent {
                 >
                   <InputBox
                     placeholder="First Name"
-                    value={firstName}
+                    value={userData ? userData.firstName : firstName}
                     onChangeText={(text) => this.setState({ firstName: text })}
                     inputStyle={styles.inputText}
                   />
                   <InputBox
                     placeholder="Last Name"
-                    value={lastName}
+                    value={userData ? userData.lastName : lastName}
                     inputStyle={styles.inputText}
                     onChangeText={(text) => this.setState({ lastName: text })}
                   />
                   <InputBox
                     placeholder="Email address"
-                    value={email}
+                    value={userData ? userData.email : email}
                     inputStyle={styles.inputText}
                     keyboardType="email-address"
                     onChangeText={(text) => {
                       this.setState({ email: text });
                     }}
                   />
-                  <HelperText
-                    type="info"
-                    visible={true}
-                    style={(colors.grey.standard, styles.inputText)}
-                  >
-                    Enter email used for challenge purchase on fitazfk.com.
-                  </HelperText>
+                  {
+                    userData ?
+                      null
+                      :
+                      <HelperText
+                        type="info"
+                        visible={true}
+                        style={(colors.grey.standard, styles.inputText)}
+                      >
+                        Enter email used for challenge purchase on fitazfk.com.
+                      </HelperText>
+                  }
                   <InputBox
                     errorMessage={error && error}
                     placeholder="Create Password"
@@ -522,7 +530,7 @@ export default class SignupScreen extends React.PureComponent {
                 </KeyboardAvoidingView>
                 <CustomBtn
                   customBtnStyle={{ marginTop: 20 }}
-                  Title="Create new account"
+                  Title="GET STARTED"
                   customBtnTitleStyle={{
                     fontWeight: "500",
                     letterSpacing: 0.7,
@@ -538,19 +546,24 @@ export default class SignupScreen extends React.PureComponent {
                 />
                 <View style={authScreenStyle.dividerOverlay}>
                 </View>
-                {appleSignInAvailable && (
-                  <AppleAuthentication.AppleAuthenticationButton
-                    onPress={this.onSignInWithApple}
-                    buttonType={
-                      AppleAuthentication.AppleAuthenticationButtonType.CONTINUE
-                    }
-                    buttonStyle={
-                      AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
-                    }
-                    cornerRadius={4}
-                    style={authScreenStyle.appleButton}
-                  />
-                )}
+                {
+                  userData ?
+                    null
+                    :
+                    appleSignInAvailable && (
+                      <AppleAuthentication.AppleAuthenticationButton
+                        onPress={this.onSignInWithApple}
+                        buttonType={
+                          AppleAuthentication.AppleAuthenticationButtonType.CONTINUE
+                        }
+                        buttonStyle={
+                          AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
+                        }
+                        cornerRadius={4}
+                        style={authScreenStyle.appleButton}
+                      />
+                    )
+                }
                 <Text
                   onPress={this.navigateToLogin}
                   style={[
