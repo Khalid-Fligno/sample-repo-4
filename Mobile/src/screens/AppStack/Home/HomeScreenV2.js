@@ -27,7 +27,6 @@ import { isActiveChallenge } from "../../../utils/challenges";
 // images
 import { IMAGE } from "../../../library/images";
 
-
 const { width } = Dimensions.get("window");
 
 export default class HomeScreenV2 extends React.PureComponent {

@@ -14,7 +14,7 @@ import * as Haptics from "expo-haptics";
 import Modal from "react-native-modal";
 import { db } from "../../../../config/firebase";
 import { burpeeOptions, findFitnessLevel } from "../../../utils";
-import CustomButton from "../../../components/Shared/CustomButton";
+import moment from "moment";
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
 import fonts from "../../../styles/fonts";
@@ -23,7 +23,32 @@ import { containerPadding } from "../../../styles/globalStyles";
 
 const { width } = Dimensions.get("window");
 
-export default class Progress6Screen extends React.PureComponent {
+const storeProgressInfo = async (
+  isInitial,
+  burpeeCount
+) => {
+  const uid = await AsyncStorage.getItem("uid");
+  const progressDataFieldName = isInitial
+    ? "initialProgressInfo"
+    : "currentProgressInfo";
+
+  console.log('progressDataFieldName: ', progressDataFieldName)
+
+  await db
+    .collection("users")
+    .doc(uid)
+    .set(
+      {
+        [progressDataFieldName]: {
+          burpeeCount,
+          date: moment().format("YYYY-MM-DD"),
+        },
+      },
+      { merge: true }
+    );
+};
+
+export default class Burpee4Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,10 +57,17 @@ export default class Progress6Screen extends React.PureComponent {
       loading: false,
     };
   }
+
   componentDidMount = () => {
     this.props.navigation.setParams({ handleCancel: this.handleCancel });
   };
+
   handleCancel = () => {
+    const {
+      isInitial,
+      updateBurpees
+    } = this.props.navigation.state.params;
+
     Alert.alert(
       "Stop burpee test?",
       "",
@@ -54,13 +86,21 @@ export default class Progress6Screen extends React.PureComponent {
               this.props.navigation.navigate(screen, params);
               return;
             }
-            this.props.navigation.navigate("Home");
+
+            if(updateBurpees){
+              this.props.navigation.navigate("ProgressEdit", {
+                isInitial: isInitial
+              });
+            } else {
+              this.props.navigation.navigate("Settings")
+            }
           },
         },
       ],
       { cancelable: false }
     );
   };
+
   handleSubmit = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
@@ -69,11 +109,22 @@ export default class Progress6Screen extends React.PureComponent {
     const userRef = db.collection("users").doc(uid);
     const userSnapshot = await userRef.get();
     const initialProgressInfo = userSnapshot.data().initialProgressInfo ?? null;
-    if (initialProgressInfo) {
+    const {
+      isInitial,
+      navigateTo,
+      updateBurpees
+    } = this.props.navigation.state.params;
+    const fitnessLevel = findFitnessLevel(burpeeCount);
+    console.log('isInitial: ', isInitial)
+
+    if (updateBurpees) {
+      await storeProgressInfo(isInitial, burpeeCount)
+    } else {
       const progressInfo = {
         ...initialProgressInfo,
         burpeeCount: burpeeCount,
       };
+
       try {
         await userRef.set(
           {
@@ -83,10 +134,9 @@ export default class Progress6Screen extends React.PureComponent {
         );
       } catch (reason) {
         console.log("[Burpee4Screen.js handleSubmit() error: ", reason);
-        Alert.alert("Error", `Error: ${reason}.`);
       }
     }
-    const fitnessLevel = findFitnessLevel(burpeeCount);
+
     AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
     try {
       await userRef.set(
@@ -96,26 +146,41 @@ export default class Progress6Screen extends React.PureComponent {
         },
         { merge: true }
       );
+
       this.setState({ loading: false });
-      if (this.props.navigation.getParam("fromScreen")) {
-        const screen = this.props.navigation.getParam("fromScreen");
-        const params = this.props.navigation.getParam("screenReturnParams");
-        this.props.navigation.navigate(screen, params);
-        return;
+
+      if (navigateTo === "Progress") {
+        this.props.navigation.navigate("ProgressEdit", {
+          isInitial: isInitial
+        });
+      } else {
+        if (this.props.navigation.getParam("fromScreen")) {
+          const screen = this.props.navigation.getParam("fromScreen");
+          const params = this.props.navigation.getParam("screenReturnParams");
+          this.props.navigation.navigate(screen, params);
+          return;
+        }
+        this.props.navigation.navigate("Home");
       }
-      this.props.navigation.navigate("Home");
     } catch (err) {
-      Alert.alert("Database write error", `${err}`);
+      console.log(err)
       this.setState({ loading: false });
     }
   };
+
   toggleBurpeeModal = () => {
     this.setState((prevState) => ({
       burpeeModalVisible: !prevState.burpeeModalVisible,
     }));
   };
+
   render() {
-    const { burpeeCount, burpeeModalVisible, loading } = this.state;
+    const {
+      burpeeCount,
+      burpeeModalVisible,
+      loading
+    } = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>

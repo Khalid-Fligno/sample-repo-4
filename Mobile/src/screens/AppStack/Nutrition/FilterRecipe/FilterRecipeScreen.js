@@ -300,34 +300,33 @@ export default class FilterRecipeScreen extends React.PureComponent {
         const { levelText } = this.state
         const tagList = []
         const recipePhases = []
-        const recipePhaseResult = []
+        const bool = true
 
         if (levelText === 'L1') {
+            const levelTags = challengeRecipeData?.level1.map(level => level.levelTags)
             let recipePhase = []
-            challengeRecipeData.level1.forEach(res => {
-                data.forEach((resTags) => {
-                    try {
-                        resTags.tags.filter((resTag) => {
-                            if (res.levelTags === resTag) {
-                                if (this.state.phase1 === true) {
-                                    if (resTags.tags.includes(this.state.phaseText)) {
-                                        recipePhase.push(resTags)
-                                    }
+            data.filter((resTags) => {
+                resTags.tags.filter((resTag) => {
+                    if (levelTags.includes(resTag)) {
+                        switch (bool) {
+                            case this.state.phase1:
+                                if (resTags.tags.includes(this.state.phaseText)) {
+                                    // console.log('restag p1: ', resTags)
+                                    recipePhase.push(resTags)
                                 }
-                                if (this.state.phase2 === true) {
-                                    if (resTags.tags.includes(this.state.phaseText)) {
-                                        recipePhase.push(resTags)
-                                    }
+                                break;
+                            case this.state.phase2:
+                                if (resTags.tags.includes(this.state.phaseText)) {
+                                    // console.log('restag p1: ', resTags)
+                                    recipePhase.push(resTags)
                                 }
-                                if (this.state.phase3 === true) {
-                                    if (resTags.tags.includes(this.state.phaseText)) {
-                                        recipePhase.push(resTags)
-                                    }
+                                break;
+                            case this.state.phase3:
+                                if (resTags.tags.includes(this.state.phaseText)) {
+                                    recipePhase.push(resTags)
                                 }
-                            }
-                        })
-                    } catch (err) {
-
+                                break;
+                        }
                     }
                 })
             })
@@ -381,32 +380,31 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     }
                 }
             });
-
         }
 
         if (levelText === 'L2') {
+            const levelTags = challengeRecipeData?.level2.map(level => level.levelTags)
             let recipePhase = []
-            challengeRecipeData.level2.forEach(res => {
-                data.forEach((resTags) => {
-                    try {
-                        resTags.tags.filter((resTag) => {
-                            if (res.levelTags === resTag) {
-                                if (this.state.phase1 === true) {
-                                    recipePhase.push(resTags)
-                                    recipePhases.push(resTags)
-                                }
-                                if (this.state.phase2 === true) {
-                                    recipePhase.push(resTags)
-                                    recipePhases.push(resTags)
-                                }
-                                if (this.state.phase3 === true) {
-                                    recipePhase.push(resTags)
-                                    recipePhases.push(resTags)
-                                }
-                            }
-                        })
-                    } catch (err) {
 
+            data.filter((resTags) => {
+                resTags.tags.filter((resTag) => {
+                    if (levelTags.includes(resTag)) {
+                        switch (bool) {
+                            case this.state.phase1:
+                                recipePhase.push(resTags)
+                                recipePhases.push(resTags)
+                                break;
+
+                            case this.state.phase2:
+                                recipePhase.push(resTags)
+                                recipePhases.push(resTags)
+                                break;
+
+                            case this.state.phase3:
+                                recipePhase.push(resTags)
+                                recipePhases.push(resTags)
+                                break;
+                        }
                     }
                 })
             })
@@ -443,29 +441,28 @@ export default class FilterRecipeScreen extends React.PureComponent {
         }
 
         if (levelText === 'L3') {
+            const levelTags = challengeRecipeData?.level3.map(level => level.levelTags)
             let recipePhase = []
 
-            challengeRecipeData.level3.forEach(res => {
-                data.forEach((resTags) => {
-                    try {
-                        resTags.tags.filter((resTag) => {
-                            if (res.levelTags === resTag) {
-                                if (this.state.phase1 === true) {
-                                    recipePhase.push(resTags)
-                                    recipePhases.push(resTags)
-                                }
-                                if (this.state.phase2 === true) {
-                                    recipePhase.push(resTags)
-                                    recipePhases.push(resTags)
-                                }
-                                if (this.state.phase3 === true) {
-                                    recipePhase.push(resTags)
-                                    recipePhases.push(resTags)
-                                }
-                            }
-                        })
-                    } catch (err) {
+            data.filter((resTags) => {
+                resTags.tags.filter((resTag) => {
+                    if (levelTags.includes(resTag)) {
+                        switch (bool) {
+                            case this.state.phase1:
+                                recipePhase.push(resTags)
+                                recipePhases.push(resTags)
+                                break;
 
+                            case this.state.phase2:
+                                recipePhase.push(resTags)
+                                recipePhases.push(resTags)
+                                break;
+
+                            case this.state.phase3:
+                                recipePhase.push(resTags)
+                                recipePhases.push(resTags)
+                                break;
+                        }
                     }
                 })
             })
@@ -536,37 +533,37 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         try {
             if (title.toLowerCase() === 'breakfast') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast = item.id
                 }
             }
             if (title.toLowerCase() === 'lunch') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.lunch = item.id
                 }
             }
             if (title.toLowerCase() === 'dinner') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.dinner = item.id
                 }
             }
             if (title.toLowerCase() === 'snack') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.snack = item.id
                 }
             }
             if (title.toLowerCase() === 'post workout') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.drink = item.id
                 }
             }
             if (title.toLowerCase() === 'preworkout') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout = item.id
                 }
             }
             if (title.toLowerCase() === 'treats') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.treats = item.id
                 }
             }
@@ -618,37 +615,37 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         try {
             if (title.toLowerCase() === 'breakfast') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast = ""
                 }
             }
             if (title.toLowerCase() === 'lunch') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.lunch = ""
                 }
             }
             if (title.toLowerCase() === 'dinner') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.dinner = ""
                 }
             }
             if (title.toLowerCase() === 'snack') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.snack = ""
                 }
             }
             if (title.toLowerCase() === 'drink') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.drink = ""
                 }
             }
             if (title.toLowerCase() === 'preworkout') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout = ""
                 }
             }
             if (title.toLowerCase() === 'treats') {
-                if(recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal){
+                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
                     recipeMeal[currentChallengeDay - 1].recipeMeal.treats = ""
                 }
             }
@@ -1006,6 +1003,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
             categoryName,
             loading,
         } = this.state
+
+        console.log('todayRecommendedRecipe: ', todayRecommendedRecipe)
 
         const skeleton = (
             <View style={styles.recipeTileSkeletonContainer}>

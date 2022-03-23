@@ -17,7 +17,6 @@ import Loader from "../../../components/Shared/Loader";
 import ProgressBar from "../../../components/Progress/ProgressBar";
 import Icon from "../../../components/Shared/Icon";
 import HelperModal from "../../../components/Shared/HelperModal";
-import CustomButton from "../../../components/Shared/CustomButton";
 import ImageModal from "../../../components/Progress/ImageModal";
 import { diff } from "../../../utils/index";
 import colors from "../../../styles/colors";
@@ -73,6 +72,7 @@ class ProgressHomeScreen extends React.PureComponent {
     if (this.unsubscribeFACUD) this.unsubscribeFACUD();
     if (this.unsubscribeFACD) this.unsubscribeFACD();
   }
+
   showHelperOnFirstOpen = async () => {
     const helperShownOnFirstOpen = await AsyncStorage.getItem(
       "progressHelperShownOnFirstOpen"
@@ -85,42 +85,21 @@ class ProgressHomeScreen extends React.PureComponent {
       AsyncStorage.setItem("progressHelperShownOnFirstOpen", "true");
     }
   };
+
   showHelperModal = () => {
     this.setState({ helperModalVisible: true });
   };
+
   hideHelperModal = () => {
     this.setState({ helperModalVisible: false });
   };
+
   toggleImageModal = (imageSource) => {
     this.setState((prevState) => ({
       imageModalSource: imageSource,
       imageModalVisible: !prevState.imageModalVisible,
     }));
   };
-
-  // fetchDataMeasurement = async () => {
-  //   this.setState({ loading: true });
-  //   const uid = await AsyncStorage.getItem("uid");
-  //   this.unsubscribe = await db.collection("users")
-  //   .doc(uid)
-  //   .collection("challenges")
-  //   .where("status", "==", "Active")
-  //   .onSnapshot(async (querySnapshot) => {
-  //     const list = []
-  //     await querySnapshot.forEach(async (doc) => {
-  //       await list.push(await doc.data());
-  //     });
-
-  //     if (list[0]){
-  //       const listing = list[0]
-  //       const listing1 = listing.onBoardingInfo.measurements.unit
-  //       console.log("Listing Uno", listing1)
-  //       this.setState({
-  //         measurements: listing1
-  //       })
-  //     }
-  //   })
-  // }
 
   fetchProgressInfo = async () => {
     this.setState({ loading: true });
@@ -145,8 +124,6 @@ class ProgressHomeScreen extends React.PureComponent {
       ) {
         const data = {
           weeklyTargets: {
-            // resistanceWeeklyComplete: 0,
-            // hiitWeeklyComplete: 0,
             currentWeekStartDate: moment().startOf("week").format("YYYY-MM-DD"),
           },
         };
@@ -155,7 +132,6 @@ class ProgressHomeScreen extends React.PureComponent {
     });
   };
 
-  // ToDo : for challenges
   fetchActiveChallengeUserData = async () => {
     try {
       this.setState({ loading: true });
@@ -180,18 +156,6 @@ class ProgressHomeScreen extends React.PureComponent {
             this.setState({ countC: 0 });
             this.setState({ countI: 0 });
             this.setState({ countS: 0 });
-
-            // this.setState({
-            //   countI: this.state.profile.weeklyTargets.interval,
-            // });
-            // this.setState({ countC: this.state.profile.weeklyTargets.circuit });
-            // this.setState({
-            //   countS: this.state.profile.weeklyTargets.strength,
-            // });
-            // this.setState({
-            //   activeChallengeUserData: undefined,
-            //   loading: false,
-            // });
           }
         });
     } catch (err) {
@@ -276,85 +240,11 @@ class ProgressHomeScreen extends React.PureComponent {
     }
   };
 
-  // fetchActiveChallengeData = async (activeChallengeUserData) => {
-  //   try {
-  //     this.unsubscribeFACD = await db
-  //       .collection("challenges")
-  //       .doc(activeChallengeUserData.id)
-  //       .onSnapshot(async (doc) => {
-  //         if (doc.exists) {
-  //           const activeChallengeData = doc.data();
-  //           //TODO calculate total interval circuit strength completed user during challenge
-  //           const totalWorkouts = [];
-  //           // activeChallengeData.phases.forEach(phase => {
-  //           activeChallengeData.workouts.forEach((workout) => {
-  //             totalWorkouts.push(workout);
-  //           });
-  //           // });
-
-  //           const totalInterval = totalWorkouts.filter(
-  //             (res) => res.target === "interval"
-  //           );
-  //           const totalCircuit = totalWorkouts.filter(
-  //             (res) => res.target === "circuit"
-  //           );
-  //           const totalStrength = totalWorkouts.filter(
-  //             (res) => res.target === "strength"
-  //           );
-
-  //           const totalIntervalCompleted =
-  //             activeChallengeUserData.workouts.filter(
-  //               (res) => res.target === "interval"
-  //             );
-  //           const totalCircuitCompleted =
-  //             activeChallengeUserData.workouts.filter(
-  //               (res) => res.target === "circuit"
-  //             );
-  //           const totalStrengthCompleted =
-  //             activeChallengeData.workouts.filter(
-  //               (res) => res.target === "strength"
-  //             );
-
-  //             console.log('asdfasdfasdf', totalStrengthCompleted.length)
-
-  //           this.fetchHomeScreenData(
-  //             activeChallengeUserData,
-  //             totalInterval,
-  //             totalCircuit,
-  //             totalStrength,
-  //             totalIntervalCompleted,
-  //             totalCircuitCompleted,
-  //             totalStrengthCompleted
-  //           );
-
-  //           this.setState({
-  //             activeChallengeUserData,
-  //             activeChallengeData,
-  //             totalInterval,
-  //             totalCircuit,
-  //             totalStrength,
-  //             totalIntervalCompleted,
-  //             totalCircuitCompleted,
-  //             totalStrengthCompleted,
-  //             loading: false,
-  //           });
-  //         }
-  //       });
-  //   } catch (err) {
-  //     this.setState({ loading: false });
-  //     console.log(err);
-  //     Alert.alert("Fetch active challenge data error!");
-  //   }
-  // };
-
   fetchHomeScreenData = async (
     activeChallengeUserData,
     totalInterval,
     totalCircuit,
     totalStrength,
-    totalIntervalCompleted,
-    totalCircuitCompleted,
-    totalStrengthCompleted
   ) => {
     if (activeChallengeUserData.workouts.length !== 0) {
       let tempTotalI = 0;
@@ -372,21 +262,12 @@ class ProgressHomeScreen extends React.PureComponent {
         tempTotalS += res.days.length;
         this.setState({ totalS: tempTotalS });
       });
-
-      // this.setState({ countI: this.state.profile.weeklyTargets.interval });
-      // this.setState({ countC: this.state.profile.weeklyTargets.circuit });
-      // this.setState({ countS: this.state.profile.weeklyTargets.strength });
     } else {
       this.setState({ totalS: 5 });
       this.setState({ totalI: 5 });
       this.setState({ totalC: 5 });
-
-      // this.setState({ countI: this.state.profile.weeklyTargets.interval });
-      // this.setState({ countC: this.state.profile.weeklyTargets.circuit });
-      // this.setState({ countS: this.state.profile.weeklyTargets.strength });
     }
   };
-  //-------**--------
 
   render() {
     const {
@@ -399,13 +280,6 @@ class ProgressHomeScreen extends React.PureComponent {
       imageModalVisible,
       imageModalSource,
       activeChallengeData,
-      activeChallengeUserData,
-      totalInterval,
-      totalCircuit,
-      totalStrength,
-      totalIntervalCompleted,
-      totalCircuitCompleted,
-      totalStrengthCompleted,
       countI,
       countC,
       countS,
@@ -414,39 +288,11 @@ class ProgressHomeScreen extends React.PureComponent {
       totalS,
     } = this.state;
 
-    // let totalI = 0;
-    // let totalC = 0;
-    // let totalS = 0;
-    // let countI = 0;
-    // let countC = 0;
-    // let countS = 0;
-
-    // if (activeChallengeData !== undefined) {
-    //   totalI = 0;
-    //   totalInterval.forEach((res) => (totalI += res.days.length));
-    //   totalC = 0;
-    //   totalCircuit.forEach((res) => (totalC += res.days.length));
-    //   totalS = 0;
-    //   totalStrength.forEach((res) => (totalS += res.days.length));
-
-    //   countI = totalIntervalCompleted.length;
-    //   countC = totalCircuitCompleted.length;
-    //   countS = totalStrengthCompleted.length;
-    // } else if (profile !== undefined) {
-    //   totalI = 5;
-    //   totalC = 5;
-    //   totalS = 5;
-
-    //   countI = profile.weeklyTargets.interval;
-    //   countC = profile.weeklyTargets.circuit;
-    //   countS = profile.weeklyTargets.strength;
-    // }
-
     const weightDifference =
       initialProgressInfo &&
       currentProgressInfo &&
       diff(initialProgressInfo.weight, currentProgressInfo.weight);
-    const weightToDecimal = 
+    const weightToDecimal =
       Number(weightDifference).toFixed(2);
     const hipDifference =
       initialProgressInfo &&
@@ -463,31 +309,17 @@ class ProgressHomeScreen extends React.PureComponent {
 
     const editBeforeBtn = (onPress) => (
       <CustomBtn
-        // Title="Update"
         Title="Edit Before"
         outline={false}
         customBtnStyle={{
-          // padding: wp("1.7%"),
-
-          // justifyContent: "space-between",
-          // paddingStart: wp("5%"),
-          // paddingEnd: wp("3%"),
-          // marginHorizontal: wp("10%"),
-          // marginVertical: wp("3%"),
           paddingTop: 8,
           paddingBottom: 8,
           paddingLeft: 20,
           paddingRight: 20,
         }}
-        // isRightIcon={true}
-        // rightIconName="chevron-right"
-        // rightIconColor={colors.black}
         customBtnTitleStyle={{
-          // fontFamily: fonts.SimplonMonoMedium,
           fontFamily: fonts.bold,
           fontSize: 8,
-          // color:colors.offWhite,
-          // textTransform: "capitalize",
         }}
         onPress={onPress}
       />
@@ -495,28 +327,14 @@ class ProgressHomeScreen extends React.PureComponent {
 
     const updateProgressBtn = (onPress) => (
       <CustomBtn
-        // Title="Update"
         Title="Update Progress"
         outline={false}
         customBtnStyle={{
-          // padding: wp("1.7%"),
-
-          // justifyContent: "space-between",
-          // paddingStart: wp("5%"),
-          // paddingEnd: wp("1%"),
-          // marginHorizontal: wp("10%"),
-          // marginVertical: wp("3%"),
           padding: 8,
         }}
-        // isRightIcon={true}
-        // rightIconName="chevron-right"
-        // rightIconColor={colors.black}
         customBtnTitleStyle={{
-          // fontFamily: fonts.SimplonMonoMedium,
           fontFamily: fonts.bold,
           fontSize: 8,
-          // color:colors.offWhite,
-          // textTransform: "capitalize",
         }}
         onPress={onPress}
       />
@@ -542,25 +360,13 @@ class ProgressHomeScreen extends React.PureComponent {
                     resizeMode={FastImage.resizeMode.cover}
                   />
                 </TouchableOpacity>
-                {/* {updateBtn(() =>
-                  this.props.navigation.navigate("Progress1", {
-                    isInitial: true,
-                    navigateTo: "Progress",
-                  })
-                )} */}
               </View>
             ) : (
               <View style={styles.imagePlaceholder}>
                 <TouchableOpacity
                   disabled={initialProgressInfo === undefined}
                   onPress={() =>
-                    // this.props.navigation.navigate("Progress1", {
-                    //   isInitial: true,
-                    //   navigateTo: "Progress",
-                    // })
                     this.props.navigation.navigate("Progress2", {
-                      initialProgressInfo: initialProgressInfo,
-                      currentProgressInfo: currentProgressInfo,
                       isInitial: true,
                     })
                   }
@@ -573,7 +379,6 @@ class ProgressHomeScreen extends React.PureComponent {
                     style={styles.addIcon}
                   />
                   <Text style={styles.imagePlaceholderButtonText}>
-                    {/* Add before photo and measurements */}
                     Add Before Photo
                   </Text>
                 </TouchableOpacity>
@@ -595,22 +400,12 @@ class ProgressHomeScreen extends React.PureComponent {
                     resizeMode={FastImage.resizeMode.cover}
                   />
                 </TouchableOpacity>
-                {/* {updateBtn(() =>
-                  this.props.navigation.navigate("Progress1", {
-                    isInitial: false,
-                  })
-                )} */}
               </View>
             ) : (
               <View style={styles.imagePlaceholder}>
                 <TouchableOpacity
                   onPress={() =>
-                    // this.props.navigation.navigate("Progress1", {
-                    //   isInitial: false,
-                    // })
                     this.props.navigation.navigate("Progress2", {
-                      initialProgressInfo: initialProgressInfo,
-                      currentProgressInfo: currentProgressInfo,
                       isInitial: false,
                     })
                   }
@@ -618,7 +413,7 @@ class ProgressHomeScreen extends React.PureComponent {
                   style={[
                     styles.imagePlaceholderButton,
                     initialProgressInfo === undefined &&
-                      styles.disabledImagePlaceHolderButton,
+                    styles.disabledImagePlaceHolderButton,
                   ]}
                 >
                   <Icon
@@ -628,7 +423,6 @@ class ProgressHomeScreen extends React.PureComponent {
                     style={styles.addIcon}
                   />
                   <Text style={styles.imagePlaceholderButtonText}>
-                    {/* Add after photo and measurements */}
                     Progress Photo
                   </Text>
                 </TouchableOpacity>
@@ -812,8 +606,6 @@ class ProgressHomeScreen extends React.PureComponent {
             >
               {editBeforeBtn(() =>
                 this.props.navigation.navigate("ProgressEdit", {
-                  initialProgressInfo: initialProgressInfo,
-                  currentProgressInfo: currentProgressInfo,
                   isInitial: true,
                 })
               )}
@@ -832,37 +624,11 @@ class ProgressHomeScreen extends React.PureComponent {
             >
               {updateProgressBtn(() =>
                 this.props.navigation.navigate("ProgressEdit", {
-                  initialProgressInfo: initialProgressInfo,
-                  currentProgressInfo: currentProgressInfo,
                   isInitial: false,
                 })
               )}
             </View>
           </View>
-          {/* <View>
-            {initialProgressInfo ? updateBtn(() =>
-              this.props.navigation.navigate("ProgressEdit", {
-                initialProgressInfo: initialProgressInfo,
-                isInitial: true
-              })
-            ) : updateBtn(() =>
-            this.props.navigation.navigate("ProgressEdit", {
-              initialProgressInfo: initialProgressInfo,
-              isInitial: true
-            })
-          )}
-          </View> */}
-          {/* {
-            initialProgressInfo && currentProgressInfo && (
-              <View style={styles.buttonContainer}>
-                <CustomButton
-                  title="UPDATE PROGRESS"
-                  onPress={() => this.props.navigation.navigate('Progress1', { isInitial: false })}
-                  blue
-                />
-              </View>
-            )
-          } */}
           <View style={styles.workoutProgressContainer}>
             <View style={styles.sectionHeader}>
               <Text style={styles.bodyText}>
@@ -870,21 +636,21 @@ class ProgressHomeScreen extends React.PureComponent {
               </Text>
             </View>
             <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  width: "100%",
-                }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                width: "100%",
+              }}
             >
               {profile && (
-                  <View>
-                    <ProgressBar
-                        // title=""
-                        completed={profile.totalWorkoutCompleted}
-                        total={totalS}
-                        size={wp("38%")}
-                    />
-                  </View>
+                <View>
+                  <ProgressBar
+                    // title=""
+                    completed={profile.totalWorkoutCompleted}
+                    total={totalS}
+                    size={wp("38%")}
+                  />
+                </View>
               )}
             </View>
           </View>
