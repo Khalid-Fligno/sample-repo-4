@@ -481,22 +481,26 @@ export default class SignupScreen extends React.PureComponent {
                   <InputBox
                     placeholder="First Name"
                     value={userData ? userData.firstName : firstName}
-                    onChangeText={(text) => this.setState({ firstName: text })}
+                    onChangeText={(text) => {
+                      this.setState({ firstName: userData ? userData.firstName : text })
+                    }}
                     inputStyle={styles.inputText}
                   />
                   <InputBox
                     placeholder="Last Name"
                     value={userData ? userData.lastName : lastName}
                     inputStyle={styles.inputText}
-                    onChangeText={(text) => this.setState({ lastName: text })}
+                    onChangeText={(text) => {
+                      this.setState({ lastName: userData ? userData.lastName : text })
+                    }}
                   />
                   <InputBox
                     placeholder="Email address"
-                    value={userData ? userData.email : email}
+                    value={userData ? userData.email :email}
                     inputStyle={styles.inputText}
                     keyboardType="email-address"
                     onChangeText={(text) => {
-                      this.setState({ email: text });
+                      this.setState({ email: userData ? userData.email : text });
                     }}
                   />
                   {

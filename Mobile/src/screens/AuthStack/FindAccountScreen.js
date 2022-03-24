@@ -5,7 +5,9 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  TextInput,
+  Dimensions
 } from 'react-native';
 import InputBox from "../../components/Shared/inputBox";
 import Icon from "../../components/Shared/Icon";
@@ -16,6 +18,10 @@ import CustomBtn from "../../components/Shared/CustomBtn";
 import authScreenStyle from './authScreenStyle';
 import fonts from "../../styles/fonts";
 import { db } from '../../../config/firebase';
+import { containerPadding } from '../../styles/globalStyles';
+import HeaderAuth from '../../components/Auth/Header';
+
+const { width } = Dimensions.get("window");
 
 const FindAccountScreen = ({ navigation }) => {
 
@@ -64,37 +70,45 @@ const FindAccountScreen = ({ navigation }) => {
               />
             </TouchableOpacity>
           </View>
-          <View>
+          <HeaderAuth/>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              // paddingTop: hp('15%'),
+              justifyContent: 'space-between',
+              // height: 500
+            }}>
             <View
               style={{
-                paddingTop: hp('15%'),
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center"
               }}
             >
               <Text style={styles.Text}>Please enter the email address you used when you purchased your Transform challenge:</Text>
               <View style={{ paddingTop: hp("3%") }}>
-                <InputBox
-                  placeholder="Email address"
-                  keyboardType="email-address"
-                  value={email}
-                  onChangeText={(text) => {
-                    setEmail(text)
-                  }}
-                  inputStyle={styles.inputText}
+                <TextInput
+                  style={styles.Input}
+                  placeholder="Email Address"
                 />
               </View>
             </View>
-            <CustomBtn
-              customBtnStyle={{ marginTop: 20 }}
-              Title="Find my account"
-              onPress={() => getUserInfo(email)}
-            />
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text
-                style={authScreenStyle.navigateToButton}
-              >
-                Already have an Account? Sign In
-              </Text>
-            </TouchableOpacity>
+            <View>
+              <CustomBtn
+                customBtnStyle={{ marginTop: 20 }}
+                Title="Find my account"
+                onPress={() => getUserInfo(email)}
+              />
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text
+                  style={authScreenStyle.navigateToButton}
+                >
+                  Already have an Account? Sign In
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -115,11 +129,13 @@ const styles = StyleSheet.create({
     fontSize: hp('3%')
   },
   Input: {
-    height: hp("5%"),
-    width: wp('70%'),
-    margin: 12,
+    height: hp("6%"),
+    width: width - containerPadding * 2,
+    padding: 8,
+    margin: 10,
     borderWidth: 1,
-    fontSize: hp('2%')
+    fontSize: hp('2%'),
+    alignItems: "center",
   },
   SignInText: {
     fontSize: hp('1.9%')
