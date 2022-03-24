@@ -7,7 +7,8 @@ import {
   StyleSheet,
   ScrollView,
   TextInput,
-  Dimensions
+  Dimensions,
+  Image,
 } from 'react-native';
 import InputBox from "../../components/Shared/inputBox";
 import Icon from "../../components/Shared/Icon";
@@ -18,8 +19,9 @@ import CustomBtn from "../../components/Shared/CustomBtn";
 import authScreenStyle from './authScreenStyle';
 import fonts from "../../styles/fonts";
 import { db } from '../../../config/firebase';
-import { containerPadding } from '../../styles/globalStyles';
+import globalStyle, { containerPadding } from '../../styles/globalStyles';
 import HeaderAuth from '../../components/Auth/Header';
+import { IMAGE } from "../../library/images";
 
 const { width } = Dimensions.get("window");
 
@@ -41,6 +43,7 @@ const FindAccountScreen = ({ navigation }) => {
   }
 
   const getUserInfo = async (email) => {
+    console.log('email: ', email)
     const userData = await getUser(email);
     if (!userData?.id) {
       console.log("Incorrect email")
@@ -55,13 +58,31 @@ const FindAccountScreen = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={authScreenStyle.safeAreaContainer}>
-      <View style={authScreenStyle.container}>
-        <ScrollView contentContainerStyle={authScreenStyle.scrollView}>
-          <View style={authScreenStyle.closeIconContainer}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: colors.black,
+      }}
+    >
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "space-between",
+          flexDirection: "column",
+          backgroundColor: colors.themeColor.themeBackgroundColor,
+        }}
+      >
+        <View>
+          <View
+            style={{
+              alignItems: "flex-end",
+            }}
+          >
             <TouchableOpacity
               onPress={() => navigation.goBack()}
-              style={authScreenStyle.closeIconButton}
+              style={{
+                padding: 20
+              }}
             >
               <Icon
                 name="cross"
@@ -70,47 +91,65 @@ const FindAccountScreen = ({ navigation }) => {
               />
             </TouchableOpacity>
           </View>
-          <HeaderAuth/>
           <View
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              // paddingTop: hp('15%'),
-              justifyContent: 'space-between',
-              // height: 500
-            }}>
+              alignItems: "center",
+              padding: 10
+            }}
+          >
+            <Image
+              source={IMAGE.BRAND_MARK}
+              style={globalStyle.fitazfkIcon}
+              resizeMode="contain"
+            />
+          </View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              paddingTop: "10%"
+            }}
+          >
             <View
               style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center"
+                width: wp("90%")
               }}
             >
-              <Text style={styles.Text}>Please enter the email address you used when you purchased your Transform challenge:</Text>
-              <View style={{ paddingTop: hp("3%") }}>
-                <TextInput
-                  style={styles.Input}
-                  placeholder="Email Address"
-                />
-              </View>
+              <Text style={styles.Text}>
+                Please enter the email address you
+                used when you purchased your Transform challenge:
+              </Text>
             </View>
-            <View>
-              <CustomBtn
-                customBtnStyle={{ marginTop: 20 }}
-                Title="Find my account"
-                onPress={() => getUserInfo(email)}
+            <View style={{ paddingTop: hp("3%") }}>
+              <TextInput
+                style={styles.Input}
+                placeholder="Email Address"
               />
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Text
-                  style={authScreenStyle.navigateToButton}
-                >
-                  Already have an Account? Sign In
-                </Text>
-              </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
+        </View>
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            bottom: 50,
+          }}
+        >
+          <CustomBtn
+            customBtnStyle={{ marginTop: 20, width: wp("90%") }}
+            Title="Find my account"
+            onPress={() => getUserInfo(email)}
+          />
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text
+              style={authScreenStyle.navigateToButton}
+            >
+              Already have an Account? Sign In
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   )
@@ -126,7 +165,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   Text: {
-    fontSize: hp('3%')
+    fontSize: hp('3%'),
+    textAlign: 'left'
   },
   Input: {
     height: hp("6%"),
