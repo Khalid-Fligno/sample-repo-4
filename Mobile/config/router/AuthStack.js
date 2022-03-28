@@ -9,6 +9,7 @@ import { fadeSpec, fade } from './utils';
 import FindAccountScreen from '../../src/screens/AuthStack/FindAccountScreen';
 import SignupScreenV2 from '../../src/screens/AuthStack/SignupScreenV2';
 import LoginScreenV2 from '../../src/screens/AuthStack/LoginScreenV2';
+import ForgottenPasswordScreenV2 from '../../src/screens/AuthStack/ForgottenPasswordScreenV2';
 
 const AuthStack = createStackNavigator(
   {
@@ -18,7 +19,8 @@ const AuthStack = createStackNavigator(
     Login: LoginScreenV2,
     // Login: LoginScreen,
     EmailVerification: EmailVerificationScreen,
-    ForgottenPassword: ForgottenPasswordScreen,
+    // ForgottenPassword: ForgottenPasswordScreen,
+    ForgottenPassword: ForgottenPasswordScreenV2,
     SpecialOffer: SpecialOfferScreen,
     FindAccount: FindAccountScreen,
   },

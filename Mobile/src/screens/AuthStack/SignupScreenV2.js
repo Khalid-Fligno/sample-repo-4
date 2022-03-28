@@ -7,19 +7,16 @@ import {
 	StyleSheet,
 	TextInput,
 	Dimensions,
-	Image
 } from 'react-native';
 import Icon from "../../components/Shared/Icon";
 import colors from "../../styles/colors";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import CustomBtn from "../../components/Shared/CustomBtn";
-import authScreenStyle from './authScreenStyle';
+import authScreenStyleV2 from './authScreenStyleV2';
 import fonts from "../../styles/fonts";
-import { db } from '../../../config/firebase';
-import globalStyle, { containerPadding } from '../../styles/globalStyles';
+import { containerPadding } from '../../styles/globalStyles';
 import HeaderAuth from '../../components/Auth/Header';
-import { IMAGE } from "../../library/images";
 
 const { width } = Dimensions.get("window");
 
@@ -37,31 +34,12 @@ const SignupScreenV2 = ({ navigation }) => {
 
 
 	return (
-		<SafeAreaView
-			style={{
-				flex: 1,
-				backgroundColor: colors.black,
-			}}
-		>
-			<View
-				style={{
-					flex: 1,
-					justifyContent: "space-between",
-					flexDirection: "column",
-					backgroundColor: colors.themeColor.themeBackgroundColor,
-				}}
-			>
+		<SafeAreaView style={authScreenStyleV2.safeAreaContainer}>
+			<View style={authScreenStyleV2.container}>
 				<View>
-					<View
-						style={{
-							alignItems: "flex-end",
-						}}
-					>
+					<View style={authScreenStyleV2.crossIconContainer}>
 						<TouchableOpacity
 							onPress={() => navigation.goBack()}
-							style={{
-								padding: 20
-							}}
 						>
 							<Icon
 								name="cross"
@@ -70,38 +48,14 @@ const SignupScreenV2 = ({ navigation }) => {
 							/>
 						</TouchableOpacity>
 					</View>
-					<View
-						style={{
-							alignItems: "center",
-							padding: 10
-						}}
-					>
-						<Image
-							source={IMAGE.BRAND_MARK}
-							style={globalStyle.fitazfkIcon}
-							resizeMode="contain"
-						/>
-					</View>
-					<View
-						style={{
-							display: "flex",
-							flexDirection: "column",
-							justifyContent: "center",
-							alignItems: "center",
-							paddingTop: "10%"
-						}}
-					>
-						<View
-							style={{
-								width: wp("90%"),
-								alignItems: "center"
-							}}
-						>
+					<HeaderAuth/>
+					<View style={authScreenStyleV2.formContainer}>
+						<View style={authScreenStyleV2.formHeaderContainer}>
 							<Text style={styles.Text}>
 								Create an Account
 							</Text>
 						</View>
-						<View style={{ paddingTop: hp("3%") }}>
+						<View style={authScreenStyleV2.formInputContainer}>
 							<TextInput
 								style={styles.Input}
 								placeholder="First Name"
@@ -122,13 +76,7 @@ const SignupScreenV2 = ({ navigation }) => {
 						</View>
 					</View>
 				</View>
-				<View
-					style={{
-						display: "flex",
-						alignItems: "center",
-						bottom: 50,
-					}}
-				>
+				<View style={authScreenStyleV2.navigateButtonContainer}>
 					<CustomBtn
 						customBtnStyle={{ marginTop: 20, width: wp("90%") }}
 						Title="GET STARTED"
@@ -136,7 +84,7 @@ const SignupScreenV2 = ({ navigation }) => {
 					/>
 					<TouchableOpacity onPress={() => navigation.navigate('Login')}>
 						<Text
-							style={authScreenStyle.navigateToButton}
+							style={styles.navigateToButton}
 						>
 							Already have an Account? Sign In
 						</Text>
@@ -148,33 +96,28 @@ const SignupScreenV2 = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		justifyContent: 'center',
-		paddingLeft: wp('10%'),
-		paddingRight: wp('10%'),
-	},
-	closeButton: {
-		alignSelf: 'flex-end',
-	},
 	Text: {
 		fontSize: hp('3%'),
-		fontFamily: fonts.SimplonMonoMedium
+		fontFamily: fonts.bold,
 	},
 	Input: {
 		height: hp("6%"),
 		width: width - containerPadding * 2,
 		padding: 8,
-		margin: 10,
+		margin: 5,
 		borderWidth: 1,
 		fontSize: hp('2%'),
 		alignItems: "center",
+		fontFamily: fonts.SimplonMonoMedium
 	},
-	SignInText: {
-		fontSize: hp('1.9%')
-	},
-	inputText: {
+	navigateToButton: {
 		fontFamily: fonts.bold,
-	},
+		letterSpacing: 0.5,
+		fontSize: 16,
+		marginTop: width / 10,
+		textAlign: "center",
+		color: colors.black,
+	}
 })
 
 export default SignupScreenV2;
