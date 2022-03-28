@@ -210,7 +210,6 @@ const LoginScreenV2 = ({ navigation }) => {
 			}
 		} catch (error) {
 			if (error.code === 'auth/wrong-password') {
-				console.log('Wrong Password')
 				setLoading(false)
 				Toast.show({
 					type: 'error',
@@ -220,12 +219,20 @@ const LoginScreenV2 = ({ navigation }) => {
 			}
 
 			if (error.code === 'auth/user-not-found') {
-				console.log('User not found')
 				setLoading(false)
 				Toast.show({
 					type: 'error',
 					text1: 'Unsuccessful Login',
 					text2: 'That email address is invalid.',
+				});
+			}
+
+			if (error.code === 'auth/invalid-email') {
+				setLoading(false)
+				Toast.show({
+					type: 'error',
+					text1: 'Unsuccessful Login',
+					text2: 'The email address is badly formatted.',
 				});
 			}
 		}
