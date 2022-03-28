@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
 	View,
 	SafeAreaView,
@@ -31,26 +31,17 @@ import { hasChallenges } from "../../utils/challenges";
 import { RestoreSubscriptions } from '../../utils/subscription';
 import { restoreAndroidPurchases } from '../../../config/android';
 import { compare, compareInApp } from '../../../config/apple';
-import * as AppleAuthentication from "expo-apple-authentication";
+import Toast from 'react-native-toast-message';
 
 const LoginScreenV2 = ({ navigation }) => {
 
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
-	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(false)
-	const [specialOffer, setSpecialOffer] = useState(null)
-	const [appleSignInAvailable, setAppleSignInAvailable] = useState(null)
-	const [message, setMessage] = useState('')
-	const [authResponse, setAuthResponse] = useState(false)
-
+	const specialOffer = navigation.getParam("specialOffer", undefined)
 	const { InAppUtils } = NativeModules;
 
-	useEffect(() => {
-		getUser()
-	}, [])
-
-	const getUser = async (email) => {
+	const getUser = useCallback(async (email) => {
 		const userRef = await db
 			.collection("users")
 			.where("email", "==", email)
@@ -61,7 +52,7 @@ const LoginScreenV2 = ({ navigation }) => {
 		} else {
 			return undefined;
 		}
-	}
+	}, [])
 
 	const goToAppScreen = async (userDocs) => {
 		// RECEIPT STILL VALID
@@ -129,7 +120,7 @@ const LoginScreenV2 = ({ navigation }) => {
 				} catch (err) {
 					Alert.alert("Error", "Could not retrieve subscription information");
 					navigation.navigate("Subscription", {
-						specialOffer: this.state.specialOffer,
+						specialOffer: specialOffer,
 					});
 				}
 			}
@@ -145,8 +136,10 @@ const LoginScreenV2 = ({ navigation }) => {
 			await restoreSubscriptions.restore(subscriptionInfo, onboarded);
 		} catch (ex) {
 			if (Platform.OS === "ios") {
+				setLoading(false)
 				await iOSStorePurchases(onboarded);
 			} else if (Platform.OS === "android") {
+				setLoading(false)
 				await restoreAndroidPurchases(props);
 			}
 		}
@@ -164,9 +157,6 @@ const LoginScreenV2 = ({ navigation }) => {
 				password
 			);
 
-			if (authResponse) {
-				setAuthResponse(true)
-			}
 			const { uid } = authResponse.user;
 			await AsyncStorage.setItem("uid", uid);
 			appsFlyer.trackEvent("af_login");
@@ -185,6 +175,7 @@ const LoginScreenV2 = ({ navigation }) => {
 				// hasChallenges is true -> khalid.sanggoyod@fligno.com
 				if (!subscriptionInfo) {
 					if (await hasChallenges(uid)) {
+						setLoading(false)
 						await goToAppScreen(userDocs)
 					} else {
 						// NO PURCHASE INFORMATION SAVED
@@ -195,13 +186,16 @@ const LoginScreenV2 = ({ navigation }) => {
 					}
 				} else if (subscriptionInfo.expiry < Date.now()) {
 					if (await hasChallenges(uid)) {
+						setLoading(false)
 						await goToAppScreen(userDocs);
 					} else {
 						// EXPIRED
+						setLoading(false)
 						await storePurchase(subscriptionInfo, onboarded);
 					}
 				} else {
 					//go to app
+					setLoading(false)
 					await goToAppScreen(userDocs);
 				}
 
@@ -210,116 +204,44 @@ const LoginScreenV2 = ({ navigation }) => {
 				console.log('subscriptionInfo: ', subscriptionInfo)
 				console.log('onboarded: ', onboarded)
 
+			} else {
 				setLoading(false)
+				await goToAppScreen(userDocs);
 			}
-
-			// snapshot.forEach((doc) => {
-			// 	if (doc.id === uid) {
-			// 		db.collection("users")
-			// 			.doc(uid)
-			// 			.get()
-			// 			.then(async (doc) => {
-			// 				Sentry.setUser({ email: doc.data().email });
-			// 				if (doc.data().fitnessLevel !== undefined) {
-			// 					await AsyncStorage.setItem(
-			// 						"fitnessLevel",
-			// 						doc.data().fitnessLevel.toString()
-			// 					);
-			// 				}
-			// 				const { subscriptionInfo = undefined, onboarded = false } =
-			// 					doc.data();
-			// 				if (subscriptionInfo === undefined) {
-			// 					if (await hasChallenges(uid)) {
-			// 						await this.goToAppScreen(doc);
-			// 					} else {
-			// 						// NO PURCHASE INFORMATION SAVED
-			// 						this.setState({ loading: false });
-			// 						this.props.navigation.navigate("Subscription", {
-			// 							specialOffer: specialOffer,
-			// 						});
-			// 					}
-			// 				} else if (subscriptionInfo.expiry < Date.now()) {
-			// 					if (await hasChallenges(uid)) {
-			// 						await this.goToAppScreen(doc);
-			// 					} else {
-			// 						// EXPIRED
-			// 						await this.storePurchase(subscriptionInfo, onboarded);
-			// 					}
-			// 				} else {
-			// 					//go to app
-			// 					await this.goToAppScreen(doc);
-			// 				}
-			// 			});
-			// 	} else {
-			// 		db.collection("users").doc(uid).set(doc.data());
-			// 		db.collection("users").doc(uid).update({
-			// 			id: uid,
-			// 		});
-			// 		var query = db.collection("users").where("id", "==", uid);
-			// 		query.get().then((querySnapshot) => {
-			// 			querySnapshot.forEach((document) => {
-			// 				document.ref
-			// 					.collection("challenges")
-			// 					.get()
-			// 					.then((querySnapshot) => {
-			// 						querySnapshot.forEach((doc) => {
-			// 							if (doc.data()) {
-			// 								db.collection("users")
-			// 									.doc(uid)
-			// 									.collection("challenges")
-			// 									.doc(doc.id)
-			// 									.set(doc.data());
-			// 							}
-			// 						});
-			// 					});
-			// 			});
-			// 		});
-			// 		db.collection("users")
-			// 			.doc(uid)
-			// 			.get()
-			// 			.then(async (doc) => {
-			// 				if (doc.data().fitnessLevel !== undefined) {
-			// 					await AsyncStorage.setItem(
-			// 						"fitnessLevel",
-			// 						await doc.data().fitnessLevel.toString()
-			// 					);
-			// 				}
-			// 				const { subscriptionInfo = undefined, onboarded = false } =
-			// 					doc.data();
-			// 				if (subscriptionInfo === undefined) {
-			// 					if (await hasChallenges(uid)) {
-			// 						await this.goToAppScreen(doc);
-			// 					} else {
-			// 						// NO PURCHASE INFORMATION SAVED
-			// 						this.setState({ loading: false });
-			// 						this.props.navigation.navigate("Subscription", {
-			// 							specialOffer: this.state.specialOffer,
-			// 						});
-			// 					}
-			// 				} else if (subscriptionInfo.expiry < Date.now()) {
-			// 					if (await hasChallenges(uid)) {
-			// 						await this.goToAppScreen(doc);
-			// 					} else {
-			// 						// EXPIRED
-			// 						await this.storePurchase(subscriptionInfo, onboarded);
-			// 					}
-			// 				} else {
-			// 					//go to app
-			// 					await this.goToAppScreen(doc);
-			// 				}
-			// 			});
-			// 	}
-			// });
 		} catch (error) {
 			if (error.code === 'auth/wrong-password') {
 				console.log('Wrong Password')
+				setLoading(false)
+				Toast.show({
+					type: 'error',
+					text1: 'Unsuccessful Login',
+					text2: 'Password is invalid.',
+				});
 			}
 
 			if (error.code === 'auth/user-not-found') {
 				console.log('User not found')
+				setLoading(false)
+				Toast.show({
+					type: 'error',
+					text1: 'Unsuccessful Login',
+					text2: 'That email address is invalid.',
+				});
 			}
 		}
 	};
+
+	useEffect(() => {
+		let isMounted = true
+
+		if (isMounted) {
+			getUser(email)
+		}
+
+		return () => {
+			isMounted = false;
+		}
+	}, [])
 
 	return (
 		<SafeAreaView style={authScreenStyleV2.safeAreaContainer}>
@@ -382,6 +304,7 @@ const LoginScreenV2 = ({ navigation }) => {
 					</TouchableOpacity>
 				</View>
 			</View>
+			<Toast/>
 			{loading && <NativeLoader />}
 		</SafeAreaView>
 	)
