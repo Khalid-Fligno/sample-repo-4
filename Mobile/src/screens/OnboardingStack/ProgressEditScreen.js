@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
@@ -44,24 +45,52 @@ export default class ProgressEditScreen extends React.PureComponent {
     return false;
   }
 
-  retakeBurpeeTest = async (isInitial) => {
-    this.setState({ loading: true });
-    await FileSystem.downloadAsync(
-      "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
-      `${FileSystem.cacheDirectory}exercise-burpees.mp4`
-    );
+  navigateToBurpee = async (isInitial, photoExist) => {
+    if (photoExist) {
+      this.setState({ loading: true });
+      await FileSystem.downloadAsync(
+        "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+        `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+      );
 
-    this.setState({ loading: false });
-    this.props.navigation.navigate("Burpee1", {
-      isInitial: isInitial,
-      navigateTo: "Progress",
-      updateBurpees: true
-    });
+      this.setState({ loading: false });
+      this.props.navigation.navigate("Burpee1", {
+        isInitial: isInitial,
+        navigateTo: "Progress",
+        updateBurpees: true
+      });
+    } else {
+      if (isInitial) {
+        Alert.alert("Add a Before Photo first to retake your Burpee Test");
+      } else {
+        Alert.alert("Add a Progress Photo first to retake your Burpee Test");
+      }
+    }
+  }
+
+  retakeBurpeeTest = async (
+    isInitial,
+    initialProgressInfo,
+    currentProgressInfo
+  ) => {
+
+    const isCurrentPhotoExist = currentProgressInfo?.photoURL
+    const isInitialPhotoExist = initialProgressInfo?.photoURL
+
+    if (isInitial) {
+      await this.navigateToBurpee(isInitial, isInitialPhotoExist)
+    } else {
+      await this.navigateToBurpee(isInitial, isCurrentPhotoExist)
+    }
   };
 
   render() {
-    const { isInitial } = this.props.navigation.state.params
-    console.log('isInitial: ', isInitial)
+    const {
+      isInitial,
+      initialProgressInfo,
+      currentProgressInfo
+    } = this.props.navigation.state.params
+
     return (
       <View
         style={[{ flex: 1, flexDirection: "column" }]}
@@ -194,7 +223,11 @@ export default class ProgressEditScreen extends React.PureComponent {
               borderBottomWidth: 1,
               borderColor: colors.grey.light,
             }}
-            onPress={() => this.retakeBurpeeTest(isInitial)}
+            onPress={() => this.retakeBurpeeTest(
+              isInitial,
+              initialProgressInfo,
+              currentProgressInfo
+            )}
           >
             <View
               style={{ flexDirection: 'row', justifyContent: 'space-between' }}

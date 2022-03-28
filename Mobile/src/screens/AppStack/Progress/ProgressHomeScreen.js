@@ -269,6 +269,23 @@ class ProgressHomeScreen extends React.PureComponent {
     }
   };
 
+  updateProgressBtn = (initialProgressInfo, currentProgressInfo) => {
+
+    this.props.navigation.navigate("ProgressEdit", {
+      isInitial: false,
+      initialProgressInfo: initialProgressInfo,
+      currentProgressInfo: currentProgressInfo
+    })
+  }
+
+  editBeforeBtn = (initialProgressInfo, currentProgressInfo) => (
+    this.props.navigation.navigate("ProgressEdit", {
+      isInitial: true,
+      initialProgressInfo: initialProgressInfo,
+      currentProgressInfo: currentProgressInfo
+    })
+  );
+
   render() {
     const {
       loading,
@@ -306,39 +323,6 @@ class ProgressHomeScreen extends React.PureComponent {
       initialProgressInfo &&
       currentProgressInfo &&
       diff(initialProgressInfo.burpeeCount, currentProgressInfo.burpeeCount);
-
-    const editBeforeBtn = (onPress) => (
-      <CustomBtn
-        Title="Edit Before"
-        outline={false}
-        customBtnStyle={{
-          paddingTop: 8,
-          paddingBottom: 8,
-          paddingLeft: 20,
-          paddingRight: 20,
-        }}
-        customBtnTitleStyle={{
-          fontFamily: fonts.bold,
-          fontSize: 8,
-        }}
-        onPress={onPress}
-      />
-    );
-
-    const updateProgressBtn = (onPress) => (
-      <CustomBtn
-        Title="Update Progress"
-        outline={false}
-        customBtnStyle={{
-          padding: 8,
-        }}
-        customBtnTitleStyle={{
-          fontFamily: fonts.bold,
-          fontSize: 8,
-        }}
-        onPress={onPress}
-      />
-    );
 
     return (
       <View style={styles.container}>
@@ -604,11 +588,18 @@ class ProgressHomeScreen extends React.PureComponent {
                 justifyContent: "center",
               }}
             >
-              {editBeforeBtn(() =>
-                this.props.navigation.navigate("ProgressEdit", {
-                  isInitial: true,
-                })
-              )}
+              <CustomBtn
+                Title="Edit Before"
+                outline={false}
+                customBtnStyle={{
+                  padding: 8,
+                }}
+                customBtnTitleStyle={{
+                  fontFamily: fonts.bold,
+                  fontSize: 8,
+                }}
+                onPress={() => this.editBeforeBtn(initialProgressInfo, currentProgressInfo)}
+              />
             </View>
             <View
               style={{
@@ -622,11 +613,18 @@ class ProgressHomeScreen extends React.PureComponent {
                 justifyContent: "center",
               }}
             >
-              {updateProgressBtn(() =>
-                this.props.navigation.navigate("ProgressEdit", {
-                  isInitial: false,
-                })
-              )}
+              <CustomBtn
+                Title="Update Progress"
+                outline={false}
+                customBtnStyle={{
+                  padding: 8,
+                }}
+                customBtnTitleStyle={{
+                  fontFamily: fonts.bold,
+                  fontSize: 8,
+                }}
+                onPress={() => this.updateProgressBtn(initialProgressInfo, currentProgressInfo)}
+              />
             </View>
           </View>
           <View style={styles.workoutProgressContainer}>
