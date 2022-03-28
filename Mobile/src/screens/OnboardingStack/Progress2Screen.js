@@ -352,9 +352,7 @@ export default class Progress2Screen extends React.PureComponent {
           0
         );
 
-        navigation.state.params.progressEdit !== undefined
-          ? this.props.navigation.navigate("ProgressEdit")
-          : this.props.navigation.navigate("ProgressHome");
+        this.props.navigation.navigate("ProgressHome");
       } else {
         this.setState({
           error: "Please select an image to continue",
