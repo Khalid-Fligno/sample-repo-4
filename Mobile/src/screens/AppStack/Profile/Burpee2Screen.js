@@ -37,7 +37,8 @@ export default class Burpee2Screen extends React.PureComponent {
     const {
       isInitial,
       navigateTo,
-      updateBurpees
+      updateBurpees,
+      photoExist2
     } = this.props.navigation.state.params;
 
     if (this.props.navigation.getParam("fromScreen")) {
@@ -54,6 +55,7 @@ export default class Burpee2Screen extends React.PureComponent {
       isInitial: isInitial,
       navigateTo: navigateTo,
       updateBurpees: updateBurpees,
+      photoExist2: photoExist2,
     });
   };
 

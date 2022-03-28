@@ -45,7 +45,8 @@ export default class Burpee1Screen extends React.PureComponent {
     const {
       isInitial,
       navigateTo,
-      updateBurpees
+      updateBurpees,
+      photoExist2
     } = this.props.navigation.state.params;
 
     if (this.props.navigation.getParam("fromScreen")) {
@@ -62,13 +63,15 @@ export default class Burpee1Screen extends React.PureComponent {
       isInitial: isInitial,
       navigateTo: navigateTo,
       updateBurpees: updateBurpees,
+      photoExist2: photoExist2
     });
   };
 
   handleCancel = () => {
     const {
       isInitial,
-      updateBurpees
+      updateBurpees,
+      photoExist2
     } = this.props.navigation.state.params;
 
     Alert.alert(
@@ -92,7 +95,8 @@ export default class Burpee1Screen extends React.PureComponent {
 
             if (updateBurpees) {
               this.props.navigation.navigate("ProgressEdit", {
-                isInitial: isInitial
+                isInitial: isInitial,
+                photoExist2: photoExist2
               });
             } else {
               this.props.navigation.navigate("Settings")

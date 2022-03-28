@@ -31,9 +31,7 @@ const storeProgressInfo = async (
   const progressDataFieldName = isInitial
     ? "initialProgressInfo"
     : "currentProgressInfo";
-
-  console.log('progressDataFieldName: ', progressDataFieldName)
-
+    
   await db
     .collection("users")
     .doc(uid)
@@ -65,7 +63,8 @@ export default class Burpee4Screen extends React.PureComponent {
   handleCancel = () => {
     const {
       isInitial,
-      updateBurpees
+      updateBurpees,
+      photoExist2
     } = this.props.navigation.state.params;
 
     Alert.alert(
@@ -89,7 +88,8 @@ export default class Burpee4Screen extends React.PureComponent {
 
             if(updateBurpees){
               this.props.navigation.navigate("ProgressEdit", {
-                isInitial: isInitial
+                isInitial: isInitial,
+                photoExist2: photoExist2
               });
             } else {
               this.props.navigation.navigate("Settings")
