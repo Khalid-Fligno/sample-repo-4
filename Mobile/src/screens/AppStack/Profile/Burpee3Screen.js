@@ -92,7 +92,8 @@ export default class Burpee3Screen extends React.PureComponent {
   handleQuitWorkout = () => {
     const {
       isInitial,
-      updateBurpees
+      updateBurpees,
+      photoExist2
     } = this.props.navigation.state.params;
 
     this.setState({ pauseModalVisible: false }, () => {
@@ -105,7 +106,8 @@ export default class Burpee3Screen extends React.PureComponent {
 
       if (updateBurpees) {
         this.props.navigation.navigate("ProgressEdit", {
-          isInitial: isInitial
+          isInitial: isInitial,
+          photoExist2: photoExist2
         });
       } else {
         this.props.navigation.navigate("Settings")
@@ -137,7 +139,8 @@ export default class Burpee3Screen extends React.PureComponent {
     const {
       isInitial,
       navigateTo,
-      updateBurpees
+      updateBurpees,
+      photoExist2
     } = this.props.navigation.state.params;
 
     if (this.props.navigation.getParam("fromScreen")) {
@@ -154,6 +157,7 @@ export default class Burpee3Screen extends React.PureComponent {
       isInitial: isInitial,
       navigateTo: navigateTo,
       updateBurpees: updateBurpees,
+      photoExist2: photoExist2
     });
 
     FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, {

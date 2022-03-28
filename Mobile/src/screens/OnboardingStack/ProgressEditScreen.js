@@ -45,8 +45,8 @@ export default class ProgressEditScreen extends React.PureComponent {
     return false;
   }
 
-  navigateToBurpee = async (isInitial, photoExist) => {
-    if (photoExist) {
+  navigateToBurpee = async (isInitial, photoExist, photoExist2) => {
+    if (photoExist || photoExist2) {
       this.setState({ loading: true });
       await FileSystem.downloadAsync(
         "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
@@ -57,7 +57,8 @@ export default class ProgressEditScreen extends React.PureComponent {
       this.props.navigation.navigate("Burpee1", {
         isInitial: isInitial,
         navigateTo: "Progress",
-        updateBurpees: true
+        updateBurpees: true,
+        photoExist2: photoExist || photoExist2
       });
     } else {
       if (isInitial) {
@@ -71,16 +72,17 @@ export default class ProgressEditScreen extends React.PureComponent {
   retakeBurpeeTest = async (
     isInitial,
     initialProgressInfo,
-    currentProgressInfo
+    currentProgressInfo,
+    photoExist2
   ) => {
 
     const isCurrentPhotoExist = currentProgressInfo?.photoURL
     const isInitialPhotoExist = initialProgressInfo?.photoURL
 
     if (isInitial) {
-      await this.navigateToBurpee(isInitial, isInitialPhotoExist)
+      await this.navigateToBurpee(isInitial, isInitialPhotoExist, photoExist2)
     } else {
-      await this.navigateToBurpee(isInitial, isCurrentPhotoExist)
+      await this.navigateToBurpee(isInitial, isCurrentPhotoExist, photoExist2)
     }
   };
 
@@ -88,7 +90,8 @@ export default class ProgressEditScreen extends React.PureComponent {
     const {
       isInitial,
       initialProgressInfo,
-      currentProgressInfo
+      currentProgressInfo,
+      photoExist2
     } = this.props.navigation.state.params
 
     return (
@@ -226,7 +229,8 @@ export default class ProgressEditScreen extends React.PureComponent {
             onPress={() => this.retakeBurpeeTest(
               isInitial,
               initialProgressInfo,
-              currentProgressInfo
+              currentProgressInfo,
+              photoExist2
             )}
           >
             <View
