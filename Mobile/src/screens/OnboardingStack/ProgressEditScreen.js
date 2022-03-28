@@ -45,19 +45,27 @@ export default class ProgressEditScreen extends React.PureComponent {
     return false;
   }
 
-  navigateToBurpee = async (isInitial) => {
-    this.setState({ loading: true });
-    await FileSystem.downloadAsync(
-      "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
-      `${FileSystem.cacheDirectory}exercise-burpees.mp4`
-    );
+  navigateToBurpee = async (isInitial, photoExist) => {
+    if (photoExist) {
+      this.setState({ loading: true });
+      await FileSystem.downloadAsync(
+        "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+        `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+      );
 
-    this.setState({ loading: false });
-    this.props.navigation.navigate("Burpee1", {
-      isInitial: isInitial,
-      navigateTo: "Progress",
-      updateBurpees: true
-    });
+      this.setState({ loading: false });
+      this.props.navigation.navigate("Burpee1", {
+        isInitial: isInitial,
+        navigateTo: "Progress",
+        updateBurpees: true
+      });
+    } else {
+      if (isInitial) {
+        Alert.alert("Add a Before Photo first to retake your Burpee Test");
+      } else {
+        Alert.alert("Add a Progress Photo first to retake your Burpee Test");
+      }
+    }
   }
 
   retakeBurpeeTest = async (
@@ -70,17 +78,9 @@ export default class ProgressEditScreen extends React.PureComponent {
     const isInitialPhotoExist = initialProgressInfo?.photoURL
 
     if (isInitial) {
-      if (isInitialPhotoExist) {
-        await this.navigateToBurpee(isInitial)
-      } else {
-        Alert.alert("Add a Before Photo first to retake your Burpee Test");
-      }
+      await this.navigateToBurpee(isInitial, isInitialPhotoExist)
     } else {
-      if (isCurrentPhotoExist) {
-        await this.navigateToBurpee(isInitial)
-      } else {
-        Alert.alert("Add a Progress Photo first to retake your Burpee Test");
-      }
+      await this.navigateToBurpee(isInitial, isCurrentPhotoExist)
     }
   };
 
