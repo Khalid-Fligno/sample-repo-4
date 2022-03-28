@@ -194,9 +194,7 @@ export default class Burpee1Screen extends React.PureComponent {
             <CustomBtn
               Title={
                 this.props.navigation.getParam("updateBurpees") ?
-                this.props.navigation.getParam("isInitial") ?
-                    "Re-take Burpee Test" :
-                    "Update Burpee count"
+                  "Update Burpee count"
                   :
                   "READY!"
               }
