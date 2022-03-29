@@ -13,17 +13,20 @@ import colors from "../../styles/colors";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import CustomBtn from "../../components/Shared/CustomBtn";
-import authScreenStyleV2 from './authScreenStyleV2';
+import authScreenStyle from './authScreenStyle';
 import fonts from "../../styles/fonts";
 import { db } from '../../../config/firebase';
 import { containerPadding } from '../../styles/globalStyles';
 import HeaderAuth from '../../components/Auth/Header';
+import NativeLoader from "../../components/Shared/NativeLoader";
+import Toast from 'react-native-toast-message';
 
 const { width } = Dimensions.get("window");
 
 const FindAccountScreen = ({ navigation }) => {
 
   const [email, setEmail] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const getUser = async (email) => {
     const userRef = await db
@@ -39,94 +42,99 @@ const FindAccountScreen = ({ navigation }) => {
   }
 
   const getUserInfo = async (email) => {
-    console.log('email: ', email)
+    setLoading(true)
+
     const userData = await getUser(email);
     if (!userData?.id) {
-      console.log("Incorrect email")
+      setLoading(false)
+      Toast.show({
+        type: 'error',
+        text1: 'That email address is invalid.',
+      });
     } else {
-      const firstName = userData.firstName
-      const lastName = userData.lastName
-      console.log('firstName: ', firstName)
-      console.log('lastName: ', lastName)
-
+      setLoading(false)
       navigation.navigate('Signup', { userData })
     }
   }
 
   return (
-    <SafeAreaView style={authScreenStyleV2.safeAreaContainer}>
-			<View style={authScreenStyleV2.container}>
-				<View>
-					<View style={authScreenStyleV2.crossIconContainer}>
-						<TouchableOpacity
-							onPress={() => navigation.goBack()}
-						>
-							<Icon
-								name="cross"
-								color={colors.themeColor.color}
-								size={22}
-							/>
-						</TouchableOpacity>
-					</View>
-          <HeaderAuth/>
-					<View style={authScreenStyleV2.formContainer}>
-						<View style={authScreenStyleV2.formHeaderContainer}>
-							<Text style={styles.Text}>
+    <SafeAreaView style={authScreenStyle.safeAreaContainer}>
+      <View style={authScreenStyle.container}>
+        <View>
+          <View style={authScreenStyle.crossIconContainer}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+            >
+              <Icon
+                name="cross"
+                color={colors.themeColor.color}
+                size={22}
+              />
+            </TouchableOpacity>
+          </View>
+          <HeaderAuth />
+          <View style={authScreenStyle.formContainer}>
+            <View style={authScreenStyle.formHeaderContainer}>
+              <Text style={styles.Text}>
                 Please enter the email address you
                 used when you purchased your Transform challenge:
-							</Text>
-						</View>
-						<View style={authScreenStyleV2.formInputContainer}>
-							<TextInput
-								style={styles.Input}
+              </Text>
+            </View>
+            <View style={authScreenStyle.formInputContainer}>
+              <TextInput
+                style={styles.Input}
 								placeholder="Email Address"
 								keyboardType="email-address"
-							/>
-						</View>
-					</View>
-				</View>
-				<View style={authScreenStyleV2.navigateButtonContainer}>
-					<CustomBtn
-						customBtnStyle={{ marginTop: 20, width: wp("90%") }}
-						Title="Find my account"
-						onPress={() => getUserInfo(email)}
-					/>
-					<TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-						<Text
-							style={styles.navigateToButton}
-						>
-							Don't have an account? Sign up
-						</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
-		</SafeAreaView>
+								onChangeText={setEmail}
+								value={email}
+              />
+            </View>
+          </View>
+        </View>
+        <View style={authScreenStyle.navigateButtonContainer}>
+          <CustomBtn
+            customBtnStyle={{ marginTop: 20, width: wp("90%") }}
+            Title="Find my account"
+            onPress={() => getUserInfo(email)}
+          />
+          <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+            <Text
+              style={styles.navigateToButton}
+            >
+              Don't have an account? Sign up
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <Toast/>
+      {loading && <NativeLoader />}
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   Text: {
-		fontSize: hp('3%'),
-		fontFamily: fonts.bold,
-	},
-	Input: {
-		height: hp("6%"),
-		width: width - containerPadding * 2,
-		padding: 8,
-		margin: 5,
-		borderWidth: 1,
-		fontSize: hp('2%'),
-		alignItems: "center",
+    fontSize: hp('3%'),
+    fontFamily: fonts.bold,
+  },
+  Input: {
+    height: hp("6%"),
+    width: width - containerPadding * 2,
+    padding: 8,
+    margin: 5,
+    borderWidth: 1,
+    fontSize: hp('2%'),
+    alignItems: "center",
     fontFamily: fonts.SimplonMonoMedium
-	},
-	navigateToButton: {
-		fontFamily: fonts.bold,
-		letterSpacing: 0.5,
-		fontSize: 16,
-		marginTop: width / 10,
-		textAlign: "center",
-		color: colors.black,
-	}
+  },
+  navigateToButton: {
+    fontFamily: fonts.bold,
+    letterSpacing: 0.5,
+    fontSize: 16,
+    marginTop: width / 10,
+    textAlign: "center",
+    color: colors.black,
+  }
 })
 
 export default FindAccountScreen;
