@@ -1283,7 +1283,7 @@
     "mv" "~2"
     "safe-json-stringify" "~1"
 
-"@expo/config-plugins@^1.0.31", "@expo/config-plugins@1.0.33":
+"@expo/config-plugins@1.0.33":
   "integrity" "sha512-YQJop0c69LKD/6ZJJto7klS7TDmzgs44TI0Z5RBqesOjYlDwNFcQk2Rl2BaA1wlAYkH+rRrhN2+WjjSyD9HiPg=="
   "resolved" "https://registry.npmjs.org/@expo/config-plugins/-/config-plugins-1.0.33.tgz"
   "version" "1.0.33"
@@ -2466,13 +2466,6 @@
   dependencies:
     "@babel/runtime" "^7.7.2"
     "regenerator-runtime" "^0.13.3"
-
-"@logrocket/react-native@^0.23.2":
-  "integrity" "sha512-q7LHtSa3lQ+eYwotDPf0TYXiiUv+7MyPRKw5goxUJEkMu6v6ft0mM6mhKPsUR27NMi/KYWCr1PiZ28MIQX6jbQ=="
-  "resolved" "https://registry.npmjs.org/@logrocket/react-native/-/react-native-0.23.2.tgz"
-  "version" "0.23.2"
-  dependencies:
-    "@expo/config-plugins" "^1.0.31"
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   "integrity" "sha1-m4sMxmPWaafY9vXQiToU00jzD78="
