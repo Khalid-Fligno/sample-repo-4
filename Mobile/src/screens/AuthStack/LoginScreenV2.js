@@ -226,7 +226,7 @@ const LoginScreenV2 = ({ navigation }) => {
 				Toast.show({
 					type: 'error',
 					text1: 'Unsuccessful Login',
-					text2: 'The email address is badly formatted.',
+					text2: 'That email address is invalid.',
 				});
 			}
 		}
