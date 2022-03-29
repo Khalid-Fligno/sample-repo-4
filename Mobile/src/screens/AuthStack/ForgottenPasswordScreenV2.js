@@ -15,6 +15,9 @@ import CustomBtn from "../../components/Shared/CustomBtn";
 import fonts from "../../styles/fonts";
 import { containerPadding } from '../../styles/globalStyles';
 import HeaderAuth from '../../components/Auth/Header';
+import Toast from 'react-native-toast-message';
+import NativeLoader from "../../components/Shared/NativeLoader";
+import { auth } from '../../../config/firebase';
 
 const { width } = Dimensions.get("window");
 
@@ -22,6 +25,48 @@ const ForgottenPasswordScreenV2 = ({ navigation }) => {
 
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
+
+  const emailIsValid = (email) => {
+    return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
+  }
+
+  const sendPasswordResetEmail = (email) => {
+    setLoading(true)
+
+    if (!email) {
+      setLoading(false)
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid email address entered.',
+      });
+    }
+
+    if (email && emailIsValid(email)) {
+      auth.sendPasswordResetEmail(email)
+      .then(() => {
+        setLoading(false)
+        Toast.show({
+          type: 'success',
+          text1: 'Successful sent',
+          text2: 'A password reset email has been sent to this email address.',
+        });
+      }).catch(() => {
+        setLoading(false)
+        Toast.show({
+          type: 'error',
+          text1: 'Account does not exist',
+          text2: 'No account found with that email address.'
+        });
+      });
+    } else {
+      setLoading(false)
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid email',
+        text2: 'Pleae enter a valid email address.'
+      });
+    }
+  }
 
   return (
     <SafeAreaView
@@ -57,7 +102,7 @@ const ForgottenPasswordScreenV2 = ({ navigation }) => {
               />
             </TouchableOpacity>
           </View>
-          <HeaderAuth/>
+          <HeaderAuth />
           <View
             style={{
               alignItems: "center",
@@ -68,6 +113,8 @@ const ForgottenPasswordScreenV2 = ({ navigation }) => {
               style={styles.Input}
               placeholder="Email Address"
               keyboardType="email-address"
+              onChangeText={setEmail}
+              value={email}
             />
           </View>
         </View>
@@ -81,10 +128,12 @@ const ForgottenPasswordScreenV2 = ({ navigation }) => {
           <CustomBtn
             customBtnStyle={{ marginTop: 20, width: wp("90%") }}
             Title="SEND PASSWORD RESET EMAIL"
-            onPress={() => getUserInfo(email)}
+            onPress={() => sendPasswordResetEmail(email)}
           />
         </View>
       </View>
+      <Toast />
+      {loading && <NativeLoader />}
     </SafeAreaView>
   )
 }
