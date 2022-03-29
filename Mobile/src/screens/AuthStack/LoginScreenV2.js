@@ -198,12 +198,6 @@ const LoginScreenV2 = ({ navigation }) => {
 					setLoading(false)
 					await goToAppScreen(userDocs);
 				}
-
-				console.log('email: ', email)
-				console.log('fitnessLevel: ', fitnessLevel)
-				console.log('subscriptionInfo: ', subscriptionInfo)
-				console.log('onboarded: ', onboarded)
-
 			} else {
 				setLoading(false)
 				await goToAppScreen(userDocs);
