@@ -43,16 +43,6 @@ const SignupScreenV2 = ({ navigation }) => {
     db.collection("users").doc(uid).set(data)
   }
 
-  const useStorage = {
-    setItem: async (key, value) => {
-      try {
-        return await AsyncStorage.setItem(key, value);
-      } catch (e) {
-        console.log({ '`Storage Util Error\nSet Item`': e });
-      }
-    },
-  }
-
   const getUserChallengeFromShopify = async (emailId) => {
     const userRef = await db
       .collection("users")
@@ -141,12 +131,7 @@ const SignupScreenV2 = ({ navigation }) => {
   ) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
-
     setLoading(true)
-    console.log('firstName: ', firstName)
-    console.log('lastName: ', lastName)
-    console.log('email: ', email)
-    console.log('password: ', password)
 
     if (!firstName || !lastName || !email || !password) {
       console.log('pasok')
@@ -181,7 +166,8 @@ const SignupScreenV2 = ({ navigation }) => {
             country: region || 'unavailable',
           };
 
-          await useStorage.setItem({ key: 'uid', value: uid });
+          await AsyncStorage.setItem("uid", uid);
+          
           try {
             await addDocumentWithId(data, uid);
 

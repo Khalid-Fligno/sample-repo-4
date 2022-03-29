@@ -41,7 +41,7 @@ const LoginScreenV2 = ({ navigation }) => {
 	const specialOffer = navigation.getParam("specialOffer", undefined)
 	const { InAppUtils } = NativeModules;
 
-	const getUser = useCallback(async (email) => {
+	const getUser = async (email) => {
 		const userRef = await db
 			.collection("users")
 			.where("email", "==", email)
@@ -52,7 +52,7 @@ const LoginScreenV2 = ({ navigation }) => {
 		} else {
 			return undefined;
 		}
-	}, [])
+	}
 
 	const goToAppScreen = async (userDocs) => {
 		// RECEIPT STILL VALID
