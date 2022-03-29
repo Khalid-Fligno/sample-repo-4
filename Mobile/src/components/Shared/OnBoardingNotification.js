@@ -14,7 +14,7 @@ export default function OnBoardingNotification({ navigation, data }) {
           borderRadius: 2,
           padding: 10,
           margin: 20,
-          flexDirection: screenWidth<=395?"column":"row",
+          flexDirection: screenWidth<=418?"column":"row",
           justifyContent: "space-between",
           alignItems: "center",
           backgroundColor: colors.themeColor.color,
