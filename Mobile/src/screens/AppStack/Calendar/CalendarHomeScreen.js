@@ -1166,6 +1166,9 @@ class CalendarHomeScreen extends React.PureComponent {
       downloaded,
     } = this.state;
 
+    console.log('todayRcWorkout: ', todayRcWorkout)
+    console.log('this.currentChallengeDay: ', this.currentChallengeDay)
+
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
       const isBetween = moment(this.stringDate).isBetween(
@@ -1222,7 +1225,7 @@ class CalendarHomeScreen extends React.PureComponent {
             <ChallengeWorkoutCard
               onPress={() =>
                 todayRcWorkout.name && todayRcWorkout.name !== "rest"
-                  ? this.loadExercises(todayRcWorkout, this.currentChallengeDay)
+                  ? this.loadExercises(todayRcWorkout)
                   : ""
               }
               res={todayRcWorkout}
