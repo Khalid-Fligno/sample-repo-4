@@ -1,16 +1,8 @@
 import { Platform, Alert } from 'react-native';
-import RNIap, {
-    Product,
-    ProductPurchase,
-    PurchaseError,
-    acknowledgePurchaseAndroid,
-    purchaseErrorListener,
-    purchaseUpdatedListener,
-} from 'react-native-iap';
+import RNIap from 'react-native-iap';
 import { db } from './firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 
-// const androidTokenUrl = 'http://3.8.209.87:8100/android/token/'; // this is installed on Personal server (Proj-Man) Server, this is required to generate secured token,  will need to move this on some other server with domain pointing
 const androidTokenUrl = 'https://34.87.240.165/android/token/'; // Google cloud server ip
 
 export const getAndroidToken = async () => {
@@ -113,8 +105,6 @@ export const sortByTransactionDate = (a, b) => {
   return comparison;
 };
 
-// Grand unified receipt
-
 export const compareInAppAND = (a, b) => {
   const purchaseA = a.expires_date_ms;
   const purchaseB = b.expires_date_ms;
@@ -139,16 +129,10 @@ export const compareProductsAND = (a, b) => {
   return comparison;
 };
 
-
 export const androidIdentifiers = [
   'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly',
   'com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly',
 ];
-
-// export const foundationIdentifiers = [
-//   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation',
-//   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation',
-// ];
 
 export const androidDiscountedIdentifiers = [
   'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.discounted',

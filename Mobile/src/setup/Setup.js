@@ -12,33 +12,25 @@ import OneSignal from "react-native-onesignal";
 import appsFlyer from "react-native-appsflyer";
 import { NavigationActions } from "react-navigation";
 import { Audio } from "expo-av";
-import { appsFlyerDevKey, appId } from "../../config/appsFlyer";
 import SwitchNavigator from "./config/router/index";
 import colors from "../styles/colors";
 import _ from "lodash";
 import { Mixpanel } from "mixpanel-react-native";
 import * as Sentry from "@sentry/react-native";
 import AsyncStorage from "@react-native-community/async-storage";
+import { appsFlyerConfig } from "../../config/appsflyer";
+import { mixpanelConfig } from "../../config/mixpanel";
+import { oneSignalConfig } from "../../config/onesignal";
+import { sentryConfig } from "../../config/sentry";
 
 const Setup = () => {
-	const routingInstrumentation = new Sentry.ReactNavigationV4Instrumentation();
-	if (!__DEV__) {
-		Sentry.init({
-			dsn: "https://12437c0b082140d5af62eff3a442ecd8@o1160693.ingest.sentry.io/6245334",
-			integrations: [
-				new Sentry.ReactNativeTracing({
-					routingInstrumentation,
-					tracingOrigins: ["localhost", /^\//, /^https:\/\//],
-				}),
-			],
-			// To set a uniform sample rate
-			tracesSampleRate: 0.2,
-			enableNative: true,
-			debug: true,
-		});
-	}
 
 	const [appState, setAppState] = useState(AppState.currentState);
+
+	if (!__DEV__) {
+		Sentry.init(sentryConfig);
+	}
+
 	let navigator;
 
 	const setTopLevelNavigator = (navigatorRef) => {
@@ -78,25 +70,16 @@ const Setup = () => {
 				_console.warn(message);
 			}
 		};
-
-		OneSignal.init("7078b922-5fed-4cc4-9bf4-2bd718e8b548", {
-			kOSSettingsKeyAutoPrompt: true,
-			kOSSettingsKeyInAppLaunchURL: false,
-		});
-
+		Mixpanel.init(mixpanelConfig.token);
+		OneSignal.init(oneSignalConfig.token, oneSignalConfig.secondParam);
 		OneSignal.setLocationShared(false);
-		appsFlyer.initSdk({
-			devKey: appsFlyerDevKey,
-			isDebug: false,
-			appId,
-		});
+		appsFlyer.initSdk(appsFlyerConfig);
 
 		const linkinListener = Linking.addEventListener("url", handleOpenURL);
 		const appStateListener = AppState.addEventListener(
 			"change",
 			handleAppStateChange
 		);
-		Mixpanel.init("109211293f4830a3355672d9b84aae74");
 
 		setAppState(AppState.currentState);
 
