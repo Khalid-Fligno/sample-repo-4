@@ -103,11 +103,14 @@ export default class FeedScreen extends React.PureComponent {
   };
 
   fetchBlogs = async (tag, currentDay, phaseData) => {
+    console.log('tag: ', tag)
+    console.log('phaseData: ', phaseData)
     let blogs = [];
     if (phaseData) {
       let data = phaseData.displayName;
       let phase = data.toLowerCase();
       let phaseTag = phase.concat("-", tag);
+      console.log('phaseTag: ', phaseTag)
       const snapshot = await db
         .collection("blogs")
         .where("tags", "array-contains", phaseTag)
@@ -228,12 +231,12 @@ export default class FeedScreen extends React.PureComponent {
         recommendedWorkout.push(`Day ${this.currentChallengeDay}`);
       }
     }
-
+    console.log('BLog data: ', blogs)
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={HomeScreenStyle.scrollView}
-        // style={[globalStyle.container,{paddingHorizontal:0}]}
+      // style={[globalStyle.container,{paddingHorizontal:0}]}
       >
         <View style={{ marginBottom: wp("10%"), flex: 1 }}>
           <View style={{ flex: 1, alignItems: "center", height: wp("100%") }}>
@@ -471,7 +474,6 @@ export default class FeedScreen extends React.PureComponent {
                 <View style={{}}>
                   <FlatList
                     horizontal
-                    keyExtractor={this.keyExtractor}
                     data={blogs}
                     style={{ flex: 1 }}
                     keyExtractor={(item) => item.title}
