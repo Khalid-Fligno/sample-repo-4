@@ -1,17 +1,17 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
-import SubscriptionScreen from "../../src/screens/OnboardingStack/SubscriptionScreen";
-import Onboarding1Screen from "../../src/screens/OnboardingStack/Onboarding1Screen";
-import Progress1Screen from "../../src/screens/OnboardingStack/Progress1Screen";
-import Progress2Screen from "../../src/screens/OnboardingStack/Progress2Screen";
-import ProgressEditScreen from "../../src/screens/OnboardingStack/ProgressEditScreen";
-import Header from "../../src/components/Shared/Header";
+import SubscriptionScreen from "../../../src/screens/OnboardingStack/SubscriptionScreen";
+import Onboarding1Screen from "../../../src/screens/OnboardingStack/Onboarding1Screen";
+import Progress1Screen from "../../../src/screens/OnboardingStack/Progress1Screen";
+import Progress2Screen from "../../../src/screens/OnboardingStack/Progress2Screen";
+import Onboarding2Screen from "../../../src/screens/OnboardingStack/Onboarding2Screen";
+import ProgressEditScreen from "../../../src/screens/OnboardingStack/ProgressEditScreen";
+import Header from "../../../src/components/Shared/Header";
 import {
   fadeSpec,
   fade,
   onboardingBackButtonMap,
 } from "./utils";
-import Onboarding2Screen from "../../src/screens/OnboardingStack/Onboarding2Screen";
 
 const OnboardingStack = createStackNavigator(
   {
@@ -34,6 +34,7 @@ const OnboardingStack = createStackNavigator(
       gesturesEnabled: false,
       header: () => {
         const { routeName } = navigation.state;
+        
         return (
           <Header
             stack="onboarding"

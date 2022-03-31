@@ -1,5 +1,5 @@
 import { Animated, Easing } from 'react-native';
-import colors from '../../src/styles/colors';
+import colors from '../../../src/styles/colors';
 
 export const fadeSpec = {
   duration: 1200,
@@ -16,6 +16,7 @@ export const fade = (props) => {
     inputRange: [index - 0.7, index, index + 0.7],
     outputRange: [0.3, 1, 0.3],
   });
+  
   return {
     opacity,
     transform: [{ translateX }, { translateY }],
@@ -40,6 +41,7 @@ export const workoutsBackButtonMap = {
 export const workoutsStartButtonMap = {
   WorkoutInfo: true,
 };
+
 export const calendarStartButtonMap = {
   WorkoutInfo: true,
 };
@@ -67,7 +69,6 @@ export const activeChallengeSetting = {
   WorkoutInfo: false,
   CalendarHome:true
 };
-
 
 export const onboardingBackButtonMap = {
   Onboarding1: false,

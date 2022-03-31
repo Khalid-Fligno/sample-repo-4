@@ -12,7 +12,7 @@ import OneSignal from "react-native-onesignal";
 import appsFlyer from "react-native-appsflyer";
 import { NavigationActions } from "react-navigation";
 import { Audio } from "expo-av";
-import SwitchNavigator from "./config/router/index";
+import SwitchNavigator from "../../src/navigation/router/index";
 import colors from "../styles/colors";
 import _ from "lodash";
 import { Mixpanel } from "mixpanel-react-native";

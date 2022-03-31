@@ -33,7 +33,7 @@ import { restoreAndroidPurchases } from '../../../config/android';
 import { compare, compareInApp } from '../../../config/apple';
 import Toast from 'react-native-toast-message';
 
-const LoginScreenV2 = ({ navigation }) => {
+const LoginScreen = ({ navigation }) => {
 
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
@@ -343,4 +343,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default LoginScreenV2;
+export default LoginScreen;

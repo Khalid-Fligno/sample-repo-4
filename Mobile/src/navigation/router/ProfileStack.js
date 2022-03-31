@@ -1,18 +1,18 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import ProfileHomeScreen from '../../src/screens/AppStack/Profile/ProfileHomeScreen';
-import ProfileScreen from '../../src/screens/AppStack/Profile/ProfileScreen';
-import InviteFriendsScreen from '../../src/screens/AppStack/Profile/InviteFriendsScreen';
-import HelpAndSupportScreen from '../../src/screens/AppStack/Profile/HelpAndSupportScreen';
-import PrivacyPolicyScreen from '../../src/screens/AppStack/Profile/PrivacyPolicyScreen';
-import TermsOfServiceScreen from '../../src/screens/AppStack/Profile/TermsOfServiceScreen';
-import SettingsScreen from '../../src/screens/AppStack/Profile/SettingsScreen';
-import Burpee1Screen from '../../src/screens/AppStack/Profile/Burpee1Screen';
-import Burpee2Screen from '../../src/screens/AppStack/Profile/Burpee2Screen';
-import Burpee3Screen from '../../src/screens/AppStack/Profile/Burpee3Screen';
-import Burpee4Screen from '../../src/screens/AppStack/Profile/Burpee4Screen';
-import ChangeUnitScreen from '../../src/screens/AppStack/Profile/ChangeUnit';
-import Header from '../../src/components/Shared/Header';
+import ProfileHomeScreen from '../../../src/screens/AppStack/Profile/ProfileHomeScreen';
+import ProfileScreen from '../../../src/screens/AppStack/Profile/ProfileScreen';
+import InviteFriendsScreen from '../../../src/screens/AppStack/Profile/InviteFriendsScreen';
+import HelpAndSupportScreen from '../../../src/screens/AppStack/Profile/HelpAndSupportScreen';
+import PrivacyPolicyScreen from '../../../src/screens/AppStack/Profile/PrivacyPolicyScreen';
+import TermsOfServiceScreen from '../../../src/screens/AppStack/Profile/TermsOfServiceScreen';
+import SettingsScreen from '../../../src/screens/AppStack/Profile/SettingsScreen';
+import Burpee1Screen from '../../../src/screens/AppStack/Profile/Burpee1Screen';
+import Burpee2Screen from '../../../src/screens/AppStack/Profile/Burpee2Screen';
+import Burpee3Screen from '../../../src/screens/AppStack/Profile/Burpee3Screen';
+import Burpee4Screen from '../../../src/screens/AppStack/Profile/Burpee4Screen';
+import ChangeUnitScreen from '../../../src/screens/AppStack/Profile/ChangeUnit';
+import Header from '../../../src/components/Shared/Header';
 
 const findProfileHeaderTitle = {
   ProfileHome: 'ACCOUNT',
@@ -58,6 +58,7 @@ const ProfileStack = createStackNavigator(
     defaultNavigationOptions: ({ navigation }) => ({
       header: () => {
         const { routeName } = navigation.state;
+        
         return (
           <Header
             navigation={navigation}
