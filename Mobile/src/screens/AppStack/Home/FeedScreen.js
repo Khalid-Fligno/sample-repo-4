@@ -28,6 +28,7 @@ import {
 } from "react-native-responsive-screen";
 // images
 import { IMAGE } from "../../../library/images";
+import AsyncStorage from "@react-native-community/async-storage";
 
 export const FeedScreen = ({ navigation }) => {
 
@@ -69,20 +70,53 @@ export const FeedScreen = ({ navigation }) => {
     }
   }
 
+  const getActiveUser = async () => {
+    const uid = await AsyncStorage.getItem("uid");
+    const userRef = await db
+      .collection("users")
+      .doc(uid)
+      .get()
+
+    if (userRef) {
+      return userRef.data()
+    } else {
+      return undefined;
+    }
+  }
+
   const getActiveUserChallengeData = async () => {
     const activeUserChallengeData = await isActiveChallenge()
     const stringDate = moment().format("YYYY-MM-DD").toString();
+    const activeUserData = await getActiveUser()
     setLoading(true)
 
-    if (!activeUserChallengeData) {
+    if (!activeUserChallengeData && activeUserData) {
       setLoading(false)
       console.log('NO ACTIVE USER CHALEENGE DATA')
-      // const trainerData = await getProfileTrainers()
-      // const blogsData = await getBlogsData(phaseTag)
-      return undefined
+      const tag = activeUserData.subscriptionInfo?.blogsId
+      
+      try {
+        const blogsData = await getBlogsData(tag)
+        const trainerData = await getProfileTrainers()
+
+        // next task conditional the blogsData is undefined ug dili madamay ang trainerData
+        if (blogsData && trainerData) {
+          setLoading(false)
+          setActiveUserChallengeData(blogsData)
+          setTrainerData(trainerData)
+        } else {
+          setLoading(false)
+          console.log('NO DATA')
+        }
+
+      } catch {
+        setLoading(false)
+        console.log('Error: ', err)
+      }
     }
 
     if (activeUserChallengeData.status === "Active") {
+      console.log('ACTIVE CHALLENGE')
       const phases = activeUserChallengeData.phases
       const tag = activeUserChallengeData?.tag
       //TODO :getCurrent phase data
