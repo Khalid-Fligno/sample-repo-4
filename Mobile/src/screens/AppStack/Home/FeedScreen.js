@@ -56,11 +56,7 @@ export const FeedScreen = ({ navigation }) => {
     }
   };
 
-  const getBlogsData = async (currentPhase, tag) => {
-    let data = currentPhase.displayName;
-    let phase = data.toLowerCase();
-    let phaseTag = phase.concat("-", tag);
-
+  const getBlogsData = async (phaseTag) => {
     const blogsRef = await db
       .collection("blogs")
       .where("tags", "array-contains", phaseTag)
@@ -79,6 +75,10 @@ export const FeedScreen = ({ navigation }) => {
     setLoading(true)
 
     if (!activeUserChallengeData) {
+      setLoading(false)
+      console.log('NO ACTIVE USER CHALEENGE DATA')
+      // const trainerData = await getProfileTrainers()
+      // const blogsData = await getBlogsData(phaseTag)
       return undefined
     }
 
@@ -90,23 +90,28 @@ export const FeedScreen = ({ navigation }) => {
         phases,
         stringDate
       );
+      let data = currentPhase.displayName;
+      let phase = data.toLowerCase();
+      let phaseTag = phase.concat("-", tag);
 
       try {
-        const blogsData = await getBlogsData(currentPhase, tag)
+        const blogsData = await getBlogsData(phaseTag)
         const trainerData = await getProfileTrainers()
 
         if (blogsData || trainerData) {
           setLoading(false)
           setActiveUserChallengeData(blogsData)
           setTrainerData(trainerData)
+        } else {
+          setLoading(false)
+          console.log('NO DATA')
         }
       } catch (err) {
+        setLoading(false)
         console.log('Error: ', err)
       }
     }
   }
-
-  console.log('Trainers: ', trainerData)
 
   useEffect(() => {
     let isMounted = true;
