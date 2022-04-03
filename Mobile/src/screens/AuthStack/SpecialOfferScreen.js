@@ -32,7 +32,7 @@ export default class SpecialOfferScreen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <ImageBackground
-          source={require('../../../assets/images/special-offer-screen-background.jpg')}
+          source={require('../../assets/images/special-offer-screen-background.jpg')}
           style={styles.flexContainer}
         >
           <View style={styles.contentContainer}>

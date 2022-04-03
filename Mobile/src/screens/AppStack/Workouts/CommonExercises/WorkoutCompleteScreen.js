@@ -208,7 +208,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
             {tickIcon}
           </View> */}
           <Image
-            source={require("../../../../../assets/icons/FITAZ_BrandMark.png")}
+            source={require("../../../../assets/icons/FITAZ_BrandMark.png")}
             style={{ width: 75 }}
             resizeMode="contain"
           />

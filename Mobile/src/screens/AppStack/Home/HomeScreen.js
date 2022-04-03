@@ -28,7 +28,7 @@ import RoundButton from "../../../components/Home/RoundButton";
 import HomeScreenStyle from "./HomeScreenStyle";
 import BigHeadingWithBackButton from "../../../components/Shared/BigHeadingWithBackButton";
 import WorkOutCard from "../../../components/Home/WorkoutCard";
-import TimeSvg from "../../../../assets/icons/time";
+import TimeSvg from "../../../assets/icons/time";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import {

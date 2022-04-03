@@ -29,7 +29,7 @@ import {
 import colors from "../../../styles/colors";
 import globalStyle from "../../../styles/globalStyles";
 import WorkoutScreenStyle from "./WorkoutScreenStyle";
-import TimeSvg from "../../../../assets/icons/time";
+import TimeSvg from "../../../assets/icons/time";
 import fonts from "../../../styles/fonts";
 import NutritionStyles from "../Nutrition/NutritionStyles";
 ("react-native-responsive-screen");

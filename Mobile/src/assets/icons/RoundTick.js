@@ -1,7 +1,7 @@
 import * as React from "react";
 // import Svg,{ Path,Image } from "react-native-svg"
 import { Image } from "react-native";
-import colors from "../../src/styles/colors";
+import colors from "../../styles/colors";
 
 function RoundTick(props) {
   // return (

@@ -81,7 +81,7 @@ export default class BlogScreen extends React.PureComponent {
           parallaxHeaderHeight={width / 2}
           renderBackground={() => (
             <Image
-              source={require('../../../../assets/images/blog-header.jpg')}
+              source={require('../../../assets/images/blog-header.jpg')}
               style={{ height: width / 2 }}
               width={width}
             />

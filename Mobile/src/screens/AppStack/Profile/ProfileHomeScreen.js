@@ -293,7 +293,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                     source={
                       avatar
                         ? { uri: avatar, cache: "immutable" }
-                        : require("../../../../assets/images/profile-add.png")
+                        : require("../../../assets/images/profile-add.png")
                     }
                   />
                 </TouchableOpacity>

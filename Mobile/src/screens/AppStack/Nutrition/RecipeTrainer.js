@@ -24,7 +24,7 @@ import  { containerPadding } from "../../../styles/globalStyles";
 import NutritionStyles from "./NutritionStyles";
 import Tag from "../../../components/Nutrition/Tag";
 import CustomBtn from "../../../components/Shared/CustomBtn";
-import TimeSvg from "../../../../assets/icons/time";
+import TimeSvg from "../../../assets/icons/time";
 import sortBy from "lodash.sortby";
 
 const moment = require("moment");

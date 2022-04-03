@@ -28,7 +28,7 @@ import NutritionStyles from "./NutritionStyles";
 import Tag from "../../../components/Nutrition/Tag";
 import CustomButton from "../../../components/Shared/CustomButton";
 import CustomBtn from "../../../components/Shared/CustomBtn";
-import TimeSvg from "../../../../assets/icons/time";
+import TimeSvg from "../../../assets/icons/time";
 import fonts from "../../../styles/fonts";
 import sortBy from "lodash.sortby";
 

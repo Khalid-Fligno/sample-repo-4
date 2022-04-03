@@ -4,7 +4,7 @@ import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import PropTypes from "prop-types";
-import TimeSvg from "../../../assets/icons/time";
+import TimeSvg from "../../assets/icons/time";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,

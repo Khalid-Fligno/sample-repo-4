@@ -948,7 +948,7 @@ export default class SubscriptionScreen extends React.PureComponent {
         <View style={styles.container}>
           <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
             <ImageBackground
-              source={require("../../../assets/images/OnBoardindImg/subscriptionBG.png")}
+              source={require("../../assets/images/OnBoardindImg/subscriptionBG.png")}
               style={styles.imageBackgroundContainer}
             >
               {/* <View style={styles.headerContainer}>

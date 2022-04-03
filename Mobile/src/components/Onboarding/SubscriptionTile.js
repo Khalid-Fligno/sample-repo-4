@@ -4,8 +4,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import SavingsBadge from "./SavingsBadge";
 import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
-import RoundTick from "../../../assets/icons/RoundTick";
-import EmptyRoundTick from "../../../assets/icons/EmptyRoundTick";
+import RoundTick from "../../assets/icons/RoundTick";
+import EmptyRoundTick from "../../assets/icons/EmptyRoundTick";
 
 const SubscriptionTile = (props) => {
   const {

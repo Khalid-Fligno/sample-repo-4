@@ -28,7 +28,7 @@ import RoundButton from "../../../components/Home/RoundButton";
 import HomeScreenStyle from "./HomeScreenStyle";
 import BigHeadingWithBackButton from "../../../components/Shared/BigHeadingWithBackButton";
 import WorkOutCard from "../../../components/Home/WorkoutCard";
-import TimeSvg from "../../../../assets/icons/time";
+import TimeSvg from "../../../assets/icons/time";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import {
@@ -66,7 +66,7 @@ const resistanceFocusMap = {
 
 const Feeds = [
   {
-    bgImage: require("../../../../assets/images/Feed/activewear.jpg"),
+    bgImage: require("../../../assets/images/Feed/activewear.jpg"),
     url: "https://fitazfk.com/collections/wear-fitazfk-apparel",
     btnTitle: "Find out more",
   },
@@ -78,7 +78,7 @@ const Feeds = [
   //   btnTitleColor:'#658dc3'
   // },
   {
-    bgImage: require("../../../../assets/images/Feed/equipment.jpg"),
+    bgImage: require("../../../assets/images/Feed/equipment.jpg"),
     url: "https://fitazfk.com/collections/equipment",
     btnTitle: "Find out more",
   },
@@ -264,7 +264,7 @@ export default class FeedScreen extends React.PureComponent {
 
         <View style={{ marginBottom: wp("30%") }}>
           <WorkOutCard
-            image={require("../../../../assets/images/placeholder.png")}
+            image={require("../../../assets/images/placeholder.png")}
             title="TODAY'S WORKOUT"
             recommendedWorkout={recommendedWorkout}
             onPress={() => this.props.navigation.navigate("Calendar")}
@@ -292,7 +292,7 @@ export default class FeedScreen extends React.PureComponent {
                 "https://www.facebook.com/groups/180007149128432/?source_id=204363259589572"
               )
             }
-            image={require("../../../../assets/images/Feed/facebook.jpg")}
+            image={require("../../../assets/images/Feed/facebook.jpg")}
           />
           {blogs && blogs.length > 0 && (
             <BlogCard
@@ -321,7 +321,7 @@ export default class FeedScreen extends React.PureComponent {
             }}
             btnTitle="Find out more"
             onPress={() => this.goToFitazfkEquipmentWorkouts()}
-            image={require("../../../../assets/images/Feed/workout.jpg")}
+            image={require("../../../assets/images/Feed/workout.jpg")}
           />
           {Feeds.map((res, i) => (
             <FeedCard

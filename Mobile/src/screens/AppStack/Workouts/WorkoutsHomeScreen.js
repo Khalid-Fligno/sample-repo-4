@@ -28,87 +28,87 @@ import WorkoutScreenStyle from "./WorkoutScreenStyle";
 const workout = [
   {
     displayName: "Workout Focus",
-    image: require("../../../../assets/images/workouts-resistance.jpg"),
+    image: require("../../../assets/images/workouts-resistance.jpg"),
   },
   {
     displayName: "Equipment",
-    image: require("../../../../assets/images/workouts-resistance.jpg"),
+    image: require("../../../assets/images/workouts-resistance.jpg"),
   },
   {
     displayName: "Mascle Group",
-    image: require("../../../../assets/images/workouts-resistance.jpg"),
+    image: require("../../../assets/images/workouts-resistance.jpg"),
   },
 ];
 const workoutTypes = [
   {
     displayName: "RESISTANCE",
     resistance: true,
-    image: require("../../../../assets/images/workouts-resistance.jpg"),
+    image: require("../../../assets/images/workouts-resistance.jpg"),
   },
   {
     displayName: "HIIT",
     hiit: true,
-    image: require("../../../../assets/images/workouts-hiit.jpg"),
+    image: require("../../../assets/images/workouts-hiit.jpg"),
   },
 ];
 
 const workoutLocations = [
   {
     displayName: "GYM",
-    image: require("../../../../assets/images/workouts-gym.jpg"),
+    image: require("../../../assets/images/workouts-gym.jpg"),
   },
   {
     displayName: "HOME",
-    image: require("../../../../assets/images/workouts-home.jpg"),
+    image: require("../../../assets/images/workouts-home.jpg"),
   },
   {
     displayName: "OUTDOORS",
-    image: require("../../../../assets/images/workouts-outdoors.jpg"),
+    image: require("../../../assets/images/workouts-outdoors.jpg"),
   },
 ];
 
 const gymResistanceWorkouts = [
   {
     displayName: "FULL BODY",
-    image: require("../../../../assets/images/workouts-gym-full.jpg"),
+    image: require("../../../assets/images/workouts-gym-full.jpg"),
   },
   {
     displayName: "UPPER BODY",
-    image: require("../../../../assets/images/workouts-gym-upper.jpg"),
+    image: require("../../../assets/images/workouts-gym-upper.jpg"),
   },
   {
     displayName: "ABS, BUTT & THIGHS",
-    image: require("../../../../assets/images/workouts-gym-abt.jpg"),
+    image: require("../../../assets/images/workouts-gym-abt.jpg"),
   },
 ];
 
 const homeResistanceWorkouts = [
   {
     displayName: "FULL BODY",
-    image: require("../../../../assets/images/workouts-home-full.jpg"),
+    image: require("../../../assets/images/workouts-home-full.jpg"),
   },
   {
     displayName: "UPPER BODY",
-    image: require("../../../../assets/images/workouts-home-upper.jpg"),
+    image: require("../../../assets/images/workouts-home-upper.jpg"),
   },
   {
     displayName: "ABS, BUTT & THIGHS",
-    image: require("../../../../assets/images/workouts-home-abt.jpg"),
+    image: require("../../../assets/images/workouts-home-abt.jpg"),
   },
 ];
 
 const outdoorsResistanceWorkouts = [
   {
     displayName: "FULL BODY",
-    image: require("../../../../assets/images/workouts-outdoors-full.jpg"),
+    image: require("../../../assets/images/workouts-outdoors-full.jpg"),
   },
   {
     displayName: "UPPER BODY",
-    image: require("../../../../assets/images/workouts-outdoors-upper.jpg"),
+    image: require("../../../assets/images/workouts-outdoors-upper.jpg"),
   },
   {
     displayName: "ABS, BUTT & THIGHS",
-    image: require("../../../../assets/images/workouts-outdoors-abt.jpg"),
+    image: require("../../../assets/images/workouts-outdoors-abt.jpg"),
   },
 ];
 
@@ -121,11 +121,11 @@ const workoutTypeImageMap = {
 const hiitStyles = [
   {
     displayName: "INTERVAL",
-    image: require("../../../../assets/images/workouts-hiit-airdyne.jpg"),
+    image: require("../../../assets/images/workouts-hiit-airdyne.jpg"),
   },
   {
     displayName: "CIRCUIT",
-    image: require("../../../../assets/images/workouts-hiit-skipping.jpg"),
+    image: require("../../../assets/images/workouts-hiit-skipping.jpg"),
   },
 ];
 
@@ -279,7 +279,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
         <ImageBackground
           source={
             item.image ||
-            require("../../../../assets/images/workouts-blank-tile.png")
+            require("../../../assets/images/workouts-blank-tile.png")
           }
           style={WorkoutScreenStyle.image}
         >

@@ -32,7 +32,7 @@ import colors from "../../../styles/colors";
 // import fonts from '../../../styles/fonts';
 import globalStyle from "../../../styles/globalStyles";
 import WorkoutScreenStyle from "./WorkoutScreenStyle";
-import TimeSvg from "../../../../assets/icons/time";
+import TimeSvg from "../../../assets/icons/time";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import NutritionStyles from "../Nutrition/NutritionStyles";
@@ -690,7 +690,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                   onPress={() => this.openApp("music:")}
                 >
                   <Image
-                    source={require("../../../../assets/icons/apple-music-icon.png")}
+                    source={require("../../../assets/icons/apple-music-icon.png")}
                     style={WorkoutScreenStyle.musicIconImage}
                   />
                 </TouchableOpacity>
@@ -703,7 +703,7 @@ export default class WorkoutInfoScreen2 extends React.PureComponent {
                   ]}
                 >
                   <Image
-                    source={require("../../../../assets/icons/spotify-icon.png")}
+                    source={require("../../../assets/icons/spotify-icon.png")}
                     style={WorkoutScreenStyle.musicIconImage}
                   />
                 </TouchableOpacity>

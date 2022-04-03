@@ -64,7 +64,7 @@ export default class LandingScreen extends React.PureComponent {
 
             <View style={styles.padding}>
               <ImageBackground
-                source={require("../../../assets/icons/FITAZ_BrandMark.png")}
+                source={require("../../assets/icons/FITAZ_BrandMark.png")}
                 style={styles.carouselImageBackground}
               >
               </ImageBackground>

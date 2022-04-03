@@ -11,24 +11,24 @@ import WorkoutTile from "../../../components/Workouts/WorkoutTile";
 import colors from "../../../styles/colors";
 import globalStyle from "../../../styles/globalStyles";
 const homeSplitImages = [
-  require("../../../../assets/images/splitImages/NINA-1.jpg"),
-  require("../../../../assets/images/splitImages/NINA-2.jpg"),
-  require("../../../../assets/images/splitImages/NINA-3.jpg"),
-  require("../../../../assets/images/splitImages/NINA-4.jpg"),
+  require("../../../assets/images/splitImages/NINA-1.jpg"),
+  require("../../../assets/images/splitImages/NINA-2.jpg"),
+  require("../../../assets/images/splitImages/NINA-3.jpg"),
+  require("../../../assets/images/splitImages/NINA-4.jpg"),
 ];
 
 const gymSplitImages = [
-  require("../../../../assets/images/splitImages/SHARNIE-1.jpg"),
-  require("../../../../assets/images/splitImages/SHARNIE-2.jpg"),
-  require("../../../../assets/images/splitImages/SHARNIE-3.jpg"),
-  require("../../../../assets/images/splitImages/SHARNIE-4.jpg"),
+  require("../../../assets/images/splitImages/SHARNIE-1.jpg"),
+  require("../../../assets/images/splitImages/SHARNIE-2.jpg"),
+  require("../../../assets/images/splitImages/SHARNIE-3.jpg"),
+  require("../../../assets/images/splitImages/SHARNIE-4.jpg"),
 ];
 
 const outdoorsSplitImages = [
-  require("../../../../assets/images/splitImages/ELLE-1.jpg"),
-  require("../../../../assets/images/splitImages/ELLE-2.jpg"),
-  require("../../../../assets/images/splitImages/ELLE-3.jpg"),
-  require("../../../../assets/images/splitImages/ELLE-4.jpg"),
+  require("../../../assets/images/splitImages/ELLE-1.jpg"),
+  require("../../../assets/images/splitImages/ELLE-2.jpg"),
+  require("../../../assets/images/splitImages/ELLE-3.jpg"),
+  require("../../../assets/images/splitImages/ELLE-4.jpg"),
 ];
 
 const images = {

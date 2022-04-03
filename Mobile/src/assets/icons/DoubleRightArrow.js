@@ -1,5 +1,4 @@
 import * as React from "react"
-import { widthPercentageToDP } from "react-native-responsive-screen"
 import Svg, { Image } from "react-native-svg"
 
 function DoubleRightArrow(props) {

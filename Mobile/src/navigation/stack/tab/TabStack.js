@@ -7,12 +7,12 @@ import colors from "../../../styles/colors";
 import fonts from "../../../styles/fonts";
 import DashboardStack from "../dashboard/DashboardStack";
 import FeedStack from "../feed/FeedStack";
-import FeedSvg from "../../../../assets/icons/Feed";
-import CalenderSvg from "../../../../assets/icons/calender";
-import SubSVG from "../../../../assets/icons/subscriptionSVG";
-import ProgressSvg from "../../../../assets/icons/progress";
+import FeedSvg from "../../../assets/icons/Feed";
+import CalenderSvg from "../../../assets/icons/calender";
+import SubSVG from "../../../assets/icons/subscriptionSVG";
+import ProgressSvg from "../../../assets/icons/progress";
 import TabBarComponent from "../../../components/Shared/TabBarComponent";
-import ChallengeSvg from "../../../../assets/icons/challengeSvg";
+import ChallengeSvg from "../../../assets/icons/challengeSvg";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

@@ -88,14 +88,14 @@ export default class AuthLoadingScreen extends React.PureComponent {
 
   loadAssetsAsync = async () => {
     const imageAssets = cacheImages([
-      require("../../assets/icons/fitazfk-app-icon-gradient-dark.png"),
-      require("../../assets/icons/fitazfk-splash-dark-logo.png"),
-      require("../../assets/icons/fitazfk-icon-outline-white.png"),
-      require("../../assets/icons/fitazfk-logo-outline-white.png"),
-      require("../../assets/icons/apple-music-icon.png"),
-      require("../../assets/icons/apple-icon-black.png"),
-      require("../../assets/icons/spotify-icon.png"),
-      require("../../assets/icons/facebook-icon-white.png"),
+      require("../assets/icons/fitazfk-app-icon-gradient-dark.png"),
+      require("../assets/icons/fitazfk-splash-dark-logo.png"),
+      require("../assets/icons/fitazfk-icon-outline-white.png"),
+      require("../assets/icons/fitazfk-logo-outline-white.png"),
+      require("../assets/icons/apple-music-icon.png"),
+      require("../assets/icons/apple-icon-black.png"),
+      require("../assets/icons/spotify-icon.png"),
+      require("../assets/icons/facebook-icon-white.png"),
       require("@lib/images/app-onboarding-carousel-1.png"),
       require("@lib/images/app-onboarding-carousel-2.png"),
       require("@lib/images/app-onboarding-carousel-3.png"),
@@ -113,7 +113,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require("@lib/images/nutrition-lunch.png"),
       require("@lib/images/nutrition-dinner.png"),
       require("@lib/images/nutrition-snack.png"),
-      require("../../assets/images/recipe-tile-skeleton.png"),
+      require("../assets/images/recipe-tile-skeleton.png"),
       require("@lib/images/workouts-gym.png"),
       require("@lib/images/workouts-gym-abt.png"),
       require("@lib/images/workouts-gym-full.png"),
@@ -133,7 +133,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require("@lib/images/workouts-outdoors-upper.png"),
       require("@lib/images/workouts-resistance.png"),
       require("@lib/images/hiit-rest-placeholder.png"),
-      require("../../assets/images/profile-add.png"),
+      require("../assets/images/profile-add.png"),
       require("@lib/images/splitImages/NINA-1.png"),
       require("@lib/images/splitImages/NINA-2.png"),
       require("@lib/images/splitImages/NINA-3.png"),
@@ -149,58 +149,58 @@ export default class AuthLoadingScreen extends React.PureComponent {
     ]);
     const fontAssets = cacheFonts([
       {
-        GothamBold: require("../../assets/fonts/gotham-bold.otf"),
+        GothamBold: require("../assets/fonts/gotham-bold.otf"),
       },
       {
-        GothamNarrowBold: require("../../assets/fonts/gotham-narrow-bold.otf"),
+        GothamNarrowBold: require("../assets/fonts/gotham-narrow-bold.otf"),
       },
       {
-        GothamBook: require("../../assets/fonts/gotham-book.otf"),
+        GothamBook: require("../assets/fonts/gotham-book.otf"),
       },
       {
-        GothamBookItalic: require("../../assets/fonts/gotham-book-italic.otf"),
+        GothamBookItalic: require("../assets/fonts/gotham-book-italic.otf"),
       },
       {
-        GothamNarrowBook: require("../../assets/fonts/gotham-narrow-book.otf"),
+        GothamNarrowBook: require("../assets/fonts/gotham-narrow-book.otf"),
       },
       {
-        GothamUltraItalic: require("../../assets/fonts/gotham-ultra-italic.otf"),
+        GothamUltraItalic: require("../assets/fonts/gotham-ultra-italic.otf"),
       },
       {
-        TuesdayNight: require("../../assets/fonts/tuesday-night.otf"),
+        TuesdayNight: require("../assets/fonts/tuesday-night.otf"),
       },
       {
-        GothamLight: require("../../assets/fonts/Gotham-Light.otf"),
+        GothamLight: require("../assets/fonts/Gotham-Light.otf"),
       },
       {
-        GothamThin: require("../../assets/fonts/Gotham-Thin.otf"),
+        GothamThin: require("../assets/fonts/Gotham-Thin.otf"),
       },
       {
-        GothamThinItalic: require("../../assets/fonts/Gotham-ThinItalic.otf"),
+        GothamThinItalic: require("../assets/fonts/Gotham-ThinItalic.otf"),
       },
       {
-        GothamBookItalic: require("../../assets/fonts/Gotham-BookItalic.otf"),
+        GothamBookItalic: require("../assets/fonts/Gotham-BookItalic.otf"),
       },
       {
-        GothamMedium: require("../../assets/fonts/Gotham-Medium.otf"),
+        GothamMedium: require("../assets/fonts/Gotham-Medium.otf"),
       },
       {
-        SimplonMonoLight: require("../../assets/fonts/SimplonMono-Light.otf"),
+        SimplonMonoLight: require("../assets/fonts/SimplonMono-Light.otf"),
       },
       {
-        SimplonMonoMedium: require("../../assets/fonts/SimplonMono-Medium-Regular.otf"),
+        SimplonMonoMedium: require("../assets/fonts/SimplonMono-Medium-Regular.otf"),
       },
       {
-        StyreneAWebRegular: require("../../assets/fonts/StyreneAWeb-Regular.ttf"),
+        StyreneAWebRegular: require("../assets/fonts/StyreneAWeb-Regular.ttf"),
       },
       {
-        StyreneAWebThin: require("../../assets/fonts/StyreneAWeb-Thin.ttf"),
+        StyreneAWebThin: require("../assets/fonts/StyreneAWeb-Thin.ttf"),
       },
       {
-        icomoon: require("../../assets/fonts/icomoon.ttf"),
+        icomoon: require("../assets/fonts/icomoon.ttf"),
       },
     ]);
-    const soundAsset = cacheSound([require("../../assets/sounds/ding.mp3")]);
+    const soundAsset = cacheSound([require("../assets/sounds/ding.mp3")]);
     await Promise.all([...imageAssets, ...fontAssets, soundAsset]);
     SplashScreen.hide();
     await this.cachingComplete();
@@ -371,7 +371,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
     return (
       <View style={styles.container}>
         <ImageBackground
-          source={require("../../assets/icons/FITAZ_SplashScreen.png")}
+          source={require("../assets/icons/FITAZ_SplashScreen.png")}
           style={styles.background}
         />
       </View>

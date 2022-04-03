@@ -113,7 +113,7 @@ export default class Onboarding1Screen extends React.PureComponent {
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
           <ImageBackground
-            source={require("../../../assets/images/OnBoardindImg/izzy1.png")}
+            source={require("../../assets/images/OnBoardindImg/izzy1.png")}
             style={{ width: width, height: width / 2 }}
           >
             <View

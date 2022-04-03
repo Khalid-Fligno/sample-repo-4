@@ -7,7 +7,7 @@ import { TouchableOpacity } from "react-native";
 import colors from "../../../styles/colors";
 import { ScrollView } from "react-native-gesture-handler";
 import Icon from "../../../components/Shared/Icon";
-import TickSvg from "../../../../assets/icons/TickSvg";
+import TickSvg from "../../../assets/icons/TickSvg";
 
 export default class OnBoarding2 extends Component {
   constructor(props) {

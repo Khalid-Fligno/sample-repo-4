@@ -10,7 +10,7 @@ import {
 import globalStyle from "../../styles/globalStyles";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
-import RoundTick from "../../../assets/icons/RoundTick";
+import RoundTick from "../../assets/icons/RoundTick";
 
 const { width } = Dimensions.get("window");
 const containerPadding = 20;

@@ -13,7 +13,7 @@ import NewRecipeBadge from "./NewRecipeBadge";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import Tag from "./Tag";
-import TimeSvg from "../../../assets/icons/time";
+import TimeSvg from "../../assets/icons/time";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { sortBy } from "lodash";
 

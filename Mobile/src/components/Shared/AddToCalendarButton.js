@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Text, StyleSheet } from "react-native";
 import colors from "../../styles/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import CalenderSvg from "../../../assets/icons/calender";
+import CalenderSvg from "../../assets/icons/calender";
 
 const AddToCalendarButton = (props) => {
   const { onPress } = props;

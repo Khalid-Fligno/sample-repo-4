@@ -16,7 +16,7 @@ import {
 
 import fonts from "../../../../styles/fonts";
 import * as Haptics from "expo-haptics";
-import TimeSvg from "../../../../../assets/icons/time";
+import TimeSvg from "../../../../assets/icons/time";
 import * as FileSystem from "expo-file-system";
 
 

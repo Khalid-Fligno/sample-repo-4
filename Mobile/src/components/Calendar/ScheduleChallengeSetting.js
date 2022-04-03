@@ -3,7 +3,7 @@ import { TouchableOpacity, StyleSheet } from "react-native";
 import { View, Text } from "react-native";
 import colors from "../../styles/colors";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import DoubleRightArrow from "../../../assets/icons/DoubleRightArrow";
+import DoubleRightArrow from "../../assets/icons/DoubleRightArrow";
 import { Alert } from "react-native";
 import fonts from "../../styles/fonts";
 
