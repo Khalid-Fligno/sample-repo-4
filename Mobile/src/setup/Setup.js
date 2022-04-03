@@ -3,16 +3,13 @@ import {
 	View,
 	StyleSheet,
 	StatusBar,
-	Linking,
 	AppState,
 	Platform,
 	LogBox,
 } from "react-native";
 import OneSignal from "react-native-onesignal";
 import appsFlyer from "react-native-appsflyer";
-import { NavigationActions } from "react-navigation";
 import { Audio } from "expo-av";
-import SwitchNavigator from "../../src/navigation/router/index";
 import colors from "../styles/colors";
 import _ from "lodash";
 import { Mixpanel } from "mixpanel-react-native";
@@ -22,6 +19,7 @@ import { appsFlyerConfig } from "../../config/appsflyer";
 import { mixpanelConfig } from "../../config/mixpanel";
 import { oneSignalConfig } from "../../config/onesignal";
 import { sentryConfig } from "../../config/sentry";
+import Router from "../navigation/Router";
 
 const Setup = () => {
 
@@ -31,21 +29,6 @@ const Setup = () => {
 		Sentry.init(sentryConfig);
 	}
 
-	let navigator;
-
-	const setTopLevelNavigator = (navigatorRef) => {
-		navigator = navigatorRef;
-	};
-
-	const navigate = (routeName, params) => {
-		navigator.dispatch(
-			NavigationActions.navigate({
-				routeName,
-				params,
-			})
-		);
-	};
-
 	const handleAppStateChange = async (nextAppState) => {
 		if (appState.match(/inactive|background/) && nextAppState === "active") {
 			if (Platform.OS === "ios") {
@@ -54,12 +37,6 @@ const Setup = () => {
 			await Audio.setIsEnabledAsync(true);
 		}
 		setAppState(nextAppState);
-	};
-
-	const handleOpenURL = (event) => {
-		if (event.url === "fitazfk://special-offer") {
-			navigate("SpecialOffer");
-		}
 	};
 
 	useEffect(() => {
@@ -75,7 +52,6 @@ const Setup = () => {
 		OneSignal.setLocationShared(false);
 		appsFlyer.initSdk(appsFlyerConfig);
 
-		const linkinListener = Linking.addEventListener("url", handleOpenURL);
 		const appStateListener = AppState.addEventListener(
 			"change",
 			handleAppStateChange
@@ -84,9 +60,6 @@ const Setup = () => {
 		setAppState(AppState.currentState);
 
 		return () => {
-			if (linkinListener) {
-				linkinListener.remove();
-			}
 			if (appStateListener) {
 				appStateListener.remove();
 			}
@@ -106,9 +79,7 @@ const Setup = () => {
 	return (
 		<View style={styles.appContainer}>
 			<StatusBar barStyle="light-content" />
-			<SwitchNavigator
-				ref={(navigatorRef) => setTopLevelNavigator(navigatorRef)}
-			/>
+			<Router />
 		</View>
 	);
 };

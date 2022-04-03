@@ -1,17 +1,17 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
-import SubscriptionScreen from "../../../src/screens/OnboardingStack/SubscriptionScreen";
-import Onboarding1Screen from "../../../src/screens/OnboardingStack/Onboarding1Screen";
-import Progress1Screen from "../../../src/screens/OnboardingStack/Progress1Screen";
-import Progress2Screen from "../../../src/screens/OnboardingStack/Progress2Screen";
-import Onboarding2Screen from "../../../src/screens/OnboardingStack/Onboarding2Screen";
-import ProgressEditScreen from "../../../src/screens/OnboardingStack/ProgressEditScreen";
-import Header from "../../../src/components/Shared/Header";
+import SubscriptionScreen from "../../../screens/OnboardingStack/SubscriptionScreen";
+import Onboarding1Screen from "../../../screens/OnboardingStack/Onboarding1Screen";
+import Progress1Screen from "../../../screens/OnboardingStack/Progress1Screen";
+import Progress2Screen from "../../../screens/OnboardingStack/Progress2Screen";
+import Onboarding2Screen from "../../../screens/OnboardingStack/Onboarding2Screen";
+import ProgressEditScreen from "../../../screens/OnboardingStack/ProgressEditScreen";
+import Header from "../../../components/Shared/Header";
 import {
   fadeSpec,
   fade,
   onboardingBackButtonMap,
-} from "./utils";
+} from "../utils";
 
 const OnboardingStack = createStackNavigator(
   {

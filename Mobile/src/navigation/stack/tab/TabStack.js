@@ -1,18 +1,18 @@
 import React from "react";
 import { createBottomTabNavigator } from "react-navigation-tabs";
-import ChallengeSubscriptionStack from "./ChallengeSubscriptionStack";
-import ProgressStack from "./ProgressStack";
-import Icon from "../../../src/components/Shared/Icon";
-import colors from "../../../src/styles/colors";
-import fonts from "../../../src/styles/fonts";
-import DashboardStack from "./DashboardStack";
-import FeedStack from "./FeedStack";
-import FeedSvg from "../../../assets/icons/Feed";
-import CalenderSvg from "../../../assets/icons/calender";
-import SubSVG from "../../../assets/icons/subscriptionSVG";
-import ProgressSvg from "../../../assets/icons/progress";
-import TabBarComponent from "../../../src/components/Shared/TabBarComponent";
-import ChallengeSvg from "../../../assets/icons/challengeSvg";
+import ChallengeSubscriptionStack from "../challengeSubscription/ChallengeSubscriptionStack";
+import ProgressStack from "../progress/ProgressStack";
+import Icon from "../../../components/Shared/Icon";
+import colors from "../../../styles/colors";
+import fonts from "../../../styles/fonts";
+import DashboardStack from "../dashboard/DashboardStack";
+import FeedStack from "../feed/FeedStack";
+import FeedSvg from "../../../../assets/icons/Feed";
+import CalenderSvg from "../../../../assets/icons/calender";
+import SubSVG from "../../../../assets/icons/subscriptionSVG";
+import ProgressSvg from "../../../../assets/icons/progress";
+import TabBarComponent from "../../../components/Shared/TabBarComponent";
+import ChallengeSvg from "../../../../assets/icons/challengeSvg";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import HomeScreenV2 from '../../../src/screens/AppStack/Home/HomeScreenV2';
-import BlogScreen from '../../../src/screens/AppStack/Home/BlogScreen';
-import Header from '../../../src/components/Shared/Header';
+import HomeScreenV2 from '../../../screens/AppStack/Home/HomeScreenV2';
+import BlogScreen from '../../../screens/AppStack/Home/BlogScreen';
+import Header from '../../../components/Shared/Header';
 
 const HomeStack = createStackNavigator(
   {

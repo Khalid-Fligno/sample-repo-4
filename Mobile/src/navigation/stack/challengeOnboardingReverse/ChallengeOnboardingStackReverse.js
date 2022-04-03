@@ -1,12 +1,12 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
-import Header from "../../../src/components/Shared/Header";
-import OnBoarding1 from "../../../src/screens/Challenges/Onboardings/OnBoarding1";
-import OnBoarding2 from "../../../src/screens/Challenges/Onboardings/OnBoarding2";
-import OnBoarding3 from "../../../src/screens/Challenges/Onboardings/OnBoarding3";
-import OnBoarding4 from "../../../src/screens/Challenges/Onboardings/OnBoarding4";
-import OnBoarding6 from "../../../src/screens/Challenges/Onboardings/OnBoarding6";
-import CompleteBoarding from "../../../src/screens/Challenges/Onboardings/CompleteBoarding";
+import Header from "../../../components/Shared/Header";
+import OnBoarding1 from "../../../screens/Challenges/Onboardings/OnBoarding1";
+import OnBoarding2 from "../../../screens/Challenges/Onboardings/OnBoarding2";
+import OnBoarding3 from "../../../screens/Challenges/Onboardings/OnBoarding3";
+import OnBoarding4 from "../../../screens/Challenges/Onboardings/OnBoarding4";
+import OnBoarding6 from "../../../screens/Challenges/Onboardings/OnBoarding6";
+import CompleteBoarding from "../../../screens/Challenges/Onboardings/CompleteBoarding";
 
 const ChallengeOnboardingStackReverse = createStackNavigator(
   {

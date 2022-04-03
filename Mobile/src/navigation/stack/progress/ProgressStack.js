@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import ProgressHomeScreen from '../../../src/screens/AppStack/Progress/ProgressHomeScreen';
-import Header from '../../../src/components/Shared/Header';
+import ProgressHomeScreen from '../../../screens/AppStack/Progress/ProgressHomeScreen';
+import Header from '../../../components/Shared/Header';
 
 const ProgressStack = createStackNavigator(
   {

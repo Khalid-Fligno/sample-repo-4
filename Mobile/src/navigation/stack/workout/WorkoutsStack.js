@@ -1,14 +1,14 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
-import WorkoutsHomeScreen2 from "../../../src/screens/AppStack/Workouts/WorkoutsHomeScreen2";
-import WorkoutsSelectionScreen2 from "../../../src/screens/AppStack/Workouts/WorkoutsSelectionScreen2";
-import WorkoutInfoScreen2V2 from "../../../src/screens/AppStack/Workouts/WorkoutInfoScreen2V2";
-import Header from "../../../src/components/Shared/Header";
+import WorkoutsHomeScreen2 from "../../../screens/AppStack/Workouts/WorkoutsHomeScreen2";
+import WorkoutsSelectionScreen2 from "../../../screens/AppStack/Workouts/WorkoutsSelectionScreen2";
+import WorkoutInfoScreen2V2 from "../../../screens/AppStack/Workouts/WorkoutInfoScreen2V2";
+import Header from "../../../components/Shared/Header";
 import {
   workoutsBackButtonMap,
   fadeSpec,
   fade,
-} from "./utils";
+} from "../utils";
 
 const WorkoutsStack = createStackNavigator(
   {

@@ -1,15 +1,15 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import NutritionHomeScreen from '../../../src/screens/AppStack/Nutrition/NutritionHomeScreen';
-import RecipeSelectionScreen from '../../../src/screens/AppStack/Nutrition/RecipeSelectionScreen';
-import RecipeScreen from '../../../src/screens/AppStack/Nutrition/RecipeScreen';
-import RecipeStepsScreen from '../../../src/screens/AppStack/Nutrition/RecipeStepsScreen';
-import Header from '../../../src/components/Shared/Header';
+import NutritionHomeScreen from '../../../screens/AppStack/Nutrition/NutritionHomeScreen';
+import RecipeSelectionScreen from '../../../screens/AppStack/Nutrition/RecipeSelectionScreen';
+import RecipeScreen from '../../../screens/AppStack/Nutrition/RecipeScreen';
+import RecipeStepsScreen from '../../../screens/AppStack/Nutrition/RecipeStepsScreen';
+import Header from '../../../components/Shared/Header';
 import {
   nutritionBackButtonMap,
   fadeSpec,
   fade,
-} from './utils';
+} from '../utils';
 
 
 const NutritionStack = createStackNavigator(

@@ -1,9 +1,9 @@
 import { createStackNavigator } from 'react-navigation-stack';
-import TabStack from './TabStack';
-import ExerciseStack from './ExerciseStack';
-import ProfileStack from './ProfileStack';
-import ChallengeOnboardingStack from './ChallengeOnboardingStack';
-import ChallengeOnboardingStackReverse from './ChallengeOnboardingStackReverse';
+import TabStack from '../tab/TabStack';
+import ExerciseStack from '../exercise/ExerciseStack';
+import ProfileStack from '../profile/ProfileStack';
+import ChallengeOnboardingStack from '../challengeOnboarding/ChallengeOnboardingStack';
+import ChallengeOnboardingStackReverse from '../challengeOnboardingReverse/ChallengeOnboardingStackReverse';
 
 const AppStack = createStackNavigator(
   {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import Header from '../../../src/components/Shared/Header';
-import ChallengeSubscriptionScreen from '../../../src/screens/Challenges/subscription';
-import CalendarStack from './CalendarStack';
+import Header from '../../../components/Shared/Header';
+import ChallengeSubscriptionScreen from '../../../screens/Challenges/subscription';
+import CalendarStack from '../calendar/CalendarStack';
 
 
 const ChallengeSubscriptionStack = createStackNavigator(

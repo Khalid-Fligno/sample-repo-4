@@ -1,9 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import Header from '../../../src/components/Shared/Header';
-import NutritionStack from './NutritionStack';
-import WorkoutsStack from './WorkoutsStack';
-import HomeStack from './HomeStack';
+import Header from '../../../components/Shared/Header';
+import NutritionStack from '../nutrition/NutritionStack';
+import WorkoutsStack from '../workout/WorkoutsStack';
+import HomeStack from '../home/HomeStack';
 
 const DashboardStack = createStackNavigator(
   {

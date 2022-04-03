@@ -1,10 +1,10 @@
 import { createStackNavigator } from "react-navigation-stack";
-import ExercisesScreenV2 from "../../../src/screens/AppStack/Workouts/CommonExercises/ExercisesScreenV2";
-import WarmUpCoolDownScreenV2 from "../../../src/screens/AppStack/Workouts/CommonExercises/WarmUpCoolDownScreenV2";
-import WorkoutCompleteScreen from "../../../src/screens/AppStack/Workouts/CommonExercises/WorkoutCompleteScreen";
-import CountDownScreenV2 from "../../../src/screens/AppStack/Workouts/CommonExercises/CountdownScreenV2";
+import ExercisesScreenV2 from "../../../screens/AppStack/Workouts/CommonExercises/ExercisesScreenV2";
+import WarmUpCoolDownScreenV2 from "../../../screens/AppStack/Workouts/CommonExercises/WarmUpCoolDownScreenV2";
+import WorkoutCompleteScreen from "../../../screens/AppStack/Workouts/CommonExercises/WorkoutCompleteScreen";
+import CountDownScreenV2 from "../../../screens/AppStack/Workouts/CommonExercises/CountdownScreenV2";
 
-import { fadeSpec, fade } from "./utils";
+import { fadeSpec, fade } from "../utils";
 
 const ExerciseStack = createStackNavigator(
   {
