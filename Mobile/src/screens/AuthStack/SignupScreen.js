@@ -20,7 +20,7 @@ import fonts from "../../styles/fonts";
 import { containerPadding } from '../../styles/globalStyles';
 import HeaderAuth from '../../components/Auth/Header';
 import * as Haptics from "expo-haptics";
-import { db, auth } from "../../../config/firebase";
+import { db, auth } from "../../config/firebase";
 import Toast from 'react-native-toast-message';
 import * as Localization from "expo-localization";
 import AsyncStorage from "@react-native-community/async-storage";

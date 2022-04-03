@@ -13,7 +13,7 @@ import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
 import CustomBtn from "../../components/Shared/CustomBtn";
 import { containerPadding } from "../../styles/globalStyles";
-import { db } from "../../../config/firebase";
+import { db } from "../../config/firebase";
 const { width, height } = Dimensions.get("window");
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";

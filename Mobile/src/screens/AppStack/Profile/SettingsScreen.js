@@ -8,7 +8,7 @@ import {
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
 import { ListItem } from "react-native-elements";
-import { db, auth } from "../../../../config/firebase";
+import { db, auth } from "../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
 import globalStyle from "../../../styles/globalStyles";

@@ -12,7 +12,7 @@ import {
          widthPercentageToDP as wp,
          heightPercentageToDP as hp,
         } from "react-native-responsive-screen";
- import { db } from "../../../../../config/firebase";
+ import { db } from "../../../../config/firebase";
 
 import fonts from "../../../../styles/fonts";
 import * as Haptics from "expo-haptics";

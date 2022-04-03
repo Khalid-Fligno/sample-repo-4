@@ -7,7 +7,7 @@ import fonts from "../../../styles/fonts";
 import createUserChallengeData from "../../../components/Challenges/UserChallengeData";
 import colors from "../../../styles/colors";
 import Loader from "../../../components/Shared/Loader";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 import AsyncStorage from "@react-native-community/async-storage";
 import FitnessLevelCard from "../../../components/Onboarding/FitnessLevelCard";
 import BigHeadingWithBackButton from "../../../components/Shared/BigHeadingWithBackButton";

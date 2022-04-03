@@ -13,7 +13,7 @@ import onboardingStyle from "./OnBoardingStyle";
 import Loader from "../../components/Shared/Loader";
 import * as Haptics from "expo-haptics";
 import AsyncStorage from "@react-native-community/async-storage";
-import { db } from "../../../config/firebase";
+import { db } from "../../config/firebase";
 import FitnessLevelCard from "../../components/Onboarding/FitnessLevelCard";
 import BigHeadingWithBackButton from "../../components/Shared/BigHeadingWithBackButton";
 import fonts from "../../styles/fonts";

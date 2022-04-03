@@ -1,4 +1,4 @@
-const { db } = require("../../../config/firebase");
+const { db } = require("../../config/firebase");
 import AsyncStorage from "@react-native-community/async-storage";
 import { Alert } from "react-native";
 import moment from "moment";

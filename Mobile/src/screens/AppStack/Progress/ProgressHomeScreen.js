@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import moment from "moment";
 import FastImage from "react-native-fast-image";
 import ReactTimeout from "react-timeout";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import ProgressBar from "../../../components/Progress/ProgressBar";
 import Icon from "../../../components/Shared/Icon";

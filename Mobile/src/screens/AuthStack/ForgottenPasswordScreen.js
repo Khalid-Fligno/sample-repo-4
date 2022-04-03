@@ -17,7 +17,7 @@ import { containerPadding } from '../../styles/globalStyles';
 import HeaderAuth from '../../components/Auth/Header';
 import Toast from 'react-native-toast-message';
 import NativeLoader from "../../components/Shared/NativeLoader";
-import { auth } from '../../../config/firebase';
+import { auth } from '../../config/firebase';
 
 const { width } = Dimensions.get("window");
 

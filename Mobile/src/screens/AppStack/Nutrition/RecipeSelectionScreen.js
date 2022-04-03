@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Alert, FlatList, Text, ActivityIndicator, } from "react-native";
 import * as FileSystem from "expo-file-system";
 import sortBy from "lodash.sortby";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 import RecipeTile from "../../../components/Nutrition/RecipeTile";
 import RecipeTileSkeleton from "../../../components/Nutrition/RecipeTileSkeleton";
 import globalStyle from "../../../styles/globalStyles";

@@ -16,7 +16,7 @@ import * as Localization from "expo-localization";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
 import Loader from "../../components/Shared/Loader";
-import { db } from "../../../config/firebase";
+import { db } from "../../config/firebase";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import CustomBtn from "../../components/Shared/CustomBtn";

@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { Alert } from "react-native";
 import FastImage from "react-native-fast-image";
 import { FileSystem } from "react-native-unimodules";
-import { db } from "../../config/firebase";
+import { db } from "../config/firebase";
 
 export const findFocus = (workoutObject) => {
   if (

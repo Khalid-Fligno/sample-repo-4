@@ -16,7 +16,7 @@ import { Divider } from "react-native-elements";
 // import Image from "react-native-scalable-image";
 import { DotIndicator } from "react-native-indicators";
 import ParallaxScrollView from "react-native-parallax-scroll-view";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import Icon from "../../../components/Shared/Icon";
 import AddToCalendarButton from "../../../components/Shared/AddToCalendarButton";

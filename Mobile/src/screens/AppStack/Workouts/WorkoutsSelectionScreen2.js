@@ -3,7 +3,7 @@ import { StyleSheet, View, Alert, Text, FlatList, ImageBackground } from 'react-
 import AsyncStorage from '@react-native-community/async-storage';
 import * as FileSystem from 'expo-file-system';
 // import moment from 'moment';
-import { db } from '../../../../config/firebase';
+import { db } from '../../../config/firebase';
 import Loader from '../../../components/Shared/Loader';
 import colors from '../../../styles/colors';
 import globalStyle from '../../../styles/globalStyles';

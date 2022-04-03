@@ -19,7 +19,7 @@ import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
 import { ListItem } from "react-native-elements";
 import FastImage from "react-native-fast-image";
-import { auth, db } from "../../../../config/firebase";
+import { auth, db } from "../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import Icon from "../../../components/Shared/Icon";
 import colors from "../../../styles/colors";

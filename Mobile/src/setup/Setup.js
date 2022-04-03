@@ -15,10 +15,10 @@ import _ from "lodash";
 import { Mixpanel } from "mixpanel-react-native";
 import * as Sentry from "@sentry/react-native";
 import AsyncStorage from "@react-native-community/async-storage";
-import { appsFlyerConfig } from "../../config/appsflyer";
-import { mixpanelConfig } from "../../config/mixpanel";
-import { oneSignalConfig } from "../../config/onesignal";
-import { sentryConfig } from "../../config/sentry";
+import { appsFlyerConfig } from "../config/appsflyer/index";
+import { mixpanelConfig } from "../config/mixpanel/index";
+import { oneSignalConfig } from "../config/onesignal/index";
+import { sentryConfig } from "../config/sentry/index";
 import Router from "../navigation/Router";
 
 const Setup = () => {

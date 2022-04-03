@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, Dimensions } from "react-native";
 import PropTypes from "prop-types";
-import { timerSound } from "../../../config/audio";
+import { timerSound } from "../../config/audio";
 import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
 

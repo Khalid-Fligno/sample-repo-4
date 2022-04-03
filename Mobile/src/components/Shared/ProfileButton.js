@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import Icon from "../Shared/Icon";
-import { db } from "../../../config/firebase";
+import { db } from "../../config/firebase";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import { Image } from "react-native";

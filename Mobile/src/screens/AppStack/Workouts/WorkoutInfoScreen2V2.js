@@ -18,7 +18,7 @@ import Video from "react-native-video";
 import Modal from "react-native-modal";
 import Carousel from "react-native-carousel";
 import { DotIndicator } from "react-native-indicators";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 import Icon from "../../../components/Shared/Icon";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import {

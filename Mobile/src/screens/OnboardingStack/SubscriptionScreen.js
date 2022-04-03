@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import * as Haptics from "expo-haptics";
 import appsFlyer from "react-native-appsflyer";
 // import * as Sentry from 'sentry-expo';
-import { auth, db } from "../../../config/firebase";
+import { auth, db } from "../../config/firebase";
 import {
   // foundationIdentifiers,
   discountedIdentifiers,
@@ -25,7 +25,7 @@ import {
   validateReceiptSandbox,
   compare,
   compareInApp,
-} from "../../../config/apple";
+} from "../../config/apple";
 import { RestoreSubscriptions } from "../../utils/subscription";
 
 import {
@@ -35,7 +35,7 @@ import {
   getAndroidSubscriptionDetails,
   replaceTestAndroidProduct,
   restoreAndroidPurchases,
-} from "../../../config/android";
+} from "../../config/android";
 import SubscriptionTile from "../../components/Onboarding/SubscriptionTile";
 import NativeLoader from "../../components/Shared/NativeLoader";
 import Icon from "../../components/Shared/Icon";

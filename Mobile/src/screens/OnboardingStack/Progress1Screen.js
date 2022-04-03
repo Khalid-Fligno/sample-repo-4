@@ -25,7 +25,7 @@ import {
   waistOptionsImperial,
   hipOptionsImperial,
 } from "../../utils/index";
-import { db } from "../../../config/firebase";
+import { db } from "../../config/firebase";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import globalStyle, { containerPadding } from "../../styles/globalStyles";

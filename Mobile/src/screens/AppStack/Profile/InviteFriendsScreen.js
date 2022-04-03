@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from 'expo-haptics';
 import Loader from '../../../components/Shared/Loader';
 import CustomButton from '../../../components/Shared/CustomButton';
-import { db } from '../../../../config/firebase';
+import { db } from '../../../config/firebase';
 import InviteFriends from '../../../components/Profile/InviteFriends';
 import FreeGiftSection from '../../../components/Profile/FreeGiftSection';
 import fonts from '../../../styles/fonts';

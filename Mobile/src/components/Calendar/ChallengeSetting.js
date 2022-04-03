@@ -8,7 +8,7 @@ import {
 } from "react-native-responsive-screen";
 import Icon from "../Shared/Icon";
 import AsyncStorage from "@react-native-community/async-storage";
-import { db } from "../../../config/firebase";
+import { db } from "../../config/firebase";
 import Loader from "../Shared/Loader";
 import { Alert } from "react-native";
 import createUserChallengeData from "../../components/Challenges/UserChallengeData";

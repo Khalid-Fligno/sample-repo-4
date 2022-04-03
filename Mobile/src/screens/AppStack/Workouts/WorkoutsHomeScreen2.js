@@ -17,7 +17,7 @@ import Icon from "../../../components/Shared/Icon";
 import CustomButton from "../../../components/Shared/CustomButton";
 import Loader from "../../../components/Shared/Loader";
 import HelperModal from "../../../components/Shared/HelperModal";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 import colors from "../../../styles/colors";
 // import fonts from '../../../styles/fonts';
 import Tile from "../../../components/Shared/Tile";

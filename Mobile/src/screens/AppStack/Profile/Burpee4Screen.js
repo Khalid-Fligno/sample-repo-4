@@ -12,7 +12,7 @@ import {
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Haptics from "expo-haptics";
 import Modal from "react-native-modal";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 import { burpeeOptions, findFitnessLevel } from "../../../utils";
 import moment from "moment";
 import Loader from "../../../components/Shared/Loader";

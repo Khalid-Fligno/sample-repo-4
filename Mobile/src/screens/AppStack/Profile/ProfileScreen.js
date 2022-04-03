@@ -11,7 +11,7 @@ import {
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Localization from "expo-localization";
 import { ListItem } from "react-native-elements";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
 import globalStyle from "../../../styles/globalStyles";

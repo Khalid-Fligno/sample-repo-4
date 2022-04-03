@@ -15,7 +15,7 @@ import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import CustomBtn from "../../components/Shared/CustomBtn";
 import authScreenStyle from './authScreenStyle';
 import fonts from "../../styles/fonts";
-import { db } from '../../../config/firebase';
+import { db } from '../../config/firebase';
 import { containerPadding } from '../../styles/globalStyles';
 import HeaderAuth from '../../components/Auth/Header';
 import NativeLoader from "../../components/Shared/NativeLoader";

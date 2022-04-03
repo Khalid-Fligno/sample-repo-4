@@ -10,7 +10,7 @@ import {
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import ImageProgress from 'react-native-image-progress';
 import Loader from '../../../components/Shared/Loader';
-import { db } from '../../../../config/firebase';
+import { db } from '../../../config/firebase';
 import fonts from '../../../styles/fonts';
 import colors from '../../../styles/colors';
 

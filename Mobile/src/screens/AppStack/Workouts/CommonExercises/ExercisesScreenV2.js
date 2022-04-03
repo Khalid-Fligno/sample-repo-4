@@ -17,7 +17,7 @@ import ExerciseInfoModal from "../../../../components/Workouts/ExerciseInfoModal
 import colors from "../../../../styles/colors";
 import fonts from "../../../../styles/fonts";
 import appsFlyer from "react-native-appsflyer";
-import { db } from "../../../../../config/firebase";
+import { db } from "../../../../config/firebase";
 import AsyncStorage from "@react-native-community/async-storage";
 import FastImage from "react-native-fast-image";
 import {

@@ -3,7 +3,7 @@ import {
   Alert
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { auth, db } from '../../config/firebase';
+import { auth, db } from '../config/firebase';
 // const subscriptionServiceUrl = 'http://3.8.209.87:8100/subscriptions/';
 const subscriptionServiceUrl = 'https://34.87.240.165/subscriptions/'; //Google cloud server ip
 export class RestoreSubscriptions {

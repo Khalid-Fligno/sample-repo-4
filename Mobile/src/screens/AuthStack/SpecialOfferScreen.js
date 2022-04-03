@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { auth } from '../../../config/firebase';
+import { auth } from '../../config/firebase';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
 

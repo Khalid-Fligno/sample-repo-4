@@ -20,7 +20,7 @@ import fonts from "../../styles/fonts";
 import { containerPadding } from '../../styles/globalStyles';
 import HeaderAuth from '../../components/Auth/Header';
 import authScreenStyle from './authScreenStyle';
-import { db, auth } from "../../../config/firebase";
+import { db, auth } from "../../config/firebase";
 import * as Sentry from "@sentry/react-native";
 import appsFlyer from "react-native-appsflyer";
 import * as Haptics from "expo-haptics";
@@ -29,8 +29,8 @@ import firebase from "firebase";
 import NativeLoader from "../../components/Shared/NativeLoader";
 import { hasChallenges } from "../../utils/challenges";
 import { RestoreSubscriptions } from '../../utils/subscription';
-import { restoreAndroidPurchases } from '../../../config/android';
-import { compare, compareInApp } from '../../../config/apple';
+import { restoreAndroidPurchases } from '../../config/android';
+import { compare, compareInApp } from '../../config/apple';
 import Toast from 'react-native-toast-message';
 
 const LoginScreen = ({ navigation }) => {

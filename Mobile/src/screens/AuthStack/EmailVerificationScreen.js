@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { auth } from '../../../config/firebase';
+import { auth } from '../../config/firebase';
 import Loader from '../../components/Shared/Loader';
 import Icon from '../../components/Shared/Icon';
 import colors from '../../styles/colors';

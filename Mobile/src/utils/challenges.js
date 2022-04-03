@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-community/async-storage";
-import { db } from "../../config/firebase";
+import { db } from "../config/firebase";
 import moment from "moment";
 import { Alert } from "react-native";
 

@@ -1,7 +1,7 @@
 import {
   findWorkoutsSelectionTitle,
   findNutritionHeaderTitle,
-} from '../utils';
+} from '../../stack/utils';
 
 describe('Find Workouts Selection Title', () => {
   test('Gym / Full Body header displays correctly', () => {

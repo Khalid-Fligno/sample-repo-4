@@ -14,7 +14,7 @@ import * as Localization from "expo-localization";
 import moment from "moment";
 import momentTimezone from "moment-timezone";
 import Loader from "../../../components/Shared/Loader";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 import colors from "../../../styles/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import HomeScreenStyle from "./HomeScreenStyle";

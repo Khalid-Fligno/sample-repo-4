@@ -17,11 +17,11 @@ import {
   validateReceiptSandbox,
   compare,
   compareInApp,
-} from "../../config/apple";
-import { restoreAndroidPurchases } from "../../config/android";
+} from "../config/apple";
+import { restoreAndroidPurchases } from "../config/android";
 import { RestoreSubscriptions } from "../utils/subscription";
-import { auth, db } from "../../config/firebase";
-import { timerSound } from "../../config/audio";
+import { auth, db } from "../config/firebase";
+import { timerSound } from "../config/audio";
 import { hasChallenges, isActiveChallenge } from "../utils/challenges";
 import { getBuildNumber, getVersion } from "react-native-device-info";
 import { Platform } from "react-native";

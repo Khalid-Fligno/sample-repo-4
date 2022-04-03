@@ -3,7 +3,7 @@ import { View, Text, ScrollView, FlatList, Alert, Linking } from "react-native";
 import { ListItem, Button } from "react-native-elements";
 import colors from "../../styles/colors";
 import globalStyle, { containerPadding } from "../../styles/globalStyles";
-import { db } from "../../../config/firebase";
+import { db } from "../../config/firebase";
 import AsyncStorage from "@react-native-community/async-storage";
 import moment from "moment";
 import momentTimezone from "moment-timezone";

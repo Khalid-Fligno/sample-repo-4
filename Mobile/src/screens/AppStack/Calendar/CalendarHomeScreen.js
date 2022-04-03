@@ -14,7 +14,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
 import firebase from "firebase";
 import ReactTimeout from "react-timeout";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
 import globalStyle, { containerPadding } from "../../../styles/globalStyles";

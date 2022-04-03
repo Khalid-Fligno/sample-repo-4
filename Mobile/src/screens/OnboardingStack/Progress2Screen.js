@@ -27,7 +27,7 @@ import ActionSheet from "react-native-actionsheet";
 import CustomBtn from "../../components/Shared/CustomBtn";
 import { containerPadding } from "../../styles/globalStyles";
 import * as MediaLibrary from "expo-media-library";
-import { db } from "../../../config/firebase";
+import { db } from "../../config/firebase";
 
 import moment from "moment";
 

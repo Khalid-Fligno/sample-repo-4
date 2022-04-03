@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import Loader from "../../../components/Shared/Loader";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 import colors from "../../../styles/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import globalStyle from "../../../styles/globalStyles";

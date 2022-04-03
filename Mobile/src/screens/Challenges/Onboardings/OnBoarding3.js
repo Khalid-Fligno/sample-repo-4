@@ -17,7 +17,7 @@ import PickerModal from "../../../components/Challenges/PickerModal";
 import InputBox2 from "../../../components/Challenges/InputBox2";
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-community/async-storage";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 
 export default class OnBoarding3 extends Component {
   constructor(props) {

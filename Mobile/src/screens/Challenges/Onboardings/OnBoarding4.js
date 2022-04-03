@@ -31,7 +31,7 @@ const actionSheetOptions = ["Cancel", "Take photo", "Upload from Camera Roll"];
 import storeProgressInfo from "../../../components/Challenges/storeProgressInfo";
 import { NavigationActions, StackActions } from "react-navigation";
 import createUserChallengeData from "../../../components/Challenges/UserChallengeData";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../config/firebase";
 import moment from "moment";
 import CalendarModal from "../../../components/Shared/CalendarModal";
 

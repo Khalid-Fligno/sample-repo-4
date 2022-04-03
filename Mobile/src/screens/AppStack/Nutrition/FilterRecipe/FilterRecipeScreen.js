@@ -25,7 +25,7 @@ import PhaseModal from "./PhaseModal";
 import FilterScreen from "./FilterScreen";
 import { convertRecipeData } from "../../../../utils/challenges";
 import RecipeTileSkeleton from "../../../../components/Nutrition/RecipeTileSkeleton";
-import { db } from "../../../../../config/firebase";
+import { db } from "../../../../config/firebase";
 import AsyncStorage from "@react-native-community/async-storage";
 const { width } = Dimensions.get("window");
 
