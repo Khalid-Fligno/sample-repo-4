@@ -48,15 +48,14 @@ export default class Burpee2Screen extends React.PureComponent {
         fromScreen: screen,
         screenReturnParams: params,
       });
-      return;
+    } else {
+      this.props.navigation.replace("Burpee3", {
+        isInitial: isInitial,
+        navigateTo: navigateTo,
+        updateBurpees: updateBurpees,
+        photoExist2: photoExist2,
+      });
     }
-
-    this.props.navigation.replace("Burpee3", {
-      isInitial: isInitial,
-      navigateTo: navigateTo,
-      updateBurpees: updateBurpees,
-      photoExist2: photoExist2,
-    });
   };
 
   render() {

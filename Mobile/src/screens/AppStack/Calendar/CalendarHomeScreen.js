@@ -766,16 +766,16 @@ class CalendarHomeScreen extends React.PureComponent {
           extraProps: { fromCalender: true },
         },
       });
-      return;
+    } else {
+      this.props.navigation.navigate("WorkoutInfo", {
+        workout,
+        reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
+        workoutSubCategory: workout.workoutSubCategory,
+        fitnessLevel,
+        extraProps: { fromCalender: true },
+        transformRoute: true,
+      });
     }
-    this.props.navigation.navigate("WorkoutInfo", {
-      workout,
-      reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
-      workoutSubCategory: workout.workoutSubCategory,
-      fitnessLevel,
-      extraProps: { fromCalender: true },
-      transformRoute: true,
-    });
     this.setState({
       downloaded: 0,
       totalToDownload: 0,
