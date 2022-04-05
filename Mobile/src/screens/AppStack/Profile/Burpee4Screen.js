@@ -31,7 +31,7 @@ const storeProgressInfo = async (
   const progressDataFieldName = isInitial
     ? "initialProgressInfo"
     : "currentProgressInfo";
-    
+
   await db
     .collection("users")
     .doc(uid)
@@ -83,16 +83,15 @@ export default class Burpee4Screen extends React.PureComponent {
               const params =
                 this.props.navigation.getParam("screenReturnParams");
               this.props.navigation.navigate(screen, params);
-              return;
-            }
-
-            if(updateBurpees){
-              this.props.navigation.navigate("ProgressEdit", {
-                isInitial: isInitial,
-                photoExist2: photoExist2
-              });
             } else {
-              this.props.navigation.navigate("Settings")
+              if (updateBurpees) {
+                this.props.navigation.navigate("ProgressEdit", {
+                  isInitial: isInitial,
+                  photoExist2: photoExist2
+                });
+              } else {
+                this.props.navigation.navigate("Settings")
+              }
             }
           },
         },

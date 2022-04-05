@@ -101,17 +101,17 @@ export default class Burpee3Screen extends React.PureComponent {
         const screen = this.props.navigation.getParam("fromScreen");
         const params = this.props.navigation.getParam("screenReturnParams");
         this.props.navigation.navigate(screen, params);
-        return;
+      } else {
+        if (updateBurpees) {
+          this.props.navigation.navigate("ProgressEdit", {
+            isInitial: isInitial,
+            photoExist2: photoExist2
+          });
+        } else {
+          this.props.navigation.navigate("Settings")
+        }
       }
 
-      if (updateBurpees) {
-        this.props.navigation.navigate("ProgressEdit", {
-          isInitial: isInitial,
-          photoExist2: photoExist2
-        });
-      } else {
-        this.props.navigation.navigate("Settings")
-      }
     });
 
     FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, {
@@ -150,15 +150,14 @@ export default class Burpee3Screen extends React.PureComponent {
         fromScreen: screen,
         screenReturnParams: params,
       });
-      return;
+    } else {
+      this.props.navigation.replace("Burpee4", {
+        isInitial: isInitial,
+        navigateTo: navigateTo,
+        updateBurpees: updateBurpees,
+        photoExist2: photoExist2
+      });
     }
-
-    this.props.navigation.replace("Burpee4", {
-      isInitial: isInitial,
-      navigateTo: navigateTo,
-      updateBurpees: updateBurpees,
-      photoExist2: photoExist2
-    });
 
     FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, {
       idempotent: true,
