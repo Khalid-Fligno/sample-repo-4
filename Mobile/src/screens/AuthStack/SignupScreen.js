@@ -25,8 +25,14 @@ import Toast from 'react-native-toast-message';
 import * as Localization from "expo-localization";
 import AsyncStorage from "@react-native-community/async-storage";
 import appsFlyer from 'react-native-appsflyer';
-import { updateUserSubscription } from '../../utils/challenges';
 import NativeLoader from "../../components/Shared/NativeLoader";
+import {
+  updateUserSubscription,
+  subOneDay,
+  subMonthly,
+  sub3Monthly,
+  subYearly,
+} from "../../utils/challenges";
 
 const { width } = Dimensions.get("window");
 
@@ -267,8 +273,8 @@ const SignupScreen = ({ navigation }) => {
                 placeholder="Last Name"
                 value={userData ? userData.lastName : lastName}
                 onChangeText={(text) => userData ? 
-                  setFirstName(userData.lastName) :
-                  setFirstName(text)
+                  setLastName(userData.lastName) :
+                  setLastName(text)
                 }
                 editable={!userData ? true : false}
               />
@@ -278,10 +284,11 @@ const SignupScreen = ({ navigation }) => {
                 keyboardType="email-address"
                 value={userData ? userData.email : email}
                 onChangeText={(text) => userData ? 
-                  setFirstName(userData.email) :
-                  setFirstName(text)
+                  setEmail(userData.email) :
+                  setEmail(text)
                 }
                 editable={!userData ? true : false}
+                autoCapitalize='none'
               />
               <TextInput
                 style={styles.Input}
@@ -290,6 +297,7 @@ const SignupScreen = ({ navigation }) => {
                 returnKeyType="go"
                 value={password}
                 onChangeText={setPassword}
+                autoCapitalize='none'
               />
             </View>
           </View>

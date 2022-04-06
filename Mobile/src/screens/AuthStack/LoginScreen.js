@@ -54,6 +54,16 @@ const LoginScreenV2 = ({ navigation }) => {
 		}
 	}
 
+	const setUserSubscriptionInfo = async (id) => {
+		const docRef = await db
+			.collection("users")
+			.doc(id)
+		
+		docRef.set({subscriptionInfo: {
+			blogsId: "lifestyleBlogs"
+		}}, { merge: true });
+	}
+
 	const goToAppScreen = async (userDocs) => {
 		// RECEIPT STILL VALID
 		setLoading(false)
@@ -61,6 +71,7 @@ const LoginScreenV2 = ({ navigation }) => {
 			navigation.navigate("Onboarding1");
 			return;
 		}
+		await setUserSubscriptionInfo(userDocs.id)
 		navigation.navigate("App");
 	};
 
@@ -198,9 +209,6 @@ const LoginScreenV2 = ({ navigation }) => {
 					setLoading(false)
 					await goToAppScreen(userDocs);
 				}
-			} else {
-				setLoading(false)
-				await goToAppScreen(userDocs);
 			}
 		} catch (error) {
 			if (error.code === 'auth/wrong-password') {
@@ -273,6 +281,7 @@ const LoginScreenV2 = ({ navigation }) => {
 								keyboardType="email-address"
 								onChangeText={setEmail}
 								value={email}
+								autoCapitalize='none'
 							/>
 							<TextInput
 								style={styles.Input}
@@ -281,6 +290,7 @@ const LoginScreenV2 = ({ navigation }) => {
 								returnKeyType="go"
 								onChangeText={setPassword}
 								value={password}
+								autoCapitalize='none'
 							/>
 						</View>
 						<TouchableOpacity onPress={() => navigation.navigate('ForgottenPassword')}>
@@ -305,7 +315,7 @@ const LoginScreenV2 = ({ navigation }) => {
 					</TouchableOpacity>
 				</View>
 			</View>
-			<Toast/>
+			<Toast />
 			{loading && <NativeLoader />}
 		</SafeAreaView>
 	)
@@ -326,7 +336,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		fontSize: hp('2%'),
 		alignItems: "center",
-		fontFamily: fonts.SimplonMonoMedium
+		fontFamily: fonts.SimplonMonoMedium,
 	},
 	forgotPasswordText: {
 		fontFamily: fonts.bold,

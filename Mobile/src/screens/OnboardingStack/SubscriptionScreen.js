@@ -268,6 +268,7 @@ export default class SubscriptionScreen extends React.PureComponent {
               originalPurchaseDate: latestReceipt.original_purchase_date_ms,
               productId: latestReceipt.product_id,
               platform: Platform.OS,
+              blogsId: "lifestyleBlogs"
             },
           };
           await userRef.set(data, { merge: true });
@@ -328,6 +329,7 @@ export default class SubscriptionScreen extends React.PureComponent {
             originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
             productId: sortedInApp[0].product_id,
             platform: Platform.OS,
+            blogsId: "lifestyleBlogs"
           },
         };
         await userRef.set(data, { merge: true });
@@ -684,6 +686,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                 originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
                 productId: sortedInApp[0].product_id,
                 platform: Platform.OS,
+                blogsId: "lifestyleBlogs"
               },
             };
             await userRef.set(data, { merge: true });
@@ -796,6 +799,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                       sortedInApp[0].original_purchase_date_ms,
                     productId: sortedInApp[0].product_id,
                     platform: Platform.OS,
+                    blogsId: "lifestyleBlogs"
                   },
                 };
                 await userRef.set(data, { merge: true });
@@ -865,6 +869,7 @@ export default class SubscriptionScreen extends React.PureComponent {
           originalPurchaseDate: Number(androidData.purchaseTime),
           productId: replaceTestAndroidProduct(purchase.productId),
           platform: Platform.OS,
+          blogsId: "lifestyleBlogs"
         },
       };
       await userRef.set(data, { merge: true });
