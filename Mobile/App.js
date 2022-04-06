@@ -36,6 +36,7 @@ const App = () => {
       tracesSampleRate: 0.2,
       enableNative: true,
       debug: true,
+      enableOutOfMemoryTracking: false
     });
   }
 
