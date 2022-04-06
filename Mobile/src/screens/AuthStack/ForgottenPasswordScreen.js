@@ -115,6 +115,7 @@ const ForgottenPasswordScreen = ({ navigation }) => {
               keyboardType="email-address"
               onChangeText={setEmail}
               value={email}
+              autoCapitalize='none'
             />
           </View>
         </View>

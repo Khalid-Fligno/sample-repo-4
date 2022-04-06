@@ -281,6 +281,7 @@ const LoginScreenV2 = ({ navigation }) => {
 								keyboardType="email-address"
 								onChangeText={setEmail}
 								value={email}
+								autoCapitalize='none'
 							/>
 							<TextInput
 								style={styles.Input}
@@ -289,6 +290,7 @@ const LoginScreenV2 = ({ navigation }) => {
 								returnKeyType="go"
 								onChangeText={setPassword}
 								value={password}
+								autoCapitalize='none'
 							/>
 						</View>
 						<TouchableOpacity onPress={() => navigation.navigate('ForgottenPassword')}>
@@ -334,7 +336,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		fontSize: hp('2%'),
 		alignItems: "center",
-		fontFamily: fonts.SimplonMonoMedium
+		fontFamily: fonts.SimplonMonoMedium,
 	},
 	forgotPasswordText: {
 		fontFamily: fonts.bold,

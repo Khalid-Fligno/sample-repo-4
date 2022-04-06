@@ -100,7 +100,7 @@ export const FeedScreen = ({ navigation }) => {
         const trainerData = await getProfileTrainers()
 
         // next task conditional the blogsData is undefined ug dili madamay ang trainerData
-        if (blogsData && trainerData) {
+        if (blogsData || trainerData) {
           setLoading(false)
           setActiveUserChallengeData(blogsData)
           setTrainerData(trainerData)

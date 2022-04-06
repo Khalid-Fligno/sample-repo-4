@@ -288,6 +288,7 @@ const SignupScreen = ({ navigation }) => {
                   setEmail(text)
                 }
                 editable={!userData ? true : false}
+                autoCapitalize='none'
               />
               <TextInput
                 style={styles.Input}
@@ -296,6 +297,7 @@ const SignupScreen = ({ navigation }) => {
                 returnKeyType="go"
                 value={password}
                 onChangeText={setPassword}
+                autoCapitalize='none'
               />
             </View>
           </View>
