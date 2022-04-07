@@ -940,7 +940,20 @@ export default class SubscriptionScreen extends React.PureComponent {
             <ImageBackground
               source={require("../../../assets/images/OnBoardindImg/subscriptionBGV2.png")}
               style={styles.imageBackgroundContainer}
-            />
+            >
+              <View style={{ paddingHorizontal: 10 }}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color: 'white',
+                    fontFamily: fonts.bold
+                  }}
+                >
+                  Subcribe to our base 'Lifestyle section and recieve' recipes,
+                  workouts and content to become a happier, healthier you
+                </Text>
+              </View>
+            </ImageBackground>
             <View style={styles.contentContainer}>
               <Text
                 style={{
@@ -1005,6 +1018,28 @@ export default class SubscriptionScreen extends React.PureComponent {
                 color={colors.charcoal.dark}
                 style={styles.chevronUp}
               />
+              <View
+                style={{
+                  backgroundColor: 'black',
+                  marginHorizontal: 20,
+                  marginTop: 5
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color: 'white',
+                    fontFamily: fonts.bold,
+                    fontSize: 11,
+                    marginVertical: 5,
+                    marginHorizontal: 10
+                  }}
+                >
+                  Looking to purchase a Transform Program instead?
+                  (this includes free 'Lifestyle' access while your challenge is active) {"\n"}
+                  Click here
+                </Text>
+              </View>
               <View style={styles.disclaimerTextContainer}>
                 <Text style={styles.disclaimerText}>
                   <Text style={styles.subscriptionTermsTitle}>
@@ -1065,6 +1100,11 @@ const styles = StyleSheet.create({
     height: width / 2,
     alignItems: "center",
     justifyContent: "space-between",
+    overflow: "hidden",
+    justifyContent: 'center'
+  },
+  opacityLayer: {
+
   },
   headerContainer: {
     flex: 1,
