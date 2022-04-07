@@ -14,10 +14,8 @@ import {
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Haptics from "expo-haptics";
 import appsFlyer from "react-native-appsflyer";
-// import * as Sentry from 'sentry-expo';
 import { auth, db } from "../../../config/firebase";
 import {
-  // foundationIdentifiers,
   discountedIdentifiers,
   identifiers,
   compareProducts,
@@ -27,7 +25,6 @@ import {
   compareInApp,
 } from "../../../config/apple";
 import { RestoreSubscriptions } from "../../utils/subscription";
-
 import {
   androidIdentifiers,
   androidDiscountedIdentifiers,
@@ -42,7 +39,6 @@ import Icon from "../../components/Shared/Icon";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import RNIap, {
-  PurchaseError,
   finishTransaction,
   purchaseErrorListener,
   purchaseUpdatedListener,
@@ -54,12 +50,10 @@ const productTitleMapIOS = {
   0: "Yearly ",
   1: "Monthly ",
 };
-
 const productTitleMapAndroid = {
   0: "Monthly ",
   1: "Yearly ",
 };
-
 const subscriptionPeriodMap = {
   "com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount": "month",
   "com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted": "year",
@@ -68,7 +62,6 @@ const subscriptionPeriodMap = {
   "com.fitazfk.fitazfkapp.sub.fullaccess.monthly": "month",
   "com.fitazfk.fitazfkapp.sub.fullaccess.yearly": "year",
 };
-
 const andriodSubscriptionTitleMap = {
   0: "year",
   1: "month",
@@ -81,7 +74,6 @@ const andriodSubscriptionPeriodMap = {
   "com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly": "month",
   "com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly": "year",
 };
-
 const itemSkus = Platform.select({
   android: androidIdentifiers,
 });
@@ -94,18 +86,6 @@ const { width, height } = Dimensions.get("window");
 let purchaseUpdateSubscription;
 let purchaseErrorSubscription;
 
-// export const compareLatest = (a, b) => {
-//   const purchaseA = a.purchase_date_ms;
-//   const purchaseB = b.purchase_date_ms;
-//   let comparison = 0;
-//   if (purchaseA > purchaseB) {
-//     comparison = -1;
-//   } else if (purchaseA < purchaseB) {
-//     comparison = 1;
-//   }
-//   return comparison;
-// };
-
 export default class SubscriptionScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -117,8 +97,9 @@ export default class SubscriptionScreen extends React.PureComponent {
       selectedIndex: 0,
     };
   }
+
   componentDidMount = async () => {
-     this.props.navigation.setParams({ handleLogout: this.logout });
+    this.props.navigation.setParams({ handleLogout: this.logout });
     await RNIap.initConnection();
     this.androidSubscriptions();
     if (this.state.specialOffer) {
@@ -128,6 +109,7 @@ export default class SubscriptionScreen extends React.PureComponent {
       await this.loadProducts();
     }
   };
+
   componentWillUnmount = () => {
     if (purchaseUpdateSubscription) {
       purchaseUpdateSubscription.remove();
@@ -144,6 +126,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Linking.openURL(url);
   };
+
   logout = () => {
     try {
       AsyncStorage.removeItem("uid");
@@ -153,6 +136,7 @@ export default class SubscriptionScreen extends React.PureComponent {
       Alert.alert("Error logging out");
     }
   };
+
   convertToProduct = (products) => {
     const convertedProds = products.map((product) => {
       return {
@@ -165,6 +149,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     });
     return convertedProds;
   };
+
   androidSubscriptions = () => {
     purchaseUpdateSubscription = purchaseUpdatedListener(
       async (purchase) => {
@@ -221,17 +206,16 @@ export default class SubscriptionScreen extends React.PureComponent {
             if (Platform.OS === "ios") {
               await this.restoreiOSPurchases(onboarded);
             } else if (Platform.OS === "android") {
-              //await restoreSubscriptions.restore(subscriptionInfo, onboarded);
               await restoreAndroidPurchases(this.props);
             }
           }
         }
       });
   };
+
   restoreiOSPurchases = async (onboarded) => {
     await InAppUtils.restorePurchases(async (error, response) => {
       if (error) {
-        // Sentry.captureException(error);
         this.setState({ loading: false });
         Alert.alert("iTunes Error", "Could not connect to iTunes store.");
         return;
@@ -242,6 +226,7 @@ export default class SubscriptionScreen extends React.PureComponent {
       this.restorePurchaseCommone(response);
     });
   };
+
   restoreReceipt = async () => {
     InAppUtils.receiptData(async (error2, receiptData) => {
       if (error2) {
@@ -304,6 +289,7 @@ export default class SubscriptionScreen extends React.PureComponent {
       }
     });
   };
+
   restorePurchaseCommone = async (response) => {
     const sortedPurchases = response.slice().sort(compare);
     try {
@@ -541,6 +527,7 @@ export default class SubscriptionScreen extends React.PureComponent {
       this.loadAndroidProducts();
     }
   };
+
   retryLoadiOSProducts = () => {
     InAppUtils.loadProducts(identifiers, (error, products) => {
       if (error) {
@@ -856,8 +843,8 @@ export default class SubscriptionScreen extends React.PureComponent {
     }
 
     const expiryDate = Number(details.expiryTimeMillis);
-
     const isValid = expiryDate > Date.now();
+
     if (isValid === true) {
       const uid = await AsyncStorage.getItem("uid");
       const userRef = db.collection("users").doc(uid);
@@ -916,7 +903,6 @@ export default class SubscriptionScreen extends React.PureComponent {
 
   handleClick() {
     const {
-      loading,
       products,
       discountedProducts,
       specialOffer,
@@ -944,7 +930,6 @@ export default class SubscriptionScreen extends React.PureComponent {
     const {
       loading,
       products,
-      discountedProducts,
       specialOffer,
       selectedIndex,
     } = this.state;
@@ -953,36 +938,9 @@ export default class SubscriptionScreen extends React.PureComponent {
         <View style={styles.container}>
           <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
             <ImageBackground
-              source={require("../../../assets/images/OnBoardindImg/subscriptionBG.png")}
+              source={require("../../../assets/images/OnBoardindImg/subscriptionBGV2.png")}
               style={styles.imageBackgroundContainer}
-            >
-              {/* <View style={styles.headerContainer}>
-                <Text style={styles.smallheaderText}>
-                  {"YOU'RE ON YOUR WAY TO"}
-                </Text>
-                <Text style={styles.smallheaderText}>
-                  GETTING SHREDDED!
-                </Text>
-                <Text style={styles.headerTextLine1}>
-                  <Text style={styles.headerTextCursive}>
-                    {'start  '}
-                  </Text>
-                                YOUR {specialOffer ? '1 MONTH' : '7 DAY'}
-                </Text>
-                <Text style={styles.headerTextLine2}>
-                  FREE TRIAL TODAY!
-                </Text>
-              </View> */}
-              <View style={styles.headerContainer}>
-                {/* <Text style={styles.headerText}>
-                    {'START YOUR'}
-                  </Text> */}
-
-                {/* <Text style={styles.headerText2}>
-                {specialOffer ? '1 MONTH' : '7 DAY'} FREE TRIAL 
-                </Text> */}
-              </View>
-            </ImageBackground>
+            />
             <View style={styles.contentContainer}>
               <Text
                 style={{
@@ -1019,7 +977,6 @@ export default class SubscriptionScreen extends React.PureComponent {
                       priceNumber={product.price}
                       currencyCode={product.currencyCode}
                       currencySymbol={product.currencySymbol}
-                      // onPress={() => this.purchaseProduct(product.identifier, product.price, product.currencyCode)}
                       onPress={() => this.setState({ selectedIndex: index })}
                       selected={selectedIndex === index}
                       term={
@@ -1029,29 +986,6 @@ export default class SubscriptionScreen extends React.PureComponent {
                       }
                     />
                   ))}
-
-                {/* {
-                    specialOffer && discountedProducts && products && discountedProducts.map((product, index) => (
-                      <SubscriptionTile
-                        key={product.identifier}
-                        primary={product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
-                        title={productTitleMap[index]}
-                        price={product.priceString}
-                        priceNumber={product.price}
-                        currencyCode={product.currencyCode}
-                        currencySymbol={product.currencySymbol}
-                        // onPress={() => this.purchaseDiscountedProduct(product.identifier, product.price, product.currencyCode)}
-                        onPress={() => this.setState({selectedIndex:index})}
-                        term={Platform.OS === 'android' ? andriodSubscriptionTitleMap[index] : subscriptionPeriodMap[product.identifier]}
-                        comparisonPrice={
-                          products && (product.identifier === 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted' || product.identifier === 'com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.discounted') ?
-                            `${products[0].price[0]} ${(products[0].price / 12).toFixed(2)}` :
-                            products[1].priceString
-                        }
-                        isDiscounted={product.identifier.indexOf('fitazfkapp.sub.fullaccess.yearly.discounted') > 0 || product.identifier.indexOf('fitazfkapp.sub.fullaccess.monthly.discount') > 0}
-                      />
-                    ))
-                  } */}
               </View>
             </View>
             <View>
@@ -1062,7 +996,6 @@ export default class SubscriptionScreen extends React.PureComponent {
                   marginTop: 20,
                   marginBottom: 10,
                 }}
-                // Title="Start your free trial"
                 Title="Start"
                 onPress={() => this.handleClick()}
               />
@@ -1129,7 +1062,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageBackgroundContainer: {
-    // height: (height > 800) ? height * 0.96 : height * 1.02,
     height: width / 2,
     alignItems: "center",
     justifyContent: "space-between",
@@ -1148,12 +1080,6 @@ const styles = StyleSheet.create({
     color: colors.black,
     textAlign: "center",
   },
-  // headerTextCursive: {
-  //   fontFamily: fonts.tuesdayNight,
-  //   fontSize: 30,
-  //   color: colors.black,
-  //   textAlign: 'center',
-  // },
   headerText: {
     fontFamily: fonts.bold,
     fontSize: 30,
@@ -1167,19 +1093,6 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     color: colors.themeColor.color,
   },
-  // headerTextLine1: {
-  //   fontFamily: fonts.ultraItalic,
-  //   fontSize: 22,
-  //   color: colors.themeColor.color,
-  //   textAlign: 'center',
-  // },
-  // headerTextLine2: {
-  //   fontFamily: fonts.ultraItalic,
-  //   fontSize: 22,
-  //   color: colors.themeColor.color,
-  //   textAlign: 'center',
-  //   marginTop: Platform.OS === 'android' ? 0 : -20,
-  // },
   contentContainer: {
     flex: 1,
     justifyContent: "flex-end",
