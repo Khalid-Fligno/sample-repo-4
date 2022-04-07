@@ -484,8 +484,6 @@ export const getTodayRecommendedMeal = async (
     },
   ];
 
-  console.log('recommendedRecipe: ', recommendedRecipe)
-
   const phaseDefaultTags = phaseNames[0];
 
   return {
