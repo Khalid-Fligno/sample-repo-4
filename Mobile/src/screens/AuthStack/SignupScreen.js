@@ -253,9 +253,16 @@ const SignupScreen = ({ navigation }) => {
           <HeaderAuth />
           <View style={authScreenStyle.formContainer}>
             <View style={authScreenStyle.formHeaderContainer}>
-              <Text style={styles.Text}>
-                Create a password to complete your account
-              </Text>
+              {
+                userData ?
+                  <Text style={styles.Text}>
+                    Create a password to complete your account
+                  </Text>
+                  :
+                  <Text style={styles.Text}>
+                    Create an Account
+                  </Text>
+              }
             </View>
             <View style={authScreenStyle.formInputContainer}>
               <TextInput
