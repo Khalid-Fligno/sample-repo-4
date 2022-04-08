@@ -1021,7 +1021,7 @@ export default class SubscriptionScreen extends React.PureComponent {
               <View
                 style={{
                   backgroundColor: 'black',
-                  marginHorizontal: 20,
+                  marginHorizontal: 15,
                   marginTop: 5
                 }}
               >
@@ -1030,14 +1030,25 @@ export default class SubscriptionScreen extends React.PureComponent {
                     textAlign: 'center',
                     color: 'white',
                     fontFamily: fonts.bold,
-                    fontSize: 11,
-                    marginVertical: 5,
-                    marginHorizontal: 10
+                    fontSize: 10,
+                    margin: 8,
                   }}
                 >
                   Looking to purchase a Transform Program instead?
                   (this includes free 'Lifestyle' access while your challenge is active) {"\n"}
-                  Click here
+                  <Text
+                    onPress={() => {
+                      this.openLink(
+                        "https://fitazfk.com/pages/transform-quiz"
+                      )
+                    }}
+                    style={{
+                      textDecorationLine: "underline",
+                      textDecorationStyle: "solid",
+                    }}
+                  >
+                    CLICK HERE
+                  </Text>
                 </Text>
               </View>
               <View style={styles.disclaimerTextContainer}>
