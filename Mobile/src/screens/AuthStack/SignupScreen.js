@@ -136,6 +136,11 @@ const SignupScreen = ({ navigation }) => {
     email,
     password
   ) => {
+    console.log('firstName: ', firstName)
+    console.log('lastName: ', lastName)
+    console.log('email: ', email)
+    console.log('password: ', password)
+
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
     setLoading(true)
@@ -260,7 +265,7 @@ const SignupScreen = ({ navigation }) => {
                   </Text>
                   :
                   <Text style={styles.Text}>
-                    Create an Account
+                    Create an Account:
                   </Text>
               }
             </View>
@@ -269,20 +274,14 @@ const SignupScreen = ({ navigation }) => {
                 style={styles.Input}
                 placeholder="First Name"
                 value={userData ? userData.firstName : firstName}
-                onChangeText={(text) => userData ?
-                  setFirstName(userData.firstName) :
-                  setFirstName(text)
-                }
+                onChangeText={(text) => setFirstName(text)}
                 editable={!userData ? true : false}
               />
               <TextInput
                 style={styles.Input}
                 placeholder="Last Name"
                 value={userData ? userData.lastName : lastName}
-                onChangeText={(text) => userData ?
-                  setLastName(userData.lastName) :
-                  setLastName(text)
-                }
+                onChangeText={(text) => setLastName(text)}
                 editable={!userData ? true : false}
               />
               <TextInput
@@ -290,10 +289,7 @@ const SignupScreen = ({ navigation }) => {
                 placeholder="Email"
                 keyboardType="email-address"
                 value={userData ? userData.email : email}
-                onChangeText={(text) => userData ?
-                  setEmail(userData.email) :
-                  setEmail(text)
-                }
+                onChangeText={(text) => setEmail(text)}
                 editable={!userData ? true : false}
                 autoCapitalize='none'
               />
@@ -313,12 +309,21 @@ const SignupScreen = ({ navigation }) => {
           <CustomBtn
             customBtnStyle={{ marginTop: 20, width: wp("90%") }}
             Title="GET STARTED!"
-            onPress={() => signup(
-              firstName,
-              lastName,
-              email.toLowerCase(),
-              password
-            )}
+            onPress={() => userData ?
+              signup(
+                userData.firstName,
+                userData.lastName,
+                userData.email.toLowerCase(),
+                password
+              )
+              :
+              signup(
+                firstName,
+                lastName,
+                email.toLowerCase(),
+                password
+              )
+            }
           />
           {
             userData ?
