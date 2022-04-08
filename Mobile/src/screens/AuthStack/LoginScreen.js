@@ -277,7 +277,7 @@ const LoginScreenV2 = ({ navigation }) => {
 						<View style={authScreenStyle.formInputContainer}>
 							<TextInput
 								style={styles.Input}
-								placeholder="Email Address"
+								placeholder="Email"
 								keyboardType="email-address"
 								onChangeText={setEmail}
 								value={email}

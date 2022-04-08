@@ -174,7 +174,7 @@ const SignupScreen = ({ navigation }) => {
           };
 
           await AsyncStorage.setItem("uid", uid);
-          
+
           try {
             await addDocumentWithId(data, uid);
 
@@ -254,7 +254,7 @@ const SignupScreen = ({ navigation }) => {
           <View style={authScreenStyle.formContainer}>
             <View style={authScreenStyle.formHeaderContainer}>
               <Text style={styles.Text}>
-                Create an Account
+                Create a password to complete your account
               </Text>
             </View>
             <View style={authScreenStyle.formInputContainer}>
@@ -262,7 +262,7 @@ const SignupScreen = ({ navigation }) => {
                 style={styles.Input}
                 placeholder="First Name"
                 value={userData ? userData.firstName : firstName}
-                onChangeText={(text) => userData ? 
+                onChangeText={(text) => userData ?
                   setFirstName(userData.firstName) :
                   setFirstName(text)
                 }
@@ -272,7 +272,7 @@ const SignupScreen = ({ navigation }) => {
                 style={styles.Input}
                 placeholder="Last Name"
                 value={userData ? userData.lastName : lastName}
-                onChangeText={(text) => userData ? 
+                onChangeText={(text) => userData ?
                   setLastName(userData.lastName) :
                   setLastName(text)
                 }
@@ -280,10 +280,10 @@ const SignupScreen = ({ navigation }) => {
               />
               <TextInput
                 style={styles.Input}
-                placeholder="Email Address"
+                placeholder="Email"
                 keyboardType="email-address"
                 value={userData ? userData.email : email}
-                onChangeText={(text) => userData ? 
+                onChangeText={(text) => userData ?
                   setEmail(userData.email) :
                   setEmail(text)
                 }
@@ -292,7 +292,7 @@ const SignupScreen = ({ navigation }) => {
               />
               <TextInput
                 style={styles.Input}
-                placeholder="Password"
+                placeholder="Create Password"
                 secureTextEntry
                 returnKeyType="go"
                 value={password}
@@ -305,7 +305,7 @@ const SignupScreen = ({ navigation }) => {
         <View style={authScreenStyle.navigateButtonContainer}>
           <CustomBtn
             customBtnStyle={{ marginTop: 20, width: wp("90%") }}
-            Title="GET STARTED"
+            Title="GET STARTED!"
             onPress={() => signup(
               firstName,
               lastName,
@@ -313,16 +313,28 @@ const SignupScreen = ({ navigation }) => {
               password
             )}
           />
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Text
-              style={styles.navigateToButton}
-            >
-              Already have an Account? Sign In
-            </Text>
-          </TouchableOpacity>
+          {
+            userData ?
+              <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+                <Text
+                  style={styles.navigateToButton}
+                >
+                  Don't have an account? Sign up
+                </Text>
+              </TouchableOpacity>
+              :
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text
+                  style={styles.navigateToButton}
+                >
+                  Already have an Account? Sign In
+                </Text>
+              </TouchableOpacity>
+          }
+
         </View>
       </View>
-      <Toast/>
+      <Toast />
       {loading && <NativeLoader />}
     </SafeAreaView>
   )
@@ -332,6 +344,7 @@ const styles = StyleSheet.create({
   Text: {
     fontSize: hp('3%'),
     fontFamily: fonts.bold,
+    textAlign: 'center'
   },
   Input: {
     height: hp("6%"),

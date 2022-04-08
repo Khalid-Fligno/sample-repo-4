@@ -83,7 +83,7 @@ const FindAccountScreen = ({ navigation }) => {
             <View style={authScreenStyle.formInputContainer}>
               <TextInput
                 style={styles.Input}
-								placeholder="Email Address"
+								placeholder="Email"
 								keyboardType="email-address"
 								onChangeText={setEmail}
 								value={email}
@@ -95,7 +95,7 @@ const FindAccountScreen = ({ navigation }) => {
         <View style={authScreenStyle.navigateButtonContainer}>
           <CustomBtn
             customBtnStyle={{ marginTop: 20, width: wp("90%") }}
-            Title="Find my account"
+            Title="FIND MY ACCOUNT"
             onPress={() => getUserInfo(email)}
           />
           <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
   Text: {
     fontSize: hp('3%'),
     fontFamily: fonts.bold,
+    textAlign: 'center'
   },
   Input: {
     height: hp("6%"),
