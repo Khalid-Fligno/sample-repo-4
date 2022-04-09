@@ -10,4 +10,5 @@ export const ONBOARDINGIMG = {
     OB_5: require("../../../assets/images/onBoardingImg/OB_5.png"),
     OB_51: require("../../../assets/images/onBoardingImg/OB_51.png"),
     THESSY238: require("../../../assets/images/onBoardingImg/Thessy238.png"),
+    SUBSCRIPTIONBG: require("../../../assets/images/onBoardingImg/subscriptionBG.png"),
 };

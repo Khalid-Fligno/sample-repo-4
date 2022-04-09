@@ -25,7 +25,6 @@ import { isActiveChallenge } from "../../../utils/challenges";
 // import LogRocket from '@logrocket/react-native';
 
 // images
-import { IMAGE } from "../../../library/images";
 import { HOMESCREENTILESIMG } from "../../../library/images/homeScreenTiles/homeScreenTiles";
 
 const { width } = Dimensions.get("window");

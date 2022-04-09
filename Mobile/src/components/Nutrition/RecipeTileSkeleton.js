@@ -1,7 +1,7 @@
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { Card } from "react-native-elements";
-import { IMAGE } from "../../library/images";
+import { OTHERSIMG } from "../../library/images/others/others";
 import colors from "../../styles/colors";
 
 const { width } = Dimensions.get("window");
@@ -9,7 +9,7 @@ const { width } = Dimensions.get("window");
 const RecipeTileSkeleton = () => {
   return (
     <View style={styles.cardContainer}>
-      <Card image={IMAGE.RECIPE_TILE_SKELETON} containerStyle={styles.card}>
+      <Card image={OTHERSIMG.RECIPETILESKELETON} containerStyle={styles.card}>
         <View style={styles.skeletonTextContainer}>
           <View style={styles.skeletonTags} />
         </View>

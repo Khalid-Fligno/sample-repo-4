@@ -13,7 +13,7 @@ import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { IMAGE } from "../../library/images";
+import { CALENDARIMG } from "../../library/images/calendar/calendar";
 
 const { width } = Dimensions.get("window");
 
@@ -63,7 +63,7 @@ const ChallengeWorkoutCard = (props) => {
     <View style={[styles.cardContainer, cardCustomStyle]}>
       <TouchableWithoutFeedback style={styles.cardContainer} onPress={onPress}>
         <ImageBackground
-          source={target ? IMAGE.CHALLENG_WORKOUT_CARD_BG : IMAGE.REST_COVER_IMAGE}
+          source={target ? CALENDARIMG.CHALLENGEWORKOUTCARDBG : CALENDARIMG.RESTCOVERIMAGE}
           style={styles.image}
         >
           <View style={target ? styles.opacityLayer : styles.opacityLayerRest}>

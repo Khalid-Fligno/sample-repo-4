@@ -47,7 +47,7 @@ import {
   EquipmentMainCategory,
   EquipmentSubCategory,
 } from "../../../utils/feedUtils";
-import { FEEDIMG, IMAGE } from "../../../library/images/feed/feed";
+import { FEEDIMG } from "../../../library/images/feed/feed";
 // import ChallengeWorkoutCard from '../../../components/Calendar/ChallengeWorkoutCard';
 const { width } = Dimensions.get("window");
 

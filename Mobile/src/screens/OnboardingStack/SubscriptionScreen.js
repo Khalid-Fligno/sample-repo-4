@@ -49,6 +49,7 @@ import RNIap, {
 } from "react-native-iap";
 import CustomBtn from "../../components/Shared/CustomBtn";
 import { containerPadding } from "../../styles/globalStyles";
+import { ONBOARDINGIMG } from "../../library/images/onBoardingImg/onBoardingImg";
 
 const productTitleMapIOS = {
   0: "Yearly ",
@@ -948,7 +949,7 @@ export default class SubscriptionScreen extends React.PureComponent {
         <View style={styles.container}>
           <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
             <ImageBackground
-              source={require("../../assets/images/OnBoardindImg/subscriptionBG.png")}
+              source={ONBOARDINGIMG.SUBSCRIPTIONBG}
               style={styles.imageBackgroundContainer}
             >
               {/* <View style={styles.headerContainer}>

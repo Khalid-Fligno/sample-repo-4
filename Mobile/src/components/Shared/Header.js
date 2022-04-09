@@ -17,7 +17,6 @@ import Icon from "../Shared/Icon";
 import colors from "../../styles/colors";
 import globalStyle from "../../styles/globalStyles";
 import VIcon from "react-native-vector-icons/Fontisto";
-import { IMAGE } from "../../library/images";
 const { width } = Dimensions.get("window");
 
 const headerContainer = {
@@ -172,7 +171,7 @@ const Header = (props) => {
             <Text style={globalStyle.headerTitleText}>{headerTitleParams}</Text>
           ) : (
             <Image
-              source={IMAGE.BRAND_MARK}
+              source={require("../../assets/icons/FITAZ_BrandMark.png")}
               style={globalStyle.fitazfkIcon}
               resizeMode="contain"
             />

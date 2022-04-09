@@ -21,7 +21,6 @@ import CustomBtn from '../../../components/Shared/CustomBtn';
 import { containerPadding } from '../../../styles/globalStyles';
 
 // images
-import { IMAGE } from '../../../library/images';
 import { OTHERSIMG } from '../../../library/images/others/others';
 
 const { width } = Dimensions.get('window');

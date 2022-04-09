@@ -13,7 +13,7 @@ import Loader from '../../../components/Shared/Loader';
 import { db } from '../../../config/firebase';
 import fonts from '../../../styles/fonts';
 import colors from '../../../styles/colors';
-import { IMAGE, OTHERSIMG } from '../../../library/images/others/others';
+import { OTHERSIMG } from '../../../library/images/others/others';
 
 const { width } = Dimensions.get('window');
 

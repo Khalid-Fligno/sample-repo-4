@@ -8,7 +8,6 @@ import globalStyle from '../../../styles/globalStyles';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 import fonts from '../../../styles/fonts';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import { IMAGE } from '../../../library/images';
 import { OTHERSIMG } from '../../../library/images/others/others';
 
 const NutritionList = [
