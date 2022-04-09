@@ -30,6 +30,7 @@ import ProfileStyles from "./ProfileStyles";
 import { FileSystem } from "react-native-unimodules";
 import { getBuildNumber, getVersion } from "react-native-device-info";
 import fonts from "../../../styles/fonts";
+import { OTHERSIMG } from "../../../library/images/others/others";
 const { width } = Dimensions.get("window");
 
 const uriToBlob = (url) => {
@@ -293,7 +294,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
                     source={
                       avatar
                         ? { uri: avatar, cache: "immutable" }
-                        : require("../../../assets/images/profile-add.png")
+                        : OTHERSIMG.PROFILEADD
                     }
                   />
                 </TouchableOpacity>

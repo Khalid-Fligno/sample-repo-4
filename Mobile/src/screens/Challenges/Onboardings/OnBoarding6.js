@@ -15,6 +15,7 @@ import storeProgressInfo from "../../../components/Challenges/storeProgressInfo"
 import moment from "moment";
 import CalendarModal from "../../../components/Shared/CalendarModal";
 import { NavigationActions, StackActions } from "react-navigation";
+import { ONBOARDINGIMG } from "../../../library/images/onBoardingImg/onBoardingImg";
 const levelOfFiness = ["Begineer", "Intermediate", "Advanced"];
 export default class OnBoarding6 extends Component {
   constructor(props) {
@@ -275,7 +276,7 @@ export default class OnBoarding6 extends Component {
               How often do you currently train.
             </Text>
             <FitnessLevelCard
-              source={require("../../../assets/images/OnBoardindImg/FL_1.png")}
+              source={ONBOARDINGIMG.FL_1}
               onPress={() => this.setState({ fitnessLevel: 1 })}
               title="0-2 times a week"
               // title="Beginner"
@@ -285,7 +286,7 @@ export default class OnBoarding6 extends Component {
               cardColor={colors.coolIce}
             />
             <FitnessLevelCard
-              source={require("../../../assets/images/OnBoardindImg/FL_2.png")}
+              source={ONBOARDINGIMG.FL_2}
               onPress={() => this.setState({ fitnessLevel: 2 })}
               title="2-3 times a week"
               // title="Intermediate"
@@ -295,7 +296,7 @@ export default class OnBoarding6 extends Component {
               cardColor={colors.coolIce}
             />
             <FitnessLevelCard
-              source={require("../../../assets/images/OnBoardindImg/FL_3.png")}
+              source={ONBOARDINGIMG.FL_3}
               onPress={() => this.setState({ fitnessLevel: 3 })}
               title="4+ times a week"
               // title="Expert"

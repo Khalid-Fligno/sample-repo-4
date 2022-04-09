@@ -22,6 +22,7 @@ import fonts from "../../styles/fonts";
 import CustomBtn from "../../components/Shared/CustomBtn";
 import globalStyle, { containerPadding } from "../../styles/globalStyles";
 import Icon from "../../components/Shared/Icon";
+import { ONBOARDINGIMG } from "../../library/images/onBoardingImg/onBoardingImg";
 
 const moment = require("moment-timezone");
 
@@ -113,7 +114,7 @@ export default class Onboarding1Screen extends React.PureComponent {
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
           <ImageBackground
-            source={require("../../assets/images/OnBoardindImg/izzy1.png")}
+            source={ONBOARDINGIMG.IZZY1}
             style={{ width: width, height: width / 2 }}
           >
             <View

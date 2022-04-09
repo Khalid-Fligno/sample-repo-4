@@ -1,4 +1,4 @@
-export const IMAGE = {
+export const HOMESCREENTILESIMG = {
     HOMESCREENBLOG: require("../../../assets/images/homeScreenTiles/home-screen-blog.png"),
     HOMESCREENSHOPAPPARELJUMPER: require("../../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.png"),
     LIFESTYLENUTRITION: require("../../../assets/images/homeScreenTiles/Lifestyle-Nutrition.png"),

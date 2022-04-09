@@ -1,4 +1,4 @@
-export const IMAGE = {
+export const OTHERSIMG = {
     APPONBOARDINGCAROUSEL1: require("../../../assets/images/others/app-onboarding-carousel-1.png"),
     APPONBOARDINGCAROUSEL2: require("../../../assets/images/others/app-onboarding-carousel-2.png"),
     APPONBOARDINGCAROUSEL3: require("../../../assets/images/others/app-onboarding-carousel-3.png"),

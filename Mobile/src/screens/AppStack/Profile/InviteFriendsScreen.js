@@ -22,6 +22,7 @@ import { containerPadding } from '../../../styles/globalStyles';
 
 // images
 import { IMAGE } from '../../../library/images';
+import { OTHERSIMG } from '../../../library/images/others/others';
 
 const { width } = Dimensions.get('window');
 
@@ -76,7 +77,7 @@ export default class InviteFriendsScreen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.safeContainer}>
         <ImageBackground
-          source={IMAGE.SPECIAL_OFFER_SCREEN_BACKGROUND}
+          source={OTHERSIMG.SPECIALOFFERSCREENBACKGROUND}
           style={styles.rewardsContainer}
         >
           <ScrollView contentContainerStyle={styles.scrollView}>

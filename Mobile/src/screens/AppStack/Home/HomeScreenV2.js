@@ -26,6 +26,7 @@ import { isActiveChallenge } from "../../../utils/challenges";
 
 // images
 import { IMAGE } from "../../../library/images";
+import { HOMESCREENTILESIMG } from "../../../library/images/homeScreenTiles/homeScreenTiles";
 
 const { width } = Dimensions.get("window");
 
@@ -106,7 +107,7 @@ export default class HomeScreenV2 extends React.PureComponent {
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Nutrition")}>
                                 <ImageBackground
-                                    source={IMAGE.LIFESTYLE_NUTRITION}
+                                    source={HOMESCREENTILESIMG.LIFESTYLENUTRITION}
                                     style={styles.image}
                                 >
                                     <View style={styles.opacityLayer}>
@@ -120,7 +121,7 @@ export default class HomeScreenV2 extends React.PureComponent {
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Workouts")}>
                                 <ImageBackground
-                                    source={IMAGE.LIFESTYLE_WORKOUT}
+                                    source={HOMESCREENTILESIMG.LIFESTYLEWORKOUT}
                                     style={styles.image}
                                     resizeMode="cover"
                                 >

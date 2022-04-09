@@ -37,7 +37,7 @@ import {
   EquipmentSubCategory,
 } from "../../../utils/feedUtils";
 // images
-import { IMAGE } from "../../../library/images";
+import { MEDIAIMG } from "../../../library/images/media/media";
 
 const { width } = Dimensions.get("window");
 const { height } = Dimensions.get("window");
@@ -332,7 +332,7 @@ export default class FeedScreen extends React.PureComponent {
                         height: 90,
                         borderRadius: 100,
                       }}
-                      source={IMAGE.FEED_COMMUNITY}
+                      source={MEDIAIMG.COMMUNITY}
                       resizeMode="cover"
                     />
                     <View style={{ marginTop: 10, paddingLeft: 10 }}>
@@ -361,7 +361,7 @@ export default class FeedScreen extends React.PureComponent {
                         height: 90,
                         borderRadius: 50,
                       }}
-                      source={IMAGE.FEED_ACTIVEWEAR}
+                      source={MEDIAIMG.ACTIVEWEAR}
                       resizeMode="cover"
                     />
                     <View style={{ marginTop: 10, paddingLeft: 10 }}>
@@ -392,7 +392,7 @@ export default class FeedScreen extends React.PureComponent {
                         height: 90,
                         borderRadius: 50,
                       }}
-                      source={IMAGE.FEED_EQUIPMENT}
+                      source={MEDIAIMG.EQUIPMENT}
                       resizeMode="cover"
                     />
                     <View style={{ marginTop: 10, paddingLeft: 10 }}>

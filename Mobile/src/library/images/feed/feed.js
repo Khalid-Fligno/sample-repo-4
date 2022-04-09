@@ -1,4 +1,4 @@
-export const IMAGE = {
+export const FEEDIMG = {
     ACTIVEWEAR: require("../../../assets/images/feed/activewear.png"),
     COMMUNITY: require("../../../assets/images/feed/community.png"),
     EQUIPMENT: require("../../../assets/images/feed/equipment.png"),

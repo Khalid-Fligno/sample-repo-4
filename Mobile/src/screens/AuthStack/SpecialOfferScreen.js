@@ -11,6 +11,7 @@ import { Button } from 'react-native-elements';
 import { auth } from '../../config/firebase';
 import fonts from '../../styles/fonts';
 import colors from '../../styles/colors';
+import { OTHERSIMG } from '../../library/images/others/others'
 
 export default class SpecialOfferScreen extends React.PureComponent {
   constructor(props) {
@@ -32,7 +33,7 @@ export default class SpecialOfferScreen extends React.PureComponent {
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <ImageBackground
-          source={require('../../assets/images/special-offer-screen-background.jpg')}
+          source={OTHERSIMG.SPECIALOFFERSCREENBACKGROUND}
           style={styles.flexContainer}
         >
           <View style={styles.contentContainer}>

@@ -1,4 +1,4 @@
-export const IMAGE = {
+export const ONBOARDINGIMG = {
     FL_1: require("../../../assets/images/onBoardingImg/FL_1.png"),
     FL_2: require("../../../assets/images/onBoardingImg/FL_2.png"),
     FL_3: require("../../../assets/images/onBoardingImg/FL_3.png"),

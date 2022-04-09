@@ -9,50 +9,51 @@ import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithB
 import fonts from '../../../styles/fonts';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import { IMAGE } from '../../../library/images';
+import { OTHERSIMG } from '../../../library/images/others/others';
 
 const NutritionList = [
   {
     title:"breakfast",
     //imageUrl:require('../../../../assets/images/nutrition-breakfast.jpg'),
-    imageUrl: IMAGE.NUTRITION_BREAKFAST,
+    imageUrl: OTHERSIMG.NUTRITIONBREAKFAST,
     meal: 'breakfast'
   },
   {
     title:"lunch",
     //imageUrl:require('../../../../assets/images/nutrition-lunch.jpg'),
-    imageUrl: IMAGE.NUTRITION_LUNCH,
+    imageUrl: OTHERSIMG.NUTRITIONLUNCH,
     meal: 'lunch'
   },
   {
     title:"dinner",
     //imageUrl:require('../../../../assets/images/nutrition-dinner.jpg'),
-    imageUrl: IMAGE.NUTRITION_DINNER,
+    imageUrl: OTHERSIMG.NUTRITIONDINNER,
     meal: 'dinner'
   },
   {
     title:"snack",
     //imageUrl:require('../../../../assets/images/nutrition-snack.jpg'),
-    imageUrl: IMAGE.NUTRITION_SNACK,
+    imageUrl: OTHERSIMG.NUTRITIONSNACK,
     meal: 'snack'
   },
   ,
   {
     title:"Post Workout",
     //imageUrl:require('../../../../assets/images/homeScreenTiles/Post-Workout.jpg'),
-    imageUrl: IMAGE.POST_WORKOUT,
+    imageUrl: OTHERSIMG.NUTRITIONPOSTWORKOUT,
     meal: 'drink'
   },
   ,
   {
     title:"Pre Workout",
     //imageUrl:require('../../../../assets/images/homeScreenTiles/new_pre_workout.jpg'),
-    imageUrl: IMAGE.PRE_WORKOUT,
+    imageUrl: OTHERSIMG.NUTRITIONPREWORKOUT,
     meal: 'preworkout'
   },
   {
     title:"treats",
     //imageUrl:require('../../../../assets/images/homeScreenTiles/Treats.jpg'),
-    imageUrl: IMAGE.TREATS,
+    imageUrl: OTHERSIMG.NUTRITIONTREATS,
     meal: 'treats'
   },
 ]

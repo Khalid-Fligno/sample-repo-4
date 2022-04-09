@@ -1,4 +1,4 @@
-export const IMAGE = {
+export const SPLITIMG = {
     ELLE_1: require("../../../assets/images/splitImages/ELLE-1.png"),
     ELLE_2: require("../../../assets/images/splitImages/ELLE-2.png"),
     ELLE_3: require("../../../assets/images/splitImages/ELLE-3.png"),

@@ -13,6 +13,7 @@ import Loader from '../../../components/Shared/Loader';
 import { db } from '../../../config/firebase';
 import fonts from '../../../styles/fonts';
 import colors from '../../../styles/colors';
+import { IMAGE, OTHERSIMG } from '../../../library/images/others/others';
 
 const { width } = Dimensions.get('window');
 
@@ -81,7 +82,7 @@ export default class BlogScreen extends React.PureComponent {
           parallaxHeaderHeight={width / 2}
           renderBackground={() => (
             <Image
-              source={require('../../../assets/images/blog-header.jpg')}
+              source={OTHERSIMG.BLOGHEADER}
               style={{ height: width / 2 }}
               width={width}
             />

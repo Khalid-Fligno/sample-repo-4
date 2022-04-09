@@ -24,91 +24,92 @@ import Tile from "../../../components/Shared/Tile";
 const { width } = Dimensions.get("window");
 import globalStyle from "../../../styles/globalStyles";
 import WorkoutScreenStyle from "./WorkoutScreenStyle";
+import { OTHERSIMG } from "../../../library/images/others/others";
 
 const workout = [
   {
     displayName: "Workout Focus",
-    image: require("../../../assets/images/workouts-resistance.jpg"),
+    image: OTHERSIMG.WORKOUTSRESISTANCE,
   },
   {
     displayName: "Equipment",
-    image: require("../../../assets/images/workouts-resistance.jpg"),
+    image: OTHERSIMG.WORKOUTSRESISTANCE,
   },
   {
     displayName: "Mascle Group",
-    image: require("../../../assets/images/workouts-resistance.jpg"),
+    image: OTHERSIMG.WORKOUTSRESISTANCE,
   },
 ];
 const workoutTypes = [
   {
     displayName: "RESISTANCE",
     resistance: true,
-    image: require("../../../assets/images/workouts-resistance.jpg"),
+    image: OTHERSIMG.WORKOUTSRESISTANCE,
   },
   {
     displayName: "HIIT",
     hiit: true,
-    image: require("../../../assets/images/workouts-hiit.jpg"),
+    image: OTHERSIMG.WORKOUTSHIIT,
   },
 ];
 
 const workoutLocations = [
   {
     displayName: "GYM",
-    image: require("../../../assets/images/workouts-gym.jpg"),
+    image: OTHERSIMG.WORKOUTSGYM,
   },
   {
     displayName: "HOME",
-    image: require("../../../assets/images/workouts-home.jpg"),
+    image: OTHERSIMG.WORKOUTSHOME,
   },
   {
     displayName: "OUTDOORS",
-    image: require("../../../assets/images/workouts-outdoors.jpg"),
+    image: OTHERSIMG.WORKOUTSOUTDOORS,
   },
 ];
 
 const gymResistanceWorkouts = [
   {
     displayName: "FULL BODY",
-    image: require("../../../assets/images/workouts-gym-full.jpg"),
+    image: OTHERSIMG.WORKOUTSGYMFULL,
   },
   {
     displayName: "UPPER BODY",
-    image: require("../../../assets/images/workouts-gym-upper.jpg"),
+    image: OTHERSIMG.WORKOUTSGYMUPPER,
   },
   {
     displayName: "ABS, BUTT & THIGHS",
-    image: require("../../../assets/images/workouts-gym-abt.jpg"),
+    image: OTHERSIMG.WORKOUTSGYMABT,
   },
 ];
 
 const homeResistanceWorkouts = [
   {
     displayName: "FULL BODY",
-    image: require("../../../assets/images/workouts-home-full.jpg"),
+    image: OTHERSIMG.WORKOUTSHOMEFULL,
   },
   {
     displayName: "UPPER BODY",
-    image: require("../../../assets/images/workouts-home-upper.jpg"),
+    image: OTHERSIMG.WORKOUTSHOMEUPPER,
   },
   {
     displayName: "ABS, BUTT & THIGHS",
-    image: require("../../../assets/images/workouts-home-abt.jpg"),
+    image: OTHERSIMG.WORKOUTSHOMEABT,
   },
 ];
 
 const outdoorsResistanceWorkouts = [
   {
     displayName: "FULL BODY",
-    image: require("../../../assets/images/workouts-outdoors-full.jpg"),
+    image: OTHERSIMG.WORKOUTSOUTDOORSFULL,
   },
   {
     displayName: "UPPER BODY",
-    image: require("../../../assets/images/workouts-outdoors-upper.jpg"),
+    image: OTHERSIMG.WORKOUTSOUTDOORSUPPER,
   },
   {
     displayName: "ABS, BUTT & THIGHS",
-    image: require("../../../assets/images/workouts-outdoors-abt.jpg"),
+    image: OTHERSIMG.WORKOUTSOUTDOORSABT,
   },
 ];
 
@@ -121,11 +122,11 @@ const workoutTypeImageMap = {
 const hiitStyles = [
   {
     displayName: "INTERVAL",
-    image: require("../../../assets/images/workouts-hiit-airdyne.jpg"),
+    image: OTHERSIMG.WORKOUTSHIITAIRDYNE,
   },
   {
     displayName: "CIRCUIT",
-    image: require("../../../assets/images/workouts-hiit-skipping.jpg"),
+    image: OTHERSIMG.WORKOUTSHIITSKIPPING,
   },
 ];
 
@@ -279,7 +280,7 @@ class WorkoutsHomeScreen extends React.PureComponent {
         <ImageBackground
           source={
             item.image ||
-            require("../../../assets/images/workouts-blank-tile.png")
+            OTHERSIMG.WORKOUTSBLANKTILE
           }
           style={WorkoutScreenStyle.image}
         >
