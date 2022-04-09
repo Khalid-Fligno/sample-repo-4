@@ -42,6 +42,7 @@ const SignupScreen = ({ navigation }) => {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const specialOffer = navigation.getParam("specialOffer", undefined)
   const userData = navigation.getParam("userData", undefined)
@@ -134,24 +135,27 @@ const SignupScreen = ({ navigation }) => {
     firstName,
     lastName,
     email,
-    password
+    password,
+    confirmPassword
   ) => {
-    console.log('firstName: ', firstName)
-    console.log('lastName: ', lastName)
-    console.log('email: ', email)
-    console.log('password: ', password)
 
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
     setLoading(true)
 
     if (!firstName || !lastName || !email || !password) {
-      console.log('pasok')
       setLoading(false)
       Toast.show({
         type: 'error',
         text1: 'Unsuccessful Signup',
         text2: 'Please complete all fields.',
+      });
+    } else if (password !== confirmPassword) {
+      setLoading(false)
+      Toast.show({
+        type: 'error',
+        text1: 'Unsuccessful Signup',
+        text2: "Passwords don't match.",
       });
     } else {
       try {
@@ -302,6 +306,15 @@ const SignupScreen = ({ navigation }) => {
                 onChangeText={setPassword}
                 autoCapitalize='none'
               />
+              <TextInput
+                style={styles.Input}
+                placeholder="Confirm Password"
+                secureTextEntry
+                returnKeyType="go"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                autoCapitalize='none'
+              />
             </View>
           </View>
         </View>
@@ -314,14 +327,16 @@ const SignupScreen = ({ navigation }) => {
                 userData.firstName,
                 userData.lastName,
                 userData.email.toLowerCase(),
-                password
+                password,
+                confirmPassword
               )
               :
               signup(
                 firstName,
                 lastName,
                 email.toLowerCase(),
-                password
+                password,
+                confirmPassword
               )
             }
           />

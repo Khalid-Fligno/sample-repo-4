@@ -99,7 +99,6 @@ export const FeedScreen = ({ navigation }) => {
         const blogsData = await getBlogsData(tag)
         const trainerData = await getProfileTrainers()
 
-        // next task conditional the blogsData is undefined ug dili madamay ang trainerData
         if (blogsData || trainerData) {
           setLoading(false)
           setActiveUserChallengeData(blogsData)
@@ -359,7 +358,7 @@ export const FeedScreen = ({ navigation }) => {
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate("AllBlogs", {
-                      data: blogs,
+                      data: activeUserChallengeData,
                     })
                   }
                 >
