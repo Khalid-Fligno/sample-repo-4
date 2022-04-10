@@ -43,4 +43,5 @@ export const OTHERSIMG = {
     WORKOUTSOUTDOORSUPPER: require("../../../assets/images/others/workouts-outdoors-upper.png"),
     WORKOUTSOUTDOORS: require("../../../assets/images/others/workouts-outdoors.png"),
     WORKOUTSRESISTANCE: require("../../../assets/images/others/workouts-resistance.png"),
+    SPLASH_IMAGE: require('../../../assets/images/others/FITAZ_SplashScreen.png'),
 };

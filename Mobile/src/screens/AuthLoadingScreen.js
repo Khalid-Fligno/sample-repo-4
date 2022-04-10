@@ -374,7 +374,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
     return (
       <View style={styles.container}>
         <ImageBackground
-          source={require("../assets/icons/FITAZ_SplashScreen.png")}
+          source={OTHERSIMG.SPLASH_IMAGE}
           style={styles.background}
         />
       </View>

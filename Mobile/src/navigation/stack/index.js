@@ -1,5 +1,6 @@
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import AuthLoadingScreen from '../../screens/AuthLoadingScreen';
+import { SplashScreen } from '../../screens/splash/SplashScreen';
 import AuthStack from './auth/AuthStack';
 import AppStack from './app/AppStack';
 import OnboardingStack from './onboarding/OnboardingStack';
@@ -7,7 +8,7 @@ import { fadeSpec, fade } from './utils';
 
 const SwitchNavigator = createSwitchNavigator(
   {
-    AuthLoading: AuthLoadingScreen,
+    AuthLoading: SplashScreen,
     Auth: AuthStack,
     Onboarding: OnboardingStack,
     App: AppStack,

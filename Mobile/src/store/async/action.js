@@ -2,7 +2,7 @@ import {
     ASYNC_ACTION_START,
     ASYNC_ACTION_ERROR,
     ASYNC_ACTION_FINISH,
-} from './constants';
+} from './event';
 
 export function asyncActionStart() {
     return {
