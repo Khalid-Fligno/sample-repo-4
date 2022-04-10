@@ -21,7 +21,7 @@ import { oneSignalConfig } from "../config/onesignal/index";
 import { sentryConfig } from "../config/sentry/index";
 import Router from "../navigation/Router";
 import { asyncActionStart } from "../store/async/action";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Shared/Loader";
 
 const Setup = () => {
@@ -93,7 +93,6 @@ const Setup = () => {
 		<View style={styles.appContainer}>
 			<StatusBar barStyle="light-content" />
 			<Router />
-			{isLoading && <Loader isLoading={isLoading} />}
 		</View>
 	);
 };

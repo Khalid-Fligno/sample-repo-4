@@ -6,7 +6,8 @@ import {
     asyncActionStart
 } from "../async/action";
 import { SET_USER } from "./event";
-import { navigate } from '../../navigation/RootNavigation';
+import { navigate } from '../../navigation/Router';
+import { isActiveChallenge } from "../../utils/challenges";
 
 export const init = () => {
 
@@ -16,7 +17,7 @@ export const init = () => {
             const uid = await useStorage.getItem('uid');
             console.log('UID: ', uid)
             if (uid) {
-                dispatch(checkUserAuthorization(uid));
+                dispatch(checkUserAuthorization("x7rilqmxCHh87un9lmNNIT7P02t1"));
             } else {
                 navigate('AuthStack');
             }
@@ -43,9 +44,12 @@ export const checkUserAuthorization = (uid) => {
 
             if (userDoc) {
                 if (!userDoc?.onboarded) {
-                    navigate('OnboardingStack', { screen: 'Subscription' });
+                    navigate('Onboarding1');
                 } else {
-                    console.log('Onboard!')
+                    isActiveChallenge().then((res) => {
+                        if (res) navigate("Calendar");
+                        else navigate("App");
+                    });
                 }
                 dispatch({ type: SET_USER, payload: userDoc });
             }
