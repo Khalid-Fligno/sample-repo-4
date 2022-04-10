@@ -9,9 +9,10 @@ export const getDocument = async ({
         .doc(documentId)
         .get();
 
-    if (!document.exists) {
-        return null
+    if (document) {
+        return document.data();
+    } else {
+        return undefined
     }
     
-    return document.data();
 };

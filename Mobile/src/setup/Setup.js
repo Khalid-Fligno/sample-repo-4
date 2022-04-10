@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	View,
 	StyleSheet,
@@ -20,19 +20,10 @@ import { mixpanelConfig } from "../config/mixpanel/index";
 import { oneSignalConfig } from "../config/onesignal/index";
 import { sentryConfig } from "../config/sentry/index";
 import Router from "../navigation/Router";
-import { asyncActionStart } from "../store/async/action";
-import { useSelector } from "react-redux";
-import Loader from "../components/Shared/Loader";
 
 const Setup = () => {
 
 	const [appState, setAppState] = useState(AppState.currentState);
-	const { isLoading } = useSelector(state => state.async);
-	const dispatch = useDispatch();
-
-	const initialize = useCallback(() => {
-		dispatch(asyncActionStart());
-	}, [dispatch]);
 
 	if (!__DEV__) {
 		Sentry.init(sentryConfig);
@@ -85,15 +76,10 @@ const Setup = () => {
 		Review();
 	}, []);
 
-	useEffect(() => {
-		initialize();
-	}, [initialize])
-
 	return (
 		<View style={styles.appContainer}>
 			<StatusBar barStyle="light-content" />
 			<Router />
-			{isLoading && <Loader isLoading={isLoading} />}
 		</View>
 	);
 };
