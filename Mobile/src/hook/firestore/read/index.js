@@ -1,9 +1,9 @@
 import { db } from "../../../config/firebase";
 
-export const getDocument = async ({
+export const getDocument = async (
     collectionName,
-    documentId,
-}) => {
+    documentId
+) => {
     const document = await db
         .collection(collectionName)
         .doc(documentId)
