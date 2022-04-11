@@ -341,15 +341,7 @@ const SignupScreen = ({ navigation }) => {
             }
           />
           {
-            userData ?
-              <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-                <Text
-                  style={styles.navigateToButton}
-                >
-                  Don't have an account? Sign up
-                </Text>
-              </TouchableOpacity>
-              :
+            !userData ?
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text
                   style={styles.navigateToButton}
@@ -357,6 +349,8 @@ const SignupScreen = ({ navigation }) => {
                   Already have an Account? Sign In
                 </Text>
               </TouchableOpacity>
+              :
+              null
           }
 
         </View>

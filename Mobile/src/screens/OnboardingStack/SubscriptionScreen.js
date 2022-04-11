@@ -949,8 +949,8 @@ export default class SubscriptionScreen extends React.PureComponent {
                     fontFamily: fonts.bold
                   }}
                 >
-                  Subcribe to our base 'Lifestyle section and recieve' recipes,
-                  workouts and content to become a happier, healthier you
+                  Subcribe to our base 'Lifestyle section and receive' recipes,
+                  workouts and content to become a happier, healthier you.
                 </Text>
               </View>
             </ImageBackground>

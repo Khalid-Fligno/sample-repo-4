@@ -111,7 +111,7 @@ const ForgottenPasswordScreen = ({ navigation }) => {
           >
             <TextInput
               style={styles.Input}
-              placeholder="Email Address"
+              placeholder="Email"
               keyboardType="email-address"
               onChangeText={setEmail}
               value={email}
