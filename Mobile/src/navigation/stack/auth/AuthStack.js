@@ -1,6 +1,4 @@
 import { createStackNavigator } from 'react-navigation-stack';
-import LandingScreen from '../../../screens/AuthStack/LandingScreen';
-import LoginScreen from '../../../screens/AuthStack/LoginScreen';
 import SignupScreen from '../../../screens/AuthStack/SignupScreen';
 import EmailVerificationScreen from '../../../screens/AuthStack/EmailVerificationScreen';
 import ForgottenPasswordScreen from '../../../screens/AuthStack/ForgottenPasswordScreen';
