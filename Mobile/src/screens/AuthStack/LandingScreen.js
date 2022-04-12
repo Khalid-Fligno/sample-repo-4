@@ -37,7 +37,9 @@ export default class LandingScreen extends React.PureComponent {
   async checkAppVersion() {
     const uid = await AsyncStorage.getItem("uid");
     if (uid) {
+      console.log('uid: ', uid)
       const version = await checkVersion();
+      console.log('version: ', version)
       await db
         .collection("users")
         .doc(uid)

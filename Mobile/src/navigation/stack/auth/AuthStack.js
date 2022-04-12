@@ -7,12 +7,13 @@ import ForgottenPasswordScreen from '../../../screens/AuthStack/ForgottenPasswor
 import SpecialOfferScreen from '../../../screens/AuthStack/SpecialOfferScreen';
 import { fadeSpec, fade } from '../utils';
 import FindAccountScreen from '../../../screens/AuthStack/FindAccountScreen';
+import { AuthScreen } from '../../../screens/auth';
 
 const AuthStack = createStackNavigator(
   {
-    Landing: LandingScreen,
+    Landing: AuthScreen.LandingScreen,
     Signup: SignupScreen,
-    Login: LoginScreen,
+    Login: AuthScreen.LoginScreen,
     EmailVerification: EmailVerificationScreen,
     ForgottenPassword: ForgottenPasswordScreen,
     SpecialOffer: SpecialOfferScreen,

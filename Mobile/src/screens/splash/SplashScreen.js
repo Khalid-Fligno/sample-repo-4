@@ -30,7 +30,7 @@ export const SplashScreenV2 = ({ navigation }) => {
         if (user) {
           subscriber();
           const { uid } = user;
-          useStorage.setItem({ key: 'uid', value: uid })
+          useStorage.setItem('uid', uid)
           if (uid) {
             checkUserAuthorization(uid);
           }
@@ -53,24 +53,23 @@ export const SplashScreenV2 = ({ navigation }) => {
 
   const checkUserAuthorization = async (uid) => {
     try {
-      const userDoc = await getDocument({
-        collectionName: COLLECTION_NAMES.USERS,
-        documentId: uid,
-      });
+      const userDoc = await getDocument(
+        COLLECTION_NAMES.USERS,
+        uid
+      );
 
       if (userDoc) {
         const {
           subscriptionInfo,
         } = userDoc;
-
         Sentry.setUser({ email: userDoc.email });
         if (!userDoc.fitnessLevel) {
-          await useStorage.setItem({ key: 'fitnessLevel', value: "1" })
+          await useStorage.setItem('fitnessLevel', "1")
         } else {
-          await useStorage.setItem({
-            key: 'fitnessLevel',
-            value: userDoc.fitnessLevel.toString()
-          })
+          await useStorage.setItem(
+            'fitnessLevel',
+            userDoc.fitnessLevel.toString()
+          )
         }
         if (!subscriptionInfo) {
           if (await hasChallenges(uid)) {
@@ -81,7 +80,7 @@ export const SplashScreenV2 = ({ navigation }) => {
           }
         } else if (subscriptionInfo.expiry < Date.now()) {
           if (await hasChallenges(uid)) {
-            await goToAppScreen(doc);
+            await goToAppScreen(userDoc);
           } else {
             // EXPIRED
             if (subscriptionInfo.receipt) {

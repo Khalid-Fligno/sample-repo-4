@@ -14,12 +14,12 @@ import colors from "../styles/colors";
 import _ from "lodash";
 import { Mixpanel } from "mixpanel-react-native";
 import * as Sentry from "@sentry/react-native";
-import AsyncStorage from "@react-native-community/async-storage";
 import { appsFlyerConfig } from "../config/appsflyer/index";
 import { mixpanelConfig } from "../config/mixpanel/index";
 import { oneSignalConfig } from "../config/onesignal/index";
 import { sentryConfig } from "../config/sentry/index";
 import Router from "../navigation/Router";
+import { useStorage } from "../hook/storage";
 
 const Setup = () => {
 
@@ -68,9 +68,9 @@ const Setup = () => {
 
 	useEffect(() => {
 		const Review = async () => {
-			const res = await AsyncStorage.getItem("later");
+			const res = await useStorage.getItem("later");
 			if (res === "true") {
-				await AsyncStorage.removeItem("later");
+				await useStorage.removeItem("later");
 			}
 		};
 		Review();

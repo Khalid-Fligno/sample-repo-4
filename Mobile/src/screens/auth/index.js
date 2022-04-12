@@ -1,5 +1,5 @@
-import {Login} from './login';
-import {SignUp} from './signup';
-import {LandingScreen} from './landing';
+import {LoginScreen} from './LoginScreen';
+// import {SignUp} from './signup';
+import {LandingScreen} from './LandingScreen';
 
-export const AuthScreen = {Login, SignUp, LandingScreen};
+export const AuthScreen = {LandingScreen, LoginScreen};
