@@ -1,61 +1,48 @@
 import React, { useEffect } from 'react'
 import {
   ImageBackground,
-  Platform,
   View,
 } from 'react-native'
-import { useStore } from 'react-redux'
 import { getDocument } from '../../hook/firestore/read'
 import { COLLECTION_NAMES } from '../../library/collections'
-import { OTHERSIMG } from '../../library/images/others/others'
+import { OTHERSIMG } from "../../library/images/others/others";
 import { splashStyles } from '../../styles/splash/splashStyles'
 import { hasChallenges, isActiveChallenge } from '../../utils/challenges'
 import SplashScreen from "react-native-splash-screen";
 import { useStorage } from '../../hook/storage'
-import AsyncStorage from '@react-native-community/async-storage';
 import { auth } from '../../config/firebase'
 import * as Sentry from "@sentry/react-native";
+import { fontAssets } from '../../library/fonts';
+import { imageAssets } from '../../library/images';
+import { soundAsset } from '../../library/sounds';
 
 export const SplashScreenV2 = ({ navigation }) => {
 
-  // const checkAppVersion = async () => {
-  //   const docId = "qiF608JzXVcCpeiWccrC"
-  //   const doc = await getDocument(
-  //     COLLECTION_NAMES.LEGALDOCS,
-  //     docId
-  //   )
+  const loadAssetsAsync = async () => {
+    await Promise.all([...imageAssets(), ...fontAssets(), soundAsset()]);
+    SplashScreen.hide();
+    await cachingComplete();
+  }
 
-  //   if (doc) {
-  //     let appVersion = null;
-  //     let appVersion2 = null;
-  //     if (Platform.OS === "ios") {
-  //       appVersion = String(doc.data().iosBuildVersion);
-  //       appVersion2 = String(getVersion());
-  //     } else {
-  //       appVersion = Number(doc.data().androidBuildVersion);
-  //       appVersion2 = Number(getBuildNumber());
-  //     }
-  //     SplashScreen.hide();
-  //   } else {
-  //     return null
-  //   }
-  // }
-
-  const onAuthStateChanged = async (user) => {
-    try {
-      if (user) {
-        const { uid } = user;
-        await useStorage.setItem({ key: 'uid', value: uid })
-        if (uid) {
-          checkUserAuthorization(uid);
+  const cachingComplete = async () => {
+    const subscriber = auth.onAuthStateChanged((user) => {
+      try {
+        if (user) {
+          subscriber();
+          const { uid } = user;
+          useStorage.setItem({ key: 'uid', value: uid })
+          if (uid) {
+            checkUserAuthorization(uid);
+          }
+        } else {
+          subscriber();
+          Sentry.configureScope((scope) => scope.setUser(null));
+          navigation.navigate("Auth");
         }
-      } else {
-        Sentry.configureScope((scope) => scope.setUser(null));
-        navigation.navigate("Auth");
+      } catch (error) {
+        console.log('Error: ', error)
       }
-    } catch (error) {
-      console.log('Error: ', error)
-    }
+    });
   }
 
   const storePurchase = async (subscriptionInfo) => {
@@ -133,12 +120,7 @@ export const SplashScreenV2 = ({ navigation }) => {
   };
 
   useEffect(() => {
-    const subscriber = auth.onAuthStateChanged((user) => {
-      console.log('user: ', user)
-      onAuthStateChanged(user)
-    }
-    );
-    return subscriber;
+    loadAssetsAsync();
   }, [])
 
   return (
