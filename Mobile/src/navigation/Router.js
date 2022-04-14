@@ -1,47 +1,36 @@
 import React, { useEffect } from 'react'
 import { Linking } from 'react-native';
-import { NavigationActions } from 'react-navigation';
 import SwitchNavigator from "../navigation/stack/index";
+import { navigate, navigationRef } from './rootNavigation';
 
 const Router = () => {
 
-    let navigator;
+  const setTopLevelNavigator = (navigatorRef) => {
+    navigationRef(navigatorRef)
+  };
 
-    const setTopLevelNavigator = (navigatorRef) => {
-        navigator = navigatorRef;
+  const handleOpenURL = (event) => {
+    if (event.url === "fitazfk://special-offer") {
+      navigate("SpecialOffer");
+    }
+  };
+
+  useEffect(() => {
+    const linkinListener = Linking
+      .addEventListener("url", handleOpenURL);
+
+    return () => {
+      if (linkinListener) {
+        linkinListener.remove();
+      }
     };
+  })
 
-    const navigate = (routeName, params) => {
-        navigator.dispatch(
-            NavigationActions.navigate({
-                routeName,
-                params,
-            })
-        );
-    };
-
-    const handleOpenURL = (event) => {
-        if (event.url === "fitazfk://special-offer") {
-            navigate("SpecialOffer");
-        }
-    };
-
-    useEffect(() => {
-        const linkinListener = Linking
-            .addEventListener("url", handleOpenURL);
-
-        return () => {
-            if (linkinListener) {
-                linkinListener.remove();
-            }
-        };
-    })
-
-    return (
-        <SwitchNavigator
-            ref={(navigatorRef) => setTopLevelNavigator(navigatorRef)}
-        />
-    )
+  return (
+    <SwitchNavigator
+      ref={(navigatorRef) => setTopLevelNavigator(navigatorRef)}
+    />
+  )
 }
 
 export default Router;

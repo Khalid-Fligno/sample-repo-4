@@ -48,7 +48,6 @@ export const LandingScreen = ({ navigation }) => {
     checkAppVersion();
   }, [])
 
-  console.log(uids)
   return (
     <SafeAreaView style={landingStyles.safeAreaContainer}>
       <View style={landingStyles.container}>

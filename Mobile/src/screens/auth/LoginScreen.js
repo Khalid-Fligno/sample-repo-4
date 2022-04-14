@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
 	View,
 	SafeAreaView,
@@ -27,6 +27,10 @@ import { restoreAndroidPurchases } from '../../config/android';
 import { compare, compareInApp } from '../../config/apple';
 import Toast from 'react-native-toast-message';
 import { loginStyles } from '../../styles/auth/loginStyle';
+import { getUser } from '../../hook/firestore/read';
+import { COLLECTION_NAMES } from '../../library/collections';
+import { addDocument } from '../../hook/firestore/write';
+import { FIELD_NAME } from '../../library/fieldName';
 
 export const LoginScreen = ({ navigation }) => {
 
@@ -36,37 +40,25 @@ export const LoginScreen = ({ navigation }) => {
 	const specialOffer = navigation.getParam("specialOffer", undefined)
 	const { InAppUtils } = NativeModules;
 
-	const getUser = async (email) => {
-		const userRef = await db
-			.collection("users")
-			.where("email", "==", email)
-			.get();
-
-		if (userRef.size > 0) {
-			return userRef.docs[0].data();
-		} else {
-			return undefined;
-		}
-	}
-
-	const setUserSubscriptionInfo = async (id) => {
-		const docRef = await db
-			.collection("users")
-			.doc(id)
-		
-		docRef.set({subscriptionInfo: {
-			blogsId: "lifestyleBlogs"
-		}}, { merge: true });
-	}
-
 	const goToAppScreen = async (userDocs) => {
+		const data = {
+			subscriptionInfo: {
+				blogsId: "lifestyleBlogs"
+			}
+		}
+
 		// RECEIPT STILL VALID
 		setLoading(false)
 		if (!userDocs.onboarded) {
 			navigation.navigate("Onboarding1");
 			return;
 		}
-		await setUserSubscriptionInfo(userDocs.id)
+
+		await addDocument(
+			COLLECTION_NAMES.USERS,
+			userDocs.id,
+			data
+		)
 		navigation.navigate("App");
 	};
 
@@ -166,7 +158,11 @@ export const LoginScreen = ({ navigation }) => {
 			const { uid } = authResponse.user;
 			await AsyncStorage.setItem("uid", uid);
 			appsFlyer.trackEvent("af_login");
-			const userDocs = await getUser(email)
+			const userDocs = await getUser(
+				COLLECTION_NAMES.USERS,
+				FIELD_NAME.EMAIL,
+				email,
+			)
 
 			if (userDocs) {
 				const {
@@ -234,18 +230,6 @@ export const LoginScreen = ({ navigation }) => {
 			}
 		}
 	};
-
-	useEffect(() => {
-		let isMounted = true
-
-		if (isMounted) {
-			getUser(email)
-		}
-
-		return () => {
-			isMounted = false;
-		}
-	}, [])
 
 	return (
 		<SafeAreaView style={loginStyles.safeAreaContainer}>

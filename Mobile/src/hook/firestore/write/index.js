@@ -1,15 +1,13 @@
+import { db } from "../../../config/firebase";
+
 export const addDocument = async (
     collectionName,
+    id,
     data
 ) => {
-    const docRef = await firestore
+    const docRef = await db
         .collection(collectionName)
-        .doc(data.id)
+        .doc(id)
 
-    docRef
-        .set(data)
-        .then((res) => { })
-        .catch((error) => {
-            console.log("new user added error", error);
-        });
-};
+    docRef.set(data, { merge: true });
+}
