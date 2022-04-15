@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/react-native";
 import SplashScreen from "react-native-splash-screen";
-import { hasChallenges, isActiveChallenge } from '../../challenges'
+import { hasChallenges, isActiveChallenge } from '../../../utils/challenges'
 import { useStorage } from '../../../hook/storage'
 import { auth } from '../../../config/firebase'
 import { fontAssets } from '../../../library/fonts';

@@ -1,5 +1,4 @@
 import { createStackNavigator } from 'react-navigation-stack';
-import SignupScreen from '../../../screens/AuthStack/SignupScreen';
 import EmailVerificationScreen from '../../../screens/AuthStack/EmailVerificationScreen';
 import ForgottenPasswordScreen from '../../../screens/AuthStack/ForgottenPasswordScreen';
 import SpecialOfferScreen from '../../../screens/AuthStack/SpecialOfferScreen';
@@ -10,7 +9,7 @@ import { AuthScreen } from '../../../screens/auth';
 const AuthStack = createStackNavigator(
   {
     Landing: AuthScreen.LandingScreen,
-    Signup: SignupScreen,
+    Signup: AuthScreen.SignupScreen,
     Login: AuthScreen.LoginScreen,
     EmailVerification: EmailVerificationScreen,
     ForgottenPassword: ForgottenPasswordScreen,
