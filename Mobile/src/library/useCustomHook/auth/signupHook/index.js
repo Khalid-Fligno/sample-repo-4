@@ -1,35 +1,35 @@
 import { useState } from "react";
 import * as Haptics from "expo-haptics";
-import { auth } from "../../../config/firebase";
-import { COLLECTION_NAMES } from '../../../library/collections';
-import { FIELD_NAME } from '../../../library/fieldName';
-import { getUserChallenge, getUserSpecificField } from "../../../hook/firestore/read";
-import { addDocument, addSubDocument } from "../../../hook/firestore/write";
-import { deleteDocument, deleteSubDocument } from "../../../hook/firestore/delete";
+import { auth } from "../../../../config/firebase";
+import { COLLECTION_NAMES } from '../../../../library/collections';
+import { FIELD_NAME } from '../../../../library/fieldName';
+import { getUserChallenge, getUserSpecificField } from "../../../../hook/firestore/read";
+import { addDocument, addSubDocument } from "../../../../hook/firestore/write";
+import { deleteDocument, deleteSubDocument } from "../../../../hook/firestore/delete";
 import * as Localization from "expo-localization";
 import AsyncStorage from "@react-native-community/async-storage";
 import appsFlyer from 'react-native-appsflyer';
 import Toast from 'react-native-toast-message';
+import { navigate } from "../../../../navigation/rootNavigation";
 import {
   updateUserSubscription,
   subOneDay,
   subMonthly,
   sub3Monthly,
   subYearly,
-} from "../../../utils/challenges";
+} from "../../../../utils/challenges";
 import {
   Keyboard,
   Alert,
 } from 'react-native'
 
-export const useCounter = (navigation) => {
+export const useCounter = (specialOffer) => {
   const [email, setEmail] = useState("")
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
-  const specialOffer = navigation.getParam("specialOffer", undefined)
 
   const addChallengesAfterSignUp = async (email, uid) => {
     const shopifyRegisteredUser = await getUserSpecificField(
@@ -99,7 +99,13 @@ export const useCounter = (navigation) => {
     }
   };
 
-  const signup = async () => {
+  const signup = async (
+    firstName,
+    lastName,
+    email,
+    password,
+    confirmPassword
+  ) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
     setLoading(true)
@@ -146,15 +152,11 @@ export const useCounter = (navigation) => {
           await AsyncStorage.setItem("uid", uid);
 
           try {
-            const res = await addDocument(
+            await addDocument(
               COLLECTION_NAMES.USERS,
               uid,
               data
             );
-
-            if (!res) {
-              return undefined
-            }
 
             setLoading(false)
             appsFlyer.trackEvent("af_complete_registration", {
@@ -168,7 +170,7 @@ export const useCounter = (navigation) => {
               );
             });
 
-            navigation.navigate("Onboarding1", {
+            navigate("Onboarding1", {
               name: firstName,
               specialOffer: specialOffer,
             });

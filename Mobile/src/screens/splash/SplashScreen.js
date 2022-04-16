@@ -4,7 +4,7 @@ import {
   View,
 } from 'react-native'
 import { OTHERSIMG } from "../../library/images/others/others";
-import { loadAssetsAsync } from '../../library/useCustomHook/splashHook';
+import { loadAssetsAsync } from '../../library/useCustomHook/auth/splashHook';
 import { splashStyles } from '../../styles/splash/splashStyles'
 
 export const SplashScreenV2 = () => {

@@ -30,7 +30,7 @@ import NativeLoader from "../../components/Shared/NativeLoader";
 
 const { width } = Dimensions.get("window");
 
-const SignupScreen = ({ navigation }) => {
+const SignupScreens = ({ navigation }) => {
 
   const [email, setEmail] = useState("")
   const [firstName, setFirstName] = useState("")
@@ -345,4 +345,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default SignupScreen;
+export default SignupScreens;

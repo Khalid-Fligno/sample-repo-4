@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { db, auth } from "../../../config/firebase";
-import { getUser } from '../../../hook/firestore/read';
-import { COLLECTION_NAMES } from '../../../library/collections';
-import { addDocument } from '../../../hook/firestore/write';
-import { FIELD_NAME } from '../../../library/fieldName';
-import { hasChallenges } from "../../../utils/challenges";
-import { RestoreSubscriptions } from '../../../utils/subscription';
-import { restoreAndroidPurchases } from '../../../config/android';
-import { compare, compareInApp } from '../../../config/apple';
+import { db, auth } from "../../../../config/firebase";
+import { getUser } from '../../../../hook/firestore/read';
+import { COLLECTION_NAMES } from '../../../collections';
+import { addDocument } from '../../../../hook/firestore/write';
+import { FIELD_NAME } from '../../../fieldName';
+import { hasChallenges } from "../../../../utils/challenges";
+import { RestoreSubscriptions } from '../../../../utils/subscription';
+import { restoreAndroidPurchases } from '../../../../config/android';
+import { compare, compareInApp } from '../../../../config/apple';
+import { navigate } from '../../../../navigation/rootNavigation'
 import * as Sentry from "@sentry/react-native";
 import appsFlyer from "react-native-appsflyer";
 import * as Haptics from "expo-haptics";
@@ -20,11 +21,11 @@ import {
 	Alert,
 } from 'react-native'
 
-export const useCounter = (navigation) => {
+export const useCounter = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [specialOffer, setSpeciaOffer] = useState(undefined)
   const [loading, setLoading] = useState(false)
-  const specialOffer = navigation.getParam("specialOffer", undefined)
   const { InAppUtils } = NativeModules;
 
   const goToAppScreen = async (userDocs) => {
@@ -37,7 +38,7 @@ export const useCounter = (navigation) => {
     // RECEIPT STILL VALID
     setLoading(false)
     if (!userDocs.onboarded) {
-      navigation.navigate("Onboarding1");
+      navigate("Onboarding1");
       return;
     }
 
@@ -46,7 +47,7 @@ export const useCounter = (navigation) => {
       userDocs.id,
       data
     )
-    navigation.navigate("App");
+    navigate("App");
   };
 
   const iOSStorePurchases = async (onboarded) => {
@@ -56,7 +57,7 @@ export const useCounter = (navigation) => {
         Alert.alert("iTunes Error", "Could not connect to iTunes store.");
       } else {
         if (response.length === 0) {
-          navigation.navigate("Subscription", {
+          navigate("Subscription", {
             specialOffer: specialOffer,
           });
           return;
@@ -85,26 +86,26 @@ export const useCounter = (navigation) => {
             await userRef.set(data, { merge: true });
             setLoading(false)
             if (onboarded) {
-              navigation.navigate("Onboarding1");
+              navigate("Onboarding1");
               return;
             }
-            navigation.navigate("App");
+            navigate("App");
           } else if (
             sortedInApp[0] &&
             sortedInApp[0].expires_date_ms < Date.now()
           ) {
             Alert.alert("Expired", "Your most recent subscription has expired");
-            navigation.navigate("Subscription");
+            navigate("Subscription");
           } else {
             Alert.alert("Something went wrong");
-            navigation.navigate("Subscription", {
+            navigate("Subscription", {
               specialOffer: specialOffer,
             });
             return;
           }
         } catch (err) {
           Alert.alert("Error", "Could not retrieve subscription information");
-          navigation.navigate("Subscription", {
+          navigate("Subscription", {
             specialOffer: specialOffer,
           });
         }
@@ -130,7 +131,10 @@ export const useCounter = (navigation) => {
     }
   };
 
-  const login = async () => {
+  const login = async (
+    email,
+    password
+  ) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
     setLoading(true)
@@ -169,7 +173,7 @@ export const useCounter = (navigation) => {
           } else {
             // NO PURCHASE INFORMATION SAVED
             setLoading(false)
-            navigation.navigate("Subscription", {
+            navigate("Subscription", {
               specialOffer: specialOffer,
             });
           }
@@ -224,6 +228,7 @@ export const useCounter = (navigation) => {
     password,
     setPassword,
     loading,
-    login
+    login,
+    setSpeciaOffer
   };
-};
+}  

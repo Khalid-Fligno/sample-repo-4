@@ -5,15 +5,7 @@ export const addDocument = async (
     id,
     data
 ) => {
-    const docRef = await db
-        .collection(collectionName)
-        .doc(id)
-
-    if (docRef) {
-        return docRef.set(data, { merge: true });
-    } else {
-        return undefined
-    }
+    await db.collection(collectionName).doc(id).set(data, { merge: true })
 }
 
 export const addSubDocument = async (
@@ -23,15 +15,10 @@ export const addSubDocument = async (
     id1,
     data
 ) => {
-    const docRef = await db
+    await db
         .collection(collectionName)
         .doc(id)
         .collection(collectionName1)
         .doc(id1)
-
-    if (docRef) {
-        return docRef.set(data, { merge: true });
-    } else {
-        return undefined
-    }
+        .set(data, { merge: true });
 }

@@ -14,7 +14,7 @@ import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { landingStyles } from "../../styles/auth/landingStyle";
-import { checkAppVersion } from "../../library/useCustomHook/landingHook";
+import { checkAppVersion } from "../../library/useCustomHook/auth/landingHook";
 
 export const LandingScreen = ({ navigation }) => {
 

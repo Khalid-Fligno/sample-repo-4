@@ -13,11 +13,10 @@ import CustomBtn from "../../components/Shared/CustomBtn";
 import HeaderAuth from '../../components/Auth/Header';
 import Toast from 'react-native-toast-message';
 import NativeLoader from "../../components/Shared/NativeLoader";
-import { useCounter } from '../../library/useCustomHook/signupHook';
+import { useCounter } from '../../library/useCustomHook/auth/signupHook';
 import { signupStyle } from '../../styles/auth/signupStyle';
 
 export const SignupScreen = ({ navigation }) => {
-
   const userData = navigation.getParam("userData", undefined)
   const {
     email,
@@ -32,7 +31,7 @@ export const SignupScreen = ({ navigation }) => {
     setConfirmPassword,
     loading,
     signup
-  } = useCounter(navigation)
+  } = useCounter()
 
   return (
     <SafeAreaView style={signupStyle.safeAreaContainer}>

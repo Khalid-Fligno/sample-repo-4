@@ -1,14 +1,14 @@
 import * as Sentry from "@sentry/react-native";
 import SplashScreen from "react-native-splash-screen";
-import { hasChallenges, isActiveChallenge } from '../../../utils/challenges'
-import { useStorage } from '../../../hook/storage'
-import { auth } from '../../../config/firebase'
-import { fontAssets } from '../../../library/fonts';
-import { imageAssets } from '../../../library/images';
-import { soundAsset } from '../../../library/sounds';
-import { getDocument } from '../../../hook/firestore/read'
-import { COLLECTION_NAMES } from '../../../library/collections'
-import { navigate } from "../../../navigation/rootNavigation";
+import { hasChallenges, isActiveChallenge } from '../../../../utils/challenges'
+import { useStorage } from '../../../../hook/storage'
+import { auth } from '../../../../config/firebase'
+import { fontAssets } from '../../../../library/fonts';
+import { imageAssets } from '../../../../library/images';
+import { soundAsset } from '../../../../library/sounds';
+import { getDocument } from '../../../../hook/firestore/read'
+import { COLLECTION_NAMES } from '../../../../library/collections'
+import { navigate } from "../../../../navigation/rootNavigation";
 
 export const loadAssetsAsync = async () => {
   await Promise.all([...imageAssets(), ...fontAssets(), soundAsset()]);

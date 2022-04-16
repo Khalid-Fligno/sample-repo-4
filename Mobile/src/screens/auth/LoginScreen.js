@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	View,
 	SafeAreaView,
@@ -14,18 +14,23 @@ import HeaderAuth from '../../components/Auth/Header';
 import NativeLoader from "../../components/Shared/NativeLoader";
 import Toast from 'react-native-toast-message';
 import { loginStyles } from '../../styles/auth/loginStyle';
-import { useCounter } from '../../library/useCustomHook/loginHook';
+import { useCounter } from '../../library/useCustomHook/auth/loginHook';
 
 export const LoginScreen = ({ navigation }) => {
-
+	const specialOffer = navigation.getParam("specialOffer", undefined)
 	const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    loading,
-    login
-	} = useCounter(navigation)
+		email,
+		setEmail,
+		password,
+		setPassword,
+		loading,
+		login,
+		setSpeciaOffer
+	} = useCounter()
+
+	useEffect(() => {
+		setSpeciaOffer(specialOffer)
+	}, [specialOffer])
 
 	return (
 		<SafeAreaView style={loginStyles.safeAreaContainer}>
