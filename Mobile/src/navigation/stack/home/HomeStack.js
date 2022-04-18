@@ -1,12 +1,12 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import HomeScreenV2 from '../../../screens/AppStack/Home/HomeScreenV2';
 import BlogScreen from '../../../screens/AppStack/Home/BlogScreen';
 import Header from '../../../components/Shared/Header';
+import { lifestyleScreen } from '../../../screens/tab/lifestyle/lifestyleScreen';
 
 const HomeStack = createStackNavigator(
   {
-    HomeHome: HomeScreenV2,
+    HomeHome: lifestyleScreen,
     HomeBlog: BlogScreen,
   },
   {
