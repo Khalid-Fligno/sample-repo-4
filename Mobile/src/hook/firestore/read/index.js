@@ -19,11 +19,11 @@ export const getDocument = async (
 export const getUser = async (
     collectionName,
     fieldName,
-    email,
+    value,
 ) => {
     const userRef = await db
         .collection(collectionName)
-        .where(fieldName, "==", email)
+        .where(fieldName, "==", value)
         .get();
 
     if (userRef.size > 0) {

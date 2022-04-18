@@ -7,7 +7,12 @@ import { FIELD_NAME } from '../../../fieldName';
 import { hasChallenges } from "../../../../utils/challenges";
 import { RestoreSubscriptions } from '../../../../utils/subscription';
 import { restoreAndroidPurchases } from '../../../../config/android';
-import { compare, compareInApp } from '../../../../config/apple';
+import { 
+  compare, 
+  compareInApp, 
+  validateReceiptProduction, 
+  validateReceiptSandbox 
+} from '../../../../config/apple';
 import { navigate } from '../../../../navigation/rootNavigation'
 import * as Sentry from "@sentry/react-native";
 import appsFlyer from "react-native-appsflyer";
@@ -50,6 +55,19 @@ export const useCounter = () => {
     navigate("App");
   };
 
+  const validate = async (receiptData) => {
+    const validationData = await validateReceiptProduction(receiptData).catch(
+      async () => {
+        const validationDataSandbox = await validateReceiptSandbox(receiptData);
+        return validationDataSandbox;
+      }
+    );
+    if (validationData !== undefined) {
+      return validationData;
+    }
+    return undefined;
+  };
+
   const iOSStorePurchases = async (onboarded) => {
     InAppUtils.restorePurchases(async (error, response) => {
       if (error) {
@@ -64,7 +82,7 @@ export const useCounter = () => {
         }
         const sortedPurchases = response.slice().sort(compare);
         try {
-          const validationData = await this.validate(
+          const validationData = await validate(
             sortedPurchases[0].transactionReceipt
           );
           if (validationData === undefined) {

@@ -1,9 +1,7 @@
 import { createStackNavigator } from 'react-navigation-stack';
 import EmailVerificationScreen from '../../../screens/AuthStack/EmailVerificationScreen';
-import ForgottenPasswordScreen from '../../../screens/AuthStack/ForgottenPasswordScreen';
 import SpecialOfferScreen from '../../../screens/AuthStack/SpecialOfferScreen';
 import { fadeSpec, fade } from '../utils';
-import FindAccountScreen from '../../../screens/AuthStack/FindAccountScreen';
 import { AuthScreen } from '../../../screens/auth';
 
 const AuthStack = createStackNavigator(
@@ -12,9 +10,9 @@ const AuthStack = createStackNavigator(
     Signup: AuthScreen.SignupScreen,
     Login: AuthScreen.LoginScreen,
     EmailVerification: EmailVerificationScreen,
-    ForgottenPassword: ForgottenPasswordScreen,
+    ForgottenPassword: AuthScreen.ForgottenPasswordScreen,
     SpecialOffer: SpecialOfferScreen,
-    FindAccount: FindAccountScreen,
+    FindAccount: AuthScreen.FindAccountScreen,
   },
   {
     initialRouteName: 'Landing',
