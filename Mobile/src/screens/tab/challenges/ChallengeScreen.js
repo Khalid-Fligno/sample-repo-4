@@ -4,6 +4,7 @@ import React, {
   useRef
 } from "react"
 import {
+  Text,
   View
 } from "react-native";
 import moment from "moment";
@@ -12,11 +13,13 @@ import { DayDisplayComponent } from "../../../components/tab/challenges/DayDispl
 import globalStyle from "../../../styles/globalStyles";
 import { getCurrentChallengeDay, getCurrentPhase, getTodayRecommendedWorkout, getTotalChallengeWorkoutsCompleted, isActiveChallenge } from "../../../utils/challenges";
 import { addSubDocument } from "../../../hook/firestore/write";
-import { getDocument } from "../../../hook/firestore/read";
+import { getDocument, getSpecificSubCollection } from "../../../hook/firestore/read";
 import { COLLECTION_NAMES } from "../../../library/collections/index"
 import { useStorage } from "../../../hook/storage"
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import calendarStyles from "../../AppStack/Calendar/calendarStyle";
 
 export const ChallengeScreen = () => {
   const [CalendarSelectedDate, setCalendarSelectedDate] = useState();
@@ -29,6 +32,7 @@ export const ChallengeScreen = () => {
   const [currentDay, setCurrentDay] = useState();
   const [showRC, setShowRC] = useState(false)
   const [phaseData, setPhaseData] = useState();
+  const [phase, setPhase] = useState();
   const [totalChallengeWorkoutsCompleted, setTotalChallengeWorkoutsCompleted] = useState();
   const [currentChallengeDay, setCurrentChallengeDay] = useState();
   const [transformLevel, setTransformLevel] = useState();
@@ -100,6 +104,89 @@ export const ChallengeScreen = () => {
     }
   }
 
+  const fetchActiveChallengeUserData = async () => {
+    try {
+      setLoading(true)
+      const uid = await useStorage.getItem("uid");
+      const list = [];
+      const getUserChallengeActive = await getSpecificSubCollection(
+        COLLECTION_NAMES.USERS,
+        COLLECTION_NAMES.CHALLENGES,
+        "status",
+        uid,
+        "Active"
+      )
+
+      if (!getUserChallengeActive) {
+        return undefined
+      }
+
+      getUserChallengeActive.forEach((doc) => {
+        list.push(doc.data());
+      })
+      const activeChallengeEndDate = list[0] ? list[0].endDate : null;
+      const currentDate = moment().format("YYYY-MM-DD");
+      const isCompleted = moment(currentDate).isSameOrAfter(
+        activeChallengeEndDate
+      );
+
+      if (list[0] && !isCompleted) {
+        fetchActiveChallengeData(list[0]);
+      }
+      // this.unsubscribeFACUD = db
+      //   .collection("users")
+      //   .doc(uid)
+      //   .collection("challenges")
+      //   .where("status", "in", ["Active"])
+      //   .onSnapshot(async (querySnapshot) => {
+      //     const list = [];
+      //     querySnapshot.forEach(async (doc) => {
+      //       list.push(doc.data());
+      //     });
+      //     const activeChallengeEndDate = list[0] ? list[0].endDate : null;
+      //     const currentDate = moment().format("YYYY-MM-DD");
+      //     const isCompleted = moment(currentDate).isSameOrAfter(
+      //       activeChallengeEndDate
+      //     );
+      //     if (list[0] && !isCompleted) {
+      //       this.fetchActiveChallengeData(list[0]);
+      //     } else {
+      //       if (isCompleted) {
+      //         //TODO check challenge is Completed or not
+      //         const newData = createUserChallengeData(
+      //           { ...list[0], status: "InActive" },
+      //           new Date()
+      //         );
+      //         const challengeRef = db
+      //           .collection("users")
+      //           .doc(uid)
+      //           .collection("challenges")
+      //           .doc(list[0].id);
+      //         challengeRef.set(newData, { merge: true });
+      //         this.setState({ completeCha: isCompleted });
+      //         this.props.navigation.navigate("ChallengeSubscription", {
+      //           completedChallenge: true,
+      //         });
+      //         Alert.alert(
+      //           "Congratulations!",
+      //           "You have completed your challenge",
+      //           [{ text: "OK", onPress: () => {} }],
+      //           { cancelable: false }
+      //         );
+      //       } else {
+      //         this.setState({
+      //           activeChallengeUserData: undefined,
+      //           loading: false,
+      //         });
+      //       }
+      //     }
+      //   });
+    } catch (err) {
+      setLoading(false)
+      console.log(err);
+    }
+  };
+
   const fetchActiveChallengeData = async (activeChallengeUserData) => {
     console.log('activeChallengeUserData: ', activeChallengeUserData)
     try {
@@ -111,9 +198,11 @@ export const ChallengeScreen = () => {
       if (getActiveChallenge) {
         setActiveChallengeUserData(activeChallengeUserData)
         setActiveChallengeData(getActiveChallenge)
-        getCurrentPhaseInfo();
+        setTimeout(() => {
+          getCurrentPhaseInfo();
+        }, 500);
       }
-    } catch(err) {
+    } catch (err) {
       setLoading(false)
       console.log("Fetch active challenge data error! ", err);
     }
@@ -146,18 +235,21 @@ export const ChallengeScreen = () => {
         activeChallengeUserData.phases,
         currentDay
       );
-      console.log('phase: ', phase);
+
+      console.log('phase: ', phase)
 
       if (phase) {
+        setPhase(phase)
         //TODO :fetch the current phase data from Challenges collection
         const phaseData = activeChallengeData.phases.filter(
           (res) => res.name === phase.name ? res : null
         )[0];
 
+        console.log('phaseData: ', phaseData)
+
         if (!phaseData) {
           return null
         }
-        console.log('phaseDataphaseData: ', phaseData);
         setPhaseData(phaseData)
         //TODO :calculate the workout completed till selected date
         const totalChallengeWorkoutsCompleted =
@@ -297,8 +389,8 @@ export const ChallengeScreen = () => {
   }, [])
 
   useEffect(() => {
-    fetchActiveChallengeData()
-  },[])
+    fetchActiveChallengeUserData()
+  }, [])
 
   return (
     <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
@@ -322,14 +414,15 @@ export const ChallengeScreen = () => {
             You can change this in settings
           </Text>
         </View>
-      )}
-      {skipped && (
+      )} */}
+      {/* {skipped && (
         <OnBoardingNotification
           navigation={navigation}
           data={activeChallengeUserData}
         />
       )} */}
       <DayDisplayComponent
+        phase={phase}
         phaseData={phaseData}
         showRC={showRC}
         activeChallengeData={activeChallengeData}

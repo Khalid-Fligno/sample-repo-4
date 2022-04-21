@@ -13,14 +13,14 @@ import { ProgressComponent } from "./ProgressComponent";
 
 export const DayDisplayComponent = (props) => {
   const {
+    phase,
     phaseData,
     showRC,
     activeChallengeData,
     currentChallengeDay,
     transformLevel
   } = props
-  console.log('phaseData: ', phaseData)
-  console.log('showRC: ', showRC)
+
   return (
     <ScrollView
       contentContainerStyle={calendarStyles.dayDisplayContainer}
@@ -35,11 +35,13 @@ export const DayDisplayComponent = (props) => {
             paddingHorizontal: 20,
           }}
         >
-          {/* <ProgressComponent
+          <ProgressComponent
             activeChallengeData={activeChallengeData}
             currentChallengeDay={currentChallengeDay}
             transformLevel={transformLevel}
-          /> */}
+            phaseData={phaseData}
+            phase={phase}
+          />
         </View>
       )}
       {/* <WorkoutCardComponent/>

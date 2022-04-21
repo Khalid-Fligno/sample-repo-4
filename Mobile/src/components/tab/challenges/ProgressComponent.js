@@ -1,18 +1,47 @@
+import { Haptics } from "expo";
 import React, { useState } from "react";
-import { Text, View } from "react-native";
+import { Linking, Text, TouchableOpacity, View } from "react-native";
 import colors from "../../../styles/colors";
 import fonts from "../../../styles/fonts";
+import Icon from "../../Shared/Icon";
+import Svg, { Path } from "react-native-svg";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
-export const ProgressComponent = (
-  activeChallengeData,
-  currentChallengeDay,
-  transformLevel
-) => {
+export const ProgressComponent = (props) => {
+  const {
+    activeChallengeData,
+    currentChallengeDay,
+    transformLevel,
+    phaseData,
+    phase
+  } = props
   const [width, setWidth] = useState()
+
+  const openLink = (url) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Linking.openURL(url);
+  }
+
+  const getPhase = (phaseData) => {
+    return (
+      (
+        phaseData.name.substring(0, 5) +
+        " " +
+        phaseData.name.substring(5, phaseData.name.length)
+      )
+        .charAt(0)
+        .toUpperCase() +
+      (
+        phaseData.name.substring(0, 5) +
+        " " +
+        phaseData.name.substring(5, phaseData.name.length)
+      ).slice(1)
+    );
+  }
 
   return (
     <>
-      <View
+      {/* <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
@@ -110,13 +139,13 @@ export const ProgressComponent = (
             fontFamily: fonts.bold,
           }}
         >
-          {getPhase(this.phaseData)}
+          {getPhase(phaseData)}
         </Text>
       </View>
       <View style={{ marginTop: 20, flex: 1 }}>
         <TouchableOpacity
-          phase={this.phase}
-          onPress={() => this.openLink(this.phase.pdfUrl)}
+          phase={phase}
+          onPress={() => openLink(phase.pdfUrl)}
         >
           <View style={{ flex: 1 }}>
             <Icon name="file-text-o" size={20} />
@@ -155,10 +184,10 @@ export const ProgressComponent = (
           position: "absolute",
           left:
             Platform.OS === "ios"
-              ? (width * this.currentChallengeDay) /
+              ? (width * currentChallengeDay) /
               activeChallengeData.numberOfDays +
               11
-              : (width * this.currentChallengeDay) /
+              : (width * currentChallengeDay) /
               activeChallengeData.numberOfDays +
               12,
           top: 85,
@@ -187,10 +216,10 @@ export const ProgressComponent = (
           position: "absolute",
           left:
             Platform.OS === "ios"
-              ? (width * this.currentChallengeDay) /
+              ? (width * currentChallengeDay) /
               activeChallengeData.numberOfDays -
               7
-              : (width * this.currentChallengeDay) /
+              : (width * currentChallengeDay) /
               activeChallengeData.numberOfDays -
               7,
           top: Platform.OS === "ios" ? 96 : 94,
@@ -210,9 +239,9 @@ export const ProgressComponent = (
             fontSize: 25,
           }}
         >
-          {this.currentChallengeDay}
+          {currentChallengeDay}
         </Text>
-      </View>
+      </View> */}
     </>
   )
 }

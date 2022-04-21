@@ -70,3 +70,24 @@ export const getUserSpecificField = async (
     return undefined;
   }
 }
+
+export const getSpecificSubCollection = async (
+  collectionName,
+  collectionName1,
+  fieldName,
+  value,
+  value1
+) => {
+  const docsRef = await db
+  .collection(collectionName)
+  .doc(value)
+  .collection(collectionName1)
+  .where(fieldName, "in", [value1])
+  .get()
+
+  if (docsRef.size > 0) {
+    return docsRef
+  } else {
+    return undefined;
+  }
+}
