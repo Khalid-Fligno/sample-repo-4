@@ -5,7 +5,16 @@ export const addDocument = async (
   id,
   data
 ) => {
-  await db.collection(collectionName).doc(id).set(data, { merge: true })
+  return await db
+  .collection(collectionName)
+  .doc(id)
+  .set(data, { merge: true })
+  .then((res) => {
+    return true
+  })
+  .catch((err) => {
+    return false
+  });
 }
 
 export const addSubDocument = async (
@@ -15,10 +24,16 @@ export const addSubDocument = async (
   id1,
   data
 ) => {
-  await db
+  return await db
     .collection(collectionName)
     .doc(id)
     .collection(collectionName1)
     .doc(id1)
-    .set(data, { merge: true });
+    .set(data, { merge: true })
+    .then((res) => {
+      return true
+    })
+    .catch((err) => {
+      return false
+    });
 }

@@ -1480,7 +1480,7 @@ class CalendarHomeScreen extends React.PureComponent {
         </>
       );
     };
-
+    
     const dayDisplay = (
       <ScrollView
         contentContainerStyle={calendarStyles.dayDisplayContainer}
@@ -1540,7 +1540,7 @@ class CalendarHomeScreen extends React.PureComponent {
         />
       </Modal>
     );
-    console.log('calendarStrip: ', this.calendarStrip)
+    console.log('phaseData: ', this.phaseData)
     return (
       <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
         <CustomCalendarStrip

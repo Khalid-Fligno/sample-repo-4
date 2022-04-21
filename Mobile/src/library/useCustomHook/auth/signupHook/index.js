@@ -58,13 +58,18 @@ export const useCounter = (specialOffer) => {
         shopifyRegisteredUser.hasOwnProperty("challenge") &&
         shopifyRegisteredUser.challenge
       ) {
-        await addSubDocument(
+        const isUserAddChallengeDetail = await addSubDocument(
           COLLECTION_NAMES.USERS,
           COLLECTION_NAMES.CHALLENGES,
           uid,
           challengeDetail.id,
           challengeDetail
         )
+
+        if(!isUserAddChallengeDetail){
+          console.log('User challenge detail not added')
+          return undefined
+        }
         //delete old user
         if (shopifyRegisteredUser != undefined) {
           await deleteSubDocument(
@@ -152,11 +157,16 @@ export const useCounter = (specialOffer) => {
           await AsyncStorage.setItem("uid", uid);
 
           try {
-            await addDocument(
+            const isUserAddedData = await addDocument(
               COLLECTION_NAMES.USERS,
               uid,
               data
             );
+
+            if(!isUserAddedData){
+              console.log('User Data not added')
+              return undefined
+            }
 
             setLoading(false)
             appsFlyer.trackEvent("af_complete_registration", {
