@@ -12,10 +12,11 @@ import {
 import RecipeScreen from "../../../screens/AppStack/Nutrition/RecipeScreen";
 import RecipeStepsScreen from "../../../screens/AppStack/Nutrition/RecipeStepsScreen";
 import FilterRecipeScreen from "../../../screens/AppStack/Nutrition/FilterRecipe/FilterRecipeScreen";
+import { ChallengeTabScreen } from "../../../screens/tab/challenges";
 
 const CalendarStack = createStackNavigator(
   {
-    CalendarHome: CalendarHomeScreen,
+    CalendarHome: ChallengeTabScreen.ChallengeScreen,
     WorkoutsSelection: WorkoutsSelectionScreen2,
     WorkoutInfo: WorkoutInfoScreen2V2,
     Recipe: RecipeScreen,

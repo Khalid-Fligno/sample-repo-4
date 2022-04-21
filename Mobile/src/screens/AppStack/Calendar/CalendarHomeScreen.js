@@ -1540,6 +1540,7 @@ class CalendarHomeScreen extends React.PureComponent {
         />
       </Modal>
     );
+    console.log('calendarStrip: ', this.calendarStrip)
     return (
       <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
         <CustomCalendarStrip

@@ -19,7 +19,7 @@ import CustomBtn from "../../../components/Shared/CustomBtn";
 import { HOMESCREENTILESIMG } from '../../../library/images/homeScreenTiles/homeScreenTiles';
 import { useCounter } from '../../../library/useCustomHook/tab/lifestyle/lifestyleHook';
 
-export const lifestyleScreen = ({ navigation }) => {
+export const LifestyleScreen = ({ navigation }) => {
 
   const {
     loading,

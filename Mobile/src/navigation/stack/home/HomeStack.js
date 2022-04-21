@@ -2,11 +2,11 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import BlogScreen from '../../../screens/AppStack/Home/BlogScreen';
 import Header from '../../../components/Shared/Header';
-import { lifestyleScreen } from '../../../screens/tab/lifestyle/lifestyleScreen';
+import { LifestyleTabScreen } from '../../../screens/tab/lifestyle';
 
 const HomeStack = createStackNavigator(
   {
-    HomeHome: lifestyleScreen,
+    HomeHome: LifestyleTabScreen.LifestyleScreen,
     HomeBlog: BlogScreen,
   },
   {
