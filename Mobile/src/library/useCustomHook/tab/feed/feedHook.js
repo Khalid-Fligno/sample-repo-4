@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  getCurrentPhase,
-  isActiveChallenge,
-} from "../../../../utils/challenges";
+import { isActiveChallenge } from "../../../../utils/challenges";
 import AsyncStorage from "@react-native-community/async-storage";
 import { getColllection, getDocument, getSpecificCollection } from "../../../../hook/firestore/read/index";
 import { COLLECTION_NAMES } from "../../../collections/index"
@@ -64,6 +61,28 @@ export const useCounter = () => {
       return undefined;
     }
   }
+
+  const getCurrentPhase = (data, currentDate1) => {
+    let phase = undefined;
+    
+    data.forEach((el) => {
+      let currentDate = moment(currentDate1).format("YYYY-MM-DD");
+      const isBetween = moment(currentDate).isBetween(
+        el.startDate,
+        el.endDate,
+        undefined,
+        "[]"
+      );
+  
+      if (isBetween) {
+        phase = el;
+      } else {
+        phase = el;
+      }
+    });
+
+    return phase;
+  };
 
   const getActiveUserChallengeData = async () => {
     const activeUserChallengeData = await isActiveChallenge()
