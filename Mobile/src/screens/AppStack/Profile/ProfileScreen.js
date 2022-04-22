@@ -16,7 +16,6 @@ import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
 import globalStyle from "../../../styles/globalStyles";
 import ProfileStyles from "./ProfileStyles";
-import HomeScreenStyle from "../Home/HomeScreenStyle";
 import ProgressBar from "../../../components/Progress/ProgressBar";
 import {
   heightPercentageToDP as hp,
@@ -212,8 +211,8 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 hideChevron
               />
               <View>
-                <View style={HomeScreenStyle.sectionHeader}>
-                  <Text style={[HomeScreenStyle.bodyText]}>
+                <View style={{alignItems: 'flex-start'}}>
+                  <Text style={[ProfileStyles.bodyText]}>
                     Total workout complete
                   </Text>
                 </View>

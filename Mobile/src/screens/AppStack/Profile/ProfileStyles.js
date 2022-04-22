@@ -111,6 +111,15 @@ const ProfileStyles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
+  bodyText: {
+    fontFamily: fonts.bold,
+    fontSize: 12,
+    color: colors.grey.dark,
+    fontWeight:'500',
+    paddingVertical:20,
+    textAlign:"center",
+    width:'100%'
+  },
 });
 
 export default ProfileStyles;

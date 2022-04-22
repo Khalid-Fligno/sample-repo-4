@@ -1,11 +1,9 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
 import Header from "../../../components/Shared/Header";
-import FeedScreen from "../../../screens/AppStack/Home/FeedScreen";
-import AllBlogs from "../../../screens/AppStack/Home/blogs/AllBlogs"
-import Trainers from "../../../screens/AppStack/Home/trainers/Trainers"
 import RecipeTrainer from "../../../screens/AppStack/Nutrition/RecipeTrainer";
 import RecipeTrainerSteps from "../../../screens/AppStack/Nutrition/RecipeTrainerSteps";
+import { FeedTabScreen } from "../../../screens/tab/feed";
 
 const backButtonMap ={
     AllBlogs:true,
@@ -16,9 +14,9 @@ const backButtonMap ={
 
 const FeedStack = createStackNavigator(
   {
-    FeedScreen: FeedScreen,
-    AllBlogs: AllBlogs,
-    Trainers: Trainers,
+    FeedScreen: FeedTabScreen.FeedScreen,
+    AllBlogs: FeedTabScreen.AllBlogScreen,
+    Trainers: FeedTabScreen.TrainerScreen,
     RecipeTrainer: RecipeTrainer,
     RecipeTrainerSteps: RecipeTrainerSteps
 
