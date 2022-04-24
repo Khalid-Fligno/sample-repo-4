@@ -81,7 +81,7 @@ export const getTodayRecommendedWorkout = async (
   var b = moment(activeChallengeUserData.startDate);
   var a = moment(selectedDate);
   let currentDay = a.diff(b, "days") + 1;
-  const workoutData = workouts.filter((res) => res.days.includes(currentDay))
+  const workoutData = workouts.find((res) => res.days.includes(currentDay));
   if (workoutData && workoutData.id) {
     const programRef = db
       .collection("newWorkouts")

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getUser } from '../../../../hook/firestore/read';
+import { getSpecificCollection } from '../../../../hook/firestore/read';
 import { navigate } from "../../../../navigation/rootNavigation";
 import { COLLECTION_NAMES } from '../../../collections';
 import { FIELD_NAME } from '../../../fieldName';
@@ -11,11 +11,13 @@ export const useCounter = () => {
 
   const getUserInfo = async (email) => {
     setLoading(true)
-    const userData = await getUser(
+    const userDatas = await getSpecificCollection(
       COLLECTION_NAMES.USERS,
       FIELD_NAME.EMAIL,
       email,
+      "=="
     );
+    const userData = userDatas.docs[0].data()
 
     if (!userData?.id) {
       setLoading(false)

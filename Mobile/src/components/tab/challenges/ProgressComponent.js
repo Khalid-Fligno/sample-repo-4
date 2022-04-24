@@ -1,4 +1,3 @@
-import { Haptics } from "expo";
 import React, { useState } from "react";
 import { Linking, Text, TouchableOpacity, View } from "react-native";
 import colors from "../../../styles/colors";
@@ -6,6 +5,7 @@ import fonts from "../../../styles/fonts";
 import Icon from "../../Shared/Icon";
 import Svg, { Path } from "react-native-svg";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { Haptics } from "expo";
 
 export const ProgressComponent = (props) => {
   const {
@@ -41,7 +41,7 @@ export const ProgressComponent = (props) => {
 
   return (
     <>
-      {/* <View
+      <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
@@ -241,7 +241,7 @@ export const ProgressComponent = (props) => {
         >
           {currentChallengeDay}
         </Text>
-      </View> */}
+      </View>
     </>
   )
 }

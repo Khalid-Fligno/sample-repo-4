@@ -1,4 +1,4 @@
-import { LifestyleScreen } from './LifestyleScreen';
+import { LifestyleScreen } from './lifestyleScreen';
 
 export const LifestyleTabScreen = { 
   LifestyleScreen

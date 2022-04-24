@@ -2,14 +2,12 @@ import React from "react";
 import {
   Dimensions,
   ScrollView,
-  Text,
-  View
+  View,
 } from "react-native";
 import calendarStyles from "../../../screens/AppStack/Calendar/calendarStyle";
-import { ProgressComponent } from "./ProgressComponent";
-// import { MealListComponent } from "./MealListComponent";
+import { MealListComponent } from "./MealListComponent";
 // import { ProgressComponet } from "./ProgressComponent";
-// import { WorkoutCardComponent } from "./WorkoutCardComponent";
+import { WorkoutCardComponent } from "./WorkoutCardComponent";
 
 export const DayDisplayComponent = (props) => {
   const {
@@ -18,7 +16,15 @@ export const DayDisplayComponent = (props) => {
     showRC,
     activeChallengeData,
     currentChallengeDay,
-    transformLevel
+    transformLevel,
+    todayRcWorkout,
+    loadExercises,
+    // AllRecipe,
+    // favoriteRecipe,
+    // todayRecommendedRecipe,
+    // todayRecommendedMeal,
+    // setLoading,
+    // navigation,
   } = props
 
   return (
@@ -35,17 +41,24 @@ export const DayDisplayComponent = (props) => {
             paddingHorizontal: 20,
           }}
         >
-          <ProgressComponent
-            activeChallengeData={activeChallengeData}
-            currentChallengeDay={currentChallengeDay}
-            transformLevel={transformLevel}
-            phaseData={phaseData}
-            phase={phase}
-          />
+          {/* {progressComponent} */}
         </View>
       )}
-      {/* <WorkoutCardComponent/>
-      <MealListComponent/> */}
+      <WorkoutCardComponent
+        todayRcWorkout={todayRcWorkout}
+        showRC={showRC}
+        currentChallengeDay={currentChallengeDay}
+        activeChallengeData={activeChallengeData}
+        loadExercises={loadExercises}
+      />
+      {/* <MealListComponent
+          AllRecipe={AllRecipe}
+          favoriteRecipe={favoriteRecipe}
+          todayRecommendedRecipe={todayRecommendedRecipe}
+          todayRecommendedMeal={todayRecommendedMeal}
+          setLoading={setLoading}
+          navigation={navigation}
+      /> */}
     </ScrollView>
   );
 }

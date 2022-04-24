@@ -3,6 +3,8 @@ import { Alert } from "react-native";
 import FastImage from "react-native-fast-image";
 import { FileSystem } from "react-native-unimodules";
 import { db } from "../config/firebase";
+import { getCollection, getSpecificCollection } from "../hook/firestore/read";
+import { COLLECTION_NAMES } from "../library/collections";
 
 export const findFocus = (workoutObject) => {
   if (
@@ -169,74 +171,73 @@ export const getRandomRestImages = async () => {
 };
 
 export const loadExercise = async (workoutData) => {
-  const type = "interval";
-  FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`)
-    .then((res) => {
+  console.log('workoutData: ', workoutData)
+
+  await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
+    (res) => {
       Promise.all(
         res.map(async (item, index) => {
-          if (item.includes("exercise-")) {
-            await FileSystem.deleteAsync(
-              `${FileSystem.cacheDirectory}${item}`,
-              {
-                idempotent: true,
-              }
-            )
-              .then(() => {
-                // console.log(item,"deleted...")
+          console.log('item: ', item)
+          if (
+            item.includes("exercise-")
+          ) {
+            FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
+              idempotent: true,
+            })
+              .then((item) => {
+                console.log('item: ', item)
               })
               .catch((err) => {
-                console.log(err, "error");
-              });
+                console.log('Error Reading Filesystem: ', err)
+              })
           }
         })
       );
-    })
-    .catch((err) => {
-      console.log(err, "error");
-    });
-  // console.log("Workout data: ", workoutData);
+    }
+  );
+
   if (workoutData.newWorkout) {
     let exercises = [];
     let tempExerciseData = [];
     let workoutExercises = [];
+    const exerciseRef = await getCollection(
+      COLLECTION_NAMES.EXERCISES
+    )
 
-    const exerciseRef = (
-      await db
-        .collection("Exercises")
-        // .where("id", "in", workoutData.exercises)
-        .get()
-    ).docs;
+    if (!exerciseRef) {
+      console.log('Error exerciseRef')
+    }
 
-    if (workoutData.filters && workoutData.filters.length > 0) {
-      workoutData.filters.forEach((resType) => {
-        if (resType === "interval") {
-          exerciseRef.forEach((exercise) => {
-            if (workoutData.exercises && workoutData.exercises?.length > 0) {
-              workoutData.exercises.forEach((resExercise) => {
-                if (resExercise.id === exercise.id) {
-                  const exerciseDuration = Object.assign({}, exercise.data(), {
-                    duration: resExercise.duration,
-                  });
-                  tempExerciseData.push(exerciseDuration);
-                }
-                workoutExercises = workoutData.exercises.map((id) => {
-                  return tempExerciseData.find((res) => res.id === id);
-                });
+    if (
+      workoutData.filters.includes('interval') &&
+      workoutData.filters &&
+      workoutData.filters.length > 0
+    ) {
+      exerciseRef.forEach((exercise) => {
+        if (workoutData.exercises && workoutData.exercises?.length > 0) {
+          workoutData.exercises.forEach((resExercise) => {
+            if (resExercise.id === exercise.id) {
+              const exerciseDuration = Object.assign({}, exercise.data(), {
+                duration: resExercise.duration,
               });
+              tempExerciseData.push(exerciseDuration);
             }
+            workoutExercises = workoutData.exercises.map((id) => {
+              return tempExerciseData.find((res) => res.id === id);
+            });
           });
-        } else {
-          exerciseRef.forEach((exercise) => {
-            if (workoutData.exercises && workoutData.exercises?.length > 0) {
-              workoutData.exercises.forEach((resExercise) => {
-                if (resExercise === exercise.id) {
-                  tempExerciseData.push(exercise.data());
-                }
-                workoutExercises = workoutData.exercises.map((id) => {
-                  return tempExerciseData.find((res) => res.id === id);
-                });
-              });
+        }
+      });
+    } else {
+      exerciseRef.forEach((exercise) => {
+        if (workoutData.exercises && workoutData.exercises?.length > 0) {
+          workoutData.exercises.forEach((resExercise) => {
+            if (resExercise === exercise.id) {
+              tempExerciseData.push(exercise.data());
             }
+            workoutExercises = workoutData.exercises.map((id) => {
+              return tempExerciseData.find((res) => res.id === id);
+            });
           });
         }
       });
@@ -256,7 +257,6 @@ export const loadExercise = async (workoutData) => {
     if (exercises?.length > 0) {
       workoutData = Object.assign({}, workoutData, { exercises: exercises });
       const res = await downloadExercise(workoutData);
-      // console.log(">>>", res);
       if (res) return workoutData;
       else return false;
     } else {
@@ -264,7 +264,6 @@ export const loadExercise = async (workoutData) => {
     }
   } else {
     const res = await downloadExercise(workoutData);
-    // console.log("....", res);
     if (res) return workoutData;
     else return false;
   }
@@ -276,49 +275,7 @@ const downloadExercise = async (workout) => {
       workout?.exercises && workout?.exercises?.length > 0
         ? workout?.exercises
         : [];
-    let warmUpExercises = [];
-    let coolDownExercises = [];
 
-    if (workout.warmUpExercises) {
-      let tempExerciseData = [];
-      const exerciseRef = (
-        await db
-          .collection("WarmUpCoolDownExercises")
-          .where("id", "in", workout.warmUpExercises)
-          .get()
-      ).docs;
-
-      exerciseRef.forEach((exercise) => {
-        tempExerciseData.push(exercise.data());
-      });
-
-      if (workout?.warmUpExercises && workout.warmUpExercises?.length > 0) {
-        warmUpExercises = workout.warmUpExercises.map((id) => {
-          return tempExerciseData.find((res) => res.id === id);
-        });
-      }
-    }
-    if (workout.coolDownExercises) {
-      let tempExerciseData = [];
-      const exerciseRef = (
-        await db
-          .collection("WarmUpCoolDownExercises")
-          .where("id", "in", workout.coolDownExercises)
-          .get()
-      ).docs;
-
-      exerciseRef.forEach((exercise) => {
-        tempExerciseData.push(exercise.data());
-      });
-
-      if (workout?.coolDownExercises && workout.coolDownExercises?.length > 0) {
-        coolDownExercises = workout.coolDownExercises.map((id) => {
-          return tempExerciseData.find((res) => res.id === id);
-        });
-      }
-    }
-    // console.log("WarmUp exercises: ", warmUpExercises);
-    // console.log("Cooldown exercises: ", coolDownExercises);
     return Promise.all(
       exercises.map(async (exercise, index) => {
         return new Promise(async (resolve, reject) => {
@@ -331,70 +288,26 @@ const downloadExercise = async (workout) => {
             }
           }
           if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-            await FileSystem.downloadAsync(
-              exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-              `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`
-            )
-              .then(() => {
-                resolve("Downloaded");
-                // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
-              })
-              .catch((err) => resolve("Download failed"));
-          } else {
-            resolve("no video found");
-          }
-        });
-      }),
-      warmUpExercises.map(async (exercise, index) => {
-        return new Promise(async (resolve, reject) => {
-          let videoIndex = 0;
-          if (workout.newWorkout) {
-            if (exercise.videoUrls && exercise.videoUrls?.length > 0) {
-              videoIndex = exercise.videoUrls.findIndex(
-                (res) => res.model === workout.exerciseModel
-              );
-            }
-          }
-          if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-            await FileSystem.downloadAsync(
-              exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-              `${FileSystem.cacheDirectory}warmUpExercise-${index + 1}.mp4`
-            )
-              .then(() => {
-                resolve("Downloaded");
-                // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
-              })
-              .catch((err) => resolve("Download failed"));
-          } else {
-            resolve("no video found");
-          }
-        });
-      }),
-      coolDownExercises.map(async (exercise, index) => {
-        return new Promise(async (resolve, reject) => {
-          let videoIndex = 0;
-          if (workout.newWorkout) {
-            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-              videoIndex = exercise.videoUrls.findIndex(
-                (res) => res.model === workout.exerciseModel
-              );
-            }
-          }
+            const downloadResumable = FileSystem.createDownloadResumable(
+              exercise.videoUrls[videoIndex].url,
+              `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
+              {}
+            );
 
-          if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-            await FileSystem.downloadAsync(
-              exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-              `${FileSystem.cacheDirectory}coolDownExercise-${index + 1}.mp4`
-            )
+            await downloadResumable
+              .downloadAsync()
               .then(() => {
-                resolve("Downloaded");
+                resolve(exercise);
+                this.setState((prevState) => ({
+                  files: !prevState.files,
+                }));
               })
-              .catch((err) => resolve("Download failed"));
+              .catch(() => resolve("Error Download"));
           } else {
             resolve("no video found");
           }
         });
-      })
+      }),
     );
   } catch (err) {
     console.log(err);
@@ -410,7 +323,6 @@ export const downloadExerciseWC = async (
   type
 ) => {
   try {
-    const tempExerciseData = [];
     let exercises = [];
     const exerciseRef = (
       await db
@@ -418,13 +330,16 @@ export const downloadExerciseWC = async (
         .where("id", "in", exerciseIds)
         .get()
     ).docs;
-    exerciseRef.forEach((exercise) => {
-      tempExerciseData.push(exercise.data());
-    });
-    exercises = exerciseIds.map((id) => {
-      return tempExerciseData.find((res) => res.id === id);
-    });
-    // console.log("kkkk",exercises)
+    const tempExerciseData =
+      exerciseRef.map((exercise) => {
+        return exercise.data();
+      }) || [];
+
+    exercises =
+      exerciseIds.map((id) => {
+        return tempExerciseData.find((res) => res.id === id);
+      }) || [];
+
     return Promise.all(
       exercises.map(async (exercise, index) => {
         return new Promise(async (resolve, reject) => {
@@ -434,15 +349,20 @@ export const downloadExerciseWC = async (
               (res) => res.model === exerciseModel
             );
           if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-            await FileSystem.downloadAsync(
+            const downloadResumable = FileSystem.createDownloadResumable(
               exercise.videoUrls[videoIndex].url,
-              `${FileSystem.cacheDirectory}exercise-${type}-${index + 1}.mp4`
-            )
+              `${FileSystem.cacheDirectory}exercise-${type}-${index + 1}.mp4`,
+              {}
+            );
+            await downloadResumable
+              .downloadAsync()
               .then(() => {
                 resolve(exercise);
-                // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
+                this.setState((prevState) => ({
+                  files: !prevState.files,
+                }));
               })
-              .catch((err) => resolve("Download failed"));
+              .catch(() => resolve("Error Download"));
           }
         });
       })

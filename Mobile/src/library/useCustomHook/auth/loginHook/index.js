@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { db, auth } from "../../../../config/firebase";
-import { getUser } from '../../../../hook/firestore/read';
+import { getSpecificCollection } from '../../../../hook/firestore/read';
 import { COLLECTION_NAMES } from '../../../collections';
 import { addDocument } from '../../../../hook/firestore/write';
 import { FIELD_NAME } from '../../../fieldName';
 import { hasChallenges } from "../../../../utils/challenges";
 import { RestoreSubscriptions } from '../../../../utils/subscription';
 import { restoreAndroidPurchases } from '../../../../config/android';
-import { 
-  compare, 
-  compareInApp, 
-  validateReceiptProduction, 
-  validateReceiptSandbox 
+import {
+  compare,
+  compareInApp,
+  validateReceiptProduction,
+  validateReceiptSandbox
 } from '../../../../config/apple';
 import { navigate } from '../../../../navigation/rootNavigation'
 import * as Sentry from "@sentry/react-native";
@@ -22,8 +22,8 @@ import firebase from "firebase";
 import Toast from 'react-native-toast-message';
 import {
   Keyboard,
-	NativeModules,
-	Alert,
+  NativeModules,
+  Alert,
 } from 'react-native'
 
 export const useCounter = () => {
@@ -53,7 +53,7 @@ export const useCounter = () => {
       data
     )
 
-    if(!isUserAdded){
+    if (!isUserAdded) {
       console.log('NOT PASS')
       return undefined
     }
@@ -172,47 +172,52 @@ export const useCounter = () => {
       const { uid } = authResponse.user;
       await AsyncStorage.setItem("uid", uid);
       appsFlyer.trackEvent("af_login");
-      const userDocs = await getUser(
+      const userDoc = await getSpecificCollection(
         COLLECTION_NAMES.USERS,
         FIELD_NAME.EMAIL,
         email,
+        "=="
       )
 
-      if (userDocs) {
-        const {
-          email,
-          fitnessLevel,
-          subscriptionInfo,
-          onboarded
-        } = userDocs
-        await AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
-        Sentry.setUser({ email: email });
+      if (userDoc) {
+        const userDocs = userDoc.docs[0].data()
 
-        // hasChallenges is true -> khalid.sanggoyod@fligno.com
-        if (!subscriptionInfo) {
-          if (await hasChallenges(uid)) {
-            setLoading(false)
-            await goToAppScreen(userDocs)
+        if (userDocs) {
+          const {
+            email,
+            fitnessLevel,
+            subscriptionInfo,
+            onboarded
+          } = userDocs
+          await AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
+          Sentry.setUser({ email: email });
+
+          // hasChallenges is true -> khalid.sanggoyod@fligno.com
+          if (!subscriptionInfo) {
+            if (await hasChallenges(uid)) {
+              setLoading(false)
+              await goToAppScreen(userDocs)
+            } else {
+              // NO PURCHASE INFORMATION SAVED
+              setLoading(false)
+              navigate("Subscription", {
+                specialOffer: specialOffer,
+              });
+            }
+          } else if (subscriptionInfo.expiry < Date.now()) {
+            if (await hasChallenges(uid)) {
+              setLoading(false)
+              await goToAppScreen(userDocs);
+            } else {
+              // EXPIRED
+              setLoading(false)
+              await storePurchase(subscriptionInfo, onboarded);
+            }
           } else {
-            // NO PURCHASE INFORMATION SAVED
-            setLoading(false)
-            navigate("Subscription", {
-              specialOffer: specialOffer,
-            });
-          }
-        } else if (subscriptionInfo.expiry < Date.now()) {
-          if (await hasChallenges(uid)) {
+            //go to app
             setLoading(false)
             await goToAppScreen(userDocs);
-          } else {
-            // EXPIRED
-            setLoading(false)
-            await storePurchase(subscriptionInfo, onboarded);
           }
-        } else {
-          //go to app
-          setLoading(false)
-          await goToAppScreen(userDocs);
         }
       }
     } catch (error) {

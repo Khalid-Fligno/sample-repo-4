@@ -80,8 +80,8 @@ class CalendarHomeScreen extends React.PureComponent {
       downloaded: 0,
       totalToDownload: 0,
       files: undefined,
-      newWorkoutParams:undefined,
-      finishdownloaded:false
+      newWorkoutParams: undefined,
+      finishdownloaded: false
     };
     this.calendarStrip = React.createRef();
   }
@@ -97,23 +97,25 @@ class CalendarHomeScreen extends React.PureComponent {
     this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting(),
     });
-    // this.checkScheduleChallenge();
     this.checkSchedule();
     this.fetchRecipeChallenge();
     this.fetchActiveChallengeUserData();
-    this.fetchUserData();
+    this.focusListener = this.props.navigation.addListener("didFocus", () => {
+      this.onFocusFunction();
+    });
   };
+
   componentDidUpdate = () => {
     if (this.state.files !== undefined) {
       this.state.downloaded++;
-      if (this.state.totalToDownload === this.state.downloaded ) {
+      if (this.state.totalToDownload === this.state.downloaded) {
         this.setState({
-          finishdownloaded:true,
-          files:undefined
+          finishdownloaded: true,
+          files: undefined
         });
       }
     }
-    if (this.state.newWorkoutParams !== undefined && this.state.finishdownloaded===true) {
+    if (this.state.newWorkoutParams !== undefined && this.state.finishdownloaded === true) {
       this.goToNext(this.state.newWorkoutParams)
     }
   };
@@ -124,14 +126,19 @@ class CalendarHomeScreen extends React.PureComponent {
       totalToDownload: 0,
       files: undefined,
       loadingExercises: false,
-      finishdownloaded:false
+      finishdownloaded: false
     });
+    this.focusListener.remove();
     if (this.unsubscribeFACUD) {
       this.unsubscribeFACUD();
     }
-
     if (this.unsubscribeFACD) this.unsubscribeFACD();
     if (this.unsubscribeSchedule) this.unsubscribeSchedule();
+  }
+
+  async onFocusFunction() {
+    console.log("On focus");
+    await this.fetchUserData();
   }
 
   handleActiveChallengeSetting() {
@@ -232,15 +239,17 @@ class CalendarHomeScreen extends React.PureComponent {
       activeChallengeUserData &&
       activeChallengeUserData.status === "Active" &&
       new Date(activeChallengeUserData.startDate).getTime() <=
-        new Date(this.stringDate).getTime() &&
+      new Date(this.stringDate).getTime() &&
       new Date(activeChallengeUserData.endDate).getTime() >=
-        new Date(this.stringDate).getTime()
+      new Date(this.stringDate).getTime()
     ) {
       this.getCurrentPhaseInfo();
     } else {
-      if (!this.state.isSchedule && !this.state.ScheduleData)
+      if (!this.state.isSchedule && !this.state.ScheduleData) {
+        console.log('checkScheduleChallenge: ', this.state.ScheduleData)
         this.checkScheduleChallenge();
-      else {
+
+      } else {
         const isBetween = moment(this.stringDate).isBetween(
           this.state.ScheduleData.startDate,
           this.state.ScheduleData.endDate,
@@ -257,6 +266,7 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   fetchUserData = async () => {
+    this.setState({ loading: true })
     const uid = await AsyncStorage.getItem("uid");
     const version = await checkVersion();
     const versionCodeRef = db
@@ -292,8 +302,9 @@ class CalendarHomeScreen extends React.PureComponent {
           };
           userRef.set(data, { merge: true });
         }
+        this.setState({ loading: false })
         this.setState({
-          initialBurpeeTestCompleted: data.initialBurpeeTestCompleted ?? false,
+          initialBurpeeTestCompleted: data?.initialBurpeeTestCompleted ?? false,
         });
       })
       .catch((reason) => console.log("Fetching user data error: ", reason));
@@ -407,7 +418,7 @@ class CalendarHomeScreen extends React.PureComponent {
             if (item.includes("exercise-")) {
               FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
                 idempotent: true,
-              }).then(() => {});
+              }).then(() => { });
             }
           })
         );
@@ -697,8 +708,8 @@ class CalendarHomeScreen extends React.PureComponent {
           .indexOf("Array") > -1
           ? workout.warmUpExercises
           : workout.warmUpExercises.filter((warmUpExercise) => {
-              return warmUpExercise;
-            }),
+            return warmUpExercise;
+          }),
         workout.warmUpExerciseModel,
         "warmUp"
       );
@@ -718,7 +729,7 @@ class CalendarHomeScreen extends React.PureComponent {
           // if (this.state.totalToDownload === this.state.downloaded) {
           //   this.goToNext(newWorkout);
           // }
-            this.setState({newWorkoutParams:newWorkout})
+          this.setState({ newWorkoutParams: newWorkout })
         } else {
           this.setState({ loadingExercises: false });
           Alert.alert("Alert!", "Something went wrong!");
@@ -737,25 +748,20 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   async goToNext(workout) {
-    if (
-      this.currentChallengeDay === 1 &&
-      !this.state.initialBurpeeTestCompleted
-    ) {
-      await FileSystem.downloadAsync(
-        "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
-        `${FileSystem.cacheDirectory}exercise-burpees.mp4`
-      );
-    }
     const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
+
     if (this.currentChallengeDay > 0) {
       Object.assign(workout, {
         displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
       });
     }
-    if (
-      this.currentChallengeDay === 1 &&
-      !this.state.initialBurpeeTestCompleted
-    ) {
+
+    if (!this.state.initialBurpeeTestCompleted) {
+      await FileSystem.downloadAsync(
+        "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+        `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+      );
+
       this.props.navigation.navigate("Burpee1", {
         fromScreen: "WorkoutInfo",
         screenReturnParams: {
@@ -765,23 +771,24 @@ class CalendarHomeScreen extends React.PureComponent {
           fitnessLevel,
           extraProps: { fromCalender: true },
         },
+      })
+    } else {
+      this.props.navigation.navigate("WorkoutInfo", {
+        workout,
+        reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
+        workoutSubCategory: workout.workoutSubCategory,
+        fitnessLevel,
+        extraProps: { fromCalender: true },
+        transformRoute: true,
       });
-      return;
     }
-    this.props.navigation.navigate("WorkoutInfo", {
-      workout,
-      reps: workout.difficultyLevel[fitnessLevel - 1].toString(),
-      workoutSubCategory: workout.workoutSubCategory,
-      fitnessLevel,
-      extraProps: { fromCalender: true },
-      transformRoute: true,
-    });
+
     this.setState({
       downloaded: 0,
       totalToDownload: 0,
       files: undefined,
       loadingExercises: false,
-      finishdownloaded:false
+      finishdownloaded: false
     })
   }
 
@@ -844,7 +851,7 @@ class CalendarHomeScreen extends React.PureComponent {
               Alert.alert(
                 "Congratulations!",
                 "You have completed your challenge",
-                [{ text: "OK", onPress: () => {} }],
+                [{ text: "OK", onPress: () => { } }],
                 { cancelable: false }
               );
             } else {
@@ -935,7 +942,7 @@ class CalendarHomeScreen extends React.PureComponent {
               treatsId.push(res.recipeMeal.treats);
             }
           }
-        } catch (err) {}
+        } catch (err) { }
       });
 
       this.setState({
@@ -1163,7 +1170,7 @@ class CalendarHomeScreen extends React.PureComponent {
       completeCha,
       todayRecommendedRecipe,
       favoriteRecipe,
-      downloaded,
+      initialBurpeeTestCompleted
     } = this.state;
 
     let showRC = false;
@@ -1222,7 +1229,7 @@ class CalendarHomeScreen extends React.PureComponent {
             <ChallengeWorkoutCard
               onPress={() =>
                 todayRcWorkout.name && todayRcWorkout.name !== "rest"
-                  ? this.loadExercises(todayRcWorkout, this.currentChallengeDay)
+                  ? this.loadExercises(todayRcWorkout)
                   : ""
               }
               res={todayRcWorkout}
@@ -1412,11 +1419,11 @@ class CalendarHomeScreen extends React.PureComponent {
               left:
                 Platform.OS === "ios"
                   ? (width * this.currentChallengeDay) /
-                      activeChallengeData.numberOfDays +
-                    11
+                  activeChallengeData.numberOfDays +
+                  11
                   : (width * this.currentChallengeDay) /
-                      activeChallengeData.numberOfDays +
-                    12,
+                  activeChallengeData.numberOfDays +
+                  12,
               top: 85,
             }}
           >
@@ -1448,11 +1455,11 @@ class CalendarHomeScreen extends React.PureComponent {
               left:
                 Platform.OS === "ios"
                   ? (width * this.currentChallengeDay) /
-                      activeChallengeData.numberOfDays -
-                    7
+                  activeChallengeData.numberOfDays -
+                  7
                   : (width * this.currentChallengeDay) /
-                      activeChallengeData.numberOfDays -
-                    7,
+                  activeChallengeData.numberOfDays -
+                  7,
               top: Platform.OS === "ios" ? 96 : 94,
               backgroundColor: "#F79400",
               width: 40,
@@ -1480,7 +1487,7 @@ class CalendarHomeScreen extends React.PureComponent {
         </>
       );
     };
-    
+
     const dayDisplay = (
       <ScrollView
         contentContainerStyle={calendarStyles.dayDisplayContainer}
@@ -1524,7 +1531,7 @@ class CalendarHomeScreen extends React.PureComponent {
         animationIn="fadeInLeft"
         animationOut="fadeOutLeft"
         onBackdropPress={() => this.toggleSetting()}
-        // useNativeDriver={true}
+      // useNativeDriver={true}
       >
         <ChallengeSetting
           onToggle={() => this.toggleSetting()}
@@ -1540,7 +1547,6 @@ class CalendarHomeScreen extends React.PureComponent {
         />
       </Modal>
     );
-    console.log('phaseData: ', this.phaseData)
     return (
       <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
         <CustomCalendarStrip
