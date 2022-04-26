@@ -240,7 +240,8 @@ export default class AuthLoadingScreen extends React.PureComponent {
             const { subscriptionInfo = undefined, onboarded = false } =
               doc.data();
 
-            if (subscriptionInfo === undefined) {
+            if (!subscriptionInfo || !subscriptionInfo?.expiry) {
+              console.log('Pasok nga walay subscription info expiry')
               // console.log("uid",uid);
               if (await hasChallenges(uid)) {
                 await this.goToAppScreen(doc);

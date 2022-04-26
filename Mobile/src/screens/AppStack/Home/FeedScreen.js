@@ -19,7 +19,6 @@ import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import {
-  getCurrentPhase,
   isActiveChallenge,
 } from "../../../utils/challenges";
 import {
@@ -84,6 +83,28 @@ export const FeedScreen = ({ navigation }) => {
     }
   }
 
+  const getCurrentPhase = (data, currentDate1) => {
+    let phase = undefined;
+    data.forEach((el) => {
+      let currentDate = moment(currentDate1).format("YYYY-MM-DD");
+
+      const isBetween = moment(currentDate).isBetween(
+        el.startDate,
+        el.endDate,
+        undefined,
+        "[]"
+      );
+
+      if (isBetween) {
+        phase = el;
+      } else {
+        phase = el;
+      }
+    });
+
+    return phase;
+  };
+
   const getActiveUserChallengeData = async () => {
     const activeUserChallengeData = await isActiveChallenge()
     const stringDate = moment().format("YYYY-MM-DD").toString();
@@ -94,7 +115,7 @@ export const FeedScreen = ({ navigation }) => {
       setLoading(false)
       console.log('NO ACTIVE USER CHALEENGE DATA')
       const tag = activeUserData.subscriptionInfo?.blogsId
-      
+
       try {
         const blogsData = await getBlogsData(tag)
         const trainerData = await getProfileTrainers()
