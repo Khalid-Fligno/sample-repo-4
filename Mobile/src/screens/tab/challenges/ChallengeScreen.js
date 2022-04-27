@@ -13,7 +13,7 @@ import moment from "moment";
 import CustomCalendarStrip from "../../../components/Calendar/CustomCalendarStrip";
 import { DayDisplayComponent } from "../../../components/tab/challenges/DayDisplayComponent";
 import globalStyle from "../../../styles/globalStyles";
-import { fetchRecipeData, getCurrentChallengeDay, getCurrentPhase, getTodayRecommendedMeal, getTodayRecommendedWorkout, getTotalChallengeWorkoutsCompleted, isActiveChallenge } from "../../../utils/challenges";
+import { convertRecipeData, fetchRecipeData, getCurrentChallengeDay, getCurrentPhase, getTodayRecommendedMeal, getTodayRecommendedWorkout, getTotalChallengeWorkoutsCompleted, isActiveChallenge } from "../../../utils/challenges";
 import { addDocument, addSubDocument } from "../../../hook/firestore/write";
 import { getCollection, getDocument, getSpecificSubCollection } from "../../../hook/firestore/read";
 import { COLLECTION_NAMES } from "../../../library/collections/index"
@@ -58,6 +58,7 @@ export const ChallengeScreen = ({ navigation }) => {
   const [isSettingVisible, setIsSettingVisible] = useState()
   const [AllRecipe, setAllRecipe] = useState()
   const [challengeRecipe, setChallengeRecipe] = useState()
+  const [favoriteRecipe, setFavoriteRecipe] = useState()
   const calendarStrip = useRef(null)
 
   const fetchUserAndChallengeData = async () => {
@@ -112,7 +113,7 @@ export const ChallengeScreen = ({ navigation }) => {
       }
     }
 
-    if (userRef && challengeRef) {
+    if (userRef || challengeRef) {
       const getInitialBurpeeTestCompleted = userRef?.initialBurpeeTestCompleted ?? false
       const documents = challengeRef.docs.map((doc) => doc.data());
       const level_1 = documents.filter((res) => {
@@ -140,10 +141,9 @@ export const ChallengeScreen = ({ navigation }) => {
         },
       ];
 
-      fetchRecipeData(challengeLevel).then((res) => {
-        setAllRecipe(res.recommendedRecipe)
-      });
-
+      const getRecipeData  = await fetchRecipeData(challengeLevel)
+      
+      setAllRecipe(getRecipeData.recommendedRecipe)
       setChallengeRecipe(challengeLevel)
       setInitialBurpeeTestCompleted(getInitialBurpeeTestCompleted)
       fetchActiveChallengeUserData(userRef.id)
@@ -177,7 +177,7 @@ export const ChallengeScreen = ({ navigation }) => {
       );
 
       if (list[0] && !isCompleted) {
-        fetchActiveChallengeData(list[0]);
+        fetchActiveChallengeData(list[0], currentDate);
       } else {
         if (isCompleted) {
           const newData = createUserChallengeData(
@@ -217,7 +217,10 @@ export const ChallengeScreen = ({ navigation }) => {
     }
   };
 
-  const fetchActiveChallengeData = async (activeChallengeUserData) => {
+  const fetchActiveChallengeData = async (
+    activeChallengeUserData,
+    currentDay
+  ) => {
     try {
       const getActiveChallenge = await getDocument(
         COLLECTION_NAMES.CHALLENGES,
@@ -229,6 +232,85 @@ export const ChallengeScreen = ({ navigation }) => {
         activeChallengeUserData
       ) {
         const getSkipped = activeChallengeUserData.onBoardingInfo.skipped ?? false
+        const faveRecipe = activeChallengeUserData?.faveRecipe
+        let recipe = [];
+        let breakfastId = [];
+        let lunchId = [];
+        let dinnerId = [];
+        let snackId = [];
+        let drinkId = [];
+        let preworkoutId = [];
+        let treatsId = [];
+
+        const currentChallengeDay = getCurrentChallengeDay(
+          activeChallengeUserData.startDate,
+          currentDay
+        );
+
+        if (faveRecipe) {
+          faveRecipe.forEach((res) => {
+            try {
+              if (res.day === currentChallengeDay) {
+                if (res.recipeMeal.breakfast) {
+                  recipe.push(res.recipeMeal.breakfast);
+                  breakfastId.push(res.recipeMeal.breakfast);
+                }
+                if (res.recipeMeal.lunch) {
+                  recipe.push(res.recipeMeal.lunch);
+                  lunchId.push(res.recipeMeal.lunch);
+                }
+                if (res.recipeMeal.dinner) {
+                  recipe.push(res.recipeMeal.dinner);
+                  dinnerId.push(res.recipeMeal.dinner);
+                }
+                if (res.recipeMeal.snack) {
+                  recipe.push(res.recipeMeal.snack);
+                  snackId.push(res.recipeMeal.snack);
+                }
+                if (res.recipeMeal.drink) {
+                  recipe.push(res.recipeMeal.drink);
+                  drinkId.push(res.recipeMeal.drink);
+                }
+                if (res.recipeMeal.preworkout) {
+                  recipe.push(res.recipeMeal.preworkout);
+                  preworkoutId.push(res.recipeMeal.preworkout);
+                }
+                if (res.recipeMeal.treats) {
+                  recipe.push(res.recipeMeal.treats);
+                  treatsId.push(res.recipeMeal.treats);
+                }
+              }
+            } catch (err) {
+              console.log('Error recipe: ', err)
+            }
+          });
+        }
+
+        convertRecipeData(recipe).then((res) => {
+          const resx = res.recipeResult;
+
+          const breakfastList = resx.filter((res) => res.id === breakfastId[0]);
+          const lunchList = resx.filter((res) => res.id === lunchId[0]);
+          const dinnerList = resx.filter((res) => res.id === dinnerId[0]);
+          const snackList = resx.filter((res) => res.id === snackId[0]);
+          const drinkList = resx.filter((res) => res.id === drinkId[0]);
+          const preworkoutList = resx.filter((res) => res.id === preworkoutId[0]);
+          const treatsList = resx.filter((res) => res.id === treatsId[0]);
+
+          const recommendedMeal = [
+            {
+              breakfast: breakfastList,
+              lunch: lunchList,
+              dinner: dinnerList,
+              snack: snackList,
+              drink: drinkList,
+              preworkout: preworkoutList,
+              treats: treatsList,
+            },
+          ];
+
+          setFavoriteRecipe(recommendedMeal)
+        });
 
         setActiveChallengeUserData(activeChallengeUserData)
         setActiveChallengeData(getActiveChallenge)
@@ -309,28 +391,18 @@ export const ChallengeScreen = ({ navigation }) => {
 
         if (todayRcWorkout) {
           setTodayRcWorkout(todayRcWorkout);
-
+          console.log('todayRcWorkout')
           // TODO getToday one recommended meal randomly
-          getTodayRecommendedMeal(phaseData, activeChallengeData).then(
-            (res) => {
-              setTodayRecommendedRecipe(res.recommendedRecipe)
-              setTodayRecommendedMeal(res.recommendedMeal)
-              setChallengeMealsFilterList(res.challengeMealsFilterList)
-              setPhaseDefaultTags(res.phaseDefaultTags)
-              setLoading(false)
-            })
+          const getTodayRecommendedMeals = await getTodayRecommendedMeal(phaseData, activeChallengeData)
+
+          console.log('getTodayRecommendedMeals: ', getTodayRecommendedMeals.recommendedRecipe)
         } else {
           setTodayRcWorkout(undefined);
 
           // TODO getToday one recommended meal randomly
-          getTodayRecommendedMeal(phaseData, activeChallengeData).then(
-            (res) => {
-              setTodayRecommendedRecipe(res.recommendedRecipe)
-              setTodayRecommendedMeal(res.recommendedMeal)
-              setChallengeMealsFilterList(res.challengeMealsFilterList)
-              setPhaseDefaultTags(res.phaseDefaultTags)
-              setLoading(false)
-            })
+          const getTodayRecommendedMeals = await getTodayRecommendedMeal(phaseData, activeChallengeData)
+
+          console.log('getTodayRecommendedMeals: ', getTodayRecommendedMeals.recommendedRecipe)
         }
       }
     } else {
@@ -394,13 +466,13 @@ export const ChallengeScreen = ({ navigation }) => {
         setScheduleData(activeChallenge)
         setLoading(true)
         setCurrentDay(activeChallenge.startDate);
-        fetchActiveChallengeData(activeChallenge);
+        fetchActiveChallengeData(activeChallenge, stringDate);
       }
       if (isBetween) {
         setIsSchedule(true)
         setScheduleData(activeChallenge)
         if (!activeChallengeData) {
-          fetchActiveChallengeData(activeChallenge);
+          fetchActiveChallengeData(activeChallenge, stringDate);
         } else {
           getCurrentPhaseInfo(
             activeChallengeUserData,
@@ -426,7 +498,7 @@ export const ChallengeScreen = ({ navigation }) => {
         setIsSchedule(true)
         setScheduleData(activeChallenge)
         if (!activeChallengeData) {
-          fetchActiveChallengeData(activeChallenge);
+          fetchActiveChallengeData(activeChallenge, stringDate);
         } else {
           getCurrentPhaseInfo(
             activeChallengeUserData,
@@ -674,6 +746,11 @@ export const ChallengeScreen = ({ navigation }) => {
     fetchUserAndChallengeData()
   }, [])
 
+  console.log('AllRecipe: ', AllRecipe)
+  console.log('favoriteRecipe: ', favoriteRecipe)
+  console.log('todayRecommendedRecipe: ', todayRecommendedRecipe)
+  console.log('todayRecommendedMeal: ', todayRecommendedMeal)
+
   return (
     <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
       <CustomCalendarStrip
@@ -716,12 +793,12 @@ export const ChallengeScreen = ({ navigation }) => {
         transformLevel={transformLevel}
         todayRcWorkout={todayRcWorkout}
         loadExercises={loadExercises}
-      // AllRecipe={AllRecipe}
-      // favoriteRecipe={favoriteRecipe}
-      // todayRecommendedRecipe={todayRecommendedRecipe}
-      // todayRecommendedMeal={todayRecommendedMeal}
-      // setLoading={setLoading}
-      // navigation={navigation}
+        AllRecipe={AllRecipe}
+        favoriteRecipe={favoriteRecipe}
+        todayRecommendedRecipe={todayRecommendedRecipe}
+        todayRecommendedMeal={todayRecommendedMeal}
+        setLoading={setLoading}
+        navigation={navigation}
       />
       <SettingComponent
         isSettingVisible={isSettingVisible}

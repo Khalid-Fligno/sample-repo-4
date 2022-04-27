@@ -19,12 +19,12 @@ export const DayDisplayComponent = (props) => {
     transformLevel,
     todayRcWorkout,
     loadExercises,
-    // AllRecipe,
-    // favoriteRecipe,
-    // todayRecommendedRecipe,
-    // todayRecommendedMeal,
-    // setLoading,
-    // navigation,
+    AllRecipe,
+    favoriteRecipe,
+    todayRecommendedRecipe,
+    todayRecommendedMeal,
+    setLoading,
+    navigation,
   } = props
 
   return (
@@ -51,14 +51,15 @@ export const DayDisplayComponent = (props) => {
         activeChallengeData={activeChallengeData}
         loadExercises={loadExercises}
       />
-      {/* <MealListComponent
+      <MealListComponent
           AllRecipe={AllRecipe}
           favoriteRecipe={favoriteRecipe}
           todayRecommendedRecipe={todayRecommendedRecipe}
           todayRecommendedMeal={todayRecommendedMeal}
           setLoading={setLoading}
           navigation={navigation}
-      /> */}
+          showRC={showRC}
+      />
     </ScrollView>
   );
 }

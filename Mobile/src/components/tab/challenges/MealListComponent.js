@@ -13,7 +13,8 @@ export const MealListComponent = (props) => {
     todayRecommendedRecipe,
     todayRecommendedMeal,
     setLoading,
-    navigation
+    navigation,
+    showRC
   } = props
 
   const goToRecipe = async (recipeData) => {
