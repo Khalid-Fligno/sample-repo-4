@@ -141,10 +141,10 @@ export const ChallengeScreen = ({ navigation }) => {
         },
       ];
 
-      const getRecipeData  = await fetchRecipeData(challengeLevel)
-      
-      setAllRecipe(getRecipeData.recommendedRecipe)
-      setChallengeRecipe(challengeLevel)
+      const getRecipeData = await fetchRecipeData(challengeLevel)
+
+      setAllRecipe(getRecipeData.recommendedRecipe[0])
+      setChallengeRecipe(challengeLevel[0])
       setInitialBurpeeTestCompleted(getInitialBurpeeTestCompleted)
       fetchActiveChallengeUserData(userRef.id)
     }
@@ -331,6 +331,7 @@ export const ChallengeScreen = ({ navigation }) => {
     activeChallengeData,
     stringDate
   ) => {
+
     if (activeChallengeUserData && activeChallengeData) {
       const test = activeChallengeUserData.startDate;
       const transformLevel = activeChallengeUserData.displayName;
@@ -338,18 +339,6 @@ export const ChallengeScreen = ({ navigation }) => {
 
       if (stringDate >= test) {
         setLoading(true)
-      }
-
-      const isBetween = moment(stringDate).isBetween(
-        activeChallengeUserData.startDate,
-        activeChallengeUserData.endDate,
-        undefined,
-        "[]"
-      );
-
-      if (calendarStrip.current) {
-        if (isBetween) setShowRC(true);
-        else setShowRC(false);
       }
 
       const phase = getCurrentPhase(
@@ -389,23 +378,27 @@ export const ChallengeScreen = ({ navigation }) => {
           )
         )[0];
 
-        if (todayRcWorkout) {
+        // TODO getToday one recommended meal randomly
+        const getTodayRecommendedMeals = await getTodayRecommendedMeal(phaseData, activeChallengeData)
+
+        if (todayRcWorkout && getTodayRecommendedMeals) {
+          setLoading(false)
           setTodayRcWorkout(todayRcWorkout);
-          console.log('todayRcWorkout')
-          // TODO getToday one recommended meal randomly
-          const getTodayRecommendedMeals = await getTodayRecommendedMeal(phaseData, activeChallengeData)
-
-          console.log('getTodayRecommendedMeals: ', getTodayRecommendedMeals.recommendedRecipe)
+          setTodayRecommendedRecipe(getTodayRecommendedMeals.recommendedRecipe[0])
+          setTodayRecommendedMeal(getTodayRecommendedMeals.recommendedMeal[0])
+          setChallengeMealsFilterList(getTodayRecommendedMeals.challengeMealsFilterList)
+          setPhaseDefaultTags(getTodayRecommendedMeals.phaseDefaultTags)
         } else {
+          setLoading(false)
           setTodayRcWorkout(undefined);
-
-          // TODO getToday one recommended meal randomly
-          const getTodayRecommendedMeals = await getTodayRecommendedMeal(phaseData, activeChallengeData)
-
-          console.log('getTodayRecommendedMeals: ', getTodayRecommendedMeals.recommendedRecipe)
+          setTodayRecommendedRecipe(getTodayRecommendedMeals.recommendedRecipe[0])
+          setTodayRecommendedMeal(getTodayRecommendedMeals.recommendedMeal[0])
+          setChallengeMealsFilterList(getTodayRecommendedMeals.challengeMealsFilterList)
+          setPhaseDefaultTags(getTodayRecommendedMeals.phaseDefaultTags)
         }
       }
     } else {
+      setLoading(false)
       console.log('Something went wrong please try again')
     }
   }
@@ -417,7 +410,6 @@ export const ChallengeScreen = ({ navigation }) => {
   ) => {
     console.log('checkScheduleChallenge')
     const activeChallenge = activeChallengeUserData
-    console.log('activeChallenge: ', activeChallenge)
 
     if (!activeChallenge) {
       console.log('Error activeChallenge')
@@ -441,7 +433,6 @@ export const ChallengeScreen = ({ navigation }) => {
         console.log('User status and isSchedule not added')
       }
     } else if (activeChallenge && activeChallenge.isSchedule) {
-
       const isBetween = moment(currentDay).isBetween(
         activeChallenge.startDate,
         activeChallenge.endDate,
@@ -461,16 +452,16 @@ export const ChallengeScreen = ({ navigation }) => {
         console.log('User status and isSchedule not added')
       }
       if (!isSchedule) {
-        setCalendarSelectedDate(moment(activeChallenge.startDate))
-        setIsSchedule(true)
-        setScheduleData(activeChallenge)
         setLoading(true)
-        setCurrentDay(activeChallenge.startDate);
+        setScheduleData(activeChallenge)
         fetchActiveChallengeData(activeChallenge, stringDate);
+        setCalendarSelectedDate(moment(activeChallenge.startDate))
+        setCurrentDay(activeChallenge.startDate);
+        setIsSchedule(true)
       }
       if (isBetween) {
-        setIsSchedule(true)
         setScheduleData(activeChallenge)
+        setIsSchedule(true)
         if (!activeChallengeData) {
           fetchActiveChallengeData(activeChallenge, stringDate);
         } else {
@@ -481,9 +472,9 @@ export const ChallengeScreen = ({ navigation }) => {
           );
         }
       } else {
-        setIsSchedule(true)
-        setScheduleData(activeChallenge)
         setLoading(true)
+        setScheduleData(activeChallenge)
+        setIsSchedule(true)
       }
     } else {
       setLoading(false)
@@ -495,8 +486,8 @@ export const ChallengeScreen = ({ navigation }) => {
       );
 
       if (isBetween) {
-        setIsSchedule(true)
         setScheduleData(activeChallenge)
+        setIsSchedule(true)
         if (!activeChallengeData) {
           fetchActiveChallengeData(activeChallenge, stringDate);
         } else {
@@ -507,9 +498,9 @@ export const ChallengeScreen = ({ navigation }) => {
           );
         }
       } else {
-        setIsSchedule(true)
+        setLoading(false)
         setScheduleData(activeChallenge)
-        setLoading(true)
+        setIsSchedule(true)
       }
     }
   }
@@ -534,33 +525,52 @@ export const ChallengeScreen = ({ navigation }) => {
   ) => {
     const stringDate = date.format("YYYY-MM-DD").toString()
     setCurrentDay(stringDate)
-    // const currentChallengeDay = getCurrentChallengeDay(
-    //   activeChallengeUserData.startDate,
-    //   stringDate
-    // );
-    // if (!currentChallengeDay) {
-    //   console.log('Error currentChallengeDay')
-    // }
-    // setCurrentChallengeDay(currentChallengeDay)
-    // console.log('currentChallengeDay: ', currentChallengeDay)
 
-    // const data = {
-    //   recipes: {
-    //     days: currentChallengeDay
-    //   }
-    // }
-    // const uid = await useStorage.getItem("uid");
-    // const isCurrentChallengeDayAdded = await addSubDocument(
-    //   COLLECTION_NAMES.USERS, 
-    //   COLLECTION_NAMES.CHALLENGES,
-    //   uid,
-    //   activeChallengeUserData.id,
-    //   data
-    // )
+    const currentChallengeDay = getCurrentChallengeDay(
+      activeChallengeUserData.startDate,
+      stringDate
+    );
 
-    // if (!isCurrentChallengeDayAdded) {
-    //   console.log('Error isCurrentChallengeDayAdded')
-    // }
+    if (!currentChallengeDay) {
+      console.log('Error currentChallengeDay')
+    }
+
+    setCurrentChallengeDay(currentChallengeDay)
+    console.log('currentChallengeDay: ', currentChallengeDay)
+
+    const data = {
+      recipes: {
+        days: currentChallengeDay
+      }
+    }
+    const uid = await useStorage.getItem("uid");
+    const isCurrentChallengeDayAdded = await addSubDocument(
+      COLLECTION_NAMES.USERS,
+      COLLECTION_NAMES.CHALLENGES,
+      uid,
+      activeChallengeUserData.id,
+      data
+    )
+
+    if (!isCurrentChallengeDayAdded) {
+      console.log('Error isCurrentChallengeDayAdded')
+    }
+
+    const isBetween = moment(stringDate).isBetween(
+      activeChallengeUserData.startDate,
+      activeChallengeUserData.endDate,
+      undefined,
+      "[]"
+    );
+
+    if (
+      calendarStrip.current &&
+      isBetween
+    ) {
+      setShowRC(true); 
+    } else {
+      setShowRC(false);
+    }
 
     //TODO:check the active challenge cndtns
     if (
@@ -746,10 +756,11 @@ export const ChallengeScreen = ({ navigation }) => {
     fetchUserAndChallengeData()
   }, [])
 
-  console.log('AllRecipe: ', AllRecipe)
-  console.log('favoriteRecipe: ', favoriteRecipe)
-  console.log('todayRecommendedRecipe: ', todayRecommendedRecipe)
-  console.log('todayRecommendedMeal: ', todayRecommendedMeal)
+
+  console.log('ScheduleData: ', ScheduleData)
+  console.log('isSchedule: ', isSchedule)
+  console.log('showRC: ', showRC)
+  console.log('loading: ', loading)
 
   return (
     <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>

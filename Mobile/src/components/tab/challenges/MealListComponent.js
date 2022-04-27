@@ -129,12 +129,12 @@ export const MealListComponent = (props) => {
       >
         Today's Meals
       </Text>
-      {AllRecipe[0] && (
+      {AllRecipe && (
         <TodayMealsList
-          recipe={AllRecipe[0]}
-          favoriteRecipe={favoriteRecipe[0]}
-          todayRecommendedRecipe={todayRecommendedRecipe[0]}
-          data={todayRecommendedMeal[0]}
+          recipe={AllRecipe}
+          favoriteRecipe={favoriteRecipe}
+          todayRecommendedRecipe={todayRecommendedRecipe}
+          data={todayRecommendedMeal}
           onPress={(res) => goToRecipe(res)}
           filterPress={(res, res1, res2, title) =>
             getToFilter(res, res1, res2, title)

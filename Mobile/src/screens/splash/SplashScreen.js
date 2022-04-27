@@ -73,7 +73,7 @@ export const SplashScreenV2 = () => {
             userDoc.fitnessLevel.toString()
           )
         }
-        if (!subscriptionInfo) {
+        if (!subscriptionInfo || !subscriptionInfo?.expiry) {
           if (await hasChallenges(uid)) {
             await goToAppScreen(userDoc);
           } else {

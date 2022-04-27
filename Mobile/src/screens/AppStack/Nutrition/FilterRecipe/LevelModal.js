@@ -267,7 +267,7 @@ export default class LevelModal extends React.PureComponent {
                             </View>
                         </TouchableOpacity>
 
-                        <View style={{ marginVertical: 20 }, !this.props.phase3 && !this.props.phase2 && !this.props.phase1 ? {opacity: 0.7} : null}>
+                        <View style={[{ marginVertical: 20 }, !this.props.phase3 && !this.props.phase2 && !this.props.phase1 ? {opacity: 0.7} : null]}>
                             <TouchableOpacity
                                 style={styles.button}
                                 onPress={this.props.applyButton}
