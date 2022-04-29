@@ -30,7 +30,7 @@ import NativeLoader from "../../components/Shared/NativeLoader";
 import { hasChallenges } from "../../utils/challenges";
 import { RestoreSubscriptions } from '../../utils/subscription';
 import { restoreAndroidPurchases } from '../../../config/android';
-import { compare, compareInApp } from '../../../config/apple';
+import { compare, compareInApp, validateReceiptProduction, validateReceiptSandbox } from '../../../config/apple';
 import Toast from 'react-native-toast-message';
 
 const LoginScreenV2 = ({ navigation }) => {
@@ -75,6 +75,19 @@ const LoginScreenV2 = ({ navigation }) => {
 		navigation.navigate("App");
 	};
 
+	const validate = async (receiptData) => {
+    const validationData = await validateReceiptProduction(receiptData).catch(
+      async () => {
+        const validationDataSandbox = await validateReceiptSandbox(receiptData);
+        return validationDataSandbox;
+      }
+    );
+    if (validationData !== undefined) {
+      return validationData;
+    }
+    return undefined;
+  };
+
 	const iOSStorePurchases = async (onboarded) => {
 		InAppUtils.restorePurchases(async (error, response) => {
 			if (error) {
@@ -89,7 +102,7 @@ const LoginScreenV2 = ({ navigation }) => {
 				}
 				const sortedPurchases = response.slice().sort(compare);
 				try {
-					const validationData = await this.validate(
+					const validationData = await validate(
 						sortedPurchases[0].transactionReceipt
 					);
 					if (validationData === undefined) {
@@ -139,7 +152,7 @@ const LoginScreenV2 = ({ navigation }) => {
 	};
 
 	const storePurchase = async (subscriptionInfo, onboarded) => {
-		const restoreSubscriptions = new RestoreSubscriptions(props);
+		const restoreSubscriptions = new RestoreSubscriptions(navigation);
 		if (!subscriptionInfo.platform) {
 			subscriptionInfo.platform = "ios";
 		}
@@ -151,7 +164,7 @@ const LoginScreenV2 = ({ navigation }) => {
 				await iOSStorePurchases(onboarded);
 			} else if (Platform.OS === "android") {
 				setLoading(false)
-				await restoreAndroidPurchases(props);
+				await restoreAndroidPurchases(navigation);
 			}
 		}
 	};
@@ -202,6 +215,7 @@ const LoginScreenV2 = ({ navigation }) => {
 					} else {
 						// EXPIRED
 						setLoading(false)
+						console.log("Expired")
 						await storePurchase(subscriptionInfo, onboarded);
 					}
 				} else {
