@@ -25,6 +25,9 @@ export const DayDisplayComponent = (props) => {
     todayRecommendedMeal,
     setLoading,
     navigation,
+    activeChallengeUserData,
+    phaseDefaultTags,
+    challengeRecipe,
   } = props
 
   return (
@@ -59,6 +62,11 @@ export const DayDisplayComponent = (props) => {
           setLoading={setLoading}
           navigation={navigation}
           showRC={showRC}
+          activeChallengeUserData={activeChallengeUserData}
+          phaseDefaultTags={phaseDefaultTags}
+          challengeRecipe={challengeRecipe}
+          activeChallengeData={activeChallengeData}
+          currentChallengeDay={currentChallengeDay}
       />
     </ScrollView>
   );

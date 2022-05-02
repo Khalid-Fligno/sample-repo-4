@@ -1,20 +1,24 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import { View } from "react-native";
+import { 
+  View, 
+  Text,
+  StyleSheet
+} from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import MealCarousel from "./Carousels/MealCarousel";
 
-const TodayMealsList = (props) => {
+export const TodayMealsList = (props) => {
   const {
-    data,
     recipe,
-    todayRecommendedRecipe,
     favoriteRecipe,
+    todayRecommendedRecipe,
+    data,
     onPress,
-    filterPress,
+    filterPress
   } = props;
+  // console.log('favoriteRecipe: ', favoriteRecipe)
 
   if (favoriteRecipe === undefined) {
     return (
@@ -175,8 +179,6 @@ const TodayMealsList = (props) => {
     );
   }
 };
-
-export default TodayMealsList;
 
 const styles = StyleSheet.create({
   container: {

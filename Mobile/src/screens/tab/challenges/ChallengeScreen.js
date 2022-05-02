@@ -32,33 +32,33 @@ import { NavigationActions } from "react-navigation";
 
 export const ChallengeScreen = ({ navigation }) => {
   const [CalendarSelectedDate, setCalendarSelectedDate] = useState();
-  const [isSchedule, setIsSchedule] = useState();
-  const [ScheduleData, setScheduleData] = useState();
+  const [isSchedule, setIsSchedule] = useState(false);
+  const [ScheduleData, setScheduleData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [activeChallengeData, setActiveChallengeData] = useState();
-  const [activeChallengeUserData, setActiveChallengeUserData] = useState();
+  const [activeChallengeData, setActiveChallengeData] = useState([]);
+  const [activeChallengeUserData, setActiveChallengeUserData] = useState([]);
   const [todayRcWorkout, setTodayRcWorkout] = useState(undefined);
-  const [currentDay, setCurrentDay] = useState();
+  const [currentDay, setCurrentDay] = useState(null);
   const [showRC, setShowRC] = useState(false)
-  const [phaseData, setPhaseData] = useState();
-  const [phase, setPhase] = useState();
-  const [totalChallengeWorkoutsCompleted, setTotalChallengeWorkoutsCompleted] = useState();
-  const [currentChallengeDay, setCurrentChallengeDay] = useState();
-  const [transformLevel, setTransformLevel] = useState();
+  const [phaseData, setPhaseData] = useState(null);
+  const [phase, setPhase] = useState([]);
+  const [totalChallengeWorkoutsCompleted, setTotalChallengeWorkoutsCompleted] = useState(null);
+  const [currentChallengeDay, setCurrentChallengeDay] = useState(null);
+  const [transformLevel, setTransformLevel] = useState(undefined);
   const [loadingExercises, setLoadingExercises] = useState()
   const [totalToDownload, setTotalToDownload] = useState()
   const [newWorkoutParams, setNewWorkoutParams] = useState()
-  const [initialBurpeeTestCompleted, setInitialBurpeeTestCompleted] = useState()
-  const [completeCha, setCompleteCha] = useState()
-  const [todayRecommendedRecipe, setTodayRecommendedRecipe] = useState()
-  const [todayRecommendedMeal, setTodayRecommendedMeal] = useState()
-  const [challengeMealsFilterList, setChallengeMealsFilterList] = useState()
-  const [phaseDefaultTags, setPhaseDefaultTags] = useState()
-  const [skipped, setSkipped] = useState()
-  const [isSettingVisible, setIsSettingVisible] = useState()
-  const [AllRecipe, setAllRecipe] = useState()
-  const [challengeRecipe, setChallengeRecipe] = useState()
-  const [favoriteRecipe, setFavoriteRecipe] = useState()
+  const [initialBurpeeTestCompleted, setInitialBurpeeTestCompleted] = useState(false)
+  const [completeCha, setCompleteCha] = useState(false)
+  const [todayRecommendedRecipe, setTodayRecommendedRecipe] = useState([])
+  const [todayRecommendedMeal, setTodayRecommendedMeal] = useState([])
+  const [challengeMealsFilterList, setChallengeMealsFilterList] = useState([])
+  const [phaseDefaultTags, setPhaseDefaultTags] = useState(undefined)
+  const [skipped, setSkipped] = useState(false)
+  const [isSettingVisible, setIsSettingVisible] = useState(false)
+  const [AllRecipe, setAllRecipe] = useState([])
+  const [challengeRecipe, setChallengeRecipe] = useState([])
+  const [favoriteRecipe, setFavoriteRecipe] = useState([])
   const calendarStrip = useRef(null)
 
   const fetchUserAndChallengeData = async () => {
@@ -116,23 +116,26 @@ export const ChallengeScreen = ({ navigation }) => {
     if (userRef || challengeRef) {
       const getInitialBurpeeTestCompleted = userRef?.initialBurpeeTestCompleted ?? false
       const documents = challengeRef.docs.map((doc) => doc.data());
+      const ids = {
+        level_1: "88969d13-fd11-4fde-966e-df1270fb97dd",
+        level_2: "7798f53c-f613-435d-b94b-b67f1f43b51b",
+        level_3: "0d48d056-2623-4201-b25a-3f1d78083dba",
+      }
       const level_1 = documents.filter((res) => {
-        if (res.id === "88969d13-fd11-4fde-966e-df1270fb97dd") {
+        if (res.id === ids.level_1) {
           return res.id;
         }
       });
       const level_2 = documents.filter((res) => {
-        if (res.id === "7798f53c-f613-435d-b94b-b67f1f43b51b") {
+        if (res.id === ids.level_2) {
           return res.id;
         }
       });
-
       const level_3 = documents.filter((res) => {
-        if (res.id === "0d48d056-2623-4201-b25a-3f1d78083dba") {
+        if (res.id === ids.level_3) {
           return res.id;
         }
       });
-
       const challengeLevel = [
         {
           level1: level_1,
@@ -217,6 +220,93 @@ export const ChallengeScreen = ({ navigation }) => {
     }
   };
 
+  const getFavoriteRcipe = async (
+    activeChallengeUserData,
+    currentDay
+  ) => {
+    const faveRecipe = activeChallengeUserData?.faveRecipe
+    let recipe = [];
+    let breakfastId = [];
+    let lunchId = [];
+    let dinnerId = [];
+    let snackId = [];
+    let drinkId = [];
+    let preworkoutId = [];
+    let treatsId = [];
+
+    const currentChallengeDay = getCurrentChallengeDay(
+      activeChallengeUserData.startDate,
+      currentDay
+    );
+
+    try {
+      faveRecipe.forEach((res) => {
+
+        if (res.day === currentChallengeDay) {
+          if (res.recipeMeal.breakfast) {
+            recipe.push(res.recipeMeal.breakfast);
+            breakfastId.push(res.recipeMeal.breakfast);
+          }
+          if (res.recipeMeal.lunch) {
+            recipe.push(res.recipeMeal.lunch);
+            lunchId.push(res.recipeMeal.lunch);
+          }
+          if (res.recipeMeal.dinner) {
+            recipe.push(res.recipeMeal.dinner);
+            dinnerId.push(res.recipeMeal.dinner);
+          }
+          if (res.recipeMeal.snack) {
+            recipe.push(res.recipeMeal.snack);
+            snackId.push(res.recipeMeal.snack);
+          }
+          if (res.recipeMeal.drink) {
+            recipe.push(res.recipeMeal.drink);
+            drinkId.push(res.recipeMeal.drink);
+          }
+          if (res.recipeMeal.preworkout) {
+            recipe.push(res.recipeMeal.preworkout);
+            preworkoutId.push(res.recipeMeal.preworkout);
+          }
+          if (res.recipeMeal.treats) {
+            recipe.push(res.recipeMeal.treats);
+            treatsId.push(res.recipeMeal.treats);
+          }
+        }
+      });
+    } catch (err) {
+      console.log('Error faveRecipe: ', err)
+    }
+
+    const recipeList = await convertRecipeData(recipe)
+
+    if (recipeList) {
+      const recipes = recipeList.recipeResult;
+      const breakfastList = recipes.filter((res) => res.id === breakfastId[0]);
+      const lunchList = recipes.filter((res) => res.id === lunchId[0]);
+      const dinnerList = recipes.filter((res) => res.id === dinnerId[0]);
+      const snackList = recipes.filter((res) => res.id === snackId[0]);
+      const drinkList = recipes.filter((res) => res.id === drinkId[0]);
+      const preworkoutList = recipes.filter((res) => res.id === preworkoutId[0]);
+      const treatsList = recipes.filter((res) => res.id === treatsId[0]);
+      const recommendedMeal = [
+        {
+          breakfast: breakfastList,
+          lunch: lunchList,
+          dinner: dinnerList,
+          snack: snackList,
+          drink: drinkList,
+          preworkout: preworkoutList,
+          treats: treatsList,
+        },
+      ];
+
+      return {
+        recommendedMeal
+      }
+    }
+
+  }
+
   const fetchActiveChallengeData = async (
     activeChallengeUserData,
     currentDay
@@ -232,86 +322,12 @@ export const ChallengeScreen = ({ navigation }) => {
         activeChallengeUserData
       ) {
         const getSkipped = activeChallengeUserData.onBoardingInfo.skipped ?? false
-        const faveRecipe = activeChallengeUserData?.faveRecipe
-        let recipe = [];
-        let breakfastId = [];
-        let lunchId = [];
-        let dinnerId = [];
-        let snackId = [];
-        let drinkId = [];
-        let preworkoutId = [];
-        let treatsId = [];
-
-        const currentChallengeDay = getCurrentChallengeDay(
-          activeChallengeUserData.startDate,
+        const favoriteRecipe = await getFavoriteRcipe(
+          activeChallengeUserData,
           currentDay
-        );
+        )
 
-        if (faveRecipe) {
-          faveRecipe.forEach((res) => {
-            try {
-              if (res.day === currentChallengeDay) {
-                if (res.recipeMeal.breakfast) {
-                  recipe.push(res.recipeMeal.breakfast);
-                  breakfastId.push(res.recipeMeal.breakfast);
-                }
-                if (res.recipeMeal.lunch) {
-                  recipe.push(res.recipeMeal.lunch);
-                  lunchId.push(res.recipeMeal.lunch);
-                }
-                if (res.recipeMeal.dinner) {
-                  recipe.push(res.recipeMeal.dinner);
-                  dinnerId.push(res.recipeMeal.dinner);
-                }
-                if (res.recipeMeal.snack) {
-                  recipe.push(res.recipeMeal.snack);
-                  snackId.push(res.recipeMeal.snack);
-                }
-                if (res.recipeMeal.drink) {
-                  recipe.push(res.recipeMeal.drink);
-                  drinkId.push(res.recipeMeal.drink);
-                }
-                if (res.recipeMeal.preworkout) {
-                  recipe.push(res.recipeMeal.preworkout);
-                  preworkoutId.push(res.recipeMeal.preworkout);
-                }
-                if (res.recipeMeal.treats) {
-                  recipe.push(res.recipeMeal.treats);
-                  treatsId.push(res.recipeMeal.treats);
-                }
-              }
-            } catch (err) {
-              console.log('Error recipe: ', err)
-            }
-          });
-        }
-
-        convertRecipeData(recipe).then((res) => {
-          const resx = res.recipeResult;
-
-          const breakfastList = resx.filter((res) => res.id === breakfastId[0]);
-          const lunchList = resx.filter((res) => res.id === lunchId[0]);
-          const dinnerList = resx.filter((res) => res.id === dinnerId[0]);
-          const snackList = resx.filter((res) => res.id === snackId[0]);
-          const drinkList = resx.filter((res) => res.id === drinkId[0]);
-          const preworkoutList = resx.filter((res) => res.id === preworkoutId[0]);
-          const treatsList = resx.filter((res) => res.id === treatsId[0]);
-
-          const recommendedMeal = [
-            {
-              breakfast: breakfastList,
-              lunch: lunchList,
-              dinner: dinnerList,
-              snack: snackList,
-              drink: drinkList,
-              preworkout: preworkoutList,
-              treats: treatsList,
-            },
-          ];
-
-          setFavoriteRecipe(recommendedMeal)
-        });
-
+        setFavoriteRecipe(favoriteRecipe.recommendedMeal[0])
         setActiveChallengeUserData(activeChallengeUserData)
         setActiveChallengeData(getActiveChallenge)
         fetchCalendarEntries(
@@ -357,17 +373,6 @@ export const ChallengeScreen = ({ navigation }) => {
           return null
         }
         setPhaseData(phaseData)
-        //TODO :calculate the workout completed till selected date
-        const totalChallengeWorkoutsCompleted =
-          getTotalChallengeWorkoutsCompleted(
-            activeChallengeUserData,
-            stringDate
-          );
-
-        if (!totalChallengeWorkoutsCompleted) {
-          return null
-        }
-        setTotalChallengeWorkoutsCompleted(totalChallengeWorkoutsCompleted)
 
         //TODO get recommended workout here
         const todayRcWorkout = (
@@ -396,6 +401,18 @@ export const ChallengeScreen = ({ navigation }) => {
           setChallengeMealsFilterList(getTodayRecommendedMeals.challengeMealsFilterList)
           setPhaseDefaultTags(getTodayRecommendedMeals.phaseDefaultTags)
         }
+
+        //TODO :calculate the workout completed till selected date
+        const totalChallengeWorkoutsCompleted =
+          getTotalChallengeWorkoutsCompleted(
+            activeChallengeUserData,
+            stringDate
+          );
+
+        if (!totalChallengeWorkoutsCompleted) {
+          return null
+        }
+        setTotalChallengeWorkoutsCompleted(totalChallengeWorkoutsCompleted)
       }
     } else {
       setLoading(false)
@@ -531,10 +548,6 @@ export const ChallengeScreen = ({ navigation }) => {
       stringDate
     );
 
-    if (!currentChallengeDay) {
-      console.log('Error currentChallengeDay')
-    }
-
     setCurrentChallengeDay(currentChallengeDay)
     console.log('currentChallengeDay: ', currentChallengeDay)
 
@@ -554,22 +567,6 @@ export const ChallengeScreen = ({ navigation }) => {
 
     if (!isCurrentChallengeDayAdded) {
       console.log('Error isCurrentChallengeDayAdded')
-    }
-
-    const isBetween = moment(stringDate).isBetween(
-      activeChallengeUserData.startDate,
-      activeChallengeUserData.endDate,
-      undefined,
-      "[]"
-    );
-
-    if (
-      calendarStrip.current &&
-      isBetween
-    ) {
-      setShowRC(true); 
-    } else {
-      setShowRC(false);
     }
 
     //TODO:check the active challenge cndtns
@@ -611,6 +608,22 @@ export const ChallengeScreen = ({ navigation }) => {
           setLoading(false)
         }
       }
+    }
+
+    const isBetween = moment(stringDate).isBetween(
+      activeChallengeUserData.startDate,
+      activeChallengeUserData.endDate,
+      undefined,
+      "[]"
+    );
+
+    if (
+      calendarStrip.current &&
+      isBetween
+    ) {
+      setShowRC(true);
+    } else {
+      setShowRC(false);
     }
   }
 
@@ -757,10 +770,10 @@ export const ChallengeScreen = ({ navigation }) => {
   }, [])
 
 
-  console.log('ScheduleData: ', ScheduleData)
-  console.log('isSchedule: ', isSchedule)
-  console.log('showRC: ', showRC)
-  console.log('loading: ', loading)
+  // console.log('ScheduleData: ', ScheduleData)
+  // console.log('isSchedule: ', isSchedule)
+  // console.log('showRC: ', showRC)
+  // console.log('loading: ', loading)
 
   return (
     <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
@@ -810,6 +823,9 @@ export const ChallengeScreen = ({ navigation }) => {
         todayRecommendedMeal={todayRecommendedMeal}
         setLoading={setLoading}
         navigation={navigation}
+        activeChallengeUserData={activeChallengeUserData}
+        phaseDefaultTags={phaseDefaultTags}
+        challengeRecipe={challengeRecipe}
       />
       <SettingComponent
         isSettingVisible={isSettingVisible}

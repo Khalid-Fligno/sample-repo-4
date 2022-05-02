@@ -2,7 +2,7 @@ import React from "react";
 import { Alert, Text } from "react-native";
 import colors from "../../../styles/colors";
 import fonts from "../../../styles/fonts";
-import TodayMealsList from "../../Calendar/TodayMealsList";
+import { TodayMealsList } from "../../Calendar/TodayMealsList";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import * as FileSystem from "expo-file-system";
 
@@ -14,8 +14,17 @@ export const MealListComponent = (props) => {
     todayRecommendedMeal,
     setLoading,
     navigation,
-    showRC
+    showRC,
+    activeChallengeUserData,
+    phaseDefaultTags,
+    challengeRecipe,
+    activeChallengeData,
+    currentChallengeDay
   } = props
+
+  const handleBack = () => {
+    navigation.pop();
+  };
 
   const goToRecipe = async (recipeData) => {
     setLoading(true)
@@ -44,74 +53,66 @@ export const MealListComponent = (props) => {
   }
 
   const getToFilter = (data, data1, data2, title) => {
-    console.log('Filter Page')
-    // const {
-    //   challengeRecipe,
-    //   activeChallengeData,
-    //   phaseDefaultTags,
-    //   activeChallengeUserData,
-    // } = this.state;
+    const datas = activeChallengeUserData.faveRecipe;
 
-    // const datas = activeChallengeUserData.faveRecipe;
+    if (datas === undefined) {
+      Alert.alert("New Feature", "Favourite Recipe feature is now available.", [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: async () => {
+            const number = 60;
+            const currentNumber = [];
 
-    // if (datas === undefined) {
-    //   Alert.alert("New Feature", "Favourite Recipe feature is now available.", [
-    //     {
-    //       text: "Cancel",
-    //       style: "cancel",
-    //     },
-    //     {
-    //       text: "OK",
-    //       onPress: async () => {
-    //         const number = 60;
-    //         const currentNumber = [];
+            for (let i = 1; i <= number; i++) {
+              const data = {
+                day: i,
+                recipeMeal: {
+                  breakfast: "",
+                  lunch: "",
+                  dinner: "",
+                  snack: "",
+                  drink: "",
+                  preworkout: "",
+                  treats: "",
+                },
+              };
+              currentNumber.push(data);
+            }
 
-    //         for (let i = 1; i <= number; i++) {
-    //           const data = {
-    //             day: i,
-    //             recipeMeal: {
-    //               breakfast: "",
-    //               lunch: "",
-    //               dinner: "",
-    //               snack: "",
-    //               drink: "",
-    //               preworkout: "",
-    //               treats: "",
-    //             },
-    //           };
-    //           currentNumber.push(data);
-    //         }
+            const id = activeChallengeUserData.id;
+            const uid = await AsyncStorage.getItem("uid");
+            const activeChallengeUserRef = db
+              .collection("users")
+              .doc(uid)
+              .collection("challenges")
+              .doc(id);
 
-    //         const id = this.state.activeChallengeUserData.id;
-    //         const uid = await AsyncStorage.getItem("uid");
-    //         const activeChallengeUserRef = db
-    //           .collection("users")
-    //           .doc(uid)
-    //           .collection("challenges")
-    //           .doc(id);
+            activeChallengeUserRef.set(
+              { faveRecipe: currentNumber },
+              { merge: true }
+            );
 
-    //         activeChallengeUserRef.set(
-    //           { faveRecipe: currentNumber },
-    //           { merge: true }
-    //         );
+            handleBack();
+          },
+        },
+      ]);
+    }
 
-    //         this.handleBack();
-    //       },
-    //     },
-    //   ]);
-    // }
-
-    // this.props.navigation.navigate("FilterRecipe", {
-    //   currentChallengeDay: this.currentChallengeDay,
-    //   activeChallengeUserData: activeChallengeUserData,
-    //   phaseDefaultTags: phaseDefaultTags,
-    //   defaultLevelTags: activeChallengeData.levelTags,
-    //   todayRecommendedRecipe: data2,
-    //   challengeAllRecipe: challengeRecipe[0],
-    //   recipes: data,
-    //   title: title,
-    //   allRecipeData: data1,
-    // });
+    navigation.navigate("FilterRecipe", {
+      currentChallengeDay: currentChallengeDay,
+      activeChallengeUserData: activeChallengeUserData,
+      phaseDefaultTags: phaseDefaultTags,
+      defaultLevelTags: activeChallengeData.levelTags,
+      todayRecommendedRecipe: data2,
+      challengeAllRecipe: challengeRecipe[0],
+      recipes: data,
+      title: title,
+      allRecipeData: data1,
+    });
   }
 
   return showRC && (

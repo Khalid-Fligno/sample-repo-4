@@ -101,17 +101,17 @@ export const convertRecipeData = async (recipeId) => {
   const recipeResult = [];
   const recipeRef = db.collection("recipes");
   const snapshot = await recipeRef.get();
-  if (recipeId) {
-    if (snapshot.empty) {
-      return null;
-    } else {
-      snapshot.forEach((res) => {
-        if (recipeId.includes(res.data().id)) {
-          recipeResult.push(res.data());
-        }
-      });
-    }
+
+  if (snapshot.empty) {
+    return null;
+  } else {
+    snapshot.forEach((res) => {
+      if (recipeId.includes(res.data().id)) {
+        recipeResult.push(res.data());
+      }
+    });
   }
+
   return {
     recipeResult,
   };
