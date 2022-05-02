@@ -64,19 +64,7 @@ export const ChallengeScreen = ({ navigation }) => {
   const fetchUserAndChallengeData = async () => {
     // start loading
     setLoading(true)
-    const version = await checkVersion();
     const uid = await useStorage.getItem("uid");
-    const data = {
-      AppVersion:
-        Platform.OS === "ios"
-          ? String(version.version)
-          : String(getVersion()),
-    }
-    const setUserRef = await addDocument(
-      COLLECTION_NAMES.USERS,
-      uid,
-      data
-    )
     const userRef = await getDocument(
       COLLECTION_NAMES.USERS,
       uid
@@ -85,69 +73,21 @@ export const ChallengeScreen = ({ navigation }) => {
       COLLECTION_NAMES.CHALLENGES,
     )
 
-    if (!setUserRef) {
-      console.log('Error setUserRef')
-    }
-
-    if (!userRef?.weeklyTargets) {
-      const data = {
-        weeklyTargets: {
-          resistanceWeeklyComplete: 0,
-          hiitWeeklyComplete: 0,
-          strength: 0,
-          interval: 0,
-          circuit: 0,
-          currentWeekStartDate: moment()
-            .startOf("week")
-            .format("YYYY-MM-DD"),
-        },
-      }
-      const setUserWeeklyTarget = await addDocument(
-        COLLECTION_NAMES.USERS,
-        userRef.id,
-        data
-      )
-
-      if (!setUserWeeklyTarget) {
-        console.log('Error setUserWeeklyTarget')
-      }
-    }
-
     if (userRef || challengeRef) {
       const getInitialBurpeeTestCompleted = userRef?.initialBurpeeTestCompleted ?? false
-      const documents = challengeRef.docs.map((doc) => doc.data());
-      const ids = {
-        level_1: "88969d13-fd11-4fde-966e-df1270fb97dd",
-        level_2: "7798f53c-f613-435d-b94b-b67f1f43b51b",
-        level_3: "0d48d056-2623-4201-b25a-3f1d78083dba",
+      const isWeeklyTargetsAdded = await setWeeklyTargets(userRef)
+      const challengeData = await challengesData(challengeRef)
+      const isPlatformDataAdded = setPlatformData(userRef)
+
+      if (
+        !isWeeklyTargetsAdded &&
+        !isPlatformDataAdded
+      ) {
+        console.log("Error isWeeklyTargetsAdded")
       }
-      const level_1 = documents.filter((res) => {
-        if (res.id === ids.level_1) {
-          return res.id;
-        }
-      });
-      const level_2 = documents.filter((res) => {
-        if (res.id === ids.level_2) {
-          return res.id;
-        }
-      });
-      const level_3 = documents.filter((res) => {
-        if (res.id === ids.level_3) {
-          return res.id;
-        }
-      });
-      const challengeLevel = [
-        {
-          level1: level_1,
-          level2: level_2,
-          level3: level_3,
-        },
-      ];
 
-      const getRecipeData = await fetchRecipeData(challengeLevel)
-
-      setAllRecipe(getRecipeData.recommendedRecipe[0])
-      setChallengeRecipe(challengeLevel[0])
+      setAllRecipe(challengeData.challenges.recommendedRecipe[0])
+      setChallengeRecipe(challengeData.challengeLevel[0])
       setInitialBurpeeTestCompleted(getInitialBurpeeTestCompleted)
       fetchActiveChallengeUserData(userRef.id)
     }
@@ -341,6 +281,85 @@ export const ChallengeScreen = ({ navigation }) => {
       console.log("Fetch active challenge data error! ", err);
     }
   };
+
+  const challengesData = async (challengeRef) => {
+    const documents = challengeRef.docs.map((doc) => doc.data());
+    const ids = {
+      level_1: "88969d13-fd11-4fde-966e-df1270fb97dd",
+      level_2: "7798f53c-f613-435d-b94b-b67f1f43b51b",
+      level_3: "0d48d056-2623-4201-b25a-3f1d78083dba",
+    }
+    const level_1 = documents.filter((res) => {
+      if (res.id === ids.level_1) {
+        return res.id;
+      }
+    });
+    const level_2 = documents.filter((res) => {
+      if (res.id === ids.level_2) {
+        return res.id;
+      }
+    });
+    const level_3 = documents.filter((res) => {
+      if (res.id === ids.level_3) {
+        return res.id;
+      }
+    });
+    const challengeLevel = [
+      {
+        level1: level_1,
+        level2: level_2,
+        level3: level_3,
+      },
+    ];
+
+    const challenges = await fetchRecipeData(challengeLevel)
+
+    return {
+      challenges,
+      challengeLevel
+    }
+  }
+
+  const setWeeklyTargets = async (userRef) => {
+    if (!userRef?.weeklyTargets) {
+      const data = {
+        weeklyTargets: {
+          resistanceWeeklyComplete: 0,
+          hiitWeeklyComplete: 0,
+          strength: 0,
+          interval: 0,
+          circuit: 0,
+          currentWeekStartDate: moment()
+            .startOf("week")
+            .format("YYYY-MM-DD"),
+        },
+      }
+
+      const isWeeklyTargetsAdded = await addDocument(
+        COLLECTION_NAMES.USERS,
+        userRef.id,
+        data
+      )
+
+      return isWeeklyTargetsAdded
+    }
+  }
+
+  const setPlatformData = async (userRef) => {
+    const version = await checkVersion();
+    const data = {
+      AppVersion:
+        Platform.OS === "ios"
+          ? String(version.version)
+          : String(getVersion()),
+    }
+
+    return await addDocument(
+      COLLECTION_NAMES.USERS,
+      userRef.id,
+      data
+    )
+  }
 
   const getCurrentPhaseInfo = async (
     activeChallengeUserData,
