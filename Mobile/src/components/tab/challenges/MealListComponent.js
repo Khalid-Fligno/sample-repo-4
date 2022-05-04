@@ -108,7 +108,7 @@ export const MealListComponent = (props) => {
       phaseDefaultTags: phaseDefaultTags,
       defaultLevelTags: activeChallengeData.levelTags,
       todayRecommendedRecipe: data2,
-      challengeAllRecipe: challengeRecipe[0],
+      challengeAllRecipe: challengeRecipe,
       recipes: data,
       title: title,
       allRecipeData: data1,

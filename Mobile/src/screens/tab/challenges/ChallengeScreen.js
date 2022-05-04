@@ -61,41 +61,52 @@ export const ChallengeScreen = ({ navigation }) => {
   const [favoriteRecipe, setFavoriteRecipe] = useState([])
   const calendarStrip = useRef(null)
 
-  const fetchUserAndChallengeData = async () => {
+  const fetchUserData = async () => {
     // start loading
     setLoading(true)
     const uid = await useStorage.getItem("uid");
-    const userRef = await getDocument(
-      COLLECTION_NAMES.USERS,
-      uid
-    )
-    const challengeRef = await getCollection(
-      COLLECTION_NAMES.CHALLENGES,
-    )
+    try {
+      const user = await getDocument(
+        COLLECTION_NAMES.USERS,
+        uid
+      )
 
-    if (userRef || challengeRef) {
-      const getInitialBurpeeTestCompleted = userRef?.initialBurpeeTestCompleted ?? false
-      const isWeeklyTargetsAdded = await setWeeklyTargets(userRef)
-      const challengeData = await challengesData(challengeRef)
-      const isPlatformDataAdded = setPlatformData(userRef)
-
-      if (
-        !isWeeklyTargetsAdded &&
-        !isPlatformDataAdded
-      ) {
-        console.log("Error isWeeklyTargetsAdded")
+      if (!user) {
+        throw new Error("Incomplete data");
       }
 
-      setAllRecipe(challengeData.challenges.recommendedRecipe[0])
-      setChallengeRecipe(challengeData.challengeLevel[0])
+      const getInitialBurpeeTestCompleted = user?.initialBurpeeTestCompleted ?? false
+      await setWeeklyTargets(user)
+      await setPlatformData(user)
+      await fetchActiveChallengeUserData(user.id)
       setInitialBurpeeTestCompleted(getInitialBurpeeTestCompleted)
-      fetchActiveChallengeUserData(userRef.id)
+    } catch (err) {
+      console.log("Error fetch user: ", err)
+    }
+  }
+
+  // this func need to transfer in filterRecipeScreen
+  const fetchChallengeData = async () => {
+    try {
+      const challengeRef = await getCollection(
+        COLLECTION_NAMES.CHALLENGES,
+      )
+
+      if (!challengeRef) {
+        throw new Error("Incomplete data");
+      }
+
+      const challengesData = await getChallengesData(challengeRef)
+
+      setAllRecipe(challengesData.challenges.recommendedRecipe[0])
+      setChallengeRecipe(challengesData.challengeLevel[0])
+    } catch (err) {
+      console.log("Error fetch challenge: ", err)
     }
   }
 
   const fetchActiveChallengeUserData = async (uid) => {
     try {
-      const list = [];
       const getUserChallengeActive = await getSpecificSubCollection(
         COLLECTION_NAMES.USERS,
         COLLECTION_NAMES.CHALLENGES,
@@ -103,62 +114,64 @@ export const ChallengeScreen = ({ navigation }) => {
         uid,
         "Active"
       )
+      let list = [];
 
       if (!getUserChallengeActive) {
-        console.log('Error getUserChallengeActive')
-        return undefined
+        throw new Error("Incomplete data");
       }
 
       getUserChallengeActive.forEach((doc) => {
         list.push(doc.data());
       })
 
-      const activeChallengeEndDate = list[0] ? list[0].endDate : null;
-      const currentDate = moment().format("YYYY-MM-DD");
-      const isCompleted = moment(currentDate).isSameOrAfter(
-        activeChallengeEndDate
-      );
-
-      if (list[0] && !isCompleted) {
-        fetchActiveChallengeData(list[0], currentDate);
-      } else {
-        if (isCompleted) {
-          const newData = createUserChallengeData(
-            { ...list[0], status: "InActive" },
-            new Date()
-          );
-          const challengeRef = await addSubDocument(
-            COLLECTION_NAMES.USERS,
-            COLLECTION_NAMES.CHALLENGES,
-            uid,
-            list[0].id,
-            newData
-          )
-
-          if (!challengeRef) {
-            console.log('Error challengeRef')
-          }
-
-          setCompleteCha(isCompleted)
-          navigation.navigate("ChallengeSubscription", {
-            completedChallenge: true,
-          });
-          Alert.alert(
-            "Congratulations!",
-            "You have completed your challenge",
-            [{ text: "OK", onPress: () => { } }],
-            { cancelable: false }
-          );
-        } else {
-          setActiveChallengeUserData(undefined)
-          setLoading(false)
-        }
-      }
+      await makeChallengeCompleted(list)
     } catch (err) {
       setLoading(false)
-      console.log(err);
+      console.log("Error fetch active user challenge: ", err);
     }
   };
+
+  const makeChallengeCompleted = async (list) => {
+    const activeChallengeEndDate = list[0] ? list[0].endDate : null;
+    const currentDate = moment().format("YYYY-MM-DD");
+    const isCompleted = moment(currentDate).isSameOrAfter(
+      activeChallengeEndDate
+    );
+
+    if (list[0] && !isCompleted) {
+      await fetchActiveChallengeData(list[0], currentDate);
+    } else {
+      if (isCompleted) {
+        const newData = createUserChallengeData(
+          { ...list[0], status: "InActive" },
+          new Date()
+        );
+
+        await addSubDocument(
+          COLLECTION_NAMES.USERS,
+          COLLECTION_NAMES.CHALLENGES,
+          uid,
+          list[0].id,
+          newData
+        )
+
+        setCompleteCha(isCompleted)
+        navigation.navigate("ChallengeSubscription", {
+          completedChallenge: true,
+        });
+
+        Alert.alert(
+          "Congratulations!",
+          "You have completed your challenge",
+          [{ text: "OK", onPress: () => { } }],
+          { cancelable: false }
+        );
+      } else {
+        setActiveChallengeUserData(undefined)
+        setLoading(false)
+      }
+    }
+  }
 
   const getFavoriteRcipe = async (
     activeChallengeUserData,
@@ -257,32 +270,31 @@ export const ChallengeScreen = ({ navigation }) => {
         activeChallengeUserData.id
       )
 
-      if (
-        getActiveChallenge &&
-        activeChallengeUserData
-      ) {
-        const getSkipped = activeChallengeUserData.onBoardingInfo.skipped ?? false
-        const favoriteRecipe = await getFavoriteRcipe(
-          activeChallengeUserData,
-          currentDay
-        )
-
-        setFavoriteRecipe(favoriteRecipe.recommendedMeal[0])
-        setActiveChallengeUserData(activeChallengeUserData)
-        setActiveChallengeData(getActiveChallenge)
-        fetchCalendarEntries(
-          activeChallengeUserData,
-          getActiveChallenge
-        )
-        setSkipped(getSkipped)
+      if (!getActiveChallenge) {
+        throw new Error("Incomplete Data")
       }
+
+      const getSkipped = activeChallengeUserData.onBoardingInfo.skipped ?? false
+      const favoriteRecipe = await getFavoriteRcipe(
+        activeChallengeUserData,
+        currentDay
+      )
+
+      setFavoriteRecipe(favoriteRecipe.recommendedMeal[0])
+      setActiveChallengeUserData(activeChallengeUserData)
+      setActiveChallengeData(getActiveChallenge)
+      setSkipped(getSkipped)
+      fetchCalendarEntries(
+        activeChallengeUserData,
+        getActiveChallenge
+      )
     } catch (err) {
       setLoading(false)
-      console.log("Fetch active challenge data error! ", err);
+      console.log("Error fetch active challenge: ", err);
     }
   };
 
-  const challengesData = async (challengeRef) => {
+  const getChallengesData = async (challengeRef) => {
     const documents = challengeRef.docs.map((doc) => doc.data());
     const ids = {
       level_1: "88969d13-fd11-4fde-966e-df1270fb97dd",
@@ -320,8 +332,8 @@ export const ChallengeScreen = ({ navigation }) => {
     }
   }
 
-  const setWeeklyTargets = async (userRef) => {
-    if (!userRef?.weeklyTargets) {
+  const setWeeklyTargets = async (user) => {
+    if (!user?.weeklyTargets) {
       const data = {
         weeklyTargets: {
           resistanceWeeklyComplete: 0,
@@ -335,17 +347,15 @@ export const ChallengeScreen = ({ navigation }) => {
         },
       }
 
-      const isWeeklyTargetsAdded = await addDocument(
+      return await addDocument(
         COLLECTION_NAMES.USERS,
-        userRef.id,
+        user.id,
         data
       )
-
-      return isWeeklyTargetsAdded
     }
   }
 
-  const setPlatformData = async (userRef) => {
+  const setPlatformData = async (user) => {
     const version = await checkVersion();
     const data = {
       AppVersion:
@@ -356,7 +366,7 @@ export const ChallengeScreen = ({ navigation }) => {
 
     return await addDocument(
       COLLECTION_NAMES.USERS,
-      userRef.id,
+      user.id,
       data
     )
   }
@@ -366,79 +376,81 @@ export const ChallengeScreen = ({ navigation }) => {
     activeChallengeData,
     stringDate
   ) => {
+    const test = activeChallengeUserData.startDate;
+    const transformLevel = activeChallengeUserData.displayName;
+    setTransformLevel(transformLevel)
 
-    if (activeChallengeUserData && activeChallengeData) {
-      const test = activeChallengeUserData.startDate;
-      const transformLevel = activeChallengeUserData.displayName;
-      setTransformLevel(transformLevel)
+    if (stringDate >= test) {
+      setLoading(true)
+    }
 
-      if (stringDate >= test) {
-        setLoading(true)
+    const phase = getCurrentPhase(
+      activeChallengeUserData.phases,
+      stringDate
+    );
+
+    if (phase) {
+      setPhase(phase)
+
+      //TODO :fetch the current phase data from Challenges collection
+      const phaseData = activeChallengeData.phases.filter(
+        (res) => res.name === phase.name ? res : null
+      )[0];
+
+      if (!phaseData) {
+        console.log("Error get phase data")
+      }
+      setPhaseData(phaseData)
+
+      //TODO get recommended workout here
+      const todayRcWorkout = (
+        await getTodayRecommendedWorkout(
+          activeChallengeData.workouts,
+          activeChallengeUserData,
+          stringDate
+        )
+      )[0];
+
+      // TODO getToday one recommended meal randomly
+      const getTodayRecommendedMeals = await getTodayRecommendedMeal(
+        phaseData, activeChallengeData
+      )
+
+      if (
+        todayRcWorkout &&
+        getTodayRecommendedMeals
+      ) {
+        setLoading(false)
+        setTodayRcWorkout(todayRcWorkout);
+        setTodayRecommendedRecipe(getTodayRecommendedMeals.recommendedRecipe[0])
+        setTodayRecommendedMeal(getTodayRecommendedMeals.recommendedMeal[0])
+        setChallengeMealsFilterList(getTodayRecommendedMeals.challengeMealsFilterList)
+        setPhaseDefaultTags(getTodayRecommendedMeals.phaseDefaultTags)
+      } else {
+        setLoading(false)
+        setTodayRcWorkout(undefined);
+        setTodayRecommendedRecipe(getTodayRecommendedMeals.recommendedRecipe[0])
+        setTodayRecommendedMeal(getTodayRecommendedMeals.recommendedMeal[0])
+        setChallengeMealsFilterList(getTodayRecommendedMeals.challengeMealsFilterList)
+        setPhaseDefaultTags(getTodayRecommendedMeals.phaseDefaultTags)
       }
 
-      const phase = getCurrentPhase(
-        activeChallengeUserData.phases,
-        stringDate
-      );
+      //TODO :calculate the workout completed till selected date
+      const totalChallengeWorkoutsCompleted =
+        getTotalChallengeWorkoutsCompleted(
+          activeChallengeUserData,
+          stringDate
+        );
 
-      if (phase) {
-        setPhase(phase)
-        //TODO :fetch the current phase data from Challenges collection
-        const phaseData = activeChallengeData.phases.filter(
-          (res) => res.name === phase.name ? res : null
-        )[0];
-
-        if (!phaseData) {
-          return null
-        }
-        setPhaseData(phaseData)
-
-        //TODO get recommended workout here
-        const todayRcWorkout = (
-          await getTodayRecommendedWorkout(
-            activeChallengeData.workouts,
-            activeChallengeUserData,
-            stringDate
-          )
-        )[0];
-
-        // TODO getToday one recommended meal randomly
-        const getTodayRecommendedMeals = await getTodayRecommendedMeal(phaseData, activeChallengeData)
-
-        if (todayRcWorkout && getTodayRecommendedMeals) {
-          setLoading(false)
-          setTodayRcWorkout(todayRcWorkout);
-          setTodayRecommendedRecipe(getTodayRecommendedMeals.recommendedRecipe[0])
-          setTodayRecommendedMeal(getTodayRecommendedMeals.recommendedMeal[0])
-          setChallengeMealsFilterList(getTodayRecommendedMeals.challengeMealsFilterList)
-          setPhaseDefaultTags(getTodayRecommendedMeals.phaseDefaultTags)
-        } else {
-          setLoading(false)
-          setTodayRcWorkout(undefined);
-          setTodayRecommendedRecipe(getTodayRecommendedMeals.recommendedRecipe[0])
-          setTodayRecommendedMeal(getTodayRecommendedMeals.recommendedMeal[0])
-          setChallengeMealsFilterList(getTodayRecommendedMeals.challengeMealsFilterList)
-          setPhaseDefaultTags(getTodayRecommendedMeals.phaseDefaultTags)
-        }
-
-        //TODO :calculate the workout completed till selected date
-        const totalChallengeWorkoutsCompleted =
-          getTotalChallengeWorkoutsCompleted(
-            activeChallengeUserData,
-            stringDate
-          );
-
-        if (!totalChallengeWorkoutsCompleted) {
-          return null
-        }
-        setTotalChallengeWorkoutsCompleted(totalChallengeWorkoutsCompleted)
+      if (!totalChallengeWorkoutsCompleted) {
+        return null
       }
+      setTotalChallengeWorkoutsCompleted(totalChallengeWorkoutsCompleted)
     } else {
       setLoading(false)
-      console.log('Something went wrong please try again')
+      console.log("Error get phase")
     }
   }
-
   const checkScheduleChallenge = async (
     activeChallengeUserData,
     activeChallengeData,
@@ -546,6 +558,7 @@ export const ChallengeScreen = ({ navigation }) => {
     activeChallengeData
   ) => {
     const selectedDate = calendarStrip.current.getSelectedDate();
+
     //Todo :call the function to get the data of current date
     handleDateSelected(
       selectedDate,
@@ -560,23 +573,18 @@ export const ChallengeScreen = ({ navigation }) => {
     activeChallengeData
   ) => {
     const stringDate = date.format("YYYY-MM-DD").toString()
-    setCurrentDay(stringDate)
-
     const currentChallengeDay = getCurrentChallengeDay(
       activeChallengeUserData.startDate,
       stringDate
     );
-
-    setCurrentChallengeDay(currentChallengeDay)
-    console.log('currentChallengeDay: ', currentChallengeDay)
-
     const data = {
       recipes: {
         days: currentChallengeDay
       }
     }
     const uid = await useStorage.getItem("uid");
-    const isCurrentChallengeDayAdded = await addSubDocument(
+
+    await addSubDocument(
       COLLECTION_NAMES.USERS,
       COLLECTION_NAMES.CHALLENGES,
       uid,
@@ -584,8 +592,21 @@ export const ChallengeScreen = ({ navigation }) => {
       data
     )
 
-    if (!isCurrentChallengeDayAdded) {
-      console.log('Error isCurrentChallengeDayAdded')
+    setCurrentDay(stringDate)
+    setCurrentChallengeDay(currentChallengeDay)
+
+    const isBetween = isBetweenDate(
+      activeChallengeUserData,
+      stringDate
+    )
+
+    if (
+      calendarStrip.current &&
+      isBetween
+    ) {
+      setShowRC(true);
+    } else {
+      setShowRC(false);
     }
 
     //TODO:check the active challenge cndtns
@@ -613,12 +634,10 @@ export const ChallengeScreen = ({ navigation }) => {
           stringDate
         );
       } else {
-        const isBetween = moment(stringDate).isBetween(
-          activeChallengeUserData.startDate,
-          activeChallengeUserData.endDate,
-          undefined,
-          "[]"
-        );
+        const isBetween = isBetweenDate(
+          activeChallengeUserData,
+          stringDate
+        )
         if (isBetween) getCurrentPhaseInfo(
           activeChallengeUserData,
           activeChallengeData
@@ -628,7 +647,12 @@ export const ChallengeScreen = ({ navigation }) => {
         }
       }
     }
+  }
 
+  const isBetweenDate = (
+    activeChallengeUserData,
+    stringDate
+  ) => {
     const isBetween = moment(stringDate).isBetween(
       activeChallengeUserData.startDate,
       activeChallengeUserData.endDate,
@@ -636,14 +660,7 @@ export const ChallengeScreen = ({ navigation }) => {
       "[]"
     );
 
-    if (
-      calendarStrip.current &&
-      isBetween
-    ) {
-      setShowRC(true);
-    } else {
-      setShowRC(false);
-    }
+    return isBetween
   }
 
   const loadExercises = async (workoutData) => {
@@ -785,7 +802,8 @@ export const ChallengeScreen = ({ navigation }) => {
   }, [])
 
   useEffect(() => {
-    fetchUserAndChallengeData()
+    fetchUserData()
+    fetchChallengeData()
   }, [])
 
 

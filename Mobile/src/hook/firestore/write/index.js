@@ -9,12 +9,8 @@ export const addDocument = async (
   .collection(collectionName)
   .doc(id)
   .set(data, { merge: true })
-  .then((res) => {
-    return true
-  })
-  .catch((err) => {
-    return false
-  });
+  .then((res) => {})
+  .catch((err) => console.log(err));
 }
 
 export const addSubDocument = async (
@@ -30,10 +26,6 @@ export const addSubDocument = async (
     .collection(collectionName1)
     .doc(id1)
     .set(data, { merge: true })
-    .then((res) => {
-      return true
-    })
-    .catch((err) => {
-      return false
-    });
+    .then((res) => {})
+    .catch((err) => console.log(err));
 }

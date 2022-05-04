@@ -4,5 +4,6 @@ export const COLLECTION_NAMES = {
     LEGALDOCS: 'legalDocuments',
     CHALLENGES: 'challenges',
     EXERCISES: 'Exercises',
-    WARMUPCOOLDOWN: "WarmUpCoolDownExercises"
+    WARMUPCOOLDOWN: "WarmUpCoolDownExercises",
+    RECIPES: 'recipes'
 };
