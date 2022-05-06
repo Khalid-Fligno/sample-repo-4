@@ -6,7 +6,7 @@ import {
 } from "react-native";
 import calendarStyles from "../../../screens/AppStack/Calendar/calendarStyle";
 import { MealListComponent } from "./MealListComponent";
-// import { ProgressComponet } from "./ProgressComponent";
+import { ProgressComponent } from "./ProgressComponent";
 import { WorkoutCardComponent } from "./WorkoutCardComponent";
 
 export const DayDisplayComponent = (props) => {
@@ -44,7 +44,13 @@ export const DayDisplayComponent = (props) => {
             paddingHorizontal: 20,
           }}
         >
-          {/* {progressComponent} */}
+          <ProgressComponent
+            activeChallengeData={activeChallengeData}
+            currentChallengeDay={currentChallengeDay}
+            transformLevel={transformLevel}
+            phaseData={phaseData}
+            phase={phase}
+          />
         </View>
       )}
       <WorkoutCardComponent
@@ -55,18 +61,18 @@ export const DayDisplayComponent = (props) => {
         loadExercises={loadExercises}
       />
       <MealListComponent
-          AllRecipe={AllRecipe}
-          favoriteRecipe={favoriteRecipe}
-          todayRecommendedRecipe={todayRecommendedRecipe}
-          todayRecommendedMeal={todayRecommendedMeal}
-          setLoading={setLoading}
-          navigation={navigation}
-          showRC={showRC}
-          activeChallengeUserData={activeChallengeUserData}
-          phaseDefaultTags={phaseDefaultTags}
-          challengeRecipe={challengeRecipe}
-          activeChallengeData={activeChallengeData}
-          currentChallengeDay={currentChallengeDay}
+        AllRecipe={AllRecipe}
+        favoriteRecipe={favoriteRecipe}
+        todayRecommendedRecipe={todayRecommendedRecipe}
+        todayRecommendedMeal={todayRecommendedMeal}
+        setLoading={setLoading}
+        navigation={navigation}
+        showRC={showRC}
+        activeChallengeUserData={activeChallengeUserData}
+        phaseDefaultTags={phaseDefaultTags}
+        challengeRecipe={challengeRecipe}
+        activeChallengeData={activeChallengeData}
+        currentChallengeDay={currentChallengeDay}
       />
     </ScrollView>
   );

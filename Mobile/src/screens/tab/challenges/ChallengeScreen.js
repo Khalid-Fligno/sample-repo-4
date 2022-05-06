@@ -40,7 +40,7 @@ export const ChallengeScreen = ({ navigation }) => {
   const [todayRcWorkout, setTodayRcWorkout] = useState(undefined);
   const [currentDay, setCurrentDay] = useState(null);
   const [showRC, setShowRC] = useState(false)
-  const [phaseData, setPhaseData] = useState(null);
+  const [phaseData, setPhaseData] = useState([]);
   const [phase, setPhase] = useState([]);
   const [totalChallengeWorkoutsCompleted, setTotalChallengeWorkoutsCompleted] = useState(null);
   const [currentChallengeDay, setCurrentChallengeDay] = useState(null);
@@ -413,7 +413,7 @@ export const ChallengeScreen = ({ navigation }) => {
 
       // TODO getToday one recommended meal randomly
       const getTodayRecommendedMeals = await getTodayRecommendedMeal(
-        phaseData, 
+        phaseData,
         activeChallengeData
       )
 

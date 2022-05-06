@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Linking, Text, TouchableOpacity, View } from "react-native";
 import colors from "../../../styles/colors";
 import fonts from "../../../styles/fonts";
@@ -15,7 +15,10 @@ export const ProgressComponent = (props) => {
     phaseData,
     phase
   } = props
-  const [width, setWidth] = useState()
+  const [newWidth, setNewWidth] = useState(0)
+  const [width, setWidth] = useState(0)
+
+  // console.log("phaseData: ", phaseData?.name?.substring(0, 5))
 
   const openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -25,19 +28,30 @@ export const ProgressComponent = (props) => {
   const getPhase = (phaseData) => {
     return (
       (
-        phaseData.name.substring(0, 5) +
+        phaseData?.name?.substring(0, 5) +
         " " +
-        phaseData.name.substring(5, phaseData.name.length)
+        phaseData?.name?.substring(5, phaseData?.name.length)
       )
         .charAt(0)
         .toUpperCase() +
       (
-        phaseData.name.substring(0, 5) +
+        phaseData?.name?.substring(0, 5) +
         " " +
-        phaseData.name.substring(5, phaseData.name.length)
+        phaseData?.name?.substring(5, phaseData?.name.length)
       ).slice(1)
     );
   }
+
+  const getWidth = () => {
+    const width = Math.floor((newWidth * currentChallengeDay) /
+      activeChallengeData.numberOfDays)
+
+    setWidth(width)
+  }
+
+  useEffect(() => {
+    getWidth()
+  }, [newWidth, activeChallengeData?.numberOfDays])
 
   return (
     <>
@@ -81,14 +95,14 @@ export const ProgressComponent = (props) => {
               fontFamily: fonts.bold,
             }}
           >
-            Day {activeChallengeData.numberOfDays}
+            Day {activeChallengeData?.numberOfDays}
           </Text>
         </View>
       </View>
       <View
         onLayout={(e) => {
           const newWidth = e.nativeEvent.layout.width;
-          setWidth(newWidth);
+          setNewWidth(newWidth);
         }}
         style={{
           height: 10,
@@ -101,16 +115,16 @@ export const ProgressComponent = (props) => {
         <View
           style={{
             height: 10,
-            width:
-              (width * currentChallengeDay) /
-              activeChallengeData.numberOfDays,
+            width: width,
             borderRadius: 10,
             backgroundColor: colors.themeColor.fill,
             position: "absolute",
             left: 0,
             top: 0,
           }}
-        ></View>
+        >
+
+        </View>
       </View>
       <View
         style={{
@@ -148,7 +162,7 @@ export const ProgressComponent = (props) => {
           onPress={() => openLink(phase.pdfUrl)}
         >
           <View style={{ flex: 1 }}>
-            <Icon name="file-text-o" size={20} />
+            <Icon name="info" size={20} />
           </View>
 
           <View style={{ marginTop: -20 }}>
@@ -183,13 +197,9 @@ export const ProgressComponent = (props) => {
         style={{
           position: "absolute",
           left:
-            Platform.OS === "ios"
-              ? (width * currentChallengeDay) /
-              activeChallengeData.numberOfDays +
-              11
-              : (width * currentChallengeDay) /
-              activeChallengeData.numberOfDays +
-              12,
+            Platform.OS === "ios" ?
+              width + 11 :
+              width + 12,
           top: 85,
         }}
       >
@@ -214,14 +224,7 @@ export const ProgressComponent = (props) => {
         elevation={5}
         style={{
           position: "absolute",
-          left:
-            Platform.OS === "ios"
-              ? (width * currentChallengeDay) /
-              activeChallengeData.numberOfDays -
-              7
-              : (width * currentChallengeDay) /
-              activeChallengeData.numberOfDays -
-              7,
+          left: width - 4,
           top: Platform.OS === "ios" ? 96 : 94,
           backgroundColor: "#F79400",
           width: 40,
