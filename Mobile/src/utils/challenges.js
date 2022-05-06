@@ -194,10 +194,7 @@ export const getTodayRecommendedMeal = async (
   activeChallengeData
 ) => {
   let snapshotDocs = [];
-  let levelName = activeChallengeData.levelTags;
-  let phaseTag = phaseData.name;
-  let data = phaseData.meals;
-  const phaseNames = getPhaseTag(phaseTag)
+  const phaseNames = getPhaseTag(phaseData)
   const snapshot = await getCollection(
     COLLECTION_NAMES.RECIPES
   )
@@ -205,7 +202,6 @@ export const getTodayRecommendedMeal = async (
     activeChallengeData,
     snapshot,
     phaseData,
-    data
   )
 
   snapshot.forEach((res) => {
@@ -216,7 +212,7 @@ export const getTodayRecommendedMeal = async (
     snapshotDocs,
     phaseMeals.recipeList,
     phaseNames,
-    levelName
+    activeChallengeData
   )
   const challengeMealsFilterList = phaseMeals.recipeList.map((res) => res.id);
   const breakfastList = phaseMeals.recipeList.filter((res) => res.breakfastVisible);
@@ -258,7 +254,9 @@ export const getTodayRecommendedMeal = async (
   };
 };
 
-const getPhaseTag = (phaseTag) => {
+const getPhaseTag = (phaseData) => {
+  let phaseTag = phaseData.name;
+
   switch (phaseTag) {
     case "Phase1":
       return "P1"
@@ -273,9 +271,9 @@ const getMealRecipes = async (
   activeChallengeData,
   snapshot,
   phaseData,
-  data
 ) => {
   let recipeList = []
+  let data = phaseData.meals;
 
   if (
     activeChallengeData &&
@@ -313,7 +311,7 @@ const getEachMealRecipes = async (
   snapshotDocs,
   phaseMeals,
   phaseNames,
-  levelName
+  activeChallengeData
 ) => {
   let breakfastResult = [];
   let lunchResult = [];
@@ -322,6 +320,7 @@ const getEachMealRecipes = async (
   let drinkResult = [];
   let preworkoutResult = [];
   let treatsResult = [];
+  let levelName = activeChallengeData.levelTags;
 
   // BREAKFAST
   breakfastResult = snapshotDocs

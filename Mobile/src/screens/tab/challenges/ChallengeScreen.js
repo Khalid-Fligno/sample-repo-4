@@ -413,7 +413,8 @@ export const ChallengeScreen = ({ navigation }) => {
 
       // TODO getToday one recommended meal randomly
       const getTodayRecommendedMeals = await getTodayRecommendedMeal(
-        phaseData, activeChallengeData
+        phaseData, 
+        activeChallengeData
       )
 
       if (
@@ -443,8 +444,9 @@ export const ChallengeScreen = ({ navigation }) => {
         );
 
       if (!totalChallengeWorkoutsCompleted) {
-        return null
+        console.log("Error totalChallengeWorkoutsCompleted")
       }
+
       setTotalChallengeWorkoutsCompleted(totalChallengeWorkoutsCompleted)
     } else {
       setLoading(false)
@@ -457,61 +459,50 @@ export const ChallengeScreen = ({ navigation }) => {
     stringDate
   ) => {
     console.log('checkScheduleChallenge')
-    const activeChallenge = activeChallengeUserData
-
-    if (!activeChallenge) {
-      console.log('Error activeChallenge')
-    }
 
     if (
-      activeChallenge &&
-      moment(activeChallenge.startDate).isSame(stringDate) &&
-      activeChallenge.isSchedule
+      activeChallengeUserData &&
+      moment(activeChallengeUserData.startDate).isSame(stringDate) &&
+      activeChallengeUserData.isSchedule
     ) {
       const data = { status: "Active", isSchedule: true }
-      const isStatusAndScheduleAdded = await addSubDocument(
+      await addSubDocument(
         COLLECTION_NAMES.USERS,
         COLLECTION_NAMES.CHALLENGES,
         uid,
-        activeChallenge.id,
+        activeChallengeUserData.id,
         data
       )
 
-      if (!isStatusAndScheduleAdded) {
-        console.log('User status and isSchedule not added')
-      }
-    } else if (activeChallenge && activeChallenge.isSchedule) {
+    } else if (activeChallengeUserData && activeChallengeUserData.isSchedule) {
       const isBetween = moment(currentDay).isBetween(
-        activeChallenge.startDate,
-        activeChallenge.endDate,
+        activeChallengeUserData.startDate,
+        activeChallengeUserData.endDate,
         undefined,
         "[]"
       );
       const data = { status: "Active", isSchedule: true }
-      const isStatusAndScheduleAdded = await addSubDocument(
+      await addSubDocument(
         COLLECTION_NAMES.USERS,
         COLLECTION_NAMES.CHALLENGES,
         uid,
-        activeChallenge.id,
+        activeChallengeUserData.id,
         data
       )
 
-      if (!isStatusAndScheduleAdded) {
-        console.log('User status and isSchedule not added')
-      }
       if (!isSchedule) {
         setLoading(true)
-        setScheduleData(activeChallenge)
-        fetchActiveChallengeData(activeChallenge, stringDate);
-        setCalendarSelectedDate(moment(activeChallenge.startDate))
-        setCurrentDay(activeChallenge.startDate);
+        setScheduleData(activeChallengeUserData)
+        fetchActiveChallengeData(activeChallengeUserData, stringDate);
+        setCalendarSelectedDate(moment(activeChallengeUserData.startDate))
+        setCurrentDay(activeChallengeUserData.startDate);
         setIsSchedule(true)
       }
       if (isBetween) {
-        setScheduleData(activeChallenge)
+        setScheduleData(activeChallengeUserData)
         setIsSchedule(true)
         if (!activeChallengeData) {
-          fetchActiveChallengeData(activeChallenge, stringDate);
+          fetchActiveChallengeData(activeChallengeUserData, stringDate);
         } else {
           getCurrentPhaseInfo(
             activeChallengeUserData,
@@ -521,23 +512,23 @@ export const ChallengeScreen = ({ navigation }) => {
         }
       } else {
         setLoading(true)
-        setScheduleData(activeChallenge)
+        setScheduleData(activeChallengeUserData)
         setIsSchedule(true)
       }
     } else {
       setLoading(false)
       const isBetween = moment(currentDay).isBetween(
-        activeChallenge.startDate,
-        activeChallenge.endDate,
+        activeChallengeUserData.startDate,
+        activeChallengeUserData.endDate,
         undefined,
         "[]"
       );
 
       if (isBetween) {
-        setScheduleData(activeChallenge)
+        setScheduleData(activeChallengeUserData)
         setIsSchedule(true)
         if (!activeChallengeData) {
-          fetchActiveChallengeData(activeChallenge, stringDate);
+          fetchActiveChallengeData(activeChallengeUserData, stringDate);
         } else {
           getCurrentPhaseInfo(
             activeChallengeUserData,
@@ -547,7 +538,7 @@ export const ChallengeScreen = ({ navigation }) => {
         }
       } else {
         setLoading(false)
-        setScheduleData(activeChallenge)
+        setScheduleData(activeChallengeUserData)
         setIsSchedule(true)
       }
     }
