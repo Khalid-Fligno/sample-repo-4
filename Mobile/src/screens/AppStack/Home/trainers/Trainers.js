@@ -147,7 +147,6 @@ export const Trainers = ({ navigation }) => {
 									{about}
 								</Text>
 							</View>
-
 							<View style={{ paddingTop: hp('3%') }}>
 								<Text style={{
 									fontSize: wp("5.5%"),
@@ -157,16 +156,6 @@ export const Trainers = ({ navigation }) => {
 								>
 									{name}'s favorite recipe
 								</Text>
-								<View style={{ alignItems: 'flex-end', paddingTop: 10 }}>
-									<Text
-										style={{
-											fontSize: wp("3.0%"),
-											fontFamily: fonts.bold,
-											fontWeight: "bold",
-										}}
-									>Scroll for more {'>'}{'>'} </Text>
-								</View>
-
 							</View>
 						</View>
 						<View style={{ flex: 1, width: wp('75%') }}>
@@ -214,9 +203,7 @@ export const Trainers = ({ navigation }) => {
 													}}
 													>
 														{item.title}
-
 													</Text>
-
 												</View>
 												<View style={{ flexDirection: 'row', paddingTop: hp('1%') }}>
 													<View>
