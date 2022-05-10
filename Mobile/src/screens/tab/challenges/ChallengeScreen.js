@@ -33,7 +33,7 @@ import { NavigationActions } from "react-navigation";
 export const ChallengeScreen = ({ navigation }) => {
   const [CalendarSelectedDate, setCalendarSelectedDate] = useState();
   const [isSchedule, setIsSchedule] = useState(false);
-  const [ScheduleData, setScheduleData] = useState([]);
+  const [ScheduleData, setScheduleData] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [activeChallengeData, setActiveChallengeData] = useState([]);
   const [activeChallengeUserData, setActiveChallengeUserData] = useState([]);
@@ -802,6 +802,7 @@ export const ChallengeScreen = ({ navigation }) => {
   // console.log('isSchedule: ', isSchedule)
   // console.log('showRC: ', showRC)
   // console.log('loading: ', loading)
+  // console.log('ScheduleData: ', ScheduleData)
 
   return (
     <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
