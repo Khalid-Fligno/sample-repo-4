@@ -13,9 +13,22 @@ import moment from "moment";
 import CustomCalendarStrip from "../../../components/Calendar/CustomCalendarStrip";
 import { DayDisplayComponent } from "../../../components/tab/challenges/DayDisplayComponent";
 import globalStyle from "../../../styles/globalStyles";
-import { convertRecipeData, fetchRecipeData, getCurrentChallengeDay, getCurrentPhase, getTodayRecommendedMeal, getTodayRecommendedWorkout, getTotalChallengeWorkoutsCompleted, isActiveChallenge } from "../../../utils/challenges";
+import { 
+  convertRecipeData, 
+  fetchRecipeData, 
+  getCurrentChallengeDay, 
+  getCurrentPhase, 
+  getTodayRecommendedMeal, 
+  getTodayRecommendedWorkout, 
+  getTotalChallengeWorkoutsCompleted, 
+  isActiveChallenge 
+} from "../../../utils/challenges";
 import { addDocument, addSubDocument } from "../../../hook/firestore/write";
-import { getCollection, getDocument, getSpecificSubCollection } from "../../../hook/firestore/read";
+import { 
+  getCollection, 
+  getDocument, 
+  getSpecificSubCollection 
+} from "../../../hook/firestore/read";
 import { COLLECTION_NAMES } from "../../../library/collections/index"
 import { useStorage } from "../../../hook/storage"
 import Loader from "../../../components/Shared/Loader";
@@ -793,17 +806,19 @@ export const ChallengeScreen = ({ navigation }) => {
   }, [])
 
   useEffect(() => {
-    fetchUserData()
-    fetchChallengeData()
+    fetchUserData();
   }, [])
 
+  useEffect(() => {
+    fetchChallengeData()
+  }, [])
 
   // console.log('ScheduleData: ', ScheduleData)
   // console.log('isSchedule: ', isSchedule)
   // console.log('showRC: ', showRC)
   // console.log('loading: ', loading)
   // console.log('ScheduleData: ', ScheduleData)
-
+  
   return (
     <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
       <CustomCalendarStrip
