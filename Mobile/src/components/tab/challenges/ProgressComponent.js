@@ -18,8 +18,6 @@ export const ProgressComponent = (props) => {
   const [newWidth, setNewWidth] = useState(0)
   const [width, setWidth] = useState(0)
 
-  // console.log("phaseData: ", phaseData?.name?.substring(0, 5))
-
   const openLink = (url) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Linking.openURL(url);
@@ -51,7 +49,11 @@ export const ProgressComponent = (props) => {
 
   useEffect(() => {
     getWidth()
-  }, [newWidth, activeChallengeData?.numberOfDays])
+  }, [
+    newWidth,
+    activeChallengeData?.numberOfDays,
+    currentChallengeDay
+  ])
 
   return (
     <>
@@ -123,7 +125,6 @@ export const ProgressComponent = (props) => {
             top: 0,
           }}
         >
-
         </View>
       </View>
       <View
