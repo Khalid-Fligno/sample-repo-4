@@ -84,9 +84,7 @@ export const ChallengeScreen = ({ navigation }) => {
         uid
       )
 
-      if (!user) {
-        throw new Error("Incomplete data");
-      }
+      if (!user) throw new Error("Incomplete data");
 
       const getInitialBurpeeTestCompleted = user?.initialBurpeeTestCompleted ?? false
       await setWeeklyTargets(user)
@@ -129,9 +127,7 @@ export const ChallengeScreen = ({ navigation }) => {
       )
       let list = [];
 
-      if (!getUserChallengeActive) {
-        throw new Error("Incomplete data");
-      }
+      if (!getUserChallengeActive) throw new Error("Incomplete data");
 
       getUserChallengeActive.forEach((doc) => {
         list.push(doc.data());
@@ -283,9 +279,7 @@ export const ChallengeScreen = ({ navigation }) => {
         activeChallengeUserData.id
       )
 
-      if (!getActiveChallenge) {
-        throw new Error("Incomplete Data")
-      }
+      if (!getActiveChallenge) throw new Error("Incomplete Data");
 
       const getSkipped = activeChallengeUserData.onBoardingInfo.skipped ?? false
       const favoriteRecipe = await getFavoriteRcipe(
@@ -430,9 +424,15 @@ export const ChallengeScreen = ({ navigation }) => {
         activeChallengeData
       )
 
+      const favoriteRecipe = await getFavoriteRcipe(
+        activeChallengeUserData,
+        stringDate
+      )
+  
       if (
         todayRcWorkout &&
-        getTodayRecommendedMeals
+        getTodayRecommendedMeals &&
+        favoriteRecipe
       ) {
         setLoading(false)
         setTodayRcWorkout(todayRcWorkout);
@@ -440,6 +440,7 @@ export const ChallengeScreen = ({ navigation }) => {
         setTodayRecommendedMeal(getTodayRecommendedMeals.recommendedMeal[0])
         setChallengeMealsFilterList(getTodayRecommendedMeals.challengeMealsFilterList)
         setPhaseDefaultTags(getTodayRecommendedMeals.phaseDefaultTags)
+        setFavoriteRecipe(favoriteRecipe.recommendedMeal[0])
       } else {
         setLoading(false)
         setTodayRcWorkout(undefined);
@@ -447,6 +448,7 @@ export const ChallengeScreen = ({ navigation }) => {
         setTodayRecommendedMeal(getTodayRecommendedMeals.recommendedMeal[0])
         setChallengeMealsFilterList(getTodayRecommendedMeals.challengeMealsFilterList)
         setPhaseDefaultTags(getTodayRecommendedMeals.phaseDefaultTags)
+        setFavoriteRecipe(favoriteRecipe.recommendedMeal[0])
       }
 
       //TODO :calculate the workout completed till selected date
@@ -796,7 +798,7 @@ export const ChallengeScreen = ({ navigation }) => {
   }
 
   const toggleSetting = () => {
-    setIsSettingVisible(!isSettingVisible)
+    setIsSettingVisible(!isSettingVisible);
   };
 
   useEffect(() => {
@@ -810,7 +812,7 @@ export const ChallengeScreen = ({ navigation }) => {
   }, [])
 
   useEffect(() => {
-    fetchChallengeData()
+    fetchChallengeData();
   }, [])
 
   // console.log('ScheduleData: ', ScheduleData)
