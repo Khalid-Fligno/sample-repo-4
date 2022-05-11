@@ -1004,8 +1004,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
             loading,
         } = this.state
 
-        console.log('todayRecommendedRecipe: ', todayRecommendedRecipe)
-
         const skeleton = (
             <View style={styles.recipeTileSkeletonContainer}>
                 <RecipeTileSkeleton />

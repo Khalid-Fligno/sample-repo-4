@@ -43,7 +43,7 @@ import OnBoardingNotification from "../../../components/Shared/OnBoardingNotific
 import { SettingComponent } from "../../../components/tab/challenges/SettingComponent";
 import { NavigationActions } from "react-navigation";
 
-export const ChallengeScreen = ({ navigation }) => {
+export const TransformScreen = ({ navigation }) => {
   const [CalendarSelectedDate, setCalendarSelectedDate] = useState();
   const [isSchedule, setIsSchedule] = useState(false);
   const [ScheduleData, setScheduleData] = useState(undefined);
