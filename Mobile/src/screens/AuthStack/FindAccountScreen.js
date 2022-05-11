@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TextInput,
   Dimensions,
+  Linking,
 } from 'react-native';
 import Icon from "../../components/Shared/Icon";
 import colors from "../../styles/colors";
@@ -20,6 +21,7 @@ import { containerPadding } from '../../styles/globalStyles';
 import HeaderAuth from '../../components/Auth/Header';
 import NativeLoader from "../../components/Shared/NativeLoader";
 import Toast from 'react-native-toast-message';
+import * as Haptics from "expo-haptics";
 
 const { width } = Dimensions.get("window");
 
@@ -56,6 +58,11 @@ const FindAccountScreen = ({ navigation }) => {
       navigation.navigate('Signup', { userData })
     }
   }
+
+  const openLink = (url) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Linking.openURL(url);
+  };
 
   return (
     <SafeAreaView style={authScreenStyle.safeAreaContainer}>
@@ -98,11 +105,11 @@ const FindAccountScreen = ({ navigation }) => {
             Title="FIND MY ACCOUNT"
             onPress={() => getUserInfo(email)}
           />
-          <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+          <TouchableOpacity onPress={() => openLink("https://fitazfk.canny.io/")}>
             <Text
               style={styles.navigateToButton}
             >
-              Don't have an account? Sign up
+              Need help? Click here
             </Text>
           </TouchableOpacity>
         </View>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	View,
 	SafeAreaView,
@@ -10,6 +10,7 @@ import {
 	Keyboard,
 	NativeModules,
 	Alert,
+	Linking,
 } from 'react-native';
 import Icon from "../../components/Shared/Icon";
 import colors from "../../styles/colors";
@@ -169,6 +170,11 @@ const LoginScreenV2 = ({ navigation }) => {
 		}
 	};
 
+	const openLink = (url) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Linking.openURL(url);
+  };
+
 	const login = async (email, password) => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 		Keyboard.dismiss();
@@ -320,11 +326,11 @@ const LoginScreenV2 = ({ navigation }) => {
 						Title="SIGN IN"
 						onPress={() => login(email, password)}
 					/>
-					<TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+					<TouchableOpacity onPress={() => openLink("https://fitazfk.canny.io/")}>
 						<Text
 							style={styles.navigateToText}
 						>
-							Don't have an account? Sign up
+							Need help? Click here
 						</Text>
 					</TouchableOpacity>
 				</View>

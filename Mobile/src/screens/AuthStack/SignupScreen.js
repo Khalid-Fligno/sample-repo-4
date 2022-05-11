@@ -315,31 +315,50 @@ const SignupScreen = ({ navigation }) => {
                 onChangeText={setConfirmPassword}
                 autoCapitalize='none'
               />
+              <CustomBtn
+                customBtnStyle={{ 
+                  height: hp("6%"),
+                  width: width - containerPadding * 2,
+                  padding: 8,
+                  margin: 5,
+                  alignItems: "center",
+                }}
+                Title="GET STARTED!"
+                onPress={() => userData ?
+                  signup(
+                    userData.firstName,
+                    userData.lastName,
+                    userData.email.toLowerCase(),
+                    password,
+                    confirmPassword
+                  )
+                  :
+                  signup(
+                    firstName,
+                    lastName,
+                    email.toLowerCase(),
+                    password,
+                    confirmPassword
+                  )
+                }
+              />
             </View>
           </View>
         </View>
         <View style={authScreenStyle.navigateButtonContainer}>
-          <CustomBtn
-            customBtnStyle={{ marginTop: 20, width: wp("90%") }}
-            Title="GET STARTED!"
-            onPress={() => userData ?
-              signup(
-                userData.firstName,
-                userData.lastName,
-                userData.email.toLowerCase(),
-                password,
-                confirmPassword
-              )
-              :
-              signup(
-                firstName,
-                lastName,
-                email.toLowerCase(),
-                password,
-                confirmPassword
-              )
-            }
-          />
+          <Text
+            style={{
+              fontFamily: fonts.bold,
+              textAlign: "center",
+              color: colors.black,
+              width: 350,
+              top: 12
+            }}
+          >
+            Note: If you have just purchased Transform, 
+            you already have an account, retrieve this here or 
+            please contact support@fitazfk.com if you are having issues.
+          </Text>
           {
             !userData ?
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
