@@ -9,7 +9,7 @@ export default function OnBoardingNotification({ navigation, data }) {
     <View style={{ backgroundColor: colors.white }}>
       <View
         style={{
-          borderColor: colors.themeColor.color,
+          borderColor: colors.black,
           borderWidth: 1,
           borderRadius: 2,
           padding: 10,
@@ -17,7 +17,6 @@ export default function OnBoardingNotification({ navigation, data }) {
           flexDirection: screenWidth<=418?"column":"row",
           justifyContent: "space-between",
           alignItems: "center",
-          backgroundColor: colors.themeColor.color,
         }}
       >
         <View
@@ -25,9 +24,6 @@ export default function OnBoardingNotification({ navigation, data }) {
             flexDirection: "row",
             paddingBottom: 3,
             justifyContent: "flex-start",
-            borderBottomColor: colors.themeColor.color,
-            borderBottomWidth: 1,
-            backgroundColor: colors.themeColor.color,
           }}
         >
           <Text
@@ -53,8 +49,6 @@ export default function OnBoardingNotification({ navigation, data }) {
             style={{
               flexDirection: "row",
               justifyContent: "flex-end",
-              borderColor: colors.black,
-              borderWidth: 1,
             }}
           >
             <Text
