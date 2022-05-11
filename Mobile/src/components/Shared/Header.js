@@ -128,7 +128,7 @@ const Header = (props) => {
               }}
               onPress={handleActiveChallengeSetting}
             >
-              <VIcon name="player-settings" size={27} color={colors.citrus} />
+              <VIcon name="player-settings" size={27} color={colors.black} />
             </TouchableOpacity>
           </View>
         )}
