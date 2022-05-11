@@ -343,6 +343,7 @@ const ChallengeSetting = (props) => {
         onPress={() => resetChallengeDate(chosenDate)}
         addingToCalendar={loading}
         loading={loading}
+        title="ADD TO CALENDAR"
       />
     </SafeAreaView>
   );
