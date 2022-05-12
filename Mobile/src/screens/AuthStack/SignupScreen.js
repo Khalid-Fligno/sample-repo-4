@@ -9,6 +9,7 @@ import {
   Dimensions,
   Keyboard,
   Alert,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Icon from "../../components/Shared/Icon";
 import colors from "../../styles/colors";
@@ -245,138 +246,139 @@ const SignupScreen = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={authScreenStyle.safeAreaContainer}>
-      <View style={authScreenStyle.container}>
-        <View>
-          <View style={authScreenStyle.crossIconContainer}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-            >
-              <Icon
-                name="cross"
-                color={colors.themeColor.color}
-                size={22}
-              />
-            </TouchableOpacity>
-          </View>
-          <HeaderAuth />
-          <View style={authScreenStyle.formContainer}>
-            <View style={authScreenStyle.formHeaderContainer}>
-              {
-                userData ?
-                  <Text style={styles.Text}>
-                    Create a password to complete your account
-                  </Text>
-                  :
-                  <Text style={styles.Text}>
-                    Create an Account:
-                  </Text>
-              }
-            </View>
-            <View style={authScreenStyle.formInputContainer}>
-              <TextInput
-                style={styles.Input}
-                placeholder="First Name"
-                value={userData ? userData.firstName : firstName}
-                onChangeText={(text) => setFirstName(text)}
-                editable={!userData ? true : false}
-              />
-              <TextInput
-                style={styles.Input}
-                placeholder="Last Name"
-                value={userData ? userData.lastName : lastName}
-                onChangeText={(text) => setLastName(text)}
-                editable={!userData ? true : false}
-              />
-              <TextInput
-                style={styles.Input}
-                placeholder="Email"
-                keyboardType="email-address"
-                value={userData ? userData.email : email}
-                onChangeText={(text) => setEmail(text)}
-                editable={!userData ? true : false}
-                autoCapitalize='none'
-              />
-              <TextInput
-                style={styles.Input}
-                placeholder="Create Password"
-                secureTextEntry
-                returnKeyType="go"
-                value={password}
-                onChangeText={setPassword}
-                autoCapitalize='none'
-              />
-              <TextInput
-                style={styles.Input}
-                placeholder="Confirm Password"
-                secureTextEntry
-                returnKeyType="go"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                autoCapitalize='none'
-              />
-              <CustomBtn
-                customBtnStyle={{ 
-                  height: hp("6%"),
-                  width: width - containerPadding * 2,
-                  padding: 8,
-                  margin: 5,
-                  alignItems: "center",
-                }}
-                Title="GET STARTED!"
-                onPress={() => userData ?
-                  signup(
-                    userData.firstName,
-                    userData.lastName,
-                    userData.email.toLowerCase(),
-                    password,
-                    confirmPassword
-                  )
-                  :
-                  signup(
-                    firstName,
-                    lastName,
-                    email.toLowerCase(),
-                    password,
-                    confirmPassword
-                  )
-                }
-              />
-            </View>
-          </View>
-        </View>
-        <View style={authScreenStyle.navigateButtonContainer}>
-          <Text
-            style={{
-              fontFamily: fonts.bold,
-              textAlign: "center",
-              color: colors.black,
-              width: 350,
-              top: 12
-            }}
-          >
-            Note: If you have just purchased Transform, 
-            you already have an account, retrieve this here or 
-            please contact support@fitazfk.com if you are having issues.
-          </Text>
-          {
-            !userData ?
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Text
-                  style={styles.navigateToButton}
-                >
-                  Already have an Account? Sign In
-                </Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={authScreenStyle.safeAreaContainer}>
+        <View style={authScreenStyle.container}>
+          <View>
+            <View style={authScreenStyle.crossIconContainer}>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+              >
+                <Icon
+                  name="cross"
+                  color={colors.themeColor.color}
+                  size={22}
+                />
               </TouchableOpacity>
-              :
-              null
-          }
+            </View>
+            <HeaderAuth />
+            <View style={authScreenStyle.formContainer}>
+              <View style={authScreenStyle.formHeaderContainer}>
+                {
+                  userData ?
+                    <Text style={styles.Text}>
+                      Create a password to complete your account
+                    </Text>
+                    :
+                    <Text style={styles.Text}>
+                      Create an Account:
+                    </Text>
+                }
+              </View>
+              <View style={authScreenStyle.formInputContainer}>
+                <TextInput
+                  style={styles.Input}
+                  placeholder="First Name"
+                  value={userData ? userData.firstName : firstName}
+                  onChangeText={(text) => setFirstName(text)}
+                  editable={!userData ? true : false}
+                />
+                <TextInput
+                  style={styles.Input}
+                  placeholder="Last Name"
+                  value={userData ? userData.lastName : lastName}
+                  onChangeText={(text) => setLastName(text)}
+                  editable={!userData ? true : false}
+                />
+                <TextInput
+                  style={styles.Input}
+                  placeholder="Email"
+                  keyboardType="email-address"
+                  value={userData ? userData.email : email}
+                  onChangeText={(text) => setEmail(text)}
+                  editable={!userData ? true : false}
+                  autoCapitalize='none'
+                />
+                <TextInput
+                  style={styles.Input}
+                  placeholder="Create Password"
+                  secureTextEntry
+                  returnKeyType="go"
+                  value={password}
+                  onChangeText={setPassword}
+                  autoCapitalize='none'
+                />
+                <TextInput
+                  style={styles.Input}
+                  placeholder="Confirm Password"
+                  secureTextEntry
+                  returnKeyType="go"
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  autoCapitalize='none'
+                />
+                <CustomBtn
+                  customBtnStyle={{
+                    height: hp("6%"),
+                    width: width - containerPadding * 2,
+                    padding: 8,
+                    margin: 5,
+                    alignItems: "center",
+                  }}
+                  Title="GET STARTED!"
+                  onPress={() => userData ?
+                    signup(
+                      userData.firstName,
+                      userData.lastName,
+                      userData.email.toLowerCase(),
+                      password,
+                      confirmPassword
+                    )
+                    :
+                    signup(
+                      firstName,
+                      lastName,
+                      email.toLowerCase(),
+                      password,
+                      confirmPassword
+                    )
+                  }
+                />
+              </View>
+            </View>
+          </View>
+          <View style={styles.navigateSigninContainer}>
+            <Text
+              style={{
+                fontFamily: fonts.bold,
+                textAlign: "center",
+                color: colors.black,
+                width: 340,
+              }}
+            >
+              Note: If you have just purchased Transform,
+              you already have an account, retrieve this here or
+              please contact support@fitazfk.com if you are having issues.
+            </Text>
+            {
+              !userData ?
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                  <Text
+                    style={styles.navigateToButton}
+                  >
+                    Already have an Account? Sign In
+                  </Text>
+                </TouchableOpacity>
+                :
+                null
+            }
 
+          </View>
         </View>
-      </View>
-      <Toast />
-      {loading && <NativeLoader />}
-    </SafeAreaView>
+        <Toast />
+        {loading && <NativeLoader />}
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -400,9 +402,14 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     letterSpacing: 0.5,
     fontSize: 16,
-    marginTop: width / 10,
+    marginVertical: 20,
     textAlign: "center",
     color: colors.black,
+  },
+  navigateSigninContainer: {
+    display: "flex",
+    alignItems: "center",
+    marginVertical: 5,
   }
 })
 

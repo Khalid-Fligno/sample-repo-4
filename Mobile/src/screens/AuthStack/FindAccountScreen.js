@@ -8,6 +8,8 @@ import {
   TextInput,
   Dimensions,
   Linking,
+  TouchableWithoutFeedback,
+  Keyboard
 } from 'react-native';
 import Icon from "../../components/Shared/Icon";
 import colors from "../../styles/colors";
@@ -65,58 +67,60 @@ const FindAccountScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={authScreenStyle.safeAreaContainer}>
-      <View style={authScreenStyle.container}>
-        <View>
-          <View style={authScreenStyle.crossIconContainer}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-            >
-              <Icon
-                name="cross"
-                color={colors.themeColor.color}
-                size={22}
-              />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={authScreenStyle.safeAreaContainer}>
+        <View style={authScreenStyle.container}>
+          <View>
+            <View style={authScreenStyle.crossIconContainer}>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+              >
+                <Icon
+                  name="cross"
+                  color={colors.themeColor.color}
+                  size={22}
+                />
+              </TouchableOpacity>
+            </View>
+            <HeaderAuth />
+            <View style={authScreenStyle.formContainer}>
+              <View style={authScreenStyle.formHeaderContainer}>
+                <Text style={styles.Text}>
+                  Please enter the email address you
+                  used when you purchased your Transform challenge:
+                </Text>
+              </View>
+              <View style={authScreenStyle.formInputContainer}>
+                <TextInput
+                  style={styles.Input}
+                  placeholder="Email"
+                  keyboardType="email-address"
+                  onChangeText={setEmail}
+                  value={email}
+                  autoCapitalize='none'
+                />
+              </View>
+            </View>
+          </View>
+          <View style={authScreenStyle.navigateButtonContainer}>
+            <CustomBtn
+              customBtnStyle={{ marginTop: 20, width: wp("90%") }}
+              Title="FIND MY ACCOUNT"
+              onPress={() => getUserInfo(email)}
+            />
+            <TouchableOpacity onPress={() => openLink("https://fitazfk.canny.io/")}>
+              <Text
+                style={styles.navigateToButton}
+              >
+                Need help? Click here
+              </Text>
             </TouchableOpacity>
           </View>
-          <HeaderAuth />
-          <View style={authScreenStyle.formContainer}>
-            <View style={authScreenStyle.formHeaderContainer}>
-              <Text style={styles.Text}>
-                Please enter the email address you
-                used when you purchased your Transform challenge:
-              </Text>
-            </View>
-            <View style={authScreenStyle.formInputContainer}>
-              <TextInput
-                style={styles.Input}
-								placeholder="Email"
-								keyboardType="email-address"
-								onChangeText={setEmail}
-								value={email}
-                autoCapitalize='none'
-              />
-            </View>
-          </View>
         </View>
-        <View style={authScreenStyle.navigateButtonContainer}>
-          <CustomBtn
-            customBtnStyle={{ marginTop: 20, width: wp("90%") }}
-            Title="FIND MY ACCOUNT"
-            onPress={() => getUserInfo(email)}
-          />
-          <TouchableOpacity onPress={() => openLink("https://fitazfk.canny.io/")}>
-            <Text
-              style={styles.navigateToButton}
-            >
-              Need help? Click here
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <Toast/>
-      {loading && <NativeLoader />}
-    </SafeAreaView>
+        <Toast />
+        {loading && <NativeLoader />}
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   )
 }
 

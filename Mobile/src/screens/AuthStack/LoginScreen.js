@@ -11,6 +11,7 @@ import {
 	NativeModules,
 	Alert,
 	Linking,
+	TouchableWithoutFeedback,
 } from 'react-native';
 import Icon from "../../components/Shared/Icon";
 import colors from "../../styles/colors";
@@ -59,10 +60,12 @@ const LoginScreenV2 = ({ navigation }) => {
 		const docRef = await db
 			.collection("users")
 			.doc(id)
-		
-		docRef.set({subscriptionInfo: {
-			blogsId: "lifestyleBlogs"
-		}}, { merge: true });
+
+		docRef.set({
+			subscriptionInfo: {
+				blogsId: "lifestyleBlogs"
+			}
+		}, { merge: true });
 	}
 
 	const goToAppScreen = async (userDocs) => {
@@ -77,17 +80,17 @@ const LoginScreenV2 = ({ navigation }) => {
 	};
 
 	const validate = async (receiptData) => {
-    const validationData = await validateReceiptProduction(receiptData).catch(
-      async () => {
-        const validationDataSandbox = await validateReceiptSandbox(receiptData);
-        return validationDataSandbox;
-      }
-    );
-    if (validationData !== undefined) {
-      return validationData;
-    }
-    return undefined;
-  };
+		const validationData = await validateReceiptProduction(receiptData).catch(
+			async () => {
+				const validationDataSandbox = await validateReceiptSandbox(receiptData);
+				return validationDataSandbox;
+			}
+		);
+		if (validationData !== undefined) {
+			return validationData;
+		}
+		return undefined;
+	};
 
 	const iOSStorePurchases = async (onboarded) => {
 		InAppUtils.restorePurchases(async (error, response) => {
@@ -171,9 +174,9 @@ const LoginScreenV2 = ({ navigation }) => {
 	};
 
 	const openLink = (url) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Linking.openURL(url);
-  };
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+		Linking.openURL(url);
+	};
 
 	const login = async (email, password) => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -273,71 +276,73 @@ const LoginScreenV2 = ({ navigation }) => {
 	}, [])
 
 	return (
-		<SafeAreaView style={authScreenStyle.safeAreaContainer}>
-			<View style={authScreenStyle.container}>
-				<View>
-					<View style={authScreenStyle.crossIconContainer}>
-						<TouchableOpacity
-							onPress={() => navigation.goBack()}
-						>
-							<Icon
-								name="cross"
-								color={colors.themeColor.color}
-								size={22}
-							/>
-						</TouchableOpacity>
+		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+			<SafeAreaView style={authScreenStyle.safeAreaContainer}>
+				<View style={authScreenStyle.container}>
+					<View>
+						<View style={authScreenStyle.crossIconContainer}>
+							<TouchableOpacity
+								onPress={() => navigation.goBack()}
+							>
+								<Icon
+									name="cross"
+									color={colors.themeColor.color}
+									size={22}
+								/>
+							</TouchableOpacity>
+						</View>
+						<HeaderAuth />
+						<View style={authScreenStyle.formContainer}>
+							<View style={authScreenStyle.formHeaderContainer}>
+								<Text style={styles.Text}>
+									Sign In
+								</Text>
+							</View>
+							<View style={authScreenStyle.formInputContainer}>
+								<TextInput
+									style={styles.Input}
+									placeholder="Email"
+									keyboardType="email-address"
+									onChangeText={setEmail}
+									value={email}
+									autoCapitalize='none'
+								/>
+								<TextInput
+									style={styles.Input}
+									placeholder="Password"
+									secureTextEntry
+									returnKeyType="go"
+									onChangeText={setPassword}
+									value={password}
+									autoCapitalize='none'
+								/>
+							</View>
+							<TouchableOpacity onPress={() => navigation.navigate('ForgottenPassword')}>
+								<Text style={styles.forgotPasswordText}>
+									Forgotten your password?
+								</Text>
+							</TouchableOpacity>
+						</View>
 					</View>
-					<HeaderAuth />
-					<View style={authScreenStyle.formContainer}>
-						<View style={authScreenStyle.formHeaderContainer}>
-							<Text style={styles.Text}>
-								Sign In
-							</Text>
-						</View>
-						<View style={authScreenStyle.formInputContainer}>
-							<TextInput
-								style={styles.Input}
-								placeholder="Email"
-								keyboardType="email-address"
-								onChangeText={setEmail}
-								value={email}
-								autoCapitalize='none'
-							/>
-							<TextInput
-								style={styles.Input}
-								placeholder="Password"
-								secureTextEntry
-								returnKeyType="go"
-								onChangeText={setPassword}
-								value={password}
-								autoCapitalize='none'
-							/>
-						</View>
-						<TouchableOpacity onPress={() => navigation.navigate('ForgottenPassword')}>
-							<Text style={styles.forgotPasswordText}>
-								Forgotten your password?
+					<View style={authScreenStyle.navigateButtonContainer}>
+						<CustomBtn
+							customBtnStyle={{ marginTop: 20, width: wp("90%") }}
+							Title="SIGN IN"
+							onPress={() => login(email, password)}
+						/>
+						<TouchableOpacity onPress={() => openLink("https://fitazfk.canny.io/")}>
+							<Text
+								style={styles.navigateToText}
+							>
+								Need help? Click here
 							</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
-				<View style={authScreenStyle.navigateButtonContainer}>
-					<CustomBtn
-						customBtnStyle={{ marginTop: 20, width: wp("90%") }}
-						Title="SIGN IN"
-						onPress={() => login(email, password)}
-					/>
-					<TouchableOpacity onPress={() => openLink("https://fitazfk.canny.io/")}>
-						<Text
-							style={styles.navigateToText}
-						>
-							Need help? Click here
-						</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
-			<Toast />
-			{loading && <NativeLoader />}
-		</SafeAreaView>
+				<Toast />
+				{loading && <NativeLoader />}
+			</SafeAreaView>
+		</TouchableWithoutFeedback>
 	)
 }
 

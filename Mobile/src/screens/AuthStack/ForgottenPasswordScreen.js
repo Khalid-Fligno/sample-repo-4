@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TextInput,
   Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard
 } from 'react-native';
 import Icon from "../../components/Shared/Icon";
 import colors from "../../styles/colors";
@@ -43,21 +45,21 @@ const ForgottenPasswordScreen = ({ navigation }) => {
 
     if (email && emailIsValid(email)) {
       auth.sendPasswordResetEmail(email)
-      .then(() => {
-        setLoading(false)
-        Toast.show({
-          type: 'success',
-          text1: 'Successful sent',
-          text2: 'A password reset email has been sent to this email address.',
+        .then(() => {
+          setLoading(false)
+          Toast.show({
+            type: 'success',
+            text1: 'Successful sent',
+            text2: 'A password reset email has been sent to this email address.',
+          });
+        }).catch(() => {
+          setLoading(false)
+          Toast.show({
+            type: 'error',
+            text1: 'Account does not exist',
+            text2: 'No account found with that email address.'
+          });
         });
-      }).catch(() => {
-        setLoading(false)
-        Toast.show({
-          type: 'error',
-          text1: 'Account does not exist',
-          text2: 'No account found with that email address.'
-        });
-      });
     } else {
       setLoading(false)
       Toast.show({
@@ -69,73 +71,75 @@ const ForgottenPasswordScreen = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: colors.black,
-      }}
-    >
-      <View
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView
         style={{
           flex: 1,
-          justifyContent: "space-between",
-          flexDirection: "column",
-          backgroundColor: colors.themeColor.themeBackgroundColor,
+          backgroundColor: colors.black,
         }}
       >
-        <View>
-          <View
-            style={{
-              alignItems: "flex-end",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "space-between",
+            flexDirection: "column",
+            backgroundColor: colors.themeColor.themeBackgroundColor,
+          }}
+        >
+          <View>
+            <View
               style={{
-                padding: 20
+                alignItems: "flex-end",
               }}
             >
-              <Icon
-                name="cross"
-                color={colors.themeColor.color}
-                size={22}
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{
+                  padding: 20
+                }}
+              >
+                <Icon
+                  name="cross"
+                  color={colors.themeColor.color}
+                  size={22}
+                />
+              </TouchableOpacity>
+            </View>
+            <HeaderAuth />
+            <View
+              style={{
+                alignItems: "center",
+                paddingTop: "10%"
+              }}
+            >
+              <TextInput
+                style={styles.Input}
+                placeholder="Email"
+                keyboardType="email-address"
+                onChangeText={setEmail}
+                value={email}
+                autoCapitalize='none'
               />
-            </TouchableOpacity>
+            </View>
           </View>
-          <HeaderAuth />
           <View
             style={{
+              display: "flex",
               alignItems: "center",
-              paddingTop: "10%"
+              bottom: 50,
             }}
           >
-            <TextInput
-              style={styles.Input}
-              placeholder="Email"
-              keyboardType="email-address"
-              onChangeText={setEmail}
-              value={email}
-              autoCapitalize='none'
+            <CustomBtn
+              customBtnStyle={{ marginTop: 20, width: wp("90%") }}
+              Title="SEND PASSWORD RESET EMAIL"
+              onPress={() => sendPasswordResetEmail(email)}
             />
           </View>
         </View>
-        <View
-          style={{
-            display: "flex",
-            alignItems: "center",
-            bottom: 50,
-          }}
-        >
-          <CustomBtn
-            customBtnStyle={{ marginTop: 20, width: wp("90%") }}
-            Title="SEND PASSWORD RESET EMAIL"
-            onPress={() => sendPasswordResetEmail(email)}
-          />
-        </View>
-      </View>
-      <Toast />
-      {loading && <NativeLoader />}
-    </SafeAreaView>
+        <Toast />
+        {loading && <NativeLoader />}
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   )
 }
 
