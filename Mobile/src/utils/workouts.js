@@ -170,7 +170,7 @@ export const getRandomRestImages = async () => {
   return images[getRandomNumber(images.length)];
 };
 
-export const loadExercise = async (workoutData) => {
+export const loadExercise = async (workoutData, setFiles) => {
   console.log('workoutData: ', workoutData)
 
   await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
@@ -256,20 +256,20 @@ export const loadExercise = async (workoutData) => {
 
     if (exercises?.length > 0) {
       workoutData = Object.assign({}, workoutData, { exercises: exercises });
-      const res = await downloadExercise(workoutData);
+      const res = await downloadExercise(workoutData, setFiles);
       if (res) return workoutData;
       else return false;
     } else {
       return false;
     }
   } else {
-    const res = await downloadExercise(workoutData);
+    const res = await downloadExercise(workoutData, setFiles);
     if (res) return workoutData;
     else return false;
   }
 };
 
-const downloadExercise = async (workout) => {
+const downloadExercise = async (workout, setFiles) => {
   try {
     const exercises =
       workout?.exercises && workout?.exercises?.length > 0
@@ -296,11 +296,11 @@ const downloadExercise = async (workout) => {
 
             await downloadResumable
               .downloadAsync()
-              .then(() => {
-                resolve(exercise);
-                this.setState((prevState) => ({
-                  files: !prevState.files,
-                }));
+              .then((res) => {
+                if(res.status === 200){
+                  resolve(exercise);
+                  setFiles(res.complete)
+                }
               })
               .catch(() => resolve("Error Download"));
           } else {
@@ -320,7 +320,8 @@ export const downloadExerciseWC = async (
   workout,
   exerciseIds,
   exerciseModel,
-  type
+  type,
+  setFiles
 ) => {
   try {
     let exercises = [];
@@ -356,11 +357,11 @@ export const downloadExerciseWC = async (
             );
             await downloadResumable
               .downloadAsync()
-              .then(() => {
-                resolve(exercise);
-                this.setState((prevState) => ({
-                  files: !prevState.files,
-                }));
+              .then((res) => {
+                if(res.status === 200){
+                  resolve(exercise);
+                  setFiles(res.complete)
+                }
               })
               .catch(() => resolve("Error Download"));
           }
