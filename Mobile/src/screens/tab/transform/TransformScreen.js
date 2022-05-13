@@ -21,6 +21,7 @@ import {
   getTodayRecommendedMeal, 
   getTodayRecommendedWorkout, 
   getTotalChallengeWorkoutsCompleted, 
+  isActiveChallenge 
 } from "../../../utils/challenges";
 import { addDocument, addSubDocument } from "../../../hook/firestore/write";
 import { 
@@ -57,7 +58,7 @@ export const TransformScreen = ({ navigation }) => {
   const [totalChallengeWorkoutsCompleted, setTotalChallengeWorkoutsCompleted] = useState(null);
   const [currentChallengeDay, setCurrentChallengeDay] = useState(null);
   const [transformLevel, setTransformLevel] = useState(undefined);
-  const [loadingExercises, setLoadingExercises] = useState(false)
+  const [loadingExercises, setLoadingExercises] = useState()
   const [totalToDownload, setTotalToDownload] = useState()
   const [newWorkoutParams, setNewWorkoutParams] = useState()
   const [initialBurpeeTestCompleted, setInitialBurpeeTestCompleted] = useState(false)
@@ -71,9 +72,7 @@ export const TransformScreen = ({ navigation }) => {
   const [AllRecipe, setAllRecipe] = useState([])
   const [challengeRecipe, setChallengeRecipe] = useState([])
   const [favoriteRecipe, setFavoriteRecipe] = useState([])
-  const [downloaded, setDownloaded] = useState(0)
-  const [finishDownloaded, setFinishDownloaded] = useState(false)
-  const [files, setFiles] = useState(undefined)
+  const [files, setFiles] = useState(false)
   const calendarStrip = useRef(null)
 
   const fetchUserData = async () => {
@@ -672,7 +671,7 @@ export const TransformScreen = ({ navigation }) => {
   }
 
   const loadExercises = async (workoutData) => {
-    setLoadingExercises(true)
+    setLoading(true)
 
     Object.assign(workoutData, {
       warmUpExercises: workoutData.warmUpExercises,
@@ -731,14 +730,16 @@ export const TransformScreen = ({ navigation }) => {
             warmUpExercises: warmUpExercises,
             coolDownExercises: coolDownExercises,
           });
-
-          setNewWorkoutParams(newWorkout)
+          // if (this.state.totalToDownload === this.state.downloaded) {
+          //   this.goToNext(newWorkout);
+          // }
+          goToNext(newWorkout)
         } else {
-          setLoadingExercises(false)
+          // this.setState({ loadingExercises: false });
           Alert.alert("Alert!", "Something went wrong!");
         }
       } else {
-        setLoadingExercises(false)
+        // this.setState({ loadingExercises: false });
         Alert.alert("Alert!", "Something went wrong!");
       }
     } else if (workout) {
@@ -746,13 +747,13 @@ export const TransformScreen = ({ navigation }) => {
         goToNext(workout);
       }
     } else {
-      setLoadingExercises(false)
+      // this.setState({ loadingExercises: false });
     }
   }
 
   const goToNext = async (workout) => {
     const fitnessLevel = await useStorage.getItem("fitnessLevel", null);
-    setLoadingExercises(false)
+    setLoading(false)
 
     if (currentChallengeDay > 0) {
       Object.assign(workout, {
@@ -786,12 +787,6 @@ export const TransformScreen = ({ navigation }) => {
         transformRoute: true,
       });
     }
-
-    setDownloaded(0)
-    setTotalToDownload(0)
-    setFiles(false)
-    setLoadingExercises(false)
-    setFinishDownloaded(false)
   }
 
   const resetActiveChallengeUserData = () => {
@@ -823,25 +818,11 @@ export const TransformScreen = ({ navigation }) => {
     fetchChallengeData();
   }, [])
 
-  useEffect(() => {
-    if (!files) {
-      if (totalToDownload === downloaded) {
-        setFinishDownloaded(true)
-        setFiles(false)
-      }
-    }
-    if (!newWorkoutParams && finishDownloaded) {
-      goToNext(newWorkoutParams)
-    }
-  }, [files, downloaded, totalToDownload, newWorkoutParams, finishDownloaded])
-
   // console.log('ScheduleData: ', ScheduleData)
   // console.log('isSchedule: ', isSchedule)
   // console.log('showRC: ', showRC)
   // console.log('loading: ', loading)
   // console.log('ScheduleData: ', ScheduleData)
-  console.log('downloaded: ', downloaded)
-  console.log('totalToDownload: ', totalToDownload)
   console.log('files: ', files)
 
   return (
@@ -910,12 +891,8 @@ export const TransformScreen = ({ navigation }) => {
         ScheduleData={ScheduleData}
       />
       <Loader
-        loading={loading || loadingExercises}
+        loading={loading}
         color={colors.red.standard}
-        downloaded={downloaded}
-        totalToDownload={totalToDownload}
-        progressive={true}
-        loadingExercises={loadingExercises}
       // text={loading ? 'Please wait we are loading workout' : null}
       />
     </View>

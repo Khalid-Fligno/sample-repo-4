@@ -171,22 +171,19 @@ export const getRandomRestImages = async () => {
 };
 
 export const loadExercise = async (workoutData, setFiles) => {
-  console.log('workoutData: ', workoutData)
 
   await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
     (res) => {
       Promise.all(
         res.map(async (item, index) => {
-          console.log('item: ', item)
+
           if (
             item.includes("exercise-")
           ) {
             FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
               idempotent: true,
             })
-              .then((item) => {
-                console.log('item: ', item)
-              })
+              .then(() => {})
               .catch((err) => {
                 console.log('Error Reading Filesystem: ', err)
               })
@@ -294,15 +291,16 @@ const downloadExercise = async (workout, setFiles) => {
               {}
             );
 
-            await downloadResumable
-              .downloadAsync()
-              .then((res) => {
-                if(res.status === 200){
-                  resolve(exercise);
-                  setFiles(res.complete)
-                }
-              })
-              .catch(() => resolve("Error Download"));
+            try {
+              const downloaded = await downloadResumable.downloadAsync();
+
+              if (downloaded.status === 200) {
+                resolve(exercise);
+                setFiles(downloaded.uri)
+              }
+            } catch (err) {
+              resolve("Error Download")
+            }
           } else {
             resolve("no video found");
           }
@@ -355,15 +353,17 @@ export const downloadExerciseWC = async (
               `${FileSystem.cacheDirectory}exercise-${type}-${index + 1}.mp4`,
               {}
             );
-            await downloadResumable
-              .downloadAsync()
-              .then((res) => {
-                if(res.status === 200){
-                  resolve(exercise);
-                  setFiles(res.complete)
-                }
-              })
-              .catch(() => resolve("Error Download"));
+
+            try {
+              const downloaded = await downloadResumable.downloadAsync();
+
+              if (downloaded.status === 200) {
+                resolve(exercise);
+                setFiles(downloaded.uri)
+              }
+            } catch (err) {
+              resolve("Error Download")
+            }
           }
         });
       })
