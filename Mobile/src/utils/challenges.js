@@ -214,7 +214,6 @@ export const getTodayRecommendedMeal = async (
     phaseNames,
     activeChallengeData
   )
-  const challengeMealsFilterList = phaseMeals.recipeList.map((res) => res.id);
   const breakfastList = phaseMeals.recipeList.filter((res) => res.breakfastVisible);
   const lunchList = phaseMeals.recipeList.filter((res) => res.lunchVisible);
   const dinnerList = phaseMeals.recipeList.filter((res) => res.dinnerVisible);
@@ -249,7 +248,6 @@ export const getTodayRecommendedMeal = async (
   return {
     recommendedRecipe,
     recommendedMeal,
-    challengeMealsFilterList,
     phaseDefaultTags,
   };
 };

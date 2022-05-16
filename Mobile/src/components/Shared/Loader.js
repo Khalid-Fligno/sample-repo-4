@@ -1,16 +1,41 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { 
+  View, 
+  StyleSheet, 
+  Text,
+  Animated
+} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { DotIndicator } from 'react-native-indicators';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import progressBar from '../../styles/progressBar';
 
 const Loader = ({
   loading,
   overlayColor,
-  text,
+  setDownloadInfo,
+  downloadInfo,
+  progressive
 }) => {
+
+  const progressDownload = () => {
+    for (const progress of Array(101).keys()) {
+      setDownloadInfo({
+        progress: Math.floor((progress * 100) / progress),
+        loaded: progress,
+        total: progress,
+        completed: false,
+      });
+    }
+  }
+
+  useEffect(() => {
+    progressDownload();
+  }, [])
+
+  console.log('downloadInfo: ', downloadInfo)
 
   if (loading) {
     return (
@@ -22,19 +47,28 @@ const Loader = ({
           overlayColor={overlayColor}
         >
           <View style={styles.contentContainer}>
-            <View style={styles.dotIndicatorContainer}>
-              <DotIndicator
-                color={colors.themeColor.color}
-                count={3}
-                size={10}
-              />
-            </View>
             {
-              text && (
-                <Text style={styles.loaderText}>
-                  {text}
-                </Text>
-              )
+              progressive ?
+                <>
+                  <View style={progressBar.bar}>
+                    <Animated.View style={[
+                      StyleSheet.absoluteFill, {
+                        backgroundColor: colors.black,
+                        borderRadius: 20,
+                        width: `${downloadInfo.progress}%`
+                      }
+                    ]} />
+                  </View>
+                  <Text style={styles.loaderText}>Downloading {downloadInfo.progress}%</Text>
+                </>
+                :
+                <View style={styles.dotIndicatorContainer}>
+                  <DotIndicator
+                    color={colors.themeColor.color}
+                    count={3}
+                    size={10}
+                  />
+                </View>
             }
           </View>
         </Spinner>

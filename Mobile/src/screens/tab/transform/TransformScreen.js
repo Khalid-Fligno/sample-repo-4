@@ -55,24 +55,27 @@ export const TransformScreen = ({ navigation }) => {
   const [showRC, setShowRC] = useState(false)
   const [phaseData, setPhaseData] = useState([]);
   const [phase, setPhase] = useState([]);
-  const [totalChallengeWorkoutsCompleted, setTotalChallengeWorkoutsCompleted] = useState(null);
   const [currentChallengeDay, setCurrentChallengeDay] = useState(null);
   const [transformLevel, setTransformLevel] = useState(undefined);
-  const [loadingExercises, setLoadingExercises] = useState()
-  const [totalToDownload, setTotalToDownload] = useState()
+  const [loadingExercises, setLoadingExercises] = useState(false)
   const [newWorkoutParams, setNewWorkoutParams] = useState()
   const [initialBurpeeTestCompleted, setInitialBurpeeTestCompleted] = useState(false)
   const [completeCha, setCompleteCha] = useState(false)
   const [todayRecommendedRecipe, setTodayRecommendedRecipe] = useState([])
   const [todayRecommendedMeal, setTodayRecommendedMeal] = useState([])
-  const [challengeMealsFilterList, setChallengeMealsFilterList] = useState([])
   const [phaseDefaultTags, setPhaseDefaultTags] = useState(undefined)
   const [skipped, setSkipped] = useState(false)
   const [isSettingVisible, setIsSettingVisible] = useState(false)
   const [AllRecipe, setAllRecipe] = useState([])
   const [challengeRecipe, setChallengeRecipe] = useState([])
   const [favoriteRecipe, setFavoriteRecipe] = useState([])
-  const [files, setFiles] = useState(false)
+  const [files, setFiles] = useState(undefined)
+  const [downloadInfo, setDownloadInfo] = useState({
+    progress: 0,
+    completed: false,
+    total: 0,
+    loaded: 0,
+  });
   const calendarStrip = useRef(null)
 
   const fetchUserData = async () => {
@@ -439,7 +442,6 @@ export const TransformScreen = ({ navigation }) => {
         setTodayRcWorkout(todayRcWorkout);
         setTodayRecommendedRecipe(getTodayRecommendedMeals.recommendedRecipe[0])
         setTodayRecommendedMeal(getTodayRecommendedMeals.recommendedMeal[0])
-        setChallengeMealsFilterList(getTodayRecommendedMeals.challengeMealsFilterList)
         setPhaseDefaultTags(getTodayRecommendedMeals.phaseDefaultTags)
         setFavoriteRecipe(favoriteRecipe.recommendedMeal[0])
       } else {
@@ -447,23 +449,10 @@ export const TransformScreen = ({ navigation }) => {
         setTodayRcWorkout(undefined);
         setTodayRecommendedRecipe(getTodayRecommendedMeals.recommendedRecipe[0])
         setTodayRecommendedMeal(getTodayRecommendedMeals.recommendedMeal[0])
-        setChallengeMealsFilterList(getTodayRecommendedMeals.challengeMealsFilterList)
         setPhaseDefaultTags(getTodayRecommendedMeals.phaseDefaultTags)
         setFavoriteRecipe(favoriteRecipe.recommendedMeal[0])
       }
 
-      //TODO :calculate the workout completed till selected date
-      const totalChallengeWorkoutsCompleted =
-        getTotalChallengeWorkoutsCompleted(
-          activeChallengeUserData,
-          stringDate
-        );
-
-      if (!totalChallengeWorkoutsCompleted) {
-        console.log("Error totalChallengeWorkoutsCompleted")
-      }
-
-      setTotalChallengeWorkoutsCompleted(totalChallengeWorkoutsCompleted)
     } else {
       setLoading(false)
       console.log("Error get phase")
@@ -671,33 +660,13 @@ export const TransformScreen = ({ navigation }) => {
   }
 
   const loadExercises = async (workoutData) => {
-    setLoading(true)
+    setLoadingExercises(true)
 
     Object.assign(workoutData, {
       warmUpExercises: workoutData.warmUpExercises,
     });
 
-    if (workoutData.newWorkout) {
-      const getTotalDownload =
-        workoutData.exercises.length +
-        workoutData.warmUpExercises.length +
-        workoutData.coolDownExercises.length +
-        workoutData.warmUpExercises.length +
-        workoutData.coolDownExercises.length
-
-      console.log('getTotalDownload: ', getTotalDownload)
-      setTotalToDownload(getTotalDownload)
-    } else {
-      const getTotalDownload =
-        workoutData.exercises.length +
-        workoutData.warmUpExercises.length +
-        workoutData.coolDownExercises.length
-
-      setTotalToDownload(getTotalDownload)
-    }
-
-    const workout = await loadExercise(workoutData, setFiles);
-    console.log('workout: ', workout)
+    const workout = await loadExercise(workoutData)
 
     if (workout && workout.newWorkout) {
       const warmUpExercises = await downloadExerciseWC(
@@ -711,9 +680,7 @@ export const TransformScreen = ({ navigation }) => {
           }),
         workout.warmUpExerciseModel,
         "warmUp",
-        setFiles
       );
-      console.log('warmUpExercises: ', warmUpExercises)
 
       if (warmUpExercises.length > 0) {
         const coolDownExercises = await downloadExerciseWC(
@@ -721,39 +688,34 @@ export const TransformScreen = ({ navigation }) => {
           workout.coolDownExercises,
           workout.coolDownExerciseModel,
           "coolDown",
-          setFiles
+          setDownloadInfo
         );
-        console.log('coolDownExercises: ', coolDownExercises)
 
         if (coolDownExercises.length > 0) {
           const newWorkout = Object.assign({}, workout, {
             warmUpExercises: warmUpExercises,
             coolDownExercises: coolDownExercises,
           });
-          // if (this.state.totalToDownload === this.state.downloaded) {
-          //   this.goToNext(newWorkout);
-          // }
+
           goToNext(newWorkout)
         } else {
-          // this.setState({ loadingExercises: false });
+          setLoadingExercises(false)
           Alert.alert("Alert!", "Something went wrong!");
         }
       } else {
-        // this.setState({ loadingExercises: false });
+        setLoadingExercises(false)
         Alert.alert("Alert!", "Something went wrong!");
       }
     } else if (workout) {
-      if (totalToDownload === downloaded) {
-        goToNext(workout);
-      }
+      goToNext(workout);
     } else {
-      // this.setState({ loadingExercises: false });
+      setLoadingExercises(false)
     }
   }
 
   const goToNext = async (workout) => {
     const fitnessLevel = await useStorage.getItem("fitnessLevel", null);
-    setLoading(false)
+    setLoadingExercises(false)
 
     if (currentChallengeDay > 0) {
       Object.assign(workout, {
@@ -786,6 +748,11 @@ export const TransformScreen = ({ navigation }) => {
         extraProps: { fromCalender: true },
         transformRoute: true,
       });
+
+      setDownloadInfo((info) => ({
+        ...info,
+        completed: true,
+      }));
     }
   }
 
@@ -823,8 +790,7 @@ export const TransformScreen = ({ navigation }) => {
   // console.log('showRC: ', showRC)
   // console.log('loading: ', loading)
   // console.log('ScheduleData: ', ScheduleData)
-  console.log('files: ', files)
-
+  
   return (
     <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
       <CustomCalendarStrip
@@ -891,8 +857,11 @@ export const TransformScreen = ({ navigation }) => {
         ScheduleData={ScheduleData}
       />
       <Loader
-        loading={loading}
+        loading={loading || loadingExercises}
         color={colors.red.standard}
+        setDownloadInfo={setDownloadInfo}
+        downloadInfo={downloadInfo}
+        progressive={true}
       // text={loading ? 'Please wait we are loading workout' : null}
       />
     </View>

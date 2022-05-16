@@ -170,7 +170,7 @@ export const getRandomRestImages = async () => {
   return images[getRandomNumber(images.length)];
 };
 
-export const loadExercise = async (workoutData, setFiles) => {
+export const loadExercise = async (workoutData) => {
 
   await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
     (res) => {
@@ -253,20 +253,20 @@ export const loadExercise = async (workoutData, setFiles) => {
 
     if (exercises?.length > 0) {
       workoutData = Object.assign({}, workoutData, { exercises: exercises });
-      const res = await downloadExercise(workoutData, setFiles);
+      const res = await downloadExercise(workoutData);
       if (res) return workoutData;
       else return false;
     } else {
       return false;
     }
   } else {
-    const res = await downloadExercise(workoutData, setFiles);
+    const res = await downloadExercise(workoutData);
     if (res) return workoutData;
     else return false;
   }
 };
 
-const downloadExercise = async (workout, setFiles) => {
+const downloadExercise = async (workout) => {
   try {
     const exercises =
       workout?.exercises && workout?.exercises?.length > 0
@@ -293,10 +293,9 @@ const downloadExercise = async (workout, setFiles) => {
 
             try {
               const downloaded = await downloadResumable.downloadAsync();
-
+          
               if (downloaded.status === 200) {
                 resolve(exercise);
-                setFiles(downloaded.uri)
               }
             } catch (err) {
               resolve("Error Download")
@@ -319,7 +318,6 @@ export const downloadExerciseWC = async (
   exerciseIds,
   exerciseModel,
   type,
-  setFiles
 ) => {
   try {
     let exercises = [];
@@ -359,7 +357,6 @@ export const downloadExerciseWC = async (
 
               if (downloaded.status === 200) {
                 resolve(exercise);
-                setFiles(downloaded.uri)
               }
             } catch (err) {
               resolve("Error Download")
