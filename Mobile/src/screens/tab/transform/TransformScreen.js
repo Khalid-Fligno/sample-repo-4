@@ -70,12 +70,9 @@ export const TransformScreen = ({ navigation }) => {
   const [challengeRecipe, setChallengeRecipe] = useState([])
   const [favoriteRecipe, setFavoriteRecipe] = useState([])
   const [files, setFiles] = useState(undefined)
-  const [downloadInfo, setDownloadInfo] = useState({
-    progress: 0,
-    completed: false,
-    total: 0,
-    loaded: 0,
-  });
+  const [totalToDownload, setTotalToDownload] = useState(0)
+  const [downloaded, setDownloaded] = useState(0)
+  const [finishdownloaded, setFinishdownloaded] = useState(false)
   const calendarStrip = useRef(null)
 
   const fetchUserData = async () => {
@@ -666,7 +663,25 @@ export const TransformScreen = ({ navigation }) => {
       warmUpExercises: workoutData.warmUpExercises,
     });
 
-    const workout = await loadExercise(workoutData)
+    if (workoutData.newWorkout) {
+      const getTotalDownload =
+        workoutData.exercises.length +
+        workoutData.warmUpExercises.length +
+        workoutData.coolDownExercises.length +
+        workoutData.warmUpExercises.length +
+        workoutData.coolDownExercises.length
+
+      setTotalToDownload(getTotalDownload)
+    } else {
+      const getTotalDownload =
+        workoutData.exercises.length +
+        workoutData.warmUpExercises.length +
+        workoutData.coolDownExercises.length
+
+      setTotalToDownload(getTotalDownload)
+    }
+
+    const workout = await loadExercise(workoutData, setFiles)
 
     if (workout && workout.newWorkout) {
       const warmUpExercises = await downloadExerciseWC(
@@ -680,6 +695,7 @@ export const TransformScreen = ({ navigation }) => {
           }),
         workout.warmUpExerciseModel,
         "warmUp",
+        setFiles
       );
 
       if (warmUpExercises.length > 0) {
@@ -688,7 +704,7 @@ export const TransformScreen = ({ navigation }) => {
           workout.coolDownExercises,
           workout.coolDownExerciseModel,
           "coolDown",
-          setDownloadInfo
+          setFiles
         );
 
         if (coolDownExercises.length > 0) {
@@ -697,7 +713,7 @@ export const TransformScreen = ({ navigation }) => {
             coolDownExercises: coolDownExercises,
           });
 
-          goToNext(newWorkout)
+          setNewWorkoutParams(newWorkout)
         } else {
           setLoadingExercises(false)
           Alert.alert("Alert!", "Something went wrong!");
@@ -748,12 +764,13 @@ export const TransformScreen = ({ navigation }) => {
         extraProps: { fromCalender: true },
         transformRoute: true,
       });
-
-      setDownloadInfo((info) => ({
-        ...info,
-        completed: true,
-      }));
     }
+
+    setTotalToDownload(0)
+    setDownloaded(0)
+    setFiles(undefined)
+    setLoadingExercises(false)
+    setFinishdownloaded(false)
   }
 
   const resetActiveChallengeUserData = () => {
@@ -785,12 +802,38 @@ export const TransformScreen = ({ navigation }) => {
     fetchChallengeData();
   }, [])
 
+  useEffect(() => {
+    setTotalToDownload(0)
+    setDownloaded(0)
+    setFiles(undefined)
+    setLoadingExercises(false)
+    setFinishdownloaded(false)
+  }, [])
+
+  useEffect(() => {
+    if(files){
+      for (const downloaded of Array(totalToDownload).keys()){
+        if(totalToDownload === downloaded){
+          console.log('downloaded: ', downloaded)
+          console.log('totalToDownload: ', totalToDownload)
+          setFinishdownloaded(true)
+          setFiles(undefined)
+        }
+      }
+    }
+
+    if(newWorkoutParams && finishdownloaded){
+      goToNext(newWorkoutParams)
+    }
+  }, [files, downloaded, totalToDownload])
+
   // console.log('ScheduleData: ', ScheduleData)
   // console.log('isSchedule: ', isSchedule)
   // console.log('showRC: ', showRC)
   // console.log('loading: ', loading)
   // console.log('ScheduleData: ', ScheduleData)
-  
+  console.log('finishdownloaded: ', finishdownloaded)
+
   return (
     <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
       <CustomCalendarStrip
@@ -859,9 +902,7 @@ export const TransformScreen = ({ navigation }) => {
       <Loader
         loading={loading || loadingExercises}
         color={colors.red.standard}
-        setDownloadInfo={setDownloadInfo}
-        downloadInfo={downloadInfo}
-        progressive={true}
+        progressive={false}
       // text={loading ? 'Please wait we are loading workout' : null}
       />
     </View>

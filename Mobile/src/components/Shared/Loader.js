@@ -15,27 +15,8 @@ import progressBar from '../../styles/progressBar';
 const Loader = ({
   loading,
   overlayColor,
-  setDownloadInfo,
-  downloadInfo,
   progressive
 }) => {
-
-  const progressDownload = () => {
-    for (const progress of Array(101).keys()) {
-      setDownloadInfo({
-        progress: Math.floor((progress * 100) / progress),
-        loaded: progress,
-        total: progress,
-        completed: false,
-      });
-    }
-  }
-
-  useEffect(() => {
-    progressDownload();
-  }, [])
-
-  console.log('downloadInfo: ', downloadInfo)
 
   if (loading) {
     return (

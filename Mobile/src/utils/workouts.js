@@ -170,7 +170,7 @@ export const getRandomRestImages = async () => {
   return images[getRandomNumber(images.length)];
 };
 
-export const loadExercise = async (workoutData) => {
+export const loadExercise = async (workoutData, setFiles) => {
 
   await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
     (res) => {
@@ -253,20 +253,20 @@ export const loadExercise = async (workoutData) => {
 
     if (exercises?.length > 0) {
       workoutData = Object.assign({}, workoutData, { exercises: exercises });
-      const res = await downloadExercise(workoutData);
+      const res = await downloadExercise(workoutData, setFiles);
       if (res) return workoutData;
       else return false;
     } else {
       return false;
     }
   } else {
-    const res = await downloadExercise(workoutData);
+    const res = await downloadExercise(workoutData, setFiles);
     if (res) return workoutData;
     else return false;
   }
 };
 
-const downloadExercise = async (workout) => {
+const downloadExercise = async (workout, setFiles) => {
   try {
     const exercises =
       workout?.exercises && workout?.exercises?.length > 0
@@ -296,6 +296,7 @@ const downloadExercise = async (workout) => {
           
               if (downloaded.status === 200) {
                 resolve(exercise);
+                setFiles(downloaded.uri)
               }
             } catch (err) {
               resolve("Error Download")
@@ -318,6 +319,7 @@ export const downloadExerciseWC = async (
   exerciseIds,
   exerciseModel,
   type,
+  setFiles
 ) => {
   try {
     let exercises = [];
@@ -357,6 +359,7 @@ export const downloadExerciseWC = async (
 
               if (downloaded.status === 200) {
                 resolve(exercise);
+                setFiles(downloaded.uri)
               }
             } catch (err) {
               resolve("Error Download")
