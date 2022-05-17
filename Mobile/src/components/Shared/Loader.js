@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   View, 
   StyleSheet, 
@@ -14,11 +14,19 @@ import progressBar from '../../styles/progressBar';
 
 const Loader = ({
   loading,
+  loadExercises,
   overlayColor,
-  progressive
+  downloaded,
+  totalToDownload
 }) => {
 
-  if (loading) {
+  const [percentage, setPercentage] = useState(0)
+
+  useEffect(() => {
+    setPercentage(Math.floor((downloaded / totalToDownload) * 100))
+  }, [downloaded, totalToDownload])
+
+  if (loading || loadExercises) {
     return (
       <View style={styles.loaderContainer}>
         <Spinner
@@ -29,18 +37,18 @@ const Loader = ({
         >
           <View style={styles.contentContainer}>
             {
-              progressive ?
+              loadExercises ?
                 <>
                   <View style={progressBar.bar}>
                     <Animated.View style={[
                       StyleSheet.absoluteFill, {
                         backgroundColor: colors.black,
                         borderRadius: 20,
-                        width: `${downloadInfo.progress}%`
+                        width: `${percentage}%`
                       }
                     ]} />
                   </View>
-                  <Text style={styles.loaderText}>Downloading {downloadInfo.progress}%</Text>
+                  <Text style={styles.loaderText}>Downloading {percentage}%</Text>
                 </>
                 :
                 <View style={styles.dotIndicatorContainer}>

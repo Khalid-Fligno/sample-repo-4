@@ -661,6 +661,7 @@ export const TransformScreen = ({ navigation }) => {
 
     Object.assign(workoutData, {
       warmUpExercises: workoutData.warmUpExercises,
+      displayName: `${workoutData.displayName} - Day ${currentChallengeDay}`,
     });
 
     if (workoutData.newWorkout) {
@@ -731,14 +732,7 @@ export const TransformScreen = ({ navigation }) => {
 
   const goToNext = async (workout) => {
     const fitnessLevel = await useStorage.getItem("fitnessLevel", null);
-    setLoadingExercises(false)
-
-    if (currentChallengeDay > 0) {
-      Object.assign(workout, {
-        displayName: `${workout.displayName} - Day ${currentChallengeDay}`,
-      });
-    }
-
+    
     if (!initialBurpeeTestCompleted) {
       await FileSystem.downloadAsync(
         "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
@@ -812,10 +806,9 @@ export const TransformScreen = ({ navigation }) => {
 
   useEffect(() => {
     if(files){
-      for (const downloaded of Array(totalToDownload).keys()){
-        if(totalToDownload === downloaded){
-          console.log('downloaded: ', downloaded)
-          console.log('totalToDownload: ', totalToDownload)
+      for (let i = 0; i <= totalToDownload; i++){
+        if(totalToDownload === i){
+          setDownloaded(i)
           setFinishdownloaded(true)
           setFiles(undefined)
         }
@@ -825,7 +818,7 @@ export const TransformScreen = ({ navigation }) => {
     if(newWorkoutParams && finishdownloaded){
       goToNext(newWorkoutParams)
     }
-  }, [files, downloaded, totalToDownload])
+  }, [files])
 
   // console.log('ScheduleData: ', ScheduleData)
   // console.log('isSchedule: ', isSchedule)
@@ -833,6 +826,8 @@ export const TransformScreen = ({ navigation }) => {
   // console.log('loading: ', loading)
   // console.log('ScheduleData: ', ScheduleData)
   console.log('finishdownloaded: ', finishdownloaded)
+  console.log('totalToDownload: ', totalToDownload)
+  console.log('downloaded: ', downloaded)
 
   return (
     <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
@@ -900,9 +895,11 @@ export const TransformScreen = ({ navigation }) => {
         ScheduleData={ScheduleData}
       />
       <Loader
-        loading={loading || loadingExercises}
+        loading={loading}
+        loadExercises={loadingExercises}
         color={colors.red.standard}
-        progressive={false}
+        downloaded={downloaded}
+        totalToDownload={totalToDownload}
       // text={loading ? 'Please wait we are loading workout' : null}
       />
     </View>
