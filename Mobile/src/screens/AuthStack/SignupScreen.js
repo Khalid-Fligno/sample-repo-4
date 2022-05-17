@@ -350,15 +350,16 @@ const SignupScreen = ({ navigation }) => {
           <View style={styles.navigateSigninContainer}>
             <Text
               style={{
-                fontFamily: fonts.bold,
                 textAlign: "center",
                 color: colors.black,
-                width: 340,
+                width: wp('90%'),
+                fontSize: hp('2%'),
               }}
             >
-              Note: If you have just purchased Transform,
-              you already have an account, retrieve this here or
-              please contact support@fitazfk.com if you are having issues.
+              Note: If you have just purchased <Text style={{ fontWeight: "bold" }}>Transform</Text>,
+              you already have the start of an account, you need to retrieve & finish your account
+              <Text onPress={() => navigation.navigate('FindAccount')}> here </Text>
+              or please contact support@fitazfk.com if you are having issues.
             </Text>
             {
               !userData ?
