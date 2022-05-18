@@ -812,15 +812,6 @@ export const TransformScreen = ({ navigation }) => {
     }
   }, [files, downloaded, totalToDownload])
 
-  // console.log('ScheduleData: ', ScheduleData)
-  // console.log('isSchedule: ', isSchedule)
-  // console.log('showRC: ', showRC)
-  // console.log('loading: ', loading)
-  // console.log('ScheduleData: ', ScheduleData)
-  // console.log('finishdownloaded: ', finishdownloaded)
-  // console.log('totalToDownload: ', totalToDownload)
-  // console.log('downloaded: ', downloaded)
-
   return (
     <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
       <CustomCalendarStrip

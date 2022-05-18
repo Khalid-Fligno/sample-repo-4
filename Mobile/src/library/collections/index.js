@@ -5,5 +5,8 @@ export const COLLECTION_NAMES = {
     CHALLENGES: 'challenges',
     EXERCISES: 'Exercises',
     WARMUPCOOLDOWN: "WarmUpCoolDownExercises",
+    RECIPES: 'recipes',
+    TRAINERS: 'trainers',
+    BLOGS: 'blogs',
     RECIPES: 'recipes'
 };
