@@ -797,16 +797,8 @@ export const TransformScreen = ({ navigation }) => {
   }, [])
 
   useEffect(() => {
-    setTotalToDownload(0)
-    setDownloaded(0)
-    setFiles(undefined)
-    setLoadingExercises(false)
-    setFinishdownloaded(false)
-  }, [])
-
-  useEffect(() => {
     if(files){
-      for (let i = 0; i <= totalToDownload; i++){
+      for (let i = downloaded; i <= totalToDownload; i++){
         if(totalToDownload === i){
           setDownloaded(i)
           setFinishdownloaded(true)
@@ -818,16 +810,16 @@ export const TransformScreen = ({ navigation }) => {
     if(newWorkoutParams && finishdownloaded){
       goToNext(newWorkoutParams)
     }
-  }, [files])
+  }, [files, downloaded, totalToDownload])
 
   // console.log('ScheduleData: ', ScheduleData)
   // console.log('isSchedule: ', isSchedule)
   // console.log('showRC: ', showRC)
   // console.log('loading: ', loading)
   // console.log('ScheduleData: ', ScheduleData)
-  console.log('finishdownloaded: ', finishdownloaded)
-  console.log('totalToDownload: ', totalToDownload)
-  console.log('downloaded: ', downloaded)
+  // console.log('finishdownloaded: ', finishdownloaded)
+  // console.log('totalToDownload: ', totalToDownload)
+  // console.log('downloaded: ', downloaded)
 
   return (
     <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
