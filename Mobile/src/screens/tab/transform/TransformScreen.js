@@ -27,7 +27,7 @@ import { addDocument, addSubDocument } from "../../../hook/firestore/write";
 import { 
   getCollection, 
   getDocument, 
-  getSpecificSubCollection 
+  getSpecificSubCollectionTransForm 
 } from "../../../hook/firestore/read";
 import { COLLECTION_NAMES } from "../../../library/collections/index"
 import { useStorage } from "../../../hook/storage"
@@ -119,12 +119,13 @@ export const TransformScreen = ({ navigation }) => {
 
   const fetchActiveChallengeUserData = async (uid) => {
     try {
-      const getUserChallengeActive = await getSpecificSubCollection(
+      const getUserChallengeActive = await getSpecificSubCollectionTransForm(
         COLLECTION_NAMES.USERS,
         COLLECTION_NAMES.CHALLENGES,
         "status",
         uid,
-        "Active"
+        "Active",
+        "in"
       )
       let list = [];
 

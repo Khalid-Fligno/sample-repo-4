@@ -72,18 +72,19 @@ export const getUserSpecificField = async (
   }
 }
 
-export const getSpecificSubCollection = async (
+export const getSpecificSubCollectionTransForm = async (
   collectionName,
   collectionName1,
   fieldName,
   value,
-  value1
+  value1,
+  operator
 ) => {
   const docsRef = await db
     .collection(collectionName)
     .doc(value)
     .collection(collectionName1)
-    .where(fieldName, "in", [value1])
+    .where(fieldName, operator, [value1])
     .get()
 
   if (docsRef.size > 0) {
@@ -102,5 +103,27 @@ export const getCollection = async (collectionName) => {
     return collectionRef
   } else {
     return undefined
+  }
+}
+
+export const getSpecificSubCollection = async (
+  collectionName,
+  collectionName1,
+  fieldName,
+  value,
+  value1,
+  operator
+) => {
+  const docsRef = await db
+    .collection(collectionName)
+    .doc(value)
+    .collection(collectionName1)
+    .where(fieldName, operator, value1)
+    .get()
+
+  if (docsRef.size > 0) {
+    return docsRef
+  } else {
+    return undefined;
   }
 }
