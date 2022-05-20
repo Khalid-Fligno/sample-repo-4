@@ -8,5 +8,6 @@ export const COLLECTION_NAMES = {
     RECIPES: 'recipes',
     TRAINERS: 'trainers',
     BLOGS: 'blogs',
-    RECIPES: 'recipes'
+    RECIPES: 'recipes',
+    NEWWORKOUTS: 'newWorkouts'
 };

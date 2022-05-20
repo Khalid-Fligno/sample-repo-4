@@ -202,6 +202,8 @@ class ProgressHomeScreen extends React.PureComponent {
                 (res) => res.target === "strength"
               );
 
+            console.log('totalStrengthCompleted: ', totalStrengthCompleted)
+
             this.setState({ totalS: 5 });
             this.setState({ totalI: 5 });
             this.setState({ totalC: 5 });
@@ -304,6 +306,8 @@ class ProgressHomeScreen extends React.PureComponent {
       totalC,
       totalS,
     } = this.state;
+
+    console.log('totalS: ', totalS)
 
     const weightDifference =
       initialProgressInfo &&

@@ -47,16 +47,14 @@ export const useCounter = () => {
       return;
     }
 
-    const isUserAdded = await addDocument(
+    console.log('userDocs ID: ', userDocs.id)
+
+    await addDocument(
       COLLECTION_NAMES.USERS,
       userDocs.id,
       data
     )
 
-    if (!isUserAdded) {
-      console.log('NOT PASS')
-      return undefined
-    }
     navigate("App");
   };
 

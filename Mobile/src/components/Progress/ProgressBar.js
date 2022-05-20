@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View, Text, Dimensions } from "react-native";
 import PropTypes from "prop-types";
 import colors from "../../styles/colors";
@@ -20,6 +20,7 @@ const ProgressBar = (props) => {
     customProgressNumberStyle,
     customProgessTotalStyle,
   } = props;
+
   return (
     <View style={styles.container}>
       <AnimatedCircularProgress

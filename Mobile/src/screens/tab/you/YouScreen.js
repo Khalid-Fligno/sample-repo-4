@@ -42,14 +42,7 @@ export const YouScreen = ({ navigation }) => {
   const [helperModalVisible, setHelperModalVisible] = useState(false);
   const [imageModalVisible, setImageModalVisible] = useState(false);
   const [imageModalSource, setImageModalSource] = useState(undefined);
-  const [activeChallengeUserData, setActiveChallengeUserData] = useState(undefined);
   const [activeChallengeData, setActiveChallengeData] = useState(undefined);
-  const [totalInterval, setTotalInterval] = useState(undefined);
-  const [totalCircuit, setTotalCircuit] = useState(undefined);
-  const [totalStrength, setTotalStrength] = useState(undefined);
-  const [totalIntervalCompleted, setTotalIntervalCompleted] = useState(undefined);
-  const [totalCircuitCompleted, setTotalCircuitCompleted] = useState(undefined);
-  const [totalStrengthCompleted, setTotalStrengthCompleted] = useState(undefined);
   const [totalI, setTotalI] = useState(0);
   const [totalS, setTotalS] = useState(0);
   const [totalC, setTotalC] = useState(0);
@@ -152,11 +145,10 @@ export const YouScreen = ({ navigation }) => {
         "Active",
         "=="
       )
-      let list = []
 
       userActiveChallengeRef.docs.forEach(userActiveChallenge => {
         if (userActiveChallenge) {
-          fetchActiveChallengeData(userActiveChallenge)
+          fetchActiveChallengeData(userActiveChallenge.data())
         } else {
           setTotalS(0)
           setTotalI(0)
@@ -179,90 +171,29 @@ export const YouScreen = ({ navigation }) => {
         activeChallengeUserData.id
       )
 
-      console.log("activeChallengeData: ", activeChallengeData)
-
-
       if (activeChallengeData) {
-        let totalWorkouts = [];
+        const totalIntervalCompleted =
+          activeChallengeUserData.workouts
+            .filter(res => res.target === "interval");
+        const totalCircuitCompleted =
+          activeChallengeUserData.workouts
+            .filter(res => res.target === "circuit");
+        const totalStrengthCompleted =
+          activeChallengeUserData.workouts
+            .filter(res => res.target === "strength");
 
-        activeChallengeData.workouts.forEach((workout) => {
-          totalWorkouts.push(workout);
-        });
-
-        if (totalWorkouts) {
-          const totalInterval = totalWorkouts.filter(res => res.target === "interval");
-          const totalCircuit = totalWorkouts.filter(res => res.target === "circuit");
-          const totalStrength = totalWorkouts.filter(res => res.target === "strength");
-          const totalIntervalCompleted =
-            activeChallengeUserData.workouts
-              .filter(res => res.target === "interval");
-          const totalCircuitCompleted =
-            activeChallengeUserData.workouts
-              .filter(res => res.target === "circuit");
-          const totalStrengthCompleted =
-            activeChallengeUserData.workouts
-              .filter(res => res.target === "strength");
-
-          fetchHomeScreenData(
-            activeChallengeUserData,
-            totalInterval,
-            totalCircuit,
-            totalStrength,
-          );
-
-          setTotalS(5)
-          setTotalI(5)
-          setTotalC(5)
-          setCountC(totalCircuitCompleted.length)
-          setCountI(totalIntervalCompleted.length)
-          setCountS(totalStrengthCompleted.length)
-          setActiveChallengeUserData(activeChallengeUserData)
-          setActiveChallengeData(activeChallengeData)
-          setTotalInterval(totalInterval)
-          setTotalCircuit(totalCircuit)
-          setTotalStrength(totalStrength)
-          setTotalIntervalCompleted(totalIntervalCompleted)
-          setTotalCircuitCompleted(totalCircuitCompleted)
-          setTotalStrengthCompleted(totalStrengthCompleted)
-          setLoading(false)
-        }
+        setTotalS(5)
+        setTotalI(5)
+        setTotalC(5)
+        setCountC(totalCircuitCompleted.length)
+        setCountI(totalIntervalCompleted.length)
+        setCountS(totalStrengthCompleted.length)
+        setActiveChallengeData(activeChallengeData)
+        setLoading(false)
       }
     } catch (err) {
       setLoading(false)
       console.log("Fetch active challenge data error: ", err);
-    }
-  };
-
-  const fetchHomeScreenData = async (
-    activeChallengeUserData,
-    totalInterval,
-    totalCircuit,
-    totalStrength,
-  ) => {
-
-    if (activeChallengeUserData.workouts.length !== 0) {
-      let tempTotalI = 0;
-      let tempTotalC = 0;
-      let tempTotalS = 0;
-
-      totalInterval.forEach((res) => {
-        tempTotalI += res.days.length;
-        setTotalI(tempTotalI)
-      });
-
-      totalCircuit.forEach((res) => {
-        tempTotalC += res.days.length;
-        setTotalC(tempTotalC)
-      });
-
-      totalStrength.forEach((res) => {
-        tempTotalS += res.days.length;
-        setTotalS(tempTotalS)
-      });
-    } else {
-      setTotalS(5)
-      setTotalC(5)
-      setTotalI(5)
     }
   };
 
