@@ -366,7 +366,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 )}
                 {showRR && (
                   <Text style={WorkoutScreenStyle.exerciseDescriptionText}>
-                    {" "}
                     {exercise.recommendedResistance}
                   </Text>
                 )}
