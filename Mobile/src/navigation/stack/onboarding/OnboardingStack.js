@@ -1,7 +1,8 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
 import SubscriptionScreen from "../../../screens/OnboardingStack/SubscriptionScreen";
-import Onboarding1Screen from "../../../screens/OnboardingStack/Onboarding1Screen";
+// import Onboarding1Screen from "../../../screens/OnboardingStack/Onboarding1Screen";
+import {OnboardingTabScreen} from "../../../screens/onboarding/index";
 import Progress1Screen from "../../../screens/OnboardingStack/Progress1Screen";
 import Progress2Screen from "../../../screens/OnboardingStack/Progress2Screen";
 import Onboarding2Screen from "../../../screens/OnboardingStack/Onboarding2Screen";
@@ -16,7 +17,7 @@ import {
 const OnboardingStack = createStackNavigator(
   {
     Subscription: SubscriptionScreen,
-    Onboarding1: Onboarding1Screen,
+    Onboarding1: OnboardingTabScreen.Onboarding1Screen,
     Onboarding2: Onboarding2Screen,
     Progress1: Progress1Screen,
     Progress2: Progress2Screen,

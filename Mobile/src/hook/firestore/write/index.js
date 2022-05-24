@@ -9,7 +9,9 @@ export const addDocument = async (
   .collection(collectionName)
   .doc(id)
   .set(data, { merge: true })
-  .then((res) => {})
+  .then((res) => {
+    return true
+  })
   .catch((err) => console.log(err));
 }
 

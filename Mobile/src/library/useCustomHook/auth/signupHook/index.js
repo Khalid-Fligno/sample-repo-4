@@ -163,27 +163,24 @@ export const useCounter = (specialOffer) => {
               data
             );
 
-            if(!isUserAddedData){
-              console.log('User Data not added')
-              return undefined
+            if(isUserAddedData){
+              setLoading(false)
+              appsFlyer.trackEvent("af_complete_registration", {
+                af_registration_method: "Email",
+              });
+              await addChallengesAfterSignUp(email, uid);
+              await auth.currentUser?.sendEmailVerification().then(() => {
+                Alert.alert(
+                  "Please verify email",
+                  "An email verification link has been sent to your email address"
+                );
+              });
+  
+              navigate("Onboarding1", {
+                name: firstName,
+                specialOffer: specialOffer,
+              });
             }
-
-            setLoading(false)
-            appsFlyer.trackEvent("af_complete_registration", {
-              af_registration_method: "Email",
-            });
-            await addChallengesAfterSignUp(email, uid);
-            await auth.currentUser?.sendEmailVerification().then(() => {
-              Alert.alert(
-                "Please verify email",
-                "An email verification link has been sent to your email address"
-              );
-            });
-
-            navigate("Onboarding1", {
-              name: firstName,
-              specialOffer: specialOffer,
-            });
           } catch (err) {
             await response.user.delete();
             Toast.show({

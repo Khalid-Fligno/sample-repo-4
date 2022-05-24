@@ -13,28 +13,25 @@ import moment from "moment";
 import CustomCalendarStrip from "../../../components/Calendar/CustomCalendarStrip";
 import { DayDisplayComponent } from "../../../components/tab/challenges/DayDisplayComponent";
 import globalStyle from "../../../styles/globalStyles";
-import { 
-  convertRecipeData, 
-  fetchRecipeData, 
-  getCurrentChallengeDay, 
-  getCurrentPhase, 
-  getTodayRecommendedMeal, 
-  getTodayRecommendedWorkout, 
-  getTotalChallengeWorkoutsCompleted, 
-  isActiveChallenge 
+import {
+  convertRecipeData,
+  fetchRecipeData,
+  getCurrentChallengeDay,
+  getCurrentPhase,
+  getTodayRecommendedMeal,
+  getTodayRecommendedWorkout,
 } from "../../../utils/challenges";
 import { addDocument, addSubDocument } from "../../../hook/firestore/write";
-import { 
-  getCollection, 
-  getDocument, 
-  getSpecificSubCollectionTransForm 
+import {
+  getCollection,
+  getDocument,
+  getSpecificSubCollectionTransForm
 } from "../../../hook/firestore/read";
 import { COLLECTION_NAMES } from "../../../library/collections/index"
 import { useStorage } from "../../../hook/storage"
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import calendarStyles from "../../AppStack/Calendar/calendarStyle";
 import * as FileSystem from "expo-file-system";
 import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
 import { checkVersion } from "react-native-check-version";
@@ -430,7 +427,7 @@ export const TransformScreen = ({ navigation }) => {
         activeChallengeUserData,
         stringDate
       )
-  
+
       if (
         todayRcWorkout &&
         getTodayRecommendedMeals &&
@@ -733,7 +730,7 @@ export const TransformScreen = ({ navigation }) => {
 
   const goToNext = async (workout) => {
     const fitnessLevel = await useStorage.getItem("fitnessLevel", null);
-    
+
     if (!initialBurpeeTestCompleted) {
       await FileSystem.downloadAsync(
         "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
@@ -798,9 +795,9 @@ export const TransformScreen = ({ navigation }) => {
   }, [])
 
   useEffect(() => {
-    if(files){
-      for (let i = downloaded; i <= totalToDownload; i++){
-        if(totalToDownload === i){
+    if (files) {
+      for (let i = downloaded; i <= totalToDownload; i++) {
+        if (totalToDownload === i) {
           setDownloaded(i)
           setFinishdownloaded(true)
           setFiles(undefined)
@@ -808,7 +805,7 @@ export const TransformScreen = ({ navigation }) => {
       }
     }
 
-    if(newWorkoutParams && finishdownloaded){
+    if (newWorkoutParams && finishdownloaded) {
       goToNext(newWorkoutParams)
     }
   }, [files, downloaded, totalToDownload])
@@ -828,14 +825,34 @@ export const TransformScreen = ({ navigation }) => {
       />
       {isSchedule && !showRC && !loading && (
         <View style={{ margin: wp("5%") }}>
-          <Text style={calendarStyles.scheduleTitleStyle}>
+          <Text
+            style={{
+              textAlign: "center",
+              fontFamily: fonts.GothamMedium,
+              fontSize: wp("5%"),
+            }}
+          >
             {ScheduleData.displayName}
           </Text>
-          <Text style={calendarStyles.scheduleTextStyle}>
+          <Text
+            style={{
+              textAlign: "center",
+              marginTop: wp("2%"),
+              color: colors.grey.dark,
+              fontFamily: fonts.GothamMedium,
+            }}
+          >
             Your challenge will start from{" "}
             {moment(ScheduleData.startDate).format("DD MMM YYYY")}
           </Text>
-          <Text style={calendarStyles.scheduleTextStyle}>
+          <Text
+            style={{
+              textAlign: "center",
+              marginTop: wp("2%"),
+              color: colors.grey.dark,
+              fontFamily: fonts.GothamMedium,
+            }}
+          >
             You can change this in settings
           </Text>
         </View>
