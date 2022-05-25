@@ -11,7 +11,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import fonts from "../../../../styles/fonts";
+import fonts from "../../styles/fonts";
 import * as Haptics from "expo-haptics";
 
 export const AllBlogScreen = ({ navigation }) => {

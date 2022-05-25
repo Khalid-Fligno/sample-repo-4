@@ -5,15 +5,15 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import Icon from "../../components/Shared/Icon";
-import colors from "../../styles/colors";
+import Icon from "../../../components/Shared/Icon";
+import colors from "../../../styles/colors";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import CustomBtn from "../../components/Shared/CustomBtn";
-import HeaderAuth from '../../components/Auth/Header';
+import CustomBtn from "../../../components/Shared/CustomBtn";
+import HeaderAuth from '../../../components/Auth/Header';
 import Toast from 'react-native-toast-message';
-import NativeLoader from "../../components/Shared/NativeLoader";
-import { useCounter } from '../../library/useCustomHook/auth/forgottenPasswordHook';
-import { forgottenPasswordStyle } from '../../styles/auth/forgottenPasswordStyle';
+import NativeLoader from "../../../components/Shared/NativeLoader";
+import { useCounter } from '../../../library/useCustomHook/auth/forgottenPasswordHook';
+import { styles } from './style';
 
 export const ForgottenPasswordScreen = ({ navigation }) => {
 
@@ -25,10 +25,10 @@ export const ForgottenPasswordScreen = ({ navigation }) => {
   } = useCounter()
 
   return (
-    <SafeAreaView style={forgottenPasswordStyle.safeAreaContainer}>
-      <View style={forgottenPasswordStyle.container}>
+    <SafeAreaView style={styles.safeAreaContainer}>
+      <View style={styles.container}>
         <View>
-          <View style={forgottenPasswordStyle.crossIconContainer}>
+          <View style={styles.crossIconContainer}>
             <TouchableOpacity
               onPress={() => navigation.goBack()}
             >
@@ -40,9 +40,9 @@ export const ForgottenPasswordScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <HeaderAuth />
-          <View style={forgottenPasswordStyle.formInputContainer}>
+          <View style={styles.formInputContainer}>
             <TextInput
-              style={forgottenPasswordStyle.Input}
+              style={styles.Input}
               placeholder="Email Address"
               keyboardType="email-address"
               onChangeText={setEmail}
@@ -51,7 +51,7 @@ export const ForgottenPasswordScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        <View style={forgottenPasswordStyle.navigateButtonContainer}>
+        <View style={styles.navigateButtonContainer}>
           <CustomBtn
             customBtnStyle={{ marginTop: 20, width: wp("90%") }}
             Title="SEND PASSWORD RESET EMAIL"

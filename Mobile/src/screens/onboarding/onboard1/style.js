@@ -8,7 +8,7 @@ import { containerPadding } from "../../../styles/globalStyles";
 
 const { width } = Dimensions.get("window");
 
-export const onboarding1Styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.black,

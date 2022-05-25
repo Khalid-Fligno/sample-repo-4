@@ -1,9 +1,9 @@
 import { createStackNavigator } from "react-navigation-stack";
-import { OfferScreen } from "../../../screens/offer";
+import { SpecialOfferScreen } from "../../../screens/offer/SpecialOfferScreen";
 
 const OfferStack = createStackNavigator(
   {
-    Offer: OfferScreen.SpecialOfferScreen
+    Offer: SpecialOfferScreen
   },
   {
     initialRouteName: 'Offer',

@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { useEffect } from "react";
 import globalStyle from "../../../styles/globalStyles";
-import { lifestyleStyle } from "../../../styles/tab/lifestyle/lifestyleStyle";
+import { styles } from "./style";
 import { isActiveChallenge } from "../../../utils/challenges";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
@@ -34,7 +34,7 @@ export const LifestyleScreen = ({ navigation }) => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={lifestyleStyle.scrollView}
+      contentContainerStyle={styles.scrollView}
       style={[globalStyle.container]}
     >
       <View>
@@ -46,45 +46,45 @@ export const LifestyleScreen = ({ navigation }) => {
           customContainerStyle={{ height: hp('15%') }}
         />
         <View>
-          <View style={lifestyleStyle.cardContainer}>
-            <TouchableOpacity style={lifestyleStyle.cardContainer} onPress={() => navigation.navigate("Nutrition")}>
+          <View style={styles.cardContainer}>
+            <TouchableOpacity style={styles.cardContainer} onPress={() => navigation.navigate("Nutrition")}>
               <ImageBackground
                 source={HOMESCREENTILESIMG.LIFESTYLENUTRITION}
-                style={lifestyleStyle.image}
+                style={styles.image}
               >
-                <View style={lifestyleStyle.opacityLayer}>
-                  <View style={lifestyleStyle.titleContainer}>
-                    <Text style={lifestyleStyle.title}>Nutrition</Text>
+                <View style={styles.opacityLayer}>
+                  <View style={styles.titleContainer}>
+                    <Text style={styles.title}>Nutrition</Text>
                   </View>
                 </View>
               </ImageBackground>
             </TouchableOpacity>
           </View>
-          <View style={lifestyleStyle.cardContainer}>
-            <TouchableOpacity style={lifestyleStyle.cardContainer} onPress={() => navigation.navigate("Workouts")}>
+          <View style={styles.cardContainer}>
+            <TouchableOpacity style={styles.cardContainer} onPress={() => navigation.navigate("Workouts")}>
               <ImageBackground
                 source={HOMESCREENTILESIMG.LIFESTYLEWORKOUT}
-                style={lifestyleStyle.image}
+                style={styles.image}
                 resizeMode="cover"
               >
-                <View style={lifestyleStyle.opacityLayer}>
-                  <View style={lifestyleStyle.titleContainer}>
-                    <Text style={lifestyleStyle.title}>Workout</Text>
+                <View style={styles.opacityLayer}>
+                  <View style={styles.titleContainer}>
+                    <Text style={styles.title}>Workout</Text>
                   </View>
                 </View>
               </ImageBackground>
             </TouchableOpacity>
           </View>
         </View>
-        <View style={lifestyleStyle.lookContainer}>
-          <Text style={lifestyleStyle.title1}>Looking for more?</Text>
+        <View style={styles.lookContainer}>
+          <Text style={styles.title1}>Looking for more?</Text>
           <Text style={{ fontFamily: fonts.StyreneAWebRegular }}>Start a challenge</Text>
         </View>
         <View>
           <CustomBtn
             titleCapitalise={true}
             Title='Explore a challenge'
-            customBtnStyle={lifestyleStyle.oblongBtnStyle}
+            customBtnStyle={styles.oblongBtnStyle}
             onPress={() => {
               isActiveChallenge().then((res) => {
                 if (res) {

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { auth } from '../../config/firebase';
 import { OTHERSIMG } from '../../library/images/others/others';
-import { specialOfferStyle } from '../../styles/offer/specialOfferStyle';
+import { styles } from './style';
 
 export const SpecialOfferScreen = ({navigation}) => {
 
@@ -27,27 +27,27 @@ export const SpecialOfferScreen = ({navigation}) => {
     <SafeAreaView style={styles.safeAreaView}>
       <ImageBackground
         source={OTHERSIMG.SPECIALOFFERSCREENBACKGROUND}
-        style={specialOfferStyle.flexContainer}
+        style={styles.flexContainer}
       >
-        <View style={specialOfferStyle.contentContainer}>
-          <Text style={specialOfferStyle.headingLarge}>
+        <View style={styles.contentContainer}>
+          <Text style={styles.headingLarge}>
             FK YEAH!
           </Text>
-          <Text style={specialOfferStyle.heading}>
+          <Text style={styles.heading}>
             HIT THE BUTTON BELOW TO SCORE YOUR
           </Text>
-          <Text style={specialOfferStyle.headingLarge}>
+          <Text style={styles.headingLarge}>
             1 MONTH FREE{'\n'}+{'\n'}20% OFF!*
           </Text>
           <Button
             title="REDEEM OFFER NOW"
             onPress={clickContinue}
             activeOpacity={0.7}
-            buttonStyle={specialOfferStyle.button}
-            titleStyle={specialOfferStyle.buttonText}
+            buttonStyle={styles.button}
+            titleStyle={styles.buttonText}
           />
         </View>
-        <Text style={specialOfferStyle.disclaimer}>
+        <Text style={styles.disclaimer}>
           *Based on Australian App store prices.  Discount may be higher or lower based on your local App Store territory pricing tiers.
         </Text>
       </ImageBackground>

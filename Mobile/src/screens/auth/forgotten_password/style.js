@@ -2,14 +2,14 @@ import {
   Dimensions,
   StyleSheet
 } from "react-native";
-import colors from "../colors";
-import fonts from "../fonts";
-import { containerPadding } from "../globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { containerPadding } from "../../../styles/globalStyles";
+import colors from "../../../styles/colors";
+import fonts from "../../../styles/fonts";
 
 const { width } = Dimensions.get("window");
 
-export const forgottenPasswordStyle = StyleSheet.create({
+export const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
     backgroundColor: colors.black,

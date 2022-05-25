@@ -6,7 +6,7 @@ import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const { width } = Dimensions.get('window');
 
-export const lifestyleStyle = StyleSheet.create({
+export const styles = StyleSheet.create({
   scrollView: {
     padding: 0,
   },

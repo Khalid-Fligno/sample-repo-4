@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   SafeAreaView,
@@ -6,15 +6,15 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import Icon from "../../components/Shared/Icon";
-import colors from "../../styles/colors";
+import Icon from "../../../components/Shared/Icon";
+import colors from "../../../styles/colors";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import CustomBtn from "../../components/Shared/CustomBtn";
-import HeaderAuth from '../../components/Auth/Header';
-import NativeLoader from "../../components/Shared/NativeLoader";
+import CustomBtn from "../../../components/Shared/CustomBtn";
+import HeaderAuth from '../../../components/Auth/Header';
+import NativeLoader from "../../../components/Shared/NativeLoader";
 import Toast from 'react-native-toast-message';
-import { findAccountStyle } from '../../styles/auth/findAccountStyle';
-import { useCounter } from '../../library/useCustomHook/auth/findAccountHook';
+import { styles } from './style';
+import { useCounter } from '../../../library/useCustomHook/auth/findAccountHook';
 
 export const FindAccountScreen = ({ navigation }) => {
 
@@ -26,10 +26,10 @@ export const FindAccountScreen = ({ navigation }) => {
   } = useCounter()
 
   return (
-    <SafeAreaView style={findAccountStyle.safeAreaContainer}>
-      <View style={findAccountStyle.container}>
+    <SafeAreaView style={styles.safeAreaContainer}>
+      <View style={styles.container}>
         <View>
-          <View style={findAccountStyle.crossIconContainer}>
+          <View style={styles.crossIconContainer}>
             <TouchableOpacity
               onPress={() => navigation.goBack()}
             >
@@ -41,16 +41,16 @@ export const FindAccountScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <HeaderAuth />
-          <View style={findAccountStyle.formContainer}>
-            <View style={findAccountStyle.formHeaderContainer}>
-              <Text style={findAccountStyle.Text}>
+          <View style={styles.formContainer}>
+            <View style={styles.formHeaderContainer}>
+              <Text style={styles.Text}>
                 Please enter the email address you
                 used when you purchased your Transform challenge:
               </Text>
             </View>
-            <View style={findAccountStyle.formInputContainer}>
+            <View style={styles.formInputContainer}>
               <TextInput
-                style={findAccountStyle.Input}
+                style={styles.Input}
 								placeholder="Email"
 								keyboardType="email-address"
 								onChangeText={setEmail}
@@ -60,7 +60,7 @@ export const FindAccountScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <View style={findAccountStyle.navigateButtonContainer}>
+        <View style={styles.navigateButtonContainer}>
           <CustomBtn
             customBtnStyle={{ marginTop: 20, width: wp("90%") }}
             Title="FIND MY ACCOUNT"
@@ -68,7 +68,7 @@ export const FindAccountScreen = ({ navigation }) => {
           />
           <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
             <Text
-              style={findAccountStyle.navigateToButton}
+              style={styles.navigateToButton}
             >
               Don't have an account? Sign up
             </Text>

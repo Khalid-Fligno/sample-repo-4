@@ -22,7 +22,7 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import CustomBtn from "../../../components/Shared/CustomBtn";
-import { youStyle } from "../../../styles/tab/you/youStyle";
+import { styles } from "./style";
 import { useStorage } from '../../../hook/storage'
 import {
   getDocument,
@@ -237,9 +237,9 @@ export const YouScreen = ({ navigation }) => {
   }, [])
 
   return (
-    <View style={youStyle.container}>
-      <ScrollView contentContainerStyle={youStyle.contentContainer}>
-        <View style={youStyle.imagesContainer}>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <View style={styles.imagesContainer}>
           {initialProgressInfo && initialProgressInfo.photoURL ? (
             <View>
               <TouchableOpacity
@@ -248,7 +248,7 @@ export const YouScreen = ({ navigation }) => {
                 }
               >
                 <FastImage
-                  style={youStyle.image}
+                  style={styles.image}
                   source={{
                     uri: initialProgressInfo.photoURL,
                     cache: "immutable",
@@ -258,7 +258,7 @@ export const YouScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           ) : (
-            <View style={youStyle.imagePlaceholder}>
+            <View style={styles.imagePlaceholder}>
               <TouchableOpacity
                 disabled={initialProgressInfo === undefined}
                 onPress={() =>
@@ -266,15 +266,15 @@ export const YouScreen = ({ navigation }) => {
                     isInitial: true,
                   })
                 }
-                style={youStyle.imagePlaceholderButton}
+                style={styles.imagePlaceholderButton}
               >
                 <Icon
                   name="add-circle"
                   color={colors.white}
                   size={20}
-                  style={youStyle.addIcon}
+                  style={styles.addIcon}
                 />
-                <Text style={youStyle.imagePlaceholderButtonText}>
+                <Text style={styles.imagePlaceholderButtonText}>
                   Add Before Photo
                 </Text>
               </TouchableOpacity>
@@ -288,7 +288,7 @@ export const YouScreen = ({ navigation }) => {
                 }
               >
                 <FastImage
-                  style={youStyle.image}
+                  style={styles.image}
                   source={{
                     uri: currentProgressInfo.photoURL,
                     cache: "immutable",
@@ -298,7 +298,7 @@ export const YouScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           ) : (
-            <View style={youStyle.imagePlaceholder}>
+            <View style={styles.imagePlaceholder}>
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("Progress2", {
@@ -307,43 +307,43 @@ export const YouScreen = ({ navigation }) => {
                 }
                 disabled={initialProgressInfo === undefined}
                 style={[
-                  youStyle.imagePlaceholderButton,
+                  styles.imagePlaceholderButton,
                   initialProgressInfo === undefined &&
-                  youStyle.disabledImagePlaceHolderButton,
+                  styles.disabledImagePlaceHolderButton,
                 ]}
               >
                 <Icon
                   name="add-circle"
                   color={colors.white}
                   size={20}
-                  style={youStyle.addIcon}
+                  style={styles.addIcon}
                 />
-                <Text style={youStyle.imagePlaceholderButtonText}>
+                <Text style={styles.imagePlaceholderButtonText}>
                   Progress Photo
                 </Text>
               </TouchableOpacity>
             </View>
           )}
         </View>
-        <View style={youStyle.dateRowContainer}>
-          <View style={youStyle.dateContainer}>
-            <Text style={youStyle.dateText}>
+        <View style={styles.dateRowContainer}>
+          <View style={styles.dateContainer}>
+            <Text style={styles.dateText}>
               {initialProgressInfo
                 ? moment(initialProgressInfo.date).format("DD/MM/YYYY")
                 : "-"}
             </Text>
           </View>
-          <View style={youStyle.dateContainer}>
-            <Text style={youStyle.dateText}>
+          <View style={styles.dateContainer}>
+            <Text style={styles.dateText}>
               {currentProgressInfo
                 ? moment(currentProgressInfo.date).format("DD/MM/YYYY")
                 : "-"}
             </Text>
           </View>
         </View>
-        <View style={youStyle.dataRowContainer}>
-          <View style={youStyle.dataContainer}>
-            <Text style={youStyle.dataText}>
+        <View style={styles.dataRowContainer}>
+          <View style={styles.dataContainer}>
+            <Text style={styles.dataText}>
               {initialProgressInfo ? initialProgressInfo.weight : "-"}{" "}
               {initialProgressInfo && unitsOfMeasurement === "metric" && "kg"}
               {initialProgressInfo &&
@@ -351,12 +351,12 @@ export const YouScreen = ({ navigation }) => {
                 "lbs"}
             </Text>
           </View>
-          <View style={youStyle.fieldContainer}>
-            <Text style={youStyle.fieldText}>WEIGHT</Text>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldText}>WEIGHT</Text>
             <Text
               style={[
-                youStyle.dataTextNegative,
-                weightDifference >= 0 && youStyle.dataTextPositive,
+                styles.dataTextNegative,
+                weightDifference >= 0 && styles.dataTextPositive,
               ]}
             >
               {weightToDecimal || "-"}{" "}
@@ -364,8 +364,8 @@ export const YouScreen = ({ navigation }) => {
               {weightDifference && unitsOfMeasurement === "imperial" && "lbs"}
             </Text>
           </View>
-          <View style={youStyle.dataContainer}>
-            <Text style={youStyle.dataText}>
+          <View style={styles.dataContainer}>
+            <Text style={styles.dataText}>
               {currentProgressInfo && currentProgressInfo.weight
                 ? currentProgressInfo.weight
                 : "-"}{" "}
@@ -380,9 +380,9 @@ export const YouScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <View style={youStyle.dataRowContainer}>
-          <View style={youStyle.dataContainer}>
-            <Text style={youStyle.dataText}>
+        <View style={styles.dataRowContainer}>
+          <View style={styles.dataContainer}>
+            <Text style={styles.dataText}>
               {initialProgressInfo ? initialProgressInfo.waist : "-"}{" "}
               {initialProgressInfo && unitsOfMeasurement === "metric" && "cm"}
               {initialProgressInfo &&
@@ -390,12 +390,12 @@ export const YouScreen = ({ navigation }) => {
                 "inches"}
             </Text>
           </View>
-          <View style={youStyle.fieldContainer}>
-            <Text style={youStyle.fieldText}>WAIST</Text>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldText}>WAIST</Text>
             <Text
               style={[
-                youStyle.dataTextNegative,
-                waistDifference >= 0 && youStyle.dataTextPositive,
+                styles.dataTextNegative,
+                waistDifference >= 0 && styles.dataTextPositive,
               ]}
             >
               {waistDifference || "-"}{" "}
@@ -405,8 +405,8 @@ export const YouScreen = ({ navigation }) => {
                 "inches"}
             </Text>
           </View>
-          <View style={youStyle.dataContainer}>
-            <Text style={youStyle.dataText}>
+          <View style={styles.dataContainer}>
+            <Text style={styles.dataText}>
               {currentProgressInfo && currentProgressInfo.waist
                 ? currentProgressInfo.waist
                 : "-"}{" "}
@@ -421,9 +421,9 @@ export const YouScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <View style={youStyle.dataRowContainer}>
-          <View style={youStyle.dataContainer}>
-            <Text style={youStyle.dataText}>
+        <View style={styles.dataRowContainer}>
+          <View style={styles.dataContainer}>
+            <Text style={styles.dataText}>
               {initialProgressInfo ? initialProgressInfo.hip : "-"}{" "}
               {initialProgressInfo && unitsOfMeasurement === "metric" && "cm"}
               {initialProgressInfo &&
@@ -431,12 +431,12 @@ export const YouScreen = ({ navigation }) => {
                 "inches"}
             </Text>
           </View>
-          <View style={youStyle.fieldContainer}>
-            <Text style={youStyle.fieldText}>HIP</Text>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldText}>HIP</Text>
             <Text
               style={[
-                youStyle.dataTextNegative,
-                hipDifference >= 0 && youStyle.dataTextPositive,
+                styles.dataTextNegative,
+                hipDifference >= 0 && styles.dataTextPositive,
               ]}
             >
               {hipDifference || "-"}{" "}
@@ -444,8 +444,8 @@ export const YouScreen = ({ navigation }) => {
               {hipDifference && unitsOfMeasurement === "imperial" && "inches"}
             </Text>
           </View>
-          <View style={youStyle.dataContainer}>
-            <Text style={youStyle.dataText}>
+          <View style={styles.dataContainer}>
+            <Text style={styles.dataText}>
               {currentProgressInfo && currentProgressInfo.hip
                 ? currentProgressInfo.hip
                 : "-"}{" "}
@@ -460,25 +460,25 @@ export const YouScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <View style={youStyle.dataRowContainer}>
-          <View style={youStyle.dataContainer}>
-            <Text style={youStyle.dataText}>
+        <View style={styles.dataRowContainer}>
+          <View style={styles.dataContainer}>
+            <Text style={styles.dataText}>
               {initialProgressInfo ? initialProgressInfo.burpeeCount : "-"}
             </Text>
           </View>
-          <View style={youStyle.fieldContainer}>
-            <Text style={youStyle.fieldText}>BURPEES</Text>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldText}>BURPEES</Text>
             <Text
               style={[
-                youStyle.dataTextNegative,
-                burpeesDifference >= 0 && youStyle.dataTextPositive,
+                styles.dataTextNegative,
+                burpeesDifference >= 0 && styles.dataTextPositive,
               ]}
             >
               {burpeesDifference || "-"}
             </Text>
           </View>
-          <View style={youStyle.dataContainer}>
-            <Text style={youStyle.dataText}>
+          <View style={styles.dataContainer}>
+            <Text style={styles.dataText}>
               {currentProgressInfo && currentProgressInfo.burpeeCount
                 ? currentProgressInfo.burpeeCount
                 : "-"}
@@ -539,9 +539,9 @@ export const YouScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        <View style={youStyle.workoutProgressContainer}>
-          <View style={youStyle.sectionHeader}>
-            <Text style={youStyle.bodyText}>
+        <View style={styles.workoutProgressContainer}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.bodyText}>
               Total workout complete
             </Text>
           </View>
@@ -564,9 +564,9 @@ export const YouScreen = ({ navigation }) => {
             )}
           </View>
         </View>
-        <View style={youStyle.workoutProgressContainer}>
-          <View style={youStyle.sectionHeader}>
-            <Text style={youStyle.bodyText}>
+        <View style={styles.workoutProgressContainer}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.bodyText}>
               {activeChallengeData
                 ? "Active challenge progress"
                 : "Weekly workout progress"}

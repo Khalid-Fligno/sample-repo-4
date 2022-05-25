@@ -18,7 +18,7 @@ import globalStyle from "../../../styles/globalStyles";
 import Icon from "../../../components/Shared/Icon";
 import { ONBOARDINGIMG } from "../../../library/images/onBoardingImg/onBoardingImg";
 import moment from "moment-timezone"
-import { onboarding1Styles } from "./onboarding1Style";
+import { styles } from "./style";
 import { useCounter } from "../../../library/useCustomHook/onboarding/onboard1/index";
 
 export const Onboarding1Screen = ({ navigation }) => {
@@ -45,8 +45,8 @@ export const Onboarding1Screen = ({ navigation }) => {
 	}, [specialOffer, name])
 
   return (
-    <SafeAreaView style={onboarding1Styles.container}>
-      <View style={onboarding1Styles.flexContainer}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.flexContainer}>
         <ImageBackground
           source={ONBOARDINGIMG.IZZY1}
           style={{ width: width, height: width / 2 }}
@@ -61,21 +61,21 @@ export const Onboarding1Screen = ({ navigation }) => {
               },
             ]}
           >
-            <Text style={onboarding1Styles.headerText}>Welcome</Text>
-            <Text style={onboarding1Styles.bodyText}>
+            <Text style={styles.headerText}>Welcome</Text>
+            <Text style={styles.bodyText}>
               It’s time to start your FitazFK journey! Just a few questions
               before we can start.
             </Text>
           </View>
         </ImageBackground>
 
-        <View style={onboarding1Styles.contentContainer}>
-          <View style={onboarding1Styles.inputFieldContainer}>
+        <View style={styles.contentContainer}>
+          <View style={styles.inputFieldContainer}>
             <TouchableOpacity
               onPress={toggleDobModal}
-              style={onboarding1Styles.inputButton}
+              style={styles.inputButton}
             >
-              <Text style={onboarding1Styles.inputSelectionText}>
+              <Text style={styles.inputSelectionText}>
                 {chosenDate
                   ? moment(chosenDate).format("LL")
                   : "Enter date of birth"}
@@ -118,9 +118,9 @@ export const Onboarding1Screen = ({ navigation }) => {
               </View>
             </Modal>
           </View>
-          <View style={onboarding1Styles.inputFieldContainer}>
-            <Text style={onboarding1Styles.inputFieldTitle}>Units of measurement</Text>
-            <View style={onboarding1Styles.buttonRowContainer}>
+          <View style={styles.inputFieldContainer}>
+            <Text style={styles.inputFieldTitle}>Units of measurement</Text>
+            <View style={styles.buttonRowContainer}>
               <CustomBtn
                 Title="Metric"
                 outline={true}
@@ -169,7 +169,7 @@ export const Onboarding1Screen = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <View style={onboarding1Styles.buttonContainer}>
+        <View style={styles.buttonContainer}>
           <CustomBtn
             Title="Continue"
             customBtnStyle={{ padding: 15 }}

@@ -18,7 +18,7 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { useCounter } from "../../../library/useCustomHook/tab/feed/feedHook";
-import { feedStyle } from "../../../styles/tab/feed/feedStyle";
+import { styles } from "./style";
 import { FEEDIMG } from "../../../library/images/feed/feed";
 
 export const FeedScreen = ({ navigation }) => {
@@ -57,12 +57,12 @@ export const FeedScreen = ({ navigation }) => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={feedStyle.scrollView}
+      contentContainerStyle={styles.scrollView}
     >
       <View style={{ marginBottom: wp("10%"), flex: 1 }}>
         <View style={{ flex: 1, alignItems: "center", height: wp("100%") }}>
           <SwiperFlatList
-            paginationStyleItem={feedStyle.bars}
+            paginationStyleItem={styles.bars}
             showPagination
             autoplay={true}
             autoplayDelay={6}
@@ -331,8 +331,8 @@ export const FeedScreen = ({ navigation }) => {
             </View>
           </View>
           <View style={{ flex: 1 }}>
-            <View style={feedStyle.lookContainer}>
-              <Text style={feedStyle.title1}>Looking for more?</Text>
+            <View style={styles.lookContainer}>
+              <Text style={styles.title1}>Looking for more?</Text>
               <Text style={{ fontFamily: fonts.StyreneAWebRegular }}>
                 Start a workout
               </Text>
@@ -341,7 +341,7 @@ export const FeedScreen = ({ navigation }) => {
               <CustomBtn
                 titleCapitalise={true}
                 Title="Explore workouts"
-                customBtnStyle={feedStyle.oblongBtnStyle}
+                customBtnStyle={styles.oblongBtnStyle}
                 onPress={() => navigation.navigate("Workouts")}
               />
             </View>

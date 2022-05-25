@@ -3,7 +3,10 @@ import { createStackNavigator } from "react-navigation-stack";
 import Header from "../../../components/Shared/Header";
 import RecipeTrainer from "../../../screens/AppStack/Nutrition/RecipeTrainer";
 import RecipeTrainerSteps from "../../../screens/AppStack/Nutrition/RecipeTrainerSteps";
-import { FeedTabScreen } from "../../../screens/tab/feed";
+import { AllBlogScreen } from "../../../screens/blogs/AllBlogScreen";
+import { TabScreen } from "../../../screens/tab/index";
+import { TrainerScreen } from "../../../screens/trainers/TrainerScreen";
+
 
 const backButtonMap ={
     AllBlogs:true,
@@ -14,9 +17,9 @@ const backButtonMap ={
 
 const FeedStack = createStackNavigator(
   {
-    FeedScreen: FeedTabScreen.FeedScreen,
-    AllBlogs: FeedTabScreen.AllBlogScreen,
-    Trainers: FeedTabScreen.TrainerScreen,
+    FeedScreen: TabScreen.FeedScreen,
+    AllBlogs: AllBlogScreen,
+    Trainers: TrainerScreen,
     RecipeTrainer: RecipeTrainer,
     RecipeTrainerSteps: RecipeTrainerSteps
   },

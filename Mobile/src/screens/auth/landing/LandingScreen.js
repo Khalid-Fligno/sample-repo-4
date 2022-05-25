@@ -7,17 +7,17 @@ import {
   Platform,
   Text
 } from "react-native";
-import fonts from "../../styles/fonts";
-import colors from "../../styles/colors";
-import CustomBtn from "../../components/Shared/CustomBtn";
+import fonts from "../../../styles/fonts";
+import colors from "../../../styles/colors";
+import CustomBtn from "../../../components/Shared/CustomBtn";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { landingStyles } from "../../styles/auth/landingStyle";
+import { styles } from "./style";
 import { getVersion } from "react-native-device-info";
 import { checkVersion } from "react-native-check-version";
-import { db } from "../../config/firebase";
-import { useStorage } from "../../hook/storage";
+import { db } from "../../../config/firebase";
+import { useStorage } from "../../../hook/storage";
 
 export const LandingScreen = ({ navigation }) => {
 
@@ -47,23 +47,23 @@ export const LandingScreen = ({ navigation }) => {
   }, [])
 
   return (
-    <SafeAreaView style={landingStyles.safeAreaContainer}>
-      <View style={landingStyles.container}>
+    <SafeAreaView style={styles.safeAreaContainer}>
+      <View style={styles.container}>
         <StatusBar barStyle="light-content" />
 
-        <View style={landingStyles.carouselCardContainer}>
+        <View style={styles.carouselCardContainer}>
 
-          <View style={landingStyles.padding}>
+          <View style={styles.padding}>
             <ImageBackground
-              source={require("../../assets/icons/FITAZ_BrandMark.png")}
-              style={landingStyles.carouselImageBackground}
+              source={require("../../../assets/icons/FITAZ_BrandMark.png")}
+              style={styles.carouselImageBackground}
             >
             </ImageBackground>
-            <View style={landingStyles.textPadding}>
-              <Text style={landingStyles.fontText}>em
-                <Text style={landingStyles.underline}>powered</Text>
+            <View style={styles.textPadding}>
+              <Text style={styles.fontText}>em
+                <Text style={styles.underline}>powered</Text>
               </Text>
-              <Text style={landingStyles.fontText}>by you.</Text>
+              <Text style={styles.fontText}>by you.</Text>
             </View>
           </View>
 
@@ -71,9 +71,9 @@ export const LandingScreen = ({ navigation }) => {
             <TouchableOpacity onPress={() =>
               navigation.navigate("FindAccount")}
             >
-              <View style={landingStyles.transformProgram}>
+              <View style={styles.transformProgram}>
                 <View style={{ marginLeft: 10 }}>
-                  <Text style={landingStyles.Text}>I have just purchased my {"\n"}1st Transform Program</Text>
+                  <Text style={styles.Text}>I have just purchased my {"\n"}1st Transform Program</Text>
                 </View>
                 <View style={{ marginRight: 10 }}>
                   <Icon name="angle-right" size={45} />
@@ -86,9 +86,9 @@ export const LandingScreen = ({ navigation }) => {
             <TouchableOpacity onPress={() =>
               navigation.navigate("Signup", { specialOffer })}
             >
-              <View style={landingStyles.transformProgram}>
+              <View style={styles.transformProgram}>
                 <View style={{ marginLeft: 10 }}>
-                  <Text style={landingStyles.Text}>I want to do a 7 day free {"\n"}trial of the Fitaz App </Text>
+                  <Text style={styles.Text}>I want to do a 7 day free {"\n"}trial of the Fitaz App </Text>
                 </View>
                 <View style={{ marginRight: 10 }}>
                   <Icon name="angle-right" size={45} />
@@ -98,8 +98,8 @@ export const LandingScreen = ({ navigation }) => {
           </View>
 
         </View>
-        <View style={landingStyles.absoluteButtonContainer}>
-          <View style={landingStyles.buttonContainer}>
+        <View style={styles.absoluteButtonContainer}>
+          <View style={styles.buttonContainer}>
             <View style={{
               paddingTop: hp("2%"),
               paddingBottom: hp("2%"),

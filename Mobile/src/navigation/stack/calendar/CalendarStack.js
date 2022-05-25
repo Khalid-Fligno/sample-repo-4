@@ -12,11 +12,11 @@ import {
 import RecipeScreen from "../../../screens/AppStack/Nutrition/RecipeScreen";
 import RecipeStepsScreen from "../../../screens/AppStack/Nutrition/RecipeStepsScreen";
 import FilterRecipeScreen from "../../../screens/AppStack/Nutrition/FilterRecipe/FilterRecipeScreen";
-import { TransformTabScreen } from "../../../screens/tab/transform";
+import { TabScreen } from "../../../screens/tab/index";
 
 const CalendarStack = createStackNavigator(
   {
-    CalendarHome: TransformTabScreen.TransformScreen,
+    CalendarHome: TabScreen.TransformScreen,
     WorkoutsSelection: WorkoutsSelectionScreen2,
     WorkoutInfo: WorkoutInfoScreen2V2,
     Recipe: RecipeScreen,

@@ -6,15 +6,15 @@ import {
 	TouchableOpacity,
 	TextInput,
 } from 'react-native';
-import Icon from "../../components/Shared/Icon";
-import colors from "../../styles/colors";
+import Icon from "../../../components/Shared/Icon";
+import colors from "../../../styles/colors";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import CustomBtn from "../../components/Shared/CustomBtn";
-import HeaderAuth from '../../components/Auth/Header';
-import NativeLoader from "../../components/Shared/NativeLoader";
+import CustomBtn from "../../../components/Shared/CustomBtn";
+import HeaderAuth from '../../../components/Auth/Header';
+import NativeLoader from "../../../components/Shared/NativeLoader";
 import Toast from 'react-native-toast-message';
-import { loginStyles } from '../../styles/auth/loginStyle';
-import { useCounter } from '../../library/useCustomHook/auth/loginHook';
+import { styles } from './style';
+import { useCounter } from '../../../library/useCustomHook/auth/loginHook';
 
 export const LoginScreen = ({ navigation }) => {
 	const specialOffer = navigation.getParam("specialOffer", undefined)
@@ -33,10 +33,10 @@ export const LoginScreen = ({ navigation }) => {
 	}, [specialOffer])
 
 	return (
-		<SafeAreaView style={loginStyles.safeAreaContainer}>
-			<View style={loginStyles.container}>
+		<SafeAreaView style={styles.safeAreaContainer}>
+			<View style={styles.container}>
 				<View>
-					<View style={loginStyles.crossIconContainer}>
+					<View style={styles.crossIconContainer}>
 						<TouchableOpacity
 							onPress={() => navigation.goBack()}
 						>
@@ -48,15 +48,15 @@ export const LoginScreen = ({ navigation }) => {
 						</TouchableOpacity>
 					</View>
 					<HeaderAuth />
-					<View style={loginStyles.formContainer}>
-						<View style={loginStyles.formHeaderContainer}>
-							<Text style={loginStyles.Text}>
+					<View style={styles.formContainer}>
+						<View style={styles.formHeaderContainer}>
+							<Text style={styles.Text}>
 								Sign In
 							</Text>
 						</View>
-						<View style={loginStyles.formInputContainer}>
+						<View style={styles.formInputContainer}>
 							<TextInput
-								style={loginStyles.Input}
+								style={styles.Input}
 								placeholder="Email"
 								keyboardType="email-address"
 								onChangeText={setEmail}
@@ -64,7 +64,7 @@ export const LoginScreen = ({ navigation }) => {
 								autoCapitalize='none'
 							/>
 							<TextInput
-								style={loginStyles.Input}
+								style={styles.Input}
 								placeholder="Password"
 								secureTextEntry
 								returnKeyType="go"
@@ -74,13 +74,13 @@ export const LoginScreen = ({ navigation }) => {
 							/>
 						</View>
 						<TouchableOpacity onPress={() => navigation.navigate('ForgottenPassword')}>
-							<Text style={loginStyles.forgotPasswordText}>
+							<Text style={styles.forgotPasswordText}>
 								Forgotten your password?
 							</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
-				<View style={loginStyles.navigateButtonContainer}>
+				<View style={styles.navigateButtonContainer}>
 					<CustomBtn
 						customBtnStyle={{ marginTop: 20, width: wp("90%") }}
 						Title="SIGN IN"
@@ -88,7 +88,7 @@ export const LoginScreen = ({ navigation }) => {
 					/>
 					<TouchableOpacity onPress={() => navigation.navigate('Signup')}>
 						<Text
-							style={loginStyles.navigateToText}
+							style={styles.navigateToText}
 						>
 							Don't have an account? Sign up
 						</Text>

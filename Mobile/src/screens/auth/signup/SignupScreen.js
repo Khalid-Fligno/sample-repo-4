@@ -6,15 +6,15 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import Icon from "../../components/Shared/Icon";
-import colors from "../../styles/colors";
+import Icon from "../../../components/Shared/Icon";
+import colors from "../../../styles/colors";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import CustomBtn from "../../components/Shared/CustomBtn";
-import HeaderAuth from '../../components/Auth/Header';
+import CustomBtn from "../../../components/Shared/CustomBtn";
+import HeaderAuth from '../../../components/Auth/Header';
 import Toast from 'react-native-toast-message';
-import NativeLoader from "../../components/Shared/NativeLoader";
-import { useCounter } from '../../library/useCustomHook/auth/signupHook';
-import { signupStyle } from '../../styles/auth/signupStyle';
+import NativeLoader from "../../../components/Shared/NativeLoader";
+import { useCounter } from '../../../library/useCustomHook/auth/signupHook';
+import { styles } from './style';
 
 export const SignupScreen = ({ navigation }) => {
   const userData = navigation.getParam("userData", undefined)
@@ -34,10 +34,10 @@ export const SignupScreen = ({ navigation }) => {
   } = useCounter()
 
   return (
-    <SafeAreaView style={signupStyle.safeAreaContainer}>
-      <View style={signupStyle.container}>
+    <SafeAreaView style={styles.safeAreaContainer}>
+      <View style={styles.container}>
         <View>
-          <View style={signupStyle.crossIconContainer}>
+          <View style={styles.crossIconContainer}>
             <TouchableOpacity
               onPress={() => navigation.goBack()}
             >
@@ -49,36 +49,36 @@ export const SignupScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <HeaderAuth />
-          <View style={signupStyle.formContainer}>
-            <View style={signupStyle.formHeaderContainer}>
+          <View style={styles.formContainer}>
+            <View style={styles.formHeaderContainer}>
               {
                 userData ?
-                  <Text style={signupStyle.Text}>
+                  <Text style={styles.Text}>
                     Create a password to complete your account
                   </Text>
                   :
-                  <Text style={signupStyle.Text}>
+                  <Text style={styles.Text}>
                     Create an Account:
                   </Text>
               }
             </View>
-            <View style={signupStyle.formInputContainer}>
+            <View style={styles.formInputContainer}>
               <TextInput
-                style={signupStyle.Input}
+                style={styles.Input}
                 placeholder="First Name"
                 value={userData ? userData.firstName : firstName}
                 onChangeText={(text) => setFirstName(text)}
                 editable={!userData ? true : false}
               />
               <TextInput
-                style={signupStyle.Input}
+                style={styles.Input}
                 placeholder="Last Name"
                 value={userData ? userData.lastName : lastName}
                 onChangeText={(text) => setLastName(text)}
                 editable={!userData ? true : false}
               />
               <TextInput
-                style={signupStyle.Input}
+                style={styles.Input}
                 placeholder="Email"
                 keyboardType="email-address"
                 value={userData ? userData.email : email}
@@ -87,7 +87,7 @@ export const SignupScreen = ({ navigation }) => {
                 autoCapitalize='none'
               />
               <TextInput
-                style={signupStyle.Input}
+                style={styles.Input}
                 placeholder="Create Password"
                 secureTextEntry
                 returnKeyType="go"
@@ -96,7 +96,7 @@ export const SignupScreen = ({ navigation }) => {
                 autoCapitalize='none'
               />
               <TextInput
-                style={signupStyle.Input}
+                style={styles.Input}
                 placeholder="Confirm Password"
                 secureTextEntry
                 returnKeyType="go"
@@ -107,7 +107,7 @@ export const SignupScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <View style={signupStyle.navigateButtonContainer}>
+        <View style={styles.navigateButtonContainer}>
           <CustomBtn
             customBtnStyle={{ marginTop: 20, width: wp("90%") }}
             Title="GET STARTED!"
@@ -133,7 +133,7 @@ export const SignupScreen = ({ navigation }) => {
             !userData ?
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text
-                  style={signupStyle.navigateToButton}
+                  style={styles.navigateToButton}
                 >
                   Already have an Account? Sign In
                 </Text>

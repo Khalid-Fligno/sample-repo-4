@@ -1,9 +1,8 @@
 import { StyleSheet } from "react-native";
-import colors from "../colors";
-import fonts from "../fonts";
+import colors from "../../styles/colors";
+import fonts from "../../styles/fonts";
 
-
-export const specialOfferStyle = StyleSheet.create({
+export const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
     backgroundColor: colors.black,

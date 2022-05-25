@@ -1,11 +1,11 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import Header from '../../../components/Shared/Header';
-import { LifestyleTabScreen } from '../../../screens/tab/lifestyle';
+import { TabScreen } from "../../../screens/tab/index";
 
 const HomeStack = createStackNavigator(
   {
-    HomeHome: LifestyleTabScreen.LifestyleScreen,
+    HomeHome: TabScreen.LifestyleScreen,
   },
   {
     initialRouteName: 'HomeHome',

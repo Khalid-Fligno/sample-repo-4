@@ -1,16 +1,18 @@
-import {
-  Dimensions,
-  StyleSheet
+import { 
+  Dimensions, 
+  StyleSheet 
 } from "react-native";
-import colors from "../colors";
-import fonts from "../fonts";
-import { containerPadding } from "../globalStyles";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
+import { containerPadding } from "../../../styles/globalStyles";
+import colors from "../../../styles/colors";
+import fonts from "../../../styles/fonts";
 
 const { width } = Dimensions.get("window");
 
-export const signupStyle = StyleSheet.create({
+export const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
     backgroundColor: colors.black,
@@ -24,10 +26,6 @@ export const signupStyle = StyleSheet.create({
   crossIconContainer: {
     alignItems: "flex-end",
     padding: 20
-  },
-  imageContainer: {
-    alignItems: "center",
-    padding: 10
   },
   formContainer: {
     display: "flex",
@@ -71,4 +69,4 @@ export const signupStyle = StyleSheet.create({
     textAlign: "center",
     color: colors.black,
   }
-})
+});

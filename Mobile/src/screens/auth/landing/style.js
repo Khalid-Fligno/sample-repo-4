@@ -2,15 +2,15 @@ import {
     Dimensions,
     StyleSheet
 } from "react-native";
-import colors from "../colors";
-import fonts from "../fonts";
-import { containerPadding } from "../globalStyles";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { containerPadding } from "../../../styles/globalStyles";
+import colors from "../../../styles/colors";
+import fonts from "../../../styles/fonts";
 
 const { width, height } = Dimensions.get("window");
 
-export const landingStyles = StyleSheet.create({
+export const styles = StyleSheet.create({
     safeAreaContainer: {
       flex: 1,
       backgroundColor: colors.black,

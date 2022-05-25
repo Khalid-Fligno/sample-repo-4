@@ -11,12 +11,12 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import fonts from "../../../../styles/fonts";
-import TimeSvg from "../../../../assets/icons/time";
+import fonts from "../../styles/fonts";
+import TimeSvg from "../../assets/icons/time";
 import * as FileSystem from "expo-file-system";
-import Loader from '../../../../components/Shared/Loader';
-import colors from '../../../../styles/colors';
-import { useCounter } from '../../../../library/useCustomHook/tab/feed/trainers/trainerHook';
+import Loader from '../../components/Shared/Loader';
+import colors from '../../styles/colors';
+import { useCounter } from '../../library/useCustomHook/tab/feed/trainers/trainerHook';
 
 export const TrainerScreen = ({ navigation }) => {
   const id = navigation.getParam("id", undefined)

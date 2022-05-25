@@ -1,12 +1,12 @@
 import { StyleSheet } from "react-native";
-import colors from "../../colors";
+import colors from "../../../styles/colors";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import fonts from "../../fonts";
+import fonts from "../../../styles/fonts";
 
-export const feedStyle = StyleSheet.create({
+export const styles = StyleSheet.create({
   scrollView: {
     padding: 0,
   },

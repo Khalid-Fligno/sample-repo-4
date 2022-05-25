@@ -4,7 +4,7 @@ import {
   View,
 } from 'react-native'
 import { OTHERSIMG } from "../../library/images/others/others";
-import { splashStyles } from '../../styles/splash/splashStyles'
+import { styles } from './style'
 import * as Sentry from "@sentry/react-native";
 import SplashScreen from "react-native-splash-screen";
 import { hasChallenges, isActiveChallenge } from '../../utils/challenges'
@@ -125,10 +125,10 @@ export const SplashScreenV2 = () => {
   }, [])
 
   return (
-    <View style={splashStyles.container}>
+    <View style={styles.container}>
       <ImageBackground
         source={OTHERSIMG.SPLASH_IMAGE}
-        style={splashStyles.background}
+        style={styles.background}
       />
     </View>
   )
