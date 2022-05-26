@@ -1,9 +1,9 @@
 import { useState } from "react"
-import * as Haptics from "expo-haptics";
 import { useStorage } from '../../../../hook/storage'
 import { addDocument } from '../../../../hook/firestore/write'
 import { COLLECTION_NAMES } from '../../../collections/index'
 import { navigate } from '../../../../navigation/rootNavigation'
+import * as Haptics from "expo-haptics";
 import moment from "moment-timezone"
 
 export const useCounter = () => {

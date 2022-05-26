@@ -3,9 +3,9 @@ import { createStackNavigator } from "react-navigation-stack";
 import Header from "../../../components/Shared/Header";
 import RecipeTrainer from "../../../screens/AppStack/Nutrition/RecipeTrainer";
 import RecipeTrainerSteps from "../../../screens/AppStack/Nutrition/RecipeTrainerSteps";
-import { AllBlogScreen } from "../../../screens/blogs/AllBlogScreen";
+import { AllBlogScreen } from "../../../screens/tab/feed/blogs/AllBlogScreen";
 import { TabScreen } from "../../../screens/tab/index";
-import { TrainerScreen } from "../../../screens/trainers/TrainerScreen";
+import { TrainerScreen } from "../../../screens/tab/feed/trainers/TrainerScreen";
 
 
 const backButtonMap ={

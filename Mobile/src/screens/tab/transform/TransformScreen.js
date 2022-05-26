@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import moment from "moment";
 import CustomCalendarStrip from "../../../components/Calendar/CustomCalendarStrip";
-import { DayDisplayComponent } from "../../../components/tab/challenges/DayDisplayComponent";
+import { DayDisplayComponent } from "../../../components/tab/transform/DayDisplayComponent";
 import globalStyle from "../../../styles/globalStyles";
 import {
   convertRecipeData,
@@ -37,7 +37,7 @@ import { downloadExerciseWC, loadExercise } from "../../../utils/workouts";
 import { checkVersion } from "react-native-check-version";
 import createUserChallengeData from "../../../components/Challenges/UserChallengeData";
 import OnBoardingNotification from "../../../components/Shared/OnBoardingNotification";
-import { SettingComponent } from "../../../components/tab/challenges/SettingComponent";
+import { SettingComponent } from "../../../components/tab/transform/SettingComponent";
 import { NavigationActions } from "react-navigation";
 
 export const TransformScreen = ({ navigation }) => {
