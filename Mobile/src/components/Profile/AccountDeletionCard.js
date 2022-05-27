@@ -1,8 +1,10 @@
 
-import { StyleSheet, View, Platform, Text, TextInput, Dimensions } from "react-native"
+import { StyleSheet, View, Platform, Text, TextInput, TouchableOpacity } from "react-native"
 import React, { useState } from "react";
 import fonts from "../../styles/fonts";
 import CustomBtn from "../Shared/CustomBtn";
+import Icon from "../Shared/Icon";
+
 import { auth, db, storage } from "../../../config/firebase";
 import {
   widthPercentageToDP as wp,
@@ -125,13 +127,15 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
       switch (error.code) {
         case "auth/wrong-password":
           return "This password is invalid for the signed in user"
+        case "auth/too-many-requests":
+          return error.message
         default:
           return "Unexpected error, please try again"
       }
     }
 
     const errorMessage = userlocalisedError()
-    const actionIsDisablesd = isLoading || password.trim().length == 0
+    const actionIsDisablesd = password.trim().length == 0
 
     return (
       <Modal
@@ -141,6 +145,15 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
         onBackButtonPress={cancelAction()}
         onModalHide={resetState}>
           <View style={styles.modalView}>
+              <TouchableOpacity
+                style={styles.closeButton} 
+                onPress={cancelAction()}>
+                  <Icon
+                    name="cross"
+                    color={colors.themeColor.color}
+                    size={22}/>
+              </TouchableOpacity>
+              {/* </View> */}
               <Text style={styles.modalTitleText}>Delete account</Text>
               <Text style={styles.modalText}>
                   Deleting your account is permanent. When you delete your FitazFK account, 
@@ -157,6 +170,7 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
                     secureTextEntry
                     autoCapitalize='none'
                     textContentType="password"
+                    textAlign="center"
                     clearTextOnFocus
                     onFocus={ () => setPassword("") }/>
 
@@ -164,9 +178,9 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
       
               <CustomBtn
                 Title="Delete my account!"
-                disabled={actionIsDisablesd}
+                disabled={isLoading || actionIsDisablesd}
                 loading={isLoading} // Integrate with deletion action
-                customBtnStyle={styles.buttonState(actionIsDisablesd)}
+                customBtnStyle={styles.buttonState(isLoading, actionIsDisablesd)}
                 onPress={deleteAccount}
                 customBtnTitleStyle={{ letterSpacing: fonts.letterSpacing }} />
         </View>
@@ -190,9 +204,9 @@ const styles = StyleSheet.create({
       shadowRadius: 4,
       elevation: 5
     },
-    buttonState: (disabled) => [
+    buttonState: (isLoading, isDisabled) => [
       {
-        opacity: disabled ? 0.2 : 1,
+        opacity: isDisabled && !isLoading ? 0.2 : 1,
         width: wp("60%"),
         marginTop: 16
       }
@@ -225,5 +239,8 @@ const styles = StyleSheet.create({
       fontFamily: fonts.GothamMedium,
       marginBottom: 16,
       textAlign: "center"
+    },
+    closeButton: {
+      alignSelf: "flex-end"
     }
   });
