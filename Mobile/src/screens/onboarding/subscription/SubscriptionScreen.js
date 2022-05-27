@@ -42,7 +42,7 @@ export const SubscriptionScreen = ({ navigation }) => {
   const [discountedProducts, setDiscountedProducts] = useState(undefined)
   const [selectedIndex, setSelectedIndex] = useState(0)
 
-  const InAppUtils = NativeModules;
+  const { InAppUtils } = NativeModules;
   const specialOffer = navigation.getParam("specialOffer", undefined)
   const productTitleMapIOS = {
     0: "Yearly ",
@@ -488,7 +488,8 @@ export const SubscriptionScreen = ({ navigation }) => {
       } else {
         const sortedProducts = products.slice().sort(compareProducts);
         setDiscountedProducts(sortedProducts)
-        setLoading(false)      }
+        setLoading(false)
+      }
     });
   };
 
@@ -623,17 +624,18 @@ export const SubscriptionScreen = ({ navigation }) => {
   }, [])
 
   useEffect(() => {
-    async () => {
-      await RNIap.initConnection();
-    }
-  }, [])
-
-  useEffect(() => {
     androidSubscriptions();
   }, [])
 
   useEffect(() => {
-    async () => {
+    async function RNIapConnect () {
+      await RNIap.initConnection();
+    }
+    RNIapConnect()
+  }, [])
+
+  useEffect(() => {
+    async function getProducts () {
       if (specialOffer) {
         await loadDiscountedProducts();
         await loadProducts();
@@ -641,8 +643,11 @@ export const SubscriptionScreen = ({ navigation }) => {
         await loadProducts();
       }
     }
+    getProducts()
   }, [])
+
   console.log("products: ", products)
+
   return (
     <React.Fragment>
       <View style={styles.container}>
