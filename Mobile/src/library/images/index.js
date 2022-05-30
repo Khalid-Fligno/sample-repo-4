@@ -16,5 +16,5 @@ export const IMAGE = {
   FEED_COMMUNITY: require("@lib/images/media/community.png"),
   FEED_ACTIVEWEAR: require("@lib/images/media/activewear.png"),
   FEED_EQUIPMENT: require("@lib/images/media/equipment.png"),
-
+  TRANSFORM_WORKOUT_TILE: require("../../../assets/images/Calendar/transformWorkoutTile.png")
 };

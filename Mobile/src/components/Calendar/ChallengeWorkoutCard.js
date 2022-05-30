@@ -63,7 +63,7 @@ const ChallengeWorkoutCard = (props) => {
     <View style={[styles.cardContainer, cardCustomStyle]}>
       <TouchableWithoutFeedback style={styles.cardContainer} onPress={onPress}>
         <ImageBackground
-          source={target ? IMAGE.CHALLENG_WORKOUT_CARD_BG : IMAGE.REST_COVER_IMAGE}
+          source={target ? IMAGE.TRANSFORM_WORKOUT_TILE : IMAGE.REST_COVER_IMAGE}
           style={styles.image}
         >
           <View style={target ? styles.opacityLayer : styles.opacityLayerRest}>
