@@ -90,12 +90,12 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
           .then(response => true)
       }
 
-      reauthenticate = (currentPassword) => {
+      function reauthenticate(currentPassword) {
         var user = auth.currentUser
         var credential = require('firebase').auth.EmailAuthProvider.credential(
           auth.currentUser.email, 
           currentPassword)
-        return user.reauthenticateWithCredential(credential);
+        return user.reauthenticateWithCredential(credential)
       }
 
       try {
@@ -158,7 +158,7 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
                 onPress={cancelAction()}>
                   <Icon
                     name="cross"
-                    color={colors.themeColor.color}
+                    color={colors.black}
                     size={22}/>
               </TouchableOpacity>
               {/* </View> */}
