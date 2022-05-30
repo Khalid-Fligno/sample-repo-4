@@ -20,11 +20,6 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
 
-    const store = Platform.select({
-        ios: "Apple",
-        android: "Google Play"
-    })
-
     function resetState() {
       setPassword("")
       setIsLoading(false)
@@ -80,7 +75,19 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
   
       // Bonus, implementation
       function deleteMailSubscription() {
+
         // https://developers.klaviyo.com/en/reference/request-deletion
+        const options = {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json', 
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({email: auth.currentUser.email})
+        };
+        
+        return fetch('https://a.klaviyo.com/api/v2/data-privacy/deletion-request?api_key=pk_1d7c9e7b4fbc006231b653c80218a3a2b8', options)
+          .then(response => true)
       }
 
       reauthenticate = (currentPassword) => {
@@ -98,7 +105,8 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
         // Perform background deletion request
         const _ = await Promise.all([
           deleteFireStoreData(uid),
-          deleteStorageData(uid)
+          deleteStorageData(uid),
+          deleteMailSubscription()
         ])
 
         // Lets remove them from our authentication
@@ -156,9 +164,10 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
               {/* </View> */}
               <Text style={styles.modalTitleText}>Delete account</Text>
               <Text style={styles.modalText}>
-                  Deleting your account is permanent. When you delete your FitazFK account, 
-                  you won't be able to retrieve the contents generated or provided by FitazFK. 
-                  Any subscriptions made via {store} will need to be manually suspended.
+                Deleting your account is permanent. When you delete your Fitaz app account, 
+                you will no longer be able to login and access the app. Any Transform challenges 
+                and all of your data (measurements, workouts completed, photos) will be lost. 
+                You will also need to suspend any Lifestyle subscriptions made via the Apple or Google Play app stores yourself if this applies.
               </Text>
               <TextInput
                     editable={!isLoading}
@@ -208,7 +217,8 @@ const styles = StyleSheet.create({
       {
         opacity: isDisabled && !isLoading ? 0.2 : 1,
         width: wp("60%"),
-        marginTop: 16
+        marginTop: 16,
+        backgroundColor: colors.bloodOrange
       }
     ],
     modalTitleText: {
