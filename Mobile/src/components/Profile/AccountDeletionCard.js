@@ -59,17 +59,35 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
       }
   
       async function deleteStorageData(uid) {
+
+        const allSettled = (promises) => {
+          return Promise.all(promises.map(promise => promise
+              .then(value => ({ status: 'fulfilled', value }))
+              .catch(reason => ({ status: 'rejected', reason }))
+          ));
+        }
+
         return storage.ref()
           .child("user-photos")
           .child(uid)
           .listAll() // Get all file in the `user-photos/uid` path
-          .then(files => Promise.all(files.items.map(f => f.delete()))) // Delete all the users photos
-          .then(_ => true)
-          .catch(error => {
-            // Check Error to see if there was no files to begin with,
-            // https://firebase.google.com/docs/storage/web/handle-errors
-            if (error.code == "storage/object-not-found") return true
-            throw error
+          .then(files => allSettled(files.items.map(f => f.delete()))) // Delete all the users photos
+          .then(result => {
+              const failedFileDeletions = result.filter(r => {
+                switch (r.status) {
+                  case "fulfilled": 
+                    return false
+                  case "rejected":
+                    // Check Error to see if there was no files to begin with,
+                    // https://firebase.google.com/docs/storage/web/handle-errors
+                    return r.reason.error.code != "storage/object-not-found"
+                }
+              })
+              .map(r => r.reason.error.code)
+
+              // If we have any valid reason
+              if (failedFileDeletions.length > 0) throw { code: [...new Set(failedFileDeletions)].join(', ') }
+              return true
           })
       }
   
@@ -93,7 +111,7 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
       function reauthenticate(currentPassword) {
         var user = auth.currentUser
         var credential = require('firebase').auth.EmailAuthProvider.credential(
-          auth.currentUser.email, 
+          user.email, 
           currentPassword)
         return user.reauthenticateWithCredential(credential)
       }
