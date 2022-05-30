@@ -58,6 +58,12 @@ const ProfileStyles = StyleSheet.create({
     color: colors.black,
     fontSize: 14,
   },
+  listItemDeletionTitleStyle: {
+    fontFamily: fonts.bold,
+    color: colors.red.standard,
+    textAlign: "center",
+    fontSize: 14,
+  },
   listItemSubtitleStyle: {
     fontFamily: fonts.bold,
     color: colors.charcoal.standard,

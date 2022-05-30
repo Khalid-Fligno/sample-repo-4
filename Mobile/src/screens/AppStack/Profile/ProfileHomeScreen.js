@@ -388,7 +388,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
               <ListItem
                 title="Delete my account"
                 containerStyle={ProfileStyles.listItemContainerBottom}
-                titleStyle={ProfileStyles.listItemTitleStyle}
+                titleStyle={ProfileStyles.listItemDeletionTitleStyle}
                 onPress={() => { this.setState({deletionModalVisible: true}) }} />
             </View>
             <Text
