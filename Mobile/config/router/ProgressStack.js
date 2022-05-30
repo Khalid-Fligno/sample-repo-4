@@ -2,10 +2,11 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import ProgressHomeScreen from '../../src/screens/AppStack/Progress/ProgressHomeScreen';
 import Header from '../../src/components/Shared/Header';
+import { YouScreen } from '../../src/screens/AppStack/Progress/you/YouScreen';
 
 const ProgressStack = createStackNavigator(
   {
-    ProgressHome: ProgressHomeScreen,
+    ProgressHome: YouScreen,
   },
   {
     initialRouteName: 'ProgressHome',
