@@ -7,37 +7,39 @@ import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import { Image } from "react-native";
 
-const ProfileButton = (props) => {
+const ProfileButton = () => {
   const [initials, setInitials] = useState(null);
   const [avatar, setAvatar] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      const uid = await AsyncStorage.getItem("uid");
-      if (uid) {
-        const unsubscribe = await db
-          .collection("users")
-          .doc(uid)
-          .onSnapshot(async (doc) => {
-            const profile = await doc.data();
-            let initials =
-              profile.firstName && profile.firstName.length > 0
-                ? profile.firstName.substring(0, 1).toUpperCase()
-                : "";
-            initials +=
-              profile.lastName && profile.lastName.length > 0
-                ? profile.lastName.substring(0, 1).toUpperCase()
-                : "";
+  const getUser = async () => {
+    const uid = await AsyncStorage.getItem("uid");
+    const userDataFromFirebase = await db
+      .collection("users")
+      .doc(uid)
+      .get()
 
-            setInitials(initials || null);
-            setAvatar(profile.avatar);
-          });
+    const profile = userDataFromFirebase.data()
 
-        return () => {
-          unsubscribe();
-        };
+    if (profile) {
+      let initials =
+        profile.firstName && profile.firstName.length > 0
+          ? profile.firstName.substring(0, 1).toUpperCase()
+          : "";
+      initials +=
+        profile.lastName && profile.lastName.length > 0
+          ? profile.lastName.substring(0, 1).toUpperCase()
+          : "";
+
+      setInitials(initials || null);
+
+      if(profile.avatar){
+        setAvatar(profile.avatar);
       }
-    })();
+    }
+  }
+
+  useEffect(() => {
+    getUser()
   }, []);
 
   return (
