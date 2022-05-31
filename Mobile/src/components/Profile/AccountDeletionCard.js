@@ -60,6 +60,9 @@ export default function AccountDeletionCard({isVisible, onCancel, onSuccess}) {
   
       async function deleteStorageData(uid) {
 
+        // This exists because Reac-Native 0.63.2, does not have Promoise.allSettled
+        // It is available in 0.64.0+, please remove this and change below to Promise.allSettled
+        // when we update to a newer version of React-Native
         const allSettled = (promises) => {
           return Promise.all(promises.map(promise => promise
               .then(value => ({ status: 'fulfilled', value }))
