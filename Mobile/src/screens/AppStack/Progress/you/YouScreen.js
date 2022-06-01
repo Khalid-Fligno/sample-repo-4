@@ -31,6 +31,9 @@ export const YouScreen = ({ navigation }) => {
   const [currentProgressInfo, setCurrentProgressInfo] = useState(undefined);
   const [unitsOfMeasurement, setUnitsOfMeasurement] = useState(undefined);
   const [activeChallengeData, setActiveChallengeData] = useState(undefined);
+  const [weightDiff, setWeightDiff] = useState(null);
+  const [waistDiff, setWaistDiff] = useState(null);
+  const [hipDiff, setHipDiff] = useState(null);
   const [modal, setModal] = useState(false);
   const [totalI, setTotalI] = useState(0);
   const [totalS, setTotalS] = useState(0);
@@ -39,24 +42,6 @@ export const YouScreen = ({ navigation }) => {
   const [countS, setCountS] = useState(0);
   const [countC, setCountC] = useState(0);
 
-  const weightDifference =
-    initialProgressInfo &&
-    currentProgressInfo &&
-    diff(initialProgressInfo.weight, currentProgressInfo.weight);
-  const weightToDecimal =
-    Number(weightDifference).toFixed(2);
-  const hipDifference =
-    initialProgressInfo &&
-    currentProgressInfo &&
-    diff(initialProgressInfo.hip, currentProgressInfo.hip);
-  const waistDifference =
-    initialProgressInfo &&
-    currentProgressInfo &&
-    diff(initialProgressInfo.waist, currentProgressInfo.waist);
-  const burpeesDifference =
-    initialProgressInfo &&
-    currentProgressInfo &&
-    diff(initialProgressInfo.burpeeCount, currentProgressInfo.burpeeCount);
   const { width } = Dimensions.get("window");
 
   const fetchProgressInfo = async () => {
@@ -163,29 +148,20 @@ export const YouScreen = ({ navigation }) => {
     }
   };
 
-  const updateProgressBtn = (
+  const progressDifference = (
     initialProgressInfo,
     currentProgressInfo
   ) => {
+    if (initialProgressInfo && currentProgressInfo) {
+      const weight = diff(initialProgressInfo.weight, currentProgressInfo.weight);
+      const waist = diff(initialProgressInfo.waist, currentProgressInfo.waist);
+      const hip = diff(initialProgressInfo.hip, currentProgressInfo.hip)
 
-    navigation.navigate("ProgressEdit", {
-      isInitial: false,
-      initialProgressInfo: initialProgressInfo,
-      currentProgressInfo: currentProgressInfo
-    })
+      setWeightDiff(weight)
+      setWaistDiff(waist)
+      setHipDiff(hip)
+    }
   }
-
-  const editBeforeBtn = (
-    initialProgressInfo,
-    currentProgressInfo
-  ) => (
-
-    navigation.navigate("ProgressEdit", {
-      isInitial: true,
-      initialProgressInfo: initialProgressInfo,
-      currentProgressInfo: currentProgressInfo
-    })
-  );
 
   const toggleModal = () => {
     setModal(!modal)
@@ -195,6 +171,13 @@ export const YouScreen = ({ navigation }) => {
     fetchProgressInfo();
     fetchActiveChallengeUserData();
   }, [])
+
+  useEffect(() => {
+    progressDifference(
+      initialProgressInfo,
+      currentProgressInfo
+    )
+  }, [initialProgressInfo, currentProgressInfo])
 
   return (
     <ScrollView>
@@ -238,16 +221,9 @@ export const YouScreen = ({ navigation }) => {
               style={{
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "space-between",
+                justifyContent: "flex-end",
               }}
             >
-              <Text
-                style={{
-                  fontFamily: fonts.StyreneAWebRegular,
-                }}
-              >
-                Updated 2 days ago
-              </Text>
               <TouchableOpacity onPress={() => setModal(true)}>
                 <Text
                   style={{
@@ -296,18 +272,23 @@ export const YouScreen = ({ navigation }) => {
                     }}>
                       Weight
                     </Text>
-                    <Text style={{ fontSize: 25 }}>
-                      {initialProgressInfo ? initialProgressInfo.weight : "-"}{" "}
-                      {initialProgressInfo && unitsOfMeasurement === "metric" && "kg"}
-                      {initialProgressInfo && unitsOfMeasurement === "imperial" && "lbs"}
+                    <Text style={{ fontSize: 25, textAlign: "center" }}>
+                      {weightDiff?.data || "-"}
+                      {weightDiff?.data && unitsOfMeasurement === "metric" && "kg"}
+                      {weightDiff?.data && unitsOfMeasurement === "imperial" && "lbs"}
                     </Text>
                   </View>
-                  <Icon
-                    name="chevron-down"
-                    color="green"
-                    size={17}
-                    style={{ paddingLeft: 10 }}
-                  />
+                  {
+                    weightDiff ?
+                      <Icon
+                        name={weightDiff?.bol ? "chevron-up" : "chevron-down"}
+                        color={weightDiff?.bol ? "red" : "green"}
+                        size={17}
+                        style={{ paddingLeft: 10 }}
+                      />
+                      :
+                      null
+                  }
                 </View>
               </View>
               <View
@@ -334,20 +315,25 @@ export const YouScreen = ({ navigation }) => {
                     }}>
                       Waist
                     </Text>
-                    <Text style={{ fontSize: 25 }}>
-                      {initialProgressInfo ? initialProgressInfo.waist : "-"}{" "}
-                      {initialProgressInfo && unitsOfMeasurement === "metric" && "cm"}
-                      {initialProgressInfo &&
+                    <Text style={{ fontSize: 25, textAlign: "center" }}>
+                      {waistDiff?.data || "-"}
+                      {waistDiff?.data && unitsOfMeasurement === "metric" && "cm"}
+                      {waistDiff?.data &&
                         unitsOfMeasurement === "imperial" &&
                         "inches"}
                     </Text>
                   </View>
-                  <Icon
-                    name="chevron-up"
-                    color="red"
-                    size={17}
-                    style={{ paddingLeft: 10 }}
-                  />
+                  {
+                    waistDiff ?
+                      <Icon
+                        name={waistDiff?.bol ? "chevron-up" : "chevron-down"}
+                        color={waistDiff?.bol ? "red" : "green"}
+                        size={17}
+                        style={{ paddingLeft: 10 }}
+                      />
+                      :
+                      null
+                  }
                 </View>
               </View>
             </View>
@@ -383,20 +369,23 @@ export const YouScreen = ({ navigation }) => {
                     }}>
                       Hip
                     </Text>
-                    <Text style={{ fontSize: 25 }}>
-                      {initialProgressInfo ? initialProgressInfo.hip : "-"}{" "}
-                      {initialProgressInfo && unitsOfMeasurement === "metric" && "cm"}
-                      {initialProgressInfo &&
-                        unitsOfMeasurement === "imperial" &&
-                        "inches"}
+                    <Text style={{ fontSize: 25, textAlign: "center" }}>
+                      {hipDiff?.data || "-"}
+                      {hipDiff?.data && unitsOfMeasurement === "metric" && "cm"}
+                      {hipDiff?.data && unitsOfMeasurement === "imperial" && "inches"}
                     </Text>
                   </View>
-                  <Icon
-                    name="chevron-down"
-                    color="green"
-                    size={17}
-                    style={{ paddingLeft: 10 }}
-                  />
+                  {
+                    hipDiff ?
+                      <Icon
+                        name={hipDiff?.bol ? "chevron-up" : "chevron-down"}
+                        color={hipDiff?.bol ? "red" : "green"}
+                        size={17}
+                        style={{ paddingLeft: 10 }}
+                      />
+                      :
+                      null
+                  }
                 </View>
               </View>
               <View
@@ -416,8 +405,10 @@ export const YouScreen = ({ navigation }) => {
                 }}>
                   Burpees
                 </Text>
-                <Text style={{ fontSize: 25 }}>
-                  {burpeesDifference || "-"}
+                <Text style={{ fontSize: 25, textAlign: "center" }}>
+                  {currentProgressInfo && currentProgressInfo.burpeeCount
+                    ? currentProgressInfo.burpeeCount
+                    : "-"}
                 </Text>
               </View>
             </View>
