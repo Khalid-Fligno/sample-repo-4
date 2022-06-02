@@ -163,6 +163,30 @@ export const YouScreen = ({ navigation }) => {
     }
   }
 
+  const updateProgressBtn = (
+    initialProgressInfo,
+    currentProgressInfo
+  ) => {
+
+    navigation.navigate("ProgressEdit", {
+      isInitial: false,
+      initialProgressInfo: initialProgressInfo,
+      currentProgressInfo: currentProgressInfo
+    })
+  }
+
+  const editBeforeBtn = (
+    initialProgressInfo,
+    currentProgressInfo
+  ) => (
+
+    navigation.navigate("ProgressEdit", {
+      isInitial: true,
+      initialProgressInfo: initialProgressInfo,
+      currentProgressInfo: currentProgressInfo
+    })
+  );
+
   const toggleModal = () => {
     setModal(!modal)
   };
@@ -273,9 +297,9 @@ export const YouScreen = ({ navigation }) => {
                       Weight
                     </Text>
                     <Text style={{ fontSize: 25, textAlign: "center" }}>
-                      {weightDiff?.data || "-"}
-                      {weightDiff?.data && unitsOfMeasurement === "metric" && "kg"}
-                      {weightDiff?.data && unitsOfMeasurement === "imperial" && "lbs"}
+                      {Number(weightDiff?.data).toFixed(2) || "-"}
+                      {Number(weightDiff?.data).toFixed(2) && unitsOfMeasurement === "metric" && "kg"}
+                      {Number(weightDiff?.data).toFixed(2) && unitsOfMeasurement === "imperial" && "lbs"}
                     </Text>
                   </View>
                   {
@@ -654,6 +678,7 @@ export const YouScreen = ({ navigation }) => {
                 backgroundColor: "#DEDBDB"
               }}
               customBtnTitleStyle={{ fontSize: 14 }}
+              onPress={() => editBeforeBtn(initialProgressInfo, currentProgressInfo)}
             />
             <CustomBtn
               Title="View/Edit progress"
@@ -664,6 +689,7 @@ export const YouScreen = ({ navigation }) => {
                 backgroundColor: "#DEDBDB"
               }}
               customBtnTitleStyle={{ fontSize: 14 }}
+              onPress={() => updateProgressBtn(initialProgressInfo, currentProgressInfo)}
             />
           </View>
         </Modal>
