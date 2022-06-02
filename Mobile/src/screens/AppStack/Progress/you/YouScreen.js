@@ -153,9 +153,9 @@ export const YouScreen = ({ navigation }) => {
     currentProgressInfo
   ) => {
     if (initialProgressInfo && currentProgressInfo) {
-      const weight = diff(initialProgressInfo.weight, currentProgressInfo.weight);
-      const waist = diff(initialProgressInfo.waist, currentProgressInfo.waist);
-      const hip = diff(initialProgressInfo.hip, currentProgressInfo.hip)
+      const weight = diff(initialProgressInfo?.weight, currentProgressInfo?.weight);
+      const waist = diff(initialProgressInfo?.waist, currentProgressInfo?.waist);
+      const hip = diff(initialProgressInfo?.hip, currentProgressInfo?.hip)
 
       setWeightDiff(weight)
       setWaistDiff(waist)
@@ -297,9 +297,9 @@ export const YouScreen = ({ navigation }) => {
                       Weight
                     </Text>
                     <Text style={{ fontSize: 25, textAlign: "center" }}>
-                      {Number(weightDiff?.data).toFixed(2) || "-"}
-                      {Number(weightDiff?.data).toFixed(2) && unitsOfMeasurement === "metric" && "kg"}
-                      {Number(weightDiff?.data).toFixed(2) && unitsOfMeasurement === "imperial" && "lbs"}
+                      {weightDiff?.data ? Number(weightDiff?.data).toFixed(2) : "-"}
+                      {weightDiff?.data ? Number(weightDiff?.data).toFixed(2) && unitsOfMeasurement === "metric" && "kg" : null}
+                      {weightDiff?.data ? Number(weightDiff?.data).toFixed(2) && unitsOfMeasurement === "imperial" && "lbs" : null}
                     </Text>
                   </View>
                   {
@@ -340,11 +340,13 @@ export const YouScreen = ({ navigation }) => {
                       Waist
                     </Text>
                     <Text style={{ fontSize: 25, textAlign: "center" }}>
-                      {waistDiff?.data || "-"}
-                      {waistDiff?.data && unitsOfMeasurement === "metric" && "cm"}
-                      {waistDiff?.data &&
+                      {waistDiff?.data ? waistDiff?.data : "-"}
+                      {waistDiff?.data ? waistDiff?.data && unitsOfMeasurement === "metric" && "cm" : null}
+                      {waistDiff?.data ?
+                        waistDiff?.data &&
                         unitsOfMeasurement === "imperial" &&
-                        "inches"}
+                        "inches" :
+                        null}
                     </Text>
                   </View>
                   {
@@ -394,9 +396,9 @@ export const YouScreen = ({ navigation }) => {
                       Hip
                     </Text>
                     <Text style={{ fontSize: 25, textAlign: "center" }}>
-                      {hipDiff?.data || "-"}
-                      {hipDiff?.data && unitsOfMeasurement === "metric" && "cm"}
-                      {hipDiff?.data && unitsOfMeasurement === "imperial" && "inches"}
+                      {hipDiff?.data ? hipDiff?.data : "-"}
+                      {hipDiff?.data ? hipDiff?.data && unitsOfMeasurement === "metric" && "cm" : null}
+                      {hipDiff?.data ? hipDiff?.data && unitsOfMeasurement === "imperial" && "inches" : null}
                     </Text>
                   </View>
                   {
