@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { db } from "../../../../../config/firebase";
 import { diff } from "../../../../utils/index";
 import moment from "moment";
-import Icon from "../../../../components/Shared/Icon";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from '../../../../styles/colors';
 import Loader from '../../../../components/Shared/Loader';
 import Modal from "react-native-modal";
@@ -305,10 +305,9 @@ export const YouScreen = ({ navigation }) => {
                   {
                     weightDiff ?
                       <Icon
-                        name={weightDiff?.bol ? "chevron-up" : "chevron-down"}
+                        name={weightDiff?.bol ? "arrow-up" : "arrow-down"}
                         color={weightDiff?.bol ? "red" : "green"}
-                        size={17}
-                        style={{ paddingLeft: 10 }}
+                        size={27}
                       />
                       :
                       null
@@ -352,10 +351,9 @@ export const YouScreen = ({ navigation }) => {
                   {
                     waistDiff ?
                       <Icon
-                        name={waistDiff?.bol ? "chevron-up" : "chevron-down"}
+                        name={waistDiff?.bol ? "arrow-up" : "arrow-down"}
                         color={waistDiff?.bol ? "red" : "green"}
-                        size={17}
-                        style={{ paddingLeft: 10 }}
+                        size={27}
                       />
                       :
                       null
@@ -404,10 +402,9 @@ export const YouScreen = ({ navigation }) => {
                   {
                     hipDiff ?
                       <Icon
-                        name={hipDiff?.bol ? "chevron-up" : "chevron-down"}
+                        name={hipDiff?.bol ? "arrow-up" : "arrow-down"}
                         color={hipDiff?.bol ? "red" : "green"}
-                        size={17}
-                        style={{ paddingLeft: 10 }}
+                        size={27}
                       />
                       :
                       null
