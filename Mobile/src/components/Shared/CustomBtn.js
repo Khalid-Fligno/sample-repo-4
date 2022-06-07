@@ -55,8 +55,7 @@ const CustomBtn = (props) => {
         props.customBtnStyle,
       ]}
       activeOpacity={0.5}
-      onPress={props.onPress}
-    >
+      onPress={props.onPress}>
       {props.leftIcon && (
         <Image
           source={props.leftIconUrl}
@@ -100,7 +99,10 @@ const CustomBtn = (props) => {
 };
 
 CustomBtn.propTypes = {
-  customBtnStyle: PropTypes.object,
+  customBtnStyle: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array
+  ]),
   customBtnTitleStyle: PropTypes.object,
   Title: PropTypes.string,
   outline: PropTypes.bool,
