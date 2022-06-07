@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
   Picker,
   TextInput,
+  TouchableWithoutFeedback,
+  Keyboard
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Haptics from "expo-haptics";
@@ -318,216 +320,221 @@ export default class Progress1Screen extends React.PureComponent {
     }
     let weightData = weight.toString();
     return (
-      <SafeAreaView style={styles.safeAreaContainer}>
-        <KeyboardAvoidingView keyboardVerticalOffset={90} behavior="padding">
-          <View style={styles.container}>
-            <View style={styles.textContainer}>
-              <Text style={styles.headerText}>
-                {this.props.navigation.getParam("isInitial")
-                  ? "Measurements"
-                  : "Progress Measurements"}
-              </Text>
-              <Text style={styles.bodyText}>
-                To help you track your progress, let’s find out where you are
-                now.
-              </Text>
-            </View>
-            <View style={styles.contentContainer}>
-              <View style={styles.inputFieldContainer}>
-                <Text style={styles.inputFieldTitle}>Weight({uom})</Text>
+      <KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoidingView}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <SafeAreaView style={styles.safeAreaContainer}>
+            <View style={styles.container}>
+              <View style={styles.textContainer}>
+                <Text style={styles.headerText}>
+                  {this.props.navigation.getParam("isInitial")
+                    ? "Measurements"
+                    : "Progress Measurements"}
+                </Text>
+                <Text style={styles.bodyText}>
+                  To help you track your progress, let’s find out where you are
+                  now.
+                </Text>
+              </View>
+              <View style={styles.contentContainer}>
+                <View style={styles.inputFieldContainer}>
+                  <Text style={styles.inputFieldTitle}>Weight({uom})</Text>
 
-                {unitOfMeasurement === "metric" ? (
-                  <TextInput
-                    style={styles.inputButton}
-                    placeholder="kg"
-                    keyboardType="numeric"
-                    onChangeText={(value) => this.setState({ weight: value })}
-                    value={weightData}
-                  />
-                ) : (
-                  <TextInput
-                    style={styles.inputButton}
-                    placeholder="lbs"
-                    keyboardType="numeric"
-                    onChangeText={(value) => this.setState({ weight: value })}
-                    value={weightData}
-                  />
-                )}
+                  {unitOfMeasurement === "metric" ? (
+                    <TextInput
+                      style={styles.inputButton}
+                      placeholder="kg"
+                      keyboardType="numeric"
+                      onChangeText={(value) => this.setState({ weight: value })}
+                      value={weightData}
+                    />
+                  ) : (
+                    <TextInput
+                      style={styles.inputButton}
+                      placeholder="lbs"
+                      keyboardType="numeric"
+                      onChangeText={(value) => this.setState({ weight: value })}
+                      value={weightData}
+                    />
+                  )}
 
-                <Modal
-                  isVisible={weightModalVisible}
-                  onBackdropPress={() => this.hideModal("weightModalVisible")}
-                  animationIn="fadeIn"
-                  animationInTiming={600}
-                  animationOut="fadeOut"
-                  animationOutTiming={600}
-                >
-                  <View style={globalStyle.modalContainer}>
-                    <Picker
-                      selectedValue={weight}
-                      onValueChange={(value) =>
-                        this.setState({ weight: value })
-                      }
-                    >
-                      {unitOfMeasurement === "metric"
-                        ? weightOptionsMetric.map((i) => (
+                  <Modal
+                    isVisible={weightModalVisible}
+                    onBackdropPress={() => this.hideModal("weightModalVisible")}
+                    animationIn="fadeIn"
+                    animationInTiming={600}
+                    animationOut="fadeOut"
+                    animationOutTiming={600}
+                  >
+                    <View style={globalStyle.modalContainer}>
+                      <Picker
+                        selectedValue={weight}
+                        onValueChange={(value) =>
+                          this.setState({ weight: value })
+                        }
+                      >
+                        {unitOfMeasurement === "metric"
+                          ? weightOptionsMetric.map((i) => (
                             <Picker.Item
                               key={i.value}
                               label={`${i.label} kg`}
                               value={i.value}
                             />
                           ))
-                        : weightOptionsImperial.map((i) => (
+                          : weightOptionsImperial.map((i) => (
                             <Picker.Item
                               key={i.value}
                               label={`${i.label} lbs`}
                               value={i.value}
                             />
                           ))}
-                    </Picker>
-                    <TouchableOpacity
-                      title="DONE"
-                      onPress={() => this.hideModal("weightModalVisible")}
-                      style={globalStyle.modalButton}
-                    >
-                      <Text style={globalStyle.modalButtonText}>DONE</Text>
-                    </TouchableOpacity>
-                  </View>
-                </Modal>
-              </View>
-              <View style={styles.inputFieldContainer}>
-                <Text style={styles.inputFieldTitle}>Waist</Text>
-                <TouchableOpacity
-                  onPress={() => this.showModal("waistModalVisible")}
-                  style={styles.inputButton}
-                >
-                  <Text style={styles.inputSelectionText}>
-                    {waist} {unitOfMeasurement === "metric" && "cm"}
-                    {unitOfMeasurement === "imperial" && "inches"}
-                  </Text>
-                </TouchableOpacity>
-                <Modal
-                  isVisible={waistModalVisible}
-                  onBackdropPress={() => this.hideModal("waistModalVisible")}
-                  animationIn="fadeIn"
-                  animationInTiming={600}
-                  animationOut="fadeOut"
-                  animationOutTiming={600}
-                >
-                  <View style={globalStyle.modalContainer}>
-                    <Picker
-                      selectedValue={waist}
-                      onValueChange={(value) => this.setState({ waist: value })}
-                    >
-                      {unitOfMeasurement === "metric"
-                        ? waistOptionsMetric.map((i) => (
+                      </Picker>
+                      <TouchableOpacity
+                        title="DONE"
+                        onPress={() => this.hideModal("weightModalVisible")}
+                        style={globalStyle.modalButton}
+                      >
+                        <Text style={globalStyle.modalButtonText}>DONE</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </Modal>
+                </View>
+                <View style={styles.inputFieldContainer}>
+                  <Text style={styles.inputFieldTitle}>Waist</Text>
+                  <TouchableOpacity
+                    onPress={() => this.showModal("waistModalVisible")}
+                    style={styles.inputButton}
+                  >
+                    <Text style={styles.inputSelectionText}>
+                      {waist} {unitOfMeasurement === "metric" && "cm"}
+                      {unitOfMeasurement === "imperial" && "inches"}
+                    </Text>
+                  </TouchableOpacity>
+                  <Modal
+                    isVisible={waistModalVisible}
+                    onBackdropPress={() => this.hideModal("waistModalVisible")}
+                    animationIn="fadeIn"
+                    animationInTiming={600}
+                    animationOut="fadeOut"
+                    animationOutTiming={600}
+                  >
+                    <View style={globalStyle.modalContainer}>
+                      <Picker
+                        selectedValue={waist}
+                        onValueChange={(value) => this.setState({ waist: value })}
+                      >
+                        {unitOfMeasurement === "metric"
+                          ? waistOptionsMetric.map((i) => (
                             <Picker.Item
                               key={i.value}
                               label={`${i.label} cm`}
                               value={i.value}
                             />
                           ))
-                        : waistOptionsImperial.map((i) => (
+                          : waistOptionsImperial.map((i) => (
                             <Picker.Item
                               key={i.value}
                               label={`${i.label} inches`}
                               value={i.value}
                             />
                           ))}
-                    </Picker>
-                    <TouchableOpacity
-                      title="DONE"
-                      onPress={() => this.hideModal("waistModalVisible")}
-                      style={globalStyle.modalButton}
-                    >
-                      <Text style={globalStyle.modalButtonText}>DONE</Text>
-                    </TouchableOpacity>
-                  </View>
-                </Modal>
-              </View>
-              <View style={styles.inputFieldContainer}>
-                <Text style={styles.inputFieldTitle}>Hip</Text>
-                <TouchableOpacity
-                  onPress={() => this.showModal("hipModalVisible")}
-                  style={styles.inputButton}
-                >
-                  <Text style={styles.inputSelectionText}>
-                    {hip} {unitOfMeasurement === "metric" && "cm"}
-                    {unitOfMeasurement === "imperial" && "inches"}
-                  </Text>
-                </TouchableOpacity>
-                <Modal
-                  isVisible={hipModalVisible}
-                  onBackdropPress={() => this.hideModal("hipModalVisible")}
-                  animationIn="fadeIn"
-                  animationInTiming={600}
-                  animationOut="fadeOut"
-                  animationOutTiming={600}
-                >
-                  <View style={globalStyle.modalContainer}>
-                    <Picker
-                      selectedValue={hip}
-                      onValueChange={(value) => this.setState({ hip: value })}
-                    >
-                      {unitOfMeasurement === "metric"
-                        ? hipOptionsMetric.map((i) => (
+                      </Picker>
+                      <TouchableOpacity
+                        title="DONE"
+                        onPress={() => this.hideModal("waistModalVisible")}
+                        style={globalStyle.modalButton}
+                      >
+                        <Text style={globalStyle.modalButtonText}>DONE</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </Modal>
+                </View>
+                <View style={styles.inputFieldContainer}>
+                  <Text style={styles.inputFieldTitle}>Hip</Text>
+                  <TouchableOpacity
+                    onPress={() => this.showModal("hipModalVisible")}
+                    style={styles.inputButton}
+                  >
+                    <Text style={styles.inputSelectionText}>
+                      {hip} {unitOfMeasurement === "metric" && "cm"}
+                      {unitOfMeasurement === "imperial" && "inches"}
+                    </Text>
+                  </TouchableOpacity>
+                  <Modal
+                    isVisible={hipModalVisible}
+                    onBackdropPress={() => this.hideModal("hipModalVisible")}
+                    animationIn="fadeIn"
+                    animationInTiming={600}
+                    animationOut="fadeOut"
+                    animationOutTiming={600}
+                  >
+                    <View style={globalStyle.modalContainer}>
+                      <Picker
+                        selectedValue={hip}
+                        onValueChange={(value) => this.setState({ hip: value })}
+                      >
+                        {unitOfMeasurement === "metric"
+                          ? hipOptionsMetric.map((i) => (
                             <Picker.Item
                               key={i.value}
                               label={`${i.label} cm`}
                               value={i.value}
                             />
                           ))
-                        : hipOptionsImperial.map((i) => (
+                          : hipOptionsImperial.map((i) => (
                             <Picker.Item
                               key={i.value}
                               label={`${i.label} inches`}
                               value={i.value}
                             />
                           ))}
-                    </Picker>
-                    <TouchableOpacity
-                      title="DONE"
-                      onPress={() => this.hideModal("hipModalVisible")}
-                      style={globalStyle.modalButton}
-                    >
-                      <Text style={globalStyle.modalButtonText}>DONE</Text>
-                    </TouchableOpacity>
-                  </View>
-                </Modal>
+                      </Picker>
+                      <TouchableOpacity
+                        title="DONE"
+                        onPress={() => this.hideModal("hipModalVisible")}
+                        style={globalStyle.modalButton}
+                      >
+                        <Text style={globalStyle.modalButtonText}>DONE</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </Modal>
+                </View>
               </View>
+              <View style={styles.buttonContainer}>
+                <CustomBtn
+                  // Title="NEXT"
+                  Title="Update"
+                  titleCapitalise={true}
+                  onPress={() => this.handleSubmit(weight, waist, hip)}
+                  customBtnStyle={{bottom: 90}}
+                />
+              </View>
+              <Loader loading={loading} color={colors.themeColor.color} />
             </View>
-            <View style={styles.buttonContainer}>
-              <CustomBtn
-                // Title="NEXT"
-                Title="Update"
-                titleCapitalise={true}
-                onPress={() => this.handleSubmit(weight, waist, hip)}
-              />
-            </View>
-            <Loader loading={loading} color={colors.themeColor.color} />
-          </View>
-        </KeyboardAvoidingView>
-
-        <HelperModal
-          helperModalVisible={helperModalVisible}
-          hideHelperModal={this.hideHelperModal}
-          headingText="Progress"
-          bodyText="Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test."
-          bodyText2="You will need to complete all three to successfully add an entry."
-          bodyText3="If you can't do all of this right now, press skip in the top right corner to complete it later."
-          color="coral"
-        />
-      </SafeAreaView>
+            <HelperModal
+              helperModalVisible={helperModalVisible}
+              hideHelperModal={this.hideHelperModal}
+              headingText="Progress"
+              bodyText="Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test."
+              bodyText2="You will need to complete all three to successfully add an entry."
+              bodyText3="If you can't do all of this right now, press skip in the top right corner to complete it later."
+              color="coral"
+            />
+          </SafeAreaView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  safeAreaContainer: {
+  keyboardAvoidingView: {
     flex: 1,
     backgroundColor: colors.black,
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  safeAreaContainer: {
+    flex: 1,
   },
   container: {
     flex: 1,
@@ -556,6 +563,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
     justifyContent: "center",
+    bottom: 25
   },
   inputFieldContainer: {
     marginBottom: 20,
