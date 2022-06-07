@@ -223,7 +223,7 @@ export const YouScreen = ({ navigation }) => {
           <Text style={{
             fontFamily: fonts.StyreneAWebRegular
           }}>
-            Total workouts complete 🎉
+            Total workouts completed 🎉
           </Text>
         </View>
         <View
@@ -279,40 +279,36 @@ export const YouScreen = ({ navigation }) => {
                   height: hp("14%"),
                   borderRadius: 10,
                   alignItems: "center",
-                  justifyContent: "center"
+                  justifyContent: "space-evenly",
+                  flexDirection: "row"
                 }}
               >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center"
-                  }}
-                >
-                  <View>
-                    <Text style={{
-                      fontFamily: fonts.StyreneAWebRegular,
-                      fontSize: 13,
-                      textAlign: "center"
-                    }}>
-                      Weight
-                    </Text>
-                    <Text style={{ fontSize: 25, textAlign: "center" }}>
-                      {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) : "-"}
-                      {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) && unitsOfMeasurement === "metric" && "kg" : null}
-                      {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) && unitsOfMeasurement === "imperial" && "lbs" : null}
-                    </Text>
-                  </View>
-                  {
-                    weightDiff ?
-                      <Icon
-                        name={weightDiff?.bol ? "arrow-up" : "arrow-down"}
-                        color={weightDiff?.bol ? "red" : "green"}
-                        size={27}
-                      />
-                      :
-                      null
-                  }
+                <View style={{marginLeft: 20}}>
                 </View>
+                <View>
+                  <Text style={{
+                    fontFamily: fonts.StyreneAWebRegular,
+                    fontSize: 13,
+                    textAlign: "center"
+                  }}>
+                    Weight
+                  </Text>
+                  <Text style={{ fontSize: 25, textAlign: "center" }}>
+                    {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) : "-"}
+                    {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) && unitsOfMeasurement === "metric" && "kg" : null}
+                    {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) && unitsOfMeasurement === "imperial" && "lbs" : null}
+                  </Text>
+                </View>
+                {
+                  weightDiff ?
+                    <Icon
+                      name={weightDiff?.bol ? "arrow-up" : "arrow-down"}
+                      color={weightDiff?.bol ? "red" : "green"}
+                      size={27}
+                    />
+                    :
+                    null
+                }
               </View>
               <View
                 style={{
@@ -321,44 +317,40 @@ export const YouScreen = ({ navigation }) => {
                   height: hp("14%"),
                   borderRadius: 10,
                   alignItems: "center",
-                  justifyContent: "center"
+                  justifyContent: "space-evenly",
+                  flexDirection: "row"
                 }}
               >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center"
-                  }}
-                >
-                  <View>
-                    <Text style={{
-                      fontFamily: fonts.StyreneAWebRegular,
-                      fontSize: 13,
-                      textAlign: "center"
-                    }}>
-                      Waist
-                    </Text>
-                    <Text style={{ fontSize: 25, textAlign: "center" }}>
-                      {waistDiff?.data ? waistDiff?.data : "-"}
-                      {waistDiff?.data ? waistDiff?.data && unitsOfMeasurement === "metric" && "cm" : null}
-                      {waistDiff?.data ?
-                        waistDiff?.data &&
-                        unitsOfMeasurement === "imperial" &&
-                        "inches" :
-                        null}
-                    </Text>
-                  </View>
-                  {
-                    waistDiff ?
-                      <Icon
-                        name={waistDiff?.bol ? "arrow-up" : "arrow-down"}
-                        color={waistDiff?.bol ? "red" : "green"}
-                        size={27}
-                      />
-                      :
-                      null
-                  }
+                <View style={{marginLeft: 20}}>
                 </View>
+                <View>
+                  <Text style={{
+                    fontFamily: fonts.StyreneAWebRegular,
+                    fontSize: 13,
+                    textAlign: "center"
+                  }}>
+                    Waist
+                  </Text>
+                  <Text style={{ fontSize: 25, textAlign: "center" }}>
+                    {waistDiff?.data ? waistDiff?.data : "-"}
+                    {waistDiff?.data ? waistDiff?.data && unitsOfMeasurement === "metric" && "cm" : null}
+                    {waistDiff?.data ?
+                      waistDiff?.data &&
+                      unitsOfMeasurement === "imperial" &&
+                      "inches" :
+                      null}
+                  </Text>
+                </View>
+                {
+                  waistDiff ?
+                    <Icon
+                      name={waistDiff?.bol ? "arrow-up" : "arrow-down"}
+                      color={waistDiff?.bol ? "red" : "green"}
+                      size={27}
+                    />
+                    :
+                    null
+                }
               </View>
             </View>
             <View
@@ -376,40 +368,36 @@ export const YouScreen = ({ navigation }) => {
                   height: hp("14%"),
                   borderRadius: 10,
                   alignItems: "center",
-                  justifyContent: "center"
+                  justifyContent: "space-evenly",
+                  flexDirection: "row"
                 }}
               >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center"
-                  }}
-                >
-                  <View>
-                    <Text style={{
-                      fontFamily: fonts.StyreneAWebRegular,
-                      fontSize: 13,
-                      textAlign: "center"
-                    }}>
-                      Hip
-                    </Text>
-                    <Text style={{ fontSize: 25, textAlign: "center" }}>
-                      {hipDiff?.data ? hipDiff?.data : "-"}
-                      {hipDiff?.data ? hipDiff?.data && unitsOfMeasurement === "metric" && "cm" : null}
-                      {hipDiff?.data ? hipDiff?.data && unitsOfMeasurement === "imperial" && "inches" : null}
-                    </Text>
-                  </View>
-                  {
-                    hipDiff ?
-                      <Icon
-                        name={hipDiff?.bol ? "arrow-up" : "arrow-down"}
-                        color={hipDiff?.bol ? "red" : "green"}
-                        size={27}
-                      />
-                      :
-                      null
-                  }
+                <View style={{marginLeft: 20}}>
                 </View>
+                <View>
+                  <Text style={{
+                    fontFamily: fonts.StyreneAWebRegular,
+                    fontSize: 13,
+                    textAlign: "center"
+                  }}>
+                    Hip
+                  </Text>
+                  <Text style={{ fontSize: 25, textAlign: "center" }}>
+                    {hipDiff?.data ? hipDiff?.data : "-"}
+                    {hipDiff?.data ? hipDiff?.data && unitsOfMeasurement === "metric" && "cm" : null}
+                    {hipDiff?.data ? hipDiff?.data && unitsOfMeasurement === "imperial" && "inches" : null}
+                  </Text>
+                </View>
+                {
+                  hipDiff ?
+                    <Icon
+                      name={hipDiff?.bol ? "arrow-up" : "arrow-down"}
+                      color={hipDiff?.bol ? "red" : "green"}
+                      size={27}
+                    />
+                    :
+                    null
+                }
               </View>
               <View
                 style={{
