@@ -187,6 +187,30 @@ export const YouScreen = ({ navigation }) => {
     })
   );
 
+  const latestBurpee = (
+    initialProgressInfo,
+    currentProgressInfo
+  ) => {
+    let result = "-"
+
+    if (
+      initialProgressInfo &&
+      currentProgressInfo &&
+      initialProgressInfo?.burpeeCount &&
+      currentProgressInfo?.burpeeCount
+    ) {
+      result = currentProgressInfo.burpeeCount
+    } else if (
+      currentProgressInfo?.burpeeCount
+    ) {
+      result = currentProgressInfo.burpeeCount
+    } else if (initialProgressInfo?.burpeeCount) {
+      result = initialProgressInfo.burpeeCount
+    }
+
+    return result
+  }
+
   const toggleModal = () => {
     setModal(!modal)
   };
@@ -283,7 +307,7 @@ export const YouScreen = ({ navigation }) => {
                   flexDirection: "row"
                 }}
               >
-                <View style={{marginLeft: 20}}>
+                <View style={{ marginLeft: 20 }}>
                 </View>
                 <View>
                   <Text style={{
@@ -321,7 +345,7 @@ export const YouScreen = ({ navigation }) => {
                   flexDirection: "row"
                 }}
               >
-                <View style={{marginLeft: 20}}>
+                <View style={{ marginLeft: 20 }}>
                 </View>
                 <View>
                   <Text style={{
@@ -372,7 +396,7 @@ export const YouScreen = ({ navigation }) => {
                   flexDirection: "row"
                 }}
               >
-                <View style={{marginLeft: 20}}>
+                <View style={{ marginLeft: 20 }}>
                 </View>
                 <View>
                   <Text style={{
@@ -417,9 +441,10 @@ export const YouScreen = ({ navigation }) => {
                   Burpees
                 </Text>
                 <Text style={{ fontSize: 25, textAlign: "center" }}>
-                  {currentProgressInfo && currentProgressInfo.burpeeCount
-                    ? currentProgressInfo.burpeeCount
-                    : "-"}
+                  {latestBurpee(
+                    initialProgressInfo,
+                    currentProgressInfo
+                  )}
                 </Text>
               </View>
             </View>
