@@ -297,9 +297,9 @@ export const YouScreen = ({ navigation }) => {
                       Weight
                     </Text>
                     <Text style={{ fontSize: 25, textAlign: "center" }}>
-                      {weightDiff?.data ? Number(weightDiff?.data).toFixed(2) : "-"}
-                      {weightDiff?.data ? Number(weightDiff?.data).toFixed(2) && unitsOfMeasurement === "metric" && "kg" : null}
-                      {weightDiff?.data ? Number(weightDiff?.data).toFixed(2) && unitsOfMeasurement === "imperial" && "lbs" : null}
+                      {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) : "-"}
+                      {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) && unitsOfMeasurement === "metric" && "kg" : null}
+                      {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) && unitsOfMeasurement === "imperial" && "lbs" : null}
                     </Text>
                   </View>
                   {
