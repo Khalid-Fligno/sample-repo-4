@@ -558,6 +558,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
     justifyContent: "center",
+    top: 15
   },
   inputFieldContainer: {
     marginBottom: 20,
