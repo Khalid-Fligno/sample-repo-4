@@ -52,6 +52,56 @@ export const SplashScreenV2 = () => {
     }
   };
   
+  const checkUserAuthorization = async (uid) => {
+    try {
+      const userDoc = await getDocument(
+        COLLECTION_NAMES.USERS,
+        uid
+      );
+      console.log('userDoc: ', userDoc)
+  
+      if (userDoc) {
+        const {
+          subscriptionInfo,
+        } = userDoc;
+        Sentry.setUser({ email: userDoc.email });
+        if (!userDoc.fitnessLevel) {
+          await useStorage.setItem('fitnessLevel', "1")
+        } else {
+          await useStorage.setItem(
+            'fitnessLevel',
+            userDoc.fitnessLevel.toString()
+          )
+        }
+        if (!subscriptionInfo || !subscriptionInfo?.expiry) {
+          if (await hasChallenges(uid)) {
+            await goToAppScreen(userDoc);
+          } else {
+            // NO PURCHASE INFORMATION SAVED
+            navigate("Subscription");
+          }
+        } else if (subscriptionInfo.expiry < Date.now()) {
+          if (await hasChallenges(uid)) {
+            await goToAppScreen(userDoc);
+          } else {
+            // EXPIRED
+            if (subscriptionInfo.receipt) {
+              await storePurchase(subscriptionInfo);
+            } else {
+              navigate("Subscription");
+            }
+          }
+        } else if (subscriptionInfo.expiry > Date.now()) {
+          // RECEIPT STILL VALID
+          await hasChallenges(uid);
+          await goToAppScreen(userDoc);
+        }
+      }
+    } catch (error) {
+      console.log('Error: ', error)
+    }
+  };
+  
   const goToAppScreen = async (userDoc) => {
     const activeChallenge = await isActiveChallenge();
   
