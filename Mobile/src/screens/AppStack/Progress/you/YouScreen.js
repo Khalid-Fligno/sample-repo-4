@@ -255,34 +255,30 @@ export const YouScreen = ({ navigation }) => {
             paddingTop: 10
           }}
         >
-          <View style={{ paddingVertical: 10 }}>
+          <View style={{
+            paddingVertical: 10,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}>
             <Text
               style={{
                 fontSize: 20,
                 fontFamily: fonts.StyreneAWebRegular,
-                paddingVertical: 5
               }}
             >
               Body Measurements
             </Text>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end",
-              }}
-            >
-              <TouchableOpacity onPress={() => setModal(true)}>
-                <Text
-                  style={{
-                    fontFamily: fonts.StyreneAWebRegular,
-                    textDecorationLine: 'underline'
-                  }}
-                >
-                  Edit
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity onPress={() => setModal(true)}>
+              <Text
+                style={{
+                  fontFamily: fonts.StyreneAWebRegular,
+                  textDecorationLine: 'underline'
+                }}
+              >
+                Edit
+              </Text>
+            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -353,7 +349,7 @@ export const YouScreen = ({ navigation }) => {
               >
                 <View style={{
                   marginLeft: waistDiff?.data ? 20 : null
-                }}>                
+                }}>
                 </View>
                 <View>
                   <Text style={{
