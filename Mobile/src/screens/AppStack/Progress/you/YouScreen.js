@@ -307,7 +307,9 @@ export const YouScreen = ({ navigation }) => {
                   flexDirection: "row"
                 }}
               >
-                <View style={{ marginLeft: 20 }}>
+                <View style={{
+                  marginLeft: weightDiff?.data ? 20 : null
+                }}>
                 </View>
                 <View>
                   <Text style={{
@@ -323,16 +325,20 @@ export const YouScreen = ({ navigation }) => {
                     {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) && unitsOfMeasurement === "imperial" && "lbs" : null}
                   </Text>
                 </View>
-                {
-                  weightDiff ?
-                    <Icon
-                      name={weightDiff?.bol ? "arrow-up" : "arrow-down"}
-                      color={weightDiff?.bol ? "red" : "green"}
-                      size={27}
-                    />
-                    :
-                    null
-                }
+                <View style={{
+                  left: 2,
+                }}>
+                  {
+                    weightDiff ?
+                      <Icon
+                        name={weightDiff?.bol ? "arrow-up" : "arrow-down"}
+                        color={weightDiff?.bol ? "red" : "green"}
+                        size={27}
+                      />
+                      :
+                      null
+                  }
+                </View>
               </View>
               <View
                 style={{
@@ -345,7 +351,9 @@ export const YouScreen = ({ navigation }) => {
                   flexDirection: "row"
                 }}
               >
-                <View style={{ marginLeft: 20 }}>
+                <View style={{
+                  marginLeft: waistDiff?.data ? 20 : null
+                }}>                
                 </View>
                 <View>
                   <Text style={{
@@ -365,16 +373,20 @@ export const YouScreen = ({ navigation }) => {
                       null}
                   </Text>
                 </View>
-                {
-                  waistDiff ?
-                    <Icon
-                      name={waistDiff?.bol ? "arrow-up" : "arrow-down"}
-                      color={waistDiff?.bol ? "red" : "green"}
-                      size={27}
-                    />
-                    :
-                    null
-                }
+                <View style={{
+                  left: 7,
+                }}>
+                  {
+                    waistDiff ?
+                      <Icon
+                        name={waistDiff?.bol ? "arrow-up" : "arrow-down"}
+                        color={waistDiff?.bol ? "red" : "green"}
+                        size={27}
+                      />
+                      :
+                      null
+                  }
+                </View>
               </View>
             </View>
             <View
@@ -396,7 +408,9 @@ export const YouScreen = ({ navigation }) => {
                   flexDirection: "row"
                 }}
               >
-                <View style={{ marginLeft: 20 }}>
+                <View style={{
+                  marginLeft: hipDiff?.data ? 20 : null
+                }}>
                 </View>
                 <View>
                   <Text style={{
@@ -412,16 +426,20 @@ export const YouScreen = ({ navigation }) => {
                     {hipDiff?.data ? hipDiff?.data && unitsOfMeasurement === "imperial" && "inches" : null}
                   </Text>
                 </View>
-                {
-                  hipDiff ?
-                    <Icon
-                      name={hipDiff?.bol ? "arrow-up" : "arrow-down"}
-                      color={hipDiff?.bol ? "red" : "green"}
-                      size={27}
-                    />
-                    :
-                    null
-                }
+                <View style={{
+                  left: 7,
+                }}>
+                  {
+                    hipDiff ?
+                      <Icon
+                        name={hipDiff?.bol ? "arrow-up" : "arrow-down"}
+                        color={hipDiff?.bol ? "red" : "green"}
+                        size={27}
+                      />
+                      :
+                      null
+                  }
+                </View>
               </View>
               <View
                 style={{
