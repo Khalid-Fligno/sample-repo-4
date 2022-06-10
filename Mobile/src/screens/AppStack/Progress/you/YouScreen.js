@@ -191,7 +191,7 @@ export const YouScreen = ({ navigation }) => {
     initialProgressInfo,
     currentProgressInfo
   ) => {
-    let result = "-"
+    let result = "-";
 
     if (
       initialProgressInfo &&
@@ -207,8 +207,24 @@ export const YouScreen = ({ navigation }) => {
     } else if (initialProgressInfo?.burpeeCount) {
       result = initialProgressInfo.burpeeCount
     }
+    return result;
+  }
 
-    return result
+  const diffMeasurement = (measurement) => {
+    let result = "-";
+
+    if (measurement) {
+      result = measurement
+    } else if (
+      currentProgressInfo?.weight
+    ) {
+      result = currentProgressInfo.weight
+    } else if (
+      initialProgressInfo?.weight
+    ) {
+      result = initialProgressInfo.weight
+    }
+    return result;
   }
 
   const toggleModal = () => {
@@ -252,7 +268,7 @@ export const YouScreen = ({ navigation }) => {
         </View>
         <View
           style={{
-            paddingTop: 10
+            paddingVertical: 20
           }}
         >
           <View style={{
@@ -311,14 +327,15 @@ export const YouScreen = ({ navigation }) => {
                   <Text style={{
                     fontFamily: fonts.StyreneAWebRegular,
                     fontSize: 13,
-                    textAlign: "center"
+                    textAlign: "center",
+                    marginBottom: 5
                   }}>
                     Weight
                   </Text>
                   <Text style={{ fontSize: 25, textAlign: "center" }}>
-                    {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) : "-"}
-                    {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) && unitsOfMeasurement === "metric" && "kg" : null}
-                    {weightDiff?.data ? Number(weightDiff?.data).toFixed(1) && unitsOfMeasurement === "imperial" && "lbs" : null}
+                    {Number(diffMeasurement(weightDiff?.data)).toFixed(1)}
+                    {diffMeasurement() ? Number(diffMeasurement(weightDiff?.data)).toFixed(1) && unitsOfMeasurement === "metric" && "kg" : null}
+                    {diffMeasurement() ? Number(diffMeasurement(weightDiff?.data)).toFixed(1) && unitsOfMeasurement === "imperial" && "lbs" : null}
                   </Text>
                 </View>
                 <View style={{
@@ -355,15 +372,16 @@ export const YouScreen = ({ navigation }) => {
                   <Text style={{
                     fontFamily: fonts.StyreneAWebRegular,
                     fontSize: 13,
-                    textAlign: "center"
+                    textAlign: "center",
+                    marginBottom: 5
                   }}>
                     Waist
                   </Text>
                   <Text style={{ fontSize: 25, textAlign: "center" }}>
-                    {waistDiff?.data ? waistDiff?.data : "-"}
-                    {waistDiff?.data ? waistDiff?.data && unitsOfMeasurement === "metric" && "cm" : null}
-                    {waistDiff?.data ?
-                      waistDiff?.data &&
+                    {diffMeasurement(waistDiff?.data)}
+                    {diffMeasurement() ? diffMeasurement(waistDiff?.data) && unitsOfMeasurement === "metric" && "cm" : null}
+                    {diffMeasurement() ?
+                      diffMeasurement(waistDiff?.data) &&
                       unitsOfMeasurement === "imperial" &&
                       "inches" :
                       null}
@@ -412,14 +430,15 @@ export const YouScreen = ({ navigation }) => {
                   <Text style={{
                     fontFamily: fonts.StyreneAWebRegular,
                     fontSize: 13,
-                    textAlign: "center"
+                    textAlign: "center",
+                    marginBottom: 5
                   }}>
                     Hip
                   </Text>
                   <Text style={{ fontSize: 25, textAlign: "center" }}>
-                    {hipDiff?.data ? hipDiff?.data : "-"}
-                    {hipDiff?.data ? hipDiff?.data && unitsOfMeasurement === "metric" && "cm" : null}
-                    {hipDiff?.data ? hipDiff?.data && unitsOfMeasurement === "imperial" && "inches" : null}
+                    {diffMeasurement()}
+                    {diffMeasurement() ? diffMeasurement(hipDiff?.data) && unitsOfMeasurement === "metric" && "cm" : null}
+                    {diffMeasurement() ? diffMeasurement(hipDiff?.data) && unitsOfMeasurement === "imperial" && "inches" : null}
                   </Text>
                 </View>
                 <View style={{
@@ -450,7 +469,8 @@ export const YouScreen = ({ navigation }) => {
                 <Text style={{
                   fontFamily: fonts.StyreneAWebRegular,
                   fontSize: 13,
-                  textAlign: "center"
+                  textAlign: "center",
+                  marginBottom: 5
                 }}>
                   Burpees
                 </Text>
@@ -605,68 +625,6 @@ export const YouScreen = ({ navigation }) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-            </View>
-          </View>
-        </View>
-        <View style={{ paddingVertical: 10 }}>
-          <View style={{ alignItems: "center" }}>
-            <View style={{ padding: 8 }}>
-              <Text style={{
-                fontFamily: fonts.StyreneAWebRegular,
-                fontSize: 13,
-                paddingVertical: 20,
-              }}>
-                {activeChallengeData
-                  ? "Active challenge progress"
-                  : "Weekly workout progress"}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              {profile && (
-                <View>
-                  <ProgressBar
-                    title="Strength"
-                    completed={countS}
-                    total={totalS}
-                    size={wp("38%")}
-                  />
-                </View>
-              )}
-              {profile && (
-                <View>
-                  <ProgressBar
-                    title="Circuit"
-                    completed={countC}
-                    total={totalC}
-                    size={wp("38%")}
-                  />
-                </View>
-              )}
-            </View>
-            <View
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                justifyContent: "center",
-                marginTop: -30,
-              }}
-            >
-              {profile && (
-                <View>
-                  <ProgressBar
-                    title="Interval"
-                    completed={countI}
-                    total={totalI}
-                    size={wp("38%")}
-                  />
-                </View>
-              )}
             </View>
           </View>
         </View>
