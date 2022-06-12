@@ -522,7 +522,7 @@ export const YouScreen = ({ navigation }) => {
                         uri: initialProgressInfo.photoURL,
                         cache: "immutable",
                       }}
-                      resizeMode={FastImage.resizeMode.cover}
+                      // resizeMode={FastImage.resizeMode.cover}
                     />
                   </View>
                   :
@@ -573,7 +573,7 @@ export const YouScreen = ({ navigation }) => {
                     ? moment(currentProgressInfo.date).format("DD/MM/YYYY")
                     : "-"}
                 </Text>
-                {currentProgressInfo ?
+                {currentProgressInfo && currentProgressInfo.photoURL ?
                   <View>
                     <FastImage
                       style={{
@@ -589,7 +589,7 @@ export const YouScreen = ({ navigation }) => {
                         uri: currentProgressInfo.photoURL,
                         cache: "immutable",
                       }}
-                      resizeMode={FastImage.resizeMode.cover}
+                      // resizeMode={FastImage.resizeMode.cover}
                     />
                   </View>
                   :
