@@ -12,42 +12,30 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import ProgressBar from "../../../../components/Progress/ProgressBar";
 import AsyncStorage from "@react-native-community/async-storage";
 import { db } from "../../../../../config/firebase";
 import { diff } from "../../../../utils/index";
 import moment from "moment";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import colors from '../../../../styles/colors';
-import Loader from '../../../../components/Shared/Loader';
 import Modal from "react-native-modal";
 import CustomBtn from '../../../../components/Shared/CustomBtn';
 
 export const YouScreen = ({ navigation }) => {
 
-  const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState(undefined);
   const [initialProgressInfo, setInitialProgressInfo] = useState(undefined);
   const [currentProgressInfo, setCurrentProgressInfo] = useState(undefined);
   const [unitsOfMeasurement, setUnitsOfMeasurement] = useState(undefined);
-  const [activeChallengeData, setActiveChallengeData] = useState(undefined);
   const [weightDiff, setWeightDiff] = useState(null);
   const [waistDiff, setWaistDiff] = useState(null);
   const [hipDiff, setHipDiff] = useState(null);
   const [modal, setModal] = useState(false);
-  const [totalI, setTotalI] = useState(0);
-  const [totalS, setTotalS] = useState(0);
-  const [totalC, setTotalC] = useState(0);
-  const [countI, setCountI] = useState(0);
-  const [countS, setCountS] = useState(0);
-  const [countC, setCountC] = useState(0);
 
   const { width } = Dimensions.get("window");
 
   const fetchProgressInfo = async () => {
-    setLoading(true)
     const uid = await AsyncStorage.getItem("uid");
-    const userDataFromFirebase = await await db
+    const userDataFromFirebase = await db
       .collection("users")
       .doc(uid)
       .get();
@@ -63,7 +51,6 @@ export const YouScreen = ({ navigation }) => {
       setInitialProgressInfo(userData.initialProgressInfo)
       setCurrentProgressInfo(currentProgressInfo)
       setUnitsOfMeasurement(userData.unitsOfMeasurement)
-      setLoading(false)
 
       if (
         userData.weeklyTargets.currentWeekStartDate !==
@@ -81,70 +68,6 @@ export const YouScreen = ({ navigation }) => {
           .set(data, { merge: true })
           .catch((err) => console.log(err));
       }
-    }
-  };
-
-  const fetchActiveChallengeUserData = async () => {
-    try {
-      setLoading(true)
-      const uid = await AsyncStorage.getItem("uid");
-      const userActiveChallengeRef = await db
-        .collection("users")
-        .doc(uid)
-        .collection("challenges")
-        .where("status", "==", "Active")
-        .get()
-
-      userActiveChallengeRef.docs.forEach(userActiveChallenge => {
-        if (userActiveChallenge) {
-          fetchActiveChallengeData(userActiveChallenge.data())
-        } else {
-          setTotalS(0)
-          setTotalI(0)
-          setTotalC(0)
-          setCountC(0)
-          setCountI(0)
-          setCountS(0)
-        }
-      })
-    } catch (err) {
-      setLoading(false)
-      console.log("Fetch active challenge user data error!", err);
-    }
-  };
-
-  const fetchActiveChallengeData = async (activeChallengeUserData) => {
-    try {
-      const activeChallengeDataFromFirebase = await db
-        .collection("challenges")
-        .doc(activeChallengeUserData.id)
-        .get();
-
-      const activeChallengeData = activeChallengeDataFromFirebase.data()
-
-      if (activeChallengeData) {
-        const totalIntervalCompleted =
-          activeChallengeUserData.workouts
-            .filter(res => res.target === "interval");
-        const totalCircuitCompleted =
-          activeChallengeUserData.workouts
-            .filter(res => res.target === "circuit");
-        const totalStrengthCompleted =
-          activeChallengeUserData.workouts
-            .filter(res => res.target === "strength");
-
-        setTotalS(5)
-        setTotalI(5)
-        setTotalC(5)
-        setCountC(totalCircuitCompleted.length)
-        setCountI(totalIntervalCompleted.length)
-        setCountS(totalStrengthCompleted.length)
-        setActiveChallengeData(activeChallengeData)
-        setLoading(false)
-      }
-    } catch (err) {
-      setLoading(false)
-      console.log("Fetch active challenge data error: ", err);
     }
   };
 
@@ -233,7 +156,6 @@ export const YouScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchProgressInfo();
-    fetchActiveChallengeUserData();
   }, [])
 
   useEffect(() => {
@@ -259,7 +181,9 @@ export const YouScreen = ({ navigation }) => {
             alignItems: "center"
           }}
         >
-          <Text style={{ fontSize: 40 }}>9</Text>
+          <Text style={{ fontSize: 40 }}>
+            {profile?.totalWorkoutCompleted}
+          </Text>
           <Text style={{
             fontFamily: fonts.StyreneAWebRegular
           }}>
@@ -522,7 +446,7 @@ export const YouScreen = ({ navigation }) => {
                         uri: initialProgressInfo.photoURL,
                         cache: "immutable",
                       }}
-                      // resizeMode={FastImage.resizeMode.cover}
+                    // resizeMode={FastImage.resizeMode.cover}
                     />
                   </View>
                   :
@@ -589,7 +513,7 @@ export const YouScreen = ({ navigation }) => {
                         uri: currentProgressInfo.photoURL,
                         cache: "immutable",
                       }}
-                      // resizeMode={FastImage.resizeMode.cover}
+                    // resizeMode={FastImage.resizeMode.cover}
                     />
                   </View>
                   :
@@ -677,7 +601,6 @@ export const YouScreen = ({ navigation }) => {
             />
           </View>
         </Modal>
-        <Loader loading={loading} color={colors.red.standard} />
       </View>
     </ScrollView>
   )

@@ -352,7 +352,7 @@ export default class Progress2Screen extends React.PureComponent {
           0
         );
 
-        this.props.navigation.navigate("CalendarHome");
+        this.props.navigation.navigate("ProgressHome");
       } else {
         this.setState({
           error: "Please select an image to continue",
