@@ -1,4 +1,5 @@
 import * as firebase from "firebase";
+import "firebase/firestore";
 
 // Live configuration
 // const firebaseConfig = {
