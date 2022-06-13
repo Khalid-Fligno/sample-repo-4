@@ -134,7 +134,7 @@ export const YouScreen = ({ navigation }) => {
   }
 
   const diffMeasurement = (measurement) => {
-    let result = "-";
+    let result = undefined;
 
     if (measurement) {
       result = measurement
@@ -147,6 +147,8 @@ export const YouScreen = ({ navigation }) => {
     ) {
       result = initialProgressInfo.weight
     }
+
+    console.log("measurement: ", measurement)
     return result;
   }
 
@@ -257,7 +259,7 @@ export const YouScreen = ({ navigation }) => {
                     Weight
                   </Text>
                   <Text style={{ fontSize: 25, textAlign: "center" }}>
-                    {Number(diffMeasurement(weightDiff?.data)).toFixed(1)}
+                    {diffMeasurement() ? Number(diffMeasurement(weightDiff?.data)).toFixed(1) : "-"}
                     {diffMeasurement() ? Number(diffMeasurement(weightDiff?.data)).toFixed(1) && unitsOfMeasurement === "metric" && "kg" : null}
                     {diffMeasurement() ? Number(diffMeasurement(weightDiff?.data)).toFixed(1) && unitsOfMeasurement === "imperial" && "lbs" : null}
                   </Text>
@@ -302,7 +304,7 @@ export const YouScreen = ({ navigation }) => {
                     Waist
                   </Text>
                   <Text style={{ fontSize: 25, textAlign: "center" }}>
-                    {diffMeasurement(waistDiff?.data)}
+                    {diffMeasurement() ? diffMeasurement(waistDiff?.data) : "-"}
                     {diffMeasurement() ? diffMeasurement(waistDiff?.data) && unitsOfMeasurement === "metric" && "cm" : null}
                     {diffMeasurement() ?
                       diffMeasurement(waistDiff?.data) &&
@@ -360,7 +362,7 @@ export const YouScreen = ({ navigation }) => {
                     Hip
                   </Text>
                   <Text style={{ fontSize: 25, textAlign: "center" }}>
-                    {diffMeasurement()}
+                    {diffMeasurement() ? diffMeasurement(hipDiff?.data) : "-"}
                     {diffMeasurement() ? diffMeasurement(hipDiff?.data) && unitsOfMeasurement === "metric" && "cm" : null}
                     {diffMeasurement() ? diffMeasurement(hipDiff?.data) && unitsOfMeasurement === "imperial" && "inches" : null}
                   </Text>
@@ -471,6 +473,7 @@ export const YouScreen = ({ navigation }) => {
                       isInitial: true,
                     })
                   }
+                  style={{padding: 10}}
                 >
                   <Text
                     style={{
@@ -538,11 +541,12 @@ export const YouScreen = ({ navigation }) => {
                     })
                   }
                   disabled={initialProgressInfo === undefined}
+                  style={{padding: 10}}
                 >
                   <Text
                     style={{
                       fontFamily: fonts.StyreneAWebRegular,
-                      textDecorationLine: 'underline'
+                      textDecorationLine: 'underline',
                     }}
                   >
                     Edit After
