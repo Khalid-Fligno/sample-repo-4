@@ -943,33 +943,37 @@ class CalendarHomeScreen extends React.PureComponent {
     }
 
     convertRecipeData(recipe).then((res) => {
-      const resx = res.recipeResult;
 
-      const breakfastList = resx.filter((res) => res.id === breakfastId[0]);
-      const lunchList = resx.filter((res) => res.id === lunchId[0]);
-      const dinnerList = resx.filter((res) => res.id === dinnerId[0]);
-      const snackList = resx.filter((res) => res.id === snackId[0]);
-      const drinkList = resx.filter((res) => res.id === drinkId[0]);
-      const preworkoutList = resx.filter((res) => res.id === preworkoutId[0]);
-      const treatsList = resx.filter((res) => res.id === treatsId[0]);
+      const recipeLists = res.recipeResult.reduce((result, element) => {
+        if (breakfastId.includes(element.id)) {
+          result.breakfast.push(element)
+        } else if (lunchId.includes(element.id)) {
+          result.lunch.push(element)
+        } else if (dinnerId.includes(element.id)) {
+          result.dinner.push(element)
+        } else if (snackId.includes(element.id)) {
+          result.snack.push(element)
+        } else if (drinkId.includes(element.id)) {
+          result.drink.push(element)
+        } else if (preworkoutId.includes(element.id)) {
+          result.preworkout.push(element)
+        } else if (treatsId.includes(element.id)) {
+          result.treats.push(element.id)
+        }
+        return result
+      }, { 
+        breakfast: [],
+        lunch: [],
+        dinner: [],
+        snack: [],
+        drink: [],
+        preworkout: [],
+        treats: [],
+      })
 
-      const recommendedMeal = [
-        {
-          breakfast: breakfastList,
-          lunch: lunchList,
-          dinner: dinnerList,
-          snack: snackList,
-          drink: drinkList,
-          preworkout: preworkoutList,
-          treats: treatsList,
-        },
-      ];
-
-      this.setState({
-        favoriteRecipe: recommendedMeal,
-      });
-    });
-  };
+      this.setState({favoriteRecipe: [recipeLists]})
+    })
+  }
 
   async getCurrentPhaseInfo() {
     const { activeChallengeUserData, activeChallengeData } = this.state;

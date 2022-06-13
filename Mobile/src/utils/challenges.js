@@ -119,7 +119,6 @@ export const convertRecipeData = async (recipeId) => {
 };
 
 export const fetchRecipeData = async (challengeRecipe) => {
-  let phaseMeals = [];
   let recipes = [];
   let breakFastMeals = [];
   let lunchMeals = [];
@@ -128,64 +127,47 @@ export const fetchRecipeData = async (challengeRecipe) => {
   let drinkMeals = [];
   let preworkoutMeals = [];
   let treats = [];
+
   if (challengeRecipe) {
     const recipeRef = db.collection("recipes");
     const snapshot = await recipeRef.get();
 
-    const mealsId = challengeRecipe[0]?.level2[0]?.phases[0]?.meals;
-
     if (snapshot.empty) {
       return null;
-    } else {
-      snapshot.forEach((res) => {
-        recipes.push(res.data());
-      });
-
-      snapshot.forEach((res) => {
-        if (mealsId && mealsId.includes(res.data().id)) {
-          phaseMeals.push(res.data());
-        }
-      });
     }
 
-    // BREAKFAST
-    breakFastMeals = recipes.filter((item) => item.breakfast) || [];
+    snapshot.forEach((res) => {
 
-    // LUNCH
-    lunchMeals = recipes.filter((item) => item.lunch) || [];
+      const recipe = res.data()
 
-    // DINNER
-    dinnerMeals = recipes.filter((item) => item.dinner) || [];
+      let mealsArray
+      if(recipe.breakfast) mealsArray = breakFastMeals
+      else if (recipe.lunch) mealsArray = lunchMeals
+      else if (recipe.dinner) mealsArray = dinnerMeals
+      else if (recipe.snack) mealsArray = snackMeals
+      else if (recipe.drink) mealsArray = drinkMeals
+      else if (recipe.preworkout) mealsArray = preworkoutMeals
+      else if (recipe.treats) mealsArray = treats
+      
+      mealsArray?.push(recipe)
 
-    // SNACK
-    snackMeals = recipes.filter((item) => item.snack) || [];
-
-    // DRINK
-    drinkMeals = recipes.filter((item) => item.drink) || [];
-
-    // PREWORKOUT
-    preworkoutMeals = recipes.filter((item) => item.preworkout) || [];
-
-    //  TREATS
-    treats = recipes.filter((item) => item.treats) || [];
+    })
   }
 
-  const recommendedRecipe = [
-    {
-      breakfast: breakFastMeals,
-      snack: snackMeals,
-      lunch: lunchMeals,
-      dinner: dinnerMeals,
-      drink: drinkMeals,
-      preworkout: preworkoutMeals,
-      treats: treats,
-    },
-  ];
-
   return {
-    recommendedRecipe,
-  };
-};
+    recommendedRecipe: [
+      {
+        breakfast: breakFastMeals,
+        snack: snackMeals,
+        lunch: lunchMeals,
+        dinner: dinnerMeals,
+        drink: drinkMeals,
+        preworkout: preworkoutMeals,
+        treats: treats,
+      }
+    ]
+  }
+}
 
 export const getTodayRecommendedMeal = async (
   phaseData,

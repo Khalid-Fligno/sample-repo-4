@@ -82,20 +82,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
     };
 
     getAllRecipeData = () => {
-        const allRecipeData = this.props.navigation.getParam("allRecipeData", null)
-        const dupId = []
-
-        allRecipeData.forEach((res) => {
-            dupId.push(res.id)
-        })
-
-        const uniqId = [...new Set(dupId)]
-
-        convertRecipeData(uniqId).then(res => {
-            this.setState({
-                data: res.recipeResult,
-            })
-        })
+        const allRecipeData = this.props.navigation.getParam("allRecipeData", [])
+        this.setState({data: allRecipeData})
     }
 
     getDefaultCategoryTags = () => {
@@ -135,7 +123,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
         })
 
         this.setState({
-            categoryName: result
+            categoryName: result,
+            loading: false,
+            todayRecommendedRecipe: recipeData
         })
     }
 
