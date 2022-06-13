@@ -133,22 +133,28 @@ export const YouScreen = ({ navigation }) => {
     return result;
   }
 
-  const diffMeasurement = (measurement) => {
+  const diffMeasurement = (
+    measurement,
+    currentMeasurement,
+    initialMeasurement
+  ) => {
     let result = undefined;
 
     if (measurement) {
       result = measurement
     } else if (
-      currentProgressInfo?.weight
+      currentMeasurement
     ) {
-      result = currentProgressInfo.weight
+      result = currentMeasurement
     } else if (
-      initialProgressInfo?.weight
+      initialMeasurement
     ) {
-      result = initialProgressInfo.weight
+      result = initialMeasurement
     }
 
     console.log("measurement: ", measurement)
+    console.log("currentMeasurement: ", currentMeasurement)
+    console.log("initialMeasurement: ", initialMeasurement)
     return result;
   }
 
@@ -259,9 +265,33 @@ export const YouScreen = ({ navigation }) => {
                     Weight
                   </Text>
                   <Text style={{ fontSize: 25, textAlign: "center" }}>
-                    {diffMeasurement() ? Number(diffMeasurement(weightDiff?.data)).toFixed(1) : "-"}
-                    {diffMeasurement() ? Number(diffMeasurement(weightDiff?.data)).toFixed(1) && unitsOfMeasurement === "metric" && "kg" : null}
-                    {diffMeasurement() ? Number(diffMeasurement(weightDiff?.data)).toFixed(1) && unitsOfMeasurement === "imperial" && "lbs" : null}
+                    {diffMeasurement(
+                      weightDiff?.data,
+                      currentProgressInfo?.weight,
+                      initialProgressInfo?.weight
+                    ) ? Number(diffMeasurement(
+                      weightDiff?.data,
+                      currentProgressInfo?.weight,
+                      initialProgressInfo?.weight
+                    )).toFixed(1) : "-"}
+                    {diffMeasurement(
+                      weightDiff?.data,
+                      currentProgressInfo?.weight,
+                      initialProgressInfo?.weight
+                    ) ? Number(diffMeasurement(
+                      weightDiff?.data,
+                      currentProgressInfo?.weight,
+                      initialProgressInfo?.weight
+                    )).toFixed(1) && unitsOfMeasurement === "metric" && "kg" : null}
+                    {diffMeasurement(
+                      weightDiff?.data,
+                      currentProgressInfo?.weight,
+                      initialProgressInfo?.weight
+                    ) ? Number(diffMeasurement(
+                      weightDiff?.data,
+                      currentProgressInfo?.weight,
+                      initialProgressInfo?.weight
+                    )).toFixed(1) && unitsOfMeasurement === "imperial" && "lbs" : null}
                   </Text>
                 </View>
                 <View style={{
@@ -304,10 +334,34 @@ export const YouScreen = ({ navigation }) => {
                     Waist
                   </Text>
                   <Text style={{ fontSize: 25, textAlign: "center" }}>
-                    {diffMeasurement() ? diffMeasurement(waistDiff?.data) : "-"}
-                    {diffMeasurement() ? diffMeasurement(waistDiff?.data) && unitsOfMeasurement === "metric" && "cm" : null}
-                    {diffMeasurement() ?
-                      diffMeasurement(waistDiff?.data) &&
+                    {diffMeasurement(
+                      waistDiff?.data,
+                      currentProgressInfo?.waist,
+                      initialProgressInfo?.waist
+                    ) ? diffMeasurement(
+                      waistDiff?.data,
+                      currentProgressInfo?.waist,
+                      initialProgressInfo?.waist
+                    ) : "-"}
+                    {diffMeasurement(
+                      waistDiff?.data,
+                      currentProgressInfo?.waist,
+                      initialProgressInfo?.waist
+                    ) ? diffMeasurement(
+                      waistDiff?.data,
+                      currentProgressInfo?.waist,
+                      initialProgressInfo?.waist
+                    ) && unitsOfMeasurement === "metric" && "cm" : null}
+                    {diffMeasurement(
+                      waistDiff?.data,
+                      currentProgressInfo?.waist,
+                      initialProgressInfo?.waist
+                    ) ?
+                      diffMeasurement(
+                        waistDiff?.data,
+                        currentProgressInfo?.waist,
+                        initialProgressInfo?.waist
+                      ) &&
                       unitsOfMeasurement === "imperial" &&
                       "inches" :
                       null}
@@ -362,9 +416,33 @@ export const YouScreen = ({ navigation }) => {
                     Hip
                   </Text>
                   <Text style={{ fontSize: 25, textAlign: "center" }}>
-                    {diffMeasurement() ? diffMeasurement(hipDiff?.data) : "-"}
-                    {diffMeasurement() ? diffMeasurement(hipDiff?.data) && unitsOfMeasurement === "metric" && "cm" : null}
-                    {diffMeasurement() ? diffMeasurement(hipDiff?.data) && unitsOfMeasurement === "imperial" && "inches" : null}
+                    {diffMeasurement(
+                      hipDiff?.data,
+                      currentProgressInfo?.hip,
+                      initialProgressInfo?.hip
+                    ) ? diffMeasurement(
+                      hipDiff?.data,
+                      currentProgressInfo?.hip,
+                      initialProgressInfo?.hip
+                    ) : "-"}
+                    {diffMeasurement(
+                      hipDiff?.data,
+                      currentProgressInfo?.hip,
+                      initialProgressInfo?.hip
+                    ) ? diffMeasurement(
+                      hipDiff?.data,
+                      currentProgressInfo?.hip,
+                      initialProgressInfo?.hip
+                    ) && unitsOfMeasurement === "metric" && "cm" : null}
+                    {diffMeasurement(
+                      hipDiff?.data,
+                      currentProgressInfo?.hip,
+                      initialProgressInfo?.hip
+                    ) ? diffMeasurement(
+                      hipDiff?.data,
+                      currentProgressInfo?.hip,
+                      initialProgressInfo?.hip
+                    ) && unitsOfMeasurement === "imperial" && "inches" : null}
                   </Text>
                 </View>
                 <View style={{
@@ -473,7 +551,7 @@ export const YouScreen = ({ navigation }) => {
                       isInitial: true,
                     })
                   }
-                  style={{padding: 10}}
+                  style={{ padding: 10 }}
                 >
                   <Text
                     style={{
@@ -541,7 +619,7 @@ export const YouScreen = ({ navigation }) => {
                     })
                   }
                   disabled={initialProgressInfo === undefined}
-                  style={{padding: 10}}
+                  style={{ padding: 10 }}
                 >
                   <Text
                     style={{

@@ -153,11 +153,11 @@ export default class Progress1Screen extends React.PureComponent {
       .get()
       .then((snapshot) => {
         const data = snapshot.data();
-        const initialProgressInfo = data.initialProgressInfo;
+        const initialProgressInfo = data?.initialProgressInfo;
         this.setState({
-          weight: initialProgressInfo.weight ?? 0,
-          waist: initialProgressInfo.waist ?? 0,
-          hip: initialProgressInfo.hip ?? 0,
+          weight: initialProgressInfo?.weight ?? 0,
+          waist: initialProgressInfo?.waist ?? 0,
+          hip: initialProgressInfo?.hip ?? 0,
           loading: false,
         });
       });
@@ -171,11 +171,11 @@ export default class Progress1Screen extends React.PureComponent {
       .get()
       .then((snapshot) => {
         const data = snapshot.data();
-        const progressInfo = data.currentProgressInfo;
+        const progressInfo = data?.currentProgressInfo;
         this.setState({
-          weight: progressInfo.weight ?? 0,
-          waist: progressInfo.waist ?? 0,
-          hip: progressInfo.hip ?? 0,
+          weight: progressInfo?.weight ?? 0,
+          waist: progressInfo?.waist ?? 0,
+          hip: progressInfo?.hip ?? 0,
           loading: false,
         });
       });
