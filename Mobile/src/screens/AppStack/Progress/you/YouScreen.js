@@ -508,7 +508,7 @@ export const YouScreen = ({ navigation }) => {
                 >
                   {initialProgressInfo && initialProgressInfo.photoURL
                     ? moment(initialProgressInfo.date).format("DD/MM/YYYY")
-                    : null}
+                    : "-"}
                 </Text>
                 {initialProgressInfo && initialProgressInfo.photoURL ?
                   <View>
@@ -541,7 +541,7 @@ export const YouScreen = ({ navigation }) => {
                       margin: 10
                     }}
                   >
-                    <Text>Pic 1</Text>
+                    <Text>Before</Text>
                   </View>
                 }
                 <TouchableOpacity
@@ -576,7 +576,7 @@ export const YouScreen = ({ navigation }) => {
                 >
                   {currentProgressInfo && currentProgressInfo.photoURL
                     ? moment(currentProgressInfo.date).format("DD/MM/YYYY")
-                    : null}
+                    : "-"}
                 </Text>
                 {currentProgressInfo && currentProgressInfo.photoURL ?
                   <View>
@@ -609,7 +609,7 @@ export const YouScreen = ({ navigation }) => {
                       margin: 10
                     }}
                   >
-                    <Text>Pic 2</Text>
+                    <Text>After</Text>
                   </View>
                 }
                 <TouchableOpacity
