@@ -155,9 +155,9 @@ export default class Progress1Screen extends React.PureComponent {
         const data = snapshot.data();
         const initialProgressInfo = data?.initialProgressInfo;
         this.setState({
-          weight: initialProgressInfo?.weight ?? null,
-          waist: initialProgressInfo?.waist ?? null,
-          hip: initialProgressInfo?.hip ?? null,
+          weight: initialProgressInfo?.weight,
+          waist: initialProgressInfo?.waist,
+          hip: initialProgressInfo?.hip,
           loading: false,
         });
       });
@@ -173,9 +173,9 @@ export default class Progress1Screen extends React.PureComponent {
         const data = snapshot.data();
         const progressInfo = data?.currentProgressInfo;
         this.setState({
-          weight: progressInfo?.weight ?? null,
-          waist: progressInfo?.waist ?? null,
-          hip: progressInfo?.hip ?? null,
+          weight: progressInfo?.weight,
+          waist: progressInfo?.waist,
+          hip: progressInfo?.hip,
           loading: false,
         });
       });
@@ -343,7 +343,7 @@ export default class Progress1Screen extends React.PureComponent {
                     placeholder="Input your weight"
                     keyboardType="numeric"
                     onChangeText={(value) => this.setState({ weight: value })}
-                    value={weight}
+                    value={weight ? weight.toString() : null}
                   />
                 ) : (
                   <TextInput
@@ -351,7 +351,7 @@ export default class Progress1Screen extends React.PureComponent {
                     placeholder="Input your weight"
                     keyboardType="numeric"
                     onChangeText={(value) => this.setState({ weight: value })}
-                    value={weight}
+                    value={weight.toString()}
                   />
                 )}
 
