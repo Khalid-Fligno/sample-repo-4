@@ -119,38 +119,32 @@ export const convertRecipeData = async (recipeId) => {
 };
 
 export const fetchRecipeData = async (challengeRecipe) => {
-  let recipes = [];
   let breakFastMeals = [];
   let lunchMeals = [];
   let dinnerMeals = [];
   let snackMeals = [];
-  let drinkMeals = [];
   let preworkoutMeals = [];
   let treats = [];
 
   if (challengeRecipe) {
-    const recipeRef = db.collection("recipes");
-    const snapshot = await recipeRef.get();
+
+    const snapshot = await db.collection("recipes").get();
 
     if (snapshot.empty) {
       return null;
     }
 
     snapshot.forEach((res) => {
-
       const recipe = res.data()
-
       let mealsArray
       if(recipe.breakfast) mealsArray = breakFastMeals
       else if (recipe.lunch) mealsArray = lunchMeals
       else if (recipe.dinner) mealsArray = dinnerMeals
-      else if (recipe.snack) mealsArray = snackMeals
-      else if (recipe.drink) mealsArray = drinkMeals
+      else if (recipe.snack || recipe.drink) mealsArray = snackMeals
       else if (recipe.preworkout) mealsArray = preworkoutMeals
       else if (recipe.treats) mealsArray = treats
       
       mealsArray?.push(recipe)
-
     })
   }
 
@@ -161,7 +155,6 @@ export const fetchRecipeData = async (challengeRecipe) => {
         snack: snackMeals,
         lunch: lunchMeals,
         dinner: dinnerMeals,
-        drink: drinkMeals,
         preworkout: preworkoutMeals,
         treats: treats,
       }
@@ -187,7 +180,10 @@ export const getTodayRecommendedMeal = async (
   let levelName = activeChallengeData.levelTags;
   let phaseTag = phaseData.name;
   let data = phaseData.meals;
-  const recipeRef = db.collection("recipes");
+  const recipeRef = db
+    .collection("recipes")
+    .where('showTransform', '==', true)
+
   const snapshot = await recipeRef.get();
 
   if (phaseTag === "Phase1") {
@@ -226,219 +222,70 @@ export const getTodayRecommendedMeal = async (
     });
   }
 
-  breakfastResult = snapshotDocs
-    .filter((snapshotDoc) => {
-      const filteredPhaseMeals =
-        phaseMeals.filter(
-          (meal) =>
-            meal.types.includes("breakfast") &&
-            // meal.showTransform &&
-            meal.breakfast
-        ) || [];
-
-      if (snapshotDoc.breakfast && snapshotDoc.showTransform) {
-        switch (levelName) {
-          case "L1":
-            if (
-              snapshotDoc.tags?.includes(phaseNames[0])
-            ) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-          case "L2":
-          case "L3":
-            if (snapshotDoc.tags?.includes(levelName)) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-        }
+  /// Function takes a recipe and array of propeties as strings to look up in the recipe object 
+  // to see if it matches the type of meal
+  const isRecipeAllowed = (recipe, propertyPointers) => {
+    if (propertyPointers.some(t => recipe[t] ?? false)) {
+      switch (levelName) {
+        case "L1":
+          return recipe.tags?.includes(phaseNames[0]) ?? false
+        case "L2":
+        case "L3":
+          return recipe.tags?.includes(levelName) ?? false
+        default:
+          return false
       }
+    }
+  }
+
+  const phaseMealsContainsBreakfast = phaseMeals.some((meal) => meal.types.includes("breakfast") && meal.breakfast)
+  const phaseMealsContainsLunch = phaseMeals.some((meal) => meal.types.includes("lunch") && meal.lunch)
+  const phaseMealsContainsDinner = phaseMeals.some((meal) => meal.types.includes("dinner") && meal.dinner)
+  const phaseMealsContainsSnackOrDrink = phaseMeals.some((meal) => { 
+      const isSnack = meal.types.includes("snack") && meal.snack
+      const isDrink = meal.types.includes("drink") && meal.drink
+      return isSnack || isDrink
     })
-    .reduce((accum, item) => {
-      return [...accum, item];
-    }, []);
+  const phaseMealsContainsPreworkout = phaseMeals.some((meal) => meal.types.includes("preworkout") && meal.preworkout)
+  const phaseMealsContainsTreats = phaseMeals.some((meal) => meal.types.includes("treats") && meal.treats)
 
-  lunchResult = snapshotDocs
-    .filter((snapshotDoc) => {
-      const filteredPhaseMeals =
-        phaseMeals.filter(
-          (meal) => meal.types.includes("lunch") && meal.lunch
-        ) || [];
-
-      if (snapshotDoc.lunch && snapshotDoc.showTransform) {
-        switch (levelName) {
-          case "L1":
-            if (
-              snapshotDoc.tags?.includes(phaseNames[0])
-            ) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-          case "L2":
-          case "L3":
-            if (snapshotDoc.tags?.includes(levelName)) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-        }
+  const recommendedRecipe = snapshotDocs
+    .reduce((result, recipe) => {
+      if(phaseMealsContainsBreakfast && isRecipeAllowed(recipe, ["breakfast"])) {
+        result.breakfast.push(recipe)
       }
-    })
-    .reduce((accum, item) => {
-      return [...accum, item];
-    }, []);
-
-  dinnerResult = snapshotDocs
-    .filter((snapshotDoc) => {
-      const filteredPhaseMeals =
-        phaseMeals.filter(
-          (meal) => meal.types.includes("dinner") && meal.dinner
-        ) || [];
-
-      if (snapshotDoc.dinner && snapshotDoc.showTransform) {
-        switch (levelName) {
-          case "L1":
-            if (
-              snapshotDoc.tags?.includes(phaseNames[0])
-            ) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-          case "L2":
-          case "L3":
-            if (snapshotDoc.tags?.includes(levelName)) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-        }
+      if (phaseMealsContainsLunch && isRecipeAllowed(recipe, ["lunch"])) {
+        result.lunch.push(recipe)
       }
-    })
-    .reduce((accum, item) => {
-      return [...accum, item];
-    }, []);
-
-  snackResult = snapshotDocs
-    .filter((snapshotDoc) => {
-      const filteredPhaseMeals =
-        phaseMeals.filter(
-          (meal) => meal.types.includes("snack") && meal.snack
-        ) || [];
-
-      if (snapshotDoc.snack && snapshotDoc.showTransform) {
-        switch (levelName) {
-          case "L1":
-            if (
-              snapshotDoc.tags?.includes(phaseNames[0])
-            ) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-          case "L2":
-          case "L3":
-            if (snapshotDoc.tags?.includes(levelName)) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-        }
+      if (phaseMealsContainsDinner && isRecipeAllowed(recipe, ["dinner"])) {
+        result.dinner.push(recipe)
       }
-    })
-    .reduce((accum, item) => {
-      return [...accum, item];
-    }, []);
-
-  drinkResult = snapshotDocs
-    .filter((snapshotDoc) => {
-      const filteredPhaseMeals =
-        phaseMeals.filter(
-          (meal) => meal.types.includes("drink") && meal.drink
-        ) || [];
-
-      if (snapshotDoc.drink && snapshotDoc.showTransform) {
-        switch (levelName) {
-          case "L1":
-            if (
-              snapshotDoc.tags?.includes(phaseNames[0])
-            ) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-          case "L2":
-          case "L3":
-            if (snapshotDoc.tags?.includes(levelName)) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-        }
+      if (phaseMealsContainsSnackOrDrink && isRecipeAllowed(recipe, ["snack", "drink"])) {
+        result.snack.push(recipe)
       }
-    })
-    .reduce((accum, item) => {
-      return [...accum, item];
-    }, []);
-
-  preworkoutResult = snapshotDocs
-    .filter((snapshotDoc) => {
-      const filteredPhaseMeals =
-        phaseMeals.filter(
-          (meal) => meal.types.includes("preworkout") && meal.preworkout
-        ) || [];
-
-      if (snapshotDoc.preworkout && snapshotDoc.showTransform) {
-        switch (levelName) {
-          case "L1":
-            if (
-              snapshotDoc.tags?.includes(phaseNames[0])
-            ) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-          case "L2":
-          case "L3":
-            if (snapshotDoc.tags?.includes(levelName)) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-        }
+      if (phaseMealsContainsPreworkout && isRecipeAllowed(recipe, ["preworkout"])) {
+        result.preworkout.push(recipe)
       }
-    })
-    .reduce((accum, item) => {
-      return [...accum, item];
-    }, []);
-
-  treatsResult = snapshotDocs
-    .filter((snapshotDoc) => {
-      const filteredPhaseMeals = phaseMeals.filter(
-        (meal) => meal.types.includes("treats") && meal.treats
-      );
-
-      if (snapshotDoc.treats && snapshotDoc.showTransform) {
-        switch (levelName) {
-          case "L1":
-            if (
-              snapshotDoc.tags?.includes(phaseNames[0])
-            ) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-          case "L2":
-          case "L3":
-            if (snapshotDoc.tags?.includes(levelName)) {
-              return filteredPhaseMeals.length > 0 ? snapshotDoc : false;
-            }
-            break;
-        }
+      if (phaseMealsContainsTreats && isRecipeAllowed(recipe, ["treats"])) {
+        result.treats.push(recipe)
       }
+      return result
+    }, {
+        breakfast: [],
+        lunch: [],
+        dinner: [],
+        snack: [],
+        preworkout: [],
+        treats: []
     })
-    .reduce((accum, item) => {
-      return [...accum, item];
-    }, []);
-
-  const challengeMealsFilterList = phaseMeals.map((res) => res.id);
 
   // const getRandomNumber = (length)=>  Math.floor((Math.random() * length) + 0);
+
+  // This determines what categories of meals will be present in the screen
   const breakfastList = phaseMeals.filter((res) => res.breakfastVisible);
   const lunchList = phaseMeals.filter((res) => res.lunchVisible);
   const dinnerList = phaseMeals.filter((res) => res.dinnerVisible);
   const snackList = phaseMeals.filter((res) => res.snackVisible);
-  const drinkList = phaseMeals.filter((res) => res.drinkVisible);
   const preworkoutList = phaseMeals.filter((res) => res.preworkoutVisible);
   const treatsList = phaseMeals.filter((res) => res.treatsVisible);
 
@@ -448,31 +295,16 @@ export const getTodayRecommendedMeal = async (
       snack: snackList,
       lunch: lunchList,
       dinner: dinnerList,
-      drink: drinkList,
       preworkout: preworkoutList,
       treats: treatsList,
     },
   ];
 
-  const recommendedRecipe = [
-    {
-      breakfast: breakfastResult,
-      lunch: lunchResult,
-      dinner: dinnerResult,
-      snack: snackResult,
-      drink: drinkResult,
-      preworkout: preworkoutResult,
-      treats: treatsResult,
-    },
-  ];
-
-  const phaseDefaultTags = phaseNames[0];
-
   return {
-    recommendedRecipe,
+    recommendedRecipe: [recommendedRecipe],
     recommendedMeal,
-    challengeMealsFilterList,
-    phaseDefaultTags,
+    challengeMealsFilterList: phaseMeals.map((res) => res.id),
+    phaseDefaultTags: phaseNames[0],
   };
 };
 
