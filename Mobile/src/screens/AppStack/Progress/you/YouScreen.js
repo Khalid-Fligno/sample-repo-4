@@ -506,9 +506,9 @@ export const YouScreen = ({ navigation }) => {
                     fontFamily: fonts.StyreneAWebRegular,
                   }}
                 >
-                  {initialProgressInfo
+                  {initialProgressInfo && initialProgressInfo.photoURL
                     ? moment(initialProgressInfo.date).format("DD/MM/YYYY")
-                    : "-"}
+                    : null}
                 </Text>
                 {initialProgressInfo && initialProgressInfo.photoURL ?
                   <View>
@@ -574,9 +574,9 @@ export const YouScreen = ({ navigation }) => {
                     fontFamily: fonts.StyreneAWebRegular,
                   }}
                 >
-                  {currentProgressInfo
+                  {currentProgressInfo && currentProgressInfo.photoURL
                     ? moment(currentProgressInfo.date).format("DD/MM/YYYY")
-                    : "-"}
+                    : null}
                 </Text>
                 {currentProgressInfo && currentProgressInfo.photoURL ?
                   <View>
