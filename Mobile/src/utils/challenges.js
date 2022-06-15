@@ -101,7 +101,7 @@ export const getTodayRecommendedWorkout = async (
 export const convertRecipeData = async (recipeIds) => {
 
   if (recipeIds?.length <= 0) {
-    return null
+    return []
   }
 
   const snapshot = await db.collection("recipes").get()
@@ -114,7 +114,7 @@ export const convertRecipeData = async (recipeIds) => {
       recipeResult.push(recipe)
     }
   })
-  return { recipeResult }
+  return recipeResult
 };
 
 export const fetchRecipeData = async (challengeRecipe) => {

@@ -927,8 +927,8 @@ class CalendarHomeScreen extends React.PureComponent {
       this.setState({ skipped: activeChallengeUserData.onBoardingInfo.skipped ?? false })
     }
 
-    convertRecipeData(recipe).then((res) => {
-      const recipeLists = res.recipeResult.reduce((result, element) => {
+    convertRecipeData(recipe).then((recipeResult) => {
+      const recipeLists = recipeResult.reduce((result, element) => {
         if (breakfastId.includes(element.id)) {
           result.breakfast.push(element)
         } else if (lunchId.includes(element.id)) {
