@@ -98,24 +98,23 @@ export const getTodayRecommendedWorkout = async (
   }
 };
 
-export const convertRecipeData = async (recipeId) => {
-  const recipeResult = [];
-  const recipeRef = db.collection("recipes");
-  const snapshot = await recipeRef.get();
-  if (recipeId) {
-    if (snapshot.empty) {
-      return null;
-    } else {
-      snapshot.forEach((res) => {
-        if (recipeId.includes(res.data().id)) {
-          recipeResult.push(res.data());
-        }
-      });
-    }
+export const convertRecipeData = async (recipeIds) => {
+
+  if (recipeIds?.length <= 0) {
+    return null
   }
-  return {
-    recipeResult,
-  };
+
+  const snapshot = await db.collection("recipes").get()
+  if (snapshot.empty) return null
+
+  const recipeResult = []
+  snapshot.forEach((doc) => {
+    const recipe = doc.data()
+    if (recipeIds.includes(recipe.id)) {
+      recipeResult.push(recipe)
+    }
+  })
+  return { recipeResult }
 };
 
 export const fetchRecipeData = async (challengeRecipe) => {

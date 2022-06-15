@@ -865,15 +865,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   fetchActiveChallengeData = async (activeChallengeUserData) => {
     const { currentDay } = this.state;
-    let data = activeChallengeUserData.faveRecipe;
-    let recipe = [];
-    let breakfastId = [];
-    let lunchId = [];
-    let dinnerId = [];
-    let snackId = [];
-    let drinkId = [];
-    let preworkoutId = [];
-    let treatsId = [];
 
     const currentChallengeDay = getCurrentChallengeDay(
       activeChallengeUserData.startDate,
@@ -901,49 +892,42 @@ class CalendarHomeScreen extends React.PureComponent {
       console.log("Fetch active challenge data error!");
     }
 
-    if (data) {
-      data.forEach((res) => {
-        try {
-          if (res.day === currentChallengeDay) {
-            if (res.recipeMeal.breakfast) {
-              recipe.push(res.recipeMeal.breakfast);
-              breakfastId.push(res.recipeMeal.breakfast);
-            }
-            if (res.recipeMeal.lunch) {
-              recipe.push(res.recipeMeal.lunch);
-              lunchId.push(res.recipeMeal.lunch);
-            }
-            if (res.recipeMeal.dinner) {
-              recipe.push(res.recipeMeal.dinner);
-              dinnerId.push(res.recipeMeal.dinner);
-            }
-            if (res.recipeMeal.snack) {
-              recipe.push(res.recipeMeal.snack);
-              snackId.push(res.recipeMeal.snack);
-            }
-            if (res.recipeMeal.drink) {
-              recipe.push(res.recipeMeal.drink);
-              drinkId.push(res.recipeMeal.drink);
-            }
-            if (res.recipeMeal.preworkout) {
-              recipe.push(res.recipeMeal.preworkout);
-              preworkoutId.push(res.recipeMeal.preworkout);
-            }
-            if (res.recipeMeal.treats) {
-              recipe.push(res.recipeMeal.treats);
-              treatsId.push(res.recipeMeal.treats);
-            }
-          }
-        } catch (err) { }
-      });
+    let recipe = [];
+    let breakfastId = [];
+    let lunchId = [];
+    let dinnerId = [];
+    let snackId = [];
+    let preworkoutId = [];
+    let treatsId = [];
+    const usersFavouriteRecipes = activeChallengeUserData.faveRecipe
+      ?.find(day => day.day === currentChallengeDay)
+      ?.recipeMeal
 
-      this.setState({
-        skipped: activeChallengeUserData.onBoardingInfo.skipped ?? false,
-      });
+    if (usersFavouriteRecipes) {
+
+      const idsForMeal = (idsContainer, ...propertyNames) => {
+        // We need to perform data transformation for these properties inside the 'faveRecipe'
+        // Currently the property types for breakfast, lunch, etc are just string.
+        // We want to set them to be a type of Array<String> for future use.
+        // We transform into an array and flatten it, if it was already an array flatting it should set to be an array still
+        const recipeIds = propertyNames
+          .flatMap(p => usersFavouriteRecipes[p]) // Get all collection of ids from multiple meal categories
+          .filter(r => r?.trim()) // Remove any null/undefined/empty ids
+        idsContainer.push(...recipeIds)
+        recipe.push(...recipeIds)
+      }
+
+      idsForMeal(breakfastId, 'breakfast', )
+      idsForMeal(lunchId, 'lunch')
+      idsForMeal(dinnerId, 'dinner')
+      idsForMeal(snackId, 'snack' ,'drink')
+      idsForMeal(preworkoutId, 'preworkout')
+      idsForMeal(treatsId, 'treat')
+
+      this.setState({ skipped: activeChallengeUserData.onBoardingInfo.skipped ?? false })
     }
 
     convertRecipeData(recipe).then((res) => {
-
       const recipeLists = res.recipeResult.reduce((result, element) => {
         if (breakfastId.includes(element.id)) {
           result.breakfast.push(element)
@@ -953,8 +937,6 @@ class CalendarHomeScreen extends React.PureComponent {
           result.dinner.push(element)
         } else if (snackId.includes(element.id)) {
           result.snack.push(element)
-        } else if (drinkId.includes(element.id)) {
-          result.drink.push(element)
         } else if (preworkoutId.includes(element.id)) {
           result.preworkout.push(element)
         } else if (treatsId.includes(element.id)) {
@@ -966,7 +948,6 @@ class CalendarHomeScreen extends React.PureComponent {
         lunch: [],
         dinner: [],
         snack: [],
-        drink: [],
         preworkout: [],
         treats: [],
       })
