@@ -76,11 +76,18 @@ export default class FilterRecipeScreen extends React.PureComponent {
             title: this.props.navigation.getParam("title", null),
         }
 
+        const selectedItems = this.recipeMealGroupList(paramState.activeChallengeUserData, paramState.title, paramState.currentChallengeDay)
         this.setState({
             ...paramState,
-            selectedItems: this.recipeMealGroupList(paramState.activeChallengeUserData, paramState.title, paramState.currentChallengeDay)
-        });
+            selectedItems,
+            canFavouriteMoreRecipes: this.canFavouriteMoreRecipes(selectedItems)
+        })
+
     };
+
+    canFavouriteMoreRecipes = (selectedItems) => {
+        return selectedItems.length < 2 // TODO: get this value from phase.lunch
+    }
 
     handleBack = () => {
         const { navigation } = this.props;
@@ -560,7 +567,10 @@ export default class FilterRecipeScreen extends React.PureComponent {
             console.error(err)
         }
 
-        this.setState({selectedItems: newMealList})
+        this.setState({
+            selectedItems: newMealList,
+            canFavouriteMoreRecipes: this.canFavouriteMoreRecipes(newMealList)
+        })
     }
 
     onRemoveFavorite = async (item, activeChallengeUserData, title, currentChallengeDay) => {
@@ -584,7 +594,10 @@ export default class FilterRecipeScreen extends React.PureComponent {
             .doc(id)
             .set({ "faveRecipe": faveRecipeCollection }, { merge: true })
 
-        this.setState({selectedItems: mealList})
+        this.setState({
+            selectedItems: mealList,
+            canFavouriteMoreRecipes: this.canFavouriteMoreRecipes(mealList)
+        })
     }
 
     ifExistRecipe = (item) => {
@@ -618,10 +631,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
         const result = color1.splice(0, 3)
         const title = this.state.title
 
+        const isSelected = this.ifExistRecipe(item, activeChallengeUserData, title, currentChallengeDay)
+        const heartDisbaled = !this.state.canFavouriteMoreRecipes && !isSelected
+
         return (
             <FilterScreen
                 faveRecipeItem={faveRecipeItem}
-                ifExistRecipe={() => this.ifExistRecipe(item, activeChallengeUserData, title, currentChallengeDay)}
+                favouritingDisabled={heartDisbaled}
+                ifExistRecipe={() => isSelected }
                 onSelectHeart={() => this.onSelectHeart(item, activeChallengeUserData, title, currentChallengeDay)}
                 navigation={this.props.navigation}
                 result={result}
@@ -746,7 +763,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
                             isBackButton={true}
                             onPress={this.handleBack}
                             backButtonText="Back to Challenge"
-                            isBackButton={true}
                             customContainerStyle={{ bottom: 25 }}
                         />
                         <Text style={{ bottom: 60, fontSize: 30, fontFamily: fonts.bold }}>{title}</Text>

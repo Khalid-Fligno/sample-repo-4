@@ -33,7 +33,7 @@ export default class FilterScreen extends React.PureComponent {
 
 
     render() {
-        const { result, item, title } = this.props
+        const { result, item, title, onSelectHeart, favouritingDisabled } = this.props
 
         return (
             <View
@@ -63,8 +63,8 @@ export default class FilterScreen extends React.PureComponent {
                                     alignItems:'flex-end'
                                 }}>
                                 <TouchableOpacity
-                                   
-                                    onPress={this.props.onSelectHeart}
+                                    disabled={favouritingDisabled}
+                                    onPress={onSelectHeart}
                                 >
                                     {
                                         Platform.OS === "ios" ?
