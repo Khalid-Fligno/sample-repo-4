@@ -107,16 +107,15 @@ export default class SettingsScreen extends React.PureComponent {
   };
 
   resetInitialProgress = async () => {
-    this.setState({ loading: true });
     const uid = await AsyncStorage.getItem("uid");
     const userRef = db.collection("users")
       .doc(uid)
     await userRef.update({
       initialProgressInfo: {
         date: moment().format("YYYY-MM-DD"),
-        weight: null ?? 0,
-        waist: null ?? 0,
-        hip: null ?? 0,
+        weight: null,
+        waist: null,
+        hip: null,
       },
 
       currentProgressInfo: {
@@ -127,7 +126,6 @@ export default class SettingsScreen extends React.PureComponent {
       }
     });
     Alert.alert("Your progress info has been reset");
-    this.setState({ loading: false });
   };
 
   retakeBurpeeTest = async () => {
