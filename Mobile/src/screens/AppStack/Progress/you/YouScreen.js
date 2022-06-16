@@ -17,6 +17,8 @@ import { db } from "../../../../../config/firebase";
 import { diff } from "../../../../utils/index";
 import moment from "moment";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import colors from '../../../../styles/colors';
+import Loader from '../../../../components/Shared/Loader';
 import Modal from "react-native-modal";
 import CustomBtn from '../../../../components/Shared/CustomBtn';
 
@@ -30,10 +32,13 @@ export const YouScreen = ({ navigation }) => {
   const [waistDiff, setWaistDiff] = useState(null);
   const [hipDiff, setHipDiff] = useState(null);
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [burpeeRes, setBurpeeRess] = useState(null);
 
   const { width } = Dimensions.get("window");
 
   const fetchProgressInfo = async () => {
+    setLoading(true)
     const uid = await AsyncStorage.getItem("uid");
     const userDataFromFirebase = await db
       .collection("users")
@@ -43,12 +48,16 @@ export const YouScreen = ({ navigation }) => {
     const userData = userDataFromFirebase.data()
 
     if (userData) {
-      const currentProgressInfo = userData.currentProgressInfo ?
+      const currentProgressInfo = userData?.currentProgressInfo ?
         userData.currentProgressInfo :
         null
 
+      const initialProgressInfo = userData?.initialProgressInfo ?
+        userData.initialProgressInfo :
+        null
+
       setProfile(userData)
-      setInitialProgressInfo(userData.initialProgressInfo)
+      setInitialProgressInfo(initialProgressInfo)
       setCurrentProgressInfo(currentProgressInfo)
       setUnitsOfMeasurement(userData.unitsOfMeasurement)
 
@@ -68,6 +77,8 @@ export const YouScreen = ({ navigation }) => {
           .set(data, { merge: true })
           .catch((err) => console.log(err));
       }
+
+      setLoading(false)
     }
   };
 
@@ -110,6 +121,16 @@ export const YouScreen = ({ navigation }) => {
     })
   );
 
+  const getBurpeeCount = (
+    afterBurpee,
+    beforeBurpee
+  ) => {
+    if (afterBurpee) {
+      return afterBurpee
+    }
+    return beforeBurpee
+  }
+
   const latestBurpee = (
     initialProgressInfo,
     currentProgressInfo
@@ -124,13 +145,17 @@ export const YouScreen = ({ navigation }) => {
     ) {
       result = currentProgressInfo.burpeeCount
     } else if (
-      currentProgressInfo?.burpeeCount
+      currentProgressInfo?.burpeeCount ||
+      initialProgressInfo?.burpeeCount
     ) {
-      result = currentProgressInfo.burpeeCount
-    } else if (initialProgressInfo?.burpeeCount) {
-      result = initialProgressInfo.burpeeCount
+      result = getBurpeeCount(
+        currentProgressInfo?.burpeeCount,
+        initialProgressInfo?.burpeeCount
+      )
     }
-    return result;
+    console.log("result: ", result)
+
+    setBurpeeRess(result);
   }
 
   const diffMeasurement = (
@@ -152,9 +177,6 @@ export const YouScreen = ({ navigation }) => {
       result = initialMeasurement
     }
 
-    console.log("measurement: ", measurement)
-    console.log("currentMeasurement: ", currentMeasurement)
-    console.log("initialMeasurement: ", initialMeasurement)
     return result;
   }
 
@@ -165,6 +187,13 @@ export const YouScreen = ({ navigation }) => {
   useEffect(() => {
     fetchProgressInfo();
   }, [])
+
+  useEffect(() => {
+    latestBurpee(
+      initialProgressInfo,
+      currentProgressInfo
+    );
+  }, [initialProgressInfo, currentProgressInfo])
 
   useEffect(() => {
     progressDifference(
@@ -479,10 +508,7 @@ export const YouScreen = ({ navigation }) => {
                   Burpees
                 </Text>
                 <Text style={{ fontSize: 25, textAlign: "center" }}>
-                  {latestBurpee(
-                    initialProgressInfo,
-                    currentProgressInfo
-                  )}
+                  {burpeeRes}
                 </Text>
               </View>
             </View>
@@ -683,6 +709,7 @@ export const YouScreen = ({ navigation }) => {
             />
           </View>
         </Modal>
+        <Loader loading={loading} color={colors.red.standard} />
       </View>
     </ScrollView>
   )
