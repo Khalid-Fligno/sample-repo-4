@@ -125,6 +125,9 @@ export default class SettingsScreen extends React.PureComponent {
         hip: null,
       }
     });
+    this.props.navigation.navigate("ProgressEdit", {
+      isInitial: true
+    })
     Alert.alert("Your progress info has been reset");
   };
 

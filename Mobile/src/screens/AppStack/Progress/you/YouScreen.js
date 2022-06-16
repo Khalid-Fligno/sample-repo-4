@@ -38,7 +38,6 @@ export const YouScreen = ({ navigation }) => {
   const { width } = Dimensions.get("window");
 
   const fetchProgressInfo = async () => {
-    setLoading(true)
     const uid = await AsyncStorage.getItem("uid");
     const userDataFromFirebase = await db
       .collection("users")
@@ -77,8 +76,6 @@ export const YouScreen = ({ navigation }) => {
           .set(data, { merge: true })
           .catch((err) => console.log(err));
       }
-
-      setLoading(false)
     }
   };
 
@@ -90,7 +87,7 @@ export const YouScreen = ({ navigation }) => {
       const weight = diff(initialProgressInfo?.weight, currentProgressInfo?.weight);
       const waist = diff(initialProgressInfo?.waist, currentProgressInfo?.waist);
       const hip = diff(initialProgressInfo?.hip, currentProgressInfo?.hip)
-
+      console.log("waist: ", waist?.data)
       setWeightDiff(weight)
       setWaistDiff(waist)
       setHipDiff(hip)
@@ -201,6 +198,8 @@ export const YouScreen = ({ navigation }) => {
       currentProgressInfo
     )
   }, [initialProgressInfo, currentProgressInfo])
+
+  console.log("initialProgressInfo: ", initialProgressInfo)
 
   return (
     <ScrollView>

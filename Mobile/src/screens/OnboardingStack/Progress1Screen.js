@@ -351,7 +351,7 @@ export default class Progress1Screen extends React.PureComponent {
                     placeholder="Input your weight"
                     keyboardType="numeric"
                     onChangeText={(value) => this.setState({ weight: value })}
-                    value={weight.toString()}
+                    value={weight ? weight.toString() : null}
                   />
                 )}
 

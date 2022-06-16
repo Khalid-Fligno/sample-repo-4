@@ -159,7 +159,9 @@ export default class Burpee4Screen extends React.PureComponent {
           this.props.navigation.navigate(screen, params);
           return;
         }
-        this.props.navigation.navigate("Home");
+        this.props.navigation.navigate("ProgressEdit", {
+          isInitial: true
+        });;
       }
     } catch (err) {
       console.log(err)
