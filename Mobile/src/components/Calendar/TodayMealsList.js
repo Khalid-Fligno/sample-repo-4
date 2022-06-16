@@ -14,6 +14,7 @@ const TodayMealsList = (props) => {
     favoriteRecipe, //Users current set of favourite recipes
     onPress,
     filterPress,
+    favouriteRecipeConfigs
   } = props;
 
   return (
@@ -26,6 +27,7 @@ const TodayMealsList = (props) => {
           title={"Breakfast"}
           onPress={onPress}
           filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.breakfast}
           favoriteRecipe={favoriteRecipe.breakfast}
         />
       )}
@@ -37,6 +39,7 @@ const TodayMealsList = (props) => {
           title={"Lunch"}
           onPress={onPress}
           filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.lunch}
           favoriteRecipe={favoriteRecipe.lunch}
         />
       )}
@@ -48,6 +51,7 @@ const TodayMealsList = (props) => {
           title={"Dinner"}
           onPress={onPress}
           filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.dinner}
           favoriteRecipe={favoriteRecipe.dinner}
         />
       )}
@@ -59,6 +63,7 @@ const TodayMealsList = (props) => {
           title={"Snack"}
           onPress={onPress}
           filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.snack}
           favoriteRecipe={favoriteRecipe.snack}
         />
       )}
@@ -70,6 +75,7 @@ const TodayMealsList = (props) => {
           title={"Pre Workout"}
           onPress={onPress}
           filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.preworkout}
           favoriteRecipe={favoriteRecipe.preworkout}
         />
       )}
@@ -81,6 +87,7 @@ const TodayMealsList = (props) => {
           title={"Treats"}
           onPress={onPress}
           filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.treats}
           favoriteRecipe={favoriteRecipe.treats}
         />
       )}

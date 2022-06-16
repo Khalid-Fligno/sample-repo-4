@@ -1015,8 +1015,12 @@ class CalendarHomeScreen extends React.PureComponent {
           )
         )[0];
 
-        if (todayRcWorkout) this.setState({ todayRcWorkout: todayRcWorkout });
-        else this.setState({ todayRcWorkout: undefined });
+        let newState = { favouriteRecipeConfigs: this.phaseData.favouriteRecipeConfigs }
+
+        if (todayRcWorkout) newState.todayRcWorkout = todayRcWorkout
+        else newState.todayRcWorkout = undefined
+
+        this.setState(newState)
       }
     } else {
       // Alert.alert('Something went wrong please try again')
@@ -1054,7 +1058,7 @@ class CalendarHomeScreen extends React.PureComponent {
     navigation.pop();
   };
 
-  getToFilter(data, data1, data2, title) {
+  getToFilter(data, data1, data2, title, configs) {
     const {
       challengeRecipe,
       activeChallengeData,
@@ -1118,6 +1122,7 @@ class CalendarHomeScreen extends React.PureComponent {
       defaultLevelTags: activeChallengeData.levelTags,
       todayRecommendedRecipe: data2,
       challengeAllRecipe: challengeRecipe[0],
+      configs: configs, 
       recipes: data,
       title: title,
       allRecipeData: data1,
@@ -1146,6 +1151,7 @@ class CalendarHomeScreen extends React.PureComponent {
       completeCha,
       todayRecommendedRecipe,
       favoriteRecipe,
+      favouriteRecipeConfigs
     } = this.state;
 
     let showRC = false;
@@ -1188,9 +1194,10 @@ class CalendarHomeScreen extends React.PureComponent {
             favoriteRecipe={favoriteRecipe[0]}
             todayRecommendedRecipe={todayRecommendedRecipe[0]}
             data={todayRecommendedMeal[0]}
+            favouriteRecipeConfigs={favouriteRecipeConfigs}
             onPress={(res) => this.goToRecipe(res)}
-            filterPress={(res, res1, res2, title) =>
-              this.getToFilter(res, res1, res2, title)
+            filterPress={(res, res1, res2, title, favouriteRecipeConfigs) =>
+              this.getToFilter(res, res1, res2, title, favouriteRecipeConfigs)
             }
           />
         )}

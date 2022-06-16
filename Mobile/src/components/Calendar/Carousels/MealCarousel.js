@@ -18,6 +18,7 @@ const MealCarousel = ({
   favoriteRecipe,
   onPress,
   filterPress,
+  favouriteRecipeConfigs
 }) => {
   return (
     <View>
@@ -76,7 +77,7 @@ const MealCarousel = ({
             ))}
         <TouchableOpacity
           style={styles.cardContainer1}
-          onPress={() => filterPress(data, data1, data2, title)}
+          onPress={() => filterPress(data, data1, data2, title, favouriteRecipeConfigs)}
         >
           <View style={styles.opacityLayer1}>
             <Icon name="pluscircleo" size={20} style={{ left: 50 }} />

@@ -58,7 +58,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             phaseDefaultTags: "",
             categoryName: [],
             activeChallengeUserData: undefined,
-            currentChallengeDay: undefined,
+            currentChallengeDay: undefined
         };
     }
 
@@ -73,7 +73,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             defaultLevelTags: this.props.navigation.getParam("defaultLevelTags", null),
             challengeRecipe: this.props.navigation.getParam("challengeAllRecipe", null),
             recipes: this.props.navigation.getParam("recipes", null),
-            title: this.props.navigation.getParam("title", null),
+            title: this.props.navigation.getParam("title", null)
         }
 
         const selectedItems = this.recipeMealGroupList(paramState.activeChallengeUserData, paramState.title, paramState.currentChallengeDay)
@@ -86,7 +86,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
     };
 
     canFavouriteMoreRecipes = (selectedItems) => {
-        return selectedItems.length < 2 // TODO: get this value from phase.lunch
+        const configs = this.props.navigation.getParam("configs", null)
+        const maximumAllowedFavourites = configs?.maximumAllowedFavourites ?? 1
+        return selectedItems.length < maximumAllowedFavourites
     }
 
     handleBack = () => {
@@ -207,9 +209,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
     toggleGutHealth = () => {
-        this.setState({
-            gutHealth: !this.state.gutHealth
-        })
+        this.setState({ gutHealth: !this.state.gutHealth })
         if (this.state.gutHealth === false) {
             this.setState({ category: [...this.state.category, { name: "Gut Health" }] })
         } else {
