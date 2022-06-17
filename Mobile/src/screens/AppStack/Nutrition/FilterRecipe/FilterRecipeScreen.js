@@ -7,7 +7,7 @@ import {
     FlatList,
     Text,
     ScrollView,
-    Alert,
+    Animated
 } from "react-native";
 import sortBy from "lodash.sortby";
 import colors from "../../../../styles/colors";
@@ -62,6 +62,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
         };
     }
 
+    animated
+
     componentDidMount = () => {
         this.getDefaultCategoryTags()
         this.getAllRecipeData()
@@ -77,18 +79,36 @@ export default class FilterRecipeScreen extends React.PureComponent {
         }
 
         const selectedItems = this.recipeMealGroupList(paramState.activeChallengeUserData, paramState.title, paramState.currentChallengeDay)
+        const canFavouriteMoreRecipes = this.canFavouriteMoreRecipes(selectedItems)
         this.setState({
             ...paramState,
             selectedItems,
-            canFavouriteMoreRecipes: this.canFavouriteMoreRecipes(selectedItems)
+            canFavouriteMoreRecipes,
+            fadeValue: new Animated.Value(canFavouriteMoreRecipes ? 0 : 1)
         })
-
     };
 
+    componentDidUpdate = (prevProps, prevState) => {
+        if (prevState.canFavouriteMoreRecipes !== this.state.canFavouriteMoreRecipes)
+            this._animateIn(!this.state.canFavouriteMoreRecipes)
+    }
+
+
+    _animateIn = (show) => {
+        Animated.timing(this.state.fadeValue, {
+            toValue: show ? 1 : 0,
+            duration: 300,
+            useNativeDriver: false, // <-- Add this
+          }).start();
+    }
+
+
+    get maximumAllowedFavourites() {
+        return this.props.navigation.getParam("configs", null)?.maximumAllowedFavourites ?? 1
+    }
+
     canFavouriteMoreRecipes = (selectedItems) => {
-        const configs = this.props.navigation.getParam("configs", null)
-        const maximumAllowedFavourites = configs?.maximumAllowedFavourites ?? 1
-        return selectedItems.length < maximumAllowedFavourites
+        return selectedItems.length < this.maximumAllowedFavourites
     }
 
     handleBack = () => {
@@ -739,9 +759,15 @@ export default class FilterRecipeScreen extends React.PureComponent {
             phaseDefaultTags,
             categoryName,
             loading,
+            fadeValue
         } = this.state
 
         console.log('todayRecommendedRecipe: ', todayRecommendedRecipe)
+
+        const hInterpolate = fadeValue?.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 44],
+        })
 
         const skeleton = (
             <View style={styles.recipeTileSkeletonContainer}>
@@ -753,9 +779,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         return (
             <View style={globalStyle.container}>
-                <View
-                    style={styles.customContainerStyle}
-                >
+                <View style={styles.customContainerStyle}>
                     {/* BigHeadText */}
                     <View>
                         <BigHeadingWithBackButton
@@ -772,17 +796,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     <View style={{ marginTop: 10, width: 100 }}>
                         <TouchableOpacity
                             onPress={this.onClickFilter}
-
                             style={styles.oblongBtnStyle}>
-
                             <Text
                                 style={{
                                     marginTop: 10,
                                     fontSize: 12,
                                     fontFamily: fonts.bold,
                                     textTransform: 'uppercase',
-                                }}
-                            >
+                                }}>
                                 Filter
                             </Text>
                         </TouchableOpacity>
@@ -791,14 +812,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 </View>
                 <ScrollView
                     horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                // style={{
-                //     paddingVertical: wp("3%"),
-                // }}
-                >
+                    showsHorizontalScrollIndicator={false}>
                     <View
-                        style={{ flexDirection: 'row', marginVertical: 10, marginBottom: 20, top: 0, height: 20 }}
-                    >
+                        style={{ flexDirection: 'row', marginVertical: 10, marginBottom: 20, top: 0, height: 20 }}>
                         {
                             tags.length ?
                                 tags.map((item, index) => (
@@ -872,6 +888,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         }
                     </View>
                 </ScrollView>
+                <Animated.View style={[
+                    styles.maxRecipesBanner,
+                    { opacity: fadeValue, height: hInterpolate }
+                    ]}>
+                    <Text style={styles.maxRecipesBannerText}>
+                        Max {this.maximumAllowedFavourites} allowed recipes 
+                    </Text>
+                </Animated.View>
                 {
                     loading ?
                         skeleton
@@ -1009,6 +1033,25 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: '#4d4c4c',
         padding: 10,
+    },
+    maxRecipesBanner: {
+        alignItems: 'center',
+        borderRadius: 8,
+        borderWidth: 0,
+        backgroundColor: colors.red.light,
+        color: colors.black,
+        shadowColor: colors.black,
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 11.95,
+    },
+    maxRecipesBannerText: {
+        fontFamily: fonts.bold,
+        fontSize: 12,
+        margin: 12,
+        height: 18,
     }
-
 })

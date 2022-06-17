@@ -31,7 +31,6 @@ export default class FilterScreen extends React.PureComponent {
         }
     }
 
-
     render() {
         const { result, item, title, onSelectHeart, favouritingDisabled } = this.props
 
@@ -63,9 +62,9 @@ export default class FilterScreen extends React.PureComponent {
                                     alignItems:'flex-end'
                                 }}>
                                 <TouchableOpacity
+                                    style={styles.heartState(favouritingDisabled) }
                                     disabled={favouritingDisabled}
-                                    onPress={onSelectHeart}
-                                >
+                                    onPress={onSelectHeart}>
                                     {
                                         Platform.OS === "ios" ?
                                             <Icon name={this.props.ifExistRecipe() ? 'heart' : 'hearto'} size={30} color={'red'} />
@@ -202,6 +201,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: '#4d4c4c',
         padding: 10,
-    }
+    },
+    heartState: (isDisabled) => [
+        {
+            opacity: isDisabled ? 0.2 : 1
+        }
+    ]
 
 })
