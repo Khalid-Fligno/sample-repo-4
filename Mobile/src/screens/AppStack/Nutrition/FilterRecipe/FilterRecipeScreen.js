@@ -6,8 +6,7 @@ import {
     Dimensions,
     FlatList,
     Text,
-    ScrollView,
-    Animated
+    ScrollView
 } from "react-native";
 import sortBy from "lodash.sortby";
 import colors from "../../../../styles/colors";
@@ -83,25 +82,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
         this.setState({
             ...paramState,
             selectedItems,
-            canFavouriteMoreRecipes,
-            fadeValue: new Animated.Value(canFavouriteMoreRecipes ? 0 : 1)
+            canFavouriteMoreRecipes
         })
-    };
-
-    componentDidUpdate = (prevProps, prevState) => {
-        if (prevState.canFavouriteMoreRecipes !== this.state.canFavouriteMoreRecipes)
-            this._animateIn(!this.state.canFavouriteMoreRecipes)
     }
-
-
-    _animateIn = (show) => {
-        Animated.timing(this.state.fadeValue, {
-            toValue: show ? 1 : 0,
-            duration: 300,
-            useNativeDriver: false, // <-- Add this
-          }).start();
-    }
-
 
     get maximumAllowedFavourites() {
         return this.props.navigation.getParam("configs", null)?.maximumAllowedFavourites ?? 1
@@ -759,15 +742,10 @@ export default class FilterRecipeScreen extends React.PureComponent {
             phaseDefaultTags,
             categoryName,
             loading,
-            fadeValue
+            selectedItems
         } = this.state
 
         console.log('todayRecommendedRecipe: ', todayRecommendedRecipe)
-
-        const hInterpolate = fadeValue?.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, 44],
-        })
 
         const skeleton = (
             <View style={styles.recipeTileSkeletonContainer}>
@@ -888,14 +866,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         }
                     </View>
                 </ScrollView>
-                <Animated.View style={[
-                    styles.maxRecipesBanner,
-                    { opacity: fadeValue, height: hInterpolate }
-                    ]}>
+                <View style={[styles.maxRecipesBanner]}>
                     <Text style={styles.maxRecipesBannerText}>
-                        Max {this.maximumAllowedFavourites} allowed recipes 
+                        Selected {selectedItems?.length}/{this.maximumAllowedFavourites} Recipes
                     </Text>
-                </Animated.View>
+                    <Text style={styles.maxRecipesBannerSubheading}>
+                        Deselect a recipe if you wish to select another, if you have reached your max allocation.
+                    </Text>
+                </View>
                 {
                     loading ?
                         skeleton
@@ -1038,7 +1016,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 8,
         borderWidth: 0,
-        backgroundColor: colors.red.light,
+        backgroundColor: colors.citrus,
         color: colors.black,
         shadowColor: colors.black,
         shadowOffset: {
@@ -1047,11 +1025,18 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.2,
         shadowRadius: 11.95,
+        justifyContent: 'space-between',
+        padding: 16,
     },
     maxRecipesBannerText: {
         fontFamily: fonts.bold,
-        fontSize: 12,
-        margin: 12,
-        height: 18,
+        fontSize: 14,
+        textAlign: 'center',
+        marginBottom: 4
+    },
+    maxRecipesBannerSubheading: {
+        fontSize: 10,
+        fontFamily: fonts.GothamLight,
+        textAlign: 'center'
     }
 })
