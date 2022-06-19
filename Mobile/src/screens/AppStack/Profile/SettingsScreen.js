@@ -113,16 +113,10 @@ export default class SettingsScreen extends React.PureComponent {
     await userRef.update({
       initialProgressInfo: {
         date: moment().format("YYYY-MM-DD"),
-        weight: null,
-        waist: null,
-        hip: null,
       },
 
       currentProgressInfo: {
         date: moment().format("YYYY-MM-DD"),
-        weight: null,
-        waist: null,
-        hip: null,
       }
     });
     this.props.navigation.navigate("ProgressEdit", {
