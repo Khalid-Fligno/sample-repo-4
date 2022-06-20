@@ -67,9 +67,11 @@ const MealCarousel = ({
                 <ImageBackground
                   source={{ uri: recipe.coverImage, cache: "force-cache" }}
                   style={styles.image}
-                  resizeMode="cover"
-                >
+                  resizeMode="cover">
                   <View style={styles.opacityLayer}>
+                    {recipe.drink && (
+                      <Text style={styles.watermarkTitle}>post{'\n'}workout</Text>
+                    )}
                     <Text style={styles.cardTitle}>{recipe.title}</Text>
                   </View>
                 </ImageBackground>
@@ -162,4 +164,17 @@ const styles = StyleSheet.create({
     width: "90%",
     fontSize: wp("3.5%"),
   },
+  watermarkTitle: {
+    color: colors.white,
+    backgroundColor: colors.black,
+    textTransform: 'uppercase',  
+    textAlign: 'center', 
+    fontFamily: fonts.SimplonMonoMedium,
+    fontSize: 12,
+    position: 'absolute',
+    top: 8,
+    left: -38,
+    transform: [{ rotate: '-45deg'}],
+    width: 120
+  }
 });

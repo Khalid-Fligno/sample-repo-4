@@ -52,6 +52,10 @@ export default class FilterScreen extends React.PureComponent {
                         image={{ uri: item.coverImage }}
                         containerStyle={styles.card}
                     >
+                    
+                        {item.drink && (
+                            <Text style={styles.watermarkTitle}>post{'\n'}workout</Text>
+                        )}
                         {
                             this.props.faveRecipeItem === undefined ?
                                 null
@@ -206,6 +210,18 @@ const styles = StyleSheet.create({
         {
             opacity: isDisabled ? 0.2 : 1
         }
-    ]
-
+    ],
+    watermarkTitle: {
+        color: colors.white,
+        backgroundColor: colors.black,
+        fontFamily: fonts.SimplonMonoMedium,
+        fontSize: 12,
+        textTransform: 'uppercase',  
+        textAlign: 'center',  
+        position: 'absolute',
+        top: -143,
+        left: -40,
+        transform: [{ rotate: '-45deg'}],
+        width: 120
+      }
 })
