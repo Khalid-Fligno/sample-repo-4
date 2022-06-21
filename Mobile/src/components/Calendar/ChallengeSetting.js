@@ -138,170 +138,76 @@ const ChallengeSetting = (props) => {
   };
 
   const setShedular = async (selectedDate) => {
-    setLoading(false);
-    Alert.alert(
-      "",
-      "Do you want to keep your Active Challenge Progress Data?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "YES",
-          onPress: async () => {
-            const TODAY = moment();
-            setLoading(true);
-            const uid = await AsyncStorage.getItem("uid");
-            const userRef = db
-              .collection("users")
-              .doc(uid)
-              .collection("challenges");
-            const data = createUserChallengeData(
-              activeChallengeData,
-              selectedDate,
-              activeChallengeUserData,
-              currentDay
-            );
-            delete data.workouts;
-            if (moment(selectedDate).isSame(TODAY, "d")) {
-              Object.assign(data, { status: "Active" });
-            } else {
-              Object.assign(data, { isSchedule: false, status: "Active" });
-            }
-            userRef
-              .doc(activeChallengeData.id)
-              .set(data, { merge: true })
-              .then((res) => {
-                Alert.alert(
-                  "",
-                  `Your start date has been added to your challenge. Go to ${moment(
-                    selectedDate
-                  ).format(
-                    "DD-MM-YY"
-                  )} on the challenge dashboard to see what Day 1 looks like`,
-                  [
-                    {
-                      text: "OK",
-                      onPress: () => {
-                        if (completeCha) {
-                          const resetAction = StackActions.reset({
-                            index: 0,
-                            actions: [
-                              NavigationActions.navigate({
-                                routeName: "Tabs",
-                                action: NavigationActions.navigate({
-                                  routeName: "ChallengeSubscription",
-                                  params: { completedChallenge: true },
-                                }),
-                              }),
-                            ],
-                          });
-                          navigation.dispatch(resetAction);
-                        } else {
-                          const resetAction = StackActions.reset({
-                            index: 0,
-                            actions: [
-                              NavigationActions.navigate({
-                                routeName: "Tabs",
-                                action: NavigationActions.navigate({
-                                  routeName: "CalendarHome",
-                                }),
-                              }),
-                            ],
-                          });
-                          navigation.dispatch(resetAction);
-                        }
-                      },
-                    },
-                  ],
-                  { cancelable: false }
-                );
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          },
-        },
-        {
-          text: "NO",
-          onPress: async () => {
-            const TODAY = moment();
-            setLoading(true);
-            const uid = await AsyncStorage.getItem("uid");
-            const userRef = db
-              .collection("users")
-              .doc(uid)
-              .collection("challenges");
-            const data = createUserChallengeData(
-              activeChallengeData,
-              selectedDate,
-              activeChallengeUserData,
-              currentDay
-            );
-            if (moment(selectedDate).isSame(TODAY, "d")) {
-              Object.assign(data, { status: "Active" });
-            } else {
-              // Object.assign(data, { isSchedule: true, status: "InActive" });
-              Object.assign(data, { isSchedule: false, status: "Active" });
-            }
-            userRef
-              .doc(activeChallengeData.id)
-              .set(data, { merge: true })
-              .then((res) => {
-                Alert.alert(
-                  "",
-                  `Your start date has been added to your challenge. Go to ${moment(
-                    selectedDate
-                  ).format(
-                    "DD-MM-YY"
-                  )} on the challenge dashboard to see what Day 1 looks like`,
-                  [
-                    {
-                      text: "OK",
-                      onPress: () => {
-                        if (completeCha) {
-                          const resetAction = StackActions.reset({
-                            index: 0,
-                            actions: [
-                              NavigationActions.navigate({
-                                routeName: "Tabs",
-                                action: NavigationActions.navigate({
-                                  routeName: "ChallengeSubscription",
-                                  params: { completedChallenge: true },
-                                }),
-                              }),
-                            ],
-                          });
-                          navigation.dispatch(resetAction);
-                        } else {
-                          const resetAction = StackActions.reset({
-                            index: 0,
-                            actions: [
-                              NavigationActions.navigate({
-                                routeName: "Tabs",
-                                action: NavigationActions.navigate({
-                                  routeName: "CalendarHome",
-                                }),
-                              }),
-                            ],
-                          });
-                          navigation.dispatch(resetAction);
-                        }
-                      },
-                    },
-                  ],
-                  { cancelable: false }
-                );
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          },
-        },
-      ],
-      { cancelable: true }
+    const TODAY = moment();
+    setLoading(true);
+    const uid = await AsyncStorage.getItem("uid");
+    const userRef = db
+      .collection("users")
+      .doc(uid)
+      .collection("challenges");
+    const data = createUserChallengeData(
+      activeChallengeData,
+      selectedDate,
+      activeChallengeUserData,
+      currentDay
     );
+    if (moment(selectedDate).isSame(TODAY, "d")) {
+      Object.assign(data, { status: "Active" });
+    } else {
+      Object.assign(data, { isSchedule: false, status: "Active" });
+    }
+    userRef
+      .doc(activeChallengeData.id)
+      .set(data, { merge: true })
+      .then((res) => {
+        Alert.alert(
+          "",
+          `Your start date has been added to your challenge. Go to ${moment(
+            selectedDate
+          ).format(
+            "DD-MM-YY"
+          )} on the challenge dashboard to see what Day 1 looks like`,
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                if (completeCha) {
+                  const resetAction = StackActions.reset({
+                    index: 0,
+                    actions: [
+                      NavigationActions.navigate({
+                        routeName: "Tabs",
+                        action: NavigationActions.navigate({
+                          routeName: "ChallengeSubscription",
+                          params: { completedChallenge: true },
+                        }),
+                      }),
+                    ],
+                  });
+                  navigation.dispatch(resetAction);
+                } else {
+                  const resetAction = StackActions.reset({
+                    index: 0,
+                    actions: [
+                      NavigationActions.navigate({
+                        routeName: "Tabs",
+                        action: NavigationActions.navigate({
+                          routeName: "CalendarHome",
+                        }),
+                      }),
+                    ],
+                  });
+                  navigation.dispatch(resetAction);
+                }
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <SafeAreaView
