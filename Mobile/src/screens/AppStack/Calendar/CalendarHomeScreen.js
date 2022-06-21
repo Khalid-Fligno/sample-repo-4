@@ -824,6 +824,7 @@ class CalendarHomeScreen extends React.PureComponent {
           const isCompleted = moment(currentDate).isSameOrAfter(
             activeChallengeEndDate
           );
+
           if (list[0] && !isCompleted) {
             this.fetchActiveChallengeData(list[0]);
           } else {
@@ -839,16 +840,23 @@ class CalendarHomeScreen extends React.PureComponent {
                 .collection("challenges")
                 .doc(list[0].id);
               challengeRef.set(newData, { merge: true });
-              this.setState({ completeCha: isCompleted });
               this.props.navigation.navigate("ChallengeSubscription", {
                 completedChallenge: true,
               });
-              Alert.alert(
-                "Congratulations!",
-                "You have completed your challenge",
-                [{ text: "OK", onPress: () => { } }],
-                { cancelable: false }
-              );
+              this.setState({ completeCha: isCompleted });
+              setTimeout(() => {
+                Alert.alert(
+                  "Congratulations!",
+                  "You have completed your challenge",
+                  [
+                    {
+                      text: "OK",
+                      onPress: () => {}
+                    }
+                  ],
+                  { cancelable: false }
+                );
+              }, 5)
             } else {
               this.setState({
                 activeChallengeUserData: undefined,

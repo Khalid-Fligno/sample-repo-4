@@ -153,11 +153,11 @@ export default class Progress1Screen extends React.PureComponent {
       .get()
       .then((snapshot) => {
         const data = snapshot.data();
-        const initialProgressInfo = data.initialProgressInfo;
+        const initialProgressInfo = data?.initialProgressInfo;
         this.setState({
-          weight: initialProgressInfo.weight ?? 0,
-          waist: initialProgressInfo.waist ?? 0,
-          hip: initialProgressInfo.hip ?? 0,
+          weight: initialProgressInfo?.weight,
+          waist: initialProgressInfo?.waist,
+          hip: initialProgressInfo?.hip,
           loading: false,
         });
       });
@@ -171,11 +171,11 @@ export default class Progress1Screen extends React.PureComponent {
       .get()
       .then((snapshot) => {
         const data = snapshot.data();
-        const progressInfo = data.currentProgressInfo;
+        const progressInfo = data?.currentProgressInfo;
         this.setState({
-          weight: progressInfo.weight ?? 0,
-          waist: progressInfo.waist ?? 0,
-          hip: progressInfo.hip ?? 0,
+          weight: progressInfo?.weight,
+          waist: progressInfo?.waist,
+          hip: progressInfo?.hip,
           loading: false,
         });
       });
@@ -317,9 +317,9 @@ export default class Progress1Screen extends React.PureComponent {
         uom: "lbs",
       });
     }
-    let weightData = weight.toString();
+
     return (
-      <KeyboardAwareScrollView style={{backgroundColor: colors.offWhite}}>
+      <KeyboardAwareScrollView style={{ backgroundColor: colors.offWhite }}>
         <SafeAreaView style={styles.safeAreaContainer}>
           <View style={styles.container}>
             <View style={styles.textContainer}>
@@ -340,18 +340,18 @@ export default class Progress1Screen extends React.PureComponent {
                 {unitOfMeasurement === "metric" ? (
                   <TextInput
                     style={styles.inputButton}
-                    placeholder="kg"
+                    placeholder="Input your weight"
                     keyboardType="numeric"
                     onChangeText={(value) => this.setState({ weight: value })}
-                    value={weightData}
+                    value={weight ? weight.toString() : null}
                   />
                 ) : (
                   <TextInput
                     style={styles.inputButton}
-                    placeholder="lbs"
+                    placeholder="Input your weight"
                     keyboardType="numeric"
                     onChangeText={(value) => this.setState({ weight: value })}
-                    value={weightData}
+                    value={weight ? weight.toString() : null}
                   />
                 )}
 
@@ -402,10 +402,19 @@ export default class Progress1Screen extends React.PureComponent {
                   onPress={() => this.showModal("waistModalVisible")}
                   style={styles.inputButton}
                 >
-                  <Text style={styles.inputSelectionText}>
-                    {waist} {unitOfMeasurement === "metric" && "cm"}
-                    {unitOfMeasurement === "imperial" && "inches"}
-                  </Text>
+                  {
+                    waist ?
+                      <Text style={styles.inputSelectionText}>
+                        {waist} {unitOfMeasurement === "metric" && "cm"}
+                        {unitOfMeasurement === "imperial" && "inches"}
+                      </Text>
+                      :
+                      <Text style={{
+                        color: "#CACACA"
+                      }}>
+                        Input your waist
+                      </Text>
+                  }
                 </TouchableOpacity>
                 <Modal
                   isVisible={waistModalVisible}
@@ -452,10 +461,19 @@ export default class Progress1Screen extends React.PureComponent {
                   onPress={() => this.showModal("hipModalVisible")}
                   style={styles.inputButton}
                 >
-                  <Text style={styles.inputSelectionText}>
-                    {hip} {unitOfMeasurement === "metric" && "cm"}
-                    {unitOfMeasurement === "imperial" && "inches"}
-                  </Text>
+                  {
+                    hip ?
+                      <Text style={styles.inputSelectionText}>
+                        {hip} {unitOfMeasurement === "metric" && "cm"}
+                        {unitOfMeasurement === "imperial" && "inches"}
+                      </Text>
+                      :
+                      <Text style={{
+                        color: "#CACACA"
+                      }}>
+                        Input your hip
+                      </Text>
+                  }
                 </TouchableOpacity>
                 <Modal
                   isVisible={hipModalVisible}
@@ -503,7 +521,7 @@ export default class Progress1Screen extends React.PureComponent {
                 Title="Update"
                 titleCapitalise={true}
                 onPress={() => this.handleSubmit(weight, waist, hip)}
-                customBtnStyle={{width: width / 1.1}}
+                customBtnStyle={{ width: width / 1.1 }}
               />
             </View>
             <Loader loading={loading} color={colors.themeColor.color} />
