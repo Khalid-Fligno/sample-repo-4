@@ -16,5 +16,7 @@ export const IMAGE = {
   FEED_COMMUNITY: require("@lib/images/media/community.png"),
   FEED_ACTIVEWEAR: require("@lib/images/media/activewear.png"),
   FEED_EQUIPMENT: require("@lib/images/media/equipment.png"),
-  TRANSFORM_WORKOUT_TILE: require("../../../assets/images/Calendar/transformWorkoutTile.png")
+  TRANSFORM_WORKOUT_TILE: require("../../../assets/images/Calendar/transformWorkoutTile.png"),
+  PROGRESS1_IMG: require("@lib/images/progressScreenImg1.jpeg"),
+  PROGRESS2_IMG: require("@lib/images/progressScreenImg2.jpeg")
 };
