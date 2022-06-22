@@ -6,55 +6,34 @@ import {
   Dimensions,
   TouchableOpacity,
   Alert,
+  Image
 } from "react-native";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import { containerPadding } from "../../styles/globalStyles";
-import { BackHandler } from "react-native";
 import { Icon } from 'react-native-elements'
 import * as FileSystem from "expo-file-system";
-import Loader from "../../components/Shared/Loader";
+import { IMAGE } from '../../library/images';
 
 const { width } = Dimensions.get("window");
 
-export default class ProgressEditScreen extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-    this.backButtonClick = this.backButtonClick.bind(this);
-  }
+const ProgressEditScreen = ({ navigation }) => {
 
-  componentDidMount = () => {
-    this.subscribed = BackHandler.addEventListener(
-      'hardwareBackPress',
-      this.backButtonClick
-    );
-  };
+  const {
+    isInitial,
+    initialProgressInfo,
+    currentProgressInfo,
+    photoExist2
+  } = navigation.state.params
 
-  componentWillUnmount() {
-    if (this.subscribed) this.subscribed.remove();
-  }
-
-  backButtonClick() {
-    if (this.props.navigation && this.props.navigation.goBack) {
-      this.props.navigation.navigate('ProgressHome')
-      return true;
-
-    }
-    return false;
-  }
-
-  navigateToBurpee = async (isInitial, photoExist, photoExist2) => {
+  const navigateToBurpee = async (isInitial, photoExist, photoExist2) => {
     if (photoExist || photoExist2) {
-      this.setState({ loading: true });
       await FileSystem.downloadAsync(
         "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
         `${FileSystem.cacheDirectory}exercise-burpees.mp4`
       );
 
-      this.setState({ loading: false });
-      this.props.navigation.navigate("Burpee1", {
+      navigation.navigate("Burpee1", {
         isInitial: isInitial,
         navigateTo: "Progress",
         updateBurpees: true,
@@ -69,7 +48,7 @@ export default class ProgressEditScreen extends React.PureComponent {
     }
   }
 
-  retakeBurpeeTest = async (
+  const retakeBurpeeTest = async (
     isInitial,
     initialProgressInfo,
     currentProgressInfo,
@@ -80,201 +59,218 @@ export default class ProgressEditScreen extends React.PureComponent {
     const isInitialPhotoExist = initialProgressInfo?.photoURL
 
     if (isInitial) {
-      await this.navigateToBurpee(isInitial, isInitialPhotoExist, photoExist2)
+      await navigateToBurpee(isInitial, isInitialPhotoExist, photoExist2)
     } else {
-      await this.navigateToBurpee(isInitial, isCurrentPhotoExist, photoExist2)
+      await navigateToBurpee(isInitial, isCurrentPhotoExist, photoExist2)
     }
   };
 
-  render() {
-    const {
-      isInitial,
-      initialProgressInfo,
-      currentProgressInfo,
-      photoExist2
-    } = this.props.navigation.state.params
-
-    return (
+  return (
+    <View
+      style={[{ flex: 1, flexDirection: "column" }]}
+    >
+      <View style={{ padding: 20 }}>
+        <Text style={styles.headerText}>
+          {isInitial ?
+            'View/Edit Before' :
+            'View/Edit Progress'
+          }
+        </Text>
+      </View>
       <View
-        style={[{ flex: 1, flexDirection: "column" }]}
+        style={{
+          flex: 2,
+          flexDirection: "column",
+          marginHorizontal: 10,
+        }}
       >
-        <View style={{ flex: 1 }}>
-          <View style={styles.textContainer}>
-            <Text style={styles.headerText}>
-              {isInitial ?
-                'Edit Before' :
-                'Progress'
-              }
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{ flex: 2, flexDirection: "column" }}
-        >
-          <TouchableOpacity style={{
+        <TouchableOpacity
+          style={{
             flex: 1,
-            width,
-            padding: 10,
+            padding: 5,
             paddingHorizontal: containerPadding,
             justifyContent: 'center',
-            borderTopWidth: 1,
-            borderColor: colors.grey.light,
-          }} onPress={() => {
-            this.props.navigation.navigate("Progress2", {
+            backgroundColor: "#DEDBDB",
+            borderRadius: 10,
+          }}
+          onPress={() => {
+            navigation.navigate("Progress2", {
               initialProgressInfo: initialProgressInfo,
               currentProgressInfo: currentProgressInfo,
               isInitial: isInitial,
               progressEdit: true
             });
           }}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              alignItems: 'center'
+            }}>
+              <Text
+                style={{
+                  fontFamily: fonts.bold,
+                  fontSize: 22,
+                  color: colors.charcoal.dark,
+                  marginBottom: 5,
+                }}
+              >
+                {isInitial ?
+                  "Before Photo" :
+                  "Progress Photo"
+                }
+              </Text>
+            </View>
             <View
-              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center'
+              }}
             >
-              <View style={{
+              <Icon name="chevron-right" size={36} color={colors.charcoal.light} type="entypo" />
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            padding: 5,
+            paddingHorizontal: containerPadding,
+            justifyContent: 'center',
+            backgroundColor: "#DEDBDB",
+            borderRadius: 10,
+            marginVertical: 10,
+          }}
+          onPress={() => {
+            navigation.navigate("Progress1", {
+              initialProgressInfo: initialProgressInfo,
+              currentProgressInfo: currentProgressInfo,
+              isInitial: isInitial,
+              progressEdit: true,
+              measurements: true
+            });
+          }}
+        >
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between', }}
+          >
+            <View
+              style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-start',
                 alignItems: 'center'
-              }}>
-                <Text
-                  style={{
-                    fontFamily: fonts.bold,
-                    fontSize: 22,
-                    color: colors.charcoal.light,
-                    marginBottom: 5,
-                  }}
-                >
-                  {isInitial ?
-                    "Before Photo" :
-                    "Progress Photo"
-                  }
-                </Text>
-              </View>
-              <View
+              }}
+            >
+              <Text
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                  alignItems: 'center'
+                  fontFamily: fonts.bold,
+                  fontSize: 22,
+                  color: colors.charcoal.dark,
+                  marginBottom: 5,
                 }}
               >
-                <Icon name="chevron-right" size={36} color={colors.coolIce} type="entypo" />
-              </View>
+                {isInitial ?
+                  "Measurements" :
+                  "Progress Measurements"
+                }
+              </Text>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              width,
-              padding: 10,
-              paddingHorizontal: containerPadding,
-              justifyContent: 'center',
-              borderTopWidth: 1,
-              borderColor: colors.grey.light,
-            }}
-            onPress={() => {
-              this.props.navigation.navigate("Progress1", {
-                initialProgressInfo: initialProgressInfo,
-                currentProgressInfo: currentProgressInfo,
-                isInitial: isInitial,
-                progressEdit: true,
-                measurements: true
-              });
-            }}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center'
+              }}
+            >
+              <Icon name="chevron-right" size={36} color={colors.charcoal.light} type="entypo" />
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            padding: 5,
+            paddingHorizontal: containerPadding,
+            justifyContent: 'center',
+            backgroundColor: "#DEDBDB",
+            borderRadius: 10
+          }}
+          onPress={() => retakeBurpeeTest(
+            isInitial,
+            initialProgressInfo,
+            currentProgressInfo,
+            photoExist2
+          )}
+        >
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
           >
             <View
-              style={{ flexDirection: 'row', justifyContent: 'space-between', }}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                alignItems: 'center'
+              }}
             >
-              <View
+              <Text
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
-                  alignItems: 'center'
+                  fontFamily: fonts.bold,
+                  fontSize: 22,
+                  color: colors.charcoal.dark,
+                  marginBottom: 5,
                 }}
               >
-                <Text
-                  style={{
-                    fontFamily: fonts.bold,
-                    fontSize: 22,
-                    color: colors.charcoal.light,
-                    marginBottom: 5,
-                  }}
-                >
-                  {isInitial ?
-                    "Measurements" :
-                    "Progress Measurements"
-                  }
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                  alignItems: 'center'
-                }}
-              >
-                <Icon name="chevron-right" size={36} color={colors.coolIce} type="entypo" />
-              </View>
+                {isInitial ?
+                  "Retake Burpee Test" :
+                  "Update Burpee Test"
+                }
+              </Text>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              width,
-              padding: 10,
-              paddingHorizontal: containerPadding,
-              justifyContent: 'center',
-              borderTopWidth: 1,
-              borderBottomWidth: 1,
-              borderColor: colors.grey.light,
-            }}
-            onPress={() => this.retakeBurpeeTest(
-              isInitial,
-              initialProgressInfo,
-              currentProgressInfo,
-              photoExist2
-            )}
-          >
             <View
-              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center'
+              }}
             >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
-                  alignItems: 'center'
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: fonts.bold,
-                    fontSize: 22,
-                    color: colors.charcoal.light,
-                    marginBottom: 5,
-                  }}
-                >
-                  {isInitial ?
-                    "Retake Burpee Test" :
-                    "Update Burpee Test"
-                  }
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                  alignItems: 'center'
-                }}
-              >
-                <Icon name="chevron-right" size={36} color={colors.coolIce} type="entypo" />
-              </View>
+              <Icon name="chevron-right" size={36} color={colors.charcoal.light} type="entypo" />
             </View>
-          </TouchableOpacity>
-        </View>
-        <Loader loading={this.state.loading} color={colors.charcoal.standard} />
-        <View style={{ flex: 3 }} />
+          </View>
+        </TouchableOpacity>
       </View>
-    );
-  }
+      <View
+        style={{ flex: 3 }}
+      >
+        <View style={{flexBasis: 20}}></View>
+        {
+          isInitial ?
+            <Image
+              source={IMAGE.PROGRESS2_IMG}
+              style={{
+                width,
+                height: width / 1.2,
+              }}
+              resizeMode="cover"
+            />
+            :
+            <Image
+              source={IMAGE.PROGRESS1_IMG}
+              style={{
+                width,
+                height: width,
+              }}
+              resizeMode="cover"
+            />
+        }
+      </View>
+    </View>
+  );
 }
+
+export default ProgressEditScreen;
 
 const styles = StyleSheet.create({
   safeAreaContainer: {
@@ -287,17 +283,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: colors.offWhite,
   },
-  textContainer: {
-    flex: 1,
-    width,
-    padding: 10,
-    paddingHorizontal: containerPadding
-  },
   headerText: {
     fontFamily: fonts.bold,
     fontSize: 24,
     color: colors.charcoal.light,
-    marginBottom: 5,
   },
   bodyText: {
     fontFamily: fonts.standard,
