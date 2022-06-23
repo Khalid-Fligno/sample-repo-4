@@ -106,6 +106,7 @@
     "react-native-image-progress": "^1.1.1",
     "react-native-in-app-utils": "^6.1.0",
     "react-native-indicators": "^0.17.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-loading-spinner-overlay": "^1.0.1",
     "react-native-modal": "^11.5.2",
     "react-native-onesignal": "^3.6.3",

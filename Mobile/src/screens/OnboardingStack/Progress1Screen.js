@@ -33,6 +33,7 @@ import { BackHandler } from "react-native";
 import moment from "moment";
 import * as FileSystem from "expo-file-system";
 import _ from "lodash";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const { width } = Dimensions.get("window");
 
@@ -152,11 +153,11 @@ export default class Progress1Screen extends React.PureComponent {
       .get()
       .then((snapshot) => {
         const data = snapshot.data();
-        const initialProgressInfo = data.initialProgressInfo;
+        const initialProgressInfo = data?.initialProgressInfo;
         this.setState({
-          weight: initialProgressInfo.weight ?? 0,
-          waist: initialProgressInfo.waist ?? 0,
-          hip: initialProgressInfo.hip ?? 0,
+          weight: initialProgressInfo?.weight,
+          waist: initialProgressInfo?.waist,
+          hip: initialProgressInfo?.hip,
           loading: false,
         });
       });
@@ -170,11 +171,11 @@ export default class Progress1Screen extends React.PureComponent {
       .get()
       .then((snapshot) => {
         const data = snapshot.data();
-        const progressInfo = data.currentProgressInfo;
+        const progressInfo = data?.currentProgressInfo;
         this.setState({
-          weight: progressInfo.weight ?? 0,
-          waist: progressInfo.waist ?? 0,
-          hip: progressInfo.hip ?? 0,
+          weight: progressInfo?.weight,
+          waist: progressInfo?.waist,
+          hip: progressInfo?.hip,
           loading: false,
         });
       });
@@ -316,10 +317,10 @@ export default class Progress1Screen extends React.PureComponent {
         uom: "lbs",
       });
     }
-    let weightData = weight.toString();
+
     return (
-      <SafeAreaView style={styles.safeAreaContainer}>
-        <KeyboardAvoidingView keyboardVerticalOffset={90} behavior="padding">
+      <KeyboardAwareScrollView style={{ backgroundColor: colors.offWhite }}>
+        <SafeAreaView style={styles.safeAreaContainer}>
           <View style={styles.container}>
             <View style={styles.textContainer}>
               <Text style={styles.headerText}>
@@ -339,18 +340,18 @@ export default class Progress1Screen extends React.PureComponent {
                 {unitOfMeasurement === "metric" ? (
                   <TextInput
                     style={styles.inputButton}
-                    placeholder="kg"
+                    placeholder="Input your weight"
                     keyboardType="numeric"
                     onChangeText={(value) => this.setState({ weight: value })}
-                    value={weightData}
+                    value={weight ? weight.toString() : null}
                   />
                 ) : (
                   <TextInput
                     style={styles.inputButton}
-                    placeholder="lbs"
+                    placeholder="Input your weight"
                     keyboardType="numeric"
                     onChangeText={(value) => this.setState({ weight: value })}
-                    value={weightData}
+                    value={weight ? weight.toString() : null}
                   />
                 )}
 
@@ -371,19 +372,19 @@ export default class Progress1Screen extends React.PureComponent {
                     >
                       {unitOfMeasurement === "metric"
                         ? weightOptionsMetric.map((i) => (
-                            <Picker.Item
-                              key={i.value}
-                              label={`${i.label} kg`}
-                              value={i.value}
-                            />
-                          ))
+                          <Picker.Item
+                            key={i.value}
+                            label={`${i.label} kg`}
+                            value={i.value}
+                          />
+                        ))
                         : weightOptionsImperial.map((i) => (
-                            <Picker.Item
-                              key={i.value}
-                              label={`${i.label} lbs`}
-                              value={i.value}
-                            />
-                          ))}
+                          <Picker.Item
+                            key={i.value}
+                            label={`${i.label} lbs`}
+                            value={i.value}
+                          />
+                        ))}
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
@@ -401,10 +402,19 @@ export default class Progress1Screen extends React.PureComponent {
                   onPress={() => this.showModal("waistModalVisible")}
                   style={styles.inputButton}
                 >
-                  <Text style={styles.inputSelectionText}>
-                    {waist} {unitOfMeasurement === "metric" && "cm"}
-                    {unitOfMeasurement === "imperial" && "inches"}
-                  </Text>
+                  {
+                    waist ?
+                      <Text style={styles.inputSelectionText}>
+                        {waist} {unitOfMeasurement === "metric" && "cm"}
+                        {unitOfMeasurement === "imperial" && "inches"}
+                      </Text>
+                      :
+                      <Text style={{
+                        color: "#CACACA"
+                      }}>
+                        Input your waist
+                      </Text>
+                  }
                 </TouchableOpacity>
                 <Modal
                   isVisible={waistModalVisible}
@@ -421,19 +431,19 @@ export default class Progress1Screen extends React.PureComponent {
                     >
                       {unitOfMeasurement === "metric"
                         ? waistOptionsMetric.map((i) => (
-                            <Picker.Item
-                              key={i.value}
-                              label={`${i.label} cm`}
-                              value={i.value}
-                            />
-                          ))
+                          <Picker.Item
+                            key={i.value}
+                            label={`${i.label} cm`}
+                            value={i.value}
+                          />
+                        ))
                         : waistOptionsImperial.map((i) => (
-                            <Picker.Item
-                              key={i.value}
-                              label={`${i.label} inches`}
-                              value={i.value}
-                            />
-                          ))}
+                          <Picker.Item
+                            key={i.value}
+                            label={`${i.label} inches`}
+                            value={i.value}
+                          />
+                        ))}
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
@@ -451,10 +461,19 @@ export default class Progress1Screen extends React.PureComponent {
                   onPress={() => this.showModal("hipModalVisible")}
                   style={styles.inputButton}
                 >
-                  <Text style={styles.inputSelectionText}>
-                    {hip} {unitOfMeasurement === "metric" && "cm"}
-                    {unitOfMeasurement === "imperial" && "inches"}
-                  </Text>
+                  {
+                    hip ?
+                      <Text style={styles.inputSelectionText}>
+                        {hip} {unitOfMeasurement === "metric" && "cm"}
+                        {unitOfMeasurement === "imperial" && "inches"}
+                      </Text>
+                      :
+                      <Text style={{
+                        color: "#CACACA"
+                      }}>
+                        Input your hip
+                      </Text>
+                  }
                 </TouchableOpacity>
                 <Modal
                   isVisible={hipModalVisible}
@@ -471,19 +490,19 @@ export default class Progress1Screen extends React.PureComponent {
                     >
                       {unitOfMeasurement === "metric"
                         ? hipOptionsMetric.map((i) => (
-                            <Picker.Item
-                              key={i.value}
-                              label={`${i.label} cm`}
-                              value={i.value}
-                            />
-                          ))
+                          <Picker.Item
+                            key={i.value}
+                            label={`${i.label} cm`}
+                            value={i.value}
+                          />
+                        ))
                         : hipOptionsImperial.map((i) => (
-                            <Picker.Item
-                              key={i.value}
-                              label={`${i.label} inches`}
-                              value={i.value}
-                            />
-                          ))}
+                          <Picker.Item
+                            key={i.value}
+                            label={`${i.label} inches`}
+                            value={i.value}
+                          />
+                        ))}
                     </Picker>
                     <TouchableOpacity
                       title="DONE"
@@ -502,22 +521,23 @@ export default class Progress1Screen extends React.PureComponent {
                 Title="Update"
                 titleCapitalise={true}
                 onPress={() => this.handleSubmit(weight, waist, hip)}
+                customBtnStyle={{ width: width / 1.1 }}
               />
             </View>
             <Loader loading={loading} color={colors.themeColor.color} />
           </View>
-        </KeyboardAvoidingView>
+          <HelperModal
+            helperModalVisible={helperModalVisible}
+            hideHelperModal={this.hideHelperModal}
+            headingText="Progress"
+            bodyText="Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test."
+            bodyText2="You will need to complete all three to successfully add an entry."
+            bodyText3="If you can't do all of this right now, press skip in the top right corner to complete it later."
+            color="coral"
+          />
+        </SafeAreaView>
+      </KeyboardAwareScrollView>
 
-        <HelperModal
-          helperModalVisible={helperModalVisible}
-          hideHelperModal={this.hideHelperModal}
-          headingText="Progress"
-          bodyText="Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test."
-          bodyText2="You will need to complete all three to successfully add an entry."
-          bodyText3="If you can't do all of this right now, press skip in the top right corner to complete it later."
-          color="coral"
-        />
-      </SafeAreaView>
     );
   }
 }
@@ -556,6 +576,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
     justifyContent: "center",
+    top: 15
   },
   inputFieldContainer: {
     marginBottom: 20,

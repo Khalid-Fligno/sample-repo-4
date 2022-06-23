@@ -20,7 +20,7 @@ const CustomCalendarStrip = (props) => {
           duration: 400,
           highlightColor: "transparent",
           borderWidth: 2,
-          borderHighlightColor: colors.themeColor.color,
+          borderHighlightColor: colors.black,
         }}
         style={calendarStyles.calendarStrip}
         calendarHeaderStyle={calendarStyles.calendarStripHeader}
@@ -53,13 +53,17 @@ const CustomCalendarStrip = (props) => {
           flex: 0.15,
         }}
         leftSelector={
-          <Icon name="chevron-left" size={17} color={colors.themeColor.color} />
+          <Icon
+            name="chevron-left"
+            size={17}
+            color={colors.black}
+          />
         }
         rightSelector={
           <Icon
             name="chevron-right"
             size={17}
-            color={colors.themeColor.color}
+            color={colors.black}
           />
         }
       />

@@ -13,9 +13,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import Video from "react-native-video";
-import Modal from "react-native-modal";
 import Carousel from "react-native-carousel";
 import { DotIndicator } from "react-native-indicators";
 import { db } from "../../../config/firebase";
@@ -32,7 +30,6 @@ import WorkoutScreenStyle from "./WorkoutScreenStyle";
 import TimeSvg from "../../../assets/icons/time";
 import fonts from "../../../styles/fonts";
 import NutritionStyles from "../Nutrition/NutritionStyles";
-("react-native-responsive-screen");
 import moment from "moment";
 import WorkOutDuration from "./WorkOutDuration";
 
@@ -205,6 +202,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
 
   togglePreview = (section) => {
     const { key } = section;
+
     switch (key) {
       case 0:
         this.setState({ expandedWarmup: !this.state.expandedWarmup });
@@ -224,6 +222,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   renderItem = (render) => {
     const section = render.section;
     const { expandedWarmup, expandedExercise, expandedCooldown } = this.state;
+
     if (section.key === 0) {
       return expandedWarmup ? (
         this.renderExercise(render)
@@ -249,13 +248,13 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   renderExercise = ({ item: exercise, index, section }) => {
     let showRR =
       exercise.recommendedResistance &&
-      !exercise.recommendedResistance.includes("N/A")
+        !exercise.recommendedResistance.includes("N/A")
         ? true
         : false;
     let showCT =
       exercise.coachingTip &&
-      exercise.coachingTip.length > 0 &&
-      !exercise.coachingTip.includes("none")
+        exercise.coachingTip.length > 0 &&
+        !exercise.coachingTip.includes("none")
         ? true
         : false;
     const workIntervalTimeinSec =
@@ -266,19 +265,18 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     let videoUrl = "";
     switch (section.key) {
       case 0:
-        videoUrl = `${FileSystem.cacheDirectory}warmUpExercise-${
-          index + 1
-        }.mp4`;
+        videoUrl = `${FileSystem.cacheDirectory}warmUpExercise-${index + 1
+          }.mp4`;
         break;
       case 1:
         videoUrl = `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`;
         break;
       case 2:
-        videoUrl = `${FileSystem.cacheDirectory}coolDownExercise-${
-          index + 1
-        }.mp4`;
+        videoUrl = `${FileSystem.cacheDirectory}coolDownExercise-${index + 1
+          }.mp4`;
         break;
     }
+
     return (
       <View style={WorkoutScreenStyle.carouselContainer}>
         <Carousel
@@ -369,7 +367,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 )}
                 {showRR && (
                   <Text style={WorkoutScreenStyle.exerciseDescriptionText}>
-                    {" "}
                     {exercise.recommendedResistance}
                   </Text>
                 )}
@@ -421,9 +418,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       loading,
       workout,
       reps,
-      chosenDate,
-      calendarModalVisible,
-      addingToCalendar,
     } = this.state;
     let workoutTime = 0;
     let warmupInterval = 0;
@@ -459,74 +453,35 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
           { paddingHorizontal: 0, backgroundColor: colors.smoke },
         ]}
       >
-        {Platform.OS === "ios" && (
-          <Modal
-            isVisible={calendarModalVisible}
-            animationIn="fadeIn"
-            animationInTiming={600}
-            animationOut="fadeOut"
-            animationOutTiming={600}
-            onBackdropPress={this.hideCalendarModal}
-          >
-            <View style={globalStyle.modalContainer}>
-              <DateTimePicker
-                mode="date"
-                value={chosenDate}
-                onChange={this.setDate}
-                minimumDate={new Date()}
-              />
-              <TouchableOpacity
-                onPress={() => this.addWorkoutToCalendar(chosenDate)}
-                style={globalStyle.modalButton}
-              >
-                {addingToCalendar ? (
-                  <DotIndicator color={colors.white} count={3} size={6} />
-                ) : (
-                  <Text style={globalStyle.modalButtonText}>
-                    ADD TO CALENDAR
-                  </Text>
-                )}
-              </TouchableOpacity>
-            </View>
-          </Modal>
-        )}
-        {Platform.OS === "android" && calendarModalVisible && !loading && (
-          <DateTimePicker
-            mode="date"
-            value={chosenDate}
-            onChange={this.setDate}
-            minimumDate={new Date()}
-          />
-        )}
         {workout && !loading && (
           <View style={WorkoutScreenStyle.flatListContainer}>
             <SectionList
               sections={
                 workout.warmUpExercises && workout.coolDownExercises
                   ? [
-                      {
-                        data: workout.warmUpExercises,
-                        title: "Warmup",
-                        key: 0,
-                      },
-                      {
-                        data: workout.exercises,
-                        title: "Workout",
-                        key: 1,
-                      },
-                      {
-                        data: workout.coolDownExercises,
-                        title: "Cooldown",
-                        key: 2,
-                      },
-                    ]
+                    {
+                      data: workout.warmUpExercises,
+                      title: "Warmup",
+                      key: 0,
+                    },
+                    {
+                      data: workout.exercises,
+                      title: "Workout",
+                      key: 1,
+                    },
+                    {
+                      data: workout.coolDownExercises,
+                      title: "Cooldown",
+                      key: 2,
+                    },
+                  ]
                   : [
-                      {
-                        data: workout.exercises,
-                        title: "Workout",
-                        key: 1,
-                      },
-                    ]
+                    {
+                      data: workout.exercises,
+                      title: "Workout",
+                      key: 1,
+                    },
+                  ]
               }
               keyExtractor={this.keyExtractor}
               renderItem={this.renderItem}
@@ -537,7 +492,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                       {workout && workout.displayName.toUpperCase()}
                     </Text>
                   </View>
-
                   <View style={WorkoutScreenStyle.workoutIconsRow}>
                     {!this.state.workout.filters.includes("strength") && (
                       <View style={WorkoutScreenStyle.workoutIconContainer}>

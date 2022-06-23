@@ -29,11 +29,11 @@ export const getAndroidSubscriptionDetails = (packageName, subscriptionId, purch
 
 export const replaceTestAndroidProduct = (productId) => { return productId.replace('com.fitazfkapp.fitazfkapp', 'com.fitazfk.fitazfkapp') }
 
-export const restoreAndroidPurchases = async (props) =>{
+export const restoreAndroidPurchases = async (navigation) =>{
     try {
         let purchases = await RNIap.getAvailablePurchases();
         if (purchases.length === 0) {
-            props.navigation.navigate('Subscription');
+            navigation.navigate('Subscription');
             return false;
         }
         purchases = purchases.length > 1 ? purchases.slice().sort(sortByTransactionDate) : purchases;
@@ -67,24 +67,24 @@ export const restoreAndroidPurchases = async (props) =>{
                     .then(async (doc) => {
                         Alert.alert('Restore Successful', 'Successfully restored your purchase.');
                         if (await doc.data().onboarded) {
-                            props.navigation.navigate('App');
+                            navigation.navigate('App');
                         } else {
-                            props.navigation.navigate('Onboarding1', { name: props.navigation.getParam('name', null) });
+                            navigation.navigate('Onboarding1', { name: navigation.getParam('name', null) });
                         }
                     });
 
                 return true;
             } else if (expiryTime < Date.now()) {
                 Alert.alert('Expired', 'Your most recent subscription has expired');
-                props.navigation.navigate('Subscription');
+                navigation.navigate('Subscription');
             } else {
                 Alert.alert('Something went wrong');
-                props.navigation.navigate('Subscription');
+                navigation.navigate('Subscription');
             }
         }            
         catch (err) {
             Alert.alert('Error', 'Could not retrieve subscription information');
-            props.navigation.navigate('Subscription');
+            navigation.navigate('Subscription');
             return false;
         }
     } catch (err) {

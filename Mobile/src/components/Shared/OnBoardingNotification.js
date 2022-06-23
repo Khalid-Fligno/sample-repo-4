@@ -1,23 +1,25 @@
 import React from "react";
-import { View, Text, TouchableOpacity,Dimensions } from "react-native";
+import { 
+  View, 
+  Text, 
+  TouchableOpacity 
+} from "react-native";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 
 export default function OnBoardingNotification({ navigation, data }) {
-  const screenWidth = Dimensions.get('window').width;
+  
   return (
     <View style={{ backgroundColor: colors.white }}>
       <View
         style={{
-          borderColor: colors.themeColor.color,
+          borderColor: colors.black,
           borderWidth: 1,
           borderRadius: 2,
           padding: 10,
           margin: 20,
-          flexDirection: screenWidth<=418?"column":"row",
-          justifyContent: "space-between",
+          flexDirection: "column",
           alignItems: "center",
-          backgroundColor: colors.themeColor.color,
         }}
       >
         <View
@@ -25,9 +27,6 @@ export default function OnBoardingNotification({ navigation, data }) {
             flexDirection: "row",
             paddingBottom: 3,
             justifyContent: "flex-start",
-            borderBottomColor: colors.themeColor.color,
-            borderBottomWidth: 1,
-            backgroundColor: colors.themeColor.color,
           }}
         >
           <Text
@@ -53,8 +52,6 @@ export default function OnBoardingNotification({ navigation, data }) {
             style={{
               flexDirection: "row",
               justifyContent: "flex-end",
-              borderColor: colors.black,
-              borderWidth: 1,
             }}
           >
             <Text

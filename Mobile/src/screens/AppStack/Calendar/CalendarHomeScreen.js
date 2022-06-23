@@ -726,9 +726,12 @@ class CalendarHomeScreen extends React.PureComponent {
             warmUpExercises: warmUpExercises,
             coolDownExercises: coolDownExercises,
           });
+<<<<<<< HEAD
           // if (this.state.totalToDownload === this.state.downloaded) {
           //   this.goToNext(newWorkout);
           // }
+=======
+>>>>>>> milestone/june-17-22
           this.setState({ newWorkoutParams: newWorkout })
         } else {
           this.setState({ loadingExercises: false });
@@ -829,6 +832,7 @@ class CalendarHomeScreen extends React.PureComponent {
           const isCompleted = moment(currentDate).isSameOrAfter(
             activeChallengeEndDate
           );
+
           if (list[0] && !isCompleted) {
             this.fetchActiveChallengeData(list[0]);
           } else {
@@ -844,16 +848,23 @@ class CalendarHomeScreen extends React.PureComponent {
                 .collection("challenges")
                 .doc(list[0].id);
               challengeRef.set(newData, { merge: true });
-              this.setState({ completeCha: isCompleted });
               this.props.navigation.navigate("ChallengeSubscription", {
                 completedChallenge: true,
               });
-              Alert.alert(
-                "Congratulations!",
-                "You have completed your challenge",
-                [{ text: "OK", onPress: () => { } }],
-                { cancelable: false }
-              );
+              this.setState({ completeCha: isCompleted });
+              setTimeout(() => {
+                Alert.alert(
+                  "Congratulations!",
+                  "You have completed your challenge",
+                  [
+                    {
+                      text: "OK",
+                      onPress: () => {}
+                    }
+                  ],
+                  { cancelable: false }
+                );
+              }, 5)
             } else {
               this.setState({
                 activeChallengeUserData: undefined,
@@ -894,11 +905,8 @@ class CalendarHomeScreen extends React.PureComponent {
             this.setState({
               activeChallengeUserData,
               activeChallengeData: doc.data(),
-              // loading:false
             });
             setTimeout(() => {
-              // this.setState({ loading: false });
-              // if(!doc.data().newChallenge)
               this.getCurrentPhaseInfo();
             }, 500);
           }
@@ -984,7 +992,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
     if (activeChallengeUserData && activeChallengeData) {
       this.setState({ loading: false });
-      // const data = activeChallengeUserData.faveRecipe;
       const test = activeChallengeUserData.startDate;
       const transformLevel = activeChallengeUserData.displayName;
 
@@ -1335,12 +1342,13 @@ class CalendarHomeScreen extends React.PureComponent {
                   (width * this.currentChallengeDay) /
                   activeChallengeData.numberOfDays,
                 borderRadius: 10,
-                backgroundColor: colors.themeColor.fill,
+                backgroundColor: "#fa896e",
                 position: "absolute",
                 left: 0,
                 top: 0,
               }}
-            ></View>
+            >
+            </View>
           </View>
           <View
             style={{
@@ -1433,16 +1441,12 @@ class CalendarHomeScreen extends React.PureComponent {
               xmlSpace="preserve"
               width={hp("1.5%")}
               height={hp("1.5%")}
-              fill={colors.themeColor.fill}
+              fill="#fa896e"
               style={{
                 strokeWidth: 50,
-                stroke: colors.themeColor.fill,
+                stroke: "#fa896e",
                 strokeLinejoin: "round",
                 strokeLinecap: "round",
-                // shadowColor: '#171717',
-                // shadowOffset: {width: 0, height: 0},
-                // shadowOpacity: 0.2,
-                // shadowRadius: 3,
               }}
             >
               <Path className="prefix__st0" d="M 55 46 L 87 90 L 22 90 z" />
@@ -1461,17 +1465,13 @@ class CalendarHomeScreen extends React.PureComponent {
                   activeChallengeData.numberOfDays -
                   7,
               top: Platform.OS === "ios" ? 96 : 94,
-              backgroundColor: "#F79400",
+              backgroundColor: "#fa896e",
               width: 40,
               height: 40,
               justifyContent: "center",
               alignItems: "center",
               flex: 1,
               borderRadius: 8,
-              // shadowColor: '#171717',
-              // shadowOffset: {width: 0, height: 5},
-              // shadowOpacity: 0.2,
-              // shadowRadius: 3,
             }}
           >
             <Text
@@ -1505,17 +1505,6 @@ class CalendarHomeScreen extends React.PureComponent {
             >
               <Progress />
             </View>
-            {/*<ChallengeProgressCard2*/}
-            {/*    phase={this.phase}*/}
-            {/*    phaseData={this.phaseData}*/}
-            {/*    activeChallengeData={activeChallengeData}*/}
-            {/*    activeChallengeUserData={activeChallengeUserData}*/}
-            {/*    totalChallengeWorkoutsCompleted={*/}
-            {/*      this.totalChallengeWorkoutsCompleted*/}
-            {/*    }*/}
-            {/*    openLink={() => this.openLink(this.phaseData.pdfUrl)}*/}
-            {/*    currentDay={this.currentChallengeDay}*/}
-            {/*/>*/}
           </>
         )}
         {workoutCard}

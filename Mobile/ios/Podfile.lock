@@ -465,9 +465,9 @@ PODS:
     - React
   - RNVectorIcons (6.7.0):
     - React
-  - SDWebImage (5.12.3):
-    - SDWebImage/Core (= 5.12.3)
-  - SDWebImage/Core (5.12.3)
+  - SDWebImage (5.12.5):
+    - SDWebImage/Core (= 5.12.5)
+  - SDWebImage/Core (5.12.5)
   - SDWebImageWebPCoder (0.6.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.7)
@@ -904,7 +904,7 @@ SPEC CHECKSUMS:
   RNSentry: 143980f2f98320eaaf10ccf7235dfc7f68b5ffa5
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
-  SDWebImage: 53179a2dba77246efa8a9b85f5c5b21f8f43e38f
+  SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   Sentry: 6ff0eac197e699126c024993eba40a7462e92941
   UMAppLoader: ee77a072f9e15128f777ccd6d2d00f52ab4387e6
@@ -925,4 +925,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: a0802d0d1883062529e0950442649ffa4e2d8e3c
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

@@ -405,6 +405,8 @@ export default class Progress2Screen extends React.PureComponent {
                   Title="Update Photo"
                   titleCapitalise={true}
                   onPress={this.chooseUploadType}
+                  customBtnStyle={{backgroundColor: "#2E2E2E"}}
+                  customBtnTitleStyle={{color: colors.white}}
                 />
               </View>
             ) : (
@@ -436,6 +438,8 @@ export default class Progress2Screen extends React.PureComponent {
               Title="Upload Photo"
               titleCapitalise={true}
               onPress={() => this.handleImagePicked(image)}
+              customBtnStyle={{backgroundColor: "#2E2E2E"}}
+              customBtnTitleStyle={{color: colors.white}}
             />
             <CustomBtn
               Title="Cancel"
