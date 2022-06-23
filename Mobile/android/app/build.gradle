@@ -133,8 +133,8 @@ android {
         applicationId 'com.fitazfk.fitazfkapp'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 71
-        versionName "3.5.0"
+        versionCode 72
+        versionName "3.5.1"
     }
     splits {
         abi {
