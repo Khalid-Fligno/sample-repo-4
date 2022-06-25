@@ -13,7 +13,7 @@ import fonts from "../../styles/fonts";
 import { containerPadding } from "../../styles/globalStyles";
 import { Icon } from 'react-native-elements'
 import * as FileSystem from "expo-file-system";
-import { IMAGE } from '../../library/images';
+import { OTHERSIMG } from "../../library/images/others/others";
 
 const { width } = Dimensions.get("window");
 
@@ -248,7 +248,7 @@ const ProgressEditScreen = ({ navigation }) => {
         {
           isInitial ?
             <Image
-              source={IMAGE.PROGRESS2_IMG}
+              source={OTHERSIMG.PROGRESS2_IMG}
               style={{
                 width,
                 height: width / 1.2,
@@ -257,7 +257,7 @@ const ProgressEditScreen = ({ navigation }) => {
             />
             :
             <Image
-              source={IMAGE.PROGRESS1_IMG}
+              source={OTHERSIMG.PROGRESS1_IMG}
               style={{
                 width,
                 height: width,

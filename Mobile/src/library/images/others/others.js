@@ -44,4 +44,6 @@ export const OTHERSIMG = {
     WORKOUTSOUTDOORS: require("../../../assets/images/others/workouts-outdoors.png"),
     WORKOUTSRESISTANCE: require("../../../assets/images/others/workouts-resistance.png"),
     SPLASH_IMAGE: require('../../../assets/images/others/FITAZ_SplashScreen.png'),
+    PROGRESS1_IMG: require('../../../assets/images/others/progressScreenImg1.jpeg'),
+    PROGRESS2_IMG: require('../../../assets/images/others/progressScreenImg2.jpeg'),
 };
