@@ -1,10 +1,9 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
-import SubscriptionScreen from "../../../screens/OnboardingStack/SubscriptionScreen";
 import Progress1Screen from "../../../screens/OnboardingStack/Progress1Screen";
 import Progress2Screen from "../../../screens/OnboardingStack/Progress2Screen";
 import { OnboardScreen } from "../../../screens/onboarding/index";
-import ProgressEditScreen from "../../../screens/OnboardingStack/ProgressEditScreen";
+import UserProgressEditScreen from "../../../screens/tab/you/userProgressEdit/UserProgressEditScreen";
 import Header from "../../../components/Shared/Header";
 import {
   fadeSpec,
@@ -19,7 +18,7 @@ const OnboardingStack = createStackNavigator(
     Onboarding2: OnboardScreen.Onboarding2Screen,
     Progress1: Progress1Screen,
     Progress2: Progress2Screen,
-    ProgressEdit: ProgressEditScreen,
+    ProgressEdit: UserProgressEditScreen,
   },
   {
     initialRouteName: "Subscription",
