@@ -5,7 +5,7 @@ import fonts from "../../styles/fonts";
 import CustomBtn from "../Shared/CustomBtn";
 import Icon from "../Shared/Icon";
 
-import { auth, db, storage } from "../../../config/firebase";
+import { auth, db, storage } from "../../config/firebase";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

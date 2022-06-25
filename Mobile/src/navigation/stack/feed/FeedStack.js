@@ -1,11 +1,13 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
-import Header from "../../src/components/Shared/Header";
-import { FeedScreen } from "../../src/screens/AppStack/Home/FeedScreen";
-import { AllBlogs } from "../../src/screens/AppStack/Home/blogs/AllBlogs";
-import { Trainers } from "../../src/screens/AppStack/Home/trainers/Trainers"
-import RecipeTrainer from "../../src/screens/AppStack/Nutrition/RecipeTrainer";
-import RecipeTrainerSteps from "../../src/screens/AppStack/Nutrition/RecipeTrainerSteps";
+import Header from "../../../components/Shared/Header";
+import RecipeTrainer from "../../../screens/AppStack/Nutrition/RecipeTrainer";
+import RecipeTrainerSteps from "../../../screens/AppStack/Nutrition/RecipeTrainerSteps";
+import { AllBlogScreen } from "../../../screens/tab/feed/blogs/AllBlogScreen";
+import { TabScreen } from "../../../screens/tab/index";
+import { TrainerScreen } from "../../../screens/tab/feed/trainers/TrainerScreen";
+
+
 const backButtonMap ={
     AllBlogs:true,
     Trainers:true,

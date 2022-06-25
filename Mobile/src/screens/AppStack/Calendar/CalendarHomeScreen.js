@@ -726,12 +726,9 @@ class CalendarHomeScreen extends React.PureComponent {
             warmUpExercises: warmUpExercises,
             coolDownExercises: coolDownExercises,
           });
-<<<<<<< HEAD
           // if (this.state.totalToDownload === this.state.downloaded) {
           //   this.goToNext(newWorkout);
           // }
-=======
->>>>>>> milestone/june-17-22
           this.setState({ newWorkoutParams: newWorkout })
         } else {
           this.setState({ loadingExercises: false });
