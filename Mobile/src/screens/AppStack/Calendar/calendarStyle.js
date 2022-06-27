@@ -39,10 +39,12 @@ const calendarStyles = StyleSheet.create({
   },
   headerText: {
     fontFamily: fonts.bold,
-    fontSize: wp("4.5%"),
+    fontSize: wp("6%"),
     color: colors.charcoal.dark,
     marginVertical: wp("4%"),
-    // marginBottom: -10,
+    marginLeft: wp("8%"),
+    textAlign: "left",
+    width: "100%",
   },
   listContainer: {
     width,

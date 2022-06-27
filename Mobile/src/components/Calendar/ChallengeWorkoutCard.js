@@ -67,22 +67,6 @@ const ChallengeWorkoutCard = (props) => {
           style={styles.image}
         >
           <View style={target ? styles.opacityLayer : styles.opacityLayerRest}>
-            {
-              target === "" ?
-              null
-              :
-              <View style={styles.innerViewContainer}>
-                <Text
-                  key={res}
-                  style={[
-                    styles.recTextLabel,
-                    { color: colors.themeColor.color },
-                  ]}
-                >
-                  Today's Workout
-                </Text>
-              </View>
-            }
             <View style={styles.titleContainer}>
               {target !== "rest" && (
                 <Text key={res} style={styles.target}>
@@ -169,7 +153,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-between",
     paddingHorizontal: wp("5%"),
-    paddingVertical: wp("4%"),
+    paddingVertical: wp("8%"),
   },
   opacityLayerRest: {
     flex: 1,
