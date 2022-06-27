@@ -15,7 +15,7 @@ export default function OnBoardingNotification({ navigation, data }) {
         style={{
           borderColor: colors.black,
           borderWidth: 1,
-          borderRadius: 2,
+          borderRadius: 10,
           padding: 10,
           margin: 20,
           flexDirection: "column",
