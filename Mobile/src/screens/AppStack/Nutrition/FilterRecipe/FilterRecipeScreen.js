@@ -61,12 +61,23 @@ export default class FilterRecipeScreen extends React.PureComponent {
         };
     }
 
-    animated
+    // animated
+
+    pluralTitle = (title) => {
+
+        switch(title) {
+            case 'Lunch':
+                return 'Lunches'
+            default:
+                return `${title}s`
+        }
+    } 
 
     componentDidMount = () => {
         this.getDefaultCategoryTags()
         this.getAllRecipeData()
         
+        const title = this.props.navigation.getParam("title", null)
         const paramState = {
             currentChallengeDay: this.props.navigation.getParam('currentChallengeDay', null),
             activeChallengeUserData: this.props.navigation.getParam('activeChallengeUserData', null),
@@ -74,7 +85,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
             defaultLevelTags: this.props.navigation.getParam("defaultLevelTags", null),
             challengeRecipe: this.props.navigation.getParam("challengeAllRecipe", null),
             recipes: this.props.navigation.getParam("recipes", null),
-            title: this.props.navigation.getParam("title", null)
+            title: title,
+            pluralTitle: this.pluralTitle(title)
         }
 
         const selectedItems = this.recipeMealGroupList(paramState.activeChallengeUserData, paramState.title, paramState.currentChallengeDay)
@@ -737,6 +749,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             tags,
             nameCat,
             title,
+            pluralTitle,
             todayRecommendedRecipe,
             defaultLevelTags,
             phaseDefaultTags,
@@ -866,14 +879,16 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         }
                     </View>
                 </ScrollView>
-                <View style={[styles.maxRecipesBanner]}>
-                    <Text style={styles.maxRecipesBannerText}>
-                        Selected {selectedItems?.length}/{this.maximumAllowedFavourites} Recipes
-                    </Text>
-                    <Text style={styles.maxRecipesBannerSubheading}>
-                        Deselect a recipe if you wish to select another, if you have reached your max allocation.
-                    </Text>
-                </View>
+                {this.maximumAllowedFavourites > 1 && (
+                    <View style={[styles.maxRecipesBanner]}>
+                        <Text style={styles.maxRecipesBannerText}>
+                            You have selected {selectedItems?.length}/{this.maximumAllowedFavourites} {pluralTitle?.toLowerCase() ?? "recipes"}
+                        </Text>
+                        <Text style={styles.maxRecipesBannerSubheading}>
+                            Deselect the recipes and choose again to change your selection.
+                        </Text>
+                    </View>)
+                }
                 {
                     loading ?
                         skeleton
@@ -1015,9 +1030,9 @@ const styles = StyleSheet.create({
     maxRecipesBanner: {
         alignItems: 'center',
         borderRadius: 8,
-        borderWidth: 0,
-        backgroundColor: colors.citrus,
-        color: colors.black,
+        backgroundColor: colors.white,    
+        borderColor: colors.black,
+        borderWidth: 1,
         shadowColor: colors.black,
         shadowOffset: {
             width: 0,
@@ -1026,17 +1041,18 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 11.95,
         justifyContent: 'space-between',
+        marginTop: 8,
         padding: 16,
     },
     maxRecipesBannerText: {
-        fontFamily: fonts.bold,
+        fontFamily: fonts.StyreneAWebRegular,
         fontSize: 14,
         textAlign: 'center',
         marginBottom: 4
     },
     maxRecipesBannerSubheading: {
         fontSize: 10,
-        fontFamily: fonts.GothamLight,
+        fontFamily: fonts.SimplonMonoLight,
         textAlign: 'center'
     }
 })

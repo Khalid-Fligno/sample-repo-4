@@ -104,7 +104,9 @@ export const convertRecipeData = async (recipeIds) => {
     return []
   }
 
-  const snapshot = await db.collection("recipes").get()
+  const snapshot = await db.collection("recipes")
+    .orderBy('title')
+    .get()
   if (snapshot.empty) return null
 
   const recipeResult = []
@@ -166,13 +168,6 @@ export const getTodayRecommendedMeal = async (
   activeChallengeData
 ) => {
   let phaseMeals = [];
-  let breakfastResult = [];
-  let lunchResult = [];
-  let dinnerResult = [];
-  let snackResult = [];
-  let drinkResult = [];
-  let preworkoutResult = [];
-  let treatsResult = [];
   let phaseNames = [];
   let snapshotDocs = [];
 
@@ -182,6 +177,7 @@ export const getTodayRecommendedMeal = async (
   const recipeRef = db
     .collection("recipes")
     .where('showTransform', '==', true)
+    .orderBy('title')
 
   const snapshot = await recipeRef.get();
 
