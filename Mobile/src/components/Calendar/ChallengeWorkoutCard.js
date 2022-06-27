@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden",
     backgroundColor: colors.grey.medium,
-    borderRadius: 3,
+    borderRadius: 14,
   },
   opacityLayer: {
     flex: 1,
