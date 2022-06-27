@@ -206,29 +206,11 @@ export const YouScreen = ({ navigation }) => {
       <View style={{
         flexDirection: "column",
         paddingHorizontal: 20,
-        paddingTop: 10,
       }}
       >
         <View
           style={{
-            backgroundColor: "#F0F0F0",
-            paddingVertical: 30,
-            borderRadius: 10,
-            alignItems: "center"
-          }}
-        >
-          <Text style={{ fontSize: 40 }}>
-            {profile?.totalWorkoutCompleted}
-          </Text>
-          <Text style={{
-            fontFamily: fonts.StyreneAWebRegular
-          }}>
-            Total workouts completed 🎉
-          </Text>
-        </View>
-        <View
-          style={{
-            paddingVertical: 20
+            paddingVertical: 10
           }}
         >
           <View style={{
@@ -658,6 +640,24 @@ export const YouScreen = ({ navigation }) => {
               </View>
             </View>
           </View>
+        </View>
+        <View
+          style={{
+            backgroundColor: "#F0F0F0",
+            paddingVertical: 20,
+            borderRadius: 10,
+            alignItems: "center",
+            marginBottom: 20
+          }}
+        >
+          <Text style={{ fontSize: 40 }}>
+            {profile?.totalWorkoutCompleted}
+          </Text>
+          <Text style={{
+            fontFamily: fonts.StyreneAWebRegular
+          }}>
+            Total workouts completed 🎉
+          </Text>
         </View>
         <Modal
           isVisible={modal}
