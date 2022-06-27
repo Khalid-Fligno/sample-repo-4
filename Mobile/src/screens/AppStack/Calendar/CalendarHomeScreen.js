@@ -873,15 +873,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   fetchActiveChallengeData = async (activeChallengeUserData) => {
     const { currentDay } = this.state;
-    let data = activeChallengeUserData.faveRecipe;
-    let recipe = [];
-    let breakfastId = [];
-    let lunchId = [];
-    let dinnerId = [];
-    let snackId = [];
-    let drinkId = [];
-    let preworkoutId = [];
-    let treatsId = [];
 
     const currentChallengeDay = getCurrentChallengeDay(
       activeChallengeUserData.startDate,
@@ -909,75 +900,69 @@ class CalendarHomeScreen extends React.PureComponent {
       console.log("Fetch active challenge data error!");
     }
 
-    if (data) {
-      data.forEach((res) => {
-        try {
-          if (res.day === currentChallengeDay) {
-            if (res.recipeMeal.breakfast) {
-              recipe.push(res.recipeMeal.breakfast);
-              breakfastId.push(res.recipeMeal.breakfast);
-            }
-            if (res.recipeMeal.lunch) {
-              recipe.push(res.recipeMeal.lunch);
-              lunchId.push(res.recipeMeal.lunch);
-            }
-            if (res.recipeMeal.dinner) {
-              recipe.push(res.recipeMeal.dinner);
-              dinnerId.push(res.recipeMeal.dinner);
-            }
-            if (res.recipeMeal.snack) {
-              recipe.push(res.recipeMeal.snack);
-              snackId.push(res.recipeMeal.snack);
-            }
-            if (res.recipeMeal.drink) {
-              recipe.push(res.recipeMeal.drink);
-              drinkId.push(res.recipeMeal.drink);
-            }
-            if (res.recipeMeal.preworkout) {
-              recipe.push(res.recipeMeal.preworkout);
-              preworkoutId.push(res.recipeMeal.preworkout);
-            }
-            if (res.recipeMeal.treats) {
-              recipe.push(res.recipeMeal.treats);
-              treatsId.push(res.recipeMeal.treats);
-            }
-          }
-        } catch (err) { }
-      });
+    let recipe = [];
+    let breakfastId = [];
+    let lunchId = [];
+    let dinnerId = [];
+    let snackId = [];
+    let preworkoutId = [];
+    let treatsId = [];
+    const usersFavouriteRecipes = activeChallengeUserData.faveRecipe
+      ?.find(day => day.day === currentChallengeDay)
+      ?.recipeMeal
 
-      this.setState({
-        skipped: activeChallengeUserData.onBoardingInfo.skipped ?? false,
-      });
+    if (usersFavouriteRecipes) {
+
+      const idsForMeal = (idsContainer, ...propertyNames) => {
+        // We need to perform data transformation for these properties inside the 'faveRecipe'
+        // Currently the property types for breakfast, lunch, etc are just string.
+        // We want to set them to be a type of Array<String> for future use.
+        // We transform into an array and flatten it, if it was already an array flatting it should set to be an array still
+        const recipeIds = propertyNames
+          .flatMap(p => usersFavouriteRecipes[p]) // Get all collection of ids from multiple meal categories
+          .filter(r => r?.trim()) // Remove any null/undefined/empty ids
+        idsContainer.push(...recipeIds)
+        recipe.push(...recipeIds)
+      }
+
+      idsForMeal(breakfastId, 'breakfast', )
+      idsForMeal(lunchId, 'lunch')
+      idsForMeal(dinnerId, 'dinner')
+      idsForMeal(snackId, 'snack' ,'drink')
+      idsForMeal(preworkoutId, 'preworkout')
+      idsForMeal(treatsId, 'treat')
+
+      this.setState({ skipped: activeChallengeUserData.onBoardingInfo.skipped ?? false })
     }
 
-    convertRecipeData(recipe).then((res) => {
-      const resx = res.recipeResult;
+    convertRecipeData(recipe).then((recipeResult) => {
+      const recipeLists = recipeResult.reduce((result, element) => {
+        if (breakfastId.includes(element.id)) {
+          result.breakfast.push(element)
+        } else if (lunchId.includes(element.id)) {
+          result.lunch.push(element)
+        } else if (dinnerId.includes(element.id)) {
+          result.dinner.push(element)
+        } else if (snackId.includes(element.id)) {
+          result.snack.push(element)
+        } else if (preworkoutId.includes(element.id)) {
+          result.preworkout.push(element)
+        } else if (treatsId.includes(element.id)) {
+          result.treats.push(element.id)
+        }
+        return result
+      }, { 
+        breakfast: [],
+        lunch: [],
+        dinner: [],
+        snack: [],
+        preworkout: [],
+        treats: [],
+      })
 
-      const breakfastList = resx.filter((res) => res.id === breakfastId[0]);
-      const lunchList = resx.filter((res) => res.id === lunchId[0]);
-      const dinnerList = resx.filter((res) => res.id === dinnerId[0]);
-      const snackList = resx.filter((res) => res.id === snackId[0]);
-      const drinkList = resx.filter((res) => res.id === drinkId[0]);
-      const preworkoutList = resx.filter((res) => res.id === preworkoutId[0]);
-      const treatsList = resx.filter((res) => res.id === treatsId[0]);
-
-      const recommendedMeal = [
-        {
-          breakfast: breakfastList,
-          lunch: lunchList,
-          dinner: dinnerList,
-          snack: snackList,
-          drink: drinkList,
-          preworkout: preworkoutList,
-          treats: treatsList,
-        },
-      ];
-
-      this.setState({
-        favoriteRecipe: recommendedMeal,
-      });
-    });
-  };
+      this.setState({favoriteRecipe: [recipeLists]})
+    })
+  }
 
   async getCurrentPhaseInfo() {
     const { activeChallengeUserData, activeChallengeData } = this.state;
@@ -1038,8 +1023,12 @@ class CalendarHomeScreen extends React.PureComponent {
           )
         )[0];
 
-        if (todayRcWorkout) this.setState({ todayRcWorkout: todayRcWorkout });
-        else this.setState({ todayRcWorkout: undefined });
+        let newState = { favouriteRecipeConfigs: this.phaseData.favouriteRecipeConfigs }
+
+        if (todayRcWorkout) newState.todayRcWorkout = todayRcWorkout
+        else newState.todayRcWorkout = undefined
+
+        this.setState(newState)
       }
     } else {
       // Alert.alert('Something went wrong please try again')
@@ -1077,7 +1066,7 @@ class CalendarHomeScreen extends React.PureComponent {
     navigation.pop();
   };
 
-  getToFilter(data, data1, data2, title) {
+  getToFilter(data, data1, data2, title, configs) {
     const {
       challengeRecipe,
       activeChallengeData,
@@ -1141,6 +1130,7 @@ class CalendarHomeScreen extends React.PureComponent {
       defaultLevelTags: activeChallengeData.levelTags,
       todayRecommendedRecipe: data2,
       challengeAllRecipe: challengeRecipe[0],
+      configs: configs, 
       recipes: data,
       title: title,
       allRecipeData: data1,
@@ -1169,6 +1159,7 @@ class CalendarHomeScreen extends React.PureComponent {
       completeCha,
       todayRecommendedRecipe,
       favoriteRecipe,
+      favouriteRecipeConfigs
     } = this.state;
 
     let showRC = false;
@@ -1211,9 +1202,10 @@ class CalendarHomeScreen extends React.PureComponent {
             favoriteRecipe={favoriteRecipe[0]}
             todayRecommendedRecipe={todayRecommendedRecipe[0]}
             data={todayRecommendedMeal[0]}
+            favouriteRecipeConfigs={favouriteRecipeConfigs}
             onPress={(res) => this.goToRecipe(res)}
-            filterPress={(res, res1, res2, title) =>
-              this.getToFilter(res, res1, res2, title)
+            filterPress={(res, res1, res2, title, favouriteRecipeConfigs) =>
+              this.getToFilter(res, res1, res2, title, favouriteRecipeConfigs)
             }
           />
         )}

@@ -8,172 +8,91 @@ import MealCarousel from "./Carousels/MealCarousel";
 
 const TodayMealsList = (props) => {
   const {
-    data,
-    recipe,
-    todayRecommendedRecipe,
-    favoriteRecipe,
+    data, // Array containg modelled recipe for tile to show category, this will determine if a meal type shows
+    recipe, // All recipes in store
+    todayRecommendedRecipe, 
+    favoriteRecipe, //Users current set of favourite recipes
     onPress,
     filterPress,
+    favouriteRecipeConfigs
   } = props;
 
-  if (favoriteRecipe === undefined) {
-    return (
-      <View style={styles.container}>
-        {data.breakfast && data.breakfast.length > 0 && (
-          <MealCarousel
-            data={data.breakfast}
-            data1={recipe.breakfast}
-            data2={todayRecommendedRecipe.breakfast}
-            title={"Breakfast"}
-            onPress={onPress}
-            filterPress={filterPress}
-          />
-        )}
-        {data.lunch && data.lunch.length > 0 && (
-          <MealCarousel
-            data={data.lunch}
-            data1={recipe.lunch}
-            data2={todayRecommendedRecipe.lunch}
-            title={"Lunch"}
-            onPress={onPress}
-            filterPress={filterPress}
-          />
-        )}
-        {data.dinner && data.dinner.length > 0 && (
-          <MealCarousel
-            data={data.dinner}
-            data1={recipe.dinner}
-            data2={todayRecommendedRecipe.dinner}
-            title={"Dinner"}
-            onPress={onPress}
-            filterPress={filterPress}
-          />
-        )}
-        {data.snack && data.snack.length > 0 && (
-          <MealCarousel
-            data={data.snack}
-            data1={recipe.snack}
-            data2={todayRecommendedRecipe.snack}
-            title={"Snack"}
-            onPress={onPress}
-            filterPress={filterPress}
-          />
-        )}
-        {data.drink && data.drink.length > 0 && (
-          <MealCarousel
-            data={data.drink}
-            data1={recipe.drink}
-            data2={todayRecommendedRecipe.drink}
-            title={"Post Workout"}
-            onPress={onPress}
-            filterPress={filterPress}
-          />
-        )}
-        {data.preworkout && data.preworkout.length > 0 && (
-          <MealCarousel
-            data={data.preworkout}
-            data1={recipe.preworkout}
-            data2={todayRecommendedRecipe.preworkout}
-            title={"Pre Workout"}
-            onPress={onPress}
-            filterPress={filterPress}
-          />
-        )}
-        {data.treats && data.treats.length > 0 && (
-          <MealCarousel
-            data={data.treats}
-            data1={recipe.treats}
-            data2={todayRecommendedRecipe.treats}
-            title={"Treats"}
-            onPress={onPress}
-            filterPress={filterPress}
-          />
-        )}
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.container}>
-        {data.breakfast && data.breakfast.length > 0 && (
-          <MealCarousel
-            data={data.breakfast}
-            data1={recipe.breakfast}
-            data2={todayRecommendedRecipe.breakfast}
-            title={"Breakfast"}
-            onPress={onPress}
-            filterPress={filterPress}
-            favoriteRecipe={favoriteRecipe.breakfast}
-          />
-        )}
-        {data.lunch && data.lunch.length > 0 && (
-          <MealCarousel
-            data={data.lunch}
-            data1={recipe.lunch}
-            data2={todayRecommendedRecipe.lunch}
-            title={"Lunch"}
-            onPress={onPress}
-            filterPress={filterPress}
-            favoriteRecipe={favoriteRecipe.lunch}
-          />
-        )}
-        {data.dinner && data.dinner.length > 0 && (
-          <MealCarousel
-            data={data.dinner}
-            data1={recipe.dinner}
-            data2={todayRecommendedRecipe.dinner}
-            title={"Dinner"}
-            onPress={onPress}
-            filterPress={filterPress}
-            favoriteRecipe={favoriteRecipe.dinner}
-          />
-        )}
-        {data.snack && data.snack.length > 0 && (
-          <MealCarousel
-            data={data.snack}
-            data1={recipe.snack}
-            data2={todayRecommendedRecipe.snack}
-            title={"Snack"}
-            onPress={onPress}
-            filterPress={filterPress}
-            favoriteRecipe={favoriteRecipe.snack}
-          />
-        )}
-        {data.drink && data.drink.length > 0 && (
-          <MealCarousel
-            data={data.drink}
-            data1={recipe.drink}
-            data2={todayRecommendedRecipe.drink}
-            title={"Post Workout"}
-            onPress={onPress}
-            filterPress={filterPress}
-            favoriteRecipe={favoriteRecipe.drink}
-          />
-        )}
-        {data.preworkout && data.preworkout.length > 0 && (
-          <MealCarousel
-            data={data.preworkout}
-            data1={recipe.preworkout}
-            data2={todayRecommendedRecipe.preworkout}
-            title={"Pre Workout"}
-            onPress={onPress}
-            filterPress={filterPress}
-            favoriteRecipe={favoriteRecipe.preworkout}
-          />
-        )}
-        {data.treats && data.treats.length > 0 && (
-          <MealCarousel
-            data={data.treats}
-            data1={recipe.treats}
-            data2={todayRecommendedRecipe.treats}
-            title={"Treats"}
-            onPress={onPress}
-            filterPress={filterPress}
-            favoriteRecipe={favoriteRecipe.treats}
-          />
-        )}
-      </View>
-    );
-  }
+  return (
+    <View style={styles.container}>
+      {data.breakfast && data.breakfast.length > 0 && (
+        <MealCarousel
+          data={data.breakfast}
+          data1={recipe.breakfast}
+          data2={todayRecommendedRecipe.breakfast}
+          title={"Breakfast"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.breakfast}
+          favoriteRecipe={favoriteRecipe.breakfast}
+        />
+      )}
+      {data.lunch && data.lunch.length > 0 && (
+        <MealCarousel
+          data={data.lunch}
+          data1={recipe.lunch}
+          data2={todayRecommendedRecipe.lunch}
+          title={"Lunch"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.lunch}
+          favoriteRecipe={favoriteRecipe.lunch}
+        />
+      )}
+      {data.dinner && data.dinner.length > 0 && (
+        <MealCarousel
+          data={data.dinner}
+          data1={recipe.dinner}
+          data2={todayRecommendedRecipe.dinner}
+          title={"Dinner"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.dinner}
+          favoriteRecipe={favoriteRecipe.dinner}
+        />
+      )}
+      {data.snack && data.snack.length > 0 && (
+        <MealCarousel
+          data={data.snack}
+          data1={recipe.snack}
+          data2={todayRecommendedRecipe.snack}
+          title={"Snack"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.snack}
+          favoriteRecipe={favoriteRecipe.snack}
+        />
+      )}
+      {data.preworkout && data.preworkout.length > 0 && (
+        <MealCarousel
+          data={data.preworkout}
+          data1={recipe.preworkout}
+          data2={todayRecommendedRecipe.preworkout}
+          title={"Pre Workout"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.preworkout}
+          favoriteRecipe={favoriteRecipe.preworkout}
+        />
+      )}
+      {data.treats && data.treats.length > 0 && (
+        <MealCarousel
+          data={data.treats}
+          data1={recipe.treats}
+          data2={todayRecommendedRecipe.treats}
+          title={"Treats"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.treats}
+          favoriteRecipe={favoriteRecipe.treats}
+        />
+      )}
+    </View>
+  );
 };
 
 export default TodayMealsList;

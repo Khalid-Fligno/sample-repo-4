@@ -6,8 +6,7 @@ import {
     Dimensions,
     FlatList,
     Text,
-    ScrollView,
-    Alert,
+    ScrollView
 } from "react-native";
 import sortBy from "lodash.sortby";
 import colors from "../../../../styles/colors";
@@ -28,7 +27,7 @@ import RecipeTileSkeleton from "../../../../components/Nutrition/RecipeTileSkele
 import { db } from "../../../../../config/firebase";
 import AsyncStorage from "@react-native-community/async-storage";
 const { width } = Dimensions.get("window");
-
+import _ from "lodash";
 export default class FilterRecipeScreen extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -58,23 +57,54 @@ export default class FilterRecipeScreen extends React.PureComponent {
             phaseDefaultTags: "",
             categoryName: [],
             activeChallengeUserData: undefined,
-            currentChallengeDay: undefined,
+            currentChallengeDay: undefined
         };
     }
+
+    // animated
+
+    pluralTitle = (title) => {
+
+        switch(title) {
+            case 'Lunch':
+                return 'Lunches'
+            default:
+                return `${title}s`
+        }
+    } 
 
     componentDidMount = () => {
         this.getDefaultCategoryTags()
         this.getAllRecipeData()
-        this.setState({
+        
+        const title = this.props.navigation.getParam("title", null)
+        const paramState = {
             currentChallengeDay: this.props.navigation.getParam('currentChallengeDay', null),
             activeChallengeUserData: this.props.navigation.getParam('activeChallengeUserData', null),
             phaseDefaultTags: this.props.navigation.getParam('phaseDefaultTags', null),
             defaultLevelTags: this.props.navigation.getParam("defaultLevelTags", null),
             challengeRecipe: this.props.navigation.getParam("challengeAllRecipe", null),
             recipes: this.props.navigation.getParam("recipes", null),
-            title: this.props.navigation.getParam("title", null),
-        });
-    };
+            title: title,
+            pluralTitle: this.pluralTitle(title)
+        }
+
+        const selectedItems = this.recipeMealGroupList(paramState.activeChallengeUserData, paramState.title, paramState.currentChallengeDay)
+        const canFavouriteMoreRecipes = this.canFavouriteMoreRecipes(selectedItems)
+        this.setState({
+            ...paramState,
+            selectedItems,
+            canFavouriteMoreRecipes
+        })
+    }
+
+    get maximumAllowedFavourites() {
+        return this.props.navigation.getParam("configs", null)?.maximumAllowedFavourites ?? 1
+    }
+
+    canFavouriteMoreRecipes = (selectedItems) => {
+        return selectedItems.length < this.maximumAllowedFavourites
+    }
 
     handleBack = () => {
         const { navigation } = this.props;
@@ -82,20 +112,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
     };
 
     getAllRecipeData = () => {
-        const allRecipeData = this.props.navigation.getParam("allRecipeData", null)
-        const dupId = []
-
-        allRecipeData.forEach((res) => {
-            dupId.push(res.id)
-        })
-
-        const uniqId = [...new Set(dupId)]
-
-        convertRecipeData(uniqId).then(res => {
-            this.setState({
-                data: res.recipeResult,
-            })
-        })
+        const allRecipeData = this.props.navigation.getParam("allRecipeData", [])
+        this.setState({data: allRecipeData})
     }
 
     getDefaultCategoryTags = () => {
@@ -121,9 +139,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         const uniqId = [...new Set(dupId)]
 
-        convertRecipeData(uniqId).then(res => {
+        convertRecipeData(uniqId).then(recipeResult => {
             this.setState({
-                todayRecommendedRecipe: res.recipeResult,
+                todayRecommendedRecipe: recipeResult,
                 loading: false
             })
         })
@@ -135,7 +153,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
         })
 
         this.setState({
-            categoryName: result
+            categoryName: result,
+            loading: false,
+            todayRecommendedRecipe: recipeData
         })
     }
 
@@ -204,9 +224,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
     toggleGutHealth = () => {
-        this.setState({
-            gutHealth: !this.state.gutHealth
-        })
+        this.setState({ gutHealth: !this.state.gutHealth })
         if (this.state.gutHealth === false) {
             this.setState({ category: [...this.state.category, { name: "Gut Health" }] })
         } else {
@@ -528,355 +546,85 @@ export default class FilterRecipeScreen extends React.PureComponent {
         });
     }
 
+    recipeMealGroupList = (activeChallengeUserData, title, currentChallengeDay) => {
+        const faveRecipeCollection = activeChallengeUserData.faveRecipe
+        const challengeDayIndex = currentChallengeDay - 1
+        if(challengeDayIndex >= faveRecipeCollection.length) {
+            return null
+        }
+
+        // We need to migrate old single string value to a list of ids
+        return [faveRecipeCollection[challengeDayIndex].recipeMeal[title.toLowerCase()]]
+            .flatMap(e => e)
+            .filter(e => e?.trim())
+    }
+
     onFavorite = async (item, activeChallengeUserData, title, currentChallengeDay) => {
-        const recipeMeal = activeChallengeUserData.faveRecipe
-
-        try {
-            if (title.toLowerCase() === 'breakfast') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast = item.id
-                }
-            }
-            if (title.toLowerCase() === 'lunch') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.lunch = item.id
-                }
-            }
-            if (title.toLowerCase() === 'dinner') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.dinner = item.id
-                }
-            }
-            if (title.toLowerCase() === 'snack') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.snack = item.id
-                }
-            }
-            if (title.toLowerCase() === 'post workout') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.drink = item.id
-                }
-            }
-            if (title.toLowerCase() === 'preworkout') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout = item.id
-                }
-            }
-            if (title.toLowerCase() === 'treats') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.treats = item.id
-                }
-            }
-        } catch (err) {
-            console.log('Error: ', err)
+        const faveRecipeCollection = activeChallengeUserData.faveRecipe
+        const challengeDayIndex = currentChallengeDay - 1
+        if(challengeDayIndex >= faveRecipeCollection.length) {
+            return // nop
         }
 
+        const newMealList = _.union(this.recipeMealGroupList(activeChallengeUserData, title, currentChallengeDay), [item.id])
 
-        const id = activeChallengeUserData.id
-        const uid = await AsyncStorage.getItem("uid");
-        const activeChallengeUserRef = db
-            .collection("users")
-            .doc(uid)
-            .collection("challenges")
-            .doc(id)
+        // Set new meal list
+        faveRecipeCollection[challengeDayIndex].recipeMeal[title.toLowerCase()] = newMealList
 
         try {
-            if (title.toLowerCase() === 'breakfast') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-            if (title.toLowerCase() === 'lunch') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-            if (title.toLowerCase() === 'dinner') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-            if (title.toLowerCase() === 'snack') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-            if (title.toLowerCase() === 'post workout') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-            if (title.toLowerCase() === 'preworkout') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-            if (title.toLowerCase() === 'treats') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
+            const uid = await AsyncStorage.getItem("uid");
+            db.collection("users")
+                .doc(uid)
+                .collection("challenges")
+                .doc(activeChallengeUserData.id)
+                .set({ "faveRecipe": faveRecipeCollection }, { merge: true })
         } catch (err) {
-
-        }
-
-
-    }
-
-    onRemoveFavorite = async (item, activeChallengeUserData, title, currentChallengeDay) => {
-
-        const recipeMeal = activeChallengeUserData.faveRecipe
-
-        try {
-            if (title.toLowerCase() === 'breakfast') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast = ""
-                }
-            }
-            if (title.toLowerCase() === 'lunch') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.lunch = ""
-                }
-            }
-            if (title.toLowerCase() === 'dinner') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.dinner = ""
-                }
-            }
-            if (title.toLowerCase() === 'snack') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.snack = ""
-                }
-            }
-            if (title.toLowerCase() === 'drink') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.drink = ""
-                }
-            }
-            if (title.toLowerCase() === 'preworkout') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout = ""
-                }
-            }
-            if (title.toLowerCase() === 'treats') {
-                if (recipeMeal[currentChallengeDay - 1] && recipeMeal[currentChallengeDay - 1].recipeMeal) {
-                    recipeMeal[currentChallengeDay - 1].recipeMeal.treats = ""
-                }
-            }
-        } catch (err) {
-            console.log('Error1: ', err)
-        }
-
-
-        const id = activeChallengeUserData.id
-        const uid = await AsyncStorage.getItem("uid");
-        const activeChallengeUserRef = db
-            .collection("users")
-            .doc(uid)
-            .collection("challenges")
-            .doc(id)
-
-        try {
-            if (title.toLowerCase() === 'breakfast') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-            if (title.toLowerCase() === 'lunch') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-            if (title.toLowerCase() === 'dinner') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-            if (title.toLowerCase() === 'snack') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-            if (title.toLowerCase() === 'drink') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-            if (title.toLowerCase() === 'preworkout') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-            if (title.toLowerCase() === 'treats') {
-                activeChallengeUserRef.set({ "faveRecipe": recipeMeal }, { merge: true })
-            }
-        } catch (err) {
-
-        }
-    }
-
-    ifExist = (item, activeChallengeUserData, title, currentChallengeDay) => {
-        let result = false
-        const recipeMeal = activeChallengeUserData.faveRecipe
-
-        try {
-            try {
-                if (title.toLowerCase() === 'breakfast') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-            try {
-                if (title.toLowerCase() === 'lunch') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.lunch
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-            try {
-                if (title.toLowerCase() === 'dinner') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.dinner
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-            try {
-                if (title.toLowerCase() === 'snack') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.snack
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-            try {
-                if (title.toLowerCase() === 'post workout') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.drink
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-            try {
-                if (title.toLowerCase() === 'preworkout') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-            try {
-                if (title.toLowerCase() === 'treats') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.treats
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-        } catch (err) {
-
+            console.error(err)
         }
 
         this.setState({
-            recipeIsExist: result
+            selectedItems: newMealList,
+            canFavouriteMoreRecipes: this.canFavouriteMoreRecipes(newMealList)
         })
-
     }
 
-    ifExistRecipe = (item, activeChallengeUserData, title, currentChallengeDay) => {
-        let result = false
-        const recipeMeal = activeChallengeUserData.faveRecipe
-
-        try {
-            try {
-                if (title.toLowerCase() === 'breakfast') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.breakfast
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-            try {
-                if (title.toLowerCase() === 'lunch') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.lunch
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-            try {
-                if (title.toLowerCase() === 'dinner') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.dinner
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-            try {
-                if (title.toLowerCase() === 'snack') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.snack
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-            try {
-                if (title.toLowerCase() === 'post workout') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.drink
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-            try {
-                if (title.toLowerCase() === 'preworkout') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.preworkout
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-            try {
-                if (title.toLowerCase() === 'treats') {
-                    const res = recipeMeal[currentChallengeDay - 1].recipeMeal.treats
-                    if (res === item.id) {
-                        result = true
-                    } else {
-                        result = false
-                    }
-                }
-            } catch (err) { }
-
-        } catch (err) {
-
+    onRemoveFavorite = async (item, activeChallengeUserData, title, currentChallengeDay) => {
+        const faveRecipeCollection = activeChallengeUserData.faveRecipe
+        const challengeDayIndex = currentChallengeDay - 1
+        if(challengeDayIndex >= faveRecipeCollection.length) {
+            return // nop
         }
 
-        return result
+        const mealList = this.recipeMealGroupList(activeChallengeUserData, title, currentChallengeDay)
+            .filter(e => e != item.id)
+    
+        // Set new meal list
+        faveRecipeCollection[challengeDayIndex].recipeMeal[title.toLowerCase()] = mealList
+
+        const id = activeChallengeUserData.id
+        const uid = await AsyncStorage.getItem("uid");
+        db.collection("users")
+            .doc(uid)
+            .collection("challenges")
+            .doc(id)
+            .set({ "faveRecipe": faveRecipeCollection }, { merge: true })
+
+        this.setState({
+            selectedItems: mealList,
+            canFavouriteMoreRecipes: this.canFavouriteMoreRecipes(mealList)
+        })
+    }
+
+    ifExistRecipe = (item) => {
+        return this.state.selectedItems.includes(item.id) ?? false
     }
 
     onSelectHeart = (item, activeChallengeUserData, title, currentChallengeDay) => {
-        if (this.state.recipeIsExist) {
+        if (this.ifExistRecipe(item, activeChallengeUserData, title, currentChallengeDay)) {
             this.onRemoveFavorite(item, activeChallengeUserData, title, currentChallengeDay)
         } else {
             this.onFavorite(item, activeChallengeUserData, title, currentChallengeDay)
         }
-        this.ifExist(item, activeChallengeUserData, title, currentChallengeDay)
     }
 
     renderItem = ({ item }) => {
@@ -898,10 +646,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
         const result = color1.splice(0, 3)
         const title = this.state.title
 
+        const isSelected = this.ifExistRecipe(item, activeChallengeUserData, title, currentChallengeDay)
+        const heartDisbaled = !this.state.canFavouriteMoreRecipes && !isSelected
+
         return (
             <FilterScreen
                 faveRecipeItem={faveRecipeItem}
-                ifExistRecipe={() => this.ifExistRecipe(item, activeChallengeUserData, title, currentChallengeDay)}
+                favouritingDisabled={heartDisbaled}
+                ifExistRecipe={() => isSelected }
                 onSelectHeart={() => this.onSelectHeart(item, activeChallengeUserData, title, currentChallengeDay)}
                 navigation={this.props.navigation}
                 result={result}
@@ -997,11 +749,13 @@ export default class FilterRecipeScreen extends React.PureComponent {
             tags,
             nameCat,
             title,
+            pluralTitle,
             todayRecommendedRecipe,
             defaultLevelTags,
             phaseDefaultTags,
             categoryName,
             loading,
+            selectedItems
         } = this.state
 
         console.log('todayRecommendedRecipe: ', todayRecommendedRecipe)
@@ -1016,9 +770,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         return (
             <View style={globalStyle.container}>
-                <View
-                    style={styles.customContainerStyle}
-                >
+                <View style={styles.customContainerStyle}>
                     {/* BigHeadText */}
                     <View>
                         <BigHeadingWithBackButton
@@ -1026,7 +778,6 @@ export default class FilterRecipeScreen extends React.PureComponent {
                             isBackButton={true}
                             onPress={this.handleBack}
                             backButtonText="Back to Challenge"
-                            isBackButton={true}
                             customContainerStyle={{ bottom: 25 }}
                         />
                         <Text style={{ bottom: 60, fontSize: 30, fontFamily: fonts.bold }}>{title}</Text>
@@ -1036,17 +787,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     <View style={{ marginTop: 10, width: 100 }}>
                         <TouchableOpacity
                             onPress={this.onClickFilter}
-
                             style={styles.oblongBtnStyle}>
-
                             <Text
                                 style={{
                                     marginTop: 10,
                                     fontSize: 12,
                                     fontFamily: fonts.bold,
                                     textTransform: 'uppercase',
-                                }}
-                            >
+                                }}>
                                 Filter
                             </Text>
                         </TouchableOpacity>
@@ -1055,14 +803,9 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 </View>
                 <ScrollView
                     horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                // style={{
-                //     paddingVertical: wp("3%"),
-                // }}
-                >
+                    showsHorizontalScrollIndicator={false}>
                     <View
-                        style={{ flexDirection: 'row', marginVertical: 10, marginBottom: 20, top: 0, height: 20 }}
-                    >
+                        style={{ flexDirection: 'row', marginVertical: 10, marginBottom: 20, top: 0, height: 20 }}>
                         {
                             tags.length ?
                                 tags.map((item, index) => (
@@ -1136,6 +879,16 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         }
                     </View>
                 </ScrollView>
+                {this.maximumAllowedFavourites > 1 && (
+                    <View style={[styles.maxRecipesBanner]}>
+                        <Text style={styles.maxRecipesBannerText}>
+                            You have selected {selectedItems?.length}/{this.maximumAllowedFavourites} {pluralTitle?.toLowerCase() ?? "recipes"}
+                        </Text>
+                        <Text style={styles.maxRecipesBannerSubheading}>
+                            Deselect the recipes and choose again to change your selection.
+                        </Text>
+                    </View>)
+                }
                 {
                     loading ?
                         skeleton
@@ -1273,6 +1026,33 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: '#4d4c4c',
         padding: 10,
+    },
+    maxRecipesBanner: {
+        alignItems: 'center',
+        borderRadius: 8,
+        backgroundColor: colors.white,    
+        borderColor: colors.black,
+        borderWidth: 1,
+        shadowColor: colors.black,
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 11.95,
+        justifyContent: 'space-between',
+        marginTop: 8,
+        padding: 16,
+    },
+    maxRecipesBannerText: {
+        fontFamily: fonts.StyreneAWebRegular,
+        fontSize: 14,
+        textAlign: 'center',
+        marginBottom: 4
+    },
+    maxRecipesBannerSubheading: {
+        fontSize: 10,
+        fontFamily: fonts.SimplonMonoLight,
+        textAlign: 'center'
     }
-
 })

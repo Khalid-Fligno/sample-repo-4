@@ -14,6 +14,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   unsubWorkout:any;
   recipeList:any=[];
   workoutList:any=[];
+  displayedColumns = ["favourite-name", "favourite-max-value"];
 
   constructor
   (
@@ -54,6 +55,21 @@ export class ViewComponent implements OnInit, OnDestroy {
   public _filter(id: string=""): any {
     let data =  this.recipeList.filter((option:any) => option.id === id)[0];
     return data && data.title?data.title:''
+  }
+
+  public _getFavouriteConfigurationDataSource(favouriteRecipeConfigs:any) : {}[] {
+    return [
+        { property :'breakfast', displayName: "Breakfast" },
+        { property :'lunch', displayName: "Lunch" },
+        { property :'dinner', displayName: "Dinner" },
+        { property :'snack', displayName: "Snack" },
+        { property :'drink', displayName: "Post Workout" },
+      ].map((obj:any) => {
+        return { 
+          title: obj.displayName,
+          maximumAllowedFavourites: favouriteRecipeConfigs[obj.property].maximumAllowedFavourites
+        }
+      })
   }
 
   async getWorkout(){

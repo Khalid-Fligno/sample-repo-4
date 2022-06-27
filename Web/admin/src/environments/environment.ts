@@ -5,15 +5,14 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyDTwQ2csz41d8Bo60H-wH_NWlQglKC7NDM",
-    authDomain: "fitazfk-app.firebaseapp.com",
-    databaseURL: "https://fitazfk-app.firebaseio.com",
-    projectId: "fitazfk-app",
-    storageBucket: "fitazfk-app.appspot.com",
-    messagingSenderId: "100949764253",
+    apiKey: "AIzaSyCNhs6I_Im0s57HgowFzI9KO_meK9T341Y",
+    authDomain: "staging-fitazfk-app.firebaseapp.com",
+    databaseURL: "https://staging-fitazfk-app.firebaseio.com",
+    projectId: "staging-fitazfk-app",
+    storageBucket: "staging-fitazfk-app.appspot.com",
+    messagingSenderId: "148679785242",
   },
-  httpUrl: "https://34.87.240.165/admin" // status: 200
-  // httpUrl: "http://localhost:8100/admin" // status: 0
+  httpUrl: "http://localhost:8100/admin" // status: 0
 };
 
 /*

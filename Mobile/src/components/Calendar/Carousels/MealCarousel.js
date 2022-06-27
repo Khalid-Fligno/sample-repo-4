@@ -18,6 +18,7 @@ const MealCarousel = ({
   favoriteRecipe,
   onPress,
   filterPress,
+  favouriteRecipeConfigs
 }) => {
   return (
     <View>
@@ -66,9 +67,11 @@ const MealCarousel = ({
                 <ImageBackground
                   source={{ uri: recipe.coverImage, cache: "force-cache" }}
                   style={styles.image}
-                  resizeMode="cover"
-                >
+                  resizeMode="cover">
                   <View style={styles.opacityLayer}>
+                    {recipe.drink && (
+                      <Text style={styles.watermarkTitle}>post{'\n'}workout</Text>
+                    )}
                     <Text style={styles.cardTitle}>{recipe.title}</Text>
                   </View>
                 </ImageBackground>
@@ -76,7 +79,7 @@ const MealCarousel = ({
             ))}
         <TouchableOpacity
           style={styles.cardContainer1}
-          onPress={() => filterPress(data, data1, data2, title)}
+          onPress={() => filterPress(data, data1, data2, title, favouriteRecipeConfigs)}
         >
           <View style={styles.opacityLayer1}>
             <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
@@ -161,4 +164,17 @@ const styles = StyleSheet.create({
     width: "90%",
     fontSize: wp("3.5%"),
   },
+  watermarkTitle: {
+    color: colors.white,
+    backgroundColor: colors.black,
+    textTransform: 'uppercase',  
+    textAlign: 'center', 
+    fontFamily: fonts.SimplonMonoMedium,
+    fontSize: 12,
+    position: 'absolute',
+    top: 8,
+    left: -38,
+    transform: [{ rotate: '-45deg'}],
+    width: 120
+  }
 });
