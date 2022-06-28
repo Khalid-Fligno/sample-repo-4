@@ -1,184 +1,245 @@
-import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  Dimensions,
-  ImageBackground,
-  Platform,
-} from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import Modal from "react-native-modal";
-import Loader from "../../../components/Shared/Loader";
-import colors from "../../../styles/colors";
-import fonts from "../../../styles/fonts";
-import CustomBtn from "../../../components/Shared/CustomBtn";
+import React, { Component } from "react";
+import { View, Text, ScrollView, SafeAreaView } from "react-native";
+import ChallengeStyle from "../chellengeStyle";
 import globalStyle from "../../../styles/globalStyles";
-import Icon from "../../../components/Shared/Icon";
-import { ONBOARDINGIMG } from "../../../library/images/onBoardingImg/onBoardingImg";
-import moment from "moment-timezone"
-import { styles } from "./style";
-import { useCounter } from "../../../library/useCustomHook/onboarding/onboard1/index";
+import CustomBtn from "../../../components/Shared/CustomBtn";
+import * as FileSystem from "expo-file-system";
+import CheckboxComponent from "../../../components/Challenges/CheckboxComponent";
+import colors from "../../../styles/colors";
 
-export const Onboarding1Screen = ({ navigation }) => {
-  const { width } = Dimensions.get("window");
-  const name = navigation.getParam("name", null)
-  const specialOffer = navigation.getParam("specialOffer", undefined)
-  const {
-    loading,
-    chosenDate,
-    dobModalVisible,
-    chosenUom,
-    setChosenUom,
-    setDate,
-    handleSubmit,
-    toggleDobModal,
-    closeDobModal,
-    setSpeciaOffer,
-    setName
-  } = useCounter()
-  
-  useEffect(() => {
-		setSpeciaOffer(specialOffer)
-    setName(name)
-	}, [specialOffer, name])
+export default class OnBoarding1 extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      challengeData: [],
+      weightLoss: 1,
+      increaseEnergy: 1,
+      toneUp: 1,
+      mentalHealth: 1,
+      increaseFitness: 1,
+      btnDisabled: true,
+      quit: false,
+      completedChallenge: false,
+    };
+  }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.flexContainer}>
-        <ImageBackground
-          source={ONBOARDINGIMG.IZZY1}
-          style={{ width: width, height: width / 2 }}
-        >
-          <View
-            style={[
-              globalStyle.opacityLayer,
-              {
-                alignItems: "flex-start",
-                paddingStart: 20,
-                backgroundColor: "none",
-              },
-            ]}
+  onFocusFunction = () => {
+    const challengeData = this.props.navigation.getParam("data", {})[
+      "challengeData"
+    ];
+    const toAchieve = challengeData["onBoardingInfo"]
+      ? challengeData["onBoardingInfo"]["toAchieve"]
+      : [];
+    this.setState({
+      challengeData: challengeData,
+      weightLoss: toAchieve ? toAchieve.weightLoss : 1,
+      increaseEnergy: toAchieve ? toAchieve.increaseEnergy : 1,
+      toneUp: toAchieve ? toAchieve.toneUp : 1,
+      mentalHealth: toAchieve ? toAchieve.mentalHealth : 1,
+      increaseFitness: toAchieve ? toAchieve.increaseFitness : 1,
+      btnDisabled: true,
+      quit: this.props.navigation.getParam("quit"),
+      completedChallenge: this.props.navigation.getParam("completedChallenge"),
+    });
+  };
+
+  // add a focus listener onDidMount
+  async componentDidMount() {
+    this.listeners = [
+      this.props.navigation.addListener("didFocus", () => {
+        this.onFocusFunction();
+      }),
+    ];
+    await FileSystem.downloadAsync(
+      "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+      `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+    );
+  }
+
+  // and don't forget to remove the listener
+  componentWillUnmount() {
+    this.listeners.forEach((item) => item.remove());
+  }
+  goToNextScreen(type) {
+    let {
+      challengeData,
+      weightLoss,
+      increaseEnergy,
+      toneUp,
+      mentalHealth,
+      increaseFitness,
+      quit,
+      completedChallenge,
+    } = this.state;
+    const onBoardingInfo = Object.assign({}, challengeData.onBoardingInfo, {
+      toAchieve: {
+        weightLoss,
+        increaseEnergy,
+        toneUp,
+        mentalHealth,
+        increaseFitness,
+      },
+    });
+
+    let updatedChallengedata = Object.assign({}, challengeData, {
+      onBoardingInfo,
+    });
+
+    let toAchieve = "";
+
+    for (var key in onBoardingInfo.toAchieve) {
+      if (
+        onBoardingInfo.toAchieve[key] !== undefined &&
+        onBoardingInfo.toAchieve[key] !== 1
+      ) {
+        toAchieve += key.toString() + ", ";
+      }
+    }
+
+    if (type === "previous") {
+      this.props.navigation.navigate("ChallengeOnBoarding6");
+    } else {
+      this.props.navigation.navigate("ChallengeOnBoarding3", {
+        completedChallenge,
+        quit,
+        data: {
+          challengeData: updatedChallengedata,
+        },
+        onboardingProcessComplete:
+          this.props.navigation.getParam("onboardingProcessComplete") !==
+          undefined
+            ? this.props.navigation.getParam("onboardingProcessComplete")
+            : false,
+        challengeOnboard:
+          this.props.navigation.getParam("challengeOnboard") !== undefined
+            ? this.props.navigation.getParam("challengeOnboard")
+            : false,
+      });
+    }
+  }
+
+  render() {
+    let {
+      weightLoss,
+      increaseEnergy,
+      increaseFitness,
+      toneUp,
+      mentalHealth,
+      btnDisabled,
+    } = this.state;
+    return (
+      <SafeAreaView style={ChallengeStyle.container}>
+        <View style={globalStyle.container}>
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+              flexDirection: "column",
+              justifyContent: "space-between",
+              paddingVertical: 15,
+            }}
+            bounces={false}
+            showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.headerText}>Welcome</Text>
-            <Text style={styles.bodyText}>
-              It’s time to start your FitazFK journey! Just a few questions
-              before we can start.
-            </Text>
-          </View>
-        </ImageBackground>
-
-        <View style={styles.contentContainer}>
-          <View style={styles.inputFieldContainer}>
-            <TouchableOpacity
-              onPress={toggleDobModal}
-              style={styles.inputButton}
-            >
-              <Text style={styles.inputSelectionText}>
-                {chosenDate
-                  ? moment(chosenDate).format("LL")
-                  : "Enter date of birth"}
+            <View>
+              <Text style={ChallengeStyle.onBoardingTitle}>
+                What do you want to achieve?
               </Text>
-              <Icon
-                name="chevron-down"
-                size={19}
-                color={colors.charcoal.light}
-                style={{ textAlign: "right" }}
-              />
-            </TouchableOpacity>
-            <Modal
-              isVisible={dobModalVisible}
-              onBackdropPress={closeDobModal}
-              animationIn="fadeIn"
-              animationInTiming={600}
-              animationOut="fadeOut"
-              animationOutTiming={600}
+            </View>
+
+            <CheckboxComponent
+              title="Weight loss"
+              isChecked={weightLoss > 1}
+              onPress={(isChecked) => {
+                this.setState({ btnDisabled: false });
+                if (isChecked) {
+                  this.setState({ weightLoss: 10 });
+                } else this.setState({ weightLoss: 1 });
+              }}
+            />
+
+            <CheckboxComponent
+              title="Increase energy"
+              isChecked={increaseEnergy > 1}
+              onPress={(isChecked) => {
+                this.setState({ btnDisabled: false });
+                if (isChecked) {
+                  this.setState({ increaseEnergy: 10 });
+                } else this.setState({ increaseEnergy: 1 });
+              }}
+            />
+
+            <CheckboxComponent
+              title="Tone up"
+              isChecked={toneUp > 1}
+              onPress={(isChecked) => {
+                this.setState({ btnDisabled: false });
+                if (isChecked) {
+                  this.setState({ toneUp: 10 });
+                } else this.setState({ toneUp: 1 });
+              }}
+            />
+
+            <CheckboxComponent
+              title="Mental health"
+              isChecked={mentalHealth > 1}
+              onPress={(isChecked) => {
+                this.setState({ btnDisabled: false });
+                if (isChecked) {
+                  this.setState({ mentalHealth: 10 });
+                } else this.setState({ mentalHealth: 1 });
+              }}
+            />
+
+            <CheckboxComponent
+              title="Increase fitness"
+              isChecked={increaseFitness > 1}
+              onPress={(isChecked) => {
+                this.setState({ btnDisabled: false });
+                if (isChecked) {
+                  this.setState({ increaseFitness: 10 });
+                } else this.setState({ increaseFitness: 1 });
+              }}
+            />
+
+            <View
+              style={{ flex: 1, justifyContent: "flex-end", marginTop: 20 }}
             >
-              <View style={globalStyle.modalContainer}>
-                <DateTimePicker
-                  mode="date"
-                  value={chosenDate ? chosenDate : new Date(1990, 0, 1)}
-                  onChange={setDate}
-                  minimumDate={new Date(1940, 0, 1)}
-                  maximumDate={new Date(2008, 0, 1)}
-                  itemStyle={{
-                    fontFamily: fonts.standard,
-                  }}
-                />
-                {Platform.OS === "ios" && (
-                  <TouchableOpacity
-                    title="DONE"
-                    onPress={closeDobModal}
-                    style={globalStyle.modalButton}
-                  >
-                    <Text style={globalStyle.modalButtonText}>DONE</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            </Modal>
-          </View>
-          <View style={styles.inputFieldContainer}>
-            <Text style={styles.inputFieldTitle}>Units of measurement</Text>
-            <View style={styles.buttonRowContainer}>
               <CustomBtn
-                Title="Metric"
-                outline={true}
+                Title="Next"
                 customBtnStyle={{
-                  padding: 5,
-                  width: "46%",
-                  borderColor:
-                    chosenUom === "metric"
-                      ? colors.themeColor.color
-                      : colors.themeColor.color,
+                  padding: 15,
+                  width: "100%",
                 }}
-                onPress={() => setChosenUom("metric")}
-                customBtnTitleStyle={{
-                  fontSize: 15,
-                  marginLeft: 5,
-                  color: chosenUom === "metric" ? colors.black : colors.black,
-                }}
-                leftIconColor={colors.black}
-                leftIconSize={15}
-                isLeftIcon={chosenUom === "metric" ? true : false}
-                leftIconName="tick"
-              />
-              <CustomBtn
-                Title="Imperial"
-                outline={true}
-                customBtnStyle={{
-                  padding: 5,
-                  width: "46%",
-                  borderColor:
-                    chosenUom === "imperial"
-                      ? colors.themeColor.color
-                      : colors.themeColor.color,
-                }}
-                onPress={() => setChosenUom("imperial")}
-                customBtnTitleStyle={{
-                  fontSize: 15,
-                  marginLeft: 5,
-                  color:
-                    chosenUom === "imperial" ? colors.black : colors.black,
-                }}
-                leftIconColor={colors.black}
-                leftIconSize={15}
-                isLeftIcon={chosenUom === "imperial" ? true : false}
-                leftIconName="tick"
+                isRightIcon={true}
+                rightIconName="chevron-right"
+                rightIconColor={colors.black}
+                rightIconSize={13}
+                onPress={() => this.goToNextScreen("")}
+                disabled={btnDisabled}
               />
             </View>
-          </View>
+            {this.props.navigation.getParam("challengeOnboard", {}) && (
+              <CustomBtn
+                Title="Back"
+                customBtnStyle={{
+                  padding: 15,
+                  width: "100%",
+                  marginTop: 5,
+                  marginBottom: -10,
+                  backgroundColor: "transparent",
+                }}
+                onPress={() => this.goToNextScreen("previous")}
+                disabled={false}
+                customBtnTitleStyle={{ color: colors.black, marginRight: 40 }}
+                isLeftIcon={true}
+                leftIconName="chevron-left"
+                leftIconColor={colors.black}
+                leftIconSize={13}
+              />
+            )}
+          </ScrollView>
         </View>
-        <View style={styles.buttonContainer}>
-          <CustomBtn
-            Title="Continue"
-            customBtnStyle={{ padding: 15 }}
-            onPress={() => handleSubmit(chosenDate, chosenUom)}
-            customBtnTitleStyle={{ letterSpacing: fonts.letterSpacing }}
-          />
-        </View>
-        <Loader loading={loading} color={colors.coral.standard} />
-      </View>
-    </SafeAreaView>
-  );
+      </SafeAreaView>
+    );
+  }
 }
