@@ -122,6 +122,10 @@ export class EditComponent implements OnInit, OnDestroy {
       drink = this.recipeList.filter((recipe:any)=>d.meals.includes(recipe.id) && recipe.drink).map((recipe:any)=>recipe.id);
     }
 
+    function maxAllowed(propertyName: string): number {
+      return d?.favouriteRecipeConfigs?.[propertyName]?.maximumAllowedFavourites ?? 1
+    }
+
     return this.fb.group({
       displayName: [{value:d && d.displayName?d.displayName:'',disabled:d && d.displayName?true:false},Validators.required],
       name: [d && d.name?d.name:''],
@@ -132,10 +136,15 @@ export class EditComponent implements OnInit, OnDestroy {
       pdfUrl: [d && d.pdfUrl?d.pdfUrl:'',Validators.required],
       // meals: [d && d.meals?d.meals:'',Validators.required],
       breakfast:[d && d.meals?breakfast:'',Validators.required],
+      breakfastMaxAllowedFavourites: [maxAllowed('breakfast'), Validators.required],
       lunch:[d && d.meals?lunch:'',Validators.required],
+      lunchMaxAllowedFavourites: [maxAllowed('lunch'), Validators.required],
       dinner:[d && d.meals?dinner:'',Validators.required],
+      dinnerMaxAllowedFavourites: [maxAllowed('dinner'), Validators.required],
       snack:[d && d.meals?snack:'',Validators.required],
+      snackMaxAllowedFavourites: [maxAllowed('snack'), Validators.required],
       drink:[d && d.meals?drink:''],
+      drinksMaxAllowedFavourites: [maxAllowed('drink'), Validators.required]
     })
   }
 
@@ -460,7 +469,6 @@ export class EditComponent implements OnInit, OnDestroy {
     ])];
 
     return phases.map((res:any)=>{
-        console.log("drink",res.drink)
         const meals = [...new Set([...res.breakfast,...res.lunch,...res.dinner,...res.snack,...res.drink])];
         const displayName = res.displayName.replace(/\s/g,'');
         return {
@@ -471,7 +479,24 @@ export class EditComponent implements OnInit, OnDestroy {
                   startDay:res.startDay,
                   endDay:res.endDay ,
                   pdfUrl:res.pdfUrl,
-                  meals:meals
+                  favouriteRecipeConfigs: {
+                    breakfast: {
+                      maximumAllowedFavourites: res.breakfastMaxAllowedFavourites
+                    },
+                    lunch: {
+                      maximumAllowedFavourites: res.lunchMaxAllowedFavourites
+                    },
+                    dinner: {
+                      maximumAllowedFavourites: res.dinnerMaxAllowedFavourites
+                    },
+                    snack: {
+                      maximumAllowedFavourites: res.snackMaxAllowedFavourites
+                    },
+                    drink: {
+                      maximumAllowedFavourites: res.drinksMaxAllowedFavourites
+                    }
+                  },
+                  meals: meals
               }
     })
   }
