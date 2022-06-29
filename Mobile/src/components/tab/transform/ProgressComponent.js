@@ -119,7 +119,7 @@ export const ProgressComponent = (props) => {
             height: 10,
             width: width,
             borderRadius: 10,
-            backgroundColor: colors.themeColor.fill,
+            backgroundColor: "#fa896e",
             position: "absolute",
             left: 0,
             top: 0,
@@ -210,10 +210,10 @@ export const ProgressComponent = (props) => {
           xmlSpace="preserve"
           width={hp("1.5%")}
           height={hp("1.5%")}
-          fill={colors.themeColor.fill}
+          fill="#fa896e"
           style={{
             strokeWidth: 50,
-            stroke: colors.themeColor.fill,
+            stroke: "#fa896e",
             strokeLinejoin: "round",
             strokeLinecap: "round",
           }}
@@ -227,7 +227,7 @@ export const ProgressComponent = (props) => {
           position: "absolute",
           left: width - 4,
           top: Platform.OS === "ios" ? 96 : 94,
-          backgroundColor: "#F79400",
+          backgroundColor: "#fa896e",
           width: 40,
           height: 40,
           justifyContent: "center",

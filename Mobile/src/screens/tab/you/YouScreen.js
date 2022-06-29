@@ -95,25 +95,25 @@ export const YouScreen = ({ navigation }) => {
     initialProgressInfo,
     currentProgressInfo
   ) => {
-
     navigation.navigate("ProgressEdit", {
       isInitial: false,
       initialProgressInfo: initialProgressInfo,
       currentProgressInfo: currentProgressInfo
     })
+    setModal(false)
   }
 
   const editBeforeBtn = (
     initialProgressInfo,
     currentProgressInfo
-  ) => (
-
+  ) => {
     navigation.navigate("ProgressEdit", {
       isInitial: true,
       initialProgressInfo: initialProgressInfo,
       currentProgressInfo: currentProgressInfo
     })
-  );
+    setModal(false)
+  }
 
   const getBurpeeCount = (
     afterBurpee,
@@ -195,8 +195,6 @@ export const YouScreen = ({ navigation }) => {
       currentProgressInfo
     )
   }, [initialProgressInfo, currentProgressInfo])
-
-  console.log("initialProgressInfo: ", initialProgressInfo)
 
   return (
     <ScrollView>
