@@ -1,4 +1,5 @@
 import React, {
+  useCallback,
   useEffect,
   useState
 } from "react";
@@ -49,7 +50,7 @@ export const EditMeasurement = ({ navigation }) => {
   const [helperModalVisible, setHelperModalVisible] = useState(false)
   const [unitOfMeasurement, setUnitOfMeasurement] = useState(null)
   const [uom, setUom] = useState(null)
-  
+
   const fetchDataMeasurement = async () => {
     setLoading(true)
     const uid = await useStorage.getItem("uid");
@@ -65,32 +66,16 @@ export const EditMeasurement = ({ navigation }) => {
   };
 
   const fetchInitialDataMeasurements = async () => {
-    setLoading(true)
-    const uid = await useStorage.getItem("uid");
-    const userData = await getDocument(
-      COLLECTION_NAMES.USERS,
-      uid
-    )
-
-    if (userData) {
-      const initialProgressInfo = userData?.initialProgressInfo;
+    if (navigation.getParam("isInitial")) {
+      const initialProgressInfo = navigation.getParam("initialProgressInfo", null);
+      console.log("initialProgressInfo: ", initialProgressInfo)
+      console.log("hip: ", initialProgressInfo?.hip)
       setWeight(initialProgressInfo?.weight)
       setWaist(initialProgressInfo?.waist)
       setHip(initialProgressInfo?.hip)
-      setLoading(false)
-    }
-  };
-
-  const fetchCurrentDataMeasurements = async () => {
-    setLoading(true)
-    const uid = await useStorage.getItem("uid");
-    const userData = await getDocument(
-      COLLECTION_NAMES.USERS,
-      uid
-    )
-
-    if (userData) {
-      const currentProgressInfo = userData?.currentProgressInfo;
+    } else {
+      const currentProgressInfo = navigation.getParam("currentProgressInfo", null)
+      console.log("currentProgressInfo: ", currentProgressInfo)
       setWeight(currentProgressInfo?.weight)
       setWaist(currentProgressInfo?.waist)
       setHip(currentProgressInfo?.hip)
@@ -145,7 +130,6 @@ export const EditMeasurement = ({ navigation }) => {
       ? "initialProgressInfo"
       : "currentProgressInfo";
 
-    console.log(progressDataFieldName)
     try {
       const data = {
         [progressDataFieldName]: {
@@ -157,7 +141,7 @@ export const EditMeasurement = ({ navigation }) => {
           date: moment().format("YYYY-MM-DD"),
         },
       }
-      
+
       await addDocument(
         COLLECTION_NAMES.USERS,
         uid,
@@ -168,7 +152,7 @@ export const EditMeasurement = ({ navigation }) => {
     }
   };
 
-  const handleSubmit = async (
+  const handleSubmit = useCallback(async (
     weight,
     waist,
     hip
@@ -194,15 +178,15 @@ export const EditMeasurement = ({ navigation }) => {
           ? userData.initialProgressInfo
           : userData.currentProgressInfo;
         if (progressInfo) {
-          if (true) {
-            await storeProgressInfo(
-              navigation.getParam("isInitial"),
-              weight,
-              waist,
-              hip,
-            );
-            navigation.navigate("ProgressEdit");
-          }
+          await storeProgressInfo(
+            navigation.getParam("isInitial"),
+            weight,
+            waist,
+            hip,
+          );
+          navigation.navigate("ProgressHome", {
+            
+          });
         } else {
           await storeProgressInfo(
             navigation.getParam("isInitial"),
@@ -218,7 +202,7 @@ export const EditMeasurement = ({ navigation }) => {
         { text: "OK", onPress: () => setLoading(false) },
       ]);
     }
-  };
+  }, [])
 
   const showHelperModal = () => {
     setHelperModalVisible(true)
@@ -248,11 +232,7 @@ export const EditMeasurement = ({ navigation }) => {
   }, [])
 
   useEffect(() => {
-    if (navigation.getParam("isInitial")) {
-      fetchInitialDataMeasurements();
-    } else {
-      fetchCurrentDataMeasurements();
-    }
+    fetchInitialDataMeasurements();
   }, [])
 
   return (
