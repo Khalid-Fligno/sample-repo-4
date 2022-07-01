@@ -71,9 +71,6 @@ export const activeChallengeSetting = {
 
 export const onboardingBackButtonMap = {
   Onboarding1: false,
-  Progress1: true,
-  Progress2: true,
-  ProgressEdit: true
 };
 
 export const onboardingSkipButtonMap = {
