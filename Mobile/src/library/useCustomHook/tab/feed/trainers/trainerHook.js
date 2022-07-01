@@ -1,5 +1,5 @@
 import { COLLECTION_NAMES } from "../../../../collections"
-import { getColllection, getDocument, getSpecificCollection } from "../../../../../hook/firestore/read/index";
+import { getSpecificCollection } from "../../../../../hook/firestore/read/index";
 import { useState } from "react";
 
 export const useCounter = () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,174 +12,48 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import AsyncStorage from "@react-native-community/async-storage";
-import { db } from "../../../config/firebase";
-import { diff } from "../../../utils/index";
 import moment from "moment";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Modal from "react-native-modal";
 import CustomBtn from '../../../components/Shared/CustomBtn';
+import Loader from "../../../components/Shared/Loader";
+import colors from "../../../styles/colors";
+import { useCounter } from '../../../library/useCustomHook/tab/you/youScreenHook';
 
 export const YouScreen = ({ navigation }) => {
-
-  const [profile, setProfile] = useState(undefined);
-  const [initialProgressInfo, setInitialProgressInfo] = useState(undefined);
-  const [currentProgressInfo, setCurrentProgressInfo] = useState(undefined);
-  const [unitsOfMeasurement, setUnitsOfMeasurement] = useState(undefined);
-  const [weightDiff, setWeightDiff] = useState(null);
-  const [waistDiff, setWaistDiff] = useState(null);
-  const [hipDiff, setHipDiff] = useState(null);
-  const [modal, setModal] = useState(false);
-  const [burpeeRes, setBurpeeRess] = useState(null);
-
   const { width } = Dimensions.get("window");
-
-  const fetchProgressInfo = async () => {
-    const uid = await AsyncStorage.getItem("uid");
-    const userDataFromFirebase = await db
-      .collection("users")
-      .doc(uid)
-      .get();
-
-    const userData = userDataFromFirebase.data()
-
-    if (userData) {
-      const currentProgressInfo = userData?.currentProgressInfo ?
-        userData.currentProgressInfo :
-        null
-
-      const initialProgressInfo = userData?.initialProgressInfo ?
-        userData.initialProgressInfo :
-        null
-
-      setProfile(userData)
-      setInitialProgressInfo(initialProgressInfo)
-      setCurrentProgressInfo(currentProgressInfo)
-      setUnitsOfMeasurement(userData.unitsOfMeasurement)
-
-      if (
-        userData.weeklyTargets.currentWeekStartDate !==
-        moment().startOf("week").format("YYYY-MM-DD")
-      ) {
-        const data = {
-          weeklyTargets: {
-            currentWeekStartDate: moment().startOf("week").format("YYYY-MM-DD"),
-          },
-        };
-
-        await db
-          .collection("users")
-          .doc(userData.id)
-          .set(data, { merge: true })
-          .catch((err) => console.log(err));
-      }
-    }
-  };
-
-  const progressDifference = (
+  const {
+    profile,
     initialProgressInfo,
-    currentProgressInfo
-  ) => {
-    if (initialProgressInfo && currentProgressInfo) {
-      const weight = diff(initialProgressInfo?.weight, currentProgressInfo?.weight);
-      const waist = diff(initialProgressInfo?.waist, currentProgressInfo?.waist);
-      const hip = diff(initialProgressInfo?.hip, currentProgressInfo?.hip)
-      console.log("waist: ", waist?.data)
-      setWeightDiff(weight)
-      setWaistDiff(waist)
-      setHipDiff(hip)
-    }
-  }
-
-  const updateProgressBtn = (
-    initialProgressInfo,
-    currentProgressInfo
-  ) => {
-    navigation.navigate("ProgressEdit", {
-      isInitial: false,
-      initialProgressInfo: initialProgressInfo,
-      currentProgressInfo: currentProgressInfo
-    })
-    setModal(false)
-  }
-
-  const editBeforeBtn = (
-    initialProgressInfo,
-    currentProgressInfo
-  ) => {
-    navigation.navigate("ProgressEdit", {
-      isInitial: true,
-      initialProgressInfo: initialProgressInfo,
-      currentProgressInfo: currentProgressInfo
-    })
-    setModal(false)
-  }
-
-  const getBurpeeCount = (
-    afterBurpee,
-    beforeBurpee
-  ) => {
-    if (afterBurpee) {
-      return afterBurpee
-    }
-    return beforeBurpee
-  }
-
-  const latestBurpee = (
-    initialProgressInfo,
-    currentProgressInfo
-  ) => {
-    let result = "-";
-
-    if (
-      initialProgressInfo &&
-      currentProgressInfo &&
-      initialProgressInfo?.burpeeCount &&
-      currentProgressInfo?.burpeeCount
-    ) {
-      result = currentProgressInfo.burpeeCount
-    } else if (
-      currentProgressInfo?.burpeeCount ||
-      initialProgressInfo?.burpeeCount
-    ) {
-      result = getBurpeeCount(
-        currentProgressInfo?.burpeeCount,
-        initialProgressInfo?.burpeeCount
-      )
-    }
-    console.log("result: ", result)
-
-    setBurpeeRess(result);
-  }
-
-  const diffMeasurement = (
-    measurement,
-    currentMeasurement,
-    initialMeasurement
-  ) => {
-    let result = undefined;
-
-    if (measurement) {
-      result = measurement
-    } else if (
-      currentMeasurement
-    ) {
-      result = currentMeasurement
-    } else if (
-      initialMeasurement
-    ) {
-      result = initialMeasurement
-    }
-
-    return result;
-  }
-
-  const toggleModal = () => {
-    setModal(!modal)
-  };
+    currentProgressInfo,
+    unitsOfMeasurement,
+    weightDiff,
+    waistDiff,
+    hipDiff,
+    burpeeRes,
+    userData,
+    loading,
+    modal,
+    setModal,
+    fetchUserData,
+    fetchProgressInfo,
+    progressDifference,
+    updateProgressBtn,
+    editBeforeBtn,
+    latestBurpee,
+    diffMeasurement,
+    toggleModal
+  } = useCounter()
 
   useEffect(() => {
     fetchProgressInfo();
+  }, [initialProgressInfo, currentProgressInfo, userData])
+
+  useEffect(() => {
+    navigation.addListener("didFocus", async () => {
+      await fetchUserData();
+    })
+    fetchUserData();
   }, [])
 
   useEffect(() => {
@@ -646,7 +520,7 @@ export const YouScreen = ({ navigation }) => {
           }}
         >
           <Text style={{ fontSize: 40 }}>
-            {profile?.totalWorkoutCompleted}
+            {profile}
           </Text>
           <Text style={{
             fontFamily: fonts.StyreneAWebRegular
@@ -703,6 +577,7 @@ export const YouScreen = ({ navigation }) => {
             />
           </View>
         </Modal>
+        <Loader loading={loading} color={colors.red.standard} />
       </View>
     </ScrollView>
   )
