@@ -66,8 +66,36 @@ export class EditComponent implements OnInit {
       value: 'V+'
     },
     {
-      label: 'Gluten free',
+      label: 'Gluten Free',
       value: 'GF'
+    },
+    {
+      label: 'Dairy Free',
+      value: 'DF'
+    },
+    {
+      label: 'Gut Health',
+      value: 'GH'
+    },
+    {
+      label: 'Phase 1',
+      value: 'P1'
+    },
+    {
+      label: 'Phase 2',
+      value: 'P2'
+    },
+    {
+      label: 'Phase 3',
+      value: 'P3'
+    },
+    {
+      label: 'Level 2',
+      value: 'L2'
+    },
+    {
+      label: 'Level 3',
+      value: 'L3'
     }
   ];
 
