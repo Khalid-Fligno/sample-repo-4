@@ -432,12 +432,12 @@ export default class FilterRecipeScreen extends React.PureComponent {
             sortBy(recipePhase).filter((recipe) => {
                 for (let i = 0; i < recipe.tags.length; i++) {
                     if (this.state.veganChecked === true) {
-                        if (recipe.tags[i] === 'V') {
+                        if (recipe.tags[i] === 'V+') {
                             tagList.push(recipe)
                         }
                     }
                     if (this.state.vegetarianChecked === true) {
-                        if (recipe.tags[i] === 'V+') {
+                        if (recipe.tags[i] === 'V') {
                             tagList.push(recipe)
                         }
                     }
@@ -490,12 +490,12 @@ export default class FilterRecipeScreen extends React.PureComponent {
             sortBy(recipePhase).filter((recipe) => {
                 for (let i = 0; i < recipe.tags.length; i++) {
                     if (this.state.veganChecked === true) {
-                        if (recipe.tags[i] === 'V') {
+                        if (recipe.tags[i] === 'V+') {
                             tagList.push(recipe)
                         }
                     }
                     if (this.state.vegetarianChecked === true) {
-                        if (recipe.tags[i] === 'V+') {
+                        if (recipe.tags[i] === 'V') {
                             tagList.push(recipe)
                         }
                     }
