@@ -32,7 +32,6 @@ const setDataUser = async (data) => {
       .set(data, { merge: true });
   } catch (err) {
     console.log("Store progress error: ", err);
-    Alert.alert("Something went wrong ", "error in store progress info ");
   }
 }
 
@@ -40,12 +39,11 @@ const storeProgressInfo = async (data, bool) => {
   const currentProgressInfo = await getCurrentInfoUser()
   const dataObj = {
     currentProgressInfo: bool ? {
-      photoURL: currentProgressInfo.photoURL,
-      weight: parseInt(currentProgressInfo.weight, 10),
-      waist: parseInt(currentProgressInfo.waist, 10),
-      hip: parseInt(currentProgressInfo.hip, 10),
-      burpeeCount: currentProgressInfo.burpeeCount,
-      date: moment().format("YYYY-MM-DD"),
+      photoURL: currentProgressInfo?.photoURL ?? null,
+      weight: parseInt(currentProgressInfo?.weight, 10) ?? null,
+      waist: parseInt(currentProgressInfo?.waist, 10) ?? null,
+      hip: parseInt(currentProgressInfo?.hip, 10) ?? null,
+      burpeeCount: currentProgressInfo?.burpeeCount ?? null,
     } : {},
     initialProgressInfo: {
       photoURL: data.photoURL,
