@@ -179,18 +179,20 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
     toggleVegetarian = () => {
-        this.setState({
-            vegetarianChecked: !this.state.vegetarianChecked
-        })
-        if (this.state.vegetarianChecked === false) {
-            this.setState({ category: [...this.state.category, { name: "Vegetarian" }] })
+        
+        let {vegetarianChecked, category} = this.state
+        
+       
+        if (vegetarianChecked === false) {
+            var updatedCategory = [...category, { name: "Vegetarian" }]
         } else {
-            this.setState({
-                category: this.state.category.filter((item) => {
-                    return item.name !== "Vegetarian"
-                })
-            })
+            var updatedCategory = category.filter((item) => item.name !== "Vegetarian")
         }
+
+        this.setState({ 
+            vegetarianChecked: !vegetarianChecked,
+            category: updatedCategory
+        })
     }
 
     toggleGlutenFree = () => {
@@ -352,12 +354,12 @@ export default class FilterRecipeScreen extends React.PureComponent {
             sortBy(recipePhase).filter((recipe) => {
                 for (let i = 0; i < recipe.tags.length; i++) {
                     if (this.state.veganChecked === true) {
-                        if (recipe.tags[i] === 'V') {
+                        if (recipe.tags[i] === 'V+') {
                             tagList.push(recipe)
                         }
                     }
                     if (this.state.vegetarianChecked === true) {
-                        if (recipe.tags[i] === 'V+') {
+                        if (recipe.tags[i] === 'V') {
                             tagList.push(recipe)
                         }
                     }
@@ -636,8 +638,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         const tagList1 = sortBy(item.tags).filter((tag) => {
 
-            if (tag === 'V') color1.push({ name: tag, color: '#00C520' })
-            if (tag === 'V+') color1.push({ name: tag.replace('V+', 'VEG'), color: '#9403fc' })
+            if (tag === 'V') color1.push({ name: "VEG", color: '#00C520' })
+            if (tag === 'V+') color1.push({ name: "V", color: '#9403fc' })
             if (tag === 'GF') color1.push({ name: tag, color: '#469753' })
             if (tag === 'DF') color1.push({ name: tag, color: '#B7782B' })
             if (tag === 'GH') color1.push({ name: tag, color: '#965734' })
