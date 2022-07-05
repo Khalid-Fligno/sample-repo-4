@@ -129,7 +129,9 @@ export const fetchRecipeData = async (challengeRecipe) => {
 
   if (challengeRecipe) {
 
-    const snapshot = await db.collection("recipes").get();
+    const snapshot = await db.collection("recipes")
+      .orderBy('title')
+      .get();
 
     if (snapshot.empty) {
       return null;
