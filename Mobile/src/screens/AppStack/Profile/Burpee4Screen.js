@@ -79,10 +79,7 @@ export default class Burpee4Screen extends React.PureComponent {
           text: "Yes",
           onPress: () => {
             if (this.props.navigation.getParam("fromScreen")) {
-              const screen = this.props.navigation.getParam("fromScreen");
-              const params =
-                this.props.navigation.getParam("screenReturnParams");
-              this.props.navigation.navigate(screen, params);
+              this.props.navigation.navigate("CalendarHome");
             } else if (this.props.navigation.getParam("calendarScreen")) {
               const screen = this.props.navigation.getParam("calendarScreen");
               this.props.navigation.navigate(screen);
@@ -165,7 +162,7 @@ export default class Burpee4Screen extends React.PureComponent {
           this.props.navigation.navigate(screen, params);
           return;
         }
-        this.props.navigation.navigate("ProgressEdit", {
+        this.props.navigation.navigate("Settings", {
           isInitial: true
         });;
       }
