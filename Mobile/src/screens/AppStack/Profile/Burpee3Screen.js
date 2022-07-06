@@ -95,12 +95,15 @@ export default class Burpee3Screen extends React.PureComponent {
       updateBurpees,
       photoExist2
     } = this.props.navigation.state.params;
-
+    console.log("CalenderHomeScreen: ", this.props.navigation.getParam("calendarScreen"))
     this.setState({ pauseModalVisible: false }, () => {
       if (this.props.navigation.getParam("fromScreen")) {
         const screen = this.props.navigation.getParam("fromScreen");
         const params = this.props.navigation.getParam("screenReturnParams");
         this.props.navigation.navigate(screen, params);
+      } else if (this.props.navigation.getParam("calendarScreen")) {
+        const screen = this.props.navigation.getParam("calendarScreen");
+        this.props.navigation.navigate(screen);
       } else {
         if (updateBurpees) {
           this.props.navigation.navigate("ProgressEdit", {
@@ -142,13 +145,18 @@ export default class Burpee3Screen extends React.PureComponent {
       updateBurpees,
       photoExist2
     } = this.props.navigation.state.params;
-
+    console.log("CalenderHomeScreen: ", this.props.navigation.getParam("calendarScreen"))
     if (this.props.navigation.getParam("fromScreen")) {
       const screen = this.props.navigation.getParam("fromScreen");
       const params = this.props.navigation.getParam("screenReturnParams");
       this.props.navigation.replace("Burpee4", {
         fromScreen: screen,
         screenReturnParams: params,
+      });
+    } else if (this.props.navigation.getParam("calendarScreen")) {
+      const screen = this.props.navigation.getParam("calendarScreen");
+      this.props.navigation.navigate("Burpee4", {
+        calendarScreen: screen
       });
     } else {
       this.props.navigation.replace("Burpee4", {
