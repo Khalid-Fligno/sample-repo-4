@@ -69,8 +69,7 @@ class CalendarHomeScreen extends React.PureComponent {
       skipped: false,
       initialBurpeeTestCompleted: false,
       width: 0,
-      AllRecipe: [],
-      challengeRecipe: [],
+      AllRecipe: undefined,
       transformLevel: undefined,
       completeCha: undefined,
       todayRecommendedRecipe: undefined,
@@ -146,49 +145,14 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   fetchRecipeChallenge = async () => {
-    await db
-      .collection("challenges")
-      .get()
-      .then((querySnapshot) => {
-        const documents = querySnapshot.docs.map((doc) => doc.data());
-
-        const level_1 = documents.filter((res) => {
-          if (res.id === "88969d13-fd11-4fde-966e-df1270fb97dd") {
-            return res.id;
-          }
-        });
-        const level_2 = documents.filter((res) => {
-          if (res.id === "7798f53c-f613-435d-b94b-b67f1f43b51b") {
-            return res.id;
-          }
-        });
-
-        const level_3 = documents.filter((res) => {
-          if (res.id === "0d48d056-2623-4201-b25a-3f1d78083dba") {
-            return res.id;
-          }
-        });
-
-        const challengeLevel = [
-          {
-            level1: level_1,
-            level2: level_2,
-            level3: level_3,
-          },
-        ];
-
-        fetchRecipeData(challengeLevel).then((res) => {
-          this.setState({
-            AllRecipe: res.recommendedRecipe,
-            loading: false,
-          });
-        });
-
+    fetchRecipeData()
+      .then((res) => {
         this.setState({
-          challengeRecipe: challengeLevel,
-        });
-      });
-  };
+          AllRecipe: res,
+          loading: false,
+        })
+      })
+  }
 
   fetchCalendarEntries = () => {
     const selectedDate = this.calendarStrip.current.getSelectedDate();
@@ -300,8 +264,8 @@ class CalendarHomeScreen extends React.PureComponent {
           };
           userRef.set(data, { merge: true });
         }
-        this.setState({ loading: false })
         this.setState({
+          loading: false,
           initialBurpeeTestCompleted: data?.initialBurpeeTestCompleted ?? false,
         });
       })
@@ -1068,7 +1032,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   getToFilter(data, data1, data2, title, configs) {
     const {
-      challengeRecipe,
       activeChallengeData,
       phaseDefaultTags,
       activeChallengeUserData,
@@ -1129,7 +1092,6 @@ class CalendarHomeScreen extends React.PureComponent {
       phaseDefaultTags: phaseDefaultTags,
       defaultLevelTags: activeChallengeData.levelTags,
       todayRecommendedRecipe: data2,
-      challengeAllRecipe: challengeRecipe[0],
       configs: configs, 
       recipes: data,
       title: title,
@@ -1196,9 +1158,9 @@ class CalendarHomeScreen extends React.PureComponent {
         >
           Today's Meals
         </Text>
-        {AllRecipe[0] && (
+        {AllRecipe && (
           <TodayMealsList
-            recipe={AllRecipe[0]}
+            recipe={AllRecipe}
             favoriteRecipe={favoriteRecipe[0]}
             todayRecommendedRecipe={todayRecommendedRecipe[0]}
             data={todayRecommendedMeal[0]}

@@ -239,6 +239,25 @@ export default class LevelModal extends React.PureComponent {
                         </TouchableOpacity>
                         <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select Level</Text>
                         <TouchableOpacity
+                            onPress={this.props.togglePostpartumChecked}>
+                            <View style={styles.tagContainer}>
+                                <Text style={{ marginBottom: 10, fontSize: 15 }}>Postpartum</Text>
+                                {Platform.OS == 'ios' ?
+                                    (<CheckBox
+                                        boxType='square'
+                                        value={this.props.postpartumChecked}
+                                    />
+                                    ) : (
+                                        <CheckBox
+                                            boxType='square'
+                                            value={this.props.togglePostpartumChecked}
+                                            onValueChange={this.props.postpartumChecked}
+                                        />
+                                )}
+                            </View>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity
                             onPress={this.props.onPressLevel1}
                         // onPress={() => console.log('levelBUttonData: ', challengeRecipeData.level1)}
                         >
