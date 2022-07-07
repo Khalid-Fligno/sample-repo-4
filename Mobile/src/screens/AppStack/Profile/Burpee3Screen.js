@@ -98,9 +98,7 @@ export default class Burpee3Screen extends React.PureComponent {
 
     this.setState({ pauseModalVisible: false }, () => {
       if (this.props.navigation.getParam("fromScreen")) {
-        const screen = this.props.navigation.getParam("fromScreen");
-        const params = this.props.navigation.getParam("screenReturnParams");
-        this.props.navigation.navigate(screen, params);
+        this.props.navigation.navigate("CalendarHome");
       } else {
         if (updateBurpees) {
           this.props.navigation.navigate("ProgressEdit", {

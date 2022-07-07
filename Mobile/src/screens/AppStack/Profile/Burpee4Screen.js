@@ -79,10 +79,7 @@ export default class Burpee4Screen extends React.PureComponent {
           text: "Yes",
           onPress: () => {
             if (this.props.navigation.getParam("fromScreen")) {
-              const screen = this.props.navigation.getParam("fromScreen");
-              const params =
-                this.props.navigation.getParam("screenReturnParams");
-              this.props.navigation.navigate(screen, params);
+              this.props.navigation.navigate("CalendarHome");
             } else {
               if (updateBurpees) {
                 this.props.navigation.navigate("ProgressEdit", {
