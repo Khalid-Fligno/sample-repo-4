@@ -21,18 +21,12 @@ import CustomBtn from "../../../components/Shared/CustomBtn";
 import { containerPadding } from "../../../styles/globalStyles";
 
 const { width } = Dimensions.get("window");
-
-const coachingTip = [
-  "Land with your feet flat on the ground just outside your hands.",
-  "When extending out, avoid keeping your legs dead straight.",
-  "Don’t let your hips drop as you land into your push-up.",
-];
-
 export default class Burpee1Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
+      strengthAssessmentInfo: props.navigation.getParam("strengthAssessmentInfo")
     };
   }
 
@@ -55,13 +49,15 @@ export default class Burpee1Screen extends React.PureComponent {
       this.props.navigation.navigate("Burpee2", {
         fromScreen: screen,
         screenReturnParams: params,
+        strengthAssessmentInfo: this.state.strengthAssessmentInfo
       });
     } else {
       this.props.navigation.navigate("Burpee2", {
         isInitial: isInitial,
         navigateTo: navigateTo,
         updateBurpees: updateBurpees,
-        photoExist2: photoExist2
+        photoExist2: photoExist2,
+        strengthAssessmentInfo: this.state.strengthAssessmentInfo
       });
     }
   };
@@ -108,17 +104,19 @@ export default class Burpee1Screen extends React.PureComponent {
 
   render() {
     const { loading } = this.state;
-
+    const { 
+      title, 
+      message, 
+      assessmentVideo: { title: videoTitle }, 
+      additionalInfo: { coachingTips } 
+    } = this.state.strengthAssessmentInfo
+    
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
           <View style={styles.textContainer}>
-            <Text style={styles.headerText}>Burpee Test</Text>
-            <Text style={styles.bodyText}>
-              It’s time to test your fitness level - this will help us gauge the
-              intensity of your workouts. Complete as many burpees as possible
-              in 60 seconds.
-            </Text>
+            <Text style={styles.headerText}>{title}</Text>
+            <Text style={styles.bodyText}>{message}</Text>
           </View>
           <View style={styles.contentContainer}>
             <View style={styles.carouselContainer}>
@@ -134,24 +132,12 @@ export default class Burpee1Screen extends React.PureComponent {
               >
                 <View style={styles.exerciseTile}>
                   <View style={WorkoutScreenStyle.exerciseTileHeaderBar}>
-                    <View>
-                      <Text
-                        style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}
-                      >
-                        BURPEES
-                      </Text>
-                    </View>
-                    <View>
-                      <Text
-                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
-                      >
-                        MAX
-                      </Text>
-                    </View>
+                      <Text style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}>{videoTitle.toUpperCase()}</Text>
+                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>MAX</Text>
                   </View>
                   <Video
                     source={{
-                      uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
+                      uri: `${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle)}.mp4`,
                     }}
                     resizeMode="contain"
                     repeat
@@ -162,25 +148,17 @@ export default class Burpee1Screen extends React.PureComponent {
                 <View style={styles.exerciseDescriptionContainer}>
                   <View style={WorkoutScreenStyle.exerciseTileHeaderBar}>
                     <View>
-                      <Text
-                        style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}
-                      >
-                        ADDITIONAL INFO
-                      </Text>
+                      <Text style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}>ADDITIONAL INFO</Text>
                     </View>
                   </View>
-                  <View
-                    style={WorkoutScreenStyle.exerciseDescriptionTextContainer}
-                  >
+                  <View style={WorkoutScreenStyle.exerciseDescriptionTextContainer}>
                     <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>
                       Coaching tip:
                     </Text>
-                    {coachingTip.map((tip, index) => (
+                    {coachingTips.map((tip, index) => (
                       <View style={{ flexDirection: "row" }} key={index}>
                         <Text style={NutritionStyles.ingredientsText}> • </Text>
-                        <Text style={NutritionStyles.ingredientsText}>
-                          {tip}
-                        </Text>
+                        <Text style={NutritionStyles.ingredientsText}>{tip}</Text>
                       </View>
                     ))}
                   </View>
@@ -191,10 +169,7 @@ export default class Burpee1Screen extends React.PureComponent {
           <View style={styles.buttonContainer}>
             <CustomBtn
               Title={
-                this.props.navigation.getParam("updateBurpees") ?
-                  "Update Burpee count"
-                  :
-                  "READY!"
+                this.props.navigation.getParam("updateBurpees") ? `Update ${title} count` : "READY!"
               }
               onPress={this.handleNext}
               outline={false}
