@@ -1,6 +1,5 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import HomeScreen from '../../src/screens/AppStack/Home/HomeScreen';
 import Header from '../../src/components/Shared/Header';
 import NutritionStack from './NutritionStack';
 import WorkoutsStack from './WorkoutsStack';

@@ -14,7 +14,7 @@ import Loader from "../../../components/Shared/Loader";
 import { db } from "../../../../config/firebase";
 import colors from "../../../styles/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import HomeScreenStyle from "./HomeScreenStyle";
+import HomeScreenStyle from "./HomeScreenStyleV2";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
