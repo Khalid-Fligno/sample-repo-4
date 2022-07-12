@@ -715,16 +715,9 @@ class CalendarHomeScreen extends React.PureComponent {
       });
     }
 
-    const { 
-      assessmentVideo: { title: videoTitle, url: videoUrl }, 
-    } = this.state.activeChallengeData?.strengthAssessment
-
     if (!this.state.initialBurpeeTestCompleted) {
       
-      await FileSystem.downloadAsync(videoUrl, `${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle)}.mp4`)
-
       this.props.navigation.navigate("Burpee1", {
-        strengthAssessmentInfo: this.state.activeChallengeData?.strengthAssessment,
         fromScreen: "WorkoutInfo",
         screenReturnParams: {
           workout,

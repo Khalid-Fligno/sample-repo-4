@@ -19,19 +19,85 @@ import WorkoutScreenStyle from "../Workouts/WorkoutScreenStyle";
 import NutritionStyles from "../Nutrition/NutritionStyles";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import { containerPadding } from "../../../styles/globalStyles";
+import { db } from "../../../../config/firebase";
+
+
+import {
+  isActiveChallenge,
+} from "../../../utils/challenges";
+
 
 const { width } = Dimensions.get("window");
 export default class Burpee1Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      strengthAssessmentInfo: props.navigation.getParam("strengthAssessmentInfo")
+      loading: false
     };
   }
 
   componentDidMount() {
     this.props.navigation.setParams({ handleCancel: this.handleCancel });
+
+    this.fetchStrengthAssessment()
+  }
+
+  fetchStrengthAssessment = async () => {
+
+    // Hack to trigger next layout for Loader to appear
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    this.setState({ loading: true })
+
+    const exit = () => {
+      this.setState({ loading: false })
+    }
+
+    
+    const fetchStrengthAssessmentId = async () => {
+      // Get active challenge, if any
+      const activeChallenge = await isActiveChallenge()
+
+      if (activeChallenge) {
+        const challengeRef = await db
+          .collection("challenges")
+          .doc(activeChallenge.id)
+          .get()
+        
+        const strengthAssessmentId = challengeRef.data()?.strengthAssessmentId?.trim()
+        if(strengthAssessmentId?.length > 0) return strengthAssessmentId
+        else return "default"
+
+      } else {
+        return "default"
+      }
+    }
+    
+    // Get Strength assessment information
+    const strengthAssessmentRef = await db
+      .collection("strengthAssessments")
+      .doc(await fetchStrengthAssessmentId())
+      .get()
+
+    if(!strengthAssessmentRef.exists) {
+      exit()
+      return
+    }
+
+    const strengthAssessmentInfo = strengthAssessmentRef.data()
+    const {
+      video: {url, title, version}
+    } = strengthAssessmentInfo
+
+    const videoUri =`${FileSystem.cacheDirectory}${encodeURIComponent(title+version)}.mp4`
+    if(await !FileSystem.getInfoAsync(videoUri).exists)  
+      await FileSystem.downloadAsync(url, videoUri)
+   
+    // Successfully loaded assessment information
+    this.setState({
+      loading: false,
+      strengthAssessmentInfo
+    })
   }
 
   handleNext = async () => {
@@ -102,17 +168,25 @@ export default class Burpee1Screen extends React.PureComponent {
     );
   };
 
+
   render() {
-    const { loading } = this.state;
-    const { 
-      title, 
-      message, 
-      assessmentVideo: { title: videoTitle }, 
-      additionalInfo: { coachingTips } 
-    } = this.state.strengthAssessmentInfo
-    
-    return (
-      <SafeAreaView style={styles.container}>
+    const { loading, strengthAssessmentInfo } = this.state
+
+    console.log(`Loading: ${loading}`)
+
+    const renderMainContents = (strengthAssessmentInfo) => {
+
+      if(!strengthAssessmentInfo) 
+        return (<View style={styles.flexContainer}/>)
+
+      const { 
+        title, 
+        message, 
+        video: { title: videoTitle, version: videoVersion }, 
+        additionalInfo: { coachingTips } 
+      } = strengthAssessmentInfo
+
+      return (
         <View style={styles.flexContainer}>
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>{title}</Text>
@@ -137,7 +211,7 @@ export default class Burpee1Screen extends React.PureComponent {
                   </View>
                   <Video
                     source={{
-                      uri: `${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle)}.mp4`,
+                      uri: `${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle+videoVersion)}.mp4`,
                     }}
                     resizeMode="contain"
                     repeat
@@ -176,8 +250,20 @@ export default class Burpee1Screen extends React.PureComponent {
               customBtnTitleStyle={{ fontSize: 14, fontFamily: fonts.bold }}
             />
           </View>
-          <Loader color={colors.coral.standard} loading={loading} />
         </View>
+      )
+    }
+    
+    return (
+      <SafeAreaView style={styles.container}>
+
+        {!loading && renderMainContents(strengthAssessmentInfo) }
+        
+        {loading && ( 
+          <View style={styles.flexContainer}>
+              <Loader color={colors.coral.standard} loading={loading}/>
+          </View>
+        )}
       </SafeAreaView>
     );
   }

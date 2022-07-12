@@ -181,7 +181,7 @@ export default class Burpee4Screen extends React.PureComponent {
       burpeeCount,
       burpeeModalVisible,
       loading,
-      strengthAssessmentInfo: { assessmentVideo: {title: videoTitle } }
+      strengthAssessmentInfo: { video: {title: videoTitle } }
     } = this.state;
 
     return (

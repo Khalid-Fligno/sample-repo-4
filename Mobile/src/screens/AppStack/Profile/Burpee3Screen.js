@@ -39,7 +39,7 @@ export default class Burpee3Screen extends React.PureComponent {
     super(props);
     this.state = {
       timerStart: false,
-      totalDuration: 10,
+      totalDuration: 60,
       appState: AppState.currentState,
       videoPaused: false,
       pauseModalVisible: false,
@@ -99,7 +99,7 @@ export default class Burpee3Screen extends React.PureComponent {
 
     const {
       strengthAssessmentInfo : { 
-        assessmentVideo: { title: videoTitle } 
+        video: { title: videoTitle, version: videoVersion } 
       }
     } = this.state
 
@@ -120,7 +120,7 @@ export default class Burpee3Screen extends React.PureComponent {
       }
     })
 
-    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle)}.mp4`, {
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle+videoVersion)}.mp4`, {
       idempotent: true,
     })
   };
@@ -151,7 +151,7 @@ export default class Burpee3Screen extends React.PureComponent {
 
     const {
       strengthAssessmentInfo : { 
-        assessmentVideo: { title: videoTitle } 
+        video: { title: videoTitle, version: videoVersion } 
       }
     } = this.state
 
@@ -173,7 +173,7 @@ export default class Burpee3Screen extends React.PureComponent {
       });
     }
 
-    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle)}.mp4`, {
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle + videoVersion)}.mp4`, {
       idempotent: true,
     });
   };
@@ -184,7 +184,7 @@ export default class Burpee3Screen extends React.PureComponent {
       totalDuration,
       pauseModalVisible,
       strengthAssessmentInfo : { 
-        assessmentVideo: { title: videoTitle } 
+        video: { title: videoTitle, version: videoVersion} 
       } 
     } = this.state;
 
@@ -196,7 +196,7 @@ export default class Burpee3Screen extends React.PureComponent {
               <Video
                 ref={this.video}
                 source={{
-                  uri: `${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle)}.mp4`,
+                  uri: `${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle+videoVersion)}.mp4`,
                 }}
                 resizeMode="contain"
                 isLooping
