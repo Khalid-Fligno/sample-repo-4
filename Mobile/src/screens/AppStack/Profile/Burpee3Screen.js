@@ -105,9 +105,10 @@ export default class Burpee3Screen extends React.PureComponent {
 
     this.setState({ pauseModalVisible: false }, () => {
       if (this.props.navigation.getParam("fromScreen")) {
-        const screen = this.props.navigation.getParam("fromScreen");
-        const params = this.props.navigation.getParam("screenReturnParams");
-        this.props.navigation.navigate(screen, params);
+        this.props.navigation.navigate("CalendarHome");
+      } else if (this.props.navigation.getParam("calendarScreen")) {
+        const screen = this.props.navigation.getParam("calendarScreen");
+        this.props.navigation.navigate(screen);
       } else {
         if (updateBurpees) {
           this.props.navigation.navigate("ProgressEdit", {
@@ -162,6 +163,11 @@ export default class Burpee3Screen extends React.PureComponent {
         fromScreen: screen,
         screenReturnParams: params,
         strengthAssessmentInfo: this.state.strengthAssessmentInfo
+      });
+    } else if (this.props.navigation.getParam("calendarScreen")) {
+      const screen = this.props.navigation.getParam("calendarScreen");
+      this.props.navigation.navigate("Burpee4", {
+        calendarScreen: screen
       });
     } else {
       this.props.navigation.replace("Burpee4", {

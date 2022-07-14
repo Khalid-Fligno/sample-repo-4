@@ -114,14 +114,11 @@ export default class SettingsScreen extends React.PureComponent {
       initialProgressInfo: {
         date: moment().format("YYYY-MM-DD"),
       },
-
       currentProgressInfo: {
         date: moment().format("YYYY-MM-DD"),
-      }
+      },
+      initialBurpeeTestCompleted: false
     });
-    this.props.navigation.navigate("ProgressEdit", {
-      isInitial: true
-    })
     Alert.alert("Your progress info has been reset");
   };
 

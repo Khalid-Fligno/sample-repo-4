@@ -17,10 +17,10 @@ import { db } from "../../../../../config/firebase";
 import { diff } from "../../../../utils/index";
 import moment from "moment";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import colors from '../../../../styles/colors';
-import Loader from '../../../../components/Shared/Loader';
 import Modal from "react-native-modal";
 import CustomBtn from '../../../../components/Shared/CustomBtn';
+import colors from '../../../../styles/colors';
+import Loader from '../../../../components/Shared/Loader';
 
 export const YouScreen = ({ navigation }) => {
 
@@ -32,12 +32,14 @@ export const YouScreen = ({ navigation }) => {
   const [waistDiff, setWaistDiff] = useState(null);
   const [hipDiff, setHipDiff] = useState(null);
   const [modal, setModal] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [burpeeRes, setBurpeeRess] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState(undefined)
 
   const { width } = Dimensions.get("window");
 
   const fetchProgressInfo = async () => {
+    setLoading(true)
     const uid = await AsyncStorage.getItem("uid");
     const userDataFromFirebase = await db
       .collection("users")
@@ -45,21 +47,9 @@ export const YouScreen = ({ navigation }) => {
       .get();
 
     const userData = userDataFromFirebase.data()
+    console.log("userData: ", userData)
 
     if (userData) {
-      const currentProgressInfo = userData?.currentProgressInfo ?
-        userData.currentProgressInfo :
-        null
-
-      const initialProgressInfo = userData?.initialProgressInfo ?
-        userData.initialProgressInfo :
-        null
-
-      setProfile(userData)
-      setInitialProgressInfo(initialProgressInfo)
-      setCurrentProgressInfo(currentProgressInfo)
-      setUnitsOfMeasurement(userData.unitsOfMeasurement)
-
       if (
         userData.weeklyTargets.currentWeekStartDate !==
         moment().startOf("week").format("YYYY-MM-DD")
@@ -76,6 +66,9 @@ export const YouScreen = ({ navigation }) => {
           .set(data, { merge: true })
           .catch((err) => console.log(err));
       }
+
+      setUserData(userData)
+      setLoading(false)
     }
   };
 
@@ -87,7 +80,6 @@ export const YouScreen = ({ navigation }) => {
       const weight = diff(initialProgressInfo?.weight, currentProgressInfo?.weight);
       const waist = diff(initialProgressInfo?.waist, currentProgressInfo?.waist);
       const hip = diff(initialProgressInfo?.hip, currentProgressInfo?.hip)
-      console.log("waist: ", waist?.data)
       setWeightDiff(weight)
       setWaistDiff(waist)
       setHipDiff(hip)
@@ -98,25 +90,25 @@ export const YouScreen = ({ navigation }) => {
     initialProgressInfo,
     currentProgressInfo
   ) => {
-
     navigation.navigate("ProgressEdit", {
       isInitial: false,
       initialProgressInfo: initialProgressInfo,
       currentProgressInfo: currentProgressInfo
     })
+    setModal(false)
   }
 
   const editBeforeBtn = (
     initialProgressInfo,
     currentProgressInfo
-  ) => (
-
+  ) => {
     navigation.navigate("ProgressEdit", {
       isInitial: true,
       initialProgressInfo: initialProgressInfo,
       currentProgressInfo: currentProgressInfo
     })
-  );
+    setModal(false)
+  };
 
   const getBurpeeCount = (
     afterBurpee,
@@ -150,7 +142,6 @@ export const YouScreen = ({ navigation }) => {
         initialProgressInfo?.burpeeCount
       )
     }
-    console.log("result: ", result)
 
     setBurpeeRess(result);
   }
@@ -181,7 +172,23 @@ export const YouScreen = ({ navigation }) => {
     setModal(!modal)
   };
 
+  const extractUserData = async () => {
+    if (userData) {
+      setInitialProgressInfo(userData?.initialProgressInfo)
+      setProfile(userData?.totalWorkoutCompleted)
+      setCurrentProgressInfo(userData?.currentProgressInfo)
+      setUnitsOfMeasurement(userData.unitsOfMeasurement)
+    }
+  }
+
   useEffect(() => {
+    extractUserData();
+  }, [initialProgressInfo, userData])
+
+  useEffect(() => {
+    navigation.addListener("didFocus", async () => {
+      await fetchProgressInfo();
+    });
     fetchProgressInfo();
   }, [])
 
@@ -198,8 +205,6 @@ export const YouScreen = ({ navigation }) => {
       currentProgressInfo
     )
   }, [initialProgressInfo, currentProgressInfo])
-
-  console.log("initialProgressInfo: ", initialProgressInfo)
 
   return (
     <ScrollView>
@@ -651,7 +656,7 @@ export const YouScreen = ({ navigation }) => {
           }}
         >
           <Text style={{ fontSize: 40 }}>
-            {profile?.totalWorkoutCompleted}
+            {profile}
           </Text>
           <Text style={{
             fontFamily: fonts.StyreneAWebRegular

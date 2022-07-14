@@ -296,19 +296,10 @@ export default class OnBoarding4 extends Component {
 
   addedToCalendarPopup(stringDate2) {
     const onPressAlert = () => {
-      // this.hideCalendarModal();
-      const resetAction = StackActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({
-            routeName: "Tabs",
-            action: NavigationActions.navigate({
-              routeName: "Calendar",
-            }),
-          }),
-        ],
+      this.hideCalendarModal()
+      this.props.navigation.navigate('Burpee1', {
+        calendarScreen: 'CalendarHome'
       });
-      this.props.navigation.dispatch(resetAction);
     };
     this.setState({ addingToCalendar: false });
     Alert.alert(
@@ -385,11 +376,13 @@ export default class OnBoarding4 extends Component {
     const stringDate3 = moment(date).format("YYYY-MM-DD").toString();
 
     if (quit || completedChallenge) {
+      console.log("QUIT: ", quit)
       if (this.state.addingToCalendar) {
         return;
       }
       this.setState({ addingToCalendar: true });
-      ////////////////////saving on calendar
+
+      //saving on calendar
       let updatedChallengedata = this.state.challengeData;
 
       let skipped = updatedChallengedata.onBoardingInfo.skipped;
@@ -442,6 +435,7 @@ export default class OnBoarding4 extends Component {
       await storeProgressInfo(progressData, quit || completedChallenge);
       await this.saveOnBoardingInfo(data, stringDate2);
     } else {
+      console.log("QUIT: False")
       if (this.state.addingToCalendar) {
         return;
       }

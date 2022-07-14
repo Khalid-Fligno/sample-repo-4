@@ -67,7 +67,7 @@ export default class Burpee4Screen extends React.PureComponent {
       updateBurpees,
       photoExist2
     } = this.props.navigation.state.params;
-
+    console.log("CalenderHomeScreen: ", this.props.navigation.getParam("calendarScreen"))
     Alert.alert(
       "Stop burpee test?",
       "",
@@ -80,10 +80,10 @@ export default class Burpee4Screen extends React.PureComponent {
           text: "Yes",
           onPress: () => {
             if (this.props.navigation.getParam("fromScreen")) {
-              const screen = this.props.navigation.getParam("fromScreen");
-              const params =
-                this.props.navigation.getParam("screenReturnParams");
-              this.props.navigation.navigate(screen, params);
+              this.props.navigation.navigate("CalendarHome");
+            } else if (this.props.navigation.getParam("calendarScreen")) {
+              const screen = this.props.navigation.getParam("calendarScreen");
+              this.props.navigation.navigate(screen);
             } else {
               if (updateBurpees) {
                 this.props.navigation.navigate("ProgressEdit", {
@@ -148,11 +148,14 @@ export default class Burpee4Screen extends React.PureComponent {
       );
 
       this.setState({ loading: false });
-
+      console.log("CalenderHomeScreen: ", this.props.navigation.getParam("calendarScreen"))
       if (navigateTo === "Progress") {
         this.props.navigation.navigate("ProgressEdit", {
           isInitial: isInitial
         });
+      } else if (this.props.navigation.getParam("calendarScreen")) {
+        const screen = this.props.navigation.getParam("calendarScreen");
+        this.props.navigation.navigate(screen);
       } else {
         if (this.props.navigation.getParam("fromScreen")) {
           const screen = this.props.navigation.getParam("fromScreen");
@@ -160,7 +163,7 @@ export default class Burpee4Screen extends React.PureComponent {
           this.props.navigation.navigate(screen, params);
           return;
         }
-        this.props.navigation.navigate("ProgressEdit", {
+        this.props.navigation.navigate("Settings", {
           isInitial: true
         });;
       }
