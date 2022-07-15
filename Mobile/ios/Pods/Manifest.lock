@@ -874,7 +874,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 8ca588cc921e70590820ce72b8789b02c67cce38
   React-jsinspector: b14e62ebe7a66e9231e9581279909f2fc3db6606
   react-native-appsflyer: 230a933e888b2a324a8fc2e31018f70cabedf8e0
-  react-native-in-app-utils: 96cdefc90ad74a79a95d19239a183995a6face0b
+  react-native-in-app-utils: 9499d8e2c008d447d8be83012e6425f13ead8fd7
   react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
   react-native-onesignal: 5187b12401c959102a64bde48fbca39c5e3b8136
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865

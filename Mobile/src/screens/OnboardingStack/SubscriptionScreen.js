@@ -369,7 +369,7 @@ export default class SubscriptionScreen extends React.PureComponent {
     try {
       RNIap.getSubscriptions(itemSkus)
         .then((products) => {
-          if (products.length !== 2) {
+          if (products.length == 0) {
             // IAP products not retrieved (App Store server down, etc.)
             this.setState({ loading: false });
             Alert.alert(
@@ -414,7 +414,7 @@ export default class SubscriptionScreen extends React.PureComponent {
           "Unable to connect to the App Store",
           "Please try again later"
         );
-      } else if (products.length !== 2) {
+      } else if (products.length == 0) {
         // IAP products not retrieved (App Store server down, etc.)
         this.setState({ loading: false });
         Alert.alert(
@@ -452,7 +452,7 @@ export default class SubscriptionScreen extends React.PureComponent {
   loadAndroidDiscountedProducts = async () => {
     RNIap.getSubscriptions(discountedItemSku)
       .then((products) => {
-        if (products.length !== 2) {
+        if (products.length == 0) {
           // IAP products not retrieved (App Store server down, etc.)
           this.setState({ loading: false });
           Alert.alert(
@@ -494,7 +494,7 @@ export default class SubscriptionScreen extends React.PureComponent {
           "Unable to connect to the App Store",
           "Please try again later"
         );
-      } else if (products.length !== 2) {
+      } else if (products.length == 0) {
         // IAP products not retrieved (App Store server down, etc.)
         this.setState({ loading: false });
         Alert.alert(
@@ -536,7 +536,7 @@ export default class SubscriptionScreen extends React.PureComponent {
           "Unable to connect to the App Store",
           "Please try again later"
         );
-      } else if (products.length !== 2) {
+      } else if (products.length == 0) {
         // IAP products not retrieved (App Store server down, etc.)
         this.setState({ loading: false });
         Alert.alert(
@@ -579,7 +579,7 @@ export default class SubscriptionScreen extends React.PureComponent {
           "Unable to connect to the App Store",
           "Please try again later"
         );
-      } else if (products.length !== 2) {
+      } else if (products.length == 0) {
         // IAP products not retrieved (App Store server down, etc.)
         this.setState({ loading: false });
         Alert.alert(
@@ -652,55 +652,53 @@ export default class SubscriptionScreen extends React.PureComponent {
           const validationData = await this.validate(
             response.transactionReceipt
           );
-          if (validationData === undefined) {
-            this.setState({ loading: false });
-            Alert.alert("Receipt validation error");
-            return;
-          }
-          const sortedInApp = validationData.receipt.in_app
-            .slice()
-            .sort(compareInApp);
-          const isValid =
-            sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now();
-          if (isValid === true) {
-            const uid = await AsyncStorage.getItem("uid");
-            const userRef = db.collection("users").doc(uid);
-            const data = {
-              subscriptionInfo: {
-                receipt: response.transactionReceipt,
-                expiry: sortedInApp[0].expires_date_ms,
-                originalTransactionId: sortedInApp[0].original_transaction_id,
-                originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
-                productId: sortedInApp[0].product_id,
-                platform: Platform.OS,
-                blogsId: "lifestyleBlogs"
-              },
-            };
-            await userRef.set(data, { merge: true });
-            // Appsflyer event tracking - Start Free Trial
-            const eventName = "af_start_trial";
-            const eventValues = {
-              af_price: productPrice,
-              af_currency: productCurrencyCode,
-            };
-            appsFlyer.trackEvent(eventName, eventValues);
-            userRef.get().then(async (doc) => {
-              this.setState({ loading: false });
-              if (await doc.data().onboarded) {
-                this.props.navigation.navigate("App");
-              } else {
-                this.props.navigation.navigate("Onboarding1", {
-                  name: this.props.navigation.getParam("name", null),
-                });
-              }
-            });
-          } else if (isValid === false) {
+          // if (validationData === undefined) {
+          //   this.setState({ loading: false });
+          //   Alert.alert("Receipt validation error");
+          //   return;
+          // }
+          // const sortedInApp = validationData.receipt.in_app
+          //   .slice()
+          //   .sort(compareInApp);
+          const isValid = true//sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now();
+
+          if(!isValid) {
             this.setState({ loading: false });
             Alert.alert("Purchase Unsuccessful");
-          } else {
-            this.setState({ loading: false });
-            Alert.alert("Something went wrong", `${isValid.message}`);
+            return
           }
+
+          const uid = await AsyncStorage.getItem("uid");
+          const userRef = db.collection("users").doc(uid);
+          const data = {
+            subscriptionInfo: {
+              receipt: response.transactionReceipt,
+              expiry: sortedInApp[0].expires_date_ms,
+              originalTransactionId: sortedInApp[0].original_transaction_id,
+              originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
+              productId: sortedInApp[0].product_id,
+              platform: Platform.OS,
+              blogsId: "lifestyleBlogs"
+            },
+          }
+          await userRef.set(data, { merge: true });
+          // Appsflyer event tracking - Start Free Trial
+          const eventName = "af_start_trial";
+          const eventValues = {
+            af_price: productPrice,
+            af_currency: productCurrencyCode,
+          };
+          appsFlyer.trackEvent(eventName, eventValues);
+          userRef.get().then(async (doc) => {
+            this.setState({ loading: false });
+            if (await doc.data().onboarded) {
+              this.props.navigation.navigate("App");
+            } else {
+              this.props.navigation.navigate("Onboarding1", {
+                name: this.props.navigation.getParam("name", null),
+              });
+            }
+          })
         }
       });
     });

@@ -13,6 +13,7 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		200AFF0828801285005A2033 /* StoreKitTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 200AFF0728801285005A2033 /* StoreKitTestCertificate.cer */; };
 		99EC63CFB4B549BBAF093D10 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3ABB89D1E68496EB7D95742 /* SplashScreen.storyboard */; };
 		9E13B4732493D63000473ED1 /* shell-app.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9E13B4712493D62F00473ED1 /* shell-app.bundle */; };
 		9E13B4742493D63000473ED1 /* shell-app-manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E13B4722493D62F00473ED1 /* shell-app-manifest.json */; };
@@ -29,6 +30,8 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = FitazFK/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = FitazFK/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = FitazFK/main.m; sourceTree = "<group>"; };
+		200AFF06288003B7005A2033 /* StoreKitConfiguration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = StoreKitConfiguration.storekit; sourceTree = "<group>"; };
+		200AFF0728801285005A2033 /* StoreKitTestCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = StoreKitTestCertificate.cer; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AFC3D492460C4505AC9B333 /* Pods-FitazFK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FitazFK.debug.xcconfig"; path = "Target Support Files/Pods-FitazFK/Pods-FitazFK.debug.xcconfig"; sourceTree = "<group>"; };
 		48F9ADCC4C83A462C65D3FC4 /* Pods-FitazFK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FitazFK.release.xcconfig"; path = "Target Support Files/Pods-FitazFK/Pods-FitazFK.release.xcconfig"; sourceTree = "<group>"; };
@@ -66,6 +69,8 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				0731D3B524204D62009CAE85 /* Expo.plist */,
 				E3ABB89D1E68496EB7D95742 /* SplashScreen.storyboard */,
+				200AFF06288003B7005A2033 /* StoreKitConfiguration.storekit */,
+				200AFF0728801285005A2033 /* StoreKitTestCertificate.cer */,
 			);
 			name = FitazFK;
 			sourceTree = "<group>";
@@ -185,6 +190,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E13B4732493D63000473ED1 /* shell-app.bundle in Resources */,
+				200AFF0828801285005A2033 /* StoreKitTestCertificate.cer in Resources */,
 				9E13B4742493D63000473ED1 /* shell-app-manifest.json in Resources */,
 				0731D3B824204D62009CAE85 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
@@ -207,8 +213,8 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=$(which node)\n../node_modules/react-native/scripts/react-native-xcode.sh\n../node_modules/expo-updates/scripts/create-manifest-ios.sh\n";
+			shellPath = /bin/zsh;
+			shellScript = "# Fix for machines using nvm\n#if [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n\n. \"$HOME/.nvm/nvm.sh\"\n\n#elif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n#. \"$(brew --prefix nvm)/nvm.sh\"\n#fi\n\nnvm use\n\nexport NODE_BINARY=$(which node)\n../node_modules/react-native/scripts/react-native-xcode.sh\n#../node_modules/expo-updates/scripts/create-manifest-ios.sh\n";
 		};
 		074B1E5D5EC5780CA12BDA41 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
