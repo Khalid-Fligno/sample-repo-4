@@ -55,7 +55,6 @@ export default class Burpee2Screen extends React.PureComponent {
         calendarScreen: screen,
         strengthAssessmentInfo: this.props.navigation.getParam("strengthAssessmentInfo"),
       });
-      })
     } else {
       this.props.navigation.replace("Burpee3", {
         isInitial: isInitial,
