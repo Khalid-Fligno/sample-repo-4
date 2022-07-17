@@ -53,6 +53,7 @@ export default class Burpee4Screen extends React.PureComponent {
       burpeeCount: 0,
       burpeeModalVisible: false,
       loading: false,
+      strengthAssessmentInfo: props.navigation.getParam("strengthAssessmentInfo")
     };
   }
 
@@ -182,7 +183,8 @@ export default class Burpee4Screen extends React.PureComponent {
     const {
       burpeeCount,
       burpeeModalVisible,
-      loading
+      loading,
+      strengthAssessmentInfo: { video: {title: videoTitle } }
     } = this.state;
 
     return (
@@ -191,12 +193,12 @@ export default class Burpee4Screen extends React.PureComponent {
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>Results</Text>
             <Text style={styles.bodyText}>
-              Please enter the number of burpees you completed.
+              Please enter the number of {videoTitle.toLowerCase()} you completed.
             </Text>
           </View>
           <View style={styles.contentContainer}>
             <View style={styles.inputFieldContainer}>
-              <Text style={styles.inputFieldTitle}>Burpee Count</Text>
+              <Text style={styles.inputFieldTitle}>{videoTitle} Count</Text>
               <TouchableOpacity
                 onPress={this.toggleBurpeeModal}
                 style={styles.inputButton}
