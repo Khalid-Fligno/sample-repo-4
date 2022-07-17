@@ -16,7 +16,7 @@ import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
 import globalStyle from "../../../styles/globalStyles";
 import ProfileStyles from "./ProfileStyles";
-import HomeScreenStyle from "../Home/HomeScreenStyle";
+import HomeScreenStyle from "../Home/HomeScreenStyleV2";
 import ProgressBar from "../../../components/Progress/ProgressBar";
 import {
   heightPercentageToDP as hp,

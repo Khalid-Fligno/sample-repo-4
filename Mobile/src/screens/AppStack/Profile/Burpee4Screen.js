@@ -53,6 +53,7 @@ export default class Burpee4Screen extends React.PureComponent {
       burpeeCount: 0,
       burpeeModalVisible: false,
       loading: false,
+      strengthAssessmentInfo: props.navigation.getParam("strengthAssessmentInfo")
     };
   }
 
@@ -66,7 +67,7 @@ export default class Burpee4Screen extends React.PureComponent {
       updateBurpees,
       photoExist2
     } = this.props.navigation.state.params;
-
+    console.log("CalenderHomeScreen: ", this.props.navigation.getParam("calendarScreen"))
     Alert.alert(
       "Stop burpee test?",
       "",
@@ -80,6 +81,9 @@ export default class Burpee4Screen extends React.PureComponent {
           onPress: () => {
             if (this.props.navigation.getParam("fromScreen")) {
               this.props.navigation.navigate("CalendarHome");
+            } else if (this.props.navigation.getParam("calendarScreen")) {
+              const screen = this.props.navigation.getParam("calendarScreen");
+              this.props.navigation.navigate(screen);
             } else {
               if (updateBurpees) {
                 this.props.navigation.navigate("ProgressEdit", {
@@ -144,11 +148,14 @@ export default class Burpee4Screen extends React.PureComponent {
       );
 
       this.setState({ loading: false });
-
+      console.log("CalenderHomeScreen: ", this.props.navigation.getParam("calendarScreen"))
       if (navigateTo === "Progress") {
         this.props.navigation.navigate("ProgressEdit", {
           isInitial: isInitial
         });
+      } else if (this.props.navigation.getParam("calendarScreen")) {
+        const screen = this.props.navigation.getParam("calendarScreen");
+        this.props.navigation.navigate(screen);
       } else {
         if (this.props.navigation.getParam("fromScreen")) {
           const screen = this.props.navigation.getParam("fromScreen");
@@ -156,7 +163,7 @@ export default class Burpee4Screen extends React.PureComponent {
           this.props.navigation.navigate(screen, params);
           return;
         }
-        this.props.navigation.navigate("ProgressEdit", {
+        this.props.navigation.navigate("Settings", {
           isInitial: true
         });;
       }
@@ -176,7 +183,8 @@ export default class Burpee4Screen extends React.PureComponent {
     const {
       burpeeCount,
       burpeeModalVisible,
-      loading
+      loading,
+      strengthAssessmentInfo: { video: {title: videoTitle } }
     } = this.state;
 
     return (
@@ -185,12 +193,12 @@ export default class Burpee4Screen extends React.PureComponent {
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>Results</Text>
             <Text style={styles.bodyText}>
-              Please enter the number of burpees you completed.
+              Please enter the number of {videoTitle.toLowerCase()} you completed.
             </Text>
           </View>
           <View style={styles.contentContainer}>
             <View style={styles.inputFieldContainer}>
-              <Text style={styles.inputFieldTitle}>Burpee Count</Text>
+              <Text style={styles.inputFieldTitle}>{videoTitle} Count</Text>
               <TouchableOpacity
                 onPress={this.toggleBurpeeModal}
                 style={styles.inputButton}

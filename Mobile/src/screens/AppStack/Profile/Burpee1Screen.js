@@ -19,25 +19,85 @@ import WorkoutScreenStyle from "../Workouts/WorkoutScreenStyle";
 import NutritionStyles from "../Nutrition/NutritionStyles";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import { containerPadding } from "../../../styles/globalStyles";
+import { db } from "../../../../config/firebase";
+
+
+import {
+  isActiveChallenge,
+} from "../../../utils/challenges";
+
 
 const { width } = Dimensions.get("window");
-
-const coachingTip = [
-  "Land with your feet flat on the ground just outside your hands.",
-  "When extending out, avoid keeping your legs dead straight.",
-  "Don’t let your hips drop as you land into your push-up.",
-];
-
 export default class Burpee1Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      loading: false
     };
   }
 
   componentDidMount() {
     this.props.navigation.setParams({ handleCancel: this.handleCancel });
+
+    this.fetchStrengthAssessment()
+  }
+
+  fetchStrengthAssessment = async () => {
+
+    // Hack to trigger next layout for Loader to appear
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    this.setState({ loading: true })
+
+    const exit = () => {
+      this.setState({ loading: false })
+    }
+
+    
+    const fetchStrengthAssessmentId = async () => {
+      // Get active challenge, if any
+      const activeChallenge = await isActiveChallenge()
+
+      if (activeChallenge) {
+        const challengeRef = await db
+          .collection("challenges")
+          .doc(activeChallenge.id)
+          .get()
+        
+        const strengthAssessmentId = challengeRef.data()?.strengthAssessmentId?.trim()
+        if(strengthAssessmentId?.length > 0) return strengthAssessmentId
+        else return "default"
+
+      } else {
+        return "default"
+      }
+    }
+    
+    // Get Strength assessment information
+    const strengthAssessmentRef = await db
+      .collection("strengthAssessments")
+      .doc(await fetchStrengthAssessmentId())
+      .get()
+
+    if(!strengthAssessmentRef.exists) {
+      exit()
+      return
+    }
+
+    const strengthAssessmentInfo = strengthAssessmentRef.data()
+    const {
+      video: {url, title, version}
+    } = strengthAssessmentInfo
+
+    const videoUri =`${FileSystem.cacheDirectory}${encodeURIComponent(title+version)}.mp4`
+    if(await !FileSystem.getInfoAsync(videoUri).exists)  
+      await FileSystem.downloadAsync(url, videoUri)
+   
+    // Successfully loaded assessment information
+    this.setState({
+      loading: false,
+      strengthAssessmentInfo
+    })
   }
 
   handleNext = async () => {
@@ -46,7 +106,7 @@ export default class Burpee1Screen extends React.PureComponent {
       isInitial,
       navigateTo,
       updateBurpees,
-      photoExist2
+      photoExist2,
     } = this.props.navigation.state.params;
 
     if (this.props.navigation.getParam("fromScreen")) {
@@ -55,13 +115,21 @@ export default class Burpee1Screen extends React.PureComponent {
       this.props.navigation.navigate("Burpee2", {
         fromScreen: screen,
         screenReturnParams: params,
+        strengthAssessmentInfo: this.state.strengthAssessmentInfo
+      });
+    } else if (this.props.navigation.getParam("calendarScreen")) {
+      console.log("CalenderHomeScreen: ", this.props.navigation.getParam("calendarScreen"))
+      const screen = this.props.navigation.getParam("calendarScreen");
+      this.props.navigation.navigate("Burpee2", {
+        calendarScreen: screen
       });
     } else {
       this.props.navigation.navigate("Burpee2", {
         isInitial: isInitial,
         navigateTo: navigateTo,
         updateBurpees: updateBurpees,
-        photoExist2: photoExist2
+        photoExist2: photoExist2,
+        strengthAssessmentInfo: this.state.strengthAssessmentInfo
       });
     }
   };
@@ -70,7 +138,7 @@ export default class Burpee1Screen extends React.PureComponent {
     const {
       isInitial,
       updateBurpees,
-      photoExist2
+      photoExist2,
     } = this.props.navigation.state.params;
 
     Alert.alert(
@@ -86,6 +154,9 @@ export default class Burpee1Screen extends React.PureComponent {
           onPress: () => {
             if (this.props.navigation.getParam("fromScreen")) {
               this.props.navigation.navigate("CalendarHome");
+            } else if (this.props.navigation.getParam("calendarScreen")) {
+              const screen = this.props.navigation.getParam("calendarScreen");
+              this.props.navigation.navigate(screen);
             } else {
               if (updateBurpees) {
                 this.props.navigation.navigate("ProgressEdit", {
@@ -103,19 +174,29 @@ export default class Burpee1Screen extends React.PureComponent {
     );
   };
 
-  render() {
-    const { loading } = this.state;
 
-    return (
-      <SafeAreaView style={styles.container}>
+  render() {
+    const { loading, strengthAssessmentInfo } = this.state
+
+    console.log(`Loading: ${loading}`)
+
+    const renderMainContents = (strengthAssessmentInfo) => {
+
+      if(!strengthAssessmentInfo) 
+        return (<View style={styles.flexContainer}/>)
+
+      const { 
+        title, 
+        message, 
+        video: { title: videoTitle, version: videoVersion }, 
+        additionalInfo: { coachingTips } 
+      } = strengthAssessmentInfo
+
+      return (
         <View style={styles.flexContainer}>
           <View style={styles.textContainer}>
-            <Text style={styles.headerText}>Burpee Test</Text>
-            <Text style={styles.bodyText}>
-              It’s time to test your fitness level - this will help us gauge the
-              intensity of your workouts. Complete as many burpees as possible
-              in 60 seconds.
-            </Text>
+            <Text style={styles.headerText}>{title}</Text>
+            <Text style={styles.bodyText}>{message}</Text>
           </View>
           <View style={styles.contentContainer}>
             <View style={styles.carouselContainer}>
@@ -131,24 +212,12 @@ export default class Burpee1Screen extends React.PureComponent {
               >
                 <View style={styles.exerciseTile}>
                   <View style={WorkoutScreenStyle.exerciseTileHeaderBar}>
-                    <View>
-                      <Text
-                        style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}
-                      >
-                        BURPEES
-                      </Text>
-                    </View>
-                    <View>
-                      <Text
-                        style={WorkoutScreenStyle.exerciseTileHeaderBarRight}
-                      >
-                        MAX
-                      </Text>
-                    </View>
+                      <Text style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}>{videoTitle.toUpperCase()}</Text>
+                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>MAX</Text>
                   </View>
                   <Video
                     source={{
-                      uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
+                      uri: `${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle+videoVersion)}.mp4`,
                     }}
                     resizeMode="contain"
                     repeat
@@ -159,25 +228,17 @@ export default class Burpee1Screen extends React.PureComponent {
                 <View style={styles.exerciseDescriptionContainer}>
                   <View style={WorkoutScreenStyle.exerciseTileHeaderBar}>
                     <View>
-                      <Text
-                        style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}
-                      >
-                        ADDITIONAL INFO
-                      </Text>
+                      <Text style={WorkoutScreenStyle.exerciseTileHeaderTextLeft}>ADDITIONAL INFO</Text>
                     </View>
                   </View>
-                  <View
-                    style={WorkoutScreenStyle.exerciseDescriptionTextContainer}
-                  >
+                  <View style={WorkoutScreenStyle.exerciseDescriptionTextContainer}>
                     <Text style={WorkoutScreenStyle.exerciseDescriptionHeader}>
                       Coaching tip:
                     </Text>
-                    {coachingTip.map((tip, index) => (
+                    {coachingTips.map((tip, index) => (
                       <View style={{ flexDirection: "row" }} key={index}>
                         <Text style={NutritionStyles.ingredientsText}> • </Text>
-                        <Text style={NutritionStyles.ingredientsText}>
-                          {tip}
-                        </Text>
+                        <Text style={NutritionStyles.ingredientsText}>{tip}</Text>
                       </View>
                     ))}
                   </View>
@@ -188,18 +249,27 @@ export default class Burpee1Screen extends React.PureComponent {
           <View style={styles.buttonContainer}>
             <CustomBtn
               Title={
-                this.props.navigation.getParam("updateBurpees") ?
-                  "Update Burpee count"
-                  :
-                  "READY!"
+                this.props.navigation.getParam("updateBurpees") ? `Update ${title} count` : "READY!"
               }
               onPress={this.handleNext}
               outline={false}
               customBtnTitleStyle={{ fontSize: 14, fontFamily: fonts.bold }}
             />
           </View>
-          <Loader color={colors.coral.standard} loading={loading} />
         </View>
+      )
+    }
+    
+    return (
+      <SafeAreaView style={styles.container}>
+
+        {!loading && renderMainContents(strengthAssessmentInfo) }
+        
+        {loading && ( 
+          <View style={styles.flexContainer}>
+              <Loader color={colors.coral.standard} loading={loading}/>
+          </View>
+        )}
       </SafeAreaView>
     );
   }

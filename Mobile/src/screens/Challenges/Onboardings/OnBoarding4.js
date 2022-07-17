@@ -296,19 +296,10 @@ export default class OnBoarding4 extends Component {
 
   addedToCalendarPopup(stringDate2) {
     const onPressAlert = () => {
-      // this.hideCalendarModal();
-      const resetAction = StackActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({
-            routeName: "Tabs",
-            action: NavigationActions.navigate({
-              routeName: "Calendar",
-            }),
-          }),
-        ],
+      this.hideCalendarModal()
+      this.props.navigation.navigate('Burpee1', {
+        calendarScreen: 'CalendarHome'
       });
-      this.props.navigation.dispatch(resetAction);
     };
     this.setState({ addingToCalendar: false });
     Alert.alert(
