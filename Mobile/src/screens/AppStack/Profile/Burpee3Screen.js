@@ -95,7 +95,7 @@ export default class Burpee3Screen extends React.PureComponent {
       updateBurpees,
       photoExist2
     } = this.props.navigation.state.params;
-    console.log("CalenderHomeScreen: ", this.props.navigation.getParam("calendarScreen"))
+
     this.setState({ pauseModalVisible: false }, () => {
       if (this.props.navigation.getParam("fromScreen")) {
         this.props.navigation.navigate("CalendarHome");
@@ -140,7 +140,7 @@ export default class Burpee3Screen extends React.PureComponent {
       updateBurpees,
       photoExist2
     } = this.props.navigation.state.params;
-    console.log("CalenderHomeScreen: ", this.props.navigation.getParam("calendarScreen"))
+
     if (this.props.navigation.getParam("fromScreen")) {
       const screen = this.props.navigation.getParam("fromScreen");
       const params = this.props.navigation.getParam("screenReturnParams");

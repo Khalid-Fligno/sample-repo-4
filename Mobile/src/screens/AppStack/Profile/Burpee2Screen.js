@@ -48,11 +48,6 @@ export default class Burpee2Screen extends React.PureComponent {
         fromScreen: screen,
         screenReturnParams: params,
       });
-    } else if (this.props.navigation.getParam("calendarScreen")) {
-      const screen = this.props.navigation.getParam("calendarScreen");
-      this.props.navigation.navigate("Burpee3", {
-        calendarScreen: screen
-      });
     } else {
       this.props.navigation.replace("Burpee3", {
         isInitial: isInitial,
