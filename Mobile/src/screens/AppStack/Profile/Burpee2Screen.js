@@ -47,6 +47,13 @@ export default class Burpee2Screen extends React.PureComponent {
       this.props.navigation.replace("Burpee3", {
         fromScreen: screen,
         screenReturnParams: params,
+        strengthAssessmentInfo: this.props.navigation.getParam("strengthAssessmentInfo"),
+      });
+    } else if (this.props.navigation.getParam("calendarScreen")) {
+      const screen = this.props.navigation.getParam("calendarScreen");
+      this.props.navigation.navigate("Burpee3", {
+        calendarScreen: screen,
+        strengthAssessmentInfo: this.props.navigation.getParam("strengthAssessmentInfo"),
       });
     } else {
       this.props.navigation.replace("Burpee3", {
@@ -54,7 +61,8 @@ export default class Burpee2Screen extends React.PureComponent {
         navigateTo: navigateTo,
         updateBurpees: updateBurpees,
         photoExist2: photoExist2,
-      });
+        strengthAssessmentInfo: this.props.navigation.getParam("strengthAssessmentInfo"),
+      })
     }
   };
 
