@@ -123,6 +123,12 @@ export default class SettingsScreen extends React.PureComponent {
   };
 
   retakeBurpeeTest = async () => {
+    this.setState({ loading: true });
+    await FileSystem.downloadAsync(
+      "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
+      `${FileSystem.cacheDirectory}exercise-burpees.mp4`
+    );
+    this.setState({ loading: false });
     this.props.navigation.navigate("Burpee1");
   };
 
@@ -164,7 +170,7 @@ export default class SettingsScreen extends React.PureComponent {
                 )
               }
               <ListItem
-                title="Re-take strength assessment"
+                title="Re-take burpee test"
                 titleStyle={ProfileStyles.listItemTitleStyle}
                 containerStyle={ProfileStyles.listItemContainer}
                 rightIcon={{

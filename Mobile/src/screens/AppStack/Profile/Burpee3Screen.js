@@ -43,7 +43,6 @@ export default class Burpee3Screen extends React.PureComponent {
       appState: AppState.currentState,
       videoPaused: false,
       pauseModalVisible: false,
-      strengthAssessmentInfo: props.navigation.getParam("strengthAssessmentInfo")
     };
     this.video = createRef();
   }
@@ -96,13 +95,7 @@ export default class Burpee3Screen extends React.PureComponent {
       updateBurpees,
       photoExist2
     } = this.props.navigation.state.params;
-
-    const {
-      strengthAssessmentInfo : { 
-        video: { title: videoTitle, version: videoVersion } 
-      }
-    } = this.state
-
+    console.log("CalenderHomeScreen: ", this.props.navigation.getParam("calendarScreen"))
     this.setState({ pauseModalVisible: false }, () => {
       if (this.props.navigation.getParam("fromScreen")) {
         this.props.navigation.navigate("CalendarHome");
@@ -116,11 +109,12 @@ export default class Burpee3Screen extends React.PureComponent {
           this.props.navigation.navigate("Settings")
         }
       }
-    })
 
-    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle+videoVersion)}.mp4`, {
+    });
+
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, {
       idempotent: true,
-    })
+    });
   };
 
   quitWorkout = () => {
@@ -146,32 +140,24 @@ export default class Burpee3Screen extends React.PureComponent {
       updateBurpees,
       photoExist2
     } = this.props.navigation.state.params;
-
-    const {
-      strengthAssessmentInfo : { 
-        video: { title: videoTitle, version: videoVersion } 
-      }
-    } = this.state
-
+    console.log("CalenderHomeScreen: ", this.props.navigation.getParam("calendarScreen"))
     if (this.props.navigation.getParam("fromScreen")) {
       const screen = this.props.navigation.getParam("fromScreen");
       const params = this.props.navigation.getParam("screenReturnParams");
       this.props.navigation.replace("Burpee4", {
         fromScreen: screen,
         screenReturnParams: params,
-        strengthAssessmentInfo: this.state.strengthAssessmentInfo
       });
     } else {
       this.props.navigation.replace("Burpee4", {
         isInitial: isInitial,
         navigateTo: navigateTo,
         updateBurpees: updateBurpees,
-        photoExist2: photoExist2,
-        strengthAssessmentInfo: this.state.strengthAssessmentInfo
+        photoExist2: photoExist2
       });
     }
 
-    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle + videoVersion)}.mp4`, {
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, {
       idempotent: true,
     });
   };
@@ -181,9 +167,6 @@ export default class Burpee3Screen extends React.PureComponent {
       timerStart,
       totalDuration,
       pauseModalVisible,
-      strengthAssessmentInfo : { 
-        video: { title: videoTitle, version: videoVersion} 
-      } 
     } = this.state;
 
     return (
@@ -194,7 +177,7 @@ export default class Burpee3Screen extends React.PureComponent {
               <Video
                 ref={this.video}
                 source={{
-                  uri: `${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle+videoVersion)}.mp4`,
+                  uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
                 }}
                 resizeMode="contain"
                 isLooping
@@ -210,10 +193,10 @@ export default class Burpee3Screen extends React.PureComponent {
             />
           </View>
           <View style={styles.currentExerciseTextContainer}>
-            <Text style={styles.currentExerciseNameText}>{videoTitle}</Text>
+            <Text style={styles.currentExerciseNameText}>BURPEES</Text>
             <Text style={styles.currentExerciseRepsText}>MAX</Text>
           </View>
-          <Text style={styles.bottomText}>{`REMEMBER TO COUNT YOUR ${videoTitle}!`.toUpperCase()}</Text>
+          <Text style={styles.bottomText}>REMEMBER TO COUNT YOUR BURPEES!</Text>
           <CountdownPauseModal
             isVisible={pauseModalVisible}
             handleQuit={this.quitWorkout}

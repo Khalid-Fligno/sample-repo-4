@@ -491,7 +491,7 @@ export const YouScreen = ({ navigation }) => {
                   textAlign: "center",
                   marginBottom: 5
                 }}>
-                Strength Assessment
+                  Burpees
                 </Text>
                 <Text style={{ fontSize: 25, textAlign: "center" }}>
                   {burpeeRes}

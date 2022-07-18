@@ -96,10 +96,6 @@ export class EditComponent implements OnInit {
     {
       label: 'Level 3',
       value: 'L3'
-    },
-    {
-      label: 'Transform Postpartum',
-      value: 'PP'
     }
   ];
 

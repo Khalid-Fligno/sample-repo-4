@@ -119,7 +119,7 @@ export const convertRecipeData = async (recipeIds) => {
   return recipeResult
 };
 
-export const fetchRecipeData = async () => {
+export const fetchRecipeData = async (challengeRecipe) => {
   let breakFastMeals = [];
   let lunchMeals = [];
   let dinnerMeals = [];
@@ -127,34 +127,41 @@ export const fetchRecipeData = async () => {
   let preworkoutMeals = [];
   let treats = [];
 
-  const snapshot = await db.collection("recipes")
-    .orderBy('title')
-    .get();
+  if (challengeRecipe) {
 
-  if (snapshot.empty) {
-    return null;
+    const snapshot = await db.collection("recipes")
+      .orderBy('title')
+      .get();
+
+    if (snapshot.empty) {
+      return null;
+    }
+
+    snapshot.forEach((res) => {
+      const recipe = res.data()
+      let mealsArray
+      if(recipe.breakfast) mealsArray = breakFastMeals
+      else if (recipe.lunch) mealsArray = lunchMeals
+      else if (recipe.dinner) mealsArray = dinnerMeals
+      else if (recipe.snack || recipe.drink) mealsArray = snackMeals
+      else if (recipe.preworkout) mealsArray = preworkoutMeals
+      else if (recipe.treats) mealsArray = treats
+      
+      mealsArray?.push(recipe)
+    })
   }
 
-  snapshot.forEach((res) => {
-    const recipe = res.data()
-    let mealsArray
-    if(recipe.breakfast) mealsArray = breakFastMeals
-    else if (recipe.lunch) mealsArray = lunchMeals
-    else if (recipe.dinner) mealsArray = dinnerMeals
-    else if (recipe.snack || recipe.drink) mealsArray = snackMeals
-    else if (recipe.preworkout) mealsArray = preworkoutMeals
-    else if (recipe.treats) mealsArray = treats
-    
-    mealsArray?.push(recipe)
-  })
-
   return {
-    breakfast: breakFastMeals,
-    snack: snackMeals,
-    lunch: lunchMeals,
-    dinner: dinnerMeals,
-    preworkout: preworkoutMeals,
-    treats: treats,
+    recommendedRecipe: [
+      {
+        breakfast: breakFastMeals,
+        snack: snackMeals,
+        lunch: lunchMeals,
+        dinner: dinnerMeals,
+        preworkout: preworkoutMeals,
+        treats: treats,
+      }
+    ]
   }
 }
 
