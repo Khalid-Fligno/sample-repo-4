@@ -446,15 +446,13 @@ export const subYearly = {
 
 // Given a document reference for a user and the an id for the challenge
 // Find the given challenge under the user and return it
-export const getUserChallenge = async (userRef, challengeProductId) => {
+export const getUserChallenge = async (userRef, challengeId) => {
   const snapshot = await userRef
     .collection('challenges')
-    .where("shopifyProductId", "==", String(challengeProductId))
+    .doc(challengeId)
     .get();
 
-  if (snapshot.size > 0) {
-    return snapshot.docs[0].data();
-  }
+  return snapshot.data()
 }
 
 export const createNewChallengeModel = (data) => {
