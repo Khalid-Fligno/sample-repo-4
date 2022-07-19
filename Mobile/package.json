@@ -101,7 +101,7 @@
     "react-native-html-to-text": "^0.0.5",
     "react-native-iap": "^4.5.0",
     "react-native-image-progress": "^1.1.1",
-    "react-native-in-app-utils": "^6.1.0",
+    "react-native-in-app-utils": "chirag04/react-native-in-app-utils#master",
     "react-native-indicators": "^0.17.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-loading-spinner-overlay": "^1.0.1",

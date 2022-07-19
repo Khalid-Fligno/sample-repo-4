@@ -443,3 +443,56 @@ export const subYearly = {
     title: "App (12 Month Subscription)",
   },
 };
+
+// Given a document reference for a user and the an id for the challenge
+// Find the given challenge under the user and return it
+export const getUserChallenge = async (userRef, challengeId) => {
+  const snapshot = await userRef
+    .collection('challenges')
+    .doc(challengeId)
+    .get();
+
+  return snapshot.data()
+}
+
+export const createNewChallengeModel = (data) => {
+
+  if(!data) return null
+
+  const phases = data.phases.map((res) => {
+      return (
+          {
+              "name": res.name,
+              "displayName": res.displayName,
+              "startDate": moment(new Date(), 'YYYY-MM-DD').add(res.startDay - 1, 'days').format('YYYY-MM-DD'),
+              "endDate": moment(new Date(), 'YYYY-MM-DD').add(res.endDay - 1, 'days').format('YYYY-MM-DD'),
+              "startDay": res.startDay,
+              "endDay": res.endDay,
+              "pdfUrl": res.pdfUrl
+          }
+      )
+  })
+
+  return {
+      "name": data.name,
+      "displayName": data.displayName,
+      "id": data.id,
+      "tag": data.tag,
+      "startDate": moment(new Date()).format('YYYY-MM-DD'),
+      "endDate": moment(new Date(), 'YYYY-MM-DD').add(data.numberOfDays - 1, 'days').format('YYYY-MM-DD'),
+      "status": data.status ? data.status : "InActive",
+      "phases": phases,
+      "workouts": [],
+      "onBoardingInfo": {},
+      "currentProgressInfo": {},
+      "createdOn": data.createdOn ? data.createdOn : moment(new Date()).format('YYYY-MM-DD'),
+      "numberOfDays": data.numberOfDays,
+      "numberOfWeeks": data.numberOfWeeks,
+      "imageUrl": data.imageUrl,
+      "shopifyProductId": data.shopifyProductId,
+      "createdAt": data.createdAt ? data.createdAt : '',
+      "productId": data.productId,
+      "productReChargeId": data.shopifyProductId,
+      "isSchedule": false
+  }
+}
