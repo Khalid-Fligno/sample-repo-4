@@ -15,16 +15,25 @@ import AsyncStorage from "@react-native-community/async-storage";
 import * as Haptics from "expo-haptics";
 import appsFlyer from "react-native-appsflyer";
 import { auth, db } from "../../../config/firebase";
+import { firestore } from "firebase";
+
 import {
   discountedIdentifiers,
   identifiers,
+  transformIdentifiers,
   compareProducts,
   validateReceiptProduction,
   validateReceiptSandbox,
   compare,
   compareInApp,
+  productPeriod,
+  trialPeriod,
+  savingPercentage,
+  productAdditionalText,
+  lifeStyleIdentifiers
 } from "../../../config/apple";
 import { RestoreSubscriptions } from "../../utils/subscription";
+import { getUserChallenge, createNewChallengeModel } from "../../utils//challenges";
 import {
   androidIdentifiers,
   androidDiscountedIdentifiers,
@@ -54,25 +63,9 @@ const productTitleMapAndroid = {
   0: "Monthly ",
   1: "Yearly ",
 };
-const subscriptionPeriodMap = {
-  "com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount": "month",
-  "com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted": "year",
-  "com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation": "month",
-  "com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation": "year",
-  "com.fitazfk.fitazfkapp.sub.fullaccess.monthly": "month",
-  "com.fitazfk.fitazfkapp.sub.fullaccess.yearly": "year",
-};
 const andriodSubscriptionTitleMap = {
   0: "year",
   1: "month",
-};
-const andriodSubscriptionPeriodMap = {
-  "com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly.discount": "month",
-  "com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.discounted": "year",
-  "com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly.foundation": "month",
-  "com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly.foundation": "year",
-  "com.fitazfkapp.fitazfkapp.sub.fullaccess.monthly": "month",
-  "com.fitazfkapp.fitazfkapp.sub.fullaccess.yearly": "year",
 };
 const itemSkus = Platform.select({
   android: androidIdentifiers,
@@ -153,7 +146,7 @@ export default class SubscriptionScreen extends React.PureComponent {
   androidSubscriptions = () => {
     purchaseUpdateSubscription = purchaseUpdatedListener(
       async (purchase) => {
-        const receipt = purchase.transactionReceipt;
+        const receipt = purchase?.transactionReceipt;
 
         if (receipt) {
           try {
@@ -407,6 +400,11 @@ export default class SubscriptionScreen extends React.PureComponent {
   };
 
   loadiOSProducts = async () => {
+
+    // TODO: Only load products that are availanble
+    // If use already has a transform product, 
+    // don't give them the option or mark as bought
+
     await InAppUtils.loadProducts(identifiers, (error, products) => {
       if (error) {
         this.setState({ loading: false });
@@ -433,7 +431,7 @@ export default class SubscriptionScreen extends React.PureComponent {
           { cancelable: false }
         );
       } else {
-        const sortedProducts = products.slice().sort(compareProducts);
+        const sortedProducts = products.sort(compareProducts);
         this.setState({ products: sortedProducts, loading: false });
       }
     });
@@ -648,57 +646,22 @@ export default class SubscriptionScreen extends React.PureComponent {
           return;
         }
 
-        if (response && response.productIdentifier) {
-          const validationData = await this.validate(
-            response.transactionReceipt
-          );
-          // if (validationData === undefined) {
-          //   this.setState({ loading: false });
-          //   Alert.alert("Receipt validation error");
-          //   return;
-          // }
-          // const sortedInApp = validationData.receipt.in_app
-          //   .slice()
-          //   .sort(compareInApp);
-          const isValid = true//sortedInApp[0] && sortedInApp[0].expires_date_ms > Date.now();
+        const inApppPurchase = await this.validate(response.transactionReceipt)?.receipt.in_app[0]
 
-          if(!isValid) {
-            this.setState({ loading: false });
-            Alert.alert("Purchase Unsuccessful");
-            return
-          }
-
-          const uid = await AsyncStorage.getItem("uid");
-          const userRef = db.collection("users").doc(uid);
-          const data = {
-            subscriptionInfo: {
-              receipt: response.transactionReceipt,
-              expiry: sortedInApp[0].expires_date_ms,
-              originalTransactionId: sortedInApp[0].original_transaction_id,
-              originalPurchaseDate: sortedInApp[0].original_purchase_date_ms,
-              productId: sortedInApp[0].product_id,
-              platform: Platform.OS,
-              blogsId: "lifestyleBlogs"
-            },
-          }
-          await userRef.set(data, { merge: true });
-          // Appsflyer event tracking - Start Free Trial
-          const eventName = "af_start_trial";
-          const eventValues = {
-            af_price: productPrice,
-            af_currency: productCurrencyCode,
-          };
-          appsFlyer.trackEvent(eventName, eventValues);
-          userRef.get().then(async (doc) => {
-            this.setState({ loading: false });
-            if (await doc.data().onboarded) {
-              this.props.navigation.navigate("App");
-            } else {
-              this.props.navigation.navigate("Onboarding1", {
-                name: this.props.navigation.getParam("name", null),
-              });
-            }
-          })
+        if (inApppPurchase === undefined) {
+          this.setState({ loading: false });
+          Alert.alert("Receipt validation error");
+          return;
+        }
+        
+        if(transformIdentifiers.some(t=> t.identifier == inApppPurchase.product_id)) {
+          // If this is a transform product
+          this.linkPurchasedChallengeToUser(inApppPurchase)
+        } else if (lifeStyleIdentifiers.some(l => l.identifier == inApppPurchase.product_id) && inApppPurchase.expires_date_ms > Date.now()) {
+          this.linkLifestyleSubscriptionToUser(response, inApppPurchase, productPrice, productCurrencyCode)
+        } else {
+          this.setState({ loading: false })
+          Alert.alert("Purchase Unsuccessful")
         }
       });
     });
@@ -818,6 +781,102 @@ export default class SubscriptionScreen extends React.PureComponent {
       });
     });
   };
+
+  linkLifestyleSubscriptionToUser = async (response, validated_in_app_recipet, productPrice, productCurrencyCode) => {
+    const uid = await AsyncStorage.getItem("uid");
+    const userRef = db.collection("users").doc(uid);
+    const data = {
+      subscriptionInfo: {
+        receipt: response.transactionReceipt,
+        expiry: validated_in_app_recipet.expires_date_ms,
+        originalTransactionId: validated_in_app_recipet.original_transaction_id,
+        originalPurchaseDate: validated_in_app_recipet.original_purchase_date_ms,
+        productId: validated_in_app_recipet.product_id,
+        platform: Platform.OS,
+        blogsId: "lifestyleBlogs"
+      },
+    }
+    await userRef.set(data, { merge: true });
+    // Appsflyer event tracking - Start Free Trial
+    const eventValues = {
+      af_price: productPrice,
+      af_currency: productCurrencyCode,
+    }
+    appsFlyer.trackEvent(
+      "af_start_trial", 
+      eventValues);
+    
+    userRef
+      .get()
+      .then(async (doc) => {
+        this.setState({ loading: false });
+        if (await doc.data().onboarded) {
+          this.props.navigation.navigate("App");
+        } else {
+          this.props.navigation.navigate("Onboarding1", {
+            name: this.props.navigation.getParam("name", null),
+          });
+        }
+      })  
+  }
+
+  linkPurchasedChallengeToUser = async (validated_in_app_recipet) => {
+
+        // Get a user reference
+    const uid = await AsyncStorage.getItem("uid")
+    const userRef = db.collection("users").doc(uid)
+
+    const inAppPurchases = {
+      expiry: validated_in_app_recipet.expires_date_ms,
+      originalTransactionId: validated_in_app_recipet.original_transaction_id,
+      originalPurchaseDate: validated_in_app_recipet.original_purchase_date_ms,
+      transactionId: validated_in_app_recipet.transaction_id,
+      productId: validated_in_app_recipet.product_id,
+      platform: Platform.OS
+    }
+
+    await userRef.update({inAppPurchases: firestore.FieldValue.arrayUnion(inAppPurchases) })
+    
+    // Helper function to go to next screen
+    const goToNextScreen = async () => {
+      const userDocument = await userRef.get()
+      if(userDocument.data().onboarded) {
+        this.props.navigation.navigate("App");
+      } else {
+        this.props.navigation.navigate("Onboarding1", {
+          name: this.props.navigation.getParam("name", null),
+        })
+      }
+    }
+
+    const { challengeId } = transformIdentifiers.find(t => t.identifier == validated_in_app_recipet.product_id)
+    const userChallenge = await getUserChallenge(userRef, challengeId)
+    
+    // Check if this challenge has already been assigned to the given user
+    // If they already have this challenge, ignore it for now
+    if (userChallenge) {
+      console.log("user already has challenge:", userChallenge.name);
+      goToNextScreen()
+      return
+    }
+
+    // Get a copy of the purchased challenge
+    const challengeDetails = await db.collection("challenges")
+      .doc(challengeId)
+      .get()
+
+    const newUserChallenge = createNewChallengeModel(challengeDetails.data())
+
+    if(!newUserChallenge) {
+      return
+    }
+    await userRef
+      .collection('challenges')
+      .doc(newUserChallenge.id)
+      .set(newUserChallenge, { merge: true })
+
+    goToNextScreen()
+  }
 
   handleAndroidPayment = async (purchase) => {
     if (purchase.purchaseStateAndroid !== 1) {
@@ -945,10 +1004,8 @@ export default class SubscriptionScreen extends React.PureComponent {
                     textAlign: 'center',
                     color: 'white',
                     fontFamily: fonts.bold
-                  }}
-                >
-                  Subcribe to our base 'Lifestyle' section and receive recipes,
-                  workouts and content to become a happier, healthier you.
+                  }}>
+                  Subscribe to our base "Lifestyle" section or purchase a Transform challenge below to become a happier, healthier you.
                 </Text>
               </View>
             </ImageBackground>
@@ -971,19 +1028,8 @@ export default class SubscriptionScreen extends React.PureComponent {
                   products.map((product, index) => (
                     <SubscriptionTile
                       key={product.identifier}
-                      primary={
-                        product.identifier.indexOf(
-                          "fitazfkapp.sub.fullaccess.monthly"
-                        ) > 0 ||
-                        product.identifier.indexOf(
-                          "fitazfkapp.sub.fullaccess.monthly.discount"
-                        ) > 0
-                      }
-                      title={
-                        Platform.OS === "ios"
-                          ? productTitleMapIOS[index]
-                          : productTitleMapAndroid[index]
-                      }
+                      primary={true}
+                      title={ Platform.OS === "ios" ? product.title : productTitleMapAndroid[index] }
                       price={product.priceString}
                       priceNumber={product.price}
                       currencyCode={product.currencyCode}
@@ -993,8 +1039,11 @@ export default class SubscriptionScreen extends React.PureComponent {
                       term={
                         Platform.OS === "android"
                           ? andriodSubscriptionTitleMap[index]
-                          : subscriptionPeriodMap[product.identifier]
+                          : productPeriod(product.identifier)
                       }
+                      trialPeriod={trialPeriod(product.identifier)}
+                      savingsPercent={savingPercentage(product.identifier)}
+                      additionalText={productAdditionalText(product.identifier)}
                     />
                   ))}
               </View>
@@ -1030,23 +1079,16 @@ export default class SubscriptionScreen extends React.PureComponent {
                     fontFamily: fonts.bold,
                     fontSize: 10,
                     margin: 8,
-                  }}
-                >
-                  Looking to purchase a Transform Program instead?
-                  (this includes free 'Lifestyle' access while your challenge is active) {"\n"}
+                  }}>
+                  Need to buy your equipment pack for the Transform challenges?
                   <Text
-                    onPress={() => {
-                      this.openLink(
-                        "https://fitazfk.com/pages/transform-quiz"
-                      )
-                    }}
+                    onPress={() => { this.openLink("https://fitazfk.com/") }}
                     style={{
                       textDecorationLine: "underline",
                       textDecorationStyle: "solid",
-                    }}
-                  >
-                    CLICK HERE
+                    }}> {"TAP HERE"}
                   </Text>
+                  {" to buy a challenge + equipment bundle or the equipment pack separately."}
                 </Text>
               </View>
               <View style={styles.disclaimerTextContainer}>

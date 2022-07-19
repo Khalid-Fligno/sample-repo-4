@@ -13,10 +13,12 @@ const SubscriptionTile = (props) => {
     price,
     priceNumber,
     onPress,
-    primary,
     comparisonPrice,
-    isDiscounted,
     selected,
+    term,
+    trialPeriod,
+    savingsPercent,
+    additionalText
   } = props;
   return (
     <TouchableOpacity
@@ -32,38 +34,42 @@ const SubscriptionTile = (props) => {
         <View style={styles.textContainer}>
           <View>
             <View style={styles.subscriptionTitleContainer}>
-              {<Text>{title}</Text>}
-              <Text>{!primary && <SavingsBadge text="Save 40%" />}</Text>
+              {<Text>{title} </Text>}
+              <Text>{savingsPercent && <SavingsBadge text={`Save ${savingsPercent}%`}/>}</Text>
             </View>
-
             <Text
               style={[
                 styles.priceTitle,
                 {
                   color: selected ? colors.themeColor.color : colors.grey.dark,
                 },
-              ]}
-            >
+              ]}>
               {price}
-              <Text style={styles.yearlySubTitle}>
-                {primary ? ` / monthly` : ` / yearly`}
+              <Text style={styles.yearlySubTitle}>/ {term}
+
               </Text>
             </Text>
           </View>
           {comparisonPrice && (
             <Text style={styles.comparisonPrice}>{comparisonPrice}</Text>
           )}
-          {!primary && (
+          {savingsPercent && (
             <Text style={{ marginTop: 3 }}>
               <Text style={styles.subscriptionPriceText}>
                 {`${price[0]}${(priceNumber / 12).toFixed(2)}`} / month
               </Text>
             </Text>
           )}
-
-          <Text style={[styles.subText, { marginTop: 1 }]}>
-            {`After ${isDiscounted ? "1 month" : "7 day"} free trial`}
-          </Text>
+          {trialPeriod && (
+            <Text style={[styles.subText, { marginTop: 1 }]}>
+              {`After ${trialPeriod} free trial`}
+            </Text>
+          )}
+          {additionalText && (
+            <Text style={[styles.subText, { marginTop: 1 }]}>
+              {additionalText}
+            </Text>
+          )}
         </View>
         <View style={styles.iconSubscriptionTileColumn}>
           {selected && <RoundTick height={50} width={60} />}
@@ -79,7 +85,7 @@ SubscriptionTile.propTypes = {
   price: PropTypes.string.isRequired,
   term: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
-  primary: PropTypes.bool,
+  savingsPercent: PropTypes.string,
   comparisonPrice: PropTypes.string,
   priceNumber: PropTypes.number.isRequired,
   isDiscounted: PropTypes.bool,
@@ -89,7 +95,7 @@ SubscriptionTile.propTypes = {
 };
 
 SubscriptionTile.defaultProps = {
-  primary: false,
+  savingsPercent: undefined,
   comparisonPrice: undefined,
   isDiscounted: false,
   selected: false,

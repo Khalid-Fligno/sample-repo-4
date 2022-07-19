@@ -2,18 +2,18 @@
   "identifier" : "17715A62",
   "nonRenewingSubscriptions" : [
     {
-      "displayPrice" : "111",
+      "displayPrice" : "119.99",
       "familyShareable" : false,
       "internalID" : "B3D2790A",
       "localizations" : [
         {
-          "description" : "Transform Level 1 includes LIfestyle access",
-          "displayName" : "Transform Level 1",
+          "description" : "Transform Lvl 1 (No Equipment)",
+          "displayName" : "Transform Lvl 1 (No Equipment)",
           "locale" : "en_US"
         },
         {
-          "description" : "Transform Level 1 includes LIfestyle access",
-          "displayName" : "Transform Level 1",
+          "description" : "Transform Lvl 1 (No Equipment)",
+          "displayName" : "Transform Lvl 1 (No Equipment)",
           "locale" : "en_AU"
         }
       ],
@@ -22,18 +22,18 @@
       "type" : "NonRenewingSubscription"
     },
     {
-      "displayPrice" : "122",
+      "displayPrice" : "119.99",
       "familyShareable" : false,
       "internalID" : "A4AA005D",
       "localizations" : [
         {
-          "description" : "Transform Level 2 includes LIfestyle access",
-          "displayName" : "Transform Level 2",
+          "description" : "Transform Lvl 2 (No Equipment)",
+          "displayName" : "Transform Lvl 2 (No Equipment)",
           "locale" : "en_US"
         },
         {
-          "description" : "Transform Level 2 includes LIfestyle access",
-          "displayName" : "Transform Level 2",
+          "description" : "Transform Lvl 2 (No Equipment)",
+          "displayName" : "Transform Lvl 2 (No Equipment)",
           "locale" : "en_AU"
         }
       ],
@@ -42,18 +42,18 @@
       "type" : "NonRenewingSubscription"
     },
     {
-      "displayPrice" : "133",
+      "displayPrice" : "119.99",
       "familyShareable" : false,
       "internalID" : "D22CF952",
       "localizations" : [
         {
-          "description" : "Transform Level 3 includes LIfestyle access",
-          "displayName" : "Transform Level 3",
+          "description" : "Transform Lvl 3 (No Equipment)",
+          "displayName" : "Transform Lvl 3 (No Equipment)",
           "locale" : "en_US"
         },
         {
-          "description" : "Transform Level 3 includes LIfestyle access",
-          "displayName" : "Transform Level 3",
+          "description" : "Transform Lvl 3 (No Equipment)",
+          "displayName" : "Transform Lvl 3 (No Equipment)",
           "locale" : "en_AU"
         }
       ],
@@ -89,7 +89,7 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "14.56",
+          "displayPrice" : "19.99",
           "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "6A670AF0",
@@ -100,19 +100,19 @@
           },
           "localizations" : [
             {
-              "description" : "Monthly Subscription",
-              "displayName" : "Monthly Subscription",
+              "description" : "Lifestyle Access Monthly",
+              "displayName" : "Lifestyle Access Monthly",
               "locale" : "en_US"
             },
             {
-              "description" : "Monthly Subscription",
-              "displayName" : "Monthly Subscription",
+              "description" : "Lifestyle Access Monthly",
+              "displayName" : "Lifestyle Access Monthly",
               "locale" : "en_AU"
             }
           ],
           "productID" : "com.fitazfk.fitazfkapp.sub.fullaccess.monthly",
           "recurringSubscriptionPeriod" : "P1M",
-          "referenceName" : "Full Access Monthly",
+          "referenceName" : "Lifestyle Access Monthly",
           "subscriptionGroupID" : "62CFF6AA",
           "type" : "RecurringSubscription"
         },
@@ -134,19 +134,19 @@
           },
           "localizations" : [
             {
-              "description" : "Yearly Subscription",
-              "displayName" : "Yearly Subscription",
+              "description" : "Lifestyle Access Yearly",
+              "displayName" : "Lifestyle Access Yearly",
               "locale" : "en_US"
             },
             {
-              "description" : "Yearly Subscription",
-              "displayName" : "Yearly Subscription",
+              "description" : "Lifestyle Access Yearly",
+              "displayName" : "Lifestyle Access Yearly",
               "locale" : "en_AU"
             }
           ],
           "productID" : "com.fitazfk.fitazfkapp.sub.fullaccess.yearly",
           "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "Full Access Yearly",
+          "referenceName" : "Lifestyle Access Yearly",
           "subscriptionGroupID" : "62CFF6AA",
           "type" : "RecurringSubscription"
         }

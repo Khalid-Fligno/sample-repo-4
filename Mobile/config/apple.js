@@ -33,29 +33,94 @@ export const compareInApp = (a, b) => {
 };
 
 export const compareProducts = (a, b) => {
-  const purchaseA = a.price;
-  const purchaseB = b.price;
-  let comparison = 0;
-  if (purchaseA > purchaseB) {
-    comparison = -1;
-  } else if (purchaseA < purchaseB) {
-    comparison = 1;
-  }
-  return comparison;
-};
+  // Order of products rules:
+  // Product type order - [Lifestyle, Transform]
+  // If Lifestle, order by subscription price
+  // If Transform, order by level
 
+  const allProducts = [a, b];
+  if(allProducts.every(p => lifeStyleIdentifiers.some(l => l.identifier == p.identifier))) {
+    return a.price < b.price
+  } else if(allProducts.every(p => transformIdentifiers.includes(p.identifier))) {
+    return transformIdentifiers.indexOf(a.identifier) < transformIdentifiers.indexOf(b.identifier)
+  } else if (lifeStyleIdentifiers.some(l => l.identifier == a.identifier)) {
+    return -1
+  } else {
+    return 1
+  }
+}
+
+export const lifeStyleIdentifiers = [
+  { identifier : 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly', period: "yearly", trialPeriod: "7 day", savingsPercent : "40" },
+  { identifier : 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly', period: "monthly", trialPeriod: "7 day" },
+]
+
+export const transformIdentifiers = [
+  { 
+    identifier : 'com.fitazfk.fitazfkapp.sub.transform.level1', 
+    challengeId: '88969d13-fd11-4fde-966e-df1270fb97dd',
+    period: "6 month access", 
+    additionalText: "Includes 6 month lifestyle subscription"
+  },
+  { 
+    identifier : 'com.fitazfk.fitazfkapp.sub.transform.level2', 
+    challengeId: '7798f53c-f613-435d-b94b-b67f1f43b51b', 
+    period: "6 month access",
+    additionalText: "Includes 6 month lifestyle subscription"
+  },
+  { 
+    identifier : 'com.fitazfk.fitazfkapp.sub.transform.level3', 
+    challengeId: '0d48d056-2623-4201-b25a-3f1d78083dba', 
+    period: "6 month access", 
+    additionalText: "Includes 6 month lifestyle subscription"
+  }
+]
 
 export const identifiers = [
-  'com.fitazfk.fitazfkapp.sub.fullaccess.yearly',
-  'com.fitazfk.fitazfkapp.sub.fullaccess.monthly',
-];
-
-// export const foundationIdentifiers = [
-//   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation',
-//   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation',
-// ];
+  lifeStyleIdentifiers, 
+  transformIdentifiers
+]
+.flatMap(i => i)
+.map(i => i.identifier)
 
 export const discountedIdentifiers = [
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted',
   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount',
 ];
+
+const subscriptionPeriodMap = {
+  "com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount": "monthly",
+  "com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted": "yearly",
+  "com.fitazfk.fitazfkapp.sub.fullaccess.monthly.foundation": "monthly",
+  "com.fitazfk.fitazfkapp.sub.fullaccess.yearly.foundation": "yearly",
+  ...Object.fromEntries(
+    [transformIdentifiers, lifeStyleIdentifiers]
+      .flatMap(i => i)
+      .map(i => [i.identifier, i.period])
+    )
+};
+
+export const productPeriod = (identifier) => {
+  return subscriptionPeriodMap[identifier]
+}
+
+export const trialPeriod = (identifier) => {
+  return [lifeStyleIdentifiers, transformIdentifiers]
+    .flatMap(i => i)
+    .find(i => i.identifier == identifier)
+    ?.trialPeriod
+}
+
+export const savingPercentage = (identifier) => {
+  return [lifeStyleIdentifiers, transformIdentifiers]
+    .flatMap(i => i)
+    .find(i => i.identifier == identifier)
+    ?.savingsPercent
+}
+
+export const productAdditionalText = (identifier) => {
+  return [lifeStyleIdentifiers, transformIdentifiers]
+  .flatMap(i => i)
+  .find(i => i.identifier == identifier)
+  ?.additionalText
+}
