@@ -646,7 +646,8 @@ export default class SubscriptionScreen extends React.PureComponent {
           return;
         }
 
-        const inApppPurchase = await this.validate(response.transactionReceipt)?.receipt.in_app[0]
+        const validationData = await this.validate(response.transactionReceipt)
+        const inApppPurchase = validationData?.receipt?.in_app[0]
 
         if (inApppPurchase === undefined) {
           this.setState({ loading: false });
