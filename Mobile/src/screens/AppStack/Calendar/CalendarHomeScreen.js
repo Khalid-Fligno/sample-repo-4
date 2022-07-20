@@ -80,7 +80,6 @@ class CalendarHomeScreen extends React.PureComponent {
       downloaded: 0,
       totalToDownload: 0,
       files: undefined,
-      newWorkoutParams: undefined,
       finishdownloaded: false
     };
     this.calendarStrip = React.createRef();
@@ -114,9 +113,6 @@ class CalendarHomeScreen extends React.PureComponent {
           files: undefined
         });
       }
-    }
-    if (this.state.newWorkoutParams !== undefined && this.state.finishdownloaded === true) {
-      this.goToNext(this.state.newWorkoutParams)
     }
   };
 
@@ -431,7 +427,6 @@ class CalendarHomeScreen extends React.PureComponent {
       const exerciseRef = (
         await db
           .collection("Exercises")
-
           .get()
       ).docs;
 
@@ -676,9 +671,6 @@ class CalendarHomeScreen extends React.PureComponent {
   loadExercises = async (workoutData) => {
     this.setState({ loadingExercises: true });
 
-    Object.assign(workoutData, {
-      warmUpExercises: workoutData.warmUpExercises,
-    });
     if (workoutData.newWorkout) {
       this.setState({
         totalToDownload:
@@ -724,7 +716,7 @@ class CalendarHomeScreen extends React.PureComponent {
             warmUpExercises: warmUpExercises,
             coolDownExercises: coolDownExercises,
           });
-          this.setState({ newWorkoutParams: newWorkout })
+          this.goToNext(newWorkout)
         } else {
           this.setState({ loadingExercises: false });
           Alert.alert("Alert!", "Something went wrong!");
