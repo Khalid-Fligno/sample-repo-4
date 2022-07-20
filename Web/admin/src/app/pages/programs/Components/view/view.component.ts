@@ -58,6 +58,8 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   public _getFavouriteConfigurationDataSource(favouriteRecipeConfigs:any) : {}[] {
+
+    if(!favouriteRecipeConfigs) return []
     return [
         { property :'breakfast', displayName: "Breakfast" },
         { property :'lunch', displayName: "Lunch" },
