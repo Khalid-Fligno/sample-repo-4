@@ -234,31 +234,46 @@ const LoginScreenV2 = ({ navigation }) => {
 				}
 			}
 		} catch (error) {
-			if (error.code === 'auth/wrong-password') {
-				setLoading(false)
-				Toast.show({
-					type: 'error',
-					text1: 'Unsuccessful Login',
-					text2: 'Password is invalid.',
-				});
-			}
 
-			if (error.code === 'auth/user-not-found') {
-				setLoading(false)
-				Toast.show({
-					type: 'error',
-					text1: 'Unsuccessful Login',
-					text2: 'That email address is invalid.',
-				});
-			}
+			console.log(error)
 
-			if (error.code === 'auth/invalid-email') {
-				setLoading(false)
-				Toast.show({
-					type: 'error',
-					text1: 'Unsuccessful Login',
-					text2: 'That email address is invalid.',
-				});
+			setLoading(false)
+
+			switch(error.code) {
+				case  'auth/wrong-password':
+					Toast.show({
+						type: 'error',
+						text1: 'Unsuccessful Login',
+						text2: 'Password is invalid.',
+					});
+					break
+				case 'auth/user-not-found':
+					Toast.show({
+						type: 'error',
+						text1: 'Unsuccessful Login',
+						text2: 'Password is invalid.',
+					});
+					break
+				case 'auth/user-not-found':
+					Toast.show({
+						type: 'error',
+						text1: 'Unsuccessful Login',
+						text2: 'That email address is invalid.',
+					});
+					break
+				case 'auth/too-many-requests':
+					Toast.show({
+						type: 'error',
+						text1: 'Unsuccessful Login',
+						text2: 'Account is temporiraliy locked, try again later.',
+					});
+					break
+				default:
+					Toast.show({
+						type: 'error',
+						text1: 'Unsuccessful Login',
+						text2: `Error Code: ${error.code}`,
+					});
 			}
 		}
 	};
