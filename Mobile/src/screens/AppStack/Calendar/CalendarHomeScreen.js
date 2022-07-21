@@ -404,82 +404,49 @@ class CalendarHomeScreen extends React.PureComponent {
     });
   }
   loadExercise = async (workoutData) => {
-    const type = "interval";
-    await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
-      (res) => {
-        Promise.all(
-          res.map(async (item, index) => {
-            if (item.includes("exercise-")) {
-              FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
-                idempotent: true,
-              }).then(() => { });
-            }
-          })
-        );
-      }
-    );
+    // await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
+    //   (res) => {
+    //     Promise.all(
+    //       res.map(async (item, index) => {
+    //         if (item.includes("exercise-")) {
+    //           FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
+    //             idempotent: true,
+    //           }).then(() => { });
+    //         }
+    //       })
+    //     );
+    //   }
+    // );
 
-    if (workoutData.newWorkout) {
-      let exercises = [];
-      let tempExerciseData = [];
-      let workoutExercises = [];
-
-      const exerciseRef = (
-        await db
-          .collection("Exercises")
-          .get()
-      ).docs;
-
-      workoutData.filters.forEach((resType) => {
-        if (resType === "interval") {
-          exerciseRef.forEach((exercise) => {
-            workoutData.exercises
-              .filter((resExercise) => resExercise.id === exercise.id)
-              .forEach((resExercise) => {
-                const exerciseDuration = Object.assign({}, exercise.data(), {
-                  duration: resExercise.duration,
-                });
-                tempExerciseData.push(exerciseDuration);
-              });
-          });
-          workoutExercises = workoutData.exercises.map((id) => {
-            return tempExerciseData.find((res) => res.id === id);
-          });
-        } else {
-          exerciseRef.forEach((exercise) => {
-            workoutData.exercises
-              .filter((resExercise) => resExercise === exercise.id)
-              .forEach((resExercise) => {
-                tempExerciseData.push(exercise.data());
-              });
-          });
-          workoutExercises = workoutData.exercises.map((id) => {
-            return tempExerciseData.find((res) => res.id === id);
-          });
-        }
-      });
-
-      exercises = workoutData.exercises.map((id) => {
-        if (id.id) {
-          return tempExerciseData.find((res) => res.id === id.id);
-        } else {
-          return tempExerciseData.find((res) => res.id === id);
-        }
-      });
-
-      if (exercises.length > 0) {
-        workoutData = Object.assign({}, workoutData, { exercises: exercises });
-        const res = await this.downloadExercise(workoutData);
-        if (res) return workoutData;
-        else return false;
-      } else {
-        return false;
-      }
-    } else {
-      const res = await this.downloadExercise(workoutData);
-      return workoutData;
+    if (!workoutData.newWorkout) {
+      return (await this.downloadExercise(workoutData))
     }
-  };
+    const exerciseRef = (
+      await db
+        .collection("Exercises")
+        .get()
+    ).docs
+
+    const containsIntervalType = workoutData.filters.includes('interval')
+    const exercises = workoutData
+      .exercises
+      .map(exerciseId => {
+        let exercise = exerciseRef.find(r => [exerciseId, exerciseId.id].includes(r.id)).data()
+        if(exerciseId.duration) {
+            exercise.duration = exerciseId.duration
+        }
+        return exercise
+      })
+      
+    if (exercises.length <= 0)
+      return false
+    
+    workoutData.exercises = exercises
+
+    const res = await this.downloadExercise(workoutData);
+    if (res) return workoutData;
+    else return false
+  }
 
   downloadExercise = async (workout) => {
     try {
@@ -690,49 +657,44 @@ class CalendarHomeScreen extends React.PureComponent {
     }
 
     const workout = await this.loadExercise(workoutData);
-    if (workout && workout.newWorkout) {
-      const warmUpExercises = await this.downloadExerciseWC(
-        workout,
-        Object.prototype.toString
-          .call(workout.warmUpExercises)
-          .indexOf("Array") > -1
-          ? workout.warmUpExercises
-          : workout.warmUpExercises.filter((warmUpExercise) => {
-            return warmUpExercise;
-          }),
-        workout.warmUpExerciseModel,
-        "warmUp"
-      );
-      if (warmUpExercises.length > 0) {
-        const coolDownExercises = await this.downloadExerciseWC(
-          workout,
-          workout.coolDownExercises,
-          workout.coolDownExerciseModel,
-          "coolDown"
-        );
 
-        if (coolDownExercises.length > 0) {
-          const newWorkout = Object.assign({}, workout, {
-            warmUpExercises: warmUpExercises,
-            coolDownExercises: coolDownExercises,
-          });
-          this.goToNext(newWorkout)
-        } else {
-          this.setState({ loadingExercises: false });
-          Alert.alert("Alert!", "Something went wrong!");
-        }
+    if (workout) {
+      if(!workout.newWorkout && this.state.totalToDownload === this.state.downloaded) {
+        this.goToNext(workout);
+        return
+      }
+    } else {
+      this.setState({ loadingExercises: false });
+      return
+    }
+  
+    const warmUpExercises = await this.downloadExerciseWC(workout, workout.warmUpExercises, workout.warmUpExerciseModel, "warmUp")
+    
+    console.log(warmUpExercises)
+    
+    if (warmUpExercises.length > 0) {
+      const coolDownExercises = await this.downloadExerciseWC(
+        workout,
+        workout.coolDownExercises,
+        workout.coolDownExerciseModel,
+        "coolDown"
+      );
+
+      if (coolDownExercises.length > 0) {
+        const newWorkout = Object.assign({}, workout, {
+          warmUpExercises: warmUpExercises,
+          coolDownExercises: coolDownExercises,
+        });
+        this.goToNext(newWorkout)
       } else {
         this.setState({ loadingExercises: false });
         Alert.alert("Alert!", "Something went wrong!");
       }
-    } else if (workout) {
-      if (this.state.totalToDownload === this.state.downloaded) {
-        this.goToNext(workout);
-      }
     } else {
       this.setState({ loadingExercises: false });
+      Alert.alert("Alert!", "Something went wrong!");
     }
-  };
+  }
 
   async goToNext(workout) {
     const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
