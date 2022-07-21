@@ -404,6 +404,7 @@ class CalendarHomeScreen extends React.PureComponent {
     });
   }
   loadExercise = async (workoutData) => {
+    // TODO: Better manage videos
     // await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
     //   (res) => {
     //     Promise.all(
