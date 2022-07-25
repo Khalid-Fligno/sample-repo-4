@@ -349,47 +349,33 @@ export const getChallengeDetails = async (userid) => {
     .doc(userid)
     .collection("challenges")
     .get();
-  if (challengeRef.size > 0) {
-    challengeRef.docs.forEach((doc) => {
-      userChallenge.push(doc.data());
-    });
-    return userChallenge;
-  }
+  
+    return challengeRef.docs.map(doc => doc.data())
 };
+
 export const getLatestChallenge = (challenges) => {
   return challenges.sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   )[0];
 };
-export const hasChallenges = async (uid) => {
-  const userChallenges = await getChallengeDetails(uid);
 
-  if (userChallenges !== undefined && userChallenges.length > 0) {
-    let isChallengeValidStatus = [];
-    isChallengeValidStatus = userChallenges.map((challenge) => {
-      let challengeEndDate = moment(challenge.createdOn, "YYYY-MM-DD").add(
-        6,
-        "months"
-      );
-      let currentDate = moment();
-      let isChallengeValid =
-        moment(currentDate).isSameOrBefore(challengeEndDate);
-      if (!isChallengeValid) {
-        Alert.alert("Alert!", `Your ${challenge.displayName} has expired.`);
-        removeChallengeFromUser(uid, challenge.id);
-      }
-      return isChallengeValid;
-    });
+export const getValidChallenges = async (uid) => {
+  const userChallenges = await getChallengeDetails(uid)
 
-    if (isChallengeValidStatus.includes(true)) {
-      return true;
-    } else {
-      Alert.alert("Alert!", "Your challenge has expired.");
-      return false;
+  return userChallenges.filter(challenge => {
+    let challengeEndDate = moment(challenge.createdOn, "YYYY-MM-DD")
+      .add(6,"months")
+    let currentDate = moment();
+    let isChallengeValid = moment(currentDate).isSameOrBefore(challengeEndDate);
+    if (!isChallengeValid) {
+      removeChallengeFromUser(uid, challenge.id)
     }
-  } else {
-    return false;
-  }
+    return isChallengeValid;
+  })
+}
+export const hasChallenges = async (uid) => {
+  const userChallenges = await getValidChallenges(uid);
+  return userChallenges.length > 0
 };
 
 export const removeChallengeFromUser = async (uid, challengeId) => {

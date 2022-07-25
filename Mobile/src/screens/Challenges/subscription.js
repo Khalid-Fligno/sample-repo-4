@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, ScrollView, FlatList, Alert, Linking } from "react-native";
+import { View, Text, ScrollView, FlatList, Alert, Linking, Platform } from "react-native";
 import { ListItem, Button } from "react-native-elements";
 import colors from "../../styles/colors";
 import globalStyle, { containerPadding } from "../../styles/globalStyles";
@@ -192,8 +192,18 @@ class ChallengeSubscriptionScreen extends Component {
           subTitle={item.subTitle}
           key={index}
           btnTitle="Buy"
-          // onPress={()=>this.addChallengeToUser(index)}
-          onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
+          onPress={() => {
+              // item.id = challenge id
+              if(Platform.OS === "ios")
+                this.props.navigation.navigate("Subscription", {
+                  challengesOnly: true,
+                  preselectedChallenge: item.id
+                })
+                  
+              else if (item.shopifyUrl)
+                this.openLink(item.shopifyUrl)
+            }
+          }
           disabled={false}
           challengeData={item}
         />

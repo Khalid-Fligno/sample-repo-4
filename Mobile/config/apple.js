@@ -76,13 +76,6 @@ export const transformIdentifiers = [
   }
 ]
 
-export const identifiers = [
-  lifeStyleIdentifiers, 
-  transformIdentifiers
-]
-.flatMap(i => i)
-.map(i => i.identifier)
-
 export const discountedIdentifiers = [
   'com.fitazfk.fitazfkapp.sub.fullaccess.yearly.discounted',
   'com.fitazfk.fitazfkapp.sub.fullaccess.monthly.discount',
@@ -123,4 +116,12 @@ export const productAdditionalText = (identifier) => {
   .flatMap(i => i)
   .find(i => i.identifier == identifier)
   ?.additionalText
+}
+
+export const identifiers = (excludeChallengesIdentifiers = [], excludeLifestyleIdentifiers = []) => {
+  return [
+    transformIdentifiers.filter(i => !excludeChallengesIdentifiers.includes(i.challengeId)),
+    lifeStyleIdentifiers.filter(i => !excludeLifestyleIdentifiers.includes(i.identifier))
+  ]
+  .flatMap(i => i.map(identifier => identifier.identifier))
 }

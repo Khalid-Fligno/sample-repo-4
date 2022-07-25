@@ -1,38 +1,38 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import HomeScreen from '../../src/screens/AppStack/Home/HomeScreen';
-import BlogScreen from '../../src/screens/AppStack/Home/BlogScreen';
-import Header from '../../src/components/Shared/Header';
 import ChallengeSubscriptionScreen from '../../src/screens/Challenges/subscription';
-import CalendarHomeScreen from '../../src/screens/AppStack/Calendar/CalendarHomeScreen';
-import CalendarStack from './CalendarStack';
+import SubscriptionScreen from "../../src/screens/OnboardingStack/SubscriptionScreen";
+import Header from '../../src/components/Shared/Header';
 
-
-const ChallengeSubscriptionStack = createStackNavigator(
-  {
-    ChallengeSubscription: ChallengeSubscriptionScreen,
-    Calendar:CalendarStack
-    // Subscription: HomeScreen,
-  },
-  {
-    initialRouteName: 'Calendar',
+const ChallengeSubscriptionStack = createStackNavigator({
+  ChallengeSubscription: ChallengeSubscriptionScreen,
+  Subscription: SubscriptionScreen,
+  }, {
     defaultNavigationOptions: ({ navigation }) => ({
-      gesturesEnabled:false,
+      gesturesEnabled: true,
       header: () => {
         const { routeName } = navigation.state;
-        if(routeName === "Calendar")
-          return null
+        switch (routeName) {
+          case "ChallengeSubscription":
+            var withProfileButton = true
+            var withBackButton = false
+            var bac
+            break
+          case 'Subscription':
+            var withProfileButton = false
+            var withBackButton = true
+            break
+        }
         return (
           <Header
             stack="ChallengeSubscription"
             navigation={navigation}
-            withProfileButton={routeName === 'ChallengeSubscription'}
-            // withHomeButton={true}
+            withProfileButton={withProfileButton}
+            withBackButton={withBackButton}
           />
-        );
+        )
       },
     }),
-  },
-);
+  })
 
-export default ChallengeSubscriptionStack;
+  export default ChallengeSubscriptionStack

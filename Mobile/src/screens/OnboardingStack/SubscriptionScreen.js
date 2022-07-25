@@ -33,7 +33,7 @@ import {
   lifeStyleIdentifiers
 } from "../../../config/apple";
 import { RestoreSubscriptions } from "../../utils/subscription";
-import { getUserChallenge, createNewChallengeModel } from "../../utils//challenges";
+import { getUserChallenge, getValidChallenges, createNewChallengeModel } from "../../utils//challenges";
 import {
   androidIdentifiers,
   androidDiscountedIdentifiers,
@@ -82,12 +82,17 @@ let purchaseErrorSubscription;
 export default class SubscriptionScreen extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    const preSelectedTransform = transformIdentifiers
+      .find(i => i.challengeId == props.navigation.getParam("preselectedChallenge", undefined))
+
     this.state = {
       loading: false,
       products: undefined,
       discountedProducts: undefined,
       specialOffer: props.navigation.getParam("specialOffer", undefined),
-      selectedIndex: 0,
+      challengesOnly: props.navigation.getParam("challengesOnly", false),
+      selectedId: preSelectedTransform?.identifier,
     };
   }
 
@@ -401,11 +406,14 @@ export default class SubscriptionScreen extends React.PureComponent {
 
   loadiOSProducts = async () => {
 
-    // TODO: Only load products that are availanble
-    // If use already has a transform product, 
-    // don't give them the option or mark as bought
+    const {challengesOnly} = this.state
+    const uid = await AsyncStorage.getItem("uid");
+    const activeChallenges = await getValidChallenges(uid);
+    const productIdentifiers = identifiers(
+      activeChallenges.map(c => c.id), 
+      challengesOnly ? lifeStyleIdentifiers.map(l => l.identifier) : [])
 
-    await InAppUtils.loadProducts(identifiers, (error, products) => {
+    await InAppUtils.loadProducts(productIdentifiers, (error, products) => {
       if (error) {
         this.setState({ loading: false });
         Alert.alert(
@@ -526,8 +534,16 @@ export default class SubscriptionScreen extends React.PureComponent {
     }
   };
 
-  retryLoadiOSProducts = () => {
-    InAppUtils.loadProducts(identifiers, (error, products) => {
+  retryLoadiOSProducts = async () => {
+
+    const {challengesOnly} = this.state
+    const uid = await AsyncStorage.getItem("uid");
+    const activeChallenges = await getValidChallenges(uid);
+    const productIdentifiers = identifiers(
+      activeChallenges.map(c => c.id), 
+      challengesOnly ? lifeStyleIdentifiers.map(l => l.identifier) : [])
+
+    InAppUtils.loadProducts(productIdentifiers, (error, products) => {
       if (error) {
         this.setState({ loading: false });
         Alert.alert(
@@ -964,20 +980,22 @@ export default class SubscriptionScreen extends React.PureComponent {
       products,
       discountedProducts,
       specialOffer,
-      selectedIndex,
+      selectedId,
     } = this.state;
 
-    if (!specialOffer && products) {
+    const product = products.find(p => p.identifier == selectedId)
+
+    if (!specialOffer && product) {
       this.purchaseProduct(
-        products[selectedIndex].identifier,
-        products[selectedIndex].price,
-        products[selectedIndex].currencyCode
+        product.identifier,
+        product.price,
+        product.currencyCode
       );
-    } else if (specialOffer && discountedProducts && products) {
+    } else if (specialOffer && discountedProducts && product) {
       this.purchaseDiscountedProduct(
-        products[selectedIndex].identifier,
-        products[selectedIndex].price,
-        products[selectedIndex].currencyCode
+        product.identifier,
+        product.price,
+        product.currencyCode
       );
     } else {
       Alert.alert("Something went please try again...");
@@ -989,7 +1007,7 @@ export default class SubscriptionScreen extends React.PureComponent {
       loading,
       products,
       specialOffer,
-      selectedIndex,
+      selectedId,
     } = this.state;
     return (
       <React.Fragment>
@@ -1035,8 +1053,8 @@ export default class SubscriptionScreen extends React.PureComponent {
                       priceNumber={product.price}
                       currencyCode={product.currencyCode}
                       currencySymbol={product.currencySymbol}
-                      onPress={() => this.setState({ selectedIndex: index })}
-                      selected={selectedIndex === index}
+                      onPress={() => this.setState({ selectedId: product.identifier })}
+                      selected={selectedId === product.identifier}
                       term={
                         Platform.OS === "android"
                           ? andriodSubscriptionTitleMap[index]
