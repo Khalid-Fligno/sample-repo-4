@@ -866,8 +866,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
             </View>
             {!rest && (
               <Video
-              source={{uri: videoUrl}}
-              rate={1.0}
+                source={{uri: videoUrl}}
+                rate={1.0}
                 volume={1.0}
                 muted={false}
                 resizeMode="cover"
