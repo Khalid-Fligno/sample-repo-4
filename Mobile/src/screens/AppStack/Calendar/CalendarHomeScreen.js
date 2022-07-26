@@ -884,7 +884,7 @@ class CalendarHomeScreen extends React.PureComponent {
     navigation.pop();
   };
 
-  getToFilter(data, data1, data2, title, configs) {
+  async getToFilter(data, data1, data2, title, configs) {
     const {
       challengeRecipe,
       activeChallengeData,
@@ -892,58 +892,46 @@ class CalendarHomeScreen extends React.PureComponent {
       activeChallengeUserData,
     } = this.state;
 
-    const datas = activeChallengeUserData.faveRecipe;
+    const datas = activeChallengeUserData
 
-    if (datas === undefined) {
-      Alert.alert("New Feature", "Favourite Recipe feature is now available.", [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "OK",
-          onPress: async () => {
-            const number = 60;
-            const currentNumber = [];
+    if (datas.faveRecipe === undefined) {
 
-            for (let i = 1; i <= number; i++) {
-              const data = {
-                day: i,
-                recipeMeal: {
-                  breakfast: "",
-                  lunch: "",
-                  dinner: "",
-                  snack: "",
-                  drink: "",
-                  preworkout: "",
-                  treats: "",
-                },
-              };
-              currentNumber.push(data);
-            }
-
-            const id = this.state.activeChallengeUserData.id;
-            const uid = await AsyncStorage.getItem("uid");
-            const activeChallengeUserRef = db
-              .collection("users")
-              .doc(uid)
-              .collection("challenges")
-              .doc(id);
-
-            activeChallengeUserRef.set(
-              { faveRecipe: currentNumber },
-              { merge: true }
-            );
-
-            this.handleBack();
+      const initialFaveRecipe = [];
+      for (let i = 1; i <= 60; i++) {
+        const data = {
+          day: i,
+          recipeMeal: {
+            breakfast: "",
+            lunch: "",
+            dinner: "",
+            snack: "",
+            drink: "",
+            preworkout: "",
+            treats: "",
           },
-        },
-      ]);
+        };
+        initialFaveRecipe.push(data);
+      }
+
+      const id = this.state.activeChallengeUserData.id;
+      const uid = await AsyncStorage.getItem("uid");
+      const activeChallengeUserRef = db
+        .collection("users")
+        .doc(uid)
+        .collection("challenges")
+        .doc(id);
+
+      await activeChallengeUserRef.set(
+        { faveRecipe: initialFaveRecipe },
+        { merge: true }
+      );
+
+      datas.faveRecipe = initialFaveRecipe
     }
 
     this.props.navigation.navigate("FilterRecipe", {
       currentChallengeDay: this.currentChallengeDay,
-      activeChallengeUserData: activeChallengeUserData,
+      activeChallengeUserData: datas,
       phaseDefaultTags: phaseDefaultTags,
       defaultLevelTags: activeChallengeData.levelTags,
       todayRecommendedRecipe: data2,
