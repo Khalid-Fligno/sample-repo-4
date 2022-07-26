@@ -1,15 +1,16 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import ChallengeSubscriptionScreen from '../../src/screens/Challenges/subscription';
-import SubscriptionScreen from "../../src/screens/OnboardingStack/SubscriptionScreen";
 import Header from '../../src/components/Shared/Header';
 
 const ChallengeSubscriptionStack = createStackNavigator({
   ChallengeSubscription: ChallengeSubscriptionScreen,
-  Subscription: SubscriptionScreen,
   }, {
+    // mode: 'modal',
     defaultNavigationOptions: ({ navigation }) => ({
       gesturesEnabled: true,
+      
+        // headerMode: 'none'
       header: () => {
         const { routeName } = navigation.state;
         switch (routeName) {

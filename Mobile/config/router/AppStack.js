@@ -2,9 +2,10 @@ import { createStackNavigator } from 'react-navigation-stack';
 import TabStack from './TabStack';
 import ExerciseStack from './ExerciseStack';
 import ProfileStack from './ProfileStack';
-import { fadeSpec, fade } from './utils';
 import ChallengeOnboardingStack from './ChallengeOnboardingStack';
 import ChallengeOnboardingStackReverse from './ChallengeOnboardingStackReverse';
+import SusbcriptionStack from './SubscriptionStack';
+
 
 const AppStack = createStackNavigator(
   {
@@ -13,9 +14,10 @@ const AppStack = createStackNavigator(
     Exercise: { screen: ExerciseStack },
     ChallengeOnBoardingReverse: { screen: ChallengeOnboardingStackReverse },
     ChallengeOnBoarding: { screen:ChallengeOnboardingStack },
-    
+    Subscription: SusbcriptionStack
   },
   {
+    mode: 'modal',
     initialRouteName: 'Tabs',
     // transitionConfig: () => ({
     //   transitionSpec: fadeSpec,

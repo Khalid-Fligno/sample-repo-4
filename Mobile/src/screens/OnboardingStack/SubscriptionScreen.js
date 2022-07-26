@@ -92,12 +92,16 @@ export default class SubscriptionScreen extends React.PureComponent {
       discountedProducts: undefined,
       specialOffer: props.navigation.getParam("specialOffer", undefined),
       challengesOnly: props.navigation.getParam("challengesOnly", false),
+      dismissOnSuccess: props.navigation.getParam("dismissOnSuccess", false),
       selectedId: preSelectedTransform?.identifier,
     };
   }
 
   componentDidMount = async () => {
-    this.props.navigation.setParams({ handleLogout: this.logout });
+    this.props.navigation.setParams({ 
+      handleLogout: this.logout,
+      handleCancel: () => this.props.navigation.dismiss()
+    });
     await RNIap.initConnection();
     this.androidSubscriptions();
     if (this.state.specialOffer) {
@@ -857,7 +861,9 @@ export default class SubscriptionScreen extends React.PureComponent {
     // Helper function to go to next screen
     const goToNextScreen = async () => {
       const userDocument = await userRef.get()
-      if(userDocument.data().onboarded) {
+      if(this.state.dismissOnSuccess) {
+        this.props.navigation.dismiss()
+      } if(userDocument.data().onboarded) {
         this.props.navigation.navigate("App");
       } else {
         this.props.navigation.navigate("Onboarding1", {

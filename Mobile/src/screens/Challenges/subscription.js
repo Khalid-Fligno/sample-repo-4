@@ -197,7 +197,8 @@ class ChallengeSubscriptionScreen extends Component {
               if(Platform.OS === "ios")
                 this.props.navigation.navigate("Subscription", {
                   challengesOnly: true,
-                  preselectedChallenge: item.id
+                  preselectedChallenge: item.id,
+                  dismissOnSuccess: true
                 })
                   
               else if (item.shopifyUrl)
