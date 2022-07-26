@@ -507,7 +507,7 @@ class CalendarHomeScreen extends React.PureComponent {
             return defer(false)
           }
         }
-
+        videoUrls[videoIndex].localUrl = localLocation
         return defer(true)
       }
 

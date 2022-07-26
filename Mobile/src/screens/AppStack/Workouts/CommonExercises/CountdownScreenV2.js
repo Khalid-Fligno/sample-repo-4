@@ -15,7 +15,6 @@ import colors from "../../../../styles/colors";
 import fonts from "../../../../styles/fonts";
 
 const CountDownScreenV2 = ({navigation}) => {
-  const exerciseList = navigation.getParam("exerciseList", null);
   const workout = navigation.getParam("workout", null);
   const reps = navigation.getParam("reps", null);
   const resistanceCategoryId = navigation.getParam("resistanceCategoryId", null);
@@ -101,26 +100,6 @@ const CountDownScreenV2 = ({navigation}) => {
       { cancelable: false }
     );
   };
-
-  const checkVideoCache = async () => {
-    const video1 = await FileSystem.getInfoAsync(
-      `${FileSystem.cacheDirectory}exercise-1.mp4`
-    );
-    if (!video1.exists) {
-      Promise.all(
-        exerciseList.map(async (exercise, index) => {
-          await FileSystem.downloadAsync(
-            exercise.videoURL,
-            `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`
-          );
-        })
-      );
-    }
-  };
-
-  useState(() => {
-    checkVideoCache();
-  }, [])
 
   const finishCountdown = (test, workout, reps, resistanceCategoryId) => {
     workout["lifestyle"] = lifestyle;

@@ -261,20 +261,10 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     const restIntervalTimeinSec =
       this.state.workout.restIntervalMap[this.state.fitnessLevel - 1];
 
-    let videoUrl = "";
-    switch (section.key) {
-      case 0:
-        videoUrl = `${FileSystem.cacheDirectory}warmUpExercise-${index + 1
-          }.mp4`;
-        break;
-      case 1:
-        videoUrl = `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`;
-        break;
-      case 2:
-        videoUrl = `${FileSystem.cacheDirectory}coolDownExercise-${index + 1
-          }.mp4`;
-        break;
-    }
+    if (exercise.newWorkout) var videoIndex = exercise.videoUrls.findIndex((v) => v.model == exercise.exerciseModel) ?? 0
+    else var videoIndex = 0
+    const video =  exercise.videoUrls[videoIndex]
+    const videoUrl = video.localUrl ?? video.url // Backup if local cache is deleted/not loaded
 
     return (
       <View style={WorkoutScreenStyle.carouselContainer}>

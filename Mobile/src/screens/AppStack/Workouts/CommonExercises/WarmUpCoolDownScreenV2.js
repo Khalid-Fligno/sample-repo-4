@@ -283,6 +283,11 @@ export default class WarmUpCoolDownScreenV2 extends Component {
 
     let currentExercise = exerciseList[exerciseIndex - 1];
 
+    if (currentExercise?.newWorkout) var videoIndex = currentExercise.videoUrls.findIndex((v) => v.model == currentExercise.exerciseModel) ?? 0
+    else var videoIndex = 0
+    const video =  currentExercise?.videoUrls[videoIndex]
+    const videoUrl = video?.localUrl ?? video?.url 
+
     let lastExercise =
       exerciseList.length > 0
         ? getLastExerciseWC(exerciseList, exerciseIndex - 1, workout, 1)
@@ -317,9 +322,7 @@ export default class WarmUpCoolDownScreenV2 extends Component {
             <View>
               {exerciseList.length > 0 && (
                 <Video
-                  source={{
-                    uri: `${FileSystem.cacheDirectory}exercise-${type}-${exerciseIndex}.mp4`,
-                  }}
+                  source={{uri: videoUrl}}
                   rate={1.0}
                   volume={1.0}
                   muted={false}

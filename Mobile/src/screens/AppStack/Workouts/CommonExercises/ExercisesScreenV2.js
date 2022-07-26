@@ -835,6 +835,11 @@ export default class ExercisesScreenV2 extends React.PureComponent {
       }
     };
 
+    if (currentExercise?.newWorkout) var videoIndex = currentExercise.videoUrls.findIndex((v) => v.model == currentExercise.exerciseModel) ?? 0
+    else var videoIndex = 0
+    const video =  currentExercise?.videoUrls[videoIndex]
+    const videoUrl = video?.localUrl ?? video?.url 
+
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -861,11 +866,8 @@ export default class ExercisesScreenV2 extends React.PureComponent {
             </View>
             {!rest && (
               <Video
-                source={{
-                  uri: `${FileSystem.cacheDirectory}exercise-${currentExerciseIndex + 1
-                    }.mp4`,
-                }}
-                rate={1.0}
+              source={{uri: videoUrl}}
+              rate={1.0}
                 volume={1.0}
                 muted={false}
                 resizeMode="cover"
