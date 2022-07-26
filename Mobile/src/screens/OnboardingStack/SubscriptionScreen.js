@@ -1106,15 +1106,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                     fontSize: 10,
                     margin: 8,
                   }}>
-                  Need to buy your equipment pack for the Transform challenges?
-                  <Text
-                    onPress={() => { this.openLink("https://fitazfk.com/") }}
-                    style={{
-                      textDecorationLine: "underline",
-                      textDecorationStyle: "solid",
-                    }}> {"TAP HERE"}
-                  </Text>
-                  {" to buy a challenge + equipment bundle or the equipment pack separately."}
+                  Please note the equipment you need for a Transform challenge will need to be purchased separately.
                 </Text>
               </View>
               <View style={styles.disclaimerTextContainer}>
