@@ -30,6 +30,7 @@ import {
   trialPeriod,
   savingPercentage,
   productAdditionalText,
+  productTitle,
   lifeStyleIdentifiers
 } from "../../../config/apple";
 import { RestoreSubscriptions } from "../../utils/subscription";
@@ -1054,7 +1055,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                     <SubscriptionTile
                       key={product.identifier}
                       primary={true}
-                      title={ Platform.OS === "ios" ? product.title : productTitleMapAndroid[index] }
+                      title={ Platform.OS === "ios" ? productTitle(product.identifier) : productTitleMapAndroid[index] }
                       price={product.priceString}
                       priceNumber={product.price}
                       currencyCode={product.currencyCode}

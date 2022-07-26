@@ -465,7 +465,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   downloadVideosForWorkout = async (workout) => {
     try {
-      // type = on of "exercise, warmUp, cooldown"
       const downloadVideo = async (exercise) => {
         
         const { name, videoUrls, exerciseModel, newWorkout } = exercise
@@ -483,15 +482,17 @@ class CalendarHomeScreen extends React.PureComponent {
           return defer(false)
         }
 
-        const localLocation = `${FileSystem.cacheDirectory}${encodeURIComponent(name)}.mp4`
+        const localLocation = `${FileSystem.cacheDirectory}${encodeURIComponent(name.replace(/[^a-z0-9]/gi, '_'))}.mp4`
         const dirInfo = await FileSystem.getInfoAsync(localLocation);
+
         if(!dirInfo.exists) {
           try { await FileSystem.downloadAsync(videoUrls[videoIndex].url, localLocation) }
-          catch { error => 
+          catch (error) {
             console.log(`Failed to download video: ${error}`)
             return defer(false)
           }
         }
+
         videoUrls[videoIndex].localUrl = localLocation
         return defer(true)
       }
@@ -546,9 +547,7 @@ class CalendarHomeScreen extends React.PureComponent {
         displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
       });
     }
-
-
-
+    
     const requiredVideos = [workout.exercises, workout.warmUpExercises, workout.coolDownExercises]
       .map(i => i.map(v => v.videoUrls))
       .flat(2)

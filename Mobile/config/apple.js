@@ -51,8 +51,19 @@ export const compareProducts = (a, b) => {
 }
 
 export const lifeStyleIdentifiers = [
-  { identifier : 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly', period: "yearly", trialPeriod: "7 day", savingsPercent : "40" },
-  { identifier : 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly', period: "monthly", trialPeriod: "7 day" },
+  { 
+    identifier : 'com.fitazfk.fitazfkapp.sub.fullaccess.yearly', 
+    period: "yearly", 
+    trialPeriod: "7 day", 
+    savingsPercent : "40",
+    title: "Lifestyle Access Yearly"
+  },
+  { 
+    identifier : 'com.fitazfk.fitazfkapp.sub.fullaccess.monthly', 
+    period: "monthly", 
+    trialPeriod: "7 day",
+    title: "Lifestyle Access Monthly"
+  }
 ]
 
 export const transformIdentifiers = [
@@ -60,18 +71,21 @@ export const transformIdentifiers = [
     identifier : 'com.fitazfk.fitazfkapp.sub.transform.level1', 
     challengeId: '88969d13-fd11-4fde-966e-df1270fb97dd',
     period: "6 month access", 
+    title: "Transform Lvl 1 (No Equipment)",
     additionalText: "Includes 6 month lifestyle subscription"
   },
   { 
     identifier : 'com.fitazfk.fitazfkapp.sub.transform.level2', 
     challengeId: '7798f53c-f613-435d-b94b-b67f1f43b51b', 
     period: "6 month access",
+    title: "Transform Lvl 2 (No Equipment)",
     additionalText: "Includes 6 month lifestyle subscription"
   },
   { 
     identifier : 'com.fitazfk.fitazfkapp.sub.transform.level3', 
     challengeId: '0d48d056-2623-4201-b25a-3f1d78083dba', 
     period: "6 month access", 
+    title: "Transform Lvl 3 (No Equipment)",
     additionalText: "Includes 6 month lifestyle subscription"
   }
 ]
@@ -116,6 +130,13 @@ export const productAdditionalText = (identifier) => {
   .flatMap(i => i)
   .find(i => i.identifier == identifier)
   ?.additionalText
+}
+
+export const productTitle = (identifier) => {
+  return [lifeStyleIdentifiers, transformIdentifiers]
+  .flatMap(i => i)
+  .find(i => i.identifier == identifier)
+  ?.title
 }
 
 export const identifiers = (excludeChallengesIdentifiers = [], excludeLifestyleIdentifiers = []) => {
