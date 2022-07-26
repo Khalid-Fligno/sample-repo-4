@@ -406,21 +406,6 @@ class CalendarHomeScreen extends React.PureComponent {
   loadExercise = async (workoutData) => {
 
     const cloneWorkout = {...workoutData};
-    // TODO: Better manage videos
-    // Perform last in the background does not need to wait for anyone
-    // await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
-    //   (res) => {
-    //     Promise.all(
-    //       res.map(async (item, index) => {
-    //         if (item.includes("exercise-")) {
-    //           FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
-    //             idempotent: true,
-    //           }).then(() => { });
-    //         }
-    //       })
-    //     );
-    //   }
-    // );
 
     if (!workoutData.newWorkout) {
       return (await this.downloadVideosForWorkout(workoutData))
@@ -561,6 +546,28 @@ class CalendarHomeScreen extends React.PureComponent {
         displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
       });
     }
+
+
+
+    const requiredVideos = [workout.exercises, workout.warmUpExercises, workout.coolDownExercises]
+      .map(i => i.map(v => v.videoUrls))
+      .flat(2)
+      .map(i => decodeURIComponent(i.localUrl.split("/").pop()))
+
+    requiredVideos.push('exercise-burpees.mp4')
+
+    // Delete videos that are not used for this exercise
+    FileSystem
+      .readDirectoryAsync(`${FileSystem.cacheDirectory}`)
+      .then((res) => {
+        const deleteVideos = res
+          .filter(item => !requiredVideos.includes(item) && item.split('.').pop()?.toLowerCase() == "mp4")
+          .map(item => FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${encodeURIComponent(item)}`, { idempotent: true }))
+        return Promise.all(deleteVideos)
+      })
+      .catch(error => {
+        console.log(`Failed to delete video: ${error}`)
+      })
 
     if (!this.state.initialBurpeeTestCompleted) {
       await FileSystem.downloadAsync(
