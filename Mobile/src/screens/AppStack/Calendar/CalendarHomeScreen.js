@@ -80,7 +80,6 @@ class CalendarHomeScreen extends React.PureComponent {
       downloaded: 0,
       totalToDownload: 0,
       files: undefined,
-      newWorkoutParams: undefined,
       finishdownloaded: false
     };
     this.calendarStrip = React.createRef();
@@ -114,9 +113,6 @@ class CalendarHomeScreen extends React.PureComponent {
           files: undefined
         });
       }
-    }
-    if (this.state.newWorkoutParams !== undefined && this.state.finishdownloaded === true) {
-      this.goToNext(this.state.newWorkoutParams)
     }
   };
 
@@ -408,339 +404,154 @@ class CalendarHomeScreen extends React.PureComponent {
     });
   }
   loadExercise = async (workoutData) => {
-    const type = "interval";
-    await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
-      (res) => {
-        Promise.all(
-          res.map(async (item, index) => {
-            if (item.includes("exercise-")) {
-              FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
-                idempotent: true,
-              }).then(() => { });
-            }
-          })
-        );
-      }
-    );
 
-    if (workoutData.newWorkout) {
-      let exercises = [];
-      let tempExerciseData = [];
-      let workoutExercises = [];
+    const cloneWorkout = {...workoutData};
+    // TODO: Better manage videos
+    // Perform last in the background does not need to wait for anyone
+    // await FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
+    //   (res) => {
+    //     Promise.all(
+    //       res.map(async (item, index) => {
+    //         if (item.includes("exercise-")) {
+    //           FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
+    //             idempotent: true,
+    //           }).then(() => { });
+    //         }
+    //       })
+    //     );
+    //   }
+    // );
 
+    if (!workoutData.newWorkout) {
+      return (await this.downloadVideosForWorkout(workoutData))
+    }
+
+    const exerciseRef = (await db.collection("Exercises").get()).docs
+    const containsIntervalType = workoutData.filters.includes('interval')
+    cloneWorkout.exercises = workoutData
+      .exercises
+      .map(exerciseId => {
+        let exercise = exerciseRef.find(r => [exerciseId, exerciseId.id].includes(r.id)).data()
+        if(containsIntervalType) {
+            exercise.duration = exerciseId.duration
+        }
+        return exercise
+      })
+      
+    // Load Warmup Exercises
+    if (workoutData.warmUpExercises) {
       const exerciseRef = (
         await db
-          .collection("Exercises")
-
+          .collection("WarmUpCoolDownExercises") // in operator has a 10 item limit
+          .where("id", "in", workoutData.warmUpExercises)
           .get()
-      ).docs;
+      ).docs
 
-      workoutData.filters.forEach((resType) => {
-        if (resType === "interval") {
-          exerciseRef.forEach((exercise) => {
-            workoutData.exercises
-              .filter((resExercise) => resExercise.id === exercise.id)
-              .forEach((resExercise) => {
-                const exerciseDuration = Object.assign({}, exercise.data(), {
-                  duration: resExercise.duration,
-                });
-                tempExerciseData.push(exerciseDuration);
-              });
-          });
-          workoutExercises = workoutData.exercises.map((id) => {
-            return tempExerciseData.find((res) => res.id === id);
-          });
-        } else {
-          exerciseRef.forEach((exercise) => {
-            workoutData.exercises
-              .filter((resExercise) => resExercise === exercise.id)
-              .forEach((resExercise) => {
-                tempExerciseData.push(exercise.data());
-              });
-          });
-          workoutExercises = workoutData.exercises.map((id) => {
-            return tempExerciseData.find((res) => res.id === id);
-          });
-        }
-      });
-
-      exercises = workoutData.exercises.map((id) => {
-        if (id.id) {
-          return tempExerciseData.find((res) => res.id === id.id);
-        } else {
-          return tempExerciseData.find((res) => res.id === id);
-        }
-      });
-
-      if (exercises.length > 0) {
-        workoutData = Object.assign({}, workoutData, { exercises: exercises });
-        const res = await this.downloadExercise(workoutData);
-        if (res) return workoutData;
-        else return false;
-      } else {
-        return false;
-      }
-    } else {
-      const res = await this.downloadExercise(workoutData);
-      return workoutData;
+      cloneWorkout.warmUpExercises = workoutData
+        .warmUpExercises
+        .map((id) => exerciseRef.find((ref) => ref.id === id)?.data())
     }
-  };
 
-  downloadExercise = async (workout) => {
-    try {
-      const exercises = workout.exercises;
-      let warmUpExercises = [];
-      let coolDownExercises = [];
-
-      if (workout.warmUpExercises) {
-        const exerciseRef = (
-          await db
-            .collection("WarmUpCoolDownExercises")
-            .where("id", "in", workout.warmUpExercises)
-            .get()
-        ).docs;
-
-        const tempExerciseData =
-          exerciseRef.map((exercise) => {
-            return exercise.data();
-          }) || [];
-
-        warmUpExercises = workout.warmUpExercises.map((id) => {
-          return tempExerciseData.find((res) => res.id === id);
-        });
-      }
-      if (workout.coolDownExercises) {
-        const exerciseRef = (
-          await db
-            .collection("WarmUpCoolDownExercises")
-            .where("id", "in", workout.coolDownExercises)
-            .get()
-        ).docs;
-
-        const tempExerciseData =
-          exerciseRef.map((exercise) => {
-            return exercise.data();
-          }) || [];
-        coolDownExercises = workout.coolDownExercises.map((id) => {
-          return tempExerciseData.find((res) => res.id === id);
-        });
-      }
-
-      return Promise.all(
-        exercises.map(async (exercise, index) => {
-          return new Promise(async (resolve, reject) => {
-            let videoIndex = 0;
-            if (workout.newWorkout)
-              videoIndex = exercise.videoUrls.findIndex(
-                (res) => res.model === workout.exerciseModel
-              );
-            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-              const downloadResumable = FileSystem.createDownloadResumable(
-                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-                `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`
-              );
-              await downloadResumable
-                .downloadAsync()
-                .then(() => {
-                  resolve("Downloaded");
-                  this.setState((prevState) => ({
-                    files: !prevState.files,
-                  }));
-                })
-                .catch(() => resolve("Error Download"));
-            } else {
-              resolve("no video found");
-            }
-          });
-        }),
-        warmUpExercises.map(async (exercise, index) => {
-          return new Promise(async (resolve, reject) => {
-            let videoIndex = 0;
-            if (workout.newWorkout) {
-              if (exercise.videoUrls && exercise.videoUrls?.length > 0) {
-                videoIndex = exercise.videoUrls.findIndex(
-                  (res) => res.model === workout.exerciseModel
-                );
-              }
-            }
-            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-              const warmUP = FileSystem.createDownloadResumable(
-                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-                `${FileSystem.cacheDirectory}warmUpExercise-${index + 1}.mp4`
-              );
-              await warmUP
-                .downloadAsync()
-                .then(() => {
-                  resolve("Downloaded");
-                  this.setState((prevState) => ({
-                    files: !prevState.files,
-                  }));
-                })
-                .catch((err) => resolve("Download failed"));
-            } else {
-              resolve("no video found");
-            }
-          });
-        }),
-        coolDownExercises.map(async (exercise, index) => {
-          return new Promise(async (resolve, reject) => {
-            let videoIndex = 0;
-            if (workout.newWorkout) {
-              if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-                videoIndex = exercise.videoUrls.findIndex(
-                  (res) => res.model === workout.exerciseModel
-                );
-              }
-            }
-
-            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-              const coolDown = FileSystem.createDownloadResumable(
-                exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
-                `${FileSystem.cacheDirectory}coolDownExercise-${index + 1}.mp4`
-              );
-              await coolDown
-                .downloadAsync()
-                .then(() => {
-                  resolve("Downloaded");
-                  this.setState((prevState) => ({
-                    files: !prevState.files,
-                  }));
-                })
-                .catch((err) => resolve("Download failed"));
-            } else {
-              resolve("no video found");
-            }
-          });
-        })
-      );
-    } catch (err) {
-      console.log(err);
-      Alert.alert("Something went wrong", "Workout Not Available");
-      return "false";
-    }
-  };
-
-  downloadExerciseWC = async (workout, exerciseIds, exerciseModel, type) => {
-    try {
-      let exercises = [];
+    // Load Cooldown Exercises
+    if (workoutData.coolDownExercises) {
       const exerciseRef = (
         await db
           .collection("WarmUpCoolDownExercises")
-          .where("id", "in", exerciseIds)
+          .where("id", "in", workoutData.coolDownExercises) // in operator has a 10 item limit
           .get()
       ).docs;
-      const tempExerciseData =
-        exerciseRef.map((exercise) => {
-          return exercise.data();
-        }) || [];
 
-      exercises =
-        exerciseIds.map((id) => {
-          return tempExerciseData.find((res) => res.id === id);
-        }) || [];
+      cloneWorkout.coolDownExercises = workoutData
+        .coolDownExercises
+        .map((id) => exerciseRef.find((ref) => ref.id === id)?.data())
+    }
 
-      return Promise.all(
-        exercises.map(async (exercise, index) => {
-          return new Promise(async (resolve, reject) => {
-            let videoIndex = 0;
-            if (workout.newWorkout)
-              videoIndex = exercise.videoUrls.findIndex(
-                (res) => res.model === exerciseModel
-              );
-            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
-              const downloadResumable = FileSystem.createDownloadResumable(
-                exercise.videoUrls[videoIndex].url,
-                `${FileSystem.cacheDirectory}exercise-${type}-${index + 1}.mp4`,
-                {}
-              );
-              await downloadResumable
-                .downloadAsync()
-                .then(() => {
-                  resolve(exercise);
-                  this.setState((prevState) => ({
-                    files: !prevState.files,
-                  }));
-                })
-                .catch(() => resolve("Error Download"));
-            }
-          });
+    console.log("dsadsadas")
+        
+    const res = await this.downloadVideosForWorkout(cloneWorkout);
+    if (res) {
+      console.log("happe")
+      return cloneWorkout;
+    }
+    else {
+      return false
+    }
+  }
+
+  downloadVideosForWorkout = async (workout) => {
+    try {
+      // type = on of "exercise, warmUp, cooldown"
+      const downloadVideo = async (exercise) => {
+        
+        const { name, videoUrls, exerciseModel, newWorkout } = exercise
+
+        const defer = (success) => {
+          this.setState((prevState) => ({files: !prevState.files}))
+          return success
+        }
+
+        if (newWorkout) var videoIndex = videoUrls.findIndex((v) => v.model == exerciseModel) ?? 0
+        else var videoIndex = 0
+
+        if(!videoUrls && videoUrls.length > videoIndex) {
+          console.log(`Video at index ${videoIndex} for exercise (${exercise.id}) does not exist`)
+          return defer(false)
+        }
+
+        const localLocation = `${FileSystem.cacheDirectory}${encodeURIComponent(name)}.mp4`
+        const dirInfo = await FileSystem.getInfoAsync(localLocation);
+        if(!dirInfo.exists) {
+          try { await FileSystem.downloadAsync(videoUrls[videoIndex].url, localLocation) }
+          catch { error => 
+            console.log(`Failed to download video: ${error}`)
+            return defer(false)
+          }
+        }
+
+        return defer(true)
+      }
+
+      return Promise
+        .all([workout.exercises, workout.warmUpExercises, workout.coolDownExercises]
+            .flatMap(e => e)
+            .map(e => downloadVideo(e)))
+        .then(_ => true)
+        .catch(error => {
+          console.error(error)
+          return false
         })
-      );
+
     } catch (err) {
       console.log(err);
       Alert.alert("Something went wrong", "Workout Not Available");
-      return "false";
+      return false
     }
   };
 
   loadExercises = async (workoutData) => {
-    this.setState({ loadingExercises: true });
 
-    Object.assign(workoutData, {
-      warmUpExercises: workoutData.warmUpExercises,
-    });
-    if (workoutData.newWorkout) {
-      this.setState({
-        totalToDownload:
-          workoutData.exercises.length +
-          workoutData.warmUpExercises.length +
-          workoutData.coolDownExercises.length +
-          workoutData.warmUpExercises.length +
-          workoutData.coolDownExercises.length,
-      });
-    } else {
-      this.setState({
-        totalToDownload:
-          workoutData.exercises.length +
-          workoutData.warmUpExercises.length +
-          workoutData.coolDownExercises.length,
-      });
-    }
+    this.setState({
+      loadingExercises: true,
+      totalToDownload:
+        workoutData.exercises.length +
+        workoutData.warmUpExercises.length +
+        workoutData.coolDownExercises.length,
+    })
 
     const workout = await this.loadExercise(workoutData);
-    if (workout && workout.newWorkout) {
-      const warmUpExercises = await this.downloadExerciseWC(
-        workout,
-        Object.prototype.toString
-          .call(workout.warmUpExercises)
-          .indexOf("Array") > -1
-          ? workout.warmUpExercises
-          : workout.warmUpExercises.filter((warmUpExercise) => {
-            return warmUpExercise;
-          }),
-        workout.warmUpExerciseModel,
-        "warmUp"
-      );
-      if (warmUpExercises.length > 0) {
-        const coolDownExercises = await this.downloadExerciseWC(
-          workout,
-          workout.coolDownExercises,
-          workout.coolDownExerciseModel,
-          "coolDown"
-        );
 
-        if (coolDownExercises.length > 0) {
-          const newWorkout = Object.assign({}, workout, {
-            warmUpExercises: warmUpExercises,
-            coolDownExercises: coolDownExercises,
-          });
-          this.setState({ newWorkoutParams: newWorkout })
-        } else {
-          this.setState({ loadingExercises: false });
-          Alert.alert("Alert!", "Something went wrong!");
-        }
-      } else {
-        this.setState({ loadingExercises: false });
-        Alert.alert("Alert!", "Something went wrong!");
-      }
-    } else if (workout) {
-      if (this.state.totalToDownload === this.state.downloaded) {
+    if (workout) {
+      if(!workout.newWorkout && this.state.totalToDownload === this.state.downloaded) {
         this.goToNext(workout);
+        return
       }
     } else {
       this.setState({ loadingExercises: false });
+      return
     }
-  };
+    
+    this.goToNext(workout)
+  }
 
   async goToNext(workout) {
     const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
