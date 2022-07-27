@@ -119,7 +119,7 @@ export const convertRecipeData = async (recipeIds) => {
   return recipeResult
 };
 
-export const fetchRecipeData = async (challengeRecipe) => {
+export const fetchRecipeData = async () => {
   let breakFastMeals = [];
   let lunchMeals = [];
   let dinnerMeals = [];
@@ -127,41 +127,34 @@ export const fetchRecipeData = async (challengeRecipe) => {
   let preworkoutMeals = [];
   let treats = [];
 
-  if (challengeRecipe) {
+  const snapshot = await db.collection("recipes")
+    .orderBy('title')
+    .get();
 
-    const snapshot = await db.collection("recipes")
-      .orderBy('title')
-      .get();
-
-    if (snapshot.empty) {
-      return null;
-    }
-
-    snapshot.forEach((res) => {
-      const recipe = res.data()
-      let mealsArray
-      if(recipe.breakfast) mealsArray = breakFastMeals
-      else if (recipe.lunch) mealsArray = lunchMeals
-      else if (recipe.dinner) mealsArray = dinnerMeals
-      else if (recipe.snack || recipe.drink) mealsArray = snackMeals
-      else if (recipe.preworkout) mealsArray = preworkoutMeals
-      else if (recipe.treats) mealsArray = treats
-      
-      mealsArray?.push(recipe)
-    })
+  if (snapshot.empty) {
+    return null;
   }
 
+  snapshot.forEach((res) => {
+    const recipe = res.data()
+    let mealsArray
+    if(recipe.breakfast) mealsArray = breakFastMeals
+    else if (recipe.lunch) mealsArray = lunchMeals
+    else if (recipe.dinner) mealsArray = dinnerMeals
+    else if (recipe.snack || recipe.drink) mealsArray = snackMeals
+    else if (recipe.preworkout) mealsArray = preworkoutMeals
+    else if (recipe.treats) mealsArray = treats
+    
+    mealsArray?.push(recipe)
+  })
+
   return {
-    recommendedRecipe: [
-      {
-        breakfast: breakFastMeals,
-        snack: snackMeals,
-        lunch: lunchMeals,
-        dinner: dinnerMeals,
-        preworkout: preworkoutMeals,
-        treats: treats,
-      }
-    ]
+    breakfast: breakFastMeals,
+    snack: snackMeals,
+    lunch: lunchMeals,
+    dinner: dinnerMeals,
+    preworkout: preworkoutMeals,
+    treats: treats,
   }
 }
 
