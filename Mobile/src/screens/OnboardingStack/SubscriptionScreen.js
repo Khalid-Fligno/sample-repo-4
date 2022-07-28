@@ -668,7 +668,7 @@ export default class SubscriptionScreen extends React.PureComponent {
         }
 
         const validationData = await this.validate(response.transactionReceipt)
-        const inApppPurchase = validationData?.receipt?.in_app[0]
+        const inApppPurchase = validationData?.receipt?.in_app.find(r => r.transaction_id == response.transactionIdentifier)
 
         if (inApppPurchase === undefined) {
           this.setState({ loading: false });
@@ -849,7 +849,6 @@ export default class SubscriptionScreen extends React.PureComponent {
     const userRef = db.collection("users").doc(uid)
 
     const inAppPurchases = {
-      expiry: validated_in_app_recipet.expires_date_ms,
       originalTransactionId: validated_in_app_recipet.original_transaction_id,
       originalPurchaseDate: validated_in_app_recipet.original_purchase_date_ms,
       transactionId: validated_in_app_recipet.transaction_id,
