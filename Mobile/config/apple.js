@@ -87,6 +87,13 @@ export const transformIdentifiers = [
     period: "6 month access", 
     title: "Transform Lvl 3 (No Equipment)",
     additionalText: "Includes 6 month lifestyle subscription"
+  },
+  {
+    identifier : 'com.fitazfk.fitazfkapp.sub.transform.postpartum', 
+    challengeId: 'TODO: Get from fireebase', // TODO: get Challenge ID
+    period: "6 month access", 
+    title: "Transform Postpartum (No Equipment)",
+    additionalText: "Includes 6 month lifestyle subscription"
   }
 ]
 
