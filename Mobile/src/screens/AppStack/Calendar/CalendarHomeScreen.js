@@ -517,8 +517,6 @@ class CalendarHomeScreen extends React.PureComponent {
       .flat(2)
       .map(i => decodeURIComponent(i.localUrl.split("/").pop()))
 
-    requiredVideos.push('exercise-burpees.mp4')
-
     // Delete videos that are not used for this exercise
     FileSystem
       .readDirectoryAsync(`${FileSystem.cacheDirectory}`)
