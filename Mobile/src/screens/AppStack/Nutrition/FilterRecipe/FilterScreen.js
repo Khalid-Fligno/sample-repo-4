@@ -32,26 +32,25 @@ export default class FilterScreen extends React.PureComponent {
     }
 
     render() {
-        const { result, item, title, onSelectHeart, favouritingDisabled } = this.props
+        const { result, item, title, onSelectHeart, favouritingDisabled, ifExistRecipe } = this.props
 
         return (
             <View
                 style={styles.cardContainer}
             >
                 <TouchableOpacity
-                    onPress={() =>
+                    onPress={ () =>
                         this.props.navigation.push("Recipe", {
                             recipe: item,
                             backTitle: false,
                             title: title,
-
                         })
-                    }
-                >
+                    }>
                     <Card
                         image={{ uri: item.coverImage }}
-                        containerStyle={styles.card}
-                    >
+                        containerStyle={styles.card}>
+
+                        <View>
                     
                         {item.drink && (
                             <Text style={styles.watermarkTitle}>post{'\n'}workout</Text>
@@ -69,12 +68,7 @@ export default class FilterScreen extends React.PureComponent {
                                     style={styles.heartState(favouritingDisabled) }
                                     disabled={favouritingDisabled}
                                     onPress={onSelectHeart}>
-                                    {
-                                        Platform.OS === "ios" ?
-                                            <Icon name={this.props.ifExistRecipe() ? 'heart' : 'hearto'} size={30} color={'red'} />
-                                            :
-                                            <Icon name={this.props.ifExistRecipe() ? 'heart' : 'hearto'} size={30} color={'red'} />
-                                    }
+                                    <Icon name={ifExistRecipe ? 'heart' : 'hearto'} size={30} color={'red'} />
                                 </TouchableOpacity>
                                 </View>
                         }
@@ -110,6 +104,7 @@ export default class FilterScreen extends React.PureComponent {
                                 }
                                 <Text style={{ fontSize: 9 }}>+ more</Text>
                             </View>
+                        </View>
                         </View>
                     </Card>
                 </TouchableOpacity>

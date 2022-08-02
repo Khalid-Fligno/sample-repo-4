@@ -477,7 +477,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
             <FilterScreen
                 faveRecipeItem={faveRecipeItem}
                 favouritingDisabled={heartDisbaled}
-                ifExistRecipe={() => isSelected }
+                ifExistRecipe={isSelected}
                 onSelectHeart={() => this.onSelectHeart(item, activeChallengeUserData, title, currentChallengeDay)}
                 navigation={this.props.navigation}
                 result={result}
@@ -485,7 +485,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 title={title}
             />
         )
-    };
+    }
 
     clickModal = (data) => {
 
@@ -733,9 +733,10 @@ export default class FilterRecipeScreen extends React.PureComponent {
                                 contentContainerStyle={styles.scrollView}
                                 data={todayRecommendedRecipe}
                                 keyExtractor={(res) => res.id}
-                                renderItem={(item) => this.renderItem(item)}
+                                renderItem={this.renderItem}
                                 showsVerticalScrollIndicator={false}
                                 removeClippedSubviews={false}
+                                maxToRenderPerBatch={10}
                             />
                             :
                             <View
@@ -752,8 +753,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                                         fontSize: 15,
                                         fontFamily: fonts.bold,
                                         textTransform: 'uppercase',
-                                    }}
-                                >
+                                    }}>
                                     no recipes are available
                                 </Text>
                             </View>

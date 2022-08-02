@@ -91,16 +91,15 @@ class CalendarHomeScreen extends React.PureComponent {
   componentDidMount = async () => {
     this.props.navigation.setParams({
       toggleHelperModal: this.showHelperModal,
-    });
-    this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting(),
     });
+
     this.checkSchedule();
     this.fetchRecipeChallenge();
     this.fetchActiveChallengeUserData();
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
-    });
+    })
   };
 
   componentDidUpdate = () => {
