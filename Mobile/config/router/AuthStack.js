@@ -27,7 +27,7 @@ const AuthStack = createStackNavigator(
       },
     }),
     defaultNavigationOptions: {
-      header: null,
+      headerShown: false,
     },
   },
 );

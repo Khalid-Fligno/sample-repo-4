@@ -22,7 +22,7 @@ const ExerciseStack = createStackNavigator(
       },
     }),
     defaultNavigationOptions: {
-      header: null,
+      headerShown: false,
     },
   }
 );

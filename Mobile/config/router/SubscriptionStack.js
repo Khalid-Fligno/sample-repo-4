@@ -8,7 +8,7 @@ const SusbcriptionStack = createStackNavigator(
 {  Subscription: SubscriptionScreen },
 {     
     defaultNavigationOptions: ({ navigation }) => ({
-    gesturesEnabled: true,
+    gestureEnabled: true,
         // headerMode: 'none'
     header: () => {
         return (

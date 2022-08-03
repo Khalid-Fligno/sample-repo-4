@@ -11,8 +11,8 @@ const ChallengesStack = createStackNavigator(
   {
     initialRouteName: 'Calendar',
     defaultNavigationOptions: ({ navigation }) => ({
-      gesturesEnabled: false,
-      header: () => null,
+      gestureEnabled: false,
+      headerShown: false,
     }),
   },
 );

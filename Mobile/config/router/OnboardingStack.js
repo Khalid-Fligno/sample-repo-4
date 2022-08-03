@@ -25,7 +25,7 @@ const OnboardingStack = createStackNavigator(
       },
     }),
     defaultNavigationOptions: ({ navigation }) => ({
-      gesturesEnabled: false,
+      gestureEnabled: false,
       header: () => {
         const { routeName } = navigation.state;
         return (

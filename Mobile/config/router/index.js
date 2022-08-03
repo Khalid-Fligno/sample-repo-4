@@ -21,7 +21,7 @@ const SwitchNavigator = createSwitchNavigator(
       },
     }),
     defaultNavigationOptions: {
-      header: null,
+      headerShown: false,
     },
   },
 );

@@ -14,7 +14,7 @@ const DashboardStack = createStackNavigator(
   {
     initialRouteName: 'Home',
     defaultNavigationOptions: ({ navigation }) => ({
-      gesturesEnabled:false,
+      gestureEnabled:false,
       header: () => {
         const { routeName } = navigation.state;
         if(routeName === 'Dashboard')

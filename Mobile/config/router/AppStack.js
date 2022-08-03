@@ -26,8 +26,8 @@ const AppStack = createStackNavigator(
     //   },
     // }),
     defaultNavigationOptions:({ navigation })=>( {
-      gesturesEnabled:navigation.state.routeName === 'ChallengeOnBoarding'?false:true,
-      header: null,
+      gestureEnabled:navigation.state.routeName === 'ChallengeOnBoarding'?false:true,
+      headerShown: false,
     }
     )
   },

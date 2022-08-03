@@ -50,7 +50,7 @@ const TabStack = createBottomTabNavigator(
     initialRouteName: "Lifestyle",
     tabBarComponent: (props) => <TabBarComponent {...props} />, //remember to import it,
     defaultNavigationOptions: ({ navigation }) => ({
-      header: null,
+      headerShown: false,
       title: getTabName(navigation.state.routeName),
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;

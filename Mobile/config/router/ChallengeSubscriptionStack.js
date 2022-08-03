@@ -8,7 +8,7 @@ const ChallengeSubscriptionStack = createStackNavigator({
   }, {
     // mode: 'modal',
     defaultNavigationOptions: ({ navigation }) => ({
-      gesturesEnabled: true,
+      gestureEnabled: true,
       
         // headerMode: 'none'
       header: () => {
