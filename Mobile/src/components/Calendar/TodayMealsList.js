@@ -28,7 +28,7 @@ const TodayMealsList = (props) => {
           onPress={onPress}
           filterPress={filterPress}
           favouriteRecipeConfigs={favouriteRecipeConfigs?.breakfast}
-          favoriteRecipe={favoriteRecipe.breakfast}
+          favoriteRecipe={favoriteRecipe?.breakfast}
         />
       )}
       {data.lunch && data.lunch.length > 0 && (
@@ -40,7 +40,7 @@ const TodayMealsList = (props) => {
           onPress={onPress}
           filterPress={filterPress}
           favouriteRecipeConfigs={favouriteRecipeConfigs?.lunch}
-          favoriteRecipe={favoriteRecipe.lunch}
+          favoriteRecipe={favoriteRecipe?.lunch}
         />
       )}
       {data.dinner && data.dinner.length > 0 && (
@@ -52,7 +52,7 @@ const TodayMealsList = (props) => {
           onPress={onPress}
           filterPress={filterPress}
           favouriteRecipeConfigs={favouriteRecipeConfigs?.dinner}
-          favoriteRecipe={favoriteRecipe.dinner}
+          favoriteRecipe={favoriteRecipe?.dinner}
         />
       )}
       {data.snack && data.snack.length > 0 && (
@@ -64,7 +64,7 @@ const TodayMealsList = (props) => {
           onPress={onPress}
           filterPress={filterPress}
           favouriteRecipeConfigs={favouriteRecipeConfigs?.snack}
-          favoriteRecipe={favoriteRecipe.snack}
+          favoriteRecipe={favoriteRecipe?.snack}
         />
       )}
       {data.preworkout && data.preworkout.length > 0 && (
@@ -76,7 +76,7 @@ const TodayMealsList = (props) => {
           onPress={onPress}
           filterPress={filterPress}
           favouriteRecipeConfigs={favouriteRecipeConfigs?.preworkout}
-          favoriteRecipe={favoriteRecipe.preworkout}
+          favoriteRecipe={favoriteRecipe?.preworkout}
         />
       )}
       {data.treats && data.treats.length > 0 && (
@@ -88,7 +88,7 @@ const TodayMealsList = (props) => {
           onPress={onPress}
           filterPress={filterPress}
           favouriteRecipeConfigs={favouriteRecipeConfigs?.treats}
-          favoriteRecipe={favoriteRecipe.treats}
+          favoriteRecipe={favoriteRecipe?.treats}
         />
       )}
     </View>

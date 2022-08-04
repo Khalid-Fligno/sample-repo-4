@@ -23,7 +23,6 @@ import * as Haptics from "expo-haptics";
 import {
   fetchRecipeData,
   getCurrentPhase,
-  getTotalChallengeWorkoutsCompleted,
   getCurrentChallengeDay,
   getTodayRecommendedMeal,
   getTodayRecommendedWorkout,
@@ -70,11 +69,10 @@ class CalendarHomeScreen extends React.PureComponent {
       initialBurpeeTestCompleted: false,
       width: 0,
       AllRecipe: undefined,
-      transformLevel: undefined,
       completeCha: undefined,
       todayRecommendedRecipe: undefined,
       phaseDefaultTags: undefined,
-      favoriteRecipe: [],
+      favoriteRecipe: undefined,
       currentDay: undefined,
       downloaded: 0,
       totalToDownload: 0,
@@ -89,18 +87,156 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   componentDidMount = async () => {
+
     this.props.navigation.setParams({
-      toggleHelperModal: this.showHelperModal,
       activeChallengeSetting: () => this.handleActiveChallengeSetting(),
     });
 
-    this.checkSchedule();
-    this.fetchRecipeChallenge();
-    this.fetchActiveChallengeUserData();
+    this.start()
+
+    // Load all recipes once and only once
+
+    // Check if active challenge is between days, isScheduled (false means we are currently active)
+    // get rid of logic for isSchedule checks
+    // Get active challenge, monitor it. DO first time initial load stuff: Get recipes, favourites, phase info
+    // Monitor active challenge changes, don't refresh for favourite changes only if affects your day
+    // Load correct phase and todays workout, todays favourite recipes
+
     this.focusListener = this.props.navigation.addListener("didFocus", () => {
       this.onFocusFunction();
     })
   };
+
+
+
+  start = async () => {
+      // Lets load the latest challenge
+      const uid = await AsyncStorage.getItem("uid");
+
+      let firstTime = true
+
+      this.unsubscribeFACUD = db
+        .collection("users")
+        .doc(uid)
+        .collection("challenges")
+        .where("status", "in", ["Active"])
+        .onSnapshot(async (querySnapshot) => {
+
+          const activeUserChallenge = querySnapshot.docs[0]?.data()
+
+          // No active challenge available
+          if(!activeUserChallenge) {
+            this.setState({ activeChallengeUserData: undefined })
+            return
+          }
+
+          const currentDate = moment().format("YYYY-MM-DD")
+          // If challenge has completed then inform user
+          if(moment(currentDate).isSameOrAfter(activeUserChallenge.endDate)) {
+            this.completeChallenge()
+            return
+          }
+
+
+          if (firstTime) {
+            firstTime = false
+            
+            const [challengeDoc, AllRecipe] = await Promise.all([
+              db.collection("challenges").doc(activeUserChallenge.id).get(),
+              await fetchRecipeData()
+            ])
+
+            var activeChallengeData = challengeDoc.data()
+            var allRecipes = AllRecipe
+            var currentDay = moment(new Date()).format("YYYY-MM-DD")
+            // Lets load all the recipes
+            this.setState({ 
+              AllRecipe,
+              activeChallengeData,
+              currentDay,
+              currentChallengeDay: getCurrentChallengeDay(activeUserChallenge.startDate, currentDay)
+            })
+          } else {
+            var { AllRecipe: allRecipes , activeChallengeData, currentDay } = this.state
+          }
+
+          // Get users favourite recipes for today
+          const favouriteRecipes = this.usersFavouriteRecipesForDay(activeUserChallenge, allRecipes, currentDay)
+
+          this.getCurrentPhaseInfo(activeUserChallenge, activeChallengeData, currentDay, allRecipes)
+          
+          this.setState({
+            activeChallengeUserData: activeUserChallenge,
+            favoriteRecipe: favouriteRecipes,
+          })
+        })
+  }
+
+  onUserChallengeChanged = async (activeChallenge) => {
+
+  }
+
+  completeChallenge = async (activeChallenge) => {
+
+    const newActiveChallengeData = createUserChallengeData({ ...activeChallenge, status: "InActive" }, new Date())
+    await db
+      .collection("users")
+      .doc(uid)
+      .collection("challenges")
+      .doc(activeChallenge.id)
+      .set(newActiveChallengeData, { merge: true })
+
+    this.setState({ completeCha: isCompleted })
+
+    Alert.alert(
+      "Congratulations!",
+      "You have completed your challenge",
+      [
+        {
+          text: "OK",
+          onPress: () => this.props.navigation.navigate("ChallengeSubscription", { completedChallenge: true })
+        }
+      ],
+      { cancelable: false }
+    )
+  }
+
+  usersFavouriteRecipesForDay = (usersActiveChallenge, allRecipes, dateSelected) => {
+
+    const currentChallengeDay = getCurrentChallengeDay(usersActiveChallenge.startDate, dateSelected)
+    const usersFavouriteRecipes = usersActiveChallenge
+      .faveRecipe
+      ?.find(day => day.day === currentChallengeDay)
+      ?.recipeMeal ?? {}
+    return Object
+      .keys(usersFavouriteRecipes)
+      .reduce((result, propertyName) => {
+        // We need to perform data transformation for these properties inside the 'faveRecipe'
+        // Currently the property types for breakfast, lunch, etc are just string.
+        // We want to set them to be a type of Array<String> for future use.
+        // We transform into an array and flatten it, if it was already an array flatting it should set to be an array still
+        const ids = [usersFavouriteRecipes[propertyName]]
+          .flat(1)
+          .filter(r => r?.trim()) // Remove any null/undefined/empty ids
+
+        switch (propertyName) {
+          case 'drink': // Drink == post_workout, allrecipes['snack'] contains both snack and postworkout recipes
+            var filteredRecipes = allRecipes['snack'].filter(recipe => ids.includes(recipe.id))
+            break
+          default:
+            var filteredRecipes = allRecipes[propertyName].filter(recipe => ids.includes(recipe.id))
+        }
+        result[propertyName] = [...new Set(filteredRecipes)] // Remove any duplicate objects
+        return result
+      }, { 
+          breakfast: [],
+          lunch: [],
+          dinner: [],
+          snack: [],
+          preworkout: [],
+          treats: [],
+      })
+  }
 
   componentDidUpdate = () => {
     if (this.state.files !== undefined) {
@@ -142,10 +278,7 @@ class CalendarHomeScreen extends React.PureComponent {
   fetchRecipeChallenge = async () => {
     fetchRecipeData()
       .then((res) => {
-        this.setState({
-          AllRecipe: res,
-          loading: false,
-        })
+        this.setState({AllRecipe: res })
       })
   }
 
@@ -163,64 +296,39 @@ class CalendarHomeScreen extends React.PureComponent {
   };
 
   handleDateSelected = async (date) => {
-    const { activeChallengeData, activeChallengeUserData } = this.state;
-    this.setState({ loading: false });
-    this.stringDate = date.format("YYYY-MM-DD").toString();
-    this.day = date.format("dddd");
-    this.month = date.format("MMM");
-    this.date = date.format("D");
+    const { activeChallengeData, activeChallengeUserData, AllRecipe} = this.state;
+    
+    // this.setState({ loading: false });
+    const currentDayTime = new Date(date).getTime()
+    const currentDayDate = date.format("YYYY-MM-DD")
+    const currentDay = currentDayDate.toString()
 
     this.setState({
-      currentDay: (this.stringDate = date.format("YYYY-MM-DD").toString()),
-    });
+      currentDay,
+      CalendarSelectedDate: date,
+      currentChallengeDay: getCurrentChallengeDay(activeChallengeUserData.startDate, currentDay),
+      favoriteRecipe: this.usersFavouriteRecipesForDay(activeChallengeUserData, AllRecipe, currentDay)
+    })
 
-    this.currentChallengeDay = getCurrentChallengeDay(
-      activeChallengeUserData.startDate,
-      this.stringDate
-    );
+    if (activeChallengeData && activeChallengeUserData &&
+      new Date(activeChallengeUserData.startDate).getTime() <= currentDayTime &&
+      new Date(activeChallengeUserData.endDate).getTime() >= currentDayTime) {
 
-    const id = activeChallengeUserData.id;
-    const uid = await AsyncStorage.getItem("uid");
-    const activeChallengeUserRef = db
-      .collection("users")
-      .doc(uid)
-      .collection("challenges")
-      .doc(id);
-
-    await activeChallengeUserRef.set(
-      { recipes: { days: this.currentChallengeDay } },
-      { merge: true }
-    );
-
-    //TODO:check the active challenge cndtns
-    if (
-      activeChallengeData &&
-      activeChallengeUserData &&
-      activeChallengeUserData.status === "Active" &&
-      new Date(activeChallengeUserData.startDate).getTime() <=
-      new Date(this.stringDate).getTime() &&
-      new Date(activeChallengeUserData.endDate).getTime() >=
-      new Date(this.stringDate).getTime()
-    ) {
-      this.getCurrentPhaseInfo();
-    } else {
-      if (!this.state.isSchedule && !this.state.ScheduleData)
+      this.getCurrentPhaseInfo(activeChallengeUserData, activeChallengeData, currentDay, AllRecipe)
+    } 
+    else if (!this.state.isSchedule && !this.state.ScheduleData) {
         this.checkScheduleChallenge();
-      else {
-        const isBetween = moment(this.stringDate).isBetween(
-          this.state.ScheduleData.startDate,
-          this.state.ScheduleData.endDate,
-          undefined,
-          "[]"
-        );
-        if (isBetween) this.getCurrentPhaseInfo();
-        else {
-          this.setState({ loading: false });
-          this.forceUpdate();
-        }
-      }
-    }
-  };
+    } 
+    // else {
+    //   const isBetween = moment(currentDayDate).isBetween(ScheduleData.startDate, ScheduleData.endDate, undefined, "[]")
+    //   if (isBetween) 
+    //     this.getCurrentPhaseInfo(activeChallengeUserData, activeChallengeData, currentDay)
+    //   else {
+    //     this.setState({ loading: false });
+    //     this.forceUpdate();
+    //   }
+    // }
+  }
 
   fetchUserData = async () => {
     this.setState({ loading: true })
@@ -267,23 +375,6 @@ class CalendarHomeScreen extends React.PureComponent {
       .catch((reason) => console.log("Fetching user data error: ", reason));
   };
 
-  checkSchedule = async () => {
-    isActiveChallenge().then((res) => {
-      const isBetween = moment(this.stringDate).isBetween(
-        res.startDate,
-        res.endDate,
-        undefined,
-        "[]"
-      );
-      if (!isBetween) {
-        this.setState({
-          isSchedule: true,
-          ScheduleData: res,
-          loading: false,
-        });
-      }
-    });
-  };
   async checkScheduleChallenge() {
     const uid = await AsyncStorage.getItem("uid");
     //Checking if any schedule challenge is assign to user
@@ -504,10 +595,11 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async goToNext(workout) {
     const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
+    const { currentChallengeDay, initialBurpeeTestCompleted } = state
 
-    if (this.currentChallengeDay > 0) {
+    if (currentChallengeDay > 0) {
       Object.assign(workout, {
-        displayName: `${workout.displayName} - Day ${this.currentChallengeDay}`,
+        displayName: `${workout.displayName} - Day ${currentChallengeDay}`,
       });
     }
     
@@ -529,7 +621,7 @@ class CalendarHomeScreen extends React.PureComponent {
         console.log(`Failed to delete video: ${error}`)
       })
 
-    if (!this.state.initialBurpeeTestCompleted) {
+    if (!initialBurpeeTestCompleted) {
       
       this.props.navigation.navigate("Burpee1", {
         fromScreen: "WorkoutInfo",
@@ -578,234 +670,125 @@ class CalendarHomeScreen extends React.PureComponent {
     this.setState({ isSwiping: false });
   };
 
-  // ToDo : for challenges
-  fetchActiveChallengeUserData = async () => {
-    try {
-      this.setState({ loading: true });
-      const uid = await AsyncStorage.getItem("uid");
-      this.unsubscribeFACUD = db
-        .collection("users")
-        .doc(uid)
-        .collection("challenges")
-        .where("status", "in", ["Active"])
-        .onSnapshot(async (querySnapshot) => {
-          const list = [];
-          querySnapshot.forEach(async (doc) => {
-            list.push(doc.data());
-          });
-          const activeChallengeEndDate = list[0] ? list[0].endDate : null;
-          const currentDate = moment().format("YYYY-MM-DD");
-          const isCompleted = moment(currentDate).isSameOrAfter(
-            activeChallengeEndDate
-          );
+  async getCurrentPhaseInfo(activeChallengeUserData, activeChallengeData, currentDay, allRecipes) {
 
-          if (list[0] && !isCompleted) {
-            this.fetchActiveChallengeData(list[0]);
-          } else {
-            if (isCompleted) {
-              //TODO check challenge is Completed or not
-              const newData = createUserChallengeData(
-                { ...list[0], status: "InActive" },
-                new Date()
-              );
-              const challengeRef = db
-                .collection("users")
-                .doc(uid)
-                .collection("challenges")
-                .doc(list[0].id);
-              challengeRef.set(newData, { merge: true });
-              this.props.navigation.navigate("ChallengeSubscription", {
-                completedChallenge: true,
-              });
-              this.setState({ completeCha: isCompleted });
-              setTimeout(() => {
-                Alert.alert(
-                  "Congratulations!",
-                  "You have completed your challenge",
-                  [
-                    {
-                      text: "OK",
-                      onPress: () => {}
-                    }
-                  ],
-                  { cancelable: false }
-                );
-              }, 5)
-            } else {
-              this.setState({
-                activeChallengeUserData: undefined,
-                loading: false,
-              });
-            }
-          }
-        });
-    } catch (err) {
-      this.setState({ loading: false });
-      console.log(err);
+    if(!activeChallengeUserData || !activeChallengeData) {
+      console.error("No active challenge information provided")
+      return
     }
-  };
-
-  fetchActiveChallengeData = async (activeChallengeUserData) => {
-    const { currentDay } = this.state;
-
-    const currentChallengeDay = getCurrentChallengeDay(
-      activeChallengeUserData.startDate,
-      currentDay
-    );
-
-    try {
-      this.unsubscribeFACD = db
-        .collection("challenges")
-        .doc(await activeChallengeUserData.id)
-        .onSnapshot((doc) => {
-          if (doc.exists) {
-            this.setState({
-              activeChallengeUserData,
-              activeChallengeData: doc.data(),
-            });
-            setTimeout(() => {
-              this.getCurrentPhaseInfo();
-            }, 500);
-          }
-        });
-    } catch (err) {
-      this.setState({ loading: false });
-      console.log(err);
-      console.log("Fetch active challenge data error!");
+    const phase = getCurrentPhase(activeChallengeUserData.phases, currentDay)
+    const phaseData = activeChallengeData.phases.find(res => res.name === phase?.name)
+    
+    if (!phaseData) {
+      return
     }
 
-    let recipe = [];
-    let breakfastId = [];
-    let lunchId = [];
-    let dinnerId = [];
-    let snackId = [];
-    let preworkoutId = [];
-    let treatsId = [];
-    const usersFavouriteRecipes = activeChallengeUserData.faveRecipe
-      ?.find(day => day.day === currentChallengeDay)
-      ?.recipeMeal
+    console.log(`Current Day: ${currentDay}, ${phaseData}`)
 
-    if (usersFavouriteRecipes) {
-
-      const idsForMeal = (idsContainer, ...propertyNames) => {
-        // We need to perform data transformation for these properties inside the 'faveRecipe'
-        // Currently the property types for breakfast, lunch, etc are just string.
-        // We want to set them to be a type of Array<String> for future use.
-        // We transform into an array and flatten it, if it was already an array flatting it should set to be an array still
-        const recipeIds = propertyNames
-          .flatMap(p => usersFavouriteRecipes[p]) // Get all collection of ids from multiple meal categories
-          .filter(r => r?.trim()) // Remove any null/undefined/empty ids
-        idsContainer.push(...recipeIds)
-        recipe.push(...recipeIds)
-      }
-
-      idsForMeal(breakfastId, 'breakfast', )
-      idsForMeal(lunchId, 'lunch')
-      idsForMeal(dinnerId, 'dinner')
-      idsForMeal(snackId, 'snack' ,'drink')
-      idsForMeal(preworkoutId, 'preworkout')
-      idsForMeal(treatsId, 'treat')
-
-      this.setState({ skipped: activeChallengeUserData.onBoardingInfo.skipped ?? false })
-    }
-
-    convertRecipeData(recipe).then((recipeResult) => {
-      const recipeLists = recipeResult.reduce((result, element) => {
-        if (breakfastId.includes(element.id)) {
-          result.breakfast.push(element)
-        } else if (lunchId.includes(element.id)) {
-          result.lunch.push(element)
-        } else if (dinnerId.includes(element.id)) {
-          result.dinner.push(element)
-        } else if (snackId.includes(element.id)) {
-          result.snack.push(element)
-        } else if (preworkoutId.includes(element.id)) {
-          result.preworkout.push(element)
-        } else if (treatsId.includes(element.id)) {
-          result.treats.push(element.id)
-        }
-        return result
-      }, { 
-        breakfast: [],
-        lunch: [],
-        dinner: [],
-        snack: [],
-        preworkout: [],
-        treats: [],
-      })
-
-      this.setState({favoriteRecipe: [recipeLists]})
-    })
+    const [todayRecommendedMeal, todayRcWorkout] = await Promise.all([
+      this.getTodayRecommendedMeal(allRecipes, phaseData, activeChallengeData),  // TODO: Only need to do once the phase changes
+      getTodayRecommendedWorkout(activeChallengeData.workouts, activeChallengeUserData, currentDay)
+    ])
+    
+    this.setState({
+      phaseData,
+      todayRecommendedRecipe: todayRecommendedMeal.recommendedRecipe,
+      todayRecommendedMeal: todayRecommendedMeal.recommendedMeal,
+      challengeMealsFilterList: todayRecommendedMeal.challengeMealsFilterList,
+      phaseDefaultTags: todayRecommendedMeal.phaseDefaultTags,
+      favouriteRecipeConfigs: phaseData.favouriteRecipeConfigs,
+      todayRcWorkout: todayRcWorkout,
+    });
   }
 
-  async getCurrentPhaseInfo() {
-    const { activeChallengeUserData, activeChallengeData } = this.state;
+  getTodayRecommendedMeal = async (allRecipes, phaseData, activeChallengeData) => {
 
-    if (activeChallengeUserData && activeChallengeData) {
-      this.setState({ loading: false });
-      const test = activeChallengeUserData.startDate;
-      const transformLevel = activeChallengeUserData.displayName;
+    const findRecipeForId = (id) => {
 
-      if (this.stringDate >= test) {
-        this.setState({ loading: true });
+      for (const category of Object.values(allRecipes)) {
+        const recipe = category.find(r => r.id == id)
+        if(recipe) return recipe
       }
+      return null
+    }
 
-      //TODO :getCurrent phase data
-      this.phase = getCurrentPhase(
-        activeChallengeUserData.phases,
-        this.stringDate
-      );
-      this.transformLevel = transformLevel;
-      if (this.phase) {
-        //TODO :fetch the current phase data from Challenges collection
-        this.phaseData = activeChallengeData.phases.filter(
-          (res) => res.name === this.phase.name
-        )[0];
-
-        //TODO :calculate the workout completed till selected date
-        this.totalChallengeWorkoutsCompleted =
-          getTotalChallengeWorkoutsCompleted(
-            activeChallengeUserData,
-            this.stringDate
-          );
-
-        //TODO calculate current challenge day
-        this.currentChallengeDay = getCurrentChallengeDay(
-          activeChallengeUserData.startDate,
-          this.stringDate
-        );
-
-        // TODO getToday one recommended meal randomly
-        getTodayRecommendedMeal(this.phaseData, activeChallengeData).then(
-          (res) => {
-            this.setState({
-              todayRecommendedRecipe: res.recommendedRecipe,
-              todayRecommendedMeal: res.recommendedMeal,
-              challengeMealsFilterList: res.challengeMealsFilterList,
-              phaseDefaultTags: res.phaseDefaultTags,
-              loading: false,
-            });
-          }
-        );
-
-        //TODO get recommended workout here
-        const todayRcWorkout = (
-          await getTodayRecommendedWorkout(
-            activeChallengeData.workouts,
-            activeChallengeUserData,
-            this.stringDate
-          )
-        )[0];
-
-        let newState = { favouriteRecipeConfigs: this.phaseData.favouriteRecipeConfigs }
-
-        if (todayRcWorkout) newState.todayRcWorkout = todayRcWorkout
-        else newState.todayRcWorkout = undefined
-
-        this.setState(newState)
+    const getPhaseNames = () => {
+      switch (phaseData.name) {
+        case 'Phase1':
+          return ['P1']
+        case 'Phase2':
+          return ['P2']
+        case 'Phase3':
+          return ['P3']    
       }
-    } else {
-      // Alert.alert('Something went wrong please try again')
+    }
+
+    const phaseNames = getPhaseNames()
+
+    const phaseMeals = phaseData
+      .meals
+      .map(id => findRecipeForId(id))
+      .filter(recipe => recipe.showTransform)
+
+
+    /// Function takes a recipe and array of propeties as strings to look up in the recipe object 
+    // to see if it matches the type of meal
+    const isRecipeAllowed = (recipe) => {
+      let levelName = activeChallengeData.levelTags
+      switch (levelName) {
+        case "L1":
+          return recipe.tags?.includes(phaseNames[0]) ?? false
+        case "L2":
+        case "L3":
+          return recipe.tags?.includes(levelName) ?? false
+        default:
+          return false
+      }
+    }
+
+    const phaseMealsContainsBreakfast = phaseMeals.some((meal) => meal.types.includes("breakfast") && meal.breakfast)
+    const phaseMealsContainsLunch = phaseMeals.some((meal) => meal.types.includes("lunch") && meal.lunch)
+    const phaseMealsContainsDinner = phaseMeals.some((meal) => meal.types.includes("dinner") && meal.dinner)
+    const phaseMealsContainsSnackOrDrink = phaseMeals.some((meal) => { 
+        const isSnack = meal.types.includes("snack") && meal.snack
+        const isDrink = meal.types.includes("drink") && meal.drink
+        return isSnack || isDrink
+      })
+    const phaseMealsContainsPreworkout = phaseMeals.some((meal) => meal.types.includes("preworkout") && meal.preworkout)
+    const phaseMealsContainsTreats = phaseMeals.some((meal) => meal.types.includes("treats") && meal.treats)
+
+    const recommendedRecipe = {
+      breakfast: phaseMealsContainsBreakfast ? allRecipes.breakfast.filter(recipe => isRecipeAllowed(recipe)) : [],
+      lunch: phaseMealsContainsLunch ? allRecipes.lunch.filter(recipe => isRecipeAllowed(recipe)) : [],
+      dinner: phaseMealsContainsDinner ? allRecipes.dinner.filter(recipe => isRecipeAllowed(recipe)) : [],
+      snack: phaseMealsContainsSnackOrDrink ? allRecipes.snack.filter(recipe => isRecipeAllowed(recipe)) : [],
+      preworkout: phaseMealsContainsPreworkout ? allRecipes.preworkout.filter(recipe => isRecipeAllowed(recipe)) : [],
+      treats: phaseMealsContainsTreats ? allRecipes.treats.filter(recipe => isRecipeAllowed(recipe)) : []
+    }
+
+    // This determines what categories of meals will be present in the screen
+    const breakfastList = phaseMeals.filter((res) => res.breakfastVisible)
+    const lunchList = phaseMeals.filter((res) => res.lunchVisible)
+    const dinnerList = phaseMeals.filter((res) => res.dinnerVisible)
+    const snackList = phaseMeals.filter((res) => res.snackVisible)
+    const preworkoutList = phaseMeals.filter((res) => res.preworkoutVisible)
+    const treatsList = phaseMeals.filter((res) => res.treatsVisible)
+
+    const recommendedMeal =
+    {
+      breakfast: breakfastList,
+      snack: snackList,
+      lunch: lunchList,
+      dinner: dinnerList,
+      preworkout: preworkoutList,
+      treats: treatsList,
+    }
+
+    return {
+      recommendedRecipe: recommendedRecipe,
+      recommendedMeal,
+      challengeMealsFilterList: phaseMeals.map((res) => res.id),
+      phaseDefaultTags: phaseNames,
     }
   }
 
@@ -845,6 +828,7 @@ class CalendarHomeScreen extends React.PureComponent {
       activeChallengeData,
       phaseDefaultTags,
       activeChallengeUserData,
+      currentChallengeDay
     } = this.state;
 
     const datas = activeChallengeUserData
@@ -885,7 +869,7 @@ class CalendarHomeScreen extends React.PureComponent {
     }
 
     this.props.navigation.navigate("FilterRecipe", {
-      currentChallengeDay: this.currentChallengeDay,
+      currentChallengeDay: currentChallengeDay,
       activeChallengeUserData: datas,
       phaseDefaultTags: phaseDefaultTags,
       defaultLevelTags: activeChallengeData.levelTags,
@@ -919,26 +903,23 @@ class CalendarHomeScreen extends React.PureComponent {
       completeCha,
       todayRecommendedRecipe,
       favoriteRecipe,
-      favouriteRecipeConfigs
+      favouriteRecipeConfigs,
+      phaseData,
+      currentChallengeDay,
+      currentDay
     } = this.state;
 
     let showRC = false;
     if (activeChallengeData && activeChallengeUserData) {
-      const isBetween = moment(this.stringDate).isBetween(
+      const isBetween = moment(currentDay).isBetween(
         activeChallengeUserData.startDate,
         activeChallengeUserData.endDate,
         undefined,
         "[]"
       );
       if (this.calendarStrip.current) {
-        if (
-          isBetween &&
-          todayRecommendedMeal &&
-          todayRecommendedMeal.length > 0
-        )
-          //check if user has recommended meals
-          showRC = true;
-        else showRC = false;
+        // UNDO
+        showRC = isBetween //&& todayRecommendedMeal && todayRecommendedMeal.length > 0
       }
     }
     const mealsList = showRC && (
@@ -956,12 +937,12 @@ class CalendarHomeScreen extends React.PureComponent {
         >
           Today's Meals
         </Text>
-        {AllRecipe && (
+        {AllRecipe && todayRecommendedMeal && (
           <TodayMealsList
             recipe={AllRecipe}
-            favoriteRecipe={favoriteRecipe[0]}
-            todayRecommendedRecipe={todayRecommendedRecipe[0]}
-            data={todayRecommendedMeal[0]}
+            favoriteRecipe={favoriteRecipe}
+            todayRecommendedRecipe={todayRecommendedRecipe}
+            data={todayRecommendedMeal}
             favouriteRecipeConfigs={favouriteRecipeConfigs}
             onPress={(res) => this.goToRecipe(res)}
             filterPress={(res, res1, res2, title, favouriteRecipeConfigs) =>
@@ -983,7 +964,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   : ""
               }
               res={todayRcWorkout}
-              currentDay={this.currentChallengeDay}
+              currentDay={currentChallengeDay}
               title={activeChallengeData.displayName}
             />
           </View>
@@ -995,7 +976,7 @@ class CalendarHomeScreen extends React.PureComponent {
             <ChallengeWorkoutCard
               onPress={() => null}
               res={""}
-              currentDay={this.currentChallengeDay}
+              currentDay={currentChallengeDay}
               title={activeChallengeData.displayName}
             />
           </View>
@@ -1081,11 +1062,9 @@ class CalendarHomeScreen extends React.PureComponent {
             <View
               style={{
                 height: 10,
-                width:
-                  (width * this.currentChallengeDay) /
-                  activeChallengeData.numberOfDays,
+                width: (width * currentChallengeDay) / activeChallengeData.numberOfDays,
                 borderRadius: 10,
-                backgroundColor: "#fa896e",
+                backgroundColor: "#fa896f",
                 position: "absolute",
                 left: 0,
                 top: 0,
@@ -1114,7 +1093,7 @@ class CalendarHomeScreen extends React.PureComponent {
                   fontFamily: fonts.bold,
                 }}
               >
-                {this.transformLevel + " "}
+                {activeChallengeUserData.displayName + " "}
               </Text>
             </View>
             <Text
@@ -1123,15 +1102,16 @@ class CalendarHomeScreen extends React.PureComponent {
                 fontFamily: fonts.bold,
               }}
             >
-              {getPhase(this.phaseData)}
+              {getPhase(phaseData)}
             </Text>
           </View>
 
           <View style={{ marginTop: 20, flex: 1 }}>
             <TouchableOpacity
-              phase={this.phase}
-              onPress={() => this.openLink(this.phase.pdfUrl)}
-            >
+              onPress={ () => {
+                  if(phaseData) this.openLink(phaseData.pdfUrl)
+                }
+              }>
               <View style={{ flex: 1 }}>
                 <Icon name="file-text-o" size={20} />
               </View>
@@ -1169,10 +1149,10 @@ class CalendarHomeScreen extends React.PureComponent {
               position: "absolute",
               left:
                 Platform.OS === "ios"
-                  ? (width * this.currentChallengeDay) /
+                  ? (width * currentChallengeDay) /
                   activeChallengeData.numberOfDays +
                   11
-                  : (width * this.currentChallengeDay) /
+                  : (width * currentChallengeDay) /
                   activeChallengeData.numberOfDays +
                   12,
               top: 85,
@@ -1201,10 +1181,10 @@ class CalendarHomeScreen extends React.PureComponent {
               position: "absolute",
               left:
                 Platform.OS === "ios"
-                  ? (width * this.currentChallengeDay) /
+                  ? (width * currentChallengeDay) /
                   activeChallengeData.numberOfDays -
                   7
-                  : (width * this.currentChallengeDay) /
+                  : (width * currentChallengeDay) /
                   activeChallengeData.numberOfDays -
                   7,
               top: Platform.OS === "ios" ? 96 : 94,
@@ -1224,7 +1204,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 fontSize: 25,
               }}
             >
-              {this.currentChallengeDay}
+              {currentChallengeDay}
             </Text>
           </View>
         </>
@@ -1235,9 +1215,8 @@ class CalendarHomeScreen extends React.PureComponent {
       <ScrollView
         contentContainerStyle={calendarStyles.dayDisplayContainer}
         scrollEnabled={!this.state.isSwiping}
-        showsVerticalScrollIndicator={false}
-      >
-        {this.phaseData && showRC && (
+        showsVerticalScrollIndicator={false}>
+        {phaseData && showRC && (
           <>
             <View
               style={{
