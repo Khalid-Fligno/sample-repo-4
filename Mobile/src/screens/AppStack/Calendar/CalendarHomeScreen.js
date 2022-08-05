@@ -82,89 +82,86 @@ class CalendarHomeScreen extends React.PureComponent {
     this.setState({ isSettingVisible: !this.state.isSettingVisible });
   };
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
 
     this.props.navigation.setParams({
       activeChallengeSetting: () => this.handleActiveChallengeSetting(),
     });
 
     this.start()
-
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
-      this.onFocusFunction();
-    })
   };
 
   start = async () => {
 
-      this.setState({loading: true})
+    this.setState({loading: true})
 
-      // Lets load the latest challenge
-      const uid = await AsyncStorage.getItem("uid");
-      let firstTime = true
+    // Lets load the latest challenge
+    const uid = await AsyncStorage.getItem("uid");
+    let firstTime = true
 
-      this.unsubscribeFACUD = db
-        .collection("users")
-        .doc(uid)
-        .collection("challenges")
-        .where("status", "in", ["Active"])
-        .onSnapshot(async (querySnapshot) => {
+    this.unsubscribeFACUD = db
+      .collection("users")
+      .doc(uid)
+      .collection("challenges")
+      .where("status", "in", ["Active"])
+      .onSnapshot(async (querySnapshot) => {
 
-          const activeUserChallenge = querySnapshot.docs[0]?.data()
+        const activeUserChallenge = querySnapshot.docs[0]?.data()
 
-          // No active challenge available
-          if(!activeUserChallenge) {
-            this.setState({ 
-              activeChallengeUserData: undefined ,
-              loading: false
-            })
-            return
-          }
+        // No active challenge available
+        if(!activeUserChallenge) {
+          this.setState({ 
+            activeChallengeUserData: undefined ,
+            loading: false
+          })
+          return
+        }
 
-          const currentDate = moment().format("YYYY-MM-DD")
-          // If challenge has completed then inform user
-          if(moment(currentDate).isSameOrAfter(activeUserChallenge.endDate)) {
-            this.completeChallenge(uid, activeUserChallenge)
-            return
-          }
+        const currentDate = moment().format("YYYY-MM-DD")
+        // If challenge has completed then inform user
+        if(moment(currentDate).isSameOrAfter(activeUserChallenge.endDate)) {
+          this.completeChallenge(uid, activeUserChallenge)
+          return
+        }
 
-          if (firstTime) {
-            firstTime = false
-            const [challengeDoc, AllRecipe] = await Promise.all([
-              db.collection("challenges").doc(activeUserChallenge.id).get(),
-              await fetchRecipeData()
-            ])
+        if (firstTime) {
+          firstTime = false
+          const [challengeDoc, AllRecipe] = await Promise.all([
+            db.collection("challenges").doc(activeUserChallenge.id).get(),
+            await fetchRecipeData()
+          ])
 
-            var activeChallengeData = challengeDoc.data()
-            var allRecipes = AllRecipe
-            var currentDay = moment(new Date()).format("YYYY-MM-DD")
-            // Lets load all the recipes
-            this.setState({ 
-              AllRecipe: allRecipes,
-              currentDay,
-              currentChallengeDay: getCurrentChallengeDay(activeUserChallenge.startDate, currentDay)
-            })
-          } else {
-            var { AllRecipe: allRecipes , activeChallengeData, currentDay } = this.state
-          }
+          var activeChallengeData = challengeDoc.data()
+          var allRecipes = AllRecipe
+          var currentDay = moment(new Date()).format("YYYY-MM-DD")
+          // Lets load all the recipes
+          this.setState({ 
+            AllRecipe: allRecipes,
+            currentDay,
+            currentChallengeDay: getCurrentChallengeDay(activeUserChallenge.startDate, currentDay)
+          })
+        } else {
+          var { AllRecipe: allRecipes , activeChallengeData, currentDay } = this.state
+        }
 
-          // Update data when challenge data is modified
-          this.onUserChallengeChanged(activeUserChallenge, activeChallengeData, allRecipes, currentDay)
-        })
+        // Update data when challenge data is modified
+        this.onUserChallengeChanged(activeUserChallenge, activeChallengeData, allRecipes, currentDay)
+      })
+
+    this.focusListener = this.props.navigation.addListener("didFocus", () => {
+      this.onFocusFunction();
+    })
   }
 
   onUserChallengeChanged = async (activeUserChallenge, activeChallengeData, allRecipes, currentDay) => {
 
     const favouriteRecipes = this.usersFavouriteRecipesForDay(activeUserChallenge, allRecipes, currentDay)
-    const todayRcWorkout = await getTodayRecommendedWorkout(activeChallengeData.workouts, activeUserChallenge, currentDay)
-
     this.getCurrentPhaseInfo(activeUserChallenge, activeChallengeData, currentDay, allRecipes)
 
     this.setState({
       activeChallengeUserData: activeUserChallenge,
       favoriteRecipe: favouriteRecipes,
       activeChallengeData,
-      todayRcWorkout,
       loading: false
     })
   }
@@ -294,14 +291,12 @@ class CalendarHomeScreen extends React.PureComponent {
     const currentDayTime = new Date(date).getTime()
     const currentDayDate = date.format("YYYY-MM-DD")
     const currentDay = currentDayDate.toString()
-    const todayRcWorkout = await getTodayRecommendedWorkout(activeChallengeData.workouts, activeChallengeUserData, currentDay)
 
     this.setState({
       currentDay,
       CalendarSelectedDate: date,
       currentChallengeDay: getCurrentChallengeDay(activeChallengeUserData.startDate, currentDay),
       favoriteRecipe: this.usersFavouriteRecipesForDay(activeChallengeUserData, AllRecipe, currentDay),
-      todayRcWorkout
     })
 
     if (activeChallengeData && activeChallengeUserData &&
@@ -351,6 +346,27 @@ class CalendarHomeScreen extends React.PureComponent {
     }
   }
 
+  // Handy function to load any amount of ids.
+  // Firestore limits in queries to 10 ids max, but this will chunk the ids into payloads of 10
+  // Then merge all read requests together
+  loadIdsForCollection = async (collectionName, ids) => {
+
+    function spliceIntoChunks(arr, chunkSize) {
+      const res = [];
+      let mutableArr = [...arr]
+      while (mutableArr.length > 0) {
+          const chunk = mutableArr.splice(0, chunkSize);
+          res.push(chunk);
+      }
+      return res;
+    }
+
+    const chunks = spliceIntoChunks(ids, 10)
+    const results = await Promise.all(chunks.map(chunk => db.collection(collectionName).where('id', 'in', chunk).get()))
+  
+    return results.flatMap(result => result.docs.map(r => r.data()))
+  }
+
   loadExercise = async (workoutData) => {
 
     const cloneWorkout = {...workoutData};
@@ -359,18 +375,19 @@ class CalendarHomeScreen extends React.PureComponent {
       return (await this.downloadVideosForWorkout(workoutData))
     }
 
-    const exerciseRef = (await db.collection("Exercises").get()).docs
+    const exerciseRef = await this.loadIdsForCollection('Exercises', cloneWorkout.exercises)
     const containsIntervalType = workoutData.filters.includes('interval')
     cloneWorkout.exercises = workoutData
       .exercises
       .map(exerciseId => {
-        let exercise = exerciseRef.find(r => [exerciseId, exerciseId.id].includes(r.id)).data()
+        console.log(exerciseId)
+        let exercise = exerciseRef.find(r => [exerciseId, exerciseId.id].includes(r.id))
         if(containsIntervalType) {
             exercise.duration = exerciseId.duration
         }
         return exercise
       })
-      
+
     // Load Warmup Exercises
     if (workoutData.warmUpExercises) {
       const exerciseRef = (
@@ -397,18 +414,10 @@ class CalendarHomeScreen extends React.PureComponent {
       cloneWorkout.coolDownExercises = workoutData
         .coolDownExercises
         .map((id) => exerciseRef.find((ref) => ref.id === id)?.data())
-    }
-
-    console.log("dsadsadas")
-        
+    }        
     const res = await this.downloadVideosForWorkout(cloneWorkout);
-    if (res) {
-      console.log("happe")
-      return cloneWorkout;
-    }
-    else {
-      return false
-    }
+    if (res)return cloneWorkout
+    else return false
   }
 
   downloadVideosForWorkout = async (workout) => {
@@ -489,7 +498,7 @@ class CalendarHomeScreen extends React.PureComponent {
 
   async goToNext(workout) {
     const fitnessLevel = await AsyncStorage.getItem("fitnessLevel", null);
-    const { currentChallengeDay, initialBurpeeTestCompleted } = state
+    const { currentChallengeDay, initialBurpeeTestCompleted } = this.state
 
     if (currentChallengeDay > 0) {
       Object.assign(workout, {
@@ -564,7 +573,7 @@ class CalendarHomeScreen extends React.PureComponent {
     this.setState({ isSwiping: false });
   };
 
-  async getCurrentPhaseInfo(activeChallengeUserData, activeChallengeData, currentDay, allRecipes) {
+  getCurrentPhaseInfo = async (activeChallengeUserData, activeChallengeData, currentDay, allRecipes) => {
 
     if(!activeChallengeUserData || !activeChallengeData) {
       console.error("No active challenge information provided")
@@ -574,10 +583,19 @@ class CalendarHomeScreen extends React.PureComponent {
     const phase = getCurrentPhase(activeChallengeUserData.phases, currentDay)
     const phaseData = activeChallengeData.phases.find(res => res.name === phase?.name)
     
-    if (!phaseData && this.state.phaseData?.name == phaseData.name)
+    if (!phaseData)
       return // Don't load phase info, if there is no phaseData or the phase data is the same as last time
 
-    const todayRecommendedMeal = await this.getTodayRecommendedMeal(allRecipes, phaseData, activeChallengeData)
+    if(this.state.phaseData?.name == phaseData?.name) {
+      const todayRcWorkout = await getTodayRecommendedWorkout(activeChallengeData.workouts, activeChallengeUserData, currentDay)
+      this.setState({todayRcWorkout})
+      return
+    }
+    
+    const [todayRecommendedMeal, todayRcWorkout] = await Promise.all([
+      this.getTodayRecommendedMeal(allRecipes, phaseData, activeChallengeData),
+      getTodayRecommendedWorkout(activeChallengeData.workouts, activeChallengeUserData, currentDay)
+    ])
 
     this.setState({
       phaseData,
@@ -586,7 +604,8 @@ class CalendarHomeScreen extends React.PureComponent {
       challengeMealsFilterList: todayRecommendedMeal.challengeMealsFilterList,
       phaseDefaultTags: todayRecommendedMeal.phaseDefaultTags,
       favouriteRecipeConfigs: phaseData.favouriteRecipeConfigs,
-    });
+      todayRcWorkout
+    })
   }
 
   getTodayRecommendedMeal = async (allRecipes, phaseData, activeChallengeData) => {
@@ -802,8 +821,7 @@ class CalendarHomeScreen extends React.PureComponent {
       showRC = this.calendarStrip.current && isBetween && todayRecommendedMeal
       isOutsideSchedule = !isBetween
     }
-
-    console.log("Show RC", showRC)
+    
     const mealsList = showRC && (
       <>
         <Text
