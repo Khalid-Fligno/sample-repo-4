@@ -59,6 +59,27 @@ export const getCurrentDay = (number) => {
   }
 };
 
+export const convertRecipeData = async (recipeIds) => {
+
+  if (recipeIds?.length <= 0) {
+    return []
+  }
+
+  const snapshot = await db.collection("recipes")
+    .orderBy('title')
+    .get()
+  if (snapshot.empty) return null
+
+  const recipeResult = []
+  snapshot.forEach((doc) => {
+    const recipe = doc.data()
+    if (recipeIds.includes(recipe.id)) {
+      recipeResult.push(recipe)
+    }
+  })
+  return recipeResult
+};
+
 export const getTodayRecommendedWorkout = async (
   workouts,
   activeChallengeUserData,

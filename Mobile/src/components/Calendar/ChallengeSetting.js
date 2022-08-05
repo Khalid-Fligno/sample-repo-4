@@ -239,8 +239,6 @@ const ChallengeSetting = (props) => {
           activeChallengeUserData={activeChallengeUserData}
         />
       )}
-      <Loader loading={loading} color={colors.red.standard} />
-
       <CalendarModal
         isVisible={calendarModalVisible}
         onBackdropPress={hideCalendarModal}
