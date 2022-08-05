@@ -131,6 +131,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         return tag.replace('GH', 'Gut Health')
                 }
             })
+            .filter(t => t?.trim())
             .map(tag => ({ name: tag }))
 
         this.setState({
@@ -366,6 +367,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
     onFavorite = async (item, activeChallengeUserData, title, currentChallengeDay) => {
+        console.log("HERERE 1")
+
         const faveRecipeCollection = activeChallengeUserData.faveRecipe
         const challengeDayIndex = currentChallengeDay - 1
         if(challengeDayIndex >= faveRecipeCollection.length) {
@@ -379,11 +382,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         try {
             const uid = await AsyncStorage.getItem("uid");
+            console.log("HERERE")
             db.collection("users")
                 .doc(uid)
                 .collection("challenges")
                 .doc(activeChallengeUserData.id)
                 .set({ "faveRecipe": faveRecipeCollection }, { merge: true })
+
+            console.log("Out noew HERERE")
         } catch (err) {
             console.error(err)
         }
