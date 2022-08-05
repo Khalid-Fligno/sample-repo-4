@@ -380,7 +380,6 @@ class CalendarHomeScreen extends React.PureComponent {
     cloneWorkout.exercises = workoutData
       .exercises
       .map(exerciseId => {
-        console.log(exerciseId)
         let exercise = exerciseRef.find(r => [exerciseId, exerciseId.id].includes(r.id))
         if(containsIntervalType) {
             exercise.duration = exerciseId.duration

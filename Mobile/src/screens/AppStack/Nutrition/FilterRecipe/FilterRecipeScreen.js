@@ -115,44 +115,26 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
     getDefaultCategoryTags = () => {
-        this.setState({ loading: true })
         const recipeData = this.props.navigation.getParam("todayRecommendedRecipe", null)
-
-        const categoryName = []
-        const dupId = []
-
-        recipeData.forEach((res) => {
-            if (res.tags) {
-                res.tags.filter((item) => {
-                    if (item === 'V') categoryName.push(item.replace('V', 'Vegan'))
-                    if (item === 'V+') categoryName.push(item.replace('V+', 'Vegetarian'))
-                    if (item === 'GF') categoryName.push(item.replace('GF', 'Gluten Free'))
-                    if (item === 'DF') categoryName.push(item.replace('DF', 'Dairy Free'))
-                    if (item === 'GH') categoryName.push(item.replace('GH', 'Gut Health'))
-                })
-            }
-
-            dupId.push(res.id)
-        })
-
-        const uniqId = [...new Set(dupId)]
-
-        convertRecipeData(uniqId).then(recipeResult => {
-            this.setState({
-                todayRecommendedRecipe: recipeResult,
-                loading: false
+        const categoryName = [... new Set(recipeData.flatMap(recipe => recipe.tags))]
+            .map(tag => {
+                switch(tag) {
+                    case 'V':
+                        return tag.replace('V', 'Vegan')
+                    case 'V+':
+                        return tag.replace('V+', 'Vegetarian')
+                    case 'GF':
+                        return tag.replace('GF', 'Gluten Free')
+                    case 'DF': 
+                        return tag.replace('DF', 'Dairy Free')
+                    case 'GH': 
+                        return tag.replace('GH', 'Gut Health')
+                }
             })
-        })
-
-        const uniq = [...new Set(categoryName)]
-        const result = []
-        uniq.forEach((res) => {
-            result.push({ name: res })
-        })
+            .map(tag => ({ name: tag }))
 
         this.setState({
-            categoryName: result,
-            loading: false,
+            categoryName,
             todayRecommendedRecipe: recipeData
         })
     }
