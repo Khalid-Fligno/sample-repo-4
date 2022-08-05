@@ -39,6 +39,7 @@ export class EditComponent implements OnInit, OnDestroy {
   unsubWorkout:any;
   recipeList:any=[];
   workoutList:any=[];
+  strengthAssessments:any=[];
 
   //search
   searchOptions:any[]=[];
@@ -80,6 +81,7 @@ export class EditComponent implements OnInit, OnDestroy {
       shopifyProductId:[d && d.shopifyProductId?d.shopifyProductId:'',Validators.required],
       shopifyUrl:[d && d.shopifyUrl?d.shopifyUrl:'',Validators.pattern(this.http.urlRegex)],
       tag: [d && d.tag?d.tag:shortId.generate(),Validators.required],
+      strengthAssessmentId: [d && d.strengthAssessmentId, Validators.required]
     });
 
 
@@ -95,6 +97,7 @@ export class EditComponent implements OnInit, OnDestroy {
     this.getWorkout();
     this.applySearch();
     this.applySearchWorkouts();
+    this.getStrengthAssessments();
   }
 
   ngOnDestroy()
@@ -355,6 +358,13 @@ export class EditComponent implements OnInit, OnDestroy {
 
   public objectComparisonFunction = function( option:any, value:any ) : boolean {
     return option.id === value.id;
+  }
+
+  async getStrengthAssessments() {
+    const strengthAssessmentsDocs = await this.db.firestore.collection('strengthAssessments').get()
+    this.strengthAssessments = strengthAssessmentsDocs
+      .docs
+      .map(doc => doc.data())
   }
 
   async getRecipe(){

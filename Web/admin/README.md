@@ -25,3 +25,22 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Domestic Cat How to to deploy
+
+Install Firebase CLI
+To host your site with Firebase Hosting, you need the Firebase CLI (a command line tool).
+Run the following npm command to install the CLI or update to the latest CLI version.
+npm install -g firebase-tools
+
+Sign in to Google
+`firebase login`
+
+Initiate your project
+Run this command from your app’s root directory:
+`firebase init`
+
+When you’re ready, deploy your web app
+Put your static files (e.g., HTML, CSS, JS) in your app’s deploy directory (the default is “public”). Then, run this command from your app’s root directory:
+
+`firebase deploy`

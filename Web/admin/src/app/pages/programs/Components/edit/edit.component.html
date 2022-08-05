@@ -62,6 +62,14 @@
           <input matInput formControlName="shopifyUrl" placeholder="https://shopify.com/" required>
         </mat-form-field>
 
+        <mat-form-field appearance="outline">
+          <mat-label>Strength Assessment</mat-label>
+          <mat-select formControlName="strengthAssessmentId">
+            <mat-option *ngFor="let assessment of strengthAssessments" [value]="assessment.id">{{assessment.title}}</mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="f.tags.invalid">Please select an strenght assesment for this challenge</mat-error> -->
+        </mat-form-field>
+
         <!-- <mat-form-field appearance="outline" >
           <mat-label>Tag :</mat-label>
           <input matInput formControlName="tag" required>
