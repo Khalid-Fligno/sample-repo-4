@@ -370,6 +370,8 @@ class CalendarHomeScreen extends React.PureComponent {
   loadExercise = async (workoutData) => {
 
     let exercises = []
+    let exerciseIds = []
+    const tempExerciseData = []
 
     const cloneWorkout = {...workoutData};
 
@@ -377,11 +379,15 @@ class CalendarHomeScreen extends React.PureComponent {
         return (await this.downloadVideosForWorkout(workoutData))
     }
 
-    const tempExerciseData = [];
+    const containsIntervalType = workoutData.filters.includes('interval')
 
-    const exerciseIds = workoutData.exercises.map((exercise) => {
-        return exercise.id
-    })
+    if(containsIntervalType) {
+        exerciseIds = workoutData.exercises.map((exercise) => {
+            return exercise.id
+        })
+    } else {
+        exerciseIds = workoutData.exercises
+    }
 
     const exerciseRef = (await db.collection("Exercises").where('id','in', exerciseIds).get()).docs
 
@@ -393,8 +399,6 @@ class CalendarHomeScreen extends React.PureComponent {
         return tempExerciseData.find((res) => res.id === id);
     });
 
-
-    const containsIntervalType = workoutData.filters.includes('interval')
     cloneWorkout.exercises = workoutData.exercises.map(exerciseId => {
             let exercise = exercises.find(r => [exerciseId, exerciseId.id].includes(r.id))
             if(containsIntervalType) {
