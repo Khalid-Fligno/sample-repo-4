@@ -369,23 +369,39 @@ class CalendarHomeScreen extends React.PureComponent {
 
   loadExercise = async (workoutData) => {
 
+    let exercises = []
+
     const cloneWorkout = {...workoutData};
 
     if (!workoutData.newWorkout) {
-      return (await this.downloadVideosForWorkout(workoutData))
+        return (await this.downloadVideosForWorkout(workoutData))
     }
 
-    const exerciseRef = await this.loadIdsForCollection('Exercises', cloneWorkout.exercises)
+    const tempExerciseData = [];
+
+    const exerciseIds = workoutData.exercises.map((exercise) => {
+        return exercise.id
+    })
+
+    const exerciseRef = (await db.collection("Exercises").where('id','in', exerciseIds).get()).docs
+
+    exerciseRef.forEach((exercise) => {
+        tempExerciseData.push(exercise.data());
+    })
+
+    exercises = exerciseIds.map((id) => {
+        return tempExerciseData.find((res) => res.id === id);
+    });
+
+
     const containsIntervalType = workoutData.filters.includes('interval')
-    cloneWorkout.exercises = workoutData
-      .exercises
-      .map(exerciseId => {
-        let exercise = exerciseRef.find(r => [exerciseId, exerciseId.id].includes(r.id))
-        if(containsIntervalType) {
-            exercise.duration = exerciseId.duration
-        }
-        return exercise
-      })
+    cloneWorkout.exercises = workoutData.exercises.map(exerciseId => {
+            let exercise = exercises.find(r => [exerciseId, exerciseId.id].includes(r.id))
+            if(containsIntervalType) {
+                exercise.duration = exerciseId.duration
+            }
+            return exercise
+         })
 
     // Load Warmup Exercises
     if (workoutData.warmUpExercises) {
