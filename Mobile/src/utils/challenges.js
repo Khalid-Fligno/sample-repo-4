@@ -120,14 +120,30 @@ export const fetchRecipeData = async () => {
   snapshot.forEach((res) => {
     const recipe = res.data()
     let mealsArray
-    if(recipe.breakfast) mealsArray = breakFastMeals
-    else if (recipe.lunch) mealsArray = lunchMeals
-    else if (recipe.dinner) mealsArray = dinnerMeals
-    else if (recipe.snack || recipe.drink) mealsArray = snackMeals
-    else if (recipe.preworkout) mealsArray = preworkoutMeals
-    else if (recipe.treats) mealsArray = treats
-    
-    mealsArray?.push(recipe)
+    if(recipe.breakfast) {
+        mealsArray = breakFastMeals
+        mealsArray?.push(recipe)
+    }
+    if (recipe.lunch) {
+        mealsArray = lunchMeals
+        mealsArray?.push(recipe)
+    }
+    if (recipe.dinner) {
+        mealsArray = dinnerMeals
+        mealsArray?.push(recipe)
+    }
+    if (recipe.snack || recipe.drink) {
+        mealsArray = snackMeals
+        mealsArray?.push(recipe)
+    }
+    if (recipe.preworkout) {
+        mealsArray = preworkoutMeals
+        mealsArray?.push(recipe)
+    }
+    if (recipe.treats) {
+        mealsArray = treats
+        mealsArray?.push(recipe)
+    }
   })
 
   return {
