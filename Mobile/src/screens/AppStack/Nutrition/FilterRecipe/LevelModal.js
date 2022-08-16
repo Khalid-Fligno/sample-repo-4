@@ -250,8 +250,8 @@ export default class LevelModal extends React.PureComponent {
                                     ) : (
                                         <CheckBox
                                             boxType='square'
-                                            value={this.props.togglePostpartumChecked}
-                                            onValueChange={this.props.postpartumChecked}
+                                            value={this.props.postpartumChecked}
+                                            onValueChange={this.props.togglePostpartumChecked}
                                         />
                                 )}
                             </View>
