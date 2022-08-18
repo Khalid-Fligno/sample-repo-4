@@ -130,8 +130,8 @@ export class EditComponent implements OnInit, OnDestroy {
     }
 
     return this.fb.group({
-      displayName: [{value:d && d.displayName?d.displayName:'',disabled:d && d.displayName?true:false},Validators.required],
-      name: [d && d.name?d.name:''],
+      displayName: [{value: d?.displayName?d.displayName:''},Validators.required],
+      name: [{value: d && d.name?d.name:'', disabled: d?.name?true:false}],
       thumbnail: [d && d.thumbnail?d.thumbnail:'',Validators.required],
       description: [d && d.description?d.description:'',Validators.required],
       startDay: [{value:d && d.startDay?d.startDay:'',disabled:d && d.startDay?true:false},Validators.required],
@@ -482,7 +482,7 @@ export class EditComponent implements OnInit, OnDestroy {
         const meals = [...new Set([...res.breakfast,...res.lunch,...res.dinner,...res.snack,...res.drink])];
         return {
                   displayName: res.displayName,
-                  name: res.name,
+                  name: res.name.replace(/\s/g,''),
                   thumbnail:res.thumbnail ,
                   description:res.description ,
                   startDay:res.startDay,
