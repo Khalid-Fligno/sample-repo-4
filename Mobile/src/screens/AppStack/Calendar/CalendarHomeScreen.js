@@ -869,22 +869,7 @@ class CalendarHomeScreen extends React.PureComponent {
           </View>
         </>
       ) : null;
-    const getPhase = (phaseData) => {
-      return (
-        (
-          phaseData.name.substring(0, 5) +
-          " " +
-          phaseData.name.substring(5, phaseData.name.length)
-        )
-          .charAt(0)
-          .toUpperCase() +
-        (
-          phaseData.name.substring(0, 5) +
-          " " +
-          phaseData.name.substring(5, phaseData.name.length)
-        ).slice(1)
-      );
-    };
+
     const Progress = () => {
       return (
         <>
@@ -989,7 +974,7 @@ class CalendarHomeScreen extends React.PureComponent {
                 fontFamily: fonts.bold,
               }}
             >
-              {getPhase(phaseData)}
+              {phaseData.displayName}
             </Text>
           </View>
 
