@@ -359,24 +359,29 @@ class CalendarHomeScreen extends React.PureComponent {
         return (await this.downloadVideosForWorkout(workoutData))
     }
 
-    const containsIntervalType = workoutData.filters.includes('interval')
-    if(containsIntervalType) {
-      var exerciseIds = workoutData.exercises.map((exercise) => exercise.id)
-    } else {
-      var exerciseIds = workoutData.exercises
-    }
-    const exercises = await this.loadIdsForCollection('Exercises', exerciseIds)
+    const exerciseIds = workoutData.exercises
+      .map(exercise => {
+        switch(typeof(exercise)) {
+          case 'string': // This means the value is a id string
+            return exercise
+          default:
+            return exercise?.id
+        }
+      })
+      .filter(id => id) // Remove unsupported id models
 
+    const exercises = await this.loadIdsForCollection('Exercises', exerciseIds)
+    const containsIntervalType = workoutData.filters.includes('interval')
     cloneWorkout.exercises = workoutData.exercises.map(exerciseId => {
       let exercise = exercises.find(r => [exerciseId, exerciseId.id].includes(r.id))
-      if(containsIntervalType) {
+      if(exerciseId?.duration) { // Typically the workout will have a .filter containing 'interval'
           exercise.duration = exerciseId.duration
       }
       return exercise
     })
 
     // Load Warmup Exercises
-    if (workoutData.warmUpExercises) {
+    if (workoutData.warmUpExercises?.length > 0) {
       const exerciseRef = (
         await db
           .collection("WarmUpCoolDownExercises") // in operator has a 10 item limit
@@ -390,7 +395,7 @@ class CalendarHomeScreen extends React.PureComponent {
     }
 
     // Load Cooldown Exercises
-    if (workoutData.coolDownExercises) {
+    if (workoutData.coolDownExercises?.length > 0) {
       const exerciseRef = (
         await db
           .collection("WarmUpCoolDownExercises")
