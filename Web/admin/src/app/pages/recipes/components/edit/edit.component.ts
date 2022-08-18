@@ -90,6 +90,10 @@ export class EditComponent implements OnInit {
       value: 'P3'
     },
     {
+      label: 'Level 1',
+      value: 'L1'
+    },
+    {
       label: 'Level 2',
       value: 'L2'
     },
