@@ -130,7 +130,7 @@ export class EditComponent implements OnInit, OnDestroy {
     }
 
     return this.fb.group({
-      displayName: [{value: d?.displayName?d.displayName:''},Validators.required],
+      displayName: [d?.displayName?d.displayName:'',Validators.required],
       name: [{value: d && d.name?d.name:'', disabled: d?.name?true:false}],
       thumbnail: [d && d.thumbnail?d.thumbnail:'',Validators.required],
       description: [d && d.description?d.description:'',Validators.required],
