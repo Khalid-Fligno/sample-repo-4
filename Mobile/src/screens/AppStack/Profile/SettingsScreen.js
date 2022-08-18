@@ -164,7 +164,7 @@ export default class SettingsScreen extends React.PureComponent {
                 )
               }
               <ListItem
-                title="Re-take strength assessment"
+                title="Re-take fitness test"
                 titleStyle={ProfileStyles.listItemTitleStyle}
                 containerStyle={ProfileStyles.listItemContainer}
                 rightIcon={{

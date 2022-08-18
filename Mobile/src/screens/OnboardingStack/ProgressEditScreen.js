@@ -219,8 +219,8 @@ const ProgressEditScreen = ({ navigation }) => {
                 }}
               >
                 {isInitial ?
-                  "Retake Strength Assessment" :
-                  "Update Strength Assessment"
+                  "Retake Fitness Test" :
+                  "Update Fitness Test"
                 }
               </Text>
             </View>
