@@ -480,10 +480,9 @@ export class EditComponent implements OnInit, OnDestroy {
 
     return phases.map((res:any)=>{
         const meals = [...new Set([...res.breakfast,...res.lunch,...res.dinner,...res.snack,...res.drink])];
-        const displayName = res.displayName.replace(/\s/g,'');
         return {
-                  displayName: displayName,
-                  name: displayName,
+                  displayName: res.displayName,
+                  name: res.name,
                   thumbnail:res.thumbnail ,
                   description:res.description ,
                   startDay:res.startDay,
