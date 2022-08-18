@@ -304,7 +304,8 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         const { 
             levelText, phase, category,
-            veganChecked, vegetarianChecked, glutenFree, dairyFree, gutHealth } = this.state
+            veganChecked, vegetarianChecked, glutenFree, dairyFree, gutHealth 
+        } = this.state
         
         const requiredFilteredTags = [
             {tag: levelText, isSelected: true},
@@ -317,8 +318,11 @@ export default class FilterRecipeScreen extends React.PureComponent {
         .filter(t => t.isSelected) // Only have tags that are enabled
         .map(t => t.tag)
 
-        const optionalFilteredTags = phase.map(p => p.phaseTag)
-
+        // We only care about phase tags, if they have chose level 1.
+        // Else don't use phase filtering as the logic of this does not work.
+        // You currently can't filter on phases for specific levels
+        let optionalFilteredTags = levelText == "L1" ? phase.map(p => p.phaseTag) : []
+        
         // Filter all the recipes based on the given conditions above
         const filteredRecipes = data            
             .filter(recipe => [
