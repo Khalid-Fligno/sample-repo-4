@@ -332,7 +332,7 @@ class CalendarHomeScreen extends React.PureComponent {
   }
 
   // Handy function to load any amount of ids.
-  // Firestore limits in queries to 10 ids max, but this will chunk the ids into payloads of 10
+  // Firestore limits 'in' queries to 10 ids max, but this will chunk the ids into payloads of 10
   // Then merge all read requests together
   loadIdsForCollection = async (collectionName, ids) => {
 
@@ -348,15 +348,10 @@ class CalendarHomeScreen extends React.PureComponent {
 
     const chunks = spliceIntoChunks(ids, 10)
     const results = await Promise.all(chunks.map(chunk => db.collection(collectionName).where('id', 'in', chunk).get()))
-  
     return results.flatMap(result => result.docs.map(r => r.data()))
   }
 
   loadExercise = async (workoutData) => {
-
-    let exercises = []
-    let exerciseIds = []
-    const tempExerciseData = []
 
     const cloneWorkout = {...workoutData};
 
@@ -365,32 +360,20 @@ class CalendarHomeScreen extends React.PureComponent {
     }
 
     const containsIntervalType = workoutData.filters.includes('interval')
-
     if(containsIntervalType) {
-        exerciseIds = workoutData.exercises.map((exercise) => {
-            return exercise.id
-        })
+      var exerciseIds = workoutData.exercises.map((exercise) => exercise.id)
     } else {
-        exerciseIds = workoutData.exercises
+      var exerciseIds = workoutData.exercises
     }
-
-    const exerciseRef = (await db.collection("Exercises").where('id','in', exerciseIds).get()).docs
-
-    exerciseRef.forEach((exercise) => {
-        tempExerciseData.push(exercise.data());
-    })
-
-    exercises = exerciseIds.map((id) => {
-        return tempExerciseData.find((res) => res.id === id);
-    });
+    const exercises = await this.loadIdsForCollection('Exercises', exerciseIds)
 
     cloneWorkout.exercises = workoutData.exercises.map(exerciseId => {
-            let exercise = exercises.find(r => [exerciseId, exerciseId.id].includes(r.id))
-            if(containsIntervalType) {
-                exercise.duration = exerciseId.duration
-            }
-            return exercise
-         })
+      let exercise = exercises.find(r => [exerciseId, exerciseId.id].includes(r.id))
+      if(containsIntervalType) {
+          exercise.duration = exerciseId.duration
+      }
+      return exercise
+    })
 
     // Load Warmup Exercises
     if (workoutData.warmUpExercises) {
@@ -420,7 +403,7 @@ class CalendarHomeScreen extends React.PureComponent {
         .map((id) => exerciseRef.find((ref) => ref.id === id)?.data())
     }        
     const res = await this.downloadVideosForWorkout(cloneWorkout);
-    if (res)return cloneWorkout
+    if (res) return cloneWorkout
     else return false
   }
 
