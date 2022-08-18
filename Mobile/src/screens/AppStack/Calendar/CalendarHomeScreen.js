@@ -95,6 +95,9 @@ class CalendarHomeScreen extends React.PureComponent {
 
     this.setState({loading: true})
 
+    // Fetch user information
+    await this.fetchUserData()
+
     // Lets load the latest challenge
     const uid = await AsyncStorage.getItem("uid");
     let firstTime = true
@@ -147,10 +150,6 @@ class CalendarHomeScreen extends React.PureComponent {
         // Update data when challenge data is modified
         this.onUserChallengeChanged(activeUserChallenge, activeChallengeData, allRecipes, currentDay)
       })
-
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
-      this.onFocusFunction();
-    })
   }
 
   onUserChallengeChanged = async (activeUserChallenge, activeChallengeData, allRecipes, currentDay) => {
@@ -248,16 +247,11 @@ class CalendarHomeScreen extends React.PureComponent {
       loadingExercises: false,
       finishdownloaded: false
     });
-    this.focusListener.remove();
     if (this.unsubscribeFACUD) {
       this.unsubscribeFACUD();
     }
     if (this.unsubscribeFACD) this.unsubscribeFACD();
     if (this.unsubscribeSchedule) this.unsubscribeSchedule();
-  }
-
-  async onFocusFunction() {
-    await this.fetchUserData()
   }
 
   handleActiveChallengeSetting() {
@@ -308,19 +302,16 @@ class CalendarHomeScreen extends React.PureComponent {
 
   fetchUserData = async () => {
 
-    try {
-      const uid = await AsyncStorage.getItem("uid");
-      const version = await checkVersion();
-      
-      const userRef = db .collection("users").doc(uid)
+    const uid = await AsyncStorage.getItem("uid");
+    const version = await checkVersion();
+    const userRef = db .collection("users").doc(uid)
 
-      userRef.set(
-          { AppVersion: Platform.OS === "ios" ? String(version.version) : String(getVersion()) },
-          { merge: true })
+    userRef.set(
+        { AppVersion: Platform.OS === "ios" ? String(version.version) : String(getVersion()) },
+        { merge: true })
 
-      const userDoc = await userRef.get()
-      const userData = userDoc.data();
-
+    userRef.onSnapshot(doc => {
+      const userData = doc.data()
       if (userData?.weeklyTargets === null) {
         const data = {
           weeklyTargets: {
@@ -336,14 +327,8 @@ class CalendarHomeScreen extends React.PureComponent {
         }
         userRef.set(data, { merge: true });
       }
-
-      this.setState({
-        initialBurpeeTestCompleted: userData?.initialBurpeeTestCompleted ?? false,
-      })
-
-    } catch (error) { 
-      console.log("Fetching user data error: ", error) 
-    }
+      this.setState({ initialBurpeeTestCompleted: userData?.initialBurpeeTestCompleted ?? false })
+    })
   }
 
   // Handy function to load any amount of ids.
