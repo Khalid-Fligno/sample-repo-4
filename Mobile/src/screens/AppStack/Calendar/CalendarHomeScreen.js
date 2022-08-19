@@ -637,7 +637,9 @@ class CalendarHomeScreen extends React.PureComponent {
       switch (levelName) {
         case "L1":
           return recipe.tags?.includes(phaseNames[0]) ?? false
-        case "L2", "L3", "PP":
+        case "L2":
+        case "L3":
+        case "PP":
           return recipe.tags?.includes(levelName) ?? false
         default:
           return false
