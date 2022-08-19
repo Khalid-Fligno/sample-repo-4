@@ -90,7 +90,7 @@ export const transformIdentifiers = [
   },
   {
     identifier : 'com.fitazfk.fitazfkapp.sub.transform.postpartum', 
-    challengeId: 'ee5302c5-c88c-48f6-81dc-76e4edfd8090', // TODO: get Challenge ID
+    challengeId: 'ee5302c5-c88c-48f6-81dc-76e4edfd8090',
     period: "6 month access", 
     title: "Transform Postpartum (No Equipment)",
     additionalText: "Includes 6 month lifestyle subscription"
