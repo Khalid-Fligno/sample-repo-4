@@ -268,21 +268,37 @@ export default class LevelModal extends React.PureComponent {
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={this.props.onPressLevel2}
-                        >
-
+                            onPress={this.props.onPressLevel2}>
                             <View style={styles.tagContainer}>
                                 <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 2</Text>
-                                <Icon name="chevron-right" size={12} color={colors.black} />
+                                {Platform.OS == 'ios' ?
+                                    (<CheckBox
+                                        boxType='square'
+                                        value={this.props.level2Checked} />
+                                    ) : (
+                                        <CheckBox
+                                            boxType='square'
+                                            value={this.props.level2Checked}
+                                            onValueChange={this.props.onPressLevel2}
+                                        />
+                                )}
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={this.props.onPressLevel3}
-                        >
-
+                            onPress={this.props.onPressLevel3}>
                             <View style={styles.tagContainer}>
                                 <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 3</Text>
-                                <Icon name="chevron-right" size={12} color={colors.black} />
+                                {Platform.OS == 'ios' ?
+                                    (<CheckBox
+                                        boxType='square'
+                                        value={this.props.level3Checked} />
+                                    ) : (
+                                        <CheckBox
+                                            boxType='square'
+                                            value={this.props.level3Checked}
+                                            onValueChange={this.props.onPressLevel3}
+                                        />
+                                )}
                             </View>
                         </TouchableOpacity>
 

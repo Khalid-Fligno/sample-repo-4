@@ -510,6 +510,18 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
     filterModal = (data) => {
 
+        const toggleLevelChange = (newLevelText) => {
+            const newisCurrentlyOn = this.state.levelText != newLevelText
+            this.setState({
+                levelText: newisCurrentlyOn ? newLevelText : "",
+                phase1: newisCurrentlyOn,
+                phase: newisCurrentlyOn ? [{phaseTag: "P1"}] : [],
+                phaseText: newisCurrentlyOn ? 'P1' : "",
+                phase2: false, 
+                phase3: false
+            })
+        }
+
         return (
             <Modal
                 isVisible={this.state.isClickVisible ? !this.state.isFilterVisible : this.state.isFilterVisible}
@@ -526,22 +538,16 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         isClickVisible: true,
                         levelText: "L1"
                     })}
-                    onPressLevel2={() => this.setState({
-                        isFilterVisible: false,
-                        isClickVisible: true,
-                        levelText: "L2"
-                    })}
-                    onPressLevel3={() => this.setState({
-                        isFilterVisible: false,
-                        isClickVisible: true,
-                        levelText: "L3"
-                    })}
+                    onPressLevel2={() => toggleLevelChange("L2") }
+                    onPressLevel3={() => toggleLevelChange("L3") }
                     veganChecked={this.state.veganChecked}
                     vegetarianChecked={this.state.vegetarianChecked}
                     glutenFreeChecked={this.state.glutenFree}
                     dairyFreeChecked={this.state.dairyFree}
                     gutHealthChecked={this.state.gutHealth}
                     postpartumChecked={this.state.levelText == "PP"}
+                    level2Checked={this.state.levelText == "L2"}
+                    level3Checked={this.state.levelText == "L3"}
                     phase1={this.state.phase1}
                     phase2={this.state.phase2}
                     phase3={this.state.phase3}
@@ -550,18 +556,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     toggleGlutenFree={() => this.toggleGlutenFree()}
                     toggleDairyFree={() => this.toggleDairyFree()}
                     toggleGutHealth={() => this.toggleGutHealth()}
-                    togglePostpartumChecked={() => {
-                        
-                        const newisCurrentlyOn = this.state.levelText != "PP"
-                        this.setState({
-                            levelText: newisCurrentlyOn ? "PP" : "",
-                            phase1: newisCurrentlyOn,
-                            phase: newisCurrentlyOn ? [{phaseTag: "P1"}] : [],
-                            phaseText: newisCurrentlyOn ? 'P1' : "",
-                            phase2: false, 
-                            phase3: false
-                        })
-                    }}
+                    togglePostpartumChecked={() => toggleLevelChange("PP") }
                     closeModal={() => this.closeModal()}
                     applyButton={() => this.applyButton(data)}
                 />
