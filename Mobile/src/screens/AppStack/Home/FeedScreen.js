@@ -144,7 +144,7 @@ export const FeedScreen = ({ navigation }) => {
         phases,
         stringDate
       );
-      let data = currentPhase.displayName;
+      let data = currentPhase.name;
       let phase = data.toLowerCase();
       let phaseTag = phase.concat("-", tag);
 
