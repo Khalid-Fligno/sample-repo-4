@@ -971,16 +971,12 @@ class CalendarHomeScreen extends React.PureComponent {
                   fontFamily: fonts.bold,
                 }}
               >
-                {activeChallengeUserData.displayName + " "}
+                {activeChallengeUserData.displayName}
               </Text>
             </View>
             <Text
-              style={{
-                // fontSize: 18,
-                fontFamily: fonts.bold,
-              }}
-            >
-              {phaseData.displayName}
+              style={{fontFamily: fonts.bold }}>
+              {` - ${phaseData.displayName}`}
             </Text>
           </View>
 
