@@ -229,7 +229,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   componentDidUpdate = () => {
     if (this.state.files !== undefined) {
-      this.state.downloaded++;
       if (this.state.totalToDownload === this.state.downloaded) {
         this.setState({
           finishdownloaded: true,
@@ -419,7 +418,10 @@ class CalendarHomeScreen extends React.PureComponent {
         const { name, videoUrls, exerciseModel, newWorkout } = exercise
 
         const defer = (success) => {
-          this.setState((prevState) => ({files: !prevState.files}))
+          this.setState((prevState) => ({
+            files: !prevState.files,
+            downloaded: prevState.downloaded + 1
+          }))
           return success
         }
 
