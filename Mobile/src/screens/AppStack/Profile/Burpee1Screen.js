@@ -135,8 +135,10 @@ export default class Burpee1Screen extends React.PureComponent {
       photoExist2,
     } = this.props.navigation.state.params;
 
+    const { title } = this.state.strengthAssessmentInfo
+
     Alert.alert(
-      "Stop burpee test?",
+      `Cancel ${title}?`,
       "",
       [
         {

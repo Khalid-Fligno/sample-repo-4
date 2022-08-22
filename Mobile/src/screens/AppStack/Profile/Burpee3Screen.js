@@ -124,8 +124,10 @@ export default class Burpee3Screen extends React.PureComponent {
   };
 
   quitWorkout = () => {
+    const { title } = this.state.strengthAssessmentInfo
+
     Alert.alert(
-      "Stop burpee test?",
+      `Cancel ${title}?`,
       "",
       [
         { text: "Cancel", style: "cancel" },
