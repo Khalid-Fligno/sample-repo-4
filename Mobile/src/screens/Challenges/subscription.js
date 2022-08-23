@@ -110,6 +110,7 @@ class ChallengeSubscriptionScreen extends Component {
     let { userChallengesList } = this.state;
     this.unsubscribeChallenges = await db
       .collection("challenges")
+      .where('inAppPurchaseAvailable','==', true)
       .onSnapshot(async (querySnapshot) => {
         const challengesList = [];
         const restartChallengesList = [];
