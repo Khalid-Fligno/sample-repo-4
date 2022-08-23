@@ -279,9 +279,6 @@ class CalendarHomeScreen extends React.PureComponent {
 
   handleDateSelected = async (date) => {
     const { activeChallengeData, activeChallengeUserData, AllRecipe} = this.state;
-    
-    // this.setState({ loading: false });
-    const currentDayTime = new Date(date).getTime()
     const currentDayDate = date.format("YYYY-MM-DD")
     const currentDay = currentDayDate.toString()
 
@@ -293,8 +290,8 @@ class CalendarHomeScreen extends React.PureComponent {
     })
 
     if (activeChallengeData && activeChallengeUserData &&
-      new Date(activeChallengeUserData.startDate).getTime() <= currentDayTime &&
-      new Date(activeChallengeUserData.endDate).getTime() >= currentDayTime) {
+      moment(currentDayDate).isBetween(activeChallengeUserData.startDate, activeChallengeUserData.endDate,undefined, '[]')) {
+
       this.getCurrentPhaseInfo(activeChallengeUserData, activeChallengeData, currentDay, AllRecipe)
     }
   }
