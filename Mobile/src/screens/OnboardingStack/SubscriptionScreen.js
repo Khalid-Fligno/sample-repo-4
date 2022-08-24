@@ -55,6 +55,7 @@ import RNIap, {
 } from "react-native-iap";
 import CustomBtn from "../../components/Shared/CustomBtn";
 import { containerPadding } from "../../styles/globalStyles";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const productTitleMapIOS = {
   0: "Yearly ",
@@ -445,7 +446,25 @@ export default class SubscriptionScreen extends React.PureComponent {
         );
       } else {
         const sortedProducts = products.sort(compareProducts);
-        this.setState({ products: sortedProducts, loading: false });
+
+        //Split products into renewable and non-renewable ite
+        const groupedProducts = sortedProducts.reduce((result, product) => { 
+            if(lifeStyleIdentifiers.some(p => p.identifier == product.identifier)) {
+              result.renewable.push(product)
+            } else {
+              result.nonRenewable.push(product)
+            }
+            return result
+        }, {
+          renewable: [],
+          nonRenewable: []
+        })
+
+        this.setState({ 
+          products: sortedProducts,
+          groupedProducts: groupedProducts, 
+          loading: false 
+        })
       }
     });
   };
@@ -1011,10 +1030,45 @@ export default class SubscriptionScreen extends React.PureComponent {
   render() {
     const {
       loading,
+      groupedProducts,
       products,
       specialOffer,
       selectedId,
     } = this.state;
+
+
+    
+    const renderProducts = (products, heading) => {
+      if(products?.length <= 0) return null
+      return (
+        <View style={styles.subscriptionTileRow}>
+          { heading && (<Text style={styles.productSectonHeader}>{heading}</Text>)}
+          { products &&
+            products.map((product, index) => (
+              <SubscriptionTile
+                key={product.identifier}
+                primary={true}
+                title={ Platform.OS === "ios" ? productTitle(product.identifier) : productTitleMapAndroid[index] }
+                price={product.priceString}
+                priceNumber={product.price}
+                currencyCode={product.currencyCode}
+                currencySymbol={product.currencySymbol}
+                onPress={() => this.setState({ selectedId: product.identifier })}
+                selected={selectedId === product.identifier}
+                term={
+                  Platform.OS === "android"
+                    ? andriodSubscriptionTitleMap[index]
+                    : productPeriod(product.identifier)
+                }
+                trialPeriod={trialPeriod(product.identifier)}
+                savingsPercent={savingPercentage(product.identifier)}
+                additionalText={productAdditionalText(product.identifier)}
+              />
+            ))}
+      </View>
+      )
+    }
+
     return (
       <React.Fragment>
         <View style={styles.container}>
@@ -1047,31 +1101,11 @@ export default class SubscriptionScreen extends React.PureComponent {
               >
                 Choose your payment option
               </Text>
-              <View style={styles.subscriptionTileRow}>
-                {!specialOffer &&
-                  products &&
-                  products.map((product, index) => (
-                    <SubscriptionTile
-                      key={product.identifier}
-                      primary={true}
-                      title={ Platform.OS === "ios" ? productTitle(product.identifier) : productTitleMapAndroid[index] }
-                      price={product.priceString}
-                      priceNumber={product.price}
-                      currencyCode={product.currencyCode}
-                      currencySymbol={product.currencySymbol}
-                      onPress={() => this.setState({ selectedId: product.identifier })}
-                      selected={selectedId === product.identifier}
-                      term={
-                        Platform.OS === "android"
-                          ? andriodSubscriptionTitleMap[index]
-                          : productPeriod(product.identifier)
-                      }
-                      trialPeriod={trialPeriod(product.identifier)}
-                      savingsPercent={savingPercentage(product.identifier)}
-                      additionalText={productAdditionalText(product.identifier)}
-                    />
-                  ))}
-              </View>
+      
+              {!specialOffer&& groupedProducts && renderProducts(groupedProducts?.renewable,  "Auto-renewing products")}
+              {!specialOffer && groupedProducts && renderProducts(groupedProducts?.nonRenewable, "One-off purchases") }
+              {!specialOffer && !groupedProducts && renderProducts(products) }
+
             </View>
             <View>
               <CustomBtn
@@ -1207,8 +1241,15 @@ const styles = StyleSheet.create({
     width,
   },
   subscriptionTileRow: {
-    paddingLeft: 10,
+    marginLeft: 10,
     paddingRight: 10,
+    paddingBottom: 16
+  },
+  productSectonHeader: {
+    marginLeft: 10,
+    fontFamily: fonts.bold,
+    fontSize: wp("4%"),
+    textTransform: "uppercase"
   },
   chevronUp: {
     alignSelf: "center",

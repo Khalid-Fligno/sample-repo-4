@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { View, Text, ScrollView, FlatList, Alert, Linking, Platform } from "react-native";
-import { ListItem, Button } from "react-native-elements";
 import colors from "../../styles/colors";
 import globalStyle, { containerPadding } from "../../styles/globalStyles";
 import { db } from "../../../config/firebase";
 import AsyncStorage from "@react-native-community/async-storage";
 import moment from "moment";
-import momentTimezone from "moment-timezone";
 import { any } from "prop-types";
 import Loader from "../../components/Shared/Loader";
 import ChallengeStyle from "./chellengeStyle";
