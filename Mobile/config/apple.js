@@ -72,28 +72,28 @@ export const transformIdentifiers = [
     challengeId: '88969d13-fd11-4fde-966e-df1270fb97dd',
     period: "6 month access", 
     title: "Transform Lvl 1 (No Equipment)",
-    additionalText: "Includes 6 month lifestyle subscription"
+    additionalText: "Includes access to the lifestyle library of additional recipes and workouts"
   },
   { 
     identifier : 'com.fitazfk.fitazfkapp.sub.transform.level2', 
     challengeId: '7798f53c-f613-435d-b94b-b67f1f43b51b', 
     period: "6 month access",
     title: "Transform Lvl 2 (No Equipment)",
-    additionalText: "Includes 6 month lifestyle subscription"
+    additionalText: "Includes access to the lifestyle library of additional recipes and workouts"
   },
   { 
     identifier : 'com.fitazfk.fitazfkapp.sub.transform.level3', 
     challengeId: '0d48d056-2623-4201-b25a-3f1d78083dba', 
     period: "6 month access", 
     title: "Transform Lvl 3 (No Equipment)",
-    additionalText: "Includes 6 month lifestyle subscription"
+    additionalText: "Includes access to the lifestyle library of additional recipes and workouts"
   },
   {
     identifier : 'com.fitazfk.fitazfkapp.sub.transform.postpartum', 
     challengeId: 'ee5302c5-c88c-48f6-81dc-76e4edfd8090',
     period: "6 month access", 
     title: "Transform Postpartum (No Equipment)",
-    additionalText: "Includes 6 month lifestyle subscription"
+    additionalText: "Includes access to the lifestyle library of additional recipes and workouts"
   }
 ]
 

@@ -1036,13 +1036,12 @@ export default class SubscriptionScreen extends React.PureComponent {
       selectedId,
     } = this.state;
 
-
-    
-    const renderProducts = (products, heading) => {
+    const renderProducts = (products, heading, subHeading) => {
       if(products?.length <= 0) return null
       return (
         <View style={styles.subscriptionTileRow}>
-          { heading && (<Text style={styles.productSectonHeader}>{heading}</Text>)}
+          { heading && (<Text style={styles.productSectionHeader}>{heading}</Text>)}
+          { subHeading && (<Text style={styles.productSectionSubheader}>{subHeading}</Text>) }
           { products &&
             products.map((product, index) => (
               <SubscriptionTile
@@ -1084,7 +1083,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                     color: 'white',
                     fontFamily: fonts.bold
                   }}>
-                  Subscribe to our base "Lifestyle" section or purchase a Transform challenge below to become a happier, healthier you.
+                    Become a happier, healthier you!
                 </Text>
               </View>
             </ImageBackground>
@@ -1102,8 +1101,8 @@ export default class SubscriptionScreen extends React.PureComponent {
                 Choose your payment option
               </Text>
       
-              {!specialOffer&& groupedProducts && renderProducts(groupedProducts?.renewable,  "Auto-renewing products")}
-              {!specialOffer && groupedProducts && renderProducts(groupedProducts?.nonRenewable, "One-off purchases") }
+              {!specialOffer&& groupedProducts && renderProducts(groupedProducts?.renewable,  "Auto-renewing products", "(include a free trial & auto-renew unless cancelled)" )}
+              {!specialOffer && groupedProducts && renderProducts(groupedProducts?.nonRenewable, "One-off purchases", "(do not include free trials & do not auto-renew)") }
               {!specialOffer && !groupedProducts && renderProducts(products) }
 
             </View>
@@ -1169,18 +1168,7 @@ export default class SubscriptionScreen extends React.PureComponent {
                   >
                     Terms and Conditions
                   </Text>
-                  . You also agree that an ongoing subscription to the FitazFK
-                  App (FitazFK Fitness & Nutrition) will be applied to your
-                  iTunes account at the end of your{" "}
-                  {specialOffer ? "1 month" : "7 day"} free trial. Subscriptions
-                  will automatically renew and your account charged unless
-                  auto-renew is turned off at least 24-hours before the end of
-                  the current period. Subscriptions may be managed by the user
-                  and auto-renewal may be turned off by going to the users
-                  Account Settings after purchase. Any unused portion of a free
-                  trial period, if offered, will be forfeited when the user
-                  purchases a subscription to that publication, where
-                  applicable.
+                  . If you are purchasing one of our Auto-renewing products you also agree that an ongoing subscription to the Fitazfk app (Fitazfk Fitness & Nutrition) will be applied to your iTunes account at the end of your 7 day free trial. Subscriptions will automatically renew and your account charged unless auto-renew is turned off at least 24 hours before the end of the current billing period. Subscriptions to these auto-renewing products may be managed by the user and auto-renewal may be turned off by going to the user's Account Settings after purchase.
                 </Text>
               </View>
             </View>
@@ -1245,10 +1233,16 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingBottom: 16
   },
-  productSectonHeader: {
+  productSectionHeader: {
     marginLeft: 10,
     fontFamily: fonts.bold,
     fontSize: wp("4%"),
+    textTransform: "uppercase"
+  },
+  productSectionSubheader: {
+    marginLeft: 10,
+    fontFamily: fonts.bold,
+    fontSize: wp("2%"),
     textTransform: "uppercase"
   },
   chevronUp: {
