@@ -1,17 +1,14 @@
-import React from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import PropTypes from 'prop-types';
-import Icon from '../Shared/Icon';
-import colors from '../../styles/colors';
+import React from "react";
+import { View, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import PropTypes from "prop-types";
+import Icon from "../Shared/Icon";
+import colors from "../../styles/colors";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const ExerciseInfoButton = ({ onPress }) => (
   <View style={styles.invisibleView}>
-    <TouchableOpacity
-      onPress={onPress}
-      style={styles.helpButton}
-    >
+    <TouchableOpacity onPress={onPress} style={styles.helpButton}>
       <Icon
         name="question-speech-bubble"
         size={35}
@@ -30,14 +27,14 @@ const styles = StyleSheet.create({
   invisibleView: {
     height: 0,
     width,
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   helpButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     height: 52,
     width: 52,
-    position: 'absolute',
+    position: "absolute",
     marginTop: -52,
     backgroundColor: colors.transparentBlackLight,
     borderTopLeftRadius: 4,

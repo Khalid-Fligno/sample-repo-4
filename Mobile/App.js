@@ -1,15 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Alert,
   View,
   StyleSheet,
   StatusBar,
   Linking,
   AppState,
   Platform,
+  LogBox,
 } from "react-native";
-// import * as Facebook from 'expo-facebook';
-import NetInfo from "@react-native-community/netinfo";
 import OneSignal from "react-native-onesignal";
 import appsFlyer from "react-native-appsflyer";
 import { NavigationActions } from "react-navigation";
@@ -17,42 +15,65 @@ import { Audio } from "expo-av";
 import { appsFlyerDevKey, appId } from "./config/appsFlyer";
 import SwitchNavigator from "./config/router/index";
 import colors from "./src/styles/colors";
-import { YellowBox } from "react-native";
 import _ from "lodash";
+// import LogRocket from "@logrocket/react-native";
+import { Mixpanel } from "mixpanel-react-native";
+import * as Sentry from "@sentry/react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 
-YellowBox.ignoreWarnings(["Setting a timer"]);
-const _console = _.clone(console);
-console.warn = (message) => {
-  if (message.indexOf("Setting a timer") <= -1) {
-    _console.warn(message);
+const App = () => {
+  const routingInstrumentation = new Sentry.ReactNavigationV4Instrumentation();
+  if (!__DEV__) {
+    Sentry.init({
+      dsn: "https://12437c0b082140d5af62eff3a442ecd8@o1160693.ingest.sentry.io/6245334",
+      integrations: [
+        new Sentry.ReactNativeTracing({
+          routingInstrumentation,
+          tracingOrigins: ["localhost", /^\//, /^https:\/\//],
+        }),
+      ],
+      // To set a uniform sample rate
+      tracesSampleRate: 0.2,
+      enableNative: true,
+      debug: true,
+      enableOutOfMemoryTracking: false
+    });
   }
-};
 
-let navigator;
+  const [appState, setAppState] = useState(AppState.currentState);
+  let navigator;
 
-function setTopLevelNavigator(navigatorRef) {
-  navigator = navigatorRef;
-}
+  const setTopLevelNavigator = (navigatorRef) => {
+    navigator = navigatorRef;
+  };
 
-function navigate(routeName, params) {
-  navigator.dispatch(
-    NavigationActions.navigate({
-      routeName,
-      params,
-    })
-  );
-}
+  const navigate = (routeName, params) => {
+    navigator.dispatch(
+      NavigationActions.navigate({
+        routeName,
+        params,
+      })
+    );
+  };
 
-// Facebook.initializeAsync({ appId: '1825444707513470' });
+  const handleAppStateChange = async (nextAppState) => {
+    if (appState.match(/inactive|background/) && nextAppState === "active") {
+      if (Platform.OS === "ios") {
+        appsFlyer.trackAppLaunch();
+      }
+      await Audio.setIsEnabledAsync(true);
+    }
+    setAppState(nextAppState);
+  };
+  const handleOpenURL = (event) => {
+    if (event.url === "fitazfk://special-offer") {
+      navigate("SpecialOffer");
+    }
+  };
 
-export default class App extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    // Sentry.init({
-    //   dsn: 'https://ad25f20f55644584bd7ef1ffd7dfe1f1@sentry.io/1342308',
-    //   enableInExpoDevelopment: true,
-    //   debug: false,
-    // });
+  useEffect(() => {
+    LogBox.ignoreLogs(["Setting a timer"]);
+
     OneSignal.init("7078b922-5fed-4cc4-9bf4-2bd718e8b548", {
       kOSSettingsKeyAutoPrompt: true,
       kOSSettingsKeyInAppLaunchURL: false,
@@ -63,58 +84,44 @@ export default class App extends React.PureComponent {
       isDebug: false,
       appId,
     });
-    this.state = {
-      appState: AppState.currentState,
-    };
-  }
-  componentDidMount = () => {
-    // this.unsubscribe = NetInfo.addEventListener((state) => {
-    //   this.handleConnectivityChange(state);
-    // });
-    Linking.addEventListener("url", this.handleOpenURL);
-    AppState.addEventListener("change", this.handleAppStateChange);
-  };
-  componentWillUnmount = () => {
-    // this.unsubscribe();
-    Linking.removeEventListener("url", this.handleOpenURL);
-    AppState.removeEventListener("change", this.handleAppStateChange);
-  };
-  handleAppStateChange = async (nextAppState) => {
-    if (
-      this.state.appState.match(/inactive|background/) &&
-      nextAppState === "active"
-    ) {
-      if (Platform.OS === "ios") {
-        appsFlyer.trackAppLaunch();
-      }
-      await Audio.setIsEnabledAsync(true);
-    }
-    this.setState({ appState: nextAppState });
-  };
-  handleOpenURL = (event) => {
-    if (event.url === "fitazfk://special-offer") {
-      navigate("SpecialOffer");
-    }
-  };
-  handleConnectivityChange = (netInfoState) => {
-    if (netInfoState.isInternetReachable === false) {
-      Alert.alert(
-        "No internet connection",
-        "You will need a healthy internet connection to use this app"
-      );
-    }
-  };
-  render() {
-    return (
-      <View style={styles.appContainer}>
-        <StatusBar barStyle="light-content" />
-        <SwitchNavigator
-          ref={(navigatorRef) => setTopLevelNavigator(navigatorRef)}
-        />
-      </View>
+    const linkinListener = Linking.addEventListener("url", handleOpenURL);
+    const appStateListener = AppState.addEventListener(
+      "change",
+      handleAppStateChange
     );
-  }
-}
+    Mixpanel.init("109211293f4830a3355672d9b84aae74");
+
+    setAppState(AppState.currentState);
+
+    return () => {
+      if (linkinListener) {
+        linkinListener.remove();
+      }
+      if (appStateListener) {
+        appStateListener.remove();
+      }
+    };
+  }, []);
+  useEffect(() => {
+    const Review = async () => {
+      const res = await AsyncStorage.getItem("later");
+      if (res === "true") {
+        await AsyncStorage.removeItem("later");
+      }
+    };
+    Review();
+  }, []);
+  return (
+    <View style={styles.appContainer}>
+      <StatusBar barStyle="light-content" />
+      <SwitchNavigator
+        ref={(navigatorRef) => setTopLevelNavigator(navigatorRef)}
+      />
+    </View>
+  );
+};
+
+export default Sentry.wrap(App);
 
 const styles = StyleSheet.create({
   appContainer: {

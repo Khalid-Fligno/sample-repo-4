@@ -1,66 +1,56 @@
 import React from "react";
-import { StyleSheet, View, Text, Dimensions } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import PropTypes from "prop-types";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
-import { containerPadding } from "../../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { color } from "react-native-reanimated";
-const { width } = Dimensions.get("window");
-export default class ChallengeProgressBar extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-  render() {
-    const {
-      title,
-      completed,
-      total,
-      customTitleStyle,
-      size,
-      customProgressNumberStyle,
-      customProgessTotalStyle,
-    } = this.props;
-    return (
-      <View style={styles.container}>
-        <AnimatedCircularProgress
-          size={size}
-          width={wp("1.2%")}
-          fill={(completed / total) * 100}
-          tintColor={colors.themeColor.color}
-          // onAnimationComplete={() => console.log('onAnimationComplete')}
-          backgroundColor={colors.smoke}
-          rotation={0}
-        >
-          {(fill) => (
-            <View>
-              <Text style={styles.label}>DAY</Text>
-              <Text style={[styles.progressBarLabel, customProgessTotalStyle]}>
-                <Text
-                  style={[
-                    styles.progressCircleNumber,
-                    customProgressNumberStyle,
-                  ]}
-                >
-                  {completed}
-                </Text>
+
+const ChallengeProgressBar = (props) => {
+  const {
+    title,
+    completed,
+    total,
+    customTitleStyle,
+    size,
+    customProgressNumberStyle,
+    customProgessTotalStyle,
+  } = props;
+
+  return (
+    <View style={styles.container}>
+      <AnimatedCircularProgress
+        size={size}
+        width={wp("1.2%")}
+        fill={(completed / total) * 100}
+        tintColor={colors.themeColor.color}
+        backgroundColor={colors.smoke}
+        rotation={0}
+      >
+        {(fill) => (
+          <View>
+            <Text style={styles.label}>DAY</Text>
+            <Text style={[styles.progressBarLabel, customProgessTotalStyle]}>
+              <Text
+                style={[styles.progressCircleNumber, customProgressNumberStyle]}
+              >
+                {completed}
               </Text>
-              <Text style={styles.label}>/ {total}</Text>
-            </View>
-          )}
-        </AnimatedCircularProgress>
-      </View>
-    );
-  }
-}
+            </Text>
+            <Text style={styles.label}>/ {total}</Text>
+          </View>
+        )}
+      </AnimatedCircularProgress>
+    </View>
+  );
+};
+
+export default ChallengeProgressBar;
 
 ChallengeProgressBar.propTypes = {
-  // progressBarType: PropTypes.oneOf(['Strength', 'Circuit','Interval']).isRequired,
   title: PropTypes.string,
   completed: PropTypes.number.isRequired,
   total: PropTypes.number,
@@ -87,9 +77,6 @@ const styles = StyleSheet.create({
     fontSize: hp("2%"),
     color: colors.grey.dark,
     textAlign: "center",
-    // marginLeft:11,
-    // marginTop:-20,
-    // marginBottom:-5,
   },
 
   progressCircleText: {

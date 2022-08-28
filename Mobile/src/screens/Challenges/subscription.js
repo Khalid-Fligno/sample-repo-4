@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { View, Text, ScrollView, FlatList, Alert, Linking } from "react-native";
-import { ListItem, Button } from "react-native-elements";
+import { View, Text, ScrollView, FlatList, Alert, Linking, Platform } from "react-native";
 import colors from "../../styles/colors";
 import globalStyle, { containerPadding } from "../../styles/globalStyles";
 import { db } from "../../../config/firebase";
 import AsyncStorage from "@react-native-community/async-storage";
 import moment from "moment";
-import momentTimezone from "moment-timezone";
 import { any } from "prop-types";
 import Loader from "../../components/Shared/Loader";
 import ChallengeStyle from "./chellengeStyle";
@@ -21,8 +19,6 @@ import {
   short_months,
   full_months,
 } from "../../utils/challenges";
-import ChallengeBlogCard from "../../components/Home/ChallengeBlogCard";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import CalendarModal from "../../components/Shared/CalendarModal";
 
 class ChallengeSubscriptionScreen extends Component {
@@ -42,6 +38,8 @@ class ChallengeSubscriptionScreen extends Component {
       chosenDate: new Date(),
       selectedChallengeIndex: null,
       addingToCalendar: false,
+      quit: false,
+      completedChallenge: false,
     };
   }
 
@@ -55,21 +53,28 @@ class ChallengeSubscriptionScreen extends Component {
         this.props.navigation.navigate("Calendar");
       }
     });
+
+    this.setState({ quit: this.props.navigation.getParam("quit") });
+    this.setState({
+      completedChallenge: this.props.navigation.getParam("completedChallenge"),
+    });
   }
 
   componentDidMount = () => {
     this.fetchProfile();
-    this.focusListener = this.props.navigation.addListener("willFocus", () => {
-      this.onFocusFunction();
-    });
+    this.listeners = [
+      this.props.navigation.addListener("didFocus", async () => {
+        await this.onFocusFunction();
+      }),
+    ];
   };
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     if (this.unsubscribeUserChallenges) this.unsubscribeUserChallenges();
     if (this.unsubscribeUserData) this.unsubscribeUserData();
     if (this.unsubscribeChallenges) this.unsubscribeChallenges();
-    this.focusListener.remove();
-  };
+    this.listeners.forEach((item) => item.remove());
+  }
 
   fetchProfile = async () => {
     this.setState({ loading: true });
@@ -103,6 +108,7 @@ class ChallengeSubscriptionScreen extends Component {
     let { userChallengesList } = this.state;
     this.unsubscribeChallenges = await db
       .collection("challenges")
+      .where('inAppPurchaseAvailable','==', true)
       .onSnapshot(async (querySnapshot) => {
         const challengesList = [];
         const restartChallengesList = [];
@@ -122,7 +128,8 @@ class ChallengeSubscriptionScreen extends Component {
   };
 
   addChallengeToUser(index) {
-    let { userData, challengesList } = this.state;
+    let { userData, challengesList, quit, completedChallenge } = this.state;
+
     const userRef = db
       .collection("users")
       .doc(userData.id)
@@ -184,8 +191,19 @@ class ChallengeSubscriptionScreen extends Component {
           subTitle={item.subTitle}
           key={index}
           btnTitle="Buy"
-          // onPress={()=>this.addChallengeToUser(index)}
-          onPress={() => item.shopifyUrl && this.openLink(item.shopifyUrl)}
+          onPress={() => {
+              // item.id = challenge id
+              if(Platform.OS === "ios")
+                this.props.navigation.navigate("Subscription", {
+                  challengesOnly: true,
+                  preselectedChallenge: item.id,
+                  dismissOnSuccess: true
+                })
+                  
+              else if (item.shopifyUrl)
+                this.openLink(item.shopifyUrl)
+            }
+          }
           disabled={false}
           challengeData={item}
         />
@@ -271,6 +289,7 @@ class ChallengeSubscriptionScreen extends Component {
   };
 
   onBoarding(challengeData, btnTitle, btnDisabled) {
+    const { quit, completedChallenge } = this.state;
     if (btnDisabled) {
       if (btnTitle === "Active") this.props.navigation.navigate("Calendar");
       else if (challengeData.isSchedule) {
@@ -294,7 +313,9 @@ class ChallengeSubscriptionScreen extends Component {
         data: {
           challengeData,
         },
-        challengeOnboard: true
+        challengeOnboard: true,
+        quit,
+        completedChallenge,
       });
     }
   }
@@ -367,7 +388,7 @@ class ChallengeSubscriptionScreen extends Component {
     } catch (err) {
       this.setState({ loading: false });
       console.log(err);
-      Alert.alert("Fetch active challenge data error!");
+      console.log("Fetch active challenge data error!");
     }
   };
 
@@ -406,7 +427,7 @@ class ChallengeSubscriptionScreen extends Component {
     const data = createUserChallengeData(ChallengeData, new Date(selectedDate));
     // console.log(data.startDate , selectedDate);
     if (moment(selectedDate).isSame(TODAY, "d")) {
-      Object.assign(data, { status: "Active" });
+      Object.assign(data, { isSchedule: true, status: "Active" });
     } else {
       Object.assign(data, { isSchedule: true, status: "InActive" });
     }

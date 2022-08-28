@@ -1,13 +1,14 @@
 {
   "name": "admin",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "prod": "ng build --prod"
   },
   "private": true,
   "dependencies": {
@@ -19,7 +20,7 @@
     "@angular/core": "~11.1.2",
     "@angular/fire": "^6.1.4",
     "@angular/forms": "~11.1.2",
-    "@angular/material": "^12.2.7",
+    "@angular/material": "^11.2.13",
     "@angular/platform-browser": "~11.1.2",
     "@angular/platform-browser-dynamic": "~11.1.2",
     "@angular/router": "~11.1.2",

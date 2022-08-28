@@ -39,6 +39,7 @@ export class EditComponent implements OnInit, OnDestroy {
   unsubWorkout:any;
   recipeList:any=[];
   workoutList:any=[];
+  strengthAssessments:any=[];
 
   //search
   searchOptions:any[]=[];
@@ -80,6 +81,7 @@ export class EditComponent implements OnInit, OnDestroy {
       shopifyProductId:[d && d.shopifyProductId?d.shopifyProductId:'',Validators.required],
       shopifyUrl:[d && d.shopifyUrl?d.shopifyUrl:'',Validators.pattern(this.http.urlRegex)],
       tag: [d && d.tag?d.tag:shortId.generate(),Validators.required],
+      strengthAssessmentId: [d && d.strengthAssessmentId, Validators.required]
     });
 
 
@@ -95,6 +97,7 @@ export class EditComponent implements OnInit, OnDestroy {
     this.getWorkout();
     this.applySearch();
     this.applySearchWorkouts();
+    this.getStrengthAssessments();
   }
 
   ngOnDestroy()
@@ -122,9 +125,13 @@ export class EditComponent implements OnInit, OnDestroy {
       drink = this.recipeList.filter((recipe:any)=>d.meals.includes(recipe.id) && recipe.drink).map((recipe:any)=>recipe.id);
     }
 
+    function maxAllowed(propertyName: string): number {
+      return d?.favouriteRecipeConfigs?.[propertyName]?.maximumAllowedFavourites ?? 1
+    }
+
     return this.fb.group({
-      displayName: [{value:d && d.displayName?d.displayName:'',disabled:d && d.displayName?true:false},Validators.required],
-      name: [d && d.name?d.name:''],
+      displayName: [d?.displayName?d.displayName:'',Validators.required],
+      name: [{value: d && d.name?d.name:'', disabled: d?.name?true:false}],
       thumbnail: [d && d.thumbnail?d.thumbnail:'',Validators.required],
       description: [d && d.description?d.description:'',Validators.required],
       startDay: [{value:d && d.startDay?d.startDay:'',disabled:d && d.startDay?true:false},Validators.required],
@@ -132,10 +139,15 @@ export class EditComponent implements OnInit, OnDestroy {
       pdfUrl: [d && d.pdfUrl?d.pdfUrl:'',Validators.required],
       // meals: [d && d.meals?d.meals:'',Validators.required],
       breakfast:[d && d.meals?breakfast:'',Validators.required],
+      breakfastMaxAllowedFavourites: [maxAllowed('breakfast'), Validators.required],
       lunch:[d && d.meals?lunch:'',Validators.required],
+      lunchMaxAllowedFavourites: [maxAllowed('lunch'), Validators.required],
       dinner:[d && d.meals?dinner:'',Validators.required],
+      dinnerMaxAllowedFavourites: [maxAllowed('dinner'), Validators.required],
       snack:[d && d.meals?snack:'',Validators.required],
+      snackMaxAllowedFavourites: [maxAllowed('snack'), Validators.required],
       drink:[d && d.meals?drink:''],
+      drinksMaxAllowedFavourites: [maxAllowed('drink'), Validators.required]
     })
   }
 
@@ -348,6 +360,13 @@ export class EditComponent implements OnInit, OnDestroy {
     return option.id === value.id;
   }
 
+  async getStrengthAssessments() {
+    const strengthAssessmentsDocs = await this.db.firestore.collection('strengthAssessments').get()
+    this.strengthAssessments = strengthAssessmentsDocs
+      .docs
+      .map(doc => doc.data())
+  }
+
   async getRecipe(){
     const recipeRef = this.db.firestore.collection('recipes');
     this.unsubRecipe = await recipeRef
@@ -460,18 +479,33 @@ export class EditComponent implements OnInit, OnDestroy {
     ])];
 
     return phases.map((res:any)=>{
-        console.log("drink",res.drink)
         const meals = [...new Set([...res.breakfast,...res.lunch,...res.dinner,...res.snack,...res.drink])];
-        const displayName = res.displayName.replace(/\s/g,'');
         return {
-                  displayName: displayName,
-                  name: displayName,
+                  displayName: res.displayName,
+                  name: res.name.replace(/\s/g,''),
                   thumbnail:res.thumbnail ,
                   description:res.description ,
                   startDay:res.startDay,
                   endDay:res.endDay ,
                   pdfUrl:res.pdfUrl,
-                  meals:meals
+                  favouriteRecipeConfigs: {
+                    breakfast: {
+                      maximumAllowedFavourites: res.breakfastMaxAllowedFavourites
+                    },
+                    lunch: {
+                      maximumAllowedFavourites: res.lunchMaxAllowedFavourites
+                    },
+                    dinner: {
+                      maximumAllowedFavourites: res.dinnerMaxAllowedFavourites
+                    },
+                    snack: {
+                      maximumAllowedFavourites: res.snackMaxAllowedFavourites
+                    },
+                    drink: {
+                      maximumAllowedFavourites: res.drinksMaxAllowedFavourites
+                    }
+                  },
+                  meals: meals
               }
     })
   }

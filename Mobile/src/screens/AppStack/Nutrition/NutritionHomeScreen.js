@@ -8,25 +8,7 @@ import globalStyle from '../../../styles/globalStyles';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 import fonts from '../../../styles/fonts';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
-
-const NutritionList = [
-  {
-    title:"breakfast",
-    imageUrl:require('../../../../assets/images/nutrition-breakfast.jpg'),
-  },
-  {
-    title:"lunch",
-    imageUrl:require('../../../../assets/images/nutrition-lunch.jpg'),
-  },
-  {
-    title:"dinner",
-    imageUrl:require('../../../../assets/images/nutrition-dinner.jpg'),
-  },
-  {
-    title:"snack",
-    imageUrl:require('../../../../assets/images/nutrition-snack.jpg'),
-  },
-]
+import NutritionGroup from './NutritionGroup.js'
 
 export default function NutritionHomeScreen({ navigation }) {
   return (
@@ -48,19 +30,18 @@ export default function NutritionHomeScreen({ navigation }) {
         </View>
 
         {
-          NutritionList.map((data,i)=>(
+          NutritionGroup.all.map((data,i)=>(
             <Tile
               key={i}
               title1={data.title}
               image={data.imageUrl}
-              onPress={() => navigation.navigate('RecipeSelection', { meal: data.title })}
+              onPress={() => navigation.navigate('RecipeSelection', { meal: data.filteredMealType, title: data.title })}
               showTitle = {true}
               overlayTitle = {false}
               customContainerStyle={{height:170}}
               showTitleStyle={{marginTop:15}}
           />
           ))
-         
         }
        
        </View>

@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  StyleSheet,
   SafeAreaView,
   View,
   Text,
@@ -11,7 +10,6 @@ import {
   TouchableOpacity,
   Linking,
   Platform,
-  PermissionsAndroid,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Permissions from "expo-permissions";
@@ -19,15 +17,15 @@ import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
 import { ListItem } from "react-native-elements";
 import FastImage from "react-native-fast-image";
-import { auth, db } from "../../../../config/firebase";
+import { auth, db, storage } from "../../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import Icon from "../../../components/Shared/Icon";
+import AccountDeletionCard from "../../../components/Profile/AccountDeletionCard";
 import colors from "../../../styles/colors";
 // import fonts from '../../../styles/fonts';
 import ActionSheet from "react-native-actionsheet";
 import globalStyle from "../../../styles/globalStyles";
 import ProfileStyles from "./ProfileStyles";
-import { FileSystem } from "react-native-unimodules";
 import { getBuildNumber, getVersion } from "react-native-device-info";
 import fonts from "../../../styles/fonts";
 const { width } = Dimensions.get("window");
@@ -65,6 +63,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
       hasCameraRollPermission: undefined,
       hasExternalStorageDevicePermission: undefined,
       avatar: undefined,
+      deletionModalVisible: false
     };
   }
   componentDidMount() {
@@ -84,7 +83,7 @@ export default class ProfileHomeScreen extends React.PureComponent {
     } catch (ex) {}
   };
   fetchProfile = async () => {
-    // this.setState({ loading: true });
+
     const uid = await AsyncStorage.getItem("uid");
     this.unsubscribe = await db
       .collection("users")
@@ -100,13 +99,22 @@ export default class ProfileHomeScreen extends React.PureComponent {
           this.setState({ loading: false });
         }
       });
+
+      const authSubscription = auth.onAuthStateChanged(async user => {
+          if(user) { return }
+
+          // Clear out
+          await this.unsubscribe()
+          await authSubscription()
+          await AsyncStorage.removeItem("uid");
+          this.props.navigation.navigate("Auth");
+      })
   };
   saveImage = async (uri, blob) => {
     try {
       const uid = await AsyncStorage.getItem("uid");
-      const firebase = require("firebase");
       // const blob1 = await uriToBlob(uri);
-      const storageRef = firebase.storage().ref();
+      const storageRef = storage.ref();
       const userPhotosStorageRef = storageRef.child("user-photos");
       const userStorageRef = userPhotosStorageRef.child(uid);
       const avatarStorageRef = userStorageRef.child("avatar.jpeg");
@@ -222,6 +230,14 @@ export default class ProfileHomeScreen extends React.PureComponent {
         `data:image/jpeg;base64,${result.base64}`
       );
       blob = base64Response.blob()._W;
+
+      if (!blob) {
+        const base64Response = await fetch(
+          `data:image/jpeg;base64,${result.base64}`
+        );
+
+        blob = await base64Response.blob();
+      }
     }
 
     if (Platform.OS === "android") blob = await uriToBlob(result.uri);
@@ -260,19 +276,15 @@ export default class ProfileHomeScreen extends React.PureComponent {
   };
   logOut = async () => {
     try {
-      this.setState({ loading: true });
-      AsyncStorage.removeItem("uid");
-      await this.unsubscribe();
       auth.signOut();
-      this.setState({ loading: false });
-      this.props.navigation.navigate("Auth");
     } catch (err) {
       this.setState({ loading: false });
       Alert.alert("Error logging out");
     }
   };
+
   render() {
-    const { profile, loading, avatar } = this.state;
+    const { profile, loading, avatar, deletionModalVisible } = this.state;
     return (
       <SafeAreaView style={globalStyle.safeContainer}>
         <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
@@ -371,16 +383,26 @@ export default class ProfileHomeScreen extends React.PureComponent {
                 onPress={() => this.logOutAlert()}
               />
             </View>
+            <View
+              style={ProfileStyles.listContainer}>
+              <ListItem
+                title="Delete my account"
+                containerStyle={ProfileStyles.listItemContainerBottom}
+                titleStyle={ProfileStyles.listItemDeletionTitleStyle}
+                onPress={() => { this.setState({deletionModalVisible: true}) }} />
+            </View>
             <Text
               style={{
                 color: colors.smoke,
                 fontFamily: fonts.StyreneAWebRegular,
-              }}
-            >
+              }}>
               Ver {getVersion()} (Build {getBuildNumber()})
             </Text>
           </ScrollView>
           <Loader loading={loading} color={colors.charcoal.standard} />
+          <AccountDeletionCard 
+            isVisible={deletionModalVisible}
+            onCancel={() => this.setState({deletionModalVisible: false}) } />
         </View>
       </SafeAreaView>
     );

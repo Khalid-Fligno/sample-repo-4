@@ -3,25 +3,21 @@ import {
   View,
   Text,
   SafeAreaView,
-  InputBox,
   Dimensions,
   Platform,
-  Picker,
   Alert,
 } from "react-native";
-import { number } from "prop-types";
 import ChallengeStyle from "../chellengeStyle";
 import globalStyle, { containerPadding } from "../../../styles/globalStyles";
 import CustomBtn from "../../../components/Shared/CustomBtn";
-import { ScrollView, TextInput, TouchableOpacity } from "react-native";
+import { ScrollView } from "react-native";
 import fonts from "../../../styles/fonts";
 import Video from "react-native-video";
 import WorkoutTimer from "../../../components/Workouts/WorkoutTimer";
 import colors from "../../../styles/colors";
 import { timerSound } from "../../../../config/audio";
 import InputBox2 from "../../../components/Challenges/InputBox2";
-import Modal from "react-native-modal";
-import { burpeeOptions, findFitnessLevel } from "../../../utils";
+import { burpeeOptions } from "../../../utils";
 import PickerModal from "../../../components/Challenges/PickerModal";
 import { db } from "../../../../config/firebase";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -33,12 +29,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { DotIndicator } from "react-native-indicators";
 import moment from "moment";
-import momentTimezone from "moment-timezone";
 import CalendarModal from "../../../components/Shared/CalendarModal";
-import { add } from "react-native-reanimated";
 import { NavigationActions, StackActions } from "react-navigation";
 
 const { width } = Dimensions.get("window");
@@ -66,7 +58,7 @@ export default class OnBoarding5 extends Component {
 
   onFocusFunction = () => {
     const data = this.props.navigation.getParam("data", {});
-    const burpeeCount = data["challengeData"]["onBoardingInfo"]["burpeeCount"];
+    const burpeeCount = data?.challengeData?.onBoardingInfo?.burpeeCount || 0;
     if (burpeeCount > 0) {
       this.setState({
         challengeData: data["challengeData"],
@@ -81,20 +73,20 @@ export default class OnBoarding5 extends Component {
         btnDisabled: false,
       });
     }
-
-    console.log(data["challengeData"], "<><><><><");
   };
 
   // add a focus listener onDidMount
-  async componentDidMount() {
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
-      this.onFocusFunction();
-    });
+  componentDidMount() {
+    this.listeners = [
+      this.props.navigation.addListener("didFocus", () => {
+        this.onFocusFunction();
+      }),
+    ];
   }
 
   // and don't forget to remove the listener
   componentWillUnmount() {
-    // this.focusListener.remove();
+    this.listeners.forEach((item) => item.remove());
   }
 
   goToScreen(type) {
@@ -138,8 +130,6 @@ export default class OnBoarding5 extends Component {
         });
 
         this.setState({ challengeData: updatedChallengedata });
-        // calendarModalVisible true calendar popup
-        // this.setState({ calendarModalVisible: true });
         this.addChallengeToCalendar(moment().set("date", 26));
 
         if (this.state.addingToCalendar) {
@@ -377,7 +367,7 @@ export default class OnBoarding5 extends Component {
       addingToCalendar,
       chosenDate,
     } = this.state;
-    console.log("addingToCalendar", addingToCalendar);
+
     if (!challengeData.onBoardingInfo) {
       this.onFocusFunction();
     }
@@ -482,7 +472,6 @@ export default class OnBoarding5 extends Component {
               <InputBox2
                 onPress={this.toggleBurpeeModal}
                 title="Total Burpee"
-                extension={""}
                 value={burpeeCount}
                 extension={burpeeCount > 0 ? `(${fitnessLevel})` : ""}
                 customContainerStyle={{ marginTop: 20 }}
@@ -521,39 +510,6 @@ export default class OnBoarding5 extends Component {
                 rightIconSize={13}
                 customBtnTitleStyle={{ marginRight: 10 }}
               />
-              {/* {burpeeCount <= 0 ? (
-                <CustomBtn
-                  Title="Skip"
-                  customBtnStyle={{
-                    borderRadius: 50,
-                    padding: 15,
-                    width: "100%",
-                  }}
-                  onPress={() => this.goToScreen("next")}
-                  disabled={btnDisabled}
-                  isRightIcon={true}
-                  rightIconName="chevron-right"
-                  rightIconColor={colors.black}
-                  rightIconSize={13}
-                  customBtnTitleStyle={{ marginRight: 10 }}
-                />
-              ) : (
-                <CustomBtn
-                  Title="Choose Start Date"
-                  customBtnStyle={{
-                    borderRadius: 50,
-                    padding: 15,
-                    width: "100%",
-                  }}
-                  onPress={() => this.goToScreen("submit")}
-                  disabled={btnDisabled}
-                  isRightIcon={true}
-                  rightIconName="chevron-right"
-                  rightIconColor={colors.white}
-                  rightIconSize={13}
-                  customBtnTitleStyle={{ marginRight: 10 }}
-                />
-              )} */}
               <CustomBtn
                 Title="Back"
                 customBtnStyle={{

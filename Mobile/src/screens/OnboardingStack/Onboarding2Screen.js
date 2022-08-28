@@ -4,32 +4,21 @@ import {
   Text,
   SafeAreaView,
   ScrollView,
-  TouchableOpacity,
   Alert,
-  ImageBackground,
   Dimensions,
 } from "react-native";
-import CustomButton from "../../components/Shared/CustomButton";
-import globalStyle, { containerPadding } from "../../styles/globalStyles";
-import ChallengeStyle from "../Challenges/chellengeStyle";
+import globalStyle from "../../styles/globalStyles";
 import colors from "../../styles/colors";
-import CustomBtn from "../../components/Shared/CustomBtn";
 import onboardingStyle from "./OnBoardingStyle";
 import Loader from "../../components/Shared/Loader";
 import * as Haptics from "expo-haptics";
 import AsyncStorage from "@react-native-community/async-storage";
 import { db } from "../../../config/firebase";
-import RoundTick from "../../../assets/icons/RoundTick";
 import FitnessLevelCard from "../../components/Onboarding/FitnessLevelCard";
 import BigHeadingWithBackButton from "../../components/Shared/BigHeadingWithBackButton";
 import fonts from "../../styles/fonts";
-import {
-  getChallengeDetails,
-  getLatestChallenge,
-  hasChallenges,
-} from "../../utils/challenges";
-import moment from "moment";
-import momentTimezone from "moment-timezone";
+import { hasChallenges } from "../../utils/challenges";
+
 const { width } = Dimensions.get("window");
 
 class Onboarding2Screen extends Component {
@@ -57,8 +46,7 @@ class Onboarding2Screen extends Component {
       };
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
-      // this.props.navigation.navigate('App', { isInitial: true });
-      // console.log("check user has challenge",uid,userRef);
+
       if (
         userData.subscriptionInfo &&
         userData.subscriptionInfo.expiry > Date.now()
@@ -103,33 +91,8 @@ class Onboarding2Screen extends Component {
               {/* Select your intensity level below. */}
               How often do you currently train.
             </Text>
-            {/* <Text
-              style={[
-                onboardingStyle.IntensityTitleText,
-                { color: colors.grey.dark, width: "100%" },
-              ]}
-            >
-              Beginner: train once a week,
-            </Text>
-            <Text
-              style={[
-                onboardingStyle.IntensityTitleText,
-                { color: colors.grey.dark, width: "100%" },
-              ]}
-            >
-              Intermediate: train 2 to 3 times a week,
-            </Text>
-            <Text
-              style={[
-                onboardingStyle.IntensityTitleText,
-                { color: colors.grey.dark, width: "100%" },
-              ]}
-            >
-              Expert: train 4+ times a week
-            </Text> */}
 
             <FitnessLevelCard
-              // source={require("../../../../assets/images/OnBoardindImg/FL_1.png")}
               onPress={() => this.handleSubmit(1)}
               title="0-2 times a week"
               // title="Beginner"
@@ -138,7 +101,6 @@ class Onboarding2Screen extends Component {
               cardColor={colors.coolIce}
             />
             <FitnessLevelCard
-              // source={require("../../../../assets/images/OnBoardindImg/FL_2.png")}
               onPress={() => this.handleSubmit(2)}
               title="2-3 times a week"
               // title="Intermediate"
@@ -147,7 +109,6 @@ class Onboarding2Screen extends Component {
               cardColor={colors.coolIce}
             />
             <FitnessLevelCard
-              // source={require("../../../../assets/images/OnBoardindImg/FL_3.png")}
               onPress={() => this.handleSubmit(3)}
               title="4+ times a week"
               // title="Expert"
@@ -155,17 +116,6 @@ class Onboarding2Screen extends Component {
               isCardColored={true}
               cardColor={colors.coolIce}
             />
-
-            {/* <View
-              style={{ flex: 0.5, justifyContent: "flex-end", marginTop: 20 }}
-            >
-              <CustomBtn
-                Title="Continue"
-                customBtnStyle={{ borderRadius: 50, padding: 15 }}
-                onPress={() => this.handleSubmit()}
-                customBtnTitleStyle={{ letterSpacing: fonts.letterSpacing }}
-              />
-            </View> */}
           </ScrollView>
           <Loader loading={loading} color={colors.coral.standard} />
         </View>

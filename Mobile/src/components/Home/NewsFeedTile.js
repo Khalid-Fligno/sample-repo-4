@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Dimensions,
   TouchableOpacity,
@@ -7,71 +7,57 @@ import {
   ImageBackground,
   View,
   Animated,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import colors from '../../styles/colors';
-import fonts from '../../styles/fonts';
+} from "react-native";
+import PropTypes from "prop-types";
+import colors from "../../styles/colors";
+import fonts from "../../styles/fonts";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
-export default class NewsFeedTile extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.animatedValue = new Animated.Value(1);
-  }
-  handlePressIn = () => {
-    Animated.spring(this.animatedValue, {
+const NewsFeedTile = (props) => {
+  const { onPress, title, image } = props;
+
+  const animatedValue = new Animated.Value(1);
+  const animatedStyle = {
+    transform: [{ scale: animatedValue }],
+  };
+  const handlePressIn = () => {
+    Animated.spring(animatedValue, {
       toValue: 0.92,
-      useNativeDriver:true
+      useNativeDriver: true,
     }).start();
-  }
-  handlePressOut = () => {
-    Animated.spring(this.animatedValue, {
+  };
+  const handlePressOut = () => {
+    Animated.spring(animatedValue, {
       toValue: 1,
       friction: 3,
       tension: 40,
-      useNativeDriver:true
+      useNativeDriver: true,
     }).start();
-  }
-  render() {
-    const {
-      onPress,
-      title,
-      image,
-    } = this.props;
-    const animatedStyle = {
-      transform: [{ scale: this.animatedValue }],
-    };
-    return (
-      <TouchableOpacity
-        delayPressIn={60}
-        onPress={onPress}
-        style={styles.cardContainer}
-        onPressIn={this.handlePressIn}
-        onPressOut={this.handlePressOut}
-      >
-        <Animated.View
-          style={[styles.flexContainer, animatedStyle]}
-        >
-          <ImageBackground
-            source={image}
-            style={styles.image}
-          >
-            <View style={styles.opacityLayer}>
-              <View style={styles.titleContainer}>
-                <Text style={styles.title}>
-                  {title.toUpperCase()}
-                </Text>
-              </View>
+  };
+
+  return (
+    <TouchableOpacity
+      delayPressIn={60}
+      onPress={onPress}
+      style={styles.cardContainer}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+    >
+      <Animated.View style={[styles.flexContainer, animatedStyle]}>
+        <ImageBackground source={image} style={styles.image}>
+          <View style={styles.opacityLayer}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>{title.toUpperCase()}</Text>
             </View>
-          </ImageBackground>
-        </Animated.View>
-      </TouchableOpacity>
-     
-      
-    );
-  }
-}
+          </View>
+        </ImageBackground>
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
+
+export default NewsFeedTile;
 
 NewsFeedTile.propTypes = {
   onPress: PropTypes.func.isRequired,
@@ -94,16 +80,15 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    // paddingTop:10
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
   },
   opacityLayer: {
     flex: 1,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.transparentBlackLight,
   },
   titleContainer: {
@@ -113,7 +98,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 16,
     color: colors.white,
-    textAlign: 'center',
+    textAlign: "center",
     shadowColor: colors.black,
     shadowOpacity: 1,
     shadowOffset: { width: 0, height: 0 },

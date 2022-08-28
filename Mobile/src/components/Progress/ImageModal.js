@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 import {
   View,
   StyleSheet,
@@ -7,72 +7,57 @@ import {
   Text,
   Dimensions,
   ScrollView,
-} from 'react-native';
-import Modal from 'react-native-modal';
-import FastImage from 'react-native-fast-image';
-import fonts from '../../styles/fonts';
-import colors from '../../styles/colors';
+} from "react-native";
+import Modal from "react-native-modal";
+import FastImage from "react-native-fast-image";
+import fonts from "../../styles/fonts";
+import colors from "../../styles/colors";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
-export default class ImageModal extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-  render() {
-    const {
-      imageModalVisible,
-      toggleImageModal,
-      color,
-      imageSource,
-    } = this.props;
-    return (
-      <Modal
-        isVisible={imageModalVisible}
-        animationIn="fadeIn"
-        animationInTiming={400}
-        animationOut="fadeOut"
-        animationOutTiming={600}
-      >
-        <View style={styles.imageModalContainer}>
-          <View style={styles.imageModalImageContainer}>
-            <ScrollView
-              bounces={false}
-              bouncesZoom={false}
-              maximumZoomScale={2}
-              minimumZoomScale={1}
-            >
-              <FastImage
-                style={styles.imageStyle}
-                source={imageSource}
-              />
-            </ScrollView>
-          </View>
-          <View style={styles.imageModalButtonContainer}>
-            <TouchableOpacity
-              title="DONE"
-              onPress={toggleImageModal}
-              style={[
-                styles.modalButton,
-                color === 'coral' && styles.modalButtonCoral,
-                color === 'violet' && styles.modalButtonViolet,
-                color === 'blue' && styles.modalButtonBlue,
-                color === 'green' && styles.modalButtonGreen,
-                color === 'red' && styles.modalButtonRed,
-              ]}
-            >
-              <Text style={styles.modalButtonText}>
-                DONE
-              </Text>
-            </TouchableOpacity>
-          </View>
+const ImageModal = (props) => {
+  const { imageModalVisible, toggleImageModal, color, imageSource } = props;
+  return (
+    <Modal
+      isVisible={imageModalVisible}
+      animationIn="fadeIn"
+      animationInTiming={400}
+      animationOut="fadeOut"
+      animationOutTiming={600}
+    >
+      <View style={styles.imageModalContainer}>
+        <View style={styles.imageModalImageContainer}>
+          <ScrollView
+            bounces={false}
+            bouncesZoom={false}
+            maximumZoomScale={2}
+            minimumZoomScale={1}
+          >
+            <FastImage style={styles.imageStyle} source={imageSource} />
+          </ScrollView>
         </View>
-      </Modal>
-    );
-  }
-}
+        <View style={styles.imageModalButtonContainer}>
+          <TouchableOpacity
+            title="DONE"
+            onPress={toggleImageModal}
+            style={[
+              styles.modalButton,
+              color === "coral" && styles.modalButtonCoral,
+              color === "violet" && styles.modalButtonViolet,
+              color === "blue" && styles.modalButtonBlue,
+              color === "green" && styles.modalButtonGreen,
+              color === "red" && styles.modalButtonRed,
+            ]}
+          >
+            <Text style={styles.modalButtonText}>DONE</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+export default ImageModal;
 
 ImageModal.propTypes = {
   imageModalVisible: PropTypes.bool.isRequired,
@@ -88,13 +73,13 @@ ImageModal.defaultProps = {
 const styles = StyleSheet.create({
   imageModalContainer: {
     flexShrink: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    justifyContent: "space-between",
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   imageModalImageContainer: {
-    width: '100%',
+    width: "100%",
     backgroundColor: colors.grey.standard,
   },
   imageStyle: {
@@ -103,49 +88,49 @@ const styles = StyleSheet.create({
   },
   imageModalButtonContainer: {
     backgroundColor: colors.white,
-    width: '100%',
+    width: "100%",
   },
   modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.charcoal.standard,
     height: 50,
-    width: '100%',
+    width: "100%",
   },
   modalButtonCoral: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.themeColor.color,
     height: 50,
-    width: '100%',
+    width: "100%",
   },
   modalButtonViolet: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.violet.standard,
     height: 50,
-    width: '100%',
+    width: "100%",
   },
   modalButtonBlue: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.blue.standard,
     height: 50,
-    width: '100%',
+    width: "100%",
   },
   modalButtonGreen: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.green.standard,
     height: 50,
-    width: '100%',
+    width: "100%",
   },
   modalButtonRed: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.red.standard,
     height: 50,
-    width: '100%',
+    width: "100%",
   },
   modalButtonText: {
     fontFamily: fonts.bold,

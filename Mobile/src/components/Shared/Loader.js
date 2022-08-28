@@ -1,16 +1,25 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, StyleSheet, Text, Animated } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { DotIndicator } from 'react-native-indicators';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
-import fonts from '../../styles/fonts'; 
+import fonts from '../../styles/fonts';
+import progressBar from '../../styles/progressBar';
 const Loader = ({
   loading,
   color,
   overlayColor,
   text,
+  progressive,
+  downloaded,
+  totalToDownload
 }) => {
+  const [percentage, setPercentage] = useState(0)
+  useEffect(() => {
+    setPercentage(Math.floor((downloaded / totalToDownload) * 100))
+  }, [downloaded, totalToDownload])
+
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -21,19 +30,25 @@ const Loader = ({
           overlayColor={overlayColor}
         >
           <View style={styles.contentContainer}>
-            <View style={styles.dotIndicatorContainer}>
-              <DotIndicator
-                color={colors.themeColor.color}
-                count={3}
-                size={10}
-              />
-            </View>
             {
-              text && (
-                <Text style={styles.loaderText}>
-                  {text}
-                </Text>
-              )
+              progressive ?
+                <>
+                  <View style={progressBar.bar}>
+                    <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: colors.black, borderRadius: 20, width: `${percentage}%` }]} />
+                  </View>
+                  <Text style={styles.loaderText}>Downloading {percentage}%</Text>
+                </>
+                :
+                <View style={styles.dotIndicatorContainer}>
+                  <DotIndicator
+                    color={colors.themeColor.color}
+                    count={3}
+                    size={10}
+                  />
+                  <Text style={styles.loaderText}>
+                    {text}
+                  </Text>
+                </View>
             }
           </View>
         </Spinner>
@@ -51,21 +66,21 @@ Loader.propTypes = {
 };
 
 Loader.defaultProps = {
-  overlayColor: 'rgba(0, 0, 0, 0.6)',
+  overlayColor: "rgba(0, 0, 0, 0.6)",
   color: colors.white,
   text: undefined,
 };
 
 const styles = StyleSheet.create({
   loaderContainer: {
-    position: 'absolute',
+    position: "absolute",
     flex: 1,
     backgroundColor: colors.white,
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   dotIndicatorContainer: {
     height: 50,
@@ -74,7 +89,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 16,
     fontFamily: fonts.bold,
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
   },
 });
 

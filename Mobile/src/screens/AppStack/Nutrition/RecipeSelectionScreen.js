@@ -1,30 +1,15 @@
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-  Alert,
-  FlatList,
-  Text,
-} from "react-native";
+import { StyleSheet, View, Alert, FlatList, Text, ActivityIndicator, } from "react-native";
 import * as FileSystem from "expo-file-system";
 import sortBy from "lodash.sortby";
 import { db } from "../../../../config/firebase";
 import RecipeTile from "../../../components/Nutrition/RecipeTile";
 import RecipeTileSkeleton from "../../../components/Nutrition/RecipeTileSkeleton";
-import colors from "../../../styles/colors";
-import fonts from '../../../styles/fonts';
-import { TouchableOpacity } from "react-native-gesture-handler";
-import Icon from "../../../components/Shared/Icon";
 import globalStyle from "../../../styles/globalStyles";
 import BigHeadingWithBackButton from "../../../components/Shared/BigHeadingWithBackButton";
 import CustomButtonGroup from "../../../components/Shared/CustomButtonGroup";
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
-
-const { width } = Dimensions.get("window");
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import fonts from '../../../styles/fonts';
 
 export default class RecipeSelectionScreen extends React.PureComponent {
   constructor(props) {
@@ -34,24 +19,22 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       loading: false,
       filterIndex: 0,
       meal: null,
+      indicator: false,
+      limit: 6,
+      refreshing: false,
+      data: [],
     };
   }
 
   onFocusFunction = async () => {
-    const { meal } = this.state;
-    const newMeal = this.props.navigation.getParam("meal", null);
-    // if(meal && meal !== newMeal || !meal){
-    this.setState({ meal: newMeal });
-    await this.fetchRecipes();
-    // }
+    const newMeal = this.props.navigation.getParam('meal', null);
+    this.setState({ meal: newMeal })
+     await this.fetchRecipes();
   };
 
   componentDidMount = async () => {
-    // this.setState({ loading: true });
-    // this.focusListener = this.props.navigation.addListener('willFocus', async () => {
-    //     this.onFocusFunction()
-    // })
     await this.fetchRecipes();
+
   };
 
   componentWillUnmount = async () => {
@@ -61,80 +44,133 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 
   fetchRecipes = async () => {
     this.setState({ loading: true });
-    const meal = this.props.navigation.getParam("meal", null);
-    const challengeMealsFilterList = this.props.navigation.getParam(
-      "challengeMealsFilterList",
-      null
-    );
-    this.unsubscribe = await db
-      .collection("recipes")
-      .where(meal, "==", true)
+    
+    const meal = this.props.navigation.getParam('meal', null);
+    const challengeMealsFilterList = this.props.navigation.getParam('challengeMealsFilterList', null);
+    this.unsubscribe = await db.collection('recipes')
+      .where(meal, '==', true)
+      .where("showLifestyle", '==', true)
+      .orderBy('title')
+      .limit(this.state.limit)
+      
       .onSnapshot(async (querySnapshot) => {
         const recipes = [];
         await querySnapshot.forEach(async (doc) => {
-          console.log(doc.data().title)
-          if (doc.data().active) {
-            if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
-              if (challengeMealsFilterList.includes(doc.data().id))
-                await recipes.push(await doc.data());
-            } else {
+          if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
+            if (challengeMealsFilterList.includes(doc.data().id))
               await recipes.push(await doc.data());
-            }
+          } else {
+            await recipes.push(await doc.data());
           }
         });
 
-        Promise.all(
-          recipes.map(async (recipe) => {
+      // get expected data
+         this.data = await db.collection('recipes')
+         .where(meal, '==', true)
+         .where("showLifestyle", '==', true)
+         .orderBy('title')
+         .onSnapshot(async (querySnapshot) => {
+           const data = [];
+           await querySnapshot.forEach(async (doc) => {
+             if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
+               if (challengeMealsFilterList.includes(doc.data().id))
+                 await data.push(await doc.data());
+             } else {
+               await data.push(await doc.data());
+             }
+           });
+             this.setState({data: data})
+         });
+ 
+
+        await Promise.all(recipes.map(async (recipe) => {
+          const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
+          await FileSystem.getInfoAsync(fileUri)
+            .then(async ({ exists }) => {
+              if (!exists) {
+                await FileSystem.downloadAsync(
+                  recipe.coverImage,
+                  `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
+                );
+              }
+            }).catch(() => {
+              this.setState({ loading: false });
+              Alert.alert('', 'Image download error');
+            });
+        }));
+        this.setState({ recipes: recipes, loading: false});
+        
+      });
+  };
+
+  retrieveMore = async() =>{
+    try {  
+      this.setState({refreshing: true,});
+      const recipes =[];
+      const meal = this.props.navigation.getParam('meal', null);
+      const challengeMealsFilterList = this.props.navigation.getParam('challengeMealsFilterList', null);
+      const recipeMeal = await db.collection('recipes')
+        .where(meal, '==', true)
+        .where("showLifestyle", '==', true)
+        .orderBy('title')
+        .limit(this.state.limit)
+        .get()
+
+        recipeMeal.forEach(async(doc) =>{
+          if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
+                if (challengeMealsFilterList.includes(doc.data().id))
+                   await recipes.push(doc.data());
+                } else {
+                   await recipes.push(doc.data());
+                }
+          })
+          
+       
+          await Promise.all(recipes.map(async (recipe) => {
             const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
             await FileSystem.getInfoAsync(fileUri)
               .then(async ({ exists }) => {
                 if (!exists) {
                   await FileSystem.downloadAsync(
                     recipe.coverImage,
-                    `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`
+                    `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
                   );
                 }
-              })
-              .catch((reason) => {
-                this.setState({ loading: false });
-                Alert.alert("Error", `Error: ${reason}`);
+              }).catch(() => {
+                Alert.alert('', 'Image download error');
               });
-          })
-        );
-        // OLD CODE - DOWNLOADING ALL IMAGES EVERY TIME
-        // await Promise.all(recipes.map(async (recipe) => {
-        //   await FileSystem.downloadAsync(
-        //     recipe.coverImage,
-        //     `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
-        //   );
-        // }));
+          }));
+          this.setState({ recipes: recipes,limit: this.state.limit + 6});
+          this.setState({refreshing: false}); 
+          let allData = this.state.data;
+          if (recipes.length === allData.length) {
+            this.setState({indicator: false})
+          }
+          if (recipes.length != allData.length) {
+            this.setState({indicator: true})
+          }
+      
+    } catch (error) {
+      
+    }
+  }
+  
 
-        // console.log(recipes.sort((a, b) => {
-        //   if (a.order === b.order)
-        //     return 0;
-        //   else if (a.order === 0)  
-        //     return 1;
-        //   else if (b.order === 0) 
-        //     return -1;
-        //   else                  
-        //     return 1
-        // }));
-
-        // this.setState({ recipes: sortBy(recipes, "order"), loading: false });
-        this.setState({
-          recipes: recipes.sort((a, b) => {
-            if (a.order === b.order)
-              return 0;
-            else if (a.order === 0)
-              return 1;
-            else if (b.order === 0)
-              return -1;
-            else
-              return 1
-          }), loading: false
-        });
-      });
-  };
+  renderFooter = () =>{
+    try {
+      if (this.state.indicator) {
+        return(
+          <ActivityIndicator color="#999999"/>
+        )
+      } else {
+        return null;
+      }
+      
+            
+    } catch (error) {
+      
+    }
+  }
 
   updateFilter = (filterIndex) => {
     this.setState({ filterIndex });
@@ -142,76 +178,58 @@ export default class RecipeSelectionScreen extends React.PureComponent {
 
   keyExtractor = (item, index) => String(index);
 
-  renderItem = ({ item }) => (
-    <RecipeTile
-      onPress={() =>
-        this.props.navigation.push("Recipe", {
-          recipe: item,
-          backTitle: this.props.navigation.getParam("meal", null),
-        })
-      }
-      // image={
-      //   `${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage
-      // }
-      image={item.coverImage}
-      title={item.title.toUpperCase()}
-      tags={item.tags}
-      subTitle={item.subtitle}
-      time={item.time}
-      newBadge={item.newBadge}
-    />
-  );
+  renderItem = ({ item, index }) => {
+    return (
+      <RecipeTile
+        onPress={() =>
+          this.props.navigation.push("Recipe", {
+            recipe: item,
+            title: this.props.navigation.getParam("meal", null),
+          })
+        }
+        image={
+          `${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage
+        }
+        title={item.title.toUpperCase()}
+        tags={item.tags}
+        subTitle={item.subtitle}
+        time={item.time}
+        newBadge={item.newBadge}
+      />
+    );
+  };
 
   handleBack = () => {
     const { navigation } = this.props;
     navigation.pop();
   };
 
+  
+
   render() {
-    const meal = this.props.navigation.getParam("meal", null);
-    const { recipes, loading, filterIndex } = this.state;
-    const filterButtons = [
-      {
-        id: '1',
-        data: ["All", "Vegetarian", "Vegan", "Gluten-Free", "Level 1", "Level 2", "Phase 1", "Phase 2", "Phase 3"]
-      }
-    ]
+    const title = this.props.navigation.getParam('title', null);
+    const { recipes, loading, filterIndex,indicator } = this.state;
+    // console.log('indicator',this.state.indicator);
+    // console.log('recipes',this.state.recipes);
+    const filterButtons = ['All', 'V', 'V+', 'GF', 'GH', 'DF'];
+    const recipeList = sortBy(recipes, 'newBadge')
+      .filter((recipe) => {
+        // console.log(recipe.title)
+        if (recipe.tags === undefined) return recipes
+        if (filterIndex === 1) {
+          return recipe.tags.includes('V');
+        } else if (filterIndex === 2) {
+          return recipe.tags.includes('V+');
+        } if (filterIndex === 3) {
+          return recipe.tags.includes('GF');
+        } if (filterIndex === 4) {
+          return recipe.tags.includes('GH');
+        } if (filterIndex === 5) {
+          return recipe.tags.includes('DF');
+        }
 
-    const renderItem1 = ({ item: items }) =>
-    (
-      <CustomButtonGroup
-        onPress={this.updateFilter}
-        selectedIndex={filterIndex}
-        buttons={filterButtons[0].data}
-      />
-    );
-
-    const recipeList = sortBy(recipes, "newBadge").filter((recipe) => {
-      // console.log(recipe.title)
-      if (recipe.tags === undefined) return recipes;
-      if (filterIndex === 1) {
-        return recipe.tags.includes("V");
-      } else if (filterIndex === 2) {
-        return recipe.tags.includes("V+");
-      }
-      if (filterIndex === 3) {
-        return recipe.tags.includes("GF");
-      }
-      if (filterIndex === 4) {
-        return recipe.tags.includes("L1");
-      } else if (filterIndex === 5) {
-        return recipe.tags.includes("L2");
-      }
-      if (filterIndex === 6) {
-        return recipe.tags.includes("P1");
-      } else if (filterIndex === 7) {
-        return recipe.tags.includes("P2");
-      } else if (filterIndex === 8) {
-        return recipe.tags.includes("P3");
-      }
-
-      return recipes;
-    });
+        return recipes;
+      });
 
     const skeleton = (
       <View style={styles.recipeTileSkeletonContainer}>
@@ -224,56 +242,58 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       <View style={globalStyle.container}>
         <BigHeadingWithBackButton
           isBackButton={true}
-          bigTitleText={meal}
+          bigTitleText={title}
           onPress={this.handleBack}
           backButtonText="Back to nutrition"
           isBigTitle={true}
-          isBackButton={true}
           customContainerStyle={{ marginTop: 10, marginBottom: hp("2.5%") }}
         />
-        <View
-          style={{
-            marginTop: 5,
-            marginBottom: -20,
-          }}
-        >
-          <TouchableOpacity
-            style={{ flexDirection: "row", alignItems: "center", justifyContent: 'flex-end', }}
-            activeOpacity={1}
-          >
-            <Text style={styles.rLabel}>Scroll for more </Text>
-            <Icon name="chevron-right" size={8} style={styles.icon} />
-            <Icon name="chevron-right" size={8} style={styles.icon2} />
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={filterButtons}
-          keyExtractor={(item) => item.id}
-          renderItem={(item) => renderItem1(item)}
-          style={{
-            paddingVertical: wp("4%"),
-          }}
+        <CustomButtonGroup
+          onPress={this.updateFilter}
+          selectedIndex={filterIndex}
+          buttons={filterButtons}
         />
-        {loading ? (
-          skeleton
-        ) : (
-          <FlatList
-            contentContainerStyle={styles.scrollView}
-            data={recipeList}
-            keyExtractor={this.keyExtractor}
-            renderItem={this.renderItem}
-            showsVerticalScrollIndicator={false}
-            removeClippedSubviews={false}
-          // maxToRenderPerBatch={20}
-          />
-        )}
+        {
+          loading ?
+            skeleton
+            :
+            recipeList.length > 0 ?
+              (
+                <FlatList
+                  contentContainerStyle={styles.scrollView}
+                  data={recipeList}
+                  keyExtractor={this.keyExtractor}
+                  renderItem={this.renderItem}
+                  showsVerticalScrollIndicator={false}
+                  removeClippedSubviews={false}
+                  onEndReached={this.retrieveMore}
+                  ListFooterComponent={this.renderFooter}
+                  onEndReachedThreshold={0.2}
+                  refreshing={this.state.refreshing}
 
-        {/* <Loader
-          loading={loading}
-          color={colors.violet.standard}
-        /> */}
+                />
+              )
+              :
+              <View
+                style={{
+                  height: hp('65%'),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontSize: 15,
+                    fontFamily: fonts.bold,
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  no recipes are available
+                </Text>
+              </View>
+        }
       </View>
     );
   }
@@ -285,16 +305,5 @@ const styles = StyleSheet.create({
   },
   recipeTileSkeletonContainer: {
     // paddingTop: 35,
-  },
-  rLabel: {
-    fontFamily: fonts.GothamMedium,
-    fontSize: 8,
-    color: colors.grey.dark,
-  },
-  icon: {
-    marginTop: 2,
-  },
-  icon2: {
-    marginTop: 2,
   },
 });

@@ -18,33 +18,15 @@ import {
   compare,
   compareInApp,
 } from "../../config/apple";
-import {
-  restoreAndroidPurchases,
-  replaceTestAndroidProduct,
-} from "../../config/android";
+import { restoreAndroidPurchases } from "../../config/android";
 import { RestoreSubscriptions } from "../utils/subscription";
 import { auth, db } from "../../config/firebase";
 import { timerSound } from "../../config/audio";
-import {
-  getChallengeDetails,
-  getLatestChallenge,
-  hasChallenges,
-  isActiveChallenge,
-} from "../utils/challenges";
+import { hasChallenges, isActiveChallenge } from "../utils/challenges";
 import { getBuildNumber, getVersion } from "react-native-device-info";
-import moment from "moment";
-import momentTimezone from "moment-timezone";
-import RNIap, {
-  Product,
-  ProductPurchase,
-  PurchaseError,
-  acknowledgePurchaseAndroid,
-  purchaseErrorListener,
-  purchaseUpdatedListener,
-} from "react-native-iap";
 import { Platform } from "react-native";
-import { Linking } from "react-native";
 import { setRestImages } from "../utils/workouts";
+import * as Sentry from "@sentry/react-native";
 
 const { InAppUtils } = NativeModules;
 const { width } = Dimensions.get("window");
@@ -73,7 +55,7 @@ const cacheSound = async (sounds) => {
 
 export default class AuthLoadingScreen extends React.PureComponent {
   componentDidMount = async () => {
-    this.checkAppVersion();
+    await this.checkAppVersion();
     await setRestImages();
   };
 
@@ -98,34 +80,8 @@ export default class AuthLoadingScreen extends React.PureComponent {
         // console.log("app up to date");
         await this.loadAssetsAsync();
       } else {
-        SplashScreen.hide();
-
-        const updateApp = () => {
-          if (Platform.OS === "ios") {
-            Linking.openURL(
-              "https://apps.apple.com/in/app/fitazfk-fitness-nutrition/id1438373600"
-            );
-          } else {
-            Linking.openURL(
-              "https://play.google.com/store/apps/details?id=com.fitazfk.fitazfkapp"
-            );
-          }
-        };
-        // Alert.alert(
-        //   "New Update Available!",
-        //   "You have older version of app please update.",
-        //   [
-        //     {
-        //       text: "Cancel",
-        //       onPress: async () => await this.loadAssetsAsync(),
-        //     },
-        //     {
-        //       text: "Update",
-        //       onPress: updateApp,
-        //     },
-        //   ]
-        // );
         await this.loadAssetsAsync();
+        SplashScreen.hide();
       }
     }
   }
@@ -140,56 +96,56 @@ export default class AuthLoadingScreen extends React.PureComponent {
       require("../../assets/icons/apple-icon-black.png"),
       require("../../assets/icons/spotify-icon.png"),
       require("../../assets/icons/facebook-icon-white.png"),
-      require("../../assets/images/app-onboarding-carousel-1.jpg"),
-      require("../../assets/images/app-onboarding-carousel-2.jpg"),
-      require("../../assets/images/app-onboarding-carousel-3.jpg"),
-      require("../../assets/images/app-onboarding-carousel-4.jpg"),
-      require("../../assets/images/app-onboarding-carousel-5.jpg"),
-      require("../../assets/images/signup-screen-background.jpg"),
-      require("../../assets/images/subscription-screen-background.jpg"),
-      require("../../assets/images/special-offer-screen-background.jpg"),
-      require("../../assets/images/homeScreenTiles/home-screen-blog.jpg"),
-      require("../../assets/images/homeScreenTiles/home-screen-shop-apparel-jumper.jpg"),
-      require("../../assets/images/blog-header.jpg"),
-      require("../../assets/images/shop-bundles.jpg"),
-      require("../../assets/images/fitazfk-army.jpg"),
-      require("../../assets/images/nutrition-breakfast.jpg"),
-      require("../../assets/images/nutrition-lunch.jpg"),
-      require("../../assets/images/nutrition-dinner.jpg"),
-      require("../../assets/images/nutrition-snack.jpg"),
+      require("@lib/images/app-onboarding-carousel-1.png"),
+      require("@lib/images/app-onboarding-carousel-2.png"),
+      require("@lib/images/app-onboarding-carousel-3.png"),
+      require("@lib/images/app-onboarding-carousel-4.png"),
+      require("@lib/images/app-onboarding-carousel-5.png"),
+      require("@lib/images/signup-screen-background.png"),
+      require("@lib/images/subscription-screen-background.png"),
+      require("@lib/images/special-offer-screen-background.png"),
+      require("@lib/images/homeScreenTiles/home-screen-blog.png"),
+      require("@lib/images/homeScreenTiles/home-screen-shop-apparel-jumper.png"),
+      require("@lib/images/blog-header.png"),
+      require("@lib/images/shop-bundles.png"),
+      require("@lib/images/fitazfk-army.png"),
+      require("@lib/images/nutrition-breakfast.png"),
+      require("@lib/images/nutrition-lunch.png"),
+      require("@lib/images/nutrition-dinner.png"),
+      require("@lib/images/nutrition-snack.png"),
       require("../../assets/images/recipe-tile-skeleton.png"),
-      require("../../assets/images/workouts-gym.jpg"),
-      require("../../assets/images/workouts-gym-abt.jpg"),
-      require("../../assets/images/workouts-gym-full.jpg"),
-      require("../../assets/images/workouts-gym-upper.jpg"),
-      require("../../assets/images/workouts-hiit.jpg"),
-      require("../../assets/images/workouts-hiit-airdyne.jpg"),
-      require("../../assets/images/workouts-hiit-rowing.jpg"),
-      require("../../assets/images/workouts-hiit-running.jpg"),
-      require("../../assets/images/workouts-hiit-skipping.jpg"),
-      require("../../assets/images/workouts-home.jpg"),
-      require("../../assets/images/workouts-home-abt.jpg"),
-      require("../../assets/images/workouts-home-full.jpg"),
-      require("../../assets/images/workouts-home-upper.jpg"),
-      require("../../assets/images/workouts-outdoors.jpg"),
-      require("../../assets/images/workouts-outdoors-abt.jpg"),
-      require("../../assets/images/workouts-outdoors-full.jpg"),
-      require("../../assets/images/workouts-outdoors-upper.jpg"),
-      require("../../assets/images/workouts-resistance.jpg"),
-      require("../../assets/images/hiit-rest-placeholder.jpg"),
+      require("@lib/images/workouts-gym.png"),
+      require("@lib/images/workouts-gym-abt.png"),
+      require("@lib/images/workouts-gym-full.png"),
+      require("@lib/images/workouts-gym-upper.png"),
+      require("@lib/images/workouts-hiit.png"),
+      require("@lib/images/workouts-hiit-airdyne.png"),
+      require("@lib/images/workouts-hiit-rowing.png"),
+      require("@lib/images/workouts-hiit-running.png"),
+      require("@lib/images/workouts-hiit-skipping.png"),
+      require("@lib/images/workouts-home.png"),
+      require("@lib/images/workouts-home-abt.png"),
+      require("@lib/images/workouts-home-full.png"),
+      require("@lib/images/workouts-home-upper.png"),
+      require("@lib/images/workouts-outdoors.png"),
+      require("@lib/images/workouts-outdoors-abt.png"),
+      require("@lib/images/workouts-outdoors-full.png"),
+      require("@lib/images/workouts-outdoors-upper.png"),
+      require("@lib/images/workouts-resistance.png"),
+      require("@lib/images/hiit-rest-placeholder.png"),
       require("../../assets/images/profile-add.png"),
-      require("../../assets/images/splitImages/NINA-1.jpg"),
-      require("../../assets/images/splitImages/NINA-2.jpg"),
-      require("../../assets/images/splitImages/NINA-3.jpg"),
-      require("../../assets/images/splitImages/NINA-4.jpg"),
-      require("../../assets/images/splitImages/SHARNIE-1.jpg"),
-      require("../../assets/images/splitImages/SHARNIE-2.jpg"),
-      require("../../assets/images/splitImages/SHARNIE-3.jpg"),
-      require("../../assets/images/splitImages/SHARNIE-4.jpg"),
-      require("../../assets/images/splitImages/ELLE-1.jpg"),
-      require("../../assets/images/splitImages/ELLE-2.jpg"),
-      require("../../assets/images/splitImages/ELLE-3.jpg"),
-      require("../../assets/images/splitImages/ELLE-4.jpg"),
+      require("@lib/images/splitImages/NINA-1.png"),
+      require("@lib/images/splitImages/NINA-2.png"),
+      require("@lib/images/splitImages/NINA-3.png"),
+      require("@lib/images/splitImages/NINA-4.png"),
+      require("@lib/images/splitImages/SHARNIE-1.png"),
+      require("@lib/images/splitImages/SHARNIE-2.png"),
+      require("@lib/images/splitImages/SHARNIE-3.png"),
+      require("@lib/images/splitImages/SHARNIE-4.png"),
+      require("@lib/images/splitImages/ELLE-1.png"),
+      require("@lib/images/splitImages/ELLE-2.png"),
+      require("@lib/images/splitImages/ELLE-3.png"),
+      require("@lib/images/splitImages/ELLE-4.png"),
     ]);
     const fontAssets = cacheFonts([
       {
@@ -252,7 +208,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
   goToAppScreen = async (doc) => {
     // RECEIPT STILL VALID
     // this.setState({ loading: false });
-    if (await !doc.data().onboarded) {
+    if (!doc.data().onboarded) {
       this.props.navigation.navigate("Onboarding1");
       return;
     }
@@ -269,20 +225,23 @@ export default class AuthLoadingScreen extends React.PureComponent {
         const { uid } = user;
         await AsyncStorage.setItem("uid", uid);
         const userRef = db.collection("users").doc(uid);
+
         userRef.get().then(async (doc) => {
           if (doc.exists) {
-            if (await !doc.data().fitnessLevel) {
+            Sentry.setUser({ email: doc.data().email });
+            if (!doc.data().fitnessLevel) {
               await AsyncStorage.setItem("fitnessLevel", "1");
             } else {
               await AsyncStorage.setItem(
                 "fitnessLevel",
-                await doc.data().fitnessLevel.toString()
+                doc.data().fitnessLevel.toString()
               );
             }
             const { subscriptionInfo = undefined, onboarded = false } =
-              await doc.data();
+              doc.data();
 
-            if (subscriptionInfo === undefined) {
+            if (!subscriptionInfo || !subscriptionInfo?.expiry) {
+              console.log('Pasok nga walay subscription info expiry')
               // console.log("uid",uid);
               if (await hasChallenges(uid)) {
                 await this.goToAppScreen(doc);
@@ -305,11 +264,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
               // RECEIPT STILL VALID
               await hasChallenges(uid);
               await this.goToAppScreen(doc);
-              // if (onboarded) {
-              //   this.props.navigation.navigate('App');
-              // } else {
-              //   this.props.navigation.navigate('Onboarding1');
-              // }
             }
           } else {
             Alert.alert("Account data could not be found");
@@ -318,6 +272,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
         });
       } else {
         unsubscribe();
+        Sentry.configureScope((scope) => scope.setUser(null));
         this.props.navigation.navigate("Auth");
       }
     });
@@ -338,16 +293,6 @@ export default class AuthLoadingScreen extends React.PureComponent {
         await restoreAndroidPurchases(this.props);
       }
     }
-    // if (Platform.OS !== subscriptionInfo.platform) {
-    //   await restoreSubscriptions.restore(subscriptionInfo, onboarded);
-    // }
-    // else if (Platform.OS === 'ios') {
-    //   await this.restorePurchaseIOS(onboarded);
-    // }
-    // else if (Platform.OS === 'android') {
-    //   //  await restoreSubscriptions.restore(subscriptionInfo, onboarded);
-    //   await restoreAndroidPurchases(this.props);
-    // }
   };
 
   restorePurchaseIOS = async (onboarded) => {
@@ -408,89 +353,7 @@ export default class AuthLoadingScreen extends React.PureComponent {
       }
     });
   };
-  // cachingComplete = async () => {
-  //   const unsubscribe = auth.onAuthStateChanged(async (user) => {
-  //     if (user) {
-  //       unsubscribe();
-  //       const { uid } = user;
-  //       db.collection('users').doc(uid)
-  //         .get()
-  //         .then(async (doc) => {
-  //           if (doc.exists) {
-  //             if (await doc.data().fitnessLevel !== undefined) {
-  //               await AsyncStorage.setItem('fitnessLevel', await doc.data().fitnessLevel.toString());
-  //             } else {
-  //               await AsyncStorage.setItem('fitnessLevel', '1');
-  //             }
-  //             const { subscriptionInfo, onboarded } = await doc.data();
-  //             if (subscriptionInfo === undefined) {
-  //               // NO PURCHASE INFORMATION SAVED
-  //               this.props.navigation.navigate('Subscription');
-  //             } else if (subscriptionInfo.expiry < Date.now()) {
-  //               // EXPIRED
-  //               InAppUtils.restorePurchases(async (error, response) => {
-  //                 if (error) {
-  //                   Alert.alert('iTunes Error', 'Could not connect to iTunes store.');
-  //                   AsyncStorage.removeItem('uid');
-  //                   auth.signOut();
-  //                   this.props.navigation.navigate('Auth');
-  //                 } else {
-  //                   if (response.length === 0) {
-  //                     this.props.navigation.navigate('Subscription');
-  //                     return;
-  //                   }
-  //                   const sortedPurchases = response.slice().sort(compare);
-  //                   try {
-  //                     const validationData = await this.validate(sortedPurchases[0].transactionReceipt);
-  //                     if (validationData === undefined) {
-  //                       Alert.alert('Receipt validation error');
-  //                       return;
-  //                     }
-  //                     if (validationData.latest_receipt_info && validationData.latest_receipt_info.expires_date > Date.now()) {
-  //                       Alert.alert('Your subscription has been auto-renewed');
-  //                       const userRef = db.collection('users').doc(uid);
-  //                       const data = {
-  //                         subscriptionInfo: {
-  //                           receipt: sortedPurchases[0].transactionReceipt,
-  //                           expiry: validationData.latest_receipt_info.expires_date,
-  //                         },
-  //                       };
-  //                       await userRef.set(data, { merge: true });
-  //                       if (onboarded) {
-  //                         this.props.navigation.navigate('App');
-  //                       } else {
-  //                         this.props.navigation.navigate('Onboarding1');
-  //                       }
-  //                     } else {
-  //                       Alert.alert('Something went wrong');
-  //                       this.props.navigation.navigate('Subscription');
-  //                     }
-  //                   } catch (err) {
-  //                     // MOST RECENT RECEIPT VALID BUT EXPIRED (USER HAS CANCELLED)
-  //                     Alert.alert('Your subscription has expired');
-  //                     this.props.navigation.navigate('Subscription');
-  //                   }
-  //                 }
-  //               });
-  //             } else if (subscriptionInfo.expiry > Date.now()) {
-  //               // RECEIPT STILL VALID
-  //               if (onboarded) {
-  //                 this.props.navigation.navigate('App');
-  //               } else {
-  //                 this.props.navigation.navigate('Onboarding1');
-  //               }
-  //             }
-  //           } else {
-  //             Alert.alert('Account data could not be found');
-  //             this.props.navigation.navigate('Auth');
-  //           }
-  //         });
-  //     } else {
-  //       unsubscribe();
-  //       this.props.navigation.navigate('Auth');
-  //     }
-  //   });
-  // }
+
   validate = async (receiptData) => {
     const validationData = await validateReceiptProduction(receiptData).catch(
       async (error) => {

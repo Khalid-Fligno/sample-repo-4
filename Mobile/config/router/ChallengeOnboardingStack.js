@@ -25,7 +25,7 @@ const ChallengeOnboardingStack = createStackNavigator(
     initialRouteName: 'ChallengeOnBoarding1',
   
     defaultNavigationOptions: ({ navigation }) => ({
-      gesturesEnabled:false,
+      gestureEnabled:false,
       header: () => {
         const { routeName } = navigation.state;
         return (

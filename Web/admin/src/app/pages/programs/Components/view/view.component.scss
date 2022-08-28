@@ -19,6 +19,21 @@ p {
 video {
     margin-left: 16px;
 }
+table {
+    margin: 12px 0px;
+    border-bottom: none;
+}
+
+.mat-column-favourite-name {
+    border-right: 1px solid currentColor;
+    padding-right: 24px;
+    text-align: left;
+  }
+
+.mat-column-favourite-max-value {
+    padding-left: 16px;
+    text-align: center;
+  }
 
 // .stepContainer{
 //     display: flex;

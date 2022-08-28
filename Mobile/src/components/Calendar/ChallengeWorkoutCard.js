@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   TouchableOpacity,
@@ -6,154 +6,136 @@ import {
   StyleSheet,
   ImageBackground,
   View,
-  Animated,
-  TouchableHighlight
+  TouchableWithoutFeedback
 } from "react-native";
 import PropTypes from "prop-types";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
-import CustomBtn from "../Shared/CustomBtn";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { IMAGE } from "../../library/images";
 
 const { width } = Dimensions.get("window");
 
-const getTarget = (filters) => {
-  if (filters.includes("strength")) {
-    return "Strength";
-  } else if (filters.includes("interval")) {
-    return "Interval";
-  } else if (filters.includes("circuit")) {
-    return "Circuit";
-  } else if (filters.includes("rest")) {
-    return "rest";
-  }
-};
+const ChallengeWorkoutCard = (props) => {
+  const { onPress, res, cardCustomStyle } = props;
+  const [target, setTarget] = useState("");
+  const [focus, setFocus] = useState("");
 
-const getFocus = (filters) => {
-  if (filters.includes("fullBody")) {
-    return "Full Body";
-  } else if (filters.includes("upperBody")) {
-    return "Upper Body";
-  } else if (filters.includes("lowerBody")) {
-    return "Lower Body";
-  } else if (filters.includes("core")) {
-    return "Core";
-  }
-};
-
-export default class ChallengeWorkoutCard extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.animatedValue = new Animated.Value(1);
-  }
-  handlePressIn = () => {
-    Animated.spring(this.animatedValue, {
-      toValue: 0.92,
-      useNativeDriver: true,
-    }).start();
-  };
-  handlePressOut = () => {
-    Animated.spring(this.animatedValue, {
-      toValue: 1,
-      friction: 3,
-      tension: 40,
-      useNativeDriver: true,
-    }).start();
-  };
-  render() {
-    const {
-      onPress,
-      res,
-      currentDay,
-      // title,
-      // image,
-      // recommendedWorkout,
-      cardCustomStyle,
-      title,
-    } = this.props;
-    const animatedStyle = {
-      transform: [{ scale: this.animatedValue }],
-    };
-    let target = "";
-    let focus = "";
-    if (res && res.target === "rest") {
-      target = "rest";
-    } else {
-      target = res && res.filters ? getTarget(res.filters) : "";
-      focus = res && res.filters ? getFocus(res.filters) : "";
+  const getTarget = (filters) => {
+    if (filters.includes("strength")) {
+      return "Strength";
+    } else if (filters.includes("interval")) {
+      return "Interval";
+    } else if (filters.includes("circuit")) {
+      return "Circuit";
+    } else if (filters.includes("rest")) {
+      return "rest";
     }
-    return (
-      <View style={[styles.cardContainer, cardCustomStyle]}>
-        <TouchableOpacity style={styles.cardContainer} onPress={onPress}>
+  };
+
+  const getFocus = (filters) => {
+    if (filters.includes("fullBody")) {
+      return "Full Body";
+    } else if (filters.includes("upperBody")) {
+      return "Upper Body";
+    } else if (filters.includes("lowerBody")) {
+      return "Lower Body";
+    } else if (filters.includes("core")) {
+      return "Core";
+    }
+  };
+
+  useEffect(() => {
+    let _target = "";
+    let _focus = "";
+    if (res && res.target === "rest") {
+      setTarget("rest");
+    } else {
+      _target = res && res.filters ? getTarget(res.filters) : "";
+      setTarget(_target);
+      _focus = res && res.filters ? getFocus(res.filters) : "";
+      setFocus(_focus);
+    }
+  }, [res, getTarget, getFocus]);
+
+  return (
+    <View style={[styles.cardContainer, cardCustomStyle]}>
+      <TouchableWithoutFeedback style={styles.cardContainer} onPress={onPress}>
         <ImageBackground
-          source={require("../../../assets/images/Calendar/challengeWorkoutCardBg.png")}
+          source={target ? IMAGE.TRANSFORM_WORKOUT_TILE : IMAGE.REST_COVER_IMAGE}
           style={styles.image}
         >
-          <View style={styles.opacityLayer}>
-            <View style={styles.innerViewContainer}>
-              <Text
-                key={res}
-                style={[
-                  styles.recTextLabel,
-                  { color: colors.themeColor.color },
-                ]}
-              >
-                {title}
-              </Text>
-            </View>
+          <View style={target ? styles.opacityLayer : styles.opacityLayerRest}>
             <View style={styles.titleContainer}>
-              <Text style={styles.title}>Day {currentDay}</Text>
-            </View>
-            <View style={styles.innerViewContainer}>
               {target !== "rest" && (
-                <Text key={res} style={styles.recTextLabel}>
+                <Text key={res} style={styles.target}>
                   {target}
                   {focus ? " - " + focus : ""}
                 </Text>
               )}
-              {target === "rest" && (
-                <Text key={res} style={styles.recTextLabel}>
-                  Today is your rest day
-                </Text>
-              )}
             </View>
-            <CustomBtn
-              Title="View Workout"
-              customBtnStyle={{
-                padding: wp("1%"),
-
-                backgroundColor: colors.themeColor.color,
-                width: wp("30%"),
-                marginTop: wp("1%"),
-              }}
-              customBtnTitleStyle={{
-                marginTop: 0,
-                fontSize: wp("3%"),
-                fontFamily: fonts.boldNarrow,
-              }}
-              onPress={onPress}
-              disabled={target === "rest"}
-            />
+            {
+              target === "" && (
+                <View style={styles.innerViewContainerRest}>
+                    <Text key={res} style={styles.targetRest}>
+                      Today is a rest day
+                    </Text>
+                </View>
+            )}
+            {
+              target === "" ?
+                <View style={{ flex: 1, paddingTop: 5 }}>
+                  <Text style={styles.startButton}>(no workout)</Text>  
+                </View>
+                :
+                <View style={{ flex: 1, paddingTop: 10 }}>
+                  <TouchableOpacity onPress={onPress} disabled={target === "rest"}>
+                    <Text style={styles.startButton}>Start</Text>
+                    <View
+                      style={{
+                        borderBottomColor: "white",
+                        borderBottomWidth: 1,
+                        width: 57,
+                        paddingTop: 3,
+                      }}
+                    >
+                      <View
+                        style={{
+                          flex: 1,
+                          marginTop: -19,
+                          paddingLeft: 45,
+                          alignItems: "flex-start",
+                        }}
+                      >
+                        <Icon
+                          name="arrow-right"
+                          size={13}
+                          style={{ color: "white" }}
+                        />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+            }
           </View>
         </ImageBackground>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-}
+      </TouchableWithoutFeedback>
+    </View>
+  );
+};
+
+export default ChallengeWorkoutCard;
 
 ChallengeWorkoutCard.propTypes = {
   onPress: PropTypes.func.isRequired,
-  // title: PropTypes.string.isRequired,
-  // image: PropTypes.number.isRequired,
-  // recommendedWorkout: PropTypes.array,
   cardCustomStyle: PropTypes.object,
 };
 
 const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
-    height: wp("33%"),
+    height: wp("35%"),
   },
   flexContainer: {
     flex: 1,
@@ -164,12 +146,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden",
     backgroundColor: colors.grey.medium,
-    borderRadius: 3,
+    borderRadius: 14,
   },
   opacityLayer: {
     flex: 1,
     width: "100%",
     justifyContent: "space-between",
+    paddingHorizontal: wp("5%"),
+    paddingVertical: wp("8%"),
+  },
+  opacityLayerRest: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
     paddingHorizontal: wp("5%"),
     paddingVertical: wp("4%"),
   },
@@ -187,10 +176,31 @@ const styles = StyleSheet.create({
     maxWidth: width / 1.8,
     flexDirection: "row",
   },
+  innerViewContainerRest: {
+    maxWidth: width / 1.8,
+    flexDirection: "row",
+    paddingTop: 12,
+  },
   recTextLabel: {
     color: colors.offWhite,
     fontFamily: fonts.StyreneAWebRegular,
     textTransform: "capitalize",
     fontSize: wp("3%"),
+  },
+  target: {
+    color: colors.offWhite,
+    fontFamily: fonts.StyreneAWebRegular,
+    textTransform: "capitalize",
+    fontSize: wp("4%"),
+  },
+  targetRest: {
+    color: colors.offWhite,
+    fontFamily: fonts.StyreneAWebRegular,
+    fontSize: wp("4%"),
+  },
+  startButton: {
+    color: colors.offWhite,
+    fontFamily: fonts.StyreneAWebRegular,
+    fontSize: 14,
   },
 });

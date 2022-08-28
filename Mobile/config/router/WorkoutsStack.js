@@ -10,7 +10,6 @@ import {
   fade,
   findWorkoutsSelectionTitle,
 } from "./utils";
-// import WorkoutInfoScreen2 from '../../src/screens/AppStack/Workouts/WorkoutInfoScreen2';
 import WorkoutInfoScreen2V2 from "../../src/screens/AppStack/Workouts/WorkoutInfoScreen2V2";
 
 const WorkoutsStack = createStackNavigator(

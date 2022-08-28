@@ -15,8 +15,7 @@ import CountdownPauseModal from "../../../components/Workouts/CountdownPauseModa
 import WorkoutTimer from "../../../components/Workouts/WorkoutTimer";
 import colors from "../../../styles/colors";
 import fonts from "../../../styles/fonts";
-import { Video, AVPlaybackStatus } from "expo-av";
-import { useRef } from "react";
+import { Video } from "expo-av";
 
 const { width } = Dimensions.get("window");
 
@@ -35,7 +34,7 @@ export const workoutTimerStyle = {
   },
 };
 
-export default class Progress5Screen extends React.PureComponent {
+export default class Burpee3Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,17 +43,21 @@ export default class Progress5Screen extends React.PureComponent {
       appState: AppState.currentState,
       videoPaused: false,
       pauseModalVisible: false,
+      strengthAssessmentInfo: props.navigation.getParam("strengthAssessmentInfo")
     };
     this.video = createRef();
   }
+
   componentDidMount() {
     this.props.navigation.setParams({ handleCancel: this.handlePause });
     this.startTimer();
     AppState.addEventListener("change", this.handleAppStateChange);
   }
+
   componentWillUnmount() {
     AppState.removeEventListener("change", this.handleAppStateChange);
   }
+
   handleAppStateChange = async (nextAppState) => {
     const { appState } = this.state;
     if (appState === "active" && nextAppState.match(/inactive|background/)) {
@@ -62,19 +65,22 @@ export default class Progress5Screen extends React.PureComponent {
     }
     this.setState({ appState: nextAppState });
   };
+
   startTimer = () => {
     this.setState({ timerStart: true });
     this.video.current.playAsync();
     // setTimeout(() => this.setState({ videoPaused: false }), 1500);
   };
+
   handlePause = () => {
-    this.video.current.pauseAsync();
+    if (this.video && this.video.current) this.video.current.pauseAsync();
     this.setState({
       videoPaused: true,
       timerStart: false,
       pauseModalVisible: true,
     });
   };
+
   handleUnpause = () => {
     this.video.current.playAsync();
     this.setState({
@@ -83,23 +89,45 @@ export default class Progress5Screen extends React.PureComponent {
       pauseModalVisible: false,
     });
   };
+
   handleQuitWorkout = () => {
+    const {
+      isInitial,
+      updateBurpees,
+      photoExist2
+    } = this.props.navigation.state.params;
+
+    const {
+      strengthAssessmentInfo : { 
+        video: { title: videoTitle, version: videoVersion } 
+      }
+    } = this.state
+
     this.setState({ pauseModalVisible: false }, () => {
       if (this.props.navigation.getParam("fromScreen")) {
-        const screen = this.props.navigation.getParam("fromScreen");
-        const params = this.props.navigation.getParam("screenReturnParams");
-        this.props.navigation.navigate(screen, params);
-        return;
+        this.props.navigation.navigate("CalendarHome");
+      } else {
+        if (updateBurpees) {
+          this.props.navigation.navigate("ProgressEdit", {
+            isInitial: isInitial,
+            photoExist2: photoExist2
+          });
+        } else {
+          this.props.navigation.navigate("Settings")
+        }
       }
-      this.props.navigation.navigate("Home");
-    });
-    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}exercise-burpees.mp4`, {
+    })
+
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle+videoVersion)}.mp4`, {
       idempotent: true,
-    });
+    })
   };
+
   quitWorkout = () => {
+    const { title } = this.state.strengthAssessmentInfo
+
     Alert.alert(
-      "Stop burpee test?",
+      `Cancel ${title}?`,
       "",
       [
         { text: "Cancel", style: "cancel" },
@@ -111,32 +139,55 @@ export default class Progress5Screen extends React.PureComponent {
       { cancelable: false }
     );
   };
+
   handleFinish = () => {
     this.setState({ timerStart: false });
-    const { image, weight, waist, hip } = this.props.navigation.state.params;
+    const {
+      isInitial,
+      navigateTo,
+      updateBurpees,
+      photoExist2
+    } = this.props.navigation.state.params;
+
+    const {
+      strengthAssessmentInfo : { 
+        video: { title: videoTitle, version: videoVersion } 
+      }
+    } = this.state
+
     if (this.props.navigation.getParam("fromScreen")) {
       const screen = this.props.navigation.getParam("fromScreen");
       const params = this.props.navigation.getParam("screenReturnParams");
       this.props.navigation.replace("Burpee4", {
-        image,
-        weight,
-        waist,
-        hip,
         fromScreen: screen,
         screenReturnParams: params,
+        strengthAssessmentInfo: this.state.strengthAssessmentInfo
       });
-      return;
+    } else {
+      this.props.navigation.replace("Burpee4", {
+        isInitial: isInitial,
+        navigateTo: navigateTo,
+        updateBurpees: updateBurpees,
+        photoExist2: photoExist2,
+        strengthAssessmentInfo: this.state.strengthAssessmentInfo
+      });
     }
-    this.props.navigation.replace("Burpee4", {
-      image,
-      weight,
-      waist,
-      hip,
+
+    FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle + videoVersion)}.mp4`, {
+      idempotent: true,
     });
   };
+
   render() {
-    const { timerStart, totalDuration, pauseModalVisible, videoPaused } =
-      this.state;
+    const {
+      timerStart,
+      totalDuration,
+      pauseModalVisible,
+      strengthAssessmentInfo : { 
+        video: { title: videoTitle, version: videoVersion} 
+      } 
+    } = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
         <FadeInView duration={1000} style={styles.flexContainer}>
@@ -145,7 +196,7 @@ export default class Progress5Screen extends React.PureComponent {
               <Video
                 ref={this.video}
                 source={{
-                  uri: `${FileSystem.cacheDirectory}exercise-burpees.mp4`,
+                  uri: `${FileSystem.cacheDirectory}${encodeURIComponent(videoTitle+videoVersion)}.mp4`,
                 }}
                 resizeMode="contain"
                 isLooping
@@ -161,10 +212,10 @@ export default class Progress5Screen extends React.PureComponent {
             />
           </View>
           <View style={styles.currentExerciseTextContainer}>
-            <Text style={styles.currentExerciseNameText}>BURPEES</Text>
+            <Text style={styles.currentExerciseNameText}>{videoTitle}</Text>
             <Text style={styles.currentExerciseRepsText}>MAX</Text>
           </View>
-          <Text style={styles.bottomText}>REMEMBER TO COUNT YOUR BURPEES!</Text>
+          <Text style={styles.bottomText}>{`REMEMBER TO COUNT YOUR ${videoTitle}!`.toUpperCase()}</Text>
           <CountdownPauseModal
             isVisible={pauseModalVisible}
             handleQuit={this.quitWorkout}

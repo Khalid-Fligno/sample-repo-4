@@ -1,34 +1,22 @@
-import React from 'react';
+import React from "react";
 import {
   Dimensions,
   TouchableOpacity,
   Text,
   StyleSheet,
   Image,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import colors from '../../styles/colors';
-import fonts from '../../styles/fonts';
+} from "react-native";
+import PropTypes from "prop-types";
+import colors from "../../styles/colors";
+import fonts from "../../styles/fonts";
+import { ICON } from "../../library/icons";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
-const FacebookButton = ({
-  title,
-  onPress,
-}) => (
-  <TouchableOpacity
-    onPress={onPress}
-    style={styles.button}
-  >
-    <Image
-      source={require('../../../assets/icons/facebook-icon-white.png')}
-      style={styles.facebookIcon}
-    />
-    <Text
-      style={styles.buttonText}
-    >
-      {title}
-    </Text>
+const FacebookButton = ({ title, onPress }) => (
+  <TouchableOpacity onPress={onPress} style={styles.button}>
+    <Image source={ICON.FB} style={styles.facebookIcon} />
+    <Text style={styles.buttonText}>{title}</Text>
   </TouchableOpacity>
 );
 
@@ -39,9 +27,9 @@ FacebookButton.propTypes = {
 
 const styles = StyleSheet.create({
   button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.facebookBlue,
     height: 45,
     width: width - 30,

@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
-  PermissionsAndroid,
 } from "react-native";
 import { Linking } from "expo";
 import * as Haptics from "expo-haptics";
@@ -21,7 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-community/async-storage";
 import Loader from "../../components/Shared/Loader";
 import Icon from "../../components/Shared/Icon";
-import CustomButton from "../../components/Shared/CustomButton";
+
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import ActionSheet from "react-native-actionsheet";
@@ -29,7 +28,7 @@ import CustomBtn from "../../components/Shared/CustomBtn";
 import { containerPadding } from "../../styles/globalStyles";
 import * as MediaLibrary from "expo-media-library";
 import { db } from "../../../config/firebase";
-import { findFitnessLevel } from "../../utils";
+
 import moment from "moment";
 
 const { width } = Dimensions.get("window");
@@ -67,6 +66,13 @@ const storeProgressInfo = async (
       `data:image/jpeg;base64,${image.base64}`
     );
     blob = base64Response.blob()._W;
+    if (!blob) {
+      const base64Response = await fetch(
+        `data:image/jpeg;base64,${image.base64}`
+      );
+
+      blob = await base64Response.blob();
+    }
   }
   if (Platform.OS === "android") blob = await uriToBlob(image.uri);
 
@@ -164,13 +170,11 @@ export default class Progress2Screen extends React.PureComponent {
   getCameraPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === "granted" });
-    console.log("getCameraPermission");
   };
 
   getCameraRollPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     this.setState({ hasCameraRollPermission: status === "granted" });
-    console.log("getCameraRollPermission");
   };
 
   async requestAndroidPermissions() {
@@ -263,7 +267,6 @@ export default class Progress2Screen extends React.PureComponent {
       );
       this.setState({ image: manipResult });
     }
-    console.log("Image location: ", result.uri);
     MediaLibrary.saveToLibraryAsync(result.uri);
   };
 
@@ -271,23 +274,13 @@ export default class Progress2Screen extends React.PureComponent {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
-    console.log("qwertyuio", result);
+
     const originXValue = result.width > result.height ? 130 : 0;
     if (!result.cancelled) {
       try {
         const manipResult = await ImageManipulator.manipulateAsync(
           result.uri,
-          [
-            { resize: { height: 800, width: 600 } },
-            // {
-            //   crop: {
-            //     originX: originXValue,
-            //     originY: 0,
-            //     width: 600,
-            //     height: 800,
-            //   },
-            // },
-          ],
+          [{ resize: { height: 800, width: 600 } }],
           { format: "jpeg", compress: 0.7, base64: true }
         );
         this.setState({ image: manipResult });
@@ -296,7 +289,7 @@ export default class Progress2Screen extends React.PureComponent {
           error:
             "There was a problem with that image, please try a different one",
         });
-        console.log("123456789", err)
+        console.log(err);
       }
     }
   };
@@ -343,20 +336,11 @@ export default class Progress2Screen extends React.PureComponent {
     this.setState({ uploading: true });
     try {
       if (this.state.image !== null) {
-        const { weight, waist, hip, isInitial, navigateTo } =
-          this.props.navigation.state.params;
         await FileSystem.downloadAsync(
           "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
           `${FileSystem.cacheDirectory}exercise-burpees.mp4`
         );
-        // this.props.navigation.navigate("Progress3", {
-        //   image: pickerResult,
-        //   weight,
-        //   waist,
-        //   hip,
-        //   isInitial,
-        //   navigateTo,
-        // });
+
         const uid = await AsyncStorage.getItem("uid");
         const userRef = db.collection("users").doc(uid);
         await storeProgressInfo(
@@ -366,48 +350,9 @@ export default class Progress2Screen extends React.PureComponent {
           0,
           0,
           0
-          // this.props.navigation.getParam("isInitial")
-          //   ? this.props.navigation.getParam("initialProgressInfo").weight ?? 0
-          //   : this.props.navigation.getParam("currentProgressInfo").weight ?? 0,
-          // this.props.navigation.getParam("isInitial")
-          //   ? this.props.navigation.getParam("initialProgressInfo").waist ?? 0
-          //   : this.props.navigation.getParam("currentProgressInfo").waist ?? 0,
-          // this.props.navigation.getParam("isInitial")
-          //   ? this.props.navigation.getParam("initialProgressInfo").hip ?? 0
-          //   : this.props.navigation.getParam("currentProgressInfo").hip ?? 0,
-          // this.props.navigation.getParam("isInitial")
-          //   ? this.props.navigation.getParam("initialProgressInfo")
-          //       .burpeeCount ?? 0
-          //   : this.props.navigation.getParam("currentProgressInfo")
-          //       .burpeeCount ?? 0
         );
-        // const fitnessLevel = findFitnessLevel(
-        //   this.props.navigation.getParam("isInitial")
-        //     ? this.props.navigation.getParam("initialProgressInfo")
-        //         .burpeeCount ?? 0
-        //     : this.props.navigation.getParam("currentProgressInfo")
-        //         .burpeeCount ?? 0
-        // );
-        // AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
-        // try {
-        //   await userRef.set(
-        //     {
-        //       fitnessLevel,
-        //       initialBurpeeTestCompleted: true,
-        //     },
-        //     { merge: true }
-        //   );
-        //   this.setState({ uploading: false });
-        //   navigation.state.params.progressEdit !== undefined
-        //     ? this.props.navigation.navigate("ProgressEdit")
-        //     : this.props.navigation.navigate("ProgressHome");
-        // } catch (err) {
-        //   this.setState({ uploading: false });
-        //   Alert.alert("Database write error", `${err}`);
-        // }
-        navigation.state.params.progressEdit !== undefined
-          ? this.props.navigation.navigate("ProgressEdit")
-          : this.props.navigation.navigate("ProgressHome");
+
+        this.props.navigation.navigate("ProgressHome");
       } else {
         this.setState({
           error: "Please select an image to continue",
@@ -415,7 +360,7 @@ export default class Progress2Screen extends React.PureComponent {
         });
       }
     } catch (err) {
-      console.log(err);
+      console.log("image upload: ", err);
       this.setState({
         error: "Problem uploading image, please try again",
         uploading: false,
@@ -449,10 +394,6 @@ export default class Progress2Screen extends React.PureComponent {
           </View>
           <View style={styles.contentContainer}>
             {image ? (
-              // <TouchableOpacity
-              //   onPress={this.chooseUploadType}
-              //   style={styles.imageContainer}
-              // ></TouchableOpacity>
               <View>
                 <Image
                   resizeMode="contain"
@@ -460,10 +401,12 @@ export default class Progress2Screen extends React.PureComponent {
                   style={styles.image}
                 />
                 <CustomBtn
-                  style={{marginTop: 10}}
+                  style={{ marginTop: 10 }}
                   Title="Update Photo"
                   titleCapitalise={true}
                   onPress={this.chooseUploadType}
+                  customBtnStyle={{backgroundColor: "#2E2E2E"}}
+                  customBtnTitleStyle={{color: colors.white}}
                 />
               </View>
             ) : (
@@ -489,31 +432,14 @@ export default class Progress2Screen extends React.PureComponent {
 
           <View style={styles.buttonContainer}>
             {error && <Text style={styles.errorText}>{error}</Text>}
-            {/* <CustomBtn
-              Title="NEXT"
-              titleCapitalise={true}
-              onPress={() => this.handleImagePicked(image)}
-            /> */}
 
-            {/* {image ? (
-              
-              <CustomBtn
-              Title="Update Photo"
-              titleCapitalise={true}
-              onPress={() => this.handleImagePicked(image)}
-            />
-            ) : (
-              <CustomBtn
-              Title="Upload Photo"
-              titleCapitalise={true}
-              onPress={() => this.handleImagePicked(image)}
-            />
-            )} */}
             <CustomBtn
               // Title="Update Photo"
               Title="Upload Photo"
               titleCapitalise={true}
               onPress={() => this.handleImagePicked(image)}
+              customBtnStyle={{backgroundColor: "#2E2E2E"}}
+              customBtnTitleStyle={{color: colors.white}}
             />
             <CustomBtn
               Title="Cancel"

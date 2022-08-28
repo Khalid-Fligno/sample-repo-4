@@ -29,17 +29,6 @@ export const findFocus = (workoutObject) => {
   return null;
 };
 
-// export const findFocus = (workoutObject) => {
-//   if (workoutObject.upperBody) {
-//     return 'Upper';
-//   } else if (workoutObject.lowerBody) {
-//     return 'A, B & T';
-//   } else if (workoutObject.fullBody) {
-//     return 'Full';
-//   }
-//   return null;
-// };
-
 export const findLocation = (workoutObject) => {
   if (workoutObject.gym) {
     return "Gym";
@@ -91,7 +80,10 @@ export const getLastExercise = (
   ) {
     lastExercise = true;
     // nextExerciseName = "NEARLY DONE!";
-    nextExerciseName = typeof workout.coolDownExercises === 'undefined' ? "NEARLY DONE!" : workout.coolDownExercises[0].name;
+    nextExerciseName =
+      typeof workout.coolDownExercises === "undefined"
+        ? "NEARLY DONE!"
+        : workout.coolDownExercises[0].name;
   } else if (
     !exerciseList[currentExerciseIndex + 1] &&
     setCount === workout.workoutReps
@@ -122,7 +114,10 @@ export const getLastExerciseWC = (
   if (!exerciseList[currentExerciseIndex + 1]) {
     lastExercise = true;
     // nextExerciseName = "NEARLY DONE!";
-    nextExerciseName = exerciseList[0].type === 'coolDown' ? 'NEARLY DONE!' : workout.exercises[0].name;
+    nextExerciseName =
+      exerciseList[0].type === "coolDown"
+        ? "NEARLY DONE!"
+        : workout.exercises[0].name;
   } else {
     if (exerciseList[currentExerciseIndex + 1]) {
       nextExerciseName = exerciseList[currentExerciseIndex + 1].displayName;
@@ -169,46 +164,99 @@ export const setRestImages = async () => {
 export const getRandomRestImages = async () => {
   const getRandomNumber = (length) => Math.floor(Math.random() * length + 0);
   var images = JSON.parse(await AsyncStorage.getItem("restImages"));
-  console.log("getting rest images", images[getRandomNumber(images.length)]);
+  // console.log("getting rest images", images[getRandomNumber(images.length)]);
   return images[getRandomNumber(images.length)];
 };
 
 export const loadExercise = async (workoutData) => {
-  FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res) => {
-    Promise.all(
-      res.map(async (item, index) => {
-        if (item.includes("exercise-")) {
-          FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
-            idempotent: true,
-          }).then(() => {
-            // console.log(item,"deleted...")
-          });
-        }
-      })
-    );
-  });
-  console.log("Workout data: ", workoutData);
+  const type = "interval";
+  FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`)
+    .then((res) => {
+      Promise.all(
+        res.map(async (item, index) => {
+          if (item.includes("exercise-")) {
+            await FileSystem.deleteAsync(
+              `${FileSystem.cacheDirectory}${item}`,
+              {
+                idempotent: true,
+              }
+            )
+              .then(() => {
+                // console.log(item,"deleted...")
+              })
+              .catch((err) => {
+                console.log(err, "error");
+              });
+          }
+        })
+      );
+    })
+    .catch((err) => {
+      console.log(err, "error");
+    });
+  // console.log("Workout data: ", workoutData);
   if (workoutData.newWorkout) {
     let exercises = [];
     let tempExerciseData = [];
+    let workoutExercises = [];
 
     const exerciseRef = (
       await db
         .collection("Exercises")
-        .where("id", "in", workoutData.exercises)
+        // .where("id", "in", workoutData.exercises)
         .get()
     ).docs;
 
-    exerciseRef.forEach((exercise) => {
-      tempExerciseData.push(exercise.data());
-    });
-    exercises = workoutData.exercises.map((id) => {
-      return tempExerciseData.find((res) => res.id === id);
-    });
-    if (exercises.length > 0) {
+    if (workoutData.filters && workoutData.filters.length > 0) {
+      workoutData.filters.forEach((resType) => {
+        if (resType === "interval") {
+          exerciseRef.forEach((exercise) => {
+            if (workoutData.exercises && workoutData.exercises?.length > 0) {
+              workoutData.exercises.forEach((resExercise) => {
+                if (resExercise.id === exercise.id) {
+                  const exerciseDuration = Object.assign({}, exercise.data(), {
+                    duration: resExercise.duration,
+                  });
+                  tempExerciseData.push(exerciseDuration);
+                }
+                workoutExercises = workoutData.exercises.map((id) => {
+                  return tempExerciseData.find((res) => res.id === id);
+                });
+              });
+            }
+          });
+        } else {
+          exerciseRef.forEach((exercise) => {
+            if (workoutData.exercises && workoutData.exercises?.length > 0) {
+              workoutData.exercises.forEach((resExercise) => {
+                if (resExercise === exercise.id) {
+                  tempExerciseData.push(exercise.data());
+                }
+                workoutExercises = workoutData.exercises.map((id) => {
+                  return tempExerciseData.find((res) => res.id === id);
+                });
+              });
+            }
+          });
+        }
+      });
+    }
+
+    exercises =
+      workoutData.exercises &&
+      workoutData.exercises?.length > 0 &&
+      workoutData.exercises.map((id) => {
+        if (id.id) {
+          return tempExerciseData.find((res) => res.id === id.id);
+        } else {
+          return tempExerciseData.find((res) => res.id === id);
+        }
+      });
+
+    if (exercises?.length > 0) {
       workoutData = Object.assign({}, workoutData, { exercises: exercises });
       const res = await downloadExercise(workoutData);
-      console.log(">>>", res);
+      // console.log(">>>", res);
       if (res) return workoutData;
       else return false;
     } else {
@@ -216,7 +264,7 @@ export const loadExercise = async (workoutData) => {
     }
   } else {
     const res = await downloadExercise(workoutData);
-    console.log("....", res);
+    // console.log("....", res);
     if (res) return workoutData;
     else return false;
   }
@@ -224,7 +272,10 @@ export const loadExercise = async (workoutData) => {
 
 const downloadExercise = async (workout) => {
   try {
-    const exercises = workout.exercises;
+    const exercises =
+      workout?.exercises && workout?.exercises?.length > 0
+        ? workout?.exercises
+        : [];
     let warmUpExercises = [];
     let coolDownExercises = [];
 
@@ -240,9 +291,12 @@ const downloadExercise = async (workout) => {
       exerciseRef.forEach((exercise) => {
         tempExerciseData.push(exercise.data());
       });
-      warmUpExercises = workout.warmUpExercises.map((id) => {
-        return tempExerciseData.find((res) => res.id === id);
-      });
+
+      if (workout?.warmUpExercises && workout.warmUpExercises?.length > 0) {
+        warmUpExercises = workout.warmUpExercises.map((id) => {
+          return tempExerciseData.find((res) => res.id === id);
+        });
+      }
     }
     if (workout.coolDownExercises) {
       let tempExerciseData = [];
@@ -256,23 +310,29 @@ const downloadExercise = async (workout) => {
       exerciseRef.forEach((exercise) => {
         tempExerciseData.push(exercise.data());
       });
-      coolDownExercises = workout.coolDownExercises.map((id) => {
-        return tempExerciseData.find((res) => res.id === id);
-      });
+
+      if (workout?.coolDownExercises && workout.coolDownExercises?.length > 0) {
+        coolDownExercises = workout.coolDownExercises.map((id) => {
+          return tempExerciseData.find((res) => res.id === id);
+        });
+      }
     }
-    console.log("WarmUp exercises: ", warmUpExercises);
-    console.log("Cooldown exercises: ", coolDownExercises);
+    // console.log("WarmUp exercises: ", warmUpExercises);
+    // console.log("Cooldown exercises: ", coolDownExercises);
     return Promise.all(
       exercises.map(async (exercise, index) => {
         return new Promise(async (resolve, reject) => {
           let videoIndex = 0;
-          if (workout.newWorkout)
-            videoIndex = exercise.videoUrls.findIndex(
-              (res) => res.model === workout.exerciseModel
-            );
+          if (workout.newWorkout) {
+            if (exercise.videoUrls && exercise.videoUrls?.length > 0) {
+              videoIndex = exercise.videoUrls.findIndex(
+                (res) => res.model === workout.exerciseModel
+              );
+            }
+          }
           if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
             await FileSystem.downloadAsync(
-              exercise.videoUrls[videoIndex].url,
+              exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
               `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`
             )
               .then(() => {
@@ -288,13 +348,16 @@ const downloadExercise = async (workout) => {
       warmUpExercises.map(async (exercise, index) => {
         return new Promise(async (resolve, reject) => {
           let videoIndex = 0;
-          if (workout.newWorkout)
-            videoIndex = exercise.videoUrls.findIndex(
-              (res) => res.model === workout.exerciseModel
-            );
+          if (workout.newWorkout) {
+            if (exercise.videoUrls && exercise.videoUrls?.length > 0) {
+              videoIndex = exercise.videoUrls.findIndex(
+                (res) => res.model === workout.exerciseModel
+              );
+            }
+          }
           if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
             await FileSystem.downloadAsync(
-              exercise.videoUrls[videoIndex].url,
+              exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
               `${FileSystem.cacheDirectory}warmUpExercise-${index + 1}.mp4`
             )
               .then(() => {
@@ -310,18 +373,21 @@ const downloadExercise = async (workout) => {
       coolDownExercises.map(async (exercise, index) => {
         return new Promise(async (resolve, reject) => {
           let videoIndex = 0;
-          if (workout.newWorkout)
-            videoIndex = exercise.videoUrls.findIndex(
-              (res) => res.model === workout.exerciseModel
-            );
+          if (workout.newWorkout) {
+            if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
+              videoIndex = exercise.videoUrls.findIndex(
+                (res) => res.model === workout.exerciseModel
+              );
+            }
+          }
+
           if (exercise.videoUrls && exercise.videoUrls[0].url !== "") {
             await FileSystem.downloadAsync(
-              exercise.videoUrls[videoIndex].url,
+              exercise.videoUrls[videoIndex !== -1 ? videoIndex : 0].url,
               `${FileSystem.cacheDirectory}coolDownExercise-${index + 1}.mp4`
             )
               .then(() => {
                 resolve("Downloaded");
-                // console.log(`${FileSystem.cacheDirectory}exercise-${index + 1}.mp4` +"downloaded")
               })
               .catch((err) => resolve("Download failed"));
           } else {
@@ -388,17 +454,8 @@ export const downloadExerciseWC = async (
   }
 };
 
-// export const getRegisteredWebHooks = () => {
-//   return async () => {
-//     const options = {
-//       method: 'GET',
-//       headers: {
-//           'Content-Type': 'application/json',
-//           'x-recharge-access-token' : RECHARGE_API_KEY
-//         },
-//       };
-//     const res = await fetch("https://api.cloudconvert.com/v2/thumbnail", options);
-//     const body = await res.json();
-//     return body;
-//   };
-// }
+export const convertDuration = (exerciseDur) => {
+  var mins = Math.trunc(exerciseDur / 60);
+  var sec = exerciseDur % 60;
+  return mins + "min " + sec + "s";
+};

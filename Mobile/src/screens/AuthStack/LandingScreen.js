@@ -3,27 +3,25 @@ import {
   StyleSheet,
   SafeAreaView,
   View,
-  Text,
   Dimensions,
-  TouchableOpacity,
   StatusBar,
   ImageBackground,
-  Platform
+  Platform,
+  Text
 } from "react-native";
-import Carousel from "react-native-carousel";
 import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
 import CustomBtn from "../../components/Shared/CustomBtn";
-import globalStyle, { containerPadding } from "../../styles/globalStyles";
+import { containerPadding } from "../../styles/globalStyles";
 import { db } from "../../../config/firebase";
 const { width, height } = Dimensions.get("window");
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
-import { getBuildNumber, getVersion } from "react-native-device-info";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { getVersion } from "react-native-device-info";
 import { checkVersion } from "react-native-check-version";
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from "@react-native-community/async-storage";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import Icon from "react-native-vector-icons/FontAwesome";
 export default class LandingScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -37,12 +35,22 @@ export default class LandingScreen extends React.PureComponent {
   };
 
   async checkAppVersion() {
-    const uid = await AsyncStorage.getItem('uid');
-    const version = await checkVersion();
-    const versionCodeRef = db
-      .collection("users")
-      .doc(uid)
-      .set({AppVersionUse: Platform.OS === "ios" ? String(version.version) : String(getVersion())}, { merge: true });
+    const uid = await AsyncStorage.getItem("uid");
+    if (uid) {
+      const version = await checkVersion();
+      await db
+        .collection("users")
+        .doc(uid)
+        .set(
+          {
+            AppVersionUse:
+              Platform.OS === "ios"
+                ? String(version.version)
+                : String(getVersion()),
+          },
+          { merge: true }
+        );
+    }
   }
 
   render() {
@@ -51,102 +59,65 @@ export default class LandingScreen extends React.PureComponent {
       <SafeAreaView style={styles.safeAreaContainer}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" />
-          {/* <Carousel
-            width={width}
-            inactiveIndicatorColor={colors.black}
-            indicatorColor={colors.themeColor.color}
-            indicatorOffset={hp("23%")}
-            indicatorSize={20}
-            inactiveIndicatorText="○"
-            indicatorText="●"
-            animate={false}
-          >
-            <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require("../../../assets/images/OnBoardindImg/OB_1.jpg")}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayTransparent} />
-              </ImageBackground>
-            </View>
-            <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require("../../../assets/images/OnBoardindImg/OB_2.jpg")}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayTransparent} />
-              </ImageBackground>
-            </View>
-            <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require("../../../assets/images/OnBoardindImg/OB_3.jpg")}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayTransparent} />
-              </ImageBackground>
-            </View>
-            
-            <View style={styles.carouselCardContainer}>
-              <ImageBackground
-                source={require("../../../assets/images/OnBoardindImg/OB_5.jpg")}
-                style={styles.carouselImageBackground}
-              >
-                <View style={styles.opacityOverlayTransparent} />
-              </ImageBackground>
-            </View>
-          </Carousel> */}
+
           <View style={styles.carouselCardContainer}>
-            <ImageBackground
-              source={require("../../../assets/images/OnBoardindImg/Thessy238.jpeg")}
-              style={styles.carouselImageBackground}
-            >
-              <View style={styles.opacityOverlayTransparent} />
-            </ImageBackground>
+
+            <View style={styles.padding}>
+              <ImageBackground
+                source={require("../../../assets/icons/FITAZ_BrandMark.png")}
+                style={styles.carouselImageBackground}
+              >
+              </ImageBackground>
+              <View style={styles.textPadding}>
+                <Text style={styles.fontText}>em
+                  <Text style={styles.underline}>powered</Text>
+                </Text>
+                <Text style={styles.fontText}>by you.</Text>
+              </View>
+            </View>
+
+            <View style={{ paddingBottom: hp("2%") }}>
+              <TouchableOpacity onPress={() =>
+                this.props.navigation.navigate("FindAccount")}
+              >
+                <View style={styles.transformProgram}>
+                  <View style={{ marginLeft: 10 }}>
+                    <Text style={styles.Text}>I have just purchased my {"\n"}1st Transform Program</Text>
+                  </View>
+                  <View style={{ marginRight: 10 }}>
+                    <Icon name="angle-right" size={45} />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View>
+              <TouchableOpacity onPress={() =>
+                this.props.navigation.navigate("Signup", { specialOffer })}
+              >
+                <View style={styles.transformProgram}>
+                  <View style={{ marginLeft: 10 }}>
+                    <Text style={styles.Text}>I want to do a 7 day free {"\n"}trial of the Fitaz App </Text>
+                  </View>
+                  <View style={{ marginRight: 10 }}>
+                    <Icon name="angle-right" size={45} />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+
           </View>
           <View style={styles.absoluteButtonContainer}>
             <View style={styles.buttonContainer}>
-              <CustomBtn
-                customBtnStyle={{
-                  padding: 16,
-                  marginBottom: 5,
-                }}
-                Title="Start 7 Day Free Trial"
-                onPress={() =>
-                  this.props.navigation.navigate("Signup", { specialOffer })
-                }
-              />
-              <CustomBtn
-                customBtnStyle={{
-                  padding: 12,
-                  margin: 5,
-                  borderColor: colors.black,
-                  backgroundColor: colors.black,
-                }}
-                outline={false}
-                Title="TRANSFORM"
-                customBtnTitleStyle={{ color: colors.white }}
-                onPress={() =>
-                  this.props.navigation.navigate("Signup", { specialOffer })
-                }
-              />
-              {/* <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Signup', { specialOffer })}
-                activeOpacity={0.6}
-                style={styles.signupButton}
-              >
-                <Text style={styles.signupButtonText}>
-                  START FREE TRIAL
-                </Text>
-              </TouchableOpacity> */}
-              {/* <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("Login", { specialOffer })
-                }
-                activeOpacity={0.6}
-                style={styles.haveAAccountBtnStyle}
-              >
-                <Text style={styles.haveAAccountTitleStyle}>Sign In</Text>
-              </TouchableOpacity> */}
+              <View style={{
+                paddingTop: hp("2%"),
+                paddingBottom: hp("2%"),
+                alignItems: 'center'
+              }}>
+                <Text
+                  style={{ fontSize: hp("1.9%"), fontFamily: fonts.SimplonMonoMedium, }}
+                >Already have an account?</Text>
+              </View>
               <CustomBtn
                 customBtnStyle={{
                   padding: 12,
@@ -154,7 +125,7 @@ export default class LandingScreen extends React.PureComponent {
                   borderColor: colors.themeColor.color,
                 }}
                 outline={false}
-                Title="Sign In"
+                Title="SIGN IN"
                 customBtnTitleStyle={{ color: colors.black }}
                 onPress={() =>
                   this.props.navigation.navigate("Login", { specialOffer })
@@ -182,12 +153,11 @@ const styles = StyleSheet.create({
     width,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.transparent,
+    backgroundColor: colors.citrus,
   },
   carouselImageBackground: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
+    width: 95,
+    height: 80,
   },
   opacityOverlayLight: {
     width,
@@ -208,6 +178,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     backgroundColor: colors.themeColor.themeBackgroundColor,
+    height: hp("18%")
   },
   buttonContainer: {
     width,
@@ -215,38 +186,10 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingHorizontal: containerPadding,
   },
-  // signupButton: {
-  //   width: width - 20,
-  //   height: 45,
-  //   marginTop: 5,
-  //   marginBottom: 5,
-  //   backgroundColor: colors.coral.standard,
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   shadowColor: colors.charcoal.dark,
-  //   borderRadius: 2,
-  //   shadowOpacity: 0.5,
-  //   shadowOffset: { width: 0, height: 2 },
-  //   shadowRadius: 2,
-  // },
-  // signupButtonText: {
-  //   marginTop: 4,
-  //   color: colors.white,
-  //   fontFamily: fonts.bold,
-  //   fontSize: 14,
-  // },
   loginButton: {
-    // width: width - 20,
-    // height: 45,
     marginTop: 5,
-    // backgroundColor: colors.transparentCoral,
     alignItems: "center",
     justifyContent: "center",
-    // shadowColor: colors.charcoal.dark,
-    // borderRadius: 2,
-    // shadowOpacity: 0.5,
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowRadius: 2,
   },
   loginButtonText: {
     marginTop: 4,
@@ -257,7 +200,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   haveAAccountBtnStyle: {
-    //flexDirection:"row",
     padding: hp("2%"),
     justifyContent: "center",
     borderRadius: 50,
@@ -276,4 +218,35 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: colors.black,
   },
+  padding: {
+    paddingBottom: hp("20%"),
+    flexDirection: 'row',
+  },
+  textPadding: {
+    paddingLeft: wp("5%")
+  },
+  fontText: {
+    fontSize: hp('3%'),
+    fontWeight: "300",
+    fontFamily: fonts.SimplonMonoMedium,
+  },
+  underline: {
+    fontSize: hp('3%'),
+    fontWeight: "300",
+    textDecorationLine: 'underline',
+    fontFamily: fonts.SimplonMonoMedium,
+  },
+  transformProgram: {
+    flexDirection: 'row',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    width: wp("90%"),
+    height: hp("10%"),
+  },
+  Text: {
+    fontSize: hp('2%'),
+    fontFamily: fonts.SimplonMonoMedium,
+  }
 });

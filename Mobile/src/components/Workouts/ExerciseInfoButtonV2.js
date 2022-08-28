@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import PropTypes from "prop-types";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 
 const { width } = Dimensions.get("window");

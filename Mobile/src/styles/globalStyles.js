@@ -41,7 +41,7 @@ const globalStyle = StyleSheet.create({
   bigHeadingWithBackButtonText: {
     fontSize: 12,
     fontFamily: fonts.StyreneAWebRegular,
-    color: colors.back,
+    color: colors.black,
     marginLeft: 5,
     textTransform: "uppercase",
   },
@@ -83,7 +83,7 @@ const globalStyle = StyleSheet.create({
   },
   filterButtonText: {
     fontFamily: fonts.standard,
-    fontSize: wp("2.5%"),
+    fontSize: wp("2.3%"),
     color: colors.grey.standard,
     marginTop: 2,
     fontWeight: "bold",

@@ -1,104 +1,108 @@
-import React, { Component } from "react";
-import { ImageBackground } from "react-native";
-import { TouchableOpacity } from "react-native";
+import React from "react";
 import { StyleSheet } from "react-native";
-import { ScrollView, FlatList } from "react-native";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import { FileSystem } from "react-native-unimodules";
-import DoubleRightArrow from "../../../assets/icons/DoubleRightArrow";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
-import { containerPadding } from "../../styles/globalStyles";
-class TodayMealsList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+import MealCarousel from "./Carousels/MealCarousel";
 
-  mealCard = ({ item: recipe }) => (
-    <TouchableOpacity
-      style={styles.cardContainer}
-      // key={i}
-      onPress={() => this.props.onPress(recipe)}
-    >
-      <ImageBackground
-        // source={{uri: `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg` }}
-        source={{ uri: recipe.coverImage, cache: "force-cache" }}
-        style={styles.image}
-        resizeMode="cover"
-      >
-        <View style={styles.opacityLayer}>
-          <Text style={styles.cardTitle}>{recipe.title}</Text>
-        </View>
-      </ImageBackground>
-    </TouchableOpacity>
-  );
-  carousel = (data, title) => (
-    <View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingHorizontal: containerPadding,
-        }}
-      >
-        <Text style={styles.label}>{title} </Text>
-        {title === "Breakfast" && (
-          <TouchableOpacity
-            style={{ flexDirection: "row", alignItems: "center" }}
-            activeOpacity={1}
-          >
-            <Text style={styles.rLabel}>Scroll for more </Text>
-            <DoubleRightArrow height={wp("4%")} />
-          </TouchableOpacity>
-        )}
-      </View>
-      <FlatList
-        horizontal
-        // pagingEnabled={true}
-        showsHorizontalScrollIndicator={false}
-        legacyImplementation={false}
-        data={data}
-        renderItem={(item) => this.mealCard(item)}
-        keyExtractor={(res) => res.id}
-        style={{
-          paddingHorizontal: containerPadding,
-          paddingVertical: wp("3%"),
-        }}
-      />
+const TodayMealsList = (props) => {
+  const {
+    data, // Array containg modelled recipe for tile to show category, this will determine if a meal type shows
+    recipe, // All recipes in store
+    todayRecommendedRecipe, 
+    favoriteRecipe, //Users current set of favourite recipes
+    onPress,
+    filterPress,
+    favouriteRecipeConfigs
+  } = props;
+
+  return (
+    <View style={styles.container}>
+      {data.breakfast && data.breakfast.length > 0 && (
+        <MealCarousel
+          data={data.breakfast}
+          data1={recipe.breakfast}
+          data2={todayRecommendedRecipe.breakfast}
+          title={"Breakfast"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.breakfast}
+          favoriteRecipe={favoriteRecipe?.breakfast}
+        />
+      )}
+      {data.lunch && data.lunch.length > 0 && (
+        <MealCarousel
+          data={data.lunch}
+          data1={recipe.lunch}
+          data2={todayRecommendedRecipe.lunch}
+          title={"Lunch"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.lunch}
+          favoriteRecipe={favoriteRecipe?.lunch}
+        />
+      )}
+      {data.dinner && data.dinner.length > 0 && (
+        <MealCarousel
+          data={data.dinner}
+          data1={recipe.dinner}
+          data2={todayRecommendedRecipe.dinner}
+          title={"Dinner"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.dinner}
+          favoriteRecipe={favoriteRecipe?.dinner}
+        />
+      )}
+      {data.snack && data.snack.length > 0 && (
+        <MealCarousel
+          data={data.snack}
+          data1={recipe.snack}
+          data2={todayRecommendedRecipe.snack}
+          title={"Snack"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.snack}
+          favoriteRecipe={favoriteRecipe?.snack}
+        />
+      )}
+      {data.preworkout && data.preworkout.length > 0 && (
+        <MealCarousel
+          data={data.preworkout}
+          data1={recipe.preworkout}
+          data2={todayRecommendedRecipe.preworkout}
+          title={"Pre Workout"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.preworkout}
+          favoriteRecipe={favoriteRecipe?.preworkout}
+        />
+      )}
+      {data.treats && data.treats.length > 0 && (
+        <MealCarousel
+          data={data.treats}
+          data1={recipe.treats}
+          data2={todayRecommendedRecipe.treats}
+          title={"Treats"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.treats}
+          favoriteRecipe={favoriteRecipe?.treats}
+        />
+      )}
     </View>
   );
-
-  render() {
-    const { data } = this.props;
-
-    return (
-      <View style={styles.container}>
-        {data.breakfast.length > 0 &&
-          this.carousel(data.breakfast, "Breakfast")}
-        {/* {
-            data.snack.length >0 &&
-            this.carousel(data.snack,'Morning snack')
-        } */}
-        {data.lunch.length > 0 && this.carousel(data.lunch, "Lunch")}
-        {/* {
-            data.snack.length >0 &&
-            this.carousel(data.snack,'Afternoon snack')
-        } */}
-        {data.dinner.length > 0 && this.carousel(data.dinner, "Dinner")}
-        {data.snack.length > 0 && this.carousel(data.snack, "Snack")}
-        {data.drink.length > 0 && this.carousel(data.drink, "Post Workout")}
-      </View>
-    );
-  }
-}
+};
 
 export default TodayMealsList;
 
 const styles = StyleSheet.create({
   container: {
     width: wp("100%"),
+  },
+  footerComponet: {
+    paddingHorizontal: 20,
   },
   label: {
     fontFamily: fonts.bold,
@@ -116,12 +120,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden",
     backgroundColor: colors.grey.light,
-    borderRadius: 3,
+    borderRadius: 10,
   },
   cardContainer: {
     height: wp("33%"),
     width: wp("65%"),
     marginRight: wp("3.5%"),
+  },
+  cardContainer1: {
+    height: wp("33%"),
+    width: wp("65%"),
+    marginRight: wp("3.5%"),
+    borderStyle: "dashed",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#000000",
+    borderTopColor: "#000000",
   },
   opacityLayer: {
     flex: 1,
@@ -129,6 +143,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     backgroundColor: colors.transparentBlackLightest,
     padding: wp("5%"),
+  },
+  opacityLayer1: {
+    flexDirection: "column",
+    width: "100%",
+    justifyContent: "center",
+    padding: 50,
+    left: 15,
   },
   cardTitle: {
     fontFamily: fonts.bold,
@@ -140,5 +161,11 @@ const styles = StyleSheet.create({
     width: "80%",
     fontSize: wp("3.5%"),
     textTransform: "capitalize",
+  },
+  cardTitle1: {
+    fontFamily: fonts.bold,
+    color: colors.black,
+    width: "90%",
+    fontSize: wp("3.5%"),
   },
 });

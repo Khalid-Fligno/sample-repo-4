@@ -1,24 +1,19 @@
 import React from "react";
 import {
-  StyleSheet,
   SafeAreaView,
   View,
   ScrollView,
-  Dimensions,
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
 import { ListItem } from "react-native-elements";
-import firebase from "firebase";
 import { db, auth } from "../../../../config/firebase";
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
-// import fonts from '../../../styles/fonts';
 import globalStyle from "../../../styles/globalStyles";
 import ProfileStyles from "./ProfileStyles";
-
-const { width } = Dimensions.get("window");
+import moment from "moment";
 
 export default class SettingsScreen extends React.PureComponent {
   constructor(props) {
@@ -29,6 +24,7 @@ export default class SettingsScreen extends React.PureComponent {
       isPasswordAccount: false,
     };
   }
+
   componentDidMount = async () => {
     this.fetchProfile();
     const { providerData } = auth.currentUser;
@@ -38,9 +34,11 @@ export default class SettingsScreen extends React.PureComponent {
       }
     });
   };
+
   componentWillUnmount() {
     this.unsubscribe();
   }
+
   fetchProfile = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem("uid");
@@ -58,6 +56,7 @@ export default class SettingsScreen extends React.PureComponent {
         }
       });
   };
+
   changePasswordAlert = () => {
     Alert.alert(
       "Change Password",
@@ -75,6 +74,7 @@ export default class SettingsScreen extends React.PureComponent {
       { cancelable: false }
     );
   };
+
   sendPasswordResetEmail = () => {
     const { email } = this.state.profile;
     auth
@@ -86,6 +86,7 @@ export default class SettingsScreen extends React.PureComponent {
         Alert.alert(error);
       });
   };
+
   resetProgressAlert = () => {
     Alert.alert(
       "Reset Progress Info",
@@ -104,36 +105,36 @@ export default class SettingsScreen extends React.PureComponent {
       { cancelable: false }
     );
   };
+
   resetInitialProgress = async () => {
-    this.setState({ loading: true });
     const uid = await AsyncStorage.getItem("uid");
-    const userRef = db.collection("users").doc(uid);
+    const userRef = db.collection("users")
+      .doc(uid)
     await userRef.update({
-      initialProgressInfo: firebase.firestore.FieldValue.delete(),
-      currentProgressInfo: firebase.firestore.FieldValue.delete(),
+      initialProgressInfo: {
+        date: moment().format("YYYY-MM-DD"),
+      },
+      currentProgressInfo: {
+        date: moment().format("YYYY-MM-DD"),
+      },
+      initialBurpeeTestCompleted: false
     });
     Alert.alert("Your progress info has been reset");
-    this.setState({ loading: false });
   };
+
   retakeBurpeeTest = async () => {
-    this.setState({ loading: true });
-    await FileSystem.downloadAsync(
-      "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
-      `${FileSystem.cacheDirectory}exercise-burpees.mp4`
-    );
-    this.setState({ loading: false });
     this.props.navigation.navigate("Burpee1");
   };
 
   render() {
     const { isPasswordAccount, profile, loading } = this.state;
+
     return (
       <SafeAreaView style={globalStyle.safeContainer}>
         <View style={[globalStyle.container, { paddingHorizontal: 0 }]}>
           <ScrollView contentContainerStyle={globalStyle.scrollView}>
             <View style={ProfileStyles.listContainer}>
               {
-                // Only show password change if an email/password account is present
                 isPasswordAccount && (
                   <ListItem
                     title="Change Password"
@@ -148,7 +149,6 @@ export default class SettingsScreen extends React.PureComponent {
                 )
               }
               {
-                // Only show password change if an email/password account is present
                 profile && (
                   <ListItem
                     title="Reset initial progress info"
@@ -164,7 +164,7 @@ export default class SettingsScreen extends React.PureComponent {
                 )
               }
               <ListItem
-                title="Re-take burpee test"
+                title="Re-take fitness test"
                 titleStyle={ProfileStyles.listItemTitleStyle}
                 containerStyle={ProfileStyles.listItemContainer}
                 rightIcon={{

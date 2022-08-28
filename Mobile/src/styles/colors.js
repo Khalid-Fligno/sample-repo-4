@@ -80,6 +80,7 @@ const colors = {
     headerBackgroundColor: "rgb(255, 255, 255)",
     themeBorderColor: "rgb(113, 114, 115)",
     themeBorderWidth: 2,
+    fill: '#f79400'
   },
 
   bloodOrange: 'rgb(250, 137, 110)'
