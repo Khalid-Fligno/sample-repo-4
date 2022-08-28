@@ -10,13 +10,11 @@ import {
   TouchableOpacity,
   Picker,
   TextInput,
-  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Haptics from "expo-haptics";
 import Modal from "react-native-modal";
 import HelperModal from "../../components/Shared/HelperModal";
-import CustomButton from "../../components/Shared/CustomButton";
 import CustomBtn from "../../components/Shared/CustomBtn";
 import Loader from "../../components/Shared/Loader";
 import {
@@ -32,11 +30,10 @@ import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import globalStyle, { containerPadding } from "../../styles/globalStyles";
 import { BackHandler } from "react-native";
-import { findFitnessLevel } from "../../utils";
 import moment from "moment";
 import * as FileSystem from "expo-file-system";
-import * as ImageManipulator from "expo-image-manipulator";
 import _ from "lodash";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const { width } = Dimensions.get("window");
 
@@ -64,36 +61,11 @@ const storeProgressInfo = async (
   burpeeCount
 ) => {
   const uid = await AsyncStorage.getItem("uid");
-  // const firebase = require("firebase");
 
-  // let blob = "";
-  // if (Platform.OS === "ios") {
-  //   const base64Response = await fetch(
-  //     `data:image/jpeg;base64,${image.base64}`
-  //   );
-  //   console.log("image: ", image);
-  //   blob = base64Response.blob()._W;
-  // }
-  // if (Platform.OS === "android") blob = await uriToBlob(image.uri);
-
-  // const storageRef = firebase.storage().ref();
-
-  // const userPhotosStorageRef = storageRef.child("user-photos");
-  // const userStorageRef = userPhotosStorageRef.child(uid);
   const progressDataFieldName = isInitial
     ? "initialProgressInfo"
     : "currentProgressInfo";
-  // const progressPhotoFilename = isInitial
-  //   ? "initial-progress-photo.jpeg"
-  //   : "current-progress-photo.jpeg";
 
-  // const progressPhotoStorageRef = userStorageRef.child(progressPhotoFilename);
-  // const metadata = {
-  //   contentType: "image/jpeg",
-  //   cacheControl: "public",
-  // };
-  // const snapshot = await progressPhotoStorageRef.put(blob, metadata);
-  console.log("Uid: ", uid);
   try {
     await db
       .collection("users")
@@ -114,7 +86,6 @@ const storeProgressInfo = async (
   } catch (err) {
     console.log("Data set error: ", err);
   }
-  console.log("Success");
 };
 
 export default class Progress1Screen extends React.PureComponent {
@@ -135,7 +106,10 @@ export default class Progress1Screen extends React.PureComponent {
     };
   }
   componentDidMount = () => {
-    BackHandler.addEventListener("hardwareBackPress", () => true);
+    this.subscribed = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => true
+    );
     this.props.navigation.setParams({
       handleSkip: this.handleSkip,
       toggleHelperModal: this.showHelperModal,
@@ -148,7 +122,7 @@ export default class Progress1Screen extends React.PureComponent {
     }
   };
   componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackPress", () => true);
+    if (this.subscribed) this.subscribed.remove();
   }
 
   toggleHelperModal = () => {
@@ -159,16 +133,17 @@ export default class Progress1Screen extends React.PureComponent {
   fetchDataMeasurement = async () => {
     this.setState({ loading: true });
     const uid = await AsyncStorage.getItem("uid");
-    this.unsubscribe = await db.collection("users")
+    this.unsubscribe = await db
+      .collection("users")
       .doc(uid)
       .onSnapshot(async (doc) => {
         var data = await doc.data();
 
         this.setState({
-          unitOfMeasurement: data.unitsOfMeasurement
-        })
-      })
-  }
+          unitOfMeasurement: data.unitsOfMeasurement,
+        });
+      });
+  };
 
   fetchInitialDataMeasurements = async () => {
     this.setState({ loading: true });
@@ -178,11 +153,11 @@ export default class Progress1Screen extends React.PureComponent {
       .get()
       .then((snapshot) => {
         const data = snapshot.data();
-        const initialProgressInfo = data.initialProgressInfo;
+        const initialProgressInfo = data?.initialProgressInfo;
         this.setState({
-          weight: initialProgressInfo.weight ?? 0,
-          waist: initialProgressInfo.waist ?? 0,
-          hip: initialProgressInfo.hip ?? 0,
+          weight: initialProgressInfo?.weight,
+          waist: initialProgressInfo?.waist,
+          hip: initialProgressInfo?.hip,
           loading: false,
         });
       });
@@ -196,11 +171,11 @@ export default class Progress1Screen extends React.PureComponent {
       .get()
       .then((snapshot) => {
         const data = snapshot.data();
-        const progressInfo = data.currentProgressInfo;
+        const progressInfo = data?.currentProgressInfo;
         this.setState({
-          weight: progressInfo.weight ?? 0,
-          waist: progressInfo.waist ?? 0,
-          hip: progressInfo.hip ?? 0,
+          weight: progressInfo?.weight,
+          waist: progressInfo?.waist,
+          hip: progressInfo?.hip,
           loading: false,
         });
       });
@@ -262,15 +237,7 @@ export default class Progress1Screen extends React.PureComponent {
       "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
       `${FileSystem.cacheDirectory}exercise-burpees.mp4`
     );
-    // this.setState({ loading: false });
-    // this.props.navigation.navigate("Progress2", {
-    //   isInitial,
-    //   weight,
-    //   waist,
-    //   hip,
-    //   navigateTo,
-    // });
-    // this.setState({ loading: false });
+
     const uid = await AsyncStorage.getItem("uid");
     db.collection("users")
       .doc(uid)
@@ -283,17 +250,8 @@ export default class Progress1Screen extends React.PureComponent {
           : data.currentProgressInfo;
         if (progressInfo) {
           const imageURL = progressInfo.photoURL ?? null;
-          console.log("ImageURL: ", imageURL);
+
           if (true) {
-            // await FileSystem.downloadAsync(
-            //   imageURL,
-            //   `${FileSystem.cacheDirectory}progressImage.jpeg`
-            // );
-            // const image = await ImageManipulator.manipulateAsync(
-            //   `${FileSystem.cacheDirectory}progressImage.jpeg`,
-            //   [],
-            //   { base64: true }
-            // );
             const userRef = db.collection("users").doc(uid);
 
             await storeProgressInfo(
@@ -303,34 +261,7 @@ export default class Progress1Screen extends React.PureComponent {
               waist,
               hip,
               0
-              // this.props.navigation.getParam("isInitial")
-              //   ? this.props.navigation.getParam("initialProgressInfo")
-              //       .burpeeCount ?? 0
-              //   : this.props.navigation.getParam("currentProgressInfo")
-              //       .burpeeCount ?? 0
             );
-            // const fitnessLevel = findFitnessLevel(
-            //   this.props.navigation.getParam("isInitial")
-            //     ? this.props.navigation.getParam("initialProgressInfo")
-            //         .burpeeCount ?? 0
-            //     : this.props.navigation.getParam("currentProgressInfo")
-            //         .burpeeCount ?? 0
-            // );
-            // AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
-            // try {
-            //   await userRef.set(
-            //     {
-            //       fitnessLevel,
-            //       initialBurpeeTestCompleted: true,
-            //     },
-            //     { merge: true }
-            //   );
-            //   this.setState({ loading: false });
-            //   this.props.navigation.navigate("ProgressEdit");
-            // } catch (err) {
-            //   this.setState({ loading: false });
-            //   Alert.alert("Database write error", `${err}`);
-            // }
             this.props.navigation.navigate("ProgressEdit");
           }
         } else {
@@ -344,28 +275,10 @@ export default class Progress1Screen extends React.PureComponent {
             0
           );
 
-            console.log(weight)
-          // const fitnessLevel = findFitnessLevel(0);
-          // AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
-          // try {
-          //   await userRef.set(
-          //     {
-          //       fitnessLevel,
-          //       initialBurpeeTestCompleted: true,
-          //     },
-          //     { merge: true }
-          //   );
-          //   this.setState({ loading: false });
-
-          // } catch (err) {
-          //   this.setState({ loading: false });
-          //   Alert.alert("Database write error", `${err}`);
-          // }
           this.props.navigation.navigate("ProgressEdit");
         }
       })
       .catch((reason) => {
-        console.log("[Progress2Screen.js fetchImage()] error: ", reason);
         Alert.alert("Error", `Error: ${reason}.`, [
           { text: "OK", onPress: () => this.setState({ loading: false }) },
         ]);
@@ -394,25 +307,27 @@ export default class Progress1Screen extends React.PureComponent {
       helperModalVisible,
       uom,
     } = this.state;
-    // console.log("weight:",this.state.weight);
-       console.log(uom);
-    if(unitOfMeasurement =='metric'){
-      this.setState({
-        uom: 'kg'
-      })
-    }else{
-      this.setState({
-        uom: 'lbs'
-      })
-    }
-    let weightData = weight.toString()
-    return (
-      <SafeAreaView style={styles.safeAreaContainer}>
 
-        <KeyboardAvoidingView keyboardVerticalOffset={90} behavior="padding">
+    if (unitOfMeasurement == "metric") {
+      this.setState({
+        uom: "kg",
+      });
+    } else {
+      this.setState({
+        uom: "lbs",
+      });
+    }
+
+    return (
+      <KeyboardAwareScrollView style={{ backgroundColor: colors.offWhite }}>
+        <SafeAreaView style={styles.safeAreaContainer}>
           <View style={styles.container}>
             <View style={styles.textContainer}>
-              <Text style={styles.headerText}>{this.props.navigation.getParam("isInitial") ? "Measurements" : "Progress Measurements"}</Text>
+              <Text style={styles.headerText}>
+                {this.props.navigation.getParam("isInitial")
+                  ? "Measurements"
+                  : "Progress Measurements"}
+              </Text>
               <Text style={styles.bodyText}>
                 To help you track your progress, let’s find out where you are
                 now.
@@ -422,35 +337,24 @@ export default class Progress1Screen extends React.PureComponent {
               <View style={styles.inputFieldContainer}>
                 <Text style={styles.inputFieldTitle}>Weight({uom})</Text>
 
-                {unitOfMeasurement ==="metric"
-                ?
-                  <TextInput style={styles.inputButton} 
-                    placeholder="kg" 
-                    keyboardType='numeric'
-                    onChangeText={(value)=>
-                      this.setState({weight: value})}
-                    value={weightData}
-                />
+                {unitOfMeasurement === "metric" ? (
+                  <TextInput
+                    style={styles.inputButton}
+                    placeholder="Input your weight"
+                    keyboardType="numeric"
+                    onChangeText={(value) => this.setState({ weight: value })}
+                    value={weight ? weight.toString() : null}
+                  />
+                ) : (
+                  <TextInput
+                    style={styles.inputButton}
+                    placeholder="Input your weight"
+                    keyboardType="numeric"
+                    onChangeText={(value) => this.setState({ weight: value })}
+                    value={weight ? weight.toString() : null}
+                  />
+                )}
 
-                :
-                  <TextInput style={styles.inputButton} 
-                    placeholder="lbs" 
-                    keyboardType='numeric'
-                    onChangeText={(value)=>
-                      this.setState({weight: value})}
-                    value={weightData}
-                />
-              }
-               
-                {/* <TouchableOpacity
-                  onPress={() => this.showModal("weightModalVisible")}
-                  style={styles.inputButton}
-                >
-                  <Text style={styles.inputSelectionText}>
-                    {weight} {unitOfMeasurement === "metric" && "kg"}
-                    {unitOfMeasurement === "imperial" && "lbs"}
-                  </Text>
-                </TouchableOpacity> */}
                 <Modal
                   isVisible={weightModalVisible}
                   onBackdropPress={() => this.hideModal("weightModalVisible")}
@@ -498,10 +402,19 @@ export default class Progress1Screen extends React.PureComponent {
                   onPress={() => this.showModal("waistModalVisible")}
                   style={styles.inputButton}
                 >
-                  <Text style={styles.inputSelectionText}>
-                    {waist} {unitOfMeasurement === "metric" && "cm"}
-                    {unitOfMeasurement === "imperial" && "inches"}
-                  </Text>
+                  {
+                    waist ?
+                      <Text style={styles.inputSelectionText}>
+                        {waist} {unitOfMeasurement === "metric" && "cm"}
+                        {unitOfMeasurement === "imperial" && "inches"}
+                      </Text>
+                      :
+                      <Text style={{
+                        color: "#CACACA"
+                      }}>
+                        Input your waist
+                      </Text>
+                  }
                 </TouchableOpacity>
                 <Modal
                   isVisible={waistModalVisible}
@@ -548,10 +461,19 @@ export default class Progress1Screen extends React.PureComponent {
                   onPress={() => this.showModal("hipModalVisible")}
                   style={styles.inputButton}
                 >
-                  <Text style={styles.inputSelectionText}>
-                    {hip} {unitOfMeasurement === "metric" && "cm"}
-                    {unitOfMeasurement === "imperial" && "inches"}
-                  </Text>
+                  {
+                    hip ?
+                      <Text style={styles.inputSelectionText}>
+                        {hip} {unitOfMeasurement === "metric" && "cm"}
+                        {unitOfMeasurement === "imperial" && "inches"}
+                      </Text>
+                      :
+                      <Text style={{
+                        color: "#CACACA"
+                      }}>
+                        Input your hip
+                      </Text>
+                  }
                 </TouchableOpacity>
                 <Modal
                   isVisible={hipModalVisible}
@@ -599,27 +521,23 @@ export default class Progress1Screen extends React.PureComponent {
                 Title="Update"
                 titleCapitalise={true}
                 onPress={() => this.handleSubmit(weight, waist, hip)}
+                customBtnStyle={{ width: width / 1.1 }}
               />
-              {/* <CustomButton
-                title="NEXT"
-                onPress={() => this.handleSubmit(weight, waist, hip)}
-                primary
-              /> */}
             </View>
             <Loader loading={loading} color={colors.themeColor.color} />
           </View>
-        </KeyboardAvoidingView>
+          <HelperModal
+            helperModalVisible={helperModalVisible}
+            hideHelperModal={this.hideHelperModal}
+            headingText="Progress"
+            bodyText="Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test."
+            bodyText2="You will need to complete all three to successfully add an entry."
+            bodyText3="If you can't do all of this right now, press skip in the top right corner to complete it later."
+            color="coral"
+          />
+        </SafeAreaView>
+      </KeyboardAwareScrollView>
 
-        <HelperModal
-          helperModalVisible={helperModalVisible}
-          hideHelperModal={this.hideHelperModal}
-          headingText="Progress"
-          bodyText="Adding a progress entry involves 3 steps - your measurements, a progress photo and a 1 minute burpee test."
-          bodyText2="You will need to complete all three to successfully add an entry."
-          bodyText3="If you can't do all of this right now, press skip in the top right corner to complete it later."
-          color="coral"
-        />
-      </SafeAreaView>
     );
   }
 }
@@ -658,6 +576,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
     justifyContent: "center",
+    top: 15
   },
   inputFieldContainer: {
     marginBottom: 20,

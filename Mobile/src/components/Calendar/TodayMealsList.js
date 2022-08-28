@@ -1,394 +1,99 @@
-import React, { Component } from "react";
-import { ImageBackground } from "react-native";
-import { TouchableOpacity } from "react-native";
+import React from "react";
 import { StyleSheet } from "react-native";
-import { ScrollView, FlatList } from "react-native";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
-import { containerPadding } from "../../styles/globalStyles";
-// import Icon from "../Shared/Icon";
-import Icon from "react-native-vector-icons/AntDesign";
-class TodayMealsList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+import MealCarousel from "./Carousels/MealCarousel";
 
-  carouselBreakfast = (data, data1, data2, title) => {
+const TodayMealsList = (props) => {
+  const {
+    data, // Array containg modelled recipe for tile to show category, this will determine if a meal type shows
+    recipe, // All recipes in store
+    todayRecommendedRecipe, 
+    favoriteRecipe, //Users current set of favourite recipes
+    onPress,
+    filterPress,
+    favouriteRecipeConfigs
+  } = props;
 
-    return (
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingHorizontal: containerPadding,
-          }}
-        >
-          <Text style={styles.label}>{title}</Text>
-        </View>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={{
-            paddingHorizontal: containerPadding,
-            paddingVertical: wp("3%"),
-          }}
-        >
-          {data.map((recipe) => (
-            <TouchableOpacity
-              style={styles.cardContainer}
-              onPress={() => this.props.onPress(recipe)}
-            >
-              <ImageBackground
-                source={{ uri: recipe.coverImage, cache: "force-cache" }}
-                style={styles.image}
-                resizeMode="cover"
-              >
-                <View style={styles.opacityLayer}>
-                  <Text style={styles.cardTitle}>{recipe.title}</Text>
-                </View>
-              </ImageBackground>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity
-            style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
-          >
-            <View style={styles.opacityLayer1}>
-              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
-              <Text style={styles.cardTitle1}>Choose a recipe</Text>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    )
-  }
-
-  carouselLunch = (data, data1, data2, title) => {
-
-    return (
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingHorizontal: containerPadding,
-          }}
-        >
-          <Text style={styles.label}>{title}</Text>
-        </View>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={{
-            paddingHorizontal: containerPadding,
-            paddingVertical: wp("3%"),
-          }}
-        >
-          {data.map((recipe) => (
-            <TouchableOpacity
-              style={styles.cardContainer}
-              onPress={() => this.props.onPress(recipe)}
-            >
-              <ImageBackground
-                source={{ uri: recipe.coverImage, cache: "force-cache" }}
-                style={styles.image}
-                resizeMode="cover"
-              >
-                <View style={styles.opacityLayer}>
-                  <Text style={styles.cardTitle}>{recipe.title}</Text>
-                </View>
-              </ImageBackground>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity
-            style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
-          >
-            <View style={styles.opacityLayer1}>
-              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
-              <Text style={styles.cardTitle1}>Choose a recipe</Text>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    )
-  }
-
-  carouselDinner = (data, data1, data2, title) => {
-
-    return (
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingHorizontal: containerPadding,
-          }}
-        >
-          <Text style={styles.label}>{title}</Text>
-        </View>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={{
-            paddingHorizontal: containerPadding,
-            paddingVertical: wp("3%"),
-          }}
-        >
-          {data.map((recipe) => (
-            <TouchableOpacity
-              style={styles.cardContainer}
-              onPress={() => this.props.onPress(recipe)}
-            >
-              <ImageBackground
-                source={{ uri: recipe.coverImage, cache: "force-cache" }}
-                style={styles.image}
-                resizeMode="cover"
-              >
-                <View style={styles.opacityLayer}>
-                  <Text style={styles.cardTitle}>{recipe.title}</Text>
-                </View>
-              </ImageBackground>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity
-            style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
-          >
-            <View style={styles.opacityLayer1}>
-              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
-              <Text style={styles.cardTitle1}>Choose a recipe</Text>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    )
-  }
-
-  carouselSnack = (data, data1, data2, title) => {
-
-    return (
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingHorizontal: containerPadding,
-          }}
-        >
-          <Text style={styles.label}>{title}</Text>
-        </View>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={{
-            paddingHorizontal: containerPadding,
-            paddingVertical: wp("3%"),
-          }}
-        >
-          {data.map((recipe) => (
-            <TouchableOpacity
-              style={styles.cardContainer}
-              onPress={() => this.props.onPress(recipe)}
-            >
-              <ImageBackground
-                source={{ uri: recipe.coverImage, cache: "force-cache" }}
-                style={styles.image}
-                resizeMode="cover"
-              >
-                <View style={styles.opacityLayer}>
-                  <Text style={styles.cardTitle}>{recipe.title}</Text>
-                </View>
-              </ImageBackground>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity
-            style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
-          >
-            <View style={styles.opacityLayer1}>
-              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
-              <Text style={styles.cardTitle1}>Choose a recipe</Text>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    )
-  }
-
-  carouselDrink = (data, data1, data2, title) => {
-    return (
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingHorizontal: containerPadding,
-          }}
-        >
-          <Text style={styles.label}>{title}</Text>
-        </View>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={{
-            paddingHorizontal: containerPadding,
-            paddingVertical: wp("3%"),
-          }}
-        >
-          {data.map((recipe) => (
-            <TouchableOpacity
-              style={styles.cardContainer}
-              onPress={() => this.props.onPress(recipe)}
-            >
-              <ImageBackground
-                source={{ uri: recipe.coverImage, cache: "force-cache" }}
-                style={styles.image}
-                resizeMode="cover"
-              >
-                <View style={styles.opacityLayer}>
-                  <Text style={styles.cardTitle}>{recipe.title}</Text>
-                </View>
-              </ImageBackground>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity
-            style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
-          >
-            <View style={styles.opacityLayer1}>
-              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
-              <Text style={styles.cardTitle1}>Choose a recipe</Text>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    )
-  }
-
-  carouselPreworkout = (data, data1, data2, title) => {
-    return (
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingHorizontal: containerPadding,
-          }}
-        >
-          <Text style={styles.label}>{title}</Text>
-        </View>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={{
-            paddingHorizontal: containerPadding,
-            paddingVertical: wp("3%"),
-          }}
-        >
-          {data.map((recipe) => (
-            <TouchableOpacity
-              style={styles.cardContainer}
-              onPress={() => this.props.onPress(recipe)}
-            >
-              <ImageBackground
-                source={{ uri: recipe.coverImage, cache: "force-cache" }}
-                style={styles.image}
-                resizeMode="cover"
-              >
-                <View style={styles.opacityLayer}>
-                  <Text style={styles.cardTitle}>{recipe.title}</Text>
-                </View>
-              </ImageBackground>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity
-            style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
-          >
-            <View style={styles.opacityLayer1}>
-              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
-              <Text style={styles.cardTitle1}>Choose a recipe</Text>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    )
-  }
-
-  carouselTreats = (data, data1, data2, title) => {
-
-    return (
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingHorizontal: containerPadding,
-          }}
-        >
-          <Text style={styles.label}>{title}</Text>
-        </View>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={{
-            paddingHorizontal: containerPadding,
-            paddingVertical: wp("3%"),
-          }}
-        >
-          {data.map((recipe) => (
-            <TouchableOpacity
-              style={styles.cardContainer}
-              onPress={() => this.props.onPress(recipe)}
-            >
-              <ImageBackground
-                source={{ uri: recipe.coverImage, cache: "force-cache" }}
-                style={styles.image}
-                resizeMode="cover"
-              >
-                <View style={styles.opacityLayer}>
-                  <Text style={styles.cardTitle}>{recipe.title}</Text>
-                </View>
-              </ImageBackground>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity
-            style={styles.cardContainer1}
-            onPress={() => this.props.filterPress(data, data1, data2, title)}
-          >
-            <View style={styles.opacityLayer1}>
-              <Icon name="pluscircleo" size={20} style={{ left: 50 }} />
-              <Text style={styles.cardTitle1}>Choose a recipe</Text>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    )
-  }
-
-  render() {
-    const { data, recipe, todayRecommendedRecipe } = this.props
-
-    // console.log('recipe.breakfast: ', recipe.breakfast)
-    
-    return (
-      <View style={styles.container}>
-        {data.breakfast.length > 0 && this.carouselBreakfast(data.breakfast, recipe.breakfast, todayRecommendedRecipe.breakfast, "Breakfast")}
-        {data.lunch.length > 0 && this.carouselLunch(data.lunch, recipe.lunch, todayRecommendedRecipe.lunch, "Lunch")}
-        {data.dinner.length > 0 && this.carouselDinner(data.dinner, recipe.dinner, todayRecommendedRecipe.dinner, "Dinner")}
-        {data.snack.length > 0 && this.carouselSnack(data.snack, recipe.snack, todayRecommendedRecipe.snack, "Snack")}
-        {data.drink.length > 0 && this.carouselDrink(data.drink, recipe.drink, todayRecommendedRecipe.drink, "Post Workout")}
-        {data.preworkout.length > 0 && this.carouselPreworkout(data.preworkout, recipe.preworkout, todayRecommendedRecipe.preworkout, "Pre Workout")}
-        {data.treats.length > 0 && this.carouselTreats(data.treats, recipe.treats, todayRecommendedRecipe.treats, "Treats")}
-      </View>
-    );
-  }
-}
+  return (
+    <View style={styles.container}>
+      {data.breakfast && data.breakfast.length > 0 && (
+        <MealCarousel
+          data={data.breakfast}
+          data1={recipe.breakfast}
+          data2={todayRecommendedRecipe.breakfast}
+          title={"Breakfast"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.breakfast}
+          favoriteRecipe={favoriteRecipe?.breakfast}
+        />
+      )}
+      {data.lunch && data.lunch.length > 0 && (
+        <MealCarousel
+          data={data.lunch}
+          data1={recipe.lunch}
+          data2={todayRecommendedRecipe.lunch}
+          title={"Lunch"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.lunch}
+          favoriteRecipe={favoriteRecipe?.lunch}
+        />
+      )}
+      {data.dinner && data.dinner.length > 0 && (
+        <MealCarousel
+          data={data.dinner}
+          data1={recipe.dinner}
+          data2={todayRecommendedRecipe.dinner}
+          title={"Dinner"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.dinner}
+          favoriteRecipe={favoriteRecipe?.dinner}
+        />
+      )}
+      {data.snack && data.snack.length > 0 && (
+        <MealCarousel
+          data={data.snack}
+          data1={recipe.snack}
+          data2={todayRecommendedRecipe.snack}
+          title={"Snack"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.snack}
+          favoriteRecipe={favoriteRecipe?.snack}
+        />
+      )}
+      {data.preworkout && data.preworkout.length > 0 && (
+        <MealCarousel
+          data={data.preworkout}
+          data1={recipe.preworkout}
+          data2={todayRecommendedRecipe.preworkout}
+          title={"Pre Workout"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.preworkout}
+          favoriteRecipe={favoriteRecipe?.preworkout}
+        />
+      )}
+      {data.treats && data.treats.length > 0 && (
+        <MealCarousel
+          data={data.treats}
+          data1={recipe.treats}
+          data2={todayRecommendedRecipe.treats}
+          title={"Treats"}
+          onPress={onPress}
+          filterPress={filterPress}
+          favouriteRecipeConfigs={favouriteRecipeConfigs?.treats}
+          favoriteRecipe={favoriteRecipe?.treats}
+        />
+      )}
+    </View>
+  );
+};
 
 export default TodayMealsList;
 
@@ -430,7 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#000000",
-    borderTopColor: "#000000"
+    borderTopColor: "#000000",
   },
   opacityLayer: {
     flex: 1,
@@ -440,11 +145,11 @@ const styles = StyleSheet.create({
     padding: wp("5%"),
   },
   opacityLayer1: {
-    flexDirection: 'column',
+    flexDirection: "column",
     width: "100%",
     justifyContent: "center",
     padding: 50,
-    left: 15
+    left: 15,
   },
   cardTitle: {
     fontFamily: fonts.bold,

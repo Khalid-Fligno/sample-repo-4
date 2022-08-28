@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   StyleSheet,
 } from "react-native";
 import globalStyle from "../../styles/globalStyles";
-import RoundTick from "../../../assets/icons/RoundTick";
 import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
 import CustomBtn from "../Shared/CustomBtn";
@@ -16,110 +15,98 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-class ChallengeCard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
 
-  render() {
-    const {
-      numberOfDays,
-      outline,
-      btnTitle,
-      onPress,
-      imageUrl,
-      disabled,
-      numberOfWeeks,
-      restartButton,
-      onPressRestart,
-      title,
-      subTitle,
-    } = this.props;
-    return (
-      <ImageBackground
-        source={{ uri: imageUrl }}
-        style={[
-          globalStyle.FT_ImageContainer,
-          { height: 130, display: "flex" },
-        ]}
-        imageStyle={{ borderRadius: 5, backgroundColor: colors.grey.medium }}
+const ChallengeCard = (props) => {
+  const {
+    outline,
+    btnTitle,
+    onPress,
+    imageUrl,
+    disabled,
+    restartButton,
+    onPressRestart,
+    title,
+    subTitle,
+  } = props;
+
+  return (
+    <ImageBackground
+      source={{ uri: imageUrl }}
+      style={[globalStyle.FT_ImageContainer, { height: 130, display: "flex" }]}
+      imageStyle={{ borderRadius: 5, backgroundColor: colors.grey.medium }}
+    >
+      <TouchableWithoutFeedback
+        onPress={() => {
+          if (!disabled) {
+            onPress();
+          }
+        }}
       >
-        <TouchableWithoutFeedback
-          onPress={() => {
-            if (!disabled) {
-              onPress();
-            }
-          }}
-        >
-          <View style={styles.overlay}>
-            <View style={styles.ViewContainer}>
-              <View style={styles.titleContainer}>
-                <Text
-                  style={[
-                    styles.numberTextLabel,
-                    { fontSize: wp("6%"), flexWrap: "nowrap" },
-                  ]}
-                >
-                  {title}
+        <View style={styles.overlay}>
+          <View style={styles.ViewContainer}>
+            <View style={styles.titleContainer}>
+              <Text
+                style={[
+                  styles.numberTextLabel,
+                  { fontSize: wp("6%"), flexWrap: "nowrap" },
+                ]}
+              >
+                {title}
+              </Text>
+            </View>
+            {disabled && (
+              <View style={[styles.titleContainer, { marginTop: wp("2%") }]}>
+                <Text style={[styles.numberTextLabel, { fontSize: wp("4%") }]}>
+                  {subTitle}
                 </Text>
               </View>
-              {disabled && (
-                <View style={[styles.titleContainer, { marginTop: wp("2%") }]}>
-                  <Text
-                    style={[styles.numberTextLabel, { fontSize: wp("4%") }]}
-                  >
-                    {subTitle}
-                  </Text>
-                </View>
-              )}
-            </View>
-            <View style={styles.customButtonContainer}>
-              {!disabled && (
-                <CustomBtn
-                  outline={outline}
-                  Title={btnTitle}
-                  customBtnStyle={{
-                    padding: 8,
-                    backgroundColor: !outline
-                      ? colors.themeColor.color
-                      : "transparent",
-
-                    width: wp("40%"),
-                    marginTop: hp("1.8%"),
-                  }}
-                  customBtnTitleStyle={{ color: colors.black, fontSize: 14 }}
-                  onPress={onPress}
-                  disabled={disabled}
-                />
-              )}
-
-              {restartButton && (
-                <CustomBtn
-                  outline={outline}
-                  Title="Reset"
-                  customBtnStyle={{
-                    padding: 8,
-                    marginTop: 10,
-                    backgroundColor: !outline
-                      ? colors.themeColor.color
-                      : "transparent",
-                    borderRadius: 50,
-                    width: wp("40%"),
-                    marginTop: hp("1.8%"),
-                  }}
-                  customBtnTitleStyle={{ color: colors.offWhite, fontSize: 14 }}
-                  onPress={onPressRestart}
-                  disabled={disabled}
-                />
-              )}
-            </View>
+            )}
           </View>
-        </TouchableWithoutFeedback>
-      </ImageBackground>
-    );
-  }
-}
+          <View style={styles.customButtonContainer}>
+            {!disabled && (
+              <CustomBtn
+                outline={outline}
+                Title={btnTitle}
+                customBtnStyle={{
+                  padding: 8,
+                  backgroundColor: !outline
+                    ? colors.themeColor.color
+                    : "transparent",
+
+                  width: wp("40%"),
+                  marginTop: hp("1.8%"),
+                }}
+                customBtnTitleStyle={{ color: colors.black, fontSize: 14 }}
+                onPress={onPress}
+                disabled={disabled}
+              />
+            )}
+
+            {restartButton && (
+              <CustomBtn
+                outline={outline}
+                Title="Reset"
+                customBtnStyle={{
+                  padding: 8,
+                  marginTop: 10,
+                  backgroundColor: !outline
+                    ? colors.themeColor.color
+                    : "transparent",
+                  borderRadius: 50,
+                  width: wp("40%"),
+                  marginTop: hp("1.8%"),
+                }}
+                customBtnTitleStyle={{ color: colors.offWhite, fontSize: 14 }}
+                onPress={onPressRestart}
+                disabled={disabled}
+              />
+            )}
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </ImageBackground>
+  );
+};
 
 ChallengeCard.propTypes = {
   numberOfDays: PropTypes.number,

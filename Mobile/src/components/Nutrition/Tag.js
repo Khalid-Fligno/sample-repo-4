@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
     width: 22,
     marginRight: 5,
     borderWidth: 0,
-    // borderColor: colors.violet.standard,
     borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
@@ -27,6 +26,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 9,
     color: colors.black,
-    // marginTop: 4,
   },
 });

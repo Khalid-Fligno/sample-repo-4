@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-  Picker,
   TouchableOpacity,
   Dimensions,
   Alert,
@@ -16,10 +15,8 @@ import * as Haptics from "expo-haptics";
 import * as Localization from "expo-localization";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
-import CustomButton from "../../components/Shared/CustomButton";
 import Loader from "../../components/Shared/Loader";
 import { db } from "../../../config/firebase";
-import { uomMap } from "../../utils/index";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import CustomBtn from "../../components/Shared/CustomBtn";
@@ -38,29 +35,33 @@ export default class Onboarding1Screen extends React.PureComponent {
       chosenDate: "",
       dobModalVisible: false,
       chosenUom: "metric",
-      uomModalVisible: false,
       timezone: null,
       name: props.navigation.getParam("name", null),
       specialOffer: props.navigation.getParam("specialOffer", undefined),
     };
   }
+
   componentDidMount = async () => {
     const timezone = await Localization.timezone;
     this.setState({ timezone });
   };
+
   setDate = async (event, selectedDate) => {
     const currentDate = selectedDate;
     this.setState({
       chosenDate: currentDate ? currentDate : new Date(1990, 0, 1),
     });
   };
+
   handleSubmit = async (chosenDate, chosenUom) => {
     const { name, specialOffer } = this.state;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
     try {
+      const resChosenDate = chosenDate ?
+        chosenDate : new Date(1990, 0, 1)
       const timezone = await Localization.timezone;
-      const dob = moment.tz(chosenDate, timezone).format("YYYY-MM-DD");
+      const dob = moment.tz(resChosenDate, timezone).format("YYYY-MM-DD");
       const uid = await AsyncStorage.getItem("uid");
       const userRef = db.collection("users").doc(uid);
       const data = {
@@ -77,6 +78,7 @@ export default class Onboarding1Screen extends React.PureComponent {
           interval: 0,
         },
       };
+
       await userRef.set(data, { merge: true });
       this.setState({ loading: false });
       this.props.navigation.navigate("Onboarding2", {
@@ -89,33 +91,24 @@ export default class Onboarding1Screen extends React.PureComponent {
       this.setState({ loading: false });
     }
   };
+
   toggleDobModal = () => {
-    this.setState((prevState) => ({
-      dobModalVisible: !prevState.dobModalVisible,
-    }));
+    this.setState({ dobModalVisible: true })
   };
+
   closeDobModal = () => {
     this.setState({ dobModalVisible: false });
   };
-  toggleUomModal = () => {
-    this.setState((prevState) => ({
-      uomModalVisible: !prevState.uomModalVisible,
-    }));
-  };
-  closeUomModal = () => {
-    this.setState({ uomModalVisible: false });
-  };
+
   render() {
     const {
       loading,
       chosenDate,
       dobModalVisible,
       chosenUom,
-      uomModalVisible,
       timezone,
-      name,
-      specialOffer,
     } = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
@@ -133,10 +126,7 @@ export default class Onboarding1Screen extends React.PureComponent {
                 },
               ]}
             >
-              <Text style={styles.headerText}>
-                {/* Welcome{name !== null && `, ${name}`} */}
-                Welcome
-              </Text>
+              <Text style={styles.headerText}>Welcome</Text>
               <Text style={styles.bodyText}>
                 It’s time to start your FitazFK journey! Just a few questions
                 before we can start.
@@ -146,10 +136,6 @@ export default class Onboarding1Screen extends React.PureComponent {
 
           <View style={styles.contentContainer}>
             <View style={styles.inputFieldContainer}>
-              {/* <Text style={styles.inputFieldTitle}>
-                Date of Birth
-              </Text> */}
-
               <TouchableOpacity
                 onPress={this.toggleDobModal}
                 style={styles.inputButton}

@@ -12,7 +12,7 @@ const HomeStack = createStackNavigator(
   {
     initialRouteName: 'HomeHome',
     defaultNavigationOptions: ({ navigation }) => ({
-      gesturesEnabled:false,
+      gestureEnabled:false,
       header: () => {
         const { routeName } = navigation.state;
         return (

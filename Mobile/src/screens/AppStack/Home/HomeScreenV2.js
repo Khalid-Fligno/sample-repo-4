@@ -22,6 +22,11 @@ import {
 } from "react-native-responsive-screen";
 import CustomBtn from "../../../components/Shared/CustomBtn";
 import { isActiveChallenge } from "../../../utils/challenges";
+// import LogRocket from '@logrocket/react-native';
+
+// images
+import { IMAGE } from "../../../library/images";
+
 const { width } = Dimensions.get("window");
 
 export default class HomeScreenV2 extends React.PureComponent {
@@ -30,21 +35,18 @@ export default class HomeScreenV2 extends React.PureComponent {
         this.state = {
             loading: false,
             profile: undefined,
+            email: undefined,
+            id: undefined,
+            name: undefined
         };
     }
 
     componentDidMount = () => {
-        this.unsubscribe = this.props.navigation.addListener("didFocus", () => {
-            this.onFocus();
-        });
-    };
-
-    onFocus = () => {
-        this.fetchProfile();
+        this.fetchProfile()
     };
 
     componentWillUnmount = () => {
-        this.unsubscribe();
+        if(this.unsubscribe) this.unsubscribe();
     };
 
     fetchProfile = async () => {
@@ -54,17 +56,28 @@ export default class HomeScreenV2 extends React.PureComponent {
         this.unsubscribe = userRef.onSnapshot(async (doc) => {
             this.setState({
                 profile: doc.data(),
-                loading: false
+                loading: false,
+                email: doc.data().email,
+                id: doc.data().id,
+                name: doc.data().name
             });
         });
-    };
 
+      
+    };
     render() {
         const {
             loading,
             profile,
+            email,
+            name,
+            id
         } = this.state;
-
+        // LogRocket.identify(id, {
+        //     name: name,
+        //     email: email,
+        //   });
+        
         const bigHeadeingTitle =
             (profile && profile.firstName ? profile.firstName : "").toString()
         const lineText =
@@ -93,7 +106,7 @@ export default class HomeScreenV2 extends React.PureComponent {
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Nutrition")}>
                                 <ImageBackground
-                                    source={require("../../../../assets/images/homeScreenTiles/Lifestyle-Nutrition.jpg")}
+                                    source={IMAGE.LIFESTYLE_NUTRITION}
                                     style={styles.image}
                                 >
                                     <View style={styles.opacityLayer}>
@@ -107,7 +120,7 @@ export default class HomeScreenV2 extends React.PureComponent {
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.cardContainer} onPress={() => this.props.navigation.navigate("Workouts")}>
                                 <ImageBackground
-                                    source={require("../../../../assets/images/homeScreenTiles/Lifestyle-Workout.jpg")}
+                                    source={IMAGE.LIFESTYLE_WORKOUT}
                                     style={styles.image}
                                     resizeMode="cover"
                                 >

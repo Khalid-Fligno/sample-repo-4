@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   ImageBackground,
@@ -7,13 +7,13 @@ import {
   StyleSheet,
   Dimensions,
   Animated,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import colors from '../../styles/colors';
-import fonts from '../../styles/fonts';
-import globalStyle from '../../styles/globalStyles';
+} from "react-native";
+import PropTypes from "prop-types";
+import colors from "../../styles/colors";
+import fonts from "../../styles/fonts";
+import globalStyle from "../../styles/globalStyles";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 export default class WorkoutTile extends React.PureComponent {
   constructor(props) {
@@ -24,21 +24,16 @@ export default class WorkoutTile extends React.PureComponent {
     Animated.spring(this.animatedValue, {
       toValue: 0.92,
     }).start();
-  }
+  };
   handlePressOut = () => {
     Animated.spring(this.animatedValue, {
       toValue: 1,
       friction: 3,
       tension: 40,
     }).start();
-  }
+  };
   render() {
-    const {
-      onPress,
-      title1,
-      image,
-      disabled,
-    } = this.props;
+    const { onPress, title1, image, disabled } = this.props;
     const animatedStyle = {
       transform: [{ scale: this.animatedValue }],
     };
@@ -50,17 +45,10 @@ export default class WorkoutTile extends React.PureComponent {
         onPressIn={this.handlePressIn}
         onPressOut={this.handlePressOut}
       >
-        <Animated.View
-          style={[styles.flexContainer, animatedStyle]}
-        >
-          <ImageBackground
-            source={image}
-            style={styles.image}
-          >
+        <Animated.View style={[styles.flexContainer, animatedStyle]}>
+          <ImageBackground source={image} style={styles.image}>
             <View style={globalStyle.opacityLayer}>
-              <Text style={styles.title}>
-                {title1.toUpperCase()}
-              </Text>
+              <Text style={styles.title}>{title1.toUpperCase()}</Text>
             </View>
           </ImageBackground>
         </Animated.View>
@@ -98,17 +86,17 @@ const styles = StyleSheet.create({
   image: {
     backgroundColor: colors.black,
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 2,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
 
   title: {
     fontFamily: fonts.bold,
     fontSize: 24,
     color: colors.white,
-    textAlign: 'center',
+    textAlign: "center",
     shadowColor: colors.black,
     shadowOpacity: 1,
     shadowOffset: { width: 0, height: 0 },

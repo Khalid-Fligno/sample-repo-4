@@ -1,83 +1,52 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import Modal from 'react-native-modal';
-import fonts from '../../styles/fonts';
-import colors from '../../styles/colors';
-import CustomBtn from './CustomBtn';
+import React from "react";
+import PropTypes from "prop-types";
+import { View, StyleSheet, Text } from "react-native";
+import Modal from "react-native-modal";
+import fonts from "../../styles/fonts";
+import colors from "../../styles/colors";
+import CustomBtn from "./CustomBtn";
 
-export default class HelperModal extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-  render() {
-    const {
-      helperModalVisible,
-      hideHelperModal,
-      headingText,
-      bodyText,
-      bodyText2,
-      bodyText3,
-      color,
-    } = this.props;
-    return (
-      <Modal
-        isVisible={helperModalVisible}
-        animationIn="fadeIn"
-        animationInTiming={400}
-        animationOut="fadeOut"
-        animationOutTiming={400}
-      >
-        <View style={styles.helperModalContainer}>
-          <View style={styles.helperModalTextContainer}>
-            <Text style={styles.modalHeaderText}>
-              {headingText}
-            </Text>
-            <Text style={styles.modalBodyText}>
-              {bodyText}
-            </Text>
-            {
-              bodyText2 && (
-                <Text style={styles.modalBodyText}>
-                  {bodyText2}
-                </Text>
-              )
-            }
-            {
-              bodyText3 && (
-                <Text style={styles.modalBodyText}>
-                  {bodyText3}
-                </Text>
-              )
-            }
-          </View>
-          <View style={styles.helperModalButtonContainer}>
-            <CustomBtn 
-              onPress={hideHelperModal}
-              outline={true}
-              titleCapitalise={true}
-              Title='OK, GOT IT!'
-              customBtnStyle={{borderRadius:50,margin:10}}
-            />
-            {/* <TouchableOpacity
-              onPress={hideHelperModal}
-              style={[
-                styles.modalButton,
-                styles.modalThemeButton
-              ]}
-            >
-              <Text style={styles.modalButtonText}>
-                OK, GOT IT!
-              </Text>
-            </TouchableOpacity> */}
-          </View>
+const HelperModal = (props) => {
+  const {
+    helperModalVisible,
+    hideHelperModal,
+    headingText,
+    bodyText,
+    bodyText2,
+    bodyText3,
+    color,
+  } = props;
+
+  return (
+    <Modal
+      isVisible={helperModalVisible}
+      animationIn="fadeIn"
+      animationInTiming={400}
+      animationOut="fadeOut"
+      animationOutTiming={400}
+    >
+      <View style={styles.helperModalContainer}>
+        <View style={styles.helperModalTextContainer}>
+          <Text style={styles.modalHeaderText}>{headingText}</Text>
+          <Text style={styles.modalBodyText}>{bodyText}</Text>
+          {bodyText2 && <Text style={styles.modalBodyText}>{bodyText2}</Text>}
+          {bodyText3 && <Text style={styles.modalBodyText}>{bodyText3}</Text>}
         </View>
-      </Modal>
-    );
-  }
-}
+        <View style={styles.helperModalButtonContainer}>
+          <CustomBtn
+            onPress={hideHelperModal}
+            outline={true}
+            titleCapitalise={true}
+            Title="OK, GOT IT!"
+            customBtnStyle={{ borderRadius: 50, margin: 10 }}
+          />
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+export default HelperModal;
 
 HelperModal.propTypes = {
   helperModalVisible: PropTypes.bool.isRequired,
@@ -98,15 +67,15 @@ HelperModal.defaultProps = {
 const styles = StyleSheet.create({
   helperModalContainer: {
     flexShrink: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    justifyContent: "space-between",
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   helperModalTextContainer: {
-    width: '100%',
+    width: "100%",
     backgroundColor: colors.white,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     paddingTop: 15,
     paddingLeft: 15,
     paddingRight: 10,
@@ -126,29 +95,29 @@ const styles = StyleSheet.create({
   },
   helperModalButtonContainer: {
     backgroundColor: colors.white,
-    width: '100%',
+    width: "100%",
   },
   modalButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.charcoal.standard,
     height: 50,
-    width: '100%',
+    width: "100%",
   },
   modalButtonCoral: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.themeColor.color,
     height: 50,
-    width: '100%',
+    width: "100%",
   },
-  
+
   modalThemeButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.themeColor.color,
     height: 50,
-    width: '100%',
+    width: "100%",
   },
   modalButtonText: {
     fontFamily: fonts.bold,

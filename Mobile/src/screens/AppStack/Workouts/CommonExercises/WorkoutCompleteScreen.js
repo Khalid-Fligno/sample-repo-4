@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -7,87 +7,122 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
-  BackHandler
-} from 'react-native';
-import { ListItem } from 'react-native-elements';
-import * as FileSystem from 'expo-file-system';
-import { PieChart } from 'react-native-svg-charts';
-import Rate from 'react-native-rate';
-import Loader from '../../../../components/Shared/Loader';
-import Icon from '../../../../components/Shared/Icon';
+  BackHandler,
+} from "react-native";
+import { ListItem } from "react-native-elements";
+import * as FileSystem from "expo-file-system";
+import { PieChart } from "react-native-svg-charts";
+import Rate, { AndroidMarket } from "react-native-rate";
+import Loader from "../../../../components/Shared/Loader";
+import Icon from "../../../../components/Shared/Icon";
 import CustomBtn from "../../../../components/Shared/CustomBtn";
-import fonts from '../../../../styles/fonts';
-import colors from '../../../../styles/colors';
-import { Platform } from 'react-native';
+import fonts from "../../../../styles/fonts";
+import colors from "../../../../styles/colors";
+import { Platform } from "react-native";
 import globalStyle from "../../../../styles/globalStyles";
-import Dialog, { DialogContent, DialogTitle, DialogFooter, DialogButton } from 'react-native-popup-dialog';
+import Dialog, {
+  DialogContent,
+  DialogTitle,
+  DialogFooter,
+  DialogButton,
+} from "react-native-popup-dialog";
+import AsyncStorage from "@react-native-community/async-storage";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
-const pieDataComplete = [100, 0]
-  .map((value, index) => ({
-    value,
-    svg: {
-      fill: colors.coral.standard,
-    },
-    key: `pie-${index}`,
-  }));
-
+const pieDataComplete = [100, 0].map((value, index) => ({
+  value,
+  svg: {
+    fill: colors.coral.standard,
+  },
+  key: `pie-${index}`,
+}));
+const options = {
+  AppleAppID: "1438373600",
+  preferInApp: true,
+  openAppStoreIfInAppFails: false, 
+}
 export default class WorkoutCompleteScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      popUp: false
+      popUp: false,
     };
     this.backButtonClick = this.backButtonClick.bind(this);
   }
   componentDidMount = async () => {
-    BackHandler.addEventListener('hardwareBackPress',this.backButtonClick)
+    this.subscribed = BackHandler.addEventListener(
+      "hardwareBackPress", 
+      this.backButtonClick
+    );
     this.manageVideoCache();
-    if(Platform.OS === 'ios')
-      this.showRatePopup();
-    if(Platform.OS === 'android') {
-      this.setState({popUp: true})
+    if (Platform.OS === "ios") this.showRatePopup();
+    if (Platform.OS === "android") {
+      const later =await AsyncStorage.getItem('later')
+      const successreview = await AsyncStorage.getItem('success')
+      if (later==='true'||successreview==='true') {
+        this.setState({ popUp: false });
+      }else{
+        this.setState({ popUp: true });
+      }
+      
     }
+
   };
 
   componentWillUnmount = () => {
-    BackHandler.removeEventListener('hardwareBackPress',this.backButtonClick)
+    if(this.subscribed) this.subscribed.remove();
+    //BackHandler.removeEventListener("hardwareBackPress", this.backButtonClick);
   };
 
   backButtonClick() {
-    this.setState({popUp: false})
+    this.setState({ popUp: false });
   }
-
+ 
   showRatePopup = async () => {
-    Rate.rate({ AppleAppID: '1438373600', preferInApp: true, openAppStoreIfInAppFails: false });
-  }
+    Rate.rate(options,(success,error)=>{
+      if (success) {
+        // this technically only tells us if the user successfully went to the Review Page. Whether they actually did anything, we do not know.
+
+      }
+      if(error){
+        // errorMessage comes from the native code. Useful for debugging, but probably not for users to view
+
+      }
+    });
+  };
   manageVideoCache = async () => {
-    FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then((res)=>{
-      // console.log(res)
-        Promise.all(res.map(async (item,index) => {
+    FileSystem.readDirectoryAsync(`${FileSystem.cacheDirectory}`).then(
+      (res) => {
+        // console.log(res)
+        Promise.all(
+          res.map(async (item, index) => {
             if (item.includes("exercise-")) {
-              console.log(`${FileSystem.cacheDirectory}${item}`)
-              FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, { idempotent: true }).then(()=>{
-                console.log("deleted...",item)
-              })
+              // console.log(`${FileSystem.cacheDirectory}${item}`);
+              FileSystem.deleteAsync(`${FileSystem.cacheDirectory}${item}`, {
+                idempotent: true,
+              }).then(() => {
+                // console.log("deleted...",item)
+              });
             }
-        }))
-    })
-  }
+          })
+        );
+      }
+    );
+  };
   completeWorkout = async () => {
-    const extraProps = this.props.navigation.getParam('extraProps', undefined)
-    if(extraProps['fromCalender']){
-      this.props.navigation.navigate('CalendarHome');
-    }else{
-      this.props.navigation.navigate('WorkoutsHome');
+    const extraProps = this.props.navigation.getParam("extraProps", undefined);
+    if (extraProps["fromCalender"]) {
+      this.props.navigation.navigate("CalendarHome");
+    } else {
+      this.props.navigation.navigate("WorkoutsHome");
     }
-  }
+  };
   completeWorkoutAndInvite = async () => {
-    this.props.navigation.navigate('WorkoutsHome');
-    this.props.navigation.navigate('InviteFriends');
-  }
+    this.props.navigation.navigate("WorkoutsHome");
+    this.props.navigation.navigate("InviteFriends");
+  };
   render() {
     const { loading, popUp } = this.state;
     const completePieChart = (
@@ -100,14 +135,11 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
     const tickIcon = (
       <View style={styles.invisibleView}>
         <View style={styles.tickContainer}>
-          <Icon
-            name="tick-heavy"
-            color={colors.charcoal.dark}
-            size={100}
-          />
+          <Icon name="tick-heavy" color={colors.charcoal.dark} size={100} />
         </View>
       </View>
     );
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
@@ -116,30 +148,34 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
             onTouchOutside={() => {
               this.setState({ popUp: false });
             }}
-            dialogTitle={<DialogTitle title="Your feedback matters to us" align="left" />}
+            dialogTitle={
+              <DialogTitle title="Your feedback matters to us" align="left" />
+            }
             footer={
               <DialogFooter>
                 <DialogButton
                   text="DO THIS LATER"
                   onPress={() => {
-                    this.setState({ popUp: false });
+                    this.setState({ popUp: false })
+                    AsyncStorage.setItem('later','true')
                   }}
                 />
                 <DialogButton
                   text="RATE NOW"
                   onPress={() => {
                     const options = {
-                      GooglePackageName:"com.fitazfk.fitazfkapp"
-                    }
-                    Rate.rate(options, (success, errorMessage)=>{
+                      GooglePackageName: "com.fitazfk.fitazfkapp",
+                      preferredAndroidMarket: AndroidMarket.Google,
+                      preferInApp:true,
+                    };
+                    Rate.rate(options, (success) => {
                       if (success) {
-                        console.log('ANDROID RATE REVIEW ', success)
+                        AsyncStorage.setItem('success','true')
+                        this.setState({ popUp: false })
                       }
-                      if (errorMessage) {
-                        console.log('ANDROID RATE REVIEW ', errorMessage)
-                      }
-                    })
-                  }}
+                    });
+                   }
+                  }
                 />
               </DialogFooter>
             }
@@ -147,31 +183,13 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
             //   this.setState({ visible: false });
             // }}
           >
+          
             <DialogContent>
-              <TouchableOpacity
-                onPress={() => {
-                  const options = {
-                    GooglePackageName:"com.fitazfk.fitazfkapp"
-                  }
-                  Rate.rate(options, (success, errorMessage)=>{
-                    if (success) {
-                      console.log('ANDROID RATE REVIEW ', success)
-                    }
-                    if (errorMessage) {
-                      console.log('ANDROID RATE REVIEW ', errorMessage)
-                    }
-                  })
-                }}
-              >
-                <View style={{flexDirection:'row', justifyContent:'space-between', paddingBottom: 10}}>
-                  <Icon name="star-outline" size={50} />
-                  <Icon name="star-outline" size={50} />
-                  <Icon name="star-outline" size={50} />
-                  <Icon name="star-outline" size={50} />
-                  <Icon name="star-outline" size={50} />
-                </View>
-              </TouchableOpacity>
-              <Text>If you enjoy using this app, would you mind{"\n"}taking a moment to rate it? It won't take more{"\n"}than a minute. Thank you for your support!</Text>
+              <Text>
+                If you enjoy using this app, would you mind{"\n"}taking a moment
+                to rate it? It won't take more{"\n"}than a minute. Thank you for
+                your support!
+              </Text>
             </DialogContent>
           </Dialog>
           {/* <View style={styles.textContainer}>
@@ -191,20 +209,16 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
           </View> */}
           <Image
             source={require("../../../../../assets/icons/FITAZ_BrandMark.png")}
-            style={{width: 75}}
+            style={{ width: 75 }}
             resizeMode="contain"
           />
           <View style={styles.iconContainer}>
             <View style={styles.textContainer}>
-              <Text style={styles.headerText}>
-                Workout Complete!
-              </Text>
+              <Text style={styles.headerText}>Workout Complete!</Text>
               <Text style={styles.bodyText1}>
                 "Congratulations on empowering yourself!"
               </Text>
-              <Text style={styles.bodyText2}>
-                See you back here soon.
-              </Text>
+              <Text style={styles.bodyText2}>See you back here soon.</Text>
             </View>
           </View>
           <View>
@@ -241,10 +255,7 @@ export default class WorkoutCompleteScreen extends React.PureComponent {
               />
             </View>
           </View>
-          <Loader
-            color={colors.coral.standard}
-            loading={loading}
-          />
+          <Loader color={colors.coral.standard} loading={loading} />
         </View>
       </SafeAreaView>
     );
@@ -260,10 +271,10 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: colors.white,
     backgroundColor: colors.citrus,
-    alignItems: 'center',
+    alignItems: "center",
   },
   textContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     width,
     padding: 10,
     paddingTop: 25,
@@ -274,9 +285,9 @@ const styles = StyleSheet.create({
     fontSize: 44,
     // color: colors.themeColor.color,
     color: colors.charcoal.dark,
-    textAlign: 'center',
+    textAlign: "center",
     //
-    paddingBottom: 60
+    paddingBottom: 60,
   },
   bodyText1: {
     // fontFamily: fonts.bold,
@@ -285,9 +296,9 @@ const styles = StyleSheet.create({
     fontSize: 36,
     color: colors.charcoal.dark,
     marginTop: 10,
-    textAlign: 'center',
+    textAlign: "center",
     //
-    paddingBottom: 25
+    paddingBottom: 25,
   },
   bodyText2: {
     // fontFamily: fonts.bold,
@@ -296,15 +307,15 @@ const styles = StyleSheet.create({
     fontSize: 36,
     color: colors.charcoal.dark,
     marginTop: 10,
-    textAlign: 'center',
+    textAlign: "center",
     //
     paddingBottom: 220,
-    width: 300
+    width: 300,
   },
   iconContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
   pieChart: {
     height: 160,

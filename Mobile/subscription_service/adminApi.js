@@ -64,7 +64,7 @@ router.post('/addUser',jsonParser,async (req,res)=>{
                                     const challengeData = await getChallengeById(challengeId);
                                     // console.log(challengeData)
                                     const makeChallengeData = createNewChallenge(challengeData);
-                                    updateChallengesAgainstUser(makeChallengeData,userRecord.uid)
+                                    updateChallengesAgainstUser(makeChallengeData, userRecord.uid)
                                     .then(res1=>{
                                         if(!res1)
                                             console.log("failed while updating challenge")

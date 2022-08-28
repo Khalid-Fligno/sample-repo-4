@@ -24,7 +24,7 @@ const ChallengeOnboardingStackReverse = createStackNavigator(
     initialRouteName: "ChallengeOnBoarding6",
 
     defaultNavigationOptions: ({ navigation }) => ({
-      gesturesEnabled: false,
+      gestureEnabled: false,
       header: () => {
         const { routeName } = navigation.state;
         if (

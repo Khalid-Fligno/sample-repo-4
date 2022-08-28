@@ -8,46 +8,7 @@ import globalStyle from '../../../styles/globalStyles';
 import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
 import fonts from '../../../styles/fonts';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
-
-const NutritionList = [
-  {
-    title:"breakfast",
-    imageUrl:require('../../../../assets/images/nutrition-breakfast.jpg'),
-    meal: 'breakfast'
-  },
-  {
-    title:"lunch",
-    imageUrl:require('../../../../assets/images/nutrition-lunch.jpg'),
-    meal: 'lunch'
-  },
-  {
-    title:"dinner",
-    imageUrl:require('../../../../assets/images/nutrition-dinner.jpg'),
-    meal: 'dinner'
-  },
-  {
-    title:"snack",
-    imageUrl:require('../../../../assets/images/nutrition-snack.jpg'),
-    meal: 'snack'
-  },
-  ,
-  {
-    title:"Post Workout",
-    imageUrl:require('../../../../assets/images/homeScreenTiles/Post-Workout.jpg'),
-    meal: 'drink'
-  },
-  ,
-  {
-    title:"Pre Workout",
-    imageUrl:require('../../../../assets/images/homeScreenTiles/Pre-Workout.jpg'),
-    meal: 'preworkout'
-  },
-  {
-    title:"treats",
-    imageUrl:require('../../../../assets/images/homeScreenTiles/Treats.jpg'),
-    meal: 'treats'
-  },
-]
+import NutritionGroup from './NutritionGroup.js'
 
 export default function NutritionHomeScreen({ navigation }) {
   return (
@@ -69,19 +30,18 @@ export default function NutritionHomeScreen({ navigation }) {
         </View>
 
         {
-          NutritionList.map((data,i)=>(
+          NutritionGroup.all.map((data,i)=>(
             <Tile
               key={i}
               title1={data.title}
               image={data.imageUrl}
-              onPress={() => navigation.navigate('RecipeSelection', { meal: data.meal, title:data.title })}
+              onPress={() => navigation.navigate('RecipeSelection', { meal: data.filteredMealType, title: data.title })}
               showTitle = {true}
               overlayTitle = {false}
               customContainerStyle={{height:170}}
               showTitleStyle={{marginTop:15}}
           />
           ))
-         
         }
        
        </View>

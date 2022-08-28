@@ -1,19 +1,13 @@
-import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Alert,
-  FlatList,
-  Text,
-} from 'react-native';
-import * as FileSystem from 'expo-file-system';
-import sortBy from 'lodash.sortby';
-import { db } from '../../../../config/firebase';
-import RecipeTile from '../../../components/Nutrition/RecipeTile';
-import RecipeTileSkeleton from '../../../components/Nutrition/RecipeTileSkeleton';
-import globalStyle from '../../../styles/globalStyles';
-import BigHeadingWithBackButton from '../../../components/Shared/BigHeadingWithBackButton';
-import CustomButtonGroup from '../../../components/Shared/CustomButtonGroup';
+import React from "react";
+import { StyleSheet, View, Alert, FlatList, Text, ActivityIndicator, } from "react-native";
+import * as FileSystem from "expo-file-system";
+import sortBy from "lodash.sortby";
+import { db } from "../../../../config/firebase";
+import RecipeTile from "../../../components/Nutrition/RecipeTile";
+import RecipeTileSkeleton from "../../../components/Nutrition/RecipeTileSkeleton";
+import globalStyle from "../../../styles/globalStyles";
+import BigHeadingWithBackButton from "../../../components/Shared/BigHeadingWithBackButton";
+import CustomButtonGroup from "../../../components/Shared/CustomButtonGroup";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import fonts from '../../../styles/fonts';
 
@@ -24,35 +18,41 @@ export default class RecipeSelectionScreen extends React.PureComponent {
       recipes: [],
       loading: false,
       filterIndex: 0,
-      meal: null
+      meal: null,
+      indicator: false,
+      limit: 6,
+      refreshing: false,
+      data: [],
     };
   }
 
   onFocusFunction = async () => {
-    const { meal } = this.state
     const newMeal = this.props.navigation.getParam('meal', null);
     this.setState({ meal: newMeal })
-    await this.fetchRecipes();
-    // }
-
-  }
+     await this.fetchRecipes();
+  };
 
   componentDidMount = async () => {
     await this.fetchRecipes();
-  }
+
+  };
 
   componentWillUnmount = async () => {
     // this.focusListener.remove()
-    if (this.unsubscribe)
-      await this.unsubscribe();
-  }
+    if (this.unsubscribe) await this.unsubscribe();
+  };
 
   fetchRecipes = async () => {
     this.setState({ loading: true });
+    
     const meal = this.props.navigation.getParam('meal', null);
     const challengeMealsFilterList = this.props.navigation.getParam('challengeMealsFilterList', null);
     this.unsubscribe = await db.collection('recipes')
       .where(meal, '==', true)
+      .where("showLifestyle", '==', true)
+      .orderBy('title')
+      .limit(this.state.limit)
+      
       .onSnapshot(async (querySnapshot) => {
         const recipes = [];
         await querySnapshot.forEach(async (doc) => {
@@ -62,8 +62,26 @@ export default class RecipeSelectionScreen extends React.PureComponent {
           } else {
             await recipes.push(await doc.data());
           }
-
         });
+
+      // get expected data
+         this.data = await db.collection('recipes')
+         .where(meal, '==', true)
+         .where("showLifestyle", '==', true)
+         .orderBy('title')
+         .onSnapshot(async (querySnapshot) => {
+           const data = [];
+           await querySnapshot.forEach(async (doc) => {
+             if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
+               if (challengeMealsFilterList.includes(doc.data().id))
+                 await data.push(await doc.data());
+             } else {
+               await data.push(await doc.data());
+             }
+           });
+             this.setState({data: data})
+         });
+ 
 
         await Promise.all(recipes.map(async (recipe) => {
           const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
@@ -80,42 +98,120 @@ export default class RecipeSelectionScreen extends React.PureComponent {
               Alert.alert('', 'Image download error');
             });
         }));
-        this.setState({ recipes: sortBy(recipes, 'title'), loading: false });
+        this.setState({ recipes: recipes, loading: false});
+        
       });
+  };
+
+  retrieveMore = async() =>{
+    try {  
+      this.setState({refreshing: true,});
+      const recipes =[];
+      const meal = this.props.navigation.getParam('meal', null);
+      const challengeMealsFilterList = this.props.navigation.getParam('challengeMealsFilterList', null);
+      const recipeMeal = await db.collection('recipes')
+        .where(meal, '==', true)
+        .where("showLifestyle", '==', true)
+        .orderBy('title')
+        .limit(this.state.limit)
+        .get()
+
+        recipeMeal.forEach(async(doc) =>{
+          if (challengeMealsFilterList && challengeMealsFilterList.length > 0) {
+                if (challengeMealsFilterList.includes(doc.data().id))
+                   await recipes.push(doc.data());
+                } else {
+                   await recipes.push(doc.data());
+                }
+          })
+          
+       
+          await Promise.all(recipes.map(async (recipe) => {
+            const fileUri = `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`;
+            await FileSystem.getInfoAsync(fileUri)
+              .then(async ({ exists }) => {
+                if (!exists) {
+                  await FileSystem.downloadAsync(
+                    recipe.coverImage,
+                    `${FileSystem.cacheDirectory}recipe-${recipe.id}.jpg`,
+                  );
+                }
+              }).catch(() => {
+                Alert.alert('', 'Image download error');
+              });
+          }));
+          this.setState({ recipes: recipes,limit: this.state.limit + 6});
+          this.setState({refreshing: false}); 
+          let allData = this.state.data;
+          if (recipes.length === allData.length) {
+            this.setState({indicator: false})
+          }
+          if (recipes.length != allData.length) {
+            this.setState({indicator: true})
+          }
+      
+    } catch (error) {
+      
+    }
+  }
+  
+
+  renderFooter = () =>{
+    try {
+      if (this.state.indicator) {
+        return(
+          <ActivityIndicator color="#999999"/>
+        )
+      } else {
+        return null;
+      }
+      
+            
+    } catch (error) {
+      
+    }
   }
 
   updateFilter = (filterIndex) => {
     this.setState({ filterIndex });
-  }
+  };
 
   keyExtractor = (item, index) => String(index);
 
-  renderItem = ({ item }) => (
-    <RecipeTile
-      onPress={() => this.props.navigation.push('Recipe',
-        {
-          recipe: item,
-          title: this.props.navigation.getParam('meal', null)
-        })}
-      image={`${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage}
-      title={item.title.toUpperCase()}
-      tags={item.tags}
-      subTitle={item.subtitle}
-      time={item.time}
-      newBadge={item.newBadge}
-    />
-  );
+  renderItem = ({ item, index }) => {
+    return (
+      <RecipeTile
+        onPress={() =>
+          this.props.navigation.push("Recipe", {
+            recipe: item,
+            title: this.props.navigation.getParam("meal", null),
+          })
+        }
+        image={
+          `${FileSystem.cacheDirectory}recipe-${item.id}.jpg` || item.coverImage
+        }
+        title={item.title.toUpperCase()}
+        tags={item.tags}
+        subTitle={item.subtitle}
+        time={item.time}
+        newBadge={item.newBadge}
+      />
+    );
+  };
 
   handleBack = () => {
     const { navigation } = this.props;
     navigation.pop();
-  }
+  };
+
+  
 
   render() {
-    const meal = this.props.navigation.getParam('meal', null);
-    const { recipes, loading, filterIndex } = this.state;
+    const title = this.props.navigation.getParam('title', null);
+    const { recipes, loading, filterIndex,indicator } = this.state;
+    // console.log('indicator',this.state.indicator);
+    // console.log('recipes',this.state.recipes);
     const filterButtons = ['All', 'V', 'V+', 'GF', 'GH', 'DF'];
-
     const recipeList = sortBy(recipes, 'newBadge')
       .filter((recipe) => {
         // console.log(recipe.title)
@@ -144,13 +240,13 @@ export default class RecipeSelectionScreen extends React.PureComponent {
     );
     return (
       <View style={globalStyle.container}>
-        <BigHeadingWithBackButton isBackButton={true}
-          bigTitleText={meal}
+        <BigHeadingWithBackButton
+          isBackButton={true}
+          bigTitleText={title}
           onPress={this.handleBack}
           backButtonText="Back to nutrition"
           isBigTitle={true}
-          isBackButton={true}
-          customContainerStyle={{ marginTop: 10, marginBottom: hp('2.5%') }}
+          customContainerStyle={{ marginTop: 10, marginBottom: hp("2.5%") }}
         />
         <CustomButtonGroup
           onPress={this.updateFilter}
@@ -170,7 +266,11 @@ export default class RecipeSelectionScreen extends React.PureComponent {
                   renderItem={this.renderItem}
                   showsVerticalScrollIndicator={false}
                   removeClippedSubviews={false}
-                  maxToRenderPerBatch={20}
+                  onEndReached={this.retrieveMore}
+                  ListFooterComponent={this.renderFooter}
+                  onEndReachedThreshold={0.2}
+                  refreshing={this.state.refreshing}
+
                 />
               )
               :
@@ -206,5 +306,4 @@ const styles = StyleSheet.create({
   recipeTileSkeletonContainer: {
     // paddingTop: 35,
   },
-
 });

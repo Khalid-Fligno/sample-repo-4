@@ -62,6 +62,14 @@
           <input matInput formControlName="shopifyUrl" placeholder="https://shopify.com/" required>
         </mat-form-field>
 
+        <mat-form-field appearance="outline">
+          <mat-label>Strength Assessment</mat-label>
+          <mat-select formControlName="strengthAssessmentId">
+            <mat-option *ngFor="let assessment of strengthAssessments" [value]="assessment.id">{{assessment.title}}</mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="f.tags.invalid">Please select an strenght assesment for this challenge</mat-error> -->
+        </mat-form-field>
+
         <!-- <mat-form-field appearance="outline" >
           <mat-label>Tag :</mat-label>
           <input matInput formControlName="tag" required>
@@ -106,9 +114,14 @@
               </div>
 
               <mat-form-field appearance="outline" >
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name">
+                <mat-hint>This is one time input ,you can not edit it after submit.</mat-hint>
+              </mat-form-field>  
+
+              <mat-form-field appearance="outline" >
                 <mat-label>Display Name</mat-label>
                 <input matInput formControlName="displayName">
-                <mat-hint>This is one time input ,you can not edit it after submit.</mat-hint>
               </mat-form-field>  
 
               <!-- <mat-form-field appearance="outline" >
@@ -160,7 +173,13 @@
                     <p  *ngIf="recipeList.length === 0" >No record found..</p>
                   </mat-select>
                 </mat-form-field>
+                <mat-form-field appearance="outline" >
+                  <mat-label>Max allowed favourited breakfast recipes</mat-label>
+                  <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" formControlName="breakfastMaxAllowedFavourites">
+                  <mat-hint>This number indicates the maximum number of recipes that can be favourited by the user</mat-hint>
+                </mat-form-field>
               </div>
+
               <!-- BreakFast field close-->
 
               <!-- lunch field -->
@@ -172,8 +191,7 @@
                   <mat-select 
                       formControlName="lunch" 
                       multiple 
-                      (openedChange)="openedChange($event)"
-                    >
+                      (openedChange)="openedChange($event)">
                     <mat-form-field  appearance="outline" class="searchContainer">
                       <mat-label>Search</mat-label>
                       <input type="text" matInput [formControl]="selectedItem" (keydown)="$event.stopPropagation()">
@@ -184,6 +202,11 @@
                     </div>
                     <p  *ngIf="recipeList.length === 0" >No record found..</p>
                   </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" >
+                  <mat-label>Max allowed favourited lunch recipes</mat-label>
+                  <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" formControlName="lunchMaxAllowedFavourites">
+                  <mat-hint>This number indicates the maximum number of recipes that can be favourited by the user</mat-hint>
                 </mat-form-field>
               </div>
               <!-- lunch field close-->
@@ -210,6 +233,11 @@
                       <p  *ngIf="recipeList.length === 0" >No record found..</p>
                     </mat-select>
                   </mat-form-field>
+                  <mat-form-field appearance="outline" >
+                    <mat-label>Max allowed favourited dinner recipes</mat-label>
+                    <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" formControlName="dinnerMaxAllowedFavourites">
+                    <mat-hint>This number indicates the maximum number of recipes that can be favourited by the user</mat-hint>
+                  </mat-form-field>
                 </div>
               <!-- Dinner field close-->
               <!-- Snack field -->
@@ -235,6 +263,11 @@
                         <p  *ngIf="recipeList.length === 0" >No record found..</p>
                       </mat-select>
                     </mat-form-field>
+                    <mat-form-field appearance="outline" >
+                      <mat-label>Max allowed favourited snack recipes</mat-label>
+                      <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" formControlName="snackMaxAllowedFavourites">
+                      <mat-hint>This number indicates the maximum number of recipes that can be favourited by the user</mat-hint>
+                    </mat-form-field>
                   </div>
                 <!-- Snack field close-->
                 <!-- Drink field -->
@@ -246,9 +279,7 @@
                       <mat-select 
                           formControlName="drink" 
                           multiple 
-                        
-                          (openedChange)="openedChange($event)"
-                        >
+                          (openedChange)="openedChange($event)">
                         <mat-form-field  appearance="outline" class="searchContainer">
                           <mat-label>Search</mat-label>
                           <input type="text" matInput [formControl]="selectedItem" (keydown)="$event.stopPropagation()">
@@ -260,9 +291,13 @@
                         <p  *ngIf="recipeList.length === 0" >No record found..</p>
                       </mat-select>
                     </mat-form-field>
+                    <mat-form-field appearance="outline" >
+                      <mat-label>Max allowed favourited post workout recipes</mat-label>
+                      <input matInput type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189 && event.keyCode !== 187" formControlName="drinksMaxAllowedFavourites">
+                      <mat-hint>This number indicates the maximum number of recipes that can be favourited by the user</mat-hint>
+                    </mat-form-field>
                   </div>
                 <!-- Drink field close-->
-
             </div>
           </div>
         </div>

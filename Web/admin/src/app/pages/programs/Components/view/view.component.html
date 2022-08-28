@@ -69,7 +69,24 @@
           <!-- Pdf url -->
           <h3 class="heading">Pdf URL :</h3>
           <p><a [href]="data.shopifyUrl" target="blank">{{item.pdfUrl}}</a></p>
+          <!-- Maximum Favourites Per Grouping-->
+          <h3 class="heading">User Favourite Recipe Configuration:</h3>
+          <table mat-table [dataSource]=_getFavouriteConfigurationDataSource(item.favouriteRecipeConfigs)>
+            <!-- Name Column -->
+            <ng-container matColumnDef="favourite-name">
+              <th mat-header-cell *matHeaderCellDef> Name </th>
+              <td mat-cell *matCellDef="let element">{{element.title}}</td>
+            </ng-container>
 
+            <!-- Weight Column -->
+            <ng-container matColumnDef="favourite-max-value">
+              <th mat-header-cell *matHeaderCellDef> Max allowed selection </th>
+              <td mat-cell *matCellDef="let element"> {{element.maximumAllowedFavourites}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
           <!-- Meals -->
           <h3 class="heading">Meals :</h3>
           <mat-list role="list">

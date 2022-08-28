@@ -4,9 +4,8 @@ import {
     StyleSheet,
     View,
     Dimensions,
-    SafeAreaView,
-    FlatList,
     Text,
+    Platform,
 } from "react-native";
 import colors from "../../../../styles/colors";
 import fonts from '../../../../styles/fonts';
@@ -15,6 +14,10 @@ import {
     widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { Card } from 'react-native-elements';
+import Icon from "react-native-vector-icons/AntDesign";
+
+
+
 
 const { width } = Dimensions.get("window");
 
@@ -22,36 +25,56 @@ export default class FilterScreen extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            recipeIsExist: false,
+            recipeIds: []
+        }
     }
 
     render() {
-
-        const { result, item,title } = this.props
+        const { result, item, title, onSelectHeart, favouritingDisabled, ifExistRecipe } = this.props
 
         return (
             <View
                 style={styles.cardContainer}
             >
                 <TouchableOpacity
-                    onPress={() =>
+                    onPress={ () =>
                         this.props.navigation.push("Recipe", {
                             recipe: item,
                             backTitle: false,
                             title: title,
-
                         })
-                    }
-                >
+                    }>
                     <Card
                         image={{ uri: item.coverImage }}
-                        containerStyle={styles.card}
-                    >
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10 }}>
-                                <View style={{ maxWidth: '70%' }}>
-                                    <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>
+                        containerStyle={styles.card}>
+
+                        <View>
+                    
+                        {item.drink && (
+                            <Text style={styles.watermarkTitle}>post{'\n'}workout</Text>
+                        )}
+                        {
+                            this.props.faveRecipeItem === undefined ?
+                                null
+                                :
+                                <View style={{
+                                    position: 'relative',
+                                    bottom: 150,
+                                    alignItems:'flex-end'
+                                }}>
+                                <TouchableOpacity
+                                    style={styles.heartState(favouritingDisabled) }
+                                    disabled={favouritingDisabled}
+                                    onPress={onSelectHeart}>
+                                    <Icon name={ifExistRecipe ? 'heart' : 'hearto'} size={30} color={'red'} />
+                                </TouchableOpacity>
                                 </View>
+                        }
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: -10, maxWidth: '50%' }}>
+                                <Text style={{ fontFamily: fonts.bold, fontSize: 14, lineHeight: 18 }}>{item.title}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 {
@@ -81,6 +104,7 @@ export default class FilterScreen extends React.PureComponent {
                                 }
                                 <Text style={{ fontSize: 9 }}>+ more</Text>
                             </View>
+                        </View>
                         </View>
                     </Card>
                 </TouchableOpacity>
@@ -176,6 +200,23 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: '#4d4c4c',
         padding: 10,
-    }
-
+    },
+    heartState: (isDisabled) => [
+        {
+            opacity: isDisabled ? 0.2 : 1
+        }
+    ],
+    watermarkTitle: {
+        color: colors.white,
+        backgroundColor: colors.black,
+        fontFamily: fonts.SimplonMonoMedium,
+        fontSize: 12,
+        textTransform: 'uppercase',  
+        textAlign: 'center',  
+        position: 'absolute',
+        top: -143,
+        left: -40,
+        transform: [{ rotate: '-45deg'}],
+        width: 120
+      }
 })

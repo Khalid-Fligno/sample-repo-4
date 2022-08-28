@@ -10,19 +10,16 @@ import {
   Alert,
   Platform,
   ActionSheetIOS,
-  PermissionsAndroid,
 } from "react-native";
 import ActionSheet from "react-native-actionsheet";
 import { Linking } from "expo";
 import * as Haptics from "expo-haptics";
-import * as FileSystem from "expo-file-system";
 import * as Permissions from "expo-permissions";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import Icon from "../../../components/Shared/Icon";
 import Loader from "../../../components/Shared/Loader";
-import { number } from "prop-types";
 import ChallengeStyle from "../chellengeStyle";
 import globalStyle, { containerPadding } from "../../../styles/globalStyles";
 import CustomBtn from "../../../components/Shared/CustomBtn";
@@ -51,8 +48,7 @@ const uriToBlob = (url) => {
       xhr.open("GET", url);
       xhr.responseType = "blob"; // convert type
       xhr.send();
-    } catch (err) {
-    }
+    } catch (err) {}
   });
 };
 
@@ -75,7 +71,8 @@ export default class OnBoarding4 extends Component {
       calendarModalVisible: false,
       chosenDate: new Date(),
       quit: false,
-      completedChallenge: false
+      completedChallenge: false,
+      recipeId: [],
     };
   }
 
@@ -112,10 +109,8 @@ export default class OnBoarding4 extends Component {
   };
 
   onFocusFunction = async () => {
-    console.log('QuitOnboard4: ', this.props.navigation.getParam("quit"))
-    console.log('completedChallengeOnboard4: ', this.props.navigation.getParam("completedChallenge"))
     const data = this.props.navigation.getParam("data", {});
-    console.log("OnBoarding4 data:", data);
+
     const image = data["challengeData"].image
       ? data["challengeData"].image
       : null;
@@ -126,27 +121,27 @@ export default class OnBoarding4 extends Component {
       imgUrl,
       btnDisabled: false,
       quit: this.props.navigation.getParam("quit"),
-      completedChallenge: this.props.navigation.getParam("completedChallenge")
+      completedChallenge: this.props.navigation.getParam("completedChallenge"),
     });
   };
 
   // add a focus listener onDidMount
-  async componentDidMount() {
+  componentDidMount() {
     this.props.navigation.setParams({
       handleSkip: () => {
         this.goToScreen("next");
       },
     });
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
-      this.onFocusFunction();
-    });
-    // if (Platform.OS === 'android') {
-    //   await this.requestAndroidPermissions();
+    this.listeners = [
+      this.props.navigation.addListener("didFocus", () => {
+        this.onFocusFunction();
+      }),
+    ];
+  }
 
-    // }else{
-    // this.getCameraPermission();
-    // this.getCameraRollPermission();
-    // }
+  // and don't forget to remove the listener
+  componentWillUnmount() {
+    this.listeners.forEach((item) => item.remove());
   }
 
   getCameraPermission = async () => {
@@ -169,9 +164,9 @@ export default class OnBoarding4 extends Component {
     }
   }
 
-  chooseUploadType = () => {
+  chooseUploadType = async () => {
     if (Platform.OS === "android") {
-      this.requestAndroidPermissions();
+      await this.requestAndroidPermissions();
       this.showActionSheet();
     } else {
       this.getCameraPermission();
@@ -256,23 +251,12 @@ export default class OnBoarding4 extends Component {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
-    // console.log(result);
     const originXValue = result.width > result.height ? 130 : 0;
     if (!result.cancelled) {
       try {
         const manipResult = await ImageManipulator.manipulateAsync(
           result.uri,
-          [
-            { resize: { height: 800, width: 600, } },
-            // {
-            //   crop: {
-            //     originX: originXValue,
-            //     originY: 0,
-            //     width: 600,
-            //     height: 800,
-            //   },
-            // },
-          ],
+          [{ resize: { height: 800, width: 600 } }],
           { format: "jpeg", compress: 0.7, base64: true }
         );
         this.uploading(manipResult);
@@ -284,11 +268,6 @@ export default class OnBoarding4 extends Component {
       }
     }
   };
-
-  // and don't forget to remove the listener
-  componentWillUnmount() {
-    this.focusListener.remove();
-  }
 
   saveImage = async (uri, blob) => {
     try {
@@ -308,10 +287,10 @@ export default class OnBoarding4 extends Component {
       // console.log(blob)
       const snapshot = await avatarStorageRef.put(blob, metadata);
       const url = await snapshot.ref.getDownloadURL();
-      // console.log(url)
       this.setState({ imgUrl: url });
     } catch (err) {
-      Alert.alert("Image save error");
+      console.log(err);
+      // Alert.alert("Image save error");
     }
   };
 
@@ -371,41 +350,47 @@ export default class OnBoarding4 extends Component {
 
   async saveOnBoardingInfo(data, stringDate2) {
     this.setState({ loading: true });
-    {
-      this.props.navigation.getParam("challengeOnboard")
-        ? this.setState({ loading: false })
-        : this.setState({ loading: true });
-    }
+
+    this.props.navigation.getParam("challengeOnboard")
+      ? this.setState({ loading: false })
+      : this.setState({ loading: true });
+
     const uid = await AsyncStorage.getItem("uid");
-    const userRef = db
-      .collection("users")
-      .doc(uid)
-      .collection("challenges")
-      .doc(data.id);
-    userRef
-      .set(data, { merge: true })
-      .then(async (res) => {
-        if (data.onBoardingInfo.fitnessLevel)
-          await AsyncStorage.setItem(
-            "fitnessLevel",
-            data.onBoardingInfo.fitnessLevel.toString()
-          );
-        this.setState({ loading: false });
-        this.addedToCalendarPopup(stringDate2);
-      })
-      .catch((err) => {
-        this.setState({ loading: false });
-      });
+    if (data) {
+      const userRef = db
+        .collection("users")
+        .doc(uid)
+        .collection("challenges")
+        .doc(data.id);
+      userRef
+        .set(data, { merge: true })
+        .then(async (res) => {
+          if (data.onBoardingInfo.fitnessLevel)
+            await AsyncStorage.setItem(
+              "fitnessLevel",
+              data.onBoardingInfo.fitnessLevel.toString()
+            );
+          this.setState({ loading: false });
+          this.addedToCalendarPopup(stringDate2);
+        })
+        .catch((err) => {
+          this.setState({ loading: false });
+        });
+    }
   }
 
   addChallengeToCalendar = async (date) => {
-    const { quit, completedChallenge } = this.state
+    const { quit, completedChallenge } = this.state;
+    const TODAY1 = moment().format("YYYY-MM-DD").toString();
+    const stringDate3 = moment(date).format("YYYY-MM-DD").toString();
+
     if (quit || completedChallenge) {
       if (this.state.addingToCalendar) {
         return;
       }
       this.setState({ addingToCalendar: true });
-      ////////////////////saving on calendar
+
+      //saving on calendar
       let updatedChallengedata = this.state.challengeData;
 
       let skipped = updatedChallengedata.onBoardingInfo.skipped;
@@ -426,7 +411,13 @@ export default class OnBoarding4 extends Component {
         onBoardingInfo,
       });
 
-      const data = createUserChallengeData(updatedChallengedata, new Date(date));
+      const data = createUserChallengeData(
+        updatedChallengedata,
+        new Date(date),
+        stringDate3,
+        TODAY1
+      );
+
       const progressData = {
         photoURL: this.state.imgUrl,
         height: updatedChallengedata.onBoardingInfo.measurements.height,
@@ -442,14 +433,6 @@ export default class OnBoarding4 extends Component {
       const stringDate2 = moment(date).format("DD-MM-YY").toString();
       const TODAY = moment();
 
-      // if (
-      //   new Date(updatedChallengedata.startDate).getTime() <
-      //   new Date(stringDate).getTime()
-      // ) {
-      //   data.isSchedule = true;
-      //   data.status = "InActive";
-      // }
-
       if (moment(date).isSame(TODAY, "d")) {
         Object.assign(data, { status: "Active" });
       } else {
@@ -457,7 +440,6 @@ export default class OnBoarding4 extends Component {
         Object.assign(data, { isSchedule: false, status: "Active" });
       }
 
-      console.log('Data111: ', progressData)
       await storeProgressInfo(progressData, quit || completedChallenge);
       await this.saveOnBoardingInfo(data, stringDate2);
     } else {
@@ -486,8 +468,14 @@ export default class OnBoarding4 extends Component {
         onBoardingInfo,
       });
 
-      const data = createUserChallengeData(updatedChallengedata, new Date(date));
-      delete data.workouts
+      const data = createUserChallengeData(
+        updatedChallengedata,
+        new Date(date),
+        stringDate3,
+        TODAY1
+      );
+
+      delete data.workouts;
       const progressData = {
         photoURL: this.state.imgUrl,
         height: updatedChallengedata.onBoardingInfo.measurements.height,
@@ -502,14 +490,6 @@ export default class OnBoarding4 extends Component {
       // const stringDate = moment(date).format("YYYY-MM-DD").toString();
       const stringDate2 = moment(date).format("DD-MM-YY").toString();
       const TODAY = moment();
-
-      // if (
-      //   new Date(updatedChallengedata.startDate).getTime() <
-      //   new Date(stringDate).getTime()
-      // ) {
-      //   data.isSchedule = true;
-      //   data.status = "InActive";
-      // }
 
       if (moment(date).isSame(TODAY, "d")) {
         Object.assign(data, { status: "Active" });
@@ -542,7 +522,6 @@ export default class OnBoarding4 extends Component {
           if (!skipped) {
             skipped = this.state.imgUrl == null ? true : false;
           }
-          console.log("Skipped: ", skipped);
           const onBoardingInfo = Object.assign(
             {},
             updatedChallengedata.onBoardingInfo,
@@ -573,7 +552,7 @@ export default class OnBoarding4 extends Component {
             burpeeCount: updatedChallengedata.onBoardingInfo.burpeeCount ?? 0,
             fitnessLevel: updatedChallengedata.onBoardingInfo.fitnessLevel,
           };
-          storeProgressInfo(progressData);
+          await storeProgressInfo(progressData);
           // this.props.navigation.navigate("WorkoutInfo");
           const resetAction = StackActions.reset({
             index: 0,
@@ -588,57 +567,8 @@ export default class OnBoarding4 extends Component {
           });
           this.props.navigation.dispatch(resetAction);
         } else {
-          // this.props.navigation.navigate("ChallengeOnBoarding5", {
-          //   data: {
-          //     challengeData: updatedChallengedata,
-          //   },
-          //   onboardingProcessComplete:
-          //     this.props.navigation.getParam("onboardingProcessComplete") !==
-          //     undefined
-          //       ? this.props.navigation.getParam("onboardingProcessComplete")
-          //       : false,
-          //   challengeOnboard:
-          //     this.props.navigation.getParam("challengeOnboard") !== undefined
-          //       ? this.props.navigation.getParam("challengeOnboard")
-          //       : false,
-          // });
-
-          // this.addChallengeToCalendar(moment().set("date", 26));
           this.showCalendarModal();
         }
-        // Alert.alert('',
-        //   `Before Picture ${onBoardingInfo.beforePhotoUrl === "" ? 'None' : onBoardingInfo.beforePhotoUrl.toString()}`,
-        //   [
-        //     {
-        //       text: 'OK', onPress:()=>{
-        //         if (this.props.navigation.getParam('onboardingProcessComplete')) {
-        //           const progressData = {
-        //             photoURL: updatedChallengedata.onBoardingInfo.beforePhotoUrl,
-        //             height: updatedChallengedata.onBoardingInfo.measurements.height,
-        //             goalWeight: updatedChallengedata.onBoardingInfo.measurements.goalWeight,
-        //             weight: updatedChallengedata.onBoardingInfo.measurements.weight,
-        //             waist: updatedChallengedata.onBoardingInfo.measurements.waist,
-        //             hip: updatedChallengedata.onBoardingInfo.measurements.hip,
-        //             burpeeCount: 1,
-        //             fitnessLevel: 1
-        //           }
-        //           storeProgressInfo(progressData);
-        //           this.props.navigation.navigate('WorkoutInfo');
-        //         } else {
-        //           this.props.navigation.navigate('ChallengeOnBoarding5',{
-        //             data:{
-        //                    challengeData:updatedChallengedata
-        //                  },
-        //                  onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
-        //                  challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
-        //           })
-        //         }
-
-        //       }
-        //     },
-        //   ],
-        //   { cancelable: false }
-        // );
       } else {
         this.props.navigation.navigate("ChallengeOnBoarding3", {
           data: {
@@ -646,19 +576,12 @@ export default class OnBoarding4 extends Component {
           },
           onboardingProcessComplete:
             this.props.navigation.getParam("onboardingProcessComplete") !==
-              undefined
+            undefined
               ? this.props.navigation.getParam("onboardingProcessComplete")
               : false,
         });
       }
       if (type === "next") {
-        // if(type === 'next'){
-        //   this.props.navigation.navigate('ChallengeOnBoarding5',{
-        //     data:{
-        //            challengeData:updatedChallengedata
-        //          }
-        //   })
-        // }
       } else if (type === "previous") {
         this.props.navigation.navigate("ChallengeOnBoarding3", {
           data: {
@@ -687,6 +610,21 @@ export default class OnBoarding4 extends Component {
         `data:image/jpeg;base64,${result.base64}`
       );
       blob = base64Response.blob()._W;
+
+      if (!blob) {
+        const base64Response = await fetch(
+          `data:image/jpeg;base64,${result.base64}`
+        );
+
+        blob = await base64Response.blob();
+        if (!blob) {
+          const base64Response = await fetch(
+            `data:image/jpeg;base64,${result.base64}`
+          );
+
+          blob = await base64Response.blob();
+        }
+      }
     }
     if (Platform.OS === "android") blob = await uriToBlob(result.uri);
 
@@ -718,6 +656,7 @@ export default class OnBoarding4 extends Component {
             onPress={() => this.addChallengeToCalendar(chosenDate)}
             addingToCalendar={addingToCalendar}
             loading={loading}
+            title="ADD TO CALENDAR"
           />
           <View>
             <Text style={[ChallengeStyle.onBoardingTitle]}>

@@ -123,7 +123,7 @@ export default class LevelModal extends React.PureComponent {
 
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.props.toggleGlutaFree} value={this.props.glutaFreeChecked}>
+                        <TouchableOpacity onPress={this.props.toggleGlutenFree} value={this.props.glutenFreeChecked}>
                             <View style={styles.tagContainer}>
                                 <View style={styles.tagContainer1}>
                                     <View style={{
@@ -144,18 +144,18 @@ export default class LevelModal extends React.PureComponent {
                                             GF
                                         </Text>
                                     </View>
-                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Gluta-Free</Text>
+                                    <Text style={{ marginTop: 3, fontSize: 15 }}>Gluten-Free</Text>
                                 </View>
                                 {Platform.OS == 'ios' ?
                                     (<CheckBox
                                         boxType='square'
-                                        value={this.props.glutaFreeChecked}
+                                        value={this.props.glutenFreeChecked}
                                     />
                                     ) : (
                                         <CheckBox
                                             boxType='square'
-                                            value={this.props.glutaFreeChecked}
-                                            onChange={this.props.toggleGlutaFree}
+                                            value={this.props.glutenFreeChecked}
+                                            onChange={this.props.toggleGlutenFree}
                                         />
                                     )}
 
@@ -239,6 +239,25 @@ export default class LevelModal extends React.PureComponent {
                         </TouchableOpacity>
                         <Text style={{ fontFamily: fonts.bold, marginBottom: 20, marginVertical: 30, fontWeight: 'bold', fontSize: 20 }}>Select Level</Text>
                         <TouchableOpacity
+                            onPress={this.props.togglePostpartumChecked}>
+                            <View style={styles.tagContainer}>
+                                <Text style={{ marginBottom: 10, fontSize: 15 }}>Postpartum</Text>
+                                {Platform.OS == 'ios' ?
+                                    (<CheckBox
+                                        boxType='square'
+                                        value={this.props.postpartumChecked}
+                                    />
+                                    ) : (
+                                        <CheckBox
+                                            boxType='square'
+                                            value={this.props.postpartumChecked}
+                                            onValueChange={this.props.togglePostpartumChecked}
+                                        />
+                                )}
+                            </View>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity
                             onPress={this.props.onPressLevel1}
                         // onPress={() => console.log('levelBUttonData: ', challengeRecipeData.level1)}
                         >
@@ -249,21 +268,37 @@ export default class LevelModal extends React.PureComponent {
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={this.props.onPressLevel2}
-                        >
-
+                            onPress={this.props.onPressLevel2}>
                             <View style={styles.tagContainer}>
                                 <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 2</Text>
-                                <Icon name="chevron-right" size={12} color={colors.black} />
+                                {Platform.OS == 'ios' ?
+                                    (<CheckBox
+                                        boxType='square'
+                                        value={this.props.level2Checked} />
+                                    ) : (
+                                        <CheckBox
+                                            boxType='square'
+                                            value={this.props.level2Checked}
+                                            onValueChange={this.props.onPressLevel2}
+                                        />
+                                )}
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={this.props.onPressLevel3}
-                        >
-
+                            onPress={this.props.onPressLevel3}>
                             <View style={styles.tagContainer}>
                                 <Text style={{ marginBottom: 10, fontSize: 15 }}>Level 3</Text>
-                                <Icon name="chevron-right" size={12} color={colors.black} />
+                                {Platform.OS == 'ios' ?
+                                    (<CheckBox
+                                        boxType='square'
+                                        value={this.props.level3Checked} />
+                                    ) : (
+                                        <CheckBox
+                                            boxType='square'
+                                            value={this.props.level3Checked}
+                                            onValueChange={this.props.onPressLevel3}
+                                        />
+                                )}
                             </View>
                         </TouchableOpacity>
 

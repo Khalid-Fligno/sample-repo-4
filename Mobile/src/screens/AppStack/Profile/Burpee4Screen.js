@@ -14,7 +14,7 @@ import * as Haptics from "expo-haptics";
 import Modal from "react-native-modal";
 import { db } from "../../../../config/firebase";
 import { burpeeOptions, findFitnessLevel } from "../../../utils";
-import CustomButton from "../../../components/Shared/CustomButton";
+import moment from "moment";
 import Loader from "../../../components/Shared/Loader";
 import colors from "../../../styles/colors";
 import fonts from "../../../styles/fonts";
@@ -23,21 +23,54 @@ import { containerPadding } from "../../../styles/globalStyles";
 
 const { width } = Dimensions.get("window");
 
-export default class Progress6Screen extends React.PureComponent {
+const storeProgressInfo = async (
+  isInitial,
+  burpeeCount
+) => {
+  const uid = await AsyncStorage.getItem("uid");
+  const progressDataFieldName = isInitial
+    ? "initialProgressInfo"
+    : "currentProgressInfo";
+
+  await db
+    .collection("users")
+    .doc(uid)
+    .set(
+      {
+        [progressDataFieldName]: {
+          burpeeCount,
+          date: moment().format("YYYY-MM-DD"),
+        },
+      },
+      { merge: true }
+    );
+};
+
+export default class Burpee4Screen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       burpeeCount: 0,
       burpeeModalVisible: false,
       loading: false,
+      strengthAssessmentInfo: props.navigation.getParam("strengthAssessmentInfo")
     };
   }
+
   componentDidMount = () => {
     this.props.navigation.setParams({ handleCancel: this.handleCancel });
   };
+
   handleCancel = () => {
+    const {
+      isInitial,
+      updateBurpees,
+      photoExist2
+    } = this.props.navigation.state.params;
+    const { title } = this.state.strengthAssessmentInfo
+
     Alert.alert(
-      "Stop burpee test?",
+      `Cancel ${title}?`,
       "",
       [
         {
@@ -48,19 +81,24 @@ export default class Progress6Screen extends React.PureComponent {
           text: "Yes",
           onPress: () => {
             if (this.props.navigation.getParam("fromScreen")) {
-              const screen = this.props.navigation.getParam("fromScreen");
-              const params =
-                this.props.navigation.getParam("screenReturnParams");
-              this.props.navigation.navigate(screen, params);
-              return;
+              this.props.navigation.navigate("CalendarHome");
+            } else {
+              if (updateBurpees) {
+                this.props.navigation.navigate("ProgressEdit", {
+                  isInitial: isInitial,
+                  photoExist2: photoExist2
+                });
+              } else {
+                this.props.navigation.navigate("Settings")
+              }
             }
-            this.props.navigation.navigate("Home");
           },
         },
       ],
       { cancelable: false }
     );
   };
+
   handleSubmit = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     this.setState({ loading: true });
@@ -69,11 +107,22 @@ export default class Progress6Screen extends React.PureComponent {
     const userRef = db.collection("users").doc(uid);
     const userSnapshot = await userRef.get();
     const initialProgressInfo = userSnapshot.data().initialProgressInfo ?? null;
-    if (initialProgressInfo) {
+    const {
+      isInitial,
+      navigateTo,
+      updateBurpees
+    } = this.props.navigation.state.params;
+    const fitnessLevel = findFitnessLevel(burpeeCount);
+    console.log('isInitial: ', isInitial)
+
+    if (updateBurpees) {
+      await storeProgressInfo(isInitial, burpeeCount)
+    } else {
       const progressInfo = {
         ...initialProgressInfo,
         burpeeCount: burpeeCount,
       };
+
       try {
         await userRef.set(
           {
@@ -83,10 +132,9 @@ export default class Progress6Screen extends React.PureComponent {
         );
       } catch (reason) {
         console.log("[Burpee4Screen.js handleSubmit() error: ", reason);
-        Alert.alert("Error", `Error: ${reason}.`);
       }
     }
-    const fitnessLevel = findFitnessLevel(burpeeCount);
+
     AsyncStorage.setItem("fitnessLevel", fitnessLevel.toString());
     try {
       await userRef.set(
@@ -96,38 +144,56 @@ export default class Progress6Screen extends React.PureComponent {
         },
         { merge: true }
       );
+
       this.setState({ loading: false });
-      if (this.props.navigation.getParam("fromScreen")) {
-        const screen = this.props.navigation.getParam("fromScreen");
-        const params = this.props.navigation.getParam("screenReturnParams");
-        this.props.navigation.navigate(screen, params);
-        return;
+
+      if (navigateTo === "Progress") {
+        this.props.navigation.navigate("ProgressEdit", {
+          isInitial: isInitial
+        });
+      } else {
+        if (this.props.navigation.getParam("fromScreen")) {
+          const screen = this.props.navigation.getParam("fromScreen");
+          const params = this.props.navigation.getParam("screenReturnParams");
+          this.props.navigation.navigate(screen, params);
+          return;
+        }
+        this.props.navigation.navigate("Settings", {
+          isInitial: true
+        });;
       }
-      this.props.navigation.navigate("Home");
     } catch (err) {
-      Alert.alert("Database write error", `${err}`);
+      console.log(err)
       this.setState({ loading: false });
     }
   };
+
   toggleBurpeeModal = () => {
     this.setState((prevState) => ({
       burpeeModalVisible: !prevState.burpeeModalVisible,
     }));
   };
+
   render() {
-    const { burpeeCount, burpeeModalVisible, loading } = this.state;
+    const {
+      burpeeCount,
+      burpeeModalVisible,
+      loading,
+      strengthAssessmentInfo: { video: {title: videoTitle } }
+    } = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.flexContainer}>
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>Results</Text>
             <Text style={styles.bodyText}>
-              Please enter the number of burpees you completed.
+              Please enter the number of {videoTitle.toLowerCase()} you completed.
             </Text>
           </View>
           <View style={styles.contentContainer}>
             <View style={styles.inputFieldContainer}>
-              <Text style={styles.inputFieldTitle}>Burpee Count</Text>
+              <Text style={styles.inputFieldTitle}>{videoTitle} Count</Text>
               <TouchableOpacity
                 onPress={this.toggleBurpeeModal}
                 style={styles.inputButton}

@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { View, Text, ScrollView, SafeAreaView, Alert } from "react-native";
+import { View, Text, ScrollView, SafeAreaView } from "react-native";
 import ChallengeStyle from "../chellengeStyle";
 import globalStyle from "../../../styles/globalStyles";
-import SliderComponent from "../../../components/Challenges/slider";
 import CustomBtn from "../../../components/Shared/CustomBtn";
-import fonts from "../../../styles/fonts";
 import * as FileSystem from "expo-file-system";
 import CheckboxComponent from "../../../components/Challenges/CheckboxComponent";
 import colors from "../../../styles/colors";
@@ -26,8 +24,6 @@ export default class OnBoarding1 extends Component {
   }
 
   onFocusFunction = () => {
-    console.log('QuitOnboard1: ', this.props.navigation.getParam("quit"))
-    console.log('completedChallengeOnboard1: ', this.props.navigation.getParam("completedChallenge"))
     const challengeData = this.props.navigation.getParam("data", {})[
       "challengeData"
     ];
@@ -49,9 +45,11 @@ export default class OnBoarding1 extends Component {
 
   // add a focus listener onDidMount
   async componentDidMount() {
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
-      this.onFocusFunction();
-    });
+    this.listeners = [
+      this.props.navigation.addListener("didFocus", () => {
+        this.onFocusFunction();
+      }),
+    ];
     await FileSystem.downloadAsync(
       "https://firebasestorage.googleapis.com/v0/b/staging-fitazfk-app.appspot.com/o/videos%2FBURPEE%20(2).mp4?alt=media&token=9ae1ae37-6aea-4858-a2e2-1c917007803f",
       `${FileSystem.cacheDirectory}exercise-burpees.mp4`
@@ -59,9 +57,9 @@ export default class OnBoarding1 extends Component {
   }
 
   // and don't forget to remove the listener
-  componentWillUnmount = async () => {
-    this.focusListener.remove();
-  };
+  componentWillUnmount() {
+    this.listeners.forEach((item) => item.remove());
+  }
   goToNextScreen(type) {
     let {
       challengeData,
@@ -89,7 +87,6 @@ export default class OnBoarding1 extends Component {
 
     let toAchieve = "";
 
-    console.log('quit: ', quit)
     for (var key in onBoardingInfo.toAchieve) {
       if (
         onBoardingInfo.toAchieve[key] !== undefined &&
@@ -118,29 +115,11 @@ export default class OnBoarding1 extends Component {
             ? this.props.navigation.getParam("challengeOnboard")
             : false,
       });
-      // Alert.alert('',
-      //   `Transform ${toAchieve.length === 0 ? 'Nothing' : toAchieve.substring(0, toAchieve.length - 2)}`,
-      //   [
-      //     {
-      //       text: 'OK', onPress:()=>{
-      //         this.props.navigation.navigate('ChallengeOnBoarding3',{
-      //           data:{
-      //             challengeData:updatedChallengedata
-      //           },
-      //           onboardingProcessComplete: this.props.navigation.getParam('onboardingProcessComplete') !== undefined ? this.props.navigation.getParam('onboardingProcessComplete') : false,
-      //           challengeOnboard: this.props.navigation.getParam('challengeOnboard') !== undefined ? this.props.navigation.getParam('challengeOnboard') : false
-      //         });
-      //       }
-      //     },
-      //   ],
-      //   { cancelable: false }
-      // );
     }
   }
 
   render() {
     let {
-      challengeData,
       weightLoss,
       increaseEnergy,
       increaseFitness,
@@ -165,67 +144,8 @@ export default class OnBoarding1 extends Component {
               <Text style={ChallengeStyle.onBoardingTitle}>
                 What do you want to achieve?
               </Text>
-              {/* <Text
-                style={[
-                  ChallengeStyle.onBoardingTitle,
-                  {
-                    fontSize: 15,
-                    fontFamily: fonts.GothamMedium,
-                    marginTop: 20,
-                    marginBottom: 20,
-                    textTransform: "lowercase",
-                  },
-                ]}
-              >
-                {challengeData.displayName}
-              </Text> */}
             </View>
 
-            {/* <SliderComponent
-              title="Weight loss"
-              value={weightLoss}
-              minimumValue={1}
-              maximumValue={10}
-              onValueChange={(value) =>
-                this.setState({ weightLoss: Math.round(value) })
-              }
-            />
-            <SliderComponent
-              title="Increase energy"
-              value={increaseEnergy}
-              minimumValue={1}
-              maximumValue={10}
-              onValueChange={(value) =>
-                this.setState({ increaseEnergy: Math.round(value) })
-              }
-            />
-            <SliderComponent
-              title="Tone up"
-              value={toneUp}
-              minimumValue={1}
-              maximumValue={10}
-              onValueChange={(value) =>
-                this.setState({ toneUp: Math.round(value) })
-              }
-            />
-            <SliderComponent
-              title="Mental health"
-              value={mentalHealth}
-              minimumValue={1}
-              maximumValue={10}
-              onValueChange={(value) =>
-                this.setState({ mentalHealth: Math.round(value) })
-              }
-            />
-            <SliderComponent
-              title="Increase fitness"
-              value={increaseFitness}
-              minimumValue={1}
-              maximumValue={10}
-              onValueChange={(value) =>
-                this.setState({ increaseFitness: Math.round(value) })
-              }
-            /> */}
             <CheckboxComponent
               title="Weight loss"
               isChecked={weightLoss > 1}

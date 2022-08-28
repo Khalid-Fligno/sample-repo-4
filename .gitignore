@@ -108,3 +108,4 @@ web-build/
 /.vs/slnx.sqlite
 /.vs
 Web/admin/dist
+Web/admin/.firebase/*

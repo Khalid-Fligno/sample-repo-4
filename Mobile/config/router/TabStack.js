@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator, BottomTabBar } from "react-navigation-tabs";
-import ChallengeSubscriptionStack from "./ChallengeSubscriptionStack";
+import ChallengesStack from "./ChallengesStack";
 import CalendarStack from "./CalendarStack";
 import ProgressStack from "./ProgressStack";
 import Icon from "../../src/components/Shared/Icon";
@@ -41,7 +41,7 @@ const TabStack = createBottomTabNavigator(
     Feed: FeedStack,
     Lifestyle: DashboardStack,
     Challenges: {
-      screen: ChallengeSubscriptionStack,
+      screen: ChallengesStack,
     },
     // Calendar: CalendarStack,
     Progress: { screen: ProgressStack },
@@ -50,7 +50,7 @@ const TabStack = createBottomTabNavigator(
     initialRouteName: "Lifestyle",
     tabBarComponent: (props) => <TabBarComponent {...props} />, //remember to import it,
     defaultNavigationOptions: ({ navigation }) => ({
-      header: null,
+      headerShown: false,
       title: getTabName(navigation.state.routeName),
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;

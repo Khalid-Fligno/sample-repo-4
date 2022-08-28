@@ -40,31 +40,35 @@ export default class ChangeUnitScreen extends React.PureComponent {
   //   });
   // };
 
-  async componentDidMount() {
-    this.focusListener = this.props.navigation.addListener("didFocus", () => {
-      this.onFocusFunction();
-    });
+  componentDidMount() {
+    this.listeners = [
+      this.props.navigation.addListener("didFocus", () => {
+        this.onFocusFunction();
+      }),
+    ];
   }
 
   fetchDataMeasurement = async () => {
     const uid = await AsyncStorage.getItem("uid");
-    this.focusListener = db.collection("users")
+    this.unsubscribed = db
+      .collection("users")
       .doc(uid)
       .onSnapshot(async (doc) => {
         var data = doc.data();
-        console.log('data:', data.unitsOfMeasurement)
+        console.log("data:", data.unitsOfMeasurement);
         this.setState({
-          unitOfMeasurement: data.unitsOfMeasurement
-        })
-      })
-  }
+          unitOfMeasurement: data.unitsOfMeasurement,
+        });
+      });
+  };
 
   async onFocusFunction() {
     this.fetchDataMeasurement();
   }
 
-  async componentWillUnmount() {
-    // await this.focusListener.remove();
+  componentWillUnmount() {
+    this.listeners.forEach((item) => item.remove());
+    if (this.unsubscribed) this.unsubscribed();
   }
 
   handleSubmit = async (unitOfMeasurement) => {
@@ -86,10 +90,7 @@ export default class ChangeUnitScreen extends React.PureComponent {
     }
   };
   render() {
-    const {
-      loading,
-      unitOfMeasurement,
-    } = this.state;
+    const { loading, unitOfMeasurement } = this.state;
 
     return (
       <SafeAreaView style={styles.container}>
@@ -105,7 +106,7 @@ export default class ChangeUnitScreen extends React.PureComponent {
                     padding: 5,
                     width: "46%",
                     borderColor:
-                    unitOfMeasurement === "metric"
+                      unitOfMeasurement === "metric"
                         ? colors.themeColor.color
                         : colors.themeColor.color,
                   }}
@@ -113,7 +114,10 @@ export default class ChangeUnitScreen extends React.PureComponent {
                   customBtnTitleStyle={{
                     fontSize: 15,
                     marginLeft: 5,
-                    color: unitOfMeasurement === "metric" ? colors.black : colors.black,
+                    color:
+                      unitOfMeasurement === "metric"
+                        ? colors.black
+                        : colors.black,
                   }}
                   leftIconColor={colors.black}
                   leftIconSize={15}
@@ -127,16 +131,20 @@ export default class ChangeUnitScreen extends React.PureComponent {
                     padding: 5,
                     width: "46%",
                     borderColor:
-                    unitOfMeasurement === "imperial"
+                      unitOfMeasurement === "imperial"
                         ? colors.themeColor.color
                         : colors.themeColor.color,
                   }}
-                  onPress={() => this.setState({ unitOfMeasurement: "imperial" })}
+                  onPress={() =>
+                    this.setState({ unitOfMeasurement: "imperial" })
+                  }
                   customBtnTitleStyle={{
                     fontSize: 15,
                     marginLeft: 5,
                     color:
-                    unitOfMeasurement === "imperial" ? colors.black : colors.black,
+                      unitOfMeasurement === "imperial"
+                        ? colors.black
+                        : colors.black,
                   }}
                   leftIconColor={colors.black}
                   leftIconSize={15}

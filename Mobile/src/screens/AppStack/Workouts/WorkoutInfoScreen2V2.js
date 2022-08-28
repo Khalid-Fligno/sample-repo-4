@@ -6,10 +6,6 @@ import {
   Dimensions,
   TouchableOpacity,
   Alert,
-  Linking,
-  Image,
-  StatusBar,
-  FlatList,
   Platform,
   UIManager,
   LayoutAnimation,
@@ -17,35 +13,24 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as FileSystem from "expo-file-system";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import Video from "react-native-video";
-import Modal from "react-native-modal";
 import Carousel from "react-native-carousel";
-import { DotIndicator } from "react-native-indicators";
 import { db } from "../../../../config/firebase";
-import Loader from "../../../components/Shared/Loader";
 import Icon from "../../../components/Shared/Icon";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import AddToCalendarButton from "../../../components/Shared/AddToCalendarButton";
 import {
   findFocus,
-  findLocation,
   findFocusIcon,
   findWorkoutType,
 } from "../../../utils/workouts";
 import colors from "../../../styles/colors";
-// import fonts from '../../../styles/fonts';
 import globalStyle from "../../../styles/globalStyles";
 import WorkoutScreenStyle from "./WorkoutScreenStyle";
 import TimeSvg from "../../../../assets/icons/time";
-import CustomBtn from "../../../components/Shared/CustomBtn";
 import fonts from "../../../styles/fonts";
 import NutritionStyles from "../Nutrition/NutritionStyles";
-import { StackActions } from "react-navigation";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import DoubleRightArrow from "../../../../assets/icons/DoubleRightArrow";
-
-const moment = require("moment");
+import moment from "moment";
+import WorkOutDuration from "./WorkOutDuration";
 
 const { width } = Dimensions.get("window");
 
@@ -77,7 +62,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       expandedExercise: true,
       expandedWarmup: false,
       expandedCooldown: false,
-      lifestyle: false
+      lifestyle: false,
     };
   }
 
@@ -142,24 +127,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   };
 
   handleStart = () => {
-    // this.toggleMusicModal();
     this.handleWorkoutStart();
-  };
-
-  openApp = (url) => {
-    Linking.canOpenURL(url)
-      .then((supported) => {
-        if (supported) {
-          Linking.openURL(url);
-        } else {
-          Alert.alert("Cannot open this app");
-        }
-      })
-      .catch((err) => Alert.alert("An error occurred", err));
-  };
-
-  showCalendarModal = () => {
-    this.setState({ calendarModalVisible: true });
   };
 
   hideCalendarModal = () => {
@@ -204,7 +172,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   handleWorkoutStart = () => {
     const { workout, reps, extraProps, lifestyle } = this.state;
     this.setState({ musicModalVisible: false });
-    // this.props.navigation.navigate('Countdown', { exerciseList: workout.exercises, reps, resistanceCategoryId: workout.resistanceCategoryId });
     this.props.navigation.navigate("Countdown", {
       lifestyle,
       workout: workout,
@@ -221,29 +188,32 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   componentDidMount = async () => {
     this.fetchProfile();
     this.setState({ loading: true });
-    // this.focusListener = this.props.navigation.addListener('willFocus', () => {
-    //   console.log("will focued call")
-    //   this.onFocusFunction()
-    // })
     this.onFocusFunction();
     await this.props.navigation.setParams({
       handleStart: () => this.handleStart(),
     });
-    // this.checkMusicAppAvailability();
   };
 
   componentWillUnmount = async () => {
-    console.log("unmount");
-    // this.focusListener.remove()
+    if (this.unsubscribeUserChallenges) this.unsubscribeUserChallenges();
+    if (this.unsubscribeChallenges) this.unsubscribeChallenges();
   };
 
   togglePreview = (section) => {
-    if (section.key === 0) {
-      this.setState({ expandedWarmup: !this.state.expandedWarmup });
-    } else if (section.key === 1) {
-      this.setState({ expandedExercise: !this.state.expandedExercise });
-    } else if (section.key === 2) {
-      this.setState({ expandedCooldown: !this.state.expandedCooldown });
+    const { key } = section;
+
+    switch (key) {
+      case 0:
+        this.setState({ expandedWarmup: !this.state.expandedWarmup });
+        break;
+      case 1:
+        this.setState({ expandedExercise: !this.state.expandedExercise });
+      case 2:
+        this.setState({ expandedCooldown: !this.state.expandedCooldown });
+        break;
+
+      default:
+        break;
     }
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
@@ -251,6 +221,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
   renderItem = (render) => {
     const section = render.section;
     const { expandedWarmup, expandedExercise, expandedCooldown } = this.state;
+
     if (section.key === 0) {
       return expandedWarmup ? (
         this.renderExercise(render)
@@ -273,8 +244,7 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     return <View />;
   };
 
-  renderExercise = ({ item: exercise, index, section, }) => {
-    // console.log("Workout: ", this.state.workout.exercises[0].duration);
+  renderExercise = ({ item: exercise, index, section }) => {
     let showRR =
       exercise.recommendedResistance &&
         !exercise.recommendedResistance.includes("N/A")
@@ -291,26 +261,11 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
     const restIntervalTimeinSec =
       this.state.workout.restIntervalMap[this.state.fitnessLevel - 1];
 
-    const convert = (exerciseDur) => {
-      var mins = Math.trunc(exerciseDur / 60);
-      var sec = exerciseDur % 60;
-      return mins+"min "+ sec + "s"
-    }
+    if (exercise.newWorkout) var videoIndex = exercise.videoUrls.findIndex((v) => v.model == exercise.exerciseModel) ?? 0
+    else var videoIndex = 0
+    const video =  exercise.videoUrls[videoIndex]
+    const videoUrl = video.localUrl ?? video.url // Backup if local cache is deleted/not loaded
 
-    let videoUrl = "";
-    switch (section.key) {
-      case 0:
-        videoUrl = `${FileSystem.cacheDirectory}warmUpExercise-${index + 1
-          }.mp4`;
-        break;
-      case 1:
-        videoUrl = `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`;
-        break;
-      case 2:
-        videoUrl = `${FileSystem.cacheDirectory}coolDownExercise-${index + 1
-          }.mp4`;
-        break;
-    }
     return (
       <View style={WorkoutScreenStyle.carouselContainer}>
         <Carousel
@@ -338,111 +293,27 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                   </Text>
                 </View>
                 <View>
-                  {this.state.workout.workoutProcessType === "oneByOne" && section.title != 'Workout' &&
-                    !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration} {'secs'}
-                      </Text>
-                    )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title != 'Workout' &&
-                    !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration} {'secs'}
-                      </Text>
-                    )}
-
-                  {this.state.workout.workoutProcessType === "circular" && section.title != 'Workout' &&
-                    !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration} {'secs'}
-                      </Text>
-                    )}
-
-
-                  {this.state.workout.workoutProcessType === "oneByOne" && section.title === 'Workout' &&
-                    !this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {this.state.workout["workoutReps"]} x {this.state.reps}
-                      </Text>
-                    )}
-
-                  {this.state.workout.workoutProcessType === "oneByOne" &&
-                    this.state.workout.rest && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {workIntervalTimeinSec}s on/{restIntervalTimeinSec}s off
-                      </Text>
-                    )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
-                    this.state.lifestyle != true &&
-                    exercise.duration <= 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {exercise.duration}s
-                        {/* {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec}s off`} */}
-                      </Text>
-                    )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
-                    this.state.lifestyle != true &&
-                    exercise.duration > 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {convert(exercise.duration)}
-                        {/* {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec}s off`} */}
-                      </Text>
-                    )}
-
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
-                    this.state.lifestyle === true &&
-                    workIntervalTimeinSec <= 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {workIntervalTimeinSec}s
-                        {/* {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec}s off`} */}
-                      </Text>
-                    )}
-                  {this.state.workout.workoutProcessType === "onlyOne" && section.title === 'Workout' &&
-                    this.state.lifestyle === true &&
-                    workIntervalTimeinSec > 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {workIntervalTimeinSec / 60}mins
-                        {/* {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec}s off`} */}
-                      </Text>
-                    )}
-
-
-                  {/* {this.state.workout.workoutProcessType === "onlyOne" && section.title ==='Workout' &&
-                    workIntervalTimeinSec > 60 && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {this.state.workout.exercises[0].duration / 60} mins
-                        {restIntervalTimeinSec > 0 &&
-                          `/${restIntervalTimeinSec / 60}m off`}
-                      </Text>
-                    )} */}
-                  {this.state.workout.workoutProcessType === "circular" && section.title === 'Workout' &&
-                    !this.state.workout.count && (
-                      <Text style={WorkoutScreenStyle.exerciseTileHeaderBarRight}>
-                        {
-                          this.state.workout.workIntervalMap[
-                          this.state.fitnessLevel - 1
-                          ]
-                        }
-                        s on/
-                        {
-                          this.state.workout.restIntervalMap[
-                          this.state.fitnessLevel - 1
-                          ]
-                        }
-                        s off
-                      </Text>
-                    )}
+                  <WorkOutDuration
+                    type={this.state.workout.workoutProcessType}
+                    title={section.title}
+                    isRest={this.state.workout.rest}
+                    exercise={exercise}
+                    lifestyle={this.state.lifestyle}
+                    workIntervalTimeinSec={workIntervalTimeinSec}
+                    restIntervalTimeinSec={restIntervalTimeinSec}
+                    count={this.state.workout.count}
+                    workout={this.state.workout["workoutReps"]}
+                    reps={this.state.reps}
+                    workIntervalMap={this.state.workout.workIntervalMap}
+                    fitnessLevel={this.state.fitnessLevel}
+                    restIntervalMap={this.state.workout.restIntervalMap}
+                  />
                 </View>
               </View>
               <Video
                 key={exercise.name.toUpperCase()}
                 ref={(ref) => (this.videoRef = ref)}
                 source={{
-                  // uri: `${FileSystem.cacheDirectory}exercise-${index + 1}.mp4`,
                   uri: videoUrl,
                 }}
                 playWhenInactive
@@ -452,14 +323,16 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 selectedAudioTrack={{
                   type: "disabled",
                 }}
-                style={{ width: width - 30, height: width - 30, position: "relative", zIndex: 0 }}
-
+                style={{
+                  width: width - 30,
+                  height: width - 30,
+                  position: "relative",
+                  zIndex: 0,
+                }}
               />
             </View>
             <View style={styles.invisibleView}>
-              <View
-                style={styles.setCounter}
-              >
+              <View style={styles.setCounter}>
                 <Text style={styles.setCounterText}>Swipe for more info</Text>
                 <Icon name="chevron-right" size={10} style={styles.icon} />
               </View>
@@ -483,7 +356,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                 )}
                 {showRR && (
                   <Text style={WorkoutScreenStyle.exerciseDescriptionText}>
-                    {" "}
                     {exercise.recommendedResistance}
                   </Text>
                 )}
@@ -535,19 +407,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
       loading,
       workout,
       reps,
-      chosenDate,
-      calendarModalVisible,
-      addingToCalendar,
-      musicModalVisible,
-      appleMusicAvailable,
-      spotifyAvailable,
-      workoutSubCategory,
-      fitnessLevel,
-      extraProps,
-      notificationBanner,
-      expandedExercise,
-      expandedWarmup,
-      expandedCooldown,
     } = this.state;
     let workoutTime = 0;
     let warmupInterval = 0;
@@ -574,7 +433,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
         workoutInterval =
           workout.workoutTime - (warmupInterval + cooldownInterval);
       }
-      // workoutTime = ((workout.workIntervalMap[fitnessLevel-1]+workout.restIntervalMap[fitnessLevel-1])*workout.exercises.length*workout.workoutReps)/60;
     }
 
     return (
@@ -584,45 +442,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
           { paddingHorizontal: 0, backgroundColor: colors.smoke },
         ]}
       >
-        {Platform.OS === "ios" && (
-          <Modal
-            isVisible={calendarModalVisible}
-            animationIn="fadeIn"
-            animationInTiming={600}
-            animationOut="fadeOut"
-            animationOutTiming={600}
-            onBackdropPress={this.hideCalendarModal}
-          >
-            <View style={globalStyle.modalContainer}>
-              <DateTimePicker
-                mode="date"
-                value={chosenDate}
-                onChange={this.setDate}
-                minimumDate={new Date()}
-              />
-              <TouchableOpacity
-                onPress={() => this.addWorkoutToCalendar(chosenDate)}
-                style={globalStyle.modalButton}
-              >
-                {addingToCalendar ? (
-                  <DotIndicator color={colors.white} count={3} size={6} />
-                ) : (
-                  <Text style={globalStyle.modalButtonText}>
-                    ADD TO CALENDAR
-                  </Text>
-                )}
-              </TouchableOpacity>
-            </View>
-          </Modal>
-        )}
-        {Platform.OS === "android" && calendarModalVisible && !loading && (
-          <DateTimePicker
-            mode="date"
-            value={chosenDate}
-            onChange={this.setDate}
-            minimumDate={new Date()}
-          />
-        )}
         {workout && !loading && (
           <View style={WorkoutScreenStyle.flatListContainer}>
             <SectionList
@@ -662,7 +481,6 @@ export default class WorkoutInfoScreen2V2 extends React.PureComponent {
                       {workout && workout.displayName.toUpperCase()}
                     </Text>
                   </View>
-
                   <View style={WorkoutScreenStyle.workoutIconsRow}>
                     {!this.state.workout.filters.includes("strength") && (
                       <View style={WorkoutScreenStyle.workoutIconContainer}>
@@ -841,8 +659,6 @@ const styles = StyleSheet.create({
   startButton: {
     height: 55,
     width: "100%",
-    // position: "absolute",
-    // bottom: 20,
     backgroundColor: colors.black,
     alignSelf: "center",
     alignContent: "center",

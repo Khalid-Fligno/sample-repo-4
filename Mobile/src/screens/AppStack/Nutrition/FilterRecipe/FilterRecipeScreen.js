@@ -6,7 +6,7 @@ import {
     Dimensions,
     FlatList,
     Text,
-    ScrollView,
+    ScrollView
 } from "react-native";
 import sortBy from "lodash.sortby";
 import colors from "../../../../styles/colors";
@@ -24,35 +24,27 @@ import PhaseModal from "./PhaseModal";
 import FilterScreen from "./FilterScreen";
 import { convertRecipeData } from "../../../../utils/challenges";
 import RecipeTileSkeleton from "../../../../components/Nutrition/RecipeTileSkeleton";
+import { db } from "../../../../../config/firebase";
+import AsyncStorage from "@react-native-community/async-storage";
 const { width } = Dimensions.get("window");
-
+import _ from "lodash";
 export default class FilterRecipeScreen extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            recipes: [],
             loading: false,
-            filterIndex: 0,
             isFilterVisible: false,
             isClickVisible: false,
             veganChecked: false,
             vegetarianChecked: false,
-            glutaFree: false,
+            glutenFree: false,
             dairyFree: false,
             gutHealth: false,
             phase1: false,
             phase2: false,
             phase3: false,
-            level1: false,
-            level2: false,
-            level3: false,
             title: undefined,
             data: [],
-            allData: [],
-            challengeRecipe: [],
-            levelButtonData: [],
-            tagDataList: [],
-            key: 0,
             tags: [],
             phase: [],
             category: [],
@@ -63,25 +55,54 @@ export default class FilterRecipeScreen extends React.PureComponent {
             defaultLevelTags: "",
             phaseDefaultTags: "",
             categoryName: [],
-            loading: false
+            activeChallengeUserData: undefined,
+            currentChallengeDay: undefined
         };
     }
 
-    onFocusFunction() {
+    // animated
+
+    pluralTitle = (title) => {
+
+        switch(title) {
+            case 'Lunch':
+                return 'Lunches'
+            default:
+                return `${title}s`
+        }
+    } 
+
+    componentDidMount = () => {
         this.getDefaultCategoryTags()
         this.getAllRecipeData()
-        this.setState({
+        
+        const title = this.props.navigation.getParam("title", null)
+        const paramState = {
+            currentChallengeDay: this.props.navigation.getParam('currentChallengeDay', null),
+            activeChallengeUserData: this.props.navigation.getParam('activeChallengeUserData', null),
             phaseDefaultTags: this.props.navigation.getParam('phaseDefaultTags', null),
             defaultLevelTags: this.props.navigation.getParam("defaultLevelTags", null),
-            challengeRecipe: this.props.navigation.getParam("challengeAllRecipe", null),
-            allData: this.props.navigation.getParam("recipes", null),
             recipes: this.props.navigation.getParam("recipes", null),
-            title: this.props.navigation.getParam("title", null),
-        });
+            title: title,
+            pluralTitle: this.pluralTitle(title)
+        }
+
+        const selectedItems = this.recipeMealGroupList(paramState.activeChallengeUserData, paramState.title, paramState.currentChallengeDay)
+        const canFavouriteMoreRecipes = this.canFavouriteMoreRecipes(selectedItems)
+        this.setState({
+            ...paramState,
+            selectedItems,
+            canFavouriteMoreRecipes
+        })
     }
-    componentDidMount = async () => {
-        this.onFocusFunction();
-    };
+
+    get maximumAllowedFavourites() {
+        return this.props.navigation.getParam("configs", null)?.maximumAllowedFavourites ?? 1
+    }
+
+    canFavouriteMoreRecipes = (selectedItems) => {
+        return selectedItems.length < this.maximumAllowedFavourites
+    }
 
     handleBack = () => {
         const { navigation } = this.props;
@@ -89,74 +110,38 @@ export default class FilterRecipeScreen extends React.PureComponent {
     };
 
     getAllRecipeData = () => {
-        const allRecipeData = this.props.navigation.getParam("allRecipeData", null)
-        const dupId = []
-
-        allRecipeData.forEach((res) => {
-            dupId.push(res.id)
-        })
-
-        const uniqId = [...new Set(dupId)]
-
-        convertRecipeData(uniqId).then(res => {
-            this.setState({
-                data: res.recipeResult,
-            })
-        })
+        const allRecipeData = this.props.navigation.getParam("allRecipeData", [])
+        this.setState({data: allRecipeData})
     }
 
     getDefaultCategoryTags = () => {
-        this.setState({ loading: true })
         const recipeData = this.props.navigation.getParam("todayRecommendedRecipe", null)
-        const categoryName = []
-        const dupId = []
-        const finalRecipeData = []
-
-
-        recipeData.forEach((res) => {
-            if (res.tags) {
-                res.tags.filter((item) => {
-                    if (item === 'V') categoryName.push(item.replace('V', 'Vegan'))
-                    if (item === 'V+') categoryName.push(item.replace('V+', 'Vegetarian'))
-                    if (item === 'GF') categoryName.push(item.replace('GF', 'Gluta Free'))
-                    if (item === 'DF') categoryName.push(item.replace('DF', 'Dairy Free'))
-                    if (item === 'GH') categoryName.push(item.replace('GH', 'Gut Health'))
-                })
-            }
-
-            dupId.push(res.id)
-        })
-
-        const uniqId = [...new Set(dupId)]
-
-        convertRecipeData(uniqId).then(res => {
-            this.setState({
-                todayRecommendedRecipe: res.recipeResult,
-                loading: false
+        const categoryName = [... new Set(recipeData.flatMap(recipe => recipe.tags))]
+            .map(tag => {
+                switch(tag) {
+                    case 'V':
+                        return tag.replace('V', 'Vegan')
+                    case 'V+':
+                        return tag.replace('V+', 'Vegetarian')
+                    case 'GF':
+                        return tag.replace('GF', 'Gluten Free')
+                    case 'DF': 
+                        return tag.replace('DF', 'Dairy Free')
+                    case 'GH': 
+                        return tag.replace('GH', 'Gut Health')
+                }
             })
-        })
-
-        const uniq = [...new Set(categoryName)]
-        const result = []
-        uniq.forEach((res) => {
-            result.push({ name: res })
-        })
+            .filter(t => t?.trim())
+            .map(tag => ({ name: tag }))
 
         this.setState({
-            categoryName: result
+            categoryName,
+            todayRecommendedRecipe: recipeData
         })
     }
 
     toggleModal = () => {
         this.setState({ isClickVisible: !this.state.isClickVisible });
-    }
-
-    toggleLevelChallengeData = () => {
-        const { challengeRecipe } = this.state
-
-        this.setState({
-            levelButtonData: challengeRecipe.level1
-        })
     }
 
     toggleVegan = () => {
@@ -175,30 +160,32 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
     toggleVegetarian = () => {
-        this.setState({
-            vegetarianChecked: !this.state.vegetarianChecked
-        })
-        if (this.state.vegetarianChecked === false) {
-            this.setState({ category: [...this.state.category, { name: "Vegetarian" }] })
+        
+        let {vegetarianChecked, category} = this.state
+        
+       
+        if (vegetarianChecked === false) {
+            var updatedCategory = [...category, { name: "Vegetarian" }]
         } else {
-            this.setState({
-                category: this.state.category.filter((item) => {
-                    return item.name !== "Vegetarian"
-                })
-            })
+            var updatedCategory = category.filter((item) => item.name !== "Vegetarian")
         }
+
+        this.setState({ 
+            vegetarianChecked: !vegetarianChecked,
+            category: updatedCategory
+        })
     }
 
-    toggleGlutaFree = () => {
+    toggleGlutenFree = () => {
         this.setState({
-            glutaFree: !this.state.glutaFree
+            glutenFree: !this.state.glutenFree
         })
-        if (this.state.glutaFree === false) {
-            this.setState({ category: [...this.state.category, { name: "Gluta Free" }] })
+        if (this.state.glutenFree === false) {
+            this.setState({ category: [...this.state.category, { name: "Gluten Free" }] })
         } else {
             this.setState({
                 category: this.state.category.filter((item) => {
-                    return item.name !== "Gluta Free"
+                    return item.name !== "Gluten Free"
                 })
             })
         }
@@ -220,9 +207,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
     toggleGutHealth = () => {
-        this.setState({
-            gutHealth: !this.state.gutHealth
-        })
+        this.setState({ gutHealth: !this.state.gutHealth })
         if (this.state.gutHealth === false) {
             this.setState({ category: [...this.state.category, { name: "Gut Health" }] })
         } else {
@@ -288,150 +273,70 @@ export default class FilterRecipeScreen extends React.PureComponent {
     }
 
     filterOnBackdrop = () => {
-        this.setState({ isFilterVisible: !this.state.isFilterVisible })
-        this.setState({ veganChecked: false })
-        this.setState({ vegetarianChecked: false })
-        this.setState({ glutaFree: false })
-        this.setState({ dairyFree: false })
-        this.setState({ gutHealth: false })
-        this.setState({ phase1: false })
-        this.setState({ phase2: false })
-        this.setState({ phase3: false })
+        this.setState({ 
+            isFilterVisible: !this.state.isFilterVisible,
+            veganChecked: false,
+            vegetarianChecked: false,
+            glutenFree: false,
+            dairyFree: false,
+            gutHealth: false,
+            phase1: false,
+            phase2: false,
+            phase3: false
+        })
     }
 
     phaseOnBackdrop = () => {
-        this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: false })
-        this.setState({ phase1: false })
-        this.setState({ phase2: false })
-        this.setState({ phase3: false })
-        this.setState({ veganChecked: false })
-        this.setState({ vegetarianChecked: false })
-        this.setState({ glutaFree: false })
-        this.setState({ dairyFree: false })
-        this.setState({ gutHealth: false })
+        this.setState({ 
+            isClickVisible: !this.state.isClickVisible, isFilterVisible: false,
+            veganChecked: false,
+            vegetarianChecked: false,
+            glutenFree: false,
+            dairyFree: false,
+            gutHealth: false,
+            phase1: false,
+            phase2: false,
+            phase3: false
+        })
     }
 
-    applyButton = (data, levelButtonData) => {
+    applyButton = (data) => {
 
-        const allData = []
-        const tagList = []
-        const phaseData = []
+        const { 
+            levelText, phase, category,
+            veganChecked, vegetarianChecked, glutenFree, dairyFree, gutHealth 
+        } = this.state
+        
+        const requiredFilteredTags = [
+            {tag: levelText, isSelected: true},
+            {tag: "V+", isSelected: veganChecked },
+            {tag: "V", isSelected: vegetarianChecked },
+            {tag: "GF", isSelected: glutenFree },
+            {tag: "DF", isSelected: dairyFree },
+            {tag: "GH", isSelected: gutHealth }
+        ]
+        .filter(t => t.isSelected) // Only have tags that are enabled
+        .map(t => t.tag)
 
-        levelButtonData.forEach(res => {
-            data.forEach((resTags) => {
-                try {
-                    resTags.tags.filter((resId) => {
-                        if (res.levelTags === resId) {
-                            phaseData.push(resTags)
-                        }
-                    })
-                } catch (err) {
-
-                }
-            })
-        })
-
-        phaseData.forEach((res) => {
-            res.tags.filter((resTags) => {
-                if (this.state.phase1 === true) {
-                    if (resTags === this.state.phaseText) {
-                        allData.push(res.id)
-                    } else {
-                        allData.push(res.id)
-                    }
-                }
-                if (this.state.phase2 === true) {
-                    if (resTags === this.state.phaseText) {
-                        allData.push(res.id)
-                    } else {
-                        allData.push(res.id)
-                    }
-                }
-                if (this.state.phase3 === true) {
-                    if (resTags === this.state.phaseText) {
-                        allData.push(res.id)
-                    } else {
-                        allData.push(res.id)
-                    }
-                }
-            })
-        })
-
-        const uniq = [...new Set(allData)]
-
-        for (var i = 0; i < uniq.length; i++) {
-            data.map(list => {
-                if (list.id === uniq[i]) {
-                    tagList.push(list)
-                }
-            })
-        }
-
-        console.log('taglist:', tagList)
-
-        const recipeLists = sortBy(tagList).filter((recipe) => {
-            for (let i = 0; i < recipe.tags.length; i++) {
-                if (this.state.veganChecked === true) {
-                    if (recipe.tags[i] === 'V') {
-                        return recipe.tags[i]
-                    }
-                }
-                if (this.state.vegetarianChecked === true) {
-                    if (recipe.tags[i] === 'V+') {
-                        return recipe.tags[i]
-                    }
-                }
-                if (this.state.glutaFree === true) {
-                    if (recipe.tags[i] === 'GF') {
-                        return recipe.tags[i]
-                    }
-                }
-                if (this.state.dairyFree === true) {
-                    if (recipe.tags[i] === 'DF') {
-                        return recipe.tags[i]
-                    }
-                }
-                if (this.state.gutHealth === true) {
-                    if (recipe.tags[i] === 'GH') {
-                        return recipe.tags[i]
-                    }
-                }
-            }
-        });
-
-        const recipePhase = sortBy(tagList).filter((recipe) => {
-            for (let i = 0; i < recipe.tags.length; i++) {
-                if (this.state.phase1 === true) {
-                    if (recipe.tags[i] === 'P1') {
-                        return recipe.tags[i]
-                    } else {
-                        return recipe.tags[i]
-                    }
-                }
-                if (this.state.phase2 === true) {
-                    if (recipe.tags[i] === 'P2') {
-                        return recipe.tags[i]
-                    } else {
-                        return recipe.tags[i]
-                    }
-                }
-                if (this.state.phase3 === true) {
-                    if (recipe.tags[i] === 'P3') {
-                        return recipe.tags[i]
-                    } else {
-                        return recipe.tags[i]
-                    }
-                }
-            }
-        });
+        // We only care about phase tags, if they have chose level 1.
+        // Else don't use phase filtering as the logic of this does not work.
+        // You currently can't filter on phases for specific levels
+        let optionalFilteredTags = levelText == "L1" ? phase.map(p => p.phaseTag) : []
+        
+        // Filter all the recipes based on the given conditions above
+        const filteredRecipes = data            
+            .filter(recipe => [
+                requiredFilteredTags.every(t => recipe.tags.includes(t)),
+                optionalFilteredTags.length > 0 ? optionalFilteredTags.some(t => recipe.tags.includes(t)) : true
+            ].every(satisfied => satisfied))
 
         this.setState({
-            todayRecommendedRecipe: this.state.gutHealth || this.state.veganChecked || this.state.vegetarianChecked || this.state.glutaFree || this.state.dairyFree ? recipeLists : recipePhase,
+            todayRecommendedRecipe: [...new Set(filteredRecipes)],
             isFilterVisible: false,
             isClickVisible: false,
-            tags: [{ level: this.state.levelText, phase: this.state.phase }],
+            tags: [{ level: levelText, phase: phase }],
             phase: [],
-            nameCat: this.state.category,
+            nameCat: category,
             category: []
         })
     }
@@ -444,21 +349,112 @@ export default class FilterRecipeScreen extends React.PureComponent {
             phase3: false,
             veganChecked: false,
             vegetarianChecked: false,
-            glutaFree: false,
+            glutenFree: false,
             dairyFree: false,
-            gutHealth: false
+            gutHealth: false,
+            levelText: "",
+            phaseText: "",
         });
     }
 
+    recipeMealGroupList = (activeChallengeUserData, title, currentChallengeDay) => {
+        const faveRecipeCollection = activeChallengeUserData.faveRecipe
+        const challengeDayIndex = currentChallengeDay - 1
+        if(challengeDayIndex >= faveRecipeCollection.length) {
+            return null
+        }
+
+        // We need to migrate old single string value to a list of ids
+        return [faveRecipeCollection[challengeDayIndex].recipeMeal[title.toLowerCase()]]
+            .flatMap(e => e)
+            .filter(e => e?.trim())
+    }
+
+    onFavorite = async (item, activeChallengeUserData, title, currentChallengeDay) => {
+        console.log("HERERE 1")
+
+        const faveRecipeCollection = activeChallengeUserData.faveRecipe
+        const challengeDayIndex = currentChallengeDay - 1
+        if(challengeDayIndex >= faveRecipeCollection.length) {
+            return // nop
+        }
+
+        const newMealList = _.union(this.recipeMealGroupList(activeChallengeUserData, title, currentChallengeDay), [item.id])
+
+        // Set new meal list
+        faveRecipeCollection[challengeDayIndex].recipeMeal[title.toLowerCase()] = newMealList
+
+        try {
+            const uid = await AsyncStorage.getItem("uid");
+            console.log("HERERE")
+            db.collection("users")
+                .doc(uid)
+                .collection("challenges")
+                .doc(activeChallengeUserData.id)
+                .set({ "faveRecipe": faveRecipeCollection }, { merge: true })
+
+            console.log("Out noew HERERE")
+        } catch (err) {
+            console.error(err)
+        }
+
+        this.setState({
+            selectedItems: newMealList,
+            canFavouriteMoreRecipes: this.canFavouriteMoreRecipes(newMealList)
+        })
+    }
+
+    onRemoveFavorite = async (item, activeChallengeUserData, title, currentChallengeDay) => {
+        const faveRecipeCollection = activeChallengeUserData.faveRecipe
+        const challengeDayIndex = currentChallengeDay - 1
+        if(challengeDayIndex >= faveRecipeCollection.length) {
+            return // nop
+        }
+
+        const mealList = this.recipeMealGroupList(activeChallengeUserData, title, currentChallengeDay)
+            .filter(e => e != item.id)
+    
+        // Set new meal list
+        faveRecipeCollection[challengeDayIndex].recipeMeal[title.toLowerCase()] = mealList
+
+        const id = activeChallengeUserData.id
+        const uid = await AsyncStorage.getItem("uid");
+        db.collection("users")
+            .doc(uid)
+            .collection("challenges")
+            .doc(id)
+            .set({ "faveRecipe": faveRecipeCollection }, { merge: true })
+
+        this.setState({
+            selectedItems: mealList,
+            canFavouriteMoreRecipes: this.canFavouriteMoreRecipes(mealList)
+        })
+    }
+
+    ifExistRecipe = (item) => {
+        return this.state.selectedItems.includes(item.id) ?? false
+    }
+
+    onSelectHeart = (item, activeChallengeUserData, title, currentChallengeDay) => {
+        if (this.ifExistRecipe(item, activeChallengeUserData, title, currentChallengeDay)) {
+            this.onRemoveFavorite(item, activeChallengeUserData, title, currentChallengeDay)
+        } else {
+            this.onFavorite(item, activeChallengeUserData, title, currentChallengeDay)
+        }
+    }
+
     renderItem = ({ item }) => {
+        const { activeChallengeUserData, currentChallengeDay } = this.state
+
+        const faveRecipeItem = activeChallengeUserData.faveRecipe
 
         const color1 = []
 
         const tagList1 = sortBy(item.tags).filter((tag) => {
 
-            if (tag === 'V') color1.push({ name: tag, color: '#00C520' })
-            if (tag === 'V+') color1.push({ name: tag.replace('V+', 'VEG'), color: '#9403fc' })
-            if (tag === 'GF') color1.push({ name: tag, color: '#469753' })
+            if (tag === 'V') color1.push({ name: "VEG", color: '#469753' })
+            if (tag === 'V+') color1.push({ name: "V", color: '#00C520' })
+            if (tag === 'GF') color1.push({ name: tag, color: '#9403fc' })
             if (tag === 'DF') color1.push({ name: tag, color: '#B7782B' })
             if (tag === 'GH') color1.push({ name: tag, color: '#965734' })
         })
@@ -466,17 +462,24 @@ export default class FilterRecipeScreen extends React.PureComponent {
         const result = color1.splice(0, 3)
         const title = this.state.title
 
+        const isSelected = this.ifExistRecipe(item, activeChallengeUserData, title, currentChallengeDay)
+        const heartDisbaled = !this.state.canFavouriteMoreRecipes && !isSelected
+
         return (
             <FilterScreen
+                faveRecipeItem={faveRecipeItem}
+                favouritingDisabled={heartDisbaled}
+                ifExistRecipe={isSelected}
+                onSelectHeart={() => this.onSelectHeart(item, activeChallengeUserData, title, currentChallengeDay)}
                 navigation={this.props.navigation}
                 result={result}
                 item={item}
                 title={title}
             />
         )
-    };
+    }
 
-    clickModal = (data, levelButtonData) => {
+    clickModal = (data) => {
 
         return (
             <Modal
@@ -495,7 +498,7 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     togglePhase1={() => this.togglePhase1()}
                     togglePhase2={() => this.togglePhase2()}
                     togglePhase3={() => this.togglePhase3()}
-                    applyButton={() => this.applyButton(data, levelButtonData)}
+                    applyButton={() => this.applyButton(data)}
                     headerButton={() => this.setState({ isClickVisible: !this.state.isClickVisible, isFilterVisible: !this.state.isFilterVisible })}
                     backButton={() => this.setState({ isFilterVisible: true, isClickVisible: false })}
                     // backButton={() => this.setState({ isClickVisible: !this.state.isClickVisible })}
@@ -505,7 +508,19 @@ export default class FilterRecipeScreen extends React.PureComponent {
         )
     }
 
-    filterModal = (challengeRecipeData, data) => {
+    filterModal = (data) => {
+
+        const toggleLevelChange = (newLevelText) => {
+            const newisCurrentlyOn = this.state.levelText != newLevelText
+            this.setState({
+                levelText: newisCurrentlyOn ? newLevelText : "",
+                phase1: newisCurrentlyOn,
+                phase: newisCurrentlyOn ? [{phaseTag: "P1"}] : [],
+                phaseText: newisCurrentlyOn ? 'P1' : "",
+                phase2: false, 
+                phase3: false
+            })
+        }
 
         return (
             <Modal
@@ -519,40 +534,29 @@ export default class FilterRecipeScreen extends React.PureComponent {
             >
                 <LevelModal
                     onPressLevel1={() => this.setState({
-                        // isClickVisible: !this.state.isClickVisible,
                         isFilterVisible: false,
                         isClickVisible: true,
-                        levelButtonData: challengeRecipeData.level1,
-                        level1: !this.state.level1,
                         levelText: "L1"
                     })}
-                    onPressLevel2={() => this.setState({
-                        // isClickVisible: !this.state.isClickVisible,
-                        isFilterVisible: false,
-                        isClickVisible: true,
-                        levelButtonData: challengeRecipeData.level2,
-                        levelText: "L2"
-                    })}
-                    onPressLevel3={() => this.setState({
-                        // isClickVisible: !this.state.isClickVisible,
-                        isFilterVisible: false,
-                        isClickVisible: true,
-                        levelButtonData: challengeRecipeData.level3,
-                        levelText: "L3"
-                    })}
+                    onPressLevel2={() => toggleLevelChange("L2") }
+                    onPressLevel3={() => toggleLevelChange("L3") }
                     veganChecked={this.state.veganChecked}
                     vegetarianChecked={this.state.vegetarianChecked}
-                    glutaFreeChecked={this.state.glutaFree}
+                    glutenFreeChecked={this.state.glutenFree}
                     dairyFreeChecked={this.state.dairyFree}
                     gutHealthChecked={this.state.gutHealth}
+                    postpartumChecked={this.state.levelText == "PP"}
+                    level2Checked={this.state.levelText == "L2"}
+                    level3Checked={this.state.levelText == "L3"}
                     phase1={this.state.phase1}
                     phase2={this.state.phase2}
                     phase3={this.state.phase3}
                     toggleVegan={() => this.toggleVegan()}
                     toggleVegetarian={() => this.toggleVegetarian()}
-                    toggleGlutaFree={() => this.toggleGlutaFree()}
+                    toggleGlutenFree={() => this.toggleGlutenFree()}
                     toggleDairyFree={() => this.toggleDairyFree()}
                     toggleGutHealth={() => this.toggleGutHealth()}
+                    togglePostpartumChecked={() => toggleLevelChange("PP") }
                     closeModal={() => this.closeModal()}
                     applyButton={() => this.applyButton(data)}
                 />
@@ -564,19 +568,17 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
     render() {
         const {
-            recipes,
             data,
-            allData,
-            challengeRecipe,
-            levelButtonData,
             tags,
             nameCat,
             title,
+            pluralTitle,
             todayRecommendedRecipe,
             defaultLevelTags,
             phaseDefaultTags,
             categoryName,
-            loading
+            loading,
+            selectedItems
         } = this.state
 
         const skeleton = (
@@ -589,17 +591,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
 
         return (
             <View style={globalStyle.container}>
-                <View
-                    style={styles.customContainerStyle}
-                >
+                <View style={styles.customContainerStyle}>
                     {/* BigHeadText */}
                     <View>
                         <BigHeadingWithBackButton
                             isBigTitle={true}
                             isBackButton={true}
                             onPress={this.handleBack}
-                            backButtonText="Back to Workout"
-                            isBackButton={true}
+                            backButtonText="Back to Challenge"
                             customContainerStyle={{ bottom: 25 }}
                         />
                         <Text style={{ bottom: 60, fontSize: 30, fontFamily: fonts.bold }}>{title}</Text>
@@ -609,17 +608,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
                     <View style={{ marginTop: 10, width: 100 }}>
                         <TouchableOpacity
                             onPress={this.onClickFilter}
-
                             style={styles.oblongBtnStyle}>
-
                             <Text
                                 style={{
                                     marginTop: 10,
                                     fontSize: 12,
                                     fontFamily: fonts.bold,
                                     textTransform: 'uppercase',
-                                }}
-                            >
+                                }}>
                                 Filter
                             </Text>
                         </TouchableOpacity>
@@ -628,18 +624,14 @@ export default class FilterRecipeScreen extends React.PureComponent {
                 </View>
                 <ScrollView
                     horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                // style={{
-                //     paddingVertical: wp("3%"),
-                // }}
-                >
+                    showsHorizontalScrollIndicator={false}>
                     <View
-                        style={{ flexDirection: 'row', marginVertical: 10, marginBottom: 20, top: 0, height: 20 }}
-                    >
+                        style={{ flexDirection: 'row', marginVertical: 10, marginBottom: 20, top: 0, height: 20 }}>
                         {
                             tags.length ?
-                                tags.map((item) => (
+                                tags.map((item, index) => (
                                     <View
+                                        key={index}
                                         style={{
                                             flexDirection: 'row',
                                             alignItems: 'center',
@@ -708,6 +700,16 @@ export default class FilterRecipeScreen extends React.PureComponent {
                         }
                     </View>
                 </ScrollView>
+                {this.maximumAllowedFavourites > 1 && (
+                    <View style={[styles.maxRecipesBanner]}>
+                        <Text style={styles.maxRecipesBannerText}>
+                            You have selected {selectedItems?.length}/{this.maximumAllowedFavourites} {pluralTitle?.toLowerCase() ?? "recipes"}
+                        </Text>
+                        <Text style={styles.maxRecipesBannerSubheading}>
+                            Deselect the recipes and choose again to change your selection.
+                        </Text>
+                    </View>)
+                }
                 {
                     loading ?
                         skeleton
@@ -718,9 +720,10 @@ export default class FilterRecipeScreen extends React.PureComponent {
                                 contentContainerStyle={styles.scrollView}
                                 data={todayRecommendedRecipe}
                                 keyExtractor={(res) => res.id}
-                                renderItem={(item) => this.renderItem(item)}
+                                renderItem={this.renderItem}
                                 showsVerticalScrollIndicator={false}
                                 removeClippedSubviews={false}
+                                maxToRenderPerBatch={10}
                             />
                             :
                             <View
@@ -737,20 +740,19 @@ export default class FilterRecipeScreen extends React.PureComponent {
                                         fontSize: 15,
                                         fontFamily: fonts.bold,
                                         textTransform: 'uppercase',
-                                    }}
-                                >
+                                    }}>
                                     no recipes are available
                                 </Text>
                             </View>
                 }
                 {
                     this.state.isFilterVisible && (
-                        this.filterModal(challengeRecipe, data)
+                        this.filterModal(data)
                     )
                 }
                 {
                     this.state.isClickVisible && (
-                        this.clickModal(data, levelButtonData)
+                        this.clickModal(data)
                     )
                 }
             </View>
@@ -845,6 +847,33 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: '#4d4c4c',
         padding: 10,
+    },
+    maxRecipesBanner: {
+        alignItems: 'center',
+        borderRadius: 8,
+        backgroundColor: colors.white,    
+        borderColor: colors.black,
+        borderWidth: 1,
+        shadowColor: colors.black,
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 11.95,
+        justifyContent: 'space-between',
+        marginTop: 8,
+        padding: 16,
+    },
+    maxRecipesBannerText: {
+        fontFamily: fonts.StyreneAWebRegular,
+        fontSize: 14,
+        textAlign: 'center',
+        marginBottom: 4
+    },
+    maxRecipesBannerSubheading: {
+        fontSize: 10,
+        fontFamily: fonts.SimplonMonoLight,
+        textAlign: 'center'
     }
-
 })

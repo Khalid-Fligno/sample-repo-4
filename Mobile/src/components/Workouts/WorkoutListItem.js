@@ -1,11 +1,9 @@
 import React from "react";
-import Icon from "../Shared/Icon";
-import { ImageBackground, Text, View, StyleSheet, Image } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import fonts from "../../styles/fonts";
 import colors from "../../styles/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import PropTypes from "prop-types";
-import { propTypes } from "react-native-carousel";
 import TimeSvg from "../../../assets/icons/time";
 import {
   heightPercentageToDP as hp,
