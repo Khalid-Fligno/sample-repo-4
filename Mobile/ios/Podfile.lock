@@ -180,7 +180,7 @@ PODS:
   - libwebp/mux (1.2.1):
     - libwebp/demux
   - libwebp/webp (1.2.1)
-  - Mixpanel (4.1.3)
+  - Mixpanel (4.2.0)
   - Mixpanel-swift (3.1.2):
     - Mixpanel-swift/Complete (= 3.1.2)
   - Mixpanel-swift/Complete (3.1.2)
@@ -467,9 +467,9 @@ PODS:
     - React
   - RNVectorIcons (6.7.0):
     - React
-  - SDWebImage (5.12.5):
-    - SDWebImage/Core (= 5.12.5)
-  - SDWebImage/Core (5.12.5)
+  - SDWebImage (5.13.2):
+    - SDWebImage/Core (= 5.13.2)
+  - SDWebImage/Core (5.13.2)
   - SDWebImageWebPCoder (0.6.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.7)
@@ -863,7 +863,7 @@ SPEC CHECKSUMS:
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
-  Mixpanel: e1946068db90518aa5abc05deb63176c109b7e00
+  Mixpanel: 10a8acdddfa4026b51a69c82ed0d573cc1e70120
   Mixpanel-swift: fda407112b9e908f20550ab6ceaa4d05b09141d7
   MixpanelReactNative: 8b805c04ec10bdc26eb072e95f8d01a6b6132868
   OneSignal: b72068b06b359f22e27404edee87338f4b68e783
@@ -910,7 +910,7 @@ SPEC CHECKSUMS:
   RNSentry: 143980f2f98320eaaf10ccf7235dfc7f68b5ffa5
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
-  SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
+  SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   Sentry: 6ff0eac197e699126c024993eba40a7462e92941
   UMAppLoader: ee77a072f9e15128f777ccd6d2d00f52ab4387e6
@@ -931,4 +931,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 6f3a212556de97285c2dce1ce7b700ece79dcf9d
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.11.2
